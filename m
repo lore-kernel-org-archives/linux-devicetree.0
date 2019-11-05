@@ -2,301 +2,114 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2CCC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F013C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2600F204EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PC96YKae"
+	by mail.kernel.org (Postfix) with ESMTP id E7585204EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572992914;
+	bh=I9UIaPC+F6pMaRWtxmM2p9WCZ3F8CbiIzFcH59kpZGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AQDpyfq0jZWTN2K5I567ulWmQgJt1sBBM22Uc9ahl1L7C3vxLz3fPwL4XnqE3zED5
+	 /bRtsNET+u+1+EwL5hZEHoti5ytdY06ehA8MLwCA93JnuC1K2lLoTnY3wWBefnurkd
+	 7gd8WFe0DOKE5kmRWac+GKx+JEarNYAW9XI7X8Tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730834AbfKEW2Q (ORCPT
+        id S2387492AbfKEW2d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:28:16 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:54815 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730266AbfKEW2O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:28:14 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 06F8B22EE9;
-        Tue,  5 Nov 2019 23:28:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1572992890;
-        bh=hGgFuk5Nj2ZkqQgOqfvPqyJwH+mIL95XRcYip8eQf+s=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=PC96YKaeKjDhtb7Wc6uCzD+SsFg/5SwfzeJeZKg/4mDGNJQRoWh8jE9it0/Q5GxOd
-         9LxUgdOQ5F+S7IAXu2w8/N+hBfLv5M0QpsSL8yLfyF3MtAJCK+3CU5UbVe8IVUnXjT
-         F7UdBfHi4lF0ZKbjLkn6pfIrnRyq37hCZ5tJUt7o=
+        Tue, 5 Nov 2019 17:28:33 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40570 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729895AbfKEW2d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:28:33 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 22so1007147oip.7;
+        Tue, 05 Nov 2019 14:28:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=KjC2KAma0LvKn8lumDMjxYlVIodGsZnVFEKifxdYSnk=;
+        b=d3ueRprQvnW67UsHL1myk6iFa3saZxOgLa0qZeJKM/5P8dxTa03BsPGih9jWr9BPXx
+         q5mjpUxychbm+QiSQ7HS7RQIs9ig20H+ZCNrsUK0qsHq5SyEUOYOd978PXDLEJzh/2RX
+         i0T3oiQPHsyYg7Et1vY70cnsbcvLRY8sZXqTWyvTZJcbAAEEPfuGd0pCOuE+grw4MvC3
+         fLDz7G4L94nNwpx1SCabg+mG25RbZJzuTkCM7a84UX6bCf9pjdiNhVgAIwWRoblDuUsk
+         uqGt0uilMI7BO/lpPJjdOWYbDh13+z+KnxyOWdhfgBSV8hAC/l6h+wAgtdei22o/eBul
+         In/Q==
+X-Gm-Message-State: APjAAAUr6CUXItQUhx0hrpC1QR1xkHmFQU4cvss967B1D+rDN3pdN98a
+        t9lCxLhIW+dX5/z7xIc2Ww==
+X-Google-Smtp-Source: APXvYqy5wstR+27k4YDuFjIs+QGvk3acSSr3Nj8fQl3hz0coclqz40Lwa3CnvVJ6yzu4SV/xIyQc6A==
+X-Received: by 2002:a05:6808:18f:: with SMTP id w15mr836024oic.136.1572992912226;
+        Tue, 05 Nov 2019 14:28:32 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h79sm6168228oib.3.2019.11.05.14.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 14:28:31 -0800 (PST)
+Date:   Tue, 5 Nov 2019 16:28:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: net: bluetooth: add DT binding for
+ Realtek controllers
+Message-ID: <20191105222831.GB15425@bogus>
+References: <20191030224333.70241-1-bonstra@bonstra.fr.eu.org>
+ <20191030224333.70241-2-bonstra@bonstra.fr.eu.org>
+ <20191101080256.gjc4tacltehro3iw@hendrix>
+ <6C5CE71F-37F2-4C8A-9D94-1BC75937B478@holtmann.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 Nov 2019 23:28:09 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 3/5] net: phy: at803x: add device tree binding
-In-Reply-To: <20191102011351.6467-4-michael@walle.cc>
-References: <20191102011351.6467-1-michael@walle.cc>
- <20191102011351.6467-4-michael@walle.cc>
-Message-ID: <e9231afc2b4ba5cfc3cec0e0b6076e35@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.2.3
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6C5CE71F-37F2-4C8A-9D94-1BC75937B478@holtmann.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2019-11-02 02:13, schrieb Michael Walle:
-> Add support for configuring the CLK_25M pin as well as the RGMII I/O
-> voltage by the device tree.
+On Mon, Nov 04, 2019 at 03:20:59PM +0100, Marcel Holtmann wrote:
+> Hi Hugo,
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/net/phy/at803x.c | 283 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 281 insertions(+), 2 deletions(-)
+> >> The rtl_bt driver already supports some Realtek controllers on ACPI
+> >> platforms.
+> >> This commit adds bindings for DT-only platforms.
+> >> 
+> >> Signed-off-by: Hugo Grostabussiat <bonstra@bonstra.fr.eu.org>
+> >> ---
+> >> .../bindings/net/realtek-bluetooth.txt        | 25 +++++++++++++++++++
+> >> 1 file changed, 25 insertions(+)
+> >> create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.txt
+> > 
+> > You should write that binding using a YAML description. Free-form
+> > device tree bindings are more or less deprecated now.
 > 
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index 1eb5d4fb8925..a30a2ff57068 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -13,7 +13,12 @@
->  #include <linux/netdevice.h>
->  #include <linux/etherdevice.h>
->  #include <linux/of_gpio.h>
-> +#include <linux/bitfield.h>
->  #include <linux/gpio/consumer.h>
-> +#include <linux/regulator/of_regulator.h>
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <dt-bindings/net/qca-ar803x.h>
-> 
->  #define AT803X_SPECIFIC_STATUS			0x11
->  #define AT803X_SS_SPEED_MASK			(3 << 14)
-> @@ -62,6 +67,42 @@
->  #define AT803X_DEBUG_REG_5			0x05
->  #define AT803X_DEBUG_TX_CLK_DLY_EN		BIT(8)
-> 
-> +#define AT803X_DEBUG_REG_1F			0x1F
-> +#define AT803X_DEBUG_PLL_ON			BIT(2)
-> +#define AT803X_DEBUG_RGMII_1V8			BIT(3)
-> +
-> +/* AT803x supports either the XTAL input pad, an internal PLL or the
-> + * DSP as clock reference for the clock output pad. The XTAL reference
-> + * is only used for 25 MHz output, all other frequencies need the PLL.
-> + * The DSP as a clock reference is used in synchronous ethernet
-> + * applications.
-> + *
-> + * By default the PLL is only enabled if there is a link. Otherwise
-> + * the PHY will go into low power state and disabled the PLL. You can
-> + * set the PLL_ON bit (see debug register 0x1f) to keep the PLL always
-> + * enabled.
-> + */
-> +#define AT803X_MMD7_CLK25M			0x8016
-> +#define AT803X_CLK_OUT_MASK			GENMASK(4, 2)
-> +#define AT803X_CLK_OUT_25MHZ_XTAL		0
-> +#define AT803X_CLK_OUT_25MHZ_DSP		1
-> +#define AT803X_CLK_OUT_50MHZ_PLL		2
-> +#define AT803X_CLK_OUT_50MHZ_DSP		3
-> +#define AT803X_CLK_OUT_62_5MHZ_PLL		4
-> +#define AT803X_CLK_OUT_62_5MHZ_DSP		5
-> +#define AT803X_CLK_OUT_125MHZ_PLL		6
-> +#define AT803X_CLK_OUT_125MHZ_DSP		7
-> +
-> +/* Unfortunately, the AR8035 has another mask which is incompatible
-> + * with the AR8031 PHY. Also, it only supports 25MHz and 50MHz.
-> + */
-> +#define AT8035_CLK_OUT_MASK			GENMASK(4, 3)
-> +
-> +#define AT803X_CLK_OUT_STRENGTH_MASK		GENMASK(8, 7)
-> +#define AT803X_CLK_OUT_STRENGTH_FULL		0
-> +#define AT803X_CLK_OUT_STRENGTH_HALF		1
-> +#define AT803X_CLK_OUT_STRENGTH_QUARTER		2
-> +
->  #define ATH8030_PHY_ID 0x004dd076
->  #define ATH8031_PHY_ID 0x004dd074
->  #define ATH8035_PHY_ID 0x004dd072
-> @@ -73,6 +114,13 @@ MODULE_LICENSE("GPL");
-> 
->  struct at803x_priv {
->  	bool phy_reset:1;
-> +	int flags;
-> +#define AT803X_KEEP_PLL_ENABLED	BIT(0)	/* don't turn off internal PLL 
-> */
-> +	u16 clk_25m_reg;
-> +	u16 clk_25m_mask;
-> +	struct regulator_dev *vddio_rdev;
-> +	struct regulator_dev *vddh_rdev;
-> +	struct regulator *vddio;
->  };
-> 
->  struct at803x_context {
-> @@ -240,6 +288,192 @@ static int at803x_resume(struct phy_device 
-> *phydev)
->  	return phy_modify(phydev, MII_BMCR, BMCR_PDOWN | BMCR_ISOLATE, 0);
->  }
-> 
-> +static int at803x_rgmii_reg_set_voltage_sel(struct regulator_dev 
-> *rdev,
-> +					    unsigned int selector)
-> +{
-> +	struct phy_device *phydev = rdev_get_drvdata(rdev);
-> +
-> +	if (selector)
-> +		return at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F,
-> +					     0, AT803X_DEBUG_RGMII_1V8);
-> +	else
-> +		return at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F,
-> +					     AT803X_DEBUG_RGMII_1V8, 0);
-> +}
-> +
-> +static int at803x_rgmii_reg_get_voltage_sel(struct regulator_dev 
-> *rdev)
-> +{
-> +	struct phy_device *phydev = rdev_get_drvdata(rdev);
-> +	int val;
-> +
-> +	val = at803x_debug_reg_read(phydev, AT803X_DEBUG_REG_1F);
-> +	if (val < 0)
-> +		return val;
-> +
-> +	return (val & AT803X_DEBUG_RGMII_1V8) ? 1 : 0;
-> +}
-> +
-> +static struct regulator_ops vddio_regulator_ops = {
-> +	.list_voltage = regulator_list_voltage_table,
-> +	.set_voltage_sel = at803x_rgmii_reg_set_voltage_sel,
-> +	.get_voltage_sel = at803x_rgmii_reg_get_voltage_sel,
-> +};
-> +
-> +static const unsigned int vddio_voltage_table[] = {
-> +	1500000,
-> +	1800000,
-> +};
-> +
-> +static const struct regulator_desc vddio_desc = {
-> +	.name = "vddio",
-> +	.of_match = of_match_ptr("vddio-regulator"),
-> +	.n_voltages = ARRAY_SIZE(vddio_voltage_table),
-> +	.volt_table = vddio_voltage_table,
-> +	.ops = &vddio_regulator_ops,
-> +	.type = REGULATOR_VOLTAGE,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static struct regulator_ops vddh_regulator_ops = {
-> +};
-> +
-> +static const struct regulator_desc vddh_desc = {
-> +	.name = "vddh",
-> +	.of_match = of_match_ptr("vddh-regulator"),
-> +	.n_voltages = 1,
-> +	.fixed_uV = 2500000,
-> +	.ops = &vddh_regulator_ops,
-> +	.type = REGULATOR_VOLTAGE,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int at8031_register_regulators(struct phy_device *phydev)
-> +{
-> +	struct at803x_priv *priv = phydev->priv;
-> +	struct device *dev = &phydev->mdio.dev;
-> +	struct regulator_config config = { };
-> +
-> +	config.dev = dev;
-> +	config.driver_data = phydev;
-> +
-> +	priv->vddio_rdev = devm_regulator_register(dev, &vddio_desc, 
-> &config);
-> +	if (IS_ERR(priv->vddio_rdev)) {
-> +		phydev_err(phydev, "failed to register VDDIO regulator\n");
-> +		return PTR_ERR(priv->vddio_rdev);
-> +	}
-> +
-> +	priv->vddh_rdev = devm_regulator_register(dev, &vddh_desc, &config);
-> +	if (IS_ERR(priv->vddh_rdev)) {
-> +		phydev_err(phydev, "failed to register VDDH regulator\n");
-> +		return PTR_ERR(priv->vddh_rdev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static bool at803x_match_phy_id(struct phy_device *phydev, u32 phy_id)
-> +{
-> +	return (phydev->phy_id & phydev->drv->phy_id_mask)
-> +		== (phy_id & phydev->drv->phy_id_mask);
-> +}
-> +
-> +static int at803x_parse_dt(struct phy_device *phydev)
-> +{
-> +	struct device_node *node = phydev->mdio.dev.of_node;
-> +	struct at803x_priv *priv = phydev->priv;
-> +	unsigned int sel, mask;
-> +	u32 freq, strength;
-> +	int ret;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF_MDIO))
-> +		return 0;
-> +
-> +	ret = of_property_read_u32(node, "qca,clk-out-frequency", &freq);
-> +	if (!ret) {
-> +		mask = AT803X_CLK_OUT_MASK;
-> +		switch (freq) {
-> +		case 25000000:
-> +			sel = AT803X_CLK_OUT_25MHZ_XTAL;
-> +			break;
-> +		case 50000000:
-> +			sel = AT803X_CLK_OUT_50MHZ_PLL;
-> +			break;
-> +		case 62500000:
-> +			sel = AT803X_CLK_OUT_62_5MHZ_PLL;
-> +			break;
-> +		case 125000000:
-> +			sel = AT803X_CLK_OUT_125MHZ_PLL;
-> +			break;
-> +		default:
-> +			phydev_err(phydev, "invalid qca,clk-out-frequency\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* Fixup for the AR8030/AR8035. This chip has another mask and
-> +		 * supports only 25MHz and 50MHz output.
+> unless we change all the Bluetooth descriptions, I prefer we keep it the “old” way.
 
-This is actually wrong. There are two different datasheets with 
-contradictory information. The AR8035 actually supports up to 125MHz, 
-just the DSP option. I'll fix that in the v2.
+Who's going to do that? Me? You? Randomly select some poor soul to do 
+them all to get their device added? I only have 3500 to do. An all at 
+once approach doesn't really work nor is it necessary.
+
+I'd suggest new ones in schema and if you want to encourage conversions 
+require any changes on existing ones to first be converted. Still up to 
+you because it goes thru your tree.
 
 
-> +		 *
-> +		 * Warning:
-> +		 *   There was no datasheet for the AR8030 available so this is
-> +		 *   just a guess. But the AR8035 is listed as pin compatible
-> +		 *   to the AR8030 so there might be a good chance it works on
-> +		 *   the AR8030 too.
-> +		 */
-> +		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
-> +		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
-> +			mask = AT8035_CLK_OUT_MASK;
-> +			if (freq > 50000000)
-> +				phydev_err(phydev,
-> +					   "invalid qca,clk-out-frequency\n");
-> +				return -EINVAL;
-> +		}
-> +
-> +		priv->clk_25m_reg |= FIELD_PREP(mask, sel);
-> +		priv->clk_25m_mask |= mask;
+> > IIRC, that has been discussed before and the standard "model" property
+> > was to be preferred.
+> 
+> This one should really get an ACK from Rob.
 
+Humm, maybe, but I don't see 'model' used in this context.
 
--michael
-
-
+Rob
