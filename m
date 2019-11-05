@@ -2,116 +2,90 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89426C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D744C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B03B2087E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1699A21A49
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572990816;
-	bh=AtpSzcF+ikiWVL5AZdPxZ3/psINgSvSuTz/j+AwuiQI=;
+	s=default; t=1572990952;
+	bh=8KyEAYTR8mWXcTJSwI4l6l2oVWWzPciY5V/ZfbTPyvg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zMP7jgHUcZVhniCzLyVyfCRcEosmwydJTYsYc13LV3nQPvGNJ6JYBsTvIlxwGQO79
-	 HiKOhMpjA9cdDhAmREnBHvjXfCXXFQKMYMfWbJLA+NApJ+ZNTOxrf6GBuS0LYjtHNI
-	 IsOKOv7SUZzgBwxN58D5RdkBVRSE2NJFmNrtaCgg=
+	b=XIuftJKzepU2NkbCtYYV6/MnOunnIMivKqPsz9KWfZb4S/7zuXCzNTMpgAptVY+IK
+	 +6kLXYfRNpILqj9shsT4aamgUoZFP+4lr8iRFIQFTQk04i/Kl55SkXYEwxAX7ji8Nw
+	 n0wu/BFEgVs2Pjpo6UWksdAhoP+MxA5hfrWjm7qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbfKEVxg (ORCPT
+        id S1729989AbfKEVzv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 16:53:36 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35965 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730057AbfKEVxf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 16:53:35 -0500
-Received: by mail-ot1-f66.google.com with SMTP id f10so328995oto.3;
-        Tue, 05 Nov 2019 13:53:34 -0800 (PST)
+        Tue, 5 Nov 2019 16:55:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45516 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729747AbfKEVzv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 16:55:51 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r24so2739705otk.12;
+        Tue, 05 Nov 2019 13:55:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PF4FeC1B4z1EiaRv3Y35zGiHOndPSUjKYmW93QdFA+M=;
-        b=W3aNdqLajxEyB8I4UPgKLYzuoyY3Q+poRVYkGbKrkyI4gSQkx1Pwf3ris3o2d0anqH
-         AccteWr7cFVgPg3AY0oEhzH51UwMCe3RJU7/g6i4evCXjU3M00ivJ4c+dBZVFWG7djiq
-         yIDZzF7MS2iLd3KwXH7zaD7kLFU1lBa0m/p7Mm8Fnakjl3fAh/S3jzBZA3JIMTCvd7Ua
-         W2A7D5EYTsSFxo1PFW7/ORwhZk0IiwzAj8znJQH6EEtWzlg1FCiREkWtd6+xx7x8SJqv
-         DvOF3DfgpyYbPHdSHQBharofokpYEZ73Z2rCCaxdokd7tMX2AvwMI+5kLEB6HnhpxR64
-         H6DQ==
-X-Gm-Message-State: APjAAAWxEr4zarx6fssTl5lQQ1/j3P+FE7HBJunH5lXDUBVguZ8wuEHs
-        a9eFbAWWmNDr/Se4xA6BHaWeErI=
-X-Google-Smtp-Source: APXvYqxAH3UBa4/0bcwAn6bLPBmEdgRBtQ7i/IwCz6UAPAR2oM/wv9oufNgH2AZpJHzNTbjp3PGc6w==
-X-Received: by 2002:a05:6830:4cf:: with SMTP id s15mr8462573otd.261.1572990813789;
-        Tue, 05 Nov 2019 13:53:33 -0800 (PST)
+        bh=YELZCQwYPigqOFYaRv7YTPEJ4AJcr13YEeiRSB+FW5s=;
+        b=JQomvfY7ZDOp8rgTGeYIuK+BVEJprrYOUwFk8v0+0ofMAKor/Akjs9SO76hDoEVJhR
+         ZEcs7NRTwguWdPq4XMdyJ5V2j9UnDhJtmMpbA/RQLtmpVY76S/9hmPoZ6KMPgMdC1Xnh
+         Q2x/lhfKjbbAHnbIwLpJDxbP/+E8w8rnP8xS+iWaZShXBiaE2kkX9QsJ5oZ/mE97RVPO
+         hqfFQP3Ju06cNOAHk3gK6HomNg4BMOPw4W3zorC1HdATyklDm5fJUSnv3u5NQOVgo2/F
+         pJx5vY8lZhkJJ/OWivwDFuxXWjdTbcxJtP9MoQAudh8JxPNM/linMLjpabXeX+O+vK9z
+         YdDw==
+X-Gm-Message-State: APjAAAVui6QcM3JfQpmauglvhUz613jViGa/9jYt18dA1bd6IWPC26np
+        2y0sJrIRjxXvZuCvj8Q18Z91DxU=
+X-Google-Smtp-Source: APXvYqy4zjKx1imvVoqgoArtBoZXF2eaAGyn6TXNj1wQ4qDJLn+h46+UfHjeO440F37r29jD4dP9AA==
+X-Received: by 2002:a05:6830:2316:: with SMTP id u22mr25596171ote.100.1572990949120;
+        Tue, 05 Nov 2019 13:55:49 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l17sm5861342oic.24.2019.11.05.13.53.33
+        by smtp.gmail.com with ESMTPSA id 34sm6484839otf.55.2019.11.05.13.55.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 13:53:33 -0800 (PST)
-Date:   Tue, 5 Nov 2019 15:53:32 -0600
+        Tue, 05 Nov 2019 13:55:48 -0800 (PST)
+Date:   Tue, 5 Nov 2019 15:55:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anvesh Salveru <anvesh.s@samsung.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
-        pankaj.dubey@samsung.com, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
- ZRX-DC PHY property
-Message-ID: <20191105215332.GA19296@bogus>
-References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
- <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
- <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ RPMHCC clock bindings
+Message-ID: <20191105215547.GA402@bogus>
+References: <1572371299-16774-1-git-send-email-tdas@codeaurora.org>
+ <1572371299-16774-2-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
+In-Reply-To: <1572371299-16774-2-git-send-email-tdas@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
-> Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
-> specification, then after every 100ms link should transition to recovery
-> state during the low power states which increases power consumption.
+On Tue, 29 Oct 2019 23:18:17 +0530, Taniya Das wrote:
+> The RPMHCC clock provider have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those.
 > 
-> Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-> property in DesignWare controller DT node.
-> 
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
-> Change in v2: None
+>  .../devicetree/bindings/clock/qcom,rpmh-clk.txt    | 27 ------------
+>  .../devicetree/bindings/clock/qcom,rpmhcc.yaml     | 48 ++++++++++++++++++++++
+>  2 files changed, 48 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
 > 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 78494c4050f7..9507ac38ac89 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -38,6 +38,8 @@ Optional properties:
->     for data corruption. CDM registers include standard PCIe configuration
->     space registers, Port Logic registers, DMA and iATU (internal Address
->     Translation Unit) registers.
-> +- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
-> +  ZRX-DC specification.
 
-If this is a property of the phy, then it belongs in the phy node or 
-should just be implied by the phy's compatible. IOW, you should be able 
-to support this or not without changing DTs.
-
-Is this spec Synopys specific? (About the only thing Google turns up are 
-your patches.) If not, then probably shouldn't have a 'snps' prefix.
-
->  RC mode:
->  - num-viewport: number of view ports configured in hardware. If a platform
->    does not specify it, the driver assumes 2.
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
