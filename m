@@ -2,136 +2,134 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F729C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AE5C47E49
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3694721D6C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B611520656
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572983883;
-	bh=I7QRqTDJmwYS0vX5sM86Pf1uZEDFPm7/3ej3udmZ4N4=;
+	s=default; t=1572984785;
+	bh=2QBblLpKCvzCWyBYMNf7InpwQgKLfDh8gTCdbys05h0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lne+TLZn1VUDK7cQv8Ne1WQZxTbss7E097oN7xDlhKB5ifz7zwzUs226lhYIO9EHu
-	 gTR6yTM6HFPEDep7uzEp3Vov/UmDT3QuKcDkGWwzsxEXt7KHBbitBH38zCKrHe4kHx
-	 pDdpDjMX3vreB/zS/oE+123cWQaYfI60Fp4YyHsQ=
+	b=oiMpqviV3+bhJrPs8sJR+KwRMM3I0vO5SUuwjNMLItwYU7Ra5jaCdBhL6qiwkbBOw
+	 Ohl39nLq9+/erXLPVOiBAS3zv1MgTYgOorpwVgHD5YdXK9f/NXCzeQ3RtZCyrwA3km
+	 Rofrd6CEwXsYLjtYM5eyxaaY3gvzqOtxpRbgKe5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725806AbfKET6C (ORCPT
+        id S1726988AbfKEUNF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:58:02 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42228 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfKET6C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 14:58:02 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b16so18730171otk.9;
-        Tue, 05 Nov 2019 11:58:02 -0800 (PST)
+        Tue, 5 Nov 2019 15:13:05 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45623 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfKEUNF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 15:13:05 -0500
+Received: by mail-oi1-f196.google.com with SMTP id k2so18737385oij.12;
+        Tue, 05 Nov 2019 12:13:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x/Pqzh0wjtCm8/DGrbF/d0ukivugFZC6wp2pNvyyKqU=;
-        b=YuZ5mrtnQfjAuFFwfdDv4UNqXc+AEdAgz0eE/dx9f+KjqbW+XUS3BK6oJkJg7y2rA9
-         xtk4ReZZALvJSQ+1+hjiJ91W4MxHC1BdYG2LHEAbnIO+dGzRIHm+/gNt2YN63iKtFX/Q
-         2LVjhu+agnKwBvJZja+rpG/gmnr3RqD+xaeA3uOLtSjuV/VgcRO+klyWPhlRRiJ2x4O6
-         RFQFzd1PWg3C1YN1Y6JGEaBZjqV55MISzedWtYOJNj3Nhwnf6gZiXgewBqG+N9nq8U+t
-         BVLhIa3KZF9/M6urIkFoWNLPGAPnaX1iYxZZKuZvgxqcn6bloAcDCfezyMhVaDjAeebG
-         TSoQ==
-X-Gm-Message-State: APjAAAXtDaQFjJBPQajym/d5Y5U6Ik+ESYWOBO7Jc0wDr5CHRRqDuaO0
-        g2GeMLzafWikxbj1lI27M7eFIwA=
-X-Google-Smtp-Source: APXvYqzVTpLLqzm+L3XsD+1vas5TRGDVn3vLjnHeqDn40MYgszVtjMGB2hevWDiXQ0kvMy5d6Dbxrg==
-X-Received: by 2002:a9d:5617:: with SMTP id e23mr3940969oti.208.1572983881547;
-        Tue, 05 Nov 2019 11:58:01 -0800 (PST)
+        bh=mU9UcOU7sHcf7HCmRIHXhWHMA1uoQHabE8Uv8Jt+A7E=;
+        b=deYGSv8p6GIzQ3anqm/7VuAyUdkL8f4vSLJd//erntmjUeSYr369cjy2nWUkkDX8BX
+         1T6PqCjcVp8lm3GY5LohQhIQEVqUjZXpAZ8LxMs0d5GaO599TdUR3E2umG8fppna7E/K
+         pn12fGx312nfP23kG7KaPJeUd+QzOi77BifVXHYjMuKy6g2fZqLu+J20/UpJSMONwzLH
+         1k+JRJ9nrTd3Fo0mhO7ZmWsHoWNOYMk7qVcM1pZAYiwbqyTQyCyKo7kEhtyu47DVDi9h
+         sxnJAHPK8SfuYH5nCCzv5+QwLWUssw2vxAp0gAEuTlCW1QHFKGPhnHYvmXhANpkywSKE
+         5qFA==
+X-Gm-Message-State: APjAAAWET6wphwNAdWYbdfGmT6cssUm9sQwmXeUNShouijm4e9DSXMgp
+        T6/aEYB2bu61bbrtu2bt6Q==
+X-Google-Smtp-Source: APXvYqzy0m98tPqHlFSqTVQuTPMUjEJDLNZe7DOwoduqbUy3ipM2+KtNECfZLQnN0fel0V++XN/OPg==
+X-Received: by 2002:aca:dd0a:: with SMTP id u10mr740393oig.130.1572984783628;
+        Tue, 05 Nov 2019 12:13:03 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c20sm1533138otm.80.2019.11.05.11.58.00
+        by smtp.gmail.com with ESMTPSA id v13sm1077013ota.53.2019.11.05.12.13.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 11:58:00 -0800 (PST)
-Date:   Tue, 5 Nov 2019 13:58:00 -0600
+        Tue, 05 Nov 2019 12:13:03 -0800 (PST)
+Date:   Tue, 5 Nov 2019 14:13:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     p.zabel@pengutronix.de, mark.rutland@arm.com, yuenn@google.com,
-        venture@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au, openbmc@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-binding: reset: add NPCM reset controller
- documentation
-Message-ID: <20191105195800.GA16739@bogus>
-References: <20191031135617.249303-1-tmaimon77@gmail.com>
- <20191031135617.249303-2-tmaimon77@gmail.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: devfreq: Add bindings for imx ddr
+ controller
+Message-ID: <20191105201302.GA4772@bogus>
+References: <cover.1572558427.git.leonard.crestez@nxp.com>
+ <b9a87c69eb603622303add4f0c02dd4c1262462a.1572558427.git.leonard.crestez@nxp.com>
+ <20191104222126.GB5218@bogus>
+ <VI1PR04MB7023F375AEDC4549FA12247FEE7E0@VI1PR04MB7023.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031135617.249303-2-tmaimon77@gmail.com>
+In-Reply-To: <VI1PR04MB7023F375AEDC4549FA12247FEE7E0@VI1PR04MB7023.eurprd04.prod.outlook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 03:56:15PM +0200, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM reset controller.
+On Tue, Nov 05, 2019 at 07:25:57PM +0000, Leonard Crestez wrote:
+> On 05.11.2019 00:21, Rob Herring wrote:
+> > On Thu, Oct 31, 2019 at 11:50:24PM +0200, Leonard Crestez wrote:
+> >> Add devicetree bindings for the i.MX DDR Controller on imx8m series
+> >> chips. It supports dynamic frequency switching between multiple data
+> >> rates and this is exposed to Linux via the devfreq subsystem.
+> >>
+> >> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> >> ---
+> >>   .../devicetree/bindings/devfreq/imx-ddrc.yaml | 60 +++++++++++++++++++
+> > 
+> > .../bindings/memory-controllers/
+> 
+> Okay, but I'm not sure about the rules here. Usually there is a 1:1 
+> mapping between subsystems and bindings directory but I guess devfreq is 
+> odd since it's not really a physical class of device.
 
-'dt-bindings' for the subject.
-
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../bindings/reset/nuvoton,npcm-reset.txt     | 32 +++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt b/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
-> new file mode 100644
-> index 000000000000..6e802703af60
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
-> @@ -0,0 +1,32 @@
-> +Nuvoton NPCM Reset controller
-> +
-> +Required properties:
-> +- compatible : "nuvoton,npcm750-reset" for NPCM7XX BMC
-> +- reg : specifies physical base address and size of the register.
-> +- #reset-cells: must be set to 2
-> +
-> +Optional property:
-> +- nuvoton,sw-reset-number - Contains the software reset number to restart the SoC.
-> +  NPCM7xx contain four software reset that represent numbers 1 to 4.
-> +
-> +  If 'nuvoton,sw-reset-number' is not specfied software reset is disabled.
-> +
-> +Example:
-> +       rstc: rstc@f0801000 {
-> +               compatible = "nuvoton,npcm750-reset";
-> +               reg = <0xf0801000 0x70>;
-> +               #reset-cells = <2>;
-> +               nuvoton,sw-reset-number = <2>;
-> +       };
-> +
-> +Specifying reset lines connected to IP NPCM7XX modules
-> +======================================================
-> +example:
-> +
-> +        spi0: spi@..... {
-> +                ...
-> +                resets = <&rstc NPCM7XX_RESET_IPSRST2 NPCM7XX_RESET_PSPI1>;
-> +                ...
-> +        };
-> +
-> +The index could be found in <dt-bindings/reset/nuvoton,npcm7xx-reset.h>.
-> --
-> 2.22.0
-> 
-> 
-> 
-> ===========================================================================================
-> The privileged confidential information contained in this email is intended for use only by the addressees as indicated by the original sender of this email. If you are not the addressee indicated in this email or are not responsible for delivery of the email to such a person, please kindly reply to the sender indicating this fact and delete all copies of it from your computer and network server immediately. Your cooperation is highly appreciated. It is advised that any unauthorized use of confidential information of Nuvoton is strictly prohibited; and any information in this email irrelevant to the official business of Nuvoton shall be deemed as neither given nor endorsed by Nuvoton.
+Mostly true, but it's not completely 1:1.
 
 
-We can't accept patches with this footer.
+> I saw there is also a drivers/memory and there is already a 
+> devfreq-using driver in there (EXYNOS5422_DMC).
+
+Yeah, well it's been a while since I last tried to clean up locations of 
+things. DDR controller bindings are not in the best shape.
+
+
+> It's not clear if my driver fits in there; as far as I can see the only 
+> "core" functionality in drivers/memory is parsing DDR timings from DTS 
+> but for imx8m this is all controlled in firmware.
+
+You shouldn't have to think about that. Bindings should be for DDR 
+controllers regardless of whether there's a driver for devfreq, EDAC, 
+perf, or ??? or all of those.
 
 Rob
-
