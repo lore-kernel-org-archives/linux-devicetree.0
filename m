@@ -2,173 +2,137 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D32C5DF64
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9785C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4EB21D7C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85518214B2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hiQv1SCT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LCPyYI+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390769AbfKETQC (ORCPT
+        id S2390916AbfKETTm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:16:02 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:60696 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390526AbfKETQB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 14:16:01 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5JFQhd056692;
-        Tue, 5 Nov 2019 13:15:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572981326;
-        bh=EcoGS6j0s8IWE01lKKx9TXLRSHW8gbHmupnZYacNFWg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hiQv1SCTJvcMHBzAopoD1ytQNtPv60OtKZshyfH/29z8ioz2LfWvN1b6r1jvxX/mB
-         4gfSiu8zMV3JsJtVr7SuiOmlbSRr5eM6ayTtFaTHNdIp7aBtbX3gkajdTkAaBJyJDz
-         Kuu5/s09dJ9Njpx1TrveXVrZ/3+olbhatO4LjHEI=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5JFQK7069157
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 13:15:26 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
- 2019 13:15:11 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 13:15:11 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5JFPs1030118;
-        Tue, 5 Nov 2019 13:15:25 -0600
-Subject: Re: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED
- driver
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        <mazziesaccount@gmail.com>
-CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <37d85b2d-8fca-a998-95ae-61f0c049054d@ti.com>
-Date:   Tue, 5 Nov 2019 13:14:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 14:19:42 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37618 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390867AbfKETTm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 14:19:42 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p13so9994007pll.4
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 11:19:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:from:to:user-agent:date;
+        bh=hbU+lnz3PoPpDd5LQBdnFKQTsx0QptkCCfC4Iao/bDw=;
+        b=LCPyYI+iiiAIz7UBJ5PzgsIyD7zIA1uqeTHw3tC+72i8g7Cd0+VH7cG+XhA2/7lcB+
+         zzQN2EXWfjp3gN86AMcii+zGOnj7ouaZ3RwHLkptQH4xa3Jw8ev6FXa/zKE+0NOh5SK1
+         yY+s6T06b17ToJZleH5KhQo/aE/+4rsCtvI94=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:from:to
+         :user-agent:date;
+        bh=hbU+lnz3PoPpDd5LQBdnFKQTsx0QptkCCfC4Iao/bDw=;
+        b=fMx6LkWNdT5twy303NxB+N0TUxLeTzFP1kE53sRzVxRppiFvuI0T4za1nwNxNe3xmQ
+         gKb49VVAoCNIKKpz5GdTemAniRFtp+GqJ7l9sz8aGg3O2MRx92OgzT5Cxxjd7UkAcfot
+         tEtOka/0vk8OuLhqwtGdJ2zqtkCAOaoWE8XxhoMSayrALyV33Uhxdb1x+qO6H6+ztELj
+         7hAJX/eCMG+CHP4h6S4GqyoGF63mcP3Fau8/UNtUWzc9lc4A2LyXPSAzpQJYMoHeNJ+q
+         2aVbOMFb7AH2jdYyBwoax904lX4Pp/rwUnIW0V+GfbbWERL47WqcWN34IdRrMUePiB5U
+         xfgA==
+X-Gm-Message-State: APjAAAU06wcxcJrdeS9MhlMhb3gk8unfqX7drHgHR+fQ+qFBNs91Mqt+
+        PeCkBxpZg2HL7PMseJv2EpbI3w==
+X-Google-Smtp-Source: APXvYqxKzQO2ljg2ThUedxjlJI/pyjirxn7/sziOiQy2u+ZZNeDvVJNw560Tzryh1Ox/hYTy/FAEow==
+X-Received: by 2002:a17:902:102:: with SMTP id 2mr35224735plb.156.1572981581248;
+        Tue, 05 Nov 2019 11:19:41 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 39sm198792pjo.7.2019.11.05.11.19.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 11:19:40 -0800 (PST)
+Message-ID: <5dc1cb4c.1c69fb81.af253.0b8a@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        lee.jones@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org
+User-Agent: alot/0.8.1
+Date:   Tue, 05 Nov 2019 11:19:39 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Matti
-
-On 11/1/19 6:32 AM, Matti Vaittinen wrote:
-> Document ROHM BD71828 PMIC LED driver device tree bindings.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Quoting Kiran Gunda (2019-11-04 21:21:49)
+> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
+> found on SC7180 based platforms.
+>=20
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 > ---
->
-> Changes from v2 - new patch
->
->   .../bindings/leds/rohm,leds-bd71828.yaml      | 46 +++++++++++++++++++
->   1 file changed, 46 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-> new file mode 100644
-> index 000000000000..d8aeac9911ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/rohm,leds-bd71828.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ROHM BD71828 Power Management Integrated Circuit LED driver
-> +
-> +maintainers:
-> +  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> +  - Pavel Machek <pavel@ucw.cz>
-> +  - Dan Murphy <dmurphy@ti.com>
-> +  - Rob Herring <robh+dt@kernel.org>
-> +  - Mark Rutland <mark.rutland@arm.com>
-I believe you are the maintainer of this driver not the maintainers
-> +
-> +description: |
-> +  This module is part of the ROHM BD71828 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
-> +
-> +  The LED controller is represented as a sub-node of the PMIC node on the device
-> +  tree.
-> +
-> +  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
-> +
-> +properties:
-> +  compatible:
-> +    const: rohm,bd71828-led
-> +
-> +patternProperties:
-> +  "^led-[1-2]$":
-> +    type: object
-> +    description:
-> +      Properties for a single LED. Nodes must be named as led-1 and led-2.
+>  - Changes from V1:
+>    Sorted the macros and compatibles.
 
-Why is this required?  Can't we use the reg as the number and then we 
-can use standard node labels
+I don't see anything sorted though.
 
-like led@<reg value>.  Then we can check in the code to make sure that 
-the output is not out of bounds.
+>=20
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
+>  drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
+>  2 files changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/D=
+ocumentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> index 1437062..b5fc64e 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> @@ -32,6 +32,8 @@ Required properties:
+>                     "qcom,pm8998",
+>                     "qcom,pmi8998",
+>                     "qcom,pm8005",
+> +                  "qcom,pm6150",
+> +                  "qcom,pm6150l",
 
-> +    properties:
-> +      #$ref: "common.yaml#"
-> +      function:
-> +        description:
-> +          Purpose of LED as defined in dt-bindings/leds/common.h
-> +        $ref: "/schemas/types.yaml#/definitions/string"
-> +      color:
-> +        description:
-> +          LED colour as defined in dt-bindings/leds/common.h
+And this looks badly tabbed or something?
 
-s/colour/color
-
-But again I believe it is indicated above that the LEDs are either going 
-to be green or amber.  Unless they can be any color.
-
-Are there plans to make sure that the color is either green or amber in 
-the code?  I don't see a patch for the code in this series
-
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +
-> +required:
-> +  - compatible
-
-Is there an example of the node and properties?
-
-Dan
-
+>                     or generalized "qcom,spmi-pmic".
+>  - reg:             Specifies the SPMI USID slave address for this device.
+>                     For more information see:
+> diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
+> index e8fe705..74b7980 100644
+> --- a/drivers/mfd/qcom-spmi-pmic.c
+> +++ b/drivers/mfd/qcom-spmi-pmic.c
+> @@ -34,6 +34,8 @@
+>  #define PM8998_SUBTYPE         0x14
+>  #define PMI8998_SUBTYPE                0x15
+>  #define PM8005_SUBTYPE         0x18
+> +#define PM6150_SUBTYPE         0x28
+> +#define PM6150L_SUBTYPE                0x27
+> =20
+>  static const struct of_device_id pmic_spmi_id_table[] =3D {
+>         { .compatible =3D "qcom,spmi-pmic", .data =3D (void *)COMMON_SUBT=
+YPE },
+> @@ -53,6 +55,8 @@
+>         { .compatible =3D "qcom,pm8998",    .data =3D (void *)PM8998_SUBT=
+YPE },
+>         { .compatible =3D "qcom,pmi8998",   .data =3D (void *)PMI8998_SUB=
+TYPE },
+>         { .compatible =3D "qcom,pm8005",    .data =3D (void *)PM8005_SUBT=
+YPE },
+> +       { .compatible =3D "qcom,pm6150",    .data =3D (void *)PM6150_SUBT=
+YPE },
+> +       { .compatible =3D "qcom,pm6150l",   .data =3D (void *)PM6150L_SUB=
+TYPE },
+>         { }
+>  };
+> =20
