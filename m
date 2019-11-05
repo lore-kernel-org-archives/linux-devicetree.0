@@ -2,90 +2,129 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D744C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3BBC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1699A21A49
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D44C21929
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572990952;
-	bh=8KyEAYTR8mWXcTJSwI4l6l2oVWWzPciY5V/ZfbTPyvg=;
+	s=default; t=1572991451;
+	bh=T0mCTUnJUfW33I9Vx9HxXhSgMlT8hfNbw93cJZfw/Ok=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XIuftJKzepU2NkbCtYYV6/MnOunnIMivKqPsz9KWfZb4S/7zuXCzNTMpgAptVY+IK
-	 +6kLXYfRNpILqj9shsT4aamgUoZFP+4lr8iRFIQFTQk04i/Kl55SkXYEwxAX7ji8Nw
-	 n0wu/BFEgVs2Pjpo6UWksdAhoP+MxA5hfrWjm7qI=
+	b=jCj0d8KmVEW9KsGVo8BkV14tmwOwGwe8g+8G/P8Gnb8HkXJUSUoW5W9s008eUnVlm
+	 E5ByqIfYjhSwuga5HBxnaxgcHZPX4YCGp9+xYZVkm1dteHHlrQSl60fyc8lcYllBB/
+	 dunm18II4GeMcY5cKzDB2uqfzFBe6vjx+f8GVYBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729989AbfKEVzv (ORCPT
+        id S1729895AbfKEWEL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 16:55:51 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45516 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729747AbfKEVzv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 16:55:51 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r24so2739705otk.12;
-        Tue, 05 Nov 2019 13:55:49 -0800 (PST)
+        Tue, 5 Nov 2019 17:04:11 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37843 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728178AbfKEWEL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:04:11 -0500
+Received: by mail-ot1-f68.google.com with SMTP id d5so7004644otp.4;
+        Tue, 05 Nov 2019 14:04:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YELZCQwYPigqOFYaRv7YTPEJ4AJcr13YEeiRSB+FW5s=;
-        b=JQomvfY7ZDOp8rgTGeYIuK+BVEJprrYOUwFk8v0+0ofMAKor/Akjs9SO76hDoEVJhR
-         ZEcs7NRTwguWdPq4XMdyJ5V2j9UnDhJtmMpbA/RQLtmpVY76S/9hmPoZ6KMPgMdC1Xnh
-         Q2x/lhfKjbbAHnbIwLpJDxbP/+E8w8rnP8xS+iWaZShXBiaE2kkX9QsJ5oZ/mE97RVPO
-         hqfFQP3Ju06cNOAHk3gK6HomNg4BMOPw4W3zorC1HdATyklDm5fJUSnv3u5NQOVgo2/F
-         pJx5vY8lZhkJJ/OWivwDFuxXWjdTbcxJtP9MoQAudh8JxPNM/linMLjpabXeX+O+vK9z
-         YdDw==
-X-Gm-Message-State: APjAAAVui6QcM3JfQpmauglvhUz613jViGa/9jYt18dA1bd6IWPC26np
-        2y0sJrIRjxXvZuCvj8Q18Z91DxU=
-X-Google-Smtp-Source: APXvYqy4zjKx1imvVoqgoArtBoZXF2eaAGyn6TXNj1wQ4qDJLn+h46+UfHjeO440F37r29jD4dP9AA==
-X-Received: by 2002:a05:6830:2316:: with SMTP id u22mr25596171ote.100.1572990949120;
-        Tue, 05 Nov 2019 13:55:49 -0800 (PST)
+        bh=CZ2D2tQY2XYxt9UiuyFFNh/aMpMyVl8ybiw5lOJ9UsM=;
+        b=AsQZRW+v8UESLkRB7WNYmZ+KDTTb9o0EFhfxEUlvkjst2OlDLN6hmEhtWI81caYFbR
+         ea7yNzCCIUGY9zw9yhEdyhx6JvijPkp5G5a8dYO4ebUz55JXH14GCPRbCQtC09Bw80lG
+         6WRes0AqeK9C5sc71KX5VJUZCCvU6fcKhOrPSxThGwsjEV9I/9r6aJGPRa5/goU5Hz92
+         pI6x4hY+jBmax444WW3Z9e69ON3CHkICxRYz7HlyQBpmvIB8JsdRNlaqgOMljDzZABc6
+         xlv9VrhCjImK+lCTUeHPsOtsXGLN07zmQ2eYkUECBWKtzwOb6v/jMfBF6xGKE6+emm0a
+         25nQ==
+X-Gm-Message-State: APjAAAXVzYvGb9szmeSZ40DygC2G68LpjM0VNGE78cBd5G78zyIqfIdv
+        j11NiYRpXJ2fE6/XK247CA==
+X-Google-Smtp-Source: APXvYqxl9rK6tAOrYlktMp70iCJFHEU0MCT4jSTOGFY9S41OUYWigXQsydbUcc92xUHHvcx/LC/+vQ==
+X-Received: by 2002:a9d:634d:: with SMTP id y13mr24705915otk.202.1572991449843;
+        Tue, 05 Nov 2019 14:04:09 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 34sm6484839otf.55.2019.11.05.13.55.48
+        by smtp.gmail.com with ESMTPSA id e93sm6812630otb.60.2019.11.05.14.04.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 13:55:48 -0800 (PST)
-Date:   Tue, 5 Nov 2019 15:55:47 -0600
+        Tue, 05 Nov 2019 14:04:09 -0800 (PST)
+Date:   Tue, 5 Nov 2019 16:04:08 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- RPMHCC clock bindings
-Message-ID: <20191105215547.GA402@bogus>
-References: <1572371299-16774-1-git-send-email-tdas@codeaurora.org>
- <1572371299-16774-2-git-send-email-tdas@codeaurora.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        darshak.patel@einfochips.com, prajose.john@einfochips.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: leds: Document commonly used LED
+ triggers
+Message-ID: <20191105220408.GA555@bogus>
+References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
+ <20191030090124.24900-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572371299-16774-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <20191030090124.24900-2-manivannan.sadhasivam@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 29 Oct 2019 23:18:17 +0530, Taniya Das wrote:
-> The RPMHCC clock provider have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,rpmh-clk.txt    | 27 ------------
->  .../devicetree/bindings/clock/qcom,rpmhcc.yaml     | 48 ++++++++++++++++++++++
->  2 files changed, 48 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> 
+On Wed, Oct 30, 2019 at 02:31:21PM +0530, Manivannan Sadhasivam wrote:
+> This commit documents the LED triggers used commonly in the SoCs. Not
+> all triggers are documented as some of them are very application specific.
+> Most of the triggers documented here are currently used in devicetrees
+> of many SoCs.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I guess it's worth documenting these, but you plan to use 'function' 
+instead, right?
+
+> 
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: linux-leds@vger.kernel.org
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/leds/common.txt         | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 9fa6f9795d50..2a6806161590 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -55,6 +55,23 @@ Optional properties for child nodes:
+>       "timer" - LED flashes at a fixed, configurable rate
+>       "pattern" - LED alters the brightness for the specified duration with one
+>                   software timer (requires "led-pattern" property)
+> +     "mmc[N]" - LED indicates [N]th MMC storage activity
+> +     "flash" - LED indicates camera flash state
+> +     "torch" - LED indicates camera torch state
+> +     "audio-mute" - LED indicates audio mute state
+> +     "audio-micmute" - LED indicates mic mute state
+> +     "bluetooth-power" - LED indicates bluetooth power state
+> +     "usb-gadget" - LED indicates USB gadget activity
+> +     "usb-host" - LED indicates USB host activity
+> +     "mtd" - LED indicates MTD memory activity
+> +     "nand-disk" - LED indicates NAND memory activity (deprecated),
+> +                  in new implementations use "mtd"
+> +     "disk-read" - LED indicates disk read activity
+> +     "disk-write" - LED indicates disk write activity
+> +     "none" - No trigger assigned to the LED. This is the default mode
+> +              if trigger is absent
+> +     "cpu" - LED indicates activity of all CPUs
+> +     "cpu[N]" - LED indicates activity of [N]th CPU
+>  
+>  - led-pattern : Array of integers with default pattern for certain triggers.
+>                  Each trigger may parse this property differently:
+> -- 
+> 2.17.1
+> 
