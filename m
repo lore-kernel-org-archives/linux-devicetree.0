@@ -2,213 +2,95 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF74C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2026C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A65621D81
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572973680;
-	bh=982pnP21u6SLHEwMF1WidZv9LQW97H7o7tJaYDJdzz8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uQvsb948eftuGfnWZWR4yUyb/U+Fzoo5GdxCgMFbafWywoMhVnN7LXCCm3AIi5vFB
-	 SqVKYVeul5L6Jj3F6ejBECxE5s+fi3lUvzQVQkGIsJKNm/Y436ZDHZwyC2S/aUbCEd
-	 7KhFHhbcBMh3TGr7HwZOMQCYFdES4gB1GJGGiIDQ=
+	by mail.kernel.org (Postfix) with ESMTP id ADCF5214D8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390114AbfKERH7 (ORCPT
+        id S1731008AbfKER13 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:07:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45180 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 12:27:29 -0500
+Received: from smtp2.axis.com ([195.60.68.18]:60119 "EHLO smtp2.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387833AbfKERH7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:07:59 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F63A21D7D;
-        Tue,  5 Nov 2019 17:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572973678;
-        bh=982pnP21u6SLHEwMF1WidZv9LQW97H7o7tJaYDJdzz8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0DSgrhZ2NAQhUICtqBtKwZHph/j5WuH2vsCL7/O/tCwFJfttlXO//skvCyIcr6fdd
-         Q8tAcB47lt7ul0ex99vhOzzEr+FfuPk5P3fG+KSCRRyuYA7q31PBff6umt9ZGQnPMm
-         P3/5t/FhJMZP3RezivC4wWbs0XUqdezmJOg8OjR8=
-Received: by mail-qt1-f171.google.com with SMTP id r22so20259514qtt.2;
-        Tue, 05 Nov 2019 09:07:58 -0800 (PST)
-X-Gm-Message-State: APjAAAVp24RjoZLDVSW6uAQG13XPxpYCi5HoLiNG/nj+cMho7XWHpHQl
-        K6xoOJJXWiH0FCh1SlXO469XK/f7M6OAKQlvPg==
-X-Google-Smtp-Source: APXvYqz9/z2im9e76vhu3PDX2geLlkCL/9xOMZgc1KJo/mqie7zy7vcexLdTcRMCQUecwC+40LweB/fouXV5OHZ5gYU=
-X-Received: by 2002:ac8:458c:: with SMTP id l12mr19273736qtn.300.1572973677688;
- Tue, 05 Nov 2019 09:07:57 -0800 (PST)
-MIME-Version: 1.0
-References: <1572886683-4919-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1572886683-4919-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_JsqJ+xus0GDWb0Px6HKDBzOt1yjwCCkQrfMspubwG+LZOdQ@mail.gmail.com> <TY1PR01MB1770F97A73768451B2ED8A22C07E0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB1770F97A73768451B2ED8A22C07E0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 5 Nov 2019 11:07:46 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL6Nzr2oBh51PZnQfBUK1ggDcZUrLaSP2GvEycwFAwJZw@mail.gmail.com>
-Message-ID: <CAL_JsqL6Nzr2oBh51PZnQfBUK1ggDcZUrLaSP2GvEycwFAwJZw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: Repurpose lvds-encoder
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        id S1730895AbfKER13 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:27:29 -0500
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Nov 2019 12:27:27 EST
+IronPort-SDR: F0oPtGUTmrMxkUzDVCVrZr5h34rmDSMXw6pi1MHjjcupDP4CkTU2+3tJPGZLl1JJ9ecwhWzveC
+ BMO1xkLjJFp7T9CrU0hOck0ednRvpCS/YQLSbKjG02276SPboa0R9WDfKlw+Un695jXNFs1G9R
+ OfjS9zAmL5jq0NsQ9DXJKTbZEvCCSDrYYgSBpo05VOTnMdSOOudHPefQXhoi3eHQTMokOu0jFq
+ iKUOA5UCo7bRocKaqM9vOD9Ki8G6gvd5csLagUmJkRxI52GPyu3J7dZX/qods0VdOqA/L2Vapy
+ o9E=
+X-IronPort-AV: E=Sophos;i="5.68,271,1569276000"; 
+   d="scan'208";a="2106277"
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Date:   Tue, 5 Nov 2019 18:20:16 +0100
+From:   Jesper Nilsson <jesper.nilsson@axis.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Peter Rosin <peda@axentia.se>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jesper Nilsson <jespern@axis.com>,
+        Lars Persson <larper@axis.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v1 3/7] arm: dts: Use IRQ flags for legacy PCI IRQ
+ interrupts
+Message-ID: <20191105172016.iq4mx7qa4c5sregk@axis.com>
+References: <20191104163834.8932-1-andrew.murray@arm.com>
+ <20191104163834.8932-4-andrew.murray@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104163834.8932-4-andrew.murray@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 3:33 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
->
-> Hello Rob,
->
-> Thank you for your feedback!
->
-> > From: Rob Herring <robh+dt@kernel.org>
-> > Sent: 04 November 2019 21:23
-> > Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: Repurpose lvds-encoder
-> >
-> > On Mon, Nov 4, 2019 at 10:58 AM Fabrizio Castro
-> > <fabrizio.castro@bp.renesas.com> wrote:
-> > >
-> > > In an effort to repurpose lvds-encoder.c to also serve the
-> > > function of LVDS decoders, we ended up defining a new "generic"
-> > > compatible string, therefore adapt the dt-bindings to fit the
-> > > new purpose. Also, convert the dt-bindings from .txt to .yaml
-> > > while at it.
-> >
-> > "Also, ... while at it." is a sign for split into 2 patches.
->
-> Will split into 2 patches
->
-> >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >
-> > > ---
-> > > v1->v2:
-> > > * Converted to dt-schema as per Neil's comment
-> > > ---
-> > >  .../bindings/display/bridge/lvds-codec.yaml        | 117 +++++++++++++++++++++
-> > >  .../bindings/display/bridge/lvds-transmitter.txt   |  66 ------------
-> > >  2 files changed, 117 insertions(+), 66 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-> > b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-> > > new file mode 100644
-> > > index 0000000..ff79bc2
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-> > > @@ -0,0 +1,117 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/display/bridge/lvds-codec.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Trasnparent LVDS encoders and LVDS decoders
-> >
-> > Typo
->
-> Will fix
->
-> >
-> > > +
-> > > +maintainers:
-> > > +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > +
-> > > +description: |
-> > > +  This binding supports transparent LVDS encoders and LVDS decoders that don't
-> > > +  require any configuration.
-> > > +
-> > > +  LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
-> > > +  incompatible data link layers have been used over time to transmit image data
-> > > +  to LVDS panels. This binding targets devices compatible with the following
-> > > +  specifications only.
-> > > +
-> > > +  [JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
-> > > +  1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
-> > > +  [LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
-> > > +  Semiconductor
-> > > +  [VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
-> > > +  Electronics Standards Association (VESA)
-> > > +
-> > > +  Those devices have been marketed under the FPD-Link and FlatLink brand names
-> > > +  among others.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    description: |
-> > > +      Any encoder or decoder compatible with this generic binding, but with
-> > > +      additional properties not listed here, must define its own binding and
-> > > +      list a device specific compatible first followed by the generic compatible
-> > > +    items:
-> > > +      - enum:
-> >
-> > You can drop 'items' when there's only 1.
->
-> Will drop
->
-> >
-> > > +        - lvds-encoder # for LVDS encoders
-> > > +        - lvds-decoder # for LVDS decoders
-> > > +
-> > > +  ports:
-> > > +    type: object
-> > > +    description: |
-> > > +      This device has two video ports. Their connections are modeled using the
-> > > +      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt
-> > > +    properties:
-> > > +      port@0:
-> > > +        type: object
-> > > +        description: |
-> > > +          With LVDS encoders port 0 is for parallel input
-> > > +          With LVDS decoders port 0 is for LVDS input
-> > > +
-> > > +      port@1:
-> > > +        type: object
-> > > +        description: |
-> > > +          With LVDS encoders port 1 is for LVDS output
-> > > +          With LVDS decoders port 1 is for parallel output
-> >
-> > port@* are required, right?
->
-> Yes, port@0 and port@1 are both required, similarly to:
-> Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
-> therefore I have put "ports" under "required", in a similar fashion.
-> What's the right way of specifying this?
+On Mon, Nov 04, 2019 at 04:38:17PM +0000, Andrew Murray wrote:
+> Replace magic numbers used to describe legacy PCI IRQ interrupts
+> with #define.
 
-Same as any other property:
+Looks good,
 
-required:
-  - port@0
-  - port@1
+Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
 
-At the correct level of course.
+> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> ---
+>  arch/arm/boot/dts/alpine.dtsi              |  6 ++--
+>  arch/arm/boot/dts/artpec6.dtsi             | 10 +++---
+>  arch/arm/boot/dts/gemini-dlink-dir-685.dts | 34 ++++++++++----------
+>  arch/arm/boot/dts/gemini-sl93512r.dts      | 34 ++++++++++----------
+>  arch/arm/boot/dts/gemini-sq201.dts         | 34 ++++++++++----------
+>  arch/arm/boot/dts/gemini-wbd111.dts        | 34 ++++++++++----------
+>  arch/arm/boot/dts/gemini-wbd222.dts        | 34 ++++++++++----------
+>  arch/arm/boot/dts/imx6qdl.dtsi             | 10 +++---
+>  arch/arm/boot/dts/imx6sx.dtsi              | 10 +++---
+>  arch/arm/boot/dts/integratorap.dts         | 36 ++++++++++++----------
+>  arch/arm/boot/dts/keystone-k2e.dtsi        | 11 ++++---
+>  arch/arm/boot/dts/keystone.dtsi            | 10 +++---
+>  arch/arm/boot/dts/qcom-apq8064.dtsi        | 10 +++---
+>  arch/arm/boot/dts/qcom-ipq4019.dtsi        | 10 +++---
+>  arch/arm/boot/dts/versatile-pb.dts         | 36 ++++++++++++----------
+>  15 files changed, 162 insertions(+), 157 deletions(-)
 
-Rob
+/^JN - Jesper Nilsson
+-- 
+               Jesper Nilsson -- jesper.nilsson@axis.com
