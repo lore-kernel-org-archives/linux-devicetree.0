@@ -4,115 +4,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18D7CA9ED5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 05:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABDDCA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 05:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76BF20869
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 05:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18A5206BA
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 05:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZNN/Tpbx";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ey5sY7lq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="UX+opKRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbfKEFWP (ORCPT
+        id S2387409AbfKEFmc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 00:22:15 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:54540 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfKEFWO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 00:22:14 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 55AA660D77; Tue,  5 Nov 2019 05:22:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572931333;
-        bh=xs9i0VSa9ACa4k7cSLN2iUfBEn4jA8IiiZGN2Q/YeqY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZNN/TpbxXnKoosJEcPLI1tFIEjO3VAPQLx/yZAxQY2Tf0aEoFTIfKm3mL72jH3hS8
-         ogkxVrk8xltvaaJ7tDodEWvyHWJ7hhQSCjmLVCT7YtbTBgqW2wvGGScU8rUb1f1GTN
-         dzdUrZwght/8ooJB+qTq/98lMQsN/FCosJnho6QE=
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 071FE6087F;
-        Tue,  5 Nov 2019 05:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572931332;
-        bh=xs9i0VSa9ACa4k7cSLN2iUfBEn4jA8IiiZGN2Q/YeqY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ey5sY7lqKS/ZaPohQV7TVM/ptT2MqFjTHA6yIvd3kleRk/jtj4aLIm7x0jHWdmKfb
-         lBRneEm3cIFEFH5Q8Nf7P3bsFJ9MbxOEH5cL+btCiL7LwW7fTr5wjQYZ64dVS6JoX5
-         8puBMuPSo5xXlj5JSqXpFvtmTSEOWdklT48DWdU0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 071FE6087F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     swboyd@chromium.org, bjorn.andersson@linaro.org,
-        lee.jones@linaro.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org
-Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
-Date:   Tue,  5 Nov 2019 10:51:49 +0530
-Message-Id: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 5 Nov 2019 00:42:32 -0500
+Received: from gateway24.websitewelcome.com ([192.185.50.45]:26537 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387399AbfKEFmc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 00:42:32 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id BAEB43CAD
+        for <devicetree@vger.kernel.org>; Mon,  4 Nov 2019 23:42:30 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id Rrbqihw16BnGaRrbqiKdr6; Mon, 04 Nov 2019 23:42:30 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=H+g7AYW8DqVIzvI+3N37//r3zkgiBk8GNs4olp1Yr9M=; b=UX+opKRzmQ0hfBrmm+lBq0dIxc
+        DgyS9mzqzhkYaQH9CWi9xVly43fnuIOkyxbGVzFFRdzNJQ3IAxApg/B4U20ygvHCIdSoy9r4she+o
+        5WDIioGMPtaQAnaUEwGSZmY+P7yq6KV01SG2yBEYfwvZg7Jl4mPyJUGFRMkkPXosb+kG0ND47a8hZ
+        VlnttIq9G29vYH5PbyFRmV8Z2uU4ugQtDopggFYbXP0L3U+IneO4UlM8VLUWsTBPMUbIJojzO58cN
+        b3DVADXZh5B4tVRh0aUB8vJAAx/TY7dzn8Un0SXk4oYNhIyQx2VrR9jkQckvktdZ9WKLuhZMF9/ps
+        BD8+fODg==;
+Received: from [191.31.196.28] (port=37450 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iRrbp-002sjK-Ve; Tue, 05 Nov 2019 02:42:30 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v5 2/5] dt-bindings: power: supply: Max17040: Add DT bindings for max17040 fuel gauge
+Date:   Tue,  5 Nov 2019 02:42:15 -0300
+Message-Id: <20191105054218.29826-3-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191105054218.29826-1-matheus@castello.eng.br>
+References: <20191105015827.GA332@bogus>
+ <20191105054218.29826-1-matheus@castello.eng.br>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.28
+X-Source-L: No
+X-Exim-ID: 1iRrbp-002sjK-Ve
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.196.28]:37450
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 39
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
-found on SC7180 based platforms.
+Documentation of max17040 based fuel gauge characteristics.
+For configure low level state of charge threshold alert signaled from
+max17043/max17044 we add "maxim,alert-low-soc-level" property.
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- - Changes from V1:
-   Sorted the macros and compatibles.
+ .../power/supply/max17040_battery.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
 
- Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
- drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-index 1437062..b5fc64e 100644
---- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-+++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-@@ -32,6 +32,8 @@ Required properties:
-                    "qcom,pm8998",
-                    "qcom,pmi8998",
-                    "qcom,pm8005",
-+		   "qcom,pm6150",
-+		   "qcom,pm6150l",
-                    or generalized "qcom,spmi-pmic".
- - reg:             Specifies the SPMI USID slave address for this device.
-                    For more information see:
-diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
-index e8fe705..74b7980 100644
---- a/drivers/mfd/qcom-spmi-pmic.c
-+++ b/drivers/mfd/qcom-spmi-pmic.c
-@@ -34,6 +34,8 @@
- #define PM8998_SUBTYPE		0x14
- #define PMI8998_SUBTYPE		0x15
- #define PM8005_SUBTYPE		0x18
-+#define PM6150_SUBTYPE		0x28
-+#define PM6150L_SUBTYPE		0x27
- 
- static const struct of_device_id pmic_spmi_id_table[] = {
- 	{ .compatible = "qcom,spmi-pmic", .data = (void *)COMMON_SUBTYPE },
-@@ -53,6 +55,8 @@
- 	{ .compatible = "qcom,pm8998",    .data = (void *)PM8998_SUBTYPE },
- 	{ .compatible = "qcom,pmi8998",   .data = (void *)PMI8998_SUBTYPE },
- 	{ .compatible = "qcom,pm8005",    .data = (void *)PM8005_SUBTYPE },
-+	{ .compatible = "qcom,pm6150",    .data = (void *)PM6150_SUBTYPE },
-+	{ .compatible = "qcom,pm6150l",   .data = (void *)PM6150L_SUBTYPE },
- 	{ }
- };
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+new file mode 100644
+index 000000000000..f2d0b22b5f79
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+@@ -0,0 +1,33 @@
++max17040_battery
++~~~~~~~~~~~~~~~~
++
++Required properties :
++ - compatible : "maxim,max17040" or "maxim,max77836-battery"
++ - reg: i2c slave address
++
++Optional properties :
++- maxim,alert-low-soc-level :	The alert threshold that sets the state of
++ 				charge level (%) where an interrupt is
++				generated. Can be configured from 1 up to 32
++				(%). If skipped the power up default value of
++				4 (%) will be used.
++- interrupts : 			Interrupt line see Documentation/devicetree/
++				bindings/interrupt-controller/interrupts.txt
++- wakeup-source :		This device has wakeup capabilities. Use this
++				property to use alert low SOC level interrupt
++				as wake up source.
++
++Optional properties support interrupt functionality for alert low state of
++charge level, present in some ICs in the same family, and should be used with
++compatible "maxim,max77836-battery".
++
++Example:
++
++	battery-fuel-gauge@36 {
++		compatible = "maxim,max77836-battery";
++		reg = <0x36>;
++		maxim,alert-low-soc-level = <10>;
++		interrupt-parent = <&gpio7>;
++		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++		wakeup-source;
++	};
+--
+2.24.0.rc2
 
