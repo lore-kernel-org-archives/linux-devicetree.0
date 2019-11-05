@@ -2,97 +2,190 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBBDC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D835C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C59217F5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572994107;
-	bh=e1zDeItANpkU5aMHH3CBq3r2RpezJeQI7Bnf2sQsRP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G2eY6yBw3g9y+8Rh0I0HrbTLE5xUOgh75jNDvr2n87+9nTffy3DSvkd0ZbIkhWiE2
-	 nJbyRDgFak3kpliuI3H4uL+hvfdXBwfjK/SgViAOf+v9XQDyEG5as3A2Tr5GxN+Rbu
-	 QigVnKJS6SuKIBy0Wqb9rs8saYefWfZqMxH9uHnw=
+	by mail.kernel.org (Postfix) with ESMTP id B7B0B2084D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iHLJvOrK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbfKEWs0 (ORCPT
+        id S1730184AbfKEWxA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:48:26 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35930 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730192AbfKEWs0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:48:26 -0500
-Received: by mail-oi1-f193.google.com with SMTP id j7so19197547oib.3;
-        Tue, 05 Nov 2019 14:48:25 -0800 (PST)
+        Tue, 5 Nov 2019 17:53:00 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38271 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729895AbfKEWw7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:52:59 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v186so19187923oie.5
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 14:52:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ITot2P1/Oq1djB16oG4kp1TUvRDEYRsyk0+fdSTUYw4=;
+        b=iHLJvOrKMmGplCdoVyX0r+Vex/KiHX7/2gzEkqUGtS9y1kL5yKWQyCpQLbuDDjC9Is
+         5TTkBC0jgHz5YkvBoVLZNIH7IYS1FN/nj0Ri77yYoHW0RUq6VDBbgb860xuZ2D566gHO
+         jRvW49c1h4UyvoTIeITBnbXm1wQ3Mm8r0o2DNuoBShnqCcNpFhej58iGH3HAx+Eog3Ql
+         xiFj5N3CuW7VIh48JxSTvl30/ZCtzh10Y5GKZu7VKZvehv1luDEh0MfJe0gMx7PTzcZy
+         ZXAoO63WuczkBq1yJB+WPezvFII9eB/rDNWPzS3RklXRdMP30mo+PQRRWpMbyt72LoYA
+         NDCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a6RSlGUG/d/8KzpTd4sRswnPYzvmhaAeGKhO7ae8r/I=;
-        b=JPA5QQNYfVJfc9zVzSLqM+xaphkQSbzOEcA/RYMwxFXRYXsbbCk5waOqQhkoKcbaUg
-         6Ci45roKUFgGg7IjhbylXjasiu6c02whq2Bj+Ph7a+LzErYMcnHYXUhcMk6OuGnP3RuO
-         9vC38WgNmgVar+y8gTMDWBmuD/rhQkyTS+fIXJS60GjGh7uwG5DZ6/Ioc6zQvxXvbIyA
-         6NT7oVB8pcyZWQZLKj+CYSj99qNnf1pX2r/YiI6Xj6Qdc+5vn7fuTmuZfZZIiadrSUBY
-         NEDqaMrNe4FkUvNEdso8dhQ4FTzCwLde7RM6ywSQzPcYuvs8KebT+Pmj2EWAav5l+Vss
-         nH0Q==
-X-Gm-Message-State: APjAAAU8ay2hvclbfV1IbE6n/WoEfvMNCadE8JRkRDNJnUFWS7i9DTYe
-        2EoG1MUi6WC2aYy3C1TKEZIaxes=
-X-Google-Smtp-Source: APXvYqzcMPSnJ3OYS20YBUOnhtN5LeFqqMXUqA8iDmlBcXVY/2pwmyIQcwIu/ev22CTSndlo/euKwQ==
-X-Received: by 2002:aca:c489:: with SMTP id u131mr1274106oif.21.1572994105412;
-        Tue, 05 Nov 2019 14:48:25 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n9sm6779413otn.4.2019.11.05.14.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 14:48:24 -0800 (PST)
-Date:   Tue, 5 Nov 2019 16:48:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: serial: Convert Samsung UART bindings to
- json-schema
-Message-ID: <20191105224824.GA8073@bogus>
-References: <20191103160112.10764-1-krzk@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ITot2P1/Oq1djB16oG4kp1TUvRDEYRsyk0+fdSTUYw4=;
+        b=oA4g+Bfu6GaC1F1/bnxlR9IdKiw2r9Hh6Q0yPJ/GYKhP7gFaSeJMnzD242znJ7pnDY
+         sowT9DGnpe445HsJ+KvU+oeMQqf6rmAHu5HtXyajBxqk86AMue9enoeCdNOFdrKRP4GI
+         XrD8ohYIqBCW7Hoxya/9RlX1A0zeIg29HkVIRiBTo8gaeVvqo4olSiG2H105pNo6oGWn
+         Xc9tXnCwskHm1XLG4KUdEhEmgzizg/TaLyrAy5fDhSp+ctFHpEeBvDSrOfTpnrB1u5Z6
+         yy39sUHVqWG3J1znKXgTg+pZFuiWNHs5TVwBpFzo76DbvMX7Y2II09+NRt94e7rA7Hd3
+         meBQ==
+X-Gm-Message-State: APjAAAUcsWsIbvFpDA2B/9e/bYZSxI5ZR5ETFxH7oBEAw58MsMnYCVmx
+        lfqoHB9ROdzf2PxK6je8tGgZNPCOt1HtNYhKbwKU6w==
+X-Google-Smtp-Source: APXvYqzIAUzPDmogTITDbFUcA/ihvKRGXKPJD4mBnp8pOOy8bZMrACShUDrVG+Osz9+7P9TgEvDK1SPeZMDgR0ab2QY=
+X-Received: by 2002:aca:d558:: with SMTP id m85mr1203360oig.43.1572994377809;
+ Tue, 05 Nov 2019 14:52:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191103160112.10764-1-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-4-saravanak@google.com>
+ <7640808.4Pc6YCm0Y9@kreacher>
+In-Reply-To: <7640808.4Pc6YCm0Y9@kreacher>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 5 Nov 2019 14:52:21 -0800
+Message-ID: <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
+ differentiate errors
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun,  3 Nov 2019 17:01:12 +0100, Krzysztof Kozlowski wrote:
-> Convert Samsung S3C/S5P/Exynos Serial/UART bindings to DT schema format
-> using json-schema.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Simplify 'clock-names' patters after Rob's suggestions,
-> 2. Add description to 'interrupts',
-> 3. Remove 'uniqueItems' where not needed,
-> 4. Remove aliases from example.
-> ---
->  .../bindings/mfd/samsung,exynos5433-lpass.txt |   2 +-
->  .../bindings/serial/samsung_uart.txt          |  58 ---------
->  .../bindings/serial/samsung_uart.yaml         | 118 ++++++++++++++++++
->  3 files changed, 119 insertions(+), 59 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> 
+Hi Rafael,
 
-Applied, thanks.
+Thanks for the review.
 
-Rob
+On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
+> > When add_links() still has suppliers that it needs to link to in the
+> > future, this patch allows it to differentiate between suppliers that are
+> > needed for probing vs suppliers that are needed for sync_state()
+> > correctness.
+>
+> I guess you mean that it will return different error codes in the different
+> cases.
+
+Yes.
+
+>
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/base/core.c    | 12 ++++++++----
+> >  include/linux/fwnode.h | 13 +++++++++----
+> >  2 files changed, 17 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 48cd43a91ce6..e6d3e6d485da 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
+> >       struct device *parent;
+> >       struct kobject *kobj;
+> >       struct class_interface *class_intf;
+> > -     int error = -EINVAL;
+> > +     int error = -EINVAL, fw_ret;
+> >       struct kobject *glue_dir = NULL;
+> >
+> >       dev = get_device(dev);
+> > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
+> >        */
+> >       device_link_add_missing_supplier_links();
+> >
+> > -     if (fwnode_has_op(dev->fwnode, add_links)
+> > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
+> > -             device_link_wait_for_mandatory_supplier(dev, true);
+> > +     if (fwnode_has_op(dev->fwnode, add_links)) {
+>
+> fw_ret can be defined here and I'd just call it "ret".
+
+I thought that style of variable declaration is frowned up in the
+kernel coding style.
+
+>
+> > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+> > +             if (fw_ret == -ENODEV)
+> > +                     device_link_wait_for_mandatory_supplier(dev);
+> > +             else if (fw_ret)
+> > +                     device_link_wait_for_optional_supplier(dev);
+> > +     }
+> >
+> >       bus_probe_device(dev);
+> >       if (parent)
+> > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> > index 25bb81f8ded8..a19134eae5a5 100644
+> > --- a/include/linux/fwnode.h
+> > +++ b/include/linux/fwnode.h
+> > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
+> >   *           available suppliers.
+> >   *
+> >   *           Return 0 if device links have been successfully created to all
+> > - *           the suppliers of this device or if the supplier information is
+> > - *           not known. Return an error if and only if the supplier
+> > - *           information is known but some of the suppliers are not yet
+> > - *           available to create device links to.
+> > + *           the suppliers this device needs to create device links to or if
+> > + *           the supplier information is not known.
+>
+> "the known suppliers of this device or if the supplier information is not known."
+
+"suppliers it needs to create device links to" is a subset of known
+suppliers. There's no requirement that fw needs to create links to ALL
+known suppliers. Just a minor distinction.
+
+> > + *
+> > + *           Return -ENODEV if and only if the suppliers needed for probing
+> > + *           the device are not yet available to create device links to.
+>
+> It would be more precise to say something like this:
+>
+> "Return -ENODEV if an attempt to create a device link to one of the device's
+> suppliers needed for probing it fails."
+
+"attempt to create a device link to one of the device's suppliers
+needed for probing it fails" to me means device_link_add() fails.
+But I'm trying to say that it should return an error if the struct
+device isn't even there yet.
+
+> > + *
+> > + *           Return -EAGAIN if there are suppliers that need to be linked to
+> > + *           that are not yet available but none of those suppliers are
+> > + *           necessary for probing this device.
+>
+> "Return -EAGAIN if attempts to create device links to some of the device's
+> suppliers have failed, but those suppliers are not necessary for probing the
+> device."
+
+Same comment as before. The distinction I'm making here is that
+-EAGAIN is needed when the struct device itself isn't there.
+
+Btw, Greg already pulled these into driver-core-next. Let me know if
+you want me to send a delta patch to fix any of these comments.
+
+Thanks,
+Saravana
