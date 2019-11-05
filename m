@@ -2,122 +2,169 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF18C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27413C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A02921D7D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D475821D71
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572987448;
+	bh=EnA5xZWNuusgfSEDFFPNayeFPVfAM0WtLBN1DOG7mkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N6YP71whdrrAvrKlcbZJ5cMM1vz3QiMhiqK1WTqiRK+OtV+yBNHqbFd7KZXz3dxVn
+	 qhxOXpf5FTAESUc3OO9rTqSPg6RI6M6+o2kBjUQBsCLxFJlZUYM+JjaA908efv2lq5
+	 LKPFsrdH4S4uSz0izZ9TKX2vQ/GqP+xpwICM2BVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfKEUy5 (ORCPT
+        id S1729855AbfKEU5V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:54:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:53458 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbfKEUy5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:54:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36D7C30E;
-        Tue,  5 Nov 2019 12:54:56 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A0CB4014A;
-        Tue,  5 Nov 2019 04:37:41 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:37:39 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
- doorbell way
-Message-ID: <20191105123739.GB26960@e121166-lin.cambridge.arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
- <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
+        Tue, 5 Nov 2019 15:57:21 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35109 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729632AbfKEU5U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 15:57:20 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n16so18903672oig.2;
+        Tue, 05 Nov 2019 12:57:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YH8No3YE+SfIIhr1pRJYlkmraO4srBIJPhAWx/BUo7o=;
+        b=LtJCMP9BEuJo7AoGc9whEW4mnbuPZPsc+twyDY6qbUHYR6y48eKt9sSOr024qIZMpC
+         +vBPT3LwkjdhPd8/zomVZvQJYCTFUTe3Na+3wWdneNNiuZy0hk4pTjTYjw8Z4aojRiGN
+         1dMAu7b2yoLyaCXjMxGJOtwYumKQVUkkSp9CNNB2m8j1qDWIk6gM9k6V83Q+U3nx5pEq
+         0XkkGLCXoN6OSU63kzVaLamiCLKMlunMLgpmHv3PJG1W0p26OWQfJDGc0Wc05EBv5HTK
+         V9kabL72vZ/VYqQXAKuMVkp51jG3O1tN28DXCyTqLfAm7ZxD43kfT3cEbOoVglm+SV56
+         AISA==
+X-Gm-Message-State: APjAAAV1sf4kuI/iLEkWfM8e5uV/g4ZlAASe7p8y/PImIdU9nCZ+pf3Z
+        uWfjp2gcTFKOqN1PnI6mJQ==
+X-Google-Smtp-Source: APXvYqz4PTn4LH3MKQJeJhit6JeqNJpYt06BezFqeq80P3WV6oQcYKUwj76O8XCo+mV0pvazH22q3A==
+X-Received: by 2002:aca:ecd0:: with SMTP id k199mr873786oih.166.1572987439487;
+        Tue, 05 Nov 2019 12:57:19 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o18sm6597103otj.38.2019.11.05.12.57.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 12:57:18 -0800 (PST)
+Date:   Tue, 5 Nov 2019 14:57:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED
+ driver
+Message-ID: <20191105205718.GC629@bogus>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 10:43:18AM +0530, Kishon Vijay Abraham I wrote:
-> Gustavo,
+On Fri, Nov 01, 2019 at 01:32:33PM +0200, Matti Vaittinen wrote:
+> Document ROHM BD71828 PMIC LED driver device tree bindings.
 > 
-> On 27/08/19 6:55 PM, Andrew Murray wrote:
-> > On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
-> >>
-> >>
-> >>> -----Original Message-----
-> >>> From: Andrew Murray <andrew.murray@arm.com>
-> >>> Sent: 2019年8月23日 21:58
-> >>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> >>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> >>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> >>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
-> >>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> >>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> >>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> >>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> >>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> >>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
-> >>> doorbell way
-> >>>
-> >>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
-> >>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
-> >>>> in EP mode.
-> >>>>
-> >>>
-> >>> I have no problems with this patch, however...
-> >>>
-> >>> Are you able to add to this message a reason for why you are making this
-> >>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
-> >>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
-> >>
-> >> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
-> >> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
-> >> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
-> >> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
-> > 
-> > Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
-> > erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
-> > would never get used.
-> > 
-> > Now that we're adding a platform with MSIX support the existing
-> > dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
-> > different method.
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
 > 
-> Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for
-> designware as it didn't work for both me and Xiaowei?
+> Changes from v2 - new patch
+> 
+>  .../bindings/leds/rohm,leds-bd71828.yaml      | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+> new file mode 100644
+> index 000000000000..d8aeac9911ef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/rohm,leds-bd71828.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ROHM BD71828 Power Management Integrated Circuit LED driver
+> +
+> +maintainers:
+> +  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> +  - Pavel Machek <pavel@ucw.cz>
+> +  - Dan Murphy <dmurphy@ti.com>
+> +  - Rob Herring <robh+dt@kernel.org>
+> +  - Mark Rutland <mark.rutland@arm.com>
+> +
+> +description: |
+> +  This module is part of the ROHM BD71828 MFD device. For more details
+> +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
+> +
+> +  The LED controller is represented as a sub-node of the PMIC node on the device
+> +  tree.
+> +
+> +  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
+> +
+> +properties:
+> +  compatible:
+> +    const: rohm,bd71828-led
+> +
+> +patternProperties:
+> +  "^led-[1-2]$":
+> +    type: object
+> +    description:
+> +      Properties for a single LED. Nodes must be named as led-1 and led-2.
+> +    properties:
+> +      #$ref: "common.yaml#"
+> +      function:
+> +        description:
+> +          Purpose of LED as defined in dt-bindings/leds/common.h
+> +        $ref: "/schemas/types.yaml#/definitions/string"
+> +      color:
+> +        description:
+> +          LED colour as defined in dt-bindings/leds/common.h
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
 
-This question needs an answer.
+You can assume that we will have a common schema for these. So the only 
+thing needed is whether you use the properties ("true" is enough for 
+that), any additional constraints (not likely here), and whether 
+required or not.
 
-Thanks,
-Lorenzo
+> +
+> +required:
+> +  - compatible
+> -- 
+> 2.21.0
+> 
+> 
+> -- 
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+> 
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =] 
