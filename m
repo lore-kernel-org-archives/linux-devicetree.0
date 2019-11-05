@@ -2,157 +2,114 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13FCA9ED5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 08:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8AAC49EAB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 09:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD93206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 08:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE42B217F5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 09:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387784AbfKEIc1 (ORCPT
+        id S1730677AbfKEJNr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 03:32:27 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:51946 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387686AbfKEIc1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 03:32:27 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E602C3C0588;
-        Tue,  5 Nov 2019 09:32:23 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yQUalbo20ufv; Tue,  5 Nov 2019 09:32:18 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 74DD23C0585;
-        Tue,  5 Nov 2019 09:32:18 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 5 Nov 2019
- 09:32:17 +0100
-Date:   Tue, 5 Nov 2019 09:32:13 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        <linux-mmc@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Pavel Machek <pavel@ucw.cz>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add
- 'fixed-emmc-driver-type-hs{200,400}'
-Message-ID: <20191105083213.GA24603@vmlxhi-102.adit-jv.com>
-References: <20191105055015.23656-1-erosca@de.adit-jv.com>
- <20191105062223.GB1048@kunai>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191105062223.GB1048@kunai>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+        Tue, 5 Nov 2019 04:13:47 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:43440 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730433AbfKEJNr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 04:13:47 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AF57F2004DA;
+        Tue,  5 Nov 2019 10:13:44 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 335562004B0;
+        Tue,  5 Nov 2019 10:13:40 +0100 (CET)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4E2DD402B4;
+        Tue,  5 Nov 2019 17:13:34 +0800 (SGT)
+From:   Wen He <wen.he_1@nxp.com>
+To:     linux-devel@linux.nxdi.nxp.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Wen He <wen.he_1@nxp.com>
+Subject: [v6 1/2] dt/bindings: clk: Add YAML schemas for LS1028A Display Clock bindings
+Date:   Tue,  5 Nov 2019 17:02:20 +0800
+Message-Id: <20191105090221.45381-1-wen.he_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wolfram,
+LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
+output interface. Add a YAML schema for this.
 
-On Tue, Nov 05, 2019 at 07:22:23AM +0100, Wolfram Sang wrote:
-> Hi Eugeniu,
-> 
-> thanks for this work!
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+change in v6:
+	- no change	
 
-Thanks for the prompt response. Very much appreciated.
+ .../devicetree/bindings/clock/fsl,plldig.yaml | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
 
-> 
-> > A certain eMMC manufacturer provided below requirement:
-> >  ---snip---
-> >  Use "drive strength" value of 4 or 1 for HS400 or 0 for HS200.
-> >  ---snip---
-> 
-> I see.
-> 
-> > The existing "fixed-emmc-driver-type" property [1] is the closest one
-> > to implement the above, but it falls short due to being unable to define
-> > two values to differentiate between HS200 and HS400 (both modes may be
-> > supported by the same non-removable MMC device).
-> > 
-> > To allow users to set a preferred HS200/HS400 "drive strength", provide
-> > two more bindings inspired from [1]:
-> >  - fixed-emmc-driver-type-hs200
-> >  - fixed-emmc-driver-type-hs400
-> 
-> Main question before looking at the code: Can't we just extend the
-> existing binding with an optional second parameter?
-
-That's a great question/proposal, but before pushing the v2 right away,
-I would like to first share some thoughts.
-
->         minItems: 1
->         maxItems: 2
-> 
-> I tend to favour this approach...
-
-The first question which pops up in my mind is related to the meaning
-of each item. The option which I envision based on your proposal is:
-
-  * minItems: 1
-  * maxItems: 2
-  * Item[0]: Presumably equivalent to the current
-    "fixed-emmc-driver-type", i.e. the strength value applied in both
-    HS200 and HS400 modes.
-  * Item[1] (optional): Presumably equivalent to
-    "fixed-emmc-driver-type-hs400" proposed in this series. If this
-    element is provided, the first one should likely change its role
-    and become an equivalent of "fixed-emmc-driver-type-hs200" from
-    this series.
-  + Pro: Full backward compatibility. No need to touch the existing
-    users of "fixed-emmc-driver-type".
-  - Con: Not sure we have such DT bindings which dynamically change
-    their semantics based on the usage pattern.
-  - Con: Can't easily achieve the same flexibility as accomplished in
-    this series. For example, current implementation allows users to
-    define each of the three parameters (i.e. HSx00-agnostic drive
-    strength, HS200 and HS400 specific drive strengths) individually,
-    as well as in all possible combinations. This might be needed if,
-    in certain HSx00 mode, users still need to rely on the
-    RAW/unmodified drive strength. I am unsure if/how this can be
-    achieved with an array OF property with a constant or variable
-    number of elements (I try to sketch one solution below).
-
-One option to achieve a similar degree of flexibility by using an array
-OF property (instead of several u32 properties) would be to agree on a
-convention based on magic values, i.e. below DT one-liner could be an
-example of providing solely the "fixed-emmc-driver-type-hs200" value
-(based on the agreement that 0xFF values are discarded by the driver):
-
-    fixed-emmc-driver-type = <0xFF 0x1 0xFF>;
-
-> 
-> > For more details about eMMC I/O driver strength types, see Jedec spec.
-> > Keep "fixed-emmc-driver-type" in place for backward compatibility.
-> 
-> If we decide for the path proposed here, should the old binding be
-> deprecated then?
-
-I can either zap "fixed-emmc-driver-type" or extend its type and
-meaning, depending on the feedback from the reviewers.
-Looking forward to any comments and suggestions.
-
-> 
-> Happy hacking,
-> 
->    Wolfram
-
-Thanks.
-
+diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.yaml b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+new file mode 100644
+index 000000000000..32274e94aafc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+@@ -0,0 +1,43 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/fsl,plldig.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP QorIQ Layerscape LS1028A Display PIXEL Clock Binding
++
++maintainers:
++  - Wen He <wen.he_1@nxp.com>
++
++description: |
++  NXP LS1028A has a clock domain PXLCLK0 used for the Display output
++  interface in the display core, as implemented in TSMC CLN28HPM PLL.
++  which generate and offers pixel clocks to Display.
++
++properties:
++  compatible:
++    const: fsl,ls1028a-plldig
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++examples:
++  # Display PIXEL Clock node:
++  - |
++    dpclk: clock-display@f1f0000 {
++        compatible = "fsl,ls1028a-plldig";
++        reg = <0x0 0xf1f0000 0x0 0xffff>;
++        #clock-cells = <0>;
++        clocks = <&osc_27m>;
++    };
++
++...
 -- 
-Best Regards,
-Eugeniu
+2.17.1
+
