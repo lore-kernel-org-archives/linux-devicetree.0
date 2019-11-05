@@ -2,92 +2,213 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7276C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF74C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A417A21D71
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A65621D81
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572973269;
-	bh=eidZM2V4QQjO6ElDqpGD/ATrVSJUrdi/I4WF5f2EyKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KrNFQAX0zZcqAhwpwK8Fay1oS5i1MA6Q2nx0vZC+DCDqe/Jiwdp4j2hSFK0wOZBaq
-	 V4EmsgXlw0nGcedWG1fPvsSRn+wSUIOyeXMTr2/TbLk/KGD8qjBYUUXqPYrdISbkJt
-	 0voieErlZtVkQcHtfyvm2qeQioy4QRZkgHmyTDM8=
+	s=default; t=1572973680;
+	bh=982pnP21u6SLHEwMF1WidZv9LQW97H7o7tJaYDJdzz8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uQvsb948eftuGfnWZWR4yUyb/U+Fzoo5GdxCgMFbafWywoMhVnN7LXCCm3AIi5vFB
+	 SqVKYVeul5L6Jj3F6ejBECxE5s+fi3lUvzQVQkGIsJKNm/Y436ZDHZwyC2S/aUbCEd
+	 7KhFHhbcBMh3TGr7HwZOMQCYFdES4gB1GJGGiIDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbfKERBG (ORCPT
+        id S2390114AbfKERH7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:01:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41520 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 12:07:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbfKERBG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:01:06 -0500
-Received: from localhost (unknown [106.51.111.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387833AbfKERH7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:07:59 -0500
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60DA32087E;
-        Tue,  5 Nov 2019 17:01:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F63A21D7D;
+        Tue,  5 Nov 2019 17:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572973265;
-        bh=eidZM2V4QQjO6ElDqpGD/ATrVSJUrdi/I4WF5f2EyKs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qt+8WHwTJXW1jMLLWsiPCDYqwIMXQRivu9ebprQS/3h/7Xy35QHNb8uCcW5Cdl/rS
-         bDGKuSbTrMptdo9j1KY+1YlwCE7d45Pl9ltgn2RvJxTeZORJoa2cIg26hTUI6TVr0Q
-         XymXlVMuUqEs50IvTdIjgg7K+gzePGtRGotkZMCA=
-Date:   Tue, 5 Nov 2019 22:31:01 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] dmaengine: bindings/edma: dma-channel-mask to
- array
-Message-ID: <20191105170101.GE952516@vkoul-mobl>
-References: <20191025073056.25450-1-peter.ujfalusi@ti.com>
+        s=default; t=1572973678;
+        bh=982pnP21u6SLHEwMF1WidZv9LQW97H7o7tJaYDJdzz8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0DSgrhZ2NAQhUICtqBtKwZHph/j5WuH2vsCL7/O/tCwFJfttlXO//skvCyIcr6fdd
+         Q8tAcB47lt7ul0ex99vhOzzEr+FfuPk5P3fG+KSCRRyuYA7q31PBff6umt9ZGQnPMm
+         P3/5t/FhJMZP3RezivC4wWbs0XUqdezmJOg8OjR8=
+Received: by mail-qt1-f171.google.com with SMTP id r22so20259514qtt.2;
+        Tue, 05 Nov 2019 09:07:58 -0800 (PST)
+X-Gm-Message-State: APjAAAVp24RjoZLDVSW6uAQG13XPxpYCi5HoLiNG/nj+cMho7XWHpHQl
+        K6xoOJJXWiH0FCh1SlXO469XK/f7M6OAKQlvPg==
+X-Google-Smtp-Source: APXvYqz9/z2im9e76vhu3PDX2geLlkCL/9xOMZgc1KJo/mqie7zy7vcexLdTcRMCQUecwC+40LweB/fouXV5OHZ5gYU=
+X-Received: by 2002:ac8:458c:: with SMTP id l12mr19273736qtn.300.1572973677688;
+ Tue, 05 Nov 2019 09:07:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025073056.25450-1-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1572886683-4919-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1572886683-4919-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAL_JsqJ+xus0GDWb0Px6HKDBzOt1yjwCCkQrfMspubwG+LZOdQ@mail.gmail.com> <TY1PR01MB1770F97A73768451B2ED8A22C07E0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1770F97A73768451B2ED8A22C07E0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 5 Nov 2019 11:07:46 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL6Nzr2oBh51PZnQfBUK1ggDcZUrLaSP2GvEycwFAwJZw@mail.gmail.com>
+Message-ID: <CAL_JsqL6Nzr2oBh51PZnQfBUK1ggDcZUrLaSP2GvEycwFAwJZw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: Repurpose lvds-encoder
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Peter Rosin <peda@axentia.se>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25-10-19, 10:30, Peter Ujfalusi wrote:
-> Hi,
-> 
-> Changes since v4:
-> - Rebased on next to make it apply cleanly
-> - Added Reviewed-by from Rob for the DT documentation patches
-> 
-> Changes since v3:
-> - Update the dma-common.yaml and edma binding documentation according to Rob's
->   suggestion
-> 
-> Changes since v2:
-> - Fix dma-common.yaml documentation patch and extend the description of the
->   dma-channel-mask array
-> - The edma documentation now includes information on the dma-channel-mask array
->   size for EDMAs with 32 or 64 channels
-> 
-> Changes since v1:
-> - Extend the common dma-channel-mask to uint32-array to be usable for
->   controllers with more than 32 channels
-> - Use the dma-channel-mask instead custom property for available channels for
->   EDMA.
-> 
-> The original patch was part of the EDMA multicore usage series.
-> 
-> EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
-> needs to be an array to be usable for the driver.
+On Tue, Nov 5, 2019 at 3:33 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+>
+> Hello Rob,
+>
+> Thank you for your feedback!
+>
+> > From: Rob Herring <robh+dt@kernel.org>
+> > Sent: 04 November 2019 21:23
+> > Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: Repurpose lvds-encoder
+> >
+> > On Mon, Nov 4, 2019 at 10:58 AM Fabrizio Castro
+> > <fabrizio.castro@bp.renesas.com> wrote:
+> > >
+> > > In an effort to repurpose lvds-encoder.c to also serve the
+> > > function of LVDS decoders, we ended up defining a new "generic"
+> > > compatible string, therefore adapt the dt-bindings to fit the
+> > > new purpose. Also, convert the dt-bindings from .txt to .yaml
+> > > while at it.
+> >
+> > "Also, ... while at it." is a sign for split into 2 patches.
+>
+> Will split into 2 patches
+>
+> >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > >
+> > > ---
+> > > v1->v2:
+> > > * Converted to dt-schema as per Neil's comment
+> > > ---
+> > >  .../bindings/display/bridge/lvds-codec.yaml        | 117 +++++++++++++++++++++
+> > >  .../bindings/display/bridge/lvds-transmitter.txt   |  66 ------------
+> > >  2 files changed, 117 insertions(+), 66 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > > new file mode 100644
+> > > index 0000000..ff79bc2
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> > > @@ -0,0 +1,117 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/display/bridge/lvds-codec.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Trasnparent LVDS encoders and LVDS decoders
+> >
+> > Typo
+>
+> Will fix
+>
+> >
+> > > +
+> > > +maintainers:
+> > > +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > +
+> > > +description: |
+> > > +  This binding supports transparent LVDS encoders and LVDS decoders that don't
+> > > +  require any configuration.
+> > > +
+> > > +  LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
+> > > +  incompatible data link layers have been used over time to transmit image data
+> > > +  to LVDS panels. This binding targets devices compatible with the following
+> > > +  specifications only.
+> > > +
+> > > +  [JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
+> > > +  1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
+> > > +  [LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
+> > > +  Semiconductor
+> > > +  [VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
+> > > +  Electronics Standards Association (VESA)
+> > > +
+> > > +  Those devices have been marketed under the FPD-Link and FlatLink brand names
+> > > +  among others.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    description: |
+> > > +      Any encoder or decoder compatible with this generic binding, but with
+> > > +      additional properties not listed here, must define its own binding and
+> > > +      list a device specific compatible first followed by the generic compatible
+> > > +    items:
+> > > +      - enum:
+> >
+> > You can drop 'items' when there's only 1.
+>
+> Will drop
+>
+> >
+> > > +        - lvds-encoder # for LVDS encoders
+> > > +        - lvds-decoder # for LVDS decoders
+> > > +
+> > > +  ports:
+> > > +    type: object
+> > > +    description: |
+> > > +      This device has two video ports. Their connections are modeled using the
+> > > +      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt
+> > > +    properties:
+> > > +      port@0:
+> > > +        type: object
+> > > +        description: |
+> > > +          With LVDS encoders port 0 is for parallel input
+> > > +          With LVDS decoders port 0 is for LVDS input
+> > > +
+> > > +      port@1:
+> > > +        type: object
+> > > +        description: |
+> > > +          With LVDS encoders port 1 is for LVDS output
+> > > +          With LVDS decoders port 1 is for parallel output
+> >
+> > port@* are required, right?
+>
+> Yes, port@0 and port@1 are both required, similarly to:
+> Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
+> therefore I have put "ports" under "required", in a similar fashion.
+> What's the right way of specifying this?
 
-And now I saw this and have applied these and dropped the ones I fixed
-up manually!
+Same as any other property:
 
--- 
-~Vinod
+required:
+  - port@0
+  - port@1
+
+At the correct level of course.
+
+Rob
