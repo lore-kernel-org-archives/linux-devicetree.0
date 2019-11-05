@@ -2,122 +2,117 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41D3CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D15CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67F920818
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="y0g1VKoY"
+	by mail.kernel.org (Postfix) with ESMTP id DCB9A206BA
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfKEGEr (ORCPT
+        id S1726988AbfKEGW1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:04:47 -0500
-Received: from gateway30.websitewelcome.com ([192.185.197.25]:48857 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729451AbfKEGEr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 01:04:47 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id B3B09561E
-        for <devicetree@vger.kernel.org>; Mon,  4 Nov 2019 23:42:39 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id Rrbzi3vBBHunhRrbziVsOv; Mon, 04 Nov 2019 23:42:39 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=NXoTDm5tilUy+3fiCn1QLdQDuJ4WM4+qUq84t9usS4k=; b=y0g1VKoYKEdO/9b5CptUIGjYdl
-        umbUcAqMZWmxgEhDq4Ar0JYjUCfRTD1FnDKvbP5uFsGSVn1HuquS/X+qSnYnCBXJWx/0DEEGZhcth
-        8MifgPRm+PRuRiVH8XqvFjJ9lHWcIv+DgFrzhqx7gdUpfqSIGY/JvFmwWQ21Z+8NYXa0abAMJx635
-        XGRLXX/1UHKC1Ih7q3pYk4d7b1FhWFKIhUxzIW/YWQ5urr55TrEdJmkR/XqEA8055uBTqAvAuRnV+
-        FExZxxefngQV3WKSmN/tkWbZNtHeZ5nXM9k9TrzY5I6fwqoVmBb+G0AYg+vP5YiTlISgu+nwZpqLY
-        9fdEeBaQ==;
-Received: from [191.31.196.28] (port=37450 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iRrby-002sjK-Uv; Tue, 05 Nov 2019 02:42:39 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        Tue, 5 Nov 2019 01:22:27 -0500
+Received: from sauhun.de ([88.99.104.3]:33816 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbfKEGW1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 01:22:27 -0500
+Received: from localhost (p54B339C1.dip0.t-ipconnect.de [84.179.57.193])
+        by pokefinder.org (Postfix) with ESMTPSA id 199742C04C4;
+        Tue,  5 Nov 2019 07:22:24 +0100 (CET)
+Date:   Tue, 5 Nov 2019 07:22:23 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-mmc@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v5 5/5] power: supply: max17040: Send uevent in SOC and status change
-Date:   Tue,  5 Nov 2019 02:42:18 -0300
-Message-Id: <20191105054218.29826-6-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191105054218.29826-1-matheus@castello.eng.br>
-References: <20191105015827.GA332@bogus>
- <20191105054218.29826-1-matheus@castello.eng.br>
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add
+ 'fixed-emmc-driver-type-hs{200,400}'
+Message-ID: <20191105062223.GB1048@kunai>
+References: <20191105055015.23656-1-erosca@de.adit-jv.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.196.28
-X-Source-L: No
-X-Exim-ID: 1iRrby-002sjK-Uv
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.196.28]:37450
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 72
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3lcZGd9BuhuYXNfi"
+Content-Disposition: inline
+In-Reply-To: <20191105055015.23656-1-erosca@de.adit-jv.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Notify core through power_supply_changed() in case of changes in state
-of charge and power supply status. This is useful for user-space to
-efficiently update current battery level.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/power/supply/max17040_battery.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+--3lcZGd9BuhuYXNfi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index c48a691cbd7b..d7405650cc38 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -209,10 +209,19 @@ static void max17040_check_changes(struct i2c_client *client)
- static void max17040_work(struct work_struct *work)
- {
- 	struct max17040_chip *chip;
-+	int last_soc, last_status;
+Hi Eugeniu,
 
- 	chip = container_of(work, struct max17040_chip, work.work);
-+
-+	/* store SOC and status to check changes */
-+	last_soc = chip->soc;
-+	last_status = chip->status;
- 	max17040_check_changes(chip->client);
+thanks for this work!
 
-+	/* check changes and send uevent */
-+	if (last_soc != chip->soc || last_status != chip->status)
-+		power_supply_changed(chip->battery);
-+
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
- }
---
-2.24.0.rc2
+> A certain eMMC manufacturer provided below requirement:
+>  ---snip---
+>  Use "drive strength" value of 4 or 1 for HS400 or 0 for HS200.
+>  ---snip---
 
+I see.
+
+> The existing "fixed-emmc-driver-type" property [1] is the closest one
+> to implement the above, but it falls short due to being unable to define
+> two values to differentiate between HS200 and HS400 (both modes may be
+> supported by the same non-removable MMC device).
+>=20
+> To allow users to set a preferred HS200/HS400 "drive strength", provide
+> two more bindings inspired from [1]:
+>  - fixed-emmc-driver-type-hs200
+>  - fixed-emmc-driver-type-hs400
+
+Main question before looking at the code: Can't we just extend the
+existing binding with an optional second parameter?
+
+        minItems: 1
+        maxItems: 2
+
+I tend to favour this approach...
+
+> For more details about eMMC I/O driver strength types, see Jedec spec.
+> Keep "fixed-emmc-driver-type" in place for backward compatibility.
+
+If we decide for the path proposed here, should the old binding be
+deprecated then?
+
+Happy hacking,
+
+   Wolfram
+
+
+--3lcZGd9BuhuYXNfi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3BFR8ACgkQFA3kzBSg
+KbY0cA//YZ6N9IHHaKq423ABXNnBXaT4hOB/WYncPHRaK6cijvTKtR+eE10CRPpa
+ebYVYr6UatR/vR+Pq4QZixmmF5bn1mT2HbzC7nw1QIJm8OKNghOewSSWAoT3HrYn
+aBlen9t61+u/wC+Wnv8JZh/3A7XWG4gqkocWUTEihWrJv0uJ/f0rIR78mIV3ADAi
+ho5B7QBmmt2Bwsls4SEnpPvwgXwaKay0HoGOyITKE6eIk8Xokbx65KwYa50WTslR
+/q2bIZNeIrYx3Tk0zC2Qkof1brwfg9UxhCHPD7+6cbZCRvnI7nHFPQa1FCxqwTtm
+XOvB7Afzf5rowAEUnQ7Kofxp7l+zbPGo0BvuBxAQsUYsJjG/AXpso/owQKzM7ob7
++NnKgpkqHtg5wnxtTjOmLJZwfOLLmAEp7z9ibPalFpX2s4WT9kEdqNpkSanwnXSx
+bF69QHSM4nPsSCrhPLyowditB/FjtkAHceAiiBHIDcN4v+ytXVTsJbjiESudaQdZ
+co0K/mYz3VfdcJ3wDhYUUOx/Lg1ejxhYDV+V9iHxYTeWoYHS9NNny8lnP6U9Bz1v
+/E4VBIhDm+LvNE9DH1b9yMxzrD5TnISC8XBtgqkjW9m1DVu1wmtCE/WTeG+0NdNl
+zlox2HdI0G4JEJIdLrbNtVfpNMRwurT4UMLKFFPcvpSvIAaIaNw=
+=bGHK
+-----END PGP SIGNATURE-----
+
+--3lcZGd9BuhuYXNfi--
