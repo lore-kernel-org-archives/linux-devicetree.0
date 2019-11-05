@@ -2,260 +2,119 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A86AC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC94C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C51321928
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6ED21D81
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572982264;
-	bh=DANwge0pl0jxO6NsvwyOA5Ucz9xwOOV6M82LPSfakpM=;
+	s=default; t=1572982984;
+	bh=zEYP3BT2QPCevrSWwMMB/d5iNR+kVf8pnUfXeEMOYo0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tG8x4BGxZJF8xYIjyklweuCCRZv1yN0dv4PGk0C0v8+yoeLWkXT14f22OrGFhRy3j
-	 xKKfvkC7qSB43DgJgOv+ecznOM2EZhAM9wsOvMkXCcFEGCZeWABxFPvvKPK6Jczx7Z
-	 4HLX+xlWuEscihsIaz2eFfYbGCOZ6Sq/keqsQS+4=
+	b=HdYdhvacnbvzFHLH5haENwnf3lUSVRxzJ/QNHoGL0WvGKWnhUrVuQlbR+gyqxA/pB
+	 +o5FD5Hv56k7yyOj0LS2ecNjLK5a7T+xBZOUNw7elAymUuTPMZYNbynySQDDoMiFpi
+	 AxoR0AyMuMCHpUl3t018OcKwLEEtZHNCzW+ZYC7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390314AbfKETbD (ORCPT
+        id S2390401AbfKETnA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:31:03 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33997 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389691AbfKETbD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 14:31:03 -0500
-Received: by mail-ot1-f65.google.com with SMTP id t4so7190903otr.1;
-        Tue, 05 Nov 2019 11:31:02 -0800 (PST)
+        Tue, 5 Nov 2019 14:43:00 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37604 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390893AbfKETnA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 14:43:00 -0500
+Received: by mail-oi1-f193.google.com with SMTP id y194so18703709oie.4;
+        Tue, 05 Nov 2019 11:42:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eXCrqaM2ReNAR8xM9spgb2Ee5zhCWir3DnZ51DYqUs0=;
-        b=YWsfZJwEFvAcw0YM7AT9gmKK9ZA6rxygwrCRQX1GOiZ+W4ujfnLD6T6Lyiw9/0zJwE
-         TG4+R2ZQVqdO8Cm5nVBlIS/45Rz2X1Lm7wxo82nB7yuhba42V66f6HhF38SudfU8rFDb
-         iSKgt83IvsYeMYCAWPNVCFcNHZP6KVV44QI5kAJ/8i8fsBQbflAfRazFwVM7s9MFuyHO
-         ZXm3UYbEbbEDyCtHXyWFl1aeKUclFtnW6QK+g4MfIfRZ4s1uH6nAh22GSC1KaAHj1v1X
-         Gv0P3zSncTCq4y1zXLwGz6FTmnXgtJAFGZ6BUeng2ZDBl0MjrA275Zswks65KEgA27LN
-         R53A==
-X-Gm-Message-State: APjAAAVdATyFE3gOW1tBgI8affRsWa0F1B9QbZx9QROeJJEqdRjMDyzV
-        SMoaOC0TmQ0Pw41kM8wu4A==
-X-Google-Smtp-Source: APXvYqzre2W/9ZqnBFFrz/aj+RCDtEBQysbqFeG7AzSN3ieOnpHrDpu7BFOp+KDwAVrQMDlaLseVCw==
-X-Received: by 2002:a05:6830:46:: with SMTP id d6mr13605649otp.7.1572982261489;
-        Tue, 05 Nov 2019 11:31:01 -0800 (PST)
+        bh=5Pu4OrE4K395x5nbpd+Cxz5TnD1x0ZYI5bC4xcqiIR0=;
+        b=JNMrC84KxdGXfILVX9RhPXCC8Q9BYNzNB+Zu0sskZD/5kjX/KYd3tuwLnHIfR3T7O6
+         85OQ0i5EvASW8MKBxkXIyDXenMWPKfAr6fSDqkQF7wl33Wdpe4I0u0sXvQ8hG/qUSMRh
+         lmt4lXquYfvzdi3Zs2dAGZ+vnF0XZdstP4o/YzJp/XsW6eq3m/He/pYwhGMcbL79DFBI
+         6bGLu64SaOIZySJHb5V/F+Kj0WmAfdZ3rUmbzpICJ+NkE61acdrcwC1ljyiaVnNyKSNh
+         lX6Nvnqj++p3QoqH9QDWhfl/7RGYJjlzppDY2Rm4+lpQZaJovsEycy+nb4yCHBsNYp/m
+         UqYw==
+X-Gm-Message-State: APjAAAXVFPT/JD0qCmGZ4QQaXdqPHzvPRetkiYBSsx7yDAYrNrLou2cU
+        h05RaYdrK7mfIocsowQ6xg==
+X-Google-Smtp-Source: APXvYqwYe+tnDrfr4RSjoqyyhwqH3QE61rOcmw20rYatfALydaTmRWxeZcywYJxSB7Lbx0p2zYxoqw==
+X-Received: by 2002:aca:f1c5:: with SMTP id p188mr536700oih.125.1572982979431;
+        Tue, 05 Nov 2019 11:42:59 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y7sm6891792ote.81.2019.11.05.11.31.00
+        by smtp.gmail.com with ESMTPSA id 32sm6576711ott.43.2019.11.05.11.42.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 11:31:00 -0800 (PST)
-Date:   Tue, 5 Nov 2019 13:31:00 -0600
+        Tue, 05 Nov 2019 11:42:58 -0800 (PST)
+Date:   Tue, 5 Nov 2019 13:42:58 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-Message-ID: <20191105193100.GB4709@bogus>
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: power: Convert Generic Power Domain
+ bindings to json-schema
+Message-ID: <20191105194257.GA16066@bogus>
+References: <20191030173216.5993-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20191030173216.5993-1-krzk@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:26:50AM +0000, Srinivas Kandagatla wrote:
-> This patch adds bindings for wcd9340/wcd9341 audio codec which can
-> support both SLIMbus and I2S/I2C interface.
+On Wed, 30 Oct 2019 18:32:15 +0100, Krzysztof Kozlowski wrote:
+> Convert Generic Power Domain bindings to DT schema format using
+> json-schema.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> 
 > ---
->  .../bindings/sound/qcom,wcd934x.yaml          | 162 ++++++++++++++++++
->  1 file changed, 162 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> new file mode 100644
-> index 000000000000..d6cfde6597db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> @@ -0,0 +1,162 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
-> +  It has in-built Soundwire controller, pin controller, interrupt mux and
-> +  supports both I2S/I2C and SLIMbus audio interfaces.
-> +
-> +properties:
-> +  compatible:
-> +    const: slim217,250
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description: GPIO spec for reset line to use
-> +    maxItems: 1
-> +
-> +  slim-ifc-dev:
-> +    description: SLIMBus Interface device phandle
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    maxItems: 1
-
-Replied on previous version.
-
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: extclk
-> +
-> +  vdd-buck-supply:
-> +    description: A reference to the 1.8V buck supply
-> +
-> +  vdd-buck-sido-supply:
-> +    description: A reference to the 1.8V SIDO buck supply
-> +
-> +  vdd-rx-supply:
-> +    description: A reference to the 1.8V rx supply
-> +
-> +  vdd-tx-supply:
-> +    description: A reference to the 1.8V tx supply
-> +
-> +  vdd-vbat-supply:
-> +    description: A reference to the vbat supply
-> +
-> +  vdd-io-supply:
-> +    description: A reference to the 1.8V I/O supply
-> +
-> +  vdd-micbias-supply:
-> +    description: A reference to the micbias supply
-> +
-> +  qcom,micbias1-microvolts:
-
-The standard unit is 'microvolt', not 'microvolts'.
-
-> +    description: micbias1 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias2-microvolts:
-> +    description: micbias2 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias3-microvolts:
-> +    description: micbias3 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias4-microvolts:
-> +    description: micbias4 voltage between 1800000 - 2850000 microvolts
-> +
-> +  clock-output-names:
-> +    const: mclk
-> +
-> +  clock-frequency:
-> +    description: Clock frequency of output clk in Hz
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +    description: |
-> +      WCD934x subnode for each slave devices. Bindings of each subnodes
-> +      depends on the specific driver providing the functionality and
-> +      documented in their respective bindings.
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - slim-ifc-dev
-> +  - interrupts
-> +  - interrupt-controller
-> +  - clock-frequency
-> +  - clock-output-names
-> +  - qcom,micbias1-microvolts
-> +  - qcom,micbias2-microvolts
-> +  - qcom,micbias3-microvolts
-> +  - qcom,micbias4-microvolts
-> +  - "#interrupt-cells"
-> +  - "#clock-cells"
-> +  - "#sound-dai-cells"
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    codec@1,0{
-> +        compatible = "slim217,250";
-> +        reg  = <1 0>;
-> +        reset-gpios = <&tlmm 64 0>;
-> +        slim-ifc-dev  = <&wcd9340_ifd>;
-> +        #sound-dai-cells = <1>;
-> +        interrupt-parent = <&tlmm>;
-> +        interrupts = <54 4>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +        #clock-cells = <0>;
-> +        clock-frequency = <9600000>;
-> +        clock-output-names = "mclk";
-> +        qcom,micbias1-microvolts = <1800000>;
-> +        qcom,micbias2-microvolts = <1800000>;
-> +        qcom,micbias3-microvolts = <1800000>;
-> +        qcom,micbias4-microvolts = <1800000>;
-> +        clock-names = "extclk";
-> +        clocks = <&rpmhcc 2>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        pinctrl@42 {
-> +            reg = <0x42 0x2>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.21.0
+> Changes since v2:
+> 1. Keep description of consumers in power-domain.txt,
+> 2. Rename power_domain.txt to power-domain.txt,
+> 3. Indent example with four spaces (more readable).
 > 
+> Changes since v1:
+> 1. Select all nodes for consumers,
+> 2. Remove from consumers duplicated properties with dt-schema,
+> 3. Fix power domain pattern,
+> 4. Remove unneeded types.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
+>  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
+>  .../bindings/arm/freescale/fsl,scu.txt        |   2 +-
+>  .../bindings/clock/renesas,cpg-mssr.txt       |   2 +-
+>  .../bindings/clock/ti/davinci/psc.txt         |   2 +-
+>  .../firmware/nvidia,tegra186-bpmp.txt         |   2 +-
+>  .../bindings/power/amlogic,meson-gx-pwrc.txt  |   2 +-
+>  .../devicetree/bindings/power/fsl,imx-gpc.txt |   2 +-
+>  .../bindings/power/fsl,imx-gpcv2.txt          |   2 +-
+>  .../{power_domain.txt => power-domain.txt}    |  95 +------------
+>  .../bindings/power/power-domain.yaml          | 133 ++++++++++++++++++
+>  .../bindings/power/renesas,sysc-rmobile.txt   |   2 +-
+>  .../bindings/power/xlnx,zynqmp-genpd.txt      |   2 +-
+>  .../bindings/soc/bcm/brcm,bcm2835-pm.txt      |   2 +-
+>  .../bindings/soc/mediatek/scpsys.txt          |   2 +-
+>  .../bindings/soc/ti/sci-pm-domain.txt         |   2 +-
+>  MAINTAINERS                                   |   2 +-
+>  17 files changed, 149 insertions(+), 109 deletions(-)
+>  rename Documentation/devicetree/bindings/power/{power_domain.txt => power-domain.txt} (51%)
+>  create mode 100644 Documentation/devicetree/bindings/power/power-domain.yaml
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
