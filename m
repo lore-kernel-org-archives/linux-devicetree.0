@@ -2,90 +2,103 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13ECC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 18:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A571EC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 18:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E6521925
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 18:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7FF217F5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 18:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572979336;
-	bh=DEUVqw771dU2bTELeCvvnuZEJu78X/+KYCL/5q+HwBw=;
+	s=default; t=1572979747;
+	bh=sBXW7Y3XWS5oCMwqXlYFhhF/4022KiBmqq6Jnn0h16s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TvDJo4fyd9MN4GsvSSRtdhyhQFboBmAymyJuXoOpZmNDWhYB7V5mtPkIUq5Bw6ano
-	 8F4ssccMzwau8LHpr3W2R8Oe1wCBFhmoa1IUD3MdA+mDAwZZrke9Nk3iqbFJeRV9nj
-	 MoIGwpFGDiHQbcDiR5OOIHUxPD7FXCIVxOg51mpI=
+	b=BHzUND4dppyj8pZcgWv78zCJY/xoOrb3bKsb/1shT5pHE9FfGft2YYIC+DVGze1SG
+	 eZY8Ba3XfNo09Pe0ypvMQR8VOtjPt9UPF9MUfuOToOu/wM+3X5Iz4Qsh10V9bY15CM
+	 wmh42PiQZDGFiopvT7Ro7m14PwcHvg4evUAfwME0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390664AbfKESmP (ORCPT
+        id S2390432AbfKEStG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:42:15 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41974 "EHLO
+        Tue, 5 Nov 2019 13:49:06 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34198 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390485AbfKESmP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 13:42:15 -0500
-Received: by mail-oi1-f194.google.com with SMTP id e9so14607079oif.8;
-        Tue, 05 Nov 2019 10:42:13 -0800 (PST)
+        with ESMTP id S2389861AbfKEStG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 13:49:06 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l202so18522730oig.1;
+        Tue, 05 Nov 2019 10:49:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iJBXvdlpG9BhPNruKX39AR0akfvMBjiyYLN4NObqeeA=;
-        b=s/KhZusKl3Q1EgkvHM44zbffFncnSR700yIMhpRxCtHBwpbh9sQxNc/LZZqtnIsIRO
-         NU2Zy4wCOUXFliADai4OCqNX5uBsdvbOXj5swrX6foSDBtn2QdamFdwvhCbunKhZ79/M
-         mOgaEiB/sf7bj5qJCrcQDvd68RPrROxHuqJlAkFmzMugGV1D6Xk6yXFb8Al+Me1rVfXH
-         jU68B22KQCQLb5ONHmbtSck45MP3jUbQmmNpSqugXm69aVRhU1vILHXC0tHA0x2eNZ1N
-         ldIz0c5tbkNJChGQc18kgoQZV3qSyOrgTHZJVR3+OLE4yF6KIltJkQT3c8oXEO9R3SXT
-         KawA==
-X-Gm-Message-State: APjAAAV5EtzUZhHh6nRKbDg6Cq67JzRztnKrD2jfc+2pWUYcF962QOC8
-        g6HXd43CT/v/IURhWP3hxQ==
-X-Google-Smtp-Source: APXvYqyvswQl1WFYxSY5AvP/Ru+pCT4LPGDpmwpqONjetjHzezRNCjSNOQaKI/yDjC67JfGUUEfHng==
-X-Received: by 2002:a05:6808:2d0:: with SMTP id a16mr317070oid.149.1572979333259;
-        Tue, 05 Nov 2019 10:42:13 -0800 (PST)
+        bh=Qj5LiYO9Gp8VVa5aloZ7icPxyBMoZMvJD6YekkOcDko=;
+        b=DZh4DBB6PGYD9EHe8SNxx49+3hErp897GlDbAOarx4jIEVk3pbY4yFS47UNf4UkZOU
+         8pwl4bDqk72chY5FoevbkCSSZmZFIyWsiO8okHJ9z5mpQibVynwYzLFzhWF5bq5uzbtb
+         pRFsUb1IMVeArStTGYqSFoCzVgMoH/lPwhjE+vAsv5MjHtaKba2no6mkSGn4THxHPHgj
+         gaxC6LGbgJUAL2afyeB6gUB/yH99DIji7oFW5yry2ZKP7d0Y7E60BNW2SiidNvccSxSs
+         05vS1e+h3aKyUMUJ7fjyK+oRu+AjgzW+OqMCPiypwwip7D+r+hY+GQPRyeUUXsi+sTYq
+         16bg==
+X-Gm-Message-State: APjAAAWZMzHiLH+kqZc2XN9E5D/zea4QUiIp+hLhMRHECF32OR5JXnNb
+        MI7sIIfx/Kz/oEq+CFboj42HXvY=
+X-Google-Smtp-Source: APXvYqyrkBUlvV4cInkJ0w/GC7dlp4bZRcgeBsiVsjLD/Uy3nlwd90V6BQaJ97S30Z3HKKwFfh/7vw==
+X-Received: by 2002:aca:a842:: with SMTP id r63mr394336oie.118.1572979745545;
+        Tue, 05 Nov 2019 10:49:05 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a9sm6429109otc.75.2019.11.05.10.42.12
+        by smtp.gmail.com with ESMTPSA id u18sm2530972otq.31.2019.11.05.10.49.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 10:42:12 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:42:11 -0600
+        Tue, 05 Nov 2019 10:49:04 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:49:03 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     kholk11@gmail.com
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ccross@android.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, marijns95@gmail.com,
-        kholk11@gmail.com
-Subject: Re: [PATCH v2 1/5] dt-bindings: iio: spmi-vadc: Add definitions for
- USB DP/DM VADCs
-Message-ID: <20191105184211.GA30975@bogus>
-References: <20191031111645.34777-1-kholk11@gmail.com>
- <20191031111645.34777-2-kholk11@gmail.com>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add
+ bindings for gpio
+Message-ID: <20191105184903.GA4709@bogus>
+References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+ <20191029112700.14548-9-srinivas.kandagatla@linaro.org>
+ <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
+ <4f0e22ab-6aa1-2ed1-a85b-fb66531e0b2a@linaro.org>
+ <CACRpkda2CdbPe7jsomZSxdJ1wE65OmNYDsZNj1OmfzdvG4kWng@mail.gmail.com>
+ <502c64dd-a249-bb2c-7bc5-8c66fa66be35@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031111645.34777-2-kholk11@gmail.com>
+In-Reply-To: <502c64dd-a249-bb2c-7bc5-8c66fa66be35@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 31 Oct 2019 12:16:41 +0100, kholk11@gmail.com wrote:
-> From: AngeloGioacchino Del Regno <kholk11@gmail.com>
+On Tue, Nov 05, 2019 at 01:27:45PM +0000, Srinivas Kandagatla wrote:
 > 
-> Some PMICs, like PMI8950, feature two ADCs, at 0x43 and 0x44,
-> respectively used for USB D+ and USB D- (DP/DM): add the definition
-> for them as VADC_USB_DP and VADC_USB_DM.
 > 
-> Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
-> ---
->  include/dt-bindings/iio/qcom,spmi-vadc.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+> On 05/11/2019 13:25, Linus Walleij wrote:
+> > On Mon, Nov 4, 2019 at 10:35 AM Srinivas Kandagatla
+> > <srinivas.kandagatla@linaro.org>  wrote:
+> > 
+> > > This controller just has Output enable bits, No pin control properties.
+> > > 
+> > > As you suggested I can move this to drivers/gpio in next version.
+> > OK perfect, thanks!
+> > 
+> > NB: this probably also affects the compatible-string which contains
+> > "pinctrl*" right?
+> Yes, I will suffix it with "-gpio" instead.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Not a discussion we should be having because you should name this after 
+what's in the chip documentation not the OS subsystem it happens to land 
+in.
 
-If a tag was not added on purpose, please state why and what changed.
+Rob
