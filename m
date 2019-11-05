@@ -2,118 +2,266 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B700C010A2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB53C010B3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F55D20869
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572950711;
-	bh=onQoxY+60Ht/QpXXbe43yBiTlL8/TGR6VtklKa0Nv8Q=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=Li4NPjabOb8vbpreQTe6joSISF4p2sMdBTwibRYEjZUCsZ03XOijdltHEb+5K7jNc
-	 hIXAuEXxeBuu/ZFKoenkVZevzXZOgUvCX0oXKnS3eVgH/d+Sn1m6rPx8ffDVJ6vEQv
-	 ZSjk5pcm8+1BggR7cvT6PMSlzNYRwCMHEfn0A1BI=
+	by mail.kernel.org (Postfix) with ESMTP id 6253721928
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 10:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388148AbfKEKpK (ORCPT
+        id S2388395AbfKEKxA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:45:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 05:53:00 -0500
+Received: from mga17.intel.com ([192.55.52.151]:49486 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387905AbfKEKpK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:45:10 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DB6B206BA;
-        Tue,  5 Nov 2019 10:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572950709;
-        bh=onQoxY+60Ht/QpXXbe43yBiTlL8/TGR6VtklKa0Nv8Q=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=PFdcBBT7246rOR+L/TuwT/n4Vd90Yj6lLmFUd6G+BIkkG3DYYgUrl28UrcsC9529U
-         olg2lNxLJF9D2p0XDByHBB98hvUEFu0ZsC21KV3sVINqTUsnXTw6s+vC9LOX2EvyEb
-         CeG36tokQ2/KIRdx+YsA4oASez2fvTD8FLd+rPZs=
-Date:   Tue, 5 Nov 2019 11:45:07 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] arm64: dts: allwinner: orange-pi-3: Enable USB 3.0
- host support
-Message-ID: <20191105104507.GE3876@gilmour.lan>
-References: <20191020134229.1216351-1-megous@megous.com>
- <20191020134229.1216351-5-megous@megous.com>
- <20191021110946.gxmib3to7n7v2vof@gilmour>
- <20191104121648.jxgs2eoj6loh2as2@core.my.home>
+        id S2388221AbfKEKxA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:53:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 02:52:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
+   d="scan'208";a="204939882"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 05 Nov 2019 02:52:58 -0800
+Received: from [10.226.38.65] (rtanwar-mobl.gar.corp.intel.com [10.226.38.65])
+        by linux.intel.com (Postfix) with ESMTP id 5876658045B;
+        Tue,  5 Nov 2019 02:52:56 -0800 (PST)
+Subject: Re: [PATCH v3 1/2] pinctrl: Add pinmux & GPIO controller driver for a
+ new SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
+ <02558966005c0483144785ed069b144f81d209a9.1572926608.git.rahul.tanwar@linux.intel.com>
+ <20191105094917.GK32742@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <61e076de-7b24-b71d-dd79-c1c506a0f1bf@linux.intel.com>
+Date:   Tue, 5 Nov 2019 18:52:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="MAH+hnPXVZWQ5cD/"
-Content-Disposition: inline
-In-Reply-To: <20191104121648.jxgs2eoj6loh2as2@core.my.home>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191105094917.GK32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---MAH+hnPXVZWQ5cD/
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/11/2019 5:49 PM, Andy Shevchenko wrote:
+> On Tue, Nov 05, 2019 at 02:49:42PM +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+>> controls pin multiplexing & configuration including GPIO functions selection &
+>> GPIO attributes configuration.
+>>
+>> This IP is not based on & does not have anything in common with Chassis
+>> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+>> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+>> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+>>
+>> Add a new GPIO & pin control framework based driver for this IP.
+>> +static void eqbr_set_val(void __iomem *addr, u32 offset,
+>> +			 u32 mask, u32 set, raw_spinlock_t *lock)
+> This lock parameter is quite unusual. Can't you supply a pointer to a data
+> structure which has lock along with MMIO address?
 
-Hi,
+On second thoughts, i realize that this function can be totally avoided
+since it just has two callers which can be further reduced to one caller.
+I will remove this function and instead do reg update in the caller function
+itself.
 
-On Mon, Nov 04, 2019 at 01:16:48PM +0100, Ond=C5=99ej Jirman wrote:
-> Hello Maxime,
+
+>> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
+>> +{
+>> +	struct gpio_irq_chip *girq;
+>> +	struct gpio_chip *gc;
+>> +#if defined(CONFIG_OF_GPIO)
+>> +	gc->of_node = desc->node;
+>> +#endif
+> Isn't it what GPIO library does for everybody?
+
+We have 4 different of_node's for 4 different gpio_chips/banks. GPIO library
+handles like below:
+
+        if (chip->parent) {
+                gdev->dev.parent = chip->parent;
+                gdev->dev.of_node = chip->parent->of_node;
+        }
+
+#ifdef CONFIG_OF_GPIO
+        /* If the gpiochip has an assigned OF node this takes precedence */
+        if (chip->of_node)
+                gdev->dev.of_node = chip->of_node;
+        else
+                chip->of_node = gdev->dev.of_node;
+#endif
+
+So i think we need to assign 4 of_node's to gpio_chip's in the driver.
+
+>> +
+>> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
+>> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
+>> +			 desc->name);
+> Is it fatal or non-fatal?
+
+It is not fatal. But i am totally missing your point. Is it about
+dev_info() ? Can you please elaborate more ?
+
+
+>> +		return 0;
+> Ditto.
 >
-> On Mon, Oct 21, 2019 at 01:09:46PM +0200, Maxime Ripard wrote:
-> > On Sun, Oct 20, 2019 at 03:42:29PM +0200, megous@megous.com wrote:
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > Enable Allwinner's USB 3.0 phy and the host controller. Orange Pi 3
-> > > board has GL3510 USB 3.0 4-port hub connected to the SoC's USB 3.0
-> > > port. All four ports are exposed via USB3-A connectors. VBUS is
-> > > always on, since it's powered directly from DCIN (VCC-5V) and
-> > > not switchable.
-> > >
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> >
-> > Those last two patches are fine with me, I'll merge them once the phy
-> > driver will be merged.
+>> +	}
+>> +}
+>> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
+>> +{
+>> +	struct device_node *np;
+>> +	struct eqbr_gpio_desc *desc;
+> desc is very confusing here, since GPIO library uses this term for GPIO
+> descriptors.
+
+Agree, better to rename it to avoid confusion with GPIO descriptors.
+I will rename it in v4. Thanks.
+
+>> +	struct device *dev;
+>> +	int i, ret;
+>> +	struct resource res;
+>> +
+>> +		ret = bgpio_init(&desc->chip, dev, desc->bank->nr_pins/8,
+> 'nr_pins / 8,'
+
+Well noted.
+
+>> +				 desc->membase + GPIO_IN,
+>> +				 desc->membase + GPIO_OUTSET,
+>> +				 desc->membase + GPIO_OUTCLR,
+>> +				 desc->membase + GPIO_DIR,
+>> +				 NULL,
+>> +				 0);
+>> +		if (ret) {
+>> +			dev_err(dev, "unable to init generic GPIO\n");
+>> +			return ret;
+>> +		}
+>> +	return 0;
+>> +}
+>> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
+>> +			       unsigned int selector, unsigned int group)
+>> +{
+>> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+>> +	struct function_desc *func;
+>> +	struct group_desc *grp;
+>> +	unsigned int *pinmux;
+>> +	int i;
 >
-> PHY driver has been merged. You can now pull these patches too, when
-> you like.
+>> +	pinmux = grp->data;
+>> +	for (i = 0; i < grp->num_pins; i++)
+>> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
+> Shouldn't be this part serialized?
 >
-> See here: https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-ph=
-y.git/log/?h=3Dnext
+> Same Q to all similar places. I guess I already mentioned this in previous
+> review.
 
-Thanks for letting me know, I just applied it.
+From serialization, you mean locking..rt ? Yes, there is one writel()
+statement inthis flow. I will add lock for that statement. Rechecked
+the code again, i do notfind any other similar places.
 
-Maxime
---MAH+hnPXVZWQ5cD/
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+>> +	return 0;
+>> +}
+>> +static int is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
+> Looks like it better to be boolean.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcFSswAKCRDj7w1vZxhR
-xYUhAQCgnMs/KfGma0n4q8UBRgykbOwd6sV62XQC9vYIV/XaCQEA95H1Cno4U6UO
-7b+BJra9M7o+xz4P/Mv6itEuQHmycQM=
-=lBwP
------END PGP SIGNATURE-----
+Well noted, will change in v4.
 
---MAH+hnPXVZWQ5cD/--
+>> +			 unsigned int nr_funcs, unsigned int *idx)
+>> +{
+>> +	int i;
+>> +
+>> +	if (!funcs || !nr_funcs)
+>> +		return 0;
+>> +
+>> +	for (i = 0; i < nr_funcs; i++) {
+>> +
+> Redundant blank line.
+
+Well noted, will change in v4.
+
+>> +		if (funcs[i].name && (strcmp(funcs[i].name, name) == 0) ) {
+>> +			*idx = i;
+>> +			return 1;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
+>> +		       unsigned int *nr_funcs, funcs_util_ops op)
+>> +{
+>> +	struct device_node *node = dev->of_node;
+>> +	struct device_node *np;
+>> +	struct property *prop;
+>> +	unsigned int fid;
+>> +	const char *fn_name;
+>> +	int i, j;
+>> +
+>> +	i = 0;
+>> +	for_each_child_of_node(node, np) {
+>> +		prop = of_find_property(np, "groups", NULL);
+>> +		if (prop) {
+> Why not
+> 		if (!prop)
+> 			continue;
+> ?
+
+Sure, i can change like that in v4.
+
+>> +			if (of_property_read_string(np, "function",
+>> +						    &fn_name)) {
+> It's perfectly one line. Perhaps you may need to configure your text editor.
+
+I am following strict 80 chars limit. This goes on to 81 chars. It's a bit
+confusing on when to adhere to 80 chars limit and when to bypass it :)
+
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +	for (i=0; i < nr_funcs; i++) {
+> The better style is 'i = 0' and so on.
+> Simple be consistent. Or do everywhere 'i=0; i<nr_func; i++', etc. But remember
+> that this is for sure will be declined by most of the maintainers.
+
+Sure, noted.
+
+>> +	}
+>>
+>> +static int pinbank_init(struct device_node *np,
+>> +			struct eqbr_pinctrl_drv_data *drvdata,
+>> +			struct eqbr_pin_bank *bank, unsigned int id)
+>> +{
+>> +	struct device *dev = drvdata->dev;
+>> +	struct of_phandle_args spec;
+>> +
+>> +	bank->membase = drvdata->membase + id * PAD_REG_OFF;
+>> +
+>> +	if (of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &spec)) {
+>> +		dev_err(dev, "gpio-range not available!\n");
+>> +		return -EFAULT;
+> Shadowing error code with actually unsuitable one.
+
+Will change in v4. Thanks.
+
+Regards,
+Rahul
+
