@@ -2,112 +2,130 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44C1C1747C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E2BC1747C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 14:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DA821928
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC7A21882
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 14:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuGsP7Sa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389227AbfKEN5x (ORCPT
+        id S2389383AbfKEOBp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:57:53 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39095 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388000AbfKEN5w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 08:57:52 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRzL7-0002TD-VS; Tue, 05 Nov 2019 14:57:45 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRzL7-00080J-Al; Tue, 05 Nov 2019 14:57:45 +0100
-Date:   Tue, 5 Nov 2019 14:57:45 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+        Tue, 5 Nov 2019 09:01:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43909 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389377AbfKEOBo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 09:01:44 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n1so21498058wra.10;
+        Tue, 05 Nov 2019 06:01:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Wcd6F4hUjRzDP5lzJbcKbN83P0Izh8UopNSdrH/0wXs=;
+        b=JuGsP7SaJj6polj8WOmJL+wp8KAuIHmo+o9netEjHZUnkfMZlpJrU5Jm+LWMA3UbQE
+         iBvCJywvjXy6BYuWreZ9X+UIjDqjTId8lLv4aJjHAxtQxr8RZUTsxAHzztkUXuu506Ty
+         6F4HI1awQ+O9jKKZxIJ1S0pujnzRSJAafQus3efQA1FUv5vt+kmWLEv5xQlUPr4OjGPE
+         zNQZcnceOyLUnqj2qYpJiUPKgOyIQ5rxG7gBXoosxQZWOSJ3nHCDARXlwZrRxqqOHz9S
+         23irGP3IQhh+AuczCRM/sS3LgaVNvLApVUWBkkRDwvNjAo4NyFva12WxB7pBuKjpOLuF
+         606w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Wcd6F4hUjRzDP5lzJbcKbN83P0Izh8UopNSdrH/0wXs=;
+        b=RD2Fdg8y0Z/GNSC9OH3YRWFVKUAHti+joUaaPHYln9k0nPphOTE3bEpKyjJ2NMl5tr
+         LuD0UBrc2fmw5NjGnZdPNbdQb0VIbGmZCZcdYpnS/jawGu2YBkfdKmv3Eu9f1Aa+79kA
+         kmm4NjVhVUzpZoWWUDxfrSfg2jPxupyncoURmXKOMejcZCJDQIa9TCGWzvsEcmHis1mQ
+         Z2aO6vgSzDqkbYJuF/5ezqTz6HshEeUWMzK3UZHuibDCsJE1TtYFfOGAyJrXyokrgjlI
+         NBrakWMd/GkU7nK6XpadTqe2p6Dz2O3lAwY5nL5U3feJ+Ku7+fELCbq8/h/XVN12jQuc
+         ZpLA==
+X-Gm-Message-State: APjAAAWiTBFPuC1nUg9MQzqFB8BVyKMMMmMLtxMFKWpfLxOog5SihG2r
+        pzqDsG44hIV60wSn/Th7DUXMJyxX9uYQMwZpHOs=
+X-Google-Smtp-Source: APXvYqxRcCROBvE45IqEtn6OaqJk7IITVlNsi8UujVDIcnVf36fGS6gEz5kfeljJQVq3rkoKIyrIDQkO5S6JVNP7UKw=
+X-Received: by 2002:a5d:4b42:: with SMTP id w2mr27600001wrs.360.1572962502646;
+ Tue, 05 Nov 2019 06:01:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20191105131456.32400-1-peron.clem@gmail.com> <20191105131456.32400-3-peron.clem@gmail.com>
+ <a8908f1157e862164fb1bea07f8d5e1812325858.camel@pengutronix.de>
+In-Reply-To: <a8908f1157e862164fb1bea07f8d5e1812325858.camel@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Tue, 5 Nov 2019 15:01:31 +0100
+Message-ID: <CAJiuCcesD8kh_BpVLxyhk5UYYwGhp_tQkcsaY-LzxRTT5kO3Qw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
+To:     Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
         Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v3 3/7] pwm: sun4i: Add an optional probe for bus clock
-Message-ID: <20191105135745.mf63pelpbekmitgm@pengutronix.de>
-References: <20191105131456.32400-1-peron.clem@gmail.com>
- <20191105131456.32400-4-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191105131456.32400-4-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:14:52PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> H6 PWM core needs bus clock to be enabled in order to work.
-> 
-> Add an optional probe for it and a fallback for previous
-> bindings without name on module clock.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 45 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 43 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 9ba83769a478..54e19fa56a4e 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
->  
->  struct sun4i_pwm_chip {
->  	struct pwm_chip chip;
-> +	struct clk *bus_clk;
->  	struct clk *clk;
->  	struct reset_control *rst;
->  	void __iomem *base;
-> @@ -363,9 +364,35 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
->  	if (IS_ERR(pwm->base))
->  		return PTR_ERR(pwm->base);
->  
-> -	pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> -	if (IS_ERR(pwm->clk))
-> +	/* Get all clocks and reset line */
-> +	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> +	if (IS_ERR(pwm->clk)) {
-> +		dev_err(&pdev->dev, "get clock failed %ld\n",
-> +			PTR_ERR(pwm->clk));
+Hi Philipp,
 
-Please only print this message if PTR_ERR(pwm->clk) != -EPROBE_DEFER.
-You might also want to make use of commit 57f5677e535b ("printf: add
-support for printing symbolic error names") and use
+On Tue, 5 Nov 2019 at 14:36, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> On Tue, 2019-11-05 at 14:14 +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM core needs deasserted reset line in order to work.
+> >
+> > Add an optional probe for it.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 33 +++++++++++++++++++++++++++++++--
+> >  1 file changed, 31 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 6f5840a1a82d..9ba83769a478 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> [...]
+> > @@ -365,6 +367,21 @@ static int sun4i_pwm_probe(struct platform_device =
+*pdev)
+> >       if (IS_ERR(pwm->clk))
+> >               return PTR_ERR(pwm->clk);
+> >
+> > +     pwm->rst =3D devm_reset_control_get_optional_shared(&pdev->dev, N=
+ULL);
+> > +     if (IS_ERR(pwm->rst)) {
+> > +             if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
+> > +                     dev_err(&pdev->dev, "get reset failed %ld\n",
+> > +                             PTR_ERR(pwm->rst));
+> > +             return PTR_ERR(pwm->rst);
+> > +     }
+> > +
+> > +     /* Deassert reset */
+>
+> Nitpick: isn't the API function name explanatory enough?
 
-	dev_err(&pdev->dev, "get clock failed: %pe\n", pwm->clk);
+Yes I can remove this comment,
 
-Other than that the patch is fine for me.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Cl=C3=A9ment
+>
+> regards
+> Philipp
+>
