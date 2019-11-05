@@ -2,91 +2,193 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE89CC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3F6C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569452087E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572993070;
-	bh=F/JbUFYuFhhh2Sl5PmHyXZoPBPbo2SEHVGqodw3/bwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gbNNa1GwZsCcrTgGR7HzWEuC+CilnRN3VACAz2EOrYAjbUhPQNyVfygOxxdEhWSS9
-	 jSNF8WoJ6JzXg4Wxw/ZQiYWlsId+jQHTwRLbQPrOVK5d9aJP0+V5RRd41N4/eV0wlZ
-	 ZIxaJQMwHcRKRx5GjlLHBJXLF0YhyhiVIU1BsGlM=
+	by mail.kernel.org (Postfix) with ESMTP id 2F5612084D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZODWxeoM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbfKEWbK (ORCPT
+        id S1730192AbfKEWgG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:31:10 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35818 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728515AbfKEWbJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:31:09 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n16so19143986oig.2;
-        Tue, 05 Nov 2019 14:31:09 -0800 (PST)
+        Tue, 5 Nov 2019 17:36:06 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44904 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728515AbfKEWgG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:36:06 -0500
+Received: by mail-ot1-f67.google.com with SMTP id c19so3006368otr.11
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 14:36:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sI67ya690BTFzgQFAyEbbbi8Nt1gAKdEUwsmNFmIXdc=;
+        b=ZODWxeoMRTwEvAD65PgEfzPAUnDmSFK4brlri5jweoy7Vi+WgtjrshGTfCoZLdLlmE
+         OxudRyI4pmvp87d3vuAk/pMDHJzZl5Al1b36eh9f9DSrvm60ek6rspFnti0c8O4Ev4uk
+         z1qhp+xiMln01gOwVNShh2+KNYFk2Y/pLgcF5FTn5/Xtf2qFyCSb0FoRY8l7WfkpepGF
+         oAy/GlU+tNs3vQHqFKsJxibWdE6Rt5t2LmGpQq1hzGlAT9GojrTabUQw4Jw0xefov4Tw
+         iYlDOldEuXej4F2xabetKwN2uUdatrbgmhOfgs1QE4zlqslyTvdW0roW/t8G01FlgEoF
+         Q3Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P7DS8UNeHFmRF9Ai42oFGqJ59k+5UylJEgaKrw08XWM=;
-        b=Cfbw30q8KU/mGUpS2WendGh0eF7LRluyRstghVZAnNwFrHLJ/x9yheBMff6/F+/7t2
-         K5K9rAjVCUjWLLMmXcYCGnDBOW2z1h0+Cb5LThEG82JZBBdboQON/V6fs39f1XDFK8qm
-         VSN8YDq6Dwkg/FfaoyCwR02Ds+GIUfMT71ZrMqSExw+0j3Jh6Q4r3lOwsxDbfEv+kuNB
-         O7xws/uPd/IWhgMdKOJ8x0wvZchil3aq2199b0C9R0+WVtGJB7cbDfDzbPY06+BwUyPG
-         EBTIWi87vSQvGC8lOpAIO4l7AC0CrdVV11AfJeUsfpMXwBDzc6n9Z79OYrbDxmBtPDK5
-         H67A==
-X-Gm-Message-State: APjAAAXtjeYeJHp5LTjQAYCsttf2XarAe3nel3SvW9r0aA9fq2H1msUA
-        vo2a5IjYtdS0PNFvwcZb5g==
-X-Google-Smtp-Source: APXvYqwjhmMiPRy7nJVXI6Asqm9ZybIl+fIpC8DPgsMZgHWYu7TXGKfBgJrTq0u5lMK6YlasMsrn/Q==
-X-Received: by 2002:aca:c4d3:: with SMTP id u202mr1198832oif.59.1572993068836;
-        Tue, 05 Nov 2019 14:31:08 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u130sm6315754oib.56.2019.11.05.14.31.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 14:31:08 -0800 (PST)
-Date:   Tue, 5 Nov 2019 16:31:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v2] dt-bindings: phy: renesas: usb2-phy: convert bindings
- to json-schema
-Message-ID: <20191105223107.GA16214@bogus>
-References: <1572592763-12396-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sI67ya690BTFzgQFAyEbbbi8Nt1gAKdEUwsmNFmIXdc=;
+        b=RW/uLmfc3EgFha+vqkN2xoQjzJ4V48TLbnWJWyBKzNDMYm8Kv4iLhSAx9TIs6ic0k5
+         LYcEoQ71EFp3RG+B9oGhP+QJDuHcgwAONlhZpRI4zjheg7OkXbDESt1xy4Dkj6sTttST
+         gr61ciqyCzNPlEIE3nZn7yL/m14alBSTwkuGMjhj2zCVU4fCdI10L0vS9Pqkb8YYk1kq
+         KJ1rsJXPurD80eHpwLBZBGjNxmtrFyTSsfiGpBP5+x+fRzagY8KKSomInWvnJ+Mv4+U8
+         9PbaiCtsDfxnAJvr2tT8PKXxiijjqTZc7vCM8bsv8Kzgvbg/lLXc1lBOKjBnpsnUW+bz
+         VUMg==
+X-Gm-Message-State: APjAAAXn0cDIg4h7qTOcD8IF4U7vf4wHMmGwEata5SZyqkqMcXHYAWLg
+        2KijVB2TcyuCtY7+z51HIVeeGJaEe9LNGK47NZhAjQ==
+X-Google-Smtp-Source: APXvYqy6bhBsSUtfDyKnL4fDDnI//oKt21X9dsAUShv32i3I5Z2T55VMpauhoALDUST3AJ69I0rUnsVwNGgegKQRHKY=
+X-Received: by 2002:a9d:648f:: with SMTP id g15mr7370526otl.195.1572993364486;
+ Tue, 05 Nov 2019 14:36:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572592763-12396-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-3-saravanak@google.com>
+ <1593797.btdyhENphq@kreacher>
+In-Reply-To: <1593797.btdyhENphq@kreacher>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 5 Nov 2019 14:35:28 -0800
+Message-ID: <CAGETcx9KSwXgrc0PaWQtBuiET-0ts9HNgjzRcioewjqzjuQGSg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] driver core: Allow a device to wait on optional suppliers
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  1 Nov 2019 16:19:23 +0900, Yoshihiro Shimoda wrote:
-> Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
-> to json-schema.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  Changes from v1:
->  - Use const for RZ/G1C's compatible.
->  - Add resets' descriptions.
->  - Remove dr_mode descrption. 
->  https://patchwork.kernel.org/patch/11197805/
-> 
->  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 --------------
->  .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 103 +++++++++++++++++++++
->  2 files changed, 103 insertions(+), 70 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-> 
+Looks like I squashed/rebased a bit incorrectly. It's fixed in the
+next patch in the series.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+-Saravana
+
+On Tue, Nov 5, 2019 at 2:29 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Monday, October 28, 2019 11:00:23 PM CET Saravana Kannan wrote:
+> > Before this change, if a device is waiting on suppliers, it's assumed
+> > that all those suppliers are needed for the device to probe
+> > successfully. This change allows marking a devices as waiting only on
+> > optional suppliers. This allows a device to wait on suppliers (and link
+> > to them as soon as they are available) without preventing the device
+> > from being probed.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/base/core.c    | 28 +++++++++++++++++++++++++---
+> >  include/linux/device.h |  3 +++
+> >  2 files changed, 28 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 17ed054c4132..48cd43a91ce6 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -480,13 +480,25 @@ EXPORT_SYMBOL_GPL(device_link_add);
+> >   * This function is NOT meant to be called from the probe function of the
+> >   * consumer but rather from code that creates/adds the consumer device.
+> >   */
+> > -static void device_link_wait_for_supplier(struct device *consumer)
+> > +static void device_link_wait_for_supplier(struct device *consumer,
+> > +                                       bool need_for_probe)
+> >  {
+> >       mutex_lock(&wfs_lock);
+> >       list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
+> > +     consumer->links.need_for_probe = need_for_probe;
+> >       mutex_unlock(&wfs_lock);
+> >  }
+> >
+> > +static void device_link_wait_for_mandatory_supplier(struct device *consumer)
+> > +{
+> > +     device_link_wait_for_supplier(consumer, true);
+> > +}
+> > +
+> > +static void device_link_wait_for_optional_supplier(struct device *consumer)
+> > +{
+> > +     device_link_wait_for_supplier(consumer, false);
+> > +}
+> > +
+> >  /**
+> >   * device_link_add_missing_supplier_links - Add links from consumer devices to
+> >   *                                       supplier devices, leaving any
+> > @@ -656,7 +668,8 @@ int device_links_check_suppliers(struct device *dev)
+> >        * probe.
+> >        */
+> >       mutex_lock(&wfs_lock);
+> > -     if (!list_empty(&dev->links.needs_suppliers)) {
+> > +     if (!list_empty(&dev->links.needs_suppliers) &&
+> > +         dev->links.need_for_probe) {
+> >               mutex_unlock(&wfs_lock);
+> >               return -EPROBE_DEFER;
+> >       }
+> > @@ -760,6 +773,15 @@ void device_links_driver_bound(struct device *dev)
+> >  {
+> >       struct device_link *link;
+> >
+> > +     /*
+> > +      * If a device probes successfully, it's expected to have created all
+> > +      * the device links it needs to or make new device links as it needs
+> > +      * them. So, it no longer needs to wait on any suppliers.
+> > +      */
+> > +     mutex_lock(&wfs_lock);
+> > +     list_del_init(&dev->links.needs_suppliers);
+> > +     mutex_unlock(&wfs_lock);
+> > +
+> >       device_links_write_lock();
+> >
+> >       list_for_each_entry(link, &dev->links.consumers, s_node) {
+> > @@ -2393,7 +2415,7 @@ int device_add(struct device *dev)
+> >
+> >       if (fwnode_has_op(dev->fwnode, add_links)
+> >           && fwnode_call_int_op(dev->fwnode, add_links, dev))
+> > -             device_link_wait_for_supplier(dev);
+> > +             device_link_wait_for_mandatory_supplier(dev, true);
+>
+> Does this compile even?
+>
+> The function takes one argument according to the definition above ...
+>
+> >       bus_probe_device(dev);
+> >       if (parent)
+> > diff --git a/include/linux/device.h b/include/linux/device.h
+> > index f1f2aa0b19da..4fd33da9a848 100644
+> > --- a/include/linux/device.h
+> > +++ b/include/linux/device.h
+> > @@ -1156,6 +1156,8 @@ enum dl_dev_state {
+> >   * @consumers: List of links to consumer devices.
+> >   * @needs_suppliers: Hook to global list of devices waiting for suppliers.
+> >   * @defer_sync: Hook to global list of devices that have deferred sync_state.
+> > + * @need_for_probe: If needs_suppliers is on a list, this indicates if the
+> > + *               suppliers are needed for probe or not.
+> >   * @status: Driver status information.
+> >   */
+> >  struct dev_links_info {
+> > @@ -1163,6 +1165,7 @@ struct dev_links_info {
+> >       struct list_head consumers;
+> >       struct list_head needs_suppliers;
+> >       struct list_head defer_sync;
+> > +     bool need_for_probe;
+> >       enum dl_dev_state status;
+> >  };
+> >
+> >
+>
+>
+>
+>
