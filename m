@@ -2,120 +2,124 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88407CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D01CCA9ED5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D4920818
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572933778;
-	bh=Adr963WRlh5HjK13+m1iekOv9cCt3ddxETiP+Guxcp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=niKz/wUvs9rCtfBSiu1z8fuAWiyLyyhkXX9GKjYr8US4cW0spWAnpuH/3EdRoLp9c
-	 HJqM917Du+tfqEyFbniBZxHkkgOQprkVKoejj+WikXFuLLi5RcnX0joanyLySuyad8
-	 zM41VFQOwUPMJIuSItFBVYt9MteCBOlPryLExSYk=
+	by mail.kernel.org (Postfix) with ESMTP id E913820869
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:03:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="J6ALkRzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbfKEGCz (ORCPT
+        id S1730520AbfKEGDB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:02:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730520AbfKEGCz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 01:02:55 -0500
-Received: from localhost (unknown [106.201.60.252])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6400120818;
-        Tue,  5 Nov 2019 06:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572933774;
-        bh=Adr963WRlh5HjK13+m1iekOv9cCt3ddxETiP+Guxcp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=umHTxwaFvOaVM+nKqOg3CVVW9K7zsMx7qvTi1pIVZPGZ1WpX75tmC5cMnW7wAePnU
-         j7RNOfS9eYGa+9nDFB4Zgfdun3F+v4xUJbRdaNLQzhEwdsNrl5xbt0dwNMBG0rXXAf
-         jV/3LxzOxwwUDZtvayjhoCO+AWYRTIkqd1gzLBIU=
-Date:   Tue, 5 Nov 2019 11:32:49 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: phy-qcom-qmp: Add sm8150 UFS phy
- compatible string
-Message-ID: <20191105060249.GX2695@vkoul-mobl.Dlink>
-References: <20191024074802.26526-1-vkoul@kernel.org>
- <20191024074802.26526-3-vkoul@kernel.org>
+        Tue, 5 Nov 2019 01:03:01 -0500
+Received: from gateway33.websitewelcome.com ([192.185.145.87]:21594 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726697AbfKEGDB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 01:03:01 -0500
+X-Greylist: delayed 1235 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Nov 2019 01:03:00 EST
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id AF7A21036D
+        for <devicetree@vger.kernel.org>; Mon,  4 Nov 2019 23:42:24 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id Rrbki7lkCVUVYRrbkihrat; Mon, 04 Nov 2019 23:42:24 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XzVcb7tGAONUw/MGZuqDTvZTFYKEVcjqC7bTyT+W++E=; b=J6ALkRzpiRDm5X9ZdaST4cneod
+        BrjezjeL/IrdYUoMKUVlYMNuP3yDUwfkH3lhXZd97t8danEYqui1HSN1GYwqIko52jLrgTO04i4bM
+        +9y7CDKzppKukf24XpImCOswMRdNNbktbD4545x5v5sjfwLTtZi5hJtyil9TcvpqJRMFZtcTIi5gF
+        eWCEpKoQSOK2yIjECxrDdmROxabYDX2Rh93c483uyH0dS899jDOkoTqzF1oDWBLYee7HpDGAhaeuC
+        NCTwFdELZMbVXIVB+vAq2Gr8KokAQXwdHSee5nIB4Upey+dziCWUjua07gtNgV83YIvL9v6NuEWAD
+        qUmpIZgQ==;
+Received: from [191.31.196.28] (port=37450 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iRrbj-002sjK-SJ; Tue, 05 Nov 2019 02:42:24 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v5 0/5] power: supply: MAX17040: Add IRQ for low level and alert SOC changes
+Date:   Tue,  5 Nov 2019 02:42:13 -0300
+Message-Id: <20191105054218.29826-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191105015827.GA332@bogus>
+References: <20191105015827.GA332@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024074802.26526-3-vkoul@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.28
+X-Source-L: No
+X-Exim-ID: 1iRrbj-002sjK-SJ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.196.28]:37450
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 17
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 24-10-19, 13:18, Vinod Koul wrote:
-> Document "qcom,sdm845-qmp-ufs-phy" compatible string for QMP UFS PHY
-> found on SM8150.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+This series add IRQ handler for low level SOC alert, define a devicetree
+binding attribute to configure the alert level threshold and check for
+changes in SOC and power supply status for send uevents.
 
-Kishon,
+Max17043/17044 have a pin for alert host about low level state of charge and
+this alert can be configured in a threshold from 1% up to 32% of SOC.
 
-Can you pick this and 3rd patch please
+Tested on Toradex Colibri iMX7D, with a SparkFun Lipo Fuel Gauge module
+based on MAXIM MAX17043.
 
-> ---
->  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> index 085fbd676cfc..eac9ad3cbbc8 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> @@ -14,7 +14,8 @@ Required properties:
->  	       "qcom,msm8998-qmp-pcie-phy" for PCIe QMP phy on msm8998,
->  	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
->  	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
-> -	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
-> +	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845,
-> +	       "qcom,sm8150-qmp-ufs-phy" for UFS QMP phy on sm8150.
->  
->  - reg:
->    - index 0: address and length of register set for PHY's common
-> @@ -57,6 +58,8 @@ Required properties:
->  			"aux", "cfg_ahb", "ref", "com_aux".
->  		For "qcom,sdm845-qmp-ufs-phy" must contain:
->  			"ref", "ref_aux".
-> +		For "qcom,sm8150-qmp-ufs-phy" must contain:
-> +			"ref", "ref_aux".
->  
->   - resets: a list of phandles and reset controller specifier pairs,
->  	   one for each entry in reset-names.
-> @@ -83,6 +86,8 @@ Required properties:
->  			"phy", "common".
->  		For "qcom,sdm845-qmp-ufs-phy": must contain:
->  			"ufsphy".
-> +		For "qcom,sm8150-qmp-ufs-phy": must contain:
-> +			"ufsphy".
->  
->   - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
->   - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-> -- 
-> 2.20.1
+Thanks Krzysztof for your time reviewing it. Let me know what you think about
+the fixes.
 
--- 
-~Vinod
+Changes since v4:
+(Suggested by Krzysztof Kozlowski)
+- Fix code style and alignment issues
+- Keep IRQF_TRIGGER_FALLING | IRQF_ONESHOT instead client->flags
+
+(Suggested by Rob Herring)
+- Add reference to the MFD description
+- Fix the dt-bindings commit description
+
+Matheus Castello (5):
+  power: supply: max17040: Add IRQ handler for low SOC alert
+  dt-bindings: power: supply: Max17040: Add DT bindings for max17040
+    fuel gauge
+  devicetree: mfd: max14577: Add reference to max14040_battery.txt
+    descriptions
+  power: supply: max17040: Config alert SOC low level threshold from FDT
+  power: supply: max17040: Send uevent in SOC and status change
+
+ .../devicetree/bindings/mfd/max14577.txt      |   2 +
+ .../power/supply/max17040_battery.txt         |  33 ++++
+ drivers/power/supply/max17040_battery.c       | 142 +++++++++++++++++-
+ 3 files changed, 172 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+
+--
+2.24.0.rc2
+
