@@ -2,199 +2,153 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11955C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 23:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49668C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 23:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBB4206DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 23:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572995274;
-	bh=3hlfaAbF8wHnCgzl6eHP2uPiomDxegF2/QA/VPr74HQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cuJKbri1JOwzz5ZgKm/mY/arBIZORxuefltEtnGYvpNxWEfhzlyUQneEtN31RiHuz
-	 MiiustONPduSncwTj3epEIm2HutrecAlcQwKmP6JhHPDf03o7YfZVenMNoFLuO0GUl
-	 GbGgm8/BYPZYWvhTc3RFDlBBNjDVDSAQLwxGtltU=
+	by mail.kernel.org (Postfix) with ESMTP id DC09F21929
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 23:16:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tKXqfuTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfKEXHy (ORCPT
+        id S1728284AbfKEXQ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:07:54 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35076 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfKEXHy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 18:07:54 -0500
-Received: by mail-ot1-f66.google.com with SMTP id z6so19200842otb.2;
-        Tue, 05 Nov 2019 15:07:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JIWst79Fnuh1JqkgU4BXUBUOhrSVyqifwstpKOqUp58=;
-        b=hO9AUrx6+DHUavDZlVVlr/JSPWE2Ww4r3Wa+WmBJPgBc4OOvTxMM5+znQcealtc3Sj
-         RR23/JFgL93FIKwn/B+p9w6F2IYeQAP8tzQnkX4cURp+XpZn56khHJdB7IrfZ0EY+4lL
-         plKxUan/DTRIpALeoitrwq6wEeZj9CCRaaWkENp8aPxNmZNoHUYoW6M0MU6D9H6FLgpv
-         LB8wmk8Wojd/gf+zhtVjgWGJERL1OdXS1HU2wbxs4n7FoTOTwzUxxmhFiB3RTo/OkcsY
-         wwsH5NIMHnmIW7UoLFawORlFlqVEdRxrO7Z23wxROuZMxd+TBvWyScNBjEelfG3VRfzM
-         qZGQ==
-X-Gm-Message-State: APjAAAV13G2LsZgtpMf0ivLKV03AbsR99/CvSYoCc3DytKSOOFJnAWv7
-        D9PjVL89ne0hhfS6sDOBy/ZgmU7k3Qwkqqd5rKokYA==
-X-Google-Smtp-Source: APXvYqwTM8o1vXwTJxNNonDxqHv3eeWNdHml15mkVjpzTJ3SmK1zdY9R/bxzX/EX3YHzdWBPtJde7F4iESj3SmIrNd0=
-X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr25158554oth.266.1572995271717;
- Tue, 05 Nov 2019 15:07:51 -0800 (PST)
+        Tue, 5 Nov 2019 18:16:26 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:33224 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfKEXQZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 18:16:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1572995783; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eDsiJOXarrFhke1fkCycy1O3NiGTme3bfHAiHJkXB/8=;
+        b=tKXqfuTr2nlPjgFFl0fNG+qcFIc/NLt830kfPzztWEd44nARkG01pVjsPw1FGfhHOg1D9y
+        AQBEjji+3O7H2S9vFSCBXnAnpz7G6kCNxKGYzDRIH0nNoTfSLL+6P6bYRH3blL6xzG3Y5f
+        30XL3GuyitI6hQmD6SJ2+Wu3zgX7QZM=
+Date:   Wed, 06 Nov 2019 00:16:17 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/2] dt-bindings: power/supply: Document generic USB
+ charger
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me
+Message-Id: <1572995777.3.4@crapouillou.net>
+In-Reply-To: <CAL_JsqJDT71eThy43kaN3RsU03Ew7aZ_abJg0zhaFxyDH9RhhA@mail.gmail.com>
+References: <20191103220801.10666-1-paul@crapouillou.net>
+        <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
+        <1572945391.3.1@crapouillou.net>
+        <CAL_JsqJDT71eThy43kaN3RsU03Ew7aZ_abJg0zhaFxyDH9RhhA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-4-saravanak@google.com>
- <7640808.4Pc6YCm0Y9@kreacher> <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
-In-Reply-To: <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 6 Nov 2019 00:07:40 +0100
-Message-ID: <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
- differentiate errors
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 11:52 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Hi Rafael,
->
-> Thanks for the review.
->
-> On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
-> > > When add_links() still has suppliers that it needs to link to in the
-> > > future, this patch allows it to differentiate between suppliers that are
-> > > needed for probing vs suppliers that are needed for sync_state()
-> > > correctness.
-> >
-> > I guess you mean that it will return different error codes in the different
-> > cases.
->
-> Yes.
->
-> >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/base/core.c    | 12 ++++++++----
-> > >  include/linux/fwnode.h | 13 +++++++++----
-> > >  2 files changed, 17 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > index 48cd43a91ce6..e6d3e6d485da 100644
-> > > --- a/drivers/base/core.c
-> > > +++ b/drivers/base/core.c
-> > > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
-> > >       struct device *parent;
-> > >       struct kobject *kobj;
-> > >       struct class_interface *class_intf;
-> > > -     int error = -EINVAL;
-> > > +     int error = -EINVAL, fw_ret;
-> > >       struct kobject *glue_dir = NULL;
-> > >
-> > >       dev = get_device(dev);
-> > > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
-> > >        */
-> > >       device_link_add_missing_supplier_links();
-> > >
-> > > -     if (fwnode_has_op(dev->fwnode, add_links)
-> > > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > > -             device_link_wait_for_mandatory_supplier(dev, true);
-> > > +     if (fwnode_has_op(dev->fwnode, add_links)) {
-> >
-> > fw_ret can be defined here and I'd just call it "ret".
->
-> I thought that style of variable declaration is frowned up in the
-> kernel coding style.
 
-Well, I'm not aware of that. :-)
 
-> >
-> > > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > > +             if (fw_ret == -ENODEV)
-> > > +                     device_link_wait_for_mandatory_supplier(dev);
-> > > +             else if (fw_ret)
-> > > +                     device_link_wait_for_optional_supplier(dev);
-> > > +     }
-> > >
-> > >       bus_probe_device(dev);
-> > >       if (parent)
-> > > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> > > index 25bb81f8ded8..a19134eae5a5 100644
-> > > --- a/include/linux/fwnode.h
-> > > +++ b/include/linux/fwnode.h
-> > > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
-> > >   *           available suppliers.
-> > >   *
-> > >   *           Return 0 if device links have been successfully created to all
-> > > - *           the suppliers of this device or if the supplier information is
-> > > - *           not known. Return an error if and only if the supplier
-> > > - *           information is known but some of the suppliers are not yet
-> > > - *           available to create device links to.
-> > > + *           the suppliers this device needs to create device links to or if
-> > > + *           the supplier information is not known.
-> >
-> > "the known suppliers of this device or if the supplier information is not known."
->
-> "suppliers it needs to create device links to" is a subset of known
-> suppliers. There's no requirement that fw needs to create links to ALL
-> known suppliers. Just a minor distinction.
+Le mar., nov. 5, 2019 at 07:48, Rob Herring <robh+dt@kernel.org> a=20
+=E9crit :
+> On Tue, Nov 5, 2019 at 3:16 AM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>=20
+>>  Hi Rob,
+>>=20
+>>=20
+>>  Le lun., nov. 4, 2019 at 07:52, Rob Herring <robh+dt@kernel.org> a
+>>  =E9crit :
+>>  > On Sun, Nov 3, 2019 at 4:08 PM Paul Cercueil=20
+>> <paul@crapouillou.net>
+>>  > wrote:
+>>  >>
+>>  >>  Add documentation about the devicetree bindings for the generic=20
+>> USB
+>>  >>  charger.
+>>  >
+>>  > What makes it generic?
+>>=20
+>>  It only uses the USB PHY subsystem, which already has some=20
+>> half-baked
+>>  support for chargers but not bound to the power-supply subsystem.
+>>=20
+>>=20
+>>  >>
+>>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  >>  ---
+>>  >>   .../bindings/power/supply/usb-charger.txt     | 24
+>>  >> +++++++++++++++++++
+>>  >>   1 file changed, 24 insertions(+)
+>>  >>   create mode 100644
+>>  >> Documentation/devicetree/bindings/power/supply/usb-charger.txt
+>>  >>
+>>  >>  diff --git
+>>  >> a/Documentation/devicetree/bindings/power/supply/usb-charger.txt
+>>  >> b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
+>>  >>  new file mode 100644
+>>  >>  index 000000000000..fd46734cb0e5
+>>  >>  --- /dev/null
+>>  >>  +++=20
+>> b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
+>>  >>  @@ -0,0 +1,24 @@
+>>  >>  +Generic USB charger bindings
+>>  >>  +~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>  >>  +
+>>  >>  +Required properties :
+>>  >>  + - compatible : should be "usb-charger"
+>>  >>  + - phys: phandle to the USB PHY
+>>  >>  +
+>>  >>  +Example:
+>>  >>  +
+>>  >>  +usb_con: extcon {
+>>  >>  +       compatible =3D "linux,extcon-usb-gpio";
+>>  >>  +       vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
+>>  >>  +};
+>>  >>  +
+>>  >>  +usb_phy: usb-phy@0 {
+>>  >>  +       compatible =3D "usb-nop-xceiv";
+>>  >>  +       #phy-cells =3D <0>;
+>>  >>  +       extcon =3D <&usb_con>;
+>>  >
+>>  > extcon is deprecated in favor of usb-connector binding. See
+>>  > .../bindings/connector/usb-connector.txt. There's also some=20
+>> pending
+>>  > patches for adding GPIO based connector controls including Vbus=20
+>> sense
+>>  > (GPIO input) and control (regulator via a GPIO).
+>>  >
+>>  > Rob
+>>=20
+>>  I understand that the usb-connector binding is better, but the=20
+>> current
+>>  code doesn't integrate at all with the USB PHY subsystem, which has=20
+>> its
+>>  own code to handle ID and VBUS GPIOs and supports notifiers. Is that
+>>  deprecated then?
+>>=20
+>>  What's the big picture here?
+>=20
+> Does this series work for you?:
+>=20
+> https://patchwork.kernel.org/cover/11120707/
 
-That depends on what exactly you mean by "known suppliers".  The
-suppliers that are not listed by the firmware are not known at this
-point.
+I had to do some changes to my musb and PHY drivers but it works, yes.
 
-> > > + *
-> > > + *           Return -ENODEV if and only if the suppliers needed for probing
-> > > + *           the device are not yet available to create device links to.
-> >
-> > It would be more precise to say something like this:
-> >
-> > "Return -ENODEV if an attempt to create a device link to one of the device's
-> > suppliers needed for probing it fails."
->
-> "attempt to create a device link to one of the device's suppliers
-> needed for probing it fails" to me means device_link_add() fails.
-> But I'm trying to say that it should return an error if the struct
-> device isn't even there yet.
+The good thing is that I didn't have to change this driver, so I'll=20
+wait for feedback on patch 2/2 then post a v2 with a fixed devicetree=20
+example.
 
-OK, so it should be something like "if the supplier device has not
-been registered yet".
+Thanks,
+-Paul
 
-My point is that "not yet available" is kind of ambiguous.
+=
 
-> > > + *
-> > > + *           Return -EAGAIN if there are suppliers that need to be linked to
-> > > + *           that are not yet available but none of those suppliers are
-> > > + *           necessary for probing this device.
-> >
-> > "Return -EAGAIN if attempts to create device links to some of the device's
-> > suppliers have failed, but those suppliers are not necessary for probing the
-> > device."
->
-> Same comment as before. The distinction I'm making here is that
-> -EAGAIN is needed when the struct device itself isn't there.
->
-> Btw, Greg already pulled these into driver-core-next. Let me know if
-> you want me to send a delta patch to fix any of these comments.
-
-Well, it's a Greg's call if he has taken the patches, but it also
-depends on you (if you agree with the comments, it would be prudent to
-send updates).
