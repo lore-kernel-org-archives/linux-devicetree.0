@@ -2,205 +2,145 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13399C010A2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C11C010A3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D970721928
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572952299;
-	bh=L0MQuT4XYxAFwm79QAhiL05f/SdnH/s1jkfSPz113BE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nCdvBxAvVJ9YBe9ECnAO0BEEWmTHmm4CWweBbr2dAK45lcEvjtGAPJoB6cLRsdcG+
-	 krDbiZuzzV2sWu1E844+rZMJGPdoyxsSqjSqpvL75SsP8GwUFETLzo0ShqXCuamMNl
-	 VXuNUB96tpgTYn+1gGq+IW7V764ohfgEkEJSxqMY=
+	by mail.kernel.org (Postfix) with ESMTP id 1E2FB21928
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:15:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n71rvcnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388513AbfKELLj (ORCPT
+        id S1730744AbfKELPH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:11:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388494AbfKELLj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:11:39 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4BA820869;
-        Tue,  5 Nov 2019 11:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572952297;
-        bh=L0MQuT4XYxAFwm79QAhiL05f/SdnH/s1jkfSPz113BE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yl1o9f4oD62go+SoZTI/xdBt6WJXvvuOwVzpe7vPn+ctS79K7B1/M8YvcKQlgyXiJ
-         BE2CNaKz1BaPD3A6kklxIl+zEHlVAvYshsIDdrpTGwnP16AI0jIK7jzvyj0RyhME5g
-         DlR6EqbQDkkEYmG8eIj2b92ZyKXifryUwNnjalY8=
-Date:   Tue, 5 Nov 2019 12:11:34 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM
- description
-Message-ID: <20191105111134.GG3876@gilmour.lan>
-References: <20191103203334.10539-1-peron.clem@gmail.com>
- <20191103203334.10539-2-peron.clem@gmail.com>
- <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+        Tue, 5 Nov 2019 06:15:07 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53478 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfKELPH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 06:15:07 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5BEjOa001918;
+        Tue, 5 Nov 2019 05:14:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572952486;
+        bh=Fy91A3N2OFV5GYmqUZ6i9xvY6q3zrmU/FLigLI415zQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=n71rvcnDEP5e01oJ+V0SlbkDMMTbeLL/Q9n2wEkqCG6pDyeaNlPAjuQl3y4oXNfOc
+         63/8yTRKVGoHC6mwd+XT/6lZvOLvb6EtGjS2wyDXtZJTNIToxvsRLlNqDz87DgnZ4l
+         qqgDMbADkHqrilAsQGV9CRsRgTz88mpuKuFLmB70=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5BEjLa095012
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 Nov 2019 05:14:45 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
+ 2019 05:14:28 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 5 Nov 2019 05:14:28 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5BEewB014951;
+        Tue, 5 Nov 2019 05:14:40 -0600
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+ <20191030141736.GN4568@sirena.org.uk>
+ <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+ <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+ <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
+ <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
+ <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
+ <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
+ <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <3beb4b9e-8908-42c8-ee89-369f0329b775@ti.com>
+Date:   Tue, 5 Nov 2019 13:15:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
-Content-Disposition: inline
-In-Reply-To: <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---+jhVVhN62yS6hEJ8
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Clement, Uwe,
+On 05/11/2019 11.58, Linus Walleij wrote:
+> On Mon, Nov 4, 2019 at 8:11 PM Rob Herring <robh+dt@kernel.org> wrote:
+>> [Peter]
+>>> The device needs the RST line to be high, otherwise it is not
+>>> accessible. If it does not have reset control how can we make sure that
+>>> the GPIO line is in correct state?
+>>
+>> Just like the reset code, drivers register their use of the reset and
+>> the core tracks users and prevents resetting when not safe. Maybe the
+>> reset subsystem needs to learn about GPIO resets. (...)
+> 
+> I agree. Certainly the reset subsystem can do what the regulator
+> subsystem is already doing: request the GPIO line nonexclusive
+> and handle any reference counting and/or quirks that are needed
+> in a hypothetical drivers/reset/reset-gpio.c driver.
 
-On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=F6nig wrote:
-> On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=E9ment P=E9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 PWM block is basically the same as A20 PWM, except that it also has
-> > bus clock and reset line which needs to be handled accordingly.
-> >
-> > Expand Allwinner PWM binding with H6 PWM specifics.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > ---
-> >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 ++++++++++++++++++-
-> >  1 file changed, 44 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.ya=
-ml
-> > index 0ac52f83a58c..bf36ea509f31 100644
-> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> > @@ -30,13 +30,46 @@ properties:
-> >        - items:
-> >            - const: allwinner,sun50i-h5-pwm
-> >            - const: allwinner,sun5i-a13-pwm
-> > +      - const: allwinner,sun50i-h6-pwm
-> >
-> >    reg:
-> >      maxItems: 1
-> >
-> > -  clocks:
-> > +  # Even though it only applies to subschemas under the conditionals,
-> > +  # not listing them here will trigger a warning because of the
-> > +  # additionalsProperties set to false.
-> > +  clocks: true
-> > +  clock-names: true
-> > +  resets:
-> >      maxItems: 1
-> >
-> > +  if:
-> > +    properties:
-> > +      compatible:
-> > +        contains:
-> > +          const: allwinner,sun50i-h6-pwm
-> > +
-> > +  then:
-> > +    properties:
-> > +      clocks:
-> > +        items:
-> > +          - description: Module Clock
-> > +          - description: Bus Clock
-> > +
-> > +      clock-names:
-> > +        items:
-> > +          - const: mod
-> > +          - const: bus
-> > +
-> > +    required:
-> > +      - clock-names
-> > +      - resets
-> > +
-> > +  else:
-> > +    properties:
-> > +      clocks:
-> > +        maxItems: 1
-> > +
->
-> I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod and
-> bus clock is required.", right?
->
-> I wonder if it is sensible to require a clock-names property in the else
-> branch, too. This would make it obvious if the clock there corresponds
-> to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+I did wrote the reset-gpio driver first ;)
+then it failed the thought test on several levels.
 
-This can be done a bit differently and could address your concerns
+to get a reset control one either use the shared or exclusive API.
+Depending on which one you use, the behavior changes. With exclusive it
+works like a GPIO (no refcounting of asserts), with shared it refcounts.
 
-Something like
+It fails flat if I boot with old dtb blob which did not had the "resets"
+and "#reset-cells" (from the user's point of view). Even if the old dtb
+had rst/enable/reset-gpios defined.
 
-properties:
-  ...
+It is kind of hard to use it for 'Output Enable' type of gpios. They are
+not reset or enable signals for the peripheral, but to open a gate to
+outside, for example allow an amplifier to drive the analog line on (one
+of) it's output for example.
 
-  clocks:
-    minItems: 1
-    maxItems: 2
-    items:
-      - description: Bus Clock
-      - description: Module Clock
+> There is no such driver today, just a "reset" driver in
+> drivers/power/reset that resets the whole system.
 
-required:
-  - clocks
+Yep, I have checked that as well before I wrote my own gpio-reset
 
-if:
-  ...
+> But I see no problem in creating a proper reset driver in drivers/reset
+> to handle a few peripherals with a shared GPIO reset line.
 
-then:
-  properties:
-    clocks:
-      maxItems: 2
+Even if we have a reset-gpio driver we will have the same issue that the
+regulator might reset things underneath the tiddly refcounted reset line
+for non regulator users, plus one extra which is using the line as
+output enable.
 
-    clocks-names:
-      items:
-        - const: mod
-        - const: bus
+With the gpio-shared all of these can be handled in a nice way and we
+can add the pass-through mode to it which is assumed by some setups or
+use refcounting as it is in the initial patch.
 
-    required:
-      - clock-names
+And we need to modify the drivers to ask for shared/nonexclusive reset/gpio.
 
-else:
-  properties:
-    clocks:
-      maxItems: 1
+- Péter
 
-That way, the definition of the order and which clock is which is
-pretty obvious in both cases, and we don't get any weird warnings.
-
-Maxime
---+jhVVhN62yS6hEJ8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcFY5gAKCRDj7w1vZxhR
-xbV/AQCe7CHt/mkieAm/L+E98h/loKt0hEB6kyNqdnXH0QKxZAEA3BWTeLZyVpFc
-GGWBi+MvM8vrJsH5MAMILsm76CTF6QE=
-=GzAC
------END PGP SIGNATURE-----
-
---+jhVVhN62yS6hEJ8--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
