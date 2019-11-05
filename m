@@ -2,105 +2,198 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF374C17460
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 12:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F6CC17465
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 12:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9515521928
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 12:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5C121882
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 12:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eTff2nnN"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="da+Rgg+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388831AbfKEMp3 (ORCPT
+        id S2388352AbfKEMry (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 07:45:29 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45646 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388494AbfKEMp2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 07:45:28 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA5ChuiI023811;
-        Tue, 5 Nov 2019 13:45:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=JfReHPEwmniYq2zeeS3NIy67VOB8iS3FpX0DY0LvKxk=;
- b=eTff2nnNQ8QdqfYCMWXKJMPoG8vpm3npcpTTRTG2Rl87ozt89eng4yjxHH0Q3PnuztLS
- gwCBKIzfzhh+7BvJX6RYMWAiVm4r//gLWZq7eC+9/wNkbNDsXqmCKUSW+KqrsBnW8dMJ
- IhkZ18hfxeJZSwSh3d6rK4L+RzUcrQG2IbOYLzmALN4rXhtLHXIoCzzafBMj9AA2fw3F
- BBDCdU/ajuCpab01aP4n+pvH8D1/pQhmoLjou+Ix0+kxqBtWp4rc/DjzITg2GTiTrHWu
- 8t5xB9fppU6d430RS4bwva1qEzF411iK/u1w9UMnlrwpvLIgRn/+KB9L/E1q04D29aYf bw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w11jn7j8g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Nov 2019 13:45:11 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 53B2510002A;
-        Tue,  5 Nov 2019 13:45:11 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 445862B97DB;
-        Tue,  5 Nov 2019 13:45:11 +0100 (CET)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 5 Nov 2019
- 13:45:11 +0100
-Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 5 Nov 2019 13:45:10
- +0100
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH V2 net-next 2/4] ARM: dts: stm32: remove syscfg clock on stm32mp157c ethernet
-Date:   Tue, 5 Nov 2019 13:45:03 +0100
-Message-ID: <20191105124505.4738-3-christophe.roullier@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191105124505.4738-1-christophe.roullier@st.com>
-References: <20191105124505.4738-1-christophe.roullier@st.com>
+        Tue, 5 Nov 2019 07:47:54 -0500
+Received: from onstation.org ([52.200.56.107]:46596 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388222AbfKEMry (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 07:47:54 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 6DDB03E89E;
+        Tue,  5 Nov 2019 12:47:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1572958073;
+        bh=qjZCOsS9AdXrQ3Hz6ZuytYLl+kJO+LC8F46kX2vKJc4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=da+Rgg+v2Vzav6Zr/2pab6n3dPGPPB8PlzP7xI/tAVdhNWdLFi605neYEq9cEqq4U
+         ljC/RgFKxldyCxXD3FK1jIG09arij3oH9BqaPVQ+YkJyAofqet3ETDYurVJLUS1sXK
+         91bw58EiRO2BtjOHlfp45pp7yZPD2TLMxcBrbaQ0=
+Date:   Tue, 5 Nov 2019 07:47:52 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     AngeloGioacchino Del Regno <kholk11@gmail.com>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org,
+        ccross@android.com, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        marijns95@gmail.com, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/5] arm64: dts: qcom: Add configuration for PM8950
+ and PMI8950 peripherals
+Message-ID: <20191105124752.GA10725@onstation.org>
+References: <20191031111645.34777-1-kholk11@gmail.com>
+ <20191031111645.34777-4-kholk11@gmail.com>
+ <20191031195816.GA1462@onstation.org>
+ <CAK7fi1ZZq6=J_5E5QUSqecVXRdMztNDE57zGECf1dE8ZvrWaqQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.22.222]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-05_04:2019-11-05,2019-11-05 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7fi1ZZq6=J_5E5QUSqecVXRdMztNDE57zGECf1dE8ZvrWaqQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Syscfg is now activated automatically when syscfg registers are used
+On Tue, Nov 05, 2019 at 12:18:45PM +0100, AngeloGioacchino Del Regno wrote:
+> Il giorno gio 31 ott 2019 alle ore 20:58 Brian Masney
+> <masneyb@onstation.org> ha scritto:
+> >
+> > Thanks for the patches. Good to see the progress!
+> >
+> > On Thu, Oct 31, 2019 at 12:16:43PM +0100, kholk11@gmail.com wrote:
+> > > From: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> > >
+> > > The PM(I)8950 feature integrated peripherals like ADC, GPIO
+> > > controller, MPPs, PON keys and others.
+> > > Add them to DT files that will be imported on boards having
+> > > this PMIC combo (or one of them, anyways).
+> > >
+> > > Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/pm8950.dtsi  | 187 ++++++++++++++++++++++++++
+> > >  arch/arm64/boot/dts/qcom/pmi8950.dtsi |  98 ++++++++++++++
+> > >  2 files changed, 285 insertions(+)
+> > >  create mode 100644 arch/arm64/boot/dts/qcom/pm8950.dtsi
+> > >  create mode 100644 arch/arm64/boot/dts/qcom/pmi8950.dtsi
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/pm8950.dtsi b/arch/arm64/boot/dts/qcom/pm8950.dtsi
+> > > new file mode 100644
+> > > index 000000000000..a349a8dd867e
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/qcom/pm8950.dtsi
+> > > @@ -0,0 +1,187 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +// Copyright (c) 2019, AngeloGioacchino Del Regno <kholk11@gmail.com>
+> > > +
+> > > +#include <dt-bindings/iio/qcom,spmi-vadc.h>
+> > > +#include <dt-bindings/input/linux-event-codes.h>
+> > > +#include <dt-bindings/interrupt-controller/irq.h>
+> > > +#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
+> > > +#include <dt-bindings/spmi/spmi.h>
+> > > +
+> > > +&spmi_bus {
+> > > +     pm8950_lsid0: pm8950@0 {
+> > > +             compatible = "qcom,pm8950", "qcom,spmi-pmic";
+> > > +             reg = <0x0 SPMI_USID>;
+> > > +             #address-cells = <1>;
+> > > +             #size-cells = <0>;
+> > > +
+> > > +             pon@800 {
+> > > +                     compatible = "qcom,pm8916-pon";
+> > > +                     reg = <0x0800>;
+> > > +                     mode-bootloader = <0x2>;
+> > > +                     mode-recovery = <0x1>;
+> > > +
+> > > +                     pwrkey {
+> > > +                             compatible = "qcom,pm8941-pwrkey";
+> > > +                             interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+> > > +                             debounce = <15625>;
+> > > +                             bias-pull-up;
+> > > +                             linux,code = <KEY_POWER>;
+> > > +                     };
+> > > +             };
+> > > +
+> > > +             pm8950_mpps: mpps@a000 {
+> > > +                     compatible = "qcom,pm8950-mpp", "qcom,spmi-mpp";
+> > > +                     reg = <0xa000>;
+> > > +                     gpio-controller;
+> > > +                     #gpio-cells = <2>;
+> > > +                     interrupts = <0 0xa0 0 IRQ_TYPE_NONE>,
+> > > +                                  <0 0xa1 0 IRQ_TYPE_NONE>,
+> > > +                                  <0 0xa2 0 IRQ_TYPE_NONE>,
+> > > +                                  <0 0xa3 0 IRQ_TYPE_NONE>;
+> > > +
+> > > +                     /* MPP_2: PA_THERM1 */
+> > > +                     pa_therm {
+> > > +                             pm8950_mpp2_def: pa_therm1_default {
+> > > +                                     pins = "mpp2";
+> > > +                                     function = "analog";
+> > > +                                     input-enable;
+> > > +                                     qcom,amux-route =
+> > > +                                             <PMIC_MPP_AMUX_ROUTE_CH6>;
+> > > +                             };
+> > > +                     };
+> > > +
+> > > +                     /* MPP_4: QUIET_THERM */
+> > > +                     case_therm {
+> > > +                             pm8950_mpp4_def: case_therm_default {
+> > > +                                     pins = "mpp4";
+> > > +                                     function = "analog";
+> > > +                                     input-enable;
+> > > +                                     qcom,amux-route =
+> > > +                                             <PMIC_MPP_AMUX_ROUTE_CH8>;
+> > > +                             };
+> > > +                     };
+> > > +             };
+> > > +
+> > > +             pm8950_gpios: gpio@c000 {
+> > > +                     compatible = "qcom,pm8950-gpio", "qcom,spmi-gpio";
+> > > +                     reg = <0xc000>;
+> > > +                     gpio-controller;
+> > > +                     #gpio-cells = <2>;
+> > > +                     interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
+> > > +                             <0 0xc1 0 IRQ_TYPE_NONE>,
+> > > +                             <0 0xc3 0 IRQ_TYPE_NONE>,
+> > > +                             <0 0xc4 0 IRQ_TYPE_NONE>,
+> > > +                             <0 0xc5 0 IRQ_TYPE_NONE>,
+> > > +                             <0 0xc6 0 IRQ_TYPE_NONE>,
+> > > +                             <0 0xc7 0 IRQ_TYPE_NONE>;
+> > > +             };
+> >
+> > Please add gpio-ranges so that gpio-hogging will work properly. See
+> > commits for pm8941 and spmi-gpio that describes the problem and how
+> > to fix it:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=149a96047237574b756d872007c006acd0cc6687
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cdd3d64d843a2a4c658a182b744bfefbd021d542
+> >
+> > Please drop the interrupts property and configure this to be a
+> > hierarchical IRQ chip. See these two commits for more details:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ca69e2d165eb3d060cc9ad70a745e27a2cf4310b
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5f540fb4821a5444350ab3311fff60013d755d8f
+> >
+> > There is some kind of mask that you'll need to add to omit 0xc2 that
+> > Linus Walleij told me about before. I don't have the property handy
+> > right now, but can look it up later if needed.
+> >
+> > Brian
+> 
+> That looks cleaner! Didn't know about it... Anyway, the only way that I know
+> to exclude the 0xc2 is something like
+> 
+> gpio-ranges = <&pm8950_gpios 0 0 8>;
+> gpio-reserved-ranges = <2 1>;
+> 
+> ...but you're talking about a mask? Is there a different way of doing it, or
+> were you referring to the gpio-reserved-ranges property?
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Yes, it looks like gpio-reserved-ranges property is what you need.
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 9b11654a0a39..f13c2348d130 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -1326,13 +1326,11 @@
- 			clock-names = "stmmaceth",
- 				      "mac-clk-tx",
- 				      "mac-clk-rx",
--				      "ethstp",
--				      "syscfg-clk";
-+				      "ethstp";
- 			clocks = <&rcc ETHMAC>,
- 				 <&rcc ETHTX>,
- 				 <&rcc ETHRX>,
--				 <&rcc ETHSTP>,
--				 <&rcc SYSCFG>;
-+				 <&rcc ETHSTP>;
- 			st,syscon = <&syscfg 0x4>;
- 			snps,mixed-burst;
- 			snps,pbl = <2>;
--- 
-2.17.1
-
+Brian
