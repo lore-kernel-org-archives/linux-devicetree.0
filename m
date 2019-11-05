@@ -2,209 +2,209 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DBDC010A3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88D5C010A2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB3F21928
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806B621D6C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHPxh7ge"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I+dmdAeF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388098AbfKELTB (ORCPT
+        id S1730789AbfKELZl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:19:01 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50738 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730744AbfKELTB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 06:19:01 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 11so20465944wmk.0;
-        Tue, 05 Nov 2019 03:18:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5kX2WZKrRc/0HA3YIoYskEYUUqqgcwmQSGOv/EOVrOQ=;
-        b=jHPxh7gev9sZVnQXev0r5TDmzKzsRWIs5o2OfXGw5/wqr5P55ybFYbM7uUkwpQBm/P
-         wANPwqzZbgSreGvkGUZm11QHx+zgmLk/07PstzQ0FT3MKtdhvEeap9zAGXh8/0GL3mIM
-         kEIp+F2ePF0wa0D2/0QquXbNxp5dNOdGVf++RfxEwg4f/bGAoXBq+LQ1AskIJ4bw9lSE
-         /d2FHUYYwHzuB1b8F4+tabKV9S6RVKHDj4Q0rhmcBf2WwNz/m1KVlKmtchiIoCPni6o/
-         iAR5vCtzduISkBV+ULNKw8KXGJf6ouSQ9FFHt1hnH6xRecii0xDDIDJ+o6JaKW28BAme
-         Nr9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5kX2WZKrRc/0HA3YIoYskEYUUqqgcwmQSGOv/EOVrOQ=;
-        b=jxL0hSLKPD53ikKpLPOILUElNmRJIziWFZ8Wjj1M4mT5VCrXfo1hOeASHDbg6hiuj/
-         hjZH/VvNOV52Yh94T5hYpOyv7+x6Cb24w8T1g96kLKNrKUhDDZOyJXrcqTNpcTM5q9S0
-         mt3a5LiMHoSv31S0avbdZH2e2ebHdjUOCe+vZ1q6059HRe6iUeoh9gng7zwacmjefcmn
-         Q+vV8hzmmKUkIfE68YDTm2laLQ1s48JuestpaMSeDLMkm+5VcWXVos4UJfvsCSM0LFKV
-         3w+9C/gJCOW86Wmqt3/57tWVyZabJQnn+xKUnQ0U69FolUuNslcBbreLcAQH6ACGEdKA
-         l65w==
-X-Gm-Message-State: APjAAAUj6Eu8TRV28ZUuwxJT/mMtNM5Sg7ArAzMUwqTYlZpB89GMWX7e
-        OhahXbfa/6JG4kDlFbKkWk0sSGMBs2Jc/JpiZh2N3ww8
-X-Google-Smtp-Source: APXvYqwTTiRfe9TosQw/aC3uAM793PFAsBzhDOL618idpuGvhvAMaHjDyJHSOqQsn/qguujvNh8Wh6I5kBQLUMkRUHw=
-X-Received: by 2002:a1c:a751:: with SMTP id q78mr3904554wme.129.1572952736416;
- Tue, 05 Nov 2019 03:18:56 -0800 (PST)
+        Tue, 5 Nov 2019 06:25:41 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45934 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfKELZl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 06:25:41 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5BPSg5130466;
+        Tue, 5 Nov 2019 05:25:28 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572953128;
+        bh=AEgu6ZAqguAaapbiiV7DzXt549748ZM/kqwt+MmCmro=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=I+dmdAeFunPri/YD5MjnkDjm/DGTwJ0EE/cOVYCF7gW9G7dS0nPoS33WZKb21kjp9
+         dqrNhCh9ih8XYfrF/71cOZ6R8naU+EM0szTnHAmygD3K1FDcOir6evjeXmuRMswWRa
+         mq7mH/5vOVOPYGwfAjxsN+NA914Hm0VQTUMRxCqg=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5BPRGQ111123
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 Nov 2019 05:25:27 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
+ 2019 05:25:12 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 5 Nov 2019 05:25:12 -0600
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5BPOH6112622;
+        Tue, 5 Nov 2019 05:25:25 -0600
+Subject: Re: [PATCH v4 07/15] dmaengine: ti: k3 PSI-L remote endpoint
+ configuration
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lokeshvutla@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
+        <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-8-peter.ujfalusi@ti.com>
+ <bbe8e13f-b865-a352-7960-31b2865e5421@ti.com>
+ <aca16f7e-1807-188e-8beb-8a086af2869b@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <fbd57252-6782-c038-dced-03b3d776de64@ti.com>
+Date:   Tue, 5 Nov 2019 13:25:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191031111645.34777-1-kholk11@gmail.com> <20191031111645.34777-4-kholk11@gmail.com>
- <20191031195816.GA1462@onstation.org>
-In-Reply-To: <20191031195816.GA1462@onstation.org>
-From:   AngeloGioacchino Del Regno <kholk11@gmail.com>
-Date:   Tue, 5 Nov 2019 12:18:45 +0100
-Message-ID: <CAK7fi1ZZq6=J_5E5QUSqecVXRdMztNDE57zGECf1dE8ZvrWaqQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] arm64: dts: qcom: Add configuration for PM8950 and
- PMI8950 peripherals
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org,
-        ccross@android.com, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        marijns95@gmail.com, Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <aca16f7e-1807-188e-8beb-8a086af2869b@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Il giorno gio 31 ott 2019 alle ore 20:58 Brian Masney
-<masneyb@onstation.org> ha scritto:
->
-> Thanks for the patches. Good to see the progress!
->
-> On Thu, Oct 31, 2019 at 12:16:43PM +0100, kholk11@gmail.com wrote:
-> > From: AngeloGioacchino Del Regno <kholk11@gmail.com>
-> >
-> > The PM(I)8950 feature integrated peripherals like ADC, GPIO
-> > controller, MPPs, PON keys and others.
-> > Add them to DT files that will be imported on boards having
-> > this PMIC combo (or one of them, anyways).
-> >
-> > Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/pm8950.dtsi  | 187 ++++++++++++++++++++++++++
-> >  arch/arm64/boot/dts/qcom/pmi8950.dtsi |  98 ++++++++++++++
-> >  2 files changed, 285 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/pm8950.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/qcom/pmi8950.dtsi
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/pm8950.dtsi b/arch/arm64/boot/dts/qcom/pm8950.dtsi
-> > new file mode 100644
-> > index 000000000000..a349a8dd867e
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/pm8950.dtsi
-> > @@ -0,0 +1,187 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Copyright (c) 2019, AngeloGioacchino Del Regno <kholk11@gmail.com>
-> > +
-> > +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-> > +#include <dt-bindings/input/linux-event-codes.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
-> > +#include <dt-bindings/spmi/spmi.h>
-> > +
-> > +&spmi_bus {
-> > +     pm8950_lsid0: pm8950@0 {
-> > +             compatible = "qcom,pm8950", "qcom,spmi-pmic";
-> > +             reg = <0x0 SPMI_USID>;
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +
-> > +             pon@800 {
-> > +                     compatible = "qcom,pm8916-pon";
-> > +                     reg = <0x0800>;
-> > +                     mode-bootloader = <0x2>;
-> > +                     mode-recovery = <0x1>;
-> > +
-> > +                     pwrkey {
-> > +                             compatible = "qcom,pm8941-pwrkey";
-> > +                             interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-> > +                             debounce = <15625>;
-> > +                             bias-pull-up;
-> > +                             linux,code = <KEY_POWER>;
-> > +                     };
-> > +             };
-> > +
-> > +             pm8950_mpps: mpps@a000 {
-> > +                     compatible = "qcom,pm8950-mpp", "qcom,spmi-mpp";
-> > +                     reg = <0xa000>;
-> > +                     gpio-controller;
-> > +                     #gpio-cells = <2>;
-> > +                     interrupts = <0 0xa0 0 IRQ_TYPE_NONE>,
-> > +                                  <0 0xa1 0 IRQ_TYPE_NONE>,
-> > +                                  <0 0xa2 0 IRQ_TYPE_NONE>,
-> > +                                  <0 0xa3 0 IRQ_TYPE_NONE>;
-> > +
-> > +                     /* MPP_2: PA_THERM1 */
-> > +                     pa_therm {
-> > +                             pm8950_mpp2_def: pa_therm1_default {
-> > +                                     pins = "mpp2";
-> > +                                     function = "analog";
-> > +                                     input-enable;
-> > +                                     qcom,amux-route =
-> > +                                             <PMIC_MPP_AMUX_ROUTE_CH6>;
-> > +                             };
-> > +                     };
-> > +
-> > +                     /* MPP_4: QUIET_THERM */
-> > +                     case_therm {
-> > +                             pm8950_mpp4_def: case_therm_default {
-> > +                                     pins = "mpp4";
-> > +                                     function = "analog";
-> > +                                     input-enable;
-> > +                                     qcom,amux-route =
-> > +                                             <PMIC_MPP_AMUX_ROUTE_CH8>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             pm8950_gpios: gpio@c000 {
-> > +                     compatible = "qcom,pm8950-gpio", "qcom,spmi-gpio";
-> > +                     reg = <0xc000>;
-> > +                     gpio-controller;
-> > +                     #gpio-cells = <2>;
-> > +                     interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
-> > +                             <0 0xc1 0 IRQ_TYPE_NONE>,
-> > +                             <0 0xc3 0 IRQ_TYPE_NONE>,
-> > +                             <0 0xc4 0 IRQ_TYPE_NONE>,
-> > +                             <0 0xc5 0 IRQ_TYPE_NONE>,
-> > +                             <0 0xc6 0 IRQ_TYPE_NONE>,
-> > +                             <0 0xc7 0 IRQ_TYPE_NONE>;
-> > +             };
->
-> Please add gpio-ranges so that gpio-hogging will work properly. See
-> commits for pm8941 and spmi-gpio that describes the problem and how
-> to fix it:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=149a96047237574b756d872007c006acd0cc6687
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cdd3d64d843a2a4c658a182b744bfefbd021d542
->
-> Please drop the interrupts property and configure this to be a
-> hierarchical IRQ chip. See these two commits for more details:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ca69e2d165eb3d060cc9ad70a745e27a2cf4310b
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5f540fb4821a5444350ab3311fff60013d755d8f
->
-> There is some kind of mask that you'll need to add to omit 0xc2 that
-> Linus Walleij told me about before. I don't have the property handy
-> right now, but can look it up later if needed.
->
-> Brian
 
-That looks cleaner! Didn't know about it... Anyway, the only way that I know
-to exclude the 0xc2 is something like
 
-gpio-ranges = <&pm8950_gpios 0 0 8>;
-gpio-reserved-ranges = <2 1>;
+On 05/11/2019 12:27, Peter Ujfalusi wrote:
+> 
+> 
+> On 05/11/2019 12.00, Grygorii Strashko wrote:
+>> Hi Peter,
+>>
+>> On 01/11/2019 10:41, Peter Ujfalusi wrote:
+>>> In K3 architecture the DMA operates within threads. One end of the thread
+>>> is UDMAP, the other is on the peripheral side.
+>>>
+>>> The UDMAP channel configuration depends on the needs of the remote
+>>> endpoint and it can be differ from peripheral to peripheral.
+>>>
+>>> This patch adds database for am654 and j721e and small API to fetch the
+>>> PSI-L endpoint configuration from the database which should only used by
+>>> the DMA driver(s).
+>>>
+>>> Another API is added for native peripherals to give possibility to
+>>> pass new
+>>> configuration for the threads they are using, which is needed to be
+>>> able to
+>>> handle changes caused by different firmware loaded for the peripheral for
+>>> example.
+>>
+>> I have no objection to this approach, but ...
+>>
+>>>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> ---
+>>>    drivers/dma/ti/Kconfig         |   3 +
+>>>    drivers/dma/ti/Makefile        |   1 +
+>>>    drivers/dma/ti/k3-psil-am654.c | 172 ++++++++++++++++++++++++++
+>>>    drivers/dma/ti/k3-psil-j721e.c | 219 +++++++++++++++++++++++++++++++++
+>>>    drivers/dma/ti/k3-psil-priv.h  |  39 ++++++
+>>>    drivers/dma/ti/k3-psil.c       |  97 +++++++++++++++
+>>>    include/linux/dma/k3-psil.h    |  47 +++++++
+>>>    7 files changed, 578 insertions(+)
+>>>    create mode 100644 drivers/dma/ti/k3-psil-am654.c
+>>>    create mode 100644 drivers/dma/ti/k3-psil-j721e.c
+>>>    create mode 100644 drivers/dma/ti/k3-psil-priv.h
+>>>    create mode 100644 drivers/dma/ti/k3-psil.c
+>>>    create mode 100644 include/linux/dma/k3-psil.h
+>>>
+>>
+>> [...]
+>>
+>>> diff --git a/include/linux/dma/k3-psil.h b/include/linux/dma/k3-psil.h
+>>> new file mode 100644
+>>> index 000000000000..16e9c8c6f839
+>>> --- /dev/null
+>>> +++ b/include/linux/dma/k3-psil.h
+>>> @@ -0,0 +1,47 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + *  Copyright (C) 2019 Texas Instruments Incorporated -
+>>> http://www.ti.com
+>>> + */
+>>> +
+>>> +#ifndef K3_PSIL_H_
+>>> +#define K3_PSIL_H_
+>>> +
+>>> +#include <linux/types.h>
+>>> +
+>>> +#define K3_PSIL_DST_THREAD_ID_OFFSET 0x8000
+>>> +
+>>> +struct device;
+>>> +
+>>> +/* Channel Throughput Levels */
+>>> +enum udma_tp_level {
+>>> +    UDMA_TP_NORMAL = 0,
+>>> +    UDMA_TP_HIGH = 1,
+>>> +    UDMA_TP_ULTRAHIGH = 2,
+>>> +    UDMA_TP_LAST,
+>>> +};
+>>> +
+>>> +enum psil_endpoint_type {
+>>> +    PSIL_EP_NATIVE = 0,
+>>> +    PSIL_EP_PDMA_XY,
+>>> +    PSIL_EP_PDMA_MCAN,
+>>> +    PSIL_EP_PDMA_AASRC,
+>>> +};
+>>> +
+>>> +struct psil_endpoint_config {
+>>> +    enum psil_endpoint_type ep_type;
+>>> +
+>>> +    unsigned pkt_mode:1;
+>>> +    unsigned notdpkt:1;
+>>> +    unsigned needs_epib:1;
+>>> +    u32 psd_size;
+>>> +    enum udma_tp_level channel_tpl;
+>>> +
+>>> +    /* PDMA properties, valid for PSIL_EP_PDMA_* */
+>>> +    unsigned pdma_acc32:1;
+>>> +    unsigned pdma_burst:1;
+>>> +};
+>>> +
+>>> +int psil_set_new_ep_config(struct device *dev, const char *name,
+>>> +               struct psil_endpoint_config *ep_config);
+>>> +
+>>> +#endif /* K3_PSIL_H_ */
+>>>
+>>
+>> I see no user now of this public interface, so I think it better to drop
+>> it until
+>> there will be real user of it.
+> 
+> The same argument is valid for the glue layer ;)
+> 
+> This is only going to be used by native PSI-L devices and the
+> psil_endpoint_config is going to be extended to facilitate their needs
+> to give information to the DMA driver on how to set things up.
+> 
+> I would rather avoid churn later on than adding the support from the start.
+> 
+> The point is that the PSI-L endpoint configuration is part of the PSI-L
+> peripheral and based on factors these configurations might differ from
+> the default one. For example if we want to merge the two physical rx
+> channel for sa2ul (so they use the same rflow) or other things we (I)
+> can not foresee yet.
+> Or if different firmware is loaded for them and it affects their PSI-L
+> configuration.
 
-...but you're talking about a mask? Is there a different way of doing it, or
-were you referring to the gpio-reserved-ranges property?
+Ok. It's up to you.
 
-Angelo
+otherwise:
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+-- 
+Best regards,
+grygorii
