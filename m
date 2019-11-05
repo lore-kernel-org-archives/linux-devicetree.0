@@ -2,190 +2,177 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D835C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15EBC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 23:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B0B2084D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 22:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iHLJvOrK"
+	by mail.kernel.org (Postfix) with ESMTP id 57FBD2084D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 23:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572995159;
+	bh=oaA7Qs9DVF0e9HaWq2d98G4dS3cAsTt/VZEZU7zATmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NM2jUPf43jH2F4OAz/oUIjuqUw/7V9lx8YP3Ei5P8imJQ2SSbHBmXURx06AaGsWhc
+	 LX9qBs8x3wU7lZTcTPel9kKY1ICuaZfs+f6juu9dNVc4v1pIXpqaIyFa1NXaZ6QW1U
+	 02RtgRYEPHD/p745tCg6EdmwK1WYf0AEmvZWCltA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbfKEWxA (ORCPT
+        id S1730523AbfKEXFz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:53:00 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38271 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729895AbfKEWw7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 17:52:59 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v186so19187923oie.5
-        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 14:52:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ITot2P1/Oq1djB16oG4kp1TUvRDEYRsyk0+fdSTUYw4=;
-        b=iHLJvOrKMmGplCdoVyX0r+Vex/KiHX7/2gzEkqUGtS9y1kL5yKWQyCpQLbuDDjC9Is
-         5TTkBC0jgHz5YkvBoVLZNIH7IYS1FN/nj0Ri77yYoHW0RUq6VDBbgb860xuZ2D566gHO
-         jRvW49c1h4UyvoTIeITBnbXm1wQ3Mm8r0o2DNuoBShnqCcNpFhej58iGH3HAx+Eog3Ql
-         xiFj5N3CuW7VIh48JxSTvl30/ZCtzh10Y5GKZu7VKZvehv1luDEh0MfJe0gMx7PTzcZy
-         ZXAoO63WuczkBq1yJB+WPezvFII9eB/rDNWPzS3RklXRdMP30mo+PQRRWpMbyt72LoYA
-         NDCA==
+        Tue, 5 Nov 2019 18:05:55 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34017 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730184AbfKEXFz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 18:05:55 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l202so19217135oig.1;
+        Tue, 05 Nov 2019 15:05:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ITot2P1/Oq1djB16oG4kp1TUvRDEYRsyk0+fdSTUYw4=;
-        b=oA4g+Bfu6GaC1F1/bnxlR9IdKiw2r9Hh6Q0yPJ/GYKhP7gFaSeJMnzD242znJ7pnDY
-         sowT9DGnpe445HsJ+KvU+oeMQqf6rmAHu5HtXyajBxqk86AMue9enoeCdNOFdrKRP4GI
-         XrD8ohYIqBCW7Hoxya/9RlX1A0zeIg29HkVIRiBTo8gaeVvqo4olSiG2H105pNo6oGWn
-         Xc9tXnCwskHm1XLG4KUdEhEmgzizg/TaLyrAy5fDhSp+ctFHpEeBvDSrOfTpnrB1u5Z6
-         yy39sUHVqWG3J1znKXgTg+pZFuiWNHs5TVwBpFzo76DbvMX7Y2II09+NRt94e7rA7Hd3
-         meBQ==
-X-Gm-Message-State: APjAAAUcsWsIbvFpDA2B/9e/bYZSxI5ZR5ETFxH7oBEAw58MsMnYCVmx
-        lfqoHB9ROdzf2PxK6je8tGgZNPCOt1HtNYhKbwKU6w==
-X-Google-Smtp-Source: APXvYqzIAUzPDmogTITDbFUcA/ihvKRGXKPJD4mBnp8pOOy8bZMrACShUDrVG+Osz9+7P9TgEvDK1SPeZMDgR0ab2QY=
-X-Received: by 2002:aca:d558:: with SMTP id m85mr1203360oig.43.1572994377809;
- Tue, 05 Nov 2019 14:52:57 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LAi+qZUkuhq1d2wVLpPVPcbuNd2aQs6HwzUUOf0K5n0=;
+        b=CITCjdO58m2RvUsHCB9tbmJshOx0/BRDvJFf38Gyd69/OuIzbSUZNl15CaYPYq0LPC
+         7gPxdWWFk3O/QKnQA1rHAXKhFWiJT5zxUN6MYOM90GLGjvjoX76SS/OxJe2EDauxRTuR
+         QZOd8IbwUSG2lXrqy2zlIteAjCnbmvEX9ckD7NyxEao2nLNfJraEbgiN3XC3tHOXuHy7
+         oA3+EZxJkaTW/baq7Nmqi8zZcuLmWIAFPpkqM595GB8p6ur1wU5YjbyXtfa56DGvnbqe
+         R8rxRgPO69PfW2gTX0Zufd5by2POmde6g3dfiSyybxa1rhC2wBlGMmK+NZhttl3dtF+m
+         U2lg==
+X-Gm-Message-State: APjAAAVoJqpHYJ3XdDMYy4to7GdELWp8azZYfbkdlCf9R25sAJb9rfeN
+        /c1LDNegT+49u7adR9Do2tkYhgs=
+X-Google-Smtp-Source: APXvYqxhGYoDJXdpfnXNnhPdoaao9UI1xI0qHKyHXJT6+QFjo/BppkWuai5Qa9e9sgoNmpyOlN7Oew==
+X-Received: by 2002:aca:c4d5:: with SMTP id u204mr1189182oif.119.1572995153554;
+        Tue, 05 Nov 2019 15:05:53 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q82sm1372503oif.11.2019.11.05.15.05.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 15:05:52 -0800 (PST)
+Date:   Tue, 5 Nov 2019 17:05:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tony Lindgren <tony@atomide.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2 1/5] dt-bindings: media: ti-vpe: Document VPE driver
+Message-ID: <20191105230552.GA25817@bogus>
+References: <20191104203841.3628-1-bparrot@ti.com>
+ <20191104203841.3628-2-bparrot@ti.com>
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-4-saravanak@google.com>
- <7640808.4Pc6YCm0Y9@kreacher>
-In-Reply-To: <7640808.4Pc6YCm0Y9@kreacher>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 5 Nov 2019 14:52:21 -0800
-Message-ID: <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
- differentiate errors
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104203841.3628-2-bparrot@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rafael,
+On Mon, Nov 04, 2019 at 02:38:37PM -0600, Benoit Parrot wrote:
+> Device Tree bindings for the Video Processing Engine (VPE).
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  .../devicetree/bindings/media/ti,vpe.yaml     | 64 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/ti,vpe.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/ti,vpe.yaml b/Documentation/devicetree/bindings/media/ti,vpe.yaml
+> new file mode 100644
+> index 000000000000..eb9f3e1b7f5f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/ti,vpe.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
 
-Thanks for the review.
+For new bindings:
 
-On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
-> > When add_links() still has suppliers that it needs to link to in the
-> > future, this patch allows it to differentiate between suppliers that are
-> > needed for probing vs suppliers that are needed for sync_state()
-> > correctness.
->
-> I guess you mean that it will return different error codes in the different
-> cases.
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 
-Yes.
+With that,
 
->
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/base/core.c    | 12 ++++++++----
-> >  include/linux/fwnode.h | 13 +++++++++----
-> >  2 files changed, 17 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 48cd43a91ce6..e6d3e6d485da 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
-> >       struct device *parent;
-> >       struct kobject *kobj;
-> >       struct class_interface *class_intf;
-> > -     int error = -EINVAL;
-> > +     int error = -EINVAL, fw_ret;
-> >       struct kobject *glue_dir = NULL;
-> >
-> >       dev = get_device(dev);
-> > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
-> >        */
-> >       device_link_add_missing_supplier_links();
-> >
-> > -     if (fwnode_has_op(dev->fwnode, add_links)
-> > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > -             device_link_wait_for_mandatory_supplier(dev, true);
-> > +     if (fwnode_has_op(dev->fwnode, add_links)) {
->
-> fw_ret can be defined here and I'd just call it "ret".
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-I thought that style of variable declaration is frowned up in the
-kernel coding style.
-
->
-> > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > +             if (fw_ret == -ENODEV)
-> > +                     device_link_wait_for_mandatory_supplier(dev);
-> > +             else if (fw_ret)
-> > +                     device_link_wait_for_optional_supplier(dev);
-> > +     }
-> >
-> >       bus_probe_device(dev);
-> >       if (parent)
-> > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> > index 25bb81f8ded8..a19134eae5a5 100644
-> > --- a/include/linux/fwnode.h
-> > +++ b/include/linux/fwnode.h
-> > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
-> >   *           available suppliers.
-> >   *
-> >   *           Return 0 if device links have been successfully created to all
-> > - *           the suppliers of this device or if the supplier information is
-> > - *           not known. Return an error if and only if the supplier
-> > - *           information is known but some of the suppliers are not yet
-> > - *           available to create device links to.
-> > + *           the suppliers this device needs to create device links to or if
-> > + *           the supplier information is not known.
->
-> "the known suppliers of this device or if the supplier information is not known."
-
-"suppliers it needs to create device links to" is a subset of known
-suppliers. There's no requirement that fw needs to create links to ALL
-known suppliers. Just a minor distinction.
-
-> > + *
-> > + *           Return -ENODEV if and only if the suppliers needed for probing
-> > + *           the device are not yet available to create device links to.
->
-> It would be more precise to say something like this:
->
-> "Return -ENODEV if an attempt to create a device link to one of the device's
-> suppliers needed for probing it fails."
-
-"attempt to create a device link to one of the device's suppliers
-needed for probing it fails" to me means device_link_add() fails.
-But I'm trying to say that it should return an error if the struct
-device isn't even there yet.
-
-> > + *
-> > + *           Return -EAGAIN if there are suppliers that need to be linked to
-> > + *           that are not yet available but none of those suppliers are
-> > + *           necessary for probing this device.
->
-> "Return -EAGAIN if attempts to create device links to some of the device's
-> suppliers have failed, but those suppliers are not necessary for probing the
-> device."
-
-Same comment as before. The distinction I'm making here is that
--EAGAIN is needed when the struct device itself isn't there.
-
-Btw, Greg already pulled these into driver-core-next. Let me know if
-you want me to send a delta patch to fix any of these comments.
-
-Thanks,
-Saravana
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/ti,vpe.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments DRA7x Video Processing Engine (VPE) Device Tree Bindings
+> +
+> +maintainers:
+> +  - Benoit Parrot <bparrot@ti.com>
+> +
+> +description: |-
+> +  The Video Processing Engine (VPE) is a key component for image post
+> +  processing applications. VPE consist of a single memory to memory
+> +  path which can perform chroma up/down sampling, deinterlacing,
+> +  scaling and color space conversion.
+> +
+> +properties:
+> +  compatible:
+> +      const: ti,dra7-vpe
+> +
+> +  reg:
+> +    items:
+> +      - description: The VPE main register region
+> +      - description: Scaler (SC) register region
+> +      - description: Color Space Conversion (CSC) register region
+> +      - description: Video Port Direct Memory Access (VPDMA) register region
+> +
+> +  reg-names:
+> +    items:
+> +      - const: vpe_top
+> +      - const: sc
+> +      - const: csc
+> +      - const: vpdma
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    vpe: vpe@489d0000 {
+> +        compatible = "ti,dra7-vpe";
+> +        reg = <0x489d0000 0x120>,
+> +              <0x489d0700 0x80>,
+> +              <0x489d5700 0x18>,
+> +              <0x489dd000 0x400>;
+> +        reg-names = "vpe_top",
+> +                    "sc",
+> +                    "csc",
+> +                    "vpdma";
+> +        interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d360df48f9f2..baf3aac1ab7c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16316,6 +16316,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+>  S:	Maintained
+>  F:	drivers/media/platform/ti-vpe/
+>  F:	Documentation/devicetree/bindings/media/ti,cal.yaml
+> +F:	Documentation/devicetree/bindings/media/ti,vpe.yaml
+>  
+>  TI WILINK WIRELESS DRIVERS
+>  L:	linux-wireless@vger.kernel.org
+> -- 
+> 2.17.1
+> 
