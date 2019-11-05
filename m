@@ -2,249 +2,260 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0749AC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A86AC5DF62
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB2A21882
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:26:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TiRRiiKd"
+	by mail.kernel.org (Postfix) with ESMTP id 1C51321928
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572982264;
+	bh=DANwge0pl0jxO6NsvwyOA5Ucz9xwOOV6M82LPSfakpM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tG8x4BGxZJF8xYIjyklweuCCRZv1yN0dv4PGk0C0v8+yoeLWkXT14f22OrGFhRy3j
+	 xKKfvkC7qSB43DgJgOv+ecznOM2EZhAM9wsOvMkXCcFEGCZeWABxFPvvKPK6Jczx7Z
+	 4HLX+xlWuEscihsIaz2eFfYbGCOZ6Sq/keqsQS+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390314AbfKET0H (ORCPT
+        id S2390314AbfKETbD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:26:07 -0500
-Received: from mail-eopbgr130054.outbound.protection.outlook.com ([40.107.13.54]:59700
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390943AbfKET0H (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:26:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G8GJcIbZ0JLnP3fHrgMIQhYTTaOukFilNoKhbPYmZkFe0ynm+Nse/AHh1UE+x/Vv3zVw61XAEVrb0zOpYT5QbkGmaFk10RpWn96cG4332qDpHzQ6k/ALD8XDoxV7ssal+G3QHCHcO9Bm9sWnWkIk64I9jQ4K8i0s+Gc2DIk5A4vZDI5AS2tVuMnDR+ivjnqC35T7zAgQvofXFZSxFepNRFcoOpdvKIkVFxX/ILE+u5CeyBsPg/vsuqyLlysbPOgQBXehcNuLMLMy9YKPyuSVF02wVV2UCaxIIYfpkEmXO64aFBZZ+oN6toK4ujavqvhU948Kzq+8tXy5/EhoPOueDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ddzith1KCgIQvGUdk2FllzeY1o8XmIkimAvZ7eZbiYs=;
- b=COAAhHsclhEZuBQzouJ0PXBlvbbzqQakeqDC9TmimKaXFSx9Zx+dLesIrsAt+mqVeQRdkGPMgKO99v3DHG36cByPtAHs9AeRibYTWwB+U+bhmZAKbQUb5AsvH1SLOfnxPqefXh0/HpizoivvD+PcIYnyB8mcwAYlWepqEIqHqWaOjaerl+v7GPqt+cCEqEKuJKrpGvcR4O3M2DL9cRi8SE8kgfptrIMxi4VAK0Js3EGcvJp66JadcsBRxROlkyVxPTnTNvLdmTJQgM9N+nR6qU/7HP//Q80T33D1lnDW2i91powk8GORqMqE7Ky2PtF+qX0bjMlAEGVqfPCXeC8Irw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ddzith1KCgIQvGUdk2FllzeY1o8XmIkimAvZ7eZbiYs=;
- b=TiRRiiKd3PMgcKZa8aTGsNLsH1rEnm8rKWzx36QC0XlBJAq80e3nRDeUuSZfUmMeDBzCp2QOYkeRzja5xR3T1/o6fpBBIWkRi5A5dyk/HQW7/QGTYYefHVmzftqVOfmYvgwT/PFNnAlJwpfwMrHA4QdMXAyzckr5+e4QEZneZPE=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB5759.eurprd04.prod.outlook.com (20.178.125.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Tue, 5 Nov 2019 19:25:57 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2408.024; Tue, 5 Nov 2019
- 19:25:57 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Rob Herring <robh@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-CC:     Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: devfreq: Add bindings for imx ddr
- controller
-Thread-Topic: [PATCH v3 3/6] dt-bindings: devfreq: Add bindings for imx ddr
- controller
-Thread-Index: AQHVkDU6emQ0aN+uuUOlCrShp6WAog==
-Date:   Tue, 5 Nov 2019 19:25:57 +0000
-Message-ID: <VI1PR04MB7023F375AEDC4549FA12247FEE7E0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1572558427.git.leonard.crestez@nxp.com>
- <b9a87c69eb603622303add4f0c02dd4c1262462a.1572558427.git.leonard.crestez@nxp.com>
- <20191104222126.GB5218@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7825f8c0-8c2c-4ef3-babd-08d76225fc19
-x-ms-traffictypediagnostic: VI1PR04MB5759:|VI1PR04MB5759:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5759EF7E2A85C3636D71C34CEE7E0@VI1PR04MB5759.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0212BDE3BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(136003)(346002)(396003)(189003)(199004)(476003)(6246003)(9686003)(256004)(102836004)(81156014)(8676002)(76176011)(446003)(66556008)(25786009)(3846002)(71200400001)(6116002)(66476007)(6306002)(6436002)(71190400001)(14454004)(66946007)(45080400002)(76116006)(66446008)(316002)(4326008)(478600001)(966005)(7696005)(2906002)(186003)(6506007)(110136005)(86362001)(26005)(7736002)(8936002)(305945005)(64756008)(55016002)(7416002)(91956017)(486006)(99286004)(66066001)(5660300002)(44832011)(33656002)(229853002)(52536014)(74316002)(81166006)(54906003)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5759;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xOa7ZzTL1I5s6UPvJLkyJ9akHpwqlqN4jM8FQgWliUnzpUJo5UaZ1eQ4ftkyq/7Vrm5+8YCLdEY6kEcnm0Khr6du5HDqMWKWwLwFPf1GoqDEiGkBeGyvsGlMyG6Jes4ta/ggAQqyMvRZ4gg7N7BjhA6Mj25Fl43cNibbJG/7CD1KMZNKUYWdd4aUaJfpTLrVbrPTrVnjOrwlu84T3N0n1sV2lqzjqoXPStTkJTw52sQ1AT8X/0Gjwqzqlon0V+FTmSTfE5+NTQTLP3HdEtsRXzFEoMGkfA5T52DuiWahwAp2eGhEhWJk4Uyg6nwEZgR88FTGPnRytcFHe61MWA+pae/F0yVTwAWJIFoiS9mP7m/Eqhiv3EfoLp9Y9KuiZf55BYaywtNGeO0nrL53xm9lA2uK2ulh5AAmNeE85n0eUVWMVIperKlprNPzcAF9bDHcNblRfKjS2VtoSJ7IQBtY49h7l2UcWX579SEN2F2drxM=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 Nov 2019 14:31:03 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33997 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389691AbfKETbD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 14:31:03 -0500
+Received: by mail-ot1-f65.google.com with SMTP id t4so7190903otr.1;
+        Tue, 05 Nov 2019 11:31:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eXCrqaM2ReNAR8xM9spgb2Ee5zhCWir3DnZ51DYqUs0=;
+        b=YWsfZJwEFvAcw0YM7AT9gmKK9ZA6rxygwrCRQX1GOiZ+W4ujfnLD6T6Lyiw9/0zJwE
+         TG4+R2ZQVqdO8Cm5nVBlIS/45Rz2X1Lm7wxo82nB7yuhba42V66f6HhF38SudfU8rFDb
+         iSKgt83IvsYeMYCAWPNVCFcNHZP6KVV44QI5kAJ/8i8fsBQbflAfRazFwVM7s9MFuyHO
+         ZXm3UYbEbbEDyCtHXyWFl1aeKUclFtnW6QK+g4MfIfRZ4s1uH6nAh22GSC1KaAHj1v1X
+         Gv0P3zSncTCq4y1zXLwGz6FTmnXgtJAFGZ6BUeng2ZDBl0MjrA275Zswks65KEgA27LN
+         R53A==
+X-Gm-Message-State: APjAAAVdATyFE3gOW1tBgI8affRsWa0F1B9QbZx9QROeJJEqdRjMDyzV
+        SMoaOC0TmQ0Pw41kM8wu4A==
+X-Google-Smtp-Source: APXvYqzre2W/9ZqnBFFrz/aj+RCDtEBQysbqFeG7AzSN3ieOnpHrDpu7BFOp+KDwAVrQMDlaLseVCw==
+X-Received: by 2002:a05:6830:46:: with SMTP id d6mr13605649otp.7.1572982261489;
+        Tue, 05 Nov 2019 11:31:01 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y7sm6891792ote.81.2019.11.05.11.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 11:31:00 -0800 (PST)
+Date:   Tue, 5 Nov 2019 13:31:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+Message-ID: <20191105193100.GB4709@bogus>
+References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+ <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7825f8c0-8c2c-4ef3-babd-08d76225fc19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 19:25:57.7010
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YXe8EaZx92W5tqBZ1CuAbY9i5q0W5GALgOEt4d1n23gxr0hJlzHlYXUrfN1tDkhAqVTMYFzjODj5vW2X+I0AjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5759
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05.11.2019 00:21, Rob Herring wrote:=0A=
-> On Thu, Oct 31, 2019 at 11:50:24PM +0200, Leonard Crestez wrote:=0A=
->> Add devicetree bindings for the i.MX DDR Controller on imx8m series=0A=
->> chips. It supports dynamic frequency switching between multiple data=0A=
->> rates and this is exposed to Linux via the devfreq subsystem.=0A=
->>=0A=
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> ---=0A=
->>   .../devicetree/bindings/devfreq/imx-ddrc.yaml | 60 +++++++++++++++++++=
-=0A=
-> =0A=
-> .../bindings/memory-controllers/=0A=
-=0A=
-Okay, but I'm not sure about the rules here. Usually there is a 1:1 =0A=
-mapping between subsystems and bindings directory but I guess devfreq is =
-=0A=
-odd since it's not really a physical class of device.=0A=
-=0A=
-I saw there is also a drivers/memory and there is already a =0A=
-devfreq-using driver in there (EXYNOS5422_DMC).=0A=
-=0A=
-It's not clear if my driver fits in there; as far as I can see the only =0A=
-"core" functionality in drivers/memory is parsing DDR timings from DTS =0A=
-but for imx8m this is all controlled in firmware.=0A=
-=0A=
->>   1 file changed, 60 insertions(+)=0A=
->>   create mode 100644 Documentation/devicetree/bindings/devfreq/imx-ddrc.=
-yaml=0A=
->>=0A=
->> diff --git a/Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml b/D=
-ocumentation/devicetree/bindings/devfreq/imx-ddrc.yaml=0A=
->> new file mode 100644=0A=
->> index 000000000000..31db204e6845=0A=
->> --- /dev/null=0A=
->> +++ b/Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml=0A=
->> @@ -0,0 +1,60 @@=0A=
->> +# SPDX-License-Identifier: GPL-2.0=0A=
-> =0A=
-> For new bindings:=0A=
-> =0A=
-> # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)=0A=
-> =0A=
->> +%YAML 1.2=0A=
->> +---=0A=
->> +$id: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2=
-Fdevicetree.org%2Fschemas%2Fdevfreq%2Fimx-devfreq.yaml%23&amp;data=3D02%7C0=
-1%7Cleonard.crestez%40nxp.com%7Cba47e72161764d5a969a08d761755736%7C686ea1d3=
-bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637085028918247356&amp;sdata=3D2DjKgyATO=
-Pu7qhzpOCfRrmUM0%2FSAQrV9R7AxZxib8gk%3D&amp;reserved=3D0=0A=
-> =0A=
-> Run 'make dt_binding_check'. This will fail as the filename doesn't=0A=
-> match.=0A=
-> =0A=
->> +$schema: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%=
-2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Cleon=
-ard.crestez%40nxp.com%7Cba47e72161764d5a969a08d761755736%7C686ea1d3bc2b4c6f=
-a92cd99c5c301635%7C0%7C1%7C637085028918247356&amp;sdata=3DEbyVK2ZF6Z22vE%2F=
-4LfIVv0S1LoMe7%2BxhM43H1i8nxtE%3D&amp;reserved=3D0=0A=
->> +=0A=
->> +title: i.MX DDR Controller=0A=
-> =0A=
-> Perhaps i.MX8x as it's not all i.MX chips. And the filename too?=0A=
-=0A=
-Ok, will rename to imx8m-ddrc since it's not even for all imx8.=0A=
-=0A=
->> +=0A=
->> +maintainers:=0A=
->> +  - Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> +=0A=
->> +properties:=0A=
->> +  compatible:=0A=
->> +    items:=0A=
->> +      - enum:=0A=
->> +        - fsl,imx8mn-ddrc=0A=
->> +        - fsl,imx8mm-ddrc=0A=
->> +        - fsl,imx8mq-ddrc=0A=
->> +      - const: fsl,imx8m-ddrc=0A=
->> +=0A=
->> +  reg:=0A=
->> +    maxItems: 1=0A=
->> +=0A=
->> +  clocks:=0A=
->> +    maxItems: 4=0A=
->> +=0A=
->> +  clock-names:=0A=
->> +    items:=0A=
->> +      - const: dram_core=0A=
->> +      - const: dram_pll=0A=
->> +      - const: dram_alt=0A=
->> +      - const: dram_apb=0A=
-> =0A=
-> Drop 'dram_'=0A=
-=0A=
-OK=0A=
-=0A=
->> +=0A=
->> +  operating-points-v2: true=0A=
->> +=0A=
->> +  devfreq-events:=0A=
->> +    description: Phandle of PMU node=0A=
->> +    $ref: "/schemas/types.yaml#/definitions/phandle"=0A=
->> +=0A=
->> +required:=0A=
->> +  - reg=0A=
->> +  - compatible=0A=
->> +  - clocks=0A=
->> +  - clock-names=0A=
->> +=0A=
->> +additionalProperties: false=0A=
->> +=0A=
->> +examples:=0A=
->> +  - |=0A=
->> +    #include <dt-bindings/clock/imx8mm-clock.h>=0A=
->> +    ddrc: dram-controller@3d400000 {=0A=
->> +        compatible =3D "fsl,imx8mm-ddrc", "fsl,imx8m-ddrc";=0A=
->> +        reg =3D <0x3d400000 0x400000>;=0A=
->> +        clock-names =3D "dram_core", "dram_pll", "dram_alt", "dram_apb"=
-;=0A=
->> +        clocks =3D <&clk IMX8MM_CLK_DRAM_CORE>,=0A=
->> +                 <&clk IMX8MM_DRAM_PLL>,=0A=
->> +                 <&clk IMX8MM_CLK_DRAM_ALT>,=0A=
->> +                 <&clk IMX8MM_CLK_DRAM_APB>;=0A=
->> +        operating-points-v2 =3D <&ddrc_opp_table>;=0A=
->> +    };=0A=
+On Tue, Oct 29, 2019 at 11:26:50AM +0000, Srinivas Kandagatla wrote:
+> This patch adds bindings for wcd9340/wcd9341 audio codec which can
+> support both SLIMbus and I2S/I2C interface.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../bindings/sound/qcom,wcd934x.yaml          | 162 ++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> new file mode 100644
+> index 000000000000..d6cfde6597db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> @@ -0,0 +1,162 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
+> +  It has in-built Soundwire controller, pin controller, interrupt mux and
+> +  supports both I2S/I2C and SLIMbus audio interfaces.
+> +
+> +properties:
+> +  compatible:
+> +    const: slim217,250
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: GPIO spec for reset line to use
+> +    maxItems: 1
+> +
+> +  slim-ifc-dev:
+> +    description: SLIMBus Interface device phandle
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    maxItems: 1
+
+Replied on previous version.
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: extclk
+> +
+> +  vdd-buck-supply:
+> +    description: A reference to the 1.8V buck supply
+> +
+> +  vdd-buck-sido-supply:
+> +    description: A reference to the 1.8V SIDO buck supply
+> +
+> +  vdd-rx-supply:
+> +    description: A reference to the 1.8V rx supply
+> +
+> +  vdd-tx-supply:
+> +    description: A reference to the 1.8V tx supply
+> +
+> +  vdd-vbat-supply:
+> +    description: A reference to the vbat supply
+> +
+> +  vdd-io-supply:
+> +    description: A reference to the 1.8V I/O supply
+> +
+> +  vdd-micbias-supply:
+> +    description: A reference to the micbias supply
+> +
+> +  qcom,micbias1-microvolts:
+
+The standard unit is 'microvolt', not 'microvolts'.
+
+> +    description: micbias1 voltage between 1800000 - 2850000 microvolts
+> +
+> +  qcom,micbias2-microvolts:
+> +    description: micbias2 voltage between 1800000 - 2850000 microvolts
+> +
+> +  qcom,micbias3-microvolts:
+> +    description: micbias3 voltage between 1800000 - 2850000 microvolts
+> +
+> +  qcom,micbias4-microvolts:
+> +    description: micbias4 voltage between 1800000 - 2850000 microvolts
+> +
+> +  clock-output-names:
+> +    const: mclk
+> +
+> +  clock-frequency:
+> +    description: Clock frequency of output clk in Hz
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  '#sound-dai-cells':
+> +    const: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +patternProperties:
+> +  "^.*@[0-9a-f]+$":
+> +    type: object
+> +    description: |
+> +      WCD934x subnode for each slave devices. Bindings of each subnodes
+> +      depends on the specific driver providing the functionality and
+> +      documented in their respective bindings.
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset-gpios
+> +  - slim-ifc-dev
+> +  - interrupts
+> +  - interrupt-controller
+> +  - clock-frequency
+> +  - clock-output-names
+> +  - qcom,micbias1-microvolts
+> +  - qcom,micbias2-microvolts
+> +  - qcom,micbias3-microvolts
+> +  - qcom,micbias4-microvolts
+> +  - "#interrupt-cells"
+> +  - "#clock-cells"
+> +  - "#sound-dai-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    codec@1,0{
+> +        compatible = "slim217,250";
+> +        reg  = <1 0>;
+> +        reset-gpios = <&tlmm 64 0>;
+> +        slim-ifc-dev  = <&wcd9340_ifd>;
+> +        #sound-dai-cells = <1>;
+> +        interrupt-parent = <&tlmm>;
+> +        interrupts = <54 4>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <1>;
+> +        #clock-cells = <0>;
+> +        clock-frequency = <9600000>;
+> +        clock-output-names = "mclk";
+> +        qcom,micbias1-microvolts = <1800000>;
+> +        qcom,micbias2-microvolts = <1800000>;
+> +        qcom,micbias3-microvolts = <1800000>;
+> +        qcom,micbias4-microvolts = <1800000>;
+> +        clock-names = "extclk";
+> +        clocks = <&rpmhcc 2>;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        pinctrl@42 {
+> +            reg = <0x42 0x2>;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
+> 
