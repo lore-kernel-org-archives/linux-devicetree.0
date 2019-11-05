@@ -2,268 +2,120 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B951CA9EC7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88407CA9EC7
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA83217F4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="rDqV+kXj"
+	by mail.kernel.org (Postfix) with ESMTP id 59D4920818
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 06:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572933778;
+	bh=Adr963WRlh5HjK13+m1iekOv9cCt3ddxETiP+Guxcp0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=niKz/wUvs9rCtfBSiu1z8fuAWiyLyyhkXX9GKjYr8US4cW0spWAnpuH/3EdRoLp9c
+	 HJqM917Du+tfqEyFbniBZxHkkgOQprkVKoejj+WikXFuLLi5RcnX0joanyLySuyad8
+	 zM41VFQOwUPMJIuSItFBVYt9MteCBOlPryLExSYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbfKEGCl (ORCPT
+        id S1730521AbfKEGCz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:02:41 -0500
-Received: from gateway34.websitewelcome.com ([192.185.149.105]:38973 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726033AbfKEGCl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 01:02:41 -0500
-X-Greylist: delayed 1204 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Nov 2019 01:02:40 EST
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id B850B2805182
-        for <devicetree@vger.kernel.org>; Mon,  4 Nov 2019 23:42:36 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id Rrbwi3v9FHunhRrbwiVsN4; Mon, 04 Nov 2019 23:42:36 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lizOfj4n1A6GoFXXwE/W8Ky+XvCip5rrvcCbBwrCoBA=; b=rDqV+kXjbn94eip2zIJ1XvfaTp
-        ehdMTbbbBXnapXd3AsL6od4lpkWgZqu2MuUVdiJcI1RZ47Q3IHNu35RvlYL1JE3GuHw+28jKoIEOL
-        IiMf1T3/4obcWY3Snaf1N+o9/o27uvlz+d/twDTsVGN4YirucF3vMtt8P8Dt/X/tg1WYTOqxpxj6q
-        JwRan1UeoXD/K4BJDKLpFvoDtI/eO+NwXeweEAgYUOb3P46JO1syU/Bg5sjUNQeV5aj4Ta0IOdhJo
-        Hqxy92PQwldKD/mPxMB3kxENwb0d/53F6KJrf2nrHRwQywok3J0UmEovADRz+Adm+n3G9UxtmV8rb
-        HROocdcA==;
-Received: from [191.31.196.28] (port=37450 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iRrbv-002sjK-Ur; Tue, 05 Nov 2019 02:42:36 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v5 4/5] power: supply: max17040: Config alert SOC low level threshold from FDT
-Date:   Tue,  5 Nov 2019 02:42:17 -0300
-Message-Id: <20191105054218.29826-5-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191105054218.29826-1-matheus@castello.eng.br>
-References: <20191105015827.GA332@bogus>
- <20191105054218.29826-1-matheus@castello.eng.br>
+        Tue, 5 Nov 2019 01:02:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730520AbfKEGCz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 01:02:55 -0500
+Received: from localhost (unknown [106.201.60.252])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6400120818;
+        Tue,  5 Nov 2019 06:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572933774;
+        bh=Adr963WRlh5HjK13+m1iekOv9cCt3ddxETiP+Guxcp0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=umHTxwaFvOaVM+nKqOg3CVVW9K7zsMx7qvTi1pIVZPGZ1WpX75tmC5cMnW7wAePnU
+         j7RNOfS9eYGa+9nDFB4Zgfdun3F+v4xUJbRdaNLQzhEwdsNrl5xbt0dwNMBG0rXXAf
+         jV/3LxzOxwwUDZtvayjhoCO+AWYRTIkqd1gzLBIU=
+Date:   Tue, 5 Nov 2019 11:32:49 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: phy-qcom-qmp: Add sm8150 UFS phy
+ compatible string
+Message-ID: <20191105060249.GX2695@vkoul-mobl.Dlink>
+References: <20191024074802.26526-1-vkoul@kernel.org>
+ <20191024074802.26526-3-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.196.28
-X-Source-L: No
-X-Exim-ID: 1iRrbv-002sjK-Ur
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.196.28]:37450
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 61
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024074802.26526-3-vkoul@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For configuration of fuel gauge alert for a low level state of charge
-interrupt we add a function to config level threshold and a device tree
-binding property to set it in flatned device tree node.
+On 24-10-19, 13:18, Vinod Koul wrote:
+> Document "qcom,sdm845-qmp-ufs-phy" compatible string for QMP UFS PHY
+> found on SM8150.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Now we can use "maxim,alert-low-soc-level" property with the values from
-1% up to 32% to configure alert interrupt threshold.
+Kishon,
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- drivers/power/supply/max17040_battery.c | 96 +++++++++++++++++++++----
- 1 file changed, 82 insertions(+), 14 deletions(-)
+Can you pick this and 3rd patch please
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 75459f76d02c..c48a691cbd7b 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -29,6 +29,9 @@
- #define MAX17040_DELAY		1000
- #define MAX17040_BATTERY_FULL	95
+> ---
+>  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> index 085fbd676cfc..eac9ad3cbbc8 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> @@ -14,7 +14,8 @@ Required properties:
+>  	       "qcom,msm8998-qmp-pcie-phy" for PCIe QMP phy on msm8998,
+>  	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+>  	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
+> -	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
+> +	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845,
+> +	       "qcom,sm8150-qmp-ufs-phy" for UFS QMP phy on sm8150.
+>  
+>  - reg:
+>    - index 0: address and length of register set for PHY's common
+> @@ -57,6 +58,8 @@ Required properties:
+>  			"aux", "cfg_ahb", "ref", "com_aux".
+>  		For "qcom,sdm845-qmp-ufs-phy" must contain:
+>  			"ref", "ref_aux".
+> +		For "qcom,sm8150-qmp-ufs-phy" must contain:
+> +			"ref", "ref_aux".
+>  
+>   - resets: a list of phandles and reset controller specifier pairs,
+>  	   one for each entry in reset-names.
+> @@ -83,6 +86,8 @@ Required properties:
+>  			"phy", "common".
+>  		For "qcom,sdm845-qmp-ufs-phy": must contain:
+>  			"ufsphy".
+> +		For "qcom,sm8150-qmp-ufs-phy": must contain:
+> +			"ufsphy".
+>  
+>   - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
+>   - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
+> -- 
+> 2.20.1
 
-+#define MAX17040_ATHD_MASK		0xFFC0
-+#define MAX17040_ATHD_DEFAULT_POWER_UP	4
-+
- struct max17040_chip {
- 	struct i2c_client		*client;
- 	struct delayed_work		work;
-@@ -43,6 +46,8 @@ struct max17040_chip {
- 	int soc;
- 	/* State Of Charge */
- 	int status;
-+	/* Low alert threshold from 32% to 1% of the State of Charge */
-+	u32 low_soc_alert;
- };
-
- static int max17040_get_property(struct power_supply *psy,
-@@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
- 	max17040_write_reg(client, MAX17040_CMD, 0x0054);
- }
-
-+static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
-+{
-+	int ret;
-+	u16 data;
-+
-+	level = 32 - level;
-+	data = max17040_read_reg(client, MAX17040_RCOMP);
-+	/* clear the alrt bit and set LSb 5 bits */
-+	data &= MAX17040_ATHD_MASK;
-+	data |= level;
-+	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
-+
-+	return ret;
-+}
-+
- static void max17040_get_vcell(struct i2c_client *client)
- {
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-@@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *client)
- 	u16 soc;
-
- 	soc = max17040_read_reg(client, MAX17040_SOC);
--
- 	chip->soc = (soc >> 8);
- }
-
-@@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *client)
- 		chip->status = POWER_SUPPLY_STATUS_FULL;
- }
-
-+static int max17040_get_of_data(struct max17040_chip *chip)
-+{
-+	struct device *dev = &chip->client->dev;
-+	struct device_node *np = dev->of_node;
-+	int ret = 0;
-+
-+	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
-+				 &chip->low_soc_alert)) {
-+		chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
-+	} else if (chip->low_soc_alert <= 0 ||
-+			chip->low_soc_alert >= 33) {
-+		/* low_soc_alert is not between 1% and 32% */
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
- static void max17040_check_changes(struct i2c_client *client)
- {
- 	max17040_get_vcell(client);
-@@ -192,9 +229,27 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
- 	/* send uevent */
- 	power_supply_changed(chip->battery);
-
-+	/* reset alert bit */
-+	max17040_set_low_soc_alert(client, chip->low_soc_alert);
-+
- 	return IRQ_HANDLED;
- }
-
-+static int max17040_enable_alert_irq(struct max17040_chip *chip)
-+{
-+	struct i2c_client *client = chip->client;
-+	unsigned int flags;
-+	int ret;
-+
-+	dev_info(&client->dev, "IRQ: enabled\n");
-+	flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-+	ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-+					max17040_thread_handler, flags,
-+					chip->battery->desc->name, chip);
-+
-+	return ret;
-+}
-+
- static enum power_supply_property max17040_battery_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_ONLINE,
-@@ -216,6 +271,7 @@ static int max17040_probe(struct i2c_client *client,
- 	struct i2c_adapter *adapter = client->adapter;
- 	struct power_supply_config psy_cfg = {};
- 	struct max17040_chip *chip;
-+	int ret;
-
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
- 		return -EIO;
-@@ -226,6 +282,12 @@ static int max17040_probe(struct i2c_client *client,
-
- 	chip->client = client;
- 	chip->pdata = client->dev.platform_data;
-+	ret = max17040_get_of_data(chip);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"failed: low SOC alert OF data out of bounds\n");
-+		return ret;
-+	}
-
- 	i2c_set_clientdata(client, chip);
- 	psy_cfg.drv_data = chip;
-@@ -242,20 +304,26 @@ static int max17040_probe(struct i2c_client *client,
-
- 	/* check interrupt */
- 	if (client->irq) {
--		int ret;
--		unsigned int flags;
--
--		dev_info(&client->dev, "IRQ: enabled\n");
--		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
--		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
--						max17040_thread_handler, flags,
--						chip->battery->desc->name,
--						chip);
--
--		if (ret) {
--			client->irq = 0;
-+		if (of_device_is_compatible(client->dev.of_node,
-+					    "maxim,max77836-battery")) {
-+			ret = max17040_set_low_soc_alert(client,
-+							 chip->low_soc_alert);
-+			if (ret) {
-+				dev_err(&client->dev,
-+					"Failed to set low SOC alert: err %d\n",
-+					ret);
-+				return ret;
-+			}
-+
-+			ret = max17040_enable_alert_irq(chip);
-+			if (ret) {
-+				client->irq = 0;
-+				dev_warn(&client->dev,
-+					 "Failed to get IRQ err %d\n", ret);
-+			}
-+		} else {
- 			dev_warn(&client->dev,
--				"Failed to get IRQ err %d\n", ret);
-+				 "Device not compatible for IRQ");
- 		}
- 	}
-
---
-2.24.0.rc2
-
+-- 
+~Vinod
