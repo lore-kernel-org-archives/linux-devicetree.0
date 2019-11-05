@@ -2,122 +2,205 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EC0C010A3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13399C010A2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC6A21D6C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:06:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WCHdBe6z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="irV41/zB"
+	by mail.kernel.org (Postfix) with ESMTP id D970721928
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 11:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572952299;
+	bh=L0MQuT4XYxAFwm79QAhiL05f/SdnH/s1jkfSPz113BE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nCdvBxAvVJ9YBe9ECnAO0BEEWmTHmm4CWweBbr2dAK45lcEvjtGAPJoB6cLRsdcG+
+	 krDbiZuzzV2sWu1E844+rZMJGPdoyxsSqjSqpvL75SsP8GwUFETLzo0ShqXCuamMNl
+	 VXuNUB96tpgTYn+1gGq+IW7V764ohfgEkEJSxqMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730757AbfKELGS (ORCPT
+        id S2388513AbfKELLj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:06:18 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:46295 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbfKELGS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 06:06:18 -0500
-X-Greylist: delayed 596 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Nov 2019 06:06:17 EST
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2BA575BEF;
-        Tue,  5 Nov 2019 05:56:21 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 05 Nov 2019 05:56:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version:content-type
-        :content-transfer-encoding; s=fm1; bh=A2GLNiSRYncUQfGy/8eawJsIIf
-        W4xhhoTSPQkJ+iyzE=; b=WCHdBe6zwXnJe0lTS3koQfY0aAlGhoLLntHtZtSRsS
-        iElCeWtsEz42MYDq9Yru3AcLHZ+5hLe78L+adZ5r/EP8SBwW8x189t85Ju6glo+X
-        eegMvZ7FX9B8pe+a6UdlgUE71h37KuVzb0KVHxUZpQhkhBgqQvw082aSXdHcFOgn
-        exZWkFGWKEkmyNKp4brmbYVlKGQe5enAykq9xYZVGmXCqnOFhn12DrbZBj3b0w4V
-        RhAAI/FaozN0VclV5qaIGssCfAFgEE18lQf0Q8I7T06TNOID2+I0U13G9h3Hu4jZ
-        lpGdjOxsOZOMV9qWJFIRfVqzxAKVpwRm7+QR/r6MYK3Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:message-id:mime-version:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=A2GLNi
-        SRYncUQfGy/8eawJsIIfW4xhhoTSPQkJ+iyzE=; b=irV41/zB37Bip0m3fqgFgQ
-        KRAYmTInfFMCx/9mvqY8QrLS3nK5ABtpCuKRXI78riwUY5HQdoYoie8Q1FeJ1wjP
-        fayBoL3uUV2Q20tIxgjpcsPmxW9HefOoifnvjin8YzXMVPbKEclTvYXhpfOQg+pC
-        p8q+Ab/dQHGIFM11eoIGjqWZCqS6sbShbC8MsKktkmPzdzlhIwCRH+4UciEOUeci
-        p/rnwwWkL5NlLPW4ZfS1oAB+oDbXG/yUaXRiehUoYUGPF90/bJxEzo/w5A19Q+Fv
-        4yqe7M/W2eeZztz0tpcmwASta4be5PhwSVUS4VmcL5UKfy72Ev1bwrPvU3iD9Y7g
-        ==
-X-ME-Sender: <xms:UlXBXV65nUTPq27rm1Xw0xxZMhUjU59MguRABLP9jAx_gkI7X2LCYA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudduhedgvddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffogggtgfesthekredtredtjeenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghr
-    nhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:UlXBXfVWULtq82rtCNHPZrgHyQTF5A8I7Dhq10PenpQF4L5lDp4jWA>
-    <xmx:UlXBXYc4dO51Az-M2kGlMx3pSVMGU46q9LJmFh7AyxJt31zzWvUEbw>
-    <xmx:UlXBXfkGQhMDSMcMEEJP49xjZcipdKR_bXcxXgQonpiUoVfsCpQTBQ>
-    <xmx:VFXBXdZABKSfbe-nN3slar21t22v8PVAQHzMda4WZOSE91Brq5GJzw>
+        Tue, 5 Nov 2019 06:11:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388494AbfKELLj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:11:39 -0500
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9890F306005B;
-        Tue,  5 Nov 2019 05:56:18 -0500 (EST)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     lgirdwood@gmail.com, broonie@kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4BA820869;
+        Tue,  5 Nov 2019 11:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572952297;
+        bh=L0MQuT4XYxAFwm79QAhiL05f/SdnH/s1jkfSPz113BE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yl1o9f4oD62go+SoZTI/xdBt6WJXvvuOwVzpe7vPn+ctS79K7B1/M8YvcKQlgyXiJ
+         BE2CNaKz1BaPD3A6kklxIl+zEHlVAvYshsIDdrpTGwnP16AI0jIK7jzvyj0RyhME5g
+         DlR6EqbQDkkEYmG8eIj2b92ZyKXifryUwNnjalY8=
+Date:   Tue, 5 Nov 2019 12:11:34 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime@cerno.tech>,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Subject: [PATCH v2] dt-bindings: sound: adau7118: Fix example warning
-Date:   Tue,  5 Nov 2019 11:56:15 +0100
-Message-Id: <20191105105615.21391-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.23.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>, kernel@pengutronix.de
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM
+ description
+Message-ID: <20191105111134.GG3876@gilmour.lan>
+References: <20191103203334.10539-1-peron.clem@gmail.com>
+ <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
+Content-Disposition: inline
+In-Reply-To: <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The ADAU7118 has an example where the codec has an i2c address of 14, and
-the unit address set to 14 as well.
 
-However, while the address is expressed in decimal, the unit-address is
-supposed to be in hexadecimal, which ends up with two different addresses
-that trigger a DTC warning. Fix this by setting the address to 0x14.
+--+jhVVhN62yS6hEJ8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Nuno Sá <nuno.sa@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Fixes: 969d49b2cdc8 ("dt-bindings: asoc: Add ADAU7118 documentation")
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Hi Clement, Uwe,
 
----
+On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=F6nig wrote:
+> On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=E9ment P=E9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM block is basically the same as A20 PWM, except that it also has
+> > bus clock and reset line which needs to be handled accordingly.
+> >
+> > Expand Allwinner PWM binding with H6 PWM specifics.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > ---
+> >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 ++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
+pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.ya=
+ml
+> > index 0ac52f83a58c..bf36ea509f31 100644
+> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> > @@ -30,13 +30,46 @@ properties:
+> >        - items:
+> >            - const: allwinner,sun50i-h5-pwm
+> >            - const: allwinner,sun5i-a13-pwm
+> > +      - const: allwinner,sun50i-h6-pwm
+> >
+> >    reg:
+> >      maxItems: 1
+> >
+> > -  clocks:
+> > +  # Even though it only applies to subschemas under the conditionals,
+> > +  # not listing them here will trigger a warning because of the
+> > +  # additionalsProperties set to false.
+> > +  clocks: true
+> > +  clock-names: true
+> > +  resets:
+> >      maxItems: 1
+> >
+> > +  if:
+> > +    properties:
+> > +      compatible:
+> > +        contains:
+> > +          const: allwinner,sun50i-h6-pwm
+> > +
+> > +  then:
+> > +    properties:
+> > +      clocks:
+> > +        items:
+> > +          - description: Module Clock
+> > +          - description: Bus Clock
+> > +
+> > +      clock-names:
+> > +        items:
+> > +          - const: mod
+> > +          - const: bus
+> > +
+> > +    required:
+> > +      - clock-names
+> > +      - resets
+> > +
+> > +  else:
+> > +    properties:
+> > +      clocks:
+> > +        maxItems: 1
+> > +
+>
+> I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod and
+> bus clock is required.", right?
+>
+> I wonder if it is sensible to require a clock-names property in the else
+> branch, too. This would make it obvious if the clock there corresponds
+> to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
 
-Changes from v1:
-  - Fix the address instead of the unit-address.
----
- Documentation/devicetree/bindings/sound/adi,adau7118.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This can be done a bit differently and could address your concerns
 
-diff --git a/Documentation/devicetree/bindings/sound/adi,adau7118.yaml b/Documentation/devicetree/bindings/sound/adi,adau7118.yaml
-index c3f10afbdd6f..75e0cbe6be70 100644
---- a/Documentation/devicetree/bindings/sound/adi,adau7118.yaml
-+++ b/Documentation/devicetree/bindings/sound/adi,adau7118.yaml
-@@ -67,7 +67,7 @@ examples:
-         #size-cells = <0>;
-         adau7118_codec: audio-codec@14 {
-                 compatible = "adi,adau7118";
--                reg = <14>;
-+                reg = <0x14>;
-                 #sound-dai-cells = <0>;
-                 iovdd-supply = <&supply>;
-                 dvdd-supply = <&supply>;
--- 
-2.23.0
+Something like
 
+properties:
+  ...
+
+  clocks:
+    minItems: 1
+    maxItems: 2
+    items:
+      - description: Bus Clock
+      - description: Module Clock
+
+required:
+  - clocks
+
+if:
+  ...
+
+then:
+  properties:
+    clocks:
+      maxItems: 2
+
+    clocks-names:
+      items:
+        - const: mod
+        - const: bus
+
+    required:
+      - clock-names
+
+else:
+  properties:
+    clocks:
+      maxItems: 1
+
+That way, the definition of the order and which clock is which is
+pretty obvious in both cases, and we don't get any weird warnings.
+
+Maxime
+--+jhVVhN62yS6hEJ8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcFY5gAKCRDj7w1vZxhR
+xbV/AQCe7CHt/mkieAm/L+E98h/loKt0hEB6kyNqdnXH0QKxZAEA3BWTeLZyVpFc
+GGWBi+MvM8vrJsH5MAMILsm76CTF6QE=
+=GzAC
+-----END PGP SIGNATURE-----
+
+--+jhVVhN62yS6hEJ8--
