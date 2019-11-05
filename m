@@ -2,157 +2,95 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E19C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91714C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7DC121A49
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572985179;
-	bh=GyelMJW25YnnMBPhUYz/eAXNyRrneJFGG4HtJzJDBBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xZrgiMXiM0F5plgxp8KAsRQL7PV/WNgo0Mpr7kwtH7ElVvABmwxwhu8ASsecjW1Ar
-	 /NTZ7FRpELjhTFo2OMwDHx2AgWl9h7AU+K7kei9wrzjW72maePSKsXUN5DKrCRmIMj
-	 jFhczN7F2H1SjEAJUQ/1T7NFjSXhekVoXzJyTduw=
+	by mail.kernel.org (Postfix) with ESMTP id 5E7FA21A49
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 20:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfKEUTg (ORCPT
+        id S1729110AbfKEUe5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:19:36 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43531 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbfKEUTg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 15:19:36 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l20so6701223oie.10;
-        Tue, 05 Nov 2019 12:19:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nx7kJTn3OdCopAIR7Uif4GRlSRK0moBADISBNdcfrTs=;
-        b=CfErN2/fXneyoKLva9QaXEWV9InFtjqfbLUF4t/NjrhOI69gK5iCHtRaHP31DywgYl
-         VL5lrVQYAkIejBB36NkBTJ0fm3YrGyBjB0bH0Okjw+Wkxaa4vah32sKoanlNABehmpQv
-         ol+xK9XIHDTwMR8Wo7CSYCr81LRgQCKpyFCwbQgInUrlRCiij3USuzKX7TWqbkqMMU54
-         UIObKILHW/NKnsE1Ct2MD7FFkBJHbsIemKEjm6kWPfs15WovkDAqFK5GwZXVJASNm/1c
-         9awtmKjWCYWcp8YDU2eYE6Ep99eR7OnuY0ZzJTYGYcD2jBK9Y7QKXGP0Obs5KYUYndYy
-         C/7g==
-X-Gm-Message-State: APjAAAVBypSyKfNEr4Ap9aCecBk5ayKrFI4sPJtf64GqAbBb+10mwZ/R
-        pXrVjvm+9DmMAhZhWhoLTg==
-X-Google-Smtp-Source: APXvYqzcwQTTuh/ucjVOm77Dw2qQBBOp4x78YLgbH+mDcvDa5vMIG9/s7Mrn5jjgeZmF/Hy7tj1Clw==
-X-Received: by 2002:aca:dd0a:: with SMTP id u10mr766731oig.130.1572985173589;
-        Tue, 05 Nov 2019 12:19:33 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v26sm2778262oic.5.2019.11.05.12.19.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 12:19:32 -0800 (PST)
-Date:   Tue, 5 Nov 2019 14:19:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rodrigo Carvalho <rodrigorsdc@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v3] dt-bindings: iio: accel: add binding documentation
- for ADIS16240
-Message-ID: <20191105201932.GA24515@bogus>
-References: <20191101000301.12901-1-rodrigorsdc@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101000301.12901-1-rodrigorsdc@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 5 Nov 2019 15:34:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:60244 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726640AbfKEUe5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:34:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E9EF7B9;
+        Tue,  5 Nov 2019 12:34:56 -0800 (PST)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.44])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A3453FF11;
+        Tue,  5 Nov 2019 03:07:01 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Harald Geyer <harald@ccbib.org>,
+        "Jared D . McNeill" <jmcneill@NetBSD.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Emmanuel Vadot <manu@FreeBSD.org>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        linux-sunxi@googlegroups.com
+Subject: [PATCH] arm64: dts: allwinner: a64: Re-add PMU node
+Date:   Tue,  5 Nov 2019 11:06:51 +0000
+Message-Id: <20191105110651.217513-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 09:03:01PM -0300, Rodrigo Carvalho wrote:
-> This patch add device tree binding documentation for ADIS16240.
-> 
-> Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
-> ---
-> V3:
->    - Remove spi-cpol and spi-cpha field. They don't seem necessary
+As it was found recently, the Performance Monitoring Unit (PMU) on the
+Allwinner A64 SoC was not generating (the right) interrupts. With the
+SPI numbers from the manual the kernel did not receive any overflow
+interrupts, so perf was not happy at all.
+It turns out that the numbers were just off by 4, so the PMU interrupts
+are from 148 to 151, not from 152 to 155 as the manual describes.
 
-Not necessary to document or use? The latter requires the former.
+This was found by playing around with U-Boot, which typically does not
+use interrupts, so the GIC is fully available for experimentation:
+With *every* PPI and SPI enabled, an overflowing PMU cycle counter was
+found to set a bit in one of the GICD_ISPENDR registers, with careful
+counting this was determined to be number 148.
 
-If your device only supports one timing mode, then you don't need them 
-because it should be implied and the driver can just tell the SPI 
-subsystem what mode it requires. If the device can support multiple 
-timing modes, then you should document that you are using the 
-properties.
+Tested with perf record and perf top on a Pine64-LTS. Also tested with
+tasksetting to every core to confirm the assignment between IRQs and
+cores.
 
->  .../bindings/iio/accel/adi,adis16240.yaml     | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> new file mode 100644
-> index 000000000000..9a4cd12c4818
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ADIS16240 Programmable Impact Sensor and Recorder driver
-> +
-> +maintainers:
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
-> +  SPI interface.
-> +    https://www.analog.com/en/products/adis16240.html
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adis16240
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    spi0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        /* Example for a SPI device node */
-> +        accelerometer@0 {
-> +            compatible = "adi,adis16240";
-> +            reg = <0>;
-> +            spi-max-frequency = <2500000>;
-> +            spi-cpol;
-> +            spi-cpha;
-> +            interrupt-parent = <&gpio0>;
-> +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +    };
-> -- 
-> 2.23.0
-> 
+This somewhat "revert-fixes" commit ed3e9406bcbc ("arm64: dts: allwinner:
+a64: Drop PMU node").
+
+Fixes: 34a97fcc71c2 ("arm64: dts: allwinner: a64: Add PMU node")
+Fixes: ed3e9406bcbc ("arm64: dts: allwinner: a64: Drop PMU node")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 70f4cce6be43..ba41c1b85887 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -142,6 +142,15 @@
+ 		clock-output-names = "ext-osc32k";
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
+-- 
+2.17.1
+
