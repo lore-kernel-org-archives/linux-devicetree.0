@@ -6,60 +6,64 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E748C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 16:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7276C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76FE21929
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 16:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A417A21D71
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 17:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572972716;
-	bh=lG1xPmjx0M85Hu15xRRf0c2UDYPZiP2tf8OaC4I1OSU=;
+	s=default; t=1572973269;
+	bh=eidZM2V4QQjO6ElDqpGD/ATrVSJUrdi/I4WF5f2EyKs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bPDGutmPKzhHI10OkCR0BJnTyNA0+PvtK7qbYWV0TQM7VVOBZUtsDkXBeJXYyI9Qz
-	 uImQ195xC4GTsZrg0bquwyiX4/YbJ5ol0UI1+X8kNnLQmuwOW9z63b9qZX66PdO3ZI
-	 +GMJ1O99Bywd7lM1Yu3yRYDTYozfG3kCPWUKebr8=
+	b=KrNFQAX0zZcqAhwpwK8Fay1oS5i1MA6Q2nx0vZC+DCDqe/Jiwdp4j2hSFK0wOZBaq
+	 V4EmsgXlw0nGcedWG1fPvsSRn+wSUIOyeXMTr2/TbLk/KGD8qjBYUUXqPYrdISbkJt
+	 0voieErlZtVkQcHtfyvm2qeQioy4QRZkgHmyTDM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390340AbfKEQvz (ORCPT
+        id S1730894AbfKERBG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:51:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 12:01:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390275AbfKEQvz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:51:55 -0500
+        id S1728180AbfKERBG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:01:06 -0500
 Received: from localhost (unknown [106.51.111.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74D8214B2;
-        Tue,  5 Nov 2019 16:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60DA32087E;
+        Tue,  5 Nov 2019 17:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572972714;
-        bh=lG1xPmjx0M85Hu15xRRf0c2UDYPZiP2tf8OaC4I1OSU=;
+        s=default; t=1572973265;
+        bh=eidZM2V4QQjO6ElDqpGD/ATrVSJUrdi/I4WF5f2EyKs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jc0PolQjd2QLbTRJwYlwV7qizu9bVSyJSqZwRHyFnC8c7/osMDc+W9gmAKfJ5kDMN
-         sDJvx6DtQulk8s8/AlAW6vNqyRTke+wyJXlqvsmK+vIeETAUo+luv7bEFJA56YR7Fg
-         a3NRxb/tHNHIunYBuV1mTiSVr+07ZVP3zZszybA4=
-Date:   Tue, 5 Nov 2019 22:21:45 +0530
+        b=Qt+8WHwTJXW1jMLLWsiPCDYqwIMXQRivu9ebprQS/3h/7Xy35QHNb8uCcW5Cdl/rS
+         bDGKuSbTrMptdo9j1KY+1YlwCE7d45Pl9ltgn2RvJxTeZORJoa2cIg26hTUI6TVr0Q
+         XymXlVMuUqEs50IvTdIjgg7K+gzePGtRGotkZMCA=
+Date:   Tue, 5 Nov 2019 22:31:01 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] dmaengine: bindings/edma: dma-channel-mask to
+Subject: Re: [PATCH v5 0/3] dmaengine: bindings/edma: dma-channel-mask to
  array
-Message-ID: <20191105165145.GB952516@vkoul-mobl>
-References: <20190930114055.29315-1-peter.ujfalusi@ti.com>
+Message-ID: <20191105170101.GE952516@vkoul-mobl>
+References: <20191025073056.25450-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930114055.29315-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20191025073056.25450-1-peter.ujfalusi@ti.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30-09-19, 14:40, Peter Ujfalusi wrote:
+On 25-10-19, 10:30, Peter Ujfalusi wrote:
 > Hi,
+> 
+> Changes since v4:
+> - Rebased on next to make it apply cleanly
+> - Added Reviewed-by from Rob for the DT documentation patches
 > 
 > Changes since v3:
 > - Update the dma-common.yaml and edma binding documentation according to Rob's
@@ -79,14 +83,11 @@ On 30-09-19, 14:40, Peter Ujfalusi wrote:
 > 
 > The original patch was part of the EDMA multicore usage series.
 > 
-> Rob: I'm not sure if I got the dma-common.yaml update correctly...
-> 
 > EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
 > needs to be an array to be usable for the driver.
 
-Applied, thanks
-
-There was a conflict on patch3, I have reolved it, please check.
+And now I saw this and have applied these and dropped the ones I fixed
+up manually!
 
 -- 
 ~Vinod
