@@ -2,450 +2,116 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505E1C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89426C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000B721882
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:42:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SJm2XdtA"
+	by mail.kernel.org (Postfix) with ESMTP id 4B03B2087E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 21:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572990816;
+	bh=AtpSzcF+ikiWVL5AZdPxZ3/psINgSvSuTz/j+AwuiQI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zMP7jgHUcZVhniCzLyVyfCRcEosmwydJTYsYc13LV3nQPvGNJ6JYBsTvIlxwGQO79
+	 HiKOhMpjA9cdDhAmREnBHvjXfCXXFQKMYMfWbJLA+NApJ+ZNTOxrf6GBuS0LYjtHNI
+	 IsOKOv7SUZzgBwxN58D5RdkBVRSE2NJFmNrtaCgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbfKEVm1 (ORCPT
+        id S1730192AbfKEVxg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 16:42:27 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45858 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729829AbfKEVm1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 16:42:27 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4088D559;
-        Tue,  5 Nov 2019 22:42:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1572990143;
-        bh=IlttHNVUudAVNGKqKzQAAKlXVtRVyDrQd0u2nzdGDZo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SJm2XdtAsWqyyJ8nyr/t7FPs0pr9PfvJGxk67pV84TPBPVpV+9bxX467QM7oLz9hD
-         uoFarezuKEjStaHoCWwFQTmNeIUgeKugk9KtJIO9dd2ZlurzxeIjqZk0DeS0+SZfBz
-         6MsvtRtjoDnUmIstZj3qJg35aFMzjo6CMvI1FF74=
-Date:   Tue, 5 Nov 2019 23:42:13 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 06/14] drm/mxsfb: Update mxsfb with additional pixel
- formats
-Message-ID: <20191105214213.GH4869@pendragon.ideasonboard.com>
-References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
- <1567078215-31601-7-git-send-email-robert.chiras@nxp.com>
+        Tue, 5 Nov 2019 16:53:36 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35965 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730057AbfKEVxf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 16:53:35 -0500
+Received: by mail-ot1-f66.google.com with SMTP id f10so328995oto.3;
+        Tue, 05 Nov 2019 13:53:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PF4FeC1B4z1EiaRv3Y35zGiHOndPSUjKYmW93QdFA+M=;
+        b=W3aNdqLajxEyB8I4UPgKLYzuoyY3Q+poRVYkGbKrkyI4gSQkx1Pwf3ris3o2d0anqH
+         AccteWr7cFVgPg3AY0oEhzH51UwMCe3RJU7/g6i4evCXjU3M00ivJ4c+dBZVFWG7djiq
+         yIDZzF7MS2iLd3KwXH7zaD7kLFU1lBa0m/p7Mm8Fnakjl3fAh/S3jzBZA3JIMTCvd7Ua
+         W2A7D5EYTsSFxo1PFW7/ORwhZk0IiwzAj8znJQH6EEtWzlg1FCiREkWtd6+xx7x8SJqv
+         DvOF3DfgpyYbPHdSHQBharofokpYEZ73Z2rCCaxdokd7tMX2AvwMI+5kLEB6HnhpxR64
+         H6DQ==
+X-Gm-Message-State: APjAAAWxEr4zarx6fssTl5lQQ1/j3P+FE7HBJunH5lXDUBVguZ8wuEHs
+        a9eFbAWWmNDr/Se4xA6BHaWeErI=
+X-Google-Smtp-Source: APXvYqxAH3UBa4/0bcwAn6bLPBmEdgRBtQ7i/IwCz6UAPAR2oM/wv9oufNgH2AZpJHzNTbjp3PGc6w==
+X-Received: by 2002:a05:6830:4cf:: with SMTP id s15mr8462573otd.261.1572990813789;
+        Tue, 05 Nov 2019 13:53:33 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l17sm5861342oic.24.2019.11.05.13.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 13:53:33 -0800 (PST)
+Date:   Tue, 5 Nov 2019 15:53:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anvesh Salveru <anvesh.s@samsung.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
+        pankaj.dubey@samsung.com, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
+ ZRX-DC PHY property
+Message-ID: <20191105215332.GA19296@bogus>
+References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
+ <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
+ <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1567078215-31601-7-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robert,
-
-Thank you for the patch.
-
-On Thu, Aug 29, 2019 at 02:30:07PM +0300, Robert Chiras wrote:
-> Since version 4 of eLCDIF, there are some registers that can do
-> transformations on the input data, like re-arranging the pixel
-> components. By doing that, we can support more pixel formats.
-> This patch adds support for X/ABGR and RGBX/A. Although, the local alpha
-> is not supported by eLCDIF, the alpha pixel formats were added to the
-> supported pixel formats but it will be ignored. This was necessary since
-> there are systems (like Android) that requires such pixel formats.
+On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
+> Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
+> specification, then after every 100ms link should transition to recovery
+> state during the low power states which increases power consumption.
 > 
-> Also, add support for the following pixel formats:
->             16 bpp: RG16 ,BG16, XR15, XB15, AR15, AB15
+> Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
+> property in DesignWare controller DT node.
 > 
-> Set the bus format based on input from the user and panel
-> capabilities.
-> Save the bus format in crtc->mode.private_flags, so the bridge can
-> use it.
-> 
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
-> Tested-by: Guido Günther <agx@sigxcpu.org>
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > ---
->  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 147 ++++++++++++++++++++++++++++++-------
->  drivers/gpu/drm/mxsfb/mxsfb_drv.c  |  30 ++++++--
->  drivers/gpu/drm/mxsfb/mxsfb_drv.h  |   3 +-
->  drivers/gpu/drm/mxsfb/mxsfb_regs.h |  15 ++++
->  4 files changed, 163 insertions(+), 32 deletions(-)
+> Change in v2: None
 > 
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> index 5e44f57..1be29f5 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> @@ -43,14 +43,17 @@ static u32 set_hsync_pulse_width(struct mxsfb_drm_private *mxsfb, u32 val)
->  }
->  
->  /* Setup the MXSFB registers for decoding the pixels out of the framebuffer */
-> -static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb)
-> +static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb, bool update)
->  {
->  	struct drm_crtc *crtc = &mxsfb->pipe.crtc;
->  	struct drm_device *drm = crtc->dev;
->  	const u32 format = crtc->primary->state->fb->format->format;
-> -	u32 ctrl, ctrl1;
-> +	u32 ctrl = 0, ctrl1 = 0;
-> +	bool bgr_format = true;
-> +	struct drm_format_name_buf format_name_buf;
->  
-> -	ctrl = CTRL_BYPASS_COUNT | CTRL_MASTER;
-> +	if (!update)
-> +		ctrl = CTRL_BYPASS_COUNT | CTRL_MASTER;
->  
->  	/*
->  	 * WARNING: The bus width, CTRL_SET_BUS_WIDTH(), is configured to
-> @@ -59,64 +62,158 @@ static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb)
->  	 * to arbitrary value. This limitation should not pose an issue.
->  	 */
->  
-> -	/* CTRL1 contains IRQ config and status bits, preserve those. */
-> -	ctrl1 = readl(mxsfb->base + LCDC_CTRL1);
-> -	ctrl1 &= CTRL1_CUR_FRAME_DONE_IRQ_EN | CTRL1_CUR_FRAME_DONE_IRQ;
-> +	if (!update) {
-> +		/* CTRL1 contains IRQ config and status bits, preserve those. */
-> +		ctrl1 = readl(mxsfb->base + LCDC_CTRL1);
-> +		ctrl1 &= CTRL1_CUR_FRAME_DONE_IRQ_EN | CTRL1_CUR_FRAME_DONE_IRQ;
-> +	}
-> +
-> +	DRM_DEV_DEBUG_DRIVER(drm->dev, "Setting up %s mode\n",
-> +			     drm_get_format_name(format, &format_name_buf));
-> +
-> +	/* Do some clean-up that we might have from a previous mode */
-> +	ctrl &= ~CTRL_SHIFT_DIR(1);
-> +	ctrl &= ~CTRL_SHIFT_NUM(0x3f);
-> +	if (mxsfb->devdata->ipversion >= 4)
-> +		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_CLR) |
-> +		       CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_CLR),
-> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
->  
->  	switch (format) {
-> -	case DRM_FORMAT_RGB565:
-> -		dev_dbg(drm->dev, "Setting up RGB565 mode\n");
-> +	case DRM_FORMAT_BGR565: /* BG16 */
-> +		if (mxsfb->devdata->ipversion < 4)
-> +			goto err;
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 78494c4050f7..9507ac38ac89 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -38,6 +38,8 @@ Optional properties:
+>     for data corruption. CDM registers include standard PCIe configuration
+>     space registers, Port Logic registers, DMA and iATU (internal Address
+>     Translation Unit) registers.
+> +- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
+> +  ZRX-DC specification.
 
-This function should not return an error. Invalid pixel formats should
-be caught at atomic check time. The easiest way to do so is to use two
-different lists of supported formats when constructing the plane, based
-on the IP version.
+If this is a property of the phy, then it belongs in the phy node or 
+should just be implied by the phy's compatible. IOW, you should be able 
+to support this or not without changing DTs.
 
-By the way, the IP version register has been removed in i.MX6. i.MX6 and
-newer SoCs support a second plane, which I'm trying to get working. It
-would help to know what version number to use for the ipversion field
-for i.MX6, i.MX7 and i.MX8 in order to enable support for the second
-plane based on the SoC model.
+Is this spec Synopys specific? (About the only thing Google turns up are 
+your patches.) If not, then probably shouldn't have a 'snps' prefix.
 
-On a similar topic, would you happen to have tested the second plane
-(configured through AS_CTRL, AS_BUF and AS_NEXT_BUF) ? The plane "works"
-but seems to always use a 32bpp format regardless of how I program it,
-and the frame buffer start address seems to be shifted for some reason.
-
-> +		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
-> +			CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
-> +			mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-> +		/* Fall through */
-> +	case DRM_FORMAT_RGB565: /* RG16 */
-> +		ctrl |= CTRL_SET_WORD_LENGTH(0);
-> +		ctrl &= ~CTRL_DF16;
-> +		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
-> +		break;
-> +	case DRM_FORMAT_XBGR1555: /* XB15 */
-> +	case DRM_FORMAT_ABGR1555: /* AB15 */
-> +		if (mxsfb->devdata->ipversion < 4)
-> +			goto err;
-> +		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
-> +			CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
-> +			mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-> +		/* Fall through */
-> +	case DRM_FORMAT_XRGB1555: /* XR15 */
-> +	case DRM_FORMAT_ARGB1555: /* AR15 */
->  		ctrl |= CTRL_SET_WORD_LENGTH(0);
-> +		ctrl |= CTRL_DF16;
->  		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
->  		break;
-> -	case DRM_FORMAT_XRGB8888:
-> -		dev_dbg(drm->dev, "Setting up XRGB8888 mode\n");
-> +	case DRM_FORMAT_RGBX8888: /* RX24 */
-> +	case DRM_FORMAT_RGBA8888: /* RA24 */
-> +		/* RGBX - > 0RGB */
-> +		ctrl |= CTRL_SHIFT_DIR(1);
-> +		ctrl |= CTRL_SHIFT_NUM(8);
-> +		bgr_format = false;
-> +		/* Fall through */
-> +	case DRM_FORMAT_XBGR8888: /* XB24 */
-> +	case DRM_FORMAT_ABGR8888: /* AB24 */
-> +		if (bgr_format) {
-> +			if (mxsfb->devdata->ipversion < 4)
-> +				goto err;
-> +			writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
-> +			       CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
-> +			       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-> +		}
-> +		/* Fall through */
-> +	case DRM_FORMAT_XRGB8888: /* XR24 */
-> +	case DRM_FORMAT_ARGB8888: /* AR24 */
->  		ctrl |= CTRL_SET_WORD_LENGTH(3);
->  		/* Do not use packed pixels = one pixel per word instead. */
->  		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0x7);
->  		break;
->  	default:
-> -		dev_err(drm->dev, "Unhandled pixel format %08x\n", format);
-> -		return -EINVAL;
-> +		goto err;
->  	}
->  
-> -	writel(ctrl1, mxsfb->base + LCDC_CTRL1);
-> -	writel(ctrl, mxsfb->base + LCDC_CTRL);
-> +	if (update) {
-> +		writel(ctrl, mxsfb->base + LCDC_CTRL + REG_SET);
-> +		writel(ctrl1, mxsfb->base + LCDC_CTRL1 + REG_SET);
-> +	} else {
-> +		writel(ctrl, mxsfb->base + LCDC_CTRL);
-> +		writel(ctrl1, mxsfb->base + LCDC_CTRL1);
-> +	}
->  
->  	return 0;
-> +
-> +err:
-> +	DRM_DEV_ERROR(drm->dev, "Unhandled pixel format: %s\n",
-> +		      drm_get_format_name(format, &format_name_buf));
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static u32 get_bus_format_from_bpp(u32 bpp)
-> +{
-> +	switch (bpp) {
-> +	case 16:
-> +		return MEDIA_BUS_FMT_RGB565_1X16;
-> +	case 18:
-> +		return MEDIA_BUS_FMT_RGB666_1X18;
-> +	case 24:
-> +		return MEDIA_BUS_FMT_RGB888_1X24;
-> +	default:
-> +		return MEDIA_BUS_FMT_RGB888_1X24;
-> +	}
->  }
->  
->  static void mxsfb_set_bus_fmt(struct mxsfb_drm_private *mxsfb)
->  {
->  	struct drm_crtc *crtc = &mxsfb->pipe.crtc;
-> +	unsigned int bits_per_pixel = crtc->primary->state->fb->format->depth;
->  	struct drm_device *drm = crtc->dev;
->  	u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
-> -	u32 reg;
-> -
-> -	reg = readl(mxsfb->base + LCDC_CTRL);
-> +	int num_bus_formats = mxsfb->connector->display_info.num_bus_formats;
-> +	const u32 *bus_formats = mxsfb->connector->display_info.bus_formats;
-> +	u32 reg = 0;
-> +	int i = 0;
-> +
-> +	/* match the user requested bus_format to one supported by the panel */
-> +	if (num_bus_formats) {
-> +		u32 user_bus_format = get_bus_format_from_bpp(bits_per_pixel);
-> +
-> +		bus_format = bus_formats[0];
-> +		for (i = 0; i < num_bus_formats; i++) {
-> +			if (user_bus_format == bus_formats[i]) {
-> +				bus_format = user_bus_format;
-> +				break;
-> +			}
-> +		}
-> +	}
->  
-> -	if (mxsfb->connector->display_info.num_bus_formats)
-> -		bus_format = mxsfb->connector->display_info.bus_formats[0];
-> +	/*
-> +	 * CRTC will dictate the bus format via private_flags[16:1]
-> +	 * and private_flags[0] will signal a bus format change
-> +	 */
-> +	crtc->mode.private_flags &= ~0x1FFFF; /* clear bus format */
-> +	crtc->mode.private_flags |= (bus_format << 1); /* set bus format */
-> +	crtc->mode.private_flags |= 0x1; /* bus format change indication*/
->  
->  	DRM_DEV_DEBUG_DRIVER(drm->dev, "Using bus_format: 0x%08X\n",
->  			     bus_format);
->  
-> -	reg &= ~CTRL_BUS_WIDTH_MASK;
->  	switch (bus_format) {
->  	case MEDIA_BUS_FMT_RGB565_1X16:
-> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_16BIT);
-> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_16BIT);
->  		break;
->  	case MEDIA_BUS_FMT_RGB666_1X18:
-> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_18BIT);
-> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_18BIT);
->  		break;
->  	case MEDIA_BUS_FMT_RGB888_1X24:
-> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_24BIT);
-> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_24BIT);
->  		break;
->  	default:
->  		dev_err(drm->dev, "Unknown media bus format %d\n", bus_format);
->  		break;
->  	}
-> -	writel(reg, mxsfb->base + LCDC_CTRL);
-> +	writel(reg, mxsfb->base + LCDC_CTRL + REG_SET);
->  }
->  
->  static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
-> @@ -238,7 +335,7 @@ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
->  	/* Clear the FIFOs */
->  	writel(CTRL1_FIFO_CLEAR, mxsfb->base + LCDC_CTRL1 + REG_SET);
->  
-> -	err = mxsfb_set_pixel_fmt(mxsfb);
-> +	err = mxsfb_set_pixel_fmt(mxsfb, false);
->  	if (err)
->  		return;
->  
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> index 497cf44..23027a9 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> @@ -43,6 +43,27 @@ enum mxsfb_devtype {
->  	MXSFB_V4,
->  };
->  
-> +/*
-> + * When adding new formats, make sure to update the num_formats from
-> + * mxsfb_devdata below.
-> + */
-> +static const u32 mxsfb_formats[] = {
-> +	/* MXSFB_V3 */
-> +	DRM_FORMAT_XRGB8888,
-> +	DRM_FORMAT_ARGB8888,
-> +	DRM_FORMAT_RGB565,
-> +	/* MXSFB_V4 */
-> +	DRM_FORMAT_XBGR8888,
-> +	DRM_FORMAT_ABGR8888,
-> +	DRM_FORMAT_RGBX8888,
-> +	DRM_FORMAT_RGBA8888,
-> +	DRM_FORMAT_ARGB1555,
-> +	DRM_FORMAT_XRGB1555,
-> +	DRM_FORMAT_ABGR1555,
-> +	DRM_FORMAT_XBGR1555,
-> +	DRM_FORMAT_BGR565
-> +};
-> +
->  static const struct mxsfb_devdata mxsfb_devdata[] = {
->  	[MXSFB_V3] = {
->  		.transfer_count	= LCDC_V3_TRANSFER_COUNT,
-> @@ -52,6 +73,7 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
->  		.hs_wdth_mask	= 0xff,
->  		.hs_wdth_shift	= 24,
->  		.ipversion	= 3,
-> +		.num_formats	= 3,
->  	},
->  	[MXSFB_V4] = {
->  		.transfer_count	= LCDC_V4_TRANSFER_COUNT,
-> @@ -61,14 +83,10 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
->  		.hs_wdth_mask	= 0x3fff,
->  		.hs_wdth_shift	= 18,
->  		.ipversion	= 4,
-> +		.num_formats	= ARRAY_SIZE(mxsfb_formats),
->  	},
->  };
->  
-> -static const uint32_t mxsfb_formats[] = {
-> -	DRM_FORMAT_XRGB8888,
-> -	DRM_FORMAT_RGB565
-> -};
-> -
->  static struct mxsfb_drm_private *
->  drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
->  {
-> @@ -244,7 +262,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
->  	}
->  
->  	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
-> -			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
-> +			mxsfb_formats, mxsfb->devdata->num_formats, NULL,
->  			mxsfb->connector);
->  	if (ret < 0) {
->  		dev_err(drm->dev, "Cannot setup simple display pipe\n");
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-> index 0b65b51..8fb65d3 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-> @@ -16,6 +16,7 @@ struct mxsfb_devdata {
->  	unsigned int	 hs_wdth_mask;
->  	unsigned int	 hs_wdth_shift;
->  	unsigned int	 ipversion;
-> +	unsigned int	 num_formats;
->  };
->  
->  struct mxsfb_drm_private {
-> @@ -42,6 +43,6 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
->  void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb);
->  void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb);
->  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
-> -			       struct drm_plane_state *state);
-> +			       struct drm_plane_state *old_state);
->  
->  #endif /* __MXSFB_DRV_H__ */
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-> index 9fcb1db..dc4daa0 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-> @@ -44,6 +44,11 @@
->  #define REG_PUT(x, h, l) (((x) << (l)) & GENMASK(h, l))
->  #define REG_GET(x, h, l) (((x) & GENMASK(h, l)) >> (l))
->  
-> +#define SWIZZLE_LE		0 /* Little-Endian or No swap */
-> +#define SWIZZLE_BE		1 /* Big-Endian or swap all */
-> +#define SWIZZLE_HWD		2 /* Swap half-words */
-> +#define SWIZZLE_HWD_BYTE	3 /* Swap bytes within each half-word */
-> +
->  #define CTRL_SFTRST			BIT(31)
->  #define CTRL_CLKGATE			BIT(30)
->  #define CTRL_SHIFT_DIR(x)		REG_PUT((x), 26, 26)
-> @@ -93,6 +98,16 @@
->  #define REQ_8	3
->  #define REQ_16	4
->  
-> +#define CTRL2_ODD_LINE_PATTERN(x)	REG_PUT((x), 18, 16)
-> +#define CTRL2_EVEN_LINE_PATTERN(x)	REG_PUT((x), 14, 12)
-> +#define CTRL2_LINE_PATTERN_RGB	0
-> +#define CTRL2_LINE_PATTERN_RBG	1
-> +#define CTRL2_LINE_PATTERN_GBR	2
-> +#define CTRL2_LINE_PATTERN_GRB	3
-> +#define CTRL2_LINE_PATTERN_BRG	4
-> +#define CTRL2_LINE_PATTERN_BGR	5
-> +#define CTRL2_LINE_PATTERN_CLR	7
-> +
->  #define TRANSFER_COUNT_SET_VCOUNT(x)	REG_PUT((x), 31, 16)
->  #define TRANSFER_COUNT_GET_VCOUNT(x)	REG_GET((x), 31, 16)
->  #define TRANSFER_COUNT_SET_HCOUNT(x)	REG_PUT((x), 15, 0)
-
--- 
-Regards,
-
-Laurent Pinchart
+>  RC mode:
+>  - num-viewport: number of view ports configured in hardware. If a platform
+>    does not specify it, the driver assumes 2.
+> -- 
+> 2.17.1
+> 
