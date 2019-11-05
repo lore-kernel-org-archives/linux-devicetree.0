@@ -2,82 +2,112 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16806C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 14:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964F3C5DF68
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 15:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB718217F5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 14:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D9D222C1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 15:05:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kpd/leYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388875AbfKEO54 (ORCPT
+        id S1731114AbfKEPFU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:57:56 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34677 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388985AbfKEO54 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 09:57:56 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iS0HF-0000SN-Bl; Tue, 05 Nov 2019 15:57:49 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iS0HE-0001Yr-Vt; Tue, 05 Nov 2019 15:57:48 +0100
-Date:   Tue, 5 Nov 2019 15:57:48 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v3 5/7] pwm: sun4i: Add support for H6 PWM
-Message-ID: <20191105145748.6l4ke7zxlt6mibmk@pengutronix.de>
-References: <20191105131456.32400-1-peron.clem@gmail.com>
- <20191105131456.32400-6-peron.clem@gmail.com>
+        Tue, 5 Nov 2019 10:05:20 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40360 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731090AbfKEPFU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 10:05:20 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q2so15678061ljg.7
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 07:05:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tavTtm1Xo4MtMh/aOcywS9fElRJcgy1KkS7iJZf+I0o=;
+        b=Kpd/leYtPpqiEDbCJj18CuAu27YXg/BuaSVf6IXKy+NrpoBVTZePZog5GdYjJO9OIi
+         lm4PNz+RaMr2Nrhy8ku0aUXAC05hBbP1JME/FecqDMlBqkYlECiTGsIez1dWe0BBadLu
+         LIVKVjgIW0dw84EB2IjEb0twsx3ASPulZkaAWUIj7h8A2FrFsvuaKTSpTx53DmZ3nq1U
+         QNl8wl6y+nYyPwwlsv+q+D2D2+kZtdPPBtrFK7uj0fyltIejYU1J9AlQptT6e9xIT+GN
+         cLdhsevHXm//qojXfBav6e4dmTJYwtN6Khfo7QLgxUZWvK7zFuFqhWgAr3N+IqYgTJYh
+         VR7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tavTtm1Xo4MtMh/aOcywS9fElRJcgy1KkS7iJZf+I0o=;
+        b=P+IkO8Qz2ANikTlt30GUjMV1m/6Q3mKXX217zq6kG7MFAacuwrqqtDE8yTWXmLog/O
+         wla7oZiO2yJQICgNYOj2LOWZ3NugucuY3Kgp5aYFgln8vFZqsKTjKjQE583atrqroEE/
+         o52vbbfDftdU4I0YN/Ov1fjvRzqfpSoRFy623iGOyhT23WZuiW3lKy9MU8z+WRYyxKFA
+         HeTfPg3qYspQHjlS4wNoGSlqlnx+XRD2G/shLbpdipXVc96stEp4mIT7SgKztRwLPcRy
+         ZdQ0yAPCsiOIqlczEnvTqUerjTMZHfA8TCWbLHr6cRCeLEFqtMdBuizjr3F8fUZFvRyp
+         QYRQ==
+X-Gm-Message-State: APjAAAUJsjKfLrEPOz6Yf+2dRik45Mj06ZMZ5by5f2t4fUNLMnnha1pS
+        ypu2Gicew0kZ9jJb+1eiE6Rv1P9yXJ2PirNn79Driw==
+X-Google-Smtp-Source: APXvYqzg3Toe5ibsBNy4vSKkIj+jEh4yXX7QFUnejT5ioVLHdggVbJujZP6cuxOj2IbLJbzwc/uzWBBvO38pMmBvRbs=
+X-Received: by 2002:a05:651c:1202:: with SMTP id i2mr23543161lja.218.1572966318371;
+ Tue, 05 Nov 2019 07:05:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191105131456.32400-6-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <f08d265c12ebf185c0e1dbbfe0a3f86de4907194.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com> <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
+In-Reply-To: <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Nov 2019 16:05:05 +0100
+Message-ID: <CACRpkdaRt3Du4y_Yhv39d7KoQ=hOkPR-RqXYjPukxb7JG_yymQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:14:54PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> Now that sun4i PWM driver supports deasserting reset line and enabling
-> bus clock, support for H6 PWM can be added.
-> 
-> Note that while H6 PWM has two channels, only first one is wired to
-> output pin. Second channel is used as a clock source to companion AC200
-> chip which is bundled into same package.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+On Mon, Nov 4, 2019 at 4:48 PM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Good initiative (and I will see a ton of janitorial patches as a
+> > result of this...)
+>
+> I have somewhere near 62 patches waiting to be sent =) They're pretty
+> small but I'd appreciate thorough review as they're mostly untested...
+> Do you mind receiving them all in one go? Or do you think I should send
+> the series in smaller chuncks?
 
-Thanks
-Uwe
+I would be fine with one patch introducing the defines and then
+one big patch switching everybody and their dog over to using
+these definitions.
 
+I usually keep to a patch being "one technical step" and it is
+clearly (IMO) one step to introduce the defines and one step
+to make use of it in all legacy drivers.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+It's late in the kernel cycle but this particular part (the defines
+and switching over old driver to use it) I'd be happy
+to merge for v5.5.
+
+Yours,
+Linus Walleij
