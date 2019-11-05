@@ -2,109 +2,128 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D927CC1748A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 14:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706CCC17498
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 14:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B135C21D7C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 14:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F82C217F5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 14:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H8xdymB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389478AbfKEOHl (ORCPT
+        id S1729162AbfKEOve (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:07:41 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:45124 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389405AbfKEOHk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 09:07:40 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-50-5dc1822ae9e4
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 79.A6.08102.A2281CD5; Tue,  5 Nov 2019 15:07:38 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Tue, 5 Nov 2019 15:07:32 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based
- run-level control for regulators
-Thread-Topic: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based
- run-level control for regulators
-Thread-Index: AQHVkKmUb1A5TsbkA0WleApZHP5SaKd5+YkAgACQyoCAAfw5gIAADBgA
-Date:   Tue, 5 Nov 2019 14:07:32 +0000
-Message-ID: <ff6085af2b949d43571b61c7d4d69743cb175850.camel@fi.rohmeurope.com>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com>
-         <1550472ac1e105bd38da25803358cfbc0404bf38.camel@fi.rohmeurope.com>
-         <CACRpkdYkgEg=4H9tQQrVcvx1xtETYD_cHxhqd-BW6g67jpEeEg@mail.gmail.com>
-In-Reply-To: <CACRpkdYkgEg=4H9tQQrVcvx1xtETYD_cHxhqd-BW6g67jpEeEg@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <000865F25A7D6443B4A44E4BF0D5C8D9@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Tue, 5 Nov 2019 09:51:34 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40327 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727889AbfKEOve (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 09:51:34 -0500
+Received: by mail-qk1-f195.google.com with SMTP id a18so3701739qkk.7
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 06:51:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uYl0KjrEv9Q2fdLs6NYOjLfGeZFa/Sr+lnmD652MtRI=;
+        b=H8xdymB0cGUDXEMvbtbJMAL6qBdhLzrnZTOO1QO8jH9p/3pNXubisYMykQqflatEFB
+         tlJEl6YSvQpivAdYzQv/5o18WWVAuuxKYPVgb6AaWDbtp6gXsq5+vynGMJMcCKVnI6nE
+         tlFWNf9YyX1oaqyVZD3ifMAoj+JW7qrl9WrMZiXVVgi2vG7JgyihqkHZrizYkxiY/F56
+         PbnDYEjHShNf2Fmmq+0q4kMpJhOBklKZKeLHih9j4OxkjVUHS5u65TBHtHlrOgpAXxnn
+         iieP+YcBoFVXhYvOoM3y2j3QkVfEv8ag8r3V1IQFX8JijKsKSqEAaQ+wzm5O/PuDI4hb
+         bJVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uYl0KjrEv9Q2fdLs6NYOjLfGeZFa/Sr+lnmD652MtRI=;
+        b=L/hPMeIhqlkLjVTAFiRA3LlN+EdaVxJz+Zeaxhnkxt+68JUwS82lG9cC+BcuE0InPW
+         YjNSMoAGMs5q3XMdz4MgnCsMZ6XXHrtlFwb81F4LZuwpC+B5/TotZg9qruJZv3NwZwLN
+         sEXIDF11RjgOHJE2xBI23clKfMZaZygKL4Bpup4dJDARkf4LbzK63ujhrr33xXUeJ6vu
+         MqeUkah8lkDaZaIACc7EE1YL8cz4MCIoBHYQaSpoSTn7r+4yQrjO9jAtp5HsEorPtkF7
+         ebWoDtiSQ/HSbrWU3JcFVPcVYiua9qgdeyNe2YgIvwRC/Ap2oMs/qkDaWgEEuStGAhMF
+         HHtA==
+X-Gm-Message-State: APjAAAWVl6Rfh4/YQW+vzftoF5bKo7Mn2iS/C+LT/IuuaL4QtaMwwW3B
+        V40+iS9VjYNJJHJgutTJtey5V+9gcuCJsKhLXbt8Og==
+X-Google-Smtp-Source: APXvYqzGPmuUNzRcNl4nCWY9qbqLt3ZVffUgLt+cslxAC0qbCCChqf3XGl5+61mPiy+nnDobNSYGuCSIbzsYslFDySQ=
+X-Received: by 2002:a37:b6c3:: with SMTP id g186mr5225455qkf.187.1572965493257;
+ Tue, 05 Nov 2019 06:51:33 -0800 (PST)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHJsWRmVeSWpSXmKPExsVyYMXvjbpaTQdjDQ7PV7VYcvEqu0X7u2Xs
-        Fl/mnmKxmPrwCZvF/CPnWC26T29htbi9dQOLxf2vRxktvl3pYLKY8mc5k8XHnnusFpvn/2G0
-        uLxrDpvF1jfrGC2Orb7CZrH0+kUmizlLT7BYXDzlanH31FE2i9a9R9gt/l3byOIg6rFm3hpG
-        j/c3Wtk95q2p9tg56y67x6ZVnWwed67tYfM4fmM7k8f0eT+ZPFas/s7u8XmTXABXFLdNUmJJ
-        WXBmep6+XQJ3Rsua64wF/zgrTrzsZ2xgvMPZxcjJISFgIvFzyh/mLkYuDiGBq4wSLQ9fsoEk
-        hASOM0o8m2bRxcjBwSZgI9F1kx0kLCJgKXH4xBwWEJtZYA6HROONSBBbWCBdYlrLRDaImgyJ
-        r8d7oerdJI5t+8kMYrMIqEisbZwGZvMK+En0L/vLBLH3J5PE6xdNYM2cAoESL/6eYAKxGQVk
-        JTob3jFBLBOX2PTsOyvE0QISS/acZ4awRSVePv4HFVeS2PvzIQvIzcwCmhLrd+lDmA4Saz5V
-        Q0xRlJjS/ZAd4gRBiZMzn7BMYBSbhWTBLITmWQjNs5A0z0LSvICRdRWjRG5iZk56YkmqoV5R
-        aqleUX5GLpBKzs/dxAhJL192MP4/5HmIkYmD8RCjJAeTkiivV+bBWCG+pPyUyozE4oz4otKc
-        1OJDjBIczEoivBdn7I0V4k1JrKxKLcqHSUlzsCiJ86o/nBgrJACyKzs1tSC1CCYrw8GhJMEb
-        3gA0VLAoNT21Ii0zpwQhzcTBCTKcS0qkODUvJbUosbQkIx6UOOKLgakDJMUDtPcYSDtvcUFi
-        LlAUovUUozbHhJdzFzFzHJm7dBGzEEtefl6qlDjvP5BSAZDSjNI8uEWvGMU5GJWEeYMbgbI8
-        wEwDN+cV0AomoBU+j/eBrChJREhJNTDqmX4yM6n/71sactti7xl5hzDZcKl0DSGLxix355YJ
-        H0/FqQaFSlkkH7uffd9rkuPZN8mn4gxefpufmMqd4hipsud79ZICrn9Syy8kWxz82pq35Ke1
-        jPD0NwzLw36ukLb3Cn1fes6hX/VbySrW9ws0V9m+373g/53VZ/fk2hYI9h9OKbi1yESJpTgj
-        0VCLuag4EQAAOyb/8QMAAA==
+References: <1572610108-1363-1-git-send-email-rkambl@codeaurora.org>
+ <1572610108-1363-2-git-send-email-rkambl@codeaurora.org> <5dc09bbb.1c69fb81.196e5.9770@mx.google.com>
+In-Reply-To: <5dc09bbb.1c69fb81.196e5.9770@mx.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 5 Nov 2019 20:21:22 +0530
+Message-ID: <CAP245DWz7qkS3mGEjRA-EfhGieZtOAbnLsPZCHqSG9DL+NvPcg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: sc7180: Add device node support for
+ TSENS in SC7180
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajeshwari <rkambl@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, sanm@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiBUdWUsIDIwMTktMTEtMDUgYXQgMTQ6MjQgKzAxMDAsIExpbnVzIFdhbGxlaWogd3JvdGU6
-DQo+IE9uIE1vbiwgTm92IDQsIDIwMTkgYXQgODowNSBBTSBWYWl0dGluZW4sIE1hdHRpDQo+IDxN
-YXR0aS5WYWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+IHdyb3RlOg0KPiA+IE9uIFN1biwgMjAx
-OS0xMS0wMyBhdCAyMzoyNyArMDEwMCwgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gPiA+IEkgZG8g
-bm90IHVuZGVyc3RhbmQgdGhlIHJlZ3VsYXRvciBwYXJ0cyBvZiB0aGUgcGF0Y2guDQo+ID4gDQo+
-ID4gSSdtIHNvcnJ5LiBUaGUgcGF0Y2ggaXMgbm90IGNsZWFyZXN0IG9uZSB3aGF0IGNvbWVzIHRv
-IHRoZQ0KPiA+IHJlZ3VsYXRvcg0KPiA+IHN0dWZmLiBJIGNhbiB0cnkgc3BsaXR0aW5nIGl0IHRv
-IHNtYWxsZXIgYW5kIG1vcmUgbG9naWNhbCBjaGFuZ2VzDQo+ID4gaWYNCj4gPiB5b3UsIE1hcmsg
-b3Igb3RoZXIgaW50ZXJlc3RlZCBwZW9wbGUgaG9wZSB0byBnZXQgaXQgc3BsaXR0ZWQuIE9yDQo+
-ID4gcGVyaGFwcyBpdCB3b3VsZCBiZSBzaW1wbGVzdCB0byByZXZpZXcgaWYgaXQgd2FzIGFsbCBp
-biBvbmUgcGF0Y2g/DQo+IA0KPiBBcyBsb25nIGFzIHRoZSByZWd1bGF0b3IgZXhwZXJ0cyBhcmUg
-aGFwcHkgd2l0aCB0aGUgZm9ybWF0LA0KPiBzdGF5IHdpdGggdGhhdC4gSSBhbSBqdXN0IGEgZHJp
-dmUtYnkgY29kZXIgd2hlbiBpdCBjb21lcyB0bw0KPiByZWd1bGF0b3JzLg0KDQoiRHJpdmUtYnkg
-Y29kZXIiIC0gSSBkbyBkZWZpbml0ZWx5IGxpa2UgaG93IHRoYXQgc291bmRzIDpdIE1heWJlIEkg
-Y2FuDQpib3Jyb3cgdGhhdC4gQnV0IGV2ZW4gdGhlICJkcml2ZS1ieSIgcmV2aWV3aW5nIGlzIGhh
-cmQuIEFuZCBJIGd1ZXNzIGl0DQpzaG91bGQgYmUgbWFkZSBhcyBlYXN5IGFzIGl0IGNhbi4uLg0K
-DQpCciwNCglNYXR0aQ0KDQoNCg==
+Hi Rajeshwari,
+
+On Tue, Nov 5, 2019 at 3:14 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Rajeshwari (2019-11-01 05:08:28)
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 07ea393..06ded1d 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -449,6 +465,508 @@
+> >                 };
+> >         };
+> >
+> > +       thermal-zones {
+> > +               aoss-0-usr {
+> > +                       polling-delay-passive = <0>;
+> > +                       polling-delay = <0>;
+>
+> Can we get real polling delays instead of 0?
+>
+> > +                       thermal-governor = "user_space";
+> > +                       thermal-sensors = <&tsens0 0>;
+> > +                       wake-capable-sensor;
+>
+> What is this property?
+
+Downstream property. If you need this, propose changes to the tsens bindings.
+
+> > +                       trips {
+> > +                               active-config0 {
+> > +                                       temperature = <125000>;
+> > +                                       hysteresis = <1000>;
+> > +                                       type = "passive";
+> > +                               };
+> > +                               reset-mon-cfg {
+> > +                                       temperature = <115000>;
+> > +                                       hysteresis = <5000>;
+> > +                                       type = "passive";
+> > +                               };
+> > +                       };
+> > +               };
+> > +
+> > +               cpu-0-0-usr {
+> > +                       polling-delay-passive = <0>;
+> > +                       polling-delay = <0>;
+> > +                       thermal-governor = "user_space";
+>
+> What is this property?
+
+Based on a downstream property that was rejected upstream. Please get rid of it.
+
+Regards,
+Amit
