@@ -2,95 +2,174 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D496FCA9ED4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 01:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33219CA9ED3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 01:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C75214D9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 01:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A88E218BA
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 01:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572917332;
-	bh=xNc7zysrkarUrPZ8u/6BnraLE7rzilg3nT6jHMgIwlA=;
+	s=default; t=1572918240;
+	bh=ecMuPa+YgN78EEo60eO8Y0rMGubBwT8tUX+4UIYaA4Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qUBQtx1kRUWbPJPCHfiqTwNTM2eKVHKDoQgWX3TwfYvgejGCgFWdogVw8/S4gJq3x
-	 XKm0WLIOVN55RwgSvZ8tJiZj5dELd0jNCs+mBTwZ+kAOUVwqOOXVPc4/pST1uC5HIp
-	 7XT3NRLBiIwXPpM25Hl8yyNJDhsXVC2SwOMrBUPo=
+	b=mLpl4PylbDD0Se5HA90JJm/rxcQhLbt4UKr7vrJoNWFjgMe9Lx7x3nqw/ztNR2Vut
+	 +7oLMosLqH/FU5bN6wvUL3IcXqBUIqVlk0BC26LoOn2DJ+MhLXwS+PWXetWvOWGVH7
+	 VVS3MVHKlXeUWSr4EHmEYXHJC38id+dvGu06EAEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbfKEB2s (ORCPT
+        id S1730151AbfKEBn4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:28:48 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41954 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387639AbfKEB2s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 20:28:48 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 94so16192845oty.8;
-        Mon, 04 Nov 2019 17:28:47 -0800 (PST)
+        Mon, 4 Nov 2019 20:43:56 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45850 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728987AbfKEBnz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 4 Nov 2019 20:43:55 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k2so16029591oij.12;
+        Mon, 04 Nov 2019 17:43:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M9gg0kIoyQA/b2vVqI7fyQwNx3s6WAOJLTNDodsUmLA=;
-        b=NPs5uhDIFNxURteRD/4ErU1UHnjwiLX5n1PM5vtbf0tqVE9fdLfQTHvgA6rOvhQFvg
-         vb8ELi8DIa/x+QXyvxfmtCi3Yd5XyBhmUDkgPAiYNZDwtCRr0lrZqBClWsu0Q35oyFEs
-         V2O6DUglgrBs7/ZBdACCpVr5i8JZD4IGuXT7ESWNCxLCqqcToUMy2wOuIRfzSfIN9qwv
-         4WU2X1BI5mGhGoQhyUpZ2h8LF0iZ32ua7QZfRRYyt+NsEAUGEowJB7sm1YVWbdDhz0Dp
-         yT5UHJAB3e/gZxc6ZqVI7LqhvoEAyv5QyTyXY2AVJ4NvYqlH1jCNo8jzVZfhVvT2lgww
-         Kvmg==
-X-Gm-Message-State: APjAAAXshb6UDpk+xWjVwIqvE/YQp+hQDFyuRaLcewNhr1oAW47ljXun
-        DjmVotakbIcyq5wGDoB8Eg==
-X-Google-Smtp-Source: APXvYqzcV9ZpMmc/ONyrKnyJvmZg7cRevWB+ivgNxAo/R2LxP++vJQrEsF8NHCoVtWBf91eVXonwCw==
-X-Received: by 2002:a9d:6253:: with SMTP id i19mr9512571otk.201.1572917327353;
-        Mon, 04 Nov 2019 17:28:47 -0800 (PST)
+        bh=CUXJwWe90bW8v3xaQ2VIEMTd+WY4inmX6uoXpP0UKrU=;
+        b=r5EuhHg6f8V5uZJsgCvYIpRsKkdlXHyeuAFsuMFTXx/AMza2vM7tmvMv8IDNCxjPAH
+         my+FM0252BjXcRtI+LiYkkclhgbWHxVS3e0/kLKmdzQBfh2+if8BjwM21K1rJcjEurBf
+         NPBfTzfX5ijXxFXZqYO3qGAqQ3W3ohygPxLbv/6aGKlhRj/MyoyNxHhgI+j35UxeDyET
+         3M66xVEUyP5nt13PNOP34RUchIJMRFrjSNcylc7AXPZUHwHzzbQVAOb0bEEI+BuLBAqO
+         ffpUW+/Fc4x65T0krdgN+S7eLND6DfCGgVHJVHNudKAKZ9KQ9stxFTu37+Fybmmty9Cz
+         Hzgg==
+X-Gm-Message-State: APjAAAW5QpqcYp3dJlhnSR7JFcyHbaRyZ83JlojNYKyG+3Pn6dgnrhwQ
+        65j7Pad4L2WFnMwfTxfR9Q==
+X-Google-Smtp-Source: APXvYqzyj/IhgIcosg+V9eSDk1T7UbLbJYKj67K43VeYokAtGtiA5geqXFgLTpyjlQIlyARe5+gqiA==
+X-Received: by 2002:aca:da06:: with SMTP id r6mr1699237oig.82.1572918234843;
+        Mon, 04 Nov 2019 17:43:54 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y14sm5617491otk.20.2019.11.04.17.28.46
+        by smtp.gmail.com with ESMTPSA id l18sm1216351oti.11.2019.11.04.17.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 17:28:46 -0800 (PST)
-Date:   Mon, 4 Nov 2019 19:28:45 -0600
+        Mon, 04 Nov 2019 17:43:54 -0800 (PST)
+Date:   Mon, 4 Nov 2019 19:43:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     kishon@ti.com, aniljoy@cadence.com, adouglas@cadence.com,
-        nsekhar@ti.com, jsarha@ti.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C
- dir GPIO
-Message-ID: <20191105012845.GA32522@bogus>
-References: <20191028102153.24866-1-rogerq@ti.com>
- <20191028102153.24866-3-rogerq@ti.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191105014353.GA841@bogus>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191030115328.GA6253@valkosipuli.retiisi.org.uk>
+ <20191030120105.GA11432@Mani-XPS-13-9360>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028102153.24866-3-rogerq@ti.com>
+In-Reply-To: <20191030120105.GA11432@Mani-XPS-13-9360>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 28 Oct 2019 12:21:52 +0200, Roger Quadros wrote:
-> This is an optional GPIO, if specified will be used to
-> swap lane 0 and lane 1 based on GPIO status. This is required
-> to achieve plug flip support for USB Type-C.
+On Wed, Oct 30, 2019 at 05:31:05PM +0530, Manivannan Sadhasivam wrote:
+> Hi Sakari,
 > 
-> Type-C companions typically need some time after the cable is
-> plugged before and before they reflect the correct status of
-> Type-C plug orientation on the DIR line.
+> On Wed, Oct 30, 2019 at 01:53:28PM +0200, Sakari Ailus wrote:
+> > Hi Nabuvannan,
+> > 
+> > On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> > > Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> > > add MAINTAINERS entry for the binding and driver.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> > >  MAINTAINERS                                   |  8 ++
+> > >  2 files changed, 102 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > > new file mode 100644
+> > > index 000000000000..c04ec2203268
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > > @@ -0,0 +1,94 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> > > +
+> > > +maintainers:
+> > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > +
+> > > +description: |-
+> > > +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> > > +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> > > +  features a global shutter with variable charge-integration time. It is
+> > > +  programmable through I2C and 4-wire interfaces. The sensor output is
+> > > +  available via CSI-2 serial data output (1 Lane).
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: sony,imx296
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    description:
+> > > +      Input clock for the sensor.
+> > > +    items:
+> > > +      - const: mclk
+> > > +
+> > > +  clock-frequency:
+> > > +    description:
+> > > +      Frequency of the mclk clock in Hertz.
+> > > +
+> > > +  vddo-supply:
+> > > +    description:
+> > > +      Definition of the regulator used as interface power supply.
+> > > +
+> > > +  vdda-supply:
+> > > +    description:
+> > > +      Definition of the regulator used as analog power supply.
+> > > +
+> > > +  vddd-supply:
+> > > +    description:
+> > > +      Definition of the regulator used as digital power supply.
+> > > +
+> > > +  reset-gpios:
+> > > +    description:
+> > > +      The phandle and specifier for the GPIO that controls sensor reset.
+> > > +    maxItems: 1
+> > > +
+> > > +  port: true
+> > 
+> > You're missing "type: object" under port.
+> > 
 > 
-> Type-C Spec specifies CC attachment debounce time (tCCDebounce)
-> of 100 ms (min) to 200 ms (max).
-> 
-> Allow the DT node to specify the time (in ms) that we need
-> to wait before sampling the DIR line.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Cc: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/phy/ti,phy-j721e-wiz.yaml          | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
+> I did that intentionally, since there are other places where I can see the
+> "type" field not specified. So, I was not sure about that. Most of the
+> display bindings don't specify "type" and they are most available ones.
+> I don't think the "port" property differs between cameras and displays.
+> So I went with that.
+
+The difference is the panel bindings have a common schema included 
+which defines 'port' at least as a node. I don't think an include would 
+help too much here, so probably best to add 'type: object' for now. 
+Either way, this may change once video-interfaces.txt is converted if 
+any of those properties apply here.
+
+Either way:
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+Rob
