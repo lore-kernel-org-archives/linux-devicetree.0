@@ -2,112 +2,97 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964F3C5DF68
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 15:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696A0C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 15:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D9D222C1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 15:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E67E21929
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 15:06:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kpd/leYt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vmLGemzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbfKEPFU (ORCPT
+        id S1731112AbfKEPGh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:05:20 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40360 "EHLO
+        Tue, 5 Nov 2019 10:06:37 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45256 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731090AbfKEPFU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 10:05:20 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q2so15678061ljg.7
-        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 07:05:19 -0800 (PST)
+        with ESMTP id S1731032AbfKEPGh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 10:06:37 -0500
+Received: by mail-lj1-f195.google.com with SMTP id n21so8619769ljg.12
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 07:06:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tavTtm1Xo4MtMh/aOcywS9fElRJcgy1KkS7iJZf+I0o=;
-        b=Kpd/leYtPpqiEDbCJj18CuAu27YXg/BuaSVf6IXKy+NrpoBVTZePZog5GdYjJO9OIi
-         lm4PNz+RaMr2Nrhy8ku0aUXAC05hBbP1JME/FecqDMlBqkYlECiTGsIez1dWe0BBadLu
-         LIVKVjgIW0dw84EB2IjEb0twsx3ASPulZkaAWUIj7h8A2FrFsvuaKTSpTx53DmZ3nq1U
-         QNl8wl6y+nYyPwwlsv+q+D2D2+kZtdPPBtrFK7uj0fyltIejYU1J9AlQptT6e9xIT+GN
-         cLdhsevHXm//qojXfBav6e4dmTJYwtN6Khfo7QLgxUZWvK7zFuFqhWgAr3N+IqYgTJYh
-         VR7Q==
+        bh=XeLKSI0KpVKh7U51GFQKhu41G/kKMM6hiwNkiVQAYno=;
+        b=vmLGemzHKaxLBgLOj8ysaBgUxFMaOKKjcTIanlNzhYP69lx4N1ogVqivjUM37D2rJU
+         mqZpFLjzo/ZL8PcdliQcdNt45so0lInDzm5XPZpxb1dEXl776kPWKrmh47wo2KHWKBiS
+         OihVcAcKa7ILvYycaHoOqrGsb/Xv569qGfL5cyivyxmpqWoV70XY2FaTfZ4Nn4xQiBsv
+         7FcYcUKl5Yun5MQhkq6/S3MoubixSgNFspwkPZUoQQxzpKOqlkR4hn9SmDQqQpgZpaP4
+         ea/FaQ/9Ig6WlPkVHuj6Fj2xBUe3a5dMC/UZ3Z/D2iXjk3U6bGdWAoxHw5RPFdN0or70
+         1pFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tavTtm1Xo4MtMh/aOcywS9fElRJcgy1KkS7iJZf+I0o=;
-        b=P+IkO8Qz2ANikTlt30GUjMV1m/6Q3mKXX217zq6kG7MFAacuwrqqtDE8yTWXmLog/O
-         wla7oZiO2yJQICgNYOj2LOWZ3NugucuY3Kgp5aYFgln8vFZqsKTjKjQE583atrqroEE/
-         o52vbbfDftdU4I0YN/Ov1fjvRzqfpSoRFy623iGOyhT23WZuiW3lKy9MU8z+WRYyxKFA
-         HeTfPg3qYspQHjlS4wNoGSlqlnx+XRD2G/shLbpdipXVc96stEp4mIT7SgKztRwLPcRy
-         ZdQ0yAPCsiOIqlczEnvTqUerjTMZHfA8TCWbLHr6cRCeLEFqtMdBuizjr3F8fUZFvRyp
-         QYRQ==
-X-Gm-Message-State: APjAAAUJsjKfLrEPOz6Yf+2dRik45Mj06ZMZ5by5f2t4fUNLMnnha1pS
-        ypu2Gicew0kZ9jJb+1eiE6Rv1P9yXJ2PirNn79Driw==
-X-Google-Smtp-Source: APXvYqzg3Toe5ibsBNy4vSKkIj+jEh4yXX7QFUnejT5ioVLHdggVbJujZP6cuxOj2IbLJbzwc/uzWBBvO38pMmBvRbs=
-X-Received: by 2002:a05:651c:1202:: with SMTP id i2mr23543161lja.218.1572966318371;
- Tue, 05 Nov 2019 07:05:18 -0800 (PST)
+        bh=XeLKSI0KpVKh7U51GFQKhu41G/kKMM6hiwNkiVQAYno=;
+        b=CT3YBFxfzq0Gh1niHB6SJnLQP39tQXEXiKm2v3RUNNQp/7Hx/beUyB5J8JS4InGTb3
+         BkyCftbxSX9W3im5J94q02Icxm6UwJQwNYTGbcYP6gY2wZfbs34PK8RVFpxROMz+5Uv+
+         g4x0jgcgjJ3OaXXf3x+nhGiMJ+bHlyreJ8BThp3C529pnDwU0AxSDtjj79CKgiDQXZji
+         w9ybT8aEDckNkB42rLN1lp/Xt8x90o+FDE0K2Q3kXWRmbYfU52MEha+uqmJ9TsYdjZrf
+         KtMAatSI4nMLTvAGc6Z5L5fppd9EIR7hdauKXXsJJOuAwFLnUzVhCUbbtMI09TX3fMqJ
+         /PCw==
+X-Gm-Message-State: APjAAAXvWTBQj6ATVhtuqoCH1TwR7EbpRxheSgk8yAXs06Blehuwwqkp
+        wwsxuJTSMmlSaUVNyxlL1r+RTBEPd8RfpU/OpQ7Dmg==
+X-Google-Smtp-Source: APXvYqwnwnosIbALQWhH9iE66VbRevpNKoo2+AlOIGbO/YK+JvXEq7xF97GQzxccFEeM+dwg//oNT6x78p7b0HM0Jk0=
+X-Received: by 2002:a2e:9a12:: with SMTP id o18mr16050255lji.191.1572966395420;
+ Tue, 05 Nov 2019 07:06:35 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <f08d265c12ebf185c0e1dbbfe0a3f86de4907194.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com> <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
-In-Reply-To: <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
+References: <20191104163834.8932-1-andrew.murray@arm.com> <20191104163834.8932-4-andrew.murray@arm.com>
+In-Reply-To: <20191104163834.8932-4-andrew.murray@arm.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Nov 2019 16:05:05 +0100
-Message-ID: <CACRpkdaRt3Du4y_Yhv39d7KoQ=hOkPR-RqXYjPukxb7JG_yymQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
+Date:   Tue, 5 Nov 2019 16:06:24 +0100
+Message-ID: <CACRpkdYcUFkUUG8jQ=9i9LDpKbrzqNR0o_eLObijXn4YiBHOJw@mail.gmail.com>
+Subject: Re: [PATCH v1 3/7] arm: dts: Use IRQ flags for legacy PCI IRQ interrupts
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Lars Persson <lars.persson@axis.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-arm-kernel@axis.com,
+        MSM <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 4:48 PM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+On Mon, Nov 4, 2019 at 5:39 PM Andrew Murray <andrew.murray@arm.com> wrote:
 
-> > Good initiative (and I will see a ton of janitorial patches as a
-> > result of this...)
+> Replace magic numbers used to describe legacy PCI IRQ interrupts
+> with #define.
 >
-> I have somewhere near 62 patches waiting to be sent =) They're pretty
-> small but I'd appreciate thorough review as they're mostly untested...
-> Do you mind receiving them all in one go? Or do you think I should send
-> the series in smaller chuncks?
+> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 
-I would be fine with one patch introducing the defines and then
-one big patch switching everybody and their dog over to using
-these definitions.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I usually keep to a patch being "one technical step" and it is
-clearly (IMO) one step to introduce the defines and one step
-to make use of it in all legacy drivers.
-
-It's late in the kernel cycle but this particular part (the defines
-and switching over old driver to use it) I'd be happy
-to merge for v5.5.
+Thanks for just changing them all in one patch, it is swift and elegant
+patching.
 
 Yours,
 Linus Walleij
