@@ -6,100 +6,88 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B85C17476
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC61CC17460
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27968222C4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89B321D71
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 13:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mmSF+IAU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="htgooDky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388992AbfKENYb (ORCPT
+        id S2388177AbfKENZt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:24:31 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37421 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389086AbfKENYb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 08:24:31 -0500
-Received: by mail-lf1-f65.google.com with SMTP id b20so15117881lfp.4
-        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 05:24:28 -0800 (PST)
+        Tue, 5 Nov 2019 08:25:49 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36417 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388938AbfKENZt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 08:25:49 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k15so9703561lja.3
+        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 05:25:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OriTvqKjGZz26vq3sX+0nz0hNVWCQx915SM+y16L4zI=;
-        b=mmSF+IAUX1udzNA10gxQDs4IVguwwokEurVOW3StfXUANAJNYQv4/+zWORcXWFMJz6
-         m8BMOmIIg6IdlyXqx/JOil3Nbe1GQJOjv3TKF4sU9Y8IhkaCAxvvuN9OIs6XmIOXlhaV
-         3yDCu8ShhTKAlUTHth4u2KT53qkmJ5SC02XPDZHD1F7NmyWDtGHSU+gmVOKet8p9J0tg
-         tOUcealyAZisw9u0YxSTwLwJi9mNZL5v3AiyePab1IAJp9k9ulTtGJUtUmXfCzS/M3vK
-         ttjdpKUqRtjmkL88v5AmTh1EY7ErppJQbMgbmt1rENGRy7NzGgSd1ie29VbCA1Ll9hDA
-         riGQ==
+        bh=oP2Qg5DulasBMIF938P1Bp5KL5tW1M0zdz+2GVaj+Uk=;
+        b=htgooDkyaSv71Ti+556eAKWXlqMjpxkAkSOki+vleaBb6Av+WzlFduwJhyDFzZZxOZ
+         0RyJiO0Z7zhxnuLxk6elZgul0SSMAmNWjfH8yz3iCC9YaQFHYrL/y/xQp8RdE+vT9e2E
+         PngH+tXC+ktbnz7hEgGDXmhwX43XFwEqyzK+mv2tBGLw38RDkA/zJAVke51imLothgPi
+         1GtM7Sxz+UvM5Iw2d9/g4J9unmhAExVIZ9sIALS8Yi0mhIp2PydULQBs7JnM1j0ZTzOi
+         uPwTifHGSQadVDNDCxtIoQNt23BlJTEfXTi9ZSDdZmNio9+GMRgThfeecurQ1kgrdiFb
+         J06w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OriTvqKjGZz26vq3sX+0nz0hNVWCQx915SM+y16L4zI=;
-        b=DlyjEcBrda7u22oUk33NLp1u5Pk5nbDknN8EQGrBz6LzvPhfR8aNgQtEF9Xzndpau+
-         amnJN3DiNUjerzN22U47DeZdwQs5nL1qy1NeMojgNlNo4MLfHW6rjmIFuEl3wzihorAk
-         SisciDm9p8VHhmHoZMl88oJuuTOdrkuvTsZ4YaB2jxvVTK+19tb+zZZ9IWpae3bsR0Ty
-         pOJO6SDkPHVtdU7uCqX0sOYbGeAkac3U7L2JunnUrnLICKAh8UH8Au9tay3p5LLLrTRE
-         Dx3DpH+E+FM12OACVUVocigMT4W1Te7oabnfNDayqwP+eyaVpMQZ9ELKdnEUhvoBG2AH
-         mPQw==
-X-Gm-Message-State: APjAAAWS0yertpn6DhdJbMv3x7rGg2XT00UhP1SGcKbhcnEvqpZeAt34
-        9pPD9HGEhpBabhucRNcnSCxs6/jrfqPtiRw4GpZf+A==
-X-Google-Smtp-Source: APXvYqzoypaV1FwIebV/f2TxtU2nRgrE/Ebq2efFlxTgxI/d4F0Qe39na0QD1eDLDWhk898Dgs+NBvY32AC34gSuqMc=
-X-Received: by 2002:ac2:5295:: with SMTP id q21mr20306882lfm.93.1572960267714;
- Tue, 05 Nov 2019 05:24:27 -0800 (PST)
+        bh=oP2Qg5DulasBMIF938P1Bp5KL5tW1M0zdz+2GVaj+Uk=;
+        b=idIBNvJfyb6RVpmk/VayLvif2BwgljGZMAphKuBqUec57B0WivvsW2p78WjA5mY+dg
+         8WhH8sIdDSA5q/n+XxMAFz4det0G8KIdgeKaYtzz8CJ7V5sI2+kTCkahFU+nFSEGEbpD
+         vric4OyqTvN9Bhc8yCPmK3CT903EYo6XcrkMP0bsQs8OHghCCSVH2LJOLuFvK7ZP+4XC
+         XyrEJIAlnQ8Z6EI9UIfCynhyT66ggWmIIY0chfYub8ziZQgd2Ee04auNMslaz964iZtF
+         tc3hFR+FdPr8+KTlYPgAhX6Tzr3Oqqz9NAKyClb6zjLo2TU4MN9U+kKaUJeaaLE81LMq
+         TYGA==
+X-Gm-Message-State: APjAAAVuL9TfVgBqO5J/GYlJ2ud+Gl3gcLFFRr+sUW7ic+476AlB1Ldv
+        05Qm1jT+VExlhPAkZ7sYwdVGAie7K6WB90T7ktITug==
+X-Google-Smtp-Source: APXvYqwGVvtw2JLHo5RcIlsIMDfC4bj7A1mhDFHbnNes729TrLIAwbe19y/dMBfnRaFx7NDuYWTABRX2z5TR4cfVNKY=
+X-Received: by 2002:a2e:a0c9:: with SMTP id f9mr23474840ljm.77.1572960346944;
+ Tue, 05 Nov 2019 05:25:46 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com> <1550472ac1e105bd38da25803358cfbc0404bf38.camel@fi.rohmeurope.com>
-In-Reply-To: <1550472ac1e105bd38da25803358cfbc0404bf38.camel@fi.rohmeurope.com>
+References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
+ <20191029112700.14548-9-srinivas.kandagatla@linaro.org> <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
+ <4f0e22ab-6aa1-2ed1-a85b-fb66531e0b2a@linaro.org>
+In-Reply-To: <4f0e22ab-6aa1-2ed1-a85b-fb66531e0b2a@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Nov 2019 14:24:15 +0100
-Message-ID: <CACRpkdYkgEg=4H9tQQrVcvx1xtETYD_cHxhqd-BW6g67jpEeEg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based run-level
- control for regulators
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+Date:   Tue, 5 Nov 2019 14:25:35 +0100
+Message-ID: <CACRpkda2CdbPe7jsomZSxdJ1wE65OmNYDsZNj1OmfzdvG4kWng@mail.gmail.com>
+Subject: Re: [PATCH v3 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add bindings
+ for gpio
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 8:05 AM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
-> On Sun, 2019-11-03 at 23:27 +0100, Linus Walleij wrote:
+On Mon, Nov 4, 2019 at 10:35 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
 
-> > I do not understand the regulator parts of the patch.
+> This controller just has Output enable bits, No pin control properties.
 >
-> I'm sorry. The patch is not clearest one what comes to the regulator
-> stuff. I can try splitting it to smaller and more logical changes if
-> you, Mark or other interested people hope to get it splitted. Or
-> perhaps it would be simplest to review if it was all in one patch?
+> As you suggested I can move this to drivers/gpio in next version.
 
-As long as the regulator experts are happy with the format,
-stay with that. I am just a drive-by coder when it comes to regulators.
+OK perfect, thanks!
+
+NB: this probably also affects the compatible-string which contains
+"pinctrl*" right?
 
 Yours,
 Linus Walleij
