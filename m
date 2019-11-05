@@ -2,103 +2,133 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A571EC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 18:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E7CC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7FF217F5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 18:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F14217F4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 19:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572979747;
-	bh=sBXW7Y3XWS5oCMwqXlYFhhF/4022KiBmqq6Jnn0h16s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BHzUND4dppyj8pZcgWv78zCJY/xoOrb3bKsb/1shT5pHE9FfGft2YYIC+DVGze1SG
-	 eZY8Ba3XfNo09Pe0ypvMQR8VOtjPt9UPF9MUfuOToOu/wM+3X5Iz4Qsh10V9bY15CM
-	 wmh42PiQZDGFiopvT7Ro7m14PwcHvg4evUAfwME0=
+	s=default; t=1572980937;
+	bh=OXmBdFlRHFjSKG93l0PdhfI6GDLFZkT6/eylL4O2BLY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lXwexUmSqAaULWYgXoMOCooR5OTTaLkcOt2ki8ITMbAYfPPfWXLjM8aHso9GMb3X0
+	 TvnppTkyx9Y3eBiSKGHDdmnXVRo1ZiC5jtxQmpOwbCPtDUM/y/JapULuFaDr75JVeB
+	 +x6FcBJmOCLdeZgZkZ21NkEnjsVtctJpwexmFIb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390432AbfKEStG (ORCPT
+        id S2390932AbfKETIy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:49:06 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34198 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389861AbfKEStG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 13:49:06 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l202so18522730oig.1;
-        Tue, 05 Nov 2019 10:49:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qj5LiYO9Gp8VVa5aloZ7icPxyBMoZMvJD6YekkOcDko=;
-        b=DZh4DBB6PGYD9EHe8SNxx49+3hErp897GlDbAOarx4jIEVk3pbY4yFS47UNf4UkZOU
-         8pwl4bDqk72chY5FoevbkCSSZmZFIyWsiO8okHJ9z5mpQibVynwYzLFzhWF5bq5uzbtb
-         pRFsUb1IMVeArStTGYqSFoCzVgMoH/lPwhjE+vAsv5MjHtaKba2no6mkSGn4THxHPHgj
-         gaxC6LGbgJUAL2afyeB6gUB/yH99DIji7oFW5yry2ZKP7d0Y7E60BNW2SiidNvccSxSs
-         05vS1e+h3aKyUMUJ7fjyK+oRu+AjgzW+OqMCPiypwwip7D+r+hY+GQPRyeUUXsi+sTYq
-         16bg==
-X-Gm-Message-State: APjAAAWZMzHiLH+kqZc2XN9E5D/zea4QUiIp+hLhMRHECF32OR5JXnNb
-        MI7sIIfx/Kz/oEq+CFboj42HXvY=
-X-Google-Smtp-Source: APXvYqyrkBUlvV4cInkJ0w/GC7dlp4bZRcgeBsiVsjLD/Uy3nlwd90V6BQaJ97S30Z3HKKwFfh/7vw==
-X-Received: by 2002:aca:a842:: with SMTP id r63mr394336oie.118.1572979745545;
-        Tue, 05 Nov 2019 10:49:05 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u18sm2530972otq.31.2019.11.05.10.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 10:49:04 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:49:03 -0600
+        Tue, 5 Nov 2019 14:08:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390709AbfKETIy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 14:08:54 -0500
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF3EC21929;
+        Tue,  5 Nov 2019 19:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572980933;
+        bh=OXmBdFlRHFjSKG93l0PdhfI6GDLFZkT6/eylL4O2BLY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=A4Pyc+titsh2MV21obxyJRFvEjTVhzZVdWlofZbm9ErJqczl1aSdsxzH2xh1K5BrT
+         RQi8cmmYa3bBydJXKkGV83IkSwxjUqGwYyAs11LfD/Y4+MXMyC2wo0/rIObZ9L+ZMd
+         64yEhJSyMdmn41WGoUwlTmPIbBRE864pCWHECsig=
+Received: by mail-qv1-f51.google.com with SMTP id w11so366527qvu.13;
+        Tue, 05 Nov 2019 11:08:52 -0800 (PST)
+X-Gm-Message-State: APjAAAVrpJ1quM72a6Siy0L9B1jQla1F1470E+9A20OrTnKHjkeWPmzI
+        jkrlQJtPCEuN4/yuLoRaa13wjhgl/VeIAvUzlg==
+X-Google-Smtp-Source: APXvYqxZiO3lZWJ0HQfv3215/wlPFfLAmRacWVsijd7Otyaf6TcDjfY8XMoGW2mVkceqmWdXru0Tw3AymFwc3LoYKik=
+X-Received: by 2002:a0c:ca06:: with SMTP id c6mr10688316qvk.136.1572980931880;
+ Tue, 05 Nov 2019 11:08:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-2-srinivas.kandagatla@linaro.org> <20191025204338.GA25892@bogus>
+ <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org> <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
+ <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com> <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
+In-Reply-To: <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
 From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 5 Nov 2019 13:08:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
+Message-ID: <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Lee Jones <lee.jones@linaro.org>,
         Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add
- bindings for gpio
-Message-ID: <20191105184903.GA4709@bogus>
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-9-srinivas.kandagatla@linaro.org>
- <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
- <4f0e22ab-6aa1-2ed1-a85b-fb66531e0b2a@linaro.org>
- <CACRpkda2CdbPe7jsomZSxdJ1wE65OmNYDsZNj1OmfzdvG4kWng@mail.gmail.com>
- <502c64dd-a249-bb2c-7bc5-8c66fa66be35@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <502c64dd-a249-bb2c-7bc5-8c66fa66be35@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 01:27:45PM +0000, Srinivas Kandagatla wrote:
-> 
-> 
-> On 05/11/2019 13:25, Linus Walleij wrote:
-> > On Mon, Nov 4, 2019 at 10:35 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org>  wrote:
-> > 
-> > > This controller just has Output enable bits, No pin control properties.
-> > > 
-> > > As you suggested I can move this to drivers/gpio in next version.
-> > OK perfect, thanks!
-> > 
-> > NB: this probably also affects the compatible-string which contains
-> > "pinctrl*" right?
-> Yes, I will suffix it with "-gpio" instead.
+On Wed, Oct 30, 2019 at 4:55 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 29/10/2019 20:47, Rob Herring wrote:
+> > On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
+> > <srinivas.kandagatla@linaro.org> wrote:
+> >>
+> >>
+> >>
+> >> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
+> >>> Its Phandle.
+> >>>
+> >>> something like this is okay?
+> >>>
+> >>> slim-ifc-dev:
+> >>>     $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> >>
+> >> Sorry this should not be an array, so something like this:
+> >>
+> >>     slim-ifc-dev:
+> >>       description: SLIMBus Interface device phandle
+> >
+> > You're just spelling out the abbreviated name. I can do that much.
+> > What is 'SLIMBus Interface device'?
+>
+> Each SLIMBus Component contains one Interface Device. Which is
+> responsible for Monitoring and reporting the status of component, Data
+> line to Data pin connection setup for SLIMBus streaming. Interface
+> device is enumerated just like any other slim device.
 
-Not a discussion we should be having because you should name this after 
-what's in the chip documentation not the OS subsystem it happens to land 
-in.
+So a standard set of registers every slimbus device has? In hindsight,
+I would have made reg have 2 entries with both addresses. I guess that
+ship has sailed.
+
+It seems strange you would need both "devices" described as separate
+nodes in DT.
+
+>
+> We already have exactly same bindings for WCD9335 in upstream at:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
+>
+> >
+> > Is it a standard SLIMBus property? If so, document it in the right
+> > place. If not, then needs a vendor prefix.
+>
+> "SLIMBus Interface Device" itself is documented in SLIMBus Specification.
+>
+> If I remember it correctly You suggested me to move to "slim-ifc-dev"
+> as this is part of SLIMBus Specification.
+
+Probably so. If it is common, then document it in bindings/slimbus/bus.txt.
+
+Then here, 'slim-ifc-dev: true' is sufficient. You can just assume we
+convert bus.txt to schema (or feel free to do that :) ).
 
 Rob
