@@ -2,100 +2,339 @@ Return-Path: <SRS0=ig8w=Y5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9968C49EAD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 09:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5310AC49EAB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE23920869
-	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 09:47:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AFaRIlMM"
+	by mail.kernel.org (Postfix) with ESMTP id 3320A20869
+	for <linux-devicetree@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbfKEJrF (ORCPT
+        id S2387974AbfKEJtX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:47:05 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45971 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730550AbfKEJrE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 04:47:04 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v8so14557224lfa.12
-        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 01:47:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oDNWILhILXF6mm3H8oNcRKPRc083ULdV5HXXzp1YeDc=;
-        b=AFaRIlMMQwRPRvs6hBDvvglJuPWks9L1fmgOScjoJ/K+WcuKcrtV6SmSdIYBovyIy5
-         HJPQ50rNGla80V9nO70LfoT38gOPHKRHDJ7EAUk2tAty8u6jhaTFk3wz8jJR9YI/CSd1
-         MyHqQdGBqXLO4S1WrLMR6xTqUPGKLqwytU8ezk9JDoycIQsMFVnhbdyOkAPNiCuC1EY5
-         i9JfQZxKfWmzkiVkyxHgGWRMRypI5vzTMHRokDc3dKCP7fGMBKsOUHwBgwgpy0jAuOY8
-         sMnwYJTy3BFjsVzUF4ZErDbqnEzVVMv3KlcEJPM0qsMG9F5YbxRIESz1yh+dGVrtp4dX
-         YvaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oDNWILhILXF6mm3H8oNcRKPRc083ULdV5HXXzp1YeDc=;
-        b=kyC2am/Zm7lRGuplhCR+xQqFutLHqZfAM9WLibWckOkH2lfq+syuzCxOrsQGNsI6xd
-         u/mBB2nwYPnI7RZEi6bgqpASnLr8eMN0FEj0fc+m/7EUkYVmP1gB16lS72vCpMPlOS8t
-         d+G49LZWpCPOujONHYI6oyAhc9JEVkeqfaJA2z7n/R5aj79jH/oxLvl7ZiTSS+n4iJK8
-         zczKr0gVLeke0+NX7+uyGR3C6nKHfsdFuZ6wcnMqth83khn2NWNNGviHs934av8Ra/N0
-         QIgzIBu6zer0S5uahT++rwsn6YjEk2xGNLwt8DW1j0ZIK5+nBXtUhstpmiTjTIEIrhnK
-         aUAw==
-X-Gm-Message-State: APjAAAVaT01GIBpM7InhGTO9haCVQCxa/XP6Xepqh2Pppa13J8QFu+Lw
-        F+/2+T1NxSDS9T1h1LVGysTyscOfl7X3kTAqiJQnrg==
-X-Google-Smtp-Source: APXvYqwfZqIhef589Sh7H+bqh1w3hb9xsL8VjAw2n9TDnV6oj/Lqb7qFfvrsz1pjeeXvoCktgzKbjc7xIdbUvbZlrCY=
-X-Received: by 2002:a19:ca13:: with SMTP id a19mr19713764lfg.133.1572947220669;
- Tue, 05 Nov 2019 01:47:00 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Nov 2019 10:46:49 +0100
-Message-ID: <CACRpkdZWJ_4h_+QapgH1bP7EhMwBTy-6DRpv_EaWDzFutWHKaQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] pinctrl: Add new pinctrl/GPIO driver
+        Tue, 5 Nov 2019 04:49:23 -0500
+Received: from mga14.intel.com ([192.55.52.115]:51083 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387867AbfKEJtX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 04:49:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 01:49:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
+   d="scan'208";a="403294797"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Nov 2019 01:49:18 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iRvSf-0007At-CI; Tue, 05 Nov 2019 11:49:17 +0200
+Date:   Tue, 5 Nov 2019 11:49:17 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
 To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v3 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ a new SoC
+Message-ID: <20191105094917.GK32742@smile.fi.intel.com>
+References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
+ <02558966005c0483144785ed069b144f81d209a9.1572926608.git.rahul.tanwar@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02558966005c0483144785ed069b144f81d209a9.1572926608.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 7:49 AM Rahul Tanwar
-<rahul.tanwar@linux.intel.com> wrote:
+On Tue, Nov 05, 2019 at 02:49:42PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+> controls pin multiplexing & configuration including GPIO functions selection &
+> GPIO attributes configuration.
+> 
+> This IP is not based on & does not have anything in common with Chassis
+> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+> 
+> Add a new GPIO & pin control framework based driver for this IP.
 
-> This series is to add pinctrl & GPIO controller driver for a new SoC.
-> Patch 1 adds pinmux & GPIO controller driver.
-> Patch 2 adds the corresponding dt bindings YAML document.
->
-> Patches are against Linux 5.4-rc1 at below Git tree:
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
->
-> v3:
-> - Add locking for GPIO IRQ ops.
-> - Fix property naming mistake in dt bindings document.
-> - Address other code quality related review concerns.
-> - Fix a build error reported by kbuild test robot.
-> - Remove deleted structure fields from comments.
+> +static void eqbr_set_val(void __iomem *addr, u32 offset,
 
-This version looks perfectly acceptable to me, any remaining nits
-can surely be fixed-up in-tree.
+> +			 u32 mask, u32 set, raw_spinlock_t *lock)
 
-I give the other reviewers some days to consider it and then I
-will merge it for v5.5.
+This lock parameter is quite unusual. Can't you supply a pointer to a data
+structure which has lock along with MMIO address?
 
-Yours,
-Linus Walleij
+> +{
+> +	u32 val;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(lock, flags);
+
+> +	mask = mask << offset;
+
+Same Q. Why do you need these...
+
+> +	val = readl(addr);
+
+> +	val = (val & ~mask) | ((set << offset) & mask);
+
+...offset shifts? It's unusual.
+
+> +	writel(val, addr);
+> +	raw_spin_unlock_irqrestore(lock, flags);
+> +}
+
+> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
+> +{
+> +	struct gpio_irq_chip *girq;
+> +	struct gpio_chip *gc;
+
+> +#if defined(CONFIG_OF_GPIO)
+> +	gc->of_node = desc->node;
+> +#endif
+
+Isn't it what GPIO library does for everybody?
+
+> +
+> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
+
+> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
+> +			 desc->name);
+
+Is it fatal or non-fatal?
+
+> +		return 0;
+
+Ditto.
+
+> +	}
+
+> +}
+
+> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct device_node *np;
+
+> +	struct eqbr_gpio_desc *desc;
+
+desc is very confusing here, since GPIO library uses this term for GPIO
+descriptors.
+
+> +	struct device *dev;
+> +	int i, ret;
+> +	struct resource res;
+> +
+
+> +		ret = bgpio_init(&desc->chip, dev, desc->bank->nr_pins/8,
+
+'nr_pins / 8,'
+
+> +				 desc->membase + GPIO_IN,
+> +				 desc->membase + GPIO_OUTSET,
+> +				 desc->membase + GPIO_OUTCLR,
+> +				 desc->membase + GPIO_DIR,
+> +				 NULL,
+> +				 0);
+> +		if (ret) {
+> +			dev_err(dev, "unable to init generic GPIO\n");
+> +			return ret;
+> +		}
+
+> +	return 0;
+> +}
+
+> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
+> +			       unsigned int selector, unsigned int group)
+> +{
+> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct function_desc *func;
+> +	struct group_desc *grp;
+> +	unsigned int *pinmux;
+> +	int i;
+
+
+> +	pinmux = grp->data;
+> +	for (i = 0; i < grp->num_pins; i++)
+> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
+
+Shouldn't be this part serialized?
+
+Same Q to all similar places. I guess I already mentioned this in previous
+review.
+
+> +	return 0;
+> +}
+
+> +static int is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
+
+Looks like it better to be boolean.
+
+> +			 unsigned int nr_funcs, unsigned int *idx)
+> +{
+> +	int i;
+> +
+> +	if (!funcs || !nr_funcs)
+> +		return 0;
+> +
+> +	for (i = 0; i < nr_funcs; i++) {
+
+> +
+
+Redundant blank line.
+
+> +		if (funcs[i].name && (strcmp(funcs[i].name, name) == 0) ) {
+> +			*idx = i;
+> +			return 1;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
+> +		       unsigned int *nr_funcs, funcs_util_ops op)
+> +{
+> +	struct device_node *node = dev->of_node;
+> +	struct device_node *np;
+> +	struct property *prop;
+> +	unsigned int fid;
+> +	const char *fn_name;
+> +	int i, j;
+> +
+> +	i = 0;
+> +	for_each_child_of_node(node, np) {
+> +		prop = of_find_property(np, "groups", NULL);
+
+> +		if (prop) {
+
+Why not
+		if (!prop)
+			continue;
+?
+
+> +			if (of_property_read_string(np, "function",
+> +						    &fn_name)) {
+
+It's perfectly one line. Perhaps you may need to configure your text editor.
+
+> +			}
+
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +	for (i=0; i < nr_funcs; i++) {
+
+The better style is 'i = 0' and so on.
+Simple be consistent. Or do everywhere 'i=0; i<nr_func; i++', etc. But remember
+that this is for sure will be declined by most of the maintainers.
+
+> +	}
+
+> +static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct device *dev = drvdata->dev;
+> +	struct device_node *node = dev->of_node;
+> +	struct device_node *np;
+> +	struct property *prop;
+> +	int j, err;
+> +	unsigned int *pinmux, pin_id, pinmux_id;
+> +	struct group_desc group;
+> +
+> +	for_each_child_of_node(node, np) {
+> +		prop = of_find_property(np, "groups", NULL);
+
+> +		if (prop) {
+
+	if (!prop)
+		continue;
+
+	?
+
+> +		}
+> +		memset(&group, 0, sizeof(group));
+> +		pinmux = NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +static int pinbank_init(struct device_node *np,
+> +			struct eqbr_pinctrl_drv_data *drvdata,
+> +			struct eqbr_pin_bank *bank, unsigned int id)
+> +{
+> +	struct device *dev = drvdata->dev;
+> +	struct of_phandle_args spec;
+> +
+> +	bank->membase = drvdata->membase + id * PAD_REG_OFF;
+> +
+
+> +	if (of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &spec)) {
+> +		dev_err(dev, "gpio-range not available!\n");
+
+> +		return -EFAULT;
+
+Shadowing error code with actually unsuitable one.
+
+> +	}
+
+> +	return 0;
+> +}
+
+> +	int i=0, nr_gpio=0;
+
+Style.
+Besides the fact that better to put assignments closer to their usage.
+
+> +static int eqbr_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +	struct eqbr_pinctrl_drv_data *drvdata;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+> +
+> +	drvdata->dev = dev;
+
+> +	platform_set_drvdata(pdev, drvdata);
+
+I think this makes sense to do as last call in the function.
+
+> +	drvdata->membase = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(drvdata->membase))
+> +		return PTR_ERR(drvdata->membase);
+> +
+> +	ret = pinbank_probe(drvdata);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = pinctrl_reg(drvdata);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = gpiolib_reg(drvdata);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
