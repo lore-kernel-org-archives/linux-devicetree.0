@@ -1,353 +1,442 @@
-Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F695CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC9FFC6195
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD51222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422125;
-	bh=Tc8cnNhiKzhBvNO2Cs5Un7ikAUv1MsMjvHySPz7E1O8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=rh7fyGPcTWowqxbWmm3vUvS8Uvz7VYRnmnpwKcmLhWP8TfZnp7Jshf+jBkHdyM12g
-	 CvQAg4Vd1Mc3+QLiZdmidhyx1Y+tdT4+0VeHFdRSkFEAVP4+1sW/yAY+4+2NgRF7GR
-	 gszy4ret2GeuvgqADHjy/O6PEYei1Wl7PujqdlOQ=
+	by mail.kernel.org (Postfix) with ESMTP id 73E5C21848
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="FpOstLsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406292AbfJRSIo (ORCPT
+        id S1732730AbfKFWhT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:08:44 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44726 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505689AbfJRSHF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:07:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=hWN6iotQzqORhI85NQUfvHQlZSBW0NQNxJUWC/ER/MQ=; b=jgcWFtxnHEJu
-        MZv715iujjk/yK4ebDjzI0/uvzNNaHshYcNWieSW6P8gctwJxacbqpbmSfaMRDXLwZfnxLwy/Qu16
-        5ulVRa6/EEUm7cl8XBUXDTIT6qB6E/84KbB+ajCCzRCAMjrCU24fpRqdB2oxSjaiourglMtklczEi
-        jN3M8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWeQ-0004Ei-JE; Fri, 18 Oct 2019 18:06:58 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 091CB2743276; Fri, 18 Oct 2019 19:06:57 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Maciej Falkowski <m.falkowski@samsung.com>
-Cc:     alsa-devel@alsa-project.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Applied "dt-bindings: sound: Convert Samsung I2S controller to dt-schema" to the asoc tree
-In-Reply-To: <20191004125914.1033-1-m.szyprowski@samsung.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191018180658.091CB2743276@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:06:57 +0100 (BST)
+        Wed, 6 Nov 2019 17:37:19 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:55673 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfKFWhA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 17:37:00 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id BF91823E48;
+        Wed,  6 Nov 2019 23:36:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1573079817;
+        bh=THmjNYuB/baQOsCYVMIBafmJyXUq/o5Ix4mzfk3+nwU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FpOstLsrAcVtN0l01gLedH7BBxmeKlWR8u0N4vDA9/0yE9iUPTl5Zw16N6zEdNfZP
+         /IeuJGYG9n5igAloGv0q85IbD4uKa0gn0HQDGHuFpsFZzoNFLRyxueSTmh0ZR0YqnX
+         T7taaur7ZDg5vyeG2GS7s/rYe51NOhbAjA+TOB3g=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v2 3/6] net: phy: at803x: add device tree binding
+Date:   Wed,  6 Nov 2019 23:36:14 +0100
+Message-Id: <20191106223617.1655-4-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191106223617.1655-1-michael@walle.cc>
+References: <20191106223617.1655-1-michael@walle.cc>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Add support for configuring the CLK_25M pin as well as the RGMII I/O
+voltage by the device tree.
 
-   dt-bindings: sound: Convert Samsung I2S controller to dt-schema
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 2d39a1fc19ea2d33fd68f5d02e6136ddaae2ac11 Mon Sep 17 00:00:00 2001
-From: Maciej Falkowski <m.falkowski@samsung.com>
-Date: Fri, 4 Oct 2019 14:59:14 +0200
-Subject: [PATCH] dt-bindings: sound: Convert Samsung I2S controller to
- dt-schema
-
-Convert Samsung I2S controller to newer dt-schema format.
-
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-[mszyprow: integrated fix for minor spelling issues]
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191004125914.1033-1-m.szyprowski@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Michael Walle <michael@walle.cc>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../devicetree/bindings/sound/samsung-i2s.txt |  84 -----------
- .../bindings/sound/samsung-i2s.yaml           | 138 ++++++++++++++++++
- 2 files changed, 138 insertions(+), 84 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
- create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+ drivers/net/phy/at803x.c | 301 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 300 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-deleted file mode 100644
-index a88cb00fa096..000000000000
---- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-+++ /dev/null
-@@ -1,84 +0,0 @@
--* Samsung I2S controller
--
--Required SoC Specific Properties:
--
--- compatible : should be one of the following.
--   - samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
--   - samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
--     secondary fifo, s/w reset control and internal mux for root clk src.
--   - samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
--     playback, stereo channel capture, secondary fifo using internal
--     or external dma, s/w reset control, internal mux for root clk src
--     and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
--     is to allow transfer of multiple channel audio data on single data line.
--   - samsung,exynos7-i2s: with all the available features of exynos5 i2s,
--     exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
--     with only external dma and more no.of root clk sampling frequencies.
--   - samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
--     stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
--     slightly modified bit offsets.
--
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- dmas: list of DMA controller phandle and DMA request line ordered pairs.
--- dma-names: identifier string for each DMA request line in the dmas property.
--  These strings correspond 1:1 with the ordered pairs in dmas.
--- clocks: Handle to iis clock and RCLK source clk.
--- clock-names:
--  i2s0 uses some base clocks from CMU and some are from audio subsystem internal
--  clock controller. The clock names for i2s0 should be "iis", "i2s_opclk0" and
--  "i2s_opclk1" as shown in the example below.
--  i2s1 and i2s2 uses clocks from CMU. The clock names for i2s1 and i2s2 should
--  be "iis" and "i2s_opclk0".
--  "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources of the root
--  clk. i2s0 has internal mux to select the source of root clk and i2s1 and i2s2
--  doesn't have any such mux.
--- #clock-cells: should be 1, this property must be present if the I2S device
--  is a clock provider in terms of the common clock bindings, described in
--  ../clock/clock-bindings.txt.
--- clock-output-names (deprecated): from the common clock bindings, names of
--  the CDCLK I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
--  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices respectively.
--
--There are following clocks available at the I2S device nodes:
-- CLK_I2S_CDCLK    - the CDCLK (CODECLKO) gate clock,
-- CLK_I2S_RCLK_PSR - the RCLK prescaler divider clock (corresponding to the
--		    IISPSR register),
-- CLK_I2S_RCLK_SRC - the RCLKSRC mux clock (corresponding to RCLKSRC bit in
--		    IISMOD register).
--
--Refer to the SoC datasheet for availability of the above clocks.
--The CLK_I2S_RCLK_PSR and CLK_I2S_RCLK_SRC clocks are usually only available
--in the IIS Multi Audio Interface.
--
--Note: Old DTs may not have the #clock-cells property and then not use the I2S
--node as a clock supplier.
--
--Optional SoC Specific Properties:
--
--- samsung,idma-addr: Internal DMA register base address of the audio
--  sub system(used in secondary sound source).
--- pinctrl-0: Should specify pin control groups used for this controller.
--- pinctrl-names: Should contain only one value - "default".
--- #sound-dai-cells: should be 1.
--
--
--Example:
--
--i2s0: i2s@3830000 {
--	compatible = "samsung,s5pv210-i2s";
--	reg = <0x03830000 0x100>;
--	dmas = <&pdma0 10
--		&pdma0 9
--		&pdma0 8>;
--	dma-names = "tx", "rx", "tx-sec";
--	clocks = <&clock_audss EXYNOS_I2S_BUS>,
--		<&clock_audss EXYNOS_I2S_BUS>,
--		<&clock_audss EXYNOS_SCLK_I2S>;
--	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
--	#clock-cells = <1>;
--	samsung,idma-addr = <0x03000000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2s0_bus>;
--	#sound-dai-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-new file mode 100644
-index 000000000000..53e3bad4178c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-@@ -0,0 +1,138 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 8e30db28fd7d..aa782b28615b 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -13,7 +13,12 @@
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <linux/of_gpio.h>
++#include <linux/bitfield.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/consumer.h>
++#include <dt-bindings/net/qca-ar803x.h>
+ 
+ #define AT803X_SPECIFIC_STATUS			0x11
+ #define AT803X_SS_SPEED_MASK			(3 << 14)
+@@ -62,6 +67,42 @@
+ #define AT803X_DEBUG_REG_5			0x05
+ #define AT803X_DEBUG_TX_CLK_DLY_EN		BIT(8)
+ 
++#define AT803X_DEBUG_REG_1F			0x1F
++#define AT803X_DEBUG_PLL_ON			BIT(2)
++#define AT803X_DEBUG_RGMII_1V8			BIT(3)
 +
-+title: Samsung SoC I2S controller
++/* AT803x supports either the XTAL input pad, an internal PLL or the
++ * DSP as clock reference for the clock output pad. The XTAL reference
++ * is only used for 25 MHz output, all other frequencies need the PLL.
++ * The DSP as a clock reference is used in synchronous ethernet
++ * applications.
++ *
++ * By default the PLL is only enabled if there is a link. Otherwise
++ * the PHY will go into low power state and disabled the PLL. You can
++ * set the PLL_ON bit (see debug register 0x1f) to keep the PLL always
++ * enabled.
++ */
++#define AT803X_MMD7_CLK25M			0x8016
++#define AT803X_CLK_OUT_MASK			GENMASK(4, 2)
++#define AT803X_CLK_OUT_25MHZ_XTAL		0
++#define AT803X_CLK_OUT_25MHZ_DSP		1
++#define AT803X_CLK_OUT_50MHZ_PLL		2
++#define AT803X_CLK_OUT_50MHZ_DSP		3
++#define AT803X_CLK_OUT_62_5MHZ_PLL		4
++#define AT803X_CLK_OUT_62_5MHZ_DSP		5
++#define AT803X_CLK_OUT_125MHZ_PLL		6
++#define AT803X_CLK_OUT_125MHZ_DSP		7
 +
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Sylwester Nawrocki <s.nawrocki@samsung.com>
++/* The AR8035 has another mask which is compatible with the AR8031 mask but
++ * doesn't support choosing between XTAL/PLL and DSP.
++ */
++#define AT8035_CLK_OUT_MASK			GENMASK(4, 3)
 +
-+properties:
-+  compatible:
-+    description: |
-+      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
++#define AT803X_CLK_OUT_STRENGTH_MASK		GENMASK(8, 7)
++#define AT803X_CLK_OUT_STRENGTH_FULL		0
++#define AT803X_CLK_OUT_STRENGTH_HALF		1
++#define AT803X_CLK_OUT_STRENGTH_QUARTER		2
 +
-+      samsung,s5pv210-i2s: for 8/16/24bit multichannel (5.1) I2S with
-+      secondary FIFO, s/w reset control and internal mux for root clock
-+      source.
+ #define ATH9331_PHY_ID 0x004dd041
+ #define ATH8030_PHY_ID 0x004dd076
+ #define ATH8031_PHY_ID 0x004dd074
+@@ -72,6 +113,16 @@ MODULE_DESCRIPTION("Atheros 803x PHY driver");
+ MODULE_AUTHOR("Matus Ujhelyi");
+ MODULE_LICENSE("GPL");
+ 
++struct at803x_priv {
++	int flags;
++#define AT803X_KEEP_PLL_ENABLED	BIT(0)	/* don't turn off internal PLL */
++	u16 clk_25m_reg;
++	u16 clk_25m_mask;
++	struct regulator_dev *vddio_rdev;
++	struct regulator_dev *vddh_rdev;
++	struct regulator *vddio;
++};
 +
-+      samsung,exynos5420-i2s: for 8/16/24bit multichannel (5.1) I2S for
-+      playback, stereo channel capture, secondary FIFO using internal
-+      or external DMA, s/w reset control, internal mux for root clock
-+      source and 7.1 channel TDM support for playback; TDM (Time division
-+      multiplexing) is to allow transfer of multiple channel audio data on
-+      single data line.
+ struct at803x_context {
+ 	u16 bmcr;
+ 	u16 advertise;
+@@ -237,6 +288,238 @@ static int at803x_resume(struct phy_device *phydev)
+ 	return phy_modify(phydev, MII_BMCR, BMCR_PDOWN | BMCR_ISOLATE, 0);
+ }
+ 
++static int at803x_rgmii_reg_set_voltage_sel(struct regulator_dev *rdev,
++					    unsigned int selector)
++{
++	struct phy_device *phydev = rdev_get_drvdata(rdev);
 +
-+      samsung,exynos7-i2s: with all the available features of Exynos5 I2S.
-+      Exynos7 I2S has 7.1 channel TDM support for capture, secondary FIFO
-+      with only external DMA and more number of root clock sampling
-+      frequencies.
++	if (selector)
++		return at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F,
++					     0, AT803X_DEBUG_RGMII_1V8);
++	else
++		return at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F,
++					     AT803X_DEBUG_RGMII_1V8, 0);
++}
 +
-+      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
-+      stereo channels. Exynos7 I2S1 upgraded to 5.1 multichannel with
-+      slightly modified bit offsets.
-+    enum:
-+      - samsung,s3c6410-i2s
-+      - samsung,s5pv210-i2s
-+      - samsung,exynos5420-i2s
-+      - samsung,exynos7-i2s
-+      - samsung,exynos7-i2s1
++static int at803x_rgmii_reg_get_voltage_sel(struct regulator_dev *rdev)
++{
++	struct phy_device *phydev = rdev_get_drvdata(rdev);
++	int val;
 +
-+  reg:
-+    maxItems: 1
++	val = at803x_debug_reg_read(phydev, AT803X_DEBUG_REG_1F);
++	if (val < 0)
++		return val;
 +
-+  dmas:
-+    minItems: 2
-+    maxItems: 3
++	return (val & AT803X_DEBUG_RGMII_1V8) ? 1 : 0;
++}
 +
-+  dma-names:
-+    oneOf:
-+      - items:
-+          - const: tx
-+          - const: rx
-+      - items:
-+          - const: tx
-+          - const: rx
-+          - const: tx-sec
++static struct regulator_ops vddio_regulator_ops = {
++	.list_voltage = regulator_list_voltage_table,
++	.set_voltage_sel = at803x_rgmii_reg_set_voltage_sel,
++	.get_voltage_sel = at803x_rgmii_reg_get_voltage_sel,
++};
 +
-+  clocks:
-+    minItems: 1
-+    maxItems: 3
++static const unsigned int vddio_voltage_table[] = {
++	1500000,
++	1800000,
++};
 +
-+  clock-names:
-+    oneOf:
-+      - items:
-+          - const: iis
-+      - items: # for I2S0
-+          - const: iis
-+          - const: i2s_opclk0
-+          - const: i2s_opclk1
-+      - items: # for I2S1 and I2S2
-+          - const: iis
-+          - const: i2s_opclk0
-+    description: |
-+      "iis" is the I2S bus clock and i2s_opclk0, i2s_opclk1 are sources
-+      of the root clock. I2S0 has internal mux to select the source
-+      of root clock and I2S1 and I2S2 doesn't have any such mux.
++static const struct regulator_desc vddio_desc = {
++	.name = "vddio",
++	.of_match = of_match_ptr("vddio-regulator"),
++	.n_voltages = ARRAY_SIZE(vddio_voltage_table),
++	.volt_table = vddio_voltage_table,
++	.ops = &vddio_regulator_ops,
++	.type = REGULATOR_VOLTAGE,
++	.owner = THIS_MODULE,
++};
 +
-+  "#clock-cells":
-+    const: 1
++static struct regulator_ops vddh_regulator_ops = {
++};
 +
-+  clock-output-names:
-+    deprecated: true
-+    oneOf:
-+      - items: # for I2S0
-+          - const: i2s_cdclk0
-+      - items: # for I2S1
-+          - const: i2s_cdclk1
-+      - items: # for I2S2
-+          - const: i2s_cdclk2
-+    description: Names of the CDCLK I2S output clocks.
++static const struct regulator_desc vddh_desc = {
++	.name = "vddh",
++	.of_match = of_match_ptr("vddh-regulator"),
++	.n_voltages = 1,
++	.fixed_uV = 2500000,
++	.ops = &vddh_regulator_ops,
++	.type = REGULATOR_VOLTAGE,
++	.owner = THIS_MODULE,
++};
 +
-+  samsung,idma-addr:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Internal DMA register base address of the audio
-+      subsystem (used in secondary sound source).
++static int at8031_register_regulators(struct phy_device *phydev)
++{
++	struct at803x_priv *priv = phydev->priv;
++	struct device *dev = &phydev->mdio.dev;
++	struct regulator_config config = { };
 +
-+  pinctrl-0:
-+    description: Should specify pin control groups used for this controller.
++	config.dev = dev;
++	config.driver_data = phydev;
 +
-+  pinctrl-names:
-+    const: default
++	priv->vddio_rdev = devm_regulator_register(dev, &vddio_desc, &config);
++	if (IS_ERR(priv->vddio_rdev)) {
++		phydev_err(phydev, "failed to register VDDIO regulator\n");
++		return PTR_ERR(priv->vddio_rdev);
++	}
 +
-+  "#sound-dai-cells":
-+    const: 1
++	priv->vddh_rdev = devm_regulator_register(dev, &vddh_desc, &config);
++	if (IS_ERR(priv->vddh_rdev)) {
++		phydev_err(phydev, "failed to register VDDH regulator\n");
++		return PTR_ERR(priv->vddh_rdev);
++	}
 +
-+required:
-+  - compatible
-+  - reg
-+  - dmas
-+  - dma-names
-+  - clocks
-+  - clock-names
++	return 0;
++}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clock/exynos-audss-clk.h>
++static bool at803x_match_phy_id(struct phy_device *phydev, u32 phy_id)
++{
++	return (phydev->phy_id & phydev->drv->phy_id_mask)
++		== (phy_id & phydev->drv->phy_id_mask);
++}
 +
-+    i2s0: i2s@3830000 {
-+        compatible = "samsung,s5pv210-i2s";
-+        reg = <0x03830000 0x100>;
-+        dmas = <&pdma0 10>,
-+                <&pdma0 9>,
-+                <&pdma0 8>;
-+        dma-names = "tx", "rx", "tx-sec";
-+        clocks = <&clock_audss EXYNOS_I2S_BUS>,
-+                <&clock_audss EXYNOS_I2S_BUS>,
-+                <&clock_audss EXYNOS_SCLK_I2S>;
-+        clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-+        #clock-cells = <1>;
-+        samsung,idma-addr = <0x03000000>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&i2s0_bus>;
-+        #sound-dai-cells = <1>;
-+    };
++static int at803x_parse_dt(struct phy_device *phydev)
++{
++	struct device_node *node = phydev->mdio.dev.of_node;
++	struct at803x_priv *priv = phydev->priv;
++	unsigned int sel, mask;
++	u32 freq, strength;
++	int ret;
++
++	if (!IS_ENABLED(CONFIG_OF_MDIO))
++		return 0;
++
++	ret = of_property_read_u32(node, "qca,clk-out-frequency", &freq);
++	if (!ret) {
++		mask = AT803X_CLK_OUT_MASK;
++		switch (freq) {
++		case 25000000:
++			sel = AT803X_CLK_OUT_25MHZ_XTAL;
++			break;
++		case 50000000:
++			sel = AT803X_CLK_OUT_50MHZ_PLL;
++			break;
++		case 62500000:
++			sel = AT803X_CLK_OUT_62_5MHZ_PLL;
++			break;
++		case 125000000:
++			sel = AT803X_CLK_OUT_125MHZ_PLL;
++			break;
++		default:
++			phydev_err(phydev, "invalid qca,clk-out-frequency\n");
++			return -EINVAL;
++		}
++
++		priv->clk_25m_reg |= FIELD_PREP(mask, sel);
++		priv->clk_25m_mask |= mask;
++
++		/* Fixup for the AR8030/AR8035. This chip has another mask and
++		 * doesn't support the DSP reference. Eg. the lowest bit of the
++		 * mask. The upper two bits select the same frequencies. Mask
++		 * the lowest bit here.
++		 *
++		 * Warning:
++		 *   There was no datasheet for the AR8030 available so this is
++		 *   just a guess. But the AR8035 is listed as pin compatible
++		 *   to the AR8030 so there might be a good chance it works on
++		 *   the AR8030 too.
++		 */
++		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
++		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
++			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
++			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
++		}
++	}
++
++	ret = of_property_read_u32(node, "qca,clk-out-strength", &strength);
++	if (!ret) {
++		priv->clk_25m_mask |= AT803X_CLK_OUT_STRENGTH_MASK;
++		switch (strength) {
++		case AR803X_STRENGTH_FULL:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_FULL;
++			break;
++		case AR803X_STRENGTH_HALF:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_HALF;
++			break;
++		case AR803X_STRENGTH_QUARTER:
++			priv->clk_25m_reg |= AT803X_CLK_OUT_STRENGTH_QUARTER;
++			break;
++		default:
++			phydev_err(phydev, "invalid qca,clk-out-strength\n");
++			return -EINVAL;
++		}
++	}
++
++	/* Only supported on AR8031, the AR8030/AR8035 use strapping options */
++	if (at803x_match_phy_id(phydev, ATH8031_PHY_ID)) {
++		if (of_property_read_bool(node, "qca,keep-pll-enabled"))
++			priv->flags |= AT803X_KEEP_PLL_ENABLED;
++
++		ret = at8031_register_regulators(phydev);
++		if (ret < 0)
++			return ret;
++
++		priv->vddio = devm_regulator_get_optional(&phydev->mdio.dev,
++							  "vddio");
++		if (IS_ERR(priv->vddio)) {
++			phydev_err(phydev, "failed to get VDDIO regulator\n");
++			return PTR_ERR(priv->vddio);
++		}
++
++		ret = regulator_enable(priv->vddio);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int at803x_probe(struct phy_device *phydev)
++{
++	struct device *dev = &phydev->mdio.dev;
++	struct at803x_priv *priv;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	phydev->priv = priv;
++
++	return at803x_parse_dt(phydev);
++}
++
++static int at803x_clk_out_config(struct phy_device *phydev)
++{
++	struct at803x_priv *priv = phydev->priv;
++	int val;
++
++	if (!priv->clk_25m_mask)
++		return 0;
++
++	val = phy_read_mmd(phydev, MDIO_MMD_AN, AT803X_MMD7_CLK25M);
++	if (val < 0)
++		return val;
++
++	val &= ~priv->clk_25m_mask;
++	val |= priv->clk_25m_reg;
++
++	return phy_write_mmd(phydev, MDIO_MMD_AN, AT803X_MMD7_CLK25M, val);
++}
++
++static int at8031_pll_config(struct phy_device *phydev)
++{
++	struct at803x_priv *priv = phydev->priv;
++
++	/* The default after hardware reset is PLL OFF. After a soft reset, the
++	 * values are retained.
++	 */
++	if (priv->flags & AT803X_KEEP_PLL_ENABLED)
++		return at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F,
++					     0, AT803X_DEBUG_PLL_ON);
++	else
++		return at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F,
++					     AT803X_DEBUG_PLL_ON, 0);
++}
++
+ static int at803x_config_init(struct phy_device *phydev)
+ {
+ 	int ret;
+@@ -259,8 +542,20 @@ static int at803x_config_init(struct phy_device *phydev)
+ 		ret = at803x_enable_tx_delay(phydev);
+ 	else
+ 		ret = at803x_disable_tx_delay(phydev);
++	if (ret < 0)
++		return ret;
+ 
+-	return ret;
++	ret = at803x_clk_out_config(phydev);
++	if (ret < 0)
++		return ret;
++
++	if (at803x_match_phy_id(phydev, ATH8031_PHY_ID)) {
++		ret = at8031_pll_config(phydev);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
+ }
+ 
+ static int at803x_ack_interrupt(struct phy_device *phydev)
+@@ -413,6 +708,7 @@ static struct phy_driver at803x_driver[] = {
+ 	.phy_id			= ATH8035_PHY_ID,
+ 	.name			= "Atheros 8035 ethernet",
+ 	.phy_id_mask		= AT803X_PHY_ID_MASK,
++	.probe			= at803x_probe,
+ 	.config_init		= at803x_config_init,
+ 	.set_wol		= at803x_set_wol,
+ 	.get_wol		= at803x_get_wol,
+@@ -427,6 +723,7 @@ static struct phy_driver at803x_driver[] = {
+ 	.phy_id			= ATH8030_PHY_ID,
+ 	.name			= "Atheros 8030 ethernet",
+ 	.phy_id_mask		= AT803X_PHY_ID_MASK,
++	.probe			= at803x_probe,
+ 	.config_init		= at803x_config_init,
+ 	.link_change_notify	= at803x_link_change_notify,
+ 	.set_wol		= at803x_set_wol,
+@@ -441,6 +738,7 @@ static struct phy_driver at803x_driver[] = {
+ 	.phy_id			= ATH8031_PHY_ID,
+ 	.name			= "Atheros 8031 ethernet",
+ 	.phy_id_mask		= AT803X_PHY_ID_MASK,
++	.probe			= at803x_probe,
+ 	.config_init		= at803x_config_init,
+ 	.set_wol		= at803x_set_wol,
+ 	.get_wol		= at803x_get_wol,
+@@ -455,6 +753,7 @@ static struct phy_driver at803x_driver[] = {
+ 	/* ATHEROS AR9331 */
+ 	PHY_ID_MATCH_EXACT(ATH9331_PHY_ID),
+ 	.name			= "Atheros AR9331 built-in PHY",
++	.probe			= at803x_probe,
+ 	.config_init		= at803x_config_init,
+ 	.suspend		= at803x_suspend,
+ 	.resume			= at803x_resume,
 -- 
 2.20.1
 
