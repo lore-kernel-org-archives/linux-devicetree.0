@@ -7,89 +7,81 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CCDC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422E3C5DF64
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A3221D81
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA1421882
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573012552;
-	bh=VwuRRaMN+bakfDolLqAaICs5KqXbmNH9snyGnwOMiqU=;
+	s=default; t=1573012646;
+	bh=M2pgwK+egtTvkr7ezrvS7aFy5jGfigJQpMvbCZ5o7Q4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eGEJKKC6aPX2/zH4njKWahr3a6WQhIbziXXwfA8sivCgfU9cRSekzd+DJK6yyBRHZ
-	 dI9d8jRr2XQ4mNCeEWkArNGx7xND6W4LjjZP0lJfGnJis+icWMJtmWCaAX2vgSPjxa
-	 2w90bPBWsSs0sRKy4JsTYjDIdx2+H4LahX1JzZRo=
+	b=YCeQP5QXjEjZxYBtOa0iF9/bNE4BZW2QS9xuujmPikvJkFSxifLal0H4APL6ELU9Z
+	 D4u6lr6XPwiY0eteA09fnGSrIQsBhhSuol9RoFjFrUwqvCAsdhOKPHK8aV3D2kShQY
+	 I02wyDJDLg3kkmK6teP75X21soVM8RW5e8yRMNYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfKFDzs (ORCPT
+        id S1730920AbfKFD5Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:55:48 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34892 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfKFDzs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 22:55:48 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n16so19743687oig.2;
-        Tue, 05 Nov 2019 19:55:46 -0800 (PST)
+        Tue, 5 Nov 2019 22:57:25 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44194 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfKFD5Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 22:57:25 -0500
+Received: by mail-ot1-f68.google.com with SMTP id c19so3557396otr.11;
+        Tue, 05 Nov 2019 19:57:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HjUAd9X8fjLKsDxJpN2012RcMafvu6lngdZt6RcTJmE=;
-        b=oAvomgS7+612l4DdAVlOAMLAkoewa7XcB8MmP8NDj1zJM/vDTusKWQ92J9R6OZHSI+
-         uhT45bhZHRZiG9Sad+sgZ/yH1RcUQIl1UGbHgOaWDZAFCaybTkORddgeqLPxFmaqtDLP
-         Ec1HAuOE/DW2chzTJoD3CvzziZY1a5U9JSV5m35cDZ8JWnPhIe/Fi9IG0bcTZLYwn0Kn
-         1J4Vja5+jhqTnJ2pdhQ2DJbf4Lsk4zT/bHJtpluAlOpfi4mL8eV5NmfJ50+7V1igQEFs
-         YKN1MM587cyU1jnewMJMlE5+FOo2eW1j2DC0xaJdsb/l2PKzskjMzk1vUgdxXZ9eAAQv
-         QmGA==
-X-Gm-Message-State: APjAAAX3lxHqBdAazdCqNT88G5F3crgOA0ZHR4oyB/d1Nd8r3232KLPi
-        nlgXbvGiZGuBczWlPFe7Aw==
-X-Google-Smtp-Source: APXvYqxJkijcKLeyFdKVWB0o60ED3NvjcHRUtiDM4zKRWEtVlOO/Z5sLKo86HRD5S3kjvC0jks7g6Q==
-X-Received: by 2002:aca:c753:: with SMTP id x80mr337979oif.115.1573012545901;
-        Tue, 05 Nov 2019 19:55:45 -0800 (PST)
+        bh=py0k6EUYYeSmHaWf8b61DJPhzhB9zPo4JBbzAH5bbDA=;
+        b=pZ7HPLBHSSugSXNvvGOUPwA10eC+wvu8JIZkRy903gyQ4ds4po/8xSKmrKaTL9lh19
+         DAX6LZcQLrBEdCF66L+fmWpTwu6zLJ5vd0SjKNifp7+GvHqiFU3cL0kwkYHQMlzviQ92
+         m/0OT2rCYRkC4naAVl9Auapf6MOIjPyY/VD8qn2/pl/2qu3epZUwzc6Dde2rPs1qNEsq
+         wueT3qZpuvrNtsw/QK5t+v0aI0lyIbezLLNkxKZhn5fos25oio73r9c3ffAzl2wmrx+K
+         3YTV0cP94ETQIlFmSYZkmA5fGe3+O5g40NY5LTCP8XMoDbFcGxO0fKivpjCCeECUza3J
+         YvpA==
+X-Gm-Message-State: APjAAAU0QnLO4TjdGUZc/E8qDzT2CzRdpeL32a3vnwZyl99xjbZ+fMkx
+        OEGodj0LGTYFT+pkCUsMiQ==
+X-Google-Smtp-Source: APXvYqxhoUkUh4/ocp0Q+Ei5bNgYCZy9+LoviHrciti8k+fdcmqucLXu88Zxso3APp73Fi7zfaWQ7g==
+X-Received: by 2002:a05:6830:2335:: with SMTP id q21mr200742otg.237.1573012642730;
+        Tue, 05 Nov 2019 19:57:22 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c23sm6055178oiy.20.2019.11.05.19.55.45
+        by smtp.gmail.com with ESMTPSA id r129sm2284230oih.49.2019.11.05.19.57.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:55:45 -0800 (PST)
-Date:   Tue, 5 Nov 2019 21:55:44 -0600
+        Tue, 05 Nov 2019 19:57:21 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:57:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        "maintainer:BROADCOM STB AVS TMON DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/6] dt-bindings: thermal: Define BCM7216 thermal sensor
+To:     kholk11@gmail.com
+Cc:     linux-arm-msm@vger.kernel.org, kholk11@gmail.com,
+        marijns95@gmail.com, agross@kernel.org, mturquette@baylibre.com,
+        bjorn.andersson@linaro.org, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: clock: rpmcc: Document msm8976
  compatible
-Message-ID: <20191106035544.GA29667@bogus>
-References: <20191030182132.25763-1-f.fainelli@gmail.com>
- <20191030182132.25763-4-f.fainelli@gmail.com>
+Message-ID: <20191106035721.GA32273@bogus>
+References: <20191031112951.35850-1-kholk11@gmail.com>
+ <20191031112951.35850-3-kholk11@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191030182132.25763-4-f.fainelli@gmail.com>
+In-Reply-To: <20191031112951.35850-3-kholk11@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 30 Oct 2019 11:21:29 -0700, Florian Fainelli wrote:
-> BCM7216 is a 16nm process STB chip, which requires a different
-> compatible string to differentiate different temperature formulas.
+On Thu, 31 Oct 2019 12:29:51 +0100, kholk11@gmail.com wrote:
+> From: AngeloGioacchino Del Regno <kholk11@gmail.com>
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Support for MSM8976 was added to the clk-smd-rpm driver: let's
+> document here the newly added compatible string.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
 > ---
->  .../devicetree/bindings/thermal/brcm,avs-tmon.txt         | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
