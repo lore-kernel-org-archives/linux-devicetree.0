@@ -2,198 +2,107 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72B7C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75736C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35A3217F5
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:10:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJUWstEO"
+	by mail.kernel.org (Postfix) with ESMTP id 4F713206A3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725856AbfKFLKC (ORCPT
+        id S1730165AbfKFLZy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:10:02 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35007 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfKFLKC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 06:10:02 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y6so17730870lfj.2;
-        Wed, 06 Nov 2019 03:10:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bnwVsjbNiFuh5JOeo4upmlnPXVCJtlYPqMTxNS+DiLI=;
-        b=cJUWstEO1+yXWrupneRMJq4VR/toW3Xn6XKBkK8AFQk3KovnnsTne6c7yoxHJfzAAJ
-         mSZDlDpUPFKDZX75azo7tTmfn1KD79reG+D0kjqTKcWpYpBnj9a8yZAM+V27nwRLcLsi
-         Ap7V3VQOx1fiLTjfx+D41QBSoYmGDUSXOaDFc0t9iu5/A0dUU/sl1ULFkWkehL52uKQC
-         ujueJS8KncjrAaS+Q8JmPegGh0BuEgEad957GuRTSpQRIqVH2TSYtSMQ7JAzSK+K8sDD
-         Pq+X+SnOGEhP/XiMng+HDbdSBKo4hgj6jixGLbNJnzV8z+DWdsmU2CKb4EJYVvI1AH9C
-         v0ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bnwVsjbNiFuh5JOeo4upmlnPXVCJtlYPqMTxNS+DiLI=;
-        b=m3ujWBOsX64ZrHjj8tt2qyPxBG0ykcFdq0050zRp/JBSXWvomqIcH8DSWD088D0WFf
-         fu1xg69cJR8nGQuW6g3iiwnniHxJzKWP01qWMB2SXJ9Pm6uaKiwGInGINWMmff12vpwM
-         7O1Ago/nMcctHCMS0Q2i5/+oabmv/Ae7aWqFJPh2GboBOUj1jbR/mSmrB9xdEvhxM89o
-         YcTIhKiAs26Xt4O5eQkuKf5zjr1I92ONWN22bBVm0jj1I/tc6IVOqbiesVV1eTtc7ejQ
-         w7Z/tBkpSzQ2VLhqvP2EUMJb/XW7FJl70nEX3u//BxuZWv0lB0LvFRtnK0k5uOrupmQw
-         IUKw==
-X-Gm-Message-State: APjAAAVmzj6HO9fEsHa2KVpfyQ3dfABAwnANSPwaCsf3lhTmeESmYYE+
-        XtxsVAFduBoqdiLGlZEbOFY=
-X-Google-Smtp-Source: APXvYqyDAZlkhUC0it716Vc74H5Yhm1zXCS8linsSxcwyIkPeH3AM/teWSo+RcUkqCBTSrnOY7ThEQ==
-X-Received: by 2002:ac2:4856:: with SMTP id 22mr23327083lfy.131.1573038599923;
-        Wed, 06 Nov 2019 03:09:59 -0800 (PST)
-Received: from localhost.localdomain ([94.234.51.156])
-        by smtp.gmail.com with ESMTPSA id 28sm9888753lfy.38.2019.11.06.03.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 03:09:59 -0800 (PST)
-From:   Marcus Folkesson <marcus.folkesson@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 6 Nov 2019 06:25:54 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50399 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfKFLZw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 06:25:52 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iSJRW-0001jd-TJ; Wed, 06 Nov 2019 12:25:42 +0100
+Message-ID: <aaada00902c84b9f375555ee98946631b7de3280.camel@pengutronix.de>
+Subject: Re: [PATCH v4 3/3] reset: npcm: add NPCM reset controller driver
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Kent Gustavsson <kent@minoris.se>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: iio: dac: Migrate LTC1660 documentation to yaml
-Date:   Wed,  6 Nov 2019 12:12:33 +0100
-Message-Id: <20191106111233.6905-1-marcus.folkesson@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Nancy Yuen <yuenn@google.com>,
+        Patrick Venture <venture@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Date:   Wed, 06 Nov 2019 12:25:42 +0100
+In-Reply-To: <CAP6Zq1iYKKkcEKt-WW3sDRJ1ktWgQug9SQc2AF473fWnooUxeQ@mail.gmail.com>
+References: <20191106095832.236766-1-tmaimon77@gmail.com>
+         <20191106095832.236766-4-tmaimon77@gmail.com>
+         <89250d485d05d4d671203ae615ebcf514b4d6705.camel@pengutronix.de>
+         <CAP6Zq1iYKKkcEKt-WW3sDRJ1ktWgQug9SQc2AF473fWnooUxeQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rewrite bindings to use json-schema vocabulary.
+Hi Tomer,
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
----
+On Wed, 2019-11-06 at 13:14 +0200, Tomer Maimon wrote:
+[...]
+> On Wed, 6 Nov 2019 at 12:39, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+[...]
+> > Is this npcm750 specific? If so, you could call it npcm750_usb_reset and
+> > only call it if the compatible matches.
+> 
+> No, we will need it also in future BMC's
 
-Notes:
-    v2:
-    	- Remove description for reg and spi-max-frequency (Rob & Alexa)
-    	- Drop maxItems for vref-supply
+Ok, thank you for clarifying.
 
- .../bindings/iio/dac/lltc,ltc1660.yaml        | 49 +++++++++++++++++++
- .../devicetree/bindings/iio/dac/ltc1660.txt   | 21 --------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 50 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc1660.txt
+> > 
+> > +{
+> > > +     struct device_node *np = pdev->dev.of_node;
+> > > +     u32 mdlr, iprst1, iprst2, iprst3;
+> > > +     struct regmap *gcr_regmap = NULL;
+> > > +     u32 ipsrst1_bits = 0;
+> > > +     u32 ipsrst2_bits = NPCM_IPSRST2_USB_HOST;
+> > > +     u32 ipsrst3_bits = 0;
+> > > +
+> > > +     if (of_device_is_compatible(np, "nuvoton,npcm750-reset")) {
+> > 
+> > Better use of_match_device(). Also see above, I think this check could
+> > be done in probe() already?
+> > 
+> I will use  of_match_device. because the nuvoton,npcm750-reset used only at
+> npcm_usb_reset and in the next BMC version we will need to get other
+> reset device I prefer to leave it the  npcm_usb_reset function, is it O.K?
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-new file mode 100644
-index 000000000000..505b3d54b81c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/bindings/iio/dac/lltc,ltc1660.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Linear Technology Micropower octal 8-Bit and 10-Bit DACs
-+
-+maintainers:
-+  - Marcus Folkesson <marcus.folkesson@gmail.com>
-+
-+description: |
-+  Bindings for the Linear Technology Micropower octal 8-Bit and 10-Bit DAC.
-+  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/166560fa.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lltc,ltc1660
-+      - lltc,ltc1665
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 5000000
-+
-+  vref-supply:
-+    description: Phandle to the external reference voltage supply.
-+
-+required:
-+  - compatible
-+  - reg
-+  - vref-supply
-+
-+examples:
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+  
-+      dac@0 {
-+        compatible = "lltc,ltc1660";
-+        reg = <0>;
-+        spi-max-frequency = <5000000>;
-+        vref-supply = <&vref_reg>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc1660.txt b/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-deleted file mode 100644
-index c5b5f22d6c64..000000000000
---- a/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--* Linear Technology Micropower octal 8-Bit and 10-Bit DACs
--
--Required properties:
-- - compatible: Must be one of the following:
--		"lltc,ltc1660"
--		"lltc,ltc1665"
-- - reg: SPI chip select number for the device
-- - vref-supply: Phandle to the voltage reference supply
--
--Recommended properties:
-- - spi-max-frequency: Definition as per
--	 Documentation/devicetree/bindings/spi/spi-bus.txt.
--	 Max frequency for this chip is 5 MHz.
--
--Example:
--dac@0 {
--	compatible = "lltc,ltc1660";
--	reg = <0>;
--	spi-max-frequency = <5000000>;
--	vref-supply = <&vref_reg>;
--};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fbccc9d450ff..23497d713298 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9619,7 +9619,7 @@ LTC1660 DAC DRIVER
- M:	Marcus Folkesson <marcus.folkesson@gmail.com>
- L:	linux-iio@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-+F:	Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
- F:	drivers/iio/dac/ltc1660.c
- 
- LTC4261 HARDWARE MONITOR DRIVER
--- 
-2.23.0
+Yes, that is fine. I would store the GCR lookup compatible string in a
+per-device const struct that is accessible through of_device_id->data.
+
+> > > +             gcr_regmap =
+> > syscon_regmap_lookup_by_compatible("nuvoton,npcm750-gcr");
+> > > +             if (IS_ERR(gcr_regmap)) {
+> > > +                     dev_err(&pdev->dev, "Failed to find
+> > nuvoton,npcm750-gcr\n");
+> > > +                     return PTR_ERR(gcr_regmap);
+> > > +             }
+> > > +     }
+> > > +     if (!gcr_regmap)
+> > > +             return -ENXIO;
+
+^ This code could then be the same for all platforms.
+
+regards
+Philipp
 
