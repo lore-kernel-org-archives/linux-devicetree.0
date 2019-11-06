@@ -2,101 +2,154 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1538C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C15C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EF621848
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:36:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573051014;
-	bh=vlXZpNZoJiZw0moABeBNaD+/PavQRurfOu7gykExpKY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ikXuSG44mZ+SLiuDozDGm8368ngvq4B2vOj/CK5WD6z663aj2y+09M4aCO5/ziAch
-	 HBqsu2XGgtGeQ7VMOL3RKl2Gx9wA/oUmxCR4N12VJ9zG20s2EahsGmy4EVYdjruEKC
-	 npEBCDYFDjKlsiuTvUiE//q59A6dCg4DvAbOMAuI=
+	by mail.kernel.org (Postfix) with ESMTP id 3851B217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731983AbfKFOgy (ORCPT
+        id S1727958AbfKFOyQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:36:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731973AbfKFOgx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:36:53 -0500
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E6FC222C2;
-        Wed,  6 Nov 2019 14:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573051013;
-        bh=vlXZpNZoJiZw0moABeBNaD+/PavQRurfOu7gykExpKY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rXLXKG77ox5Exb7OgGuWzYQD0J5wZe5xWO7ETkwRJ2xIvJJyINp+/DaL6OApB5q1n
-         UMU5V6hzFG5xbIJRAJtA3J/MdMyejfWPumsFOcwymxnETkNJTAFRBpX9F+rd27rBPh
-         CSMfhdfiyd4LIEHgQd5MAZX3TP+eGwFablygUjbs=
-Received: by mail-lf1-f41.google.com with SMTP id v8so18186351lfa.12;
-        Wed, 06 Nov 2019 06:36:52 -0800 (PST)
-X-Gm-Message-State: APjAAAX+wY4j2ybSbcsN+X57bFJh/LLsUTBq1U01z9BZyZVyjYFY/+kP
-        C73Pq/SAtECjdB+FCtbJIj4k8nEG8MrxRyDc9d8=
-X-Google-Smtp-Source: APXvYqy81A/2+lWcpeO2gkzgbqW8TQsAHsbUEDFF+X+/DsCRQrIr3qeMIW85fIoFrSsx9XX2WotPoKKCooOri+vcmco=
-X-Received: by 2002:a19:22d3:: with SMTP id i202mr24254981lfi.69.1573051011148;
- Wed, 06 Nov 2019 06:36:51 -0800 (PST)
+        Wed, 6 Nov 2019 09:54:16 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:44067 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727028AbfKFOyQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 09:54:16 -0500
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xA6ErYHq026783;
+        Wed, 6 Nov 2019 16:53:34 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id 2A94D6032A; Wed,  6 Nov 2019 16:53:34 +0200 (IST)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        yuenn@google.com, venture@google.com, benjaminfair@google.com,
+        avifishman70@gmail.com, joel@jms.id.au
+Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v5 2/3] dt-bindings: reset: Add binding constants for NPCM7xx reset controller
+Date:   Wed,  6 Nov 2019 16:53:30 +0200
+Message-Id: <20191106145331.25740-3-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191106145331.25740-1-tmaimon77@gmail.com>
+References: <20191106145331.25740-1-tmaimon77@gmail.com>
 MIME-Version: 1.0
-References: <20191104013932.22505-1-afaerber@suse.de> <20191104013932.22505-2-afaerber@suse.de>
- <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
-In-Reply-To: <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 6 Nov 2019 15:36:40 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPdiE=L-8ymra=GC22=5QqOpJWW+hWqTUvNmwi5+caOPrA@mail.gmail.com>
-Message-ID: <CAJKOXPdiE=L-8ymra=GC22=5QqOpJWW+hWqTUvNmwi5+caOPrA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: mali-midgard: Tidy up conversion to YAML
-To:     Rob Herring <robh@kernel.org>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        linux-realtek-soc@lists.infradead.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Guillaume Gardet <guillaume.gardet@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 6 Nov 2019 at 15:25, Rob Herring <robh@kernel.org> wrote:
->
-> On Sun, Nov 3, 2019 at 7:40 PM Andreas F=C3=A4rber <afaerber@suse.de> wro=
-te:
-> >
-> > Instead of grouping alphabetically by third-party vendor, leading to
-> > one-element enums, sort by Mali model number, as done for Utgard.
-> >
-> > This already allows us to de-duplicate two "arm,mali-t760" sections and
-> > will make it easier to add new vendor compatibles.
->
-> That was the intent. Not sure how I messed that up...
->
-> This patch is problematic because there's changes in arm-soc juno/dt
-> branch and there's now a patch for exynos5420 (t628). I'd propose I
-> apply this such that we don't get a merge conflict with juno/dt and we
-> finish resorting after rc1 (or when both branches are in Linus' tree).
+Add device tree binding constants for Nuvoton BMC NPCM7xx
+reset controller.
 
-After resubmit, you could take the exynos5420 bindings one (and I'll
-take the DTS). However the submitter should base then on latest next,
-assuming you'll apply this one.
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../dt-bindings/reset/nuvoton,npcm7xx-reset.h | 91 +++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+ create mode 100644 include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
 
-Best regards,
-Krzysztof
+diff --git a/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
+new file mode 100644
+index 000000000000..df088e68a9ba
+--- /dev/null
++++ b/include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
+@@ -0,0 +1,91 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (c) 2019 Nuvoton Technology corporation.
++
++#ifndef _DT_BINDINGS_NPCM7XX_RESET_H
++#define _DT_BINDINGS_NPCM7XX_RESET_H
++
++#define NPCM7XX_RESET_IPSRST1		0x20
++#define NPCM7XX_RESET_IPSRST2		0x24
++#define NPCM7XX_RESET_IPSRST3		0x34
++
++/* Reset lines on IP1 reset module (NPCM7XX_RESET_IPSRST1) */
++#define NPCM7XX_RESET_FIU3		1
++#define NPCM7XX_RESET_UDC1		5
++#define NPCM7XX_RESET_EMC1		6
++#define NPCM7XX_RESET_UART_2_3		7
++#define NPCM7XX_RESET_UDC2		8
++#define NPCM7XX_RESET_PECI		9
++#define NPCM7XX_RESET_AES		10
++#define NPCM7XX_RESET_UART_0_1		11
++#define NPCM7XX_RESET_MC		12
++#define NPCM7XX_RESET_SMB2		13
++#define NPCM7XX_RESET_SMB3		14
++#define NPCM7XX_RESET_SMB4		15
++#define NPCM7XX_RESET_SMB5		16
++#define NPCM7XX_RESET_PWM_M0		18
++#define NPCM7XX_RESET_TIMER_0_4		19
++#define NPCM7XX_RESET_TIMER_5_9		20
++#define NPCM7XX_RESET_EMC2		21
++#define NPCM7XX_RESET_UDC4		22
++#define NPCM7XX_RESET_UDC5		23
++#define NPCM7XX_RESET_UDC6		24
++#define NPCM7XX_RESET_UDC3		25
++#define NPCM7XX_RESET_ADC		27
++#define NPCM7XX_RESET_SMB6		28
++#define NPCM7XX_RESET_SMB7		29
++#define NPCM7XX_RESET_SMB0		30
++#define NPCM7XX_RESET_SMB1		31
++
++/* Reset lines on IP2 reset module (NPCM7XX_RESET_IPSRST2) */
++#define NPCM7XX_RESET_MFT0		0
++#define NPCM7XX_RESET_MFT1		1
++#define NPCM7XX_RESET_MFT2		2
++#define NPCM7XX_RESET_MFT3		3
++#define NPCM7XX_RESET_MFT4		4
++#define NPCM7XX_RESET_MFT5		5
++#define NPCM7XX_RESET_MFT6		6
++#define NPCM7XX_RESET_MFT7		7
++#define NPCM7XX_RESET_MMC		8
++#define NPCM7XX_RESET_SDHC		9
++#define NPCM7XX_RESET_GFX_SYS		10
++#define NPCM7XX_RESET_AHB_PCIBRG	11
++#define NPCM7XX_RESET_VDMA		12
++#define NPCM7XX_RESET_ECE		13
++#define NPCM7XX_RESET_VCD		14
++#define NPCM7XX_RESET_OTP		16
++#define NPCM7XX_RESET_SIOX1		18
++#define NPCM7XX_RESET_SIOX2		19
++#define NPCM7XX_RESET_3DES		21
++#define NPCM7XX_RESET_PSPI1		22
++#define NPCM7XX_RESET_PSPI2		23
++#define NPCM7XX_RESET_GMAC2		25
++#define NPCM7XX_RESET_USB_HOST		26
++#define NPCM7XX_RESET_GMAC1		28
++#define NPCM7XX_RESET_CP		31
++
++/* Reset lines on IP3 reset module (NPCM7XX_RESET_IPSRST3) */
++#define NPCM7XX_RESET_PWM_M1		0
++#define NPCM7XX_RESET_SMB12		1
++#define NPCM7XX_RESET_SPIX		2
++#define NPCM7XX_RESET_SMB13		3
++#define NPCM7XX_RESET_UDC0		4
++#define NPCM7XX_RESET_UDC7		5
++#define NPCM7XX_RESET_UDC8		6
++#define NPCM7XX_RESET_UDC9		7
++#define NPCM7XX_RESET_PCI_MAILBOX	9
++#define NPCM7XX_RESET_SMB14		12
++#define NPCM7XX_RESET_SHA		13
++#define NPCM7XX_RESET_SEC_ECC		14
++#define NPCM7XX_RESET_PCIE_RC		15
++#define NPCM7XX_RESET_TIMER_10_14	16
++#define NPCM7XX_RESET_RNG		17
++#define NPCM7XX_RESET_SMB15		18
++#define NPCM7XX_RESET_SMB8		19
++#define NPCM7XX_RESET_SMB9		20
++#define NPCM7XX_RESET_SMB10		21
++#define NPCM7XX_RESET_SMB11		22
++#define NPCM7XX_RESET_ESPI		23
++#define NPCM7XX_RESET_USB_PHY_1		24
++#define NPCM7XX_RESET_USB_PHY_2		25
++
++#endif
+-- 
+2.22.0
+
