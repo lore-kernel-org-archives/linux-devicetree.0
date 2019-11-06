@@ -2,95 +2,170 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74009C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2610EC5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7EF217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD202178F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbfKFOyQ (ORCPT
+        id S1727347AbfKFPBg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:54:16 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:44065 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727312AbfKFOyQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 09:54:16 -0500
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xA6ErXWN026782;
-        Wed, 6 Nov 2019 16:53:33 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id CAE1460329; Wed,  6 Nov 2019 16:53:33 +0200 (IST)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        yuenn@google.com, venture@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v5 1/3] dt-bindings: reset: add NPCM reset controller documentation
-Date:   Wed,  6 Nov 2019 16:53:29 +0200
-Message-Id: <20191106145331.25740-2-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191106145331.25740-1-tmaimon77@gmail.com>
-References: <20191106145331.25740-1-tmaimon77@gmail.com>
+        Wed, 6 Nov 2019 10:01:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:41282 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727321AbfKFPBg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:01:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DA6F46A;
+        Wed,  6 Nov 2019 07:01:35 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A418A3F71A;
+        Wed,  6 Nov 2019 07:01:33 -0800 (PST)
+Date:   Wed, 6 Nov 2019 15:01:28 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "M.h. Lian" <minghuan.lian@nxp.com>
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Message-ID: <20191106150128.GA18689@e121166-lin.cambridge.arm.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+ <20190902034319.14026-3-xiaowei.bao@nxp.com>
+ <20191105123233.GA26960@e121166-lin.cambridge.arm.com>
+ <AM5PR04MB32999C59EE51DACC030E13D7F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <VI1PR0401MB22372AF4F02D3F22EA2184BEE8790@VI1PR0401MB2237.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR0401MB22372AF4F02D3F22EA2184BEE8790@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added device tree binding documentation for Nuvoton BMC
-NPCM reset controller.
+On Wed, Nov 06, 2019 at 03:46:17AM +0000, M.h. Lian wrote:
+> Hi Lorenzo,
+> 
+> Sorry for the late reply.
+> 
+> Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../bindings/reset/nuvoton,npcm-reset.txt     | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
+https://en.wikipedia.org/wiki/Posting_style#Top-posting
 
-diff --git a/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt b/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
-new file mode 100644
-index 000000000000..6e802703af60
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
-@@ -0,0 +1,32 @@
-+Nuvoton NPCM Reset controller
-+
-+Required properties:
-+- compatible : "nuvoton,npcm750-reset" for NPCM7XX BMC
-+- reg : specifies physical base address and size of the register.
-+- #reset-cells: must be set to 2
-+
-+Optional property:
-+- nuvoton,sw-reset-number - Contains the software reset number to restart the SoC.
-+  NPCM7xx contain four software reset that represent numbers 1 to 4.
-+
-+  If 'nuvoton,sw-reset-number' is not specfied software reset is disabled.
-+
-+Example:
-+	rstc: rstc@f0801000 {
-+		compatible = "nuvoton,npcm750-reset";
-+		reg = <0xf0801000 0x70>;
-+		#reset-cells = <2>;
-+		nuvoton,sw-reset-number = <2>;
-+	};
-+
-+Specifying reset lines connected to IP NPCM7XX modules
-+======================================================
-+example:
-+
-+        spi0: spi@..... {
-+                ...
-+                resets = <&rstc NPCM7XX_RESET_IPSRST2 NPCM7XX_RESET_PSPI1>;
-+                ...
-+        };
-+
-+The index could be found in <dt-bindings/reset/nuvoton,npcm7xx-reset.h>.
--- 
-2.22.0
+Never top-post on kernel mailing lists.
 
+Thanks,
+Lorenzo
+
+> Thanks,
+> Minghuan
+> 
+> > -----Original Message-----
+> > From: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Sent: Wednesday, November 6, 2019 11:36 AM
+> > To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
+> > Leo Li <leoyang.li@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
+> > Hu <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>; linux-
+> > pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linuxppc-
+> > dev@lists.ozlabs.org; bhelgaas@google.com; Z.q. Hou
+> > <zhiqiang.hou@nxp.com>
+> > Subject: RE: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+> > 
+> > 
+> > 
+> > > -----Original Message-----
+> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Sent: 2019年11月5日 20:33
+> > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
+> > Leo
+> > > Li <leoyang.li@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
+> > Hu
+> > > <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
+> > > linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
+> > > linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > > linuxppc-dev@lists.ozlabs.org; bhelgaas@google.com; Z.q. Hou
+> > > <zhiqiang.hou@nxp.com>
+> > > Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+> > >
+> > > On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
+> > > > Add support for the LS1028a PCIe controller.
+> > > >
+> > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > > ---
+> > > > v2:
+> > > >  - No change.
+> > > > v3:
+> > > >  - Reuse the ls2088 driver data structurt.
+> > > > v4:
+> > > >  - No change.
+> > > > v5:
+> > > >  - No change.
+> > > > v6:
+> > > >  - No change.
+> > > >
+> > > >  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > >
+> > > I have not seen any comment on any layerscape driver patches coming
+> > > from the maintainers as listed in the MAINTAINERS file (and CCed in this
+> > series).
+> > >
+> > > I request maintainers ACK on these patches and I expect them to start
+> > > reviewing your code if they want to be still considered maintainers
+> > > for this driver.
+> > >
+> > > The changes look OK minus Shawn's remark on compatible string that was
+> > > ignored.
+> > 
+> > Hi Lorenzo,
+> > 
+> > Thanks for your comments.
+> > 
+> > In fact, the patches have reviewed in our internal mail list, after the review by
+> > Minghuan and Mingkai, I will send these patches to opensource, they will
+> > give the ACK when these patches seems is OK and no comments on this.
+> > 
+> > Thanks
+> > Xiaowei
+> > 
+> > >
+> > > Thanks,
+> > > Lorenzo
+> > >
+> > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c
+> > > > b/drivers/pci/controller/dwc/pci-layerscape.c
+> > > > index 3a5fa26..f24f79a 100644
+> > > > --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> > > > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> > > > @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata
+> > > > ls2088_drvdata = {  static const struct of_device_id ls_pcie_of_match[] = {
+> > > >  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
+> > > >  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
+> > > > +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
+> > > >  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
+> > > >  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
+> > > >  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
+> > > > --
+> > > > 2.9.5
+> > > >
