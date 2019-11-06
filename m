@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A073C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 08:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A73CC5DF64
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 08:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059CA217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 08:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499E0206A3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 08:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573030000;
-	bh=XPHAfWI50FqeR2Qai3oNMg7QosMziMbbCg128q8f7rk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2tnCtj6jQVau3+P/LXCyiOiTaJDoQmPN5KMDkyhc0hgVTiCdnUteFBdLelduxMa53
-	 J2fk68V7Nx1oIYzQbHnoH1owbIUK3xY0hkLCe39B/Q712R2zdD8swfXm9z/OJOQVvV
-	 ANAkPHZld+OJGHTr6USHbdChIsMKoWiDEHJBYq24=
+	s=default; t=1573030045;
+	bh=uf5TG+Wknq5QFhY1vd52nLhyqhyPLL2HLPrmiOwNrQU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N4yRCX4uoo4dIijlWLKnCYLkoIszJLq6DeVDMRVSrX6VGL/VRe3AcBmcrkZLumShD
+	 afr4D/Ee8tRl87AJWCLuDpVFjWcBTyR1b9370W2fZV+TJwSdMFF0XNf3NpF7d7wjdm
+	 MyBVdkS1h46Jf/VNNeLowhrUl3Y3nSlRp1jhw4A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfKFIqg (ORCPT
+        id S1731521AbfKFIrV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:46:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50796 "EHLO mail.kernel.org"
+        Wed, 6 Nov 2019 03:47:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730069AbfKFIqg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:46:36 -0500
+        id S1730178AbfKFIrV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:47:21 -0500
 Received: from localhost.localdomain (unknown [223.226.46.117])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDC3206A3;
-        Wed,  6 Nov 2019 08:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCAD1217F4;
+        Wed,  6 Nov 2019 08:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573029995;
-        bh=XPHAfWI50FqeR2Qai3oNMg7QosMziMbbCg128q8f7rk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XTaJ8cPtrvjO1ZPeGsp08fmPy9j5kkEfwR3dBwiVt3IOf0a6B6XLLZWRH5n2eL54g
-         cyuMCiD1FJ23dVLUqPZvXXCuUy1TQ4XvZ17B8jxnbLY2g5bZ7khLypXxCgSgVv8CRf
-         OKwl/kImMPKnZDq4hcFg6ZfpsW64jZOD/Fvkf/cA=
+        s=default; t=1573030040;
+        bh=uf5TG+Wknq5QFhY1vd52nLhyqhyPLL2HLPrmiOwNrQU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fyrHYJxMwZjz/plAbEBGPqQwt2xxQmSMkNqoYXbuQDqvMGdqXk6nUcjXelIvql9iQ
+         DY0CQS1wqCxiP64X2mQDLqMTniFa9WknjsAguHXl5KkaGMftEQn7jPx+v7nVOoMwt8
+         9k20EoHnCZERZ3XarYwKxw67a7geiRfUAZGaJoU4=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Andy Gross <agross@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -47,10 +47,12 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: Use gcc clock enums
-Date:   Wed,  6 Nov 2019 14:16:04 +0530
-Message-Id: <20191106084604.1746544-1-vkoul@kernel.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: sm8150-mtp:  Enable UFS nodes
+Date:   Wed,  6 Nov 2019 14:16:56 +0530
+Message-Id: <20191106084656.1749954-2-vkoul@kernel.org>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191106084656.1749954-1-vkoul@kernel.org>
+References: <20191106084656.1749954-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -58,46 +60,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that header defining gcc clocks is upstream, use the enums instead
-of numbers
+Enable the UFS HC and phy nodes and add regulators used by these.
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 379c40b9a52f..a9b1cabccbf6 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
-+#include <dt-bindings/clock/qcom,gcc-sm8150.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -490,8 +491,8 @@
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0x0 0x00ac0000 0x0 0x6000>;
- 			clock-names = "m-ahb", "s-ahb";
--			clocks = <&gcc 123>,
--				 <&gcc 124>;
-+			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
-+				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
-@@ -501,7 +502,7 @@
- 				compatible = "qcom,geni-debug-uart";
- 				reg = <0x0 0x00a90000 0x0 0x4000>;
- 				clock-names = "se";
--				clocks = <&gcc 105>;
-+				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+index d4c240a56d2e..1eb93a768a85 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+@@ -385,3 +385,23 @@
+ &uart2 {
+ 	status = "okay";
+ };
++
++&ufs_mem_hc {
++	status = "okay";
++
++	vcc-supply = <&vreg_l10a_2p5>;
++	vcc-max-microamp = <750000>;
++	vccq-supply = <&vreg_l9a_1p2>;
++	vccq-max-microamp = <700000>;
++	vccq2-supply = <&vreg_s4a_1p8>;
++	vccq2-max-microamp = <750000>;
++};
++
++&ufs_mem_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_ufs_2ln_core_1>;
++	vdda-max-microamp = <90200>;
++	vdda-pll-supply = <&vreg_l3c_1p2>;
++	vdda-pll-max-microamp = <19000>;
++};
 -- 
 2.23.0
 
