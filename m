@@ -2,60 +2,188 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA7EFC6195
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 23:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557DDFC6195
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 23:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2A17217F5
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 23:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C38D2075C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 23:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573083204;
+	bh=kXuPSKl+d3N16AWU48reQZ1zuDSoKWcH8SnXbdsyG1Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MCWYknqpj21xtE59vVWz97eqwvGw+3A93ckMFlnLeGFD0oST+YTZ374MVM9iYcTZa
+	 d63CjAZXpa8LFJOI3CAqQEjXW7/Ypa135Lmld8+CoPKEQUDh3zgSmfBd9pXbbyUnNy
+	 xyUFbmVoaMJVw67b5e7JK6yaNSWJGzNGtcTyYGec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfKFXcD (ORCPT
+        id S1727654AbfKFXdU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:32:03 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:40351 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727654AbfKFXcD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 18:32:03 -0500
-X-Originating-IP: 92.184.100.196
-Received: from localhost (unknown [92.184.100.196])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id B9C861C0008;
-        Wed,  6 Nov 2019 23:31:51 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 00:31:22 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: at91: rearrange kizbox dts using aliases nodes
-Message-ID: <20191106233122.GN8309@piout.net>
-References: <20191105212158.22907-1-kamel.bouhara@bootlin.com>
+        Wed, 6 Nov 2019 18:33:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbfKFXdU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 18:33:20 -0500
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE2821A49;
+        Wed,  6 Nov 2019 23:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573083198;
+        bh=kXuPSKl+d3N16AWU48reQZ1zuDSoKWcH8SnXbdsyG1Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jtHyhFkWE3pKHvdd83jG7hT7NyR376eTuEr9ERzYU/cLPUMq8jfmu4Pc3AwMwAOfA
+         Ta5bhoJh9cqN3cZVa6vzhyOfspGH5C9cbvPH9vfe7rCAYdmt5ayL69+QublnfxuRyj
+         LKVoZnM3aCaTH+YQzn0GMYdakODsvG+TlLgH+QUU=
+Received: by mail-qv1-f43.google.com with SMTP id f12so93859qvu.3;
+        Wed, 06 Nov 2019 15:33:18 -0800 (PST)
+X-Gm-Message-State: APjAAAVvZvTUPBZxkVwGSH6lR00KcB0k/zkEHE8trLZqTFFndUUuW7eA
+        z1jPIsVnDE+w4zGiqr0xkcvAempI5hWtYUWfZQ==
+X-Google-Smtp-Source: APXvYqyC3A2flD/nPROb9ThjRdJKDCsiLA48Ab5fS1yM/Zg798U/Sn7jNMdhWcJ4s8JZjQWG/fXn9qcpyqj9go+/rgA=
+X-Received: by 2002:a0c:ca06:: with SMTP id c6mr490409qvk.136.1573083197450;
+ Wed, 06 Nov 2019 15:33:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105212158.22907-1-kamel.bouhara@bootlin.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+ <20191031123040.26316-5-benjamin.gaignard@st.com> <20191106041518.GC5294@bogus>
+ <41c43d09-9371-8b23-a3dd-e43f5df5c5bc@st.com>
+In-Reply-To: <41c43d09-9371-8b23-a3dd-e43f5df5c5bc@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 6 Nov 2019 17:33:05 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+eFew_8ULDOwL5GXUDxLRB9e+b+ZsMdWLKUO8i9Lk7AQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+eFew_8ULDOwL5GXUDxLRB9e+b+ZsMdWLKUO8i9Lk7AQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: mfd: Convert stm32 timers bindings to json-schema
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05/11/2019 22:21:58+0100, Kamel Bouhara wrote:
-> Use aliases nodes to easy kizbox dts readability.
-> 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> ---
->  arch/arm/boot/dts/at91-kizbox.dts | 172 +++++++++++++++---------------
->  1 file changed, 84 insertions(+), 88 deletions(-)
-> 
-Applied, thanks.
+On Wed, Nov 6, 2019 at 1:57 PM Benjamin GAIGNARD
+<benjamin.gaignard@st.com> wrote:
+>
+>
+> On 11/6/19 5:15 AM, Rob Herring wrote:
+> > On Thu, Oct 31, 2019 at 01:30:40PM +0100, Benjamin Gaignard wrote:
+> >> Convert the STM32 timers binding to DT schema format using json-schema
+> >>
+> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> ---
+> >>   .../devicetree/bindings/mfd/st,stm32-timers.yaml   | 91 ++++++++++++++++++++++
+> >>   .../devicetree/bindings/mfd/stm32-timers.txt       | 73 -----------------
+> >>   2 files changed, 91 insertions(+), 73 deletions(-)
+> >>   create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
+> >>   delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
+> >> new file mode 100644
+> >> index 000000000000..3f0a65fb2bc0
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
+> >> @@ -0,0 +1,91 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/mfd/st,stm32-timers.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: STMicroelectronics STM32 Timers bindings
+> >> +
+> >> +description: |
+> >> +  This hardware block provides 3 types of timer along with PWM functionality: \
+> > Don't need the \
+> ok
+> >
+> >> +    - advanced-control timers consist of a 16-bit auto-reload counter driven by a programmable \
+> >> +      prescaler, break input feature, PWM outputs and complementary PWM ouputs channels. \
+> >> +    - general-purpose timers consist of a 16-bit or 32-bit auto-reload counter driven by a \
+> >> +      programmable prescaler and PWM outputs.\
+> >> +    - basic timers consist of a 16-bit auto-reload counter driven by a programmable prescaler.
+> >> +
+> >> +maintainers:
+> >> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
+> >> +
+> >> +allOf:
+> >> +  - $ref: "../pwm/st,stm32-pwm.yaml#"
+> >> +  - $ref: "../iio/timer/st,stm32-timer-trigger.yaml#"
+> >> +  - $ref: "../counter/st,stm32-timer-cnt.yaml#"
+> > This works, but I prefer the child node names be listed under properties
+> > here with a ref:
+> >
+> > counter:
+> >    $ref: "../counter/st,stm32-timer-cnt.yaml#"
+> If I wrote everything in one file I guess what won't be needed anymore
+> >
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: st,stm32-timers
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +
+> >> +  clock-names:
+> >> +    items:
+> >> +      - const: int
+> >> +
+> >> +  reset:
+> >> +    maxItems: 1
+> >> +
+> >> +  dmas: true
+> > How many?
+>
+> from 0 up to 8, but I don't know the syntax for that. minItems = 0 isn't
+> accepted.
+>
+> Any hints for me ?
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+0 is not accepted because the property is never 0 items. 0 is not
+present. So just:
+
+minItems: 1
+maxItems: 8
+
+
+> >> +
+> >> +  dma-names: true
+> > What are the names?
+>
+> it could be ch1 ... ch8, "trig" or "up" in any order.
+
+Why does it need to be in any order? Normally we don't want to have that.
+
+>
+> Again I haven't be able to find a syntax that allow to list the names
+> and use them in any orders.
+
+dma-names:
+  items:
+    enum: [ ch1, ch2, ..., trig, up ]
+
+Rob
