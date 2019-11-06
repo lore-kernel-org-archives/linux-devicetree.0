@@ -2,86 +2,112 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98492C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 19:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2234C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 19:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675662187F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 19:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A282075C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 19:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E/P1CSJd"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="k3l2bcgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbfKFTLe (ORCPT
+        id S1727422AbfKFTNu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:11:34 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42017 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730487AbfKFTLe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 14:11:34 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j12so9933585plt.9
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 11:11:32 -0800 (PST)
+        Wed, 6 Nov 2019 14:13:50 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53871 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfKFTNu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 14:13:50 -0500
+Received: by mail-wm1-f66.google.com with SMTP id x4so5095404wmi.3
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 11:13:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:to:cc:user-agent:date;
-        bh=YlU+OdXhIDKR9PfiNtBOmR4FsFlmFK64CTpMfZrq0VY=;
-        b=E/P1CSJdk2lLsncbqPfDsdBx4I9NOufECjSiBJC3YmzB2mz5Yl9JXuNp0/3T3p6Qp5
-         RIUD/n4denMRlG+BEjCyFRKWgPKQRQLhqC6nfhtMsWhnmetQ9oyRzufviMqaCb0ni2Gh
-         Go3wWa12aWExYewJLEb/kZE3i2r8d0jrI+OZs=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
+        bh=imOl6s7WJtDyzdyKMjRfhQfqUS+7pQQOdxq1MLkDHB4=;
+        b=k3l2bcgEB5zMkimsxKUQaGYW3GYIvbfgMggqg/xIB3b2muNxpyx9iikRkTO+F6RLxJ
+         LUcr0uc5iBHAdfUSBBpKXUBMm9+BEmHlNt67rEhtZUQ5h3XKC1Df7udpm6b2psNg/3ti
+         QKUPBecJaHFBH0QXl864EcYvb05hFLadvo3uAkDvtofUjF22SMDjeq9bLPD5vZahtJV4
+         LWwhQgi5HUdjCcDO7F6rtbI3y9EWiRqYxlTn7T9eOQKAY68SqHn8KpWXWsCn/Ci7RAjI
+         ohClif+oPgof1ms9CpXvfBI3zmZgajDQe2KxSwgkq59Lv5E4MKwDLfqub5cteAA6suid
+         jbpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
-         :user-agent:date;
-        bh=YlU+OdXhIDKR9PfiNtBOmR4FsFlmFK64CTpMfZrq0VY=;
-        b=G7SbAEFKpkwF6qc419x0gb0gvYcROvJO/EL+9TQYRuyQOaZmJYp1vGrY1ef9jBXF86
-         Hz4WafpwCnkpATPaba1PAL7Oyzoo/X+fAnBh2B9QJujsz0sdhiL21LFQcr9k0YZ1BzWM
-         a1XDIoc1BwEOccHGL/YVloSJDhTWrXkoi0ldd/c57P2QDrG0C3bdFW69hvadayY3o+lW
-         2oNHhBwl5xJDfkwF1clWizPsb1/2tZkZ1LE9lZ9ti990t2+1+3A/8zI0efFKBBhsHBkK
-         FKlEx+EqWTABi3LMvxIe4smhn/6WSI1gYENUXX6YEEIC6WocDzWH6M/x4u5mVZOpRHep
-         o27g==
-X-Gm-Message-State: APjAAAW+EP/YHPRw3EMBJWj7AoqVJryT+S0kFT5KzZHNLUguy3T61BJS
-        wmy2kVKpRM/qK4+mXLlvRFU7Uw==
-X-Google-Smtp-Source: APXvYqxZvLIwgE1Gk+D3mymUUFiEatllcgMoJq/0gW6A92R+2Jee9wMM3IxWeYZ4gYl8FQ35QpbH+g==
-X-Received: by 2002:a17:902:aa02:: with SMTP id be2mr4333753plb.326.1573067491450;
-        Wed, 06 Nov 2019 11:11:31 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id f35sm3739655pje.32.2019.11.06.11.11.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 11:11:30 -0800 (PST)
-Message-ID: <5dc31ae2.1c69fb81.a3cd7.b5cd@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=imOl6s7WJtDyzdyKMjRfhQfqUS+7pQQOdxq1MLkDHB4=;
+        b=iy2Lr/CESzi65NEEl9JXiQg+AoW4kTEnzxW6yQrrzK7KJ7dUu4+oxveOMqRAD9N7Gg
+         TvUfJPRLs/co1juUTo8o1yuKGQvblzWhn3R9UQMqVkEohlrzOubSGBjj/OO1+FtiirUM
+         yYNQykdgdIxJvje4D71+GNIWFoh+fYwvbORMJh5jppuk9iggu/sBoVwrRFsYFDNjvhTW
+         9YgijjaGczKqCgDNbmoA1QGt4qbGfpYhOuA0kamgAGWSvP8+YukcfkmIu9tG+LhtbEXF
+         XOeMn6Tb1NluwNG4XfcuF9u2vXLMHr3jl8vtZfi0kLPedcUW3ic55KNy23Ib0Atr2ITt
+         o89A==
+X-Gm-Message-State: APjAAAWAIbNuokULquqlIsYsE3dnvn6RwMKCapvinss+WE2oAPqQtOHB
+        aAVQa4rK9iEswdJq47viGn3whA==
+X-Google-Smtp-Source: APXvYqxofhZf6+9Ut84ichRu3J3mOUD9QKq9fRKGXAHOm5aOY3zxs0m2DqEz4oxZsC8/9oJnOIgeQg==
+X-Received: by 2002:a1c:f602:: with SMTP id w2mr3859157wmc.83.1573067627615;
+        Wed, 06 Nov 2019 11:13:47 -0800 (PST)
+Received: from localhost (amontpellier-652-1-71-119.w109-210.abo.wanadoo.fr. [109.210.54.119])
+        by smtp.gmail.com with ESMTPSA id h140sm4515466wme.22.2019.11.06.11.13.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 11:13:46 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for VIM3L
+In-Reply-To: <7d8e80b5-0b37-691a-3375-6a37cc774a95@baylibre.com>
+References: <1571646004-21269-1-git-send-email-christianshewitt@gmail.com> <7d8e80b5-0b37-691a-3375-6a37cc774a95@baylibre.com>
+Date:   Wed, 06 Nov 2019 20:13:45 +0100
+Message-ID: <7hy2ws6cnq.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191106065017.22144-10-rnayak@codeaurora.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-10-rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 09/14] arm64: dts: qcom: sc7180: Add pdc interrupt controller
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 06 Nov 2019 11:11:29 -0800
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-05 22:50:12)
-> From: Maulik Shah <mkshah@codeaurora.org>
->=20
-> Add pdc interrupt controller for sc7180
->=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> On 21/10/2019 10:20, Christian Hewitt wrote:
+>> Chip on the board is S905D3 not S905X3:
+>> 
+>> [    0.098998] soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (b0:2) Detected
+>> 
+>> Change from v1: use 0xf0 mask instead of 0xf2 as advised by Neil Armstrong.
+>> 
+>> Fixes: 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L")
+>> 
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+>> ---
+>>  drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+>> index 87ed558..01fc0d2 100644
+>> --- a/drivers/soc/amlogic/meson-gx-socinfo.c
+>> +++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+>> @@ -69,7 +69,7 @@ static const struct meson_gx_package_id {
+>>  	{ "S922X", 0x29, 0x40, 0xf0 },
+>>  	{ "A311D", 0x29, 0x10, 0xf0 },
+>>  	{ "S905X3", 0x2b, 0x5, 0xf },
+>> -	{ "S905X3", 0x2b, 0xb0, 0xf2 },
+>> +	{ "S905D3", 0x2b, 0xb0, 0xf0 },
+>>  	{ "A113L", 0x2c, 0x0, 0xf8 },
+>>  };
+>>  
+>> 
+>
+> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Queued for v5.5,
+
+Kevin
+
 
