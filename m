@@ -2,165 +2,99 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8840C5DF65
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 19:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7935C5DF64
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 19:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B407217F9
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 19:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573068069;
-	bh=kt51GLtJRGhpxeArH7PbPGc0NGH1R9MH+9Qgg9Bbl2E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rksVOPeJG4Yh7JzDjXopmdrU8fLr2c/fqX90XgX1hqaSA3+zPm19dt1coz2r0Yb8H
-	 EPYQhDfw7+sT1O78aYpqtRkYLBw1ul5fdaIMUZ70X69jsVEh2cmcU86Wp0ri7bdzos
-	 bTpehh5LivMU7HlGFOlNC/Un5lXOgd2vlSHW0jgU=
+	by mail.kernel.org (Postfix) with ESMTP id B9D6E217D7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 19:35:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="q9IIk3N0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfKFTVJ (ORCPT
+        id S1731769AbfKFTfy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:21:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfKFTVJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:21:09 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E4D2075C;
-        Wed,  6 Nov 2019 19:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573068068;
-        bh=kt51GLtJRGhpxeArH7PbPGc0NGH1R9MH+9Qgg9Bbl2E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IEAPWRQpe0iBBUsDao1BwZCcAb28KOkc7oYh6GKs2SroYSjzRVbW7TXz2ar0KL9d3
-         sUnYQrBCCep8Y0basL097DguXypI0HNiAZbSzC4S+d4qPGDr14sHOzYFSytB1ET9y6
-         OdgizA3YtPO8U5omwD7mj8rkAxMmeITXadRB5Qrg=
-Received: by mail-qk1-f169.google.com with SMTP id m16so25331958qki.11;
-        Wed, 06 Nov 2019 11:21:08 -0800 (PST)
-X-Gm-Message-State: APjAAAUmMApYqHhGrHxgINZDJ2HwAvSjwYXCfLEgICffl/G18Lsag116
-        51UTpt7qPDnYGrbs3nvuSBK6iKfoEFOLJ2/Fqg==
-X-Google-Smtp-Source: APXvYqx32bwEhx99vHD/kDAS+/S75zvMWBv+yskX8CR2wiE5zYnXor6TRM6cgKz+ApVQJE7zjdsPqEDMXPf0REI1jX8=
-X-Received: by 2002:a37:4904:: with SMTP id w4mr3368103qka.119.1573068067259;
- Wed, 06 Nov 2019 11:21:07 -0800 (PST)
+        Wed, 6 Nov 2019 14:35:54 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40005 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbfKFTfy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 14:35:54 -0500
+Received: by mail-wr1-f66.google.com with SMTP id i10so6766831wrs.7
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 11:35:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Svt0Prn9o6q9bRi2+Z71xLOP8eaZ+QBmItrF2aM0ga4=;
+        b=q9IIk3N0mImL9Zq2/ZsglmYzRHe8LvSH4HOm2W+RTudvjNo5s5lAxnFr5bmJSNSw27
+         Qw3oITHHNNjuSyYlXtyhNuzi75kFzY+upd6DMsEDo/jzMXzhf3EEDNelH3Fdi2cYhDky
+         fRwv7kxmZrslp1sKm75QW/F8HM1WlNCid38gtm3uUiGtZLND5VsrEu3pzVtZQMgqbTBR
+         mOyiZcWxhwz/98a3C2Mal9trGeroRzY5pqlHvOyJ+6YewtI7J/97G5MvL8CDEqUXgAKH
+         v6ummHlWnV3CW56zPq85BsIA0hKvApNHdOGNV3NDDQT1VAYJyRyNS2nHbVSgmsFkkBek
+         EfvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Svt0Prn9o6q9bRi2+Z71xLOP8eaZ+QBmItrF2aM0ga4=;
+        b=Xl2vYzfBNcSVjkDiL5c+xV48AEfS27192IzNvTX8IMC9TdAo7C4EXvaZMtvHqIa/M0
+         XowGRTjlnF5D7VtNa9sJzipDaozeBS634H675cz6JbSvthJDx4C6girmkw5KuycIiDlM
+         KpmZLh6c7yRhOE4t18oSBhdM9MmHyKxTsFAbi1gcnbAS6rjhtRLFtZKBURhmCNSBc1hK
+         Ka5RGLZude6q9YU0rxIJPGD5ANoxoWYTtDqSSpDFOufVRqINYw7vb9YN3DVEQIOeHGzv
+         FrC6wISrwJ7aYe4yC4BI5URo+oQ2QYCeIGOU7/QcYyv+RGZhB0lvJMns+Ho7pyqfzezo
+         KT0w==
+X-Gm-Message-State: APjAAAUqSwQxcTHgf6gwxSs47e9DLR/zB4/x51cnhddZwhbz2LCDpjGO
+        mOd0OrMn3vEAV4+atSJdKI5VwA==
+X-Google-Smtp-Source: APXvYqz6zkvJvFecNHz0gOcK2N6VovMdJvan9hQM6kndetNbNVDayZPMavQNRQqFjByWobWfaToSrQ==
+X-Received: by 2002:adf:97dd:: with SMTP id t29mr4070073wrb.283.1573068950319;
+        Wed, 06 Nov 2019 11:35:50 -0800 (PST)
+Received: from localhost (amontpellier-652-1-71-119.w109-210.abo.wanadoo.fr. [109.210.54.119])
+        by smtp.gmail.com with ESMTPSA id w13sm30928713wrm.8.2019.11.06.11.35.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 11:35:49 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH] arm64: dts: meson: khadas-vim3: move audio nodes to common dtsi
+In-Reply-To: <7h4kzg7rev.fsf@baylibre.com>
+References: <1571416185-6449-1-git-send-email-christianshewitt@gmail.com> <7h4kzg7rev.fsf@baylibre.com>
+Date:   Wed, 06 Nov 2019 20:35:48 +0100
+Message-ID: <7hk18c6bmz.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-2-srinivas.kandagatla@linaro.org> <20191025204338.GA25892@bogus>
- <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org> <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
- <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
- <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org> <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
- <b3d078a1-f87d-c146-bdf7-7a6b30547bd5@linaro.org>
-In-Reply-To: <b3d078a1-f87d-c146-bdf7-7a6b30547bd5@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 6 Nov 2019 13:20:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK2yBcWbZvK3qUeYW8q+NuWrUmCTBMWqwbAU_0i1fE4rA@mail.gmail.com>
-Message-ID: <CAL_JsqK2yBcWbZvK3qUeYW8q+NuWrUmCTBMWqwbAU_0i1fE4rA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:09 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 05/11/2019 19:08, Rob Herring wrote:
-> > On Wed, Oct 30, 2019 at 4:55 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >>
-> >>
-> >>
-> >> On 29/10/2019 20:47, Rob Herring wrote:
-> >>> On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
-> >>> <srinivas.kandagatla@linaro.org> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
-> >>>>> Its Phandle.
-> >>>>>
-> >>>>> something like this is okay?
-> >>>>>
-> >>>>> slim-ifc-dev:
-> >>>>>      $ref: '/schemas/types.yaml#/definitions/phandle-array'
-> >>>>
-> >>>> Sorry this should not be an array, so something like this:
-> >>>>
-> >>>>      slim-ifc-dev:
-> >>>>        description: SLIMBus Interface device phandle
-> >>>
-> >>> You're just spelling out the abbreviated name. I can do that much.
-> >>> What is 'SLIMBus Interface device'?
-> >>
-> >> Each SLIMBus Component contains one Interface Device. Which is
-> >> responsible for Monitoring and reporting the status of component, Data
-> >> line to Data pin connection setup for SLIMBus streaming. Interface
-> >> device is enumerated just like any other slim device.
-> >
-> > So a standard set of registers every slimbus device has? In hindsight,
-> > I would have made reg have 2 entries with both addresses. I guess that
-> > ship has sailed.
->
-> That will break SLIMBus bindings, Which is expecting one device per
-> device node.
+Kevin Hilman <khilman@baylibre.com> writes:
 
-Like I said, that ship has sailed...
-
-> >
-> > It seems strange you would need both "devices" described as separate
-> > nodes in DT.
+> Christian Hewitt <christianshewitt@gmail.com> writes:
 >
-> Because they are two different devices on the SLIMBus Component.
+>> Move VIM3 audio nodes to meson-khadas-vim3.dtsi to enable audio for all
+>> boards in the VIM3 family including VIM3L.
+>>
+>> This change depends on [1] being merged/applied first.
+>>
+>> [1] https://patchwork.kernel.org/patch/11198535/
+>>
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 >
-> >
-> >>
-> >> We already have exactly same bindings for WCD9335 in upstream at:
-> >>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
-> >>
-> >>>
-> >>> Is it a standard SLIMBus property? If so, document it in the right
-> >>> place. If not, then needs a vendor prefix.
-> >>
-> >> "SLIMBus Interface Device" itself is documented in SLIMBus Specification.
-> >>
-> >> If I remember it correctly You suggested me to move to "slim-ifc-dev"
-> >> as this is part of SLIMBus Specification.
-> >
-> > Probably so. If it is common, then document it in bindings/slimbus/bus.txt.
-> >
-> As we are dealing with audio codecs here, it might be that
-> "slim-ifc-dev" is common across wcd9335 and wcd934x but not all devices
-> on the SLIMBus Component would need handle to interface device. SLIMbus
-> can also be used for control buses as well which might not need this.
-
-Like you said, it's part of the the spec, so define it somewhere
-common, not in a device specific binding.
-
-> > Then here, 'slim-ifc-dev: true' is sufficient. You can just assume we
-> > convert bus.txt to schema (or feel free to do that :) ).
+> Queued for v5.5, but...
 >
-> We need phandle to the interface device so that we can program the
-> streaming parameters for the SLIMBus Component.
+>> -&frddr_a {
+>> -        status = "okay";
+>> -};
+>
+> This node doesn't exist upstream...
 
-'true' just means 'I'm using the property' and have no other
-constraints. The constraints like type would be defined in the common
-binding and no need to duplicate here.
+oops, nevermind.  I see it's not upstream because it's still in my fixes
+branch.
 
-Rob
+Kevin
