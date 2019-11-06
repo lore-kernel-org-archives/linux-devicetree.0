@@ -2,128 +2,95 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4971EC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FADC5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCDA217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23F7217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbfKFJxp (ORCPT
+        id S1731029AbfKFJ7X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:53:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:36852 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731554AbfKFJxp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:53:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 700D9328;
-        Wed,  6 Nov 2019 01:53:44 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA2DE3F6C4;
-        Wed,  6 Nov 2019 01:53:43 -0800 (PST)
-Date:   Wed, 6 Nov 2019 09:53:41 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Anvesh Salveru <anvesh.s@samsung.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, pankaj.dubey@samsung.com,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
- ZRX-DC PHY property
-Message-ID: <20191106095340.GO9723@e119886-lin.cambridge.arm.com>
-References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
- <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
- <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
- <20191105215332.GA19296@bogus>
+        Wed, 6 Nov 2019 04:59:23 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:43995 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728271AbfKFJ7W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 04:59:22 -0500
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xA69wYD4021266;
+        Wed, 6 Nov 2019 11:58:34 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id 5D5F660329; Wed,  6 Nov 2019 11:58:34 +0200 (IST)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        yuenn@google.com, venture@google.com, benjaminfair@google.com,
+        avifishman70@gmail.com, joel@jms.id.au
+Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v4 1/3] dt-bindings: reset: add NPCM reset controller documentation
+Date:   Wed,  6 Nov 2019 11:58:30 +0200
+Message-Id: <20191106095832.236766-2-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191106095832.236766-1-tmaimon77@gmail.com>
+References: <20191106095832.236766-1-tmaimon77@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105215332.GA19296@bogus>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:53:32PM -0600, Rob Herring wrote:
-> On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
-> > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
-> > specification, then after every 100ms link should transition to recovery
-> > state during the low power states which increases power consumption.
-> > 
-> > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-> > property in DesignWare controller DT node.
-> > 
-> > CC: Rob Herring <robh+dt@kernel.org>
-> > CC: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > ---
-> > Change in v2: None
-> > 
-> >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > index 78494c4050f7..9507ac38ac89 100644
-> > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > @@ -38,6 +38,8 @@ Optional properties:
-> >     for data corruption. CDM registers include standard PCIe configuration
-> >     space registers, Port Logic registers, DMA and iATU (internal Address
-> >     Translation Unit) registers.
-> > +- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
-> > +  ZRX-DC specification.
-> 
-> If this is a property of the phy, then it belongs in the phy node or 
-> should just be implied by the phy's compatible. 
+Added device tree binding documentation for Nuvoton BMC
+NPCM reset controller.
 
-As suggested in the previous revision of this series [1], this is absolutely a
-property of the phy.
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../bindings/reset/nuvoton,npcm-reset.txt     | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
 
-> IOW, you should be able 
-> to support this or not without changing DTs.
-> 
-> Is this spec Synopys specific? (About the only thing Google turns up are 
-> your patches.) If not, then probably shouldn't have a 'snps' prefix.
+diff --git a/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt b/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
+new file mode 100644
+index 000000000000..6e802703af60
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/nuvoton,npcm-reset.txt
+@@ -0,0 +1,32 @@
++Nuvoton NPCM Reset controller
++
++Required properties:
++- compatible : "nuvoton,npcm750-reset" for NPCM7XX BMC
++- reg : specifies physical base address and size of the register.
++- #reset-cells: must be set to 2
++
++Optional property:
++- nuvoton,sw-reset-number - Contains the software reset number to restart the SoC.
++  NPCM7xx contain four software reset that represent numbers 1 to 4.
++
++  If 'nuvoton,sw-reset-number' is not specfied software reset is disabled.
++
++Example:
++	rstc: rstc@f0801000 {
++		compatible = "nuvoton,npcm750-reset";
++		reg = <0xf0801000 0x70>;
++		#reset-cells = <2>;
++		nuvoton,sw-reset-number = <2>;
++	};
++
++Specifying reset lines connected to IP NPCM7XX modules
++======================================================
++example:
++
++        spi0: spi@..... {
++                ...
++                resets = <&rstc NPCM7XX_RESET_IPSRST2 NPCM7XX_RESET_PSPI1>;
++                ...
++        };
++
++The index could be found in <dt-bindings/reset/nuvoton,npcm7xx-reset.h>.
+-- 
+2.22.0
 
-This was also unfamiliar to me, however my current understanding is that
-Zrx-dc describes the 'Receiver DC single ended impedance' limits, this is
-specified in the PCI specification (table 'Common Receiver Parameters'),
-with a different limit for each speed.
-
-I believe the purpose of this series is to to satisfy the following
-implementation note in the spec "Ports that meet the Zrx-dc specification
-for 2.5 GT/s while in the L1.Idle state are therefore not required to
-implement the 100 ms timeout and transition to Recovery should avoid
-implementing it, since it will reduce the power savings expected from the
-L1 state".
-
-In other words, if it is known that the phy is compliant then an
-unnecessary transition to a higher energy state can be avoided. Though it's
-the PCI controller (in this case) that must action this and must find out
-about the phy it is connected to.
-
-So in my view 'phy-zrxdc-compliant' should be a property of a phy (without
-snps prefix), and if a controller wants to determine if it is compliant then
-there must be a phandle to the phy so the controller can find out.
-
-[1] https://patchwork.kernel.org/patch/11202121/
-
-Thanks,
-
-Andrew Murray
-
-> 
-> >  RC mode:
-> >  - num-viewport: number of view ports configured in hardware. If a platform
-> >    does not specify it, the driver assumes 2.
-> > -- 
-> > 2.17.1
-> > 
