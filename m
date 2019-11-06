@@ -2,61 +2,61 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF4FC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 06:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF6DC5DF65
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 06:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C5D2187F
+	by mail.kernel.org (Postfix) with ESMTP id CDC132053B
 	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 06:51:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E0GM6eQ0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="edbbC1OX"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZQtCOpKq";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NIBOQNhv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731356AbfKFGvo (ORCPT
+        id S1731176AbfKFGvI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:51:44 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:46252 "EHLO
+        Wed, 6 Nov 2019 01:51:08 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:45252 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731330AbfKFGvo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 01:51:44 -0500
+        with ESMTP id S1725948AbfKFGvH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 01:51:07 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 16EAC61410; Wed,  6 Nov 2019 06:51:41 +0000 (UTC)
+        id 2963761271; Wed,  6 Nov 2019 06:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573023103;
-        bh=DW6k4KOophjwn6dn/9KrcL2nSmhbYEaQGaPpt0Q/Q7k=;
+        s=default; t=1573023066;
+        bh=ZsvqiKsUgwzvidsH733Ht926Ip8xR5FYo1WDIpEdXxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E0GM6eQ0/FpJ7K17SqZCiW31P9LMFO6Bx6m9OhUSwFXpPsmQVIFJIk9q9+GrvraFe
-         mYazNIzqSNExTZL+f1rVzW6x5i3X3L7fOBgPosWNixzxsGZKJ1wAcj9fZU52iQ5H78
-         +ucajT2481uO7CSWRWhly75O6HXNQzU/LT6NEzcc=
+        b=ZQtCOpKqshdthsPxuw4T4bMCcu6cyK4KnyZj/k5S0rpMV9R7bkLyidj1t5z4/NcNP
+         RTfPuOWG8uU0QPoODiYAylaa0JvqrzPLCK9zfsb16K0lSZNVlUxcllCyobW3Tog2NK
+         /j5QNsFLdaZ0ZKMXF+B1woqdvgAlb3A9/Gs9BCZk=
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 80269611A0;
-        Wed,  6 Nov 2019 06:51:36 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 21B0561272;
+        Wed,  6 Nov 2019 06:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573023100;
-        bh=DW6k4KOophjwn6dn/9KrcL2nSmhbYEaQGaPpt0Q/Q7k=;
+        s=default; t=1573023065;
+        bh=ZsvqiKsUgwzvidsH733Ht926Ip8xR5FYo1WDIpEdXxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=edbbC1OXg/OzQfScG01LHrVyrrLU97QDeVkxAsyBr1DHJJM0DcMKJLTNU7sdofkEk
-         xRT6nv69cRs6ztuIoPc1HmsCHp/4ikyhVOWcLdtYGxJjd/2b/2IJy20Ed2Dngbd0x8
-         eiNbVkwsuEsJx695MfT0EoZvcVebvary/ALtiKtI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 80269611A0
+        b=NIBOQNhvdBOUAz51RVVEHmBM9nk5IQdM5eqL7bR0YL0IOIhNuOQF6gbsozDfDAPY+
+         fuRZv57XTIryQJSWgONm3mt9ZOlBuQZCXnTn3LNPNMU4ksqqA/p64sj2kgRsDK5GHS
+         HQU8hdb0zp+gLVdessCXxT+i9467kkRmTqzgiEic=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 21B0561272
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
 To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, mka@chromium.org,
-        swboyd@chromium.org, Taniya Das <tdas@codeaurora.org>,
+        swboyd@chromium.org, Vivek Gautam <vivek.gautam@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v4 13/14] arm64: dts: qcom: SC7180: Add node for rpmhcc clock driver
-Date:   Wed,  6 Nov 2019 12:20:16 +0530
-Message-Id: <20191106065017.22144-14-rnayak@codeaurora.org>
+Subject: [PATCH v4 04/14] arm64: dts: sc7180: Add device node for apps_smmu
+Date:   Wed,  6 Nov 2019 12:20:07 +0530
+Message-Id: <20191106065017.22144-5-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191106065017.22144-1-rnayak@codeaurora.org>
 References: <20191106065017.22144-1-rnayak@codeaurora.org>
@@ -67,52 +67,117 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Taniya Das <tdas@codeaurora.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-Add node for rpmhcc clock driver.
+Adding device node for APPS SMMU that is connected to
+devices such as display, video, usb, mmc, etc. on SC7180
+chipset.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 88 ++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index ff0197df9a7f..c9c8c3a52f3d 100644
+index 17870dd67390..ef52cd7efc88 100644
 --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -6,6 +6,7 @@
-  */
- 
- #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-+#include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- 
-@@ -174,6 +175,9 @@
- 		gcc: clock-controller@100000 {
- 			compatible = "qcom,gcc-sc7180";
- 			reg = <0 0x00100000 0 0x1f0000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK_A>;
-+			clock-names = "bi_tcxo", "bi_tcxo_ao";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-@@ -434,6 +438,13 @@
- 					  <SLEEP_TCS   3>,
- 					  <WAKE_TCS    3>,
- 					  <CONTROL_TCS 1>;
-+
-+			rpmhcc: clock-controller {
-+				compatible = "qcom,sc7180-rpmh-clk";
-+				clocks = <&xo_board>;
-+				clock-names = "xo";
-+				#clock-cells = <1>;
-+			};
+@@ -210,6 +210,94 @@
+ 			};
  		};
- 	};
  
++		apps_smmu: iommu@15000000 {
++			compatible = "qcom,sc7180-smmu-500", "arm,mmu-500";
++			reg = <0 0x15000000 0 0x100000>;
++			#iommu-cells = <2>;
++			#global-interrupts = <1>;
++			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 411 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 412 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		intc: interrupt-controller@17a00000 {
+ 			compatible = "arm,gic-v3";
+ 			#address-cells = <2>;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
