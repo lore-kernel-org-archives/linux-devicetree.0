@@ -2,239 +2,99 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39F9C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 00:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B928C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 00:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEAA214D8
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 00:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MbXZiQWc"
+	by mail.kernel.org (Postfix) with ESMTP id 1DB902087E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 00:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572999966;
+	bh=VXbUZ4KP8QXE6F919GIoaA8/5d6Bwk12wYF5B3idnQI=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:List-ID:From;
+	b=Yp3XyHpXVBRrcYU5f5NCjcZWI4SnutQXJiED84C5SVS9hpvhDAlPYehTy2BlpZMh1
+	 G7iumicd9YmKpvWoQ1oAASTQm07oien6oGPlsIU0xKhXaZc4Yt4JHNdeEJy1ONj1X5
+	 ShgBLT0kjr97ZoySeGLjFf8LPi9WFdMwaWl8fwcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbfKFAA5 (ORCPT
+        id S1729494AbfKFA0F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 19:00:57 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34840 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbfKFAA4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 19:00:56 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n16so19331975oig.2
-        for <devicetree@vger.kernel.org>; Tue, 05 Nov 2019 16:00:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1hiwhUzBCXtjT83VsDEmYQHpboeTfijrcF+AJ7syBgI=;
-        b=MbXZiQWcxLr/gVCG+4TdqJiu9bk0wCssGuEy3JC0jY361MdKBbNcQEbabZc2GwKXpg
-         cJe54VxnwZZKb1YlthhCkm0wK42efq1vPtHhHFSibIJbMtNoGy6nenFRPVN4rbBfoK57
-         Sw/B3zSfBx1U4OFn9zi9MHGwJIqq6PsVdOnJXsbSzecojJk5vfAXaNJAMdxFCwKm/BII
-         LOPCWctuW8M2PteNbNjrne7FXwL6ZVAzN9ctKGS4erPZxzyqfjx7oE3+/7SEZVIYj7NW
-         a5wspJqTqOcB8e7AGbAznLFYoM2Mb9pHqtF+afn/bSNz+GkvfTZBR16IW96xlpOfT5n9
-         mF8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1hiwhUzBCXtjT83VsDEmYQHpboeTfijrcF+AJ7syBgI=;
-        b=TDTDiNAaAVqBfjGH0FbdNeQf5RArqwzEjmIDsDWKlKVK6ZwLzjDXXXrpiR//CXhesg
-         /sjc9xrFvuxU85x2kqGpfh7cOLTIKXKUyZh939oWTME8hQNl9fX1qVqOz6rxL056Kmxw
-         IsYvYomRRfbPkKwAAGIpQBNiLHGoZlTOWh7++VYIwMwauFOFWCSE9JE+0hYXVBHXz9WZ
-         n0a6Nvqi8o5LrlNMl+FmheJ5xpLnQCWDaBN8HLL9Qm2uuZSovppmu8jSpEwjTmfKORN0
-         OP1SvkotDaX6QTZYB6XaU0qGPYvpSnBJGXQdZ+wKkyWHv6Or/p2ne6T/gy6P0iaoy2Hh
-         LgUQ==
-X-Gm-Message-State: APjAAAU7uRo6FgZDg5G3U/484t9bg9ssGkK2L8RMRTw50A3Vk4k8//ZT
-        Vv3k2ygAWe1Z6MLJc0BvmcVN1iwEuqXxaL/qD3KOKA==
-X-Google-Smtp-Source: APXvYqwzm4wCZExmTT9d9VK+Gdv2LNZ8t/hDnxctzxs8ZILMZJ/1pkogRUEcaomc67Ia7ab9IQrVz0Wbl2XfyNTwQMs=
-X-Received: by 2002:aca:b03:: with SMTP id 3mr1450645oil.24.1572998455036;
- Tue, 05 Nov 2019 16:00:55 -0800 (PST)
+        Tue, 5 Nov 2019 19:26:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727252AbfKFA0F (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 5 Nov 2019 19:26:05 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1BC72087E;
+        Wed,  6 Nov 2019 00:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572999964;
+        bh=VXbUZ4KP8QXE6F919GIoaA8/5d6Bwk12wYF5B3idnQI=;
+        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+        b=uJvTqiHUujNfGUavE5LTIOkTuaiaQQt7dxXKZ5bySTJOUJar7VaT+RD+CvTOJ/gvl
+         RFTlE29nr/VwdwQmcJ0MiClkhY8B9Eqdzn7xvPwV2EGf/iW/KEIGWMk7TGMPpJh5tn
+         rbHjV3U9FXYyXciOEt9EnNtoRLn+gB1Fnrlnke7I=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-4-saravanak@google.com>
- <7640808.4Pc6YCm0Y9@kreacher> <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
- <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 5 Nov 2019 16:00:18 -0800
-Message-ID: <CAGETcx-X938BxBeqYD8m8Wrx-hRaXk6EEeR4szh34CS5Sv7EgA@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
- differentiate errors
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1572524473-19344-3-git-send-email-tdas@codeaurora.org>
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org> <1572524473-19344-3-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v1 2/7] dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 05 Nov 2019 16:26:04 -0800
+Message-Id: <20191106002604.A1BC72087E@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 3:07 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Nov 5, 2019 at 11:52 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Hi Rafael,
-> >
-> > Thanks for the review.
-> >
-> > On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > >
-> > > On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
-> > > > When add_links() still has suppliers that it needs to link to in the
-> > > > future, this patch allows it to differentiate between suppliers that are
-> > > > needed for probing vs suppliers that are needed for sync_state()
-> > > > correctness.
-> > >
-> > > I guess you mean that it will return different error codes in the different
-> > > cases.
-> >
-> > Yes.
-> >
-> > >
-> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > ---
-> > > >  drivers/base/core.c    | 12 ++++++++----
-> > > >  include/linux/fwnode.h | 13 +++++++++----
-> > > >  2 files changed, 17 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > > index 48cd43a91ce6..e6d3e6d485da 100644
-> > > > --- a/drivers/base/core.c
-> > > > +++ b/drivers/base/core.c
-> > > > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
-> > > >       struct device *parent;
-> > > >       struct kobject *kobj;
-> > > >       struct class_interface *class_intf;
-> > > > -     int error = -EINVAL;
-> > > > +     int error = -EINVAL, fw_ret;
-> > > >       struct kobject *glue_dir = NULL;
-> > > >
-> > > >       dev = get_device(dev);
-> > > > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
-> > > >        */
-> > > >       device_link_add_missing_supplier_links();
-> > > >
-> > > > -     if (fwnode_has_op(dev->fwnode, add_links)
-> > > > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > > > -             device_link_wait_for_mandatory_supplier(dev, true);
-> > > > +     if (fwnode_has_op(dev->fwnode, add_links)) {
-> > >
-> > > fw_ret can be defined here and I'd just call it "ret".
-> >
-> > I thought that style of variable declaration is frowned up in the
-> > kernel coding style.
->
-> Well, I'm not aware of that. :-)
+Quoting Taniya Das (2019-10-31 05:21:08)
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/Do=
+cumentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> new file mode 100644
+> index 0000000..96aaf36
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-I've definitely seen such comments before. So I'll leave fw_ret as is.
-If you and Greg both want to change it to the way you mentioned, I'm
-happy to do it.
+Can it be GPL2 or BSD? I think Rob is asking for that sort of license on
+these files.
 
-> > >
-> > > > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > > > +             if (fw_ret == -ENODEV)
-> > > > +                     device_link_wait_for_mandatory_supplier(dev);
-> > > > +             else if (fw_ret)
-> > > > +                     device_link_wait_for_optional_supplier(dev);
-> > > > +     }
-> > > >
-> > > >       bus_probe_device(dev);
-> > > >       if (parent)
-> > > > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> > > > index 25bb81f8ded8..a19134eae5a5 100644
-> > > > --- a/include/linux/fwnode.h
-> > > > +++ b/include/linux/fwnode.h
-> > > > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
-> > > >   *           available suppliers.
-> > > >   *
-> > > >   *           Return 0 if device links have been successfully created to all
-> > > > - *           the suppliers of this device or if the supplier information is
-> > > > - *           not known. Return an error if and only if the supplier
-> > > > - *           information is known but some of the suppliers are not yet
-> > > > - *           available to create device links to.
-> > > > + *           the suppliers this device needs to create device links to or if
-> > > > + *           the supplier information is not known.
-> > >
-> > > "the known suppliers of this device or if the supplier information is not known."
-> >
-> > "suppliers it needs to create device links to" is a subset of known
-> > suppliers. There's no requirement that fw needs to create links to ALL
-> > known suppliers. Just a minor distinction.
->
-> That depends on what exactly you mean by "known suppliers".  The
-> suppliers that are not listed by the firmware are not known at this
-> point.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Graphics Clock & Reset Controller Binding
+> +
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm grpahics clock control module which supports the clocks, rese=
+ts and
+> +  power domains.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sdm845-gpucc
+> +      - qcom,msm8998-gpucc
 
-Ok, I'll rephrase my comment:
-"suppliers it needs to create device links to" is a subset of listed
-suppliers. There's no requirement that fw needs to create links to ALL
-listed suppliers. For example, I can't think of any reason for
-sync_state() to be necessary for an interrupt controller driver. So,
-fw doesn't need to create device links from consumer to interrupt
-supplier. So I'm being more explicit and saying "the suppliers this
-device needs to create device links to" instead of "the listed
-suppliers of this device".
+Sort please.
 
-Long story short, I wrote the comment this way intentionally and
-changing it to what you suggest makes it inaccurate IMHO. But I'm open
-to other wording suggestions to improve the clarity of this comment.
-
->
-> > > > + *
-> > > > + *           Return -ENODEV if and only if the suppliers needed for probing
-> > > > + *           the device are not yet available to create device links to.
-> > >
-> > > It would be more precise to say something like this:
-> > >
-> > > "Return -ENODEV if an attempt to create a device link to one of the device's
-> > > suppliers needed for probing it fails."
-> >
-> > "attempt to create a device link to one of the device's suppliers
-> > needed for probing it fails" to me means device_link_add() fails.
-> > But I'm trying to say that it should return an error if the struct
-> > device isn't even there yet.
->
-> OK, so it should be something like "if the supplier device has not
-> been registered yet".
->
-> My point is that "not yet available" is kind of ambiguous.
-
-Agree, the latest suggestion sounds better.
-
-> > > > + *
-> > > > + *           Return -EAGAIN if there are suppliers that need to be linked to
-> > > > + *           that are not yet available but none of those suppliers are
-> > > > + *           necessary for probing this device.
-> > >
-> > > "Return -EAGAIN if attempts to create device links to some of the device's
-> > > suppliers have failed, but those suppliers are not necessary for probing the
-> > > device."
-> >
-> > Same comment as before. The distinction I'm making here is that
-> > -EAGAIN is needed when the struct device itself isn't there.
-> >
-> > Btw, Greg already pulled these into driver-core-next. Let me know if
-> > you want me to send a delta patch to fix any of these comments.
->
-> Well, it's a Greg's call if he has taken the patches, but it also
-> depends on you (if you agree with the comments, it would be prudent to
-> send updates).
-
-I don't mind sending updates at all. Just trying to make sure I follow
-the maintainers' preference in case they don't want trivial (because
-my current ones aren't terrible :)) comment update patches.
-
-Once we agree on all the discussion here, I can send an update patch.
-
-Thanks again for your review.
-
--Saravana
