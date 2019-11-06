@@ -2,136 +2,108 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8E1C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF94C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C002173B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5020A21A49
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573053707;
-	bh=Z5uRUEYMHnBMAkQQBIKbi4YuTu5BKSlKgXYE8gT6Bec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MIeC9/flnwNDvL/sNC1rv9zZoDQjZKseANuNSE9g5bPD3Q+kTela0cnap7+jTbliL
-	 I2alWb5FdL19VsXUh9bdVwVhe1YaJF2hLM/9LXONUlPZaHjshhoWwbHOqHs6On65v7
-	 eKFAtCwMntKHtRnES1xuOQnTr6Rl7FZomuKcB8Dg=
+	s=default; t=1573054466;
+	bh=7o0q1tVU34dCkR+noOARbHQNLo/UWxe38206TY8hDCQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qD9+SPmuzNjV8676W2YRF4b2YTEO9TxSbKx2YTfNHTIVaGjkH2xFaLcfFu46t5TuV
+	 sz2z7VhxPPxBoJQGdwbuDDE27wyBGbDcw+8DhmD1xflFcHtsGMxmekoBcJMKrY7sIZ
+	 OtIHR/Fz1L6upGS7FrtjNixjh93ZqHCdR7sKZYWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731826AbfKFPVq (ORCPT
+        id S1728530AbfKFPeZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:21:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46464 "EHLO mail.kernel.org"
+        Wed, 6 Nov 2019 10:34:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727631AbfKFPVq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:21:46 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727345AbfKFPeZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:34:25 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F712166E;
-        Wed,  6 Nov 2019 15:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E015921A49;
+        Wed,  6 Nov 2019 15:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573053706;
-        bh=Z5uRUEYMHnBMAkQQBIKbi4YuTu5BKSlKgXYE8gT6Bec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xKVvy8T7SQJv8gsuGyvvTQw5ONXKSc54BOSU448ev64QRk472PQZFFT/nTB1gGfTm
-         HRd4abZ6Xa7XqWJMo9HkBoVMefaUGGv+B1N4aOjiFIldwk1TT+GQZckyJ9+VsuL24s
-         agEi5bAJHcKcE/67YTYJsBFrzLGsfB8dA+5fwHKE=
-Date:   Wed, 6 Nov 2019 16:21:31 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        s=default; t=1573054465;
+        bh=7o0q1tVU34dCkR+noOARbHQNLo/UWxe38206TY8hDCQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CoUNr07iSKhqHPQYnHgovAiFPeBTlPbuKlIlyB1ltw17DY4h0GUk69z0sH9UCrkwg
+         QjSAKTQgidRAO2Sn0st+dAqdeImPVslmG40Ug8tl5jdYPapSS3OLGYLaJqd3ZYOxMC
+         e/fp5kQL9QBc0OXKGEMS4kFmWLHFdgdIF/OprUEE=
+Received: by mail-qk1-f170.google.com with SMTP id e2so24953116qkn.5;
+        Wed, 06 Nov 2019 07:34:24 -0800 (PST)
+X-Gm-Message-State: APjAAAVB9vnGV3OsvLRQXWiJO2D07XHmd++EANURsPQTDuRQ/V44P77e
+        kEqvXKJ8dMCOEERfvE/iU0Vv4WGHSNYONgN2aQ==
+X-Google-Smtp-Source: APXvYqw9sZsv2T4oRf/Kp1rPs5zLb4jFoqRUQy1D9khdGgEpEV2otZx+yv/nP+agw/RJymCxuNf+KXq8PP0l1j+ppZs=
+X-Received: by 2002:a05:620a:226:: with SMTP id u6mr2467840qkm.393.1573054464031;
+ Wed, 06 Nov 2019 07:34:24 -0800 (PST)
+MIME-Version: 1.0
+References: <20191104013932.22505-1-afaerber@suse.de> <20191104013932.22505-2-afaerber@suse.de>
+ <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com> <82d17114302562e0c553e2ea936974f77734e86b.camel@suse.de>
+In-Reply-To: <82d17114302562e0c553e2ea936974f77734e86b.camel@suse.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 6 Nov 2019 09:34:12 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLDFefWVdiPuAktctuBpBeOvG-OVhX2aZn=UaiN55nodg@mail.gmail.com>
+Message-ID: <CAL_JsqLDFefWVdiPuAktctuBpBeOvG-OVhX2aZn=UaiN55nodg@mail.gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: mali-midgard: Tidy up conversion to YAML
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        LAKML <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] drm/bridge: split some definitions of ANX78xx to
- dedicated headers
-Message-ID: <20191106152131.GD8617@gilmour.lan>
-References: <20191104110400.F319F68BE1@verein.lst.de>
- <20191104110605.F012268BFE@verein.lst.de>
- <20191105104126.GC3876@gilmour.lan>
- <20191105173332.GA11570@lst.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6WlEvdN9Dv0WHSBl"
-Content-Disposition: inline
-In-Reply-To: <20191105173332.GA11570@lst.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Guillaume Gardet <guillaume.gardet@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---6WlEvdN9Dv0WHSBl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi
-
-On Tue, Nov 05, 2019 at 06:33:32PM +0100, Torsten Duwe wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
+On Wed, Nov 6, 2019 at 9:07 AM Andreas F=C3=A4rber <afaerber@suse.de> wrote=
+:
 >
-> Some definitions currently in analogix-anx78xx.h are not restricted to
-> the ANX78xx series, but also applicable to other DisplayPort
-> transmitters by Analogix.
->
-> Split out them to dedicated headers, and make analogix-anx78xx.h include
-> them.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
->
-> ---
->
-> On Tue, Nov 05, 2019 at 11:41:26AM +0100, Maxime Ripard wrote:
+> Am Mittwoch, den 06.11.2019, 08:24 -0600 schrieb Rob Herring:
+> > On Sun, Nov 3, 2019 at 7:40 PM Andreas F=C3=A4rber <afaerber@suse.de>
+> > wrote:
+> > > Instead of grouping alphabetically by third-party vendor, leading
+> > > to
+> > > one-element enums, sort by Mali model number, as done for Utgard.
+> > >
+> > > This already allows us to de-duplicate two "arm,mali-t760" sections
+> > > and
+> > > will make it easier to add new vendor compatibles.
 > >
-> > This one doesn't apply on drm-misc-next. The fix doesn't look really
-> > obvious to me, can you rebase and resend it?
+> > That was the intent. Not sure how I messed that up...
+> >
+> > This patch is problematic because there's changes in arm-soc juno/dt
+> > branch and there's now a patch for exynos5420 (t628). I'd propose I
+> > apply this such that we don't get a merge conflict with juno/dt and
+> > we
+> > finish resorting after rc1 (or when both branches are in Linus'
+> > tree).
 >
-> Sure.
-> The set was based on 5.4-rc5, which lacks 025910db8057f from drm-misc-next
-> You'll also have to
-> diff -r anx6345-v5/v5-0005-drm-bridge-Add-Analogix-anx6345-support.patch anx6345-v5a/v5-0005-drm-bridge-Add-Analogix-anx6345-support.patch
-> 116,117c116,117
-> < +     [I2C_IDX_DPTX]  = ANALOGIX_I2C_DPTX,
-> < +     [I2C_IDX_TXCOM] = ANALOGIX_I2C_TXCOMMON,
-> ---
-> > +     [I2C_IDX_DPTX]  = 0x70,
-> > +     [I2C_IDX_TXCOM] = 0x72,
->
-> To make it compile, with the changed coding style of 025910db8057f.
-> Can you change that on the fly in 5/7 or shall I resend that, too?
+> This series has dependencies for the Realtek-side RFC patches and is
+> not yet ready to merge, so you can take this prep PATCH through your
+> tree for v5.6 probably, or feel free to rebase/rework as you see fit -
+> I'd just appreciate being credited at least via Reported-by. :)
 
-Please resend the whole series rebased on top of either linux-next or
-drm-misc-next.
+I was assuming the non-RFC patches are good to go, so I was going to
+pick up 1, 2, and 7.
 
-Maxime
-
---6WlEvdN9Dv0WHSBl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcLk+wAKCRDj7w1vZxhR
-xbUHAQDw1ZTTedeTOWdyiLtw5dPLgY1kNJLxyuWvOWpHnLkvfwEAtl4uNwJQytsL
-qdyuTkhCiUtsu2g+nFxjoWkC/bEU0Q0=
-=JKza
------END PGP SIGNATURE-----
-
---6WlEvdN9Dv0WHSBl--
+Rob
