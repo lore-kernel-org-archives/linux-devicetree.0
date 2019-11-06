@@ -7,108 +7,141 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55896C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 04:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5237DC5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 04:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1261C207FA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 04:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12963217D7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 04:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573013833;
-	bh=zsRfHQrQtnfc54A/CM8ZP89661pnhSCbCHe1FUEiTCI=;
+	s=default; t=1573014070;
+	bh=mrjftNi6/P18OSnIqf5qMJ0xzQjeDuEcLg2K8XmayZU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YK9sNmK1or5/X00ORYfLldqaZX/4tEshns+a/7JZ+pdsMvE+ciel5G++TSCfjtUQw
-	 0nQwYvbLcmdWGgrGem6lPn8wEcuvgyWQjlh1iU38uXvtzuycdf+c9/Cp2pNydmzCO5
-	 pngZ4a9j0YAsoXkUcULOWmOfWH9Fy5rdNVyFHVXA=
+	b=Otz26WWE/o4MH2HLLpOCNM9TG5rwZNNGPaNs4SQUANup9ctPi5OTNzbdR9CVybDce
+	 TKWv9K81iieGml6iZbp8lSvcwpHc1NOwHyeocvvNDvwJuYiFz6T24+aw9hyzcw3MbQ
+	 nC+vtgtUs9Gr76DLb0KKwQHUN2fDdsNe4LZ6pWTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbfKFERM (ORCPT
+        id S1730583AbfKFEVJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:17:12 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42065 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbfKFERM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 23:17:12 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b16so19691859otk.9;
-        Tue, 05 Nov 2019 20:17:10 -0800 (PST)
+        Tue, 5 Nov 2019 23:21:09 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36597 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfKFEVJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 23:21:09 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j7so19803250oib.3;
+        Tue, 05 Nov 2019 20:21:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pasjx8CSERkmvokF+MIWXBinQV2inOneX0DH/i8NKYE=;
-        b=U+LJqdGjDkkNh+3qJ1z9xTR8oWWZJdxenpqDWaJpcBywxHrvKKcF5Jpt5jRd8jFLWU
-         SUANNssHnY1UEXfH/4JuxBZ+ndX6Tcrz3nZ+4rqP9DzVKcrCZRXV0SEYq0a7uoH3UsqM
-         ZM6p0xq4vqOffZn2gx7J6A/XqITbwgAT9YKiYzdXn/94Kixky+1HEqXEIx2DVhWRU+tA
-         iAxl4ylykSA7kWo3Tkmvdrxf8zDkFZCqrrWTlEvAxfmLWknNihSd0auVBTORHrOCMtYp
-         qxgnYrlfH8Y9XBbqGkFVbLC4Pxioox8rjHwFqVm0XEzPx2g4EepifuOd3zSCx612FGku
-         QX4A==
-X-Gm-Message-State: APjAAAVMXvtJpQOa1PBbpunGut38fyv/N4yJk2jRJ6QvyJeFVCu/bh6e
-        nxAQ+Snb1sp98iHcFYjDDQ==
-X-Google-Smtp-Source: APXvYqymW3STVwrnKyM7oB8B3KKofNBMHecjlu2u2+qn0yFU8UaxgzxpuvOLNAN28Z1FkkCBVB69Ew==
-X-Received: by 2002:a05:6830:1e84:: with SMTP id n4mr262047otr.233.1573013829794;
-        Tue, 05 Nov 2019 20:17:09 -0800 (PST)
+        bh=GC1/ksdOjIfMA8r88prdxzosO6y9Ard78ftKzJT3YRs=;
+        b=tq2sGz1cHZBlYtsVVU+Si2bktDKtjxGp+01cAwlXEQZlEkxa6HvJuxPrOmySqHjimX
+         PsMe3A1D3neCtPDh4h4fGkDjPe/bPTmKgA58m5RKYZSse7j9vAJC6M/I6s906mC9rGGV
+         2XK6ZQcrRZRtcTWbZRh48sGezn4gb6L9QE3hZlD+E2W3vDE359tUkA/1hc8cl/vyyoiO
+         JpPOilRclK9p4OfMzgIPzTFC6nhuquAVvsJDBEr/yy8khVWs+uopPRXjWiNcKY3NCPt+
+         +aUGbRNclCG1iY4/DBaSS1GYSIqxDQ3H1JX4usf8VoudX2/3uGQ4CTPolqhFx9aWuN9s
+         1faA==
+X-Gm-Message-State: APjAAAUzdhdjydj05VIYBi3fdrW8tJzf4MT91w0NKp4O0/c5SOC9ua09
+        DQipNvCw5E+oc4oYnLsSXQ==
+X-Google-Smtp-Source: APXvYqxb3gJ3FVF2f7SF5xK93QdhFdGOiFF3vebJkIxP4iOZGB1hOKdkRk9PCd9/I6GEDKwfvdOhYg==
+X-Received: by 2002:aca:5942:: with SMTP id n63mr481764oib.56.1573014068494;
+        Tue, 05 Nov 2019 20:21:08 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e193sm837103oib.53.2019.11.05.20.17.09
+        by smtp.gmail.com with ESMTPSA id z16sm101924oih.56.2019.11.05.20.21.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 20:17:09 -0800 (PST)
-Date:   Tue, 5 Nov 2019 22:17:08 -0600
+        Tue, 05 Nov 2019 20:21:07 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:21:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] [3/3] dt-bindings: mmc: mediatek: Add document for
- mt6779
-Message-ID: <20191106041708.GA26489@bogus>
-References: <1572590582-11056-1-git-send-email-chun-hung.wu@mediatek.com>
- <1572590582-11056-3-git-send-email-chun-hung.wu@mediatek.com>
+        Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Chen-Yu Tsai <wens@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: Add BCM2711 thermal
+Message-ID: <20191106042107.GA27699@bogus>
+References: <1572615749-9524-1-git-send-email-wahrenst@gmx.net>
+ <1572615749-9524-2-git-send-email-wahrenst@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572590582-11056-3-git-send-email-chun-hung.wu@mediatek.com>
+In-Reply-To: <1572615749-9524-2-git-send-email-wahrenst@gmx.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 02:43:02PM +0800, Chun-Hung Wu wrote:
-> Add compatible node for mt6779 mmc
+On Fri, Nov 01, 2019 at 02:42:26PM +0100, Stefan Wahren wrote:
+> Since the BCM2711 doesn't have a AVS TMON block, the thermal information
+> must be retrieved from the AVS ring oscillator block. So add a new
+> suitable binding.
+
+Anything else in that block? 
 > 
-> Change-Id: Id36a136a75e892c9360ec95c7f52db06f5b308a4
-> CR-Id:
-> Feature:
-
-Remove these tags.
-
-> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 > ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/thermal/brcm,bcm2711-thermal.txt      | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,bcm2711-thermal.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 8a532f4..0c9cf6a 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -12,6 +12,7 @@ Required properties:
->  	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
->  	"mediatek,mt8183-mmc": for mmc host ip compatible with mt8183
->  	"mediatek,mt8516-mmc": for mmc host ip compatible with mt8516
-> +	"mediatek,mt6779-mmc": for mmc host ip compatible with mt6779
->  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
->  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
->  	"mediatek,mt7622-mmc": for MT7622 SoC
-> -- 
-> 1.9.1
+> diff --git a/Documentation/devicetree/bindings/thermal/brcm,bcm2711-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,bcm2711-thermal.txt
+> new file mode 100644
+> index 0000000..5531d3f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/brcm,bcm2711-thermal.txt
+> @@ -0,0 +1,39 @@
+> +Binding for Thermal Sensor driver for BCM2711 SoCs.
+> +
+> +Required properties:
+> +- compatible:		must be: "brcm,bcm2711-thermal"
+
+If the block is called 'AVS ring oscillator', then the compatible name 
+should mirror that.
+
+> +- reg:			Address range of the thermal registers.
+> +- clocks:		Phandle of the clock used by the thermal sensor.
+> +- #thermal-sensor-cells:	should be 0 (see thermal.txt)
+> +
+> +Example:
+> +
+> +thermal-zones {
+> +	cpu_thermal: cpu-thermal {
+> +		polling-delay-passive = <0>;
+> +		polling-delay = <1000>;
+> +
+> +		thermal-sensors = <&thermal>;
+> +
+> +		trips {
+> +			cpu-crit {
+> +				temperature	= <80000>;
+> +				hysteresis	= <0>;
+> +				type		= "critical";
+> +			};
+> +		};
+> +
+> +		coefficients = <(-487)  410040>;
+> +
+> +		cooling-maps {
+> +		};
+> +	};
+> +};
+> +
+> +thermal@7d5d2200 {
+> +	compatible = "brcm,bcm2711-thermal";
+> +	reg = <0x7d5d2200 0x4>;
+> +	clocks = <&clocks BCM2835_CLOCK_TSENS>;
+> +	#thermal-sensor-cells = <0>;
+> +};
+> +
+> --
+> 2.7.4
 > 
