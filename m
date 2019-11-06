@@ -2,150 +2,128 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6385EC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4971EC5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B12217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCDA217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbfKFJtG (ORCPT
+        id S1731608AbfKFJxp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:49:06 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:46790 "EHLO inva021.nxp.com"
+        Wed, 6 Nov 2019 04:53:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:36852 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731487AbfKFJtG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:49:06 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 924B62005EE;
-        Wed,  6 Nov 2019 10:49:03 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 159E32005DA;
-        Wed,  6 Nov 2019 10:48:59 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 35853402EE;
-        Wed,  6 Nov 2019 17:48:53 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/3] ARM: dts: imx6sll-evk: Add eMMC support
-Date:   Wed,  6 Nov 2019 17:47:29 +0800
-Message-Id: <1573033650-11848-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573033650-11848-1-git-send-email-Anson.Huang@nxp.com>
-References: <1573033650-11848-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1731554AbfKFJxp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:53:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 700D9328;
+        Wed,  6 Nov 2019 01:53:44 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA2DE3F6C4;
+        Wed,  6 Nov 2019 01:53:43 -0800 (PST)
+Date:   Wed, 6 Nov 2019 09:53:41 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Anvesh Salveru <anvesh.s@samsung.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
+        jingoohan1@gmail.com, pankaj.dubey@samsung.com,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
+ ZRX-DC PHY property
+Message-ID: <20191106095340.GO9723@e119886-lin.cambridge.arm.com>
+References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
+ <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
+ <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
+ <20191105215332.GA19296@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105215332.GA19296@bogus>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX6SLL EVK board has eMMC connected on uSDHC2, add support
-for it.
+On Tue, Nov 05, 2019 at 03:53:32PM -0600, Rob Herring wrote:
+> On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
+> > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
+> > specification, then after every 100ms link should transition to recovery
+> > state during the low power states which increases power consumption.
+> > 
+> > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
+> > property in DesignWare controller DT node.
+> > 
+> > CC: Rob Herring <robh+dt@kernel.org>
+> > CC: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > ---
+> > Change in v2: None
+> > 
+> >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > index 78494c4050f7..9507ac38ac89 100644
+> > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > @@ -38,6 +38,8 @@ Optional properties:
+> >     for data corruption. CDM registers include standard PCIe configuration
+> >     space registers, Port Logic registers, DMA and iATU (internal Address
+> >     Translation Unit) registers.
+> > +- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
+> > +  ZRX-DC specification.
+> 
+> If this is a property of the phy, then it belongs in the phy node or 
+> should just be implied by the phy's compatible. 
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sll-evk.dts | 67 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+As suggested in the previous revision of this series [1], this is absolutely a
+property of the phy.
 
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-index 3e1d32f..29b284c 100644
---- a/arch/arm/boot/dts/imx6sll-evk.dts
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -109,6 +109,14 @@
- 		enable-active-high;
- 	};
- 
-+	reg_sd2_vmmc: regulator-sd2-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "eMMC-VCCQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+	};
-+
- 	reg_sd3_vmmc: regulator-sd3-vmmc {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
-@@ -314,6 +322,17 @@
- 	status = "okay";
- };
- 
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-+	vqmmc-supply = <&reg_sd2_vmmc>;
-+	bus-width = <8>;
-+	no-removable;
-+	status = "okay";
-+};
-+
- &usdhc3 {
- 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
-@@ -403,6 +422,54 @@
- 		>;
- 	};
- 
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x13059
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x17059
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x17059
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x17059
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x17059
-+			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x17059
-+			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x17059
-+			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x17059
-+			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x17059
-+			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x413059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp_100mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130b9
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170b9
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170b9
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170b9
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170b9
-+			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x170b9
-+			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x170b9
-+			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x170b9
-+			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x170b9
-+			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x4130b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp_200mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170f9
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130f9
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170f9
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170f9
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170f9
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170f9
-+			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x170f9
-+			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x170f9
-+			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x170f9
-+			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x170f9
-+			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x4130f9
-+		>;
-+	};
-+
- 	pinctrl_usbotg1: usbotg1grp {
- 		fsl,pins = <
- 			MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID 0x17059
--- 
-2.7.4
+> IOW, you should be able 
+> to support this or not without changing DTs.
+> 
+> Is this spec Synopys specific? (About the only thing Google turns up are 
+> your patches.) If not, then probably shouldn't have a 'snps' prefix.
 
+This was also unfamiliar to me, however my current understanding is that
+Zrx-dc describes the 'Receiver DC single ended impedance' limits, this is
+specified in the PCI specification (table 'Common Receiver Parameters'),
+with a different limit for each speed.
+
+I believe the purpose of this series is to to satisfy the following
+implementation note in the spec "Ports that meet the Zrx-dc specification
+for 2.5 GT/s while in the L1.Idle state are therefore not required to
+implement the 100 ms timeout and transition to Recovery should avoid
+implementing it, since it will reduce the power savings expected from the
+L1 state".
+
+In other words, if it is known that the phy is compliant then an
+unnecessary transition to a higher energy state can be avoided. Though it's
+the PCI controller (in this case) that must action this and must find out
+about the phy it is connected to.
+
+So in my view 'phy-zrxdc-compliant' should be a property of a phy (without
+snps prefix), and if a controller wants to determine if it is compliant then
+there must be a phandle to the phy so the controller can find out.
+
+[1] https://patchwork.kernel.org/patch/11202121/
+
+Thanks,
+
+Andrew Murray
+
+> 
+> >  RC mode:
+> >  - num-viewport: number of view ports configured in hardware. If a platform
+> >    does not specify it, the driver assumes 2.
+> > -- 
+> > 2.17.1
+> > 
