@@ -1,903 +1,336 @@
-Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72B3CA9EA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9B3FC6194
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871EF222C5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:07:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571422028;
-	bh=hOWFPbvkBOgsqgAmUmlVwTIEWqcPKgMuzX2KgMxMCH0=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=cyJnqugM3QjI7ORaoTUF7dchUOsg9F6PTqGIfIGme0vTIvjjgCV5sFVWHA3uINle4
-	 8BFGPQX8aDGvxHU8g98O+MiQa0vTcabRKnQSkcXebi9ZGaPR2u1s/dY6jeNAHsWM55
-	 fwAScVTvyYMSYHTEODTnUwWE1o2WnzzksZZu7JlE=
+	by mail.kernel.org (Postfix) with ESMTP id 892E5217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HeDLa81X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505658AbfJRSHH (ORCPT
+        id S1731985AbfKFWhH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:07:07 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44782 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505694AbfJRSHH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:07:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=LKom4oakDjvLhQqpqywGJCyXqypbrRtAZV1y8wLZE90=; b=NGApK3d/RoIh
-        czAQeIWkrJqdmr0Q71gMrr6FIYrOnsIbIl12MEnRP6zHm3jXK+qspwksSyGa5GOLihy6QbizgvXz2
-        OJuJ2P6hd56ltJIofJXjvLr65TdqFj/tIRK2+ZrmnRH9hF9Wa8Ej6ia6Yq3VgtzQpXgWkhArpp8GP
-        ex+eM=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iLWeR-0004FE-Qm; Fri, 18 Oct 2019 18:06:59 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 4B6AE2743259; Fri, 18 Oct 2019 19:06:59 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Tzung-Bi Shih <tzungbi@google.com>
-Cc:     alsa-devel@alsa-project.org, bleung@google.com, broonie@kernel.org,
-        cychiang@google.com, devicetree@vger.kernel.org, dgreid@google.com,
-        drinkcat@google.com, enric.balletbo@collabora.com,
-        gwendal@google.com, Mark Brown <broonie@kernel.org>,
-        robh+dt@kernel.org, tzungbi@google.com
-Subject: Applied "ASoC: cros_ec_codec: refactor I2S RX" to the asoc tree
-In-Reply-To: <20191014180059.02.I43373b9a66dbb70196b3f216b3aa86111c410836@changeid>
-X-Patchwork-Hint: ignore
-Message-Id: <20191018180659.4B6AE2743259@ypsilon.sirena.org.uk>
-Date:   Fri, 18 Oct 2019 19:06:59 +0100 (BST)
+        Wed, 6 Nov 2019 17:37:07 -0500
+Received: from mail-eopbgr150053.outbound.protection.outlook.com ([40.107.15.53]:11648
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732866AbfKFWhG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:37:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QDItSdGZH0thH44GN51UHkRGoO+IFfIm9a4VkGa5mZ7Flqt8XCsE1XtEMuXeTDKAEIBWYPfaxCLRILMHe7ycbuzTJDHakJFJDYF1U3npOunjJAczdtYW/3+BrYel0oE0WhIjQgl3kzBVjTdiXaNvyaxsfEpdmOxBmQQ5DszKr/nDG/IMF0Qkd0p6x65l++dw4fPvjvqitqgHbZS2EoVYdGMYU/WRNxtEzRBZbRIMTrkenVNiwKi8w6taTdevin62LzAa5lFyjUWbIGpGXwnWYxNleMdkXCu3KuLizi+TusEj16quZZArIon+gGFyLlu7npAawmbSGM+eh7R8ZcKibA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4g9r0GR99hiBNGlK/KwDC1PLB9GapFW/c6dcT+5kiWg=;
+ b=KXRvLwN+gQypnEgSLiHnni/cHmKZNPGPp+HC8xhwFYSvtleor27pDbiYyIgsf6ZXbRiu1O8mS45zZauha+QANOxoapVzYUI7JikhXbApjje56JucnooN0jBAU/mhIcikWkwsQZEVq8lhXtTf2wDgajAPB48ziBQMJ7ek0VakrBZnn63kuZvMD3v3vEz78ayMHGBDrSYP1sOr9Dpf5gvuv5+QhTPf1uOKFKpu+VhVALVLO2d32UTdzONrFJJZ3TEuMX6DhwmwyrXC61kqYbCljZC3TmmoojYVWUyGMmHpG99vDWpwMJEvVgXrFNISOiYBXDXqeVYL6c6+1J9Mr+ER/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4g9r0GR99hiBNGlK/KwDC1PLB9GapFW/c6dcT+5kiWg=;
+ b=HeDLa81X+BWJdcPEAdxWkX7ibqvUX0MGyvZ5PBCBrhdNiynOrOwi8wr3DvmYv3Lj5GNcGEFsYDvytcyG+pIIeV4d5ZHSYV2cyvlSF4dAapASskc4MvuLrCFSmK2zNol38q7hFo3zBprUUMR7dN7hwCjOgJVbmPPf033ge9HfSwY=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB4096.eurprd04.prod.outlook.com (52.133.14.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 22:36:59 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2430.023; Wed, 6 Nov 2019
+ 22:36:59 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Martin Kepplinger <martink@posteo.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Carlo Caione <ccaione@baylibre.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+Thread-Topic: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+Thread-Index: AQHVH4Y/fXLWCNQC3kGmFNlizRWSbQ==
+Date:   Wed, 6 Nov 2019 22:36:59 +0000
+Message-ID: <VI1PR04MB70231EA80BB20C9A84B1B799EE790@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+ <7d3a868a-768c-3cb1-c6d8-bf5fcd1ddd1c@posteo.de>
+ <20191030080727.7pcvhd4466dproy4@fsr-ub1664-175>
+ <523f92bd-7e89-b48a-afd0-0a9a8bca8344@posteo.de>
+ <20191104103525.qjkxh2zhhgaaectk@fsr-ub1664-175>
+ <433f3f03-f780-c327-f1e8-fbf046a8374c@posteo.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cccedd4d-50b4-4fee-5070-08d76309d603
+x-ms-traffictypediagnostic: VI1PR04MB4096:|VI1PR04MB4096:
+x-ms-exchange-purlcount: 3
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB40965C472C2822D5F2BFE77AEE790@VI1PR04MB4096.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(54014002)(43544003)(102836004)(446003)(6246003)(55016002)(256004)(14444005)(99286004)(2906002)(76176011)(5660300002)(7696005)(476003)(6436002)(54906003)(561944003)(71190400001)(71200400001)(8936002)(6306002)(86362001)(53546011)(110136005)(9686003)(14454004)(4326008)(6506007)(966005)(316002)(81156014)(52536014)(74316002)(305945005)(81166006)(66946007)(33656002)(26005)(8676002)(7416002)(3846002)(6116002)(186003)(45080400002)(66446008)(64756008)(66556008)(66476007)(478600001)(25786009)(7736002)(76116006)(66066001)(91956017)(44832011)(229853002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4096;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pBVez4nMyFrzgmUFk2DdZp5omAI6FV0qHGntOrStPA4t8u3o9GeOMk+WeAmAHcqCSvdhg2M4XgeBqkDXcwOzTvCbr59WvMxKexMWJEBXnIHmxuniKCHsZjqCgXjtWom4gL/6WuR2XKRb6j1N3BFkYeqxdPt4yNtynAZ6m2ifa1R5Y0TCsmK9TyTjujr0XgxjflJFzBD5wTIgJ0+FeysY7uAEOY7K9JUBqXG/IV1nRMZpCb1o1/IDM59baiCcYiWKRHQ5f4IQNLi5zHybfVD2nnbS9baT+lZQtZixtZQEKY7C4bM0k83QppfSW4ZjsioQirV9feMQD38CEpGQiuHzDbDG2MxCwwJ2lOucKU5pS89nHCswNZ8K2mPrg1217lrRG+nTq1pUUWVcHC9ew7rDXJUs1gbezkgtGCciMTwInRdi3DCpLOm/dj8cfk1xwUhGoZBD+od8hwfqM5DsV37ogyrMEkJxKavauKGAs8sB1cM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cccedd4d-50b4-4fee-5070-08d76309d603
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 22:36:59.1536
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ntQZvTMwfGr0Bhu5M0DO6wzfAO107mUhFv8clNVINPagL5vgkzFD1lzXfVZMABPAUlNIi8NdS/rzu+CP4o0Uhw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4096
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: cros_ec_codec: refactor I2S RX
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 727f1c71c780789aeb8f3da2596c65ae008d5d6c Mon Sep 17 00:00:00 2001
-From: Tzung-Bi Shih <tzungbi@google.com>
-Date: Mon, 14 Oct 2019 18:20:14 +0800
-Subject: [PATCH] ASoC: cros_ec_codec: refactor I2S RX
-
-Refactor by the following items:
-- reformat copyright declaration
-- use more specific name "i2s rx"
-- use verbose symbol names to separate namespaces
-- make some short functions inline
-- remove unused TDM-related code
-
-Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-Acked-By: Benson Leung <bleung@chromium.org>
-Link: https://lore.kernel.org/r/20191014180059.02.I43373b9a66dbb70196b3f216b3aa86111c410836@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/platform/chrome/cros_ec_trace.c       |   2 +-
- .../linux/platform_data/cros_ec_commands.h    | 120 ++---
- sound/soc/codecs/cros_ec_codec.c              | 502 +++++++-----------
- 3 files changed, 251 insertions(+), 373 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
-index 6f80ff4532ae..901850004b2b 100644
---- a/drivers/platform/chrome/cros_ec_trace.c
-+++ b/drivers/platform/chrome/cros_ec_trace.c
-@@ -98,7 +98,7 @@
- 	TRACE_SYMBOL(EC_CMD_SB_READ_BLOCK), \
- 	TRACE_SYMBOL(EC_CMD_SB_WRITE_BLOCK), \
- 	TRACE_SYMBOL(EC_CMD_BATTERY_VENDOR_PARAM), \
--	TRACE_SYMBOL(EC_CMD_CODEC_I2S), \
-+	TRACE_SYMBOL(EC_CMD_EC_CODEC_I2S_RX), \
- 	TRACE_SYMBOL(EC_CMD_REBOOT_EC), \
- 	TRACE_SYMBOL(EC_CMD_GET_PANIC_INFO), \
- 	TRACE_SYMBOL(EC_CMD_ACPI_READ), \
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index 43b8f7dae4cc..261ac83bd007 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -4466,92 +4466,74 @@ enum mkbp_cec_event {
- 
- /*****************************************************************************/
- 
--/* Commands for I2S recording on audio codec. */
--
--#define EC_CMD_CODEC_I2S 0x00BC
--#define EC_WOV_I2S_SAMPLE_RATE 48000
--
--enum ec_codec_i2s_subcmd {
--	EC_CODEC_SET_SAMPLE_DEPTH = 0x0,
--	EC_CODEC_SET_GAIN = 0x1,
--	EC_CODEC_GET_GAIN = 0x2,
--	EC_CODEC_I2S_ENABLE = 0x3,
--	EC_CODEC_I2S_SET_CONFIG = 0x4,
--	EC_CODEC_I2S_SET_TDM_CONFIG = 0x5,
--	EC_CODEC_I2S_SET_BCLK = 0x6,
--	EC_CODEC_I2S_SUBCMD_COUNT = 0x7,
-+/* Commands for I2S RX on audio codec. */
-+
-+#define EC_CMD_EC_CODEC_I2S_RX 0x00BC
-+
-+enum ec_codec_i2s_rx_subcmd {
-+	EC_CODEC_I2S_RX_ENABLE = 0x0,
-+	EC_CODEC_I2S_RX_DISABLE = 0x1,
-+	EC_CODEC_I2S_RX_SET_GAIN = 0x2,
-+	EC_CODEC_I2S_RX_GET_GAIN = 0x3,
-+	EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH = 0x4,
-+	EC_CODEC_I2S_RX_SET_DAIFMT = 0x5,
-+	EC_CODEC_I2S_RX_SET_BCLK = 0x6,
-+	EC_CODEC_I2S_RX_SUBCMD_COUNT,
- };
- 
--enum ec_sample_depth_value {
--	EC_CODEC_SAMPLE_DEPTH_16 = 0,
--	EC_CODEC_SAMPLE_DEPTH_24 = 1,
-+enum ec_codec_i2s_rx_sample_depth {
-+	EC_CODEC_I2S_RX_SAMPLE_DEPTH_16 = 0x0,
-+	EC_CODEC_I2S_RX_SAMPLE_DEPTH_24 = 0x1,
-+	EC_CODEC_I2S_RX_SAMPLE_DEPTH_COUNT,
- };
- 
--enum ec_i2s_config {
--	EC_DAI_FMT_I2S = 0,
--	EC_DAI_FMT_RIGHT_J = 1,
--	EC_DAI_FMT_LEFT_J = 2,
--	EC_DAI_FMT_PCM_A = 3,
--	EC_DAI_FMT_PCM_B = 4,
--	EC_DAI_FMT_PCM_TDM = 5,
-+enum ec_codec_i2s_rx_daifmt {
-+	EC_CODEC_I2S_RX_DAIFMT_I2S = 0x0,
-+	EC_CODEC_I2S_RX_DAIFMT_RIGHT_J = 0x1,
-+	EC_CODEC_I2S_RX_DAIFMT_LEFT_J = 0x2,
-+	EC_CODEC_I2S_RX_DAIFMT_COUNT,
- };
- 
--/*
-- * For subcommand EC_CODEC_GET_GAIN.
-- */
--struct __ec_align1 ec_codec_i2s_gain {
-+struct __ec_align1 ec_param_ec_codec_i2s_rx_set_sample_depth {
-+	uint8_t depth;
-+	uint8_t reserved[3];
-+};
-+
-+struct __ec_align1 ec_param_ec_codec_i2s_rx_set_gain {
- 	uint8_t left;
- 	uint8_t right;
-+	uint8_t reserved[2];
- };
- 
--struct __ec_todo_unpacked ec_param_codec_i2s_tdm {
--	int16_t ch0_delay; /* 0 to 496 */
--	int16_t ch1_delay; /* -1 to 496 */
--	uint8_t adjacent_to_ch0;
--	uint8_t adjacent_to_ch1;
-+struct __ec_align1 ec_param_ec_codec_i2s_rx_set_daifmt {
-+	uint8_t daifmt;
-+	uint8_t reserved[3];
- };
- 
--struct __ec_todo_packed ec_param_codec_i2s {
--	/* enum ec_codec_i2s_subcmd */
--	uint8_t cmd;
--	union {
--		/*
--		 * EC_CODEC_SET_SAMPLE_DEPTH
--		 * Value should be one of ec_sample_depth_value.
--		 */
--		uint8_t depth;
--
--		/*
--		 * EC_CODEC_SET_GAIN
--		 * Value should be 0~43 for both channels.
--		 */
--		struct ec_codec_i2s_gain gain;
--
--		/*
--		 * EC_CODEC_I2S_ENABLE
--		 * 1 to enable, 0 to disable.
--		 */
--		uint8_t i2s_enable;
--
--		/*
--		 * EC_CODEC_I2S_SET_CONFIG
--		 * Value should be one of ec_i2s_config.
--		 */
--		uint8_t i2s_config;
-+struct __ec_align4 ec_param_ec_codec_i2s_rx_set_bclk {
-+	uint32_t bclk;
-+};
- 
--		/*
--		 * EC_CODEC_I2S_SET_TDM_CONFIG
--		 * Value should be one of ec_i2s_config.
--		 */
--		struct ec_param_codec_i2s_tdm tdm_param;
-+struct __ec_align4 ec_param_ec_codec_i2s_rx {
-+	uint8_t cmd; /* enum ec_codec_i2s_rx_subcmd */
-+	uint8_t reserved[3];
- 
--		/*
--		 * EC_CODEC_I2S_SET_BCLK
--		 */
--		uint32_t bclk;
-+	union {
-+		struct ec_param_ec_codec_i2s_rx_set_sample_depth
-+				set_sample_depth_param;
-+		struct ec_param_ec_codec_i2s_rx_set_gain
-+				set_gain_param;
-+		struct ec_param_ec_codec_i2s_rx_set_daifmt
-+				set_daifmt_param;
-+		struct ec_param_ec_codec_i2s_rx_set_bclk
-+				set_bclk_param;
- 	};
- };
- 
-+struct __ec_align1 ec_response_ec_codec_i2s_rx_get_gain {
-+	uint8_t left;
-+	uint8_t right;
-+};
- 
- /*****************************************************************************/
- /* System commands */
-diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
-index 3c1bd24a1057..179fa77291cd 100644
---- a/sound/soc/codecs/cros_ec_codec.c
-+++ b/sound/soc/codecs/cros_ec_codec.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Driver for ChromeOS Embedded Controller codec.
-+ * Copyright 2019 Google, Inc.
-+ *
-+ * ChromeOS Embedded Controller codec driver.
-  *
-  * This driver uses the cros-ec interface to communicate with the ChromeOS
-  * EC for audio function.
-@@ -18,403 +20,297 @@
- #include <sound/soc.h>
- #include <sound/tlv.h>
- 
--#define DRV_NAME "cros-ec-codec"
--
--/**
-- * struct cros_ec_codec_data - ChromeOS EC codec driver data.
-- * @dev:		Device structure used in sysfs.
-- * @ec_device:		cros_ec_device structure to talk to the physical device.
-- * @component:		Pointer to the component.
-- * @max_dmic_gain:	Maximum gain in dB supported by EC codec.
-- */
--struct cros_ec_codec_data {
-+struct cros_ec_codec_priv {
- 	struct device *dev;
- 	struct cros_ec_device *ec_device;
--	struct snd_soc_component *component;
--	unsigned int max_dmic_gain;
- };
- 
--static const DECLARE_TLV_DB_SCALE(ec_mic_gain_tlv, 0, 100, 0);
--
--static int ec_command_get_gain(struct snd_soc_component *component,
--			       struct ec_param_codec_i2s *param,
--			       struct ec_codec_i2s_gain *resp)
-+static int send_ec_host_command(struct cros_ec_device *ec_dev, uint32_t cmd,
-+				uint8_t *out, size_t outsize,
-+				uint8_t *in, size_t insize)
- {
--	struct cros_ec_codec_data *codec_data =
--		snd_soc_component_get_drvdata(component);
--	struct cros_ec_device *ec_device = codec_data->ec_device;
--	u8 buffer[sizeof(struct cros_ec_command) +
--		  max(sizeof(struct ec_param_codec_i2s),
--		      sizeof(struct ec_codec_i2s_gain))];
--	struct cros_ec_command *msg = (struct cros_ec_command *)&buffer;
- 	int ret;
-+	struct cros_ec_command *msg;
-+
-+	msg = kmalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
- 
- 	msg->version = 0;
--	msg->command = EC_CMD_CODEC_I2S;
--	msg->outsize = sizeof(struct ec_param_codec_i2s);
--	msg->insize = sizeof(struct ec_codec_i2s_gain);
-+	msg->command = cmd;
-+	msg->outsize = outsize;
-+	msg->insize = insize;
-+
-+	if (outsize)
-+		memcpy(msg->data, out, outsize);
- 
--	memcpy(msg->data, param, msg->outsize);
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-+	if (ret < 0)
-+		goto error;
- 
--	ret = cros_ec_cmd_xfer_status(ec_device, msg);
--	if (ret > 0)
--		memcpy(resp, msg->data, msg->insize);
-+	if (insize)
-+		memcpy(in, msg->data, insize);
- 
-+	ret = 0;
-+error:
-+	kfree(msg);
- 	return ret;
- }
- 
--/*
-- * Wrapper for EC command without response.
-- */
--static int ec_command_no_resp(struct snd_soc_component *component,
--			      struct ec_param_codec_i2s *param)
-+static int dmic_get_gain(struct snd_kcontrol *kcontrol,
-+			 struct snd_ctl_elem_value *ucontrol)
- {
--	struct cros_ec_codec_data *codec_data =
-+	struct snd_soc_component *component =
-+		snd_soc_kcontrol_component(kcontrol);
-+	struct cros_ec_codec_priv *priv =
- 		snd_soc_component_get_drvdata(component);
--	struct cros_ec_device *ec_device = codec_data->ec_device;
--	u8 buffer[sizeof(struct cros_ec_command) +
--		  sizeof(struct ec_param_codec_i2s)];
--	struct cros_ec_command *msg = (struct cros_ec_command *)&buffer;
--
--	msg->version = 0;
--	msg->command = EC_CMD_CODEC_I2S;
--	msg->outsize = sizeof(struct ec_param_codec_i2s);
--	msg->insize = 0;
--
--	memcpy(msg->data, param, msg->outsize);
--
--	return cros_ec_cmd_xfer_status(ec_device, msg);
--}
--
--static int set_i2s_config(struct snd_soc_component *component,
--			  enum ec_i2s_config i2s_config)
--{
--	struct ec_param_codec_i2s param;
-+	struct ec_param_ec_codec_i2s_rx p;
-+	struct ec_response_ec_codec_i2s_rx_get_gain r;
-+	int ret;
- 
--	dev_dbg(component->dev, "%s set I2S format to %u\n", __func__,
--		i2s_config);
-+	p.cmd = EC_CODEC_I2S_RX_GET_GAIN;
-+	ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-+				   (uint8_t *)&p, sizeof(p),
-+				   (uint8_t *)&r, sizeof(r));
-+	if (ret < 0)
-+		return ret;
- 
--	param.cmd = EC_CODEC_I2S_SET_CONFIG;
--	param.i2s_config = i2s_config;
-+	ucontrol->value.integer.value[0] = r.left;
-+	ucontrol->value.integer.value[1] = r.right;
- 
--	return ec_command_no_resp(component, &param);
-+	return 0;
- }
- 
--static int cros_ec_i2s_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-+static int dmic_put_gain(struct snd_kcontrol *kcontrol,
-+			 struct snd_ctl_elem_value *ucontrol)
- {
--	struct snd_soc_component *component = dai->component;
--	enum ec_i2s_config i2s_config;
--
--	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
--	case SND_SOC_DAIFMT_CBS_CFS:
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
--	case SND_SOC_DAIFMT_NB_NF:
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
--	case SND_SOC_DAIFMT_I2S:
--		i2s_config = EC_DAI_FMT_I2S;
--		break;
--
--	case SND_SOC_DAIFMT_RIGHT_J:
--		i2s_config = EC_DAI_FMT_RIGHT_J;
--		break;
--
--	case SND_SOC_DAIFMT_LEFT_J:
--		i2s_config = EC_DAI_FMT_LEFT_J;
--		break;
--
--	case SND_SOC_DAIFMT_DSP_A:
--		i2s_config = EC_DAI_FMT_PCM_A;
--		break;
--
--	case SND_SOC_DAIFMT_DSP_B:
--		i2s_config = EC_DAI_FMT_PCM_B;
--		break;
-+	struct snd_soc_component *component =
-+		snd_soc_kcontrol_component(kcontrol);
-+	struct cros_ec_codec_priv *priv =
-+		snd_soc_component_get_drvdata(component);
-+	struct soc_mixer_control *control =
-+		(struct soc_mixer_control *)kcontrol->private_value;
-+	int max_dmic_gain = control->max;
-+	int left = ucontrol->value.integer.value[0];
-+	int right = ucontrol->value.integer.value[1];
-+	struct ec_param_ec_codec_i2s_rx p;
- 
--	default:
-+	if (left > max_dmic_gain || right > max_dmic_gain)
- 		return -EINVAL;
--	}
- 
--	return set_i2s_config(component, i2s_config);
--}
--
--static int set_i2s_sample_depth(struct snd_soc_component *component,
--				enum ec_sample_depth_value depth)
--{
--	struct ec_param_codec_i2s param;
--
--	dev_dbg(component->dev, "%s set depth to %u\n", __func__, depth);
--
--	param.cmd = EC_CODEC_SET_SAMPLE_DEPTH;
--	param.depth = depth;
-+	dev_dbg(component->dev, "set mic gain to %u, %u\n", left, right);
- 
--	return ec_command_no_resp(component, &param);
-+	p.cmd = EC_CODEC_I2S_RX_SET_GAIN;
-+	p.set_gain_param.left = left;
-+	p.set_gain_param.right = right;
-+	return send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-+				    (uint8_t *)&p, sizeof(p), NULL, 0);
- }
- 
--static int set_i2s_bclk(struct snd_soc_component *component, uint32_t bclk)
--{
--	struct ec_param_codec_i2s param;
--
--	dev_dbg(component->dev, "%s set i2s bclk to %u\n", __func__, bclk);
-+static const DECLARE_TLV_DB_SCALE(dmic_gain_tlv, 0, 100, 0);
- 
--	param.cmd = EC_CODEC_I2S_SET_BCLK;
--	param.bclk = bclk;
-+enum {
-+	DMIC_CTL_GAIN = 0,
-+};
- 
--	return ec_command_no_resp(component, &param);
--}
-+static struct snd_kcontrol_new dmic_controls[] = {
-+	[DMIC_CTL_GAIN] =
-+		SOC_DOUBLE_EXT_TLV("EC Mic Gain", SND_SOC_NOPM, SND_SOC_NOPM,
-+				   0, 0, 0, dmic_get_gain, dmic_put_gain,
-+				   dmic_gain_tlv),
-+};
- 
--static int cros_ec_i2s_hw_params(struct snd_pcm_substream *substream,
--				 struct snd_pcm_hw_params *params,
--				 struct snd_soc_dai *dai)
-+static int i2s_rx_hw_params(struct snd_pcm_substream *substream,
-+			    struct snd_pcm_hw_params *params,
-+			    struct snd_soc_dai *dai)
- {
- 	struct snd_soc_component *component = dai->component;
--	unsigned int rate, bclk;
-+	struct cros_ec_codec_priv *priv =
-+		snd_soc_component_get_drvdata(component);
-+	struct ec_param_ec_codec_i2s_rx p;
-+	enum ec_codec_i2s_rx_sample_depth depth;
- 	int ret;
- 
--	rate = params_rate(params);
--	if (rate != 48000)
-+	if (params_rate(params) != 48000)
- 		return -EINVAL;
- 
- 	switch (params_format(params)) {
- 	case SNDRV_PCM_FORMAT_S16_LE:
--		ret = set_i2s_sample_depth(component, EC_CODEC_SAMPLE_DEPTH_16);
-+		depth = EC_CODEC_I2S_RX_SAMPLE_DEPTH_16;
- 		break;
- 	case SNDRV_PCM_FORMAT_S24_LE:
--		ret = set_i2s_sample_depth(component, EC_CODEC_SAMPLE_DEPTH_24);
-+		depth = EC_CODEC_I2S_RX_SAMPLE_DEPTH_24;
- 		break;
- 	default:
- 		return -EINVAL;
- 	}
--	if (ret < 0)
--		return ret;
--
--	bclk = snd_soc_params_to_bclk(params);
--	return set_i2s_bclk(component, bclk);
--}
- 
--static const struct snd_soc_dai_ops cros_ec_i2s_dai_ops = {
--	.hw_params = cros_ec_i2s_hw_params,
--	.set_fmt = cros_ec_i2s_set_dai_fmt,
--};
-+	dev_dbg(component->dev, "set depth to %u\n", depth);
- 
--static struct snd_soc_dai_driver cros_ec_dai[] = {
--	{
--		.name = "cros_ec_codec I2S",
--		.id = 0,
--		.capture = {
--			.stream_name = "I2S Capture",
--			.channels_min = 2,
--			.channels_max = 2,
--			.rates = SNDRV_PCM_RATE_48000,
--			.formats = SNDRV_PCM_FMTBIT_S16_LE |
--				   SNDRV_PCM_FMTBIT_S24_LE,
--		},
--		.ops = &cros_ec_i2s_dai_ops,
--	}
--};
--
--static int get_ec_mic_gain(struct snd_soc_component *component,
--			   u8 *left, u8 *right)
--{
--	struct ec_param_codec_i2s param;
--	struct ec_codec_i2s_gain resp;
--	int ret;
--
--	param.cmd = EC_CODEC_GET_GAIN;
--
--	ret = ec_command_get_gain(component, &param, &resp);
-+	p.cmd = EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH;
-+	p.set_sample_depth_param.depth = depth;
-+	ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-+				   (uint8_t *)&p, sizeof(p), NULL, 0);
- 	if (ret < 0)
- 		return ret;
- 
--	*left = resp.left;
--	*right = resp.right;
--
--	return 0;
--}
--
--static int mic_gain_get(struct snd_kcontrol *kcontrol,
--			struct snd_ctl_elem_value *ucontrol)
--{
--	struct snd_soc_component *component =
--		snd_soc_kcontrol_component(kcontrol);
--	u8 left, right;
--	int ret;
--
--	ret = get_ec_mic_gain(component, &left, &right);
--	if (ret)
--		return ret;
--
--	ucontrol->value.integer.value[0] = left;
--	ucontrol->value.integer.value[1] = right;
--
--	return 0;
--}
--
--static int set_ec_mic_gain(struct snd_soc_component *component,
--			   u8 left, u8 right)
--{
--	struct ec_param_codec_i2s param;
--
--	dev_dbg(component->dev, "%s set mic gain to %u, %u\n",
--		__func__, left, right);
-+	dev_dbg(component->dev, "set bclk to %u\n",
-+		snd_soc_params_to_bclk(params));
- 
--	param.cmd = EC_CODEC_SET_GAIN;
--	param.gain.left = left;
--	param.gain.right = right;
--
--	return ec_command_no_resp(component, &param);
-+	p.cmd = EC_CODEC_I2S_RX_SET_BCLK;
-+	p.set_bclk_param.bclk = snd_soc_params_to_bclk(params);
-+	return send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-+				    (uint8_t *)&p, sizeof(p), NULL, 0);
- }
- 
--static int mic_gain_put(struct snd_kcontrol *kcontrol,
--			struct snd_ctl_elem_value *ucontrol)
-+static int i2s_rx_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- {
--	struct snd_soc_component *component =
--		snd_soc_kcontrol_component(kcontrol);
--	struct cros_ec_codec_data *codec_data =
-+	struct snd_soc_component *component = dai->component;
-+	struct cros_ec_codec_priv *priv =
- 		snd_soc_component_get_drvdata(component);
--	int left = ucontrol->value.integer.value[0];
--	int right = ucontrol->value.integer.value[1];
--	unsigned int max_dmic_gain = codec_data->max_dmic_gain;
-+	struct ec_param_ec_codec_i2s_rx p;
-+	enum ec_codec_i2s_rx_daifmt daifmt;
- 
--	if (left > max_dmic_gain || right > max_dmic_gain)
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		break;
-+	default:
- 		return -EINVAL;
-+	}
- 
--	return set_ec_mic_gain(component, (u8)left, (u8)right);
--}
--
--static struct snd_kcontrol_new mic_gain_control =
--	SOC_DOUBLE_EXT_TLV("EC Mic Gain", SND_SOC_NOPM, SND_SOC_NOPM, 0, 0, 0,
--			   mic_gain_get, mic_gain_put, ec_mic_gain_tlv);
--
--static int enable_i2s(struct snd_soc_component *component, int enable)
--{
--	struct ec_param_codec_i2s param;
-+	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-+	case SND_SOC_DAIFMT_NB_NF:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
- 
--	dev_dbg(component->dev, "%s set i2s to %u\n", __func__, enable);
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		daifmt = EC_CODEC_I2S_RX_DAIFMT_I2S;
-+		break;
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		daifmt = EC_CODEC_I2S_RX_DAIFMT_RIGHT_J;
-+		break;
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		daifmt = EC_CODEC_I2S_RX_DAIFMT_LEFT_J;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
- 
--	param.cmd = EC_CODEC_I2S_ENABLE;
--	param.i2s_enable = enable;
-+	dev_dbg(component->dev, "set format to %u\n", daifmt);
- 
--	return ec_command_no_resp(component, &param);
-+	p.cmd = EC_CODEC_I2S_RX_SET_DAIFMT;
-+	p.set_daifmt_param.daifmt = daifmt;
-+	return send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-+				    (uint8_t *)&p, sizeof(p), NULL, 0);
- }
- 
--static int cros_ec_i2s_enable_event(struct snd_soc_dapm_widget *w,
--				    struct snd_kcontrol *kcontrol, int event)
-+static const struct snd_soc_dai_ops i2s_rx_dai_ops = {
-+	.hw_params = i2s_rx_hw_params,
-+	.set_fmt = i2s_rx_set_fmt,
-+};
-+
-+static int i2s_rx_event(struct snd_soc_dapm_widget *w,
-+			struct snd_kcontrol *kcontrol, int event)
- {
- 	struct snd_soc_component *component =
- 		snd_soc_dapm_to_component(w->dapm);
-+	struct cros_ec_codec_priv *priv =
-+		snd_soc_component_get_drvdata(component);
-+	struct ec_param_ec_codec_i2s_rx p;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
--		dev_dbg(component->dev,
--			"%s got SND_SOC_DAPM_PRE_PMU event\n", __func__);
--		return enable_i2s(component, 1);
--
-+		dev_dbg(component->dev, "enable I2S RX\n");
-+		p.cmd = EC_CODEC_I2S_RX_ENABLE;
-+		break;
- 	case SND_SOC_DAPM_PRE_PMD:
--		dev_dbg(component->dev,
--			"%s got SND_SOC_DAPM_PRE_PMD event\n", __func__);
--		return enable_i2s(component, 0);
-+		dev_dbg(component->dev, "disable I2S RX\n");
-+		p.cmd = EC_CODEC_I2S_RX_DISABLE;
-+		break;
-+	default:
-+		return 0;
- 	}
- 
--	return 0;
-+	return send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
-+				    (uint8_t *)&p, sizeof(p), NULL, 0);
- }
- 
--/*
-- * The goal of this DAPM route is to turn on/off I2S using EC
-- * host command when capture stream is started/stopped.
-- */
--static const struct snd_soc_dapm_widget cros_ec_codec_dapm_widgets[] = {
-+static struct snd_soc_dapm_widget i2s_rx_dapm_widgets[] = {
- 	SND_SOC_DAPM_INPUT("DMIC"),
--
--	/*
--	 * Control EC to enable/disable I2S.
--	 */
--	SND_SOC_DAPM_SUPPLY("I2S Enable", SND_SOC_NOPM,
--			    0, 0, cros_ec_i2s_enable_event,
-+	SND_SOC_DAPM_SUPPLY("I2S RX Enable", SND_SOC_NOPM, 0, 0, i2s_rx_event,
- 			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_PRE_PMD),
-+	SND_SOC_DAPM_AIF_OUT("I2S RX", "I2S Capture", 0, SND_SOC_NOPM, 0, 0),
-+};
- 
--	SND_SOC_DAPM_AIF_OUT("I2STX", "I2S Capture", 0, SND_SOC_NOPM, 0, 0),
-+static struct snd_soc_dapm_route i2s_rx_dapm_routes[] = {
-+	{"I2S RX", NULL, "DMIC"},
-+	{"I2S RX", NULL, "I2S RX Enable"},
- };
- 
--static const struct snd_soc_dapm_route cros_ec_codec_dapm_routes[] = {
--	{ "I2STX", NULL, "DMIC" },
--	{ "I2STX", NULL, "I2S Enable" },
-+static struct snd_soc_dai_driver i2s_rx_dai_driver = {
-+	.name = "EC Codec I2S RX",
-+	.capture = {
-+		.stream_name = "I2S Capture",
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_48000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+			SNDRV_PCM_FMTBIT_S24_LE,
-+	},
-+	.ops = &i2s_rx_dai_ops,
- };
- 
--/*
-- * Read maximum gain from device property and set it to mixer control.
-- */
--static int cros_ec_set_gain_range(struct device *dev)
-+static int i2s_rx_probe(struct snd_soc_component *component)
- {
-+	struct cros_ec_codec_priv *priv =
-+		snd_soc_component_get_drvdata(component);
-+	struct device *dev = priv->dev;
-+	int ret, val;
- 	struct soc_mixer_control *control;
--	struct cros_ec_codec_data *codec_data = dev_get_drvdata(dev);
--	int rc;
- 
--	rc = device_property_read_u32(dev, "max-dmic-gain",
--				      &codec_data->max_dmic_gain);
--	if (rc)
--		return rc;
-+	ret = device_property_read_u32(dev, "max-dmic-gain", &val);
-+	if (ret) {
-+		dev_err(dev, "Failed to read 'max-dmic-gain'\n");
-+		return ret;
-+	}
- 
- 	control = (struct soc_mixer_control *)
--				mic_gain_control.private_value;
--	control->max = codec_data->max_dmic_gain;
--	control->platform_max = codec_data->max_dmic_gain;
-+			dmic_controls[DMIC_CTL_GAIN].private_value;
-+	control->max = val;
-+	control->platform_max = val;
- 
--	return 0;
--}
--
--static int cros_ec_codec_probe(struct snd_soc_component *component)
--{
--	int rc;
--
--	struct cros_ec_codec_data *codec_data =
--		snd_soc_component_get_drvdata(component);
--
--	rc = cros_ec_set_gain_range(codec_data->dev);
--	if (rc)
--		return rc;
--
--	return snd_soc_add_component_controls(component, &mic_gain_control, 1);
-+	return snd_soc_add_component_controls(component,
-+			&dmic_controls[DMIC_CTL_GAIN], 1);
- }
- 
--static const struct snd_soc_component_driver cros_ec_component_driver = {
--	.probe			= cros_ec_codec_probe,
--	.dapm_widgets		= cros_ec_codec_dapm_widgets,
--	.num_dapm_widgets	= ARRAY_SIZE(cros_ec_codec_dapm_widgets),
--	.dapm_routes		= cros_ec_codec_dapm_routes,
--	.num_dapm_routes	= ARRAY_SIZE(cros_ec_codec_dapm_routes),
-+static const struct snd_soc_component_driver i2s_rx_component_driver = {
-+	.probe			= i2s_rx_probe,
-+	.dapm_widgets		= i2s_rx_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(i2s_rx_dapm_widgets),
-+	.dapm_routes		= i2s_rx_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(i2s_rx_dapm_routes),
- };
- 
--/*
-- * Platform device and platform driver fro cros-ec-codec.
-- */
--static int cros_ec_codec_platform_probe(struct platform_device *pd)
-+static int cros_ec_codec_platform_probe(struct platform_device *pdev)
- {
--	struct device *dev = &pd->dev;
--	struct cros_ec_device *ec_device = dev_get_drvdata(pd->dev.parent);
--	struct cros_ec_codec_data *codec_data;
-+	struct device *dev = &pdev->dev;
-+	struct cros_ec_device *ec_device = dev_get_drvdata(pdev->dev.parent);
-+	struct cros_ec_codec_priv *priv;
- 
--	codec_data = devm_kzalloc(dev, sizeof(struct cros_ec_codec_data),
--				  GFP_KERNEL);
--	if (!codec_data)
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
- 		return -ENOMEM;
- 
--	codec_data->dev = dev;
--	codec_data->ec_device = ec_device;
-+	priv->dev = dev;
-+	priv->ec_device = ec_device;
- 
--	platform_set_drvdata(pd, codec_data);
-+	platform_set_drvdata(pdev, priv);
- 
--	return devm_snd_soc_register_component(dev, &cros_ec_component_driver,
--					  cros_ec_dai, ARRAY_SIZE(cros_ec_dai));
-+	return devm_snd_soc_register_component(dev, &i2s_rx_component_driver,
-+					       &i2s_rx_dai_driver, 1);
- }
- 
- #ifdef CONFIG_OF
-@@ -427,7 +323,7 @@ MODULE_DEVICE_TABLE(of, cros_ec_codec_of_match);
- 
- static struct platform_driver cros_ec_codec_platform_driver = {
- 	.driver = {
--		.name = DRV_NAME,
-+		.name = "cros-ec-codec",
- 		.of_match_table = of_match_ptr(cros_ec_codec_of_match),
- 	},
- 	.probe = cros_ec_codec_platform_probe,
-@@ -438,4 +334,4 @@ module_platform_driver(cros_ec_codec_platform_driver);
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("ChromeOS EC codec driver");
- MODULE_AUTHOR("Cheng-Yi Chiang <cychiang@chromium.org>");
--MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_ALIAS("platform:cros-ec-codec");
--- 
-2.20.1
-
+On 06.11.2019 13:59, Martin Kepplinger wrote:=0A=
+> On 04.11.19 11:35, Abel Vesa wrote:=0A=
+>> On 19-11-04 09:49:18, Martin Kepplinger wrote:=0A=
+>>> On 30.10.19 09:08, Abel Vesa wrote:=0A=
+>>>> On 19-10-30 07:11:37, Martin Kepplinger wrote:=0A=
+>>>>> On 23.06.19 13:47, Martin Kepplinger wrote:=0A=
+>>>>>> On 10.06.19 14:13, Abel Vesa wrote:=0A=
+>>>>>>> This is another alternative for the RFC:=0A=
+>>>>>>> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
+Flkml.org%2Flkml%2F2019%2F3%2F27%2F545&amp;data=3D02%7C01%7Cleonard.crestez=
+%40nxp.com%7C6ca438b3b9e44d70ac7608d762b0c030%7C686ea1d3bc2b4c6fa92cd99c5c3=
+01635%7C0%7C1%7C637086383589318475&amp;sdata=3DNyFLkQ8PUfC7PGejDK7NBJoQu36Z=
+faYvg9yuJvHedzo%3D&amp;reserved=3D0=0A=
+>>>>>>>=0A=
+>>>>>>> This new workaround proposal is a little bit more hacky but more co=
+ntained=0A=
+>>>>>>> since everything is done within the irq-imx-gpcv2 driver.=0A=
+>>>>>>>=0A=
+>>>>>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cros=
+s_call=0A=
+>>>>>>> handler and registers instead a wrapper which calls in the 'hijacke=
+d'=0A=
+>>>>>>> handler, after that calling into EL3 which will take care of the ac=
+tual=0A=
+>>>>>>> wake up. This time, instead of expanding the PSCI ABI, we use a new=
+ vendor SIP.=0A=
+>>>>>>>=0A=
+>>>>>>> I also have the patches ready for TF-A but I'll hold on to them unt=
+il I see if=0A=
+>>>>>>> this has a chance of getting in.=0A=
+>>>>>>=0A=
+>>>>>=0A=
+>>>>> Hi Abel,=0A=
+>>>>>=0A=
+>>>>> Running this workaround doesn't seem to work anymore on 5.4-rcX. Linu=
+x=0A=
+>>>>> doesn't boot, with ATF unchanged (includes your workaround changes). =
+I=0A=
+>>>>> can try to add more details to this...=0A=
+>>>>>=0A=
+>>>>=0A=
+>>>> This is happening because the system counter is now enabled on 8mq.=0A=
+>>>> And since the irq-imx-gpcv2 is using as irq_set_affinity the=0A=
+>>>> irq_chip_set_affinity_parent. This is because the actual implementatio=
+n=0A=
+>>>> of the driver relies on GIC to set the right affinity. On a SoC=0A=
+>>>> that has the wake_request signales linked to the power controller this=
+=0A=
+>>>> works fine. Since the system counter is actually the tick broadcast=0A=
+>>>> device and the set affinity relies only on GIC, the cores can't be=0A=
+>>>> woken up by the broadcast interrupt.=0A=
+>>>>=0A=
+>>>>> Have you tested this for 5.4? Could you update this workaround? Pleas=
+e=0A=
+>>>>> let me know if I missed any earlier update on this (having a cpu-slee=
+p=0A=
+>>>>> idle state).=0A=
+>>>>>=0A=
+>>>>=0A=
+>>>> The solution is to implement the set affinity in the irq-imx-gpcv2 dri=
+ver=0A=
+>>>> which would allow the gpc to wake up the target core when the broadcas=
+t=0A=
+>>>> irq arrives.=0A=
+>>>>=0A=
+>>>> I have a patch for this. I just need to clean it up a little bit.=0A=
+>>>> Unfortunately, it won't go upstream since everuone thinks the gic=0A=
+>>>> should be the one to control the affinity. This obviously doesn't work=
+=0A=
+>>>> on 8mq.=0A=
+>>>>=0A=
+>>>> Currently, I'm at ELCE in Lyon. Will get back at the office tomorrow=
+=0A=
+>>>> and sned you what I have.=0A=
+>>>>=0A=
+>>>=0A=
+>>> Hi Abel,=0A=
+>>>=0A=
+>>> Do you have any news on said patch for testing? That'd be great for my=
+=0A=
+>>> plannings.=0A=
+>>>=0A=
+>>=0A=
+>> Sorry for the late answer.=0A=
+>>=0A=
+>> I'm dropping here the diff.=0A=
+>>=0A=
+>> Please keep in mind that this is _not_ an official solution.=0A=
+>>=0A=
+>> ---=0A=
+>>   drivers/irqchip/irq-imx-gpcv2.c | 42 +++++++++++++++++++++++++++++++++=
++++++++-=0A=
+>>   1 file changed, 41 insertions(+), 1 deletion(-)=0A=
+>>=0A=
+>> diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-g=
+pcv2.c=0A=
+>> index 01ce6f4..3150588 100644=0A=
+>> --- a/drivers/irqchip/irq-imx-gpcv2.c=0A=
+>> +++ b/drivers/irqchip/irq-imx-gpcv2.c=0A=
+>> @@ -41,6 +41,24 @@ static void __iomem *gpcv2_idx_to_reg(struct gpcv2_ir=
+qchip_data *cd, int i)=0A=
+>>   	return cd->gpc_base + cd->cpu2wakeup + i * 4;=0A=
+>>   }=0A=
+>>   =0A=
+>> +static void __iomem *gpcv2_idx_to_reg_cpu(struct gpcv2_irqchip_data *cd=
+,=0A=
+>> +					int i, int cpu)=0A=
+>> +{=0A=
+>> +	u32 offset =3D  GPC_IMR1_CORE0;=0A=
+>> +	switch(cpu) {=0A=
+>> +	case 1:=0A=
+>> +		offset =3D GPC_IMR1_CORE1;=0A=
+>> +		break;=0A=
+>> +	case 2:=0A=
+>> +		offset =3D GPC_IMR1_CORE2;=0A=
+>> +		break;=0A=
+>> +	case 3:=0A=
+>> +		offset =3D GPC_IMR1_CORE3;=0A=
+>> +		break;=0A=
+>> +	}=0A=
+>> +	return cd->gpc_base + offset + i * 4;=0A=
+>> +}=0A=
+>> +=0A=
+>>   static int gpcv2_wakeup_source_save(void)=0A=
+>>   {=0A=
+>>   	struct gpcv2_irqchip_data *cd;=0A=
+>> @@ -163,6 +181,28 @@ static void imx_gpcv2_irq_mask(struct irq_data *d)=
+=0A=
+>>   	irq_chip_mask_parent(d);=0A=
+>>   }=0A=
+>>   =0A=
+>> +static int imx_gpcv2_irq_set_affinity(struct irq_data *d,=0A=
+>> +				 const struct cpumask *dest, bool force)=0A=
+>> +{=0A=
+>> +	struct gpcv2_irqchip_data *cd =3D d->chip_data;=0A=
+>> +	void __iomem *reg;=0A=
+>> +	u32 val;=0A=
+>> +	int cpu;=0A=
+>> +=0A=
+>> +	for_each_possible_cpu(cpu) {=0A=
+>> +		raw_spin_lock(&cd->rlock);=0A=
+>> +		reg =3D gpcv2_idx_to_reg_cpu(cd, d->hwirq / 32, cpu);=0A=
+>> +		val =3D readl_relaxed(reg);=0A=
+>> +		val |=3D BIT(d->hwirq % 32);=0A=
+>> +		if (cpumask_test_cpu(cpu, dest))=0A=
+>> +			val &=3D ~BIT(d->hwirq % 32);=0A=
+>> +		writel_relaxed(val, reg);=0A=
+>> +		raw_spin_unlock(&cd->rlock);=0A=
+>> +	}=0A=
+>> +=0A=
+>> +	return irq_chip_set_affinity_parent(d, dest, force);=0A=
+>> +}=0A=
+>> +=0A=
+>>   static struct irq_chip gpcv2_irqchip_data_chip =3D {=0A=
+>>   	.name			=3D "GPCv2",=0A=
+>>   	.irq_eoi		=3D irq_chip_eoi_parent,=0A=
+>> @@ -172,7 +212,7 @@ static struct irq_chip gpcv2_irqchip_data_chip =3D {=
+=0A=
+>>   	.irq_retrigger		=3D irq_chip_retrigger_hierarchy,=0A=
+>>   	.irq_set_type		=3D irq_chip_set_type_parent,=0A=
+>>   #ifdef CONFIG_SMP=0A=
+>> -	.irq_set_affinity	=3D irq_chip_set_affinity_parent,=0A=
+>> +	.irq_set_affinity	=3D imx_gpcv2_irq_set_affinity,=0A=
+>>   #endif=0A=
+>>   };=0A=
+=0A=
+This is prone to race conditions.=0A=
+=0A=
+In NXP tree there is different gpcv2 irqchip driver which does all GPC =0A=
+IMR register manipulation in TF-A through SMC calls. The cpuidle =0A=
+workaround also manipulates the same registers and does so safely under =0A=
+a lock.=0A=
+=0A=
+If OS also writes to same IMR register then set_affinity for SPIs 1-31 =0A=
+can potentially race with one those cores being woken up. This is very =0A=
+unlikely (set_affinity calls are rare) but in the worst case the system =0A=
+could still hang on lost IPI.=0A=
+=0A=
+> I guess this diff does not apply when using this reworked change:=0A=
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fsourc=
+e.puri.sm%2FLibrem5%2Flinux-next%2Fcommit%2Fe59807ae0e236512761b751abc84a9b=
+129d7fcda&amp;data=3D02%7C01%7Cleonard.crestez%40nxp.com%7C6ca438b3b9e44d70=
+ac7608d762b0c030%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C6370863835893=
+18475&amp;sdata=3DMf%2BFtqFSG4xHL3IGPrD%2FOweR8qoJHV0IKuziPIUK%2Bsw%3D&amp;=
+reserved=3D0=0A=
+> which has worked for me when running 5.3.=0A=
+> =0A=
+> At least on 5.4-rc5, using your change, I still get=0A=
+> =0A=
+> cat /sys/devices/system/cpu/cpuidle/current_driver=0A=
+> none=0A=
+=0A=
+This reads "psci_idle" for me in linux-next on imx8mm. Your problem =0A=
+seems to be related to probing the cpuidle driver, not related to any =0A=
+hardware workarounds.=0A=
+=0A=
+> But also when trying to rewrite your patch against irq-gic-v3.c at least=
+=0A=
+> nothing changes for me (I might have done that wrong as well though).=0A=
+> =0A=
+> What needs to change (in order to have the cpu-sleep state / idle=0A=
+> driver) based on the above "reworked" workaround?=0A=
+> =0A=
+> Could the config have changed? CONFIG_ARM_CPUIDLE should be the only=0A=
+> needed path, or did things change there in 5.4?=0A=
+=0A=
+It seems there were some recent cleanups in the cpuidle psci core code, =0A=
+maybe you need config updates?=0A=
+=0A=
+https://patchwork.kernel.org/cover/11052723/=0A=
+=0A=
+> I know all this is no real solution, but currently the only way to have=
+=0A=
+> said sleep state on top of mainline. so be it for now.=0A=
+Can you use the gpcv2 driver from NXP tree?=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
