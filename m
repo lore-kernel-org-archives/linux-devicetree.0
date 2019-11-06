@@ -2,91 +2,170 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98264C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E239C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 04:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4FD2087E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7C3222C9
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 04:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573012831;
-	bh=EGN2Lrh3me+FAqx+ox1JwNnU297H3BtLLGtjLCglSss=;
+	s=default; t=1573013221;
+	bh=k03/NoU9yY0j1kkrXdGAfiuxBRECPKDW/G6G/PAEHY0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vw6c8GQ8ABqLk/w5R57s4pB+r6eyw/OgIqcdxke4R0W4RDNH4KwtidltbshBpsOmo
-	 Sndml9+QZCB9VnpHecBTt9VTd79mawKTLAqeA0YzFxkmRAgFCnSmgboOnjT3OyIaCL
-	 gT75fVWYA9yy/vZb2snwJXnel6Ii1ZdMfv2qQFDk=
+	b=zoxaWChyik1I163mpoBLjEvz8H/cRqsLPm2V31hQkjL/J5zg3BYQZ6yNw7DGVbbEb
+	 jzHyQD0DL6nVg9x2ORGLSGTTtOLH6oOjEtGc7WyWbsfwpuzoAJQVSqzGDA1Lxfd6MA
+	 Vh405AG1nAsxequ74tkkUYsG+P5oHFNpAXzIdVY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbfKFEA0 (ORCPT
+        id S1731044AbfKFEHA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:00:26 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45498 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfKFEA0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 23:00:26 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k2so19710918oij.12;
-        Tue, 05 Nov 2019 20:00:25 -0800 (PST)
+        Tue, 5 Nov 2019 23:07:00 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45954 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfKFEHA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 23:07:00 -0500
+Received: by mail-oi1-f195.google.com with SMTP id k2so19721544oij.12;
+        Tue, 05 Nov 2019 20:06:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ysqS9rcdYrTtEuoWI9nbxHqCjwSJ2N3Q7Hvz5EM+mmA=;
-        b=Qry9BVoYDD8cxzLSjE/RKrBpCIwYoCdorOgRkAE8ePauvrZKkqPVSiv9aTmaasgnje
-         Xw8nbu2faNbSO7RQfp3085YljoANOOaPLbl3XDj0eK1pE7cbKkVR9UgJnfkVyiUQWcZ4
-         3gW2xv/X9ANuvl3rvnguqu2ICj89ugNCpYzucKgDGd+i0bbRLLmjlV5K9G9JCRaBdQqV
-         Ob9eGJZR0X5R0afKO1LdfhKbpdBLSJVxijVkKfOsLYjqhyJtvQX+lgf7PYDAE/vuRDBy
-         LHTS+IONBbaEQtC4m23SbE9p07tqcyQU+wcw5OxeKMfecf1dZxaf3qK03p0cdhg/m7+H
-         oxzg==
-X-Gm-Message-State: APjAAAUOzYx3Josg1ZdH7LjmbWSv2iw+bcGMrR7yY3hhowg2WRMFvh9L
-        qdSG9BzuqEAibRv4RyIJgg==
-X-Google-Smtp-Source: APXvYqyT5mAWFh8aqygKOd9JM7fV1DLfzWIErkA64Ibng0c8MMAJ375J/TSg1ewt4VmCOvZwOVxrFw==
-X-Received: by 2002:aca:5104:: with SMTP id f4mr407777oib.40.1573012825074;
-        Tue, 05 Nov 2019 20:00:25 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pbXWYeEjjc1tNeD8Va0Rn7W5q8WImyzirMTHLiEKYGY=;
+        b=HDvT0r1O4hYvec9HRTLyyiRoRCgRpMUAnN8NYp3qonrng2HCXN05NI8IF//H6UzyTz
+         s37E6T15SEV+ZNYj4JbFAvNUzQ2njM88WrhHTmWiv2VI/tmYa/GkJYl3fBPghGLjRap7
+         TCc6L2ixyel0KqCdeHQaW8MP5faYkPGaNoxdyNQJMbnIdiVoIGr+XxJSIs3+8LSxEZy/
+         UhhiL++TWq+rig8o3KvXasRs1axFUSltBNfM5aUZk4uPxbQD9zi5MJ8YMXkTZdyaJTsq
+         XrjXuetjq/Kcd+fGjcyCJ6kuZLfd2D+mSCt4hG/lVpagelMVrD1F0IoTJzXR/W67mI93
+         KqIA==
+X-Gm-Message-State: APjAAAWxQyuhT2AoHxUH1Uqccj9rF26Efe3IdILIKmorCJAh1t8/RZYH
+        RZR/QMpzTz8HNSkW/g/R0iBxHjk=
+X-Google-Smtp-Source: APXvYqwe0beNgeLE8gya+f9XdJ7ynxnQMAtyk6u+v0005b8KLbqtym2m20lGy9EYFxREtXyxePD27Q==
+X-Received: by 2002:aca:f18b:: with SMTP id p133mr406122oih.22.1573013219216;
+        Tue, 05 Nov 2019 20:06:59 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p18sm6244401oip.18.2019.11.05.20.00.24
+        by smtp.gmail.com with ESMTPSA id k93sm6726958otc.30.2019.11.05.20.06.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 20:00:24 -0800 (PST)
-Date:   Tue, 5 Nov 2019 22:00:23 -0600
+        Tue, 05 Nov 2019 20:06:58 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:06:57 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v1 5/7] dt-bindings: clock: Add YAML schemas for the QCOM
- VIDEOCC clock bindings
-Message-ID: <20191106040023.GA4519@bogus>
-References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
- <1572524473-19344-6-git-send-email-tdas@codeaurora.org>
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-iio@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
+ bindings to json-schema
+Message-ID: <20191106040657.GA5294@bogus>
+References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+ <20191031123040.26316-3-benjamin.gaignard@st.com>
+ <20191103110841.3ad3ecfb@archlinux>
+ <CA+M3ks5sZ6wwV-V+HCLC8OLdeLqrxK0Ga-pXTsdktQErbMOk4g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1572524473-19344-6-git-send-email-tdas@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+M3ks5sZ6wwV-V+HCLC8OLdeLqrxK0Ga-pXTsdktQErbMOk4g@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 31 Oct 2019 17:51:11 +0530, Taniya Das wrote:
-> The VIDEOCC clock provider have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
+On Tue, Nov 05, 2019 at 11:07:16AM +0100, Benjamin Gaignard wrote:
+> Le dim. 3 nov. 2019 à 12:08, Jonathan Cameron <jic23@kernel.org> a écrit :
+> >
+> > On Thu, 31 Oct 2019 13:30:38 +0100
+> > Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
+> >
+> > > Convert the STM32 IIO trigger binding to DT schema format using json-schema
+> > >
+> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > I'm far from great on these as still haven't taken the time I should to learn
+> > the yaml syntax properly.  A few comments inline however based mostly on this
+> > doesn't quite look like other ones I've seen recently.
+> >
+> > Thanks,
+> >
+> > Jonathan
+> >
+> > > ---
+> > >  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++++++++++
+> > >  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
+> > >  2 files changed, 44 insertions(+), 25 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+> > > new file mode 100644
+> > > index 000000000000..1c8c8b55e8cd
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+> > > @@ -0,0 +1,44 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: STMicroelectronics STM32 Timers IIO timer bindings
+> > > +
+> > > +maintainers:
+> > > +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> > > +  - Fabrice Gasnier <fabrice.gasnier@st.com>
+> > > +
+> > > +properties:
+> > > +  $nodemane:
+> >
+> > nodename?
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,videocc.txt     | 18 -------
->  .../devicetree/bindings/clock/qcom,videocc.yaml    | 61 ++++++++++++++++++++++
->  2 files changed, 61 insertions(+), 18 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> 
+> That will be in v2
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+No, $nodename is correct. The '$' signifies something we generate and 
+add in. IOW, not a real property. I guess we could have used 'name' here 
+and stuck with traditional OpenFirmware.
+
+> 
+> >
+> > > +    pattern: "^timer@[0-9]+$"
+> > > +    type: object
+> > > +
+> > > +    description:
+> > > +      must be a sub-node of an STM32 Timer device tree node
+> > > +
+> > > +    properties:
+> > > +      compatible:
+> > > +        oneOf:
+> >
+> > enum is I think preferred for these.
+> 
+> as you like it will be in v2
+> 
+> >
+> > > +          - const: st,stm32-timer-trigger
+> > > +          - const: st,stm32h7-timer-trigger
+> > > +
+> > > +      reg: true
+> >
+> > Normally some info for what the reg value is..
+> I can't put "description" on this field because the syntax doesn't allow it.
+> I will add a comment in v2 to explain what reg is.
+
+items:
+  - maximum: <max timer number>
+
+Rob
