@@ -2,362 +2,87 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862B7C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E149C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E62F2187F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C751E21882
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573059395;
+	bh=U2nsQMfV/CP9zqFEvIKsaDEwXvLJIyKfNfbdwzBjG4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L32Phkm8NeTT07OCNHk07Ll7bNr0LfpuWjolGwQeBFt2G+FnoJyJrncZ+yhGMg2VI
+	 a76nw9cATquVYOUGJccppsLTYXt5DOAvi/UFaQmhzgjuTOLSTtx3EBoRoaO2yKSiwz
+	 OKn0cxdn/pu3M4IDQisXAJb3IlojbLho87DUtbbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbfKFQww (ORCPT
+        id S1727570AbfKFQ4f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:52:52 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:55753 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727824AbfKFQww (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 11:52:52 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id SOXyip2Ly9P9bSOY1iedV0; Wed, 06 Nov 2019 17:52:49 +0100
-Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
- <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
- <1573058741.16477.18.camel@nxp.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
-Date:   Wed, 6 Nov 2019 17:52:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 11:56:35 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35477 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732257AbfKFQ4f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 11:56:35 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z6so21440543otb.2;
+        Wed, 06 Nov 2019 08:56:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bKw0VnnNhxLDCfwgkMNCot+CxHtvj7koN2Tbmbg1cOw=;
+        b=fm3vTN8eRQ8DisXG10MynigUvTppWhqVDbDkU812wTUV/lv7l9bytSm6Ko8cBpIfO2
+         SgPbphbgasBw68+FshnIokXUuBjqyJx0vUu0OrDVW4JEQ0wHVv6B4+x0zhxT7ZmVFDpC
+         TtddQqLHCjAdEL6rCJRY5b+iUkupoVgp5jXdqYFQvyQHpBvhiTTUyByHScZcX6nSiSbB
+         S2zm0ebGa+QmBA3WLarkZtCd1t+f/CQ6WPbWjzqyyDRKYQY1QleMO7X9sYRCs+5ZwYlp
+         +NzocnNu+0XTI2hciVZSuAg2PuD7CQf/MH+ohXQKvlpd/mfkd2glNGH+juxtmpRADp2h
+         Sqrw==
+X-Gm-Message-State: APjAAAWQa1IocxhqxD/c/DcwE94jOkojZgm/APBvfgeJ8UfDS2HmUrd7
+        eIoly9WoNO3RbYy6p4RWBA==
+X-Google-Smtp-Source: APXvYqxwsNDVP+nSwdBJITYQaV3J9Tytq+ZUv8LySKHZGMEWBhzTrOvwwhFD75qIHPp0+x1ihlXTRA==
+X-Received: by 2002:a05:6830:1d74:: with SMTP id l20mr2613599oti.111.1573059393967;
+        Wed, 06 Nov 2019 08:56:33 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d205sm2583526oig.28.2019.11.06.08.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 08:56:33 -0800 (PST)
+Date:   Wed, 6 Nov 2019 10:56:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v4 08/14] dt-bindings: qcom,pdc: Add compatible for sc7180
+Message-ID: <20191106165632.GA15103@bogus>
+References: <20191106065017.22144-1-rnayak@codeaurora.org>
+ <20191106065017.22144-9-rnayak@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <1573058741.16477.18.camel@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfCMhwsl33WKBOGR5KEGFopnmg4H1XlpCQB/6CM7GEZqrOm74S2xriGDTT44JIkOW09Bb2apG+ue6gNcRv9Qr4tYBHfyXXvlf7f0Z3P8F0TANRM5rE+jS
- tacpFFZhM3hcGirOm/RKPsHs410rpc1wFQckmCY/ZIrZqdShRm3HbCBLjJ4iOB1562nKiNOgNbkvA++zyHcCreEsRjCcAGK7kZXG/Yo9ZZGjf60hzUgP0vni
- AFen8J/3PAUWiYTgR4GI6CSjAnfLOcVl+O//v0toZZOCR/xpbvCOWRg2OhfEHg0ukUNkGWH7dYfYA8oHRWDxA2Cj80xG0PXxIOSbuMfjnqBX+HwtYyLbBkqW
- 1wLjX54suiaNqoCOvlrYEH26R4qsY986udaf8A8lDBxmHMYkDa5lqbqMPoLEgMprkfP6WDzPy41vp0VnfObS/rtpMe+DOd6VvznlBctNAqP9UqNoDfstj9GM
- Ro397qPqzueG1n0iCB9AkbgeWUSFyc0bJi3mPPGBgCQyX8nCV70fHUxBAtj8QSgexIVNBevAdPUrCIUaJSTTa88XiMaFwweCpWFc7WoKUd5VemwFMgkCEN08
- J77F3to+fGpCxxRRxKBd1dose8aA3RoBXCW+zUUdMNKjQJEXYkQ1cftKzZ6GLdbVCB0dR4T2Mw5el/g2Q1UTFMDTzWh+2IwWwA891sDG64F3LfbTQ37YLPWo
- IeetJVTfncRZVDUMB24TpGCmWPJPUr5HTnvW4HKVVhQr/CiNO4knt/zPDpU4uDgILhOtGuP/mwSYX+FFWabMoX+mVmZZDUe5+MAsu2xFXFhe8b1poA9/pJPw
- 9aD8tfE4pg8CQrBz025SdzdyYcKHCtfhhWykgol1EgQ3Dvxhxm+q8uCkCxvKOA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106065017.22144-9-rnayak@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/6/19 5:45 PM, Mirela Rabulea wrote:
-> Hi Hans,
+On Wed,  6 Nov 2019 12:20:11 +0530, Rajendra Nayak wrote:
+> Add the compatible string for sc7180 SoC from Qualcomm.
 > 
-> On Mi, 2019-11-06 at 16:37 +0100, Hans Verkuil wrote:
->> That's too old. Always test with the latest version from the v4l-
->> utils git
->> repo (git://linuxtv.org/v4l-utils.git). v4l2-compliance is
->> continually
->> improved, so driver testing should always be done with the latest
->> version.
->>
->> For the JPEG encoder you can add the -s option to v4l2-compliance.
->> Unfortunately,
->> the streaming tests for JPEG decoders in v4l2-compliance are not well
->> supported
->> at the moment, so you can't use -s there.
->>
->> Please provide the full output of the v4l2-compliance command as
->> well, I'd
->> like to see the actual output.
-> 
-> Thanks for the reply. I updated to the latest v4l-utils, basic tests
-> pass, but I have issues with the streaming tests (-s). I'll work on
-> those, it might take a while.
-> For the reference, here's the actual output, for both the encoder &
-> decoder.
-> 
-> 
-> root@imx8qxpmek:/unit_tests/JPEG# ./v4l2-compliance -d /dev/video1 -s
-> v4l2-compliance SHA: 6c415a11fceb32067cdb5c2e33f90dbf018182a4, 64 bits
-> 
-> Compliance test for mxc-jpeg decode device /dev/video1:
-> 
-> Driver Info:
-> 	Driver name      : mxc-jpeg decode
-> 	Card type        : mxc-jpeg decoder
-> 	Bus info         : platform:58450000.jpegenc
-> 	Driver version   : 5.4.0
-> 	Capabilities     : 0x84204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x04204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 	Detected JPEG Encoder
-> 
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second /dev/video1 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-> 	test VIDIOC_QUERYCTRL: OK (Not Supported)
-> 	test VIDIOC_G/S_CTRL: OK (Not Supported)
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 0 Private Controls: 0
-> 
-> Format ioctls:
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK
-
-The presence of a scaler is suspicious: is the encoder indeed
-capable of scaling? I suspect this is a bug.
-
-> 
-> Codec ioctls:
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK
-
-The presence of this...
-
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK
-
-...and this is also strange for a JPEG codec. These ioctls are typically only
-needed for MPEG/H264/etc. codecs, and not for a simple JPEG codec.
-
-The same issues are found for the JPEG decoder.
-
-> 
-> Buffer ioctls:
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
-> 	test Requests: OK (Not Supported)
-> 
-> Test input 0:
-> 
-> Streaming ioctls:
-> 	test read/write: OK (Not Supported)
-> 	test blocking wait: OK
-> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
-> V4L2_FIELD_ANY
-
-The driver shall never return FIELD_ANY. This needs to be FIELD_NONE.
-
-Regards,
-
-	Hans
-
-> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
-> 	test MMAP (no poll): FAIL
-> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
-> V4L2_FIELD_ANY
-> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
-> 	test MMAP (select): FAIL
-> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
-> V4L2_FIELD_ANY
-> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
-> 	test MMAP (epoll): FAIL
-> 		fail: v4l2-test-buffers.cpp(1492): ret && ret != ENOTTY
-> 		fail: v4l2-test-buffers.cpp(1580): setupUserPtr(node,
-> q)
-> 	test USERPTR (no poll): FAIL
-> 		fail: v4l2-test-buffers.cpp(1492): ret && ret != ENOTTY
-> 		fail: v4l2-test-buffers.cpp(1580): setupUserPtr(node,
-> q)
-> 	test USERPTR (select): FAIL
-> 	test DMABUF: Cannot test, specify --expbuf-device
-> 
-> Total for mxc-jpeg decode device /dev/video1: 51, Succeeded: 46,
-> Failed: 5, Warnings: 0
-> 
-> 
-> 
-> root@imx8qxpmek:/unit_tests/JPEG# ./v4l2-compliance -d /dev/video0 -s
-> v4l2-compliance SHA: 6c415a11fceb32067cdb5c2e33f90dbf018182a4, 64 bits
-> 
-> Compliance test for mxc-jpeg decode device /dev/video0:
-> 
-> Driver Info:
-> 	Driver name      : mxc-jpeg decode
-> 	Card type        : mxc-jpeg decoder
-> 	Bus info         : platform:58400000.jpegdec
-> 	Driver version   : 5.4.0
-> 	Capabilities     : 0x84204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x04204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 	Detected JPEG Decoder
-> 
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second /dev/video0 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-> 	test VIDIOC_QUERYCTRL: OK (Not Supported)
-> 	test VIDIOC_G/S_CTRL: OK (Not Supported)
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 0 Private Controls: 0
-> 
-> Format ioctls:
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK
-> 
-> Codec ioctls:
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK
-> 
-> Buffer ioctls:
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
-> 	test Requests: OK (Not Supported)
-> 
-> Test input 0:
-> 
-> Streaming ioctls:
-> 	test read/write: OK (Not Supported)
-> 	test blocking wait: OK
-> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
-> V4L2_FIELD_ANY
-> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
-> 	test MMAP (no poll): FAIL
-> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
-> V4L2_FIELD_ANY
-> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
-> 	test MMAP (select): FAIL
-> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
-> V4L2_FIELD_ANY
-> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
-> 	test MMAP (epoll): FAIL
-> 		fail: v4l2-test-buffers.cpp(1492): ret && ret != ENOTTY
-> 		fail: v4l2-test-buffers.cpp(1580): setupUserPtr(node,
-> q)
-> 	test USERPTR (no poll): FAIL
-> 		fail: v4l2-test-buffers.cpp(1492): ret && ret != ENOTTY
-> 		fail: v4l2-test-buffers.cpp(1580): setupUserPtr(node,
-> q)
-> 	test USERPTR (select): FAIL
-> 	test DMABUF: Cannot test, specify --expbuf-device
-> 
-> Total for mxc-jpeg decode device /dev/video0: 51, Succeeded: 46,
-> Failed: 5, Warnings: 0
-> 
-> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt      | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
