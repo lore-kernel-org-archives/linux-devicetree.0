@@ -2,98 +2,89 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C350C5DF64
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E30C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA4021929
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AFA2075C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfKFPwu (ORCPT
+        id S1728679AbfKFQJm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:52:50 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:37352 "EHLO inva020.nxp.com"
+        Wed, 6 Nov 2019 11:09:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:42422 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732066AbfKFPwu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:52:50 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C3F341A064B;
-        Wed,  6 Nov 2019 16:52:48 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B5A2D1A0621;
-        Wed,  6 Nov 2019 16:52:48 +0100 (CET)
-Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 59F02205EB;
-        Wed,  6 Nov 2019 16:52:48 +0100 (CET)
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     shawnguo@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: lx2160a: add RGMII phy nodes
-Date:   Wed,  6 Nov 2019 17:52:16 +0200
-Message-Id: <1573055536-21786-3-git-send-email-ioana.ciornei@nxp.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573055536-21786-1-git-send-email-ioana.ciornei@nxp.com>
-References: <1573055536-21786-1-git-send-email-ioana.ciornei@nxp.com>
-Reply-to: ioana.ciornei@nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728530AbfKFQJm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 11:09:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A98346A;
+        Wed,  6 Nov 2019 08:09:41 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82DC23F71A;
+        Wed,  6 Nov 2019 08:09:39 -0800 (PST)
+Date:   Wed, 6 Nov 2019 16:09:37 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        roy.zang@nxp.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: add compatible
+ strings "fsl,ls1028a-pcie"
+Message-ID: <20191106160937.GB23381@e121166-lin.cambridge.arm.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Annotate the EMDIO1 node and describe the 2 AR8035 RGMII PHYs.
-Also, add phy-handles for dpmac17 and dpmac18 to its associated PHY.
-The MAC is not capable to add the needed RGMII delays, thus the
-"rgmii-id" phy-connection-type is used.
+On Mon, Sep 02, 2019 at 11:43:17AM +0800, Xiaowei Bao wrote:
+> Add the PCIe compatible string for LS1028A
 
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 27 +++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Sentences must be terminated with a period.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-index c2817b784232..1e2a7c4031fd 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -35,6 +35,33 @@
- 	status = "okay";
- };
- 
-+&dpmac17 {
-+	phy-handle = <&rgmii_phy1>;
-+	phy-connection-type = "rgmii-id";
-+};
-+
-+&dpmac18 {
-+	phy-handle = <&rgmii_phy2>;
-+	phy-connection-type = "rgmii-id";
-+};
-+
-+&emdio1 {
-+	status = "okay";
-+
-+	rgmii_phy1: ethernet-phy@1 {
-+		/* AR8035 PHY */
-+		compatible = "ethernet-phy-id004d.d072";
-+		reg = <0x1>;
-+		eee-broken-1000t;
-+	};
-+	rgmii_phy2: ethernet-phy@2 {
-+		/* AR8035 PHY */
-+		compatible = "ethernet-phy-id004d.d072";
-+		reg = <0x2>;
-+		eee-broken-1000t;
-+	};
-+};
-+
- &esdhc0 {
- 	sd-uhs-sdr104;
- 	sd-uhs-sdr50;
--- 
-1.9.1
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+>  - No change.
+> v3:
+>  - No change.
+> v4:
+>  - No change.
+> v5:
+>  - No change.
+> v6:
+>  - No change.
+> 
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index e20ceaa..99a386e 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -21,6 +21,7 @@ Required properties:
+>          "fsl,ls1046a-pcie"
+>          "fsl,ls1043a-pcie"
+>          "fsl,ls1012a-pcie"
+> +        "fsl,ls1028a-pcie"
+>    EP mode:
+>  	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+>  - reg: base addresses and lengths of the PCIe controller register blocks.
 
+I have applied this series to pci/layerscape, thanks.
+
+Lorenzo
