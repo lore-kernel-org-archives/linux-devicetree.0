@@ -2,157 +2,236 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEC4C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F922C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 13:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC96020663
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573046895;
-	bh=acqlbOW9KRReh2d7mpWhg+dFBYpnTyamFBP3xBgfnN4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F2gxQE7/nPq4lhlzPSnqVioavcj2H+/GOoqHHxO52YgQQGzKbLpfMGwzYPANzbV9E
-	 MSgoDBZH78njK0IFuzJ0tv1RcAn+zyd9aPYdGFXJHDWaOusL9OkGFBCyJJhY+ko7ei
-	 NYvDhQ2wd0/h2K4X9J9h6GEklskG3zp07UipuGaY=
+	by mail.kernel.org (Postfix) with ESMTP id 4446B2166E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 13:40:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T6+hrNSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfKFN2M (ORCPT
+        id S1730745AbfKFNkR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:28:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfKFN2L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:28:11 -0500
-Received: from mail-yw1-f51.google.com (mail-yw1-f51.google.com [209.85.161.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FE921929;
-        Wed,  6 Nov 2019 13:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573046890;
-        bh=acqlbOW9KRReh2d7mpWhg+dFBYpnTyamFBP3xBgfnN4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jZCC9XWTKGCvZag4+8V0UwjSYNo7v90srn98UNulQLavQBtfjW4BMQEgF1ASG6OsF
-         4+SuurrY3gyC0uZARvElUNvI0CXVruo3sPOoVx2IZdnzOS14D7P59a36nfD22tEEaG
-         Rpp5m08UYu/81Hv/79a0uZXLlHCbQVYhq+9zqHYc=
-Received: by mail-yw1-f51.google.com with SMTP id j137so3338668ywa.12;
-        Wed, 06 Nov 2019 05:28:10 -0800 (PST)
-X-Gm-Message-State: APjAAAX3VQdw0MzNnpbtIF1HeS1S9vB5DaCbiCBDjhMwOrotI4qi25HL
-        89Kp8ilWZB3E7//w/pqXWUzHL+UPnWcw+bSroQ==
-X-Google-Smtp-Source: APXvYqx8YEmGlOUOkomM0+9+OiizTTLGhZ01a7PA3/CuWEQJuLejHW9brVzu8Jzm5uL/IT1LYjYyaenn1W38v9BxxTE=
-X-Received: by 2002:a81:2748:: with SMTP id n69mr1363487ywn.281.1573046889250;
- Wed, 06 Nov 2019 05:28:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20191028124238.19224-1-t-kristo@ti.com> <20191028124238.19224-2-t-kristo@ti.com>
- <20191106032727.GA21162@bogus> <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
-In-Reply-To: <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 6 Nov 2019 07:27:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
-Message-ID: <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
-Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc bindings
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
+        Wed, 6 Nov 2019 08:40:17 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48988 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730456AbfKFNkQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 08:40:16 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6DdjRd104694;
+        Wed, 6 Nov 2019 07:39:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573047585;
+        bh=B4AqWpvbkF9WwJU+qXr/4lM8+KtnmSOFmTVCwEr68/c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=T6+hrNSEcYbMNGY8yQ8noGwJoc1vkj/nZLrAdWGY4qwTosk3QasLuy2seIDsn9tjG
+         NW1S0DM+36C9zcG8uKT1PJYysjyv7gt3g/Hfr8bZz4icnETFcs9f+ysa30CDAj9YlX
+         iBj+pEBwVXYN5BYoh3tnvYhOqTyM80B2C7xzBFJQ=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6DdjmR071492;
+        Wed, 6 Nov 2019 07:39:45 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 07:39:30 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 07:39:30 -0600
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6Dddi6039199;
+        Wed, 6 Nov 2019 07:39:40 -0600
+Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
+ way
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-7-xiaowei.bao@nxp.com>
+ <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
+ <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
+ <DM6PR12MB40107A9B97A8DAF32A4C651EDA790@DM6PR12MB4010.namprd12.prod.outlook.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <e34708a1-1116-89f9-c3f8-7f21b63c9d9c@ti.com>
+Date:   Wed, 6 Nov 2019 19:09:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <DM6PR12MB40107A9B97A8DAF32A4C651EDA790@DM6PR12MB4010.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 6:44 AM Tero Kristo <t-kristo@ti.com> wrote:
->
-> On 06/11/2019 05:27, Rob Herring wrote:
-> > On Mon, Oct 28, 2019 at 02:42:22PM +0200, Tero Kristo wrote:
-> >> From: Suman Anna <s-anna@ti.com>
-> >>
-> >> Add the device tree bindings document for the IPU and DSP
-> >> remote processor devices on OMAP4+ SoCs.
-> >>
-> >> Cc: Rob Herring <robh@kernel.org>
-> >> Cc: devicetree@vger.kernel.org
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> >> ---
-> >>   .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
-> >>   1 file changed, 205 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
-> >>
-> >
-> > Looks to be in pretty good shape, but how about doing a schema.
->
-> iommu / mailbox is not in schema format, can I just convert this one to
-> schema without considering those? If yes, I can go ahead and do it.
+Gustavo,
 
-The client side both have schema (in dt-schema repo).
+On 06/11/19 3:10 PM, Gustavo Pimentel wrote:
+> On Thu, Aug 29, 2019 at 6:13:18, Kishon Vijay Abraham I <kishon@ti.com> 
+> wrote:
+> 
+> Hi, this email slip away from my attention...
+> 
+>> Gustavo,
+>>
+>> On 27/08/19 6:55 PM, Andrew Murray wrote:
+>>> On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
+>>>>
+>>>>
+>>>>> -----Original Message-----
+>>>>> From: Andrew Murray <andrew.murray@arm.com>
+>>>>> Sent: 2019年8月23日 21:58
+>>>>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>>>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+>>>>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+>>>>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+>>>>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+>>>>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+>>>>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+>>>>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+>>>>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
+>>>>> doorbell way
+>>>>>
+>>>>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
+>>>>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
+>>>>>> in EP mode.
+>>>>>>
+>>>>>
+>>>>> I have no problems with this patch, however...
+>>>>>
+>>>>> Are you able to add to this message a reason for why you are making this
+>>>>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
+>>>>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
+>>>>
+>>>> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
+>>>> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
+>>>> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
+>>>> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
+>>>
+>>> Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
+>>> erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
+>>> would never get used.
+>>>
+>>> Now that we're adding a platform with MSIX support the existing
+>>> dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
+>>> different method.
+>>
+>> Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for designware as it
+>> didn't work for both me and Xiaowei?
+> 
+> When I implemented the dw_pcie_ep_raise_msix_irq(), the implementation 
+> was working quite fine on DesignWare solution. Otherwise, I wouldn't 
+> submit it to the kernel.
+> From what I have seen and if I recall well, Xiaowei implementation was 
+> done having PF's configurated on his solution, which is a configuration 
+> that I don't have in my solution, I believe this could be the missing 
+> piece that differs between our 2 implementations.
 
-> >> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
-> >> new file mode 100644
-> >> index 000000000000..e2bcfcab21c1
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
-> >> @@ -0,0 +1,205 @@
-> >> +OMAP4+ Remoteproc Devices
-> >> +=========================
-> >> +
-> >> +The OMAP family of SoCs usually have one or more slave processor sub-systems
-> >> +that are used to offload some of the processor-intensive tasks, or to manage
-> >> +other hardware accelerators, for achieving various system level goals.
-> >> +
-> >> +The processor cores in the sub-system are usually behind an IOMMU, and may
-> >> +contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
-> >> +caches, an Interrupt Controller, a Cache Controller etc.
-> >> +
-> >> +The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
-> >> +sub-system. The DSP processor sub-system can contain any of the TI's C64x,
-> >> +C66x or C67x family of DSP cores as the main execution unit. The IPU processor
-> >> +sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
-> >> +processors.
-> >> +
-> >> +Remote Processor Node:
-> >> +======================
-> >> +Each remote processor sub-system is represented as a single DT node. Each node
-> >> +has a number of required or optional properties that enable the OS running on
-> >> +the host processor (MPU) to perform the device management of the remote
-> >> +processor and to communicate with the remote processor. The various properties
-> >> +can be classified as constant or variable. The constant properties are dictated
-> >> +by the SoC and does not change from one board to another having the same SoC.
-> >> +Examples of constant properties include 'iommus', 'reg'. The variable properties
-> >> +are dictated by the system integration aspects such as memory on the board, or
-> >> +configuration used within the corresponding firmware image. Examples of variable
-> >> +properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
-> >> +
-> >> +Required properties:
-> >> +--------------------
-> >> +The following are the mandatory properties:
-> >> +
-> >> +- compatible:       Should be one of the following,
-> >> +                "ti,omap4-dsp" for DSPs on OMAP4 SoCs
-> >> +                "ti,omap5-dsp" for DSPs on OMAP5 SoCs
-> >> +                "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
-> >> +                "ti,omap4-ipu" for IPUs on OMAP4 SoCs
-> >> +                "ti,omap5-ipu" for IPUs on OMAP5 SoCs
-> >> +                "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
-> >> +
-> >> +- iommus:   phandles to OMAP IOMMU nodes, that need to be programmed
-> >> +            for this remote processor to access any external RAM memory or
-> >> +            other peripheral device address spaces. This property usually
-> >> +            has only a single phandle. Multiple phandles are used only in
-> >> +            cases where the sub-system has different ports for different
-> >> +            sub-modules within the processor sub-system (eg: DRA7 DSPs),
-> >> +            and need the same programming in both the MMUs.
->
-> ^ the target of this is not in schema.
+I haven't debugged the issue yet but in my understanding the MSI-X table should
+be in the memory (DDR) of EP system. This table will be populated by RC while
+configuring MSI-X (with msg address and msg data). The EP will use the
+populated msg address and msg data for raising MSI-X interrupt.
 
-You mean the OMAP IOMMU binding? That doesn't matter at all.
+From the dw_pcie_ep_raise_msix_irq() (copied below), nowhere the MSI-X table is
+being read from the memory of EP system. I've given my comments below.
 
-Rob
+int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+			     u16 interrupt_num)
+{
+	.
+	.
+	reg = PCI_BASE_ADDRESS_0 + (4 * bir);
+	bar_addr_upper = 0;
+	bar_addr_lower = dw_pcie_readl_dbi(pci, reg);
+
+BAR register will hold the "PCI address" programmed by the host. So
+"bar_addr_lower" will have PCI address.
+
+	reg_u64 = (bar_addr_lower & PCI_BASE_ADDRESS_MEM_TYPE_MASK);
+	if (reg_u64 == PCI_BASE_ADDRESS_MEM_TYPE_64)
+		bar_addr_upper = dw_pcie_readl_dbi(pci, reg + 4);
+
+	tbl_addr = ((u64) bar_addr_upper) << 32 | bar_addr_lower;
+
+The "tbl_addr" now has the PCI address programmed by the host.
+
+	tbl_addr += (tbl_offset + ((interrupt_num - 1) * PCI_MSIX_ENTRY_SIZE));
+	tbl_addr &= PCI_BASE_ADDRESS_MEM_MASK;
+
+	msix_tbl = ioremap_nocache(ep->phys_base + tbl_addr,
+				   PCI_MSIX_ENTRY_SIZE);
+
+"ep->phys_base" will have EPs outbound memory address and "tbl_addr" will have
+PCI address. So msix_tbl points to the EPs outbound memory region.
+	if (!msix_tbl)
+		return -EINVAL;
+
+	msg_addr_lower = readl(msix_tbl + PCI_MSIX_ENTRY_LOWER_ADDR);
+	msg_addr_upper = readl(msix_tbl + PCI_MSIX_ENTRY_UPPER_ADDR);
+
+Here an access to the EP outbound region is made (and the transaction will be
+based on ATU configuration).
+The message address should ideally be obtained from the MSI-X table present in
+the EP system. There need not be any access to the OB region for getting data
+from MSI-X table.
+
+	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
+	msg_data = readl(msix_tbl + PCI_MSIX_ENTRY_DATA);
+	vec_ctrl = readl(msix_tbl + PCI_MSIX_ENTRY_VECTOR_CTRL);
+
+All this should be obtained from the memory of EP.
+	.
+	.
+}
+
+I'm not sure how this worked for you.
+
+Thanks
+Kishon
+
+> 
+> Since patch submission into the kernel related to msix feature on pcitest 
+> tool, I didn't touch or re-tested the msix feature by lack of time (other 
+> projects requires my full attention for now). However is on my roadmap to 
+> came back to add some other features on DesignWare eDMA driver and I can 
+> do at that time some tests to see if the 
+> dw_pcie_ep_raise_msix_irq_doorbell() is compatible or not with my 
+> solution. If so, I can do some patch to simplify and use the 
+> dw_pcie_ep_raise_msix_irq_doorbell() if it still works as expected like 
+> on dw_pcie_ep_raise_msix_irq(). Agree?
+> 
+> Gustavo
+> 
+>>
+>> Thanks
+>> Kishon
+> 
+> 
