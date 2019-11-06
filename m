@@ -1,154 +1,124 @@
-Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25FECA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5C9C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23E521835
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 18:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45B52187F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kimc05Do"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="c5r7NCOu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502865AbfJRSZA (ORCPT
+        id S1727295AbfKFWhb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 14:25:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34430 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502836AbfJRSZA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 14:25:00 -0400
-Received: by mail-lj1-f195.google.com with SMTP id j19so7181801lja.1
-        for <devicetree@vger.kernel.org>; Fri, 18 Oct 2019 11:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YYQD8ZjjV8FYWgYSkKKTS/qtO4T+D7cqMY9D6mPQHr8=;
-        b=kimc05Do/CaE/fiIUHNko2Lc742S8/237oDRPUfI3GEx6oAx9L9lJDf1iB9ZVBvgqr
-         QHI9LXd7JPvAcIL8zQeohj8pqSIe4nKSyTNiX153O98ykn+pcc0mC6UD7j89U/P6K654
-         wXdH5XPyh2zGfOJ3JCCvTD4hpxDtVNzNYM4mpoG7KN810cJKVnXxZud/XLtcFFIeY0wW
-         /iVfomwNt/Sd+lhGoDLSXOItmjkDyAIakZzaekbf2DwspANM3ihx4jgKH8wazzadgrPt
-         PClTRmbx3FQyecschVXDPaHtu5piX9TuDiRTHMHviHbZNAsG9BB+i38YhGgM58jkjt8k
-         rLgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YYQD8ZjjV8FYWgYSkKKTS/qtO4T+D7cqMY9D6mPQHr8=;
-        b=C0rMbZn/2KMmAZ5SFplKT9F/9shiUbrMx/7cfamLDt7PvTRA45rXIBd3hL4PmTYI3/
-         jzRfTlZW7o5D4/DybYUzOa+6AlczpIngSDV6pSZMZh+zmwHfMdkzu5q/ORUUsugcNYDI
-         hEjnjVzo7a4jIwOiA3Q3fK33y9Q81T57s2FLEROrwfRm8E4aVNmDXagsrx1DmgHhIdgm
-         3RhPLauQzNKBB/vS4TjVAoWt/e4JzreohWEOoxM0vDV1y3OgfIHRLizkl1jkAm/IhgDQ
-         r20PiMtyb5BZmk2JOtU+UPk5z9Cm0uIKUAO3uf/QrWFYNs5eQBZoz9sEACesr0pbFCS0
-         tVGw==
-X-Gm-Message-State: APjAAAXUHuKZZTgibKoMFxzugcD4gQkUzpgA/VnUseralKTJ1DTSZb3t
-        6pXpf05PHKsV2B0TLe3atlzDhg==
-X-Google-Smtp-Source: APXvYqxtc8ZUeBcK8hiA5gxckfrSmYQjAwIJX8pQ/ZT8e1aLDLHCnL2gVSUTTfHtu03NaTJV1SDldQ==
-X-Received: by 2002:a2e:29dd:: with SMTP id p90mr7174062ljp.26.1571423098036;
-        Fri, 18 Oct 2019 11:24:58 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id g26sm3020617lje.80.2019.10.18.11.24.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2019 11:24:56 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 2/3 v3] drm/panel: Add DT bindings for Sony ACX424AKP
-Date:   Fri, 18 Oct 2019 20:24:45 +0200
-Message-Id: <20191018182446.26131-2-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191018182446.26131-1-linus.walleij@linaro.org>
-References: <20191018182446.26131-1-linus.walleij@linaro.org>
+        Wed, 6 Nov 2019 17:37:31 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:48345 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727524AbfKFWg7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 17:36:59 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 317CB23E4A;
+        Wed,  6 Nov 2019 23:36:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1573079817;
+        bh=bHgzmPWMQvRLD4IDF6kRyjvUWHwW1NVG2ZzBKrWk2cM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=c5r7NCOuLDM+GY2Md38faRERyiNuUNtONA1JvvJmarD9B/Ba72YVr+F8ryeCspVrH
+         3eQKOhuLu/Jp2Ud/hXMROrk2iv9pwkn0JZhvOKqa7IRLZfUJvPlp3lYPGV+RrQOF6O
+         +cmbr8572/zwexutMVoIa2T+7u3hNh+bYAq+28l4=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v2 4/6] net: phy: at803x: mention AR8033 as same as AR8031
+Date:   Wed,  6 Nov 2019 23:36:15 +0100
+Message-Id: <20191106223617.1655-5-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191106223617.1655-1-michael@walle.cc>
+References: <20191106223617.1655-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Sony ACX424AKP panel.
-Let's use YAML.
+The AR8033 is the AR8031 without PTP support. All other registers are
+the same. Unfortunately, they share the same PHY ID. Therefore, we
+cannot distinguish between the one with PTP support and the one without.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
-ChangeLog v2->v3:
-- Put the example inside a dsi-controller so we have a complete
-  example that verifies to the DSI panel generic binding.
-ChangeLog v1->v2:
-- Suggest a stand-alone YAML bindings file for DSI panels in
-  a separate patch, and use that to reference the
-  boolean "enforce-video-mode" attribute for DSI panels
----
- .../display/panel/sony,acx424akp.yaml         | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
+ drivers/net/phy/Kconfig  |  2 +-
+ drivers/net/phy/at803x.c | 12 +++++++-----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml b/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
-new file mode 100644
-index 000000000000..c01eea17b08f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sony ACX424AKP 4" 480x864 AMOLED panel
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+  - $ref: panel-dsi-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: sony,acx424akp
-+  reg: true
-+  port: true
-+  reset-gpios: true
-+  vddi-supply:
-+     description: regulator that supplies the vddi voltage
-+  enforce-video-mode: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - port
-+  - reset-gpios
-+  - power-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dsi-controller@0 {
-+        compatible = "foo";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        panel {
-+            compatible = "sony,acx424akp";
-+            reg = <0>;
-+            vddi-supply = <&foo>;
-+            reset-gpios = <&foo_gpio 0 GPIO_ACTIVE_LOW>;
-+        };
-+    };
-+
-+...
-\ No newline at end of file
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 1b884ebb4e48..8bccadf17e60 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -442,7 +442,7 @@ config NXP_TJA11XX_PHY
+ config AT803X_PHY
+ 	tristate "Qualcomm Atheros AR803X PHYs"
+ 	help
+-	  Currently supports the AR8030, AR8031 and AR8035 model
++	  Currently supports the AR8030, AR8031, AR8033 and AR8035 model
+ 
+ config QSEMI_PHY
+ 	tristate "Quality Semiconductor PHYs"
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index aa782b28615b..716672edd415 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -93,8 +93,8 @@
+ #define AT803X_CLK_OUT_125MHZ_PLL		6
+ #define AT803X_CLK_OUT_125MHZ_DSP		7
+ 
+-/* The AR8035 has another mask which is compatible with the AR8031 mask but
+- * doesn't support choosing between XTAL/PLL and DSP.
++/* The AR8035 has another mask which is compatible with the AR8031/AR8033 mask
++ * but doesn't support choosing between XTAL/PLL and DSP.
+  */
+ #define AT8035_CLK_OUT_MASK			GENMASK(4, 3)
+ 
+@@ -449,7 +449,9 @@ static int at803x_parse_dt(struct phy_device *phydev)
+ 		}
+ 	}
+ 
+-	/* Only supported on AR8031, the AR8030/AR8035 use strapping options */
++	/* Only supported on AR8031/AR8033, the AR8030/AR8035 use strapping
++	 * options.
++	 */
+ 	if (at803x_match_phy_id(phydev, ATH8031_PHY_ID)) {
+ 		if (of_property_read_bool(node, "qca,keep-pll-enabled"))
+ 			priv->flags |= AT803X_KEEP_PLL_ENABLED;
+@@ -734,9 +736,9 @@ static struct phy_driver at803x_driver[] = {
+ 	.ack_interrupt		= at803x_ack_interrupt,
+ 	.config_intr		= at803x_config_intr,
+ }, {
+-	/* ATHEROS 8031 */
++	/* ATHEROS 8031/8033 */
+ 	.phy_id			= ATH8031_PHY_ID,
+-	.name			= "Atheros 8031 ethernet",
++	.name			= "Atheros 8031/8033 ethernet",
+ 	.phy_id_mask		= AT803X_PHY_ID_MASK,
+ 	.probe			= at803x_probe,
+ 	.config_init		= at803x_config_init,
 -- 
-2.21.0
+2.20.1
 
