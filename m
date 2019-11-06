@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9DFC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C91C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF6E2173E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82EA217F5
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="XYdP0nkq"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dk9GfzGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731731AbfKFKMy (ORCPT
+        id S1730019AbfKFKMp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 05:12:54 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41012 "EHLO
+        Wed, 6 Nov 2019 05:12:45 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29140 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727961AbfKFKMp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 05:12:45 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6ABprr015190;
-        Wed, 6 Nov 2019 11:12:32 +0100
+        by vger.kernel.org with ESMTP id S1727239AbfKFKMo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 05:12:44 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6AC4Qg022141;
+        Wed, 6 Nov 2019 11:12:28 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=PasrWJUoa3UFwSs+GtbCxK+KUm1QgPk+g2vbUrQXP80=;
- b=XYdP0nkqZ+gppFSHdkYeziiQ7RQ4O3DKJrPMDtuLywGiPWkUlyw5pOYU87/RrdEyWHKS
- 4bLtizwvBgpT2fLYdF7CGIxAz7N35LVnMW5864l67vxUWr4mMXCeCRK3pl1GYHFnllKz
- FRg4LoqDtSiM7EYQ8WPODsCkCqhxLQhvbw4/mQbVy4eDxnvvQEbr+1GQDnb0J7jLk7rj
- 3RoRBwfa6z7lglh6zdBSyOUPVYSCSqWWbrUtIrH/q4DW92wSqnhbIGk8nQ+zGfaxWRqO
- tW9neikD62u2cSAyCg2IvLDB4ZrjExP8uwfsPm6563t5+uFrsIJaPSMWH0rTlLN9FNOo yQ== 
+ bh=ZE5EHY9r5E8wwKp2B+vrmo3u31wmEuBrC/3bKOYK1gg=;
+ b=dk9GfzGxgJnH/+LGcJaQRky3btuB2/bmemD0T9011yYuhtbyhJQ3Nh0A4svwuhGeYntM
+ EYrCog9LZMPg7U2lUjBWQMSntVun+q4Yg+OS+1gAeQISdW1sqtQP0o9xpqG1iODOrFmm
+ lY0zQV6pgGqVnTtuRqoIkFbCuw/OqxjDcH/WVUClfFfZO0xZhVcW810qyu/ltmPLugKt
+ 3838HMI/7Pp1w4r8+UIkYI1l4mLdl3DbXgTmosT+OECHO4FY/yuyPhsDD/ndItcKjX3D
+ /9m/shbTb4qgXwveDCUA8riNsWK17h+zbrtczPIy+DUgKljcqbcDplJa7M0DxBUUNRlf QQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w11jnd2w7-1
+        by mx08-00178001.pphosted.com with ESMTP id 2w0ytcwf2v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Nov 2019 11:12:31 +0100
+        Wed, 06 Nov 2019 11:12:28 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B753D100046;
-        Wed,  6 Nov 2019 11:12:27 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A84882AD343;
-        Wed,  6 Nov 2019 11:12:27 +0100 (CET)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 6 Nov 2019
- 11:12:27 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C6851100038;
+        Wed,  6 Nov 2019 11:12:23 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B6E462AD343;
+        Wed,  6 Nov 2019 11:12:23 +0100 (CET)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 6 Nov 2019
+ 11:12:23 +0100
 Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 6 Nov 2019 11:12:26
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 6 Nov 2019 11:12:23
  +0100
 From:   Christophe Roullier <christophe.roullier@st.com>
 To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
@@ -58,9 +58,9 @@ CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
         <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH V3 net-next 4/4] ARM: dts: stm32: Enable gating of the MAC TX clock during TX low-power mode on stm32mp157c
-Date:   Wed, 6 Nov 2019 11:12:20 +0100
-Message-ID: <20191106101220.12693-5-christophe.roullier@st.com>
+Subject: [PATCH V3 net-next 1/4] net: ethernet: stmmac: Add support for syscfg clock
+Date:   Wed, 6 Nov 2019 11:12:17 +0100
+Message-ID: <20191106101220.12693-2-christophe.roullier@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191106101220.12693-1-christophe.roullier@st.com>
 References: <20191106101220.12693-1-christophe.roullier@st.com>
@@ -74,25 +74,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When there is no activity on ethernet phy link, the ETH_GTX_CLK is cut
+Add optional support for syscfg clock in dwmac-stm32.c
+Now Syscfg clock is activated automatically when syscfg
+registers are used
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 28 +++++++++++--------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index f13c2348d130..8df2986dd452 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -1334,6 +1334,7 @@
- 			st,syscon = <&syscfg 0x4>;
- 			snps,mixed-burst;
- 			snps,pbl = <2>;
-+			snps,en-tx-lpi-clockgating;
- 			snps,axi-config = <&stmmac_axi_config_0>;
- 			snps,tso;
- 			status = "disabled";
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 4ef041bdf6a1..be7d58d83cfa 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -152,19 +152,24 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
+ 	int ret = 0;
+ 
+ 	if (prepare) {
+-		ret = clk_prepare_enable(dwmac->syscfg_clk);
+-		if (ret)
+-			return ret;
+-
++		if (dwmac->syscfg_clk) {
++			ret = clk_prepare_enable(dwmac->syscfg_clk);
++			if (ret)
++				return ret;
++		}
+ 		if (dwmac->clk_eth_ck) {
+ 			ret = clk_prepare_enable(dwmac->clk_eth_ck);
+ 			if (ret) {
+-				clk_disable_unprepare(dwmac->syscfg_clk);
++				if (dwmac->syscfg_clk)
++					clk_disable_unprepare
++						(dwmac->syscfg_clk);
+ 				return ret;
+ 			}
+ 		}
+ 	} else {
+-		clk_disable_unprepare(dwmac->syscfg_clk);
++		if (dwmac->syscfg_clk)
++			clk_disable_unprepare(dwmac->syscfg_clk);
++
+ 		if (dwmac->clk_eth_ck)
+ 			clk_disable_unprepare(dwmac->clk_eth_ck);
+ 	}
+@@ -320,12 +325,10 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ 		return PTR_ERR(dwmac->clk_ethstp);
+ 	}
+ 
+-	/*  Clock for sysconfig */
++	/*  Optional Clock for sysconfig */
+ 	dwmac->syscfg_clk = devm_clk_get(dev, "syscfg-clk");
+-	if (IS_ERR(dwmac->syscfg_clk)) {
+-		dev_err(dev, "No syscfg clock provided...\n");
+-		return PTR_ERR(dwmac->syscfg_clk);
+-	}
++	if (IS_ERR(dwmac->syscfg_clk))
++		dwmac->syscfg_clk = NULL;
+ 
+ 	/* Get IRQ information early to have an ability to ask for deferred
+ 	 * probe if needed before we went too far with resource allocation.
+@@ -436,7 +439,8 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
+ 		return ret;
+ 
+ 	clk_disable_unprepare(dwmac->clk_tx);
+-	clk_disable_unprepare(dwmac->syscfg_clk);
++	if (dwmac->syscfg_clk)
++		clk_disable_unprepare(dwmac->syscfg_clk);
+ 	if (dwmac->clk_eth_ck)
+ 		clk_disable_unprepare(dwmac->clk_eth_ck);
+ 
 -- 
 2.17.1
 
