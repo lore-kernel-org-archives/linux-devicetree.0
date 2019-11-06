@@ -2,139 +2,320 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71DDC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7645AC5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7F220659
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBD32075C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:59:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="P0mDZxdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbfKFLac (ORCPT
+        id S1727652AbfKFL7Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:30:32 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:58652 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfKFLab (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 06:30:31 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-5d-5dc2aed5aea0
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id EC.7C.08102.5DEA2CD5; Wed,  6 Nov 2019 12:30:29 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Wed, 6 Nov 2019 12:30:24 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        Wed, 6 Nov 2019 06:59:24 -0500
+Received: from mout01.posteo.de ([185.67.36.65]:43880 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727391AbfKFL7Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 06:59:24 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id DB1C116005E
+        for <devicetree@vger.kernel.org>; Wed,  6 Nov 2019 12:59:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1573041557; bh=GYzri181iZ/WOeNlLcMdCvqWqEhUamYlx/vBeuGli+Y=;
+        h=Subject:To:Cc:From:Openpgp:Autocrypt:Date:From;
+        b=P0mDZxdIYFZfxJr8r2zz0cA2PuRndQwmNQS32UDvKmiMCcB/0zpgK52W2rc8nhgN/
+         LrOoBHfa7H/kbdCA9l2USz14n+0OD7ywBcrggYJ+bpnZyT0RsedufL6q5+eh4O6osc
+         KzrgDtGNyZJILdMoK/DZZGY9BNsoZaL3YhUK+TEsS4v/taVvcAA67gcBjZC3FD3pZe
+         OmRoljc6igtLI5PmAygNWEwGgqy2iHEFKi1/Swir+EfW5KB2L1uqzdqy2pJhl3SIM2
+         NgKDdzhOfQc2YDELKycmBwKaz1SeViyZbqe4IoRakYqAUGw399duGQKQ3946/2ZwiD
+         4mdp/8Y+uEJXQ==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 477Q6w2YTnz6tmG;
+        Wed,  6 Nov 2019 12:59:04 +0100 (CET)
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Abel Vesa <abelvesa@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
-Subject: Re: SPAM (R/EU IT) // Re: [RFC PATCH 2/5] dt-bindings: an30259a:
- example for using fixed LED node names.
-Thread-Topic: SPAM (R/EU IT) // Re: [RFC PATCH 2/5] dt-bindings: an30259a:
- example for using fixed LED node names.
-Thread-Index: AQHVjlcGaBdmxTof6U+YTbv1fVCiQad9euAAgACC3AA=
-Date:   Wed, 6 Nov 2019 11:30:23 +0000
-Message-ID: <17a77e44acea33dc7c43e957bbca7a3f0e863ebb.camel@fi.rohmeurope.com>
-References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-         <5b9f9e7cd3dc959962fc43d27e471245e63f5f29.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191106034206.GA6299@bogus>
-In-Reply-To: <20191106034206.GA6299@bogus>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <068A4F7DFAE72141A19AE433268E98A9@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Carlo Caione <ccaione@baylibre.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+ <7d3a868a-768c-3cb1-c6d8-bf5fcd1ddd1c@posteo.de>
+ <20191030080727.7pcvhd4466dproy4@fsr-ub1664-175>
+ <523f92bd-7e89-b48a-afd0-0a9a8bca8344@posteo.de>
+ <20191104103525.qjkxh2zhhgaaectk@fsr-ub1664-175>
+From:   Martin Kepplinger <martink@posteo.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=martink@posteo.de; keydata=
+ mQINBFULfZABEADRxJqDOYAHfrp1w8Egcv88qoru37k1x0Ugy8S6qYtKLAAt7boZW+q5gPv3
+ Sj2KjfkWA7gotXpASN21OIfE/puKGwhDLAySY1DGNMQ0gIVakUO0ji5GJPjeB9JlmN5hbA87
+ Si9k3yKQQfv7Cf9Lr1iZaV4A4yjLP/JQMImaCVdC5KyqJ98Luwci1GbsLIGX3EEjfg1+MceO
+ dnJTKZpBAKd1J7S2Ib3dRwvALdiD7zqMGqkw5xrtwasatS7pc6o/BFgA9GxbeIzKmvW/hc3Q
+ amS/sB12BojyzdUJ3TnIoAqvwKTGcv5VYo2Z+3FV+/MJVXPo8cj2vmfxQx1WG4n6X0pK4X8A
+ BkCKw2N/evMZblNqAzzGVtoJvqQYkzQ20Fm+d3wFl6lS1db4MB+kU13G8kEIE22Q3i6kx4NA
+ N49FLlPeDabGfJUyDaZp5pmKdcd7/FIGH/HjShjx7g+LKSwWNMkDygr4WARAP4h8zYDZuNqe
+ ofPvMLqJxHeexBPIGF/+OwMyTvM7otP5ODuFmq6OqjNPf1irJmkiFv3yEa+Ip0vZzwl4XvrZ
+ U0IKjSy2rbRLg22NsJT0XVZJbutIXYSvIHGqSxzzfiOOLnRjR++fbeEoVlRJ4NZHDKCh3pJv
+ LNd+j03jXr4Rm058YLgO7164yr7FhMZniBJw6z648rk8/8gGPQARAQABtCVNYXJ0aW4gS2Vw
+ cGxpbmdlciA8bWFydGlua0Bwb3N0ZW8uZGU+iQI6BBMBAgAkAhsDAh4BAheABQsJCAcDBRUK
+ CQgLBRYCAwEABQJVC4DBAhkBAAoJEFADmN9as4fTpYwQAIqwZ2arvCsfwiZqr/KyJ4ewhn2/
+ 7JVR/kvx5G6nfPI55XtNDmd2Lt7xNvY5LbLwGp2c3JMD1rZ2FhbWXC39SA0yxeE4U0NTlxDg
+ RGx20k85pZTFvxyPfz9c7dAFTLMajpzLvpjBjEaqVm6KnS/UBBaGHOu0999siD1EDaSBWUiO
+ HPMXNYkcFt96p55LYNAgzSsd+zTjknxCnmzUMiDKzjFn6LdqdlyPyMj6IXpeiAFHV43SAGb6
+ 8miE+S61pq9pTapt+E5qf3zfuKATK0dfZkkMFaC+Vmv6DvcpR7G1ilpmjkR6o/mDM6dtm21T
+ 5jpYrEmb7hgigFl9Pg01mJLwSGm1GYf45aKQH/VZff+sYsDDNQUHwabG9DVV/edSRJGzCu3R
+ W/xqeF3Ll44Bhaa9LaVQuN7Yuqixhxm8flJNcfnknYd9TBQYLIZLcUyN3bbaABbCv6xkHaB6
+ ZUUQPhpVGoLANrLtTSEtYBYzktSmeARLTtVt5wJ0Q8gQ6h5a0VC6zHv37cRUYqsEwwRwbG+h
+ aBs907W8hH4etQtbbXBbbbXnOOl/QnpShjyWYe02A/f/QWpgZD5SPsB6RVQdWnP8ZN7OngzE
+ RACA2ftyBnp/0ESKMDLYJDRGm3oM01hZSZHnFBt/aggx3FOM39bmu565xg21hO7I7s9xkvbZ
+ Czz2iSRTuQINBFULfZABEADFNrM9n2N+nq4L4FKIi2PCSsWWU0RUqm26b3wkmi9anWSJsz6m
+ GXqJWj7AoV6w2ybnry+IzYIDN7NWUyvsXS7o1A0rqm7Tzhb3IdJQpE4UWvzdSKfq3ThTzy1w
+ KIFgtDkb5OtW4Zf/mpjV6tVYjjJx2SpDNvwA9swWtb+xFvvzV/zAZdaEOzoF3g81goe/sLSv
+ xdijvs95KoZJX/nmWlKyagTb7NHcxblNWhoTzdnGF+qC1MhYx/zyaD/bQQiFgJEbSI6aNfK1
+ Z/77Eub3Gkx4qcp9ZdDFFt+8qDf4rMXfQDSE7dgHIoQ1ifC1IHPyh3fY3uicbn75rPF+6Fhk
+ bkyRo14k8so9CnIYxzY+ienQGEJlO/EhsjzVl5fpML45lt5b7TeIacLsSjjIn3dBSTNYU6EY
+ YTHQUeP6oGQNAuxEQRjCx3Gqqv2TUpQPUYVUOXSDO4qqJXhiOUmIV8eH19tMPO2vc2X+tpY0
+ 3EDcy1f2ey06vtv4+gDiAfUZcv1hKVd18E9WeuGCm64lhyovLTaLf/3RSSKL33SeaLkLPOEF
+ UXA2OxlNfDs1FK0is+0oJr55ZEI7N9o6oFQp+bNcQeAyXh6yqTIW7YxK9tHpyUhVqOQGZzj5
+ 0SC/XdEn1VZbqo11DDupNsMlp+BBRuY5QwjKANGMIAvay38uICLYxaCXzQARAQABiQIfBBgB
+ AgAJBQJVC32QAhsMAAoJEFADmN9as4fTBJkQAKl9A9gUvgiLgilK6OoR9vX+cv4yL7c0uubw
+ eneL+ZWAytTAF3jHT6cPFzv4rD8iJc1yhAFDc0LW+yywnoP7Tok6cYlYH1DCjIQsZ1Du1Jad
+ rjTmvAPFyzKc2dcNPR3f1DAU3adcLLKz7v4+uLmBPI4HIn4TnYXbttfb0vTmJVJFERV7XMsu
+ NiQVDgsM1K1Sn9xqYPoU59v725VzOwyhNnV2jZC2MkyVGWFKEbPcZhTDnaFpYp83e2y+sgeN
+ l/YXkBjLnM4SCt/w7eObYsM2J2KfzfT5QdtqglWJsJMm91tWqn8GUDUgqnWz9jzzKVKDEMXA
+ W5dQSUkD0aWY0cDNkFqs8QlWRgFMelG0gqnCqZRMf/IfSnN23yGK0j5EENjKdifSdTGItlQ8
+ B4znBEu3VdpDZANzRAlHxXAEJVJ7z7fmAQ9079CauV43mIDeo4cxbxfBcmiR3sxpLoUkoZ0W
+ ONk8MxHhCLw9OfYubU2QMekS1oSOMqZ2u3/g6kTp9XiIq0LWRy862+rE1fOYWf3JpsdWVszB
+ NjZPEXwiZ9m+v/VJ3NuzrLOJqw1F/FMaaZgbauYH9c7oAx1qXl7BYMV9WYiJGiJV0xK5UzpD
+ GsOfIJ8/tbwPSs6pNZDAJata///+/Py99NtaU3bUYhyluAGZ/2UHygGkuyZnJc2mWFBWYWWi
+ uQINBFz0prUBEADX9qwu29Osr6evt73dlU3Esh807gvvROUFASNR2do560FZChk0fX+9qrzg
+ i3hk0ad3Q9DjMKRb5n3S0x+1kiVsvY0C5PWJDog2eaCc6l82ARqDb8xvjVrnuF8/1O6lYvl3
+ bM60J19MtMRXCeS8MTHlNWG6PFt2sRYtZ/HQOasj6Mtt20J6d7uQNX7ohgoMx1cpXJPMcaa2
+ mfmNmdepY3gU4R2NDQg8c6VzUFPSWkyCZPpxIyazmkfdlh/20cb3hfEpKlGl56ZNM18xSQUi
+ 1Tr6BvD0YijHpWpu/pkS/Q8CFso+gSOtuukVnD2TTJR6lfR7yevR4PiR5DILpYNZZ0MpXIUW
+ iGVwGIVFvoFyEkqb/7cQpm7j4vUgS1QwS0kCCfV6IDjYE4OnY4bgUFP/C0cTsJiEfHPIqT+X
+ HFfLZBYZe0IEgrcs89yUwOBiHTHRuixjtu7e1fiOJKzRP3kgvdiXjB4wKUDFBFBi3jkSIRJZ
+ 44GeXwAdXxgPDL47u4hPY4enG91jtgrWAc2LkTfJojRcJde3LDzYsgA7FwJS4yS40ywE60Ez
+ eAcOi6vGs2djFkQM/pRygmfd9PJ69EGoxFpDBRIe6jTHrK+PNjYeE4fOuDdCHtcufybEiv/P
+ zaSf75wP+rd7AR7q4BeS3sjXYxHSNuKEbBvwplaXAr2tgC18IwARAQABiQRyBBgBCAAmFiEE
+ 8ggriA+eQjk0aG4/UAOY31qzh9MFAlz0prUCGwIFCQPCZwACQAkQUAOY31qzh9PBdCAEGQEI
+ AB0WIQRHcgjP+zRoMgCGPgZ+LO3NP1SshQUCXPSmtQAKCRB+LO3NP1SshR+IEAC3c3xtRQfZ
+ lBqG1U7YK4SIfJzcfR/wGYRUbO+cNyagkR8fq5L/SQXRjTlpf5TqhiD8T1VbO0DoTqC4LsHP
+ 3Ovp9hloucN5/OS4NFADNnME2nFxSsmF46RgMBr/x85EhBck7XYNI6riD1fZFKohyZCDHb8q
+ hbhQbd7g4CuqAxLsRINPq5PVYVyxx+qM8leNcogfe2D9ontkOQYwVqdiwNqIgjVkqmiv1ZkC
+ x8iY+LSfZRlI0Rlm1ehHqu2nhRP47dCsyucxlCU4GS/YcOrUV7U9cyIWy3mQBRyCEh5vId1G
+ FAAEjussV5SoegRUa4DK5rJOxU15wyx7ukU7jii2nAVl77l4NOwSKFjUt5a5ciSMGCjSSY1N
+ k5PCM14vZoN2lnM3vQfgK2/r6vbjbjxEUyLLVhSiwgb9Sfo4pjiFVKEu5c6qxQvjWPhQkpEK
+ UcRYQgUVSFSB6Pc+zWlTEtU4j66SEBQnBbAFqCwqr8ZvxP8CEfeeiiwIcFd4/lnJPm8yYeTZ
+ m/DBZCdQlUcEC/Z72leg5Yx6nJpOz8327i7ccbf+thKdgWOCXjDM9nvdBS8LERh8mL1XhjOW
+ f4X2ErqEqPdsocBCK/H4Tc28W4ggzVp2JGGFAKWHYxplXL3jFTpJ+2X1yjcGyKVXcfvCtZ3n
+ ++59mVkO0eY+h1p7u/kAWZq+shcXEACybhk7DDOEbqLP72YZqQkFaNcQrGcCi24jYUItZlX9
+ mzy1+GRt6pgU7xWXPejSyP6vrexYWRVNc5tfuMJBTBbsdcR0xoJoN8Lo1SSQpPU8kgEL6Slx
+ U9Kri/82yf7KD4r44ZRseN6aGO9LvsHJms38gFk6b3gNJiBlAlFOZNVh33ob77Z0w85pS1aO
+ qYLO7fE5+mW4vV1HX2oJmMPX6YDHl6WouLsGtmAk5SOZRv9cj+sMsGmgVD/rE0m4MDhROLV3
+ 54Rl5w4S7uZjXEFCS8o1cvp6yrHuV2J5os0B/jBSSwD5MRSXZc+7zimMsxRubQUD6xSca8yS
+ EKfxh1C0RtyA1irh4iU6Mdb6HvNTYbn+mb4WbE0AnHuKJdpRj0pDeyegTPevftHEQNy9Nj0o
+ pqHDETOTYx/nw49VpXg8SxGJqeuYStJR+amX3dqBu1krWvktrF4i0U6P47aFYUs0N6clGUFj
+ BfCUkKIfEz87bveFlk+g/wvmnni5eFpLkQm5XZfOBuLdURvDcZmv4ScMLtc0TbBSueUP/DZb
+ pHNViNVPohfhJqY2VX4xZfT/V9gK61+pmXzoFIqYmOVal+Q8rPLOOEZBVmtNlicoC7jvWFG/
+ z/oPHkm5kmAMKdhqc3HcMOt5Ey7+erpN9o56Qy3GA1hv/ygOvLT1QUdsYcuxafqgGg==
+Message-ID: <433f3f03-f780-c327-f1e8-fbf046a8374c@posteo.de>
+Date:   Wed, 6 Nov 2019 12:59:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SW0wTQRTN7G7LFFhdCshY8VUUIkQQQ8wG0eCPVuMr4cMEJbjIylZL22xb
-        AoaP+ggJYBANaqigiFQRsJIq0ZZHtNSA+JYQRMRYMcrDSIwaMai4yyLwNWfm3HPOTeZAXHlG
-        roJavZnl9YxOLfcn7tVOOFf3ODxpa3wnI+hL3qcyuvjRbRnd39RI0N3uCjnd9NkBaHvvC4yu
-        sHcS9EDXAzk92XLXL1mhabjYADQu24CfxllXKNd0vLqDaWrrf/ppvjmX7JanBiRlMOacFG2W
-        Pm7j/gBuaMyNGY9F5tqPXwVWcGJlEVBARCWgsfHnoAj4QyXVA5BrbICQLh0AnepsxIsAhHIq
-        CRX1+YmCECoKXa734SLGqRocXes2iziYMiFrV830jBmNugqAhBORd/wxIWKCWoF+f/1BiJYk
-        tRP1vt8gRXkBcg/ZpzwVVDQaeP9jCgNqMSq0fsGkrDDk/PhTJi1NoZqWZ7iEQ9Hw4N/pdzVq
-        /eWb8sepVeimO06SJqNax+j0ystRWbFvak2SCkIPyz8QpWCBbU6CbVZtm6O2zVHb5qirgKwO
-        oGxGq8tizGx8LM9aYnkDly0cBwzZTiD98fe7YNKz1QMwCDxgIcTUoeQ27f005bwMQ2Yex5i4
-        dN6iY00egCCuDiH3lQgcmcnkHWF5w39qESTUYWSU73SakhKzDrOskeX/s+EQqhGZd8OTpgzi
-        2Sw296BWZ56lMagQzf1VISZWn8nyjMXMpYv1SDcJ/RCpQCG3TJSTJiOTLbxK0i4QA0uHK6tx
-        6K20V+NKQm/Qs6owEoqjlDjKWfQzQSMgDAJ1MDlfaLQyUCj6jM+IEIEJEdsH28QIMzNLqaxg
-        p+udNyexPKI95VBgxLOVmy80DMdiIZaEUEd5f5+jpG3T0Ln2o4a+1+snYnbpkmN21L+8liCL
-        f6NwM2BDYHdBmULV1rOFjnVF7B3cHNm/+u2boEf6pYm1zanjJZ4nf/LPU2vXXX/Suiw+vHy8
-        gDNeaUo6m3/rU3OVxr3YuqfJx51SEyaOiY/GeRPzD8APS8ylAwAA
+In-Reply-To: <20191104103525.qjkxh2zhhgaaectk@fsr-ub1664-175>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gUm9iICYgQWxsLA0KDQpPbiBUdWUsIDIwMTktMTEtMDUgYXQgMjE6NDIgLTA2MDAsIFJv
-YiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUdWUsIE9jdCAyOSwgMjAxOSBhdCAwMjo0NzoyNlBNICsw
-MjAwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gVXNlIHByZWRlZmluZWQgTEVEIG5vZGUg
-bmFtZSB0byBtYXRjaCB0aGUgTEVEIG5vZGUgaW4gZHJpdmVyLg0KPiA+IA0KPiA+IEl0IHdvdWxk
-IGJlIG5pY2UgdG8gb2ZmbG9hZCBjb21tb24gTEVEIHByb3BlcnR5IHBhcnNpbmcgdG8NCj4gPiBM
-RUQgY29yZSBkcml2ZXIuIE9uZSBvZiB0aGUga2V5IHRoaW5ncyB0byBhbGxvdyB0aGlzIGlzIHNv
-bWVob3cNCj4gPiAncGFpcicgdGhlIExFRCBEVCBub2RlIHdpdGggTEVEIGRyaXZlciBpbml0aWFs
-aXphdGlvbiBkYXRhLg0KPiA+IA0KPiA+IFRoaXMgcGF0Y2ggdXNlcyBMRUQgbm9kZSBuYW1lIGFz
-IGEgJ2tleScgaW4gYSBzYW1lIGZhc2hpb24NCj4gPiBhcyByZWd1bGF0b3JzIGRvLiBUaGUgYW4z
-MDI1OWEgd2FzIHNlbGVjdGVkIGFzIGRlbW9uc3RyYXRpb24NCj4gPiBleGFtcGxlIGFuZCB0aGlz
-IGNoYW5nZSBtYXkgbm90IGJlIHJlYWxseSBmZWFzaWJsZSBmb3IgYW4zMDI1OWENCj4gPiBhcyBJ
-IGhhdmUgbm8gaWRlYSB3aGV0aGVyIHRoZSBleGlzdGluZyBEVHMgZm9yIGRldmljZXMgb3V0IHRo
-ZXJlDQo+ID4gaGF2ZSBzcGVjaWZpYyBub2RlIG5hbWVzIChvciBjYW4gYmUgY2hhbmdlZCkuIFRo
-aXMgc2VydmVycyBqdXN0DQo+ID4gYXMgYW4gZXhhbXBsZSB0byBpbml0aWF0ZSBkaXNjdXNzaW9u
-IGFzIHRvIGhvdyB3ZSBjb3VsZCBwYWlyIHRoZQ0KPiA+IGRyaXZlciBkYXRhIGFuZCBEVCBub2Rl
-Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRp
-bmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbGVkcy9sZWRzLWFuMzAyNTlhLnR4dCB8IDkNCj4gPiArKysrKy0tLS0N
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4g
-PiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xl
-ZHMvbGVkcy0NCj4gPiBhbjMwMjU5YS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbGVkcy9sZWRzLQ0KPiA+IGFuMzAyNTlhLnR4dA0KPiA+IGluZGV4IGNiZDgzMzkwNmIy
-Yi4uYmQxYTJkMTFhMGFkIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9sZWRzL2xlZHMtYW4zMDI1OWEudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvbGVkcy1hbjMwMjU5YS50eHQNCj4gPiBAQCAtOSw3
-ICs5LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgCS0gI2FkZHJlc3MtY2VsbHM6IE11
-c3QgYmUgMS4NCj4gPiAgCS0gI3NpemUtY2VsbHM6IE11c3QgYmUgMC4NCj4gPiAgDQo+ID4gLUVh
-Y2ggTEVEIGlzIHJlcHJlc2VudGVkIGFzIGEgc3ViLW5vZGUgb2YgdGhlIHBhbmFzb25pYyxhbjMw
-MjU5YQ0KPiA+IG5vZGUuDQo+ID4gK0VhY2ggTEVEIGlzIHJlcHJlc2VudGVkIGFzIGEgc3ViLW5v
-ZGUgb2YgdGhlIHBhbmFzb25pYyxhbjMwMjU5YQ0KPiA+IG5vZGUuIExFRCBub2Rlcw0KPiA+ICtt
-dXN0IGJlIG5hbWVkIGFzIGxlZDEgbGVkMiBhbmQgbGVkMy4NCj4gPiAgDQo+ID4gIFJlcXVpcmVk
-IHN1Yi1ub2RlIHByb3BlcnRpZXM6DQo+ID4gIAktIHJlZzogUGluIHRoYXQgdGhlIExFRCBpcyBj
-b25uZWN0ZWQgdG8uIE11c3QgYmUgMSwgMiwgb3IgMy4NCj4gPiBAQCAtMzQsMjAgKzM1LDIwIEBA
-IGxlZC1jb250cm9sbGVyQDMwIHsNCj4gPiAgCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICAJ
-I3NpemUtY2VsbHMgPSA8MD47DQo+ID4gIA0KPiA+IC0JbGVkQDEgew0KPiA+ICsJbGVkMSB7DQo+
-ID4gIAkJcmVnID0gPDE+Ow0KPiANCj4gVGhpcyBpcyB3cm9uZy4gcmVnIHJlcXVpcmVzIGEgdW5p
-dC1hZGRyZXNzIGFuZCB2aWNlLXZlcnNhLg0KDQpSaWdodC4NCg0KSSdkIGJlIGludGVyZXN0ZWQg
-dG8ga25vdyBob3cgdXNpbmcgbm9kZSBuYW1lKHMpIHRvIG1hdGNoIHRoZSBkcml2ZXINCmRhdGEg
-KGxpa2UgcmVndWxhdG9ycyBkbykgaXMgc2VlbiBpbiBnZW5lcmFsPyBJcyB0aGlzIGEgYmFkIGlk
-ZWEgZm9yDQpMRURzPyBXb3VsZCBpdCBiZSBiZXR0ZXIgdG8gaGF2ZSBhIGxlZHMtY29tcGF0aWJs
-ZSAobGlrZSB3ZSBoYWQNCnJlZ3VsYXRvci1jb21wYXRpYmxlIGJlZm9yZSk/DQoNCklmIG5vZGUg
-bmFtZXMgY2FuIGJlIHVzZWQgLSB3b3VsZA0KDQoJbGVkMUAxIHsNCg0KCX07DQoNCglsZWQyQDIg
-ew0KDQoJfTsNCgkuLi4gZG8/DQoNClVzaW5nIG5vZGUgbmFtZXMgYXMga2V5IHJlcXVpcmVzIHRo
-ZW0gdG8gYmUgdW5pcXVlLiBPdGhlciBvcHRpb24gY291bGQNCmJlIGRvaW5nIHRoZSBzZWFyY2gg
-YmFzZWQgb24gbm9kZSBuYW1lIGFuZCB1bml0LWFkZHJlc3MgY29tYmluYXRpb24gLSANCmJ1dCBp
-ZiB1bml0LWFkZHJlc3MgZGVwZW5kcyBvbiBib2FyZCB0aGUgbGVkIGlzIHBsYWNlZCAtIHRoZW4g
-ZHJpdmVyDQptaWdodCBub3Qga25vdyBpdC4gU2hvdWxkIEkgY29udmVydCB0aGUgUkZDIHRvIGlu
-dHJvZHVjZSBhbmQgdXNlIGxlZC0NCmNvbXBhdGlibGU/DQoNCj4gPiAgCQlsaW51eCxkZWZhdWx0
-LXRyaWdnZXIgPSAiaGVhcnRiZWF0IjsNCj4gPiAgCQlmdW5jdGlvbiA9IExFRF9GVU5DVElPTl9J
-TkRJQ0FUT1I7DQo+ID4gIAkJY29sb3IgPSA8TEVEX0NPTE9SX0lEX1JFRD47DQo+ID4gIAl9Ow0K
-PiA+ICANCj4gPiAtCWxlZEAyIHsNCj4gPiArCWxlZDIgew0KPiA+ICAJCXJlZyA9IDwyPjsNCj4g
-PiAgCQlmdW5jdGlvbiA9IExFRF9GVU5DVElPTl9JTkRJQ0FUT1I7DQo+ID4gIAkJY29sb3IgPSA8
-TEVEX0NPTE9SX0lEX0dSRUVOPjsNCj4gPiAgCX07DQo+ID4gIA0KPiA+IC0JbGVkQDMgew0KPiA+
-ICsJbGVkMyB7DQo+ID4gIAkJcmVnID0gPDM+Ow0KPiA+ICAJCWZ1bmN0aW9uID0gTEVEX0ZVTkNU
-SU9OX0lORElDQVRPUjsNCj4gPiAgCQljb2xvciA9IDxMRURfQ09MT1JfSURfQkxVRT47DQo+ID4g
-LS0gDQo+ID4gMi4yMS4wDQo+ID4gDQo+ID4gDQo+ID4gLS0gDQo+ID4gTWF0dGkgVmFpdHRpbmVu
-LCBMaW51eCBkZXZpY2UgZHJpdmVycw0KPiA+IFJPSE0gU2VtaWNvbmR1Y3RvcnMsIEZpbmxhbmQg
-U1dEQw0KPiA+IEtpdmloYXJqdW5sZW5ra2kgMUUNCj4gPiA5MDIyMCBPVUxVDQo+ID4gRklOTEFO
-RA0KPiA+IA0KPiA+IH5+fiAiSSBkb24ndCB0aGluayBzbywiIHNhaWQgUmVuZSBEZXNjYXJ0ZXMu
-IEp1c3QgdGhlbiBoZSB2YW5pc2hlZA0KPiA+IH5+fg0KPiA+IFNpbW9uIHNheXMgLSBpbiBMYXRp
-biBwbGVhc2UuDQo+ID4gfn5+ICJub24gY29naXRvIG1lIiBkaXhpdCBSZW5lIERlc2NhcnRlLCBk
-ZWluZGUgZXZhbmVzY2F2aXQgfn5+DQo+ID4gVGhhbmtzIHRvIFNpbW9uIEdsYXNzIGZvciB0aGUg
-dHJhbnNsYXRpb24gPV0gDQoNCg==
+On 04.11.19 11:35, Abel Vesa wrote:
+> On 19-11-04 09:49:18, Martin Kepplinger wrote:
+>> On 30.10.19 09:08, Abel Vesa wrote:
+>>> On 19-10-30 07:11:37, Martin Kepplinger wrote:
+>>>> On 23.06.19 13:47, Martin Kepplinger wrote:
+>>>>> On 10.06.19 14:13, Abel Vesa wrote:
+>>>>>> This is another alternative for the RFC:
+>>>>>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F3%2F27%2F545&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C50f2d9cf92ae4c41db1308d76103e468%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637084541652623937&amp;sdata=eY8TR3bpvYBWGZ7Xd58%2BK8Ig0qJ3ZqTWO8fNS5X0tj8%3D&amp;reserved=0
+>>>>>>
+>>>>>> This new workaround proposal is a little bit more hacky but more contained
+>>>>>> since everything is done within the irq-imx-gpcv2 driver.
+>>>>>>
+>>>>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
+>>>>>> handler and registers instead a wrapper which calls in the 'hijacked' 
+>>>>>> handler, after that calling into EL3 which will take care of the actual
+>>>>>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
+>>>>>>
+>>>>>> I also have the patches ready for TF-A but I'll hold on to them until I see if
+>>>>>> this has a chance of getting in.
+>>>>>
+>>>>
+>>>> Hi Abel,
+>>>>
+>>>> Running this workaround doesn't seem to work anymore on 5.4-rcX. Linux
+>>>> doesn't boot, with ATF unchanged (includes your workaround changes). I
+>>>> can try to add more details to this...
+>>>>
+>>>
+>>> This is happening because the system counter is now enabled on 8mq.
+>>> And since the irq-imx-gpcv2 is using as irq_set_affinity the 
+>>> irq_chip_set_affinity_parent. This is because the actual implementation
+>>> of the driver relies on GIC to set the right affinity. On a SoC
+>>> that has the wake_request signales linked to the power controller this
+>>> works fine. Since the system counter is actually the tick broadcast
+>>> device and the set affinity relies only on GIC, the cores can't be
+>>> woken up by the broadcast interrupt.
+>>>
+>>>> Have you tested this for 5.4? Could you update this workaround? Please
+>>>> let me know if I missed any earlier update on this (having a cpu-sleep
+>>>> idle state).
+>>>>
+>>>
+>>> The solution is to implement the set affinity in the irq-imx-gpcv2 driver
+>>> which would allow the gpc to wake up the target core when the broadcast
+>>> irq arrives.
+>>>
+>>> I have a patch for this. I just need to clean it up a little bit.
+>>> Unfortunately, it won't go upstream since everuone thinks the gic
+>>> should be the one to control the affinity. This obviously doesn't work
+>>> on 8mq.
+>>>
+>>> Currently, I'm at ELCE in Lyon. Will get back at the office tomorrow
+>>> and sned you what I have.
+>>>
+>>
+>> Hi Abel,
+>>
+>> Do you have any news on said patch for testing? That'd be great for my
+>> plannings.
+>>
+> 
+> Sorry for the late answer.
+> 
+> I'm dropping here the diff.
+> 
+> Please keep in mind that this is _not_ an official solution.
+> 
+> ---
+>  drivers/irqchip/irq-imx-gpcv2.c | 42 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
+> index 01ce6f4..3150588 100644
+> --- a/drivers/irqchip/irq-imx-gpcv2.c
+> +++ b/drivers/irqchip/irq-imx-gpcv2.c
+> @@ -41,6 +41,24 @@ static void __iomem *gpcv2_idx_to_reg(struct gpcv2_irqchip_data *cd, int i)
+>  	return cd->gpc_base + cd->cpu2wakeup + i * 4;
+>  }
+>  
+> +static void __iomem *gpcv2_idx_to_reg_cpu(struct gpcv2_irqchip_data *cd,
+> +					int i, int cpu)
+> +{
+> +	u32 offset =  GPC_IMR1_CORE0;
+> +	switch(cpu) {
+> +	case 1:
+> +		offset = GPC_IMR1_CORE1;
+> +		break;
+> +	case 2:
+> +		offset = GPC_IMR1_CORE2;
+> +		break;
+> +	case 3:
+> +		offset = GPC_IMR1_CORE3;
+> +		break;
+> +	}
+> +	return cd->gpc_base + offset + i * 4;
+> +}
+> +
+>  static int gpcv2_wakeup_source_save(void)
+>  {
+>  	struct gpcv2_irqchip_data *cd;
+> @@ -163,6 +181,28 @@ static void imx_gpcv2_irq_mask(struct irq_data *d)
+>  	irq_chip_mask_parent(d);
+>  }
+>  
+> +static int imx_gpcv2_irq_set_affinity(struct irq_data *d,
+> +				 const struct cpumask *dest, bool force)
+> +{
+> +	struct gpcv2_irqchip_data *cd = d->chip_data;
+> +	void __iomem *reg;
+> +	u32 val;
+> +	int cpu;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		raw_spin_lock(&cd->rlock);
+> +		reg = gpcv2_idx_to_reg_cpu(cd, d->hwirq / 32, cpu);
+> +		val = readl_relaxed(reg);
+> +		val |= BIT(d->hwirq % 32);
+> +		if (cpumask_test_cpu(cpu, dest))
+> +			val &= ~BIT(d->hwirq % 32);
+> +		writel_relaxed(val, reg);
+> +		raw_spin_unlock(&cd->rlock);
+> +	}
+> +
+> +	return irq_chip_set_affinity_parent(d, dest, force);
+> +}
+> +
+>  static struct irq_chip gpcv2_irqchip_data_chip = {
+>  	.name			= "GPCv2",
+>  	.irq_eoi		= irq_chip_eoi_parent,
+> @@ -172,7 +212,7 @@ static struct irq_chip gpcv2_irqchip_data_chip = {
+>  	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+>  	.irq_set_type		= irq_chip_set_type_parent,
+>  #ifdef CONFIG_SMP
+> -	.irq_set_affinity	= irq_chip_set_affinity_parent,
+> +	.irq_set_affinity	= imx_gpcv2_irq_set_affinity,
+>  #endif
+>  };
+>  
+> 
+
+
+hi Abel,
+
+I guess this diff does not apply when using this reworked change:
+https://source.puri.sm/Librem5/linux-next/commit/e59807ae0e236512761b751abc84a9b129d7fcda
+which has worked for me when running 5.3.
+
+At least on 5.4-rc5, using your change, I still get
+
+cat /sys/devices/system/cpu/cpuidle/current_driver
+none
+
+But also when trying to rewrite your patch against irq-gic-v3.c at least
+nothing changes for me (I might have done that wrong as well though).
+
+What needs to change (in order to have the cpu-sleep state / idle
+driver) based on the above "reworked" workaround?
+
+Could the config have changed? CONFIG_ARM_CPUIDLE should be the only
+needed path, or did things change there in 5.4?
+
+I know all this is no real solution, but currently the only way to have
+said sleep state on top of mainline. so be it for now.
+
+thanks for your help!
+
+                            martin
