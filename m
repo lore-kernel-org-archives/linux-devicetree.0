@@ -6,85 +6,111 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E30C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE56C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AFA2075C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F21E2178F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfKFQJm (ORCPT
+        id S1727321AbfKFQST (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:09:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:42422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728530AbfKFQJm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:09:42 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A98346A;
-        Wed,  6 Nov 2019 08:09:41 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82DC23F71A;
-        Wed,  6 Nov 2019 08:09:39 -0800 (PST)
-Date:   Wed, 6 Nov 2019 16:09:37 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        roy.zang@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Message-ID: <20191106160937.GB23381@e121166-lin.cambridge.arm.com>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+        Wed, 6 Nov 2019 11:18:19 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48791 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727244AbfKFQST (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 11:18:19 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iSO0f-0000VI-4J; Wed, 06 Nov 2019 17:18:17 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iSO0d-0003OC-GA; Wed, 06 Nov 2019 17:18:15 +0100
+Date:   Wed, 6 Nov 2019 17:18:15 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2] ARM: dts: imx6q-logicpd: Enable ili2117a Touchscreen
+Message-ID: <20191106161815.uwcoe7spn3seupaq@pengutronix.de>
+References: <20191106142308.10511-1-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902034319.14026-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191106142308.10511-1-aford173@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:17:26 up 172 days, 22:35, 120 users,  load average: 0.16, 0.11,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:43:17AM +0800, Xiaowei Bao wrote:
-> Add the PCIe compatible string for LS1028A
+Hi Adam,
 
-Sentences must be terminated with a period.
-
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On 19-11-06 08:23, Adam Ford wrote:
+> The LCD used with the imx6q-logicpd board has an integrated
+> ili2117a touch controller connected to i2c1.
+> 
+> This patch adds the node to enable this feature.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 > ---
-> v2:
->  - No change.
-> v3:
->  - No change.
-> v4:
->  - No change.
-> v5:
->  - No change.
-> v6:
->  - No change.
+> ili2117 support is scheduled to be introduced for Kernel v5.5.
 > 
->  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
->  1 file changed, 1 insertion(+)
+> V2:  Change node to touchscreen@26 and move comment about 5.5 to under the dashes
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index e20ceaa..99a386e 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -21,6 +21,7 @@ Required properties:
->          "fsl,ls1046a-pcie"
->          "fsl,ls1043a-pcie"
->          "fsl,ls1012a-pcie"
-> +        "fsl,ls1028a-pcie"
->    EP mode:
->  	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
->  - reg: base addresses and lengths of the PCIe controller register blocks.
+> diff --git a/arch/arm/boot/dts/imx6q-logicpd.dts b/arch/arm/boot/dts/imx6q-logicpd.dts
+> index d96ae54be338..7a3d1d3e54a9 100644
+> --- a/arch/arm/boot/dts/imx6q-logicpd.dts
+> +++ b/arch/arm/boot/dts/imx6q-logicpd.dts
+> @@ -73,6 +73,16 @@
+>  	status = "okay";
+>  };
+>  
+> +&i2c1 {
+> +	touchscreen@26 {
+> +		compatible = "ilitek,ili2117";
+> +		reg = <0x26>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_touchscreen>;
 
-I have applied this series to pci/layerscape, thanks.
+This phandle already exists?
 
-Lorenzo
+Regards,
+  Marco
+
+> +		interrupts-extended = <&gpio1 6 IRQ_TYPE_EDGE_RISING>;
+> +	};
+> +};
+> +
+>  &ldb {
+>  	status = "okay";
+>  
+> -- 
+> 2.20.1
+> 
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
