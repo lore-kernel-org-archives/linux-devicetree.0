@@ -2,175 +2,237 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD6CC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42C1C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E6121D6C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SPOZRLbq"
+	by mail.kernel.org (Postfix) with ESMTP id 9B1B421882
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573012166;
+	bh=t65iiS3QcueU/WZw2BsZPVLnFMqieKx1WpPe5Y47q+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=INM/d8ZOBExOVMda3VJXyJ0Bty/0Mz05TKdGQcXOFMg+3ph2UDTQ3UqVRCRa4fBFL
+	 ALncqLFdIgOoK6PthJEbniexIFDXlirTWm1abcDDTIoQ70t4u+d/skiLBJXO5h+m9h
+	 b8zqRIub/R/3Tr/Ad74+RowgS7E+3TMYrFgGeM3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbfKFDqY (ORCPT
+        id S1727830AbfKFDtX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:46:24 -0500
-Received: from mail-eopbgr40084.outbound.protection.outlook.com ([40.107.4.84]:63968
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726368AbfKFDqX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:46:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cIMbOqOEbdeZaNS6jdABL+6GGOxy7Ru4DmkNqIoRRcNelsO8Ln0GrLlNn49AI5HsIi3AdF9fO3zEwywqE5F4jNAGemJwCHpSfZDF6p3+JEEV1skAalKgSytf/Dsy3Hq/Pv93LUTZ3TWZ/REP5lj3dLC3Lo3SticFV/sp9zeCz/3Kx7jkIgOyUGkNwoqc+wpi4kJqij7xot0WX6LIuTvktBpZupSpLGhuJx/6qEDvSNAvKjFdOd3OffXIbo5/5IRuznX7VxAh9e/RrUavsIlcqMv4+pyr8LWGhk9ZZxWB38IfC4QkFctdGfSrz/dswsaesgYMyR8P4iLTuxsEIiSZHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P68tMLpWq9kFEBhnHN69n57VwGyIoQLcKTrKde2RcyM=;
- b=SqJr9nKR3HUmdnYkFDvSxCFkQzjJYrWuIxGVg32XaAkGpKTQJs9yjzLFBjiAjAsXPOn9y1dJhzhGGtY7J5MIIDuiPvJUVcuy/8OnrgF3eUDc0w8hzt+MlHxQGQE2pgZiX/GsGuP94fXaEdA10Qa3eaMt+aRpLnfzZx/9oXpcPPLtEygVimqr4mJxMnVoSJOAHLosu6W8v00z+MVoaE5Bfwhln9+vO2ZVX6CLGUgOEeXd8hkZkB04dzoCobl6jZLLOmA1gZX/uEqe0XQqUQaCj0cyBX2FYobiqxHv6mrT7WieA5pFaOkZ5Ubv6k5ailVwHYJYOOLwzZKo5+4RyJwODw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P68tMLpWq9kFEBhnHN69n57VwGyIoQLcKTrKde2RcyM=;
- b=SPOZRLbqosgCagKQ2mpteTOF49VMK5soKXPGWJwxrdkUHcK8EaDwiawNIupRi2/frrZjBEfz+NnuhbX4rlemHvkqR00UhQKaCIVdowp6ipnNJoiHB4Cgl+4Hk9fd44NHeUNA+zo1+alPyymILQy+/El26yAdQEvr9ZAbgn3BFL8=
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
- VI1PR0401MB2352.eurprd04.prod.outlook.com (10.169.134.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Wed, 6 Nov 2019 03:46:17 +0000
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::2d81:2d60:747c:d0ad]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::2d81:2d60:747c:d0ad%3]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
- 03:46:17 +0000
-From:   "M.h. Lian" <minghuan.lian@nxp.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Thread-Topic: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Thread-Index: AQHVlFNBk08WsOHby0SolYA/Js4oiKd9gAVQ
-Date:   Wed, 6 Nov 2019 03:46:17 +0000
-Message-ID: <VI1PR0401MB22372AF4F02D3F22EA2184BEE8790@VI1PR0401MB2237.eurprd04.prod.outlook.com>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
- <20190902034319.14026-3-xiaowei.bao@nxp.com>
- <20191105123233.GA26960@e121166-lin.cambridge.arm.com>
- <AM5PR04MB32999C59EE51DACC030E13D7F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
-In-Reply-To: <AM5PR04MB32999C59EE51DACC030E13D7F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=minghuan.lian@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f99e9545-d31c-455e-4ed0-08d7626be115
-x-ms-traffictypediagnostic: VI1PR0401MB2352:|VI1PR0401MB2352:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0401MB23522885BC1D7E465C616B66E8790@VI1PR0401MB2352.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(366004)(396003)(39860400002)(376002)(199004)(189003)(13464003)(7736002)(7416002)(486006)(55016002)(6436002)(81156014)(64756008)(11346002)(476003)(26005)(8676002)(6506007)(7696005)(81166006)(76176011)(53546011)(186003)(66946007)(66556008)(8936002)(316002)(102836004)(66476007)(229853002)(110136005)(86362001)(54906003)(3846002)(6116002)(305945005)(66066001)(76116006)(74316002)(66446008)(99286004)(4326008)(71190400001)(14454004)(33656002)(25786009)(52536014)(71200400001)(5660300002)(14444005)(256004)(9686003)(6246003)(2906002)(478600001)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2352;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8RlyC+F704Tsa4Un8luDcZeE+6jsRhFfanJHZuTyfP2QMAIP+j5KYNNa/i2//mcK9qDV429BhjOLOQei6qlcHwFQIJS42uvIhI6HWpXdueu8Y6pKIkdkgy84/G+G2y9iOXCqePouPQAJODDzd3HPc8vwv3ni9k31WZVs99t6kI4V6zhAsFkYX7XaIpTJmKvw4UPqPU3MzHAGHjsu/BvFz6YP6/aZn9DAK096vByOeMk+Bry4oGNAL33ac4Wei+8CG0wzuxV1r38nI/dhUMnA1gana7yJTYdDwXafTWHTWcr1ZFSY5XGC3/UN3Ib1E4MRw1FzCCvNn6t5hwuYkIwuY4gRG2zJzaQAIHd+vy9EzKzi/+QAxjnXLVjfs5WqTrVJCKpcFL59g9+4Ncm99oYSM1mI6nZbXZJw2q/j//t2m/1aTE1bxuKgVtUGHN8xyeoU
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 5 Nov 2019 22:49:23 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40527 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfKFDtW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 22:49:22 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 22so1607703oip.7;
+        Tue, 05 Nov 2019 19:49:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BYRy2kU11mjJOqDThkKH567jR3x8F3FqGXpmcAaLlOo=;
+        b=F+Z7/hJZiqLIEezcoGg3lTIp28cO4/7kNLRNTu6FKs9XKWd6ogMDNRamLohBrXXgpt
+         ZNKKNS/GegUKG0huchmm7w3YfvGCWF/wKtsVgOE8LIXSTuKhJ+ZfxphcKtyb6Z+O3PQ+
+         GkJzIilUf+P8Gp8TRRhbWFdQROYxZPPAWe9Jv7pDc0/TZszOwT/eW6ljwYnjeUIiWOSN
+         JSgBy3Zl7Os07mnJIziRRlVfz53BtoDmRSjK/Akl4cJsVqDJEceOO44vKYzYQnAw3jbv
+         YNZ2GVZdB8t+Cqxuguitzn55CwShG8zCTY/7+J49Yy6N+MiWK5TNeQC7ua5Eai59SG59
+         T/Ew==
+X-Gm-Message-State: APjAAAW90eEId3KJmGBW4KzJ9djA6o5jZQWLYg8Ab0lPXYpqiPRX0LXQ
+        xKbaL7KLtvsGpRPcVejxEg==
+X-Google-Smtp-Source: APXvYqyArk7cjiKQPNiUtt/ZJP0XyerEm6RMmGQgcHosA8r7K975fgj1X6RbwQlU05L0p4gxByX+MA==
+X-Received: by 2002:aca:39d7:: with SMTP id g206mr325373oia.101.1573012161814;
+        Tue, 05 Nov 2019 19:49:21 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l4sm6486980oia.51.2019.11.05.19.49.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 19:49:21 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:49:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kent Gustavsson <kent@minoris.se>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: adc: Migrate MCP3911 documentation to
+ yaml
+Message-ID: <20191106034920.GA15882@bogus>
+References: <20191029211142.14650-1-marcus.folkesson@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f99e9545-d31c-455e-4ed0-08d7626be115
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 03:46:17.2967
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hxJVY/IUmlPvq2OO6Evi5oJN5ISICEuEkZeXjX7WTCHwFXHc/InrBMqoZqKNZ1T5SHW1JgUTda3TpeDNkJ77hw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2352
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029211142.14650-1-marcus.folkesson@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5Lg0KDQpBY2tlZC1ieTogTWlu
-Z2h1YW4gTGlhbiA8bWluZ2h1YW4uTGlhbkBueHAuY29tPg0KDQpUaGFua3MsDQpNaW5naHVhbg0K
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFhpYW93ZWkgQmFvIDx4aWFv
-d2VpLmJhb0BueHAuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIE5vdmVtYmVyIDYsIDIwMTkgMTE6
-MzYgQU0NCj4gVG86IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29t
-Pg0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25n
-dW9Aa2VybmVsLm9yZzsNCj4gTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBNLmguIExpYW4g
-PG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkNCj4gSHUgPG1pbmdrYWkuaHVAbnhwLmNv
-bT47IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgbGludXgtDQo+IHBjaUB2Z2VyLmtlcm5l
-bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBw
-Yy0NCj4gZGV2QGxpc3RzLm96bGFicy5vcmc7IGJoZWxnYWFzQGdvb2dsZS5jb207IFoucS4gSG91
-DQo+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCB2NiAzLzNd
-IFBDSTogbGF5ZXJzY2FwZTogQWRkIExTMTAyOGEgc3VwcG9ydA0KPiANCj4gDQo+IA0KPiA+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogTG9yZW56byBQaWVyYWxpc2kgPGxv
-cmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+ID4gU2VudDogMjAxOcTqMTHUwjXI1SAyMDozMw0K
-PiA+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiBDYzogcm9iaCtk
-dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsN
-Cj4gTGVvDQo+ID4gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4u
-bGlhbkBueHAuY29tPjsgTWluZ2thaQ0KPiBIdQ0KPiA+IDxtaW5na2FpLmh1QG54cC5jb20+OyBS
-b3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47DQo+ID4gbGludXgtcGNpQHZnZXIua2VybmVsLm9y
-ZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGxpbnV4
-cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBaLnEuIEhvdQ0K
-PiA+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDMv
-M10gUENJOiBsYXllcnNjYXBlOiBBZGQgTFMxMDI4YSBzdXBwb3J0DQo+ID4NCj4gPiBPbiBNb24s
-IFNlcCAwMiwgMjAxOSBhdCAxMTo0MzoxOUFNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4g
-PiA+IEFkZCBzdXBwb3J0IGZvciB0aGUgTFMxMDI4YSBQQ0llIGNvbnRyb2xsZXIuDQo+ID4gPg0K
-PiA+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+
-ID4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0K
-PiA+ID4gLS0tDQo+ID4gPiB2MjoNCj4gPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiA+IHYzOg0KPiA+
-ID4gIC0gUmV1c2UgdGhlIGxzMjA4OCBkcml2ZXIgZGF0YSBzdHJ1Y3R1cnQuDQo+ID4gPiB2NDoN
-Cj4gPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiA+IHY1Og0KPiA+ID4gIC0gTm8gY2hhbmdlLg0KPiA+
-ID4gdjY6DQo+ID4gPiAgLSBObyBjaGFuZ2UuDQo+ID4gPg0KPiA+ID4gIGRyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMgfCAxICsNCj4gPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IEkgaGF2ZSBub3Qgc2VlbiBhbnkgY29tbWVudCBv
-biBhbnkgbGF5ZXJzY2FwZSBkcml2ZXIgcGF0Y2hlcyBjb21pbmcNCj4gPiBmcm9tIHRoZSBtYWlu
-dGFpbmVycyBhcyBsaXN0ZWQgaW4gdGhlIE1BSU5UQUlORVJTIGZpbGUgKGFuZCBDQ2VkIGluIHRo
-aXMNCj4gc2VyaWVzKS4NCj4gPg0KPiA+IEkgcmVxdWVzdCBtYWludGFpbmVycyBBQ0sgb24gdGhl
-c2UgcGF0Y2hlcyBhbmQgSSBleHBlY3QgdGhlbSB0byBzdGFydA0KPiA+IHJldmlld2luZyB5b3Vy
-IGNvZGUgaWYgdGhleSB3YW50IHRvIGJlIHN0aWxsIGNvbnNpZGVyZWQgbWFpbnRhaW5lcnMNCj4g
-PiBmb3IgdGhpcyBkcml2ZXIuDQo+ID4NCj4gPiBUaGUgY2hhbmdlcyBsb29rIE9LIG1pbnVzIFNo
-YXduJ3MgcmVtYXJrIG9uIGNvbXBhdGlibGUgc3RyaW5nIHRoYXQgd2FzDQo+ID4gaWdub3JlZC4N
-Cj4gDQo+IEhpIExvcmVuem8sDQo+IA0KPiBUaGFua3MgZm9yIHlvdXIgY29tbWVudHMuDQo+IA0K
-PiBJbiBmYWN0LCB0aGUgcGF0Y2hlcyBoYXZlIHJldmlld2VkIGluIG91ciBpbnRlcm5hbCBtYWls
-IGxpc3QsIGFmdGVyIHRoZSByZXZpZXcgYnkNCj4gTWluZ2h1YW4gYW5kIE1pbmdrYWksIEkgd2ls
-bCBzZW5kIHRoZXNlIHBhdGNoZXMgdG8gb3BlbnNvdXJjZSwgdGhleSB3aWxsDQo+IGdpdmUgdGhl
-IEFDSyB3aGVuIHRoZXNlIHBhdGNoZXMgc2VlbXMgaXMgT0sgYW5kIG5vIGNvbW1lbnRzIG9uIHRo
-aXMuDQo+IA0KPiBUaGFua3MNCj4gWGlhb3dlaQ0KPiANCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBM
-b3JlbnpvDQo+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
-Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3Bj
-aS1sYXllcnNjYXBlLmMNCj4gPiA+IGluZGV4IDNhNWZhMjYuLmYyNGY3OWEgMTAwNjQ0DQo+ID4g
-PiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4g
-PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4g
-PiBAQCAtMjYzLDYgKzI2Myw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbHNfcGNpZV9kcnZkYXRh
-DQo+ID4gPiBsczIwODhfZHJ2ZGF0YSA9IHsgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
-X2lkIGxzX3BjaWVfb2ZfbWF0Y2hbXSA9IHsNCj4gPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2ws
-bHMxMDEyYS1wY2llIiwgLmRhdGEgPSAmbHMxMDQ2X2RydmRhdGEgfSwNCj4gPiA+ICAJeyAuY29t
-cGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1wY2llIiwgLmRhdGEgPSAmbHMxMDIxX2RydmRhdGEgfSwN
-Cj4gPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1wY2llIiwgLmRhdGEgPSAmbHMy
-MDg4X2RydmRhdGEgfSwNCj4gPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDQzYS1wY2ll
-IiwgLmRhdGEgPSAmbHMxMDQzX2RydmRhdGEgfSwNCj4gPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJm
-c2wsbHMxMDQ2YS1wY2llIiwgLmRhdGEgPSAmbHMxMDQ2X2RydmRhdGEgfSwNCj4gPiA+ICAJeyAu
-Y29tcGF0aWJsZSA9ICJmc2wsbHMyMDgwYS1wY2llIiwgLmRhdGEgPSAmbHMyMDgwX2RydmRhdGEg
-fSwNCj4gPiA+IC0tDQo+ID4gPiAyLjkuNQ0KPiA+ID4NCg==
+On Tue, Oct 29, 2019 at 10:11:42PM +0100, Marcus Folkesson wrote:
+> Rewrite bindings to use json-schema vocabulary.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> ---
+>  .../devicetree/bindings/iio/adc/mcp3911.txt   | 30 --------
+>  .../bindings/iio/adc/microchip,mcp3911.yaml   | 72 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 73 insertions(+), 31 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> deleted file mode 100644
+> index 3071f48fb30b..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -* Microchip MCP3911 Dual channel analog front end (ADC)
+> -
+> -Required properties:
+> - - compatible: Should be "microchip,mcp3911"
+> - - reg: SPI chip select number for the device
+> -
+> -Recommended properties:
+> - - spi-max-frequency: Definition as per
+> -	 Documentation/devicetree/bindings/spi/spi-bus.txt.
+> -	 Max frequency for this chip is 20MHz.
+> -
+> -Optional properties:
+> - - clocks: Phandle and clock identifier for sampling clock
+> - - interrupt-parent: Phandle to the parent interrupt controller
+> - - interrupts: IRQ line for the ADC
+> - - microchip,device-addr: Device address when multiple MCP3911 chips are present on the
+> -	same SPI bus. Valid values are 0-3. Defaults to 0.
+> - - vref-supply: Phandle to the external reference voltage supply.
+> -
+> -Example:
+> -adc@0 {
+> -	compatible = "microchip,mcp3911";
+> -	reg = <0>;
+> -	interrupt-parent = <&gpio5>;
+> -	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+> -	spi-max-frequency = <20000000>;
+> -	microchip,device-addr = <0>;
+> -	vref-supply = <&vref_reg>;
+> -	clocks = <&xtal>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+> new file mode 100644
+> index 000000000000..bfcf6a5fb44e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/bindings/iio/adc/microchip,mcp3911.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Microchip MCP3911 Dual channel analog front end (ADC)
+> +
+> +maintainers:
+> +  - Marcus Folkesson <marcus.folkesson@gmail.com>
+> +  - Kent Gustavsson <nedo80@gmail.com>
+> +
+> +description: |
+> +  Bindings for the Microchip MCP3911 Dual channel ADC device. Datasheet can be
+> +  found here: https://ww1.microchip.com/downloads/en/DeviceDoc/20002286C.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,mcp3911
+> +
+> +  reg:
+> +    description: SPI chip select number for the device
+
+No need to describe common properties if you have nothing special for 
+this device to say.
+
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    description: |
+> +      Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt.
+
+Same here.
+
+> +    maximum: 20000000
+> +    maxItems: 1
+
+Not an array, so drop.
+
+> +
+> +  clocks:
+> +    description: Phandle and clock identifier for sampling clock
+
+Same comment on descriptions.
+
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: IRQ line of the ADC
+> +    maxItems: 1
+> +
+> +  microchip,device-addr:
+> +    description: Device address when multiple MCP3911 chips are present on the same SPI bus.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [0, 1, 2, 3]
+> +      - default: 0
+> +
+> +  vref-supply:
+> +    description: Phandle to the external reference voltage supply.
+> +    maxItems: 1
+
+Drop this *-supply is always 1 item.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      adc@0 {
+> +        compatible = "microchip,mcp3911";
+> +        reg = <0>;
+> +        interrupt-parent = <&gpio5>;
+> +        interrupts = <15 2>;
+> +        spi-max-frequency = <20000000>;
+> +        microchip,device-addr = <0>;
+> +        vref-supply = <&vref_reg>;
+> +        clocks = <&xtal>;
+> +      };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e51a68bf8ca8..fbccc9d450ff 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10723,7 +10723,7 @@ M:	Kent Gustavsson <kent@minoris.se>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Supported
+>  F:	drivers/iio/adc/mcp3911.c
+> -F:	Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> +F:	Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+>  
+>  MICROCHIP NAND DRIVER
+>  M:	Tudor Ambarus <tudor.ambarus@microchip.com>
+> -- 
+> 2.23.0
+> 
