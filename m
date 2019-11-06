@@ -2,400 +2,323 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDC6C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4E5C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B8B20869
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4082E20869
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:45:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0Djt5Com"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfKFKj6 (ORCPT
+        id S1725890AbfKFKpE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 05:39:58 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55779 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfKFKj5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 05:39:57 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iSIj5-0005La-Fe; Wed, 06 Nov 2019 11:39:47 +0100
-Message-ID: <89250d485d05d4d671203ae615ebcf514b4d6705.camel@pengutronix.de>
-Subject: Re: [PATCH v4 3/3] reset: npcm: add NPCM reset controller driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Tomer Maimon <tmaimon77@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, yuenn@google.com, venture@google.com,
-        benjaminfair@google.com, avifishman70@gmail.com, joel@jms.id.au
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Wed, 06 Nov 2019 11:39:44 +0100
-In-Reply-To: <20191106095832.236766-4-tmaimon77@gmail.com>
-References: <20191106095832.236766-1-tmaimon77@gmail.com>
-         <20191106095832.236766-4-tmaimon77@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 6 Nov 2019 05:45:04 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37483 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730806AbfKFKpE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 05:45:04 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t1so19204846wrv.4
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 02:45:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ho0IuXnlLSu0S9dl4tyqWJ4wOPukxzFH+rPw8w9IP3U=;
+        b=0Djt5Com4Nw6nawSJY2BCWzsF4s4Xk8wxOoGPh18FDbcUJ4GQQiII9UXR5UWrhl9Ho
+         1+hy5If3cGGw6wPamrAt2Ck9f3cdm537ILzhsx/nhU40El7Bti+8EM3DtzCwD0lcdJVq
+         FsOzwh1Lcgt8dIoSZ2KacYGB0OmM198fRKZq1pTGk9mqNz1pKhSmpGx/4skJR6qKeQH/
+         q6yJAgMA1lNxdvJ5c3cg8pzFOPAs5SAPbUukBlMw5+trLF5gSTdqtRrRu8ROe22nAZXh
+         8yF6WN0msw88arX4YfEa+tQBnzkjmrmiQ2cIKVPbH6zBTa2Sz+d5UUDMWbYvrs4kVPHw
+         y1vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ho0IuXnlLSu0S9dl4tyqWJ4wOPukxzFH+rPw8w9IP3U=;
+        b=KvmcKuUaDZJCvW48WjFEaS13FoTZswV8GlbOUjeTQa0woKbfY40OV+LCNHJFbxmfFP
+         ZzqRgkbxox0wWNfJTco3IKeR+sP1DVlYfdTxDSS/y9KlQzI4WB5G4mNJxocaN/SQgzhk
+         S0/TybBxzO9EW7JNTwTSxWjTQZ71oMmf30m9q7/50aBqP7ogn0OHmKVd2tLnxVL3VvHL
+         piwcR0wTfW1b/btCy5fSgN+LCWGliGXw5l8UoIr5qVbxME54CnkYVEJAU6IsCbwgCDYV
+         vUpLdxewGnOZXMrEiwtHD+IZdbL5EYmtUoOjKpg1N0kyRCegb0ViazrYuZb/SVXKHJOk
+         WTLg==
+X-Gm-Message-State: APjAAAV1HgrpQ5XRlY9rX3FhsZbqp+H9qqyRlRcj3+ZQGAcWNRVOwKbH
+        6k3D+WBRy79Mi1sTK47T1SUhlw==
+X-Google-Smtp-Source: APXvYqxmFcDntelzvf5oc2kIZGTaA8RcxUIN9ppLG7GpMdMZTeYZT5cyAcYce2korwDEVDossgvHyA==
+X-Received: by 2002:adf:fe90:: with SMTP id l16mr1948950wrr.81.1573037100615;
+        Wed, 06 Nov 2019 02:45:00 -0800 (PST)
+Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id u187sm2483023wme.15.2019.11.06.02.44.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 02:45:00 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2] dt-bindings: usb: dwc3: Move Amlogic G12A DWC3 Glue Bindings to YAML schemas
+Date:   Wed,  6 Nov 2019 11:44:58 +0100
+Message-Id: <20191106104458.23698-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomer,
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the Amlogic G12A DWC3 Glue Bindings over to a YAML schemas,
+the AXG and GXL glue bindings will be converted later.
 
-On Wed, 2019-11-06 at 11:58 +0200, Tomer Maimon wrote:
-> Add Nuvoton NPCM BMC reset controller driver.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  drivers/reset/Kconfig      |   7 +
->  drivers/reset/Makefile     |   1 +
->  drivers/reset/reset-npcm.c | 281 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 289 insertions(+)
->  create mode 100644 drivers/reset/reset-npcm.c
-> 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 7b07281aa0ae..9e3eac30e7db 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -89,6 +89,13 @@ config RESET_MESON_AUDIO_ARB
->  	  This enables the reset driver for Audio Memory Arbiter of
->  	  Amlogic's A113 based SoCs
->  
-> +config RESET_NPCM
-> +	bool "NPCM BMC Reset Driver" if COMPILE_TEST
-> +	default ARCH_NPCM
-> +	help
-> +	  This enables the reset controller driver for Nuvoton NPCM
-> +	  BMC SoCs.
-> +
->  config RESET_OXNAS
->  	bool
->  
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index cf60ce526064..00767c03f5f2 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
->  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
->  obj-$(CONFIG_RESET_MESON) += reset-meson.o
->  obj-$(CONFIG_RESET_MESON_AUDIO_ARB) += reset-meson-audio-arb.o
-> +obj-$(CONFIG_RESET_NPCM) += reset-npcm.o
->  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
->  obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
->  obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
-> diff --git a/drivers/reset/reset-npcm.c b/drivers/reset/reset-npcm.c
-> new file mode 100644
-> index 000000000000..ad09d466d7f9
-> --- /dev/null
-> +++ b/drivers/reset/reset-npcm.c
-> @@ -0,0 +1,281 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2019 Nuvoton Technology corporation.
-> +
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_address.h>
-> +
-> +/* NPCM7xx GCR registers */
-> +#define NPCM_MDLR_OFFSET	0x7C
-> +#define NPCM_MDLR_USBD0		BIT(9)
-> +#define NPCM_MDLR_USBD1		BIT(8)
-> +#define NPCM_MDLR_USBD2_4	BIT(21)
-> +#define NPCM_MDLR_USBD5_9	BIT(22)
-> +
-> +#define NPCM_USB1PHYCTL_OFFSET	0x140
-> +#define NPCM_USB2PHYCTL_OFFSET	0x144
-> +#define NPCM_USBXPHYCTL_RS	BIT(28)
-> +
-> +/* NPCM7xx Reset registers */
-> +#define NPCM_SWRSTR		0x14
-> +#define NPCM_SWRST		BIT(2)
-> +
-> +#define NPCM_IPSRST1		0x20
-> +#define NPCM_IPSRST1_USBD1	BIT(5)
-> +#define NPCM_IPSRST1_USBD2	BIT(8)
-> +#define NPCM_IPSRST1_USBD3	BIT(25)
-> +#define NPCM_IPSRST1_USBD4	BIT(22)
-> +#define NPCM_IPSRST1_USBD5	BIT(23)
-> +#define NPCM_IPSRST1_USBD6	BIT(24)
-> +
-> +#define NPCM_IPSRST2		0x24
-> +#define NPCM_IPSRST2_USB_HOST	BIT(26)
-> +
-> +#define NPCM_IPSRST3		0x34
-> +#define NPCM_IPSRST3_USBD0	BIT(4)
-> +#define NPCM_IPSRST3_USBD7	BIT(5)
-> +#define NPCM_IPSRST3_USBD8	BIT(6)
-> +#define NPCM_IPSRST3_USBD9	BIT(7)
-> +#define NPCM_IPSRST3_USBPHY1	BIT(24)
-> +#define NPCM_IPSRST3_USBPHY2	BIT(25)
-> +
-> +#define NPCM_RC_RESETS_PER_REG	32
-> +#define NPCM_MASK_RESETS	GENMASK(4, 0)
-> +
-> +struct npcm_rc_data {
-> +	struct reset_controller_dev rcdev;
-> +	struct notifier_block restart_nb;
-> +	u32 sw_reset_number;
-> +	void __iomem *base;
-> +	spinlock_t lock;
-> +};
-> +
-> +#define to_rc_data(p) container_of(p, struct npcm_rc_data, rcdev)
-> +
-> +static int npcm_rc_restart(struct notifier_block *nb, unsigned long mode,
-> +			   void *cmd)
-> +{
-> +	struct npcm_rc_data *rc = container_of(nb, struct npcm_rc_data,
-> +					       restart_nb);
-> +
-> +	writel(NPCM_SWRST << rc->sw_reset_number, rc->base + NPCM_SWRSTR);
-> +	mdelay(1000);
-> +
-> +	pr_emerg("%s: unable to restart system\n", __func__);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int npcm_rc_setclear_reset(struct reset_controller_dev *rcdev,
-> +				  unsigned long id, bool set)
-> +{
-> +	struct npcm_rc_data *rc = to_rc_data(rcdev);
-> +	unsigned int rst_bit = BIT(id & NPCM_MASK_RESETS);
-> +	unsigned int ctrl_offset = id >> 8;
-> +	unsigned long flags;
-> +	u32 stat;
-> +
-> +	spin_lock_irqsave(&rc->lock, flags);
-> +	stat = readl(rc->base + ctrl_offset);
-> +	if (set)
-> +		writel(stat | rst_bit, rc->base + ctrl_offset);
-> +	else
-> +		writel(stat & ~rst_bit, rc->base + ctrl_offset);
-> +	spin_unlock_irqrestore(&rc->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int npcm_rc_assert(struct reset_controller_dev *rcdev, unsigned long id)
-> +{
-> +	return npcm_rc_setclear_reset(rcdev, id, true);
-> +}
-> +
-> +static int npcm_rc_deassert(struct reset_controller_dev *rcdev,
-> +			    unsigned long id)
-> +{
-> +	return npcm_rc_setclear_reset(rcdev, id, false);
-> +}
-> +
-> +static int npcm_rc_status(struct reset_controller_dev *rcdev,
-> +			  unsigned long id)
-> +{
-> +	struct npcm_rc_data *rc = to_rc_data(rcdev);
-> +	unsigned int rst_bit = BIT(id & NPCM_MASK_RESETS);
-> +	unsigned int ctrl_offset = id >> 8;
-> +
-> +	return (readl(rc->base + ctrl_offset) & rst_bit);
-> +}
-> +
-> +/*
-> + *  The following procedure should be observed in USB PHY, USB device and
-> + *  USB host initialization at BMC boot
-> + */
-> +static int npcm_usb_reset(struct platform_device *pdev, struct npcm_rc_data *rc)
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+Changes since v1:
+- fixed typo in description
+- removed dr-mode definition in favor of "true"
 
-Is this npcm750 specific? If so, you could call it npcm750_usb_reset and
-only call it if the compatible matches.
+ .../devicetree/bindings/usb/amlogic,dwc3.txt  |  88 ------------
+ .../usb/amlogic,meson-g12a-usb-ctrl.yaml      | 128 ++++++++++++++++++
+ 2 files changed, 128 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
 
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	u32 mdlr, iprst1, iprst2, iprst3;
-> +	struct regmap *gcr_regmap = NULL;
-> +	u32 ipsrst1_bits = 0;
-> +	u32 ipsrst2_bits = NPCM_IPSRST2_USB_HOST;
-> +	u32 ipsrst3_bits = 0;
-> +
-> +	if (of_device_is_compatible(np, "nuvoton,npcm750-reset")) {
-
-Better use of_match_device(). Also see above, I think this check could
-be done in probe() already?
-
-> +		gcr_regmap = syscon_regmap_lookup_by_compatible("nuvoton,npcm750-gcr");
-> +		if (IS_ERR(gcr_regmap)) {
-> +			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-gcr\n");
-> +			return PTR_ERR(gcr_regmap);
-> +		}
-> +	}
-> +	if (!gcr_regmap)
-> +		return -ENXIO;
-> +
-> +	/* checking which USB device is enabled */
-> +	regmap_read(gcr_regmap, NPCM_MDLR_OFFSET, &mdlr);
-> +	if (!(mdlr & NPCM_MDLR_USBD0))
-> +		ipsrst3_bits |= NPCM_IPSRST3_USBD0;
-> +	if (!(mdlr & NPCM_MDLR_USBD1))
-> +		ipsrst1_bits |= NPCM_IPSRST1_USBD1;
-> +	if (!(mdlr & NPCM_MDLR_USBD2_4))
-> +		ipsrst1_bits |= (NPCM_IPSRST1_USBD2 |
-> +				 NPCM_IPSRST1_USBD3 |
-> +				 NPCM_IPSRST1_USBD4);
-> +	if (!(mdlr & NPCM_MDLR_USBD0)) {
-> +		ipsrst1_bits |= (NPCM_IPSRST1_USBD5 |
-> +				 NPCM_IPSRST1_USBD6);
-> +		ipsrst3_bits |= (NPCM_IPSRST3_USBD7 |
-> +				 NPCM_IPSRST3_USBD8 |
-> +				 NPCM_IPSRST3_USBD9);
-> +	}
-> +
-> +	/* assert reset USB PHY and USB devices */
-> +	iprst1 = readl(rc->base + NPCM_IPSRST1);
-> +	iprst2 = readl(rc->base + NPCM_IPSRST2);
-> +	iprst3 = readl(rc->base + NPCM_IPSRST3);
-> +
-> +	iprst1 |= ipsrst1_bits;
-> +	iprst2 |= ipsrst2_bits;
-> +	iprst3 |= (ipsrst3_bits | NPCM_IPSRST3_USBPHY1 |
-> +		   NPCM_IPSRST3_USBPHY2);
-> +
-> +	writel(iprst1, rc->base + NPCM_IPSRST1);
-> +	writel(iprst2, rc->base + NPCM_IPSRST2);
-> +	writel(iprst3, rc->base + NPCM_IPSRST3);
-> +
-> +	/* clear USB PHY RS bit */
-> +	regmap_update_bits(gcr_regmap, NPCM_USB1PHYCTL_OFFSET,
-> +			   NPCM_USBXPHYCTL_RS, 0);
-> +	regmap_update_bits(gcr_regmap, NPCM_USB2PHYCTL_OFFSET,
-> +			   NPCM_USBXPHYCTL_RS, 0);
-> +
-> +	/* deassert reset USB PHY */
-> +	iprst3 &= ~(NPCM_IPSRST3_USBPHY1 | NPCM_IPSRST3_USBPHY2);
-> +	writel(iprst3, rc->base + NPCM_IPSRST3);
-> +
-> +	udelay(50);
-> +
-> +	/* set USB PHY RS bit */
-> +	regmap_update_bits(gcr_regmap, NPCM_USB1PHYCTL_OFFSET,
-> +			   NPCM_USBXPHYCTL_RS, NPCM_USBXPHYCTL_RS);
-> +	regmap_update_bits(gcr_regmap, NPCM_USB2PHYCTL_OFFSET,
-> +			   NPCM_USBXPHYCTL_RS, NPCM_USBXPHYCTL_RS);
-> +
-> +	/* deassert reset USB devices*/
-> +	iprst1 &= ~ipsrst1_bits;
-> +	iprst2 &= ~ipsrst2_bits;
-> +	iprst3 &= ~ipsrst3_bits;
-> +
-> +	writel(iprst1, rc->base + NPCM_IPSRST1);
-> +	writel(iprst2, rc->base + NPCM_IPSRST2);
-> +	writel(iprst3, rc->base + NPCM_IPSRST3);
-> +
-> +	return 0;
-> +}
-> +
-> +static int npcm_reset_xlate(struct reset_controller_dev *rcdev,
-> +			    const struct of_phandle_args *reset_spec)
-> +{
-> +	unsigned int offset, bit;
-> +
-> +	offset = reset_spec->args[0];
-
-Return -EINVAL if offset is not one of 0x20, 0x24, or 0x34?
-
-> +	bit = reset_spec->args[1];
-
-Return -EINVAL if bit >= NPCM_RC_RESETS_PER_REG?
-
-> +
-> +	return (offset << 8) | bit;
-> +}
-> +
-> +static const struct reset_control_ops npcm_rc_ops = {
-> +	.assert		= npcm_rc_assert,
-> +	.deassert	= npcm_rc_deassert,
-> +	.status		= npcm_rc_status,
-> +};
-> +
-> +static int npcm_rc_probe(struct platform_device *pdev)
-> +{
-> +	struct npcm_rc_data *rc;
-> +	int ret;
-> +
-> +	rc = devm_kzalloc(&pdev->dev, sizeof(*rc), GFP_KERNEL);
-> +	if (!rc)
-> +		return -ENOMEM;
-> +
-> +	rc->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(rc->base))
-> +		return PTR_ERR(rc->base);
-> +
-> +	spin_lock_init(&rc->lock);
-> +
-> +	rc->rcdev.owner = THIS_MODULE;
-> +	rc->rcdev.nr_resets = NPCM_RC_RESETS_PER_REG;
-
-This is not necessary since of_xlate is replaced with a custom version.
-
-> +	rc->rcdev.ops = &npcm_rc_ops;
-> +	rc->rcdev.of_node = pdev->dev.of_node;
-> +	rc->rcdev.of_reset_n_cells = 2;
-> +	rc->rcdev.of_xlate = npcm_reset_xlate;
-> +
-> +	platform_set_drvdata(pdev, rc);
-> +
-> +	ret = devm_reset_controller_register(&pdev->dev, &rc->rcdev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "unable to register device\n");
-> +		return ret;
-> +	}
-> +
-> +	if (npcm_usb_reset(pdev, rc))
-> +		dev_warn(&pdev->dev, "NPCM USB reset failed, can cause issues with UDC and USB host\n");
-> +
-> +	if (!of_property_read_u32(pdev->dev.of_node, "nuvoton,sw-reset-number",
-> +				  &rc->sw_reset_number)) {
-> +		if (rc->sw_reset_number && rc->sw_reset_number < 5) {
-> +			rc->restart_nb.priority = 192,
-> +			rc->restart_nb.notifier_call = npcm_rc_restart,
-> +			ret = register_restart_handler(&rc->restart_nb);
-> +			if (ret)
-> +				dev_warn(&pdev->dev, "failed to register restart handler\n");
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id npcm_rc_match[] = {
-> +	{ .compatible = "nuvoton,npcm750-reset" },
-> +	{ }
-> +};
-> +
-> +static struct platform_driver npcm_rc_driver = {
-> +	.probe	= npcm_rc_probe,
-> +	.driver	= {
-> +		.name			= "npcm-reset",
-> +		.of_match_table		= npcm_rc_match,
-> +		.suppress_bind_attrs	= true,
-> +	},
-> +};
-> +builtin_platform_driver(npcm_rc_driver);
-
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+index b9f04e617eb7..9a8b631904fd 100644
+--- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+@@ -40,91 +40,3 @@ Example device nodes:
+ 				phy-names = "usb2-phy", "usb3-phy";
+ 			};
+ 		};
+-
+-Amlogic Meson G12A DWC3 USB SoC Controller Glue
+-
+-The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
+-in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
+-only.
+-
+-A glue connects the DWC3 core to USB2 PHYs and optionnaly to an USB3 PHY.
+-
+-One of the USB2 PHY can be re-routed in peripheral mode to a DWC2 USB IP.
+-
+-The DWC3 Glue controls the PHY routing and power, an interrupt line is
+-connected to the Glue to serve as OTG ID change detection.
+-
+-Required properties:
+-- compatible:	Should be "amlogic,meson-g12a-usb-ctrl"
+-- clocks:	a handle for the "USB" clock
+-- resets:	a handle for the shared "USB" reset line
+-- reg:		The base address and length of the registers
+-- interrupts:	the interrupt specifier for the OTG detection
+-- phys: 	handle to used PHYs on the system
+-	- a <0> phandle can be used if a PHY is not used
+-- phy-names:	names of the used PHYs on the system :
+-	- "usb2-phy0" for USB2 PHY0 if USBHOST_A port is used
+-	- "usb2-phy1" for USB2 PHY1 if USBOTG_B port is used
+-	- "usb3-phy0" for USB3 PHY if USB3_0 is used
+-- dr_mode:	should be "host", "peripheral", or "otg" depending on
+-	the usage and configuration of the OTG Capable port.
+-	- "host" and "peripheral" means a fixed Host or Device only connection
+-	- "otg" means the port can be used as both Host or Device and
+-	  be switched automatically using the OTG ID pin.
+-
+-Optional properties:
+-- vbus-supply:	should be a phandle to the regulator controlling the VBUS
+-		power supply when used in OTG switchable mode
+-
+-Required child nodes:
+-
+-A child node must exist to represent the core DWC3 IP block. The name of
+-the node is not important. The content of the node is defined in dwc3.txt.
+-
+-A child node must exist to represent the core DWC2 IP block. The name of
+-the node is not important. The content of the node is defined in dwc2.txt.
+-
+-PHY documentation is provided in the following places:
+-- Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+-- Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
+-
+-Example device nodes:
+-	usb: usb@ffe09000 {
+-			compatible = "amlogic,meson-g12a-usb-ctrl";
+-			reg = <0x0 0xffe09000 0x0 0xa0>;
+-			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+-			#address-cells = <2>;
+-			#size-cells = <2>;
+-			ranges;
+-
+-			clocks = <&clkc CLKID_USB>;
+-			resets = <&reset RESET_USB>;
+-
+-			dr_mode = "otg";
+-
+-			phys = <&usb2_phy0>, <&usb2_phy1>,
+-			       <&usb3_pcie_phy PHY_TYPE_USB3>;
+-			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
+-
+-			dwc2: usb@ff400000 {
+-				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
+-				reg = <0x0 0xff400000 0x0 0x40000>;
+-				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
+-				clock-names = "ddr";
+-				phys = <&usb2_phy1>;
+-				dr_mode = "peripheral";
+-				g-rx-fifo-size = <192>;
+-				g-np-tx-fifo-size = <128>;
+-				g-tx-fifo-size = <128 128 16 16 16>;
+-			};
+-
+-			dwc3: usb@ff500000 {
+-				compatible = "snps,dwc3";
+-				reg = <0x0 0xff500000 0x0 0x100000>;
+-				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+-				dr_mode = "host";
+-				snps,dis_u2_susphy_quirk;
+-				snps,quirk-frame-length-adjustment;
+-			};
+-	};
+diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+new file mode 100644
+index 000000000000..2b2dae2e6b7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+@@ -0,0 +1,128 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/usb/amlogic,meson-g12a-usb-ctrl.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson G12A DWC3 USB SoC Controller Glue
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++description: |
++  The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
++  in host-only mode, and a DWC2 IP Core configured for USB2 peripheral mode
++  only.
++
++  A glue connects the DWC3 core to USB2 PHYs and optionally to an USB3 PHY.
++
++  One of the USB2 PHYs can be re-routed in peripheral mode to a DWC2 USB IP.
++
++  The DWC3 Glue controls the PHY routing and power, an interrupt line is
++  connected to the Glue to serve as OTG ID change detection.
++
++properties:
++  compatible:
++    enum:
++      - amlogic,meson-g12a-usb-ctrl
++
++  ranges: true
++
++  "#address-cells":
++    enum: [ 1, 2 ]
++
++  "#size-cells":
++    enum: [ 1, 2 ]
++
++  clocks:
++    minItems: 1
++
++  resets:
++    minItems: 1
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  phy-names:
++    items:
++      - const: usb2-phy0 # USB2 PHY0 if USBHOST_A port is used
++      - const: usb2-phy1 # USB2 PHY1 if USBOTG_B port is used
++      - const: usb3-phy0 # USB3 PHY if USB3_0 is used
++
++  phys:
++    minItems: 1
++    maxItems: 3
++
++  dr_mode: true
++
++  power-domains:
++    maxItems: 1
++
++  vbus-supply:
++    description: VBUS power supply when used in OTG switchable mode
++    maxItems: 1
++
++patternProperties:
++  "^usb@[0-9a-f]+$":
++    type: object
++
++additionalProperties: false
++
++required:
++  - compatible
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
++  - clocks
++  - resets
++  - reg
++  - interrupts
++  - phy-names
++  - phys
++  - dr_mode
++
++examples:
++  - |
++    usb: usb@ffe09000 {
++          compatible = "amlogic,meson-g12a-usb-ctrl";
++          reg = <0x0 0xffe09000 0x0 0xa0>;
++          interrupts = <16>;
++          #address-cells = <1>;
++          #size-cells = <1>;
++          ranges;
++
++          clocks = <&clkc_usb>;
++          resets = <&reset_usb>;
++
++          dr_mode = "otg";
++
++          phys = <&usb2_phy0>, <&usb2_phy1>, <&usb3_phy0>;
++          phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
++
++          dwc2: usb@ff400000 {
++              compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
++              reg = <0xff400000 0x40000>;
++              interrupts = <31>;
++              clocks = <&clkc_usb1>;
++              clock-names = "ddr";
++              phys = <&usb2_phy1>;
++              dr_mode = "peripheral";
++              g-rx-fifo-size = <192>;
++              g-np-tx-fifo-size = <128>;
++              g-tx-fifo-size = <128 128 16 16 16>;
++          };
++
++          dwc3: usb@ff500000 {
++              compatible = "snps,dwc3";
++              reg = <0xff500000 0x100000>;
++              interrupts = <30>;
++              dr_mode = "host";
++              snps,dis_u2_susphy_quirk;
++              snps,quirk-frame-length-adjustment;
++          };
++    };
++
+-- 
+2.22.0
 
