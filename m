@@ -2,116 +2,173 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68905C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 13:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A78C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 13:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32109214D8
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 13:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573047963;
-	bh=9ooMijLLX5vEJI2zDzsStr/RjiYwBZXaTA+1USQBnms=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lpUW+KVQD/smLgwYGtwvQrykVexrKci7hpDW04ACIXChpsc3NzJkXbw8xT67FArKn
-	 9YZm+XGPYaMeaefS4sLSckg6YEOAno3Pw9+cDYx9135DLxqxcW4UTi1D05uXsJZLAT
-	 dohKlUXdwLGqYHV+I9smh6sLdLl7/riKBqtpEAQ0=
+	by mail.kernel.org (Postfix) with ESMTP id DA96E21848
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 13:50:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xj54XUR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfKFNqC (ORCPT
+        id S1730648AbfKFNun (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:46:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbfKFNqC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:46:02 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9E342173B;
-        Wed,  6 Nov 2019 13:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573047961;
-        bh=9ooMijLLX5vEJI2zDzsStr/RjiYwBZXaTA+1USQBnms=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pZ6MI4Sa049skPVFLBG3b4ECjI+spwZDDYYLuQmcoCwpX2x/KjjvmuSgGXK94BpMe
-         61HVlmpakTvXD/KibUaNPv5EwHV2PyFuUytZDFNH2hgJMvyzlBUTtaYtQXFQbvXchZ
-         zKW2nGg7lFjfTJc9Fo5gXzmObjVaF1BaA3riwJuQ=
-Received: by mail-qk1-f174.google.com with SMTP id q70so24551147qke.12;
-        Wed, 06 Nov 2019 05:46:01 -0800 (PST)
-X-Gm-Message-State: APjAAAVONt3z2JA0tx21FP/vsWjuMRZYtOXOc6t1DTcdeqgll3Y+1rMI
-        IUIGdcwMWABb8wMPw3HKw8Abaxaymfo+TF3Daw==
-X-Google-Smtp-Source: APXvYqzKodA0H+8cMHnbaVAdmWVwHGhTRa20VjkV1siY7MSUKBtGxZ924TlE85C0A3FqVoYNE8H52coUZjb/5ccw+4s=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr2070554qka.152.1573047960848;
- Wed, 06 Nov 2019 05:46:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20191106062511.3262-1-mihailescu2m@gmail.com>
-In-Reply-To: <20191106062511.3262-1-mihailescu2m@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 6 Nov 2019 07:45:44 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJeSsih37PrRtE8TgOM4eEv+fwfuaUWDMamM-T32_=5ug@mail.gmail.com>
-Message-ID: <CAL_JsqJeSsih37PrRtE8TgOM4eEv+fwfuaUWDMamM-T32_=5ug@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos5420: add mali dt bindings and enable
- mali on Odroid XU3/4
-To:     Marian Mihailescu <mihailescu2m@gmail.com>
-Cc:     linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Wed, 6 Nov 2019 08:50:43 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50138 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfKFNun (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 08:50:43 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6Dod3r078580;
+        Wed, 6 Nov 2019 07:50:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573048239;
+        bh=JBEs1A2urMLjy0KcP/S/vkPdWlz5mh2fUZWBFV44Gkw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xj54XUR6dXTuBlKGKVP1kGZmvQYo8m+4Gcbibjr0+RiqbxWGxtIqs5QbmrFAH/FvD
+         Aj+dagzieo0lM4viCfYRD9zTAHjNgS5cTebxJ3Zzmd8j0ZYMwPjcWcF36egZsovl9W
+         ZJbr5n+aB4gMdN+PMBmBQ9Vm/2gcIMitvmJPE7zY=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6DodN3038794
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 07:50:39 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 07:50:24 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 07:50:24 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6Doaxd121369;
+        Wed, 6 Nov 2019 07:50:36 -0600
+Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc
+ bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-omap <linux-omap@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>, <devicetree@vger.kernel.org>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-2-t-kristo@ti.com> <20191106032727.GA21162@bogus>
+ <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
+ <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <80d28cf5-1219-fb49-a416-5a879f719ebd@ti.com>
+Date:   Wed, 6 Nov 2019 15:50:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:25 AM Marian Mihailescu
-<mihailescu2m@gmail.com> wrote:
->
-> From: memeka <mihailescu2m@gmail.com>
->
-> Add device tree bindings and nodes for Mali GPU for Exynos 542x SoC.
-> GPU is disabled by default, and is enabled for each board after the regulator
-> is defined. Tested on Odroid-XU4.
->
-> Changes since v1:
-> - used generic node and label for GPU
-> - added bindings for compatible
-> - fixed irq indentation
-> - fixed interrupt-names to match bindings
-> - added cooling cells for future TMU connection
-> - used generic node and label for GPU opp table
-> - removed always-on from SoC GPU regulator
->
-> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-> ---
->  .../devicetree/bindings/gpu/arm,mali-midgard.yaml  |  5 ++-
+On 06/11/2019 15:27, Rob Herring wrote:
+> On Wed, Nov 6, 2019 at 6:44 AM Tero Kristo <t-kristo@ti.com> wrote:
+>>
+>> On 06/11/2019 05:27, Rob Herring wrote:
+>>> On Mon, Oct 28, 2019 at 02:42:22PM +0200, Tero Kristo wrote:
+>>>> From: Suman Anna <s-anna@ti.com>
+>>>>
+>>>> Add the device tree bindings document for the IPU and DSP
+>>>> remote processor devices on OMAP4+ SoCs.
+>>>>
+>>>> Cc: Rob Herring <robh@kernel.org>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>> ---
+>>>>    .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
+>>>>    1 file changed, 205 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>>>>
+>>>
+>>> Looks to be in pretty good shape, but how about doing a schema.
+>>
+>> iommu / mailbox is not in schema format, can I just convert this one to
+>> schema without considering those? If yes, I can go ahead and do it.
+> 
+> The client side both have schema (in dt-schema repo).
+> 
+>>>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>>>> new file mode 100644
+>>>> index 000000000000..e2bcfcab21c1
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>>>> @@ -0,0 +1,205 @@
+>>>> +OMAP4+ Remoteproc Devices
+>>>> +=========================
+>>>> +
+>>>> +The OMAP family of SoCs usually have one or more slave processor sub-systems
+>>>> +that are used to offload some of the processor-intensive tasks, or to manage
+>>>> +other hardware accelerators, for achieving various system level goals.
+>>>> +
+>>>> +The processor cores in the sub-system are usually behind an IOMMU, and may
+>>>> +contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
+>>>> +caches, an Interrupt Controller, a Cache Controller etc.
+>>>> +
+>>>> +The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
+>>>> +sub-system. The DSP processor sub-system can contain any of the TI's C64x,
+>>>> +C66x or C67x family of DSP cores as the main execution unit. The IPU processor
+>>>> +sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
+>>>> +processors.
+>>>> +
+>>>> +Remote Processor Node:
+>>>> +======================
+>>>> +Each remote processor sub-system is represented as a single DT node. Each node
+>>>> +has a number of required or optional properties that enable the OS running on
+>>>> +the host processor (MPU) to perform the device management of the remote
+>>>> +processor and to communicate with the remote processor. The various properties
+>>>> +can be classified as constant or variable. The constant properties are dictated
+>>>> +by the SoC and does not change from one board to another having the same SoC.
+>>>> +Examples of constant properties include 'iommus', 'reg'. The variable properties
+>>>> +are dictated by the system integration aspects such as memory on the board, or
+>>>> +configuration used within the corresponding firmware image. Examples of variable
+>>>> +properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
+>>>> +
+>>>> +Required properties:
+>>>> +--------------------
+>>>> +The following are the mandatory properties:
+>>>> +
+>>>> +- compatible:       Should be one of the following,
+>>>> +                "ti,omap4-dsp" for DSPs on OMAP4 SoCs
+>>>> +                "ti,omap5-dsp" for DSPs on OMAP5 SoCs
+>>>> +                "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
+>>>> +                "ti,omap4-ipu" for IPUs on OMAP4 SoCs
+>>>> +                "ti,omap5-ipu" for IPUs on OMAP5 SoCs
+>>>> +                "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
+>>>> +
+>>>> +- iommus:   phandles to OMAP IOMMU nodes, that need to be programmed
+>>>> +            for this remote processor to access any external RAM memory or
+>>>> +            other peripheral device address spaces. This property usually
+>>>> +            has only a single phandle. Multiple phandles are used only in
+>>>> +            cases where the sub-system has different ports for different
+>>>> +            sub-modules within the processor sub-system (eg: DRA7 DSPs),
+>>>> +            and need the same programming in both the MMUs.
+>>
+>> ^ the target of this is not in schema.
+> 
+> You mean the OMAP IOMMU binding? That doesn't matter at all.
 
-Split to a separate patch.
+Yeah, OMAP IOMMU.
 
->  arch/arm/boot/dts/exynos5420.dtsi                  | 50 ++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi      |  6 ++-
->  3 files changed, 59 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> index 47bc1ac36426..e8868cb587de 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> @@ -38,9 +38,12 @@ properties:
->            - enum:
->               - samsung,exynos5433-mali
->            - const: arm,mali-t760
-> +      - items:
-> +          - enum:
-> +             - samsung,exynis5420-mali
+Ok, if it does not matter, I will just convert this all. Will send v2 
+once I am done.
 
-exynis?
-
-> +          - const: arm,mali-t628
->
->            # "arm,mali-t624"
-> -          # "arm,mali-t628"
->            # "arm,mali-t830"
->            # "arm,mali-t880"
->
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
