@@ -2,32 +2,32 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0701EC5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2047C5DF66
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85192166E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C834121D79
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfKFPVC (ORCPT
+        id S1731975AbfKFPVH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:21:02 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:33004 "EHLO inva020.nxp.com"
+        Wed, 6 Nov 2019 10:21:07 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:33162 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727231AbfKFPVB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:21:01 -0500
+        id S1732033AbfKFPVG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:21:06 -0500
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5791E1A0647;
-        Wed,  6 Nov 2019 16:20:59 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C9E221A0652;
+        Wed,  6 Nov 2019 16:21:04 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 402691A0645;
-        Wed,  6 Nov 2019 16:20:59 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BBBA01A064E;
+        Wed,  6 Nov 2019 16:21:04 +0100 (CET)
 Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7337E205EB;
-        Wed,  6 Nov 2019 16:20:58 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E48A3205EB;
+        Wed,  6 Nov 2019 16:21:03 +0100 (CET)
 From:   Mirela Rabulea <mirela.rabulea@nxp.com>
 To:     mchehab@kernel.org, shawnguo@kernel.org, robh+dt@kernel.org
 Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
@@ -40,61 +40,43 @@ Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
         niklas.soderlund+renesas@ragnatech.se,
         dafna.hirschfeld@collabora.com,
         Mirela Rabulea <mirela.rabulea@nxp.com>
-Subject: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
-Date:   Wed,  6 Nov 2019 17:20:28 +0200
-Message-Id: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+Subject: [PATCH 2/5] firmware: imx: scu-pd: Add power domains for imx-jpeg
+Date:   Wed,  6 Nov 2019 17:20:30 +0200
+Message-Id: <1573053633-21437-3-git-send-email-mirela.rabulea@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
-and it's dependencies.
-The driver was tested on i.MX8QXP, using a unit test application and
-the v4l2-compliance tool, which passes when run on the encoder/decoder dev
-node, without any other parameters:
-v4l2-compliance -d /dev/video0
-v4l2-compliance -d /dev/video1
-v4l2-compliance SHA: 2ff1e6b3d67dbbdde212c8cf0de603f9f52078ed, 64 bits
+The power domains are for imx8qxp/imx8qm JPEG encoder & decoder.
+Each has 4 slots and a wrapper.
 
-The first patch "Add packed YUV444 24bpp pixel format" was already reviewed
-upstream, but not accepted because there was no driver using this format,
-until now. This pixel format, YUV444 24bpp, is now used and needed by the
-i.MX8QXP/QM JPEG encoder/decoder driver.
+Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+---
+ drivers/firmware/imx/scu-pd.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Mirela Rabulea (5):
-  media: v4l: Add packed YUV444 24bpp pixel format
-  firmware: imx: scu-pd: Add power domains for imx-jpeg
-  media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
-  media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
-  arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
-
- .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
- Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
- drivers/firmware/imx/scu-pd.c                      |    6 +
- drivers/media/platform/Kconfig                     |    2 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/imx-jpeg/Kconfig            |   10 +
- drivers/media/platform/imx-jpeg/Makefile           |    3 +
- drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
- drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
- drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2266 ++++++++++++++++++++
- drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  187 ++
- drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
- include/uapi/linux/videodev2.h                     |    1 +
- 15 files changed, 2949 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
- create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
- create mode 100644 drivers/media/platform/imx-jpeg/Makefile
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
-
+diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
+index b556612..e7bf48a 100644
+--- a/drivers/firmware/imx/scu-pd.c
++++ b/drivers/firmware/imx/scu-pd.c
+@@ -158,6 +158,12 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
+ 	/* DC SS */
+ 	{ "dc0", IMX_SC_R_DC_0, 1, false, 0 },
+ 	{ "dc0-pll", IMX_SC_R_DC_0_PLL_0, 2, true, 0 },
++
++	/* IMAGE SS */
++	{ "img-jpegdec-mp", IMX_SC_R_MJPEG_DEC_MP, 1, false, 0 },
++	{ "img-jpegdec-s0", IMX_SC_R_MJPEG_DEC_S0, 4, true, 0 },
++	{ "img-jpegenc-mp", IMX_SC_R_MJPEG_ENC_MP, 1, false, 0 },
++	{ "img-jpegenc-s0", IMX_SC_R_MJPEG_ENC_S0, 4, true, 0 },
+ };
+ 
+ static const struct imx_sc_pd_soc imx8qxp_scu_pd = {
 -- 
 2.7.4
 
