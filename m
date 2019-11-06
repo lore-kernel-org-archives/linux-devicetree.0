@@ -2,283 +2,346 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650ADC5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE76C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAF7217D7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBBC20869
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:44:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lcOc/J2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbfKFMY6 (ORCPT
+        id S1728371AbfKFMoc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:24:58 -0500
-Received: from mga14.intel.com ([192.55.52.115]:33358 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbfKFMY5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:24:57 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 04:24:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
-   d="scan'208";a="402339963"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Nov 2019 04:24:53 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iSKMm-0002Vi-JG; Wed, 06 Nov 2019 14:24:52 +0200
-Date:   Wed, 6 Nov 2019 14:24:52 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v5 2/3] dwc: PCI: intel: PCIe RC controller driver
-Message-ID: <20191106122452.GA32742@smile.fi.intel.com>
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <ac63d9856323555736c5b361612df3ee49b0f998.1572950559.git.eswara.kota@linux.intel.com>
+        Wed, 6 Nov 2019 07:44:32 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42156 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbfKFMob (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 07:44:31 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6CiSpG058829;
+        Wed, 6 Nov 2019 06:44:28 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573044268;
+        bh=XWVHieXyvqTkLk196SYUlUYctsSQgy1G9D4/WMpYVIY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lcOc/J2frFZrgrAIVWwvRVE2W7L8IXpzmVHU1kGST6Wb91WczxATl7Wag1XpJwL5v
+         jvGrz29fFn/ZVBEj+GmHwe+feocnc3tpg5Q6zyV1XJKvmlfG+NvgafBC1cO7YNtuhZ
+         Yfm+dSUh3lHSRX4BGD3SBbdICnSOAWYYR5i0A8s8=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6CiS2f063000
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 06:44:28 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 06:44:12 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 06:44:11 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6CiNqo006624;
+        Wed, 6 Nov 2019 06:44:24 -0600
+Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc
+ bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <s-anna@ti.com>,
+        <devicetree@vger.kernel.org>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-2-t-kristo@ti.com> <20191106032727.GA21162@bogus>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
+Date:   Wed, 6 Nov 2019 14:44:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac63d9856323555736c5b361612df3ee49b0f998.1572950559.git.eswara.kota@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191106032727.GA21162@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:44:02AM +0800, Dilip Kota wrote:
-> Add support to PCIe RC controller on Intel Gateway SoCs.
-> PCIe controller is based of Synopsys DesignWare PCIe core.
+On 06/11/2019 05:27, Rob Herring wrote:
+> On Mon, Oct 28, 2019 at 02:42:22PM +0200, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> Add the device tree bindings document for the IPU and DSP
+>> remote processor devices on OMAP4+ SoCs.
+>>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
+>>   1 file changed, 205 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>>
 > 
-> Intel PCIe driver requires Upconfigure support, fast training
-> sequence and link speed configuration. So adding the respective
-> helper functions in the PCIe DesignWare framework.
-> It also programs hardware autonomous speed during speed
-> configuration so defining it in pci_regs.h.
-
-My comments below, though I may miss the discussion and comment on the settled
-things.
-
-> +config PCIE_INTEL_GW
-> +        bool "Intel Gateway PCIe host controller support"
-> +	depends on OF && (X86 || COMPILE_TEST)
-> +	select PCIE_DW_HOST
-> +	help
-> +          Say 'Y' here to enable PCIe Host controller support on Intel
-> +	  Gateway SoCs.
-> +	  The PCIe controller uses the DesignWare core plus Intel-specific
-> +	  hardware wrappers.
-
-Above has indentation issues.
-
-> +void dw_pcie_upconfig_setup(struct dw_pcie *pci)
-> +{
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL,
-> +			   val | PORT_MLTI_UPCFG_SUPPORT);
-
-Why not to use similar pattern as below?
-
-	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-	val |= PORT_MLTI_UPCFG_SUPPORT;
-	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
-
-> +}
-
-> +void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
-> +{
-> +	u32 reg, val;
-> +	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +
-> +	reg = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCTL2);
-> +	reg &= ~PCI_EXP_LNKCTL2_TLS;
-> +
-> +	switch (pcie_link_speed[link_gen]) {
-> +	case PCIE_SPEED_2_5GT:
-> +		reg |= PCI_EXP_LNKCTL2_TLS_2_5GT;
-
-> +	break;
-
-Is this a style or indentation issue?
-
-> +	case PCIE_SPEED_5_0GT:
-> +		reg |= PCI_EXP_LNKCTL2_TLS_5_0GT;
-> +	break;
-
-Ditto.
-
-> +	case PCIE_SPEED_8_0GT:
-> +		reg |= PCI_EXP_LNKCTL2_TLS_8_0GT;
-
-> +	break;
-
-Ditto.
-
-> +	case PCIE_SPEED_16_0GT:
-> +		reg |= PCI_EXP_LNKCTL2_TLS_16_0GT;
-
-> +	break;
-
-Ditto.
-
-> +	default:
-
-> +	/* Use hardware capability */
-
-Ditto.
-
-> +		val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
-> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
-> +		reg |= FIELD_PREP(PCI_EXP_LNKCTL2_TLS, val);
-
-> +	break;
-
-Ditto.
-
-> +	}
-> +
-> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCTL2, reg);
-> +}
-
-> +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
-> +{
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-
-> +	val &= ~PORT_LOGIC_N_FTS;
-> +	val |= n_fts;
-
-What if somebody supplies bits outside of the mask? I guess you need to apply
-proper masks to both values.
-
-> +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> +}
-
-> +#define PORT_LOGIC_N_FTS		GENMASK(7, 0)
-
-Shouldn't you use _MASK suffix here?
-
-> +#define BUS_IATU_OFFS			SZ_256M
-
-Perhaps less cryptic name?
-
-> +#define RST_INTRVL_DFT_MS		100
-
-Less cryptic name would be
-
-	RESET_INTERVAL_MS
-
-
-> +static void pcie_update_bits(void __iomem *base, u32 mask, u32 val, u32 ofs)
-> +{
-> +	u32 old, new;
-> +
-> +	old = readl(base + ofs);
-
-> +	new = old & ~mask;
-> +	new |= val & mask;
-
-Standard pattern
-
-	new = (old & ~mask) | (val & mask);
-
-And actually you may re-use 'val' variable and get rid of 'new' one.
-
-> +
-> +	if (new != old)
-> +		writel(new, base + ofs);
-> +}
-
-> +static int intel_pcie_get_resources(struct platform_device *pdev)
-> +{
-
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-
-> +
-
-No need to have this blank line.
-
-> +	pci->dbi_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pci->dbi_base))
-> +		return PTR_ERR(pci->dbi_base);
-
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
-
-> +
-
-Ditto.
-
-> +	lpp->app_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(lpp->app_base))
-> +		return PTR_ERR(lpp->app_base);
-
-> +	return 0;
-> +}
-
-> +	/* Read PMC status and wait for falling into L2 link state */
-> +	ret = readl_poll_timeout(lpp->app_base + PCIE_APP_PMC, value,
-
-> +				 (value & PCIE_APP_PMC_IN_L2), 20,
-
-Too many parentheses.
-
-> +				 jiffies_to_usecs(5 * HZ));
-
-> +	if (!lpp->pcie_cap_ofst) {
-> +		lpp->pcie_cap_ofst = dw_pcie_find_capability(&lpp->pci,
-> +							     PCI_CAP_ID_EXP);
-> +	}
-
-Wouldn't be slightly better to have something like
-
-	ret = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
-	if (ret >= 0 && !lpp->pcie_cap_ofst)
-		lpp->pcie_cap_ofst = ret;
-
-?
-
-(It can be expanded to print error / warning messages if needed)
-
-> +	return ret;
-> +}
-
-> +	platform_set_drvdata(pdev, lpp);
-
-I think it makes sense to setup at the end of the function (before dev_info()
-call).
-
-> +	data = device_get_match_data(dev);
-
-Perhaps
-	if (!data)
-		return -ENODEV; // -EINVAL?
-
-> +	/*
-> +	 * Intel PCIe doesn't configure IO region, so set viewport
-> +	 * to not to perform IO region access.
-> +	 */
-> +	pci->num_viewport = data->num_viewport;
-
-Missed blank line?
-
-> +	dev_info(dev, "Intel PCIe Root Complex Port init done\n");
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Looks to be in pretty good shape, but how about doing a schema.
+
+iommu / mailbox is not in schema format, can I just convert this one to 
+schema without considering those? If yes, I can go ahead and do it.
+
+> 
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>> new file mode 100644
+>> index 000000000000..e2bcfcab21c1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>> @@ -0,0 +1,205 @@
+>> +OMAP4+ Remoteproc Devices
+>> +=========================
+>> +
+>> +The OMAP family of SoCs usually have one or more slave processor sub-systems
+>> +that are used to offload some of the processor-intensive tasks, or to manage
+>> +other hardware accelerators, for achieving various system level goals.
+>> +
+>> +The processor cores in the sub-system are usually behind an IOMMU, and may
+>> +contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
+>> +caches, an Interrupt Controller, a Cache Controller etc.
+>> +
+>> +The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
+>> +sub-system. The DSP processor sub-system can contain any of the TI's C64x,
+>> +C66x or C67x family of DSP cores as the main execution unit. The IPU processor
+>> +sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
+>> +processors.
+>> +
+>> +Remote Processor Node:
+>> +======================
+>> +Each remote processor sub-system is represented as a single DT node. Each node
+>> +has a number of required or optional properties that enable the OS running on
+>> +the host processor (MPU) to perform the device management of the remote
+>> +processor and to communicate with the remote processor. The various properties
+>> +can be classified as constant or variable. The constant properties are dictated
+>> +by the SoC and does not change from one board to another having the same SoC.
+>> +Examples of constant properties include 'iommus', 'reg'. The variable properties
+>> +are dictated by the system integration aspects such as memory on the board, or
+>> +configuration used within the corresponding firmware image. Examples of variable
+>> +properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +The following are the mandatory properties:
+>> +
+>> +- compatible:	Should be one of the following,
+>> +		    "ti,omap4-dsp" for DSPs on OMAP4 SoCs
+>> +		    "ti,omap5-dsp" for DSPs on OMAP5 SoCs
+>> +		    "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
+>> +		    "ti,omap4-ipu" for IPUs on OMAP4 SoCs
+>> +		    "ti,omap5-ipu" for IPUs on OMAP5 SoCs
+>> +		    "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
+>> +
+>> +- iommus:	phandles to OMAP IOMMU nodes, that need to be programmed
+>> +		for this remote processor to access any external RAM memory or
+>> +		other peripheral device address spaces. This property usually
+>> +		has only a single phandle. Multiple phandles are used only in
+>> +		cases where the sub-system has different ports for different
+>> +		sub-modules within the processor sub-system (eg: DRA7 DSPs),
+>> +		and need the same programming in both the MMUs.
+
+^ the target of this is not in schema.
+
+>> +
+>> +- mboxes:	OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+>> +		communication with the remote processor. The specifier format is
+>> +		as per the bindings,
+>> +		Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+>> +		This property should match with the sub-mailbox node used in
+>> +		the firmware image.
+
+^ Neither this one.
+
+>> +
+>> +Optional properties:
+>> +--------------------
+>> +Some of these properties are mandatory on some SoCs, and some are optional
+>> +depending on the configuration of the firmware image to be executed on the
+>> +remote processor. The conditions are mentioned for each property.
+>> +
+>> +The following are the optional properties:
+>> +- reg:			Address space for any remoteproc memories present on
+>> +			the SoC. Should contain an entry for each value in
+>> +			'reg-names'. These are mandatory for all DSP and IPU
+>> +			processors that have them (OMAP4/OMAP5 DSPs do not have
+>> +			any RAMs)
+>> +
+>> +- reg-names:		Required names for each of the address spaces defined in
+>> +			the 'reg' property. Should contain a string from among
+>> +			the following names, each representing the corresponding
+>> +			internal RAM memory region,
+>> +			   "l2ram" for L2 RAM,
+>> +			   "l1pram" for L1 Program RAM Memory/Cache,
+>> +			   "l1dram" for L1 Data RAM Memory/Cache,
+>> +
+>> +			All devices may not have all the above memories.
+>> +
+>> +- syscon-bootreg:	Should be a pair of the phandle to the System Control
+> 
+> ti,bootreg
+
+This one I can fix.
+
+> 
+>> +			Configuration region that contains the boot address
+>> +			register, and the register offset of the boot address
+>> +			register within the System Control module. This property
+>> +			is required for all the DSP instances on OMAP4, OMAP5
+>> +			and DRA7xx SoCs.
+>> +
+>> +- memory-region:	phandle to the reserved memory node to be associated
+>> +			with the remoteproc device. The reserved memory node
+>> +			can be a CMA memory node, and should be defined as
+>> +			per the bindings,
+>> +			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>> +
+>> +- mbox-names:		Optional names for the OMAP mailbox specifiers mentioned
+>> +			in the 'mboxes' property, one per specifier value
+> 
+>  From the mboxes description, seemed like only one entry?
+> 
+> Need to define the values here.
+
+I think I can just ditch this. The current driver doesn't care about the 
+name at all. It is not used in any of the examples / current DT data either.
+
+> 
+>> +
+>> +- timers:		One or more phandles to OMAP DMTimer nodes, that serve
+>> +			as System/Tick timers for the OS running on the remote
+>> +			processors. This will usually be a single timer if the
+>> +			processor sub-system is running in SMP mode, or one per
+>> +			core in the processor sub-system. This can also be used
+>> +			to reserve specific timers to be dedicated to the
+>> +			remote processors.
+>> +
+>> +			This property is mandatory on remote processors requiring
+>> +			external tick wakeup, and to support Power Management
+>> +			features. The timers to be used should match with the
+>> +			timers used in the firmware image.
+>> +
+>> +- watchdog-timers:	One or more phandles to OMAP DMTimer nodes, used to
+>> +			serve as Watchdog timers for the processor cores. This
+>> +			will usually be one per executing processor core, even
+>> +			if the processor sub-system is running a SMP OS.
+>> +
+>> +			The timers to be used should match with the watchdog
+>> +			timers used in the firmware image.
+> 
+> These 2 are not standard names. Either need 'ti,' prefix or we should
+> standardize them. There's been some discussion of an input capture
+> binding and I was wondering if it should be more general to any
+> timer function.
+
+I'll convert these to ti,xyz for now.
+
+-Tero
+
+> 
+>> +
+>> +Example:
+>> +--------
+>> +
+>> +1. OMAP4 DSP
+>> +	/* DSP Reserved Memory node */
+>> +	reserved-memory {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		dsp_memory_region: dsp-memory@98000000 {
+>> +			compatible = "shared-dma-pool";
+>> +			reg = <0x98000000 0x800000>;
+>> +			reusable;
+>> +		};
+>> +	};
+>> +
+>> +	/* DSP node */
+>> +	ocp {
+>> +		dsp: dsp {
+>> +			compatible = "ti,omap4-dsp";
+>> +			syscon-bootreg = <&scm_conf 0x304>;
+>> +			iommus = <&mmu_dsp>;
+>> +			mboxes = <&mailbox &mbox_dsp>;
+>> +			memory-region = <&dsp_memory_region>;
+>> +			timers = <&timer5>;
+>> +			watchdog-timers = <&timer6>;
+>> +		};
+>> +	};
+>> +
+>> +2. OMAP5 IPU
+>> +	/* IPU Reserved Memory node */
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		ipu_memory_region: ipu-memory@95800000 {
+>> +			compatible = "shared-dma-pool";
+>> +			reg = <0 0x95800000 0 0x3800000>;
+>> +			reusable;
+>> +		};
+>> +	};
+>> +
+>> +	/* IPU node */
+>> +	ocp {
+>> +		ipu: ipu@55020000 {
+>> +			compatible = "ti,omap5-ipu";
+>> +			reg = <0x55020000 0x10000>;
+>> +			reg-names = "l2ram";
+>> +			iommus = <&mmu_ipu>;
+>> +			mboxes = <&mailbox &mbox_ipu>;
+>> +			memory-region = <&ipu_memory_region>;
+>> +			timers = <&timer3>, <&timer4>;
+>> +			watchdog-timers = <&timer9>, <&timer11>;
+>> +		};
+>> +	};
+>> +
+>> +3. DRA7xx/AM57xx DSP
+>> +	/* DSP1 Reserved Memory node */
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		dsp1_memory_region: dsp1-memory@99000000 {
+>> +			compatible = "shared-dma-pool";
+>> +			reg = <0x0 0x99000000 0x0 0x4000000>;
+>> +			reusable;
+>> +		};
+>> +	};
+>> +
+>> +	/* DSP1 node */
+>> +	ocp {
+>> +		dsp1: dsp@40800000 {
+>> +			compatible = "ti,dra7-dsp";
+>> +			reg = <0x40800000 0x48000>,
+>> +			      <0x40e00000 0x8000>,
+>> +			      <0x40f00000 0x8000>;
+>> +			reg-names = "l2ram", "l1pram", "l1dram";
+>> +			syscon-bootreg = <&scm_conf 0x55c>;
+>> +			iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
+>> +			mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
+>> +			memory-region = <&dsp1_memory_region>;
+>> +			timers = <&timer5>;
+>> +			watchdog-timers = <&timer10>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.17.1
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
