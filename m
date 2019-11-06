@@ -2,113 +2,93 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63D5C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5923C5DF65
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A45692178F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWzySGaI"
+	by mail.kernel.org (Postfix) with ESMTP id 954072173E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573050322;
+	bh=t22la/XtVNC5KQNqEOFeF0+C1rhKgq+qOSEIqpk5BHA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eC/DkIbydCRQEbSgTOWb6TJVvBba9wGzBXCg5+hkz3nwE7zWwWO4u5YBSoYASgdkr
+	 u6z/Nd3ZYSNk+4aSKu45VtntnAegAzHY2Ea2mUC+eBuHg4NQ1Oxbaxx4BmpoQ5AQwX
+	 dOcD7kI+nlI0Npn+4GP6PRqAnty3E6zzF0/a5a0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfKFOXV (ORCPT
+        id S1731983AbfKFOZN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:23:21 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46574 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfKFOXV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 09:23:21 -0500
-Received: by mail-yw1-f68.google.com with SMTP id i2so9601609ywg.13;
-        Wed, 06 Nov 2019 06:23:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eSWVp70y2kpyJk9Cxl49/cxLR3cgjAESMYLS12E5oUY=;
-        b=bWzySGaI1gx56KAqizix5H7Yk63JM+hiMx+HiAX2uSV+XOVSC9t6Jrkst9wSIn/yLa
-         Xcu/wWwfjHrzCGL5RS/ikhES7rrC7bIxuo/xobxeHHdGdiupSqBrywwc01R4ggjyVVwT
-         6JEpWFWZxnJ/BBGpPpEnMjKz3Upd/nuofT7yj7MARsElGSSh3VroG1/9NtMtS9asMnub
-         XLFSnfkiGKtLmEppBnfnGIvYYIlvm1VLadl1ERrUOnACBilCnP8g/fKJMCpoXlfG+JUY
-         67VOsBsBFFpozYlaQHVQN8dlLJyN6q8JLY/4aG2J/Ve/avl4AYaZ4kmHQxum19YIaqTs
-         NVrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eSWVp70y2kpyJk9Cxl49/cxLR3cgjAESMYLS12E5oUY=;
-        b=qtKs5GLIU+YfDebyWhUMdfm/bNZAHgHx/y3Hi3xLbx9Tqcy3wXsvUDhSBZY37Zrj8W
-         xjLpQskhxGI9T5kJ0IP/rJcEQnGGMx5KDkXJ6suEHVyjPnutbPRJ2a0NDqUMtU69bWYr
-         P89CNtcHGuz6SQhWVQZ1+PvJNvr/X+j1AFFqaPMZCdbU/m1EeHWWVujNWBAg4W4SCQXM
-         8w60ryy34mRSScIeosW1Ax2eKogZP7dHPBTs8wp+03gVcWHFih3dtlqEGa233EJm/AeP
-         iBDymxPVeUmgGY981iKEn8KEj3VX6moAgWJ6B82SX6mXb3QyXZIIrcvgkXuPecxBWl/Y
-         HRrQ==
-X-Gm-Message-State: APjAAAWvnrWG5dPY6Sy/aUcytqzEL4EUWoZI4fIX6LVIxuO9pcoQZtGm
-        9i6FbIcPCu4lWQVNL3HRrNXSW961+uo=
-X-Google-Smtp-Source: APXvYqzoYMq5gT/9eBMtyUIJu1a4USxwCNgZTNpjMjW3B/XCmy9qZhYAuVQhtBUvi/iW0mEQY3Xf8A==
-X-Received: by 2002:a81:58c6:: with SMTP id m189mr1437100ywb.25.1573050199708;
-        Wed, 06 Nov 2019 06:23:19 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id f203sm4436246ywa.106.2019.11.06.06.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 06:23:18 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] ARM: dts: imx6q-logicpd: Enable ili2117a Touchscreen
-Date:   Wed,  6 Nov 2019 08:23:08 -0600
-Message-Id: <20191106142308.10511-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 6 Nov 2019 09:25:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728462AbfKFOZN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 09:25:13 -0500
+Received: from mail-yw1-f41.google.com (mail-yw1-f41.google.com [209.85.161.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC1F222C4;
+        Wed,  6 Nov 2019 14:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573050312;
+        bh=t22la/XtVNC5KQNqEOFeF0+C1rhKgq+qOSEIqpk5BHA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yMmYaPKVAuHLBJl+V9hcNV4Bdja+di11oystN/HBPVsX2VVth4PM3toVOn3T+5Qni
+         TNMuQFXL7UMzuqxylzuRIkofuibnjKujINuB5rcGtAkWzBr8zJ8hSJ0e9o0f07cOIC
+         XQl+cC7bfJ3KBwLkY7NAaB/tlddnnXmckFIrCegQ=
+Received: by mail-yw1-f41.google.com with SMTP id s6so9622420ywe.5;
+        Wed, 06 Nov 2019 06:25:12 -0800 (PST)
+X-Gm-Message-State: APjAAAU4xJOAQS8AkXSk2j+4ATnQ35kgOwsm3VxxIX1WMR7/t+sc9BbK
+        m5hS9M3jJwKbh92dk9O2A0Nnjhvgt8+6WCBbNw==
+X-Google-Smtp-Source: APXvYqzZFcvicyLbyVKKqZBBg3KUfyX6DrTKhbmcP3UuFixdP0C+dSzUm2vlJQ+TJwMuEZWoGfVcj47a+BgKJoaNCRQ=
+X-Received: by 2002:a81:a196:: with SMTP id y144mr1774534ywg.507.1573050311255;
+ Wed, 06 Nov 2019 06:25:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191104013932.22505-1-afaerber@suse.de> <20191104013932.22505-2-afaerber@suse.de>
+In-Reply-To: <20191104013932.22505-2-afaerber@suse.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 6 Nov 2019 08:24:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
+Message-ID: <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: mali-midgard: Tidy up conversion to YAML
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Guillaume Gardet <guillaume.gardet@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The LCD used with the imx6q-logicpd board has an integrated
-ili2117a touch controller connected to i2c1.
+On Sun, Nov 3, 2019 at 7:40 PM Andreas F=C3=A4rber <afaerber@suse.de> wrote=
+:
+>
+> Instead of grouping alphabetically by third-party vendor, leading to
+> one-element enums, sort by Mali model number, as done for Utgard.
+>
+> This already allows us to de-duplicate two "arm,mali-t760" sections and
+> will make it easier to add new vendor compatibles.
 
-This patch adds the node to enable this feature.
+That was the intent. Not sure how I messed that up...
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
----
-ili2117 support is scheduled to be introduced for Kernel v5.5.
+This patch is problematic because there's changes in arm-soc juno/dt
+branch and there's now a patch for exynos5420 (t628). I'd propose I
+apply this such that we don't get a merge conflict with juno/dt and we
+finish resorting after rc1 (or when both branches are in Linus' tree).
 
-V2:  Change node to touchscreen@26 and move comment about 5.5 to under the dashes
-
-diff --git a/arch/arm/boot/dts/imx6q-logicpd.dts b/arch/arm/boot/dts/imx6q-logicpd.dts
-index d96ae54be338..7a3d1d3e54a9 100644
---- a/arch/arm/boot/dts/imx6q-logicpd.dts
-+++ b/arch/arm/boot/dts/imx6q-logicpd.dts
-@@ -73,6 +73,16 @@
- 	status = "okay";
- };
- 
-+&i2c1 {
-+	touchscreen@26 {
-+		compatible = "ilitek,ili2117";
-+		reg = <0x26>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_touchscreen>;
-+		interrupts-extended = <&gpio1 6 IRQ_TYPE_EDGE_RISING>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
--- 
-2.20.1
-
+Rob
