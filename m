@@ -2,170 +2,91 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2610EC5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7004EC47E49
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD202178F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C4F2178F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfKFPBg (ORCPT
+        id S1731964AbfKFPHT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:01:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:41282 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727321AbfKFPBg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:01:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DA6F46A;
-        Wed,  6 Nov 2019 07:01:35 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A418A3F71A;
-        Wed,  6 Nov 2019 07:01:33 -0800 (PST)
-Date:   Wed, 6 Nov 2019 15:01:28 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "M.h. Lian" <minghuan.lian@nxp.com>
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Wed, 6 Nov 2019 10:07:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41344 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731929AbfKFPHT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:07:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DA53BB143;
+        Wed,  6 Nov 2019 15:07:17 +0000 (UTC)
+Message-ID: <82d17114302562e0c553e2ea936974f77734e86b.camel@suse.de>
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: mali-midgard: Tidy up conversion
+ to YAML
+From:   Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        LAKML <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Message-ID: <20191106150128.GA18689@e121166-lin.cambridge.arm.com>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
- <20190902034319.14026-3-xiaowei.bao@nxp.com>
- <20191105123233.GA26960@e121166-lin.cambridge.arm.com>
- <AM5PR04MB32999C59EE51DACC030E13D7F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <VI1PR0401MB22372AF4F02D3F22EA2184BEE8790@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Guillaume Gardet <guillaume.gardet@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+Date:   Wed, 06 Nov 2019 16:07:39 +0100
+In-Reply-To: <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
+References: <20191104013932.22505-1-afaerber@suse.de>
+         <20191104013932.22505-2-afaerber@suse.de>
+         <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
+Organization: SUSE Linux GmbH
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR0401MB22372AF4F02D3F22EA2184BEE8790@VI1PR0401MB2237.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 03:46:17AM +0000, M.h. Lian wrote:
-> Hi Lorenzo,
+Am Mittwoch, den 06.11.2019, 08:24 -0600 schrieb Rob Herring:
+> On Sun, Nov 3, 2019 at 7:40 PM Andreas Färber <afaerber@suse.de>
+> wrote:
+> > Instead of grouping alphabetically by third-party vendor, leading
+> > to
+> > one-element enums, sort by Mali model number, as done for Utgard.
+> > 
+> > This already allows us to de-duplicate two "arm,mali-t760" sections
+> > and
+> > will make it easier to add new vendor compatibles.
 > 
-> Sorry for the late reply.
+> That was the intent. Not sure how I messed that up...
 > 
-> Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
+> This patch is problematic because there's changes in arm-soc juno/dt
+> branch and there's now a patch for exynos5420 (t628). I'd propose I
+> apply this such that we don't get a merge conflict with juno/dt and
+> we
+> finish resorting after rc1 (or when both branches are in Linus'
+> tree).
 
-https://en.wikipedia.org/wiki/Posting_style#Top-posting
-
-Never top-post on kernel mailing lists.
+This series has dependencies for the Realtek-side RFC patches and is
+not yet ready to merge, so you can take this prep PATCH through your
+tree for v5.6 probably, or feel free to rebase/rework as you see fit -
+I'd just appreciate being credited at least via Reported-by. :)
 
 Thanks,
-Lorenzo
+Andreas
 
-> Thanks,
-> Minghuan
-> 
-> > -----Original Message-----
-> > From: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Sent: Wednesday, November 6, 2019 11:36 AM
-> > To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
-> > Leo Li <leoyang.li@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
-> > Hu <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>; linux-
-> > pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linuxppc-
-> > dev@lists.ozlabs.org; bhelgaas@google.com; Z.q. Hou
-> > <zhiqiang.hou@nxp.com>
-> > Subject: RE: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-> > 
-> > 
-> > 
-> > > -----Original Message-----
-> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Sent: 2019年11月5日 20:33
-> > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
-> > Leo
-> > > Li <leoyang.li@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
-> > Hu
-> > > <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
-> > > linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
-> > > linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > linuxppc-dev@lists.ozlabs.org; bhelgaas@google.com; Z.q. Hou
-> > > <zhiqiang.hou@nxp.com>
-> > > Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-> > >
-> > > On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
-> > > > Add support for the LS1028a PCIe controller.
-> > > >
-> > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > ---
-> > > > v2:
-> > > >  - No change.
-> > > > v3:
-> > > >  - Reuse the ls2088 driver data structurt.
-> > > > v4:
-> > > >  - No change.
-> > > > v5:
-> > > >  - No change.
-> > > > v6:
-> > > >  - No change.
-> > > >
-> > > >  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > >
-> > > I have not seen any comment on any layerscape driver patches coming
-> > > from the maintainers as listed in the MAINTAINERS file (and CCed in this
-> > series).
-> > >
-> > > I request maintainers ACK on these patches and I expect them to start
-> > > reviewing your code if they want to be still considered maintainers
-> > > for this driver.
-> > >
-> > > The changes look OK minus Shawn's remark on compatible string that was
-> > > ignored.
-> > 
-> > Hi Lorenzo,
-> > 
-> > Thanks for your comments.
-> > 
-> > In fact, the patches have reviewed in our internal mail list, after the review by
-> > Minghuan and Mingkai, I will send these patches to opensource, they will
-> > give the ACK when these patches seems is OK and no comments on this.
-> > 
-> > Thanks
-> > Xiaowei
-> > 
-> > >
-> > > Thanks,
-> > > Lorenzo
-> > >
-> > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > b/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > index 3a5fa26..f24f79a 100644
-> > > > --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata
-> > > > ls2088_drvdata = {  static const struct of_device_id ls_pcie_of_match[] = {
-> > > >  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
-> > > >  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-> > > > +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
-> > > >  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
-> > > >  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
-> > > >  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
-> > > > --
-> > > > 2.9.5
-> > > >
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
+
