@@ -2,100 +2,74 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45DDC5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 18:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1936BC5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 18:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EAD217D7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 18:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BOKMWt3F";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IKT6wkNt"
+	by mail.kernel.org (Postfix) with ESMTP id E9A30217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 18:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732469AbfKFSU1 (ORCPT
+        id S1727351AbfKFSht (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:20:27 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:51328 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728798AbfKFSU1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 13:20:27 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 09A036090E; Wed,  6 Nov 2019 18:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573064426;
-        bh=5ypWavDEVtsHt7SQ/MbY2KLvgfwcyST2KUyItV5eUyw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BOKMWt3F9UIqUcQwNg2qE01VXlHm1tMR9AT1pKPy03j991Uv10/AeaH8uHmAsE36N
-         PBihNoiay4HFor4Pgrt2bSi8xuNY7NEhLx3sH2rg5ZelCsb1dRFMusi9GDhLZETJUv
-         5v8hJDbhCBKGtIGBrJJYUpk2hKpcjwaVhpEM3DWU=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 233F26016D;
-        Wed,  6 Nov 2019 18:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573064425;
-        bh=5ypWavDEVtsHt7SQ/MbY2KLvgfwcyST2KUyItV5eUyw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IKT6wkNtnrE1Co/LI8pZlL2D5sNj3PxXYp8Bk1UNk6tW14XNze+qEZMIAIpyiJjPD
-         Rtip5KKp5zp8E+2SzG7Ui6S/uMckr5g8MwQBAPY97arb9ReMTCFMdZTpSM7b04Ochu
-         3afxhsWXpzHM8lies5w+KdfpwIKSpcf2f/MfhL/8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 233F26016D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Wed, 6 Nov 2019 11:20:21 -0700
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        swboyd@chromium.org, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 07/14] drivers: irqchip: qcom-pdc: Move to an SoC
- independent compatible
-Message-ID: <20191106182021.GF16900@codeaurora.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org>
- <20191106065017.22144-8-rnayak@codeaurora.org>
+        Wed, 6 Nov 2019 13:37:49 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:12372 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfKFSht (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 13:37:49 -0500
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXs8PvtBNfIQ=="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vA6IbihoU
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 6 Nov 2019 19:37:44 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Jean-Baptiste Maneyrol <JManeyrol@invensense.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply
+Date:   Wed,  6 Nov 2019 19:35:35 +0100
+Message-Id: <20191106183536.123070-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191106065017.22144-8-rnayak@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 06 2019 at 23:52 -0700, Rajendra Nayak wrote:
->Remove the sdm845 SoC specific compatible to make the driver
->easily reusable across other SoC's with the same IP block.
->This will reduce further churn adding any SoC specific
->compatibles unless really needed.
->
->Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->Cc: Lina Iyer <ilina@codeaurora.org>
->Cc: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+inv_mpu6050 now supports an additional vdd-supply; document it.
 
->---
-> drivers/irqchip/qcom-pdc.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->index faa7d61b9d6c..c175333bb646 100644
->--- a/drivers/irqchip/qcom-pdc.c
->+++ b/drivers/irqchip/qcom-pdviewed-by: Lina Iyer <ilina@codeaurora.org>
->@@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
-> 	return ret;
-> }
->
->-IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
->+IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
->--
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->of Code Aurora Forum, hosted by The Linux Foundation
->
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+index 268bf7568e19..c5ee8a20af9f 100644
+--- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
++++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+@@ -21,6 +21,7 @@ Required properties:
+   bindings.
+ 
+ Optional properties:
++ - vdd-supply: regulator phandle for VDD supply
+  - vddio-supply: regulator phandle for VDDIO supply
+  - mount-matrix: an optional 3x3 mounting rotation matrix
+  - i2c-gate node.  These devices also support an auxiliary i2c bus.  This is
+-- 
+2.23.0
+
