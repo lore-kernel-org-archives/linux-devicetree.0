@@ -2,87 +2,78 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E149C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD14C5DF65
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 17:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C751E21882
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 16:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FFD21882
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 17:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573059395;
-	bh=U2nsQMfV/CP9zqFEvIKsaDEwXvLJIyKfNfbdwzBjG4M=;
+	s=default; t=1573060099;
+	bh=wmLHBRowqgj8WO8cDFITDoAKnZVvMcJ9OldphjgPD9w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L32Phkm8NeTT07OCNHk07Ll7bNr0LfpuWjolGwQeBFt2G+FnoJyJrncZ+yhGMg2VI
-	 a76nw9cATquVYOUGJccppsLTYXt5DOAvi/UFaQmhzgjuTOLSTtx3EBoRoaO2yKSiwz
-	 OKn0cxdn/pu3M4IDQisXAJb3IlojbLho87DUtbbw=
+	b=kK5LRBQHZuNm37kUoCTp159rI4fPkWEDNo/4csEhrBm+u+I+mUpKc0kRtIUTURrPM
+	 ZwIgByF8cziddz/wIwJOrzm9T+4tOssqTwt8zHjqK6GZmEB+s8oi3wyjuFEEHqCyZx
+	 nfslUAFq7isxul0EPSwSFGVDVQUWEhf+uSsIdO+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfKFQ4f (ORCPT
+        id S1732135AbfKFRIT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:56:35 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35477 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732257AbfKFQ4f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 11:56:35 -0500
-Received: by mail-ot1-f66.google.com with SMTP id z6so21440543otb.2;
-        Wed, 06 Nov 2019 08:56:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bKw0VnnNhxLDCfwgkMNCot+CxHtvj7koN2Tbmbg1cOw=;
-        b=fm3vTN8eRQ8DisXG10MynigUvTppWhqVDbDkU812wTUV/lv7l9bytSm6Ko8cBpIfO2
-         SgPbphbgasBw68+FshnIokXUuBjqyJx0vUu0OrDVW4JEQ0wHVv6B4+x0zhxT7ZmVFDpC
-         TtddQqLHCjAdEL6rCJRY5b+iUkupoVgp5jXdqYFQvyQHpBvhiTTUyByHScZcX6nSiSbB
-         S2zm0ebGa+QmBA3WLarkZtCd1t+f/CQ6WPbWjzqyyDRKYQY1QleMO7X9sYRCs+5ZwYlp
-         +NzocnNu+0XTI2hciVZSuAg2PuD7CQf/MH+ohXQKvlpd/mfkd2glNGH+juxtmpRADp2h
-         Sqrw==
-X-Gm-Message-State: APjAAAWQa1IocxhqxD/c/DcwE94jOkojZgm/APBvfgeJ8UfDS2HmUrd7
-        eIoly9WoNO3RbYy6p4RWBA==
-X-Google-Smtp-Source: APXvYqxwsNDVP+nSwdBJITYQaV3J9Tytq+ZUv8LySKHZGMEWBhzTrOvwwhFD75qIHPp0+x1ihlXTRA==
-X-Received: by 2002:a05:6830:1d74:: with SMTP id l20mr2613599oti.111.1573059393967;
-        Wed, 06 Nov 2019 08:56:33 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d205sm2583526oig.28.2019.11.06.08.56.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 08:56:33 -0800 (PST)
-Date:   Wed, 6 Nov 2019 10:56:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 08/14] dt-bindings: qcom,pdc: Add compatible for sc7180
-Message-ID: <20191106165632.GA15103@bogus>
-References: <20191106065017.22144-1-rnayak@codeaurora.org>
- <20191106065017.22144-9-rnayak@codeaurora.org>
+        Wed, 6 Nov 2019 12:08:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729075AbfKFRIT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:08:19 -0500
+Received: from localhost (unknown [106.51.111.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C557521848;
+        Wed,  6 Nov 2019 17:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573060098;
+        bh=wmLHBRowqgj8WO8cDFITDoAKnZVvMcJ9OldphjgPD9w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yOzB3YCAvxO7BCN5xbbDWRCHUSwUsYcyvGPJQzkp2KUBOjXgUx1XVPaEPnMI4BL9Q
+         LG96b93FUgz3iNrvsaeY6SwQeqeZX55kBGReH5/PA/gn48iB16gp8fFSVkUYEqOE6N
+         nu+p48MBCtkSW6R0ii1gH+LeOjLZ2e9U07Hs8duM=
+Date:   Wed, 6 Nov 2019 22:38:13 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com,
+        michal.simek@xilinx.com, anirudha.sarangi@xilinx.com,
+        nick.graumann@gmail.com, andrea.merello@gmail.com,
+        appana.durga.rao@xilinx.com, mcgrof@kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH -next 0/6] dmaengine: xilinx_dma: Add Xilinx AXI MCDMA
+ Engine driver support
+Message-ID: <20191106170813.GJ952516@vkoul-mobl>
+References: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106065017.22144-9-rnayak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  6 Nov 2019 12:20:11 +0530, Rajendra Nayak wrote:
-> Add the compatible string for sc7180 SoC from Qualcomm.
+On 22-10-19, 22:30, Radhey Shyam Pandey wrote:
+> This patchset adds Xilinx AXI MCDMA IP support. The AXI MCDMA provides
+> high-bandwidth direct memory access between memory and AXI4-Stream target
+> peripherals. It supports up to 16 independent read/write channels.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt      | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> MCDMA IP supports per channel interrupt output but driver support one
+> interrupt per channel for simplification. IP specification/programming
+> sequence and register description is mentioned in PG [1].
 > 
+> The driver is tested with xilinx internal dmatest client. In end usecase
+> MCDMA will be used by xilinx axiethernet driver using dma API's.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Applied, thanks
 
-If a tag was not added on purpose, please state why and what changed.
+-- 
+~Vinod
