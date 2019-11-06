@@ -2,186 +2,209 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CB1C5DF64
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47265C5DF64
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE12C2087E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B5E2087E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:37:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="D9WQBq35"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PC4GAtFY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ffz02pN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbfKFJdo (ORCPT
+        id S1726133AbfKFJhe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:33:44 -0500
-Received: from mail-eopbgr70047.outbound.protection.outlook.com ([40.107.7.47]:47140
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731728AbfKFJdn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:33:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JDf0CuAwCiiJSFMdYacAUY1i4I40AWd9o4od3UXQFQ1O8k1W75W/62r2Sf5TLSQrnS5IEm779clLX9qUopZlnJF07nSGUOr9SfrZhkx9mP1TV1i7azt7k55z14bd25Jlviakm3MTlWbdQ8QvXp9k6viteadktPkBgOC1Ryf+D3W088Xzvez3xQBEdEGxdMqJ+J68N78Y6RDfn3h5CkpOtcir96l+AbOUB7iy7D5bigUEI8UwQo/4SZp38bx+QgqJ6A9kYKFtNra9bvEw4nJGgBoWClFlPxkS7DV6scf5j/BqVJBBWrLbZNUtpSThdfxkt5JzO7Yz7U2tJfnP+7xi0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rYA4Mmo/kIpbj24XnxIX0rubTxkRsR3ojJNUHua/q+Q=;
- b=J3YUFWmfkiUuVS1GYFGAKTOP6FmQHXCsnYFv7YsMW8jNZlU4ZKxNkwbANbscT0lCk9/ck/IxEgLbA5XtYRIfO+WGvwdTm6NEPPpK5IPI5wvcg8wq5B/rGpyeZWvyOJMwd/v9kjASUxb0ucR5BKN8MJ8ZkjGcBwqw+S3cTdlU4O/q9IX5NoOWBoacK/CXTuVdGcvwlleAVHqZo6FPWf/RytyNIow0MVj1Sc/I6QDQ6FtN7oVTuYR1dDtgGovMa9MVTuRLvXyKLCgcJTTSxXSxr5crrJoy73nYlgQZl3m4/CeYVvtYzJn6IfO7Z470JKEMm8Xnf3m4jym/9+Q53FBcSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rYA4Mmo/kIpbj24XnxIX0rubTxkRsR3ojJNUHua/q+Q=;
- b=D9WQBq35FGSwpwuJ3oplStRKTsGjKqOLQ8qkmDKCZ/QhyvGhhtZzMH+Rxp4UE9PSry7I+3HMujDZgUMLx/6pGc94GxL3kjSd7piOpGz82EasicOnAQgQ7Bz0pIIwdbg37NtXbOcexPjPey1cJuZKrIxw+vc2kvdbRuWOquFGanA=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Wed, 6 Nov 2019 09:33:37 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::8ce8:9eaf:3916:4bc9]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::8ce8:9eaf:3916:4bc9%6]) with mapi id 15.20.2408.025; Wed, 6 Nov 2019
- 09:33:37 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Andrew Murray <andrew.murray@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
- way
-Thread-Topic: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
- doorbell way
-Thread-Index: AQHVWN1daYnbY17h2k2o9Z3qkBZ1lKcIw+QAgACoZvCABZeogIACm0MAgGtaroCAAV1ZQA==
-Date:   Wed, 6 Nov 2019 09:33:37 +0000
-Message-ID: <AM5PR04MB329993172A352E46D325D66BF5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
- <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
- <20191105123739.GB26960@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191105123739.GB26960@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: aa121ff6-301c-48e9-82c7-08d7629c66c9
-x-ms-traffictypediagnostic: AM5PR04MB3299:|AM5PR04MB3299:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB329985A67026616C48D5BAC1F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(136003)(39860400002)(366004)(189003)(199004)(13464003)(86362001)(99286004)(7696005)(102836004)(316002)(446003)(55016002)(71190400001)(71200400001)(486006)(53546011)(5660300002)(6506007)(305945005)(44832011)(33656002)(74316002)(76176011)(2906002)(7736002)(66066001)(476003)(54906003)(7416002)(229853002)(52536014)(26005)(25786009)(14444005)(11346002)(478600001)(256004)(6436002)(81166006)(14454004)(8676002)(81156014)(6116002)(3846002)(66446008)(110136005)(9686003)(8936002)(186003)(4326008)(6246003)(66946007)(64756008)(66556008)(76116006)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3299;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: on3dLkXOE3Y8YQkbNmk+IeyUmfi29w+BlrUOcfFX5hs8BnbaSDTh6a6HpJCdofVt9OOper2B/8nbBZ5k/cH0Ssp5rXtK/Rxp3LcbceJQV5BF6zt6RxM6waH6FhiKJGCXD31AJkbczSQ7XVKws81HrCj4rKtiSqA/D4yi4dJlnERjwiAdOQTeEN3mlxa4gpZ1ZfVGcJ0tU0FddOxdB4lRz16JpVj450hDyvB1MAIgZ6Hi2Ip/m6nelebID29JmTHQZPT8w1rI2iDyhz1hrJO2swkwbUCIDiSEQn2gX6M+AZ4U1IW8n2V8SRcnuWvSam+wibBXDuL9rdrDTfA/SSsdhbf9I3dXFIpgo7NqwrTGr/ubtVBTKX047ljg3BTrYh5L7hmObPcFKnzDeyCBQoOWzRhjCWAIVYYyOgpGxy4HUoOdUC4mYjfWyyw2cHfw5E60
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 6 Nov 2019 04:37:34 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55630 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfKFJhe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 04:37:34 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BF01C603A3; Wed,  6 Nov 2019 09:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573033052;
+        bh=ycIX0l1aMiAP93a1tcCFC0XAdaWIEMXrTnW0xQuIuNY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PC4GAtFYpooG8AhjsnWbJ+gg8IRwLL44Sb3kRv9AC/8eqZpR5yaqglCImJ7n4wdmI
+         L5ZZl3oUR8yixkg0BsaNxa98TqnKIecRsh9rbMlFBUQ6yMrJS0BTZjRI5mV0jGRWOz
+         g3uBhzbJRY9kGQ7KGFdBV4KnEUk88Q9gWk2EWkEA=
+Received: from [10.206.25.219] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 75EE960B69;
+        Wed,  6 Nov 2019 09:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573033051;
+        bh=ycIX0l1aMiAP93a1tcCFC0XAdaWIEMXrTnW0xQuIuNY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Ffz02pN5IqZ6XN5Lj1BMWFP/EDQIKq/fG/xi6IHNVHZ2wSiaixHaCVbQ2wP6qgcJ/
+         GZNwLMXwyxPvULL72ox96sBDqcV9TCGgcGQRAi/352vEkUE+WY3UQXHs8ZCCXt8kQK
+         av9MLAV82j6aEa1gCMmB98SLx3UgQUhQ+BQAhHro=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 75EE960B69
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: sc7180: Add USB related nodes
+To:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>
+References: <1572529762-31256-1-git-send-email-sanm@codeaurora.org>
+ <1572529762-31256-2-git-send-email-sanm@codeaurora.org>
+ <5dc0c729.1c69fb81.4575.3392@mx.google.com>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <3aa0e1a5-9dd6-fdb5-057d-70af88218fb4@codeaurora.org>
+Date:   Wed, 6 Nov 2019 15:07:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa121ff6-301c-48e9-82c7-08d7629c66c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 09:33:37.4087
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TCndZOPKuZLsXX1BmcLfiVPN39OealellLk534J2HfacgEzrVc+UqFpGu1TOYxQItgC//49mffp9KHcpedxcdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3299
+In-Reply-To: <5dc0c729.1c69fb81.4575.3392@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnlubQxMeaciDXml6Ug
-MjA6MzgNCj4gVG86IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+DQo+IENj
-OiBBbmRyZXcgTXVycmF5IDxhbmRyZXcubXVycmF5QGFybS5jb20+OyBYaWFvd2VpIEJhbw0KPiA8
-eGlhb3dlaS5iYW9AbnhwLmNvbT47IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOw0KPiBi
-aGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
-Y29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47
-DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4
-Zm91bmRhdGlvbi5vcmc7IE0uaC4NCj4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWlu
-Z2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95DQo+IFphbmcgPHJveS56YW5nQG54cC5j
-b20+OyBqaW5nb29oYW4xQGdtYWlsLmNvbTsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsg
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXhwcGMtZGV2
-QGxpc3RzLm96bGFicy5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNy8xMF0gUENJOiBs
-YXllcnNjYXBlOiBNb2RpZnkgdGhlIE1TSVggdG8gdGhlDQo+IGRvb3JiZWxsIHdheQ0KPiANCj4g
-T24gVGh1LCBBdWcgMjksIDIwMTkgYXQgMTA6NDM6MThBTSArMDUzMCwgS2lzaG9uIFZpamF5IEFi
-cmFoYW0gSSB3cm90ZToNCj4gPiBHdXN0YXZvLA0KPiA+DQo+ID4gT24gMjcvMDgvMTkgNjo1NSBQ
-TSwgQW5kcmV3IE11cnJheSB3cm90ZToNCj4gPiA+IE9uIFNhdCwgQXVnIDI0LCAyMDE5IGF0IDEy
-OjA4OjQwQU0gKzAwMDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+ID4+DQo+ID4gPj4NCj4gPiA+
-Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+Pj4gRnJvbTogQW5kcmV3IE11cnJh
-eSA8YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiA+ID4+PiBTZW50OiAyMDE55bm0OOaciDIz5pel
-IDIxOjU4DQo+ID4gPj4+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4g
-PiA+Pj4gQ2M6IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFy
-ay5ydXRsYW5kQGFybS5jb207DQo+ID4gPj4+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8
-bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsNCj4gPiA+Pj4gbG9yZW56by5waWVy
-YWxpc2lAYXJtLmNvOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsN
-Cj4gTS5oLg0KPiA+ID4+PiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1
-IDxtaW5na2FpLmh1QG54cC5jb20+Ow0KPiBSb3kNCj4gPiA+Pj4gWmFuZyA8cm95LnphbmdAbnhw
-LmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiA+ID4+PiBndXN0YXZvLnBpbWVudGVsQHN5
-bm9wc3lzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+Pj4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPj4+
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+Pj4gbGludXhwcGMt
-ZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gPiA+Pj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNy8x
-MF0gUENJOiBsYXllcnNjYXBlOiBNb2RpZnkgdGhlIE1TSVggdG8NCj4gPiA+Pj4gdGhlIGRvb3Ji
-ZWxsIHdheQ0KPiA+ID4+Pg0KPiA+ID4+PiBPbiBUaHUsIEF1ZyAyMiwgMjAxOSBhdCAwNzoyMjoz
-OVBNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+Pj4+IFRoZSBsYXllcnNjYXBlIHBs
-YXRmb3JtIHVzZSB0aGUgZG9vcmJlbGwgd2F5IHRvIHRyaWdnZXIgTVNJWA0KPiA+ID4+Pj4gaW50
-ZXJydXB0IGluIEVQIG1vZGUuDQo+ID4gPj4+Pg0KPiA+ID4+Pg0KPiA+ID4+PiBJIGhhdmUgbm8g
-cHJvYmxlbXMgd2l0aCB0aGlzIHBhdGNoLCBob3dldmVyLi4uDQo+ID4gPj4+DQo+ID4gPj4+IEFy
-ZSB5b3UgYWJsZSB0byBhZGQgdG8gdGhpcyBtZXNzYWdlIGEgcmVhc29uIGZvciB3aHkgeW91IGFy
-ZQ0KPiA+ID4+PiBtYWtpbmcgdGhpcyBjaGFuZ2U/IERpZCBkd19wY2llX2VwX3JhaXNlX21zaXhf
-aXJxIG5vdCB3b3JrIHdoZW4NCj4gPiA+Pj4gZnVuY19ubyAhPSAwPyBPciBkaWQgaXQgd29yayB5
-ZXQgZHdfcGNpZV9lcF9yYWlzZV9tc2l4X2lycV9kb29yYmVsbCBpcw0KPiBtb3JlIGVmZmljaWVu
-dD8NCj4gPiA+Pg0KPiA+ID4+IFRoZSBmYWN0IGlzIHRoYXQsIHRoaXMgZHJpdmVyIGlzIHZlcmlm
-aWVkIGluIGxzMTA0NmEgcGxhdGZvcm0gb2YNCj4gPiA+PiBOWFAgYmVmb3JlLCBhbmQgbHMxMDQ2
-YSBkb24ndCBzdXBwb3J0IE1TSVggZmVhdHVyZSwgc28gSSBzZXQgdGhlDQo+ID4gPj4gbXNpeF9j
-YXBhYmxlIG9mIHBjaV9lcGNfZmVhdHVyZXMgc3RydWN0IGlzIGZhbHNlLCBidXQgaW4gb3RoZXIN
-Cj4gPiA+PiBwbGF0Zm9ybSwgZS5nLiBsczEwODhhLCBpdCBzdXBwb3J0IHRoZSBNU0lYIGZlYXR1
-cmUsIEkgdmVyaWZpZWQgdGhlIE1TSVgNCj4gZmVhdHVyZSBpbiBsczEwODhhLCBpdCBpcyBub3Qg
-T0ssIHNvIEkgY2hhbmdlZCB0byBhbm90aGVyIHdheS4gVGhhbmtzLg0KPiA+ID4NCj4gPiA+IFJp
-Z2h0LCBzbyB0aGUgZXhpc3RpbmcgcGNpLWxheWVyc2NhcGUtZXAuYyBkcml2ZXIgbmV2ZXIgc3Vw
-cG9ydGVkDQo+ID4gPiBNU0lYIHlldCBpdCBlcnJvbmVvdXNseSBoYWQgYSBzd2l0Y2ggY2FzZSBz
-dGF0ZW1lbnQgdG8gY2FsbA0KPiA+ID4gZHdfcGNpZV9lcF9yYWlzZV9tc2l4X2lycSB3aGljaCB3
-b3VsZCBuZXZlciBnZXQgdXNlZC4NCj4gPiA+DQo+ID4gPiBOb3cgdGhhdCB3ZSdyZSBhZGRpbmcg
-YSBwbGF0Zm9ybSB3aXRoIE1TSVggc3VwcG9ydCB0aGUgZXhpc3RpbmcNCj4gPiA+IGR3X3BjaWVf
-ZXBfcmFpc2VfbXNpeF9pcnEgZG9lc24ndCB3b3JrIChmb3IgdGhpcyBwbGF0Zm9ybSkgc28gd2Ug
-YXJlDQo+ID4gPiBhZGRpbmcgYSBkaWZmZXJlbnQgbWV0aG9kLg0KPiA+DQo+ID4gR3VzdGF2bywg
-Y2FuIHlvdSBjb25maXJtIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEoKSB3b3JrcyBmb3INCj4g
-PiBkZXNpZ253YXJlIGFzIGl0IGRpZG4ndCB3b3JrIGZvciBib3RoIG1lIGFuZCBYaWFvd2VpPw0K
-PiANCj4gVGhpcyBxdWVzdGlvbiBuZWVkcyBhbiBhbnN3ZXIuDQoNClRoaXMgcXVlc3Rpb24gaGF2
-ZSBhbnN3ZXJlZCBieSBHdXN0YXZvIGluICJbUEFUQ0ggdjMgMDgvMTFdIFBDSTogbGF5ZXJzY2Fw
-ZTogDQpNb2RpZnkgdGhlIE1TSVggdG8gdGhlIGRvb3JiZWxsIG1vZGUiLCBwbGVhc2UgcmVmZXIg
-dG8gdGhlIGNvbW1lbnRzLCBkdWUgdG8NCmFkZCBhIG5ldyBwYXRjaCBmb3IgdGhpcyBzZXRzIG9m
-IHBhdGNoLCB0aGlzIHBhdGNoIG51bWJlciBjaGFuZ2VkIGZyb20gMDcvMTAgb2YgdjINCnRvIDA4
-LzExIG9mIHYzLCBzb3JyeSBmb3IgY2F1c2luZyB5b3VyIGNvbmZ1c2UuDQoNCg0KVGhhbmtzIA0K
-WGlhb3dlaSAgDQoNCg0KPiANCj4gVGhhbmtzLA0KPiBMb3JlbnpvDQo=
+
+On 11/5/2019 6:19 AM, Stephen Boyd wrote:
+> Quoting Sandeep Maheswaram (2019-10-31 06:49:22)
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> index 189254f..aecc994 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> @@ -400,3 +400,28 @@
+>>                          bias-pull-up;
+>>                  };
+>>   };
+>> +
+>> +&usb_1 {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&usb_1_dwc3 {
+>> +       dr_mode = "host";
+>> +};
+>> +
+>> +&usb_1_hsphy {
+>> +       status = "okay";
+>> +       vdd-supply = <&vreg_l4a_0p8>;
+>> +       vdda-pll-supply = <&vreg_l11a_1p8>;
+>> +       vdda-phy-dpdm-supply = <&vreg_l17a_3p0>;
+>> +       qcom,imp-res-offset-value = <8>;
+>> +       qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
+>> +       qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
+>> +       qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
+>> +};
+>> +
+>> +&usb_1_qmpphy {
+>> +       status = "okay";
+>> +       vdda-phy-supply = <&vreg_l3c_1p2>;
+>> +       vdda-pll-supply = <&vreg_l4a_0p8>;
+>> +};
+>> \ No newline at end of file
+> Why is there no newline at end of file?
+Will correct in next version.
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index cb623b7..7ee068f 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -9,6 +9,7 @@
+>>   #include <dt-bindings/clock/qcom,rpmh.h>
+>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>> +#include <dt-bindings/phy/phy-qcom-qusb2.h>
+> Sort includes?
+Will correct in next version.
+>>   
+>>   / {
+>>          interrupt-parent = <&intc>;
+>> @@ -184,6 +185,17 @@
+>>                          #power-domain-cells = <1>;
+>>                  };
+>>   
+>> +               qfprom@784000 {
+>> +                       compatible = "qcom,qfprom";
+>> +                       reg = <0 0x00784000 0 0x8ff>;
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <1>;
+>> +
+>> +                       qusb2p_hstx_trim: hstx-trim-primary@25b {
+>> +                               reg = <0x25b 0x1>;
+>> +                               bits = <1 3>;
+>> +                       };
+>> +               };
+> Add newline here?
+Will correct in next version.
+>
+>>                  pdc: interrupt-controller@b220000 {
+>>                          compatible = "qcom,sdm845-pdc";
+>>                          reg = <0 0xb220000 0 0x30000>;
+>> @@ -913,6 +925,98 @@
+>>                          status = "disabled";
+>>                  };
+>>   
+>> +               usb_1_hsphy: phy@88e3000 {
+>> +                       compatible = "qcom,sc7180-qusb2-phy";
+>> +                       reg = <0 0x088e3000 0 0x400>;
+>> +                       status = "disabled";
+>> +                       #phy-cells = <0>;
+>> +                       clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+>> +                       <&rpmhcc RPMH_CXO_CLK>;
+> Nitpick: Can you indent this to align with clocks above?
+Will correct in next version.
+>
+>> +                       clock-names = "cfg_ahb","ref";
+>> +                       resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+>> +
+>> +                       nvmem-cells = <&qusb2p_hstx_trim>;
+>> +               };
+>> +
+>> +               usb_1_qmpphy: phy@88e9000 {
+>> +                       compatible = "qcom,sc7180-qmp-usb3-phy";
+>> +                       reg = <0 0x088e9000 0 0x18c>,
+>> +                             <0 0x088e8000 0 0x38>;
+>> +                       reg-names = "reg-base", "dp_com";
+>> +                       status = "disabled";
+>> +                       #clock-cells = <1>;
+>> +                       #address-cells = <2>;
+>> +                       #size-cells = <2>;
+>> +                       ranges;
+>> +
+>> +                       clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+>> +                                <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+>> +                                <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
+>> +                                <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
+>> +                       clock-names = "aux", "cfg_ahb", "ref", "com_aux";
+>> +
+>> +                       resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
+>> +                                <&gcc GCC_USB3_PHY_PRIM_BCR>;
+>> +                       reset-names = "phy", "common";
+>> +
+>> +                       usb_1_ssphy: lanes@88e9200 {
+>> +                               reg = <0 0x088e9200 0 0x128>,
+>> +                                     <0 0x088e9400 0 0x200>,
+>> +                                     <0 0x088e9c00 0 0x218>,
+>> +                                     <0 0x088e9600 0 0x128>,
+>> +                                     <0 0x088e9800 0 0x200>,
+>> +                                     <0 0x088e9a00 0 0x18>;
+>> +                               #phy-cells = <0>;
+>> +                               clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+>> +                               clock-names = "pipe0";
+>> +                               clock-output-names = "usb3_phy_pipe_clk_src";
+> Does this clock go somewhere? Like GCC?
+Yes this clock will go to GCC.
+>> +                       };
+>> +               };
+>> +
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
