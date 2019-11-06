@@ -2,353 +2,245 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A12C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B62EC5DF64
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 21:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25B4217D7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317D7217D7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 21:24:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gAZREgml"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9vZIVJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfKFVM0 (ORCPT
+        id S1727403AbfKFVYx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:12:26 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51882 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfKFVM0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 16:12:26 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6LCNi3078031;
-        Wed, 6 Nov 2019 15:12:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573074743;
-        bh=ugrGaUHfmDhJq6zCSEwcZws9pWbmNNJsLhteajcKkp0=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=gAZREgml8ZJ4ZV8ltEdFOQB9Jp3hzN8Jbxg31SCs3/ndg9uDRHnT3G/cNTmUaYvHM
-         d8Zw3iBtYwfi7o5LqoYQyZJhk3FADw25zkEX0L5ABh+6qbaK1azEgQqdVXR/JHNuix
-         F8ViukUOOTR7+XQ3O2G0yP5zxHcIkaLDJTmTJfi8=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6LCN3B091579;
-        Wed, 6 Nov 2019 15:12:23 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 15:12:08 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 15:12:08 -0600
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id xA6LCNe5127906;
-        Wed, 6 Nov 2019 15:12:23 -0600
-Date:   Wed, 6 Nov 2019 15:15:24 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v2 19/20] dt-bindings: media: cal: convert binding to yaml
-Message-ID: <20191106211524.7n2aycypunkphe55@ti.com>
-References: <20191104193140.31145-1-bparrot@ti.com>
- <20191104193140.31145-20-bparrot@ti.com>
+        Wed, 6 Nov 2019 16:24:53 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33958 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfKFVYw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 16:24:52 -0500
+Received: by mail-wr1-f66.google.com with SMTP id e6so318795wrw.1;
+        Wed, 06 Nov 2019 13:24:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Soz8WtFTFYQ3Yhy0YEr2VY/OqOycp6OKY0yTpNQTkFw=;
+        b=r9vZIVJCWykgW/nN32WfACkf4jz43sN6bgKR6zhShogOCOQ1tUniFQrEZ7lQR8IVS0
+         kRTQUCpXGp7ylRNvNqIdROXtKQ9kzd3KXzBsEPJSyide6Wet9MtfJcAJLf8cJYnBzna4
+         FCVqZDkR7pW1YLwLvuvG08bcbw9Sxu4aizimdlNddnw3ZKHc0ol6TNoSpm31APRDnFW7
+         CLQkt8Tcu+K3iHBpKFFfBKFtfybdZBKJtpogFJP7u0v12bN4l3YbmuNjgPoxJo0mzA3Y
+         zeWVechXbanbAjOJgizujceGFHrNI2GP2FSkyBmKT+dc69S9B8DZM3lJtaCgaGsoWlc8
+         by9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Soz8WtFTFYQ3Yhy0YEr2VY/OqOycp6OKY0yTpNQTkFw=;
+        b=Q/AmRNFmKq3jAN16yOmIC0gQbjlbDJvvB0TCMHMYizGefybPnkJAP9DBAT9Dudd/iD
+         i48jT1koleQRZv0o9qDHz8i1o2XEJs+m4fcdH7f/ep6btvuD+4hQvs7RpRsj6qDYtLqZ
+         JMCGYhLGCpwANYY0LFFGu4DIx9S/sH2NmrDwmeii2KKg++TXE63mUkRvIIKb42PPdmCD
+         ouMWcECYBoaTjU9kwVjqZQnY+ZFZxrZFFG4nq2IHq0XMm8fMn19Sl+B0va8nwoO3YQKz
+         mOOcKGqTLyDjmbONUUM7GOczG2+bEx0bRsdQiV0WuGu0FLJB7E8g9vPim/Iy0IgMe+Pu
+         z6gw==
+X-Gm-Message-State: APjAAAXqaE6o2SnH4Wf0AY+rL2J2OUa4zIaEXW61mPnsVMTlMN5FTHto
+        ujhmNkrw0D9kWtrdloYP5Vb46XdJ+xru0InLKuk=
+X-Google-Smtp-Source: APXvYqzxY2Zi37gqEk4onhPJdIaLEgv2hV0xed9u6vFW9KegQrjOjRehlIouz7HG5lrDsV9X9J4GPfU2gXyZn+dqNXM=
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr4633064wrw.167.1573075490460;
+ Wed, 06 Nov 2019 13:24:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191104193140.31145-20-bparrot@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191105131456.32400-1-peron.clem@gmail.com> <20191105131456.32400-5-peron.clem@gmail.com>
+ <20191105145659.ffezqntodsys4phn@pengutronix.de>
+In-Reply-To: <20191105145659.ffezqntodsys4phn@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 6 Nov 2019 22:24:39 +0100
+Message-ID: <CAJiuCcdXr3y0oe19ZNaiQoN7Y39p54p8LjQjXfjHbTH8tbnrpw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Looks like I am missing a rebase for this specific patch where I address
-Rob's comment about port@0 and port@1.
+Hi Uwe,
 
-I'll update it in the next version.
+On Tue, 5 Nov 2019 at 15:57, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Tue, Nov 05, 2019 at 02:14:53PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > PWM core has an option to bypass whole logic and output unchanged sourc=
+e
+> > clock as PWM output. This is achieved by enabling bypass bit.
+> >
+> > Note that when bypass is enabled, no other setting has any meaning, not
+> > even enable bit.
+> >
+> > This mode of operation is needed to achieve high enough frequency to
+> > serve as clock source for AC200 chip which is integrated into same
+> > package as H6 SoC.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 38 +++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 37 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 54e19fa56a4e..810abf47c261 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -3,6 +3,10 @@
+> >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> >   *
+> >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electr=
+ons.com>
+> > + *
+> > + * Limitations:
+> > + * - When outputing the source clock directly, the PWM logic will be b=
+ypassed
+> > + *   and the currently running period is not guaranteed to be complete=
+d
+> >   */
+> >
+> >  #include <linux/bitops.h>
+> > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
+> >
+> >  struct sun4i_pwm_data {
+> >       bool has_prescaler_bypass;
+> > +     bool has_direct_mod_clk_output;
+> >       unsigned int npwm;
+> >  };
+> >
+> > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *c=
+hip,
+> >
+> >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+> > +     /*
+> > +      * PWM chapter in H6 manual has a diagram which explains that if =
+bypass
+> > +      * bit is set, no other setting has any meaning. Even more, exper=
+iment
+> > +      * proved that also enable bit is ignored in this case.
+> > +      */
+> > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > +         sun4i_pwm->data->has_direct_mod_clk_output) {
+> > +             state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate=
+);
+> > +             state->duty_cycle =3D state->period / 2;
+>
+> Please round up here.
+Ok
+>
+> > +             state->polarity =3D PWM_POLARITY_NORMAL;
+> > +             state->enabled =3D true;
+> > +             return;
+> > +     }
+> > +
+> >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
+> >           sun4i_pwm->data->has_prescaler_bypass)
+> >               prescaler =3D 1;
+> > @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, s=
+truct pwm_device *pwm,
+> >  {
+> >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+> >       struct pwm_state cstate;
+> > -     u32 ctrl;
+> > +     u32 ctrl, clk_rate;
+> > +     bool bypass;
+> >       int ret;
+> >       unsigned int delay_us;
+> >       unsigned long now;
+> > @@ -218,6 +238,15 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >               }
+> >       }
+> >
+> > +     /*
+> > +      * Although it would make much more sense to check for bypass in
+> > +      * sun4i_pwm_calculate(), value of bypass bit also depends on "en=
+abled".
+> > +      */
+> > +     clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+>
+> clk_get_rate must not be called if the clk might be off.
+Ok,
 
-Benoit
+>
+> > +     bypass =3D state->enabled &&
+> > +              (state->period * clk_rate >=3D NSEC_PER_SEC) &&
+>
+> This is too coarse. With state->period =3D 1000000 this is fulfilled
+> (unless the multiplication overflows).
 
-Benoit Parrot <bparrot@ti.com> wrote on Mon [2019-Nov-04 13:31:39 -0600]:
-> Convert ti-cal.txt to ti,cal.yaml.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  .../devicetree/bindings/media/ti,cal.yaml     | 172 ++++++++++++++++++
->  .../devicetree/bindings/media/ti-cal.txt      |  81 ---------
->  2 files changed, 172 insertions(+), 81 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
->  delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/ti,cal.yaml b/Documentation/devicetree/bindings/media/ti,cal.yaml
-> new file mode 100644
-> index 000000000000..d19587ea6470
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti,cal.yaml
-> @@ -0,0 +1,172 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/ti,cal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL) Device Tree Bindings
-> +
-> +maintainers:
-> +  - Benoit Parrot <bparrot@ti.com>
-> +
-> +description: |-
-> +  The Camera Adaptation Layer (CAL) is a key component for image capture
-> +  applications. The capture module provides the system interface and the
-> +  processing capability to connect CSI2 image-sensor modules to the
-> +  DRA72x device.
-> +
-> +  CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
-> +  should contain a 'port' child node with child 'endpoint' node. Please
-> +  refer to the bindings defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      # for DRA72 controllers
-> +      - ti,dra72-cal
-> +      # for DRA72 controllers pre ES2.0
-> +      - ti,dra72-pre-es2-cal
-> +      # for DRA76 controllers
-> +      - ti,dra76-cal
-> +      # for AM654 controllers
-> +      - ti,am654-cal
-> +
-> +  reg:
-> +    minItems: 2
-> +    items:
-> +      - description: The CAL main register region
-> +      - description: The RX Core0 (DPHY0) register region
-> +      - description: The RX Core1 (DPHY1) register region
-> +
-> +  reg-names:
-> +    minItems: 2
-> +    items:
-> +      - const: cal_top
-> +      - const: cal_rx_core0
-> +      - const: cal_rx_core1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  ti,camerrx-control:
-> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      phandle to the device control module and offset to the
-> +      control_camerarx_core register
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: fck
-> +
-> +  power-domains:
-> +    description:
-> +      List of phandle and PM domain specifier as documented in
-> +      Documentation/devicetree/bindings/power/power_domain.txt
-> +    maxItems: 1
-> +
-> +  # See ./video-interfaces.txt for details
-> +  ports:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +    patternProperties:
-> +      '^port@[0-9a-fA-F]+$':
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            minItems: 1
-> +            items:
-> +              - description: The port id
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              clock-lanes:
-> +                maxItems: 1
-> +
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - ti,camerrx-control
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    cal: cal@4845b000 {
-> +        compatible = "ti,dra72-cal";
-> +        reg = <0x4845B000 0x400>,
-> +              <0x4845B800 0x40>,
-> +              <0x4845B900 0x40>;
-> +        reg-names = "cal_top",
-> +                    "cal_rx_core0",
-> +                    "cal_rx_core1";
-> +        interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +        ti,camerrx-control = <&scm_conf 0xE94>;
-> +
-> +        ports {
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +
-> +              csi2_0: port@0 {
-> +                    reg = <0>;
-> +                    csi2_phy0: endpoint {
-> +                           remote-endpoint = <&csi2_cam0>;
-> +                           clock-lanes = <0>;
-> +                           data-lanes = <1 2>;
-> +                    };
-> +              };
-> +        };
-> +    };
-> +
-> +    i2c5: i2c@4807c000 {
-> +        clock-frequency = <400000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        camera-sensor@3c {
-> +               compatible = "ovti,ov5640";
-> +               reg = <0x3c>;
-> +
-> +               clocks = <&clk_ov5640_fixed>;
-> +               clock-names = "xclk";
-> +
-> +               port {
-> +                    csi2_cam0: endpoint {
-> +                            remote-endpoint = <&csi2_phy0>;
-> +                            clock-lanes = <0>;
-> +                            data-lanes = <1 2>;
-> +                    };
-> +               };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-> deleted file mode 100644
-> index 2deb256e7032..000000000000
-> --- a/Documentation/devicetree/bindings/media/ti-cal.txt
-> +++ /dev/null
-> @@ -1,81 +0,0 @@
-> -Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL)
-> -------------------------------------------------------
-> -
-> -The Camera Adaptation Layer (CAL) is a key component for image capture
-> -applications. The capture module provides the system interface and the
-> -processing capability to connect CSI2 image-sensor modules to the
-> -DRA72x device.
-> -
-> -Required properties:
-> -- compatible:
-> - Should be "ti,dra72-cal", for DRA72 controllers
-> - Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
-> - Should be "ti,dra76-cal", for DRA76 controllers
-> - Should be "ti,am654-cal", for AM654 controllers
-> -- reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
-> -	control address space
-> -- reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
-> -	     registers
-> -- interrupts: should contain IRQ line for the CAL;
-> -- ti,camerrx-control: phandle to the device control module and offset to
-> -		      the control_camerarx_core register.
-> -		      This node is meant to replace the "camerrx_control"
-> -		      reg entry above but "camerrx_control" is still
-> -		      handled for backward compatibility.
-> -
-> -CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
-> -should contain a 'port' child node with child 'endpoint' node. Please
-> -refer to the bindings defined in
-> -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> -
-> -Example:
-> -	cal: cal@4845b000 {
-> -		compatible = "ti,dra72-cal";
-> -		reg = <0x4845B000 0x400>,
-> -		      <0x4845B800 0x40>,
-> -		      <0x4845B900 0x40>;
-> -		reg-names = "cal_top",
-> -			    "cal_rx_core0",
-> -			    "cal_rx_core1";
-> -		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> -		ti,camerrx-control = <&scm_conf 0xE94>;
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		ports {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			csi2_0: port@0 {
-> -				reg = <0>;
-> -				csi2_phy0: endpoint {
-> -					remote-endpoint = <&csi2_cam0>;
-> -					clock-lanes = <0>;
-> -					data-lanes = <1 2>;
-> -				};
-> -			};
-> -			csi2_1: port@1 {
-> -				reg = <1>;
-> -			};
-> -		};
-> -	};
-> -
-> -	i2c5: i2c@4807c000 {
-> -		clock-frequency = <400000>;
-> -
-> -		camera-sensor@3c {
-> -			compatible = "ovti,ov5640";
-> -			reg = <0x3c>;
-> -
-> -			clocks = <&clk_fixed>;
-> -			clock-names = "xclk";
-> -
-> -			port {
-> -				csi2_cam0: endpoint {
-> -					remote-endpoint = <&csi2_phy0>;
-> -					clock-lanes = <0>;
-> -					data-lanes = <1 2>;
-> -				};
-> -			};
-> -		};
-> -	};
-> -- 
-> 2.17.1
-> 
+Sorry, misunderstood the previous mail
+
+What about something like this ?
+((state->period - 1) * clk_rate <=3D NSEC_PER_SEC) &&
+((state->period + 1) * clk_rate >=3D NSEC_PER_SEC) &&
+ ((state->duty_cycle - 1) * 2 <=3D state->period) &&
+ ((state->duty_cycle + 1) * 2 >=3D state->period);
+
+We are sure that the user is looking for a PWM around the OSC with a
+50% duty cycle ?
+
+Regards,
+Clement
+
+>
+> > +              (state->duty_cycle * 2 =3D=3D state->period);
+>
+> This is too strict. See my previous mail about how this should be done.
+>
+> If bypass is true (and the hardware support it) you can skip the
+> calculation of the other parameters.
+Yes correct and also we can skip
+
+
+>
+> > +
+> >       spin_lock(&sun4i_pwm->ctrl_lock);
+> >       ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+> > @@ -265,6 +294,13 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >               ctrl &=3D ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+> >       }
+> >
+> > +     if (sun4i_pwm->data->has_direct_mod_clk_output) {
+> > +             if (bypass)
+> > +                     ctrl |=3D BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > +             else
+> > +                     ctrl &=3D ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > +     }
+> > +
+> >       sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+> >
+> >       spin_unlock(&sun4i_pwm->ctrl_lock);
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
