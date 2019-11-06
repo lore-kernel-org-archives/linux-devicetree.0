@@ -2,105 +2,176 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DB8C47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 17:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91955C5DF65
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 18:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD5D217F5
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 17:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610922166E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 18:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xwxnzklr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="deTo+90l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfKFR7T (ORCPT
+        id S1732466AbfKFSJs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:59:19 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:32877 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727286AbfKFR7T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 12:59:19 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a17so2143185wmb.0
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 09:59:18 -0800 (PST)
+        Wed, 6 Nov 2019 13:09:48 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51076 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbfKFSJs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 13:09:48 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 11so4812965wmk.0
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 10:09:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ohhCdIQyNDGo4eqK+kLi0fkekXyA+TQ2KHQjimtJFL0=;
-        b=XwxnzklrwC7y3u9+CJmI5+Kwk+goAsS84fqa3fC4ttevbOLPLvyc1qHPKZkfYp3eqn
-         PJYm2IjM899Qslu4NSr4KvWp7bztE5VUhWkxEXVzmVd633mUbMFL3MziKJHt4Voq/3GH
-         UY7nyq6IMb5q2xrmmikKdx4LlD9hyFCkN4LR00NnRDZ6oqdJvaBBYFMZuFZJEqXp1hRx
-         Cyi3LUFmqD7TxhsfUH9pe4WKQHp8JAuG7Uqs8rH//Goq6iCMSCBAHSWudtANXzP4B/vR
-         tg3+zB3jVKbNlCNkTAZIcY3Z+R0HzF2AxDf4t6WK7193moPvxvsJWeOeoBwLugGZF9FR
-         Zejw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rgJXsUBNZa/F0SLsO+it3k7f9qVrt3VaEEsEU5U0WF4=;
+        b=deTo+90lJ6be7HHxTg00sHjXhZ3BCSqrIZB22Zr4Ih0eXfNoJ6Gwt/RbEw5gQSjgIg
+         qidpwKs5uRX2/lu5DRzqXig8ftmUi03AhVaEYUpWJ0jjW9auDFhXL1SkjGYGBmto2pb8
+         veFrOCGDVpD9USl2jXCi2MXpsVt0aBgUqTgiEF6etTbJSDsHDbDcWFVFy6vonpSHsMI7
+         L2D0mmBoCGDPshPuZzY4p7VQhtH6IXIpaaGTfk6LPUmiJgvxFMYwzdxm8qdcFIcjlA9c
+         b7kkPdCm7cyF1fB5SXXtiruwEQBPAIdGxrexuet+sitv4fmBS9v4vcbQa8fKE9swANAS
+         tp6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ohhCdIQyNDGo4eqK+kLi0fkekXyA+TQ2KHQjimtJFL0=;
-        b=ofNunsg5unkyKicoYL3N0daaDrv8FYt1RM9/lXwtXwUHmfMl7kEBxpzgeeYrVTHCK5
-         VbYJo+0z0ek4Ggvs8dh2YRBOhdh4YTEyLNDTxCO4Net0tvNrRU/IBKAe+9i3GabqFqbW
-         i4hK+OSdcJHQ/kVGbLmUSvc5SNncAMeLMMtr2WJ3hT0lduSN7Qg93HxkSm29VWkJlzV9
-         dmsK0m8ulFS0MSE/I6/r/pJr5yNpwSgwy/w1MjfZUUrXlZrxBBZ5YLzS98BM/mEK/LDL
-         L5k2zDHxB9hWLmF57EfTt2PjpC+GY65eKBI8xAIAeyUAyPlbVeApElrnqooIq5N5rD84
-         TWuQ==
-X-Gm-Message-State: APjAAAU5CQfCZgJkVueG9zE3o0RRgUqu0t0t/LPX7aylrRLvvPwpwWIm
-        o9Yg1aEJQ3nGuTZFh/jXexPpbfIA3zI=
-X-Google-Smtp-Source: APXvYqyz6kIMCTBVSrcHZYaOttuckNTvYf5lfHiASZp9OADbEVDbjDa5pyxJcAz4ASlpA4jnAsPYsw==
-X-Received: by 2002:a05:600c:12:: with SMTP id g18mr3966165wmc.44.1573063157626;
-        Wed, 06 Nov 2019 09:59:17 -0800 (PST)
-Received: from IcarusMOD.eternityproject.eu ([93.51.16.173])
-        by smtp.gmail.com with ESMTPSA id u4sm14546463wrq.22.2019.11.06.09.59.16
+        bh=rgJXsUBNZa/F0SLsO+it3k7f9qVrt3VaEEsEU5U0WF4=;
+        b=JwJCYCYlUo8/+8f41cJ1ItHXcn8ObCo10w1oh29HMEWDyKsG7La1eEK/bZ77SV87aR
+         YkC0KYbNrNUD9J7HfzOgVFNzF0OH69qkh8FQ00y1fnhimDL2oKPGl9s/uuIbHEn/ho3h
+         3sgHZ9++AZHYhVhlo2dzRFTx4RqFj9eOC1MTy+7n3WQiteo8iID1TMBukSpa9Qr/Zjg7
+         Al3W+uISEoP4sbZm122PUq6kcTIF8DDBOY3loB1QHlAPSuXQFtWqJOBL4J2QjbdWJR9F
+         3qhPVao6jVlFnKZ0mP3uAAhDCVoiG5S7RtaYOVWomdodh2rYQQHrCyhLOpieCDoeXI04
+         Fq8w==
+X-Gm-Message-State: APjAAAXgOupjW+RZxyZ0mEs6X8dz4Oa//LQfIKgc8YEqw5G9WhavFig0
+        LcVGEy6U29Hb6+7kl+S/cuf5Uw==
+X-Google-Smtp-Source: APXvYqwuEOoV5aCzLlGkVZlVwso0Ano0flwVy5rE6QbRo8vNmNb2jFk7drTtQSJedQIw1NCPZ+6geA==
+X-Received: by 2002:a1c:6a0d:: with SMTP id f13mr3948924wmc.164.1573063784694;
+        Wed, 06 Nov 2019 10:09:44 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id r19sm29208269wrr.47.2019.11.06.10.09.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 09:59:16 -0800 (PST)
-From:   kholk11@gmail.com
-To:     devicetree@vger.kernel.org
-Cc:     kholk11@gmail.com, marijns95@gmail.com, robdclark@gmail.com,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de,
-        jonathan@marek.ca, bjorn.andersson@linaro.org,
-        georgi.djakov@linaro.org, gregkh@linuxfoundation.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        Rob Herring <robh@kernel.org>
-Subject: [RESEND,v4,2/7] dt-bindings: msm/mdp5: Document optional TBU and TBU_RT clocks
-Date:   Wed,  6 Nov 2019 18:59:05 +0100
-Message-Id: <20191106175905.59745-1-kholk11@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 06 Nov 2019 10:09:43 -0800 (PST)
+Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-2-srinivas.kandagatla@linaro.org>
+ <20191025204338.GA25892@bogus>
+ <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org>
+ <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
+ <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
+ <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
+ <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <b3d078a1-f87d-c146-bdf7-7a6b30547bd5@linaro.org>
+Date:   Wed, 6 Nov 2019 18:09:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: AngeloGioacchino Del Regno <kholk11@gmail.com>
 
-These two clocks aren't present in all versions of the MDP5 HW:
-where present, they are needed to enable the Translation Buffer
-Unit(s).
 
-Signed-off-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/display/msm/mdp5.txt | 2 ++
- 1 file changed, 2 insertions(+)
+On 05/11/2019 19:08, Rob Herring wrote:
+> On Wed, Oct 30, 2019 at 4:55 AM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+>>
+>>
+>>
+>> On 29/10/2019 20:47, Rob Herring wrote:
+>>> On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
+>>> <srinivas.kandagatla@linaro.org> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
+>>>>> Its Phandle.
+>>>>>
+>>>>> something like this is okay?
+>>>>>
+>>>>> slim-ifc-dev:
+>>>>>      $ref: '/schemas/types.yaml#/definitions/phandle-array'
+>>>>
+>>>> Sorry this should not be an array, so something like this:
+>>>>
+>>>>      slim-ifc-dev:
+>>>>        description: SLIMBus Interface device phandle
+>>>
+>>> You're just spelling out the abbreviated name. I can do that much.
+>>> What is 'SLIMBus Interface device'?
+>>
+>> Each SLIMBus Component contains one Interface Device. Which is
+>> responsible for Monitoring and reporting the status of component, Data
+>> line to Data pin connection setup for SLIMBus streaming. Interface
+>> device is enumerated just like any other slim device.
+> 
+> So a standard set of registers every slimbus device has? In hindsight,
+> I would have made reg have 2 entries with both addresses. I guess that
+> ship has sailed.
 
-diff --git a/Documentation/devicetree/bindings/display/msm/mdp5.txt b/Documentation/devicetree/bindings/display/msm/mdp5.txt
-index 4e11338548aa..43d11279c925 100644
---- a/Documentation/devicetree/bindings/display/msm/mdp5.txt
-+++ b/Documentation/devicetree/bindings/display/msm/mdp5.txt
-@@ -76,6 +76,8 @@ Required properties:
- Optional properties:
- - clock-names: the following clocks are optional:
-   * "lut"
-+  * "tbu"
-+  * "tbu_rt"
- 
- Example:
- 
--- 
-2.21.0
+That will break SLIMBus bindings, Which is expecting one device per 
+device node.
 
+> 
+> It seems strange you would need both "devices" described as separate
+> nodes in DT.
+
+Because they are two different devices on the SLIMBus Component.
+
+> 
+>>
+>> We already have exactly same bindings for WCD9335 in upstream at:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
+>>
+>>>
+>>> Is it a standard SLIMBus property? If so, document it in the right
+>>> place. If not, then needs a vendor prefix.
+>>
+>> "SLIMBus Interface Device" itself is documented in SLIMBus Specification.
+>>
+>> If I remember it correctly You suggested me to move to "slim-ifc-dev"
+>> as this is part of SLIMBus Specification.
+> 
+> Probably so. If it is common, then document it in bindings/slimbus/bus.txt.
+>
+As we are dealing with audio codecs here, it might be that 
+"slim-ifc-dev" is common across wcd9335 and wcd934x but not all devices 
+on the SLIMBus Component would need handle to interface device. SLIMbus 
+can also be used for control buses as well which might not need this.
+
+
+> Then here, 'slim-ifc-dev: true' is sufficient. You can just assume we
+> convert bus.txt to schema (or feel free to do that :) ).
+
+We need phandle to the interface device so that we can program the 
+streaming parameters for the SLIMBus Component.
+
+
+--srini
+
+
+> 
+> Rob
+> 
