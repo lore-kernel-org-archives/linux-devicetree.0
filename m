@@ -2,200 +2,139 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55C4C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71DDC5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719EE2077C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7F220659
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 11:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725856AbfKFL1W (ORCPT
+        id S1729777AbfKFLac (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:27:22 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:53224 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbfKFL1W (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:27:22 -0500
-Received: from [94.134.91.181] (helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko.stuebner@theobroma-systems.com>)
-        id 1iSJSn-0004nK-UE; Wed, 06 Nov 2019 12:27:02 +0100
-From:   Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-To:     dri-devel@lists.freedesktop.org, a.hajda@samsung.com
-Cc:     hjc@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, philippe.cornu@st.com,
-        yannick.fertre@st.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        heiko@sntech.de, christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH 2/3] drm/rockchip: add ability to handle external dphys in mipi-dsi
-Date:   Wed,  6 Nov 2019 12:26:49 +0100
-Message-Id: <20191106112650.8365-2-heiko.stuebner@theobroma-systems.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191106112650.8365-1-heiko.stuebner@theobroma-systems.com>
-References: <20191106112650.8365-1-heiko.stuebner@theobroma-systems.com>
+        Wed, 6 Nov 2019 06:30:32 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:58652 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfKFLab (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 06:30:31 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-5d-5dc2aed5aea0
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id EC.7C.08102.5DEA2CD5; Wed,  6 Nov 2019 12:30:29 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Wed, 6 Nov 2019 12:30:24 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
+Subject: Re: SPAM (R/EU IT) // Re: [RFC PATCH 2/5] dt-bindings: an30259a:
+ example for using fixed LED node names.
+Thread-Topic: SPAM (R/EU IT) // Re: [RFC PATCH 2/5] dt-bindings: an30259a:
+ example for using fixed LED node names.
+Thread-Index: AQHVjlcGaBdmxTof6U+YTbv1fVCiQad9euAAgACC3AA=
+Date:   Wed, 6 Nov 2019 11:30:23 +0000
+Message-ID: <17a77e44acea33dc7c43e957bbca7a3f0e863ebb.camel@fi.rohmeurope.com>
+References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+         <5b9f9e7cd3dc959962fc43d27e471245e63f5f29.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191106034206.GA6299@bogus>
+In-Reply-To: <20191106034206.GA6299@bogus>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <068A4F7DFAE72141A19AE433268E98A9@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SW0wTQRTN7G7LFFhdCshY8VUUIkQQQ8wG0eCPVuMr4cMEJbjIylZL22xb
+        AoaP+ggJYBANaqigiFQRsJIq0ZZHtNSA+JYQRMRYMcrDSIwaMai4yyLwNWfm3HPOTeZAXHlG
+        roJavZnl9YxOLfcn7tVOOFf3ODxpa3wnI+hL3qcyuvjRbRnd39RI0N3uCjnd9NkBaHvvC4yu
+        sHcS9EDXAzk92XLXL1mhabjYADQu24CfxllXKNd0vLqDaWrrf/ppvjmX7JanBiRlMOacFG2W
+        Pm7j/gBuaMyNGY9F5tqPXwVWcGJlEVBARCWgsfHnoAj4QyXVA5BrbICQLh0AnepsxIsAhHIq
+        CRX1+YmCECoKXa734SLGqRocXes2iziYMiFrV830jBmNugqAhBORd/wxIWKCWoF+f/1BiJYk
+        tRP1vt8gRXkBcg/ZpzwVVDQaeP9jCgNqMSq0fsGkrDDk/PhTJi1NoZqWZ7iEQ9Hw4N/pdzVq
+        /eWb8sepVeimO06SJqNax+j0ystRWbFvak2SCkIPyz8QpWCBbU6CbVZtm6O2zVHb5qirgKwO
+        oGxGq8tizGx8LM9aYnkDly0cBwzZTiD98fe7YNKz1QMwCDxgIcTUoeQ27f005bwMQ2Yex5i4
+        dN6iY00egCCuDiH3lQgcmcnkHWF5w39qESTUYWSU73SakhKzDrOskeX/s+EQqhGZd8OTpgzi
+        2Sw296BWZ56lMagQzf1VISZWn8nyjMXMpYv1SDcJ/RCpQCG3TJSTJiOTLbxK0i4QA0uHK6tx
+        6K20V+NKQm/Qs6owEoqjlDjKWfQzQSMgDAJ1MDlfaLQyUCj6jM+IEIEJEdsH28QIMzNLqaxg
+        p+udNyexPKI95VBgxLOVmy80DMdiIZaEUEd5f5+jpG3T0Ln2o4a+1+snYnbpkmN21L+8liCL
+        f6NwM2BDYHdBmULV1rOFjnVF7B3cHNm/+u2boEf6pYm1zanjJZ4nf/LPU2vXXX/Suiw+vHy8
+        gDNeaUo6m3/rU3OVxr3YuqfJx51SEyaOiY/GeRPzD8APS8ylAwAA
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-While the common case is that the dsi controller uses an internal dphy,
-accessed through the phy registers inside the dsi controller, there is
-also the possibility to use a separate dphy from a different vendor.
-
-One such case is the Rockchip px30 that uses a Innosilicon Mipi dphy,
-so add the support for handling such a constellation, including the pll
-also getting generated inside that external phy.
-
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- .../display/rockchip/dw_mipi_dsi_rockchip.txt |  7 ++-
- .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 54 ++++++++++++++++++-
- 2 files changed, 57 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-index ce4c1fc9116c..8b25156a9dcf 100644
---- a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-+++ b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-@@ -8,8 +8,9 @@ Required properties:
- 	      "rockchip,rk3399-mipi-dsi", "snps,dw-mipi-dsi".
- - reg: Represent the physical address range of the controller.
- - interrupts: Represent the controller's interrupt to the CPU(s).
--- clocks, clock-names: Phandles to the controller's pll reference
--  clock(ref) and APB clock(pclk). For RK3399, a phy config clock
-+- clocks, clock-names: Phandles to the controller's and APB clock(pclk)
-+  and either a pll reference clock(ref) (internal dphy) or pll clock(pll)
-+  (when connected to an external phy). For RK3399, a phy config clock
-   (phy_cfg) and a grf clock(grf) are required. As described in [1].
- - rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
- - ports: contain a port node with endpoint definitions as defined in [2].
-@@ -18,6 +19,8 @@ Required properties:
- - video port 1 for either a panel or subsequent encoder
- 
- Optional properties:
-+- phys: from general PHY binding: the phandle for the PHY device.
-+- phy-names: Should be "dphy" if phys references an external phy.
- - power-domains: a phandle to mipi dsi power domain node.
- - resets: list of phandle + reset specifier pairs, as described in [3].
- - reset-names: string reset name, must be "apb".
-diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-index bc073ec5c183..99ec625e0448 100644
---- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-@@ -12,6 +12,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/phy/phy.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- 
-@@ -223,6 +224,9 @@ struct dw_mipi_dsi_rockchip {
- 	bool is_slave;
- 	struct dw_mipi_dsi_rockchip *slave;
- 
-+	/* optional external dphy */
-+	struct phy *phy;
-+
- 	unsigned int lane_mbps; /* per lane */
- 	u16 input_div;
- 	u16 feedback_div;
-@@ -359,6 +363,9 @@ static int dw_mipi_dsi_phy_init(void *priv_data)
- 	struct dw_mipi_dsi_rockchip *dsi = priv_data;
- 	int ret, i, vco;
- 
-+	if (dsi->phy)
-+		return 0;
-+
- 	/*
- 	 * Get vco from frequency(lane_mbps)
- 	 * vco	frequency table
-@@ -467,6 +474,27 @@ static int dw_mipi_dsi_phy_init(void *priv_data)
- 	return ret;
- }
- 
-+static void dw_mipi_dsi_phy_power_on(void *priv_data)
-+{
-+	struct dw_mipi_dsi_rockchip *dsi = priv_data;
-+	int ret;
-+
-+	ret = phy_set_mode(dsi->phy, PHY_MODE_MIPI_DPHY);
-+	if (ret) {
-+		DRM_DEV_ERROR(dsi->dev, "failed to set phy mode: %d\n", ret);
-+		return;
-+	}
-+
-+	phy_power_on(dsi->phy);
-+}
-+
-+static void dw_mipi_dsi_phy_power_off(void *priv_data)
-+{
-+	struct dw_mipi_dsi_rockchip *dsi = priv_data;
-+
-+	phy_power_off(dsi->phy);
-+}
-+
- static int
- dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
- 			  unsigned long mode_flags, u32 lanes, u32 format,
-@@ -504,9 +532,21 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
- 				      "DPHY clock frequency is out of range\n");
- 	}
- 
--	fin = clk_get_rate(dsi->pllref_clk);
- 	fout = target_mbps * USEC_PER_SEC;
- 
-+	/* an external phy does have a controllable pll clk */
-+	if (dsi->phy) {
-+		fout = clk_round_rate(dsi->pllref_clk, fout);
-+		clk_set_rate(dsi->pllref_clk, fout);
-+
-+		dsi->lane_mbps = target_mbps;
-+		*lane_mbps = dsi->lane_mbps;
-+
-+		return 0;
-+	}
-+
-+	fin = clk_get_rate(dsi->pllref_clk);
-+
- 	/* constraint: 5Mhz <= Fref / N <= 40MHz */
- 	min_prediv = DIV_ROUND_UP(fin, 40 * USEC_PER_SEC);
- 	max_prediv = fin / (5 * USEC_PER_SEC);
-@@ -561,6 +601,8 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
- 
- static const struct dw_mipi_dsi_phy_ops dw_mipi_dsi_rockchip_phy_ops = {
- 	.init = dw_mipi_dsi_phy_init,
-+	.power_on = dw_mipi_dsi_phy_power_on,
-+	.power_off = dw_mipi_dsi_phy_power_off,
- 	.get_lane_mbps = dw_mipi_dsi_get_lane_mbps,
- };
- 
-@@ -920,7 +962,15 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	dsi->pllref_clk = devm_clk_get(dev, "ref");
-+	/* try to get a possible external dphy */
-+	dsi->phy = devm_phy_optional_get(dev, "dphy");
-+	if (IS_ERR(dsi->phy)) {
-+		ret = PTR_ERR(dsi->phy);
-+		DRM_DEV_ERROR(dev, "failed to get mipi dphy: %d\n", ret);
-+		return ret;
-+	}
-+
-+	dsi->pllref_clk = devm_clk_get(dev, dsi->phy ? "pll" : "ref");
- 	if (IS_ERR(dsi->pllref_clk)) {
- 		ret = PTR_ERR(dsi->pllref_clk);
- 		DRM_DEV_ERROR(dev,
--- 
-2.23.0
-
+SGVsbG8gUm9iICYgQWxsLA0KDQpPbiBUdWUsIDIwMTktMTEtMDUgYXQgMjE6NDIgLTA2MDAsIFJv
+YiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUdWUsIE9jdCAyOSwgMjAxOSBhdCAwMjo0NzoyNlBNICsw
+MjAwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gVXNlIHByZWRlZmluZWQgTEVEIG5vZGUg
+bmFtZSB0byBtYXRjaCB0aGUgTEVEIG5vZGUgaW4gZHJpdmVyLg0KPiA+IA0KPiA+IEl0IHdvdWxk
+IGJlIG5pY2UgdG8gb2ZmbG9hZCBjb21tb24gTEVEIHByb3BlcnR5IHBhcnNpbmcgdG8NCj4gPiBM
+RUQgY29yZSBkcml2ZXIuIE9uZSBvZiB0aGUga2V5IHRoaW5ncyB0byBhbGxvdyB0aGlzIGlzIHNv
+bWVob3cNCj4gPiAncGFpcicgdGhlIExFRCBEVCBub2RlIHdpdGggTEVEIGRyaXZlciBpbml0aWFs
+aXphdGlvbiBkYXRhLg0KPiA+IA0KPiA+IFRoaXMgcGF0Y2ggdXNlcyBMRUQgbm9kZSBuYW1lIGFz
+IGEgJ2tleScgaW4gYSBzYW1lIGZhc2hpb24NCj4gPiBhcyByZWd1bGF0b3JzIGRvLiBUaGUgYW4z
+MDI1OWEgd2FzIHNlbGVjdGVkIGFzIGRlbW9uc3RyYXRpb24NCj4gPiBleGFtcGxlIGFuZCB0aGlz
+IGNoYW5nZSBtYXkgbm90IGJlIHJlYWxseSBmZWFzaWJsZSBmb3IgYW4zMDI1OWENCj4gPiBhcyBJ
+IGhhdmUgbm8gaWRlYSB3aGV0aGVyIHRoZSBleGlzdGluZyBEVHMgZm9yIGRldmljZXMgb3V0IHRo
+ZXJlDQo+ID4gaGF2ZSBzcGVjaWZpYyBub2RlIG5hbWVzIChvciBjYW4gYmUgY2hhbmdlZCkuIFRo
+aXMgc2VydmVycyBqdXN0DQo+ID4gYXMgYW4gZXhhbXBsZSB0byBpbml0aWF0ZSBkaXNjdXNzaW9u
+IGFzIHRvIGhvdyB3ZSBjb3VsZCBwYWlyIHRoZQ0KPiA+IGRyaXZlciBkYXRhIGFuZCBEVCBub2Rl
+Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRp
+bmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbGVkcy9sZWRzLWFuMzAyNTlhLnR4dCB8IDkNCj4gPiArKysrKy0tLS0N
+Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4g
+PiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xl
+ZHMvbGVkcy0NCj4gPiBhbjMwMjU5YS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbGVkcy9sZWRzLQ0KPiA+IGFuMzAyNTlhLnR4dA0KPiA+IGluZGV4IGNiZDgzMzkwNmIy
+Yi4uYmQxYTJkMTFhMGFkIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9sZWRzL2xlZHMtYW4zMDI1OWEudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvbGVkcy1hbjMwMjU5YS50eHQNCj4gPiBAQCAtOSw3
+ICs5LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgCS0gI2FkZHJlc3MtY2VsbHM6IE11
+c3QgYmUgMS4NCj4gPiAgCS0gI3NpemUtY2VsbHM6IE11c3QgYmUgMC4NCj4gPiAgDQo+ID4gLUVh
+Y2ggTEVEIGlzIHJlcHJlc2VudGVkIGFzIGEgc3ViLW5vZGUgb2YgdGhlIHBhbmFzb25pYyxhbjMw
+MjU5YQ0KPiA+IG5vZGUuDQo+ID4gK0VhY2ggTEVEIGlzIHJlcHJlc2VudGVkIGFzIGEgc3ViLW5v
+ZGUgb2YgdGhlIHBhbmFzb25pYyxhbjMwMjU5YQ0KPiA+IG5vZGUuIExFRCBub2Rlcw0KPiA+ICtt
+dXN0IGJlIG5hbWVkIGFzIGxlZDEgbGVkMiBhbmQgbGVkMy4NCj4gPiAgDQo+ID4gIFJlcXVpcmVk
+IHN1Yi1ub2RlIHByb3BlcnRpZXM6DQo+ID4gIAktIHJlZzogUGluIHRoYXQgdGhlIExFRCBpcyBj
+b25uZWN0ZWQgdG8uIE11c3QgYmUgMSwgMiwgb3IgMy4NCj4gPiBAQCAtMzQsMjAgKzM1LDIwIEBA
+IGxlZC1jb250cm9sbGVyQDMwIHsNCj4gPiAgCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICAJ
+I3NpemUtY2VsbHMgPSA8MD47DQo+ID4gIA0KPiA+IC0JbGVkQDEgew0KPiA+ICsJbGVkMSB7DQo+
+ID4gIAkJcmVnID0gPDE+Ow0KPiANCj4gVGhpcyBpcyB3cm9uZy4gcmVnIHJlcXVpcmVzIGEgdW5p
+dC1hZGRyZXNzIGFuZCB2aWNlLXZlcnNhLg0KDQpSaWdodC4NCg0KSSdkIGJlIGludGVyZXN0ZWQg
+dG8ga25vdyBob3cgdXNpbmcgbm9kZSBuYW1lKHMpIHRvIG1hdGNoIHRoZSBkcml2ZXINCmRhdGEg
+KGxpa2UgcmVndWxhdG9ycyBkbykgaXMgc2VlbiBpbiBnZW5lcmFsPyBJcyB0aGlzIGEgYmFkIGlk
+ZWEgZm9yDQpMRURzPyBXb3VsZCBpdCBiZSBiZXR0ZXIgdG8gaGF2ZSBhIGxlZHMtY29tcGF0aWJs
+ZSAobGlrZSB3ZSBoYWQNCnJlZ3VsYXRvci1jb21wYXRpYmxlIGJlZm9yZSk/DQoNCklmIG5vZGUg
+bmFtZXMgY2FuIGJlIHVzZWQgLSB3b3VsZA0KDQoJbGVkMUAxIHsNCg0KCX07DQoNCglsZWQyQDIg
+ew0KDQoJfTsNCgkuLi4gZG8/DQoNClVzaW5nIG5vZGUgbmFtZXMgYXMga2V5IHJlcXVpcmVzIHRo
+ZW0gdG8gYmUgdW5pcXVlLiBPdGhlciBvcHRpb24gY291bGQNCmJlIGRvaW5nIHRoZSBzZWFyY2gg
+YmFzZWQgb24gbm9kZSBuYW1lIGFuZCB1bml0LWFkZHJlc3MgY29tYmluYXRpb24gLSANCmJ1dCBp
+ZiB1bml0LWFkZHJlc3MgZGVwZW5kcyBvbiBib2FyZCB0aGUgbGVkIGlzIHBsYWNlZCAtIHRoZW4g
+ZHJpdmVyDQptaWdodCBub3Qga25vdyBpdC4gU2hvdWxkIEkgY29udmVydCB0aGUgUkZDIHRvIGlu
+dHJvZHVjZSBhbmQgdXNlIGxlZC0NCmNvbXBhdGlibGU/DQoNCj4gPiAgCQlsaW51eCxkZWZhdWx0
+LXRyaWdnZXIgPSAiaGVhcnRiZWF0IjsNCj4gPiAgCQlmdW5jdGlvbiA9IExFRF9GVU5DVElPTl9J
+TkRJQ0FUT1I7DQo+ID4gIAkJY29sb3IgPSA8TEVEX0NPTE9SX0lEX1JFRD47DQo+ID4gIAl9Ow0K
+PiA+ICANCj4gPiAtCWxlZEAyIHsNCj4gPiArCWxlZDIgew0KPiA+ICAJCXJlZyA9IDwyPjsNCj4g
+PiAgCQlmdW5jdGlvbiA9IExFRF9GVU5DVElPTl9JTkRJQ0FUT1I7DQo+ID4gIAkJY29sb3IgPSA8
+TEVEX0NPTE9SX0lEX0dSRUVOPjsNCj4gPiAgCX07DQo+ID4gIA0KPiA+IC0JbGVkQDMgew0KPiA+
+ICsJbGVkMyB7DQo+ID4gIAkJcmVnID0gPDM+Ow0KPiA+ICAJCWZ1bmN0aW9uID0gTEVEX0ZVTkNU
+SU9OX0lORElDQVRPUjsNCj4gPiAgCQljb2xvciA9IDxMRURfQ09MT1JfSURfQkxVRT47DQo+ID4g
+LS0gDQo+ID4gMi4yMS4wDQo+ID4gDQo+ID4gDQo+ID4gLS0gDQo+ID4gTWF0dGkgVmFpdHRpbmVu
+LCBMaW51eCBkZXZpY2UgZHJpdmVycw0KPiA+IFJPSE0gU2VtaWNvbmR1Y3RvcnMsIEZpbmxhbmQg
+U1dEQw0KPiA+IEtpdmloYXJqdW5sZW5ra2kgMUUNCj4gPiA5MDIyMCBPVUxVDQo+ID4gRklOTEFO
+RA0KPiA+IA0KPiA+IH5+fiAiSSBkb24ndCB0aGluayBzbywiIHNhaWQgUmVuZSBEZXNjYXJ0ZXMu
+IEp1c3QgdGhlbiBoZSB2YW5pc2hlZA0KPiA+IH5+fg0KPiA+IFNpbW9uIHNheXMgLSBpbiBMYXRp
+biBwbGVhc2UuDQo+ID4gfn5+ICJub24gY29naXRvIG1lIiBkaXhpdCBSZW5lIERlc2NhcnRlLCBk
+ZWluZGUgZXZhbmVzY2F2aXQgfn5+DQo+ID4gVGhhbmtzIHRvIFNpbW9uIEdsYXNzIGZvciB0aGUg
+dHJhbnNsYXRpb24gPV0gDQoNCg==
