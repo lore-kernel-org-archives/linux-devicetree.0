@@ -2,113 +2,283 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C939C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650ADC5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4619621848
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573042078;
-	bh=QfG9VKYVm3uABcMyvzBKS82KRq/p1UCgZOMJNvPhTBQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B+rCvhBWuomdbJAKtnsmtRNvIjrrFc3f9HlBx975/d8rNZGAh4xFe//F5MAmnawtC
-	 pfskN0hwsAR5MdHs1CH19dpz2mhw+gEffAnZq1au3tncMtSYteEJRNxoIPio+Oajhb
-	 tSi4WfbXLKcOPYDHFLWJvEpDvOjEfSddPxYm4T9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3DAF7217D7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfKFMH6 (ORCPT
+        id S1729286AbfKFMY6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:07:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
+        Wed, 6 Nov 2019 07:24:58 -0500
+Received: from mga14.intel.com ([192.55.52.115]:33358 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728646AbfKFMH5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:07:57 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67977214D8;
-        Wed,  6 Nov 2019 12:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573042076;
-        bh=QfG9VKYVm3uABcMyvzBKS82KRq/p1UCgZOMJNvPhTBQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zhbAxfhYabDD5iG+dB1Qv3ho2CIj/DA04G8cxDeLXbMOpYWoLhu0kmtOTPiSQ/4VO
-         B7ikXumsyENd7y/58YKxM4jb3OzD2EouNeBgA/BuyjJhCJFFjZDM+LRRinQ8NS05ab
-         dfwWcS4Wu92ZJLH/+OATvrn4schgV1p+A91k6flw=
-Date:   Wed, 6 Nov 2019 13:07:54 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Harald Geyer <harald@ccbib.org>,
-        "Jared D . McNeill" <jmcneill@netbsd.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Emmanuel Vadot <manu@freebsd.org>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Re-add PMU node
-Message-ID: <20191106120754.GC8617@gilmour.lan>
-References: <20191105110651.217513-1-andre.przywara@arm.com>
+        id S1728716AbfKFMY5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 07:24:57 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 04:24:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
+   d="scan'208";a="402339963"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Nov 2019 04:24:53 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iSKMm-0002Vi-JG; Wed, 06 Nov 2019 14:24:52 +0200
+Date:   Wed, 6 Nov 2019 14:24:52 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v5 2/3] dwc: PCI: intel: PCIe RC controller driver
+Message-ID: <20191106122452.GA32742@smile.fi.intel.com>
+References: <cover.1572950559.git.eswara.kota@linux.intel.com>
+ <ac63d9856323555736c5b361612df3ee49b0f998.1572950559.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aT9PWwzfKXlsBJM1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105110651.217513-1-andre.przywara@arm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <ac63d9856323555736c5b361612df3ee49b0f998.1572950559.git.eswara.kota@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Nov 06, 2019 at 11:44:02AM +0800, Dilip Kota wrote:
+> Add support to PCIe RC controller on Intel Gateway SoCs.
+> PCIe controller is based of Synopsys DesignWare PCIe core.
+> 
+> Intel PCIe driver requires Upconfigure support, fast training
+> sequence and link speed configuration. So adding the respective
+> helper functions in the PCIe DesignWare framework.
+> It also programs hardware autonomous speed during speed
+> configuration so defining it in pci_regs.h.
 
---aT9PWwzfKXlsBJM1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+My comments below, though I may miss the discussion and comment on the settled
+things.
 
-Hi,
+> +config PCIE_INTEL_GW
+> +        bool "Intel Gateway PCIe host controller support"
+> +	depends on OF && (X86 || COMPILE_TEST)
+> +	select PCIE_DW_HOST
+> +	help
+> +          Say 'Y' here to enable PCIe Host controller support on Intel
+> +	  Gateway SoCs.
+> +	  The PCIe controller uses the DesignWare core plus Intel-specific
+> +	  hardware wrappers.
 
-On Tue, Nov 05, 2019 at 11:06:51AM +0000, Andre Przywara wrote:
-> As it was found recently, the Performance Monitoring Unit (PMU) on the
-> Allwinner A64 SoC was not generating (the right) interrupts. With the
-> SPI numbers from the manual the kernel did not receive any overflow
-> interrupts, so perf was not happy at all.
-> It turns out that the numbers were just off by 4, so the PMU interrupts
-> are from 148 to 151, not from 152 to 155 as the manual describes.
->
-> This was found by playing around with U-Boot, which typically does not
-> use interrupts, so the GIC is fully available for experimentation:
-> With *every* PPI and SPI enabled, an overflowing PMU cycle counter was
-> found to set a bit in one of the GICD_ISPENDR registers, with careful
-> counting this was determined to be number 148.
->
-> Tested with perf record and perf top on a Pine64-LTS. Also tested with
-> tasksetting to every core to confirm the assignment between IRQs and
-> cores.
->
-> This somewhat "revert-fixes" commit ed3e9406bcbc ("arm64: dts: allwinner:
-> a64: Drop PMU node").
->
-> Fixes: 34a97fcc71c2 ("arm64: dts: allwinner: a64: Add PMU node")
-> Fixes: ed3e9406bcbc ("arm64: dts: allwinner: a64: Drop PMU node")
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Above has indentation issues.
 
-Applied, thanks for figuring this out!
-Maxime
+> +void dw_pcie_upconfig_setup(struct dw_pcie *pci)
+> +{
+> +	u32 val;
+> +
+> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
+> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL,
+> +			   val | PORT_MLTI_UPCFG_SUPPORT);
 
---aT9PWwzfKXlsBJM1
-Content-Type: application/pgp-signature; name="signature.asc"
+Why not to use similar pattern as below?
 
------BEGIN PGP SIGNATURE-----
+	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
+	val |= PORT_MLTI_UPCFG_SUPPORT;
+	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcK3mgAKCRDj7w1vZxhR
-xTd+APwKpOxpqefT67CJjNitd13UiHVtbg6+p06GY1iJTZ3LZQEA2lSDhu1e8qmi
-bprwmvdut5IsfcdKSQ48CGx5Y/ba9gc=
-=Ify8
------END PGP SIGNATURE-----
+> +}
 
---aT9PWwzfKXlsBJM1--
+> +void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+> +{
+> +	u32 reg, val;
+> +	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +
+> +	reg = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCTL2);
+> +	reg &= ~PCI_EXP_LNKCTL2_TLS;
+> +
+> +	switch (pcie_link_speed[link_gen]) {
+> +	case PCIE_SPEED_2_5GT:
+> +		reg |= PCI_EXP_LNKCTL2_TLS_2_5GT;
+
+> +	break;
+
+Is this a style or indentation issue?
+
+> +	case PCIE_SPEED_5_0GT:
+> +		reg |= PCI_EXP_LNKCTL2_TLS_5_0GT;
+> +	break;
+
+Ditto.
+
+> +	case PCIE_SPEED_8_0GT:
+> +		reg |= PCI_EXP_LNKCTL2_TLS_8_0GT;
+
+> +	break;
+
+Ditto.
+
+> +	case PCIE_SPEED_16_0GT:
+> +		reg |= PCI_EXP_LNKCTL2_TLS_16_0GT;
+
+> +	break;
+
+Ditto.
+
+> +	default:
+
+> +	/* Use hardware capability */
+
+Ditto.
+
+> +		val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
+> +		reg |= FIELD_PREP(PCI_EXP_LNKCTL2_TLS, val);
+
+> +	break;
+
+Ditto.
+
+> +	}
+> +
+> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCTL2, reg);
+> +}
+
+> +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
+> +{
+> +	u32 val;
+> +
+> +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+
+> +	val &= ~PORT_LOGIC_N_FTS;
+> +	val |= n_fts;
+
+What if somebody supplies bits outside of the mask? I guess you need to apply
+proper masks to both values.
+
+> +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> +}
+
+> +#define PORT_LOGIC_N_FTS		GENMASK(7, 0)
+
+Shouldn't you use _MASK suffix here?
+
+> +#define BUS_IATU_OFFS			SZ_256M
+
+Perhaps less cryptic name?
+
+> +#define RST_INTRVL_DFT_MS		100
+
+Less cryptic name would be
+
+	RESET_INTERVAL_MS
+
+
+> +static void pcie_update_bits(void __iomem *base, u32 mask, u32 val, u32 ofs)
+> +{
+> +	u32 old, new;
+> +
+> +	old = readl(base + ofs);
+
+> +	new = old & ~mask;
+> +	new |= val & mask;
+
+Standard pattern
+
+	new = (old & ~mask) | (val & mask);
+
+And actually you may re-use 'val' variable and get rid of 'new' one.
+
+> +
+> +	if (new != old)
+> +		writel(new, base + ofs);
+> +}
+
+> +static int intel_pcie_get_resources(struct platform_device *pdev)
+> +{
+
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+
+> +
+
+No need to have this blank line.
+
+> +	pci->dbi_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+
+> +
+
+Ditto.
+
+> +	lpp->app_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(lpp->app_base))
+> +		return PTR_ERR(lpp->app_base);
+
+> +	return 0;
+> +}
+
+> +	/* Read PMC status and wait for falling into L2 link state */
+> +	ret = readl_poll_timeout(lpp->app_base + PCIE_APP_PMC, value,
+
+> +				 (value & PCIE_APP_PMC_IN_L2), 20,
+
+Too many parentheses.
+
+> +				 jiffies_to_usecs(5 * HZ));
+
+> +	if (!lpp->pcie_cap_ofst) {
+> +		lpp->pcie_cap_ofst = dw_pcie_find_capability(&lpp->pci,
+> +							     PCI_CAP_ID_EXP);
+> +	}
+
+Wouldn't be slightly better to have something like
+
+	ret = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
+	if (ret >= 0 && !lpp->pcie_cap_ofst)
+		lpp->pcie_cap_ofst = ret;
+
+?
+
+(It can be expanded to print error / warning messages if needed)
+
+> +	return ret;
+> +}
+
+> +	platform_set_drvdata(pdev, lpp);
+
+I think it makes sense to setup at the end of the function (before dev_info()
+call).
+
+> +	data = device_get_match_data(dev);
+
+Perhaps
+	if (!data)
+		return -ENODEV; // -EINVAL?
+
+> +	/*
+> +	 * Intel PCIe doesn't configure IO region, so set viewport
+> +	 * to not to perform IO region access.
+> +	 */
+> +	pci->num_viewport = data->num_viewport;
+
+Missed blank line?
+
+> +	dev_info(dev, "Intel PCIe Root Complex Port init done\n");
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
