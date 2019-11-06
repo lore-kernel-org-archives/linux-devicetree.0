@@ -2,129 +2,141 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D66C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D263C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB8CB217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5321F217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 10:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbfKFK0r (ORCPT
+        id S1725906AbfKFK3Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 05:26:47 -0500
-Received: from mx.socionext.com ([202.248.49.38]:44272 "EHLO mx.socionext.com"
+        Wed, 6 Nov 2019 05:29:24 -0500
+Received: from mga05.intel.com ([192.55.52.43]:52551 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbfKFK0q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 05:26:46 -0500
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 06 Nov 2019 19:26:45 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 7A55E180095;
-        Wed,  6 Nov 2019 19:26:45 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 6 Nov 2019 19:26:55 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id E52701A04FC;
-        Wed,  6 Nov 2019 19:26:44 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 1/6] phy: socionext: Use devm_platform_ioremap_resource()
-Date:   Wed,  6 Nov 2019 19:26:14 +0900
-Message-Id: <1573035979-32200-2-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573035979-32200-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1573035979-32200-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1725868AbfKFK3X (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 05:29:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 02:29:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
+   d="scan'208";a="200674745"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Nov 2019 02:29:23 -0800
+Received: from [10.226.38.65] (rtanwar-mobl.gar.corp.intel.com [10.226.38.65])
+        by linux.intel.com (Postfix) with ESMTP id 7B6EC5802B9;
+        Wed,  6 Nov 2019 02:29:20 -0800 (PST)
+Subject: Re: [PATCH v3 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
+References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
+ <f91001d8c5f0cb2860fda720d0cb6298a4856dd3.1572926608.git.rahul.tanwar@linux.intel.com>
+ <20191105212941.GA8677@bogus>
+ <e7d1d72e-54d7-63ae-0eae-685a207d36ef@linux.intel.com>
+Message-ID: <f58ee4e0-1ffc-b5c4-f9eb-f14b01beb696@linux.intel.com>
+Date:   Wed, 6 Nov 2019 18:29:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <e7d1d72e-54d7-63ae-0eae-685a207d36ef@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/phy/socionext/phy-uniphier-pcie.c   | 4 +---
- drivers/phy/socionext/phy-uniphier-usb3hs.c | 4 +---
- drivers/phy/socionext/phy-uniphier-usb3ss.c | 4 +---
- 3 files changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/phy/socionext/phy-uniphier-pcie.c b/drivers/phy/socionext/phy-uniphier-pcie.c
-index 93ffbd2..25d1d9d 100644
---- a/drivers/phy/socionext/phy-uniphier-pcie.c
-+++ b/drivers/phy/socionext/phy-uniphier-pcie.c
-@@ -163,7 +163,6 @@ static int uniphier_pciephy_probe(struct platform_device *pdev)
- 	struct phy_provider *phy_provider;
- 	struct device *dev = &pdev->dev;
- 	struct regmap *regmap;
--	struct resource *res;
- 	struct phy *phy;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -176,8 +175,7 @@ static int uniphier_pciephy_probe(struct platform_device *pdev)
- 
- 	priv->dev = dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(dev, res);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
-diff --git a/drivers/phy/socionext/phy-uniphier-usb3hs.c b/drivers/phy/socionext/phy-uniphier-usb3hs.c
-index 50f379f..1d3f9e8 100644
---- a/drivers/phy/socionext/phy-uniphier-usb3hs.c
-+++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
-@@ -309,7 +309,6 @@ static int uniphier_u3hsphy_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct uniphier_u3hsphy_priv *priv;
- 	struct phy_provider *phy_provider;
--	struct resource *res;
- 	struct phy *phy;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -322,8 +321,7 @@ static int uniphier_u3hsphy_probe(struct platform_device *pdev)
- 		    priv->data->nparams > MAX_PHY_PARAMS))
- 		return -EINVAL;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(dev, res);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
-diff --git a/drivers/phy/socionext/phy-uniphier-usb3ss.c b/drivers/phy/socionext/phy-uniphier-usb3ss.c
-index ec231e4..05e40a2 100644
---- a/drivers/phy/socionext/phy-uniphier-usb3ss.c
-+++ b/drivers/phy/socionext/phy-uniphier-usb3ss.c
-@@ -215,7 +215,6 @@ static int uniphier_u3ssphy_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct uniphier_u3ssphy_priv *priv;
- 	struct phy_provider *phy_provider;
--	struct resource *res;
- 	struct phy *phy;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -228,8 +227,7 @@ static int uniphier_u3ssphy_probe(struct platform_device *pdev)
- 		    priv->data->nparams > MAX_PHY_PARAMS))
- 		return -EINVAL;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(dev, res);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
--- 
-2.7.4
+On 6/11/2019 6:24 PM, Tanwar, Rahul wrote:
+> Hi Rob,
+>
+> Thanks for the feedback.
+>
+> On 6/11/2019 5:29 AM, Rob Herring wrote:
+>>> +      bias-pull-up:
+>>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>>> +        description: Specifies pull-up configuration.
+>> Isn't this boolean?
+>>
+>>> +
+>>> +      bias-pull-down:
+>>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>>> +        description: Specifies pull-down configuration.
+>> And this?
+>>
+>> Though looks like sometimes it has a value? Pull strength I guess.
+>>
+>>> +
+>>> +      drive-strength:
+>>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>>> +        description: Enables driver-current.
+>>> +
+>>> +      slew-rate:
+>>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>>> +        description: Enables slew-rate.
+>>> +
+>>> +      drive-open-drain:
+>>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>>> +        description: Specifies open-drain configuration.
+>> boolean?
+>>
+>>> +
+>>> +      output-enable:
+>>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>>> +        description: Specifies if the pin is to be configured as output.
+>> boolean?
+>>
+>> But really, all of these should have a common schema defining the types 
+>> and only put any additional constraints here.
+> Yes, you are right. These are all boolean types.
+> All these are standard properties & we are using them with no
+> additional constraintsi.e conforming to how they are already
+> documented in pinctrl-bindings.txt. Shall ijust omit documenting
+> these properties here in driver bindings ?
+>
+>>> +
+>>> +examples:
+>>> +  # Pinmux controller node
+>>> +  - |
+>>> +    pinctrl: pinctrl@e2880000 {
+>>> +          compatible = "intel,lgm-pinctrl";
+>>> +          reg = <0xe2880000 0x100000>;
+>>> +
+>>> +          # Client device subnode
+>>> +          uart0:uart0 {
+>> space              ^
+> Just to be sure, you mean space misalignment at below
+> line <65>; /* UART_TX0 */ ?Or is it something else ?
+
+Please ignore this query of mine. I now realize  that you meant space
+between alias name & node name i.e. uart0: uart0 {. I will fix it in
+nextpatch version. Thanks.
+
+>>> +                pins = <64>, /* UART_RX0 */
+>>> +                             <65>; /* UART_TX0 */
+>>> +                function = "CONSOLE_UART0";
+>>> +                pinmux = <1>,
+>>> +                         <1>;
+>>> +                groups = "CONSOLE_UART0";
+>>> +          };
+>>> +    };
+>>> +
+>>> +...
+>>> -- 
+>>> 2.11.0
+>>>
+> Regards,
+> Rahul
 
