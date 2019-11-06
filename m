@@ -7,85 +7,79 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F689C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A009C5DF64
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 297482077B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8100222C2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 03:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573010894;
-	bh=klzUrztVAl3UamjupliqgwKiRbL2zpv78QeK1CPbV8A=;
+	s=default; t=1573010961;
+	bh=Jd1gywFI6MaDu5fm/bG16Z5n4CUhtHX3XxaXMmQA+0w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tuoyRo9yBrOkCse/HVZGrIe623UHqy3AHEsdzGpPpcGHoRxaqCN0uReeUHk9Xm97f
-	 ToGqQGM7Ir74QJAqUiBMnPIMGWzH0qn192KWTnUZprqCLJidCGVAKAFVWGII+PdYhF
-	 TN7I+IJ49Wz5Bns82oFlLVUwpcI2QsTQKkOVKaY0=
+	b=ofxu3sZtZIZhuxeUEE8HIZb2VS7Oe18Rdw9TJwh8kscV3h/wh1w2k27gGm1/VHsCD
+	 vmatTRteW0xgjSc5NwSuYS7F3RtOySG3weltDnDO7+SdSxwgbohd4sJ/qa8oSwN/P3
+	 CAYrPyGpqBxTGsgVxJpaKC2r9lerv5JOyOjSpDfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387501AbfKFD2N (ORCPT
+        id S1726608AbfKFD3U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:28:13 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38928 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730655AbfKFD2N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 22:28:13 -0500
-Received: by mail-ot1-f68.google.com with SMTP id e17so11095048otk.6;
-        Tue, 05 Nov 2019 19:28:12 -0800 (PST)
+        Tue, 5 Nov 2019 22:29:20 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43754 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfKFD3U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 22:29:20 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l20so7605843oie.10;
+        Tue, 05 Nov 2019 19:29:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O0oTid0SW10XwZb1RF+BrVVIvnOR1wYdO6Pj1OAvnFY=;
-        b=rM7ZfqNACRtWroo00blzihto1nv27ttoBG1XtZ2fonRNzv7wF6jho2APRDuckeILpl
-         +8pDvQb3/vTOgtDNjF7Ml+A/Taefe3XjBgTyBKx1Gos2HiPua4F2qDjeA5rJf2qrfGgA
-         FiINv1eKe3A3urrY28TTbtPXQJuJsntHD9I3EUgIJo9gE9Bu8uo312z8wHwcSJzrTo0S
-         XFcsqPB98kSxOVVK/gnlXDSZk/oXwEo5jOV6iiONRD8udqu9vPgM21h1DWRmsu7AXx5U
-         o3UXJ5piPxdKX4k5LKl/HWfuG5XgHKJizZZbst9sje6gnXKIA9GgHky2A4bNL9WeJXFL
-         +7Fg==
-X-Gm-Message-State: APjAAAWgNrrexDFCHmGpV3ljN9Gc0W+m1K8LZWJ5qe5m+k5j6uBWz/Fg
-        AhOwaxs2sz9dnBIFwhTfZA==
-X-Google-Smtp-Source: APXvYqzvmFAIynZbAa+Lau3VpEysLExen+Ata4ibdUunVPAd4NoDWn0KHV+ZffT5oKe/kQcLjtQNQw==
-X-Received: by 2002:a9d:6141:: with SMTP id c1mr152751otk.117.1573010892175;
-        Tue, 05 Nov 2019 19:28:12 -0800 (PST)
+        bh=YqC9TqSkya1o/KJL8zpucATnY1j4nIoBdkUAmUprxs0=;
+        b=jrSsG8cKtzmLfjTWruSw+auCf9NPizBfqhQiIkhVgxCyhV9OT/SM2asnOTvnpu6dsw
+         sIYd9ut8nrlO8f2VWuyo8H1uZHAwHKINb4pIhE6uD4WwXLVSUGlnSorvUVt7crlcwfYb
+         uJnKGj4Us20r1KrU6fDJWFT93ibT3lo0HjWc8y660bFLe79CV7WNu2crUeHouX/9ziSl
+         qcPywMz+N+LVyTA5PieXr7i1yzHEtPHGDCXi0W3OlDrH9+wPOgFfsNGuRLFT/vzX1cLK
+         /0y+QRL0nGRaeCrdDLEhXd96OB1FNf2YAZsQpcXG4lD86DOs0MYPVu/8VZT67xmFw5iE
+         q4BA==
+X-Gm-Message-State: APjAAAWUTzz2vCjK/mujcDbmMPkoUNWhow7bxxALyhq1EGS28mTR3mMp
+        nunX6DJ8l3IJsSpl0Lzoyw==
+X-Google-Smtp-Source: APXvYqx/nF0CpBAElSmOBIYblIaOc2Wf6Sp7yrh2qYVI6M6XfnHyx1svrejcYxe9WS6YADmSZrE0LQ==
+X-Received: by 2002:aca:49c7:: with SMTP id w190mr285191oia.117.1573010959021;
+        Tue, 05 Nov 2019 19:29:19 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 100sm6852434otl.48.2019.11.05.19.28.11
+        by smtp.gmail.com with ESMTPSA id 88sm3097164otp.59.2019.11.05.19.29.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:28:11 -0800 (PST)
-Date:   Tue, 5 Nov 2019 21:28:11 -0600
+        Tue, 05 Nov 2019 19:29:18 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:29:17 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     krzk@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        vireshk@kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 3/3] dt-bindings: arm: samsung: Drop syscon compatible
- from  CHIPID binding
-Message-ID: <20191106032811.GA24162@bogus>
-References: <20191028152050.10220-1-s.nawrocki@samsung.com>
- <CGME20191028152100eucas1p2ed6bd2d53670c85f6bf550af0631a55a@eucas1p2.samsung.com>
- <20191028152050.10220-3-s.nawrocki@samsung.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     jic23@kernel.org, robh+dt@kernel.org, alexandre.torgue@st.com,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add max clock rate
+ property
+Message-ID: <20191106032917.GA25856@bogus>
+References: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
+ <1572279108-25916-2-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191028152050.10220-3-s.nawrocki@samsung.com>
+In-Reply-To: <1572279108-25916-2-git-send-email-fabrice.gasnier@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 28 Oct 2019 16:20:50 +0100, Sylwester Nawrocki wrote:
-> The "syscon" compatible string was introduced mainly to allow sharing
-> of the CHIPID IO region between multiple drivers. However, such sharing
-> can be also done without an additional compatible so remove "syscon".
+On Mon, 28 Oct 2019 17:11:47 +0100, Fabrice Gasnier wrote:
+> Add optional dt property to tune maximum desired analog clock rate.
 > 
-> Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
->  .../devicetree/bindings/arm/samsung/exynos-chipid.yaml         | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
