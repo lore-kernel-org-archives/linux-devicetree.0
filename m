@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36D9C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70794C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D91217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF3B218AE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732007AbfKFPVE (ORCPT
+        id S1732045AbfKFPVL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:21:04 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:51140 "EHLO inva021.nxp.com"
+        Wed, 6 Nov 2019 10:21:11 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:33548 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727231AbfKFPVE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:21:04 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B64B5200A3E;
-        Wed,  6 Nov 2019 16:21:01 +0100 (CET)
+        id S1732033AbfKFPVL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:21:11 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 203A91A0BBA;
+        Wed,  6 Nov 2019 16:21:08 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9DF8020096F;
-        Wed,  6 Nov 2019 16:21:01 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 13B501A0B8A;
+        Wed,  6 Nov 2019 16:21:08 +0100 (CET)
 Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D2F8E205EB;
-        Wed,  6 Nov 2019 16:21:00 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 4871D205EB;
+        Wed,  6 Nov 2019 16:21:07 +0100 (CET)
 From:   Mirela Rabulea <mirela.rabulea@nxp.com>
 To:     mchehab@kernel.org, shawnguo@kernel.org, robh+dt@kernel.org
 Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
@@ -41,9 +41,9 @@ Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
         niklas.soderlund+renesas@ragnatech.se,
         dafna.hirschfeld@collabora.com,
         Mirela Rabulea <mirela.rabulea@nxp.com>
-Subject: [PATCH 1/5] media: v4l: Add packed YUV444 24bpp pixel format
-Date:   Wed,  6 Nov 2019 17:20:29 +0200
-Message-Id: <1573053633-21437-2-git-send-email-mirela.rabulea@nxp.com>
+Subject: [PATCH 3/5] media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
+Date:   Wed,  6 Nov 2019 17:20:31 +0200
+Message-Id: <1573053633-21437-4-git-send-email-mirela.rabulea@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
 References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
@@ -53,99 +53,103 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The added format is V4L2_PIX_FMT_YUV24, this is a packed
-YUV 4:4:4 format, with 8 bits for each component, 24 bits
-per sample.
-
-This format is used by the i.MX 8QuadMax and i.MX 8DualXPlus/8QuadXPlus
-JPEG encoder/decoder.
+Add bindings documentation for i.MX8QXP/QM JPEG decoder & encoder driver.
 
 Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 ---
- Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst | 37 +++++++++++++++++++++-
- drivers/media/v4l2-core/v4l2-ioctl.c               |  1 +
- include/uapi/linux/videodev2.h                     |  1 +
- 3 files changed, 38 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/media/imx8-jpeg.yaml       | 83 ++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
 
-diff --git a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-index 41b60fa..5750ff6 100644
---- a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-+++ b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
-@@ -17,7 +17,8 @@ Description
- ===========
- 
- Similar to the packed RGB formats these formats store the Y, Cb and Cr
--component of each pixel in one 16 or 32 bit word.
-+component of each pixel next to each other in memory. They occupy 16, 24 or 32
-+bits per pixel.
- 
- 
- .. raw:: latex
-@@ -157,6 +158,40 @@ component of each pixel in one 16 or 32 bit word.
- 
-       -  :cspan:`15`
- 
-+    * .. _V4L2-PIX-FMT-YUV24:
+diff --git a/Documentation/devicetree/bindings/media/imx8-jpeg.yaml b/Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+new file mode 100644
+index 0000000..2df538d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/imx8-jpeg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+      - ``V4L2_PIX_FMT_YUV24``
-+      - 'YUV3'
++title: i.MX8QXP/QM JPEG decoder/encoder Device Tree Bindings
 +
-+      - Y'\ :sub:`7`
-+      - Y'\ :sub:`6`
-+      - Y'\ :sub:`5`
-+      - Y'\ :sub:`4`
-+      - Y'\ :sub:`3`
-+      - Y'\ :sub:`2`
-+      - Y'\ :sub:`1`
-+      - Y'\ :sub:`0`
++maintainers:
++  - Mirela Rabulea <mirela.rabulea@nxp.com>
 +
-+      - Cb\ :sub:`7`
-+      - Cb\ :sub:`6`
-+      - Cb\ :sub:`5`
-+      - Cb\ :sub:`4`
-+      - Cb\ :sub:`3`
-+      - Cb\ :sub:`2`
-+      - Cb\ :sub:`1`
-+      - Cb\ :sub:`0`
++description: |-
++  The JPEG decoder/encoder present in.MXQXP/QM SoC is an
++  ISO/IEC 10918-1 JPEG standard compliant decoder/encoder, for Baseline
++  and Extended Sequential DCT modes.
 +
-+      - Cr\ :sub:`7`
-+      - Cr\ :sub:`6`
-+      - Cr\ :sub:`5`
-+      - Cr\ :sub:`4`
-+      - Cr\ :sub:`3`
-+      - Cr\ :sub:`2`
-+      - Cr\ :sub:`1`
-+      - Cr\ :sub:`0`
++properties:
++  compatible:
++    items:
++      - enum:
++            # JPEG decoder
++          - fsl,imx8-jpgdec
++            # JPEG encoder
++          - fsl,imx8-jpgenc
 +
-+      -  :cspan:`7`
++  reg:
++    maxItems: 1
 +
-     * .. _V4L2-PIX-FMT-YUV32:
- 
-       - ``V4L2_PIX_FMT_YUV32``
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 315ac12..9973fdf 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1246,6 +1246,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
- 	case V4L2_PIX_FMT_YUV444:	descr = "16-bit A/XYUV 4-4-4-4"; break;
- 	case V4L2_PIX_FMT_YUV555:	descr = "16-bit A/XYUV 1-5-5-5"; break;
- 	case V4L2_PIX_FMT_YUV565:	descr = "16-bit YUV 5-6-5"; break;
-+	case V4L2_PIX_FMT_YUV24:	descr = "24-bit YUV 4:4:4 8-8-8"; break;
- 	case V4L2_PIX_FMT_YUV32:	descr = "32-bit A/XYUV 8-8-8-8"; break;
- 	case V4L2_PIX_FMT_AYUV32:	descr = "32-bit AYUV 8-8-8-8"; break;
- 	case V4L2_PIX_FMT_XYUV32:	descr = "32-bit XYUV 8-8-8-8"; break;
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index f98bbcc..8a1d9b4 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -588,6 +588,7 @@ struct v4l2_pix_format {
- #define V4L2_PIX_FMT_YUV444  v4l2_fourcc('Y', '4', '4', '4') /* 16  xxxxyyyy uuuuvvvv */
- #define V4L2_PIX_FMT_YUV555  v4l2_fourcc('Y', 'U', 'V', 'O') /* 16  YUV-5-5-5     */
- #define V4L2_PIX_FMT_YUV565  v4l2_fourcc('Y', 'U', 'V', 'P') /* 16  YUV-5-6-5     */
-+#define V4L2_PIX_FMT_YUV24   v4l2_fourcc('Y', 'U', 'V', '3') /* 24  YUV-8-8-8     */
- #define V4L2_PIX_FMT_YUV32   v4l2_fourcc('Y', 'U', 'V', '4') /* 32  YUV-8-8-8-8   */
- #define V4L2_PIX_FMT_AYUV32  v4l2_fourcc('A', 'Y', 'U', 'V') /* 32  AYUV-8-8-8-8  */
- #define V4L2_PIX_FMT_XYUV32  v4l2_fourcc('X', 'Y', 'U', 'V') /* 32  XYUV-8-8-8-8  */
++  interrupts:
++    description: |
++      There are 4 slots available in the IP
++      If a certain slot is used, it should have an associated interrupt
++    minItems: 1               # At least one slot should be available
++    maxItems: 4               # The IP has 4 slots available for use
++
++  power-domains:
++    description:
++      List of phandle and PM domain specifier as documented in
++      Documentation/devicetree/bindings/power/power_domain.txt
++    minItems: 2               # Wrapper and 1 slot
++    maxItems: 5               # Wrapper and 4 slots
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - power-domains
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/firmware/imx/rsrc.h>
++
++    jpegdec: jpegdec@58400000 {
++        compatible = "fsl,imx8-jpgdec";
++        reg = <0x58400000 0x00050000 >;
++        interrupts = <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
++        power-domains = <&pd IMX_SC_R_MJPEG_DEC_MP>,
++                        <&pd IMX_SC_R_MJPEG_DEC_S0>,
++                        <&pd IMX_SC_R_MJPEG_DEC_S1>,
++                        <&pd IMX_SC_R_MJPEG_DEC_S2>,
++                        <&pd IMX_SC_R_MJPEG_DEC_S3>;
++    };
++
++    jpegenc: jpegenc@58450000 {
++        compatible = "fsl,imx8-jpgenc";
++        reg = <0x58450000 0x00050000 >;
++        interrupts = <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>;
++        power-domains = <&pd IMX_SC_R_MJPEG_ENC_MP>,
++                        <&pd IMX_SC_R_MJPEG_ENC_S0>,
++                        <&pd IMX_SC_R_MJPEG_ENC_S1>,
++                        <&pd IMX_SC_R_MJPEG_ENC_S2>,
++                        <&pd IMX_SC_R_MJPEG_ENC_S3>;
++    };
++...
 -- 
 2.7.4
 
