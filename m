@@ -2,346 +2,162 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE76C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F42C5DF64
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBBC20869
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:44:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lcOc/J2f"
+	by mail.kernel.org (Postfix) with ESMTP id 7F47D21848
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 12:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfKFMoc (ORCPT
+        id S1728716AbfKFM4D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:44:32 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42156 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727652AbfKFMob (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 07:44:31 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6CiSpG058829;
-        Wed, 6 Nov 2019 06:44:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573044268;
-        bh=XWVHieXyvqTkLk196SYUlUYctsSQgy1G9D4/WMpYVIY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lcOc/J2frFZrgrAIVWwvRVE2W7L8IXpzmVHU1kGST6Wb91WczxATl7Wag1XpJwL5v
-         jvGrz29fFn/ZVBEj+GmHwe+feocnc3tpg5Q6zyV1XJKvmlfG+NvgafBC1cO7YNtuhZ
-         Yfm+dSUh3lHSRX4BGD3SBbdICnSOAWYYR5i0A8s8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6CiS2f063000
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Nov 2019 06:44:28 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 06:44:12 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 06:44:11 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6CiNqo006624;
-        Wed, 6 Nov 2019 06:44:24 -0600
-Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc
- bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <s-anna@ti.com>,
-        <devicetree@vger.kernel.org>
-References: <20191028124238.19224-1-t-kristo@ti.com>
- <20191028124238.19224-2-t-kristo@ti.com> <20191106032727.GA21162@bogus>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
-Date:   Wed, 6 Nov 2019 14:44:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 07:56:03 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:61284 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbfKFM4C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 07:56:02 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-a8-5dc2c2e0fa8e
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 26.EC.08102.0E2C2CD5; Wed,  6 Nov 2019 13:56:00 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Wed, 6 Nov 2019 13:55:54 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Subject: Re: SPAM (R/EU IT) // Re: [RFC PATCH v3 02/15] dt-bindings: mfd:
+ Document ROHM BD71828 bindings
+Thread-Topic: SPAM (R/EU IT) // Re: [RFC PATCH v3 02/15] dt-bindings: mfd:
+ Document ROHM BD71828 bindings
+Thread-Index: AQHVkKffLCWYgOE13kSvnzh4Lmvy5ad9AU4AgAEPqAA=
+Date:   Wed, 6 Nov 2019 12:55:53 +0000
+Message-ID: <b4d0f8932347c418b33ebb0f35b1c094d2c6d4cd.camel@fi.rohmeurope.com>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <ae5d8cf6d276a29432583c1e5241ba7e852036b9.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191105204334.GA629@bogus>
+In-Reply-To: <20191105204334.GA629@bogus>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1E2CF95E0F529349A73FCA388FDE9EDE@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191106032727.GA21162@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0gUURiGOTOzs8e1iWnUPKkVbobdLYo8hNQSBBNFCf0QIrNRR3drLza7
+        dv3REkWpJRlFtKlbW17S7bYp2qpdVk0zulh2ETPbkkAJI7SLFNVMU+mv857zfc/7fj++A0nu
+        DR0FTVaHKFkFs57WUbcrv1+b/yYQSF3YUxSCL3Q+0+JDQ+VaPFLSQeGTwX4au1seanDB/RoN
+        7qm9SuG+z60Af+k6TOATPyoI/OnIaw2+7v4B8FN/MY1rP1wG+G51F43LXnQSuLisncKdHatw
+        b0crjX811mvxz+fXKEME7y31Av7jy4NavtS7l7/h6tXyvqo8mn/1vJHm217WEfyp0lGCr6z+
+        quWHfdOSdRtDk9IFx44NpmxrwvItocb+t3V0jnfurhr3K+AExXPyQQhE7BLU+uG8Jh/oIMc+
+        A6i47QGtXtoA6mk8SOQDCGk2CeV3axUgnI1H56qDpKJJtgoiv8es6DB2KyqsCBJqzzb0oiGP
+        UvUyNHy//g9LsXGor+axRtEMuw55D+cBRXNsM0BHfZKiQ9jZqNd95g8L2KkozzlEqFmRyPf+
+        q0YdmkUXGh+Rqo5AA+9+/n3Xo6bRIKWMTMo+V/wJKmpAjz5/+ztyLDpRENSqI0xC9073U8fA
+        ZNe4BNcY7RpHu8bRrnH0WaCpAsgimMzZgkNctEAScxdINqNFPjJsFh9QN2akHvwKrA4AAoIA
+        mAIJfQSzWF4hbmK6LXO3UbAb06Rcs2gPAARJfTizqfBOKsdkCrv3iJLtXykaUvpIJj5YlMqx
+        StY2UcwRpX/VGAj1iIlVTCdJYra4K8tkdoyVCRiimOuiwu2iNVOUhFyHMU1ZjzS7vB9KaYKc
+        u/KOjDP2HMEiv6poB5gLjw2UeEjYUlLmITnKarOKUZHM3Vq5lVVajbnW/0GDIBICfRiToRhN
+        kL/Nf59BOYKQI9a+u6lEOISxUpQTOJcfim3QrY+59WCNv3tN8+Skt1stGrcp+uKlJ1nOloTR
+        hV3UAE+fLWyvbq5ryl7aO3N70SyrITErtXvfLSqRXjE00h3TsL/K+yS0JXNezL70hIJL7ZsN
+        /sUp08sN0X3DnsS4QVdsoK/cd2DGmSU3OS6s9srOpcmz/Cnze2D8cd6jp+xGYdEcUrILvwFZ
+        FByA8wMAAA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/11/2019 05:27, Rob Herring wrote:
-> On Mon, Oct 28, 2019 at 02:42:22PM +0200, Tero Kristo wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> Add the device tree bindings document for the IPU and DSP
->> remote processor devices on OMAP4+ SoCs.
->>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
->>   1 file changed, 205 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
->>
-> 
-> Looks to be in pretty good shape, but how about doing a schema.
-
-iommu / mailbox is not in schema format, can I just convert this one to 
-schema without considering those? If yes, I can go ahead and do it.
-
-> 
->> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
->> new file mode 100644
->> index 000000000000..e2bcfcab21c1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
->> @@ -0,0 +1,205 @@
->> +OMAP4+ Remoteproc Devices
->> +=========================
->> +
->> +The OMAP family of SoCs usually have one or more slave processor sub-systems
->> +that are used to offload some of the processor-intensive tasks, or to manage
->> +other hardware accelerators, for achieving various system level goals.
->> +
->> +The processor cores in the sub-system are usually behind an IOMMU, and may
->> +contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
->> +caches, an Interrupt Controller, a Cache Controller etc.
->> +
->> +The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
->> +sub-system. The DSP processor sub-system can contain any of the TI's C64x,
->> +C66x or C67x family of DSP cores as the main execution unit. The IPU processor
->> +sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
->> +processors.
->> +
->> +Remote Processor Node:
->> +======================
->> +Each remote processor sub-system is represented as a single DT node. Each node
->> +has a number of required or optional properties that enable the OS running on
->> +the host processor (MPU) to perform the device management of the remote
->> +processor and to communicate with the remote processor. The various properties
->> +can be classified as constant or variable. The constant properties are dictated
->> +by the SoC and does not change from one board to another having the same SoC.
->> +Examples of constant properties include 'iommus', 'reg'. The variable properties
->> +are dictated by the system integration aspects such as memory on the board, or
->> +configuration used within the corresponding firmware image. Examples of variable
->> +properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
->> +
->> +Required properties:
->> +--------------------
->> +The following are the mandatory properties:
->> +
->> +- compatible:	Should be one of the following,
->> +		    "ti,omap4-dsp" for DSPs on OMAP4 SoCs
->> +		    "ti,omap5-dsp" for DSPs on OMAP5 SoCs
->> +		    "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
->> +		    "ti,omap4-ipu" for IPUs on OMAP4 SoCs
->> +		    "ti,omap5-ipu" for IPUs on OMAP5 SoCs
->> +		    "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
->> +
->> +- iommus:	phandles to OMAP IOMMU nodes, that need to be programmed
->> +		for this remote processor to access any external RAM memory or
->> +		other peripheral device address spaces. This property usually
->> +		has only a single phandle. Multiple phandles are used only in
->> +		cases where the sub-system has different ports for different
->> +		sub-modules within the processor sub-system (eg: DRA7 DSPs),
->> +		and need the same programming in both the MMUs.
-
-^ the target of this is not in schema.
-
->> +
->> +- mboxes:	OMAP Mailbox specifier denoting the sub-mailbox, to be used for
->> +		communication with the remote processor. The specifier format is
->> +		as per the bindings,
->> +		Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->> +		This property should match with the sub-mailbox node used in
->> +		the firmware image.
-
-^ Neither this one.
-
->> +
->> +Optional properties:
->> +--------------------
->> +Some of these properties are mandatory on some SoCs, and some are optional
->> +depending on the configuration of the firmware image to be executed on the
->> +remote processor. The conditions are mentioned for each property.
->> +
->> +The following are the optional properties:
->> +- reg:			Address space for any remoteproc memories present on
->> +			the SoC. Should contain an entry for each value in
->> +			'reg-names'. These are mandatory for all DSP and IPU
->> +			processors that have them (OMAP4/OMAP5 DSPs do not have
->> +			any RAMs)
->> +
->> +- reg-names:		Required names for each of the address spaces defined in
->> +			the 'reg' property. Should contain a string from among
->> +			the following names, each representing the corresponding
->> +			internal RAM memory region,
->> +			   "l2ram" for L2 RAM,
->> +			   "l1pram" for L1 Program RAM Memory/Cache,
->> +			   "l1dram" for L1 Data RAM Memory/Cache,
->> +
->> +			All devices may not have all the above memories.
->> +
->> +- syscon-bootreg:	Should be a pair of the phandle to the System Control
-> 
-> ti,bootreg
-
-This one I can fix.
-
-> 
->> +			Configuration region that contains the boot address
->> +			register, and the register offset of the boot address
->> +			register within the System Control module. This property
->> +			is required for all the DSP instances on OMAP4, OMAP5
->> +			and DRA7xx SoCs.
->> +
->> +- memory-region:	phandle to the reserved memory node to be associated
->> +			with the remoteproc device. The reserved memory node
->> +			can be a CMA memory node, and should be defined as
->> +			per the bindings,
->> +			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
->> +
->> +- mbox-names:		Optional names for the OMAP mailbox specifiers mentioned
->> +			in the 'mboxes' property, one per specifier value
-> 
->  From the mboxes description, seemed like only one entry?
-> 
-> Need to define the values here.
-
-I think I can just ditch this. The current driver doesn't care about the 
-name at all. It is not used in any of the examples / current DT data either.
-
-> 
->> +
->> +- timers:		One or more phandles to OMAP DMTimer nodes, that serve
->> +			as System/Tick timers for the OS running on the remote
->> +			processors. This will usually be a single timer if the
->> +			processor sub-system is running in SMP mode, or one per
->> +			core in the processor sub-system. This can also be used
->> +			to reserve specific timers to be dedicated to the
->> +			remote processors.
->> +
->> +			This property is mandatory on remote processors requiring
->> +			external tick wakeup, and to support Power Management
->> +			features. The timers to be used should match with the
->> +			timers used in the firmware image.
->> +
->> +- watchdog-timers:	One or more phandles to OMAP DMTimer nodes, used to
->> +			serve as Watchdog timers for the processor cores. This
->> +			will usually be one per executing processor core, even
->> +			if the processor sub-system is running a SMP OS.
->> +
->> +			The timers to be used should match with the watchdog
->> +			timers used in the firmware image.
-> 
-> These 2 are not standard names. Either need 'ti,' prefix or we should
-> standardize them. There's been some discussion of an input capture
-> binding and I was wondering if it should be more general to any
-> timer function.
-
-I'll convert these to ti,xyz for now.
-
--Tero
-
-> 
->> +
->> +Example:
->> +--------
->> +
->> +1. OMAP4 DSP
->> +	/* DSP Reserved Memory node */
->> +	reserved-memory {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		dsp_memory_region: dsp-memory@98000000 {
->> +			compatible = "shared-dma-pool";
->> +			reg = <0x98000000 0x800000>;
->> +			reusable;
->> +		};
->> +	};
->> +
->> +	/* DSP node */
->> +	ocp {
->> +		dsp: dsp {
->> +			compatible = "ti,omap4-dsp";
->> +			syscon-bootreg = <&scm_conf 0x304>;
->> +			iommus = <&mmu_dsp>;
->> +			mboxes = <&mailbox &mbox_dsp>;
->> +			memory-region = <&dsp_memory_region>;
->> +			timers = <&timer5>;
->> +			watchdog-timers = <&timer6>;
->> +		};
->> +	};
->> +
->> +2. OMAP5 IPU
->> +	/* IPU Reserved Memory node */
->> +	reserved-memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +
->> +		ipu_memory_region: ipu-memory@95800000 {
->> +			compatible = "shared-dma-pool";
->> +			reg = <0 0x95800000 0 0x3800000>;
->> +			reusable;
->> +		};
->> +	};
->> +
->> +	/* IPU node */
->> +	ocp {
->> +		ipu: ipu@55020000 {
->> +			compatible = "ti,omap5-ipu";
->> +			reg = <0x55020000 0x10000>;
->> +			reg-names = "l2ram";
->> +			iommus = <&mmu_ipu>;
->> +			mboxes = <&mailbox &mbox_ipu>;
->> +			memory-region = <&ipu_memory_region>;
->> +			timers = <&timer3>, <&timer4>;
->> +			watchdog-timers = <&timer9>, <&timer11>;
->> +		};
->> +	};
->> +
->> +3. DRA7xx/AM57xx DSP
->> +	/* DSP1 Reserved Memory node */
->> +	reserved-memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +
->> +		dsp1_memory_region: dsp1-memory@99000000 {
->> +			compatible = "shared-dma-pool";
->> +			reg = <0x0 0x99000000 0x0 0x4000000>;
->> +			reusable;
->> +		};
->> +	};
->> +
->> +	/* DSP1 node */
->> +	ocp {
->> +		dsp1: dsp@40800000 {
->> +			compatible = "ti,dra7-dsp";
->> +			reg = <0x40800000 0x48000>,
->> +			      <0x40e00000 0x8000>,
->> +			      <0x40f00000 0x8000>;
->> +			reg-names = "l2ram", "l1pram", "l1dram";
->> +			syscon-bootreg = <&scm_conf 0x55c>;
->> +			iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
->> +			mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
->> +			memory-region = <&dsp1_memory_region>;
->> +			timers = <&timer5>;
->> +			watchdog-timers = <&timer10>;
->> +		};
->> +	};
->> -- 
->> 2.17.1
->>
->> --
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGVsbG8gQWdhaW4gUm9iLA0KDQpBbmQgdGhhbmtzIGFnYWluLg0KDQpPbiBUdWUsIDIwMTktMTEt
+MDUgYXQgMTQ6NDMgLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBGcmksIE5vdiAwMSwg
+MjAxOSBhdCAwMTozMTowM1BNICswMjAwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gUk9I
+TSBCRDcxODI4IFBvd2VyIG1hbmFnZW1lbnQgSUMgaW50ZWdyYXRlcyA3IGJ1Y2sgY29udmVydGVy
+cywgNw0KPiA+IExET3MsDQo+ID4gYSByZWFsLXRpbWUgY2xvY2sgKFJUQyksIDMgR1BPL3JlZ3Vs
+YXRvciBjb250cm9sIHBpbnMsIEhBTEwgaW5wdXQNCj4gPiBhbmQgYSAzMi43Njgga0h6IGNsb2Nr
+IGdhdGUuDQo+ID4gDQo+ID4gRG9jdW1lbnQgdGhlIGR0IGJpbmRpbmdzIGRyaXZlcnMgYXJlIHVz
+aW5nLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGkudmFp
+dHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENoYW5nZXMgZnJv
+bSB2MiAtIG15IGZpcnN0IGVuY291bnRlciB3aXRoIHlhbWwgOi8NCj4gPiANCj4gPiAgLi4uL2Jp
+bmRpbmdzL21mZC9yb2htLGJkNzE4MjgtcG1pYy55YW1sICAgICAgIHwgMjQ5DQo+ID4gKysrKysr
+KysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNDkgaW5zZXJ0aW9ucygrKQ0KPiA+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWZkL3JvaG0sYmQ3MTgyOC1wbWljLnlhbWwNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4MjgtDQo+ID4gcG1p
+Yy55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4
+MjgtDQo+ID4gcG1pYy55YW1sDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAw
+MDAwMDAwMDAwMDAuLmIyYTg4ZjZlMWJiNw0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTgyOC1wbWljLnlh
+bWwNCj4gPiBAQCAtMCwwICsxLDI0OSBAQA0KPiA+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVy
+OiBHUEwtMi4wDQo+IA0KPiAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5
+IE9SIEJTRC0yLUNsYXVzZSkNCj4gDQo+IGZvciBuZXcgYmluZGluZ3MuDQoNCkxpbnVzIFdhbGxl
+aWogYWxyZWFkeSBub3RpZmllZCBtZSBhYm91dCB0aGlzLiBJIGp1c3Qgd29uZGVyZWQgd2h5IHRo
+aXMNCmlzIG5vdCByZWZsZWN0ZWQgaW46DQoNCkxJQ0VOU0VTL3ByZWZlcnJlZC9HUEwtMi4wDQoN
+CndoaWNoIHNlZW1zIHRvIHN0YXRlOg0KVmFsaWQtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
+DQpWYWxpZC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KVmFsaWQtTGljZW5zZS1J
+ZGVudGlmaWVyOiBHUEwtMi4wKw0KVmFsaWQtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9y
+LWxhdGVyDQpTUERYLVVSTDogaHR0cHM6Ly9zcGR4Lm9yZy9saWNlbnNlcy9HUEwtMi4wLmh0bWwN
+ClVzYWdlLUd1aWRlOg0KICBUbyB1c2UgdGhpcyBsaWNlbnNlIGluIHNvdXJjZSBjb2RlLCBwdXQg
+b25lIG9mIHRoZSBmb2xsb3dpbmcgU1BEWA0KICB0YWcvdmFsdWUgcGFpcnMgaW50byBhIGNvbW1l
+bnQgYWNjb3JkaW5nIHRvIHRoZSBwbGFjZW1lbnQNCiAgZ3VpZGVsaW5lcyBpbiB0aGUgbGljZW5z
+aW5nIHJ1bGVzIGRvY3VtZW50YXRpb24uDQogIEZvciAnR05VIEdlbmVyYWwgUHVibGljIExpY2Vu
+c2UgKEdQTCkgdmVyc2lvbiAyIG9ubHknIHVzZToNCiAgICBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
+cjogR1BMLTIuMA0KICBvcg0KICAgIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9u
+bHkNCg0KDQpodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92NS40LXJjNS9zb3VyY2Uv
+TElDRU5TRVMvcHJlZmVycmVkL0dQTC0yLjANCg0KSSdsbCBjaGFuZ2UgdGhlIFNQRFggZm9yIG5l
+dyBmaWxlcyBmb3IgbmV4dCB2ZXJzaW9uLg0KDQoNCj4gDQo+ID4gKyVZQU1MIDEuMg0KPiA+ICst
+LS0NCj4gPiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9tZmQvcm9obSxiZDcx
+ODI4LXBtaWMueWFtbCMNCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEt
+c2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4gKw0KPiA+ICt0aXRsZTogUk9ITSBCRDcxODI4IFBvd2Vy
+IE1hbmFnZW1lbnQgSW50ZWdyYXRlZCBDaXJjdWl0IGJpbmRpbmdzDQo+ID4gKw0KPiA+ICttYWlu
+dGFpbmVyczoNCj4gPiArICAtIExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+DQo+ID4g
+KyAgLSBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiA+ICsgIC0gTWFyayBSdXRsYW5k
+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4gDQo+IERvbid0IGxpc3QgbWUgb3IgTWFyayBoZXJl
+LiBJIG1haW50YWluIGV2ZXJ5dGhpbmcuLi4NCg0KT2suIFNvIEknbGwgYWRkIG15c2VsZiB0aGVu
+LiBBbHRob3VnaCBJIGFtIGJ5IG5vIG1lYW5zIGFuIGV4cGVydCB3aGF0DQpjb21lcyB0byBiaW5k
+aW5nIHNjaGVtYXMuIEkga25vdyB0aGUgZGV2aWNlIGFuZCBkcml2ZXIgdGhvdWdoLg0KDQo+ID4g
+Kw0KPiA+ICsgIGNsb2NrLW91dHB1dC1uYW1lczoNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+
+ICsgICAgICBTaG91bGQgY29udGFpbiBuYW1lIGZvciBvdXRwdXQgY2xvY2suDQo+IA0KPiBOZWVk
+IHRvIGRvY3VtZW50IHdoYXQgdGhlIG5hbWUgaXMuIFRob3VnaCwgd2l0aCBvbmx5IDEgY2xvY2ss
+IG5vdA0KPiB0aGF0IA0KPiB1c2VmdWwuDQoNCkhtbW0uIEkgdGhvdWdodCB0aGlzIHdvdWxkIGRl
+cGVuZCBvbiByZXN0IG9mIHRoZSBzeXN0ZW0ncyBEVC4gV2h5DQpzaG91bGQgaXQgYmUgc2FtZSBv
+biBlYWNoIGJvYXJkPyAoSSBjYW4gZHJvcCB0aGlzIG91dCB0aG91Z2gpLg0KDQo+ID4gKyAgLSB8
+DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJx
+Lmg+DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvbGVkcy9jb21tb24uaD4NCj4gPiAr
+ICAgIGkyYyB7DQo+IA0KPiAnbWFrZSBkdF9iaW5kaW5nX2NoZWNrJyByZXBvcnRzIGFuIGVycm9y
+IGJ1aWxkaW5nIHRoaXMsIGJ1dCBJJ20gbm90IA0KPiBzZWVpbmcgd2hlcmUgaXQgaXM6DQo+IA0K
+PiBFcnJvcjogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4
+MjgtDQo+IHBtaWMuZXhhbXBsZS5kdHM6MTU1LjM2LTM3IHN5bnRheCBlcnJvcg0KPiBGQVRBTCBF
+UlJPUjogVW5hYmxlIHRvIHBhcnNlIGlucHV0IHRyZWUNCg0KSSBndWVzcyBpdCBpcyB0aGUgTEVE
+IGZ1bmN0aW9uIGRlZmluaXRpb24uIFRob3NlIGZ1bmN0aW9uL2NvbG91cg0KYmluZGluZ3Mgd2Vy
+ZSBvbmx5IGFkZGVkIGluIDUuNC1yYzEuIERvIHlvdSBoYXZlIHRoZW0gZGVmaW5lZCBpbiB5b3Vy
+DQpidWlsZCBlbnZpcm9ubWVudCBhdCAvaW5jbHVkZS9kdC1iaW5kaW5ncy9sZWRzL2NvbW1vbi5o
+Pw0KDQpSZXN0IG9mIHRoZSBjb21tZW50cyBhcmUgY2xlYXIgdG8gbWUgOikNCg0KQnIsDQoJTWF0
+dGkgVmFpdHRpbmVuDQoNCj4gLS0gDQo+ID4gTWF0dGkgVmFpdHRpbmVuLCBMaW51eCBkZXZpY2Ug
+ZHJpdmVycw0KPiA+IFJPSE0gU2VtaWNvbmR1Y3RvcnMsIEZpbmxhbmQgU1dEQw0KPiA+IEtpdmlo
+YXJqdW5sZW5ra2kgMUUNCj4gPiA5MDIyMCBPVUxVDQo+ID4gRklOTEFORA0KPiA+IA0KPiA+IH5+
+fiAiSSBkb24ndCB0aGluayBzbywiIHNhaWQgUmVuZSBEZXNjYXJ0ZXMuIEp1c3QgdGhlbiBoZSB2
+YW5pc2hlZA0KPiA+IH5+fg0KPiA+IFNpbW9uIHNheXMgLSBpbiBMYXRpbiBwbGVhc2UuDQo+ID4g
+fn5+ICJub24gY29naXRvIG1lIiBkaXhpdCBSZW5lIERlc2NhcnRlLCBkZWluZGUgZXZhbmVzY2F2
+aXQgfn5+DQo+ID4gVGhhbmtzIHRvIFNpbW9uIEdsYXNzIGZvciB0aGUgdHJhbnNsYXRpb24gPV0g
+DQoNCg==
