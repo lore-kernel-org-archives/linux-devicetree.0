@@ -2,91 +2,99 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7004EC47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0701EC5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C4F2178F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85192166E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731964AbfKFPHT (ORCPT
+        id S1727427AbfKFPVC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:07:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41344 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731929AbfKFPHT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:07:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA53BB143;
-        Wed,  6 Nov 2019 15:07:17 +0000 (UTC)
-Message-ID: <82d17114302562e0c553e2ea936974f77734e86b.camel@suse.de>
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: mali-midgard: Tidy up conversion
- to YAML
-From:   Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        LAKML <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Guillaume Gardet <guillaume.gardet@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Date:   Wed, 06 Nov 2019 16:07:39 +0100
-In-Reply-To: <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
-References: <20191104013932.22505-1-afaerber@suse.de>
-         <20191104013932.22505-2-afaerber@suse.de>
-         <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
-Organization: SUSE Linux GmbH
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 6 Nov 2019 10:21:02 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:33004 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727231AbfKFPVB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:21:01 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5791E1A0647;
+        Wed,  6 Nov 2019 16:20:59 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 402691A0645;
+        Wed,  6 Nov 2019 16:20:59 +0100 (CET)
+Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7337E205EB;
+        Wed,  6 Nov 2019 16:20:58 +0100 (CET)
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     mchehab@kernel.org, shawnguo@kernel.org, robh+dt@kernel.org
+Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+Date:   Wed,  6 Nov 2019 17:20:28 +0200
+Message-Id: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Mittwoch, den 06.11.2019, 08:24 -0600 schrieb Rob Herring:
-> On Sun, Nov 3, 2019 at 7:40 PM Andreas Färber <afaerber@suse.de>
-> wrote:
-> > Instead of grouping alphabetically by third-party vendor, leading
-> > to
-> > one-element enums, sort by Mali model number, as done for Utgard.
-> > 
-> > This already allows us to de-duplicate two "arm,mali-t760" sections
-> > and
-> > will make it easier to add new vendor compatibles.
-> 
-> That was the intent. Not sure how I messed that up...
-> 
-> This patch is problematic because there's changes in arm-soc juno/dt
-> branch and there's now a patch for exynos5420 (t628). I'd propose I
-> apply this such that we don't get a merge conflict with juno/dt and
-> we
-> finish resorting after rc1 (or when both branches are in Linus'
-> tree).
+This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
+and it's dependencies.
+The driver was tested on i.MX8QXP, using a unit test application and
+the v4l2-compliance tool, which passes when run on the encoder/decoder dev
+node, without any other parameters:
+v4l2-compliance -d /dev/video0
+v4l2-compliance -d /dev/video1
+v4l2-compliance SHA: 2ff1e6b3d67dbbdde212c8cf0de603f9f52078ed, 64 bits
 
-This series has dependencies for the Realtek-side RFC patches and is
-not yet ready to merge, so you can take this prep PATCH through your
-tree for v5.6 probably, or feel free to rebase/rework as you see fit -
-I'd just appreciate being credited at least via Reported-by. :)
+The first patch "Add packed YUV444 24bpp pixel format" was already reviewed
+upstream, but not accepted because there was no driver using this format,
+until now. This pixel format, YUV444 24bpp, is now used and needed by the
+i.MX8QXP/QM JPEG encoder/decoder driver.
 
-Thanks,
-Andreas
+Mirela Rabulea (5):
+  media: v4l: Add packed YUV444 24bpp pixel format
+  firmware: imx: scu-pd: Add power domains for imx-jpeg
+  media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
+  media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+  arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
+
+ .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
+ Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
+ drivers/firmware/imx/scu-pd.c                      |    6 +
+ drivers/media/platform/Kconfig                     |    2 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/imx-jpeg/Kconfig            |   10 +
+ drivers/media/platform/imx-jpeg/Makefile           |    3 +
+ drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
+ drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
+ drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2266 ++++++++++++++++++++
+ drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  187 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
+ include/uapi/linux/videodev2.h                     |    1 +
+ 15 files changed, 2949 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+ create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
+ create mode 100644 drivers/media/platform/imx-jpeg/Makefile
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
 
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.7.4
 
