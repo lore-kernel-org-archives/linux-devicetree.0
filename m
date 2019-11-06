@@ -2,133 +2,212 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A770FC47E49
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD93FC5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B1E2187F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF7C2173E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 09:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I8DryP5b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSdRdcv3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731563AbfKFJWN (ORCPT
+        id S1727618AbfKFJZq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:22:13 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51990 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfKFJWM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 04:22:12 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA69M1wk068510;
-        Wed, 6 Nov 2019 03:22:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573032122;
-        bh=nDCiTg+AGtGr0dZ/+jhmDYrrfhHz9pKeKyYvNkCel2k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=I8DryP5b7FZM8h0XiWnOIVcVIAcYzWX26Z4VQOGDAZiTfya0SATzcxInZt5vYEX/d
-         6N3ancFsu5pKs3fQLUxotE+jvopwpB2E1zavF1HdEKjHk2L5t6KSf/GddZlp0Z7Hrc
-         4bpTe6F1y/XVHGGeJ8RMW6YIa927OzRGrCYRyQ4E=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA69M1t6009702
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Nov 2019 03:22:01 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 03:21:46 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 03:21:46 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA69Lw8s101919;
-        Wed, 6 Nov 2019 03:21:58 -0600
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
- <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
- <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
- <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
- <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
- <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
- <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
- <109f9ff2-81e0-6d3d-db60-d48cb0a4e74f@ti.com>
- <ffb8e042-7f22-0e6e-f855-afa0dc3236bb@ti.com>
- <61c8c126-3061-e297-8dab-7333316b0754@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e209692a-18a3-4079-fda7-1cc7b6b74667@ti.com>
-Date:   Wed, 6 Nov 2019 11:23:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 04:25:46 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35159 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfKFJZq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 04:25:46 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 8so2488747wmo.0;
+        Wed, 06 Nov 2019 01:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZOJbwXEfRC32OcivT3s1o5LQP4VegomtuiAoRP6hxYA=;
+        b=uSdRdcv3jeShjMmF5bqnACHCGtOE8ifA4CsrRxHIqqgtxQ/d12HF2mHz3rwOKh369v
+         tu0OtHSk7IUdW2Es8R8/C1tQrVQ4Vz9ziK61IGiwfzCm1pTDWx+/ol0tTetP1VepH4t+
+         gxBGHtExamDG8RAVJVOx39ihsTZgO5VX6noiLCwODHjpdcXmGdrZZ/hbzLAOB6PY3Afa
+         /UoxdAfjQ/aC+cX1BfChQeM0rO9tTfbhh4f/rPvMD4RkhKDoHTtpr+vpntrP6zPenrmQ
+         DkfgNbgc0Q+VWLmyPkeiAPhm57Yy3xjTZWcTEnKQ1qlSRPKTSFXW5AZ/NOk+e4dQwKmZ
+         eXqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZOJbwXEfRC32OcivT3s1o5LQP4VegomtuiAoRP6hxYA=;
+        b=dhjIWVnWjXqKI6f7uoMZ7Lk/SMBAzTGK9MG5iakLwfZMuezqTiOqoaCw8o1Z8mwR86
+         LzznIYWojAYmdA0eKmUus/8Ui4G1tnIfE2C9Q580WbfSRdaT3jnA4iY8+ig+Zx/qxVZC
+         UCMQISGbAFVYPUfsaldL6DWFivCdJ9uYicv6h2pX8T0ENLQiAu9NFimdhojfAK4YYMTm
+         iBstpRFVVfTy1qtaU6u+olg6yLkb+ErKrSncnes2cVgfRPgXkGqFlYN4Lu6kDnjOl9df
+         Fc+PsaenbqVmPX59O19FaMaZJ6EgzLwyYfj4/xDHhiaG5cn16lN7fG6iAFJlj4xM03+/
+         ELMQ==
+X-Gm-Message-State: APjAAAU6ic6EAYJH/4qre3sy1955UzOcCb90qCsizJyojm4fM8rupqXy
+        yDCK2C1MVJmd7sOUzVm0djbPVAl4pWpG79+Va1w=
+X-Google-Smtp-Source: APXvYqwDNQcqlVPCyFV9lSCoMv7rDyFzRgqxYkaCN0CfxqAF1uaJ8P0S7puanFdFxDqIiquTmFnYtsUfsuz3l1taXL0=
+X-Received: by 2002:a1c:a512:: with SMTP id o18mr1431731wme.4.1573032342346;
+ Wed, 06 Nov 2019 01:25:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <61c8c126-3061-e297-8dab-7333316b0754@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de> <20191105111134.GG3876@gilmour.lan>
+ <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com> <20191105173208.GA46143@gilmour.lan>
+In-Reply-To: <20191105173208.GA46143@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 6 Nov 2019 10:25:31 +0100
+Message-ID: <CAJiuCcdQzXScxu=nOP6HaKyFK6Q--gvQubNR8wezTVvPctVf7w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM description
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
+On Tue, 5 Nov 2019 at 18:32, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Tue, Nov 05, 2019 at 01:34:37PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > On Tue, 5 Nov 2019 at 12:11, Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > Hi Clement, Uwe,
+> > >
+> > > On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=C3=B6nig wrote=
+:
+> > > > On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=C3=A9ment P=C3=A9ron w=
+rote:
+> > > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > >
+> > > > > H6 PWM block is basically the same as A20 PWM, except that it als=
+o has
+> > > > > bus clock and reset line which needs to be handled accordingly.
+> > > > >
+> > > > > Expand Allwinner PWM binding with H6 PWM specifics.
+> > > > >
+> > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > > ---
+> > > > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 +++++++++++++=
++++++-
+> > > > >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4=
+i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
+pwm.yaml
+> > > > > index 0ac52f83a58c..bf36ea509f31 100644
+> > > > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-p=
+wm.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-p=
+wm.yaml
+> > > > > @@ -30,13 +30,46 @@ properties:
+> > > > >        - items:
+> > > > >            - const: allwinner,sun50i-h5-pwm
+> > > > >            - const: allwinner,sun5i-a13-pwm
+> > > > > +      - const: allwinner,sun50i-h6-pwm
+> > > > >
+> > > > >    reg:
+> > > > >      maxItems: 1
+> > > > >
+> > > > > -  clocks:
+> > > > > +  # Even though it only applies to subschemas under the conditio=
+nals,
+> > > > > +  # not listing them here will trigger a warning because of the
+> > > > > +  # additionalsProperties set to false.
+> > > > > +  clocks: true
+> > > > > +  clock-names: true
+> > > > > +  resets:
+> > > > >      maxItems: 1
+> > > > >
+> > > > > +  if:
+> > > > > +    properties:
+> > > > > +      compatible:
+> > > > > +        contains:
+> > > > > +          const: allwinner,sun50i-h6-pwm
+> > > > > +
+> > > > > +  then:
+> > > > > +    properties:
+> > > > > +      clocks:
+> > > > > +        items:
+> > > > > +          - description: Module Clock
+> > > > > +          - description: Bus Clock
+> > > > > +
+> > > > > +      clock-names:
+> > > > > +        items:
+> > > > > +          - const: mod
+> > > > > +          - const: bus
+> > > > > +
+> > > > > +    required:
+> > > > > +      - clock-names
+> > > > > +      - resets
+> > > > > +
+> > > > > +  else:
+> > > > > +    properties:
+> > > > > +      clocks:
+> > > > > +        maxItems: 1
+> > > > > +
+> > > >
+> > > > I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod=
+ and
+> > > > bus clock is required.", right?
+> > > >
+> > > > I wonder if it is sensible to require a clock-names property in the=
+ else
+> > > > branch, too. This would make it obvious if the clock there correspo=
+nds
+> > > > to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+> > >
+> > > This can be done a bit differently and could address your concerns
+> > >
+> > > Something like
+> > >
+> > > properties:
+> > >   ...
+> > >
+> > >   clocks:
+> > >     minItems: 1
+> > >     maxItems: 2
+> > >     items:
+> > >       - description: Bus Clock
+> > >       - description: Module Clock
+> > >
+> > > required:
+> > >   - clocks
+> > >
+> > > if:
+> > >   ...
+> > >
+> > > then:
+> > >   properties:
+> > >     clocks:
+> > >       maxItems: 2
+> >
+> > Here we should set minItems to 2 right ?
+> > so Max =3D Min =3D 2
+>
+> It's done automatically by the tooling when the other is missing.
 
-On 05/11/2019 20.07, Grygorii Strashko wrote:
->>> (but hey - if this is boot only then gpio-hogs should work. Are they?)
->>
->> That is another thing which almost works ;)
->> w/o gpio binding deferred probing is not possible if the GPIO controller
->> is probed later.
->> In some cases it might be even impossible to make sure that the GPIO
->> controller would probe first (GPIO extender on different i2c bus than
->> the user(s) of the gpio line)
->> In some cases moving around nodes in DT might artificially make things
->> work, but then someone compiles the expander as module, or some 'small'
->> change in kernel and the probe order on the bus changes.
->> I don't think it is a valid thing to have commits on the DT files
->> saying: move the expander front/after the hog affected user since since
->> Monday the probe order has changed. Then move it back two weeks later ;)
->>
-> 
-> Ok. Above sounds like real problem. The implicit dependence is exist,
-> but can't
-> be resolved if any driver depends on gpio-hog of some gpio-controller.
-> Probe deferring of gpio-controller will not lead to probe differing of
-> dependent driver.
-> 
-> Question: will gpio-hog mechanism resolve your case if it works (and
-> probe differing issues)?
+Ok thanks,
+I will update in v4.
 
-I see gpio-hog to fulfill different role, use cases. It is more like
-controlling muxes on boards to select between different exclusive
-features. Things like route the I2S lines to analog codec or HDMI, route
-RGB video to LCD panel or to HDMI, etc.
+Regards,
+Cl=C3=A9ment
 
-But, if it would work it could be used for components which can be
-enabled all the time. On the other hand, if a device has reset/enable
-line then the driver should have a way to control it.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>
+> Maxime
