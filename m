@@ -2,114 +2,115 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB22C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 06:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE45DC5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299AC2173E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 06:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86FE92173E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UfWy7760"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731382AbfKFGwH (ORCPT
+        id S1731530AbfKFHoo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:52:07 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:48286 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731330AbfKFGwG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 01:52:06 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-76-5dc26d945d76
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 4D.4A.08102.49D62CD5; Wed,  6 Nov 2019 07:52:04 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Wed, 6 Nov 2019 07:52:00 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
-Thread-Topic: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
-Thread-Index: AQHVkKp+hdqKw9vEbUql9O/haZZyiad5+mgAgAEiGoCAAYY1gIABCI2A
-Date:   Wed, 6 Nov 2019 06:51:59 +0000
-Message-ID: <c4a2462cf810c4468638522d901b6416d1a770a4.camel@fi.rohmeurope.com>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <f08d265c12ebf185c0e1dbbfe0a3f86de4907194.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com>
-         <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
-         <CACRpkdaRt3Du4y_Yhv39d7KoQ=hOkPR-RqXYjPukxb7JG_yymQ@mail.gmail.com>
-In-Reply-To: <CACRpkdaRt3Du4y_Yhv39d7KoQ=hOkPR-RqXYjPukxb7JG_yymQ@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <25065393F3209F438FDBAA6CC3CC6B53@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 6 Nov 2019 02:44:44 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34396 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731136AbfKFHon (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 02:44:43 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA67idae109132;
+        Wed, 6 Nov 2019 01:44:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573026279;
+        bh=f1NEPFJjClLNi2nXj2/pBImQn0eR1YY7EU9xYbARDFY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UfWy7760YyHkaT2NRw59cyv7eFBBc2ElZuZ6711GeQI2LpkxxKIyIS3gXR6ZtbZkH
+         33ZDi+aNXJ4bf65emhVovprynkAAbxDvLzQUfUo3kbLVVnmtBLVUM2XqL6N89fyTQj
+         u9ya/lWygS+943byIWb9IArzdpVGWfpJIXB1X5p0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA67idbQ084075
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 01:44:39 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 01:44:37 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 01:44:22 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA67iZjb063767;
+        Wed, 6 Nov 2019 01:44:36 -0600
+Subject: Re: [PATCH v4 0/3] dmaengine: bindings/edma: dma-channel-mask to
+ array
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <devicetree@vger.kernel.org>
+References: <20190930114055.29315-1-peter.ujfalusi@ti.com>
+ <20191105165145.GB952516@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <fc83b096-f737-4d90-cb3e-0d8eb43c7f12@ti.com>
+Date:   Wed, 6 Nov 2019 09:45:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0gUaxjHeWdmZ16tkWnSfM9mlzMEUVEmRL5FSF+sKSK60nWxKUd3ay8y
-        u0pWkN0w1+iGUS3rJU+W6NJlLTIp01HL9pwKy8yoFE/SSbtxyDLJLjOOpZ/eP8//+T+/58Pz
-        QpJvp83Q5vTIilOyC3Q4VVP69fL0PIdqmfmlTcBnmx4zOPv9OQb35IcofKKjk8aF9fdNOPfv
-        Kyb87OolCrd/agD4c/NBAuf1nyfw/4faTLiisB/gR1V+Gl99ewHg2+XNNC550kRgf0kjhZtC
-        ifhFqIHGB27WM/h7y2VqfpQYKAgA8UPrAUYsCOwUr/teMGKwLIcWn7fcoMU7rdcI8WRBHyGW
-        lvcy4sfg+GXh60fM2yx5MlbaUp2xCZtGWGtadqVVRmx/F+o2ZYGDEV4QBhE3Cx327yO8IBzy
-        3GOA/gpVULrBc3cACn5a5QUQ0tw85H3K6OVIbg6qa/QPtJCcH6I9ret0PZpbhG71hwZ7FqO8
-        ohrS0AvQq95OQtcUNwn1qW9oXbPcUlT5bzkwuH0E6ipqGBgaxi1H7Q/eDYQBNw7lZL0nDFg0
-        Cr7qNRlLc+jsjQekoaNQ18vvg3UB3ezroPSdSW4KulgVa0Tno7YnewZ3/hPl5XYwxg6j0N3T
-        ndRRMMY3jOAbSvuGpX3D0r5h6SJgKgPIIdnsqZJHjpuhyOkzFJfVoT1bXI4gMA6mpxL8UBep
-        gIBABX9AQohiF9tqLXzEZldyplVyW5OUdLvsVgGCpBDJbjyseWyylLlDVly/rLGQEqLZyR3H
-        LDyns7bJcpqs/HJjIBQQW2VXLfwoRU6Vt6fY7J4hm4Bh+vBwc6RbdibLipTusSbp15Hk1s5D
-        t0Zq3MZtWpx1p0kOrWpEQ2AaPNqVX0zC+vySYpKnnC6nbI5mP+skTm+1pjt/g7pBNATCaHat
-        7o7Ufs3vOd0agtAQS15W6wiPNGSZs8Dse7nAc/zEDnqqhz/utQfiV2TfSlxtCfTsXLv3dft/
-        Unn/qurbcZnNlT27fyT5shLWnVIz1qhr6ipMMdPHJr651lu0oWl1c1kbX1z9ZcKHbwtex5vX
-        f3yUuDUlPiclNmZvRm1pXVnC0piF1jNXJs6Ws5lAq7i/di6Ye+SflpJLUvVDgXJbpbippOKW
-        fgLtDG6o8gMAAA==
+In-Reply-To: <20191105165145.GB952516@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gTGludXMsDQoNCk9uIFR1ZSwgMjAxOS0xMS0wNSBhdCAxNjowNSArMDEwMCwgTGludXMg
-V2FsbGVpaiB3cm90ZToNCj4gT24gTW9uLCBOb3YgNCwgMjAxOSBhdCA0OjQ4IFBNIFZhaXR0aW5l
-biwgTWF0dGkNCj4gPE1hdHRpLlZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4gd3JvdGU6DQo+
-IA0KPiA+ID4gR29vZCBpbml0aWF0aXZlIChhbmQgSSB3aWxsIHNlZSBhIHRvbiBvZiBqYW5pdG9y
-aWFsIHBhdGNoZXMgYXMgYQ0KPiA+ID4gcmVzdWx0IG9mIHRoaXMuLi4pDQo+ID4gDQo+ID4gSSBo
-YXZlIHNvbWV3aGVyZSBuZWFyIDYyIHBhdGNoZXMgd2FpdGluZyB0byBiZSBzZW50ID0pIFRoZXkn
-cmUNCj4gPiBwcmV0dHkNCj4gPiBzbWFsbCBidXQgSSdkIGFwcHJlY2lhdGUgdGhvcm91Z2ggcmV2
-aWV3IGFzIHRoZXkncmUgbW9zdGx5DQo+ID4gdW50ZXN0ZWQuLi4NCj4gPiBEbyB5b3UgbWluZCBy
-ZWNlaXZpbmcgdGhlbSBhbGwgaW4gb25lIGdvPyBPciBkbyB5b3UgdGhpbmsgSSBzaG91bGQNCj4g
-PiBzZW5kDQo+ID4gdGhlIHNlcmllcyBpbiBzbWFsbGVyIGNodW5ja3M/DQo+IA0KPiBJIHdvdWxk
-IGJlIGZpbmUgd2l0aCBvbmUgcGF0Y2ggaW50cm9kdWNpbmcgdGhlIGRlZmluZXMgYW5kIHRoZW4N
-Cj4gb25lIGJpZyBwYXRjaCBzd2l0Y2hpbmcgZXZlcnlib2R5IGFuZCB0aGVpciBkb2cgb3ZlciB0
-byB1c2luZw0KPiB0aGVzZSBkZWZpbml0aW9ucy4NCj4gDQo+IEkgdXN1YWxseSBrZWVwIHRvIGEg
-cGF0Y2ggYmVpbmcgIm9uZSB0ZWNobmljYWwgc3RlcCIgYW5kIGl0IGlzDQo+IGNsZWFybHkgKElN
-Tykgb25lIHN0ZXAgdG8gaW50cm9kdWNlIHRoZSBkZWZpbmVzIGFuZCBvbmUgc3RlcA0KPiB0byBt
-YWtlIHVzZSBvZiBpdCBpbiBhbGwgbGVnYWN5IGRyaXZlcnMuDQo+IA0KPiBJdCdzIGxhdGUgaW4g
-dGhlIGtlcm5lbCBjeWNsZSBidXQgdGhpcyBwYXJ0aWN1bGFyIHBhcnQgKHRoZSBkZWZpbmVzDQo+
-IGFuZCBzd2l0Y2hpbmcgb3ZlciBvbGQgZHJpdmVyIHRvIHVzZSBpdCkgSSdkIGJlIGhhcHB5DQo+
-IHRvIG1lcmdlIGZvciB2NS41Lg0KDQpJJ2xsIHByZXBhcmUgb25lIHBhdGNoIGZvciBkZWZpbmVz
-IGFuZCBvbmUgbGFyZ2UgcGF0Y2ggZm9yIGRyaXZlcg0KY2hhbmdlcyBvbiB0b3Agb2YgR1BJTyB0
-cmVlIHRoZW4uIEknbGwgbGVhdmUgb3V0IHRoZSBsYXN0IG9uZSA2Mi82MiAtDQppdCBjYW4gYmUg
-YXBwbGllZCBsYXRlciBpZiBpdCBpcyBjb25zaWRlcmVkIGEgZ29vZCBpZGVhIC0gSSdkDQphcHBy
-ZWNpYXRlIGlmIHlvdSAvIEJhcnRvc3ogaGFkIHRoZSB0aW1lIHRvIGNoZWNrIGl0IHRob3VnaC4g
-DQoNCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxsZWlqDQoNCg==
+Hi Vinod,
+
+On 05/11/2019 18.51, Vinod Koul wrote:
+> On 30-09-19, 14:40, Peter Ujfalusi wrote:
+>> Hi,
+>>
+>> Changes since v3:
+>> - Update the dma-common.yaml and edma binding documentation according to Rob's
+>>   suggestion
+>>
+>> Changes since v2:
+>> - Fix dma-common.yaml documentation patch and extend the description of the
+>>   dma-channel-mask array
+>> - The edma documentation now includes information on the dma-channel-mask array
+>>   size for EDMAs with 32 or 64 channels
+>>
+>> Changes since v1:
+>> - Extend the common dma-channel-mask to uint32-array to be usable for
+>>   controllers with more than 32 channels
+>> - Use the dma-channel-mask instead custom property for available channels for
+>>   EDMA.
+>>
+>> The original patch was part of the EDMA multicore usage series.
+>>
+>> Rob: I'm not sure if I got the dma-common.yaml update correctly...
+>>
+>> EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
+>> needs to be an array to be usable for the driver.
+> 
+> Applied, thanks
+> 
+> There was a conflict on patch3, I have reolved it, please check.
+
+Looks good, I wonder what caused the conflict. The patch looks identical
+in your vinod/next and in my linux-next-wip.
+
+Oh, this is v4 and you have picked the v5. That explains.
+
+Thank you,
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
