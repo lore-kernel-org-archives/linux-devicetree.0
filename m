@@ -1,96 +1,103 @@
-Return-Path: <SRS0=cZLa=YL=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DE8CA9EA9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 17:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F96AC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0935021835
-	for <linux-devicetree@archiver.kernel.org>; Fri, 18 Oct 2019 17:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3EC21848
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 22:36:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="oN0HuX8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505602AbfJRR4W (ORCPT
+        id S1727552AbfKFWg6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 18 Oct 2019 13:56:22 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33049 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505601AbfJRR4V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Oct 2019 13:56:21 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1iLWTo-00062R-Up; Fri, 18 Oct 2019 19:56:00 +0200
-Message-ID: <07f370bfd62425c5472c1e423ae0b21b0789e5f5.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] dt-bindings: etnaviv: Add #cooling-cells
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 18 Oct 2019 19:55:56 +0200
-In-Reply-To: <20191018135022.GA6728@bogon.m.sigxcpu.org>
-References: <cover.1568255903.git.agx@sigxcpu.org>
-         <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
-         <20191018135022.GA6728@bogon.m.sigxcpu.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 6 Nov 2019 17:36:58 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:60543 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfKFWg6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 17:36:58 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EFB9723E40;
+        Wed,  6 Nov 2019 23:36:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1573079815;
+        bh=0Cgnak2q2pgGiqu0fUxgRYjBqp9MNgljwA9whngru/8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oN0HuX8TDY08mBidhtFIjFi5aeLyPuODkvfLMHX/uLGtCbv2ty2Jtf+vVvj5E1jTw
+         cihwbIe4uPu1gkiE+F0GqlqYu39oOV5sUIkC4YVisPIsEtCFsckqe5LvlEBrQTk1hM
+         xqcJzORr2bJ25jlA6sUeMF187+/8xwZzNn1+ShBU=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v2 0/6] net: phy: at803x device tree binding
+Date:   Wed,  6 Nov 2019 23:36:11 +0100
+Message-Id: <20191106223617.1655-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fr, 2019-10-18 at 15:50 +0200, Guido Günther wrote:
-> Hi,
-> On Wed, Sep 11, 2019 at 07:40:36PM -0700, Guido Günther wrote:
-> > Add #cooling-cells for when the gpu acts as a cooling device.
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt          | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> > index 8def11b16a24..640592e8ab2e 100644
-> > --- a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> > +++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> > @@ -21,6 +21,7 @@ Required properties:
-> >  Optional properties:
-> >  - power-domains: a power domain consumer specifier according to
-> >    Documentation/devicetree/bindings/power/power_domain.txt
-> > +- #cooling-cells: : If used as a cooling device, must be <2>
-> 
-> The other patch of the series made it into linux-next already but this
-> documentation fixup didn't. Anything i can do to get this applied as
-> well so documentation stays in sync?
+Adds a device tree binding to configure the clock and the RGMII voltage.
 
-I've applied and pushed this to my etnaviv/next branch just now, so it
-should show up in linux-next pretty soon.
+Changes since v1:
+ - rebased to latest net-next
+ - renamed "Atheros" to "Qualcomm Atheros"
+ - add a new patch to remove config_init() from AR9331
 
-Regards,
-Lucas
+Changes since the RFC:
+ - renamed the Kconfig entry to "Qualcomm Atheros.." and reordered the
+   item
+ - renamed the prefix from atheros to qca
+ - use the correct name AR803x (instead of AT803x) in new files and
+   dt-bindings.
+ - listed the PHY maintainers in the new schema. Hopefully, thats ok.
+ - fixed a typo in the bindings schema
+ - run dtb_checks and dt_binding_check and fixed the schema
+ - dropped the rgmii-io-1v8 property; instead provide two regulators vddh
+   and vddio, add one consumer vddio-supply
+ - fix the clock settings for the AR8030/AR8035
+ - only the AR8031 supports chaning the LDO and the PLL mode in software.
+   Check if we have the correct PHY.
+ - new patch to mention the AR8033 which is the same as the AR8031 just
+   without PTP support
+ - new patch which corrects any displayed PHY names and comments. Be
+   consistent.
+
+Michael Walle (6):
+  net: phy: at803x: fix Kconfig description
+  dt-bindings: net: phy: Add support for AT803X
+  net: phy: at803x: add device tree binding
+  net: phy: at803x: mention AR8033 as same as AR8031
+  net: phy: at803x: fix the PHY names
+  net: phy: at803x: remove config_init for AR9331
+
+ .../devicetree/bindings/net/qca,ar803x.yaml   | 111 ++++++
+ MAINTAINERS                                   |   2 +
+ drivers/net/phy/Kconfig                       |  10 +-
+ drivers/net/phy/at803x.c                      | 321 +++++++++++++++++-
+ include/dt-bindings/net/qca-ar803x.h          |  13 +
+ 5 files changed, 441 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qca,ar803x.yaml
+ create mode 100644 include/dt-bindings/net/qca-ar803x.h
+
+-- 
+2.20.1
 
