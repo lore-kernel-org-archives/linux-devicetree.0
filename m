@@ -2,122 +2,376 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD40C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 01:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695D6C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8292B21D71
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 01:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2415C222C9
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TX88rd76"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MoPwdOu1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ETazk69p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbfKFBqA (ORCPT
+        id S1730978AbfKFCxt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 5 Nov 2019 20:46:00 -0500
-Received: from mail-eopbgr00068.outbound.protection.outlook.com ([40.107.0.68]:22801
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730125AbfKFBqA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 5 Nov 2019 20:46:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nyu7WAvctPv1lY0y1kysmHQwweStHvr+6I7xT7vzQbzN39Exmj/TEqefXZ/HMV+6tObvh8fGUb2JynY98rGP1fSaVC9cK2XjGuEskKh4sLRquUuQMIcaB0GpfnQ6PJ9IZ8gBPgXL1l1fktSSpE/8F3Zq/NXNiJFSNP6mhXrHn7bZObL37FDnPMHZAXORXCYhIdtuxMpjIeEUqqkzQl4q9764enYLshdST/Il7cNWSa+Cq/VVo15aRWh8A/UU2cvPtKJIq9iCFgZxz5ds0r8JbtsgXQky/11V9qS5GRVSzY6ackLXTvkrIvSAQf2fH7chIVddvD2Rl8zYFb1H1Qyu5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R7wa7nM9N4d0T0oEJEPItuNHzQLGfbTfpJXl8yWpvfk=;
- b=bo9Ttk4zZhebOwym5USwMa63QWKwt9O6T36v0GBNWd3yAEGA9Whadkb7Dng7If0VgSzq09X5KmZb8SXeiF2nm6wgoyOA3pgZO6IBTesqhv3sSRnmjioQH6YEDz6NaTUWiQt36YwDY2Z2cVjDOc6V8syw/avsI/y5REvbp2cICRzXNC+BmDWdF+54Apl3dKpyB4/Dr65qXzNaZ1cTd9qU2ryLrXATFanSw8Nkr2Bwzb/ALfcUZu8kpGJcz4YYZ7VQvGr4ZIKqOEB6FZ9Feu9rrlYkg8IfppJMUKCYd+gRU+6GZXpq6IYamszmpk8Dd7eZx+S9UKeLdBSBj8NcYn9fCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R7wa7nM9N4d0T0oEJEPItuNHzQLGfbTfpJXl8yWpvfk=;
- b=TX88rd76jdfTJypdaJBSDGw+Z8FWp4cuvF0RKevwlGRyy0YNQ/sTKf3DNrHhYAgSxUtHc81nJjDKVa1p783n3wPFGKPrbISYPZiAcKPZYczeiqSC7HhKziRsBkF+wEmFqudjHDGJ5DRWWt49bhNhSPbJHo8TkL+SrXw5nSek1nA=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.232.225) by
- VE1PR04MB6493.eurprd04.prod.outlook.com (20.179.233.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Wed, 6 Nov 2019 01:45:54 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::9c38:e113:f0b4:f9]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::9c38:e113:f0b4:f9%7]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
- 01:45:54 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH V2 1/2] ASoC: dt-bindings: fsl_asrc: add
- compatible string for imx8qm
-Thread-Topic: [EXT] Re: [PATCH V2 1/2] ASoC: dt-bindings: fsl_asrc: add
- compatible string for imx8qm
-Thread-Index: AQHVlCVAtI/d9rj+CEmSVDL+wnn2jKd9W6jg
-Date:   Wed, 6 Nov 2019 01:45:54 +0000
-Message-ID: <VE1PR04MB647993508ACCA9B7B4938D24E3790@VE1PR04MB6479.eurprd04.prod.outlook.com>
-References: <6465fb7dfaa68b6693584bcfa696894628d45fe9.1572435604.git.shengjiu.wang@nxp.com>
- <20191105220614.GA12397@bogus>
-In-Reply-To: <20191105220614.GA12397@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 229f2b16-e5c1-42be-6320-08d7625b0ff6
-x-ms-traffictypediagnostic: VE1PR04MB6493:
-x-microsoft-antispam-prvs: <VE1PR04MB6493AB16FB926743048AF416E3790@VE1PR04MB6493.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(199004)(189003)(71200400001)(76116006)(52536014)(66066001)(6436002)(6506007)(2906002)(7416002)(229853002)(5660300002)(14444005)(476003)(71190400001)(7736002)(81156014)(64756008)(66476007)(66556008)(66446008)(8676002)(25786009)(8936002)(66946007)(11346002)(446003)(81166006)(3846002)(4326008)(33656002)(305945005)(6116002)(6916009)(55016002)(86362001)(7696005)(76176011)(486006)(256004)(6246003)(54906003)(14454004)(316002)(186003)(102836004)(74316002)(4744005)(26005)(9686003)(99286004)(478600001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6493;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 10y5g0zQRcvvjoIyPs0szyS3/QFbZ31gqRwDtVp8zi+JSTKyUZ15fqCjkCcGfgRaavzL5uvFMIvVqYPA1yQvX63ebChvHDcgaw5Ptn034BLrg1AE1uxyNISAuAjELq/oebnGcEr/9euqTFfJnE/Vylp67vKcTUOdGa7M7j9UKIzgqqfiUALSLuD4Za6bfCL26J+UhQhIOebmzxr17WJKe54t5x4LBSfGu6UZ/eoDvUgD8GIN66LdU+jykhWh0R/OaNNxQOaPkhdW8WrmihC2+Ml4Piuk3vMNYDeoBQkHudVEfMzNhQCDbQzKnUGa+J47zF5zHScKGFpKLeXovHISM3DEq+mfA49i2hs2nQpfV53D6NVwRI6yRzVBsSfCz0BqZ88tj7w8C/ct3HVy8DIwwZPGAtv1+/sVoYnKR6roNWYDGcHDLo+FoKL+UgiTYPGD
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 Nov 2019 21:53:49 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:57454 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730788AbfKFCxs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 5 Nov 2019 21:53:48 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C6C2D60B19; Wed,  6 Nov 2019 02:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573008818;
+        bh=ZNbrx0OoFfiIYzKe6eKZHH36QNhXSTZh2FwseYgbt4M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MoPwdOu1ivkyZetaCQ39eey6Jd2uj1heZNg3A2h9MO5mztTLwdV6xi5/lhP8oUVIF
+         kJt4mMvQU9gY1zUzcoXYctFv9OWFqv9yvFDXNbrQknlTwKBBNCItDYuaZSU17Lo1xt
+         3ucMaWQiE3sVI8aigWjp1TFwS/OLI55aHnO7ebCY=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5090D602C8;
+        Wed,  6 Nov 2019 02:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573008817;
+        bh=ZNbrx0OoFfiIYzKe6eKZHH36QNhXSTZh2FwseYgbt4M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ETazk69pnq7abNzDoeg0EogzI2m+gTq5jYfrTaWEUzdu/q6SqeWL+g+P+IwWMKxPh
+         2f1Bxt8U5DV9mGI1VAliM188DpdZkxFf9+gqALKS9OfUwuYdDze6IVtzR9xNMlRIMu
+         sYwPwiIFDi3WUwTZ3lz6EgqrxLjLxBuTBhkd/x/k=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5090D602C8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 1/1] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+To:     Roja Rani Yarubandi <rojay@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     mgautam@codeaurora.org, akashast@codeaurora.org,
+        msavaliy@codeaurora.org, sanm@codeaurora.org,
+        skakit@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191031074500.28523-1-rojay@codeaurora.org>
+ <20191031074500.28523-2-rojay@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <13ad90c0-ff46-f85c-df5f-55e4985af76b@codeaurora.org>
+Date:   Wed, 6 Nov 2019 08:23:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 229f2b16-e5c1-42be-6320-08d7625b0ff6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 01:45:54.4536
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X/Hmza46wY2Ax2VVN14ol+84LsrsIdcfeV6PRFpOXmNOTTfhc+gK7gmeu1Im7KoynLCJU54m4IevzxXQkF/EGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6493
+In-Reply-To: <20191031074500.28523-2-rojay@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
->=20
-> On Wed, Oct 30, 2019 at 07:41:26PM +0800, Shengjiu Wang wrote:
-> > In order to support the two asrc modules in imx8qm, we need to add
-> > compatible string "fsl,imx8qm-asrc0" and "fsl,imx8qm-asrc1"
->=20
-> Are the blocks different in some way?
->=20
-> If not, why do you need to distinguish them?
->=20
-The internal clock mapping is different for each module.
 
-Best regards
-Wang Shengjiu
+
+On 10/31/2019 1:15 PM, Roja Rani Yarubandi wrote:
+> Add QUP SE instances configuration for sc7180.
+> 
+> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+> ---
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 152 +++++-
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 683 +++++++++++++++++++++++-
+>   2 files changed, 828 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index e0724ef3317d..189254f5ae95 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+[]..
+
+>   
+>   		tlmm: pinctrl@3500000 {
+> @@ -230,12 +623,294 @@
+[]..
+> +
+> +			qup_i2c0_default: qup-i2c0-default {
+> +				pinmux {
+> +					pins = "gpio34", "gpio35";
+> +					function = "qup00";
+> +				};
+> +			};
+> +
+> +			qup_i2c1_default: qup-i2c1-default {
+> +				pinmux {
+> +					pins = "gpio0", "gpio1";
+> +					function = "qup01";
+> +				};
+> +			};
+> +
+> +			qup_i2c2_default: qup-i2c2-default {
+> +				pinmux {
+> +					pins = "gpio15", "gpio16";
+> +					function = "qup02";
+> +				};
+> +			};
+> +
+> +			qup_i2c3_default: qup-i2c3-default {
+> +				pinmux {
+> +					pins = "gpio38", "gpio39";
+> +					function = "qup03";
+> +				};
+> +			};
+> +
+> +			qup_i2c4_default: qup-i2c4-default {
+> +				pinmux {
+> +					pins = "gpio115", "gpio116";
+> +					function = "qup04";
+> +				};
+> +			};
+> +
+> +			qup_i2c5_default: qup-i2c5-default {
+> +				pinmux {
+> +					pins = "gpio25", "gpio26";
+> +					function = "qup05";
+> +				};
+> +			};
+> +
+> +			qup_i2c6_default: qup-i2c6-default {
+> +				pinmux {
+> +					pins = "gpio59", "gpio60";
+> +					function = "qup06";
+
+The pinctrl driver has no functions named qup06/07/08/09
+These are the qup functions listed
+
+         FUNCTION(qup00),
+         FUNCTION(qup01),
+         FUNCTION(qup02),
+         FUNCTION(qup03),
+         FUNCTION(qup04),
+         FUNCTION(qup05),
+         FUNCTION(qup10),
+         FUNCTION(qup11),
+         FUNCTION(qup12),
+         FUNCTION(qup13),
+         FUNCTION(qup14),
+         FUNCTION(qup15),
+
+> +				};
+> +			};
+> +
+> +			qup_i2c7_default: qup-i2c7-default {
+> +				pinmux {
+> +					pins = "gpio6", "gpio7";
+> +					function = "qup07";
+> +				};
+> +			};
+> +
+> +			qup_i2c8_default: qup-i2c8-default {
+> +				pinmux {
+> +					pins = "gpio42", "gpio43";
+> +					function = "qup08";
+> +				};
+> +			};
+> +
+> +			qup_i2c9_default: qup-i2c9-default {
+> +				pinmux {
+> +					pins = "gpio46", "gpio47";
+> +					function = "qup09";
+> +				};
+> +			};
+> +
+> +			qup_i2c10_default: qup-i2c10-default {
+> +				pinmux {
+> +					pins = "gpio86", "gpio87";
+> +					function = "qup10";
+> +				};
+> +			};
+> +
+> +			qup_i2c11_default: qup-i2c11-default {
+> +				pinmux {
+> +					pins = "gpio53", "gpio54";
+> +					function = "qup11";
+> +				};
+> +			};
+> +
+> +			qup_spi0_default: qup-spi0-default {
+> +				pinmux {
+> +					pins = "gpio34", "gpio35",
+> +					       "gpio36", "gpio37";
+> +					function = "qup00";
+> +				};
+> +			};
+> +
+> +			qup_spi1_default: qup-spi1-default {
+> +				pinmux {
+> +					pins = "gpio0", "gpio1",
+> +					       "gpio2", "gpio3",
+> +					       "gpio12", "gpio94";
+> +					function = "qup01";
+> +				};
+> +			};
+> +
+> +			qup_spi3_default: qup-spi3-default {
+> +				pinmux {
+> +					pins = "gpio38", "gpio39",
+> +					       "gpio40", "gpio41";
+> +					function = "qup03";
+> +				};
+> +			};
+> +
+> +			qup_spi5_default: qup-spi5-default {
+> +				pinmux {
+> +					pins = "gpio25", "gpio26",
+> +					       "gpio27", "gpio28";
+> +					function = "qup05";
+> +				};
+> +			};
+> +
+> +			qup_spi6_default: qup-spi6-default {
+> +				pinmux {
+> +					pins = "gpio59", "gpio60",
+> +					       "gpio61", "gpio62",
+> +					       "gpio68", "gpio72";
+> +					function = "qup06";
+> +				};
+> +			};
+> +
+> +			qup_spi8_default: qup-spi8-default {
+> +				pinmux {
+> +					pins = "gpio42", "gpio43",
+> +					       "gpio44", "gpio45";
+> +					function = "qup08";
+> +				};
+> +			};
+> +
+> +			qup_spi10_default: qup-spi10-default {
+> +				pinmux {
+> +					pins = "gpio86", "gpio87",
+> +					       "gpio88", "gpio89",
+> +					       "gpio90", "gpio91";
+> +					function = "qup10";
+> +				};
+> +			};
+> +
+> +			qup_spi11_default: qup-spi11-default {
+> +				pinmux {
+> +					pins = "gpio53", "gpio54",
+> +					       "gpio55", "gpio56";
+> +					function = "qup11";
+> +				};
+> +			};
+> +
+> +			qup_uart0_default: qup-uart0-default {
+> +				pinmux {
+> +					pins = "gpio34", "gpio35",
+> +					       "gpio36", "gpio37";
+> +					function = "qup00";
+> +				};
+> +			};
+> +
+> +			qup_uart1_default: qup-uart1-default {
+> +				pinmux {
+> +					pins = "gpio0", "gpio1",
+> +					       "gpio2", "gpio3";
+> +					function = "qup01";
+> +				};
+> +			};
+> +
+> +			qup_uart2_default: qup-uart2-default {
+> +				pinmux {
+> +					pins = "gpio15", "gpio16";
+> +					function = "qup02";
+> +				};
+> +			};
+> +
+> +			qup_uart3_default: qup-uart3-default {
+> +				pinmux {
+> +					pins = "gpio38", "gpio39",
+> +					       "gpio40", "gpio41";
+> +					function = "qup03";
+> +				};
+> +			};
+> +
+> +			qup_uart4_default: qup-uart4-default {
+> +				pinmux {
+> +					pins = "gpio115", "gpio116";
+> +					function = "qup04";
+> +				};
+> +			};
+> +
+> +			qup_uart5_default: qup-uart5-default {
+> +				pinmux {
+> +					pins = "gpio25", "gpio26",
+> +					       "gpio27", "gpio28";
+> +					function = "qup05";
+> +				};
+> +			};
+> +
+> +			qup_uart6_default: qup-uart6-default {
+> +				pinmux {
+> +					pins = "gpio59", "gpio60",
+> +					       "gpio61", "gpio62";
+> +					function = "qup06";
+> +				};
+> +			};
+> +
+> +			qup_uart7_default: qup-uart7-default {
+> +				pinmux {
+> +					pins = "gpio6", "gpio7";
+> +					function = "qup07";
+> +				};
+> +			};
+> +
+> +			qup_uart8_default: qup-uart8-default {
+>   				pinmux {
+>   					pins = "gpio44", "gpio45";
+> -					function = "qup12";
+> +					function = "qup08";
+> +				};
+> +			};
+> +
+> +			qup_uart9_default: qup-uart9-default {
+> +				pinmux {
+> +					pins = "gpio46", "gpio47";
+> +					function = "qup09";
+>   				};
+>   			};
+> +
+> +			qup_uart10_default: qup-uart10-default {
+> +				pinmux {
+> +					pins = "gpio86", "gpio87",
+> +					       "gpio88", "gpio89";
+> +					function = "qup10";
+> +				};
+> +			};
+> +
+> +			qup_uart11_default: qup-uart11-default {
+> +				pinmux {
+> +					pins = "gpio53", "gpio54",
+> +					       "gpio55", "gpio56";
+> +					function = "qup11";
+> +				};
+> +			};
+> +		};
+> +
+> +		qspi: spi@88dc000 {
+> +			compatible = "qcom,qspi-v1";
+> +			reg = <0 0x088dc000 0 0x600>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+> +				 <&gcc GCC_QSPI_CORE_CLK>;
+> +			clock-names = "iface", "core";
+> +			status = "disabled";
+>   		};
+>   
+>   		spmi_bus: spmi@c440000 {
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
