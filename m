@@ -2,559 +2,92 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC308C5DF62
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 08:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09123C5DF62
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 08:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782D52084D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 08:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1ABB217F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 08:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbfKFIgv (ORCPT
+        id S1730092AbfKFImE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:36:51 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:54113 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730088AbfKFIgu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 03:36:50 -0500
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 0E98340002;
-        Wed,  6 Nov 2019 08:36:46 +0000 (UTC)
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        =?UTF-8?q?K=C3=A9vin=20RAYMOND?= <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: [PATCH v3 2/2] ARM: dts: at91: add smartkiz support and a common kizboxmini dtsi file
-Date:   Wed,  6 Nov 2019 09:36:43 +0100
-Message-Id: <20191106083643.1995-2-kamel.bouhara@bootlin.com>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191106083643.1995-1-kamel.bouhara@bootlin.com>
-References: <20191106083643.1995-1-kamel.bouhara@bootlin.com>
+        Wed, 6 Nov 2019 03:42:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51316 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729881AbfKFImE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:42:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2F6E3ACA4;
+        Wed,  6 Nov 2019 08:42:02 +0000 (UTC)
+Subject: Re: [RFC 05/11] dt-bindings: soc: realtek: rtd1195-chip: Extend reg
+ property
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-realtek-soc@lists.infradead.org
+References: <20191103013645.9856-1-afaerber@suse.de>
+ <20191103013645.9856-6-afaerber@suse.de> <20191106044605.GA28959@bogus>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <202d501d-f548-24c6-b99c-652a59a9e255@suse.de>
+Date:   Wed, 6 Nov 2019 09:42:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20191106044605.GA28959@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Split the existing Kizbox Mini boards into three board configuration,
-the base board, the mother board and the RailDIN board.
-Add a new dts file for the SmartKiz board support.
+Am 06.11.19 um 05:46 schrieb Rob Herring:
+> On Sun, Nov 03, 2019 at 02:36:39AM +0100, Andreas Färber wrote:
+>> Allow to optionally specify a second register to identify the chip.
+>> Whether needed and which register to specify depends on the family;
+>> RTD1295 family will want the CHIP_INFO1 register.
+>>
+>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>> ---
+>>  A SoC specific binding would defeat the purpose of the generic Linux driver;
+> 
+> Why? You can map any number of compatibles to a generic driver.
 
-Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
----
- arch/arm/boot/dts/Makefile                    |   5 +-
- arch/arm/boot/dts/at91-kizboxmini-base.dts    |  24 +++
- ...oxmini.dts => at91-kizboxmini-common.dtsi} | 163 +++++++++---------
- arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  26 +++
- arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  49 ++++++
- arch/arm/boot/dts/at91-smartkiz.dts           | 109 ++++++++++++
- 6 files changed, 293 insertions(+), 83 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-base.dts
- rename arch/arm/boot/dts/{at91-kizboxmini.dts => at91-kizboxmini-common.dtsi} (51%)
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
- create mode 100644 arch/arm/boot/dts/at91-smartkiz.dts
+Because the purpose of the driver is to read from the registers which
+chip it is. If we tell it via the compatible what it is supposed to be,
+1) only the revision would need to be read, and 2) how should it react
+if the compatible tells it one thing and the register value another.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4ac053115a8e..83865d3072b5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -37,7 +37,10 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
- 	at91-ariag25.dtb \
- 	at91-ariettag25.dtb \
- 	at91-cosino_mega2560.dtb \
--	at91-kizboxmini.dtb \
-+	at91-kizboxmini-base.dtb \
-+	at91-kizboxmini-mb.dtb \
-+	at91-kizboxmini-rd.dtb \
-+	at91-smartkiz.dtb \
- 	at91-wb45n.dtb \
- 	at91sam9g15ek.dtb \
- 	at91sam9g25ek.dtb \
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-base.dts b/arch/arm/boot/dts/at91-kizboxmini-base.dts
-new file mode 100644
-index 000000000000..81c29ca5cc1b
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-base.dts
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * at91-kizboxmini-base.dts - Device Tree file for Overkiz Kizbox mini
-+ * base board
-+ *
-+ * Copyright (C) 2015 Overkiz SAS
-+ *   Author: Antoine Aubert <a.aubert@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini";
-+	compatible = "overkiz,kizboxmini-base", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+};
-+
-+&pinctrl_usart0 {
-+	atmel,pins =
-+		<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
-+		 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE
-+		 AT91_PIOA 2 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
-+};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini.dts b/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-similarity index 51%
-rename from arch/arm/boot/dts/at91-kizboxmini.dts
-rename to arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-index cb22f5fb055f..fddf267b2d17 100644
---- a/arch/arm/boot/dts/at91-kizboxmini.dts
-+++ b/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-@@ -1,17 +1,16 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * at91-kizboxmini.dts - Device Tree file for Overkiz Kizbox mini board
-  *
-- * Copyright (C) 2014 Gaël PORTAY <g.portay@overkiz.com>
-+ * Copyright (C) 2014-2018 Overkiz SAS
-+ *   Author: Antoine Aubert <a.aubert@overkiz.com>
-+ *           Gaël Portay <g.portay@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ *           Dorian Rocipon <d.rocipon@overkiz.com>
-  */
--/dts-v1/;
- #include "at91sam9g25.dtsi"
--#include <dt-bindings/pwm/pwm.h>
- 
- / {
--	model = "Overkiz Kizbox mini";
--	compatible = "overkiz,kizboxmini", "atmel,at91sam9g25", "atmel,at91sam9x5", "atmel,at91sam9";
--
- 	chosen {
- 		bootargs = "ubi.mtd=ubi";
- 		stdout-path = &dbgu;
-@@ -22,24 +21,16 @@
- 	};
- 
- 	clocks {
--		slow_xtal {
--			clock-frequency = <32768>;
--		};
--
- 		main_xtal {
- 			clock-frequency = <12000000>;
- 		};
--	};
- 
--	ahb {
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;
--			atmel,pmecc-cap = <4>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
--			status = "okay";
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+
-+		adc_op_clk {
-+			status = "disabled";
- 		};
- 	};
- 
-@@ -63,17 +54,25 @@
- 		};
- 	};
- 
--	pwm_leds {
-+	leds: pwm_leds {
- 		compatible = "pwm-leds";
- 
--		green {
-+		led_blue: pwm_blue {
-+			label = "pwm:blue:user";
-+			pwms = <&pwm0 2 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "none";
-+			status = "disabled";
-+		};
-+
-+		led_green: pwm_green {
- 			label = "pwm:green:user";
- 			pwms = <&pwm0 0 10000000 0>;
- 			max-brightness = <255>;
- 			linux,default-trigger = "default-on";
- 		};
- 
--		red {
-+		led_red: pwm_red {
- 			label = "pwm:red:user";
- 			pwms = <&pwm0 1 10000000 0>;
- 			max-brightness = <255>;
-@@ -82,53 +81,12 @@
- 	};
- };
- 
--&dbgu {
-+&usart0 {
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
- 	status = "okay";
- };
- 
--&ebi {
--	pinctrl-0 = <&pinctrl_ebi_addr_nand
--		     &pinctrl_ebi_data_0_7>;
--	pinctrl-names = "default";
--	status = "okay";
--
--	nand-controller {
--		pinctrl-0 = <&pinctrl_nand_oe_we
--			     &pinctrl_nand_cs
--			     &pinctrl_nand_rb>;
--		pinctrl-names = "default";
--		status = "okay";
--
--		nand@3 {
--			reg = <0x3 0x0 0x800000>;
--			rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
--			cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			nand-ecc-strength = <4>;
--			nand-ecc-step-size = <512>;
--			nand-on-flash-bbt;
--			label = "atmel_nand";
--
--			partitions {
--				compatible = "fixed-partitions";
--				#address-cells = <1>;
--				#size-cells = <1>;
--
--				bootstrap@0 {
--					label = "bootstrap";
--					reg = <0x0 0x20000>;
--				};
--
--				ubi@20000 {
--					label = "ubi";
--					reg = <0x20000 0x7fe0000>;
--				};
--			};
--		};
--	};
--};
--
- &macb0 {
- 	phy-mode = "rmii";
- 	status = "okay";
-@@ -137,26 +95,70 @@
- &pwm0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm0_pwm0_1
--		     &pinctrl_pwm0_pwm1_1>;
-+		     &pinctrl_pwm0_pwm1_1
-+		     &pinctrl_pwm0_pwm2_1>;
- 	status = "okay";
- };
- 
--&tcb0 {
--	timer@0 {
--		compatible = "atmel,tcb-timer";
--		reg = <0>;
--	};
-+&dbgu {
-+	status = "okay";
-+};
- 
--	timer@1 {
--		compatible = "atmel,tcb-timer";
--		reg = <1>;
--	};
-+&watchdog {
-+	status = "okay";
- };
- 
--&usart0 {
-+&adc0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "disabled";
-+};
-+
-+&ebi {
-+	pinctrl-0 = <&pinctrl_ebi_addr_nand
-+			&pinctrl_ebi_data_0_7>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
- 
-+&nand_controller {
-+	status = "okay";
-+	pinctrl-0 = <&pinctrl_nand_oe_we
-+		     &pinctrl_nand_cs
-+		     &pinctrl_nand_rb>;
-+	pinctrl-names = "default";
-+
-+	nand@3 {
-+		reg = <0x3 0x0 0x800000>;
-+		rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+		cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-on-flash-bbt;
-+		label = "atmel_nand";
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bootstrap@0 {
-+				label = "bootstrap";
-+				reg = <0x0 0x20000>;
-+			};
-+
-+			ubi@20000 {
-+				label = "ubi";
-+				reg = <0x20000 0x7fe0000>;
-+			};
-+		};
-+	};
-+};
-+
- &usb0 {
- 	num-ports = <1>;
- 	status = "okay";
-@@ -166,6 +168,3 @@
- 	status = "okay";
- };
- 
--&watchdog {
--	status = "okay";
--};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-new file mode 100644
-index 000000000000..c07d3076a9bc
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2015-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini Mother Board";
-+	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+};
-+
-+&usb0 {
-+	num-ports = <2>;
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&led_blue {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-rd.dts b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-new file mode 100644
-index 000000000000..ab50f4d22387
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2015-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini RailDIN";
-+	compatible = "overkiz,kizboxmini-rd", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	clocks {
-+		adc_op_clk {
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	adc0 {
-+		pinctrl_adc0_ad5: adc0_ad5-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+	};
-+};
-+
-+&usart0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&led_blue {
-+	status = "okay";
-+};
-+
-+&adc0 {
-+	atmel,adc-vref = <2500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_ad5>;
-+	atmel,adc-channels-used = <0x0020>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-smartkiz.dts b/arch/arm/boot/dts/at91-smartkiz.dts
-new file mode 100644
-index 000000000000..2354385f9685
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-smartkiz.dts
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ *           Dorian Rocipon <d.rocipon@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini_common.dtsi"
-+
-+/ {
-+	model = "Overkiz SmartKiz";
-+	compatible = "overkiz,smartkiz", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	clocks {
-+		adc_op_clk {
-+			status = "okay";
-+		};
-+	};
-+
-+	aliases {
-+		serial5 = &uart0;
-+	};
-+
-+	pio_keys {
-+		hk_reset {
-+			label = "HK_RESET";
-+			gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		power_rf {
-+			label = "POWER_RF";
-+			gpios = <&pioA 20 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		power_wifi {
-+			label = "POWER_WIFI";
-+			gpios = <&pioA 21 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	i2c1 {
-+		pinctrl_i2c1: i2c1-0 {
-+			atmel,pins =
-+				<AT91_PIOC 0 AT91_PERIPH_C AT91_PINCTRL_PULL_UP
-+				AT91_PIOC 1 AT91_PERIPH_C AT91_PINCTRL_PULL_UP>;
-+		};
-+	};
-+
-+	adc0 {
-+		pinctrl_adc0_ad0: adc0_ad0-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 11 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad5: adc0_ad5-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad6: adc0_ad6-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 17 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad11: adc0_ad11-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 10 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	dmas = <0>, <0>;
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "disabled";
-+};
-+
-+&macb0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&leds {
-+	blue {
-+		status = "okay";
-+	};
-+};
-+
-+&adc0 {
-+	atmel,adc-vref = <2500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&pinctrl_adc0_ad0
-+		&pinctrl_adc0_ad5
-+		&pinctrl_adc0_ad6
-+		&pinctrl_adc0_ad11
-+	>;
-+	atmel,adc-channels-used = <0x0861>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
+Also it doesn't solve the problem that we may need to extend the binding
+as new models emerge, or instead of just rtd1195, rtd1295, rtd1395, etc.
+we'd also need one for each chip, i.e., rtd1296, cf. 1) above.
+
+>>  is it possible to check the root node's compatible in an if: expression
+>>  to prohibit using more than one reg on "realtek,rtd1195"?
+> 
+> The "rule" is different programming model, different compatible string 
+> for the block.
+
+Agreed in general.
+
+> But this looks simple enough, I don't really care.
+
+Hope you also read the cover letter wrt syscon? That would probably
+obsolete this binding then and require to move the driver's logic into a
+module init instead for lack of dedicated compatible to bind against,
+like Meson does.
+
+Regards,
+Andreas
+
 -- 
-2.24.0.rc1
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
