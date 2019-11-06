@@ -2,79 +2,101 @@ Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F83C5DF63
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919E4C5DF63
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5430620663
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EFA20663
+	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 14:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=emlid.com header.i=@emlid.com header.b="tx+mCq12"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MB1WGmx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfKFOD3 (ORCPT
+        id S1726976AbfKFOIc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:03:29 -0500
-Received: from forward103o.mail.yandex.net ([37.140.190.177]:38243 "EHLO
-        forward103o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726926AbfKFOD2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 09:03:28 -0500
-Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
-        by forward103o.mail.yandex.net (Yandex) with ESMTP id C6BEB5F80F50;
-        Wed,  6 Nov 2019 17:03:25 +0300 (MSK)
-Received: from mxback3q.mail.yandex.net (mxback3q.mail.yandex.net [IPv6:2a02:6b8:c0e:39:0:640:4545:437c])
-        by forward100q.mail.yandex.net (Yandex) with ESMTP id C1F707080002;
-        Wed,  6 Nov 2019 17:03:25 +0300 (MSK)
-Received: from vla5-9cb0c276d29e.qloud-c.yandex.net (vla5-9cb0c276d29e.qloud-c.yandex.net [2a02:6b8:c18:3588:0:640:9cb0:c276])
-        by mxback3q.mail.yandex.net (mxback/Yandex) with ESMTP id 8pKhPtX86G-3OVO6BLo;
-        Wed, 06 Nov 2019 17:03:25 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emlid.com; s=mail; t=1573049005;
-        bh=hai9sgog1dfk7KHhtOi290Igt8EHHm6/472rOJW8OUc=;
-        h=Subject:To:From:Cc:Date:Message-Id;
-        b=tx+mCq12Zc5PnLyV3gYwacLWpvU7RpSMXN22Roq1f1ejMQCRkeb/kdEqmH9i7+2Dy
-         lBFgzdZGB96007NsuycC2xyjfv485b2Bu+FFSShscT7K7IeSKLCN1aVOY7g7ZBvT+B
-         cfy4VDX2z9CdM2CIrRTXRJjJS7A0hudYfpnFgGc8=
-Authentication-Results: mxback3q.mail.yandex.net; dkim=pass header.i=@emlid.com
-Received: by vla5-9cb0c276d29e.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id S6vUK4L7IT-3N1uYOit;
-        Wed, 06 Nov 2019 17:03:23 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (Client certificate not present)
-From:   Georgii Staroselskii <georgii.staroselskii@emlid.com>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>
-Subject: [PATCH 0/2] Neutis N5H3 support
-Date:   Wed,  6 Nov 2019 17:03:16 +0300
-Message-Id: <1573048998-8913-1-git-send-email-georgii.staroselskii@emlid.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 6 Nov 2019 09:08:32 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46901 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfKFOIc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 09:08:32 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r18so1506044pgu.13;
+        Wed, 06 Nov 2019 06:08:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xh0YLDess6L96nvkYhuVlivBqcsNSJ5iJO7vqQb2cA8=;
+        b=MB1WGmx7LCN3svj1Z32NEMJi+359bYzJH064LJ6eHLnQ5EGZz73rdHSTAmS8xQ/f7k
+         hHXH0vlm9SGNPrsvszHnY5l9DNVOqCNOCYD/2BmSijIBSDEsPvO1kwDOOzCflCUtE+C3
+         5uWCFCDsGeJ+btYZbhuxZEZGz66MRbWP9PD463v41i9Y1Oi+XQ1otayKg60K6uZh5Gnc
+         4DnZXRz5ohRbcR80EUKrbJhjL/yZPXX9+guRIg4XibxuO27z0vcOTmVyl6Kr/4HGMSSS
+         /Wpq0gI97R1uFldSR/4Pmm/H3wRa0HUKiXPV/wUp+1WqruYcT72pfSlLfi8NUFXF9/2d
+         +GvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xh0YLDess6L96nvkYhuVlivBqcsNSJ5iJO7vqQb2cA8=;
+        b=LRjnhGEgahrv5euh/a9edodoYAI7+LPT3dxFYmQkDIZNZjB6n2aAwMyM3f9C0F1J85
+         d0+Crq20lEdRjupd8Nv6m4XvwKO2FMGuNo92Vb+od+swra5oGbnyF+QMx1HfC0WvCovP
+         +Bz19lTbS1wWpq9UAk1fuD4hOQS/HpxB5XM4nFBwPPnoLBrsLVsQAiDuN21fhs2K07e+
+         mz9XN1TOe/1ZlMpxkWDBZUUUU+bnk21uXmGNSRbGVCLjWtn5sW+1svuc34j1rpvWB2Lj
+         x0l74wjFgr769b5dZRwVdpPIE96QEMVpAyDl9o87/u46kkq2egW1epeNhnwdhn0rJao0
+         vv6w==
+X-Gm-Message-State: APjAAAWK0/PI3crWjMTn088o/3K3C/nfN0bTQLdb+zFZftNChROYBiWI
+        CLi4VX9s0S8ql0pk4aZWgGs=
+X-Google-Smtp-Source: APXvYqygIEZIViXKClHYSYmolDRBmW+9kj6CnM/P3+aITpIuH+/hhzB9v23qpqr0AtWRs2EX6QzoUw==
+X-Received: by 2002:a17:90a:9201:: with SMTP id m1mr4135941pjo.74.1573049311958;
+        Wed, 06 Nov 2019 06:08:31 -0800 (PST)
+Received: from localhost.localdomain ([2001:19f0:7001:2668:5400:1ff:fe62:2bbd])
+        by smtp.gmail.com with ESMTPSA id a16sm4707345pfc.56.2019.11.06.06.08.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 06:08:26 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH 0/2] mtd: mtk-quadspi: add support for memory-mapped flash reading
+Date:   Wed,  6 Nov 2019 22:07:46 +0800
+Message-Id: <20191106140748.13100-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Emlid Neutis board has another variant with H3 instead of H5. This patchset
-adds support for this board by moving common bits to
-sunxi-h3-h5-emlid-neutis.dtsi and then including it in processor-specific DTS.
+This patchset adds support for optional memory-mapped flash reading.
 
-Georgii Staroselskii (2):
-  arm: dts: allwinner: Split out non-SoC specific parts of Neutis N5
-  arm: dts: sunxi: Add Neutis N5H3 support
+BTW: This controller is a ridiculous one which only supports very limited
+spi-nor instructions. I can't rework the driver into a spi-mem one because
+MTK didn't provide register description in their datasheet and even if they
+do provide the documentation, the resulted driver will still be ridiculous
+because it'll need to check every supported instructions in support_op and
+do execution in one-by-one case in exec_op.
 
- arch/arm/boot/dts/Makefile                         |   1 +
- .../dts/sun8i-h3-emlid-neutis-n5h3-devboard.dts    |  61 +++++++
- arch/arm/boot/dts/sun8i-h3-emlid-neutis-n5h3.dtsi  |  11 ++
- arch/arm/boot/dts/sunxi-h3-h5-emlid-neutis.dtsi    | 181 +++++++++++++++++++++
- .../sun50i-h5-emlid-neutis-n5-devboard.dts         |  95 +----------
- .../dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi   |  64 +-------
- 6 files changed, 259 insertions(+), 154 deletions(-)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-emlid-neutis-n5h3-devboard.dts
- create mode 100644 arch/arm/boot/dts/sun8i-h3-emlid-neutis-n5h3.dtsi
- create mode 100644 arch/arm/boot/dts/sunxi-h3-h5-emlid-neutis.dtsi
+Chuanhong Guo (2):
+  mtd: mtk-quadspi: add support for memory-mapped flash reading
+  dt-bindings: mtd: mtk-quadspi: update bindings for mmap flash read
+
+ .../devicetree/bindings/mtd/mtk-quadspi.txt   | 21 ++++++++++++++++++-
+ drivers/mtd/spi-nor/mtk-quadspi.c             | 11 ++++++++++
+ 2 files changed, 31 insertions(+), 1 deletion(-)
 
 -- 
-2.7.4
+2.21.0
 
