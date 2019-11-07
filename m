@@ -2,102 +2,156 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E4FC5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B4AFA372C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3144321D7B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573116052;
-	bh=5UXATmHfJ4Sv3v2y4iqCmaHYxknDg4YaP8YhAQf2jHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OAWje0EZXsr4yZIUgTtCWyTX5p4Qo2GGR+wA4+CJI255tLWhpy8Si182yTgcFTZiz
-	 Krpju082gDMHBeCGUKKmWBe7PFFx9oR0XnKZuEoiDmPqiGluT1YcNkJa739ecupMte
-	 PqmYY+oTT1Ogz2hiObPfZ+OHlD6enbHY9BPVbsIA=
+	by mail.kernel.org (Postfix) with ESMTP id CD9F021D7E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfKGIkv (ORCPT
+        id S1727362AbfKGIop (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:40:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbfKGIkv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:40:51 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA38321D79;
-        Thu,  7 Nov 2019 08:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573116050;
-        bh=5UXATmHfJ4Sv3v2y4iqCmaHYxknDg4YaP8YhAQf2jHg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fOthM6XmtGHNJeSt/0HirzaKkvhp+sVzK0g8L6zA5YgJT9lFDQXhvVcl5HPVstqb/
-         XPNfXaybhhUQQka2do1k5GATqsjRJ8mNBaew0ZJ/Xs6Kp2uVE9CA40KHH2Mp8i4vfG
-         ArYmC9P4vu1X4xy1rPuUj+F8+LqX4PGJ5n1ZahV4=
-Date:   Thu, 7 Nov 2019 09:40:47 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v1 0/3] of_devlink: Minor fixes and new properties
-Message-ID: <20191107084047.GB1203521@kroah.com>
-References: <20191105065000.50407-1-saravanak@google.com>
- <CAGETcx-X4OTrGfBkP6CtC6=GV=KA147VO6jJL+o6hkC1iCkeeA@mail.gmail.com>
+        Thu, 7 Nov 2019 03:44:45 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43333 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbfKGIoo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 03:44:44 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so1307207oti.10;
+        Thu, 07 Nov 2019 00:44:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=41NEiPopACB8w8/wi96XPwORusZtZyFOe+6fXdB5oWI=;
+        b=NI65yWNHYzw3WUfYaSgg+0OwZsjJvaeLUXBcd1dVigp1vSRsHHiLLEihivro1QXy4j
+         R9h0q5sfZFZniTzaTnfjF8lsPd52y7jPSA9jytSWou1mnDJVqCnpu77gb8zNI+qhomC1
+         PZNVy8tOjSImByW2DAIHV+xCLFHeAyi2cg+D4/uV4QOhY8SwPsh+JWzqlX7z1HTj/ttF
+         HNpmoV8geq5XlcmR5SZCNgGrhp0rPvlXvkJBfnaFYMJ/i1EEDx0dyT/bDrCC7BeUBp3U
+         Oc2Os/EPiYAk+3VmFFkHKT8YzJPGzWRbwbeHVLzxH22NmRgFRaIcR4mMBnO6nLVprC1W
+         p4hg==
+X-Gm-Message-State: APjAAAWjy/fyBi5YNXpt8OmswGXfVzBFwssrW8MLuc9JavkMuPqKW4n/
+        cFOukMWg49eHwIGwnZtlh1PnewQq8s+CfIQiTHk=
+X-Google-Smtp-Source: APXvYqyLd+e060V3vapvpupJ//7p928pbjWfrqP8a74RfAwxyKf0nla2NjyjPYziuD+6o8scdy87CzLXM7S3IlcXjQw=
+X-Received: by 2002:a05:6830:2363:: with SMTP id r3mr2078530oth.39.1573116282410;
+ Thu, 07 Nov 2019 00:44:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-X4OTrGfBkP6CtC6=GV=KA147VO6jJL+o6hkC1iCkeeA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 7 Nov 2019 09:44:31 +0100
+Message-ID: <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 09:53:40PM -0800, Saravana Kannan wrote:
-> On Mon, Nov 4, 2019 at 10:50 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Sending again since the cover letter missed everyone/mailing lists.
-> >
-> > First two patches are just code clean up and logging with no functional
-> > difference. The 3rd patch adds support for the following DT properties:
-> > iommus, mboxes and io-channels.
-> >
-> > These patches are on top of driver-core-next since that's where the rest
-> > of the of_devlink patches are.
-> >
-> > Greg and Rob,
-> > On a side note, I was wondering if I should rename the of_devlink kernel
-> > command line to fw_devlink and move it out of drivers/of/property.c and
-> > into drivers/base/core.c. This feature isn't really limited to
-> > devicetree, so I don't see a need to have devicetree specific kernel
-> > command line option.  Please let me know if that sounds okay to you.
-> 
-> Hi Rob,
-> 
-> Thanks for the reviews. Can you let me know what you think of this too?
-> 
-> Rob/Greg,
-> 
-> If I rename of_devlink to fw_devlink, I might also make it a setting
-> like fw_devlink=none/permissive/enforce
-> - none would be same as disabled completely.
-> - permissive would use SYNC_STATE_ONLY for all device links created by
-> firmware. So it won't block any probes even with cycles but
-> sync_state() will still work correctly.
-> - enforce would be the current "of_devlinkg=1" behavior where direct
-> dependencies would block probing and the child dependencies would use
-> SYNC_STATE_ONLY.
+Hi Prabhakar,
 
-Renaming makes sense to me, and all of the above is fine as well.
+On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This patch adds the bindings for the R-Car PCIe endpoint driver.
+>
+> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-thanks,
+Thanks for your patch!
 
-greg k-h
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> @@ -0,0 +1,43 @@
+> +* Renesas R-Car PCIe Endpoint Controller DT description
+> +
+> +Required properties:
+> +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> +                                    RZ/G2 compatible device.
+
+Unless I'm missing something, this is for the exact same hardware block as
+Documentation/devicetree/bindings/pci/rcar-pci.txt?
+So shouldn't you amend those bindings, instead of adding new compatible
+values?
+Please remember that DT describes hardware, not software policy.
+So IMHO choosing between host and endpoint is purely a configuration
+issue, and could be indicated by the presence or lack of some DT properties.
+E.g. host mode requires both "bus-range" and "device_type" properties,
+so their absence could indicate endpoint mode.
+
+> +- reg: Five register ranges as listed in the reg-names property
+> +- reg-names: Must include the following names
+> +       - "apb-base"
+> +       - "memory0"
+> +       - "memory1"
+> +       - "memory2"
+> +       - "memory3"
+
+What is the purpose of the last 4 regions?
+Can they be chosen by the driver, at runtime?
+
+> +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
+> +- clocks: from common clock binding: clock specifiers for the PCIe controller
+> +        clock.
+> +- clock-names: from common clock binding: should be "pcie".
+> +
+> +Optional Property:
+> +- max-functions: Maximum number of functions that can be configured (default 1).
+> +
+> +Example:
+> +
+> +SoC-specific DT Entry:
+> +
+> +       pcie_ep: pcie_ep@fe000000 {
+> +               compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-gen2";
+
+These compatible values do not match with the ones above
+(but they match with what I'd like to see ;-)
+
+> +               reg = <0 0xfe000000 0 0x80000>,
+> +                       <0x0 0xfe100000 0 0x100000>,
+> +                       <0x0 0xfe200000 0 0x200000>,
+> +                       <0x0 0x30000000 0 0x8000000>,
+> +                       <0x0 0x38000000 0 0x8000000>;
+> +               reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
+> +               clocks = <&cpg CPG_MOD 319>;
+> +               clock-names = "pcie";
+> +               power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> +               resets = <&cpg 319>;
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
