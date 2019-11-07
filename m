@@ -2,208 +2,74 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DA8C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAE2C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC86A214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3832087E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388171AbfKGKxj (ORCPT
+        id S1727278AbfKGLA5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:53:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59998 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727278AbfKGKxj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:53:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E3269B2CD;
-        Thu,  7 Nov 2019 10:53:36 +0000 (UTC)
-Message-ID: <df7a30583436589449ec9cb587b5ab5e8985d3d7.camel@suse.de>
-Subject: Re: [PATCH 1/4] dt-bindings: pci: add bindings for brcmstb's PCIe
- device
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        mbrugger@suse.com, linux-pci@vger.kernel.org, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Thu, 07 Nov 2019 11:53:34 +0100
-In-Reply-To: <20191107103235.GW9723@e119886-lin.cambridge.arm.com>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <20191106214527.18736-2-nsaenzjulienne@suse.de>
-         <20191107103235.GW9723@e119886-lin.cambridge.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-lSQQztMt1wJEBprNfTIe"
-User-Agent: Evolution 3.34.1 
+        Thu, 7 Nov 2019 06:00:57 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55293 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388133AbfKGLA4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 06:00:56 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iSfX1-0004bX-2C; Thu, 07 Nov 2019 12:00:51 +0100
+Received: from mgr by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iSfX0-0003fe-6L; Thu, 07 Nov 2019 12:00:50 +0100
+From:   Michael Grzeschik <m.grzeschik@pengutronix.de>
+To:     netdev@vger.kernel.org
+Cc:     Tristram.Ha@microchip.com, UNGLinuxDriver@microchip.com,
+        kernel@pengutronix.de, devicetree@vger.kernel.org
+Subject: [PATCH v1 4/4] dt-bindings: net: dsa: document additional Microchip KSZ8863/8873 switch
+Date:   Thu,  7 Nov 2019 12:00:30 +0100
+Message-Id: <20191107110030.25199-5-m.grzeschik@pengutronix.de>
+X-Mailer: git-send-email 2.24.0.rc1
+In-Reply-To: <20191107110030.25199-1-m.grzeschik@pengutronix.de>
+References: <20191107110030.25199-1-m.grzeschik@pengutronix.de>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+It is a 3-Port 10/100 Ethernet Switch. One CPU-Port and two
+Switch-Ports.
 
---=-lSQQztMt1wJEBprNfTIe
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ Documentation/devicetree/bindings/net/dsa/ksz.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Thu, 2019-11-07 at 10:32 +0000, Andrew Murray wrote:
-> On Wed, Nov 06, 2019 at 10:45:23PM +0100, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
->=20
-> Nit: Looking at past git history, ideally the patch subject would be
-> 'dt-bindings: *PCI*: *A*dd bindings for brcmstb's PCIe.
-
-Noted.
-
-> > The DT bindings description of the brcmstb PCIe device is described.
-> > This node can only be used for now on the Raspberry Pi 4.
-> >=20
-> > This was based on Jim's original submission[1], converted to yaml and
-> > adapted to the RPi4 case.
->=20
-> Thanks for picking this up.
->=20
-> > [1] https://patchwork.kernel.org/patch/10605937/
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 116 ++++++++++++++++++
-> >  1 file changed, 116 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
-.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > new file mode 100644
-> > index 000000000000..0b81c26f8568
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -0,0 +1,116 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Brcmstb PCIe Host Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - description: PCIe host controller
-> > +      - description: builtin MSI controller
-> > +
-> > +  interrupt-names:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - const: pcie
-> > +      - const: msi
-> > +
-> > +  "#address-cells":
-> > +    const: 3
-> > +
-> > +  "#size-cells":
-> > +    const: 2
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 1
-> > +
-> > +  interrupt-map-mask: true
-> > +
-> > +  interrupt-map: true
-> > +
-> > +  ranges: true
-> > +
-> > +  dma-ranges: true
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: sw_pcie
-> > +
-> > +  msi-controller:	/* We use the domain number as our controller number=
- */
-> > 	pcie->id =3D of_get_pci_domain_nr(dn);
-> > 	if (pcie->id < 0)
-> > 		return pcie->id;
-> > +    description: Identifies the node as an MSI controller.
-> > +    type: boolean
-> > +
-> > +  msi-parent:
-> > +    description: MSI controller the device is capable of using.
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +
-> > +  linux,pci-domain:
-> > +    description: PCI domain ID. Should be unique for each host control=
-ler.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +  brcm,enable-ssc:
-> > +    description: Indicates usage of spread-spectrum clocking.
-> > +    type: boolean
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - "#interrupt-cells"
-> > +  - interrupt-map-mask
-> > +  - interrupt-map
-> > +  - ranges
-> > +  - dma-ranges
-> > +  - linux,pci-domain
->=20
-> I don't think pci-domain is *required* is it?
-
-You're right, I missed that one. It was needed on some of the STB devices b=
-ut
-not in the RPi4's case. I'll remove it in v2.
-
-Regards,
-Nicolas
-
-
---=-lSQQztMt1wJEBprNfTIe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3D964ACgkQlfZmHno8
-x/6Dlgf9F45I7R8USQ8gJmC9ajqlrRMvsDHlY81jEgVLxDCZbF0PRe59u1wFyB3G
-/FikTo9UHzdlxoh53V+s79l0sfIUfivDe1QA6OHUBOLl5DjK4db9igX6SnEX7EQi
-baB5K6bwJgtqYOyOmwkyHoxBrkTCUkURwqQ6Qn49s9Q2mNzgjAe1VHredXV6BvT8
-ZcUDwz6voiY4wSEZen9tHqVoKQdSRgq8GGrohiHPzvyShfv515AckbEMKzR0Z5cf
-f73H4sNp9/P/2fk4Rtvujc22rSvHPLcHIUGZalz8tcxdGIKX02Lh1Fjx9hAzdxJZ
-0i/rcLENlxAAYJW2YCYp5ILND4hVEg==
-=Sc3w
------END PGP SIGNATURE-----
-
---=-lSQQztMt1wJEBprNfTIe--
+diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+index 95e91e84151c3..a5d71862f53cb 100644
+--- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
++++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+@@ -8,6 +8,8 @@ Required properties:
+   - "microchip,ksz8765"
+   - "microchip,ksz8794"
+   - "microchip,ksz8795"
++  - "microchip,ksz8863"
++  - "microchip,ksz8873"
+   - "microchip,ksz9477"
+   - "microchip,ksz9897"
+   - "microchip,ksz9896"
+-- 
+2.24.0.rc1
 
