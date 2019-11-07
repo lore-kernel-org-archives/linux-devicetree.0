@@ -2,102 +2,96 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C389FC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD37C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89393218AE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="MOfDJW94"
+	by mail.kernel.org (Postfix) with ESMTP id BD28D2187F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388175AbfKGLGV (ORCPT
+        id S1733142AbfKGLUZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:06:21 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:29508 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfKGLGV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 06:06:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573124779;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=24fF1xUH22DnXnm6wMQiB8qNar/ohuK/dXnbgHGAvcQ=;
-        b=MOfDJW94TnCRRCTHR1FoTvwICt2ptXsgf2KJonk1VEg8x8F01fF5X9xD9Jqmc9fiZn
-        gwirBATlQZCKk6+L31qT7i2WR60xSc9dxWTf2wEcaz4qmLXCb0WUJ1hhdesTIy/I+bma
-        mxMqNzXNsU2A9IbBoc3iQ98hgGEI5vCfl0ubSBef7U8dKyhjQAl3tNRH/r7/sK/rf3Du
-        mtyhqS7zLPQKQENlR2r8yF4f9xDb6JbFQoHsNU4zkgA+5+dERWvLvOcMgFdraQic/o9G
-        XmT7CJGePS8IoMv9WDqbJBKkzjeawGeHxOVR6fvoQqhmVPbC7vEMyXHAjQlFDsIWIxHj
-        g9kQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7PR5/L9P0"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3vA7B6Ddgt
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 7 Nov 2019 12:06:13 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 7 Nov 2019 06:20:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:54376 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727707AbfKGLUZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:20:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C6D731B;
+        Thu,  7 Nov 2019 03:20:24 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6DDF3F6C4;
+        Thu,  7 Nov 2019 03:20:22 -0800 (PST)
+Date:   Thu, 7 Nov 2019 11:20:20 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2 2/8] ARM: DTS: am33xx: add sgx gpu child node
-Date:   Thu,  7 Nov 2019 12:06:05 +0100
-Message-Id: <fbe9f4a20fd55d111afe8f09d03c154a82cf5ba5.1573124770.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1573124770.git.hns@goldelico.com>
-References: <cover.1573124770.git.hns@goldelico.com>
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/2] ARM: dts: bcm2711: force CMA into first GB of
+ memory
+Message-ID: <20191107112020.GA16965@arrakis.emea.arm.com>
+References: <20191107095611.18429-1-nsaenzjulienne@suse.de>
+ <20191107095611.18429-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107095611.18429-2-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-and add interrupt.
+Hi Nicolas,
 
-Tested on BeagleBone Black.
+On Thu, Nov 07, 2019 at 10:56:10AM +0100, Nicolas Saenz Julienne wrote:
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index ac83dac2e6ba..667658497898 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -12,6 +12,26 @@
+>  
+>  	interrupt-parent = <&gicv2>;
+>  
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		/*
+> +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
+> +		 * that's not good enough for bcm2711 as some devices can
+> +		 * only address the lower 1G of memory (ZONE_DMA).
+> +		 */
+> +		linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			size = <0x2000000>; /* 32MB */
+> +			alloc-ranges = <0x0 0x00000000 0x40000000>;
+> +			reusable;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+> +
+>  	soc {
+>  		/*
+>  		 * Defined ranges:
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/am33xx.dtsi | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Sorry, I just realised I can't merge this as it depends on a patch
+that's only in -next: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi
+4 support").
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index a9d848d50b20..dbfb9d5aa915 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -480,10 +480,11 @@
- 			#size-cells = <1>;
- 			ranges = <0 0x56000000 0x1000000>;
- 
--			/*
--			 * Closed source PowerVR driver, no child device
--			 * binding or driver in mainline
--			 */
-+			sgx: gpu@0 {
-+				compatible = "ti,am335x-sgx530-125", "img,sgx530-125", "img,sgx530";
-+				reg = <0x00 0x1000000>;	/* 16 MB */
-+				interrupts = <37>;
-+			};
- 		};
- 	};
- };
+I'll queue the second patch in the series to fix the regression
+introduces by the ZONE_DMA patches and, AFAICT, the dts update can be
+queued independently.
+
 -- 
-2.23.0
-
+Catalin
