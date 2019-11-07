@@ -2,102 +2,107 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AFEC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 05:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E7EC5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 05:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587B1214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 05:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B11214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 05:54:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XhnrecfL";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XhnrecfL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ORPPosFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfKGFqY (ORCPT
+        id S1725938AbfKGFyS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 00:46:24 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:37802 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfKGFqX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 00:46:23 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D814F60610; Thu,  7 Nov 2019 05:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573105582;
-        bh=5R7CvQNT/kKjJNFdzKmIt6+BvlKhn1cLoLRrPsfKIqo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XhnrecfL1k6NaedMJcED78XJ9cA3/WyKOu1st82/QN7Z0abZaKeErpTF3RsAdcKMr
-         2wNP5cn0mRpE7aPFzCJo129/AFLNkLmq8m9/1TCdq8uW6abeJJHVR57svyL7foxoqI
-         uoZKJflTtqJCFkS9NUfUPRyU2Jyr5hy8XK/PcP7E=
-Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC8D560112;
-        Thu,  7 Nov 2019 05:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573105582;
-        bh=5R7CvQNT/kKjJNFdzKmIt6+BvlKhn1cLoLRrPsfKIqo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XhnrecfL1k6NaedMJcED78XJ9cA3/WyKOu1st82/QN7Z0abZaKeErpTF3RsAdcKMr
-         2wNP5cn0mRpE7aPFzCJo129/AFLNkLmq8m9/1TCdq8uW6abeJJHVR57svyL7foxoqI
-         uoZKJflTtqJCFkS9NUfUPRyU2Jyr5hy8XK/PcP7E=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC8D560112
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v4 08/14] dt-bindings: qcom,pdc: Add compatible for sc7180
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        swboyd@chromium.org, Lina Iyer <ilina@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org>
- <20191106065017.22144-9-rnayak@codeaurora.org> <20191106165632.GA15103@bogus>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <3302bde7-2299-476e-e3cc-35c84a459d63@codeaurora.org>
-Date:   Thu, 7 Nov 2019 11:16:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 00:54:18 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43067 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfKGFyR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 00:54:17 -0500
+Received: by mail-ot1-f68.google.com with SMTP id l14so983063oti.10
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 21:54:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z8WMiQe0VQDjoyKQb/Q1dgHH8ZGJEBdgTxTKVf+T+d0=;
+        b=ORPPosFhWE3zKGUEjFHEXL4y2uO4VYNssFO/dITIhmo/ufc1VZAlPHDd7b6GE7doWl
+         FrwfhE8/eCmJhp6es62joxO/H6TzNYei4vDpTHfknb6tqosNL/Qo/UGWZPLKTIUV+HCA
+         uvY4Lfl792bAEV3Xs0CanTl6JGlv4wr5gIDynZ+MX+m+wqi0xWUIPRwtr72AF0Z4WAoI
+         snZYgb0yOC2pDuaXT0yWL9K6PpkeXTQs20dOJiqMC1fHUzlwuEkRsLVof/Nx7pD/Gry1
+         D2Sg8ufOI784E2JPo1atYAwQy5xPUvP/E1ZpSqhc7BZIk3pjhHMM5vAeZORSdsgeF19f
+         a/fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z8WMiQe0VQDjoyKQb/Q1dgHH8ZGJEBdgTxTKVf+T+d0=;
+        b=CdWU3CBt85ODupmRvXt+Rq8Ld1y9qMteVx8qpDUDfKrzI/g/GQuuxBlBgwxlbFA4ev
+         EaqrY+njso3T6Xlqvy22KjpS8ss7CebuXcn/zp/Khq7XSaYO2y3o+5B7TStRL72o6AGd
+         QdsClubD3REF/VFXnNiTmRAM7D3yO6ENV0lYuWFsip6BUL1r8/5illAy1g3/HOXSdb25
+         p6fYsv/S56xgK/UvSKVKJGLZraYTQFC5lOxlfueUojXrJdpYzjS0Jf+RXLOr1/W8W2mn
+         sz//jW4uMDgWenmrfIScq04TbuoGguBoyynEWMl9Q18hemyNc2vo97k5iIrLKNEkgfKa
+         27EA==
+X-Gm-Message-State: APjAAAXAeS+WPcvXlPFwaVv+MRVzLFOv1fQT91hhbHb+uBZEm5Z4a+68
+        /PUZDXKQR0VqNNFzv6F6RgVKFCnmCjovcPkw6VscZw==
+X-Google-Smtp-Source: APXvYqyM23HvT4YIwpUXDZLD1fpZ3vh1A4qEU1lt+YKirrx+bKUeYCEqwkp3sHwVS9mlTJP9q1b50L58yznJoPUQB30=
+X-Received: by 2002:a9d:7ac2:: with SMTP id m2mr1373544otn.225.1573106056538;
+ Wed, 06 Nov 2019 21:54:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191106165632.GA15103@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191105065000.50407-1-saravanak@google.com>
+In-Reply-To: <20191105065000.50407-1-saravanak@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 6 Nov 2019 21:53:40 -0800
+Message-ID: <CAGETcx-X4OTrGfBkP6CtC6=GV=KA147VO6jJL+o6hkC1iCkeeA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] of_devlink: Minor fixes and new properties
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Nov 4, 2019 at 10:50 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Sending again since the cover letter missed everyone/mailing lists.
+>
+> First two patches are just code clean up and logging with no functional
+> difference. The 3rd patch adds support for the following DT properties:
+> iommus, mboxes and io-channels.
+>
+> These patches are on top of driver-core-next since that's where the rest
+> of the of_devlink patches are.
+>
+> Greg and Rob,
+> On a side note, I was wondering if I should rename the of_devlink kernel
+> command line to fw_devlink and move it out of drivers/of/property.c and
+> into drivers/base/core.c. This feature isn't really limited to
+> devicetree, so I don't see a need to have devicetree specific kernel
+> command line option.  Please let me know if that sounds okay to you.
 
+Hi Rob,
 
-On 11/6/2019 10:26 PM, Rob Herring wrote:
-> On Wed,  6 Nov 2019 12:20:11 +0530, Rajendra Nayak wrote:
->> Add the compatible string for sc7180 SoC from Qualcomm.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Cc: Lina Iyer <ilina@codeaurora.org>
->> Cc: Marc Zyngier <maz@kernel.org>
->> ---
->>   .../devicetree/bindings/interrupt-controller/qcom,pdc.txt      | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
+Thanks for the reviews. Can you let me know what you think of this too?
 
-Sorry I missed mentioning the delta and the reason for not including your Acked-by.
-The previous patch was proposing using just a SoC specific compatible, and this
-one adds a SoC independent one along with the SoC specific one as discussed here [1]
+Rob/Greg,
 
-[1] https://lkml.org/lkml/2019/11/4/73
+If I rename of_devlink to fw_devlink, I might also make it a setting
+like fw_devlink=none/permissive/enforce
+- none would be same as disabled completely.
+- permissive would use SYNC_STATE_ONLY for all device links created by
+firmware. So it won't block any probes even with cycles but
+sync_state() will still work correctly.
+- enforce would be the current "of_devlinkg=1" behavior where direct
+dependencies would block probing and the child dependencies would use
+SYNC_STATE_ONLY.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+-Saravana
