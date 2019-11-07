@@ -2,172 +2,201 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4E5C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6BCC5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C8221D7B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67FC21882
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:39:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="go59pu7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfKGHhB (ORCPT
+        id S1726618AbfKGHjq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:37:01 -0500
-Received: from mga01.intel.com ([192.55.52.88]:5185 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfKGHhA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:37:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 23:37:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,277,1569308400"; 
-   d="scan'208";a="285920100"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga001.jf.intel.com with ESMTP; 06 Nov 2019 23:36:57 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v4 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Thu,  7 Nov 2019 15:36:45 +0800
-Message-Id: <778f21b09fabd2fdafeeeb325b35df35ab222690.1573111648.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
+        Thu, 7 Nov 2019 02:39:46 -0500
+Received: from mail-eopbgr1400121.outbound.protection.outlook.com ([40.107.140.121]:3541
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726498AbfKGHjq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 02:39:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b1Xi5RQa6K1naqDQOcvwFmuPRS4TRU8iY/pREqS0lrmjOiLgDGH80isJLnvAQY/Fxi9nFxBZdOi4ccvidIW9oPqwBSFVisbV3k1fFG4LlxWCyTECgUFQFrF1m1hQqtM5rRAjtoE/QIhgjZu3LWiYe7ZLbJo8ElKCniIbRfinoR0NBW4FdZNW0fCRraUCDNHi224jE/DROrwPgxy0fabUVuBYGpfO6W4Na4ofhkveLtyJ1iTDthWPgGCjAga19yLIvxthpHqbIkEvumOmyjPLzlRsVsBDL+eDPkHL2/uRfZaYGtJ/+VwJjJQLG6oIjfC6r7+ZxeacAELgu66Go3QSFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=czWyYTWZRhB+7KG+3GZVGdw8cuqOHqhRFrrCf2B5qKI=;
+ b=L7/jowipYdAzs/6Nbl3nOARs0DTQCSdN97M2eIRTsjNn8Smv3Jx/k2wZKDJkl0rmohBkTZl7Ph34BI1Rwn4sfXVGk4TrA8BgBjxEymHSg7g55WI3EtJpV3414S5OnEwMhpPxAjrrJTYrkO6bJwWzPxte2Kus/mbu5jWKC0NKNH0RIv+cxUZQqsR16lhTLP0MJLQoJuaphVT7lg6OQcPO3AC/ekwquPkr15AqtW0gRfpKdll3XaATu5lwX6URzKgFkRa7yVcq8YWV8WtcbI0J+hP96IPt6E46R05WTHQDC/hu0HXcbJ2qpvMkf7uhC+IVeZcLQnYfujVIeYhr0Gq/mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=czWyYTWZRhB+7KG+3GZVGdw8cuqOHqhRFrrCf2B5qKI=;
+ b=go59pu7jmLbHi4vtsgh0ltm4uLRrrBJ5xluMIuemm2BOgUPQmmbHTLOh8w3Lq9vVoaWy5Qfho7VtZVaLa4eB0LidXhkLpC66YNkERy91UrrnHsU5dmSyF6xXREC59uia8DKj9xyThF0js6W+a+iETetgj2+rP/Bs/VPnnA4Uqc8=
+Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com (52.134.242.17) by
+ OSBPR01MB4168.jpnprd01.prod.outlook.com (20.178.5.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Thu, 7 Nov 2019 07:39:37 +0000
+Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com
+ ([fe80::c9e7:5418:764e:69e3]) by OSBPR01MB2103.jpnprd01.prod.outlook.com
+ ([fe80::c9e7:5418:764e:69e3%3]) with mapi id 15.20.2408.024; Thu, 7 Nov 2019
+ 07:39:36 +0000
+From:   Biju Das <biju.das@bp.renesas.com>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree
+ bindings
+Thread-Topic: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree
+ bindings
+Thread-Index: AQHVlNmPWeEtWINgRU2UgJ1FcD7vaKd/UtRw
+Date:   Thu, 7 Nov 2019 07:39:36 +0000
+Message-ID: <OSBPR01MB210380ACAF35B2FE94F1589EB8780@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biju.das@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d441c6ad-ff2f-4f54-7892-08d76355a3ee
+x-ms-traffictypediagnostic: OSBPR01MB4168:|OSBPR01MB4168:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <OSBPR01MB4168045039ACA05E435DA265B8780@OSBPR01MB4168.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(396003)(136003)(346002)(189003)(199004)(51914003)(5660300002)(2501003)(9686003)(7416002)(478600001)(6116002)(256004)(74316002)(7736002)(305945005)(2906002)(25786009)(86362001)(99286004)(476003)(6436002)(52536014)(446003)(11346002)(76176011)(4326008)(6246003)(44832011)(7696005)(8676002)(316002)(81156014)(81166006)(107886003)(8936002)(71190400001)(66446008)(3846002)(64756008)(66066001)(66556008)(14454004)(486006)(54906003)(71200400001)(110136005)(186003)(6506007)(26005)(229853002)(102836004)(66476007)(76116006)(66946007)(55016002)(33656002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB4168;H:OSBPR01MB2103.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Lebl50PFmlsMtNf488sLqvXnXvm6ZAqyoIfDGlnvBoj3lRfS+2hFXz2bhHkA7hwkUqVIzvzqM4aAne+GLOLWcHtYcD2JXvuR4E6EdmG8XkzTOr7IH4V0NVzdQ/3VzTOKkQOdj7Q+yiVhWdmkyKx6eNMwQi5NUHkvC5Gv98T5JBLjJSv18xQAc7GbWPPUo8yHad8eFJcSBgDjdV4ffbRqCvPgPHVbCU/AtAyjIBQOk+IOWhjPfQPnvynhn3qvmGbwXusy2WmBjcU3P8B1qACBNoV7WpNi4Pid/48wTUKSChrGGh9vdJA8LB4XFK2sGdTzMyXPcWJ7Z7VVToJB6LwnzFO1EhjaDzsrImPrwaGndm8wJqUQwHVwTg3BBV+j9luF0EEh+WA6E8HDJ+5oi9MAhVnCcH0pOb0q3ZnEn1C8/qLzaztQGNiKYh7Wv8scDxEo
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d441c6ad-ff2f-4f54-7892-08d76355a3ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 07:39:36.5851
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /Me6ift2cE3Zis41oSNSeijNz0oYl/ZkXs92eCJLai1pMF+5H+zWQYJyvM2YwMrV7OsAXFerI1SNrbXaEDr+cA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4168
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+Hi Prabhakar,
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 104 +++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+Thanks for the patch
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..73e456ee0fc7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,104 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - enum:
-+              - 0 #PINMUX_GPIO
-+              - 1
-+              - 2
-+              - 3
-+              - 4
-+
-+      bias-pull-up:
-+        type: boolean
-+      bias-pull-down:
-+        type: boolean
-+      drive-strength:
-+        type: boolean
-+      slew-rate:
-+        type: boolean
-+      drive-open-drain:
-+        type: boolean
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+
-+          # Client device subnode
-+          uart0-pins: uart0 {
-+                pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+                function = "CONSOLE_UART0";
-+                pinmux = <1>,
-+                         <1>;
-+                groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
+> Subject: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindi=
+ngs
+>=20
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> This patch adds the bindings for the R-Car PCIe endpoint driver.
+>=20
+> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/pci/rcar-pci-ep.txt   | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> new file mode 100644
+> index 000000000000..b8c8616ca007
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> @@ -0,0 +1,43 @@
+> +* Renesas R-Car PCIe Endpoint Controller DT description
+> +
+> +Required properties:
+> +	    "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> +	    "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> +				     RZ/G2 compatible device.
+> +
+> +	    When compatible with the generic version, nodes must list the
+> +	    SoC-specific version corresponding to the platform first
+> +	    followed by the generic version.
+> +
+> +- reg: Five register ranges as listed in the reg-names property
+> +- reg-names: Must include the following names
+> +	- "apb-base"
+> +	- "memory0"
+> +	- "memory1"
+> +	- "memory2"
+> +	- "memory3"
+> +- resets: Must contain phandles to PCIe-related reset lines exposed by I=
+P
+> block
+> +- clocks: from common clock binding: clock specifiers for the PCIe contr=
+oller
+> +	 clock.
+> +- clock-names: from common clock binding: should be "pcie".
+> +
+> +Optional Property:
+> +- max-functions: Maximum number of functions that can be configured
+> (default 1).
+> +
+> +Example:
+> +
+> +SoC-specific DT Entry:
+> +
+> +	pcie_ep: pcie_ep@fe000000 {
+> +		compatible =3D "renesas,pcie-r8a7791", "renesas,pcie-rcar-
+> gen2";
+
+I believe it is currently tested on RZ/G2E. so please use the same.
+
+Cheers,
+Biju
+
+> +		reg =3D <0 0xfe000000 0 0x80000>,
+> +			<0x0 0xfe100000 0 0x100000>,
+> +			<0x0 0xfe200000 0 0x200000>,
+> +			<0x0 0x30000000 0 0x8000000>,
+> +			<0x0 0x38000000 0 0x8000000>;
+> +		reg-names =3D "apb-base", "memory0", "memory1",
+> "memory2", "memory3";
+> +		clocks =3D <&cpg CPG_MOD 319>;
+> +		clock-names =3D "pcie";
+> +		power-domains =3D <&sysc R8A774C0_PD_ALWAYS_ON>;
+> +		resets =3D <&cpg 319>;
+> +	};
+> --
+> 2.20.1
 
