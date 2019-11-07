@@ -2,181 +2,208 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F056C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DA8C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F067921882
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC86A214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387611AbfKGKvo (ORCPT
+        id S2388171AbfKGKxj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:51:44 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:40847 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727528AbfKGKvo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 05:51:44 -0500
-X-UUID: 0a16776730d64210b5d3d295eaac7464-20191107
-X-UUID: 0a16776730d64210b5d3d295eaac7464-20191107
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <mark-mc.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1004045333; Thu, 07 Nov 2019 18:51:38 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 7 Nov 2019 18:51:34 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 7 Nov 2019 18:51:34 +0800
-From:   MarkLee <Mark-MC.Lee@mediatek.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Sean Wang <sean.wang@mediatek.com>,
-        John Crispin <john@phrozen.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rene van Dorst <opensource@vdorst.com>,
-        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        MarkLee <Mark-MC.Lee@mediatek.com>
-Subject: [PATCH net] net: ethernet: mediatek: rework GDM setup flow
-Date:   Thu, 7 Nov 2019 18:51:35 +0800
-Message-ID: <20191107105135.1403-1-Mark-MC.Lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 7 Nov 2019 05:53:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59998 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727278AbfKGKxj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:53:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E3269B2CD;
+        Thu,  7 Nov 2019 10:53:36 +0000 (UTC)
+Message-ID: <df7a30583436589449ec9cb587b5ab5e8985d3d7.camel@suse.de>
+Subject: Re: [PATCH 1/4] dt-bindings: pci: add bindings for brcmstb's PCIe
+ device
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        mbrugger@suse.com, linux-pci@vger.kernel.org, phil@raspberrypi.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, james.quinlan@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
+Date:   Thu, 07 Nov 2019 11:53:34 +0100
+In-Reply-To: <20191107103235.GW9723@e119886-lin.cambridge.arm.com>
+References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
+         <20191106214527.18736-2-nsaenzjulienne@suse.de>
+         <20191107103235.GW9723@e119886-lin.cambridge.arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-lSQQztMt1wJEBprNfTIe"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-net: ethernet: mediatek: rework GDM setup flow
 
-The mt762x GDM block is mainly used to setup the HW 
-internal rx path - from GMAC port to RX DMA engine(PDMA/QDMA). 
-And the internal packet switching engine(PSE) is responsed 
-to do the data forward/drop following the GDM configuration.
+--=-lSQQztMt1wJEBprNfTIe
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This pacth target to simpfy the GDM setup flow by integrating 
-them into one single function "mtk_gdm_config".
-Besides, accroding to the mt762x HW design, it is recommended to 
-enable PSE to forward data after DMA has been started and 
-set PSE to drop all data before stopping DMA. 
+On Thu, 2019-11-07 at 10:32 +0000, Andrew Murray wrote:
+> On Wed, Nov 06, 2019 at 10:45:23PM +0100, Nicolas Saenz Julienne wrote:
+> > From: Jim Quinlan <james.quinlan@broadcom.com>
+>=20
+> Nit: Looking at past git history, ideally the patch subject would be
+> 'dt-bindings: *PCI*: *A*dd bindings for brcmstb's PCIe.
 
-Note, mt7628 is a different IP from other mt762x, so we exclude it
-in mtk_gdm_config function.
+Noted.
 
-Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 44 ++++++++++++++-------
- drivers/net/ethernet/mediatek/mtk_eth_soc.h |  2 +
- 2 files changed, 31 insertions(+), 15 deletions(-)
+> > The DT bindings description of the brcmstb PCIe device is described.
+> > This node can only be used for now on the Raspberry Pi 4.
+> >=20
+> > This was based on Jim's original submission[1], converted to yaml and
+> > adapted to the RPi4 case.
+>=20
+> Thanks for picking this up.
+>=20
+> > [1] https://patchwork.kernel.org/patch/10605937/
+> >=20
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  .../bindings/pci/brcm,stb-pcie.yaml           | 116 ++++++++++++++++++
+> >  1 file changed, 116 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
+.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > new file mode 100644
+> > index 000000000000..0b81c26f8568
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > @@ -0,0 +1,116 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Brcmstb PCIe Host Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - description: PCIe host controller
+> > +      - description: builtin MSI controller
+> > +
+> > +  interrupt-names:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - const: pcie
+> > +      - const: msi
+> > +
+> > +  "#address-cells":
+> > +    const: 3
+> > +
+> > +  "#size-cells":
+> > +    const: 2
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 1
+> > +
+> > +  interrupt-map-mask: true
+> > +
+> > +  interrupt-map: true
+> > +
+> > +  ranges: true
+> > +
+> > +  dma-ranges: true
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: sw_pcie
+> > +
+> > +  msi-controller:	/* We use the domain number as our controller number=
+ */
+> > 	pcie->id =3D of_get_pci_domain_nr(dn);
+> > 	if (pcie->id < 0)
+> > 		return pcie->id;
+> > +    description: Identifies the node as an MSI controller.
+> > +    type: boolean
+> > +
+> > +  msi-parent:
+> > +    description: MSI controller the device is capable of using.
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +
+> > +  linux,pci-domain:
+> > +    description: PCI domain ID. Should be unique for each host control=
+ler.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  brcm,enable-ssc:
+> > +    description: Indicates usage of spread-spectrum clocking.
+> > +    type: boolean
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +  - "#interrupt-cells"
+> > +  - interrupt-map-mask
+> > +  - interrupt-map
+> > +  - ranges
+> > +  - dma-ranges
+> > +  - linux,pci-domain
+>=20
+> I don't think pci-domain is *required* is it?
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 703adb96429e..7220abb3e731 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2180,6 +2180,31 @@ static int mtk_start_dma(struct mtk_eth *eth)
- 	return 0;
- }
- 
-+static void mtk_gdm_config(struct mtk_eth *eth, u32 config)
-+{
-+	int i;
-+
-+	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
-+		return;
-+
-+	for (i = 0; i < 2; i++) {
-+		u32 val = mtk_r32(eth, MTK_GDMA_FWD_CFG(i));
-+
-+		/* Always enable RX checksum */
-+		val |= MTK_GDMA_ICS_EN | MTK_GDMA_TCS_EN | MTK_GDMA_UCS_EN;
-+
-+		/* default setup the forward port to send frame to PDMA */
-+		val &= ~0xffff;
-+
-+		val |= config;
-+
-+		mtk_w32(eth, val, MTK_GDMA_FWD_CFG(i));
-+	}
-+	/*Reset and enable PSE*/
-+	mtk_w32(eth, RST_GL_PSE, MTK_RST_GL);
-+	mtk_w32(eth, 0, MTK_RST_GL);
-+}
-+
- static int mtk_open(struct net_device *dev)
- {
- 	struct mtk_mac *mac = netdev_priv(dev);
-@@ -2200,6 +2225,8 @@ static int mtk_open(struct net_device *dev)
- 		if (err)
- 			return err;
- 
-+		mtk_gdm_config(eth, MTK_GDMA_TO_PDMA);
-+
- 		napi_enable(&eth->tx_napi);
- 		napi_enable(&eth->rx_napi);
- 		mtk_tx_irq_enable(eth, MTK_TX_DONE_INT);
-@@ -2252,6 +2279,8 @@ static int mtk_stop(struct net_device *dev)
- 	if (!refcount_dec_and_test(&eth->dma_refcnt))
- 		return 0;
- 
-+	mtk_gdm_config(eth, MTK_GDMA_DROP_ALL);
-+
- 	mtk_tx_irq_disable(eth, MTK_TX_DONE_INT);
- 	mtk_rx_irq_disable(eth, MTK_RX_DONE_INT);
- 	napi_disable(&eth->tx_napi);
-@@ -2375,8 +2404,6 @@ static int mtk_hw_init(struct mtk_eth *eth)
- 	mtk_w32(eth, 0, MTK_QDMA_DELAY_INT);
- 	mtk_tx_irq_disable(eth, ~0);
- 	mtk_rx_irq_disable(eth, ~0);
--	mtk_w32(eth, RST_GL_PSE, MTK_RST_GL);
--	mtk_w32(eth, 0, MTK_RST_GL);
- 
- 	/* FE int grouping */
- 	mtk_w32(eth, MTK_TX_DONE_INT, MTK_PDMA_INT_GRP1);
-@@ -2385,19 +2412,6 @@ static int mtk_hw_init(struct mtk_eth *eth)
- 	mtk_w32(eth, MTK_RX_DONE_INT, MTK_QDMA_INT_GRP2);
- 	mtk_w32(eth, 0x21021000, MTK_FE_INT_GRP);
- 
--	for (i = 0; i < MTK_MAC_COUNT; i++) {
--		u32 val = mtk_r32(eth, MTK_GDMA_FWD_CFG(i));
--
--		/* setup the forward port to send frame to PDMA */
--		val &= ~0xffff;
--
--		/* Enable RX checksum */
--		val |= MTK_GDMA_ICS_EN | MTK_GDMA_TCS_EN | MTK_GDMA_UCS_EN;
--
--		/* setup the mac dma */
--		mtk_w32(eth, val, MTK_GDMA_FWD_CFG(i));
--	}
--
- 	return 0;
- 
- err_disable_pm:
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-index 76bd12cb8150..b8bcfdfc995e 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -84,6 +84,8 @@
- #define MTK_GDMA_ICS_EN		BIT(22)
- #define MTK_GDMA_TCS_EN		BIT(21)
- #define MTK_GDMA_UCS_EN		BIT(20)
-+#define MTK_GDMA_DROP_ALL	0x7777
-+#define MTK_GDMA_TO_PDMA	0x0
- 
- /* Unicast Filter MAC Address Register - Low */
- #define MTK_GDMA_MAC_ADRL(x)	(0x508 + (x * 0x1000))
--- 
-2.17.1
+You're right, I missed that one. It was needed on some of the STB devices b=
+ut
+not in the RPi4's case. I'll remove it in v2.
+
+Regards,
+Nicolas
+
+
+--=-lSQQztMt1wJEBprNfTIe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3D964ACgkQlfZmHno8
+x/6Dlgf9F45I7R8USQ8gJmC9ajqlrRMvsDHlY81jEgVLxDCZbF0PRe59u1wFyB3G
+/FikTo9UHzdlxoh53V+s79l0sfIUfivDe1QA6OHUBOLl5DjK4db9igX6SnEX7EQi
+baB5K6bwJgtqYOyOmwkyHoxBrkTCUkURwqQ6Qn49s9Q2mNzgjAe1VHredXV6BvT8
+ZcUDwz6voiY4wSEZen9tHqVoKQdSRgq8GGrohiHPzvyShfv515AckbEMKzR0Z5cf
+f73H4sNp9/P/2fk4Rtvujc22rSvHPLcHIUGZalz8tcxdGIKX02Lh1Fjx9hAzdxJZ
+0i/rcLENlxAAYJW2YCYp5ILND4hVEg==
+=Sc3w
+-----END PGP SIGNATURE-----
+
+--=-lSQQztMt1wJEBprNfTIe--
 
