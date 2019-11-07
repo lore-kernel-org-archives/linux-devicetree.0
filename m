@@ -2,570 +2,309 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A73FC6194
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1E7FA372C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3788B21929
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF8D218AE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573088226;
+	bh=rIyCffxcmihkDULsad67SDzkWDsjiTX9ZPVgQtOi6a0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MWhq3L2R/qYQ4qoYcAnzRjgRsdXFO6U1EeefA3ckyFVC5cN2FXH9rkUo7aYzWxI8i
+	 2014uw07A67lSGZpTbiiLHDKpIU65dHaiukSRCCeIcew1RrLsj/6+WFEMN5X9/FN1O
+	 P1mhMdTpd9U4HOfi/3uIOXvxkLf5oubSi2+pcWIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfKGA5C (ORCPT
+        id S1732831AbfKGA5G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:57:02 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41110 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGA5C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:57:02 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id D7FD8283D07
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-rockchip@lists.infradead.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
-        linux-kernel@vger.kernel.org, tfiga@chromium.org,
-        robh+dt@kernel.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
-        zhengsq@rock-chips.com, Jacob Chen <jacob2.chen@rock-chips.com>,
-        Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v10 01/11] media: staging: phy-rockchip-dphy: add Rockchip MIPI Synopsys DPHY driver
-Date:   Wed,  6 Nov 2019 21:56:07 -0300
-Message-Id: <20191107005617.12302-2-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191107005617.12302-1-helen.koike@collabora.com>
-References: <20191107005617.12302-1-helen.koike@collabora.com>
+        Wed, 6 Nov 2019 19:57:06 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36102 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKGA5E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:57:04 -0500
+Received: by mail-oi1-f193.google.com with SMTP id j7so471770oib.3;
+        Wed, 06 Nov 2019 16:57:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wVopP65af2cBXxzoana9KSKEMsEoxhrG9UviCULOUg4=;
+        b=WfXqhr91JSsFNCTC2KnZrddnLYR4lhhNF04xhaxZ5FILgYpr1mq83Rd9NqXo4r0GhF
+         3tjZ5A8Z1k85fAjOvYOIjJtUHgeCxtzT4Vo97GahaV4DTzqevLqJEeNBywMv6ikX8dEG
+         Xk8Vyu4tXsyCaCMPnviESSQJEOYG2J22Vkg9jMtn+jh9Yy+XsWzHix2muhBohGshabQ3
+         kPExhC/6IdEB0ikTUEVTV0LZ5DOuCqN3QflUgUtRAIBR9cIFTHqBeIP3FmvnXTz6GQ76
+         FtieUWtly9B4vbhrtWlwBesste1ygJtyYA7bw+Cjsznbayo2Yl8+2G5hipZZqQsWUnuC
+         6sjw==
+X-Gm-Message-State: APjAAAVQLpB7IrvxU9EEVNIXeVrSebMBJtj7gOEjAGzQX3672VdIBNoF
+        EV8QDW3TeXJ9bSsoVhOO7w==
+X-Google-Smtp-Source: APXvYqzgyGiNH/+b07+ECaPHE7xfGIlXeKVgv1JewsJCDXnRFj3BROp9D0klxCcE7xKAxgV91Gsdqg==
+X-Received: by 2002:aca:ad03:: with SMTP id w3mr816187oie.96.1573088221287;
+        Wed, 06 Nov 2019 16:57:01 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f9sm218449otq.52.2019.11.06.16.57.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 16:57:00 -0800 (PST)
+Date:   Wed, 6 Nov 2019 18:57:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: usb: renesas_usbhs: convert bindings to
+ json-schema
+Message-ID: <20191107005700.GA26323@bogus>
+References: <1573036483-16477-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573036483-16477-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+On Wed, Nov 06, 2019 at 07:34:43PM +0900, Yoshihiro Shimoda wrote:
+> Convert Renesas USBHS (HS-USB) controller bindings documentation
+> to json-schema.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Changes from v1:
+>  - Remove enum from RZ/A[12] compatibles.
+>  - Remove comments from reg and clocks.
+>  - Change maxItems from 2 to 3 on clocks for USB 2.0 clock selector.
+>  - Add items on clocks.
+>  - Remove $ref from a gpio property.
+>  - Add maxItems on phys, phy-names and resets.
+>  - Remove generic.txt file reference.
+>  - Remove the last blank line.
+>  https://patchwork.kernel.org/patch/11205919/
+> 
+>  .../devicetree/bindings/usb/renesas,usbhs.txt      |  58 ----------
+>  .../devicetree/bindings/usb/renesas,usbhs.yaml     | 128 +++++++++++++++++++++
+>  2 files changed, 128 insertions(+), 58 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/usb/renesas,usbhs.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.txt b/Documentation/devicetree/bindings/usb/renesas,usbhs.txt
+> deleted file mode 100644
+> index 06abe99..00000000
+> --- a/Documentation/devicetree/bindings/usb/renesas,usbhs.txt
+> +++ /dev/null
+> @@ -1,58 +0,0 @@
+> -Renesas Electronics USBHS driver
+> -
+> -Required properties:
+> -  - compatible: Must contain one or more of the following:
+> -
+> -	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
+> -	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
+> -	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
+> -	- "renesas,usbhs-r8a77470" for r8a77470 (RZ/G1C) compatible device
+> -	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
+> -	- "renesas,usbhs-r8a774b1" for r8a774b1 (RZ/G2N) compatible device
+> -	- "renesas,usbhs-r8a774c0" for r8a774c0 (RZ/G2E) compatible device
+> -	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
+> -	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
+> -	- "renesas,usbhs-r8a7792" for r8a7792 (R-Car V2H) compatible device
+> -	- "renesas,usbhs-r8a7793" for r8a7793 (R-Car M2-N) compatible device
+> -	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
+> -	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+> -	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
+> -	- "renesas,usbhs-r8a77965" for r8a77965 (R-Car M3-N) compatible device
+> -	- "renesas,usbhs-r8a77990" for r8a77990 (R-Car E3) compatible device
+> -	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
+> -	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
+> -	- "renesas,usbhs-r7s9210" for r7s9210 (RZ/A2) compatible device
+> -	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
+> -	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 or RZ/G2 compatible devices
+> -	- "renesas,rza1-usbhs" for RZ/A1 compatible device
+> -	- "renesas,rza2-usbhs" for RZ/A2 compatible device
+> -
+> -	When compatible with the generic version, nodes must list the
+> -	SoC-specific version corresponding to the platform first followed
+> -	by the generic version.
+> -
+> -  - reg: Base address and length of the register for the USBHS
+> -  - interrupts: Interrupt specifier for the USBHS
+> -  - clocks: A list of phandle + clock specifier pairs.
+> -	    - In case of "renesas,rcar-gen3-usbhs", two clocks are required.
+> -	      First clock should be peripheral and second one should be host.
+> -	    - In case of except above, one clock is required. First clock
+> -	      should be peripheral.
+> -
+> -Optional properties:
+> -  - renesas,buswait: Integer to use BUSWAIT register
+> -  - renesas,enable-gpio: A gpio specifier to check GPIO determining if USB
+> -			 function should be enabled
+> -  - phys: phandle + phy specifier pair
+> -  - phy-names: must be "usb"
+> -  - dmas: Must contain a list of references to DMA specifiers.
+> -  - dma-names : named "ch%d", where %d is the channel number ranging from zero
+> -                to the number of channels (DnFIFOs) minus one.
+> -
+> -Example:
+> -	usbhs: usb@e6590000 {
+> -		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-gen2-usbhs";
+> -		reg = <0 0xe6590000 0 0x100>;
+> -		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
+> -		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
+> new file mode 100644
+> index 00000000..1d776d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
+> @@ -0,0 +1,128 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/renesas,usbhs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas USBHS (HS-USB) controller
+> +
+> +maintainers:
+> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - const: renesas,usbhs-r7s72100 # RZ/A1
+> +          - const: renesas,rza1-usbhs
+> +
+> +      - items:
+> +          - const: renesas,usbhs-r7s9210 # RZ/A2
+> +          - const: renesas,rza2-usbhs
+> +
+> +      - items:
+> +          - enum:
+> +              - renesas,usbhs-r8a7743  # RZ/G1M
+> +              - renesas,usbhs-r8a7744  # RZ/G1N
+> +              - renesas,usbhs-r8a7745  # RZ/G1E
+> +              - renesas,usbhs-r8a77470 # RZ/G1C
+> +              - renesas,usbhs-r8a7790  # R-Car H2
+> +              - renesas,usbhs-r8a7791  # R-Car M2-W
+> +              - renesas,usbhs-r8a7792  # R-Car V2H
+> +              - renesas,usbhs-r8a7793  # R-Car M2-N
+> +              - renesas,usbhs-r8a7794  # R-Car E2
+> +          - const: renesas,rcar-gen2-usbhs
+> +
+> +      - items:
+> +          - enum:
+> +              - renesas,usbhs-r8a774a1 # RZ/G2M
+> +              - renesas,usbhs-r8a774b1 # RZ/G2N
+> +              - renesas,usbhs-r8a774c0 # RZ/G2E
+> +              - renesas,usbhs-r8a7795  # R-Car H3
+> +              - renesas,usbhs-r8a7796  # R-Car M3-W
+> +              - renesas,usbhs-r8a77965 # R-Car M3-N
+> +              - renesas,usbhs-r8a77990 # R-Car E3
+> +              - renesas,usbhs-r8a77995 # R-Car D3
+> +          - const: renesas,rcar-gen3-usbhs
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      - description: USB 2.0 host
+> +      - description: USB 2.0 peripheral
+> +      - description: USB 2.0 clock selector
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  renesas,buswait:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Integer to use BUSWAIT register.
+> +
+> +  renesas,enable-gpio:
+> +    description: |
+> +      gpio specifier to check GPIO determining if USB function should be
+> +      enabled.
+> +
+> +  phys:
+> +    maxItems: 1
+> +    items:
+> +      - description: phandle + phy specifier pair.
+> +
+> +  phy-names:
+> +    maxItems: 1
+> +    items:
+> +      - const: usb
+> +
+> +  dmas:
+> +    minItems: 2
+> +    maxItems: 4
+> +
+> +  dma-names:
+> +    minItems: 2
+> +    maxItems: 4
+> +    items:
+> +      - enum: [ch0, ch1, ch2, ch3]
 
-Add driver for Rockchip MIPI Synopsys DPHY driver
+This is saying the 1st item is one of the 4 values and the others are 
+undefined. I think you want:
 
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-[migrate to phy framework]
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-[refactored for upstream]
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
+items:
+  - const: ch0
+  - const: ch1
+  - const: ch2
+  - const: ch3
 
----
+> +
+> +  dr_mode:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    description: |
+> +      tells Dual-Role USB controllers that we want to work on a particular
+> +      mode. Valid arguments are "host", "peripheral" and "otg". In case this
+> +      attribute isn't passed via DT, USB DRD controllers should default to OTG.
 
-Changes in v10: None
-Changes in v9:
-dphy
-- Move to staging
-- replace memcpy by a directly assignment
-- remove unecessary ret variable in rockchip_dphy_init
-- s/0x1/1
-- s/0x0/0
-- coding style changes
-- dphy_reg variable sizes
-- variables from int to unsigned int
-- rename functions to start with rk_
-- rename dphy0 to rx
-- fix hardcoded lane0 usage
-- disable rx on power off
-- general cleanups of unused variables
+Assume we have a common binding for this and all you need is:
 
-Changes in v8:
-- Remove boiler plate license text
+dr_mode: true
 
-Changes in v7:
-- Migrate dphy specific code from
-drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
-to drivers/phy/rockchip/phy-rockchip-dphy.c
-- Drop support for rk3288
-- Drop support for dphy txrx
-- code styling and checkpatch fixes
-
- drivers/staging/media/Kconfig                 |   2 +
- drivers/staging/media/Makefile                |   1 +
- .../staging/media/phy-rockchip-dphy/Kconfig   |  11 +
- .../staging/media/phy-rockchip-dphy/Makefile  |   2 +
- drivers/staging/media/phy-rockchip-dphy/TODO  |   6 +
- .../phy-rockchip-dphy/phy-rockchip-dphy.c     | 400 ++++++++++++++++++
- 6 files changed, 422 insertions(+)
- create mode 100644 drivers/staging/media/phy-rockchip-dphy/Kconfig
- create mode 100644 drivers/staging/media/phy-rockchip-dphy/Makefile
- create mode 100644 drivers/staging/media/phy-rockchip-dphy/TODO
- create mode 100644 drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
-
-diff --git a/drivers/staging/media/Kconfig b/drivers/staging/media/Kconfig
-index 642adc4c24d2..a47484473883 100644
---- a/drivers/staging/media/Kconfig
-+++ b/drivers/staging/media/Kconfig
-@@ -38,4 +38,6 @@ source "drivers/staging/media/ipu3/Kconfig"
- 
- source "drivers/staging/media/soc_camera/Kconfig"
- 
-+source "drivers/staging/media/phy-rockchip-dphy/Kconfig"
-+
- endif
-diff --git a/drivers/staging/media/Makefile b/drivers/staging/media/Makefile
-index 2f1711a8aeed..b0eae3906208 100644
---- a/drivers/staging/media/Makefile
-+++ b/drivers/staging/media/Makefile
-@@ -8,3 +8,4 @@ obj-$(CONFIG_TEGRA_VDE)		+= tegra-vde/
- obj-$(CONFIG_VIDEO_HANTRO)	+= hantro/
- obj-$(CONFIG_VIDEO_IPU3_IMGU)	+= ipu3/
- obj-$(CONFIG_SOC_CAMERA)	+= soc_camera/
-+obj-$(CONFIG_PHY_ROCKCHIP_DPHY)		+= phy-rockchip-dphy/
-diff --git a/drivers/staging/media/phy-rockchip-dphy/Kconfig b/drivers/staging/media/phy-rockchip-dphy/Kconfig
-new file mode 100644
-index 000000000000..7378bd75fa7c
---- /dev/null
-+++ b/drivers/staging/media/phy-rockchip-dphy/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Phy drivers for Rockchip platforms
-+#
-+config PHY_ROCKCHIP_DPHY
-+	tristate "Rockchip MIPI Synopsys DPHY driver"
-+	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
-+	select GENERIC_PHY_MIPI_DPHY
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the Rockchip MIPI Synopsys DPHY.
-diff --git a/drivers/staging/media/phy-rockchip-dphy/Makefile b/drivers/staging/media/phy-rockchip-dphy/Makefile
-new file mode 100644
-index 000000000000..24679dc950cd
---- /dev/null
-+++ b/drivers/staging/media/phy-rockchip-dphy/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_ROCKCHIP_DPHY)		+= phy-rockchip-dphy.o
-diff --git a/drivers/staging/media/phy-rockchip-dphy/TODO b/drivers/staging/media/phy-rockchip-dphy/TODO
-new file mode 100644
-index 000000000000..e1fda55babef
---- /dev/null
-+++ b/drivers/staging/media/phy-rockchip-dphy/TODO
-@@ -0,0 +1,6 @@
-+The major reason for keeping this in staging is because the only driver
-+who uses this is rkisp1 who is also in staging. It should be moved together
-+rkisp1.
-+
-+Please CC patches to Linux Media <linux-media@vger.kernel.org> and
-+Helen Koike <helen.koike@collabora.com>.
-diff --git a/drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c b/drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
-new file mode 100644
-index 000000000000..15eff7ca874c
---- /dev/null
-+++ b/drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
-@@ -0,0 +1,400 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Rockchip MIPI Synopsys DPHY driver
-+ *
-+ * Based on:
-+ *
-+ * Copyright (C) 2016 FuZhou Rockchip Co., Ltd.
-+ * Author: Yakir Yang <ykk@@rock-chips.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/phy/phy-mipi-dphy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define RK3399_GRF_SOC_CON9	0x6224
-+#define RK3399_GRF_SOC_CON21	0x6254
-+#define RK3399_GRF_SOC_CON22	0x6258
-+#define RK3399_GRF_SOC_CON23	0x625c
-+#define RK3399_GRF_SOC_CON24	0x6260
-+#define RK3399_GRF_SOC_CON25	0x6264
-+#define RK3399_GRF_SOC_STATUS1	0xe2a4
-+
-+#define CLOCK_LANE_HS_RX_CONTROL		0x34
-+#define LANE0_HS_RX_CONTROL			0x44
-+#define LANE1_HS_RX_CONTROL			0x54
-+#define LANE2_HS_RX_CONTROL			0x84
-+#define LANE3_HS_RX_CONTROL			0x94
-+#define HS_RX_DATA_LANES_THS_SETTLE_CONTROL	0x75
-+
-+#define MAX_DPHY_CLK 8
-+
-+#define PHY_TESTEN_ADDR			(1 << 16)
-+#define PHY_TESTEN_DATA			(0 << 16)
-+#define PHY_TESTCLK			(1 << 1)
-+#define PHY_TESTCLR			(1 << 0)
-+#define THS_SETTLE_COUNTER_THRESHOLD	0x04
-+
-+#define GRF_SOC_CON12                           0x0274
-+
-+#define GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK   BIT(20)
-+#define GRF_EDP_REF_CLK_SEL_INTER               BIT(4)
-+
-+#define GRF_EDP_PHY_SIDDQ_HIWORD_MASK           BIT(21)
-+#define GRF_EDP_PHY_SIDDQ_ON                    0
-+#define GRF_EDP_PHY_SIDDQ_OFF                   BIT(5)
-+
-+struct hsfreq_range {
-+	u16 range_h;
-+	u8 cfg_bit;
-+};
-+
-+static const struct hsfreq_range rk3399_mipidphy_hsfreq_ranges[] = {
-+	{   89, 0x00 }, {   99, 0x10 }, {  109, 0x20 }, {  129, 0x01 },
-+	{  139, 0x11 }, {  149, 0x21 }, {  169, 0x02 }, {  179, 0x12 },
-+	{  199, 0x22 }, {  219, 0x03 }, {  239, 0x13 }, {  249, 0x23 },
-+	{  269, 0x04 }, {  299, 0x14 }, {  329, 0x05 }, {  359, 0x15 },
-+	{  399, 0x25 }, {  449, 0x06 }, {  499, 0x16 }, {  549, 0x07 },
-+	{  599, 0x17 }, {  649, 0x08 }, {  699, 0x18 }, {  749, 0x09 },
-+	{  799, 0x19 }, {  849, 0x29 }, {  899, 0x39 }, {  949, 0x0a },
-+	{  999, 0x1a }, { 1049, 0x2a }, { 1099, 0x3a }, { 1149, 0x0b },
-+	{ 1199, 0x1b }, { 1249, 0x2b }, { 1299, 0x3b }, { 1349, 0x0c },
-+	{ 1399, 0x1c }, { 1449, 0x2c }, { 1500, 0x3c }
-+ };
-+
-+static const char * const rk3399_mipidphy_clks[] = {
-+	"dphy-ref",
-+	"dphy-cfg",
-+	"grf",
-+};
-+
-+enum dphy_reg_id {
-+	GRF_DPHY_RX0_TURNDISABLE = 0,
-+	GRF_DPHY_RX0_FORCERXMODE,
-+	GRF_DPHY_RX0_FORCETXSTOPMODE,
-+	GRF_DPHY_RX0_ENABLE,
-+	GRF_DPHY_RX0_TESTCLR,
-+	GRF_DPHY_RX0_TESTCLK,
-+	GRF_DPHY_RX0_TESTEN,
-+	GRF_DPHY_RX0_TESTDIN,
-+	GRF_DPHY_RX0_TURNREQUEST,
-+	GRF_DPHY_RX0_TESTDOUT,
-+	GRF_DPHY_TX0_TURNDISABLE,
-+	GRF_DPHY_TX0_FORCERXMODE,
-+	GRF_DPHY_TX0_FORCETXSTOPMODE,
-+	GRF_DPHY_TX0_TURNREQUEST,
-+	GRF_DPHY_TX1RX1_TURNDISABLE,
-+	GRF_DPHY_TX1RX1_FORCERXMODE,
-+	GRF_DPHY_TX1RX1_FORCETXSTOPMODE,
-+	GRF_DPHY_TX1RX1_ENABLE,
-+	GRF_DPHY_TX1RX1_MASTERSLAVEZ,
-+	GRF_DPHY_TX1RX1_BASEDIR,
-+	GRF_DPHY_TX1RX1_ENABLECLK,
-+	GRF_DPHY_TX1RX1_TURNREQUEST,
-+	GRF_DPHY_RX1_SRC_SEL,
-+	/* rk3288 only */
-+	GRF_CON_DISABLE_ISP,
-+	GRF_CON_ISP_DPHY_SEL,
-+	GRF_DSI_CSI_TESTBUS_SEL,
-+	GRF_DVP_V18SEL,
-+	/* below is for rk3399 only */
-+	GRF_DPHY_RX0_CLK_INV_SEL,
-+	GRF_DPHY_RX1_CLK_INV_SEL,
-+};
-+
-+struct dphy_reg {
-+	u16 offset;
-+	u8 mask;
-+	u8 shift;
-+};
-+
-+#define PHY_REG(_offset, _width, _shift) \
-+	{ .offset = _offset, .mask = BIT(_width) - 1, .shift = _shift, }
-+
-+static const struct dphy_reg rk3399_grf_dphy_regs[] = {
-+	[GRF_DPHY_RX0_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON9, 4, 0),
-+	[GRF_DPHY_RX0_CLK_INV_SEL] = PHY_REG(RK3399_GRF_SOC_CON9, 1, 10),
-+	[GRF_DPHY_RX1_CLK_INV_SEL] = PHY_REG(RK3399_GRF_SOC_CON9, 1, 11),
-+	[GRF_DPHY_RX0_ENABLE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 0),
-+	[GRF_DPHY_RX0_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 4),
-+	[GRF_DPHY_RX0_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 8),
-+	[GRF_DPHY_RX0_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 12),
-+	[GRF_DPHY_TX0_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 0),
-+	[GRF_DPHY_TX0_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 4),
-+	[GRF_DPHY_TX0_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 8),
-+	[GRF_DPHY_TX0_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 12),
-+	[GRF_DPHY_TX1RX1_ENABLE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 0),
-+	[GRF_DPHY_TX1RX1_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 4),
-+	[GRF_DPHY_TX1RX1_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 8),
-+	[GRF_DPHY_TX1RX1_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 12),
-+	[GRF_DPHY_TX1RX1_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON24, 4, 0),
-+	[GRF_DPHY_RX1_SRC_SEL] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 4),
-+	[GRF_DPHY_TX1RX1_BASEDIR] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 5),
-+	[GRF_DPHY_TX1RX1_ENABLECLK] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 6),
-+	[GRF_DPHY_TX1RX1_MASTERSLAVEZ] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 7),
-+	[GRF_DPHY_RX0_TESTDIN] = PHY_REG(RK3399_GRF_SOC_CON25, 8, 0),
-+	[GRF_DPHY_RX0_TESTEN] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 8),
-+	[GRF_DPHY_RX0_TESTCLK] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 9),
-+	[GRF_DPHY_RX0_TESTCLR] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 10),
-+	[GRF_DPHY_RX0_TESTDOUT] = PHY_REG(RK3399_GRF_SOC_STATUS1, 8, 0),
-+};
-+
-+struct dphy_drv_data {
-+	const char * const *clks;
-+	unsigned int num_clks;
-+	const struct hsfreq_range *hsfreq_ranges;
-+	unsigned int num_hsfreq_ranges;
-+	const struct dphy_reg *regs;
-+};
-+
-+struct rockchip_dphy {
-+	struct device *dev;
-+	struct regmap *grf;
-+	struct clk_bulk_data clks[MAX_DPHY_CLK];
-+
-+	const struct dphy_drv_data *drv_data;
-+	struct phy_configure_opts_mipi_dphy config;
-+};
-+
-+static inline void rk_dphy_write_grf(struct rockchip_dphy *priv,
-+				     unsigned int index, u8 value)
-+{
-+	const struct dphy_reg *reg = &priv->drv_data->regs[index];
-+	/* Update high word */
-+	unsigned int val = (value << reg->shift) |
-+			   (reg->mask << (reg->shift + 16));
-+
-+	WARN_ON(!reg->offset);
-+	regmap_write(priv->grf, reg->offset, val);
-+}
-+
-+static void rk_dphy_write_rx(struct rockchip_dphy *priv,
-+			     u8 test_code, u8 test_data)
-+{
-+	/*
-+	 * With the falling edge on TESTCLK, the TESTDIN[7:0] signal content
-+	 * is latched internally as the current test code. Test data is
-+	 * programmed internally by rising edge on TESTCLK.
-+	 */
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTCLK, 1);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTDIN, test_code);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTEN, 1);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTCLK, 0);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTEN, 0);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTDIN, test_data);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTCLK, 1);
-+}
-+
-+static void rk_dphy_rx_stream_on(struct rockchip_dphy *priv)
-+{
-+	const struct dphy_drv_data *drv_data = priv->drv_data;
-+	struct phy_configure_opts_mipi_dphy *config = &priv->config;
-+	unsigned int i, hsfreq = 0, data_rate_mbps = config->hs_clk_rate;
-+
-+	do_div(data_rate_mbps, 1000 * 1000);
-+
-+	dev_dbg(priv->dev, "%s: lanes %d - data_rate_mbps %u\n",
-+		__func__, config->lanes, data_rate_mbps);
-+
-+	for (i = 0; i < drv_data->num_hsfreq_ranges; i++) {
-+		if (drv_data->hsfreq_ranges[i].range_h >= data_rate_mbps) {
-+			hsfreq = drv_data->hsfreq_ranges[i].cfg_bit;
-+			break;
-+		}
-+	}
-+
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_FORCERXMODE, 0);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_FORCETXSTOPMODE, 0);
-+
-+	/* Disable lane turn around, which is ignored in receive mode */
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TURNREQUEST, 0);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TURNDISABLE, 0xf);
-+
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_ENABLE, GENMASK(config->lanes - 1, 0));
-+
-+	/* dphy start */
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTCLK, 1);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTCLR, 1);
-+	usleep_range(100, 150);
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_TESTCLR, 0);
-+	usleep_range(100, 150);
-+
-+	/* set clock lane */
-+	/* HS hsfreq_range & lane 0  settle bypass */
-+	rk_dphy_write_rx(priv, CLOCK_LANE_HS_RX_CONTROL, 0);
-+	/* HS RX Control of lane0 */
-+	rk_dphy_write_rx(priv, LANE0_HS_RX_CONTROL, hsfreq << 1);
-+	/* HS RX Control of lane1 */
-+	rk_dphy_write_rx(priv, LANE1_HS_RX_CONTROL, hsfreq << 1);
-+	/* HS RX Control of lane2 */
-+	rk_dphy_write_rx(priv, LANE2_HS_RX_CONTROL, hsfreq << 1);
-+	/* HS RX Control of lane3 */
-+	rk_dphy_write_rx(priv, LANE3_HS_RX_CONTROL, hsfreq << 1);
-+	/* HS RX Data Lanes Settle State Time Control */
-+	rk_dphy_write_rx(priv, HS_RX_DATA_LANES_THS_SETTLE_CONTROL,
-+			 THS_SETTLE_COUNTER_THRESHOLD);
-+
-+	/* Normal operation */
-+	rk_dphy_write_rx(priv, 0x0, 0);
-+}
-+
-+static int rk_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
-+{
-+	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* pass with phy_mipi_dphy_get_default_config (with pixel rate?) */
-+	ret = phy_mipi_dphy_config_validate(&opts->mipi_dphy);
-+	if (ret)
-+		return ret;
-+
-+	priv->config = opts->mipi_dphy;
-+
-+	return 0;
-+}
-+
-+static int rk_dphy_power_on(struct phy *phy)
-+{
-+	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_bulk_enable(priv->drv_data->num_clks, priv->clks);
-+	if (ret)
-+		return ret;
-+
-+	rk_dphy_rx_stream_on(priv);
-+
-+	return 0;
-+}
-+
-+static int rk_dphy_power_off(struct phy *phy)
-+{
-+	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-+
-+	rk_dphy_write_grf(priv, GRF_DPHY_RX0_ENABLE, 0);
-+
-+	clk_bulk_disable(priv->drv_data->num_clks, priv->clks);
-+	return 0;
-+}
-+
-+static int rk_dphy_init(struct phy *phy)
-+{
-+	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-+
-+	return clk_bulk_prepare(priv->drv_data->num_clks, priv->clks);
-+}
-+
-+static int rk_dphy_exit(struct phy *phy)
-+{
-+	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-+
-+	clk_bulk_unprepare(priv->drv_data->num_clks, priv->clks);
-+	return 0;
-+}
-+
-+static const struct phy_ops rk_dphy_ops = {
-+	.power_on	= rk_dphy_power_on,
-+	.power_off	= rk_dphy_power_off,
-+	.init		= rk_dphy_init,
-+	.exit		= rk_dphy_exit,
-+	.configure	= rk_dphy_configure,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct dphy_drv_data rk3399_mipidphy_drv_data = {
-+	.clks = rk3399_mipidphy_clks,
-+	.num_clks = ARRAY_SIZE(rk3399_mipidphy_clks),
-+	.hsfreq_ranges = rk3399_mipidphy_hsfreq_ranges,
-+	.num_hsfreq_ranges = ARRAY_SIZE(rk3399_mipidphy_hsfreq_ranges),
-+	.regs = rk3399_grf_dphy_regs,
-+};
-+
-+static const struct of_device_id rk_dphy_dt_ids[] = {
-+	{
-+		.compatible = "rockchip,rk3399-mipi-dphy",
-+		.data = &rk3399_mipidphy_drv_data,
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, rk_dphy_dt_ids);
-+
-+static int rk_dphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	const struct dphy_drv_data *drv_data;
-+	struct phy_provider *phy_provider;
-+	const struct of_device_id *of_id;
-+	struct rockchip_dphy *priv;
-+	struct regmap *grf;
-+	struct phy *phy;
-+	unsigned int i;
-+	int ret;
-+
-+	if (!dev->parent || !dev->parent->of_node)
-+		return -ENODEV;
-+
-+	if (platform_get_resource(pdev, IORESOURCE_MEM, 0)) {
-+		dev_err(dev, "Rockchip DPHY driver only suports RX mode\n");
-+		return -EINVAL;
-+	}
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	priv->dev = dev;
-+
-+	grf = syscon_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(grf)) {
-+		grf = syscon_regmap_lookup_by_phandle(dev->of_node,
-+						      "rockchip,grf");
-+		if (IS_ERR(grf)) {
-+			dev_err(dev, "Can't find GRF syscon\n");
-+			return -ENODEV;
-+		}
-+	}
-+	priv->grf = grf;
-+
-+	of_id = of_match_device(rk_dphy_dt_ids, dev);
-+	if (!of_id)
-+		return -EINVAL;
-+
-+	drv_data = of_id->data;
-+	priv->drv_data = drv_data;
-+	for (i = 0; i < drv_data->num_clks; i++)
-+		priv->clks[i].id = drv_data->clks[i];
-+	ret = devm_clk_bulk_get(&pdev->dev, drv_data->num_clks, priv->clks);
-+	if (ret)
-+		return ret;
-+
-+	phy = devm_phy_create(dev, np, &rk_dphy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "failed to create phy\n");
-+		return PTR_ERR(phy);
-+	}
-+	phy_set_drvdata(phy, priv);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static struct platform_driver rk_dphy_driver = {
-+	.probe = rk_dphy_probe,
-+	.driver = {
-+		.name	= "rockchip-mipi-dphy",
-+		.of_match_table = rk_dphy_dt_ids,
-+	},
-+};
-+module_platform_driver(rk_dphy_driver);
-+
-+MODULE_AUTHOR("Ezequiel Garcia <ezequiel@collabora.com>");
-+MODULE_DESCRIPTION("Rockchip MIPI Synopsys DPHY driver");
-+MODULE_LICENSE("Dual MIT/GPL");
--- 
-2.22.0
-
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: USB 2.0 host
+> +      - description: USB 2.0 peripheral
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/r8a7790-sysc.h>
+> +
+> +    usbhs: usb@e6590000 {
+> +        compatible = "renesas,usbhs-r8a7790", "renesas,rcar-gen2-usbhs";
+> +        reg = <0 0xe6590000 0 0x100>;
+> +        interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&cpg CPG_MOD 704>;
+> +    };
+> -- 
+> 2.7.4
+> 
