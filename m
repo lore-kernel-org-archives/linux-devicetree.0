@@ -2,90 +2,242 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A15FA372C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBF2FC6194
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72BC2187F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573093506;
-	bh=25afI6HwHj61Dhp9v6w4ks1wDMy72e4vBBSfkFNSirk=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=kdMN99EbexHgLlWbfE6HWlhIT/q54Fz5h7UHRIOq1J0qtGuxhtAWRVnPfKDpGKJdg
-	 Tg5/1gZgQBX2gMOblK5czrnnCpvXSJmTIslDoFVUDzEWMOZuealHo+F5qI93dqfcDJ
-	 qmZ2okxH8NyOFAEOcjPYAowxTW1Q1RxbiSoxfpzY=
+	by mail.kernel.org (Postfix) with ESMTP id F36672187F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:28:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bxv8j5xO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfKGCZG (ORCPT
+        id S1731985AbfKGC2N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:25:06 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45886 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbfKGCZG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 21:25:06 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r24so634607otk.12
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 18:25:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/4OHW5TgomfDgMYEC8awhLrQ/oHiIOLYWaTH+ea5ADU=;
-        b=QdpEg8icNlWWdaMi4DXqhrxhCZI8VPPWrFMxBcfyi76Iwm8wOkgDtb83qTL0qiv0SX
-         kdVUr81Rd6SJ3+b8eAvVaPlN1NxwBk+qHeiYCIbJu/F9J1Z9FHQiXCmdNUGBKlj+wDC+
-         6OOafQUTfyDZxcL3AG4G829NAOjikrQgV4XjyNEQUhoFns4eT3Dd5VlTb6XlXbLyRLbR
-         ysxHrs33Tqh6avwZwfEnanLee6T/xRDpOjVu8zlYpBqfdzH0cB5/eYerTYDRd7Zut7bz
-         2RNmNwscTrIA3vfpCKxv7RwwAZgA5dWBcG9lviyrQsAeIJE8zQvehrUXzXL+kOMZoBOx
-         2jAA==
-X-Gm-Message-State: APjAAAVRXhIyvVhNjqgE022hg0bBYfdgtXHpATNYJv4HbJg59gb5iBPc
-        o6CzyXj4YZlB636w+tlfMTfu2m4=
-X-Google-Smtp-Source: APXvYqyGwhhGaVOpdW/vvKtHcuK0Zf9tyI6pPldmM7tvu3ua554fDkxXT/2vlWyAfVi+M8IkY+cFlg==
-X-Received: by 2002:a9d:de6:: with SMTP id 93mr736745ots.27.1573093504853;
-        Wed, 06 Nov 2019 18:25:04 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id e88sm309270ote.39.2019.11.06.18.25.04
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 18:25:04 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: example-schema: Standard unit should be microvolt not microvolts
-Date:   Wed,  6 Nov 2019 20:25:03 -0600
-Message-Id: <20191107022503.7899-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 6 Nov 2019 21:28:13 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47308 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfKGC2N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 21:28:13 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C7B57329;
+        Thu,  7 Nov 2019 03:28:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1573093690;
+        bh=g8WCwZH0F1Be0j0AjbbhXu+pCdV/dxFX9Y1zX3Y9JE8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bxv8j5xOQ1YZTjo6AFlNB4lz27SBs4nQrZ7GbjDNGMl01tt8r8KWijppWCcHeeOpI
+         L1P39vChxcZYH110na1olQ3GwoymnwRpB18vdsgOpVNbSMCdj9/W78e3pEPx99tgGq
+         i9eua8vTCyKExw7O3dFoLsHzJyKDFX/DSIoLGhkY=
+Date:   Thu, 7 Nov 2019 04:28:01 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: rcar-gen3: Replace "vsps" by
+ "renesas,vsps"
+Message-ID: <20191107022801.GJ4878@pendragon.ideasonboard.com>
+References: <20191105183504.21447-1-geert+renesas@glider.be>
+ <20191105183504.21447-4-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191105183504.21447-4-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Even the DT maintainer gets confused. The schema in dt-schema was wrong
-too, so this was passing validation until trying to add some common
-incorrect patterns to check.
+Hi Geert,
 
-Fixes: 58fbe999ff40 ("dt-bindings: example-schema: Add some additional examples and commentary")
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/example-schema.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for the patch.
 
-diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
-index f27ad5c90353..4ddcf709cc3c 100644
---- a/Documentation/devicetree/bindings/example-schema.yaml
-+++ b/Documentation/devicetree/bindings/example-schema.yaml
-@@ -160,7 +160,7 @@ properties:
-           - enum: [ foo, bar ]
-           - enum: [ baz, boo ]
- 
--  vendor,property-in-standard-units-microvolts:
-+  vendor,property-in-standard-units-microvolt:
-     description: Vendor specific properties having a standard unit suffix
-       don't need a type.
-     enum: [ 100, 200, 300 ]
+On Tue, Nov 05, 2019 at 07:35:04PM +0100, Geert Uytterhoeven wrote:
+> The Renesas-specific "vsps" property lacks a vendor prefix.
+> Add a "renesas," prefix to comply with DT best practises.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> This depends on '[PATCH 2/3] drm: rcar-du: Recognize "renesas,vsps" in
+> addition to "vsps"'.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+(once 2/3 will be upstream)
+
+> ---
+>  arch/arm64/boot/dts/renesas/r8a774a1.dtsi    | 2 +-
+>  arch/arm64/boot/dts/renesas/r8a774b1.dtsi    | 2 +-
+>  arch/arm64/boot/dts/renesas/r8a774c0.dtsi    | 3 ++-
+>  arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 +-
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi     | 3 ++-
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi     | 2 +-
+>  arch/arm64/boot/dts/renesas/r8a77965.dtsi    | 2 +-
+>  arch/arm64/boot/dts/renesas/r8a77970.dtsi    | 3 ++-
+>  arch/arm64/boot/dts/renesas/r8a77980.dtsi    | 3 ++-
+>  arch/arm64/boot/dts/renesas/r8a77990.dtsi    | 2 +-
+>  arch/arm64/boot/dts/renesas/r8a77995.dtsi    | 2 +-
+>  11 files changed, 15 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> index 34a9f472fbb43072..0a48b53c3f9dcd69 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> @@ -2640,7 +2640,7 @@
+>  			clock-names = "du.0", "du.1", "du.2";
+>  			status = "disabled";
+>  
+> -			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
+> +			renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
+>  
+>  			ports {
+>  				#address-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+> index fe78387e4bb866ec..2ef0e136c84dcd25 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+> @@ -2486,7 +2486,7 @@
+>  			clock-names = "du.0", "du.1", "du.3";
+>  			status = "disabled";
+>  
+> -			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd0 1>;
+> +			renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd0 1>;
+>  
+>  			ports {
+>  				#address-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+> index c7bdc3606323fc97..40aceb6681474f0d 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+> @@ -1813,7 +1813,8 @@
+>  			clocks = <&cpg CPG_MOD 724>,
+>  				 <&cpg CPG_MOD 723>;
+>  			clock-names = "du.0", "du.1";
+> -			vsps = <&vspd0 0>, <&vspd1 0>;
+> +			renesas,vsps = <&vspd0 0>, <&vspd1 0>;
+> +
+>  			status = "disabled";
+>  
+>  			ports {
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
+> index 14d8513d2a47336f..29b20e8aca5863e4 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
+> @@ -30,7 +30,7 @@
+>  };
+>  
+>  &du {
+> -	vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd3 0>;
+> +	renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd3 0>;
+>  };
+>  
+>  &fcpvb1 {
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> index fde6ec122d3b4006..c7b4ece0ab3ee03f 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -3184,7 +3184,8 @@
+>  			clock-names = "du.0", "du.1", "du.2", "du.3";
+>  
+>  			renesas,cmms = <&cmm0>, <&cmm1>, <&cmm2>, <&cmm3>;
+> -			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+> +			renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>,
+> +				       <&vspd0 1>;
+>  
+>  			status = "disabled";
+>  
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> index b9db882b0351155c..95fa1608add896bf 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> @@ -2824,7 +2824,7 @@
+>  			clock-names = "du.0", "du.1", "du.2";
+>  
+>  			renesas,cmms = <&cmm0>, <&cmm1>, <&cmm2>;
+> -			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
+> +			renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
+>  
+>  			status = "disabled";
+>  
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> index bdbe197774d2f659..fb48dabb25adaf77 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> @@ -2500,7 +2500,7 @@
+>  			clock-names = "du.0", "du.1", "du.3";
+>  
+>  			renesas,cmms = <&cmm0>, <&cmm1>, <&cmm3>;
+> -			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd0 1>;
+> +			renesas,vsps = <&vspd0 0>, <&vspd1 0>, <&vspd0 1>;
+>  
+>  			status = "disabled";
+>  
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> index 0d0558e53533f0dc..c47608c3e0fa066f 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> @@ -1121,7 +1121,8 @@
+>  			clock-names = "du.0";
+>  			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
+>  			resets = <&cpg 724>;
+> -			vsps = <&vspd0 0>;
+> +			renesas,vsps = <&vspd0 0>;
+> +
+>  			status = "disabled";
+>  
+>  			ports {
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> index 4d86669af819f089..53a01265233901fe 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> @@ -1496,7 +1496,8 @@
+>  			clock-names = "du.0";
+>  			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+>  			resets = <&cpg 724>;
+> -			vsps = <&vspd0 0>;
+> +			renesas,vsps = <&vspd0 0>;
+> +
+>  			status = "disabled";
+>  
+>  			ports {
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> index 67a6824a962c57a1..8283eb311eac6334 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> @@ -1791,7 +1791,7 @@
+>  			reset-names = "du.0";
+>  
+>  			renesas,cmms = <&cmm0>, <&cmm1>;
+> -			vsps = <&vspd0 0>, <&vspd1 0>;
+> +			renesas,vsps = <&vspd0 0>, <&vspd1 0>;
+>  
+>  			status = "disabled";
+>  
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> index e6ee2b709ba61bd3..d969d7347cf872a4 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> @@ -1024,7 +1024,7 @@
+>  			reset-names = "du.0";
+>  
+>  			renesas,cmms = <&cmm0>, <&cmm1>;
+> -			vsps = <&vspd0 0>, <&vspd1 0>;
+> +			renesas,vsps = <&vspd0 0>, <&vspd1 0>;
+>  
+>  			status = "disabled";
+>  
+
 -- 
-2.20.1
+Regards,
 
+Laurent Pinchart
