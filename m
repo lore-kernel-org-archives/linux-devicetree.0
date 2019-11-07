@@ -2,227 +2,194 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18AAFC6196
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E460FFC6194
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B5321D7E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41C82187F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QS6qH6Kp"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oNsMLhJG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfKGCLo (ORCPT
+        id S1727778AbfKGCOQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:11:44 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46471 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbfKGCLo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 21:11:44 -0500
-Received: by mail-il1-f194.google.com with SMTP id m16so318283iln.13
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 18:11:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zj5nVV7hFwHQ61cfvcd7q5vRxcIEvVb9YfJiy7fOWvA=;
-        b=QS6qH6KplAbzHfCsXrTMxGf7/EoowWyvJoRyUXZH5b5nSj1rJMvUcnL5KVNbQa9KdY
-         N7i/quh0dY0FujcDlilijbFSYfm+WYVmUB93UA2Xy8j5TZaYNXzxMRgwikJx6kcbcwjZ
-         +rW1WFH9ixpIEG9zzF8ddoItXj1z9E6alHN7AGV7acyoPCvPcI7sHP8ttXAIGmEAKtCK
-         Hz0uyLuIhA5QFb+zP2QX1ZsobUpOaQQqodCyVcoolVvXWupcllpLHiVyiD2+A+Asc8d0
-         /rB//XJsfvWLnv+UVN+KizmMR88BlZNGvmYMYj5nVVmpPKTZnYpRTre5rsbXzRdjcPfG
-         0WVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zj5nVV7hFwHQ61cfvcd7q5vRxcIEvVb9YfJiy7fOWvA=;
-        b=M8K1wlAMNEyRYZsEpjotJhRO+gyiGhaw/A2d6GLDKpVpzMz8MaYF+Uq6qYSuTk20IF
-         r6Xy/Zji7eGoRDl8PXBEMBbeJy/P7152aDY+U4/Yz7PNPx8aeR1mPtwKqQ3hfLWkfs9Q
-         FmKMVkboLB0MmYmQJJ3aqQ5I1wlysFfk79ttFThHnLH/fKOe0fVhgnDlVEzCAcfNnRkf
-         DVQF0wlUUZMw2eMsBfPgmW1PXLRCkFCWPSxjdTtMvrPhrpLFy/E+g1DajxkcUv/seFI2
-         O68nuRfWctRXw4xzZ9kliNPWI+Xx9a3XbSNsZKoA0E/+x7k+Za5Bb1CH3rN3HbBn53S9
-         od/Q==
-X-Gm-Message-State: APjAAAUTOfy4FS0ykqj2xbE1QphAFf4O6ZUuBQjTkWkT6i3dcf3hJLLC
-        EYZK5DJtC2WAXUsh42qDf4gZR49VoGwYX/LpKTyhBw==
-X-Google-Smtp-Source: APXvYqzyeDjr5TTdOJAdTcs2Mr8QC5C9jpLr0O1hsPKOR4KROaGVbyvqfBoBKMTT9YtrQzx5v4HhQifzo5shXhGLKpw=
-X-Received: by 2002:a92:4555:: with SMTP id s82mr1356329ila.228.1573092702728;
- Wed, 06 Nov 2019 18:11:42 -0800 (PST)
+        Wed, 6 Nov 2019 21:14:16 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47154 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727390AbfKGCOQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 21:14:16 -0500
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 09AD171D;
+        Thu,  7 Nov 2019 03:14:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1573092854;
+        bh=S943AS8Ob1c2aizF9GpXR7oTAO4Kwu6nZZdaD86WIXE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oNsMLhJGn85VvpPcluDXOM7zSWAefZinqAVe+1IJoiwyc74U+Uy65PAP+ma4F//0K
+         w7FVOlFtstRS4Nq6d6BlL47x+7hyhc2D5TolJAdeP00Mssytr+YowJOXQElf83EN2e
+         3XCJiBr45NICjtNFNQsdTh3/gkI+6qID7ewuv8Xo=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     dmaengine@vger.kernel.org
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 1/4] dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA
+Date:   Thu,  7 Nov 2019 04:13:57 +0200
+Message-Id: <20191107021400.16474-2-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191107021400.16474-1-laurent.pinchart@ideasonboard.com>
+References: <20191107021400.16474-1-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-References: <20191028075658.12143-1-green.wan@sifive.com> <20191028075658.12143-4-green.wan@sifive.com>
- <20191105174823.GF952516@vkoul-mobl>
-In-Reply-To: <20191105174823.GF952516@vkoul-mobl>
-From:   Green Wan <green.wan@sifive.com>
-Date:   Thu, 7 Nov 2019 10:11:33 +0800
-Message-ID: <CAJivOr7ZGwm8Bp1oGcYQHkao2zr0GsMQrcdawMHukmeA8wYVnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] dmaengine: sf-pdma: add platform DMA support for
- HiFive Unleashed A00
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 1:48 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 28-10-19, 15:56, Green Wan wrote:
-> > Add PDMA driver, sf-pdma, to enable DMA engine on HiFive Unleashed
-> > Rev A00 board.
-> >
-> >  - Implement dmaengine APIs, support MEM_TO_MEM async copy.
-> >  - Tested by DMA Test client
-> >  - Supports 4 channels DMA, each channel has 1 done and 1 err
-> >    interrupt connected to platform-level interrupt controller (PLIC).
-> >  - Depends on DMA_ENGINE and DMA_VIRTUAL_CHANNELS
-> >
-> > The datasheet is here:
-> >
-> >   https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> >
-> > Follow the DMAengine controller doc,
-> > "./Documentation/driver-api/dmaengine/provider.rst" to implement DMA
-> > engine. And use the dma test client in doc,
-> > "./Documentation/driver-api/dmaengine/dmatest.rst", to test.
-> >
-> > Each DMA channel has separate HW regs and support done and error ISRs.
-> > 4 channels share 1 done and 1 err ISRs. There's no expander/arbitrator
-> > in DMA HW.
-> >
-> >    ------               ------
-> >    |    |--< done 23 >--|ch 0|
-> >    |    |--< err  24 >--|    |     (dma0chan0)
-> >    |    |               ------
-> >    |    |               ------
-> >    |    |--< done 25 >--|ch 1|
-> >    |    |--< err  26 >--|    |     (dma0chan1)
-> >    |PLIC|               ------
-> >    |    |               ------
-> >    |    |--< done 27 >--|ch 2|
-> >    |    |--< err  28 >--|    |     (dma0chan2)
-> >    |    |               ------
-> >    |    |               ------
-> >    |    |--< done 29 >--|ch 3|
-> >    |    |--< err  30 >--|    |     (dma0chan3)
-> >    ------               ------
-> >
-> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
->
-> when did i provide this?
->
-> > Signed-off-by: Green Wan <green.wan@sifive.com>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Fixes: 31c3b98b5a01 ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
->
-> Fixes what... this is not a upstream commit?
->
+The ZynqMP includes the DisplayPort subsystem with its own DMA engine
+called DPDMA. The DPDMA IP comes with 6 individual channels
+(4 for display, 2 for audio). This documentation describes DT bindings
+of DPDMA.
 
-Since I received a RFC patch from kbuild with the fix commit number I
-thought it was about merged. RFC requested to add the "Reported-by"
-and "Fixes" but looks miss the contributor so I added them as well.
-I'll remove them in next submit. Sorry for causing confusion.
+Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+Changes since v1:
 
-> > Signed-off-by: kbuild test robot <lkp@intel.com>
-> > ---
->
-> Please list the changes done from prev version, here or in cover letter
->
-will add change log.
+- Convert the DT bindings to YAML
+- Drop the DT child nodes
+---
+ .../dma/xilinx/xlnx,zynqmp-dpdma.yaml         | 68 +++++++++++++++++++
+ MAINTAINERS                                   |  8 +++
+ include/dt-bindings/dma/xlnx-zynqmp-dpdma.h   | 16 +++++
+ 3 files changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+ create mode 100644 include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
 
-> > +static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
-> > +{
-> > +     struct sf_pdma_desc *desc;
-> > +     unsigned long flags;
-> > +
-> > +     spin_lock_irqsave(&chan->lock, flags);
-> > +
-> > +     if (chan->desc && !chan->desc->in_use) {
-> > +             spin_unlock_irqrestore(&chan->lock, flags);
-> > +             return chan->desc;
-> > +     }
-> > +
-> > +     spin_unlock_irqrestore(&chan->lock, flags);
-> > +
-> > +     desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
-> > +
->
-> this empty line in not required
->
-> > +static struct dma_async_tx_descriptor *
-> > +     sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
-> > +                             dma_addr_t dest,
->
-> please make it left justified
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+new file mode 100644
+index 000000000000..b677b2c4f302
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/xlnx,zynqmp-dpdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx ZynqMP DisplayPort DMA Controller Device Tree Bindings
++
++description: |
++  These bindings describe the DMA engine included in the Xilinx ZynqMP
++  DisplayPort Subsystem. The DMA engine supports up to 6 DMA channels (3
++  channels for a video stream, 1 channel for a graphics stream, and 2 channels
++  for an audio stream).
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  "#dma-cells":
++    const: 1
++    description: |
++      The cell is the DMA channel ID (see dt-bindings/dma/xlnx-zynqmp-dpdma.h
++      for a list of channel IDs).
++
++  compatible:
++    const: xlnx,zynqmp-dpdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description: The AXI clock
++    maxItems: 1
++
++  clock-names:
++    const: axi_clk
++
++required:
++  - "#dma-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    dma: dma-controller@fd4c0000 {
++      compatible = "xlnx,zynqmp-dpdma";
++      reg = <0x0 0xfd4c0000 0x0 0x1000>;
++      interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-parent = <&gic>;
++      clocks = <&dpdma_clk>;
++      clock-names = "axi_clk";
++      #dma-cells = <1>;
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cba1095547fd..457b39bc2320 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17898,6 +17898,14 @@ F:	drivers/misc/Kconfig
+ F:	drivers/misc/Makefile
+ F:	include/uapi/misc/xilinx_sdfec.h
+ 
++XILINX ZYNQMP DPDMA DRIVER
++M:	Hyun Kwon <hyun.kwon@xilinx.com>
++M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++L:	dmaengine@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
++F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
++
+ XILLYBUS DRIVER
+ M:	Eli Billauer <eli.billauer@gmail.com>
+ L:	linux-kernel@vger.kernel.org
+diff --git a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+new file mode 100644
+index 000000000000..3719cda5679d
+--- /dev/null
++++ b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
++/*
++ * Copyright 2019 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++ */
++
++#ifndef __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
++#define __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
++
++#define ZYNQMP_DPDMA_VIDEO0		0
++#define ZYNQMP_DPDMA_VIDEO1		1
++#define ZYNQMP_DPDMA_VIDEO2		2
++#define ZYNQMP_DPDMA_GRAPHICS		3
++#define ZYNQMP_DPDMA_AUDIO0		4
++#define ZYNQMP_DPDMA_AUDIO1		5
++
++#endif /* __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__ */
+-- 
+Regards,
 
-will fix.
->
-> > +static int sf_pdma_slave_config(struct dma_chan *dchan,
-> > +                             struct dma_slave_config *cfg)
-> > +{
-> > +     struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> > +
-> > +     memcpy(&chan->cfg, cfg, sizeof(*cfg));
-> > +     chan->dma_dir = DMA_MEM_TO_MEM;
->
-> ?? looking at changelog we have only memcpy support, so this should not
-> be here, pls remove this.
->
-> > +static enum dma_status
-> > +sf_pdma_tx_status(struct dma_chan *dchan,
-> > +               dma_cookie_t cookie,
-> > +               struct dma_tx_state *txstate)
-> > +{
-> > +     struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> > +     enum dma_status status;
-> > +
-> > +     status = dma_cookie_status(dchan, cookie, txstate);
-> > +
-> > +     if (txstate && status != DMA_ERROR)
-> > +             dma_set_residue(txstate, sf_pdma_desc_residue(chan));
->
-> which residue? the query can be for a cookie which is still in pending
-> list! you need to check the cookie and only read register for cookie if
-> submitted
->
+Laurent Pinchart
 
-WIll fix this.
-
-> > +static int sf_pdma_remove(struct platform_device *pdev)
-> > +{
-> > +     struct sf_pdma *pdma = platform_get_drvdata(pdev);
-> > +     struct sf_pdma_chan *ch;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < PDMA_NR_CH; i++) {
-> > +             ch = &pdma->chans[i];
-> > +
-> > +             list_del(&ch->vchan.chan.device_node);
-> > +             tasklet_kill(&ch->vchan.task);
-> > +             tasklet_kill(&ch->done_tasklet);
-> > +             tasklet_kill(&ch->err_tasklet);
->
-> you have an isr registered which can fire and schedule tasklets..
-
-will fix it by free irq first. Thanks for reviewing.
-
-> --
-> ~Vinod
