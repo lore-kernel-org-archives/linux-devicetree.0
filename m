@@ -2,113 +2,264 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24227C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 06:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAD6C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B0D21D79
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 06:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C4221D7B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfKGGva (ORCPT
+        id S1726618AbfKGHJm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:51:30 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48531 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfKGGva (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 01:51:30 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iSbdX-0001kX-O4; Thu, 07 Nov 2019 07:51:19 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iSbdW-0007qU-3c; Thu, 07 Nov 2019 07:51:18 +0100
-Date:   Thu, 7 Nov 2019 07:51:18 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v3 4/7] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20191107065118.j4s5cghj4ark7sql@pengutronix.de>
-References: <20191105131456.32400-1-peron.clem@gmail.com>
- <20191105131456.32400-5-peron.clem@gmail.com>
- <20191105145659.ffezqntodsys4phn@pengutronix.de>
- <CAJiuCcdXr3y0oe19ZNaiQoN7Y39p54p8LjQjXfjHbTH8tbnrpw@mail.gmail.com>
+        Thu, 7 Nov 2019 02:09:42 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7565 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726571AbfKGHJl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 02:09:41 -0500
+X-UUID: 21749321a0e943fe830c4c9ded955ed7-20191107
+X-UUID: 21749321a0e943fe830c4c9ded955ed7-20191107
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 452767178; Thu, 07 Nov 2019 15:09:38 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 7 Nov 2019 15:09:35 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 7 Nov 2019 15:09:35 +0800
+Message-ID: <1573110577.14882.2.camel@mtksdaap41>
+Subject: Re: [PATCH v16 2/5] soc: mediatek: cmdq: define the instruction
+ struct
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>
+Date:   Thu, 7 Nov 2019 15:09:37 +0800
+In-Reply-To: <20191024052732.7767-3-bibby.hsieh@mediatek.com>
+References: <20191024052732.7767-1-bibby.hsieh@mediatek.com>
+         <20191024052732.7767-3-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcdXr3y0oe19ZNaiQoN7Y39p54p8LjQjXfjHbTH8tbnrpw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Clément,
+Hi, Bibby:
 
-On Wed, Nov 06, 2019 at 10:24:39PM +0100, Clément Péron wrote:
-> On Tue, 5 Nov 2019 at 15:57, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Nov 05, 2019 at 02:14:53PM +0100, Clément Péron wrote:
-> > > +     bypass = state->enabled &&
-> > > +              (state->period * clk_rate >= NSEC_PER_SEC) &&
-> >
-> > This is too coarse. With state->period = 1000000 this is fulfilled
-> > (unless the multiplication overflows).
+On Thu, 2019-10-24 at 13:27 +0800, Bibby Hsieh wrote:
+> Define an instruction structure for gce driver to append command.
+> This structure can make the client's code more readability.
 > 
-> Sorry, misunderstood the previous mail
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 75 ++++++++++++++++--------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h | 10 ++++
+>  2 files changed, 60 insertions(+), 25 deletions(-)
 > 
-> What about something like this ?
-> ((state->period - 1) * clk_rate <= NSEC_PER_SEC) &&
-> ((state->period + 1) * clk_rate >= NSEC_PER_SEC) &&
->  ((state->duty_cycle - 1) * 2 <= state->period) &&
->  ((state->duty_cycle + 1) * 2 >= state->period);
-> 
-> We are sure that the user is looking for a PWM around the OSC with a
-> 50% duty cycle ?
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 5ea509e86488..11bfcc150ebd 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -9,12 +9,24 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>  
+> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+>  
+> +struct cmdq_instruction {
+> +	union {
+> +		u32 value;
+> +		u32 mask;
+> +	};
+> +	union {
+> +		u16 offset;
+> +		u16 event;
+> +	};
+> +	u8 subsys;
+> +	u8 op;
+> +};
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> @@ -110,10 +122,10 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_destroy);
+>  
+> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> -				   u32 arg_a, u32 arg_b)
+> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt,
+> +				   struct cmdq_instruction inst)
+>  {
+> -	u64 *cmd_ptr;
+> +	struct cmdq_instruction *cmd_ptr;
+>  
+>  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>  		/*
+> @@ -129,8 +141,9 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  			__func__, (u32)pkt->buf_size);
+>  		return -ENOMEM;
+>  	}
+> +
+>  	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> +	*cmd_ptr = inst;
+>  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  
+>  	return 0;
+> @@ -138,27 +151,34 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  
+>  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+> -		    (subsys << CMDQ_SUBSYS_SHIFT);
+> +	struct cmdq_instruction inst;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	inst.op = CMDQ_CODE_WRITE;
+> +	inst.value = value;
+> +	inst.offset = offset;
+> +	inst.subsys = subsys;
+> +
+> +	return cmdq_pkt_append_command(pkt, inst);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+>  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+>  			u16 offset, u32 value, u32 mask)
+>  {
+> -	u32 offset_mask = offset;
+> +	struct cmdq_instruction inst = { {0} };
+> +	u16 offset_mask = offset;
+>  	int err;
+>  
+>  	if (mask != 0xffffffff) {
+> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> +		inst.op = CMDQ_CODE_MASK;
+> +		inst.mask = ~mask;
+> +		err = cmdq_pkt_append_command(pkt, inst);
+>  		if (err < 0)
+>  			return err;
+>  
+>  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>  	}
+> -	err = cmdq_pkt_write(pkt, value, subsys, offset_mask);
+> +	err = cmdq_pkt_write(pkt, subsys, offset_mask, value);
 
-This again is too strict. The general policy to fulfill a request is:
+This looks like a bug fix, so move to a separate patch.
 
- 1) provide the longest possible period not bigger than requested
- 2) provide the longest possible duty cycle not bigger than requested
- 3) if possible complete the currently running period before switching
-    and don't return to the user before the new setting is active.
-    Document the behaviour prominently because the code (usually)
-    doesn't allow to understand the hardware's features here.
- 4) A disabled PWM should output the inactive level
+Regards,
+CK
 
-And then there is a corner case: If the user requests .duty_cycle = 0,
-.enabled = 1 it is ok to provide .enabled = 0 iff otherwise 0% isn't
-possible.
+>  
+>  	return err;
+>  }
+> @@ -166,45 +186,50 @@ EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  
+>  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+>  {
+> -	u32 arg_b;
+> +	struct cmdq_instruction inst = { {0} };
+>  
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * WFE arg_b
+> -	 * bit 0-11: wait value
+> -	 * bit 15: 1 - wait, 0 - no wait
+> -	 * bit 16-27: update value
+> -	 * bit 31: 1 - update, 0 - no update
+> -	 */
+> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+> +	inst.op = CMDQ_CODE_WFE;
+> +	inst.value = CMDQ_WFE_OPTION;
+> +	inst.event = event;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+> +	return cmdq_pkt_append_command(pkt, inst);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_wfe);
+>  
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  {
+> +	struct cmdq_instruction inst = { {0} };
+> +
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+> -				       CMDQ_WFE_UPDATE);
+> +	inst.op = CMDQ_CODE_WFE;
+> +	inst.value = CMDQ_WFE_UPDATE;
+> +	inst.event = event;
+> +
+> +	return cmdq_pkt_append_command(pkt, inst);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+> +	struct cmdq_instruction inst = { {0} };
+>  	int err;
+>  
+>  	/* insert EOC and generate IRQ for each command iteration */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> +	inst.op = CMDQ_CODE_EOC;
+> +	inst.value = CMDQ_EOC_IRQ_EN;
+> +	err = cmdq_pkt_append_command(pkt, inst);
+>  	if (err < 0)
+>  		return err;
+>  
+>  	/* JUMP to end */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	inst.op = CMDQ_CODE_JUMP;
+> +	inst.value = CMDQ_JUMP_PASS;
+> +	err = cmdq_pkt_append_command(pkt, inst);
+>  
+>  	return err;
+>  }
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index e6f54ef6698b..678760548791 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -20,6 +20,16 @@
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+>  
+> +/*
+> + * WFE arg_b
+> + * bit 0-11: wait value
+> + * bit 15: 1 - wait, 0 - no wait
+> + * bit 16-27: update value
+> + * bit 31: 1 - update, 0 - no update
+> + */
+> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
+> +					CMDQ_WFE_WAIT_VALUE)
+> +
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT			0x3ff
+>  
 
-So the right check for bypass is:
 
-  state->period * clk_rate >= NSEC_PER_SEC &&
-  state->period * clk_rate < whatevercanbereachedwithoutbypass &&
-  state->duty_cycle * clk_rate * 2 >= NSEC_PER_SEC
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
