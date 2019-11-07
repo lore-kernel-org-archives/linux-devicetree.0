@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B330FA372C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102A9C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65DA21D7B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB81F21D6C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 07:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A3aUeypH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DGew32WL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfKGHtB (ORCPT
+        id S1726791AbfKGHvG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:49:01 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34367 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfKGHtB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 02:49:01 -0500
-Received: by mail-lj1-f194.google.com with SMTP id 139so1139468ljf.1
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 23:49:00 -0800 (PST)
+        Thu, 7 Nov 2019 02:51:06 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38270 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGHvG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 02:51:06 -0500
+Received: by mail-lj1-f193.google.com with SMTP id v8so1130492ljh.5
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 23:51:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ShPclsm9wNkguXhY/kITDe1JSSlg/MseBi87gM5UJKo=;
-        b=A3aUeypHsz/9ckLm+t55HsyhXqAaIExjxWSz8uAx9RbfpCSSIa/dVQHvyFME/F1y3b
-         cjwuorK0ZuySNvMdCc/p1tn/5VRABSDchR/mVNf6ghjDsddVL4I9JvLRmkliBw/HoM6q
-         gouLsVgnhAJD7ykGs04H3OkxdC/rgWJJbwFF20gffEQRtgZdkQtPclcMaf3m0FzRy6sS
-         yTsj2bmtYrn9pv678XFtPbZ1Q0FskcX0g16V4VcYWGKcUYv8VXLxGbRbXZZu/uc/MGTx
-         e1cYcR+BdBd1YyuC87pel6dMiRAaVGa8c7Wcwdd0RfD7BSvEmzfXLz33yDmA5vgWw6lB
-         v8Ow==
+        bh=qSQjzivSQWR3vk7yLY/YJH/RUhPjuRasO+9jC+q89bU=;
+        b=DGew32WLlEUC99wuJsG/2cOFmi/9tbj9IsU3zfo2nRYQS7rtVNcwa2pOalO0EvNk8m
+         k9dJ6Ag6CjsByBhneIUTwyqr1aqadRcLsGzPztBS1rfy+iT0DR1Biytu95CuyZXgSjo4
+         8ZN2QIuoFJzRmzxlw98K4gigwS9cNY97lYKEcQ+4IuPC+AwS0tMWY+1XsfMuQICoH/Ep
+         RvgNiOzWuHwN31kB9gfCeXRorT5C9YHJtg4M1BhNwack6xFF5SPND7/6oxhxCn21LPvf
+         kL8zn3pnzvsE6LxTaTAoUcwWAihwHQ4MbB5AccBj1JCkWQyoWYbWzngEDKX8MG8sqmYy
+         ABIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ShPclsm9wNkguXhY/kITDe1JSSlg/MseBi87gM5UJKo=;
-        b=tKhaDbnIIv1Pg6x2FMK0ciLVvhcE8T1jEmxeEcBBu+T4DzQYK5hnEByjwVHsP4XtNW
-         YvvT5tIP5tU5wLyreAQb0wA1khz5TX5F0rOMAs7+FgSoYlaYJuU0qLEhBG4eGnWVymxJ
-         d6TX1So0SwuwWTQoUYMHbmvdcNXQjBvlflUtc5jvdwVOZZMSIfTCxuAwSY4CyMTFyP4B
-         ZVvHSvhjvyx9KSkv+c5u/LMsdvNbPGQRw38yzSkUAjfM/3QksIfhGZVvz5sil8BYZIY4
-         QirbhPc92wGC/JngFAa2u4uKVyTP57yIUnQk+w3sn1568jFoSKXcZ/SdDtPbeC81/b5s
-         eNXQ==
-X-Gm-Message-State: APjAAAWPstND3s0ID5vgcAvYftQX8pW75w0DZgIAbRfmTvTIFFIbJgot
-        o/jwVv12i6M8/usOKqV+WbZeg7SSzJ7ugv9nBCvhaw==
-X-Google-Smtp-Source: APXvYqwUh2O0/Dijv6YknCg4fr4ezNaQXK4eE+1OY3XayGTb3mFeiVW9Mfng5Pe4DzuBPCwLlVkYMxHfC8VJPmvXJ/g=
-X-Received: by 2002:a2e:90b:: with SMTP id 11mr1219439ljj.233.1573112939354;
- Wed, 06 Nov 2019 23:48:59 -0800 (PST)
+        bh=qSQjzivSQWR3vk7yLY/YJH/RUhPjuRasO+9jC+q89bU=;
+        b=Stc/NKZZuyZqn9cyH2rdvLSxr+VXYJ0gqulm1Qo6iS+nGSUK8PdRcUfqD9hBwJ9Aue
+         rTgrXn2UkNg+jMMCimZVBNQ1V8Z5IMooGVIHm0rmTvV0Qb0lIyidQ1t7g0PzNgSn3x59
+         p+DXxr/VHp223Wa8DOA9no17qKfMPQAkEKoocnH9N2/BMDLYqviTWLPwqkegeQ/hdohB
+         xAIHnMefWlSzDj9woKili8ecESVuSAfO9zry+iz+be6srgQeQeNftdoBWwgf6cIDT2vp
+         Q72Y8ib7IHr0fQO2n/mHjNgD2IZmi6ihwrpBPnMsvgcppW0k3WC9aUBvMzg/T0jtprMa
+         8bOA==
+X-Gm-Message-State: APjAAAU4h1C9h+pJpLKIYcN4UkMZAiTNB5cKGNU2bi6k469CtgCvR1Pk
+        hmwfJ3/DNHk8Zc3bG+5C2RJtLdAJ+2px+5UT+fkk0g==
+X-Google-Smtp-Source: APXvYqwKHwHViiRns9nUe35XE09guXcyAAkHBHKXy6BqY0BpDujW7VYTEQakwhSoD0SR/mqO1m1nrrf0lziVhLJDa0A=
+X-Received: by 2002:a2e:9784:: with SMTP id y4mr1275845lji.77.1573113062506;
+ Wed, 06 Nov 2019 23:51:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106060301.17408-1-joel@jms.id.au> <20191106060301.17408-3-joel@jms.id.au>
-In-Reply-To: <20191106060301.17408-3-joel@jms.id.au>
+References: <20191106060301.17408-1-joel@jms.id.au> <20191106060301.17408-4-joel@jms.id.au>
+In-Reply-To: <20191106060301.17408-4-joel@jms.id.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Nov 2019 08:48:48 +0100
-Message-ID: <CACRpkdbwtf68seNW_qx2neCExfSZE7hy2kBw9eN5ObEw0_pxow@mail.gmail.com>
-Subject: Re: [PATCH 2/4] clocksource: fttmr010: Set interrupt and shutdown
+Date:   Thu, 7 Nov 2019 08:50:50 +0100
+Message-ID: <CACRpkdaQsz-cbRqgRrAyP_3VpO9Upzcwc2CNKDL4GvC286Y63Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] clocksource: fttmr010: Add support for ast2600
 To:     Joel Stanley <joel@jms.id.au>
 Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,12 +73,22 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Wed, Nov 6, 2019 at 7:03 AM Joel Stanley <joel@jms.id.au> wrote:
 
-> In preparation for supporting the ast2600, pass the shutdown and
-> interrupt functions to the common init callback.
+> The ast2600 has some minor differences to previous versions. The
+> interrupt handler must acknowledge the timer interrupt in a status
+> register. Secondly the control register becomes write to set only,
+> requiring the use of a separate set to clear register.
 >
 > Signed-off-by: Joel Stanley <joel@jms.id.au>
 
-Provided the latter patches making use of it are OKed;
+> +/*
+> +  Control register set to clear for ast2600 only.
+> + */
+> +#define TIMER_CR_CLR           (0x3c)
+
+If it is AST2600-specific then please add some AST2600 prefix such as
+AST2600_TIMER_CR_CLR (0x3c)
+
+With that:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
