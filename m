@@ -2,222 +2,96 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AC6C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A260C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0FD2178F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79A4218AE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:12:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iyEKvbJs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="Q+i+RF/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725797AbfKGSAz (ORCPT
+        id S1725828AbfKGSMH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:00:55 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60012 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbfKGSAz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 13:00:55 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 79C1471D;
-        Thu,  7 Nov 2019 19:00:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1573149652;
-        bh=3pKlQ2PufFLvWrmoVgmkXG3/3S10PQWiYBpBD09aE54=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iyEKvbJs3KEBvDfeOnA0pTJzY1F+ToTQ2w+jDj4HDf/uRmBeumbalauALcypmCoto
-         RARi6QIfbY9Q+p/IZn9OKpNjSfWDMuS7AikhFfHfED2nZn+SJ9osv/v9ojQyQLT73g
-         Q/Dj3WGnp8gK6P+0wyogsGdyt/RzegPzuHr0JaWE=
-Date:   Thu, 7 Nov 2019 20:00:43 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Thu, 7 Nov 2019 13:12:07 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:32539 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbfKGSMH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 13:12:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573150325;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=wlYx0jYIMA60CF4+HfsceKorAaRJb8L+ckAK3oldZp4=;
+        b=Q+i+RF/W1DmjZLSFNL2y/Us5oLQemnoWRUGRohti3x59yv/RlRz65WwiP2GH94Lwu8
+        rkh/hO+nBSNhyKEKdZxR4/Z75jl4Z02dV8m51/V2luI/mwhrkkip8UIGWiD74OXXXDJN
+        jbIMe7kqrdAezzrZglbh0tAhpEzoAheScQxSDj67kLDNpZ5K3YGDkmqXzg629qA26GrG
+        pYYcNssYQPYhaFu2lI+FK7TNvAu5x6sOVD4DZMRqrLKpvrlhmxlLCyFNEyGFgXZ5p6zJ
+        oQl6WZGiUl8jnd2kK+40TKSWH0jJL67rZbMSXV8w95LqlQ/ZlJed0QaX1DPhzSIlxnKF
+        r2Cg==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJDd+zEsL6f"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vA7IC3oLV
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 7 Nov 2019 19:12:03 +0100 (CET)
+Date:   Thu, 7 Nov 2019 19:12:00 +0100
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 1/8] dt-bindings: display: Add bindings for LVDS
- bus-timings
-Message-ID: <20191107180043.GA24231@pendragon.ideasonboard.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
- <TY1PR01MB177060B843107361FEF44022C0A20@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] iio: imu: mpu6050: Add support for vdd-supply
+ regulator
+Message-ID: <20191107181140.GA908@gerhold.net>
+References: <20191106183536.123070-1-stephan@gerhold.net>
+ <20191106183536.123070-2-stephan@gerhold.net>
+ <MN2PR12MB3373CA676226F02BE0C804A8C4790@MN2PR12MB3373.namprd12.prod.outlook.com>
+ <20191106213359.GA130672@gerhold.net>
+ <MN2PR12MB3373846E85AA1A396198F46EC4780@MN2PR12MB3373.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <TY1PR01MB177060B843107361FEF44022C0A20@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <MN2PR12MB3373846E85AA1A396198F46EC4780@MN2PR12MB3373.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Fabrizio,
+On Thu, Nov 07, 2019 at 01:29:33PM +0000, Jean-Baptiste Maneyrol wrote:
+> Hi Stephan,
+> 
+> I think the regulator_bulk usage is good, and the core_enable/disable_regulator functions implemented the way you did is perfect for the init/shutdown phase.
+> 
+> We just need to change the suspend/resume implementation to use something different.
 
-On Thu, Aug 29, 2019 at 02:38:06PM +0000, Fabrizio Castro wrote:
-> On 29 August 2019 15:03 Rob Herring wrote:
-> > On Wed, Aug 28, 2019 at 1:36 PM Fabrizio Castro wrote:
-> >>
-> >> Dual-LVDS connections need markers in the DT, this patch adds
-> >> some common documentation to be referenced by both panels and
-> >> bridges.
-> >>
-> >> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >>
-> >> ---
-> >> v2->v3:
-> >> * new patch
-> >> ---
-> >>  .../bindings/display/bus-timings/lvds.yaml         | 38 ++++++++++++++++++++++
-> >>  1 file changed, 38 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> >> new file mode 100644
-> >> index 0000000..f35b55a
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> >> @@ -0,0 +1,38 @@
-> >> +# SPDX-License-Identifier: GPL-2.0
-> > 
-> > (GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
-> > 
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/display/bus-timings/lvds.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Common Properties for bus timings of LVDS interfaces
-> >> +
-> >> +maintainers:
-> >> +  - Thierry Reding <thierry.reding@gmail.com>
-> >> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >> +
-> >> +description: |
-> >> +  This document defines device tree properties common to LVDS and dual-LVDS
-> >> +  interfaces, where a dual-LVDS interface is a dual-link connection with even
-> >> +  pixels traveling on one connection, and with odd pixels traveling on the other
-> >> +  connection.
+As far as I can tell, the regulator bulk API is designed to be used when
+you want to enable/disable multiple regulators at the same time.
+It does not really allow controlling one of its regulators separately
+(in a clean way).
 
-As you define a dual-LVDS interface as "a dual-link connection", should
-this be "even pixels traveling on one link, and with odd pixels
-traveling on the other link" ?
+E.g. if you would use regulator_bulk_disable() but already disabled one
+of the regulators at some point earlier, you would run into a warning
+because the regulator is disabled twice.
 
-> >> +  This document doesn't constitue a device tree binding specification by itself
-> > 
-> > typo: constitute
-> 
-> Well spotted!
-> 
-> >> +  but is meant to be referenced by device tree bindings.
-> >> +  When referenced from panel or bridge device tree bindings, the properties
-> >> +  defined in this document are defined as follows. The panel and bridge device
-> >> +  tree bindings are responsible for defining whether each property is required
-> >> +  or optional.
-> >> +
-> >> +properties:
-> >> +  dual-lvds-even-pixels:
-> >> +    type: boolean
-> >> +    description:
-> >> +      This property is specific to an input port of a sink device. When
-> > 
-> > The schema should define what nodes these go in. The description seems
-> > to indicate in 'port' nodes (or endpoint?), but your use in the panel
-> > binding puts them in the parent.
-> 
-> Did you manage to read this?
-> https://patchwork.kernel.org/cover/11119607/
-> 
-> Could you please advice on how to do this properly?
-> 
-> >> +      specified, it marks the port as recipient of even-pixels.
-> >> +
-> >> +  dual-lvds-odd-pixels:
-> >> +    type: boolean
-> >> +    description:
-> >> +      This property is specific to an input port of a sink device. When
-> >> +      specified, it marks the port as recipient of odd-pixels.
-> > 
-> > However, I don't think you even need these. A panel's port numbers are
-> > fixed can imply even or odd. For example port@0 can be even and port@1
-> > can be odd. The port numbering is typically panel specific, but we may
-> > be able to define the numbering generically if we don't already have
-> > panels with multiple ports.
-> > 
-> > Also, aren't there dual link DSI panels?
-> 
-> This is the result of a discussion on here:
-> https://patchwork.kernel.org/patch/11095547/
-> 
-> Have you come across it?
+My updated patch is still clean enough (in my opinion), so I would say
+it is better to avoid the regulator bulk API for this situation.
+I will send v2 shortly.
 
-Let me repeat my comments from that thread for Rob in order to
-centralize the discussion here.
-
-> Taking one step back to look at the big picture, what we need is for the
-> source to know what pixel (odd or even) to send on each LVDS output. For
-> that it needs to know what pixel is expected by the sink the the inputs
-> connected to the source's outputs. From each source output we can easily
-> locate the DT nodes corresponding to the connected sink's input ports,
-> but that doesn't give us enough information. From there, we could
-> 
-> - Infer the odd/even pixel expected by the source based on the port
->   numbers. This would require common DT bindings for all dual-link LVDS
->   sinks that specify the port ordering (for instance the bindings could
->   mandate that lowest numbered port correspond to even pixels).
-> 
-> - Read the odd/even pixel expected by the source from an explicit DT
->   property, as proposed above. This would also require common DT
->   bindings for all dual-link LVDS sinks that define these new
->   properties. This would I think be better than implicitly infering it
->   from DT port numbers.
-> 
-> - Retrieve the information from the sink drm_bridge at runtime. This
->   would require a way to query the bridge for the mapping from port
->   number to odd/even pixel. The DRM_LINK_DUAL_LVDS_ODD_EVEN flag could
->   be used for that, and would then be defined as "the lowest numbered
->   port corresponds to odd pixels and the highest numbered port
->   corresponds to even pixels".
-> 
-> The second and third options would both work I think. The third one is
-> roughly what you've implemented, except that I think the flag
-> description should be clarified.
-
-Rob, what's your opinion ? We could certainly, in the context of a
-panel, decide of a fixed mapping of port numbers to odd/even pixels, but
-the issue is that sources need to know which pixels to send on which
-link (assuming of course that this can be configured on the source
-side). We thus need a way for the source to answer, at runtime, the
-question "which of ports A and B of the sink correspond to even and odd
-pixels ?". This can't be inferred by the source from the sink port
-numbers, as the mapping between port number and odd/even pixels is
-specific to each sink. We thus need to either store that property in the
-DT node of the sink (option 2) or query it at runtime from the sink
-(option 3).
-
-I like option 2 as it's more explicit, but option 3 minimizes the
-required properties in DT, which is always good. Patch 3/8 introduces a
-helper that abstracts this from a sink point of view (which I think is a
-very good idea), so once we decide which option to use, only 3/8 may
-need to be adapted, the other patches should hopefully not require
-rework.
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Stephan
