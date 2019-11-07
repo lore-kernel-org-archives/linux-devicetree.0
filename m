@@ -2,68 +2,70 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B17FA372C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E03FA372C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C422B2178F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g1odS0jD"
+	by mail.kernel.org (Postfix) with ESMTP id D01ED2178F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfKGBvj (ORCPT
+        id S1733034AbfKGB5o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:51:39 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:53092 "EHLO vps0.lunn.ch"
+        Wed, 6 Nov 2019 20:57:44 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:34432 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbfKGBvi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:51:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nmKx7wji3qmcoOogImEap1jlfatkXDxtFWOPRbr3HYc=; b=g1odS0jDMvWWS3xEEFAJlFLNPm
-        jtEx6ADqv9buymCOTDNXezrh8M3U+pG39DHhXT3Ekj8vaPoWx2qT28p1yABV9VjFFVw3crUFJ4DHj
-        RXU+Fn3YpM2nBgGFdNEYZ4kVRkIafVVbIcQFF9eY5mtdigfKz6vgm5ZwhahI1S96HwaQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iSWxU-0002im-K6; Thu, 07 Nov 2019 02:51:36 +0100
-Date:   Thu, 7 Nov 2019 02:51:36 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v2 2/6] dt-bindings: net: phy: Add support for AT803X
-Message-ID: <20191107015136.GC8978@lunn.ch>
-References: <20191106223617.1655-1-michael@walle.cc>
- <20191106223617.1655-3-michael@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106223617.1655-3-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727328AbfKGB5o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:57:44 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 54AA120014E;
+        Thu,  7 Nov 2019 02:57:42 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 42DCC20014B;
+        Thu,  7 Nov 2019 02:57:36 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7C6D2402B7;
+        Thu,  7 Nov 2019 09:57:28 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] ARM: dts: imx6sx-sdb-reva: Add revision in board compatible string
+Date:   Thu,  7 Nov 2019 09:56:03 +0800
+Message-Id: <1573091764-20483-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:36:13PM +0100, Michael Walle wrote:
-> Document the Atheros AR803x PHY bindings.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+i.MX6SX SDB Rev-A board should use its own board compatible
+string instead of default i.MX6SX SDB board.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-    Andrew
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+index f1830ed..2b29ed2 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -6,6 +6,7 @@
+ 
+ / {
+ 	model = "Freescale i.MX6 SoloX SDB RevA Board";
++	compatible = "fsl,imx6sx-sdb-reva", "fsl,imx6sx";
+ };
+ 
+ &i2c1 {
+-- 
+2.7.4
+
