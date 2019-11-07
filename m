@@ -2,207 +2,226 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC825C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 03:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662E2C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B032E20869
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 03:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A432178F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nkEHapD/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="NMOEql7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733102AbfKGD6Y (ORCPT
+        id S1733102AbfKGECX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:58:24 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34500 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733101AbfKGD6Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 22:58:24 -0500
-Received: by mail-pl1-f193.google.com with SMTP id k7so524842pll.1
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 19:58:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9GmxJGdDL35hIWtTVdTygW9Ztn4rOAQPxM5+Tu63S6Q=;
-        b=nkEHapD/g+Sgly2+Nt3aVAcHLo7ZieZHz02HhFipDyBmEJ17TuJOPvaBpKVLt8hmZ4
-         WaXcKQDM0QAn0L/5ATm0doZ65pxruMJuaROP4D3TWTEiRejEYUrKKN+YNHnMdVqyYLn9
-         V9g3Vt+QEB/bERM7/kf5BRWm8WlWO+UwULvxE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9GmxJGdDL35hIWtTVdTygW9Ztn4rOAQPxM5+Tu63S6Q=;
-        b=RpxGsokTOTmLx1m4ipnCdF5FGTGShT/+8oXqvgMpLz8o14VR27H9Lu9UdngpKEbiB8
-         ClG1yIzLnQzHpVspUiNo114UbLFIfgdwvmiC0Jux+I7TG5o2lAzUQEwV9sf5YI2Hqsvw
-         GFaSqgjGzfxwOvkuykepC4ysjsyirm1F36ekGn+FYWpSE3jX6OzB81JqBmtD0+T0kHwW
-         ncX/xYHdnbWvjZNK9psGM6QxTr1T7YQ3FZfUtUCBUvOD5sG1NKZEoU73n6CqR3FybpWP
-         EelVaWo6do3SdUtwTkOYPalUuAr2yjm0ZR8xqBMGmMZtV8TjEkrJYFHYB7Du62rl1Dsh
-         JBHw==
-X-Gm-Message-State: APjAAAVH5Lj95FbzhZ17YEk9MOdUCmODB/TV+hNuEXMD4fFV7NmqQy0c
-        zBpkCmSxXO+ePrV4nmzY8lVQCg==
-X-Google-Smtp-Source: APXvYqy/J5ZM4ai8ToCaJwrShEkVZmE2/puOUgublwvWGb1Tk2GhISYMwfGTAFZM0gyzkCjxsMgzwQ==
-X-Received: by 2002:a17:902:6acb:: with SMTP id i11mr1428339plt.214.1573099102708;
-        Wed, 06 Nov 2019 19:58:22 -0800 (PST)
-Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.gmail.com with ESMTPSA id r8sm592525pgr.59.2019.11.06.19.58.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 19:58:22 -0800 (PST)
-Subject: Re: [RFC, v3, 4/4] media: platform: mtk-mdp3: Add Mediatek MDP3
- driver
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>, hans.verkuil@cisco.com,
-        laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org,
-        matthias.bgg@gmail.com, mchehab@kernel.org
-Cc:     yuzhao@chromium.org, zwisler@chromium.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
-        sj.huang@mediatek.com, christie.yu@mediatek.com,
-        holmes.chiou@mediatek.com, frederic.chen@mediatek.com,
-        Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com,
-        Rynn.Wu@mediatek.com, linux-media@vger.kernel.org,
-        srv_heupstream@mediatek.com, devicetree@vger.kernel.org,
-        Daoyuan.Huang@mediatek.com,
-        Ping-Hsun Wu <ping-hsun.wu@mediatek.com>
-References: <20190911094013.5892-1-bibby.hsieh@mediatek.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Message-ID: <d5e5a1e2-3422-8ef6-f58a-981fc5bc2449@chromium.org>
-Date:   Thu, 7 Nov 2019 11:58:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 23:02:23 -0500
+Received: from gateway20.websitewelcome.com ([192.185.55.25]:16949 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733101AbfKGECX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 23:02:23 -0500
+X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 23:02:22 EST
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id C26FB400C6FCC
+        for <devicetree@vger.kernel.org>; Wed,  6 Nov 2019 20:08:42 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id SYISiw6ssHunhSYISiNF6e; Wed, 06 Nov 2019 21:17:20 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hDIhrFBd0ww359PJX8lv7FR9yopVFZC5THcbdkAE3CQ=; b=NMOEql7I5nljhUvbHk16kPxZAF
+        KjXOLsXqFbhxlfFPF2zVkH5ElGA5qeyyQpdsPYNtkRXSbd4C+haEDTaaWQVXskvkZ96Afus4bsdam
+        RGG/vU8KamnF6gfRZ/fI760TIVJQ7dUwW7aqemJyAKMuDg5ayeQ1MxT/GzoYPJFd6ciVep7iIl27p
+        kr0bqRK7tnSBnxKKYJ5wY3f+OGxD4pP8XCNWPWVJ3n0H2z3c5aMJTwuOX0Ng4iQ8qg3WF82yNAUU6
+        tIMDMEKJJPIxDlgwSBGyHNlIPllO/g/rgTHFBP7Gs9V9QcHpMZFcu3a6O52bXnZ/3GvfWICqE1eC9
+        RW1nqI4A==;
+Received: from [191.31.194.59] (port=34854 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iSYIR-000Mrk-6i; Thu, 07 Nov 2019 00:17:19 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v6 1/5] power: supply: max17040: Add IRQ handler for low SOC alert
+Date:   Thu,  7 Nov 2019 00:17:06 -0300
+Message-Id: <20191107031710.5672-2-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191107031710.5672-1-matheus@castello.eng.br>
+References: <20191105095905.GA31721@pi3>
+ <20191107031710.5672-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-In-Reply-To: <20190911094013.5892-1-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.194.59
+X-Source-L: No
+X-Exim-ID: 1iSYIR-000Mrk-6i
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.194.59]:34854
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 28
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+According datasheet max17040 has a pin for alert host for low SOC.
+This pin can be used as external interrupt, so we need to check for
+interrupts assigned for device and handle it.
 
-On 9/11/19 5:40 PM, Bibby Hsieh wrote:
-> From: daoyuan huang <daoyuan.huang@mediatek.com>
-> 
-> This patch adds driver for Media Data Path 3 (MDP3).
-> Each modules' related operation control is sited in mtk-mdp3-comp.c
-> Each modules' register table is defined in file with "mdp_reg_"
-> and "mmsys_" prefix
-> GCE related API, operation control  sited in mtk-mdp3-cmdq.c
-> V4L2 m2m device functions are implemented in mtk-mdp3-m2m.c
-> Probe, power, suspend/resume, system level functions are defined in
-> mtk-mdp3-core.c
-> 
-> Signed-off-by: Ping-Hsun Wu <ping-hsun.wu@mediatek.com>
-> Signed-off-by: daoyuan huang <daoyuan.huang@mediatek.com>
-> ---
-> ...
-> diff --git a/drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c b/drivers/media/platform/mtk-mdp3/mtk-mdp3-core.c
-> new file mode 100644
-> ... > +static int mdp_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mdp_dev *mdp;
-> +	phandle rproc_phandle;
-> +	int ret;
-> +
-> +	mdp = devm_kzalloc(dev, sizeof(*mdp), GFP_KERNEL);
-> +	if (!mdp)
-> +		return -ENOMEM;
-> +
-> +	mdp->pdev = pdev;
-> +	ret = mdp_component_init(mdp);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize mdp components\n");
-> +		goto err_return;
-> +	}
-> +
-> +	mdp->job_wq = alloc_workqueue(MDP_MODULE_NAME, WQ_FREEZABLE, 0);
-> +	if (!mdp->job_wq) {
-> +		dev_err(dev, "Unable to create job workqueue\n");
-> +		ret = -ENOMEM;
-> +		goto err_destroy_job_wq;
-> +	}
-> +
-> +	mdp->clock_wq = alloc_workqueue(MDP_MODULE_NAME "-clock", WQ_FREEZABLE,
-> +					0);
-> +	if (!mdp->clock_wq) {
-> +		dev_err(dev, "Unable to create clock workqueue\n");
-> +		ret = -ENOMEM;
-> +		goto err_destroy_clock_wq;
-> +	}
-> +
-> +	mdp->vpu_dev = scp_get_pdev(pdev);
-> +
-> +	ret = of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-> +				   &rproc_phandle);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Could not get scp device\n");
-> +		goto err_destroy_clock_wq;
-> +	}
-> +
-> +	mdp->rproc_handle = rproc_get_by_phandle(rproc_phandle);
-> +
-> +	dev_info(&pdev->dev, "MDP rproc_handle: %llx",
-> +		 (unsigned long long)mdp->rproc_handle);
-> +
-> +	if (!mdp->rproc_handle) {
-> +		dev_err(&pdev->dev, "Could not get MDP's rproc_handle\n");
+In handler we are checking and storing fuel gauge registers values
+and send an uevent to notificate user space, so user space can decide
+save work or turn off since the alert demonstrate that the battery may
+no have the power to keep the system turned on for much longer.
 
-"ret" is not set in this error path, ret = -ENODEV?
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/power/supply/max17040_battery.c | 73 +++++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 5 deletions(-)
 
-> +		goto err_destroy_clock_wq;
-> +	}
-> +
-> +	mutex_init(&mdp->vpu_lock);
-> +	mutex_init(&mdp->m2m_lock);
-> +
-> +	mdp->cmdq_clt = cmdq_mbox_create(dev, 0, 1200);
-> +	if (IS_ERR(mdp->cmdq_clt))
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 62499018e68b..9909f8cd7b5d 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+ #include <linux/delay.h>
++#include <linux/interrupt.h>
+ #include <linux/power_supply.h>
+ #include <linux/max17040_battery.h>
+ #include <linux/slab.h>
+@@ -160,21 +161,54 @@ static void max17040_get_status(struct i2c_client *client)
+ 		chip->status = POWER_SUPPLY_STATUS_FULL;
+ }
 
-Same here, ret = PTR_ERR(mdp->cmdq_clt)?
++static void max17040_check_changes(struct i2c_client *client)
++{
++	max17040_get_vcell(client);
++	max17040_get_soc(client);
++	max17040_get_online(client);
++	max17040_get_status(client);
++}
++
+ static void max17040_work(struct work_struct *work)
+ {
+ 	struct max17040_chip *chip;
 
-> +		goto err_destroy_clock_wq;
-> +
-> +	init_waitqueue_head(&mdp->callback_wq);
-> +	ida_init(&mdp->mdp_ida);
-> +	platform_set_drvdata(pdev, mdp);
-> +
-> +	vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
-> +	pm_runtime_enable(dev);
-> +
-> +	ret = v4l2_device_register(dev, &mdp->v4l2_dev);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register v4l2 device\n");
-> +		ret = -EINVAL;
-> +		goto err_mbox_destroy;
-> +	}
-> +
-> +	ret = mdp_m2m_device_register(mdp);
-> +	if (ret) {
-> +		v4l2_err(&mdp->v4l2_dev, "Failed to register m2m device\n");
-> +		goto err_unregister_device;
-> +	}
-> +
-> +	dev_dbg(dev, "mdp-%d registered successfully\n", pdev->id);
-> +	return 0;
-> +
-> +err_unregister_device:
-> +	v4l2_device_unregister(&mdp->v4l2_dev);
-> +err_mbox_destroy:
-> +	cmdq_mbox_destroy(mdp->cmdq_clt);
-> +err_destroy_clock_wq:
-> +	destroy_workqueue(mdp->clock_wq);
-> +err_destroy_job_wq:
-> +	destroy_workqueue(mdp->job_wq);
-> +err_return:
-> +	dev_dbg(dev, "Errno %d\n", ret);
-> +	return ret;
-> +}
-> ...
-> 
+ 	chip = container_of(work, struct max17040_chip, work.work);
+-
+-	max17040_get_vcell(chip->client);
+-	max17040_get_soc(chip->client);
+-	max17040_get_online(chip->client);
+-	max17040_get_status(chip->client);
++	max17040_check_changes(chip->client);
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+ }
+
++static irqreturn_t max17040_thread_handler(int id, void *dev)
++{
++	struct max17040_chip *chip = dev;
++	struct i2c_client *client = chip->client;
++
++	dev_warn(&client->dev, "IRQ: Alert battery low level");
++	/* read registers */
++	max17040_check_changes(chip->client);
++
++	/* send uevent */
++	power_supply_changed(chip->battery);
++
++	return IRQ_HANDLED;
++}
++
++static int max17040_enable_alert_irq(struct max17040_chip *chip)
++{
++	struct i2c_client *client = chip->client;
++	unsigned int flags;
++	int ret;
++
++	flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
++	ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++					max17040_thread_handler, flags,
++					chip->battery->desc->name, chip);
++
++	return ret;
++}
++
+ static enum power_supply_property max17040_battery_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+@@ -220,6 +254,19 @@ static int max17040_probe(struct i2c_client *client,
+ 	max17040_reset(client);
+ 	max17040_get_version(client);
+
++	/* check interrupt */
++	if (client->irq) {
++		int ret;
++
++		ret = max17040_enable_alert_irq(chip);
++
++		if (ret) {
++			client->irq = 0;
++			dev_warn(&client->dev,
++				 "Failed to get IRQ err %d\n", ret);
++		}
++	}
++
+ 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+@@ -244,6 +291,14 @@ static int max17040_suspend(struct device *dev)
+ 	struct max17040_chip *chip = i2c_get_clientdata(client);
+
+ 	cancel_delayed_work(&chip->work);
++
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			enable_irq_wake(client->irq);
++		else
++			disable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
+
+@@ -254,6 +309,14 @@ static int max17040_resume(struct device *dev)
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
++
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			disable_irq_wake(client->irq);
++		else
++			enable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
+
+--
+2.24.0.rc2
+
