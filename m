@@ -2,212 +2,87 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7394FC6196
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B38BFC6194
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63C9217F5
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:23:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="osHHklz9"
+	by mail.kernel.org (Postfix) with ESMTP id DD468206DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573086324;
+	bh=xhNvDEryn0+Nc32LvcJ1Woz2dRdItsFdczm9qImxRiY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fvu6BDyDeqwEu6NBdMGrW+YSdVzJSeSPrigNUJsGNLj/6OTfKocZC1cueeoNJeNWX
+	 rimytN/+V97QpwQ6yCLXaVLwq7fj9qm7eTvNzQUahasmsugUI6b/RaE3BHuUqHQ0Ou
+	 pomabZb7J7Zaoa0NNeUyb++RKyzf8gCeNg5TYVhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732452AbfKGAXA (ORCPT
+        id S1727228AbfKGAZV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:23:00 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42252 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732423AbfKGAWz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:22:55 -0500
-Received: by mail-pg1-f196.google.com with SMTP id q17so392542pgt.9
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 16:22:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kMqJN5UHTLl3Z21ZhJB4FAKOptyfVu99KuKppBjss1E=;
-        b=osHHklz9cEKZNTMsegzUSVTedGqOvzz/bNh2WL0fy1JkDnHD5h1G54ehM1X+njoNiU
-         1igG9FylRa7UuvHdDGSOrU/7KRxw+1ZjFqkdvciczp09K6FoHmtjSRTzYkOulALbSGCZ
-         m9HEa/TD3u2jjmCuRAMCRIpVjhH2co7Jdxv7c7DbY0mG2K+P8HESj9tIqA2YUCRwwkrp
-         jPv6tluCXn5NcpioLsO3CvtGkkRNqiqsqigphfZ4/iX3/ADx2XIEB6WvsOkV4F+N6vJO
-         HPly2FiBBVBj6edx80gxf9/DOK0Dm/ZwVbpOyOdntoqSWzIekyPt/etXlkByKvgYLCjv
-         iOlA==
+        Wed, 6 Nov 2019 19:25:21 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35871 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKGAZU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:25:20 -0500
+Received: by mail-ot1-f66.google.com with SMTP id f10so471305oto.3;
+        Wed, 06 Nov 2019 16:25:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kMqJN5UHTLl3Z21ZhJB4FAKOptyfVu99KuKppBjss1E=;
-        b=ESXG3ZUcG4MBk1Cu/C06sRyiOwXJhKVUpFR6fHJdRzDwiM4z5v2BccG3/deQgpiU+M
-         pDt8ejeSJsdsHbzBbkK64mhheuRytSsk28j48whVKPWzJzmHlkjlnssfyE6tleL/yMFb
-         R1WWyek7yq9rEKfFmuh3O521r0Qho2TQJwF1Vx6JZlmzIgUaLiUMXcrlHr5RMKZu0VOO
-         XtS60fuNyuqjeoZsJDLS2jbQVuqhYjA8Cdy+nxjTSiiPSfDadLPS7h591bj81MyyU4JR
-         GWXw2LhNjcfUtLwqflySMpDCTtoron1ohaKZ3QOeGR41kTS02R+2SSFydRgVgWbpU4J1
-         y+QA==
-X-Gm-Message-State: APjAAAXVdP4sijCdsACMwgUFDQ/+6LVCR/dNFBzaAbzqqsGn232r5HxO
-        g/FDfANt72mLO2ooKI5zVpbmHg==
-X-Google-Smtp-Source: APXvYqxsyWdGVjqpKvcWRqcgrVR1QGmWXnLNDwCmgDxP/rVtwRWVhhiCEZBqTpED7urd+AIohC0LUQ==
-X-Received: by 2002:a17:90a:a002:: with SMTP id q2mr946206pjp.124.1573086173771;
-        Wed, 06 Nov 2019 16:22:53 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i13sm155272pfo.39.2019.11.06.16.22.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZzUL/AyiBPqE7zvVbE2IsIX3VerKJnUCOltXfkVkFZY=;
+        b=dX86UKYMpfY58LIBEor0FLDCHcTaXD2pV09/g5pViB9UzIb/e7e1ND6/ynuCxo4LVn
+         K5KLhPhDwTmfGwmNhhJ/o6XnUx2l4nXmSfEiC7xmC89sFLbOfsgCuKPwpsr4yAPHuoH3
+         rkTgTlN3GD1LPFODFnFkGrgXhh7c5V/Hvi3sS/LFJjRTGYgw4T5xbc3a5dSpXY+JNQKq
+         pwoj7BNlC07CIYK2/kUD0FYvZaW4ZaLI1SPMjhVXWaZlgEOWxP8Yu2RxeR1AsanT55YE
+         M0bdcAPwkEN7RH2ZRKlPtbSsSeji/GXZu2GNzvf1WQLEWOIb799gOhp/DTSdSRsZxc+E
+         MgkQ==
+X-Gm-Message-State: APjAAAXgyXKBVTetpfHUbyd3zHVCNtQN5kPZKgLCDgT9Qrc/yId4pToL
+        xsN1ASRvBY200taoCGnRbQ==
+X-Google-Smtp-Source: APXvYqySec/Ph58g0+X2o6i2pUtu7IO0vPN9Wq5qgoeq4sY3tbPZ/3k/MyDq8RuZ4cKgUSWTuIBluQ==
+X-Received: by 2002:a05:6830:15ca:: with SMTP id j10mr430974otr.276.1573086319746;
+        Wed, 06 Nov 2019 16:25:19 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w26sm191235otm.28.2019.11.06.16.25.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:22:53 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 2/3] arm64: dts: qcom: sdm845: Add second PCIe PHY and controller
-Date:   Wed,  6 Nov 2019 16:22:46 -0800
-Message-Id: <20191107002247.1127689-3-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191107002247.1127689-1-bjorn.andersson@linaro.org>
-References: <20191107002247.1127689-1-bjorn.andersson@linaro.org>
+        Wed, 06 Nov 2019 16:25:19 -0800 (PST)
+Date:   Wed, 6 Nov 2019 18:25:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Elaine Zhang <zhangqing@rock-chips.com>
+Cc:     heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        amit.kucheria@verdurent.com,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        huangtao@rock-chips.com, linux-pm@vger.kernel.org,
+        xxx@rock-chips.com, daniel.lezcano@linaro.org,
+        linux-kernel@vger.kernel.org, xf@rock-chips.com,
+        edubezval@gmail.com, linux-rockchip@lists.infradead.org,
+        robh+dt@kernel.org, andy.yan@rock-chips.com, rui.zhang@intel.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: rockchip-thermal: Support the RK3308
+ SoC  compatible
+Message-ID: <20191107002518.GA20339@bogus>
+References: <1572923846-23310-1-git-send-email-zhangqing@rock-chips.com>
+ <1572923846-23310-2-git-send-email-zhangqing@rock-chips.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572923846-23310-2-git-send-email-zhangqing@rock-chips.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the second PCIe controller and the associated QHP PHY found on
-SDM845.
+On Tue,  5 Nov 2019 11:17:24 +0800, Elaine Zhang wrote:
+> Add a new compatible for thermal founding on RK3308 SoCs.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v1:
-- Picked up Vinod's R-b
-- Dropped interconnect property, for now
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 108 +++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index b93537b7a59f..f091670f1bdc 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1468,6 +1468,114 @@
- 			};
- 		};
- 
-+		pcie1: pci@1c08000 {
-+			compatible = "qcom,pcie-sdm845", "snps,dw-pcie";
-+			reg = <0 0x01c08000 0 0x2000>,
-+			      <0 0x40000000 0 0xf1d>,
-+			      <0 0x40000f20 0 0xa8>,
-+			      <0 0x40100000 0 0x100000>;
-+			reg-names = "parf", "dbi", "elbi", "config";
-+			device_type = "pci";
-+			linux,pci-domain = <1>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <1>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x40200000 0x0 0x40200000 0x0 0x100000>,
-+				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
-+
-+			interrupts = <GIC_SPI 307 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 435 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 438 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 439 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+
-+			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-+				 <&gcc GCC_PCIE_1_AUX_CLK>,
-+				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_CLKREF_CLK>,
-+				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-+			clock-names = "pipe",
-+				      "aux",
-+				      "cfg",
-+				      "bus_master",
-+				      "bus_slave",
-+				      "slave_q2a",
-+				      "ref",
-+				      "tbu";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
-+			assigned-clock-rates = <19200000>;
-+
-+			iommus = <&apps_smmu 0x1c00 0xf>;
-+			iommu-map = <0x0   &apps_smmu 0x1c00 0x1>,
-+				    <0x100 &apps_smmu 0x1c01 0x1>,
-+				    <0x200 &apps_smmu 0x1c02 0x1>,
-+				    <0x300 &apps_smmu 0x1c03 0x1>,
-+				    <0x400 &apps_smmu 0x1c04 0x1>,
-+				    <0x500 &apps_smmu 0x1c05 0x1>,
-+				    <0x600 &apps_smmu 0x1c06 0x1>,
-+				    <0x700 &apps_smmu 0x1c07 0x1>,
-+				    <0x800 &apps_smmu 0x1c08 0x1>,
-+				    <0x900 &apps_smmu 0x1c09 0x1>,
-+				    <0xa00 &apps_smmu 0x1c0a 0x1>,
-+				    <0xb00 &apps_smmu 0x1c0b 0x1>,
-+				    <0xc00 &apps_smmu 0x1c0c 0x1>,
-+				    <0xd00 &apps_smmu 0x1c0d 0x1>,
-+				    <0xe00 &apps_smmu 0x1c0e 0x1>,
-+				    <0xf00 &apps_smmu 0x1c0f 0x1>;
-+
-+			resets = <&gcc GCC_PCIE_1_BCR>;
-+			reset-names = "pci";
-+
-+			power-domains = <&gcc PCIE_1_GDSC>;
-+
-+			phys = <&pcie1_lane>;
-+			phy-names = "pciephy";
-+
-+			status = "disabled";
-+		};
-+
-+		pcie1_phy: phy@1c0a000 {
-+			compatible = "qcom,sdm845-qhp-pcie-phy";
-+			reg = <0 0x01c0a000 0 0x800>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-+				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_1_CLKREF_CLK>,
-+				 <&gcc GCC_PCIE_PHY_REFGEN_CLK>;
-+			clock-names = "aux", "cfg_ahb", "ref", "refgen";
-+
-+			resets = <&gcc GCC_PCIE_1_PHY_BCR>;
-+			reset-names = "phy";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_PHY_REFGEN_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			status = "disabled";
-+
-+			pcie1_lane: lanes@1c06200 {
-+				reg = <0 0x01c0a800 0 0x800>,
-+				      <0 0x01c0a800 0 0x800>,
-+				      <0 0x01c0b800 0 0x400>;
-+				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
-+				clock-names = "pipe0";
-+
-+				#phy-cells = <0>;
-+				clock-output-names = "pcie_1_pipe_clk";
-+			};
-+		};
-+
- 		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
- 				     "jedec,ufs-2.0";
--- 
-2.23.0
-
+Acked-by: Rob Herring <robh@kernel.org>
