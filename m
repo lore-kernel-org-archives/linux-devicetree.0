@@ -2,111 +2,145 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4113AC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C119DC5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1771D218AE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E682187F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KeT43MVj"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ViO0Xn9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733101AbfKGEYz (ORCPT
+        id S1733157AbfKGEma (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:24:55 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35606 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733038AbfKGEYz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 23:24:55 -0500
-Received: by mail-il1-f193.google.com with SMTP id z12so579923ilp.2
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 20:24:55 -0800 (PST)
+        Wed, 6 Nov 2019 23:42:30 -0500
+Received: from mail-eopbgr1410110.outbound.protection.outlook.com ([40.107.141.110]:6115
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726935AbfKGEm3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:42:29 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GfqNAfNCXAk1UpQPiqFdEAQzWmLTqxjvflRq6yjYx/8pl5+59DHy+MnsRiB3NBIEa667V791MALo/awD5CdCk7bI74+mvF9b6HEjL15dg/dkkr1JVkkCtKbdN5IwKoc6JZUFGcBf1NkY6+Nmo/yx/J4t3IqOcBlBk5gs7xEf0SlVaBVH5GFFwsaU2bSmJn24RAifA8fto7j/bpcuiQ4NOMr/Iiu+MkLP71dtRjkuVJVpHt7IdxKDV95LVbhD0qHh3xrILHjl4BM3juTBIKkjCNtGnS2E9MI6hZoXAmes1aJcQ3T2jbeSYLMORVZVdWEQGogd2KYX20MXZTZkKDQcmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2sjIUy1FJ/ZTCzuQq4tDF3ceiSuGiXW4JWG4ZAsF+Bw=;
+ b=gQuOJWcmo/4wdWmlhG5g9QC2SdrMOs2AOCfIX8Wqyy3dhJEC78zpbZPzRGJAdxBZ66OCFlezFVaFD8ynX9OAVyMgQXGUB3vFWPM7CUzhtpYOtJzW2GVT6R/fqNk/SsnI37npVxgqGgN+fEpd9WA26o+KyGOyysuFtaEXUAcd5cd1LkV20ZzMywDgMcEaCq8GcaIu3LNBdGvv5HwdO/KeAvrVOBdC+pLtC5/EmwQfa3rbe7NyG/5gV8OPWxnMaim3qiMsIfvsOWnY1IKj5IobvNAc98qRDCrB2PEK59yCmz7k/RqZPM7HLkH84fIH7lir3n+72iONi8WKY1WoMiQYgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NkSeoMnuWg5T7g24I3SC9PrtQXIiA61Z2VNxVdt/qfE=;
-        b=KeT43MVjU2B4DpAy2SYkA6NIhlp0NXSIvrPo/xsJrBm01MgR7r5J7gwjL6ER2SKvvu
-         6zZI/iChBctFpUxgVnyp2K9HXsspnceqjcg0uSaOkMkVpQYDzb35q4B4mpiwWuV4v6yj
-         34iZRafJSCVKeLd8feC04XhdnMKrH3chAmGDQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NkSeoMnuWg5T7g24I3SC9PrtQXIiA61Z2VNxVdt/qfE=;
-        b=R5O6ORhijUifZLmi5Fz2HX5TyGqSw8mGCSxu3IHbhj89MbZKKI46K8VKXvaXanH8mw
-         ITTiPUFA0vPhDz0kD9MAepfQkjG7QUtkpqibLHPgjTo3AQUFmeWz+Jf9fQLfcZTG21Zt
-         ylrrVZgKhMojbVO+T5NORDxzYJEOiOilA0bta7CafrLhI9C+h7FV50rONqNDYssvNpmA
-         RIvCayxVM07uM4Xh3ihec7Mgsreg/O9GpDzCDPKV6pfn6EQ6xcJeMhBe6+4nQnZMNmER
-         XZ/hJwrQ8GmNdDh/Mwo7zfrKeLDOjmHttAdzXpyXsjnMRml/6LcauCjaa6ElVy7ES2EX
-         WMqw==
-X-Gm-Message-State: APjAAAUFt7I3KQRSzxv3BmOq22ZMOUmQIxXHL/reFUj+VasUNekjrkDV
-        E4EG+c5z946k/TVgCbBKUyTlWsO/UJI=
-X-Google-Smtp-Source: APXvYqxDmQBDO7hqVZEssxc0vqXEwEoto7MXa3IxsaypY+lfzSxN1FB5X1Dc0ITZlvzbbOXtCnASHw==
-X-Received: by 2002:a92:8dd9:: with SMTP id w86mr1665642ill.93.1573100694560;
-        Wed, 06 Nov 2019 20:24:54 -0800 (PST)
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com. [209.85.166.170])
-        by smtp.gmail.com with ESMTPSA id c83sm77690iof.48.2019.11.06.20.24.53
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 20:24:53 -0800 (PST)
-Received: by mail-il1-f170.google.com with SMTP id z10so556108ilo.8
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 20:24:53 -0800 (PST)
-X-Received: by 2002:a92:109c:: with SMTP id 28mr1827293ilq.142.1573100692855;
- Wed, 06 Nov 2019 20:24:52 -0800 (PST)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2sjIUy1FJ/ZTCzuQq4tDF3ceiSuGiXW4JWG4ZAsF+Bw=;
+ b=ViO0Xn9OiVlxvZefuQnt4/4k+SUfVFX19nGDmVn+vw/02viX7Ylkiq+tPMsXBtKRYh6SgLYB4DhtRyVe0KKWxv12BCaV7su8bdVTSTrP5tt1u782zMQp1GrYaRVIsSThyA2yjjKwYsViGmnXY50iCIvljGhirEPRvOMtWkAIgYU=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4255.jpnprd01.prod.outlook.com (20.178.140.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Thu, 7 Nov 2019 04:42:26 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::6998:f6cf:8cf1:2528]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::6998:f6cf:8cf1:2528%5]) with mapi id 15.20.2430.020; Thu, 7 Nov 2019
+ 04:42:26 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v2] dt-bindings: usb: renesas_usbhs: convert bindings to
+ json-schema
+Thread-Topic: [PATCH v2] dt-bindings: usb: renesas_usbhs: convert bindings to
+ json-schema
+Thread-Index: AQHVlI3Pi+Kcq3guz0GqFGtj1OnqV6d+42kAgAA+qIA=
+Date:   Thu, 7 Nov 2019 04:42:25 +0000
+Message-ID: <TYAPR01MB45448C99FC96B7DD0C5CB0E0D8780@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1573036483-16477-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20191107005700.GA26323@bogus>
+In-Reply-To: <20191107005700.GA26323@bogus>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [150.249.235.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 35a5fd28-f566-4462-e3a8-08d7633ce380
+x-ms-traffictypediagnostic: TYAPR01MB4255:
+x-microsoft-antispam-prvs: <TYAPR01MB4255986688A9BBBA8F6B13E4D8780@TYAPR01MB4255.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(199004)(189003)(71200400001)(33656002)(8936002)(11346002)(81166006)(486006)(4744005)(7696005)(6436002)(102836004)(305945005)(66066001)(6506007)(74316002)(478600001)(55016002)(26005)(76176011)(186003)(2906002)(52536014)(7736002)(5660300002)(4326008)(14454004)(9686003)(25786009)(6246003)(476003)(64756008)(66446008)(8676002)(66946007)(81156014)(86362001)(3846002)(6916009)(446003)(71190400001)(76116006)(256004)(66476007)(316002)(66556008)(6116002)(99286004)(229853002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4255;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MFEAodzYnqe3aNbFM95Xsf/GD2QcYcZQeDvMb3Aoqx4pfCByg1nJ/8xK5/+ljPuZ+ZBvgBRcPE5zUgHJo15CjUXsCzZJOdaU9D4LeJgVCDl1DjC0+wHW6VurHkydvhNJicne9Mk1COhOpCC1B56UcV/7FUpRfJ9Pimep/Lw+QmqURY4R9Y8ZRMZpbA6dAG5RCfSKra3M8BBwVCAJh6qFYW9CHhnw7dSecQ9jAIe03JtGAKQDfWOo1nLaKk7a0lDaKe0a/Z9T2u4QpQkRKPYGg6bJDOjm6kbApfNo5xctvHOTt8dK5d8zOD7M/kxkz32VejW3x2Uiy0ChHUoJNijha81bDqnJCRt+mVXywkfkvNsPl534BFXC3UdztNjHVC2x8mwIZR9uBdgt1sb1SAnouMB/G/7lcJeLdqlVHW6D1VbgibjlxMyy2DsJHf00WCE1
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org> <1572524473-19344-2-git-send-email-tdas@codeaurora.org>
-In-Reply-To: <1572524473-19344-2-git-send-email-tdas@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 6 Nov 2019 20:24:41 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UjwO25HeVtYvzqEdUxyA4ED18ZxcwEaYVzBGRFTa2FTw@mail.gmail.com>
-Message-ID: <CAD=FV=UjwO25HeVtYvzqEdUxyA4ED18ZxcwEaYVzBGRFTa2FTw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/7] clk: qcom: clk-alpha-pll: Add support for Fabia
- PLL calibration
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35a5fd28-f566-4462-e3a8-08d7633ce380
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 04:42:25.9898
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UF1wMhNw1C0RIJd+xNM7KRPthj1LmD4x93UJQBEex+VN0gOqYkFTtuVf/iZ1yZHqqMacmtFk6eOnCVFWavfFWJSpT1AlaPRfA8ow/JoO61DYje9iVlyIKH5cn6gXyEh6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4255
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On Thu, Oct 31, 2019 at 5:21 AM Taniya Das <tdas@codeaurora.org> wrote:
->
-> @@ -1141,15 +1160,11 @@ static int alpha_pll_fabia_set_rate(struct clk_hw *hw, unsigned long rate,
->                                                 unsigned long prate)
->  {
->         struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
-> -       u32 val, l, alpha_width = pll_alpha_width(pll);
-> +       u32 l, alpha_width = pll_alpha_width(pll);
->         u64 a;
->         unsigned long rrate;
->         int ret = 0;
->
-> -       ret = regmap_read(pll->clkr.regmap, PLL_MODE(pll), &val);
-> -       if (ret)
-> -               return ret;
+Thank you for your review!
 
-My compiler happened to notice that with the change to this function:
+> From: Rob Herring, Sent: Thursday, November 7, 2019 9:57 AM
+<snip>
+> > +  dma-names:
+> > +    minItems: 2
+> > +    maxItems: 4
+> > +    items:
+> > +      - enum: [ch0, ch1, ch2, ch3]
+>=20
+> This is saying the 1st item is one of the 4 values and the others are
+> undefined. I think you want:
+>=20
+> items:
+>   - const: ch0
+>   - const: ch1
+>   - const: ch2
+>   - const: ch3
 
-drivers/clk/qcom/clk-alpha-pll.c:1166:6: error: unused variable 'ret'
-[-Werror,-Wunused-variable]
-        int ret = 0;
+You're correct. So, I'll fix it.
 
--Doug
+> > +
+> > +  dr_mode:
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    description: |
+> > +      tells Dual-Role USB controllers that we want to work on a partic=
+ular
+> > +      mode. Valid arguments are "host", "peripheral" and "otg". In cas=
+e this
+> > +      attribute isn't passed via DT, USB DRD controllers should defaul=
+t to OTG.
+>=20
+> Assume we have a common binding for this and all you need is:
+>=20
+> dr_mode: true
+
+I got it. I'll fix it on v3.
+
+Best regards,
+Yoshihiro Shimoda
+
