@@ -2,71 +2,63 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF66C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 21:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B88FC6195
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 21:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FF42087E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 21:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573161850;
-	bh=2MmroB04zpXo62z6bb7yuOe+M23UIVWKuBZY4t/a88s=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=Ssft/ZxhIIfjY/I74EZkm8iKOF6jbLzco9+PCmBQXvz7kJBXH3gAkS4LWItcVeZWX
-	 MfoTFUXUU6xkrDvpp3vExrEL8QTa1R2BrhB10HPdIAl6OdcOKWTZcSzaK/ZEhwUjN7
-	 ecv032XRwVAKxsiBqcSwSHdC8v/7lvFjz0ydyNvY=
+	by mail.kernel.org (Postfix) with ESMTP id E62D721D82
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 21:24:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Imc2kjH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbfKGVYK (ORCPT
+        id S1727070AbfKGVYS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 16:24:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfKGVYK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 16:24:10 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58CA82087E;
-        Thu,  7 Nov 2019 21:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573161849;
-        bh=2MmroB04zpXo62z6bb7yuOe+M23UIVWKuBZY4t/a88s=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=aRotv79uKIzWDg6R4j280WHwnO9rJ7BC0Bzgod2V6p0zanOzac/ItzkXS4Ov9Y6TT
-         iMFQ72NolHkj0wVQlMfCYJk6qV+jKifShbUSA1t6E8dN6Ux8KhTbC94vmRVN5yOLNA
-         dzem+BHh6ubb+9cNhvrffB3LGGtDOjjdrC/A/1aU=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 7 Nov 2019 16:24:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54854 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfKGVYR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 16:24:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=v7prfR74WqpB6QjYI8Y2BOHTsG7nZfh2FWlkAYoo2zA=; b=Imc2kjH0IvF3QaF7CwIUZA1V8
+        1vhnmAP/TlwFxEl14+16JWeXd/8A3xITJYmDlzybsR88oprxcQI/wdEeV3VK+Z5likFSENCJA6fCz
+        RriAfb0x702kNR92AkTM/YZ+Xs0jp2awOTdxc6ouRkl5Lde/3/PTTTD/+E9v/dNdKw01b6M8T+NrH
+        bt8CL1YmL5ihf3A7z2vCzxqJeJYhWG8gxf8R+zdae0PDpLzRSWOWyod3gWJI4etT33yd8UDWDpaKl
+        EH9rzODP+4wvBLfi0D/ehwjxSfugUfOHOtMhy2zqaBR9Kk4bAiJ3G7a87Iq+oHOLo/oZ0lXZIYdPD
+        8iGVgO6OQ==;
+Received: from [2001:4bb8:184:e48:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSpGH-0007F5-Hl; Thu, 07 Nov 2019 21:24:13 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: QEMU RISC-V virt machine poweroff driver
+Date:   Thu,  7 Nov 2019 22:24:06 +0100
+Message-Id: <20191107212408.11857-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1572371299-16774-3-git-send-email-tdas@codeaurora.org>
-References: <1572371299-16774-1-git-send-email-tdas@codeaurora.org> <1572371299-16774-3-git-send-email-tdas@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: clock: Introduce RPMHCC bindings for SC7180
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 13:24:08 -0800
-Message-Id: <20191107212409.58CA82087E@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2019-10-29 10:48:18)
-> Add compatible for SC7180 RPMHCC.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
+Hi all,
 
-Applied to clk-next + fixed the sort.
-
+this patch add a driver for the test device in the Qemu RISC-V
+virt machine which allows properly shutting down the VM.
+It also is added to the riscv defconfig given that qemu-virt
+is the most popular riscv platform.
