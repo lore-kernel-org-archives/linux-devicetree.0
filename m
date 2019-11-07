@@ -2,89 +2,97 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EA4C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34407C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87273218AE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Plp9ciQg"
+	by mail.kernel.org (Postfix) with ESMTP id F05DB207FA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573139200;
+	bh=fsUDid5HKrc9F/WdJDG0G0BJvA0zDxAtYlHrMV4oMlU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dEn6QLR1Me2zL4g3K0w69gwq2wGZDK1k3IDLpV88otiYwj5h1ZiGslW8b/f8ig9xf
+	 mFBm95QFsPMhy7+vrsY5jyIqQYtWiXAsrE+6xjpu3bBxrLp2Z7eF1CSLt6em1Y+v2e
+	 hP0vMQX4aZK+gywUhiYxAjL1CRW1NN7U48VZV1w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388065AbfKGPGQ (ORCPT
+        id S1729617AbfKGPGj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:06:16 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46637 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729450AbfKGPGQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 10:06:16 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e9so2617571ljp.13
-        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 07:06:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cNpdMP+c8tlO1TDBVC9k0h0b00Uv4MokMY8phy3uBZY=;
-        b=Plp9ciQgOG5hYRICyBiK09OuHTIwfyXsnNUaZufyuHBW2gt8WTNobqXZ59MKjr0gpI
-         xnU+WxvFUzWmufwpssofG3QZupAgDMO5ES5kDp7byODeuSCiTJjD3F+4/bsVzFTNl33f
-         jjze2//s0VefzxvM5fc0GXN5ZNanoo3kver6yczND4uavQ+Kncxtlw+34TtV3tag+DmT
-         ZokOjbpLhJTRyck2ejy92SJ/LXgspCBjL/6k5iYnrSG5VZbk6vuOxGOyr0OL1Pb6FrEe
-         mG3MmlnVXeIBc7Og0MUOlwvJs/znEWe581cxxZ/yah3BCmJb2hsIXCHRlOEsEiZZRORr
-         0acQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cNpdMP+c8tlO1TDBVC9k0h0b00Uv4MokMY8phy3uBZY=;
-        b=UZyyF5qZ65Pq7aliZnv3qm/zloQzy3rBZb7O0MNRS6YBhwn+/3O0pf1srV8BVHppUg
-         PFU95jBamnZ/OkqEkIsRpl5l2dKqdjltVCQ9fKKoJaAB8Unr1L2V3Qcok6tOsHz7H800
-         q/hyxRuyrLmiMbhJP/Se0pu089m2uyYHTM8HzQtHZ5EgmobWcJtjlnYYVZHVlibn4xsf
-         IHGNMZywlpA49RPFWU8fit0FGrYKPklplD6CH702RxL5bWKuwViC34mbIDpNWC3MvyNG
-         9AW7EdlJfWfkLuAQ7ScWm66vzwa3l1mRcibPVrQPa7MA9dI3QqzbDveR50cVPQM+U44c
-         u0pA==
-X-Gm-Message-State: APjAAAXDXnPdm9D5+NwdYwN7P7aoSCxEvA6UuZ59/LfZo9uq77nD662V
-        FdWnL+WyDBwr08JYLlBK4Sa5U4AMF5tCk6LwL18jnw==
-X-Google-Smtp-Source: APXvYqy0UMnhHp0V9kHUNVqUdW8dcWit5TUPdqMJ7p+PhSp0lU3WFWMFc8TaB5tFpYY9hkHHmq2SoFIgo1uRcdaSFgk=
-X-Received: by 2002:a2e:161b:: with SMTP id w27mr2825884ljd.183.1573139174709;
- Thu, 07 Nov 2019 07:06:14 -0800 (PST)
+        Thu, 7 Nov 2019 10:06:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfKGPGi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 10:06:38 -0500
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ACFB21882;
+        Thu,  7 Nov 2019 15:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573139198;
+        bh=fsUDid5HKrc9F/WdJDG0G0BJvA0zDxAtYlHrMV4oMlU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H0ouccmx3hPoSmfABuj+ASPlZjcT34bKeeTs6W7khhPV0gKKHXHX/84pH9urmXIqn
+         8k0RkS0fIKYPO330bAf7gr/wNnO6IOIHTgXxFB3dxquRjLgr5y5YnQZNpmqf1g0HYg
+         Ehg0WoF9J6m6pe7goKXBRjfM8Xk5R/3CDtnxQvxE=
+Received: by mail-qt1-f171.google.com with SMTP id o11so2681125qtr.11;
+        Thu, 07 Nov 2019 07:06:38 -0800 (PST)
+X-Gm-Message-State: APjAAAUshMS+RDZRZupsDj1c3V6bkiY6FHyFhk7C/QFTQIo7tHuMl8A/
+        p7UGbhxXX7bnq/gAGUC6htNGgS0jIpIkub7szQ==
+X-Google-Smtp-Source: APXvYqyWThPesgEWjPQEctkib9uu1yXYL3S5Ba/sok9ZNmOi20dTHR/4ibL7EeEbmf+MSrIGI5rbVM+ND/yHu3273d8=
+X-Received: by 2002:ac8:7612:: with SMTP id t18mr4267565qtq.143.1573139197437;
+ Thu, 07 Nov 2019 07:06:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106183536.123070-1-stephan@gerhold.net>
-In-Reply-To: <20191106183536.123070-1-stephan@gerhold.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Nov 2019 16:06:02 +0100
-Message-ID: <CACRpkdZgUR5Wqr7o7Rf2vGavCmx=rU53L6AaHhOQ3w2R0f2XHw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <1573102944-11095-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1573102944-11095-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 7 Nov 2019 09:06:26 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJT-k98xtsxAK+jZ1Jhwz=SmpGDR3hUiN9tcOQZBACXTw@mail.gmail.com>
+Message-ID: <CAL_JsqJT-k98xtsxAK+jZ1Jhwz=SmpGDR3hUiN9tcOQZBACXTw@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: usb: renesas_usbhs: convert bindings to json-schema
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jean-Baptiste Maneyrol <JManeyrol@invensense.com>,
-        linux-iio@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        devicetree@vger.kernel.org,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 7:37 PM Stephan Gerhold <stephan@gerhold.net> wrote:
-
-> inv_mpu6050 now supports an additional vdd-supply; document it.
+On Wed, Nov 6, 2019 at 11:02 PM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
 >
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> Convert Renesas USBHS (HS-USB) controller bindings documentation
+> to json-schema.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Changes from v2:
+>  - Fix dma-names and dr_mode.
+>  https://patchwork.kernel.org/patch/11229977/
+>
+>  Changes from v1:
+>  - Remove enum from RZ/A[12] compatibles.
+>  - Remove comments from reg and clocks.
+>  - Change maxItems from 2 to 3 on clocks for USB 2.0 clock selector.
+>  - Add items on clocks.
+>  - Remove $ref from a gpio property.
+>  - Add maxItems on phys, phy-names and resets.
+>  - Remove generic.txt file reference.
+>  - Remove the last blank line.
+>  https://patchwork.kernel.org/patch/11205919/
+>
+>  .../devicetree/bindings/usb/renesas,usbhs.txt      |  58 ----------
+>  .../devicetree/bindings/usb/renesas,usbhs.yaml     | 126 +++++++++++++++++++++
+>  2 files changed, 126 insertions(+), 58 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/usb/renesas,usbhs.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
