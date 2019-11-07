@@ -2,96 +2,87 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB75C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 17:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC87C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 17:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC94218AE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 17:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573148456;
-	bh=OYgQrmdZmNroAHb74sVUuSnpCtxolSUHgVGyEjv4V5Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nrBqA/CkIgQfeWlXep97LQ5q0OpilnD7LoCkiJ5XMvD+m3G/YB/KuU6QVmPxEVBxH
-	 iTi1/cDEER9kxIpwk33YGcyfMTdcfRnCH2V6L5XWoXyNOzaejvm3vj0qml80fSvnj1
-	 6TxU/aNC8+b0KgL+FGkUQDq1wQb49NExIPta4g/w=
+	by mail.kernel.org (Postfix) with ESMTP id E66CC21D6C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 17:43:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZUM/7cXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbfKGRkz (ORCPT
+        id S1730543AbfKGRns (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:40:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727132AbfKGRkz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:40:55 -0500
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0F702084D;
-        Thu,  7 Nov 2019 17:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573148454;
-        bh=OYgQrmdZmNroAHb74sVUuSnpCtxolSUHgVGyEjv4V5Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rDltopZkGIFVN3tdTyMtIBC0/DHvpYC//97XoCxkCgL1Wprtj27pPVltzMEqfAnS9
-         H4eUUc89erhUBoVs8OiiQr9GmEe8B6Hw/1e6dQBfKiDSw4lxtaIWMORzftVi5lU2bE
-         OiHu70ENCi0eJ9yVREDlYILAWx4y/Po/OkXaHVvE=
-Received: by mail-qt1-f170.google.com with SMTP id u22so3219324qtq.13;
-        Thu, 07 Nov 2019 09:40:53 -0800 (PST)
-X-Gm-Message-State: APjAAAWfQ2jvVcRlr9x0D9Rcemoo8XH0id4cDAfbo6KRn/LiBqMbg1V6
-        XQAf0WxAYTqrUdYMhiOUmVgi8E11W7hnDgIBMg==
-X-Google-Smtp-Source: APXvYqymGGkqABjYdF0xhvWYzF9gyZ7Mx6LFLCCgTmCamvcfGddIsg5zyOUpdwQsy7X4I+/2Uw4D8lnhSwngyNf7W74=
-X-Received: by 2002:ac8:7612:: with SMTP id t18mr5129163qtq.143.1573148453179;
- Thu, 07 Nov 2019 09:40:53 -0800 (PST)
+        Thu, 7 Nov 2019 12:43:48 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34169 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729669AbfKGRns (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 12:43:48 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n13so3070015pff.1
+        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 09:43:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:to:cc:user-agent:date;
+        bh=i/bPZYpoTgBBA0/FNFZyzs4p1x5dRwvEFsGyW1K155c=;
+        b=ZUM/7cXSrgbDE42yKYLMhG25QGuPe992yvgtfqjaqDYXj7+yjfnf3SsTzMw0AJ/BNk
+         YwwYE7udeNrqXvEu9r9ZsbUgCHhDEANgkV9C4Aqoad6abD5bjEzSFBCX2ofNmNej9aWe
+         3XiwKjGOpqhuiKZMTkiKgtWIPRk3ov+7Aus2g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
+         :user-agent:date;
+        bh=i/bPZYpoTgBBA0/FNFZyzs4p1x5dRwvEFsGyW1K155c=;
+        b=PAwm7KVp3r/Jn7oqeLdFr7R9drXXe6rKQEqxFJvo4yzg6TJTRfQ7DmlA3gyzepIX1E
+         z05Jc6ulc2XlD5/x8LBGhOVzgD694/frbFHNRxMltAQH9F2hW6XJBbRnVEjVer8/Yucs
+         0MpnIHBMw12fGfpID0Ch3oXYuYV7QG6qqsxEWhQ+OEF6qC9KfDmhrDTYAdIodgUN7DtC
+         0609gkZay5MJWI9J9Cwce/iFMckQVckC+FhtmwFMNiLYR6rwsX81UNs2kAsy678m7WDK
+         DdchAeki4HFj2sO0WLwCXWRjTl48kNp63XGpGYTb3YiZnm8dPOH+iOzCUGCNAhRL+17P
+         8vfA==
+X-Gm-Message-State: APjAAAWOOlGRb9/NvH9bgob2RWH62xQ5vQg+50uQITpC6sex/32AQdOg
+        hr2FelcKeYMfiRV52o9RDp/j8A==
+X-Google-Smtp-Source: APXvYqyKl8+9hlEMt2RuqCuK+QVNWgd3w09FeHcCuF7GvMgHbVE+27A0VSv47omCaySvcInXiNiHXA==
+X-Received: by 2002:a63:d802:: with SMTP id b2mr5935568pgh.414.1573148627379;
+        Thu, 07 Nov 2019 09:43:47 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s26sm3138076pga.67.2019.11.07.09.43.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 09:43:46 -0800 (PST)
+Message-ID: <5dc457d2.1c69fb81.839ab.803b@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-2-srinivas.kandagatla@linaro.org> <20191105193100.GB4709@bogus>
- <315fd1f8-b6b5-5df7-604d-4ca92b31772c@linaro.org>
-In-Reply-To: <315fd1f8-b6b5-5df7-604d-4ca92b31772c@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 7 Nov 2019 11:40:41 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ+EUe8TiNfUN30D9x4XNcUnevUSK2cM9zVQR=jDR1wQQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ+EUe8TiNfUN30D9x4XNcUnevUSK2cM9zVQR=jDR1wQQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191106065017.22144-2-rnayak@codeaurora.org>
+References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-2-rnayak@codeaurora.org>
+Subject: Re: [PATCH v4 01/14] dt-bindings: qcom: Add SC7180 bindings
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 09:43:45 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 4:08 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 05/11/2019 19:31, Rob Herring wrote:
-> >> +  vdd-micbias-supply:
-> >> +    description: A reference to the micbias supply
-> >> +
-> >> +  qcom,micbias1-microvolts:
-> > The standard unit is 'microvolt', not 'microvolts'.
-> >
-> I started with microvolt but dt_bindings_check reported errors.
->
-> looking at
-> https://github.com/devicetree-org/dt-schema/blob/master/meta-schemas/vendor-props.yaml#L19
->   suggested microvolts should be used on vendor properties.
->
-> Is this a typo in dt-schema ?
+Quoting Rajendra Nayak (2019-11-05 22:50:04)
+> Add a SoC string 'sc7180' for the qualcomm SC7180 SoC.
+> Also add a new board type 'idp'
+>=20
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-Yes, even the DT maintainer gets confused. :) It's fixed now.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Rob
+I see that it isn't sorted but o well!
+
