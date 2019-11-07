@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6A5FA372C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B17FA372C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A75A21848
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C422B2178F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:51:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="W00jCUAS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g1odS0jD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbfKGBuG (ORCPT
+        id S1727772AbfKGBvj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:50:06 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:53076 "EHLO vps0.lunn.ch"
+        Wed, 6 Nov 2019 20:51:39 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:53092 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfKGBuG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:50:06 -0500
+        id S1727778AbfKGBvi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:51:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=GYjQWq1yeWTOVFMX0wEXq/giClGs21U1rCBf6jNgeO0=; b=W00jCUASnPQjug9QpB/SnJ/Hsm
-        J1utV3yhfatlW/Nuo2/PSDorRwnV4UWJp7bJVxU++779lkdSqlFNyaSX5fATYu2u3DbtkDwndfLc8
-        RCo1WSbSrV5HRL5leZVvStvMJbfe6RxCpOI9/8TCS3/k0FH78KWxNI5JN2q36up6qMtY=;
+        bh=nmKx7wji3qmcoOogImEap1jlfatkXDxtFWOPRbr3HYc=; b=g1odS0jDMvWWS3xEEFAJlFLNPm
+        jtEx6ADqv9buymCOTDNXezrh8M3U+pG39DHhXT3Ekj8vaPoWx2qT28p1yABV9VjFFVw3crUFJ4DHj
+        RXU+Fn3YpM2nBgGFdNEYZ4kVRkIafVVbIcQFF9eY5mtdigfKz6vgm5ZwhahI1S96HwaQ=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
         (envelope-from <andrew@lunn.ch>)
-        id 1iSWvz-0002i3-FG; Thu, 07 Nov 2019 02:50:03 +0100
-Date:   Thu, 7 Nov 2019 02:50:03 +0100
+        id 1iSWxU-0002im-K6; Thu, 07 Nov 2019 02:51:36 +0100
+Date:   Thu, 7 Nov 2019 02:51:36 +0100
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Michael Walle <michael@walle.cc>
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
@@ -43,26 +43,26 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Florian Fainelli <f.fainelli@gmail.com>,
         Simon Horman <simon.horman@netronome.com>,
         Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v2 1/6] net: phy: at803x: fix Kconfig description
-Message-ID: <20191107015003.GB8978@lunn.ch>
+Subject: Re: [PATCH v2 2/6] dt-bindings: net: phy: Add support for AT803X
+Message-ID: <20191107015136.GC8978@lunn.ch>
 References: <20191106223617.1655-1-michael@walle.cc>
- <20191106223617.1655-2-michael@walle.cc>
+ <20191106223617.1655-3-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106223617.1655-2-michael@walle.cc>
+In-Reply-To: <20191106223617.1655-3-michael@walle.cc>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:36:12PM +0100, Michael Walle wrote:
-> The name of the PHY is actually AR803x not AT803x. Additionally, add the
-> name of the vendor and mention the AR8031 support.
+On Wed, Nov 06, 2019 at 11:36:13PM +0100, Michael Walle wrote:
+> Document the Atheros AR803x PHY bindings.
 > 
 > Signed-off-by: Michael Walle <michael@walle.cc>
 > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
