@@ -2,112 +2,219 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD83FC5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9FAC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A802E2166E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ub5AuL2y"
+	by mail.kernel.org (Postfix) with ESMTP id F14AC2187F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfKGIyu (ORCPT
+        id S1733288AbfKGJHU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:54:50 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34441 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfKGIyt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 03:54:49 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n13so2163596pff.1
-        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 00:54:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=REr9FfqxVfrOvMfCnBHOUFhY/pw9eZJd+cJfs5nnvmk=;
-        b=Ub5AuL2yBlrx2kEGok4LLkMsGs9Tg85TheBaiJPVAl5Zup7IALWGjeBGQNQxT66fGQ
-         /+Kx4qiwPKcqzjoOsuuQL20s7hdAkUp1V5GqLlC4CyA4Oh5Qh1iF6hi4f+GocdYoQJOI
-         TEVLqzJZE1uOsHzBekKouNqI77hN5vukb/5zyXZIj5F54WAxVrtm9Xh3GUaULvUhz4+v
-         Cn4dummdKET9/QWP9fYXYzcRNChTj9x7K4V/zV1j2BojghVhhhmEVvq3FgdM+YbDMPip
-         d8lOL0vcQmJYZ5r8tUheQJ+w2J6FE+u4Xwizyk9fU7IUU2M56Ynbz+vgU6uagWRKDDwL
-         SkEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=REr9FfqxVfrOvMfCnBHOUFhY/pw9eZJd+cJfs5nnvmk=;
-        b=fo8bKlR8dXSj3+WXKd4n8i7taGfzF3vmakoO7fXYAzkx5YZ7/3H1HRL5pwUWGxBEL4
-         ae4nchsb5KBIJWvIIG3MMc7CurN7UP8th38S5pzaAIV93i9EZxPB/jYhOX1yI9yNd2fm
-         cxLTQ8dBl8bAOR5/yuUDeC8tlwlHMOQIDBEJrq3u4QIsx4Fd1SbAlEMGhW5ufP2112aI
-         KLPe7PaSXaKHUGoDLB9FNkd2DOoDtjVxQrYk4wc4aHJZpTCVdOSSMUx3+mDAY1xME6QA
-         3JJFdepV2V9ctCP6ov+E8rEJIoRgLcbH2nuvDQFqImWI0dv2zwONP77DqAxBlp4VNNB4
-         mu5A==
-X-Gm-Message-State: APjAAAVosjd1+nN/qlS++bWjjw7bs+Ftkiy/cWSqSWhknUJ+6DozrQV2
-        2gXgcgpRVtInjgCliV6haNpVkw==
-X-Google-Smtp-Source: APXvYqwDFuK/xyGSDVKNWtwLPNsCCdPj7+umcyIkizF5k0puUXO125ZdEGWjnl7vA9pTpceKyeB6Bg==
-X-Received: by 2002:a63:91c1:: with SMTP id l184mr3073440pge.57.1573116888516;
-        Thu, 07 Nov 2019 00:54:48 -0800 (PST)
-Received: from localhost.localdomain (36-228-119-18.dynamic-ip.hinet.net. [36.228.119.18])
-        by smtp.gmail.com with ESMTPSA id a33sm2402361pgb.57.2019.11.07.00.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 00:54:48 -0800 (PST)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 4/4] MAINTAINERS: Add Green as SiFive PDMA driver maintainer
-Date:   Thu,  7 Nov 2019 16:49:22 +0800
-Message-Id: <20191107084955.7580-5-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191107084955.7580-1-green.wan@sifive.com>
-References: <20191107084955.7580-1-green.wan@sifive.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 7 Nov 2019 04:07:20 -0500
+Received: from mga12.intel.com ([192.55.52.136]:3962 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726800AbfKGJHU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 04:07:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 01:07:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,277,1569308400"; 
+   d="scan'208";a="205618822"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 07 Nov 2019 01:07:13 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iSdl2-0001eW-PM; Thu, 07 Nov 2019 11:07:12 +0200
+Date:   Thu, 7 Nov 2019 11:07:12 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v4 1/2] pinctrl: Add pinmux & GPIO controller driver for
+ a new SoC
+Message-ID: <20191107090712.GV32742@smile.fi.intel.com>
+References: <cover.1573111648.git.rahul.tanwar@linux.intel.com>
+ <63273c2b9ad14dae2b74e27e679da4d60a67d284.1573111648.git.rahul.tanwar@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63273c2b9ad14dae2b74e27e679da4d60a67d284.1573111648.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update MAINTAINERS for SiFive PDMA driver.
+On Thu, Nov 07, 2019 at 03:36:44PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+> controls pin multiplexing & configuration including GPIO functions selection &
+> GPIO attributes configuration.
+> 
+> This IP is not based on & does not have anything in common with Chassis
+> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+> 
+> Add a new GPIO & pin control framework based driver for this IP.
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+> +static void eqbr_gpio_mask_ack_irq(struct irq_data *d)
+> +{
+> +	eqbr_gpio_disable_irq(d);
+> +	eqbr_gpio_ack_irq(d);
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2a427d1e9f01..d319f7f33407 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14785,6 +14785,12 @@ F:	drivers/media/usb/siano/
- F:	drivers/media/usb/siano/
- F:	drivers/media/mmc/siano/
- 
-+SIFIVE PDMA DRIVER
-+M:	Green Wan <green.wan@sifive.com>
-+S:	Maintained
-+F:	drivers/dma/sf-pdma/
-+F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-+
- SIFIVE DRIVERS
- M:	Palmer Dabbelt <palmer@dabbelt.com>
- M:	Paul Walmsley <paul.walmsley@sifive.com>
+Potential race?
+
+> +}
+
+> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
+> +			       unsigned int selector, unsigned int group)
+> +{
+> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct function_desc *func;
+> +	struct group_desc *grp;
+> +	unsigned int *pinmux;
+> +	int i;
+> +
+> +	func = pinmux_generic_get_function(pctldev, selector);
+> +	if (!func)
+> +		return -EINVAL;
+> +
+> +	grp = pinctrl_generic_get_group(pctldev, group);
+> +	if (!grp)
+> +		return -EINVAL;
+> +
+> +	pinmux = grp->data;
+
+> +	for (i = 0; i < grp->num_pins; i++)
+> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
+
+What if in the middle of the loop mux of one of the pins be changed by parallel
+thread?
+
+> +	return 0;
+> +}
+
+> +static int eqbr_pinmux_gpio_request(struct pinctrl_dev *pctldev,
+> +				    struct pinctrl_gpio_range *range,
+> +				    unsigned int pin)
+> +{
+> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +
+
+> +	/* 0 mux is reserved for GPIO */
+
+Perhaps
+
+#define EQBR_GPIO_MODE	0
+
+?
+
+> +	return eqbr_set_pin_mux(pctl, 0, pin);
+> +}
+
+> +	for (i = 0; i < npins; i++) {
+> +		ret = eqbr_pinconf_set(pctldev, pins[i], configs, num_configs);
+> +		if (ret)
+> +			return ret;
+
+What if in the middle of the loop settings of one of the pins be changed by
+parallel thread?
+
+> +	}
+
+> +static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
+> +{
+> +	struct device *dev = drvdata->dev;
+> +	struct device_node *node = dev->of_node;
+> +	unsigned int *pinmux, pin_id, pinmux_id;
+> +	struct group_desc group;
+> +	struct device_node *np;
+> +	struct property *prop;
+> +	int j, err;
+> +
+> +	for_each_child_of_node(node, np) {
+> +		prop = of_find_property(np, "groups", NULL);
+> +		if (!prop)
+> +			continue;
+> +
+> +		group.num_pins = of_property_count_u32_elems(np, "pins");
+> +		if (group.num_pins < 0) {
+
+> +			dev_err(dev, "No pins in the group: %s\n",
+> +				prop->name);
+
+It is perfectly one line. The idea of if (!foo) pattern in the loop to make
+code occupy less LOCs along with increased readability.
+
+> +			return -EINVAL;
+> +		}
+> +		group.name = prop->value;
+
+> +		group.pins = devm_kcalloc(dev, group.num_pins,
+> +					  sizeof(*(group.pins)), GFP_KERNEL);
+> +		pinmux = devm_kcalloc(dev, group.num_pins,
+> +				      sizeof(*pinmux), GFP_KERNEL);
+
+These can be rearranged.
+
+> +
+> +		if (!group.pins || !pinmux)
+> +			return -ENOMEM;
+> +		for (j = 0; j < group.num_pins; j++) {
+
+> +			if (of_property_read_u32_index(np, "pins",
+> +						       j, &pin_id)) {
+
+One line.
+
+And so on...
+
+> +				dev_err(dev, "Group %s: Read intel pins id failed\n",
+> +					group.name);
+> +				return -EINVAL;
+> +			}
+> +			if (pin_id >= drvdata->pctl_desc.npins) {
+> +				dev_err(dev, "Group %s: Invalid pin ID, idx: %d, pin %u\n",
+> +					group.name, j, pin_id);
+> +				return -EINVAL;
+> +			}
+> +			group.pins[j] = pin_id;
+> +			if (of_property_read_u32_index(np, "pinmux",
+> +						       j, &pinmux_id)) {
+> +				dev_err(dev, "Group %s: Read intel pinmux id failed\n",
+> +					group.name);
+> +				return -EINVAL;
+> +			}
+> +			pinmux[j] = pinmux_id;
+> +		}
+> +
+> +		err = pinctrl_generic_add_group(drvdata->pctl_dev, group.name,
+> +						group.pins, group.num_pins,
+> +						pinmux);
+> +		if (err < 0) {
+> +			dev_err(dev, "Failed to register group %s\n",
+> +				group.name);
+> +			return err;
+> +		}
+> +		memset(&group, 0, sizeof(group));
+> +		pinmux = NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
