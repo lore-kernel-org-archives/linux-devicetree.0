@@ -2,84 +2,68 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C998FA372C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6A5FA372C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B93421848
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573089077;
-	bh=rIU6EyvBYO9j9IVhetnly4HBKdPEzu5PrktOv5FywjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sLthSCR0ECMWAvdJ94llr8bXIUt4ZhjLDCyWZr/YT6BgeNC9MvUDyAytDgJcJ5jjJ
-	 DDZzqnkE67AuU21X1BNeJnYnKk2B2FWQDUW3l/8nMiK1Qgt7PyCGx6VaJCr3Rl6CQ+
-	 2J2zVv/O22nBytCc1qwsqUplmCwkAsALYfSdFcnM=
+	by mail.kernel.org (Postfix) with ESMTP id 5A75A21848
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="W00jCUAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbfKGBLQ (ORCPT
+        id S1727924AbfKGBuG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:11:16 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43022 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGBLQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 20:11:16 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l20so459722oie.10;
-        Wed, 06 Nov 2019 17:11:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=icw6S2OVXRtdcU89hq1ruG6UsmLeUp//TCbYMm2btBk=;
-        b=LBnx0RY7ec1S3kbRk3qvTH4Pa1dt8KKBvTZsmY9Vy+pwy5Se0WsjFIu8mqYIgtm/I6
-         mUyiBNlzRdRu5xH2QfJeDf7Sgui3Vyh5SdDI6oXDURQu1sfzBAjZ6xw+zhLtuodUycLV
-         feur7j5x5AltPb5oVElqudphYC+WDLo8g20Z8/zrNNBXQiPF1A5UQFXsFZVvgzQ129j/
-         LUMAJpKAn5p53z6pY+9MnHrui/q6PbRbBcWZZMVUUdpHBrsb4EobcgCLId3MJtbXSDzz
-         TyAYVCna45ihhVVVxFR84iHBivrNSybLf47BSWtLbGVyvelfPHIvTZ3sc90StelOx8j6
-         hnPQ==
-X-Gm-Message-State: APjAAAVkj2Jj8Ef0qcA1zEiV+OHnbu86XILsKrC6OgeDs2sZ0yI/ak/I
-        b6R+Y7Qd2gJfeHu+7fYS7g==
-X-Google-Smtp-Source: APXvYqxWuabs3rv1PDOsLYIr4ybg0LIvCamfpGN0rR9RPj39X3hmAT+aHnyaQu14PBYsExoD+RRE3Q==
-X-Received: by 2002:a05:6808:2d8:: with SMTP id a24mr824426oid.127.1573089075340;
-        Wed, 06 Nov 2019 17:11:15 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m25sm233558otj.62.2019.11.06.17.11.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 17:11:14 -0800 (PST)
-Date:   Wed, 6 Nov 2019 19:11:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        yuenn@google.com, venture@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au, openbmc@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: Re: [PATCH v5 2/3] dt-bindings: reset: Add binding constants for
- NPCM7xx reset controller
-Message-ID: <20191107011114.GA19324@bogus>
-References: <20191106145331.25740-1-tmaimon77@gmail.com>
- <20191106145331.25740-3-tmaimon77@gmail.com>
+        Wed, 6 Nov 2019 20:50:06 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:53076 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727328AbfKGBuG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:50:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GYjQWq1yeWTOVFMX0wEXq/giClGs21U1rCBf6jNgeO0=; b=W00jCUASnPQjug9QpB/SnJ/Hsm
+        J1utV3yhfatlW/Nuo2/PSDorRwnV4UWJp7bJVxU++779lkdSqlFNyaSX5fATYu2u3DbtkDwndfLc8
+        RCo1WSbSrV5HRL5leZVvStvMJbfe6RxCpOI9/8TCS3/k0FH78KWxNI5JN2q36up6qMtY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iSWvz-0002i3-FG; Thu, 07 Nov 2019 02:50:03 +0100
+Date:   Thu, 7 Nov 2019 02:50:03 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v2 1/6] net: phy: at803x: fix Kconfig description
+Message-ID: <20191107015003.GB8978@lunn.ch>
+References: <20191106223617.1655-1-michael@walle.cc>
+ <20191106223617.1655-2-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106145331.25740-3-tmaimon77@gmail.com>
+In-Reply-To: <20191106223617.1655-2-michael@walle.cc>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  6 Nov 2019 16:53:30 +0200, Tomer Maimon wrote:
-> Add device tree binding constants for Nuvoton BMC NPCM7xx
-> reset controller.
+On Wed, Nov 06, 2019 at 11:36:12PM +0100, Michael Walle wrote:
+> The name of the PHY is actually AR803x not AT803x. Additionally, add the
+> name of the vendor and mention the AR8031 support.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../dt-bindings/reset/nuvoton,npcm7xx-reset.h | 91 +++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 include/dt-bindings/reset/nuvoton,npcm7xx-reset.h
-> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
