@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D2CC5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D9C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FC7206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F094206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="pCBjLTt1"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jCMF/kyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387811AbfKGKFR (ORCPT
+        id S1727434AbfKGKFY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:05:17 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40746 "EHLO
+        Thu, 7 Nov 2019 05:05:24 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39609 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfKGKFR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 05:05:17 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f3so1682242wmc.5
-        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 02:05:16 -0800 (PST)
+        with ESMTP id S1726866AbfKGKFY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 05:05:24 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t26so1692343wmi.4
+        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 02:05:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=y4QrBSeK+hGh96w3EkNRr4uaK4vS4b4d9bYcu1vsj1I=;
-        b=pCBjLTt1tKeJRanuVDAc9NiX/RFST88Q7X0GOtrWKOfAbTN8fyN8eQkx3HX7hLXysn
-         i2CsPZeeY2FOvHN2AjMX/wQHwSeJCyNi4TEaWNR3MUYyOhNcbUr2OlfUP3DOoL9pIWi1
-         RIb8MsqHH+EXZhPAXEWWjexZ2Cl97Gx5um1qcUt4435RgQMkqX51AQPdfxE695WF6uY3
-         u05xs8nifHepL6hTjb1ARmrEmmjqeq4p/2MvK50zSoL1LKUJuXSU3KpYJg5gE3VdNQ8w
-         KOPve6pVRIQLqM/XppO7ptHYpmjjDGgIbs5YX+5cGm/KoYTEkAoA7CtdXt7SYooBwfTy
-         GFGQ==
+        bh=khWGTMFVP7NY2n7izmIV3AsvSBCLzkWeN571KxpueAg=;
+        b=jCMF/kypuGb0DacQuf+2CljxzKCgbDWzLNbiBVTCopCRzkXljblxe8Dc7v37kL3uXA
+         hIH/fJP2WsD+iAfIKobKl8qMwNq0xiK/V6+qAQf2wz8FUs6Eu9qxNP/FmteO4oMkF4mh
+         b73z+L7fjSp4AJTQtbaOvk8+oMo6bCefgkzyvvCz1UgalH3bY0wF3SCM3J/IdyhJoygj
+         SCuZNNRcNQEPxx391ziJLmVokG6VYNMYt+RsderKRorMxP6s0P79G/Qit1pWrlOF1Vo8
+         iw/xsMGuK5swIT/ioTZFH+oqEQWzQnvAdNX4uEMeuOvPM13alnjEvbiw8WY9+2B+89Rh
+         7jOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=y4QrBSeK+hGh96w3EkNRr4uaK4vS4b4d9bYcu1vsj1I=;
-        b=fIMz4L/eN3Ub3DxnvrW+uqJFpNXpPq/ypGpEd/ohC3m3/zAT+0r6p+gJLm30wAheKR
-         N1F7a2PizkP66r34B3KZ9qVw9xXAC0lGnfKoh1fMyxozEMCGPIgpQZHYwJm8xOh25SKQ
-         etttnHedDK5yNfrxA8LAZTnqvO3feNfLM80diVW0lFBZ1SjY1+WbdcCRcL864RvltqES
-         3pCDy1WCL0SgAFD4h3qvkglteUJTFAB9ute0KYB3C62WQz++Ymj82hFTWOEocpc5J2V7
-         sWn7t1CrgCpJT+qggvNCUa+MnxgHMdFgKukEaYiMpe6peYVtLgaMz3XIHsp2oImX1MCT
-         JFmQ==
-X-Gm-Message-State: APjAAAXOEr1tsWDN6kL6UnjDGc/mcwXWtAGnIHsj46N/rIQRpvN/mTJP
-        Q5H7H5qgiQKqHsbBO1y/aIM=
-X-Google-Smtp-Source: APXvYqxzdHgmIC2FjgOq4HoxeBvcWfv1hR6LcFzdGk8UgnT53wvX8OUhBAvs6MO0TbQnVfT4xpfHKQ==
-X-Received: by 2002:a1c:a404:: with SMTP id n4mr1925909wme.135.1573121115871;
-        Thu, 07 Nov 2019 02:05:15 -0800 (PST)
+        bh=khWGTMFVP7NY2n7izmIV3AsvSBCLzkWeN571KxpueAg=;
+        b=QFNgQvmBrG59zzB1WkxkaW6TbrHeL1TuAIztJEezhGVxPN0FTA7hd7jc7kmKAF5meQ
+         R2GoVM+VTP0OqnLQ2YK9wPJKOlkLfyYNXQ/7cgMrpHEos0Aztd2NrnWxivGQJtQ0ZHmj
+         ayIbXtllbtaxKkkTjopuRVw/hHgIv2VQjFbCvqy7jubcCR1lZ6jtTYbBsI6Veq+hFGpV
+         UsKR4ZDAZ69ilJDNmgLfFxoso/x7ZR0NCw6qvFAU2Uuv4XXCBSSzrcPPXwxOKtoIO8U+
+         1wM0UjnXQklhtzhZTMSvs/aeetEN1iphvGWIWelckvMUtFkHC6kP037d3cnMYnPSuddX
+         rO4A==
+X-Gm-Message-State: APjAAAVZeopXlZIElVWjEowadKtwUxBWBMakBTCDLvqMXRvlFBVvJ/4J
+        Yo2NtqNddaoTHIfEBNliAdc8vl6FRwk=
+X-Google-Smtp-Source: APXvYqxK9N2z9ldVSRjttwUtDfr7ty7I992fBqsuEjVqQyS6ihq2UiTzHNOzguzrOJSon+I9EkogQA==
+X-Received: by 2002:a1c:20ce:: with SMTP id g197mr1892493wmg.99.1573121120730;
+        Thu, 07 Nov 2019 02:05:20 -0800 (PST)
 Received: from mars.home (HSI-KBW-109-192-080-035.hsi6.kabel-badenwuerttemberg.de. [109.192.80.35])
-        by smtp.googlemail.com with ESMTPSA id v184sm2225860wme.31.2019.11.07.02.05.15
+        by smtp.googlemail.com with ESMTPSA id v184sm2225860wme.31.2019.11.07.02.05.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 07 Nov 2019 02:05:15 -0800 (PST)
+        Thu, 07 Nov 2019 02:05:20 -0800 (PST)
 From:   Christoph Fritz <chf.fritz@googlemail.com>
 To:     Fabio Estevam <festevam@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -65,9 +65,9 @@ Cc:     Lee Jones <lee.jones@linaro.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Support Opensource <support.opensource@diasemi.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/4] dt-bindings: regulator: describe da906x buck regulator modes
-Date:   Thu,  7 Nov 2019 11:04:09 +0100
-Message-Id: <1573121050-4728-4-git-send-email-chf.fritz@googlemail.com>
+Subject: [PATCH 4/4] ARM: dts: phycore-imx6: set buck regulator modes explicitly
+Date:   Thu,  7 Nov 2019 11:04:10 +0100
+Message-Id: <1573121050-4728-5-git-send-email-chf.fritz@googlemail.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1573121050-4728-1-git-send-email-chf.fritz@googlemail.com>
 References: <1573121050-4728-1-git-send-email-chf.fritz@googlemail.com>
@@ -76,35 +76,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds DT description of da906x buck regulator modes.
+This patch sets initial buck regulator modes explicitly to a state
+this hardware needs.  So a wrong initial mode set by bootloader or
+pmic itself does not interfere anymore.
 
 Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
 ---
- Documentation/devicetree/bindings/mfd/da9062.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
-index edca653..5989411 100644
---- a/Documentation/devicetree/bindings/mfd/da9062.txt
-+++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-@@ -66,6 +66,9 @@ Sub-nodes:
-   details of individual regulator device can be found in:
-   Documentation/devicetree/bindings/regulator/regulator.txt
+diff --git a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+index 6486df3..e3f2181 100644
+--- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+@@ -5,6 +5,7 @@
+  */
  
-+  regulator-initial-mode may be specified for buck regulators using mode values
-+  from include/dt-bindings/regulator/dlg,da906x-regulator.h.
-+
- - rtc : This node defines settings required for the Real-Time Clock associated
-   with the DA9062. There are currently no entries in this binding, however
-   compatible = "dlg,da9062-rtc" should be added if a node is created.
-@@ -96,6 +99,7 @@ Example:
- 				regulator-max-microvolt = <1570000>;
- 				regulator-min-microamp = <500000>;
- 				regulator-max-microamp = <2000000>;
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/regulator/dlg,da906x-regulator.h>
+ 
+ / {
+ 	aliases {
+@@ -109,6 +110,7 @@
+ 				regulator-name = "vdd_arm";
+ 				regulator-min-microvolt = <730000>;
+ 				regulator-max-microvolt = <1380000>;
 +				regulator-initial-mode = <DA906X_BUCK_MODE_SYNC>;
- 				regulator-boot-on;
+ 				regulator-always-on;
  			};
- 			DA9062_LDO1: ldo1 {
+ 
+@@ -116,6 +118,7 @@
+ 				regulator-name = "vdd_soc";
+ 				regulator-min-microvolt = <730000>;
+ 				regulator-max-microvolt = <1380000>;
++				regulator-initial-mode = <DA906X_BUCK_MODE_SYNC>;
+ 				regulator-always-on;
+ 			};
+ 
+@@ -123,6 +126,7 @@
+ 				regulator-name = "vdd_ddr3";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
++				regulator-initial-mode = <DA906X_BUCK_MODE_SYNC>;
+ 				regulator-always-on;
+ 			};
+ 
+@@ -130,6 +134,7 @@
+ 				regulator-name = "vdd_eth";
+ 				regulator-min-microvolt = <1200000>;
+ 				regulator-max-microvolt = <1200000>;
++				regulator-initial-mode = <DA906X_BUCK_MODE_SYNC>;
+ 				regulator-always-on;
+ 			};
+ 
 -- 
 2.1.4
 
