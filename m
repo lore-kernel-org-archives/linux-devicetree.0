@@ -2,129 +2,132 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A046C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D824C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C622178F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C985A2085B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:35:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="rWAeG7mt"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YJ9i30mV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387811AbfKGKbV (ORCPT
+        id S2387725AbfKGKfb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:31:21 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:28016 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733278AbfKGKbU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 05:31:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573122677;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=LLIeK8S6G1SDMrMu+3CtmiOGIPjPL6uN+44MEpfUPE8=;
-        b=rWAeG7mtelo0nbRpImYik96vj49i6AudO/40NwcUJoz5SOIk/abtRphr8yvcbPkYDp
-        2HT7h6h0+zEwS6sdOcyUGXUgxXdWDP9UqOnMNh0O2bxQjYvOYy943D3IGFhx9ZlM9FHA
-        Pu/3vDl8yx8hmvrjAx64ke3cR9k0OZXcD5Xx6WyaPWzHYLsxfVNh0hYG5ps0sMX7pzKV
-        m5uq8PiI77pCI5DhNrApt1WGlHbLw6CbZFZaAfIQd1aUhaM75SfDjpyPTz/da9zS0pEq
-        4p+VEtkCTzwdoVWHQ+fCoHe5KhS/lYc5wrWGnxA5lEHH4gS0+HhzyahhWnK4S0or8jES
-        Xypw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7PR5/L9P0"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3vA7AUmdRp
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 7 Nov 2019 11:30:48 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v3 01/12] Documentation: dt: wireless: update wl1251 for sdio
-Date:   Thu,  7 Nov 2019 11:30:34 +0100
-Message-Id: <17b12e91c878dcb74160e3df5f88bc8a9e3f7fce.1573122644.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1573122644.git.hns@goldelico.com>
-References: <cover.1573122644.git.hns@goldelico.com>
+        Thu, 7 Nov 2019 05:35:31 -0500
+Received: from mail-eopbgr140074.outbound.protection.outlook.com ([40.107.14.74]:28366
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726866AbfKGKfa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:35:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F4CkVaX3UnneSMXuQQ97oHX7GrvZFPiaKpQBYpJzhfOOcGDI443Si5INrt/9Q1LCpd8BZ6D/Kb1utSqGGMxGW6TQL4mmigzCD34eEXpxFTfyjDIotgVYn5ZMz5UDMsPu799mYGoIf+p5BmSwYY6kACZ9v133TRc7MZfzIe7MAI6FlcW8jmrUFNG0jpHw3ZgF+NtO0eiDdfPyWqD7b4lFIcQIeR9XCOvXx8QlltT4q3CBgWFDXZL9w5yUzXo5vkEULzFdZSDvOGUsBIVrFm+GZgutIfc3Y30gdwwpi7GzgQNzT1wuifI6ubL0B7lcvaENVlU+iDhBzpWF7jb7zW1lAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YKf+5L3MZg4fcshelIzTHEsxVSKEUbVUJWC194TshvM=;
+ b=MOI4vismKUq4irvr3Ri2wYLKojWJt7zK3wV4I92BPmngVc3TA8Zg6fP12TSvf/gsgywFeW/zWnuVInAYhn6jhYCQjqbVmWdvkCavwA6RGHtnFHjGeHXw6MPmeG39eXYHWzCOIactlWAUJUkJxbePyZ7iHnwBU3UzaKBuB3ECdOVKL3qTKv34Z83IK6OjuIuvC6PW0zMciUaCmifaxehgxlggq87s26KYy0o3wl8z0rYKH+BYIpFk9knilmVxYHeK8/WR74V8+xkigkE2INea89NgBNq2uND4+IN+J/FcKSsnHzpcPJqLkrOJiVw3l/R7GgzgyIIlCjx0Mwn8NhXpvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YKf+5L3MZg4fcshelIzTHEsxVSKEUbVUJWC194TshvM=;
+ b=YJ9i30mVg/zrqlHHjvISY7fCBVkEa7r0AUyY7X/4bR51MVQ6kIYF56G69LbmooLaLzIXd1HuNVI9EKucw6yBXqPNv3Vk614yXV7MjXgnoMWveC+EPj2dli8yV7EGhYP1NCs1ssc8N9bagcb9V3pPk0fsMDjCgMzruJ2K650VoXU=
+Received: from AM6PR04MB4936.eurprd04.prod.outlook.com (20.177.34.20) by
+ AM6PR04MB5543.eurprd04.prod.outlook.com (20.178.94.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Thu, 7 Nov 2019 10:35:26 +0000
+Received: from AM6PR04MB4936.eurprd04.prod.outlook.com
+ ([fe80::912a:3593:7e23:72d0]) by AM6PR04MB4936.eurprd04.prod.outlook.com
+ ([fe80::912a:3593:7e23:72d0%7]) with mapi id 15.20.2430.023; Thu, 7 Nov 2019
+ 10:35:26 +0000
+From:   Fancy Fang <chen.fang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>, Jana Build <jana.build@nxp.com>
+Subject: [PATCH 1/2] arm64: dts: imx8mm: remove "simple-bus" for anatop
+Thread-Topic: [PATCH 1/2] arm64: dts: imx8mm: remove "simple-bus" for anatop
+Thread-Index: AQHVlVcRpB4mpaFfY0a5ijwg0EA9nA==
+Date:   Thu, 7 Nov 2019 10:35:26 +0000
+Message-ID: <20191107103332.16485-1-chen.fang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-clientproxiedby: SG2PR02CA0050.apcprd02.prod.outlook.com
+ (2603:1096:4:54::14) To AM6PR04MB4936.eurprd04.prod.outlook.com
+ (2603:10a6:20b:8::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=chen.fang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: afb9d01c-4c76-4b0d-1f0b-08d7636e3385
+x-ms-traffictypediagnostic: AM6PR04MB5543:|AM6PR04MB5543:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB5543B2FCCE1D15CE6ABFB42EF3780@AM6PR04MB5543.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:660;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(199004)(189003)(66556008)(14454004)(5660300002)(64756008)(66446008)(66946007)(54906003)(66476007)(99286004)(71190400001)(71200400001)(14444005)(316002)(110136005)(256004)(7736002)(478600001)(36756003)(2201001)(26005)(305945005)(6436002)(4744005)(25786009)(1076003)(2501003)(8936002)(3846002)(186003)(6116002)(102836004)(81156014)(6506007)(52116002)(386003)(66066001)(50226002)(81166006)(476003)(4326008)(6486002)(486006)(2616005)(2906002)(8676002)(86362001)(6512007)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5543;H:AM6PR04MB4936.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8nS5yOG8+z6/POkzEgzFfVIKHzfqXCFVzbD9D9WdErqE0TYm/38D5IP8ETbeDw0Zq+Uy4+BMzC4RVaqI34rp+u1Kxu0V/LYsK8nFaABL12NbVULR47ZJkN1JwIBXFAuMQwOp0PXp6/Gaa36+Kf13OKB071bRns6AYGmjJN9Y+tevwt8+xjao9J3SOvp6IMvaHnIww21vZ6X5lTrikegYwC2jH8ckif49RU0FTVWkW/u7XXfcDJdlI7ugrJd/Se8olZ4WyTO3xrXhAwJpuFIhAFrHNn2l6ru494aU1D4jJUKyNB1jCoLeq2fSrO6juHqcSLMHAIfAxcGyQz89/fgPTxrHfpKNKghC9BcrL3tZmYm7zcN5EPsSOdfKvVtTcfFnOaAhXkRhCFR/zK1gou5E1Kgb7bKWPeYzW0zIrfg1yKd5Te2smJrKQQ2v2DlN2adZ
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afb9d01c-4c76-4b0d-1f0b-08d7636e3385
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 10:35:26.1747
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B3VuDIWAgmyKXi+gDVaO7ku5NLw2NnA1azyTffARdj58e7OpyZd67vwk4KFFq9RWf2NOQe3SGjTKwDQMtdEimA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5543
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The standard method for sdio devices connected to
-an sdio interface is to define them as a child node
-like we can see with wlcore.
+Remove "simple-bus" compatible for device anatop,
+since no child nodes exist under it and it is not
+a populated bus.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Fancy Fang <chen.fang@nxp.com>
 ---
- .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-index bb2fcde6f7ff..f38950560982 100644
---- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-@@ -35,3 +35,29 @@ Examples:
- 		ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
- 	};
- };
-+
-+&mmc3 {
-+	vmmc-supply = <&wlan_en>;
-+
-+	bus-width = <4>;
-+	non-removable;
-+	ti,non-removable;
-+	cap-power-off-card;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	wlan: wifi@1 {
-+		compatible = "ti,wl1251";
-+
-+		reg = <1>;
-+
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
-+
-+		ti,wl1251-has-eeprom;
-+	};
-+};
--- 
-2.23.0
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mm.dtsi
+index 6edbdfe2d0d7..da297b5e509d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -438,7 +438,7 @@
+ 			};
+=20
+ 			anatop: anatop@30360000 {
+-				compatible =3D "fsl,imx8mm-anatop", "syscon", "simple-bus";
++				compatible =3D "fsl,imx8mm-anatop", "syscon";
+ 				reg =3D <0x30360000 0x10000>;
+ 			};
+=20
+--=20
+2.17.1
 
