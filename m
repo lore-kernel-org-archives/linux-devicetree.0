@@ -2,73 +2,68 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CC0FA372C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF09FFA372C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6BA2178F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE986217D7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:04:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cSPzIBJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733049AbfKGB5q (ORCPT
+        id S1727751AbfKGCEk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:57:46 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:34470 "EHLO inva021.nxp.com"
+        Wed, 6 Nov 2019 21:04:40 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:53114 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733033AbfKGB5p (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:57:45 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BB0F420014B;
-        Thu,  7 Nov 2019 02:57:43 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AA1742006A3;
-        Thu,  7 Nov 2019 02:57:37 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E404B40282;
-        Thu,  7 Nov 2019 09:57:29 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] dt-bindings: arm: imx: Add the i.MX6SX-SDB Rev-A board
-Date:   Thu,  7 Nov 2019 09:56:04 +0800
-Message-Id: <1573091764-20483-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573091764-20483-1-git-send-email-Anson.Huang@nxp.com>
-References: <1573091764-20483-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727328AbfKGCEk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 21:04:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=XsahgORl/nC9fQXSgVRroYjqg6suN/1vTL2xj6w2qsQ=; b=cSPzIBJDGna4Z7tnh9m1l3Adbf
+        1ortmFg1/MKaNHHTvqEQ/ooaPQ8yfRu2OtCXOjcl4s2jICmOverdg87/KdWj3zLNILcwjaU+XVJ+T
+        stBcu+x02pFH2OxvPrJThY1P8/EgTkyE5S3OaDjrofftUMecSYvGcmXaG5q/3QUb1DOM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iSXA4-0002l1-5k; Thu, 07 Nov 2019 03:04:36 +0100
+Date:   Thu, 7 Nov 2019 03:04:36 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v2 4/6] net: phy: at803x: mention AR8033 as same as AR8031
+Message-ID: <20191107020436.GD8978@lunn.ch>
+References: <20191106223617.1655-1-michael@walle.cc>
+ <20191106223617.1655-5-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106223617.1655-5-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add board binding for i.MX6SX-SDB Rev-A board which is already
-supported.
+On Wed, Nov 06, 2019 at 11:36:15PM +0100, Michael Walle wrote:
+> The AR8033 is the AR8031 without PTP support. All other registers are
+> the same. Unfortunately, they share the same PHY ID. Therefore, we
+> cannot distinguish between the one with PTP support and the one without.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Not nice. I suppose there might be a PTP register you can read to
+determine this, but that is not very helpful.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index f79683a..2f7beda 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -172,6 +172,7 @@ properties:
-           - enum:
-               - fsl,imx6sx-sabreauto      # i.MX6 SoloX Sabre Auto Board
-               - fsl,imx6sx-sdb            # i.MX6 SoloX SDB Board
-+              - fsl,imx6sx-sdb-reva       # i.MX6 SoloX SDB Rev-A Board
-           - const: fsl,imx6sx
- 
-       - description: i.MX6UL based Boards
--- 
-2.7.4
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
+    Andrew
