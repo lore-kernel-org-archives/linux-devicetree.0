@@ -2,142 +2,65 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D732C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81409C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453182178F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJbjU2Mf"
+	by mail.kernel.org (Postfix) with ESMTP id 59F4320663
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731032AbfKGPkf (ORCPT
+        id S2388454AbfKGPyG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:40:35 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46981 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730114AbfKGPkf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 10:40:35 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 19so1920245lft.13;
-        Thu, 07 Nov 2019 07:40:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3wfpECuF12H+DE1PZtlOEqiGcYmjEL0HWEfgaBT4lbM=;
-        b=bJbjU2MfoF4N8Ri1rVIdHg4m03cNn8SW9jOhXXeQO0kuaNF5bTOtxzBq2S8NFzKBqP
-         IcO351Le3xMLgl1iFeBBatrsr5reYoa+jHbcwtbD58rr0qAIr8fEtMilenNIwJnyrQV8
-         sd+ikiYu0r4wz/yBI65aSBNf3EmWzm1wL7ybh3ynGl88ftf3CmwDglI+jO2IJTJmxIO9
-         gOfvPtpEDb9BwNg7Ws3/69WrgaKiPX9ti0q3PTbSK/Lw5sTu+iXWHJdE9yUEOLnWU3Wd
-         iigsas+K15fxkvfyafGu1jxtNiEDVX2mnkDNwrVSPLhxRYu2FRpbLtJwKiZxC9HcRmmX
-         hx3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3wfpECuF12H+DE1PZtlOEqiGcYmjEL0HWEfgaBT4lbM=;
-        b=KXwJREQWQSpbSKirq5ke0Lmqafocc6dwSimYQo7KXtpFCp1Snn641OFMrTgxkGmqML
-         D5yfcMm8oKvoiRB0NPHmOu5pVcy3BhmH1kRWF9Sp1tBJDRRgjV/JN3u+M3AxDRDPSdpX
-         21oB4bn83NVtf1UfNGUFs/9SWZokd4kTMT+TNhEPhbxlTgLl9afhAsA3SDCscTQhQVV3
-         UataU8xae1CSdVDvT5cZ0U8h+YewXupmzgn4bKcm80TUB3+g23gSwUBoNCgFzJ02YSRY
-         l/SyE+kuYHzjCYVqAnFWtGQnULbUWnEkdmn3E+kB2DgzWE8RkBGokYcgyb0+yzLRU4YX
-         hFMQ==
-X-Gm-Message-State: APjAAAXYVCMcJHmsc+2+V4WSmm5qfu01nn5GX6uHJu0mjQjfw1RbiKzU
-        O5aiAFxIv5mawjrewDwFQxEtZbGwiEjACiAKTK8=
-X-Google-Smtp-Source: APXvYqy28CEsAIgaxf8ySUF97vlGB/pLswajdJxXB007SZ9AZuUinPdeAUK7kjTrQQ6CfPiZrS5vS5B4dWjHsnv6E7A=
-X-Received: by 2002:ac2:4a8a:: with SMTP id l10mr2816632lfp.185.1573141233381;
- Thu, 07 Nov 2019 07:40:33 -0800 (PST)
-MIME-Version: 1.0
-References: <1573092393-26885-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1573092393-26885-1-git-send-email-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 7 Nov 2019 12:40:24 -0300
-Message-ID: <CAOMZO5CiR7-YmAUggdt9rdZpNYKzQTFY5zGGGQ2k06Qc7pkg_Q@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] ARM: dts: imx6sll: Update usdhc fallback
- compatible to support HS400 mode
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thu, 7 Nov 2019 10:54:06 -0500
+Received: from muru.com ([72.249.23.125]:40712 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfKGPyG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 10:54:06 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 358818117;
+        Thu,  7 Nov 2019 15:54:40 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 07:54:01 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 1/8] RFC: dt-bindings: add img,pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20191107155401.GC5610@atomide.com>
+References: <cover.1573124770.git.hns@goldelico.com>
+ <4292cec1fd82cbd7d42742d749557adb01705574.1573124770.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4292cec1fd82cbd7d42742d749557adb01705574.1573124770.git.hns@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anson,
+* H. Nikolaus Schaller <hns@goldelico.com> [191107 11:07]:
+> +        - const: "ti,am335x-sgx530-125", "img,sgx530-125", "img,sgx530", "img,sgx5"
 
-On Wed, Nov 6, 2019 at 11:08 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> The latest i.MX6SLL EVK board supports HS400 mode, update usdhc's
+This should be without the x, maybe use the earliest one here
+for "ti,am3352-sgx530-125" like we have for "ti,am3352-uart".
 
-Since this is a dtsi patch, it is better not to mention a specific
-board here in the commit log.
-
-It would be better to say that unlike i.MX6SL, the i.MX6SLL SoC can
-support HS400 mode, hence fsl,imx7d-usdhc should be used as compatible
-string.
+We could use "ti,am3-sgx530-125" but that can get confused
+then with am3517 then.
 
 Regards,
 
-Fabio Estevam
-> fallback compatible to support HS400 mode by default.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes.
-> ---
->  arch/arm/boot/dts/imx6sll.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-> index 85aa8bb..1c8101f 100644
-> --- a/arch/arm/boot/dts/imx6sll.dtsi
-> +++ b/arch/arm/boot/dts/imx6sll.dtsi
-> @@ -698,7 +698,7 @@
->                         };
->
->                         usdhc1: mmc@2190000 {
-> -                               compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
-> +                               compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
->                                 reg = <0x02190000 0x4000>;
->                                 interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
->                                 clocks = <&clks IMX6SLL_CLK_USDHC1>,
-> @@ -712,7 +712,7 @@
->                         };
->
->                         usdhc2: mmc@2194000 {
-> -                               compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
-> +                               compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
->                                 reg = <0x02194000 0x4000>;
->                                 interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
->                                 clocks = <&clks IMX6SLL_CLK_USDHC2>,
-> @@ -726,7 +726,7 @@
->                         };
->
->                         usdhc3: mmc@2198000 {
-> -                               compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
-> +                               compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
->                                 reg = <0x02198000 0x4000>;
->                                 interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
->                                 clocks = <&clks IMX6SLL_CLK_USDHC3>,
-> --
-> 2.7.4
->
+Tony
