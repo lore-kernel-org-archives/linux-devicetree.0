@@ -4,101 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69324FC6194
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22DEFC6196
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37909206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D7A218AE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573087445;
-	bh=OxsEy+Dfig77EH9KkLTDBIrpEo60kZmcoko9epPNKEQ=;
+	s=default; t=1573087490;
+	bh=AIYtZlWcVIG8IxLTS2lObxMN1NcEusMTJozi+mSi6TM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LkBiwVQu1CtxYeg33rVg6th81Hn/qZLOL62cz+KXXXFurMIjlB5o2ii+Ce02UEHuK
-	 y8p24Oer+M2GVxVI/uYO3YGARcU2Wuq1K3nvBa5lrmU3Rs4ESqnAynBfEKCsJuE+p0
-	 47Q8k2+3rJJcUri9TbROx+zrKx0VYEQsGHxE36NU=
+	b=SbV+ec3+3ALtB/FhqvA7MMuStqF0TnKvHMM2fFCqK1v3FEJZ8nFLtBMmL/+VTKFV4
+	 grz5pvGMUEOJJ0Uw0CM8bozkJNz+aTqpv+Cd2C3SYWkoc4QD0k633XrQn6pyIc0pPd
+	 rEOzzIPFysllk3oSMlREeg+5nffQhF2Ip8dIWNYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfKGAoE (ORCPT
+        id S1732785AbfKGAou (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:44:04 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33741 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGAoE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:44:04 -0500
-Received: by mail-ot1-f67.google.com with SMTP id u13so517742ote.0;
-        Wed, 06 Nov 2019 16:44:03 -0800 (PST)
+        Wed, 6 Nov 2019 19:44:50 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34682 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732730AbfKGAot (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:44:49 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l202so460407oig.1;
+        Wed, 06 Nov 2019 16:44:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :user-agent;
-        bh=0Caqne9b0+WL4rLkBbGp1GBAkgiKkmuIY6NX34hcg68=;
-        b=qXDyxn528zdhlTpZaNLtmze7P8oXx/DOo+jajTth4odCB5PRwCmNEqO1ElOfnpxKqc
-         v6MLBD2CWF6n9msC/768CcVVf7sK8P69kRCHe5nEfTb4MgAruGpqV0V8/BvjnqlqpIoh
-         ozE/os+AVu16bny43vpXhOYCV0Gr8WjmpIu2jBFxuXaA/HVgczJ70RpAJwCNy5+qYle4
-         24Ptqp0CdHaOiTvNLvu71VBu1r+gQjjmSYR0tEPFKVzLpAgpu3WDejy0iUowx07f0U6X
-         tKuHYSlPKc4lzMA0Znc3TERJWZBBRYaIug8j0X+1OV7gC1JXvza+CI8G8MgK5fXe9yu+
-         AnQA==
-X-Gm-Message-State: APjAAAVc2CJKJ3AZp0iAIdk7NcljGIbu2Bat4x0BZ5hd+VonRyTfQiS7
-        KGqygckelAzRacl+kZLidg==
-X-Google-Smtp-Source: APXvYqx92yPoPX4sYPoYWxsUDxAEC9WbCWpCzZTCzN77i7Mtz6MGpHeFiBva2FYZd5mcftwDWyN+yA==
-X-Received: by 2002:a9d:6452:: with SMTP id m18mr465800otl.325.1573087443454;
-        Wed, 06 Nov 2019 16:44:03 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0A6Sl7zSjHp0Gn3fGjWaLM1DGcUnZEOa8sMsOQfIiPU=;
+        b=t22UPpwhYxTq13KRKfcuj4aSjuZLiE63ZcNaddIoPf0xTGx+ELcJs3bJI3L3HM7Z84
+         EeCJn5ALhZ0+ZRqI/pF3/NdNUpE2wxlmsg61aGWj6NQ+Sqo5EqIeaeAhiqrY8Nr88FTU
+         BBiLCdr3XWocCnHlogYVKREL8CyrttKya6nCVq21B8E9E5yuYHbq2e93BqwDozyTKfik
+         nSGqf8qlX/nQQA7FLd6Yi2SG85qf9w3NfuhA/LBh4ouzsvSPpd6TQHx3ISdXc5pAenF+
+         CKNo2k0k2R/kCvMVsYuaf9WFLIVFIZA5LPqozVZUOzd/8CtIQD8E3lpz3P+I2hYFTJk0
+         ZMbw==
+X-Gm-Message-State: APjAAAX6eaJLZxysqAzV37NwSMN/Ns8wbR/1AhbivtT6LfrF43LdKtqJ
+        sG+2gzcIcoJuVhw3AOxYVP3qaDI=
+X-Google-Smtp-Source: APXvYqyfsqvPVgFUWcwXVoPnoSlHymygFq5/jTwO77h/Hv9a1kU1pcDbot6gwp0R/54F7mjEIf2REA==
+X-Received: by 2002:aca:1101:: with SMTP id 1mr772110oir.103.1573087488847;
+        Wed, 06 Nov 2019 16:44:48 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m12sm131094oih.46.2019.11.06.16.44.02
+        by smtp.gmail.com with ESMTPSA id a9sm202045otc.75.2019.11.06.16.44.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:44:02 -0800 (PST)
-Date:   Wed, 6 Nov 2019 18:44:02 -0600
+        Wed, 06 Nov 2019 16:44:48 -0800 (PST)
+Date:   Wed, 6 Nov 2019 18:44:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH] dt-bindings: mmc: fsl-imx-esdhc: add imx8m compatible
- string
-Message-ID: <20191107004402.GA13364@bogus>
-References: <1572949321-8193-1-git-send-email-peng.fan@nxp.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH 1/3] dt-bindings: display: renesas: du: Add vendor prefix
+ to vsps property
+Message-ID: <20191107004447.GA14493@bogus>
+References: <20191105183504.21447-1-geert+renesas@glider.be>
+ <20191105183504.21447-2-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572949321-8193-1-git-send-email-peng.fan@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20191105183504.21447-2-geert+renesas@glider.be>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 5 Nov 2019 10:23:36 +0000, Peng Fan wrote:
+On Tue,  5 Nov 2019 19:35:02 +0100, Geert Uytterhoeven wrote:
+> The Renesas-specific "vsps" property lacks a vendor prefix.
+> Add a "renesas," prefix to comply with DT best practises.
 > 
-> From: Peng Fan <peng.fan@nxp.com>
+> Move "renesas,vsps" below "renesas,cmms" to preserve alphabetical sort
+> order.
 > 
-> Add imx8mq/m/n compatible string
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Fixes: 06711e6385a4ab4c ("drm: rcar-du: Document the vsps property in the DT bindings")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> 
-> V1:
->  imx8mq/m/n.dtsi already use this compatible string,
->  but not listed in binding doc, so add it.
-> 
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../devicetree/bindings/display/renesas,du.txt       | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
