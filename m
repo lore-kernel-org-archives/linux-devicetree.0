@@ -2,202 +2,150 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693C4C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5652DC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6142077C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24353214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="U1TcGbh9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PtcZKf+I";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DTwZZgdX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbfKGWdk (ORCPT
+        id S1725946AbfKGWfZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:33:40 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37929 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfKGWdk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 17:33:40 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 15so2876915pgh.5
-        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 14:33:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=KtzwCyDT19z1S/QbvOzECaMFt412YXqfydQ1RzuBLkg=;
-        b=U1TcGbh9Ac/ENu5Rs+S9Agdi2VU7eIlxTXaNEWHmbHgzonebCmn+P91pgkmYMo4AvA
-         KvDE50sI21hLyf0NdqS8XP9yHH1BhqQ2fZR5iY397Q4kVY7nQmYRwMbVpGpNbCb3N2Kg
-         h0OerXAyIOBLaGmYEG57kEVwH1JCMIiZyFgQBe7WXtpshynim83LFQAVfhJGDREKeQqC
-         GGJ51elHoA/8bVLu2Gulh8B/4McXfSnDIyltuXj+oY9ys1sDPzQJ2zW9IfYi4kesF7kE
-         I8SyH1bZc2yz8syd87Dk2DuTkcJ10+JhKNd0xhdrK/Fhrv3cb11Ws+otR8grfzkFYTh/
-         qTlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=KtzwCyDT19z1S/QbvOzECaMFt412YXqfydQ1RzuBLkg=;
-        b=pIPstBLrmwZG8M3vBnNKZ/kdHbWUQR+rh9I9bbaY9MD7zoo1gRAVTiUuL+nIzTaMHU
-         +4dRNYJfmEtWo/JjAcOuXHvmfDdCiet0Rgq2m8tKDBx5A0b2v8zxlI7JPwpWJo3edHcH
-         NeLu6OnMjG9TixEr3xruOQOt+1DZJcJyZbqdWbUlu1BPmh1nOhIj5dvduWie1CxATIEu
-         z8ipRdAaxPOcDFYUxw9tnLgPa7SNy7n503gVWXyRzheC8MT2B8tuPJHHfbmwRXP/5XwU
-         s4gDJiDkcT2ffaDnCg7+kKUJdZ75UcgaAyHhodIEEiWHxCBVpsdX97bPpW5zi5uplVVz
-         GCGQ==
-X-Gm-Message-State: APjAAAX/USycRPVL2KhtR8178SGukcPLBKmx5sNEEwMqjQm+JgDHkwxg
-        HCVwYBsLJkOa4lsBkfVaj1k3cg==
-X-Google-Smtp-Source: APXvYqxZKvUYQHZ7SvkUplmFNtYCYPosc9srD1F4orE7a2p2nPUegMn1rtKpokaCUl5aBcuZ3LlyXg==
-X-Received: by 2002:a62:e105:: with SMTP id q5mr7413683pfh.105.1573166019175;
-        Thu, 07 Nov 2019 14:33:39 -0800 (PST)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id y36sm3313037pgk.66.2019.11.07.14.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 14:33:38 -0800 (PST)
-Date:   Thu, 7 Nov 2019 14:33:37 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/2] power: reset: add a QEMU RISC-V virt machine poweroff
- driver
-In-Reply-To: <20191107212408.11857-3-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1911071432110.8918@viisi.sifive.com>
-References: <20191107212408.11857-1-hch@lst.de> <20191107212408.11857-3-hch@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 7 Nov 2019 17:35:25 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:54762 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfKGWfZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 17:35:25 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2233660D84; Thu,  7 Nov 2019 22:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573166124;
+        bh=Q2G6160efqVb5qVyhoWW92xY36mZ64vNPwsbgT5/UE0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PtcZKf+ImPi9b7/IEeCW5PC1sMgJs0tayIdJU7odKLCIQW5qSdh9JYWx/GS0LMZ/A
+         +wfuQ4IWq7q3ab3AwXG7Fi+qLZkTh52g6RyZT/jORds/ILyXnDmmPmlha/22jhS0Nw
+         ztqI2jjDqPJYa26YvjHkVrHpQCjaMhvn/FvoN3K4=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6EC2260AD9;
+        Thu,  7 Nov 2019 22:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573166123;
+        bh=Q2G6160efqVb5qVyhoWW92xY36mZ64vNPwsbgT5/UE0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DTwZZgdX2gyXbuubR1oBlne3TXog4s/aJUuw6fx3yjpqEItoi3QiqqYRalQ0tRYuR
+         0WDjzPPRqPCpNZWdiFV9EgjiBD8BbwVz+yBSqWkhBBVUqj5lAethZR0oETcXnt/GbP
+         CvThii+QifpN4FMQ6t25unnKHN6x+ntyUHNDk7Tk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6EC2260AD9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v6 4/6] dt-bindings: clock: Add support for the MSM8998
+ mmcc
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, mturquette@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org>
+ <1569959842-8399-1-git-send-email-jhugo@codeaurora.org>
+ <20191107215506.8FBFA2084D@mail.kernel.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <7f3697ae-2e12-f306-b288-4dec19544275@codeaurora.org>
+Date:   Thu, 7 Nov 2019 15:35:21 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191107215506.8FBFA2084D@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 Nov 2019, Christoph Hellwig wrote:
+On 11/7/2019 2:55 PM, Stephen Boyd wrote:
+> Quoting Jeffrey Hugo (2019-10-01 12:57:22)
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+>> index 8b0f7841af8d..a92f3cbc9736 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+>> @@ -10,11 +10,32 @@ Required properties :
+>>                          "qcom,mmcc-msm8960"
+>>                          "qcom,mmcc-msm8974"
+>>                          "qcom,mmcc-msm8996"
+>> +                       "qcom,mmcc-msm8998"
+> 
+> Can you convert this binding to YAML? Makes it easier to validate it
+> against the dts files.
 
-> Add a trivial poweroff driver for the qemu-virt test device that
-> allows an oderly shutdown of the VM.
-
-"orderly"
+I'll look at this since I'm already resending due to the merge conflict.
 
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/configs/defconfig                  |  2 +
->  drivers/power/reset/Kconfig                   |  8 ++++
->  drivers/power/reset/Makefile                  |  1 +
->  .../power/reset/qemu-riscv-virt-poweroff.c    | 47 +++++++++++++++++++
->  4 files changed, 58 insertions(+)
->  create mode 100644 drivers/power/reset/qemu-riscv-virt-poweroff.c
+>>   
+>>   - reg : shall contain base register location and length
+>>   - #clock-cells : shall contain 1
+>>   - #reset-cells : shall contain 1
+>>   
+>> +For MSM8998 only:
+>> +       - clocks: a list of phandles and clock-specifier pairs,
+>> +                 one for each entry in clock-names.
+>> +       - clock-names: "xo" for the xo clock.
+>> +                      "gpll0" for the global pll 0 clock.
+>> +                      "dsi0dsi" for the dsi0 pll dsi clock (required if dsi is
+>> +                               enabled, optional otherwise).
+>> +                      "dsi0byte" for the dsi0 pll byte clock (required if dsi
+>> +                               is enabled, optional otherwise).
+>> +                      "dsi1dsi" for the dsi1 pll dsi clock (required if dsi is
+>> +                               enabled, optional otherwise).
+>> +                      "dsi1byte" for the dsi1 pll byte clock (required if dsi
+>> +                               is enabled, optional otherwise).
+>> +                      "hdmipll" for the hdmi pll clock (required if hdmi is
+>> +                               enabled, optional otherwise).
+>> +                      "dpvco" for the displayport pll vco clock (required if
+>> +                               dp is enabled, optional otherwise).
+>> +                      "dplink" for the displayport pll link clock (required if
+>> +                               dp is enabled, optional otherwise).
 > 
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 420a0dbef386..47da87725b5e 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -63,6 +63,8 @@ CONFIG_HW_RANDOM_VIRTIO=y
->  CONFIG_SPI=y
->  CONFIG_SPI_SIFIVE=y
->  # CONFIG_PTP_1588_CLOCK is not set
-> +CONFIG_POWER_RESET=y
-> +CONFIG_QEMU_RISCV_VIRT_POWEROFF=y
->  CONFIG_DRM=y
->  CONFIG_DRM_RADEON=y
->  CONFIG_DRM_VIRTIO_GPU=y
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index a564237278ff..56cb18520850 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -256,5 +256,13 @@ config NVMEM_REBOOT_MODE
->  	  then the bootloader can read it and take different
->  	  action according to the mode.
->  
-> +config QEMU_RISCV_VIRT_POWEROFF
-> +	tristate "QEMU RISC-V virt machine poweroff driver"
-> +	depends on OF
-> +	depends on RISCV || COMPILE_TEST
-> +	help
-> +	  Say y here to allow RISC-V Qemu VMs to be shut down by
-> +	  the kernel.
-
-Same comments here and below as 
-
-https://lore.kernel.org/linux-riscv/mhng-0dedc685-73d2-4e7f-b608-69385a6e7a99@palmer-si-x1c4/T/#t
-
-there's nothing that should be RISC-V specific here.
-
-> +
->  endif
->  
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index 85da3198e4e0..b3094016b634 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -30,3 +30,4 @@ obj-$(CONFIG_REBOOT_MODE) += reboot-mode.o
->  obj-$(CONFIG_SYSCON_REBOOT_MODE) += syscon-reboot-mode.o
->  obj-$(CONFIG_POWER_RESET_SC27XX) += sc27xx-poweroff.o
->  obj-$(CONFIG_NVMEM_REBOOT_MODE) += nvmem-reboot-mode.o
-> +obj-$(CONFIG_QEMU_RISCV_VIRT_POWEROFF) += qemu-riscv-virt-poweroff.o
-> diff --git a/drivers/power/reset/qemu-riscv-virt-poweroff.c b/drivers/power/reset/qemu-riscv-virt-poweroff.c
-> new file mode 100644
-> index 000000000000..5b9a12dd853b
-> --- /dev/null
-> +++ b/drivers/power/reset/qemu-riscv-virt-poweroff.c
-> @@ -0,0 +1,47 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 Christoph Hellwig.
-> + */
-> +
-> +#include <linux/reboot.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/module.h>
-> +
-> +#define VIRT_TEST_FINISHER_PASS         0x5555
-> +
-> +static u16 __iomem *test_addr;
-> +
-> +static void qemu_virt_power_off(void)
-> +{
-> +	writew(VIRT_TEST_FINISHER_PASS, test_addr);
-> +}
-> +
-> +static int sifive_test_probe(struct platform_device *pdev)
-> +{
-> +	/* there can only be a single instance */
-> +	if (WARN_ON_ONCE(test_addr))
-> +		return -EINVAL;
-> +
-> +	test_addr = of_iomap(pdev->dev.of_node, 0);
-> +	if (!test_addr)
-> +		return -EINVAL;
-> +	pm_power_off = qemu_virt_power_off;
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sifive_test_of_match[] = {
-> +	{ .compatible = "sifive,test0", },
-> +	{},
-> +};
-> +
-> +static struct platform_driver sifive_test_driver = {
-> +	.probe			= sifive_test_probe,
-> +	.driver = {
-> +		.name		= "sifive_test",
-> +		.of_match_table = sifive_test_of_match,
-> +	},
-> +};
-> +module_platform_driver(sifive_test_driver);
-> -- 
-> 2.20.1
-> 
+> I'm not sure why it's optional. The hardware is "fixed" in the sense
+> that the dp phy is always there and connected to this hardware block.
+>  From a driver perspective I agree it's optional to be used, but from a
+> DT perspective it's always there so it should be required.
 > 
 
+Sure, the DP phy is technically always there, but does a particular 
+platform have an actual DP output connected to the phy?  If not, why 
+bother describing something that isn't even used?
 
-- Paul
+ From a more practical sense its undefined how to actually get the DP 
+clocks - the DP binding is implicitly a clock provider since it has 
+#clock-cells, but it doesn't specify how to actually get the clocks. 
+The DSI binding tells you which index is the dsi clock, and which is the 
+byte clock.
+
+The HDMI binding is not a clock provider at all.  Needs to be revised, 
+which didn't appear trivial when I took a quick look while working on mmcc.
+
+I want to do the right thing here by specifying all the external clocks 
+up front, and not have to worry about backwards compatibility with 
+pre-existing DTs later on, but I also would like to focus on one problem 
+at a time, and not go dig into all the problems with DP/HDMI before 
+landing this, particularly as those components also rely on the mmcc.
+
+Is that justification enough for you?  If not, how would you like to 
+proceed?  Make them required in the binding, and just have an invalid 
+(per the binding) DT until all the problems get sorted out?
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
