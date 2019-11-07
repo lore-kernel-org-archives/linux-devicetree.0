@@ -1,123 +1,125 @@
-Return-Path: <SRS0=r6ca=Y6=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E29FC6195
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 23:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D33FFC6197
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54652217F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  6 Nov 2019 23:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573084068;
-	bh=IRfW2TPrshrGbrjvCtxYGCPvw8dESmcB9+TtwPLQJps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZMiLo5ljlA8mkpwlVBTOro8U+8fALv/cOkpP4rJa6aL2ZuqkYAK6L/ob4OBI20dL0
-	 DL/yVF9DjrPDgxk9HaAzMWcowXX1enYmwipmgUBwYxTLYy+etAoCnvfp0VVDxebA1p
-	 5ZsW25/tL7LGL/JxRE9nvQCW5adkEtNm+CyrYrDw=
+	by mail.kernel.org (Postfix) with ESMTP id 6D5CB21848
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ms/xeib/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbfKFXrs (ORCPT
+        id S1728412AbfKGAJX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:47:48 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44086 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727316AbfKFXrr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 18:47:47 -0500
-Received: by mail-ot1-f66.google.com with SMTP id c19so352646otr.11;
-        Wed, 06 Nov 2019 15:47:47 -0800 (PST)
+        Wed, 6 Nov 2019 19:09:23 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41677 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfKGAJW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:09:22 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p26so561104pfq.8
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 16:09:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=y30EZ6Y+jB8WvOWqfr0x14yaBZH+ZgcuIUz2TMHfKr8=;
+        b=Ms/xeib/rHCGDzfSHmCcHkzNr0QrkmBmBM+PiHNWLQV65GiIWMFzPN+KQkBP+h0LHI
+         PYKSRO4GlQmy8egZg9qN08T3L22xmPBWvG9IeddjnHmlJGaKSjMCk/1gpGIOIO6YKhvE
+         0B8Misw8QMdogPgh94SDoAh7+lhyOzHgAkBy6/K81hUmAVz5mquyl4if22pR/7fmOGrF
+         oVwSklV90APcYs0BJtt+8SOcVYKHhWcblQS0HvQl9PuyfZK9V2mk/I7sff4p0lhwvMru
+         x6CrTnAsKOb41OXHqOXbdnSKjGfjqu3auMTq7cSalMDIVJVlsPdLFTuWWkU74kNtthdr
+         LGMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YghF0O9CdijziXRtYqs4rBgfocxRjD2jrxaldxrfZPA=;
-        b=NIubXICO4wlGVnIg5qoO8hQMroL030JH9nSoCwhvljSnEhpxfdLyzJrzx3hVxfdP0c
-         r0tGFox0C9Hf7Q94N+liKh8UxwowiRZracamg7q1JQiQ8vyebGwnGVnkQ58ZiDbaXh2A
-         hueaOzIdK717Ua8pNc1j71PBsdkKK8Wo0NSrlQqy02HkAKtimfnoY7KHLXnacmDHFTlc
-         njks2uwLhoCX/daqpk1tfj5BTeeqm38a90vpGcZFYh32ao8NkfWK0F6B++PqaBl3W/cs
-         zYIgfWHdQsehdktbT5Crcwdj+NRAwGKNUh3rb+pd9KZu6HGZJh0r2lw1pp9h8q0eiY3b
-         pA6g==
-X-Gm-Message-State: APjAAAW/slmdA4QjjHqAzq0oBq+RGaD73dpyKvLvEtwl3XoXR6/wX9rn
-        Zb5zl4G0PNLGUL3kHCvqPg==
-X-Google-Smtp-Source: APXvYqwgUlLWV9jHJ0xyKT6tWKqUtqWriZJeI42q4NAZ1iSZ8g0t2OjEoqRReV7onJSmLDH/dWe6Lw==
-X-Received: by 2002:a05:6830:232c:: with SMTP id q12mr319872otg.168.1573084066922;
-        Wed, 06 Nov 2019 15:47:46 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t12sm150529otl.71.2019.11.06.15.47.46
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=y30EZ6Y+jB8WvOWqfr0x14yaBZH+ZgcuIUz2TMHfKr8=;
+        b=I6anHXOh2XvTzVbX+ZepJ7CUQfRaadqp8ydmdEQ2VnNn/6FQ+mF4tz8zCl2U+riYIy
+         43WdVXyL+8/IuZNB35vh9LEhdK20ptWHM4+XVx5UM4GLSrlV/7J68PeIZDYEWoQ0QrOo
+         o4uIYMawtSTmLP5fy15UNiJnHYvX2MQ21/C+LKwU3rJgjszIyQ0eDzqu0vMOYXpOs5pR
+         TdNGaJPRMtH447rKDnSfvGwLCAwwe8/QzK5VitJhwmNpaDPoKMwc7sQWduT+6LFpOQUX
+         ieL7cQsaJiFSlDsA7aYiQs5mpSd6smVn6nU1KkqBrJYyDMz7ZMEpsQvw6dXYZO7UtaJn
+         TSLg==
+X-Gm-Message-State: APjAAAVCi8ym8MD/9X2DyYNCYRaf3gMmMeIVPcjddSrUor8lN7Mn2wBJ
+        tW5VUWv7Hi/3cuk9z2kYDReIog==
+X-Google-Smtp-Source: APXvYqzinLbWkmOtXo1/RShENTIftrXUZ1DoS+eTqL1HMg19AxARMlNrS8/KhtMbVMbblp3T4J/HXw==
+X-Received: by 2002:a63:d70f:: with SMTP id d15mr764613pgg.424.1573085362094;
+        Wed, 06 Nov 2019 16:09:22 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z23sm216549pgj.43.2019.11.06.16.09.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 15:47:46 -0800 (PST)
-Date:   Wed, 6 Nov 2019 17:47:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, rfi@lists.rocketboards.org,
-        linux-arm-kernel@axis.com, linux-mediatek@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH v1 7/7] dt-bindings: PCI: Use IRQ flags for legacy PCI
- IRQ interrupts
-Message-ID: <20191106234745.GA29524@bogus>
-References: <20191104163834.8932-1-andrew.murray@arm.com>
- <20191104163834.8932-8-andrew.murray@arm.com>
+        Wed, 06 Nov 2019 16:09:21 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/5] dt-bindings: phy-qcom-qmp: Add SDM845 PCIe to binding
+Date:   Wed,  6 Nov 2019 16:09:13 -0800
+Message-Id: <20191107000917.1092409-2-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191107000917.1092409-1-bjorn.andersson@linaro.org>
+References: <20191107000917.1092409-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104163834.8932-8-andrew.murray@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  4 Nov 2019 16:38:21 +0000, Andrew Murray wrote:
-> Replace magic numbers used to describe legacy PCI IRQ interrupts
-> with #define.
-> 
-> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  .../devicetree/bindings/pci/83xx-512x-pci.txt | 18 ++---
->  .../devicetree/bindings/pci/aardvark-pci.txt  | 10 +--
->  .../devicetree/bindings/pci/altera-pcie.txt   | 10 +--
->  .../bindings/pci/axis,artpec6-pcie.txt        | 10 +--
->  .../bindings/pci/cdns,cdns-pcie-host.txt      | 10 +--
->  .../bindings/pci/faraday,ftpci100.txt         | 68 +++++++++----------
->  .../bindings/pci/fsl,imx6q-pcie.txt           | 10 +--
->  .../bindings/pci/hisilicon-pcie.txt           | 20 +++---
->  .../bindings/pci/host-generic-pci.txt         | 10 +--
->  .../devicetree/bindings/pci/kirin-pcie.txt    | 10 +--
->  .../bindings/pci/layerscape-pci.txt           | 10 +--
->  .../devicetree/bindings/pci/mediatek-pcie.txt | 40 +++++------
->  .../devicetree/bindings/pci/mobiveil-pcie.txt |  8 +--
->  .../devicetree/bindings/pci/pci-rcar-gen2.txt |  8 +--
->  .../bindings/pci/pci-thunder-pem.txt          | 10 +--
->  .../devicetree/bindings/pci/pcie-al.txt       |  4 +-
->  .../devicetree/bindings/pci/qcom,pcie.txt     | 20 +++---
->  .../bindings/pci/ralink,rt3883-pci.txt        | 18 ++---
->  .../bindings/pci/rockchip-pcie-host.txt       | 10 +--
->  .../devicetree/bindings/pci/ti-pci.txt        | 10 +--
->  .../devicetree/bindings/pci/uniphier-pcie.txt | 10 +--
->  .../bindings/pci/v3-v360epc-pci.txt           | 34 +++++-----
->  .../devicetree/bindings/pci/versatile.txt     | 40 +++++------
->  .../devicetree/bindings/pci/xgene-pci-msi.txt | 10 +--
->  .../devicetree/bindings/pci/xgene-pci.txt     | 10 +--
->  .../bindings/pci/xilinx-nwl-pcie.txt          | 10 +--
->  .../devicetree/bindings/pci/xilinx-pcie.txt   | 20 +++---
->  27 files changed, 224 insertions(+), 224 deletions(-)
-> 
+Add the compatible and define necessary clocks and resets for the SDM845
+GEN2 QMP PCIe phy and GEN3 QHP PCIe phy.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+Changes since v2:
+- Picked up Rob's R-b
+
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index eac9ad3cbbc8..a214ce6d0db2 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -12,6 +12,8 @@ Required properties:
+ 	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
+ 	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
+ 	       "qcom,msm8998-qmp-pcie-phy" for PCIe QMP phy on msm8998,
++	       "qcom,sdm845-qhp-pcie-phy" for QHP PCIe phy on sdm845,
++	       "qcom,sdm845-qmp-pcie-phy" for QMP PCIe phy on sdm845,
+ 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+ 	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
+ 	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845,
+@@ -52,6 +54,10 @@ Required properties:
+ 			"ref", "ref_aux".
+ 		For "qcom,msm8998-qmp-pcie-phy" must contain:
+ 			"aux", "cfg_ahb", "ref".
++		For "qcom,sdm845-qhp-pcie-phy" must contain:
++			"aux", "cfg_ahb", "ref", "refgen".
++		For "qcom,sdm845-qmp-pcie-phy" must contain:
++			"aux", "cfg_ahb", "ref", "refgen".
+ 		For "qcom,sdm845-qmp-usb3-phy" must contain:
+ 			"aux", "cfg_ahb", "ref", "com_aux".
+ 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+@@ -80,6 +86,10 @@ Required properties:
+ 			"ufsphy".
+ 		For "qcom,msm8998-qmp-pcie-phy" must contain:
+ 			"phy", "common".
++		For "qcom,sdm845-qhp-pcie-phy" must contain:
++			"phy".
++		For "qcom,sdm845-qmp-pcie-phy" must contain:
++			"phy".
+ 		For "qcom,sdm845-qmp-usb3-phy" must contain:
+ 			"phy", "common".
+ 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+-- 
+2.23.0
+
