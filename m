@@ -1,108 +1,136 @@
 Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E7EC5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 05:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D338C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 06:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B11214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 05:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4872D21882
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 06:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ORPPosFh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JyLxr2bS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbfKGFyS (ORCPT
+        id S1726651AbfKGGF7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 00:54:18 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43067 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfKGFyR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 00:54:17 -0500
-Received: by mail-ot1-f68.google.com with SMTP id l14so983063oti.10
-        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 21:54:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z8WMiQe0VQDjoyKQb/Q1dgHH8ZGJEBdgTxTKVf+T+d0=;
-        b=ORPPosFhWE3zKGUEjFHEXL4y2uO4VYNssFO/dITIhmo/ufc1VZAlPHDd7b6GE7doWl
-         FrwfhE8/eCmJhp6es62joxO/H6TzNYei4vDpTHfknb6tqosNL/Qo/UGWZPLKTIUV+HCA
-         uvY4Lfl792bAEV3Xs0CanTl6JGlv4wr5gIDynZ+MX+m+wqi0xWUIPRwtr72AF0Z4WAoI
-         snZYgb0yOC2pDuaXT0yWL9K6PpkeXTQs20dOJiqMC1fHUzlwuEkRsLVof/Nx7pD/Gry1
-         D2Sg8ufOI784E2JPo1atYAwQy5xPUvP/E1ZpSqhc7BZIk3pjhHMM5vAeZORSdsgeF19f
-         a/fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z8WMiQe0VQDjoyKQb/Q1dgHH8ZGJEBdgTxTKVf+T+d0=;
-        b=CdWU3CBt85ODupmRvXt+Rq8Ld1y9qMteVx8qpDUDfKrzI/g/GQuuxBlBgwxlbFA4ev
-         EaqrY+njso3T6Xlqvy22KjpS8ss7CebuXcn/zp/Khq7XSaYO2y3o+5B7TStRL72o6AGd
-         QdsClubD3REF/VFXnNiTmRAM7D3yO6ENV0lYuWFsip6BUL1r8/5illAy1g3/HOXSdb25
-         p6fYsv/S56xgK/UvSKVKJGLZraYTQFC5lOxlfueUojXrJdpYzjS0Jf+RXLOr1/W8W2mn
-         sz//jW4uMDgWenmrfIScq04TbuoGguBoyynEWMl9Q18hemyNc2vo97k5iIrLKNEkgfKa
-         27EA==
-X-Gm-Message-State: APjAAAXAeS+WPcvXlPFwaVv+MRVzLFOv1fQT91hhbHb+uBZEm5Z4a+68
-        /PUZDXKQR0VqNNFzv6F6RgVKFCnmCjovcPkw6VscZw==
-X-Google-Smtp-Source: APXvYqyM23HvT4YIwpUXDZLD1fpZ3vh1A4qEU1lt+YKirrx+bKUeYCEqwkp3sHwVS9mlTJP9q1b50L58yznJoPUQB30=
-X-Received: by 2002:a9d:7ac2:: with SMTP id m2mr1373544otn.225.1573106056538;
- Wed, 06 Nov 2019 21:54:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20191105065000.50407-1-saravanak@google.com>
-In-Reply-To: <20191105065000.50407-1-saravanak@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 6 Nov 2019 21:53:40 -0800
-Message-ID: <CAGETcx-X4OTrGfBkP6CtC6=GV=KA147VO6jJL+o6hkC1iCkeeA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] of_devlink: Minor fixes and new properties
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 7 Nov 2019 01:05:59 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57202 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfKGGF7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 01:05:59 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA765W3J009455;
+        Thu, 7 Nov 2019 00:05:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573106732;
+        bh=YkH6IrLLDyFL1c+gPK30RscWok8biguT1gLAoAK04AQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JyLxr2bSWrMfVthmAEKDODjrRZchD+nNQJMItKW8Ks3I7yHaZWFw/NTIXH9LXMMTV
+         AWIDb9F9kpT/SN5TyhUkE9A3n9+YvhAFnqXIVAhig0y+YtQuKiXYnB8pXVCcFtPIRZ
+         hkM+tcR7Sy5I+tIxRrSnbGDOEawmANuil8TnT33M=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA765W5w098483;
+        Thu, 7 Nov 2019 00:05:32 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 7 Nov
+ 2019 00:05:16 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 7 Nov 2019 00:05:16 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA765RSj099257;
+        Thu, 7 Nov 2019 00:05:28 -0600
+Subject: Re: [PATCH 1/2] mtd: mtk-quadspi: add support for memory-mapped flash
+ reading
+To:     Chuanhong Guo <gch981213@gmail.com>,
+        <linux-mtd@lists.infradead.org>
+CC:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191106140748.13100-1-gch981213@gmail.com>
+ <20191106140748.13100-2-gch981213@gmail.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <bc917a56-e688-d701-2279-87df460d6055@ti.com>
+Date:   Thu, 7 Nov 2019 11:36:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191106140748.13100-2-gch981213@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 10:50 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Sending again since the cover letter missed everyone/mailing lists.
->
-> First two patches are just code clean up and logging with no functional
-> difference. The 3rd patch adds support for the following DT properties:
-> iommus, mboxes and io-channels.
->
-> These patches are on top of driver-core-next since that's where the rest
-> of the of_devlink patches are.
->
-> Greg and Rob,
-> On a side note, I was wondering if I should rename the of_devlink kernel
-> command line to fw_devlink and move it out of drivers/of/property.c and
-> into drivers/base/core.c. This feature isn't really limited to
-> devicetree, so I don't see a need to have devicetree specific kernel
-> command line option.  Please let me know if that sounds okay to you.
+Hi,
 
-Hi Rob,
+On 06/11/19 7:37 PM, Chuanhong Guo wrote:
+> PIO reading mode on this controller is ridiculously inefficient
+> (one cmd+addr+dummy sequence reads only one byte)
+> This patch adds support for reading from memory-mapped flash area
+> which increases reading speed from 1MB/s to 5.6MB/s
+> 
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> ---
+>  drivers/mtd/spi-nor/mtk-quadspi.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
+> index 34db01ab6cab..ba8b3be39896 100644
+> --- a/drivers/mtd/spi-nor/mtk-quadspi.c
+> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
+> @@ -106,6 +106,7 @@ struct mtk_nor {
+>  	struct spi_nor nor;
+>  	struct device *dev;
+>  	void __iomem *base;	/* nor flash base address */
+> +	void __iomem *flash_base;
+>  	struct clk *spi_clk;
+>  	struct clk *nor_clk;
+>  };
+> @@ -272,6 +273,11 @@ static ssize_t mtk_nor_read(struct spi_nor *nor, loff_t from, size_t length,
+>  	mtk_nor_set_read_mode(mtk_nor);
+>  	mtk_nor_set_addr(mtk_nor, addr);
+>  
+> +	if (mtk_nor->flash_base) {
+> +		memcpy_fromio(buffer, mtk_nor->flash_base + from, length);
+> +		return length;
+> +	}
+> +
 
-Thanks for the reviews. Can you let me know what you think of this too?
+Don't you need to check if access is still within valid memory mapped
+window?
 
-Rob/Greg,
+>  	for (i = 0; i < length; i++) {
+>  		ret = mtk_nor_execute_cmd(mtk_nor, MTK_NOR_PIO_READ_CMD);
+>  		if (ret < 0)
+> @@ -475,6 +481,11 @@ static int mtk_nor_drv_probe(struct platform_device *pdev)
+>  	if (IS_ERR(mtk_nor->base))
+>  		return PTR_ERR(mtk_nor->base);
+>  
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	mtk_nor->flash_base = devm_ioremap_resource(&pdev->dev, res);
 
-If I rename of_devlink to fw_devlink, I might also make it a setting
-like fw_devlink=none/permissive/enforce
-- none would be same as disabled completely.
-- permissive would use SYNC_STATE_ONLY for all device links created by
-firmware. So it won't block any probes even with cycles but
-sync_state() will still work correctly.
-- enforce would be the current "of_devlinkg=1" behavior where direct
-dependencies would block probing and the child dependencies would use
-SYNC_STATE_ONLY.
+There is a single API now: devm_platform_ioremap_resource().
 
--Saravana
+> +	if (IS_ERR(mtk_nor->flash_base))
+> +		mtk_nor->flash_base = NULL;
+> +
+>  	mtk_nor->spi_clk = devm_clk_get(&pdev->dev, "spi");
+>  	if (IS_ERR(mtk_nor->spi_clk))
+>  		return PTR_ERR(mtk_nor->spi_clk);
+> 
+
+-- 
+Regards
+Vignesh
