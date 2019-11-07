@@ -2,161 +2,102 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41CFC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E4FC5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5682077C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIQjJ1Kk"
+	by mail.kernel.org (Postfix) with ESMTP id 3144321D7B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 08:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573116052;
+	bh=5UXATmHfJ4Sv3v2y4iqCmaHYxknDg4YaP8YhAQf2jHg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OAWje0EZXsr4yZIUgTtCWyTX5p4Qo2GGR+wA4+CJI255tLWhpy8Si182yTgcFTZiz
+	 Krpju082gDMHBeCGUKKmWBe7PFFx9oR0XnKZuEoiDmPqiGluT1YcNkJa739ecupMte
+	 PqmYY+oTT1Ogz2hiObPfZ+OHlD6enbHY9BPVbsIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfKGIKh (ORCPT
+        id S1727362AbfKGIkv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:10:37 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46856 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfKGIKh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 03:10:37 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n14so1161700oie.13;
-        Thu, 07 Nov 2019 00:10:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Ln1GAykiZS8RusuR4H+KQoetDdyYBnG1RhAd3RuDvU=;
-        b=XIQjJ1KkwJwDO2WBDAlhOf60GzfwCkkbNwnxofI1gvr56DlMnJZNb4jHhH9l+siPjy
-         7XUMhHNlxMeUd0C8IsfA/1LUeakE2mhibVwGsvSfeeV6D1unTFUY+jfFqzTPIcRQl5X+
-         gWKfPOXD3nsSRoQRnk8+d5iIA5qxdNdnYM0aAjr5pCDue/7MNTnR9v4pFaetY9pKAOIL
-         RcPun1cI3Qh9hzQ1HJD8sMy57glLs6u3q1iXmG7lA0FwoChXUDNfAOgr2ETpotB//xIX
-         UnxYVtmQXIYLoaVGsh7uTHXu6+JIFIEnRncdelUnehHP33ZJr4CmSpidqTtDpVy7SPn3
-         mHlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Ln1GAykiZS8RusuR4H+KQoetDdyYBnG1RhAd3RuDvU=;
-        b=jXkXFJEFNJU9WLirEP/Sn7tJJOv6Ym6nWlh3UeBnYz+C86DGtGD/tU9C9pLIbJVm/t
-         cY6A1cv9WUqmSVWYSHSgNT6WGhhjzZXoNB+G9cVhYsa5x9omHRALVeRA3Yhr/el8QLzR
-         jXCn52QdIvdJ4y0i/8WQ5TJd4mYRIhTo5eSf86pNAqC7th98jkzn0sX777IhQUkg7IVP
-         eKzQ28sTXuAG+YAjEsoozPHjlNE3bH48DE6Y5/w11eM9KWOYYBplVhmUfOyW3w21X5pL
-         xdNFP1Xl33HGB8r147wHcntSqb6IEw9CVyA+t5dh3zkugZdla/vHYRQP83gVC5FEl9fh
-         7G2w==
-X-Gm-Message-State: APjAAAXu1tPNCNl+tKGRcIL8KNNGOANBC/XVvMZgQwqGcY6mVN9CtSJu
-        irTMf6I/L0dapihTroB/BkaHlp8qb3MzSp9MAWc=
-X-Google-Smtp-Source: APXvYqyCsRHXrlcNyFDdWgqpUGNUi9JY2dnU8nu8fLaBJBr7i8H4CEPtAXOaCsi6gmrcZ/dmVtw/Dn8k5G1I4v7yMqw=
-X-Received: by 2002:a05:6808:3cf:: with SMTP id o15mr2227687oie.7.1573114236156;
- Thu, 07 Nov 2019 00:10:36 -0800 (PST)
+        Thu, 7 Nov 2019 03:40:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbfKGIkv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:40:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA38321D79;
+        Thu,  7 Nov 2019 08:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573116050;
+        bh=5UXATmHfJ4Sv3v2y4iqCmaHYxknDg4YaP8YhAQf2jHg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fOthM6XmtGHNJeSt/0HirzaKkvhp+sVzK0g8L6zA5YgJT9lFDQXhvVcl5HPVstqb/
+         XPNfXaybhhUQQka2do1k5GATqsjRJ8mNBaew0ZJ/Xs6Kp2uVE9CA40KHH2Mp8i4vfG
+         ArYmC9P4vu1X4xy1rPuUj+F8+LqX4PGJ5n1ZahV4=
+Date:   Thu, 7 Nov 2019 09:40:47 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v1 0/3] of_devlink: Minor fixes and new properties
+Message-ID: <20191107084047.GB1203521@kroah.com>
+References: <20191105065000.50407-1-saravanak@google.com>
+ <CAGETcx-X4OTrGfBkP6CtC6=GV=KA147VO6jJL+o6hkC1iCkeeA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <OSBPR01MB210380ACAF35B2FE94F1589EB8780@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB210380ACAF35B2FE94F1589EB8780@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 Nov 2019 08:10:09 +0000
-Message-ID: <CA+V-a8vJrJ8Rw5OgYZN7o_i1R9ZZUfmuMWnzA0PF+pZus0o1SQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
-To:     Biju Das <biju.das@bp.renesas.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx-X4OTrGfBkP6CtC6=GV=KA147VO6jJL+o6hkC1iCkeeA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Biju,
+On Wed, Nov 06, 2019 at 09:53:40PM -0800, Saravana Kannan wrote:
+> On Mon, Nov 4, 2019 at 10:50 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > Sending again since the cover letter missed everyone/mailing lists.
+> >
+> > First two patches are just code clean up and logging with no functional
+> > difference. The 3rd patch adds support for the following DT properties:
+> > iommus, mboxes and io-channels.
+> >
+> > These patches are on top of driver-core-next since that's where the rest
+> > of the of_devlink patches are.
+> >
+> > Greg and Rob,
+> > On a side note, I was wondering if I should rename the of_devlink kernel
+> > command line to fw_devlink and move it out of drivers/of/property.c and
+> > into drivers/base/core.c. This feature isn't really limited to
+> > devicetree, so I don't see a need to have devicetree specific kernel
+> > command line option.  Please let me know if that sounds okay to you.
+> 
+> Hi Rob,
+> 
+> Thanks for the reviews. Can you let me know what you think of this too?
+> 
+> Rob/Greg,
+> 
+> If I rename of_devlink to fw_devlink, I might also make it a setting
+> like fw_devlink=none/permissive/enforce
+> - none would be same as disabled completely.
+> - permissive would use SYNC_STATE_ONLY for all device links created by
+> firmware. So it won't block any probes even with cycles but
+> sync_state() will still work correctly.
+> - enforce would be the current "of_devlinkg=1" behavior where direct
+> dependencies would block probing and the child dependencies would use
+> SYNC_STATE_ONLY.
 
-Thank you for the review.
+Renaming makes sense to me, and all of the above is fine as well.
 
-On Thu, Nov 7, 2019 at 7:39 AM Biju Das <biju.das@bp.renesas.com> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for the patch
->
-> > Subject: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
-> >
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > This patch adds the bindings for the R-Car PCIe endpoint driver.
-> >
-> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../devicetree/bindings/pci/rcar-pci-ep.txt   | 43 +++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > new file mode 100644
-> > index 000000000000..b8c8616ca007
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > @@ -0,0 +1,43 @@
-> > +* Renesas R-Car PCIe Endpoint Controller DT description
-> > +
-> > +Required properties:
-> > +         "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
-> > +         "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > +                                  RZ/G2 compatible device.
-> > +
-> > +         When compatible with the generic version, nodes must list the
-> > +         SoC-specific version corresponding to the platform first
-> > +         followed by the generic version.
-> > +
-> > +- reg: Five register ranges as listed in the reg-names property
-> > +- reg-names: Must include the following names
-> > +     - "apb-base"
-> > +     - "memory0"
-> > +     - "memory1"
-> > +     - "memory2"
-> > +     - "memory3"
-> > +- resets: Must contain phandles to PCIe-related reset lines exposed by IP
-> > block
-> > +- clocks: from common clock binding: clock specifiers for the PCIe controller
-> > +      clock.
-> > +- clock-names: from common clock binding: should be "pcie".
-> > +
-> > +Optional Property:
-> > +- max-functions: Maximum number of functions that can be configured
-> > (default 1).
-> > +
-> > +Example:
-> > +
-> > +SoC-specific DT Entry:
-> > +
-> > +     pcie_ep: pcie_ep@fe000000 {
-> > +             compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-
-> > gen2";
->
-> I believe it is currently tested on RZ/G2E. so please use the same.
->
-Yes you are correct its tested on RZ/G2E board, ill fix it in next iteration.
+thanks,
 
-Cheers,
---Prabhakar
+greg k-h
