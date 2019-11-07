@@ -2,68 +2,91 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5F2FC6194
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA2CFC6194
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAAA217D7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:05:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VcO8U3Hq"
+	by mail.kernel.org (Postfix) with ESMTP id 928DC217D7
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 02:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfKGCF7 (ORCPT
+        id S1727390AbfKGCIM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:05:59 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:53148 "EHLO vps0.lunn.ch"
+        Wed, 6 Nov 2019 21:08:12 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:50706 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbfKGCF7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:05:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=jj9KSI1jFK/p0M5xA7t/pXLUI5OVBnGlX/68JSi8S8w=; b=VcO8U3Hqt+q9++/P9d7Z3L5Ooy
-        qncjjXdE/JrHAEUYiq1plbaIxKKo0SGzWYMKrsVJ6l1zRYbQKFqGkdwq7SEKe58OgjS3fT4FLkbxL
-        Zi0EfgFV/Oz6QzGOY04GbaW5iAtfCrLpbLt6an9mLmnfCocA8GKMHKKnqv2g2+cf0/Ds=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iSXBM-0002m8-H5; Thu, 07 Nov 2019 03:05:56 +0100
-Date:   Thu, 7 Nov 2019 03:05:56 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v2 6/6] net: phy: at803x: remove config_init for AR9331
-Message-ID: <20191107020556.GF8978@lunn.ch>
-References: <20191106223617.1655-1-michael@walle.cc>
- <20191106223617.1655-7-michael@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106223617.1655-7-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727328AbfKGCIL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Nov 2019 21:08:11 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 01AA51A068C;
+        Thu,  7 Nov 2019 03:08:10 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E5DF01A00CE;
+        Thu,  7 Nov 2019 03:08:03 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8FCDF402B4;
+        Thu,  7 Nov 2019 10:07:56 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/4] ARM: dts: imx6sll: Update usdhc fallback compatible to support HS400 mode
+Date:   Thu,  7 Nov 2019 10:06:30 +0800
+Message-Id: <1573092393-26885-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:36:17PM +0100, Michael Walle wrote:
-> According to its datasheet, the internal PHY doesn't have debug
-> registers nor MMDs. Since config_init() only configures delays and
-> clocks and so on in these registers it won't be needed on this PHY.
-> Remove it.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+The latest i.MX6SLL EVK board supports HS400 mode, update usdhc's
+fallback compatible to support HS400 mode by default.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No changes.
+---
+ arch/arm/boot/dts/imx6sll.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-    Andrew
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index 85aa8bb..1c8101f 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -698,7 +698,7 @@
+ 			};
+ 
+ 			usdhc1: mmc@2190000 {
+-				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
++				compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x02190000 0x4000>;
+ 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SLL_CLK_USDHC1>,
+@@ -712,7 +712,7 @@
+ 			};
+ 
+ 			usdhc2: mmc@2194000 {
+-				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
++				compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x02194000 0x4000>;
+ 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SLL_CLK_USDHC2>,
+@@ -726,7 +726,7 @@
+ 			};
+ 
+ 			usdhc3: mmc@2198000 {
+-				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
++				compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
+ 				reg = <0x02198000 0x4000>;
+ 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SLL_CLK_USDHC3>,
+-- 
+2.7.4
+
