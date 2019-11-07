@@ -2,37 +2,43 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20903C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55629C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82C12085B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A322214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387991AbfKGJ4U (ORCPT
+        id S2388049AbfKGJ40 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:56:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40796 "EHLO mx1.suse.de"
+        Thu, 7 Nov 2019 04:56:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40806 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727926AbfKGJ4U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:56:20 -0500
+        id S2387827AbfKGJ4V (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 04:56:21 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9FC4DAFA7;
-        Thu,  7 Nov 2019 09:56:18 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id A81ECB2E5;
+        Thu,  7 Nov 2019 09:56:19 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     catalin.marinas@arm.com, linux-kernel@vger.kernel.org
+To:     catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 0/2] arm64: Fix CMA/crashkernel reservation
-Date:   Thu,  7 Nov 2019 10:56:09 +0100
-Message-Id: <20191107095611.18429-1-nsaenzjulienne@suse.de>
+Subject: [PATCH v3 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
+Date:   Thu,  7 Nov 2019 10:56:10 +0100
+Message-Id: <20191107095611.18429-2-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191107095611.18429-1-nsaenzjulienne@suse.de>
+References: <20191107095611.18429-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -40,32 +46,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As pointed out by Qian Cai[1] the series enabling ZONE_DMA in arm64
-breaks CMA/crashkernel reservations on large devices, as it changed its
-default placement. After discussing it with Catalin Marinas we're
-restoring the old behavior.
+arm64 places the CMA in ZONE_DMA32, which is not good enough for the
+Raspberry Pi 4 since it contains peripherals that can only address the
+first GB of memory. Explicitly place the CMA into that area.
 
-The Raspberry Pi 4, being the only device that needs CMA and crashkernel
-in ZONE_DMA will explicitly do so trough it's device tree.
-
-[1] https://lkml.org/lkml/2019/10/21/725
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
 ---
 
 Changes since v1:
-  - Move CMA area registration into bcm2711.dtsi
+  - Move into bcm2711.dtsi
 
 Changes since v1:
-  - s/Raspberry Pi/bcm2711 in bcm2711.dtsi
-
-Nicolas Saenz Julienne (2):
-  ARM: dts: bcm2711: force CMA into first GB of memory
-  arm64: mm: reserve CMA and crashkernel in ZONE_DMA32
+  - s/Raspberry Pi/bcm2711
 
  arch/arm/boot/dts/bcm2711.dtsi | 20 ++++++++++++++++++++
- arch/arm64/mm/init.c           |  4 ++--
- 2 files changed, 22 insertions(+), 2 deletions(-)
+ 1 file changed, 20 insertions(+)
 
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+index ac83dac2e6ba..667658497898 100644
+--- a/arch/arm/boot/dts/bcm2711.dtsi
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -12,6 +12,26 @@
+ 
+ 	interrupt-parent = <&gicv2>;
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges;
++
++		/*
++		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
++		 * that's not good enough for bcm2711 as some devices can
++		 * only address the lower 1G of memory (ZONE_DMA).
++		 */
++		linux,cma {
++			compatible = "shared-dma-pool";
++			size = <0x2000000>; /* 32MB */
++			alloc-ranges = <0x0 0x00000000 0x40000000>;
++			reusable;
++			linux,cma-default;
++		};
++	};
++
++
+ 	soc {
+ 		/*
+ 		 * Defined ranges:
 -- 
 2.23.0
 
