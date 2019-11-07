@@ -2,114 +2,97 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BD0C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81EBC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2ED21D7E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AACF2178F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="m1iNdsLo";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l+hCbMXp"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Sd8VY9GQ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Fe2kXm63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbfKGPgC (ORCPT
+        id S2388887AbfKGPib (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:36:02 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:50086 "EHLO
+        Thu, 7 Nov 2019 10:38:31 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:52270 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfKGPgB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 10:36:01 -0500
+        with ESMTP id S2388716AbfKGPia (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 10:38:30 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E96DC61017; Thu,  7 Nov 2019 15:36:00 +0000 (UTC)
+        id 6649860ACF; Thu,  7 Nov 2019 15:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573140961;
-        bh=uS6h0oAJoENnCNWRepIvCzatEd8f1mu+GozvC7RMuXI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=m1iNdsLoG7VsIOGSCGRDH+S4A4CuwCiVkZ2Ej9DA1WdJ1t9GpRXyUyZQU3Ctsp5WB
-         PD93Y1EMokUUIhJtPPcuO9yNAKsaN+W/zWK2WAt/lXW3Jw6yCaLAbf0TdPWQc4zpnR
-         Lve+eT7OJOvuwB5dn8Qalg0HXt+tIAAxOBt5IXZs=
-Received: from [192.168.1.7] (unknown [106.212.237.132])
+        s=default; t=1573141109;
+        bh=4I2NsGsi2oLEPVDxuh2TaPp7vZrikmhwsP5lTE2NoZ0=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Sd8VY9GQE1aXB0QmpgPNYeJAGEOs9wz1n7kFwUS8vas0uOvFOYG9yuUTMWjzqzWSG
+         i4oQoIok7wV9SsLo05dWg03D6oxhPw3B1UE3nOQswYrPxtVG0LlSeCb9sz6ExDJa/d
+         r/67ErcXUcfIXOvXsln3OrzBnfL+IRVbvoI3MvH4=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: mgautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E4BFD60FCF;
-        Thu,  7 Nov 2019 15:35:55 +0000 (UTC)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9FF4460996;
+        Thu,  7 Nov 2019 15:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573140958;
-        bh=uS6h0oAJoENnCNWRepIvCzatEd8f1mu+GozvC7RMuXI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=l+hCbMXpRA7DOPzE/JI9r6b13aT+X4dcgAdEY7M+bs1GIAh9I9jq4eX4clwNAGl2Q
-         JtEZ95dSw2X2DuL4ks2ZLBjKBTOi7AM9ljlVKBtlLr7j+BlJhbCdNH2MwRgPKZfWPT
-         CEypsr38yP8L0P35vP3rlBbUYi5jpk2p47XFVpi4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E4BFD60FCF
+        s=default; t=1573141108;
+        bh=4I2NsGsi2oLEPVDxuh2TaPp7vZrikmhwsP5lTE2NoZ0=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Fe2kXm63JaVUTHWLtRRpOW0jE0pmLIl3dkPKq4zqiuTCl7JAFgJsxtBvrkSiYkhkJ
+         ODrL2h9g269L0v1ixsF5y35ogMtXPbvCkhZBqEZW0KFFYYYjr2ly16NxaJidSnvhcd
+         d442HvDa1La7EkC89l4rEMr9voOoyM/4OLmRnTnI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9FF4460996
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
-Subject: Re: [PATCH 1/2] phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
-To:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-References: <1572418544-11593-1-git-send-email-sanm@codeaurora.org>
- <1572418544-11593-2-git-send-email-sanm@codeaurora.org>
-From:   Manu Gautam <mgautam@codeaurora.org>
-Message-ID: <21fb2f4b-1b24-70f8-a77c-4530cebb76b1@codeaurora.org>
-Date:   Thu, 7 Nov 2019 21:05:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath11k@lists.infradead.org
+Subject: Re: [PATCH v2 01/49] dt: bindings: net: add qcom,ath11k.yaml
+References: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
+        <1571565847-10338-2-git-send-email-kvalo@codeaurora.org>
+        <20191025213028.GA5117@bogus>
+Date:   Thu, 07 Nov 2019 17:38:23 +0200
+In-Reply-To: <20191025213028.GA5117@bogus> (Rob Herring's message of "Fri, 25
+        Oct 2019 16:30:28 -0500")
+Message-ID: <87k18by9w0.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1572418544-11593-2-git-send-email-sanm@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Rob Herring <robh@kernel.org> writes:
 
-On 10/30/2019 12:25 PM, Sandeep Maheswaram wrote:
-> Adding QMP v3 USB3 phy support for SC7180.
+> On Sun, Oct 20, 2019 at 01:03:19PM +0300, Kalle Valo wrote:
+>> ath11k is a driver for Qualcomm IEEE 802.11ax devices. Add a
+>> bindings document for the driver, first documenting IPQ8074 which is the
+>> only device ath11k currently supports.
+>> 
+>> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+>> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+
+[...]
+
+>> +  interrupts:
+>> +    minItems: 53
+>> +    maxItems: 53
 >
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 091e203..52275c5 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (c) 2017, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
->   */
->  
->  #include <linux/clk.h>
-> @@ -2118,6 +2118,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
->  	}, {
->  		.compatible = "qcom,sm8150-qmp-ufs-phy",
->  		.data = &sm8150_ufsphy_cfg,
-> +	}, {
-> +		.compatible = "qcom,sc7180-qmp-usb3-phy",
-> +		.data = &qmp_v3_usb3phy_cfg,
+> Assuming the list below has 53 entries min/maxItems is implied.
 
-SC7180 has single QMP PHY with each lane dedicated for USB and DP.
-USB driver should perform only PHY reset, not the global reset.
+There's actually 52 entries in the items list below this, I need to
+check if we are missing an entry or is this just a miscalculation.
 
+>> +  interrupt-names:
+>> +    minItems: 53
+>> +    maxItems: 53
 
->  	},
->  	{ },
->  };
+And I assume I can remove minItems and maxItems here as well.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
