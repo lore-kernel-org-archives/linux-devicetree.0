@@ -2,518 +2,167 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367AFC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39369C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC5D218AE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1624A206DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfKGSRg (ORCPT
+        id S1725912AbfKGSYK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:17:36 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58943 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727735AbfKGSRd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 13:17:33 -0500
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 52CC8C0005;
-        Thu,  7 Nov 2019 18:17:22 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 19:19:20 +0100
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Thu, 7 Nov 2019 13:24:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42680 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725823AbfKGSYK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 13:24:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 707D4ACA5;
+        Thu,  7 Nov 2019 18:24:07 +0000 (UTC)
+Message-ID: <2dcc3fca914a454006bcf2e9bd4479a30228e9fa.camel@suse.de>
+Subject: Re: [PATCH 2/4] ARM: dts: bcm2711: Enable PCIe controller
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v2 1/4] drm/bridge: Repurpose lvds-encoder.c
-Message-ID: <20191107181920.yh2suj3e2gra3iip@uno.localdomain>
-References: <1572886683-4919-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1572886683-4919-2-git-send-email-fabrizio.castro@bp.renesas.com>
+        Eric Anholt <eric@anholt.net>
+Cc:     f.fainelli@gmail.com, phil@raspberrypi.org,
+        linux-kernel@vger.kernel.org, mbrugger@suse.com,
+        james.quinlan@broadcom.com
+Date:   Thu, 07 Nov 2019 19:24:03 +0100
+In-Reply-To: <50074e33-17bf-d555-cbf6-4ec079472ecd@gmx.net>
+References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
+         <20191106214527.18736-3-nsaenzjulienne@suse.de>
+         <50074e33-17bf-d555-cbf6-4ec079472ecd@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-TlMxNcfADV/A26dcLaFO"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2jd77g337ufxysbc"
-Content-Disposition: inline
-In-Reply-To: <1572886683-4919-2-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---2jd77g337ufxysbc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+--=-TlMxNcfADV/A26dcLaFO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Fabrizio,
-  thanks for the patch.
+On Thu, 2019-11-07 at 18:44 +0100, Stefan Wahren wrote:
+> Hi Nicolas,
+>=20
+> please move this patch behind the driver patches, which is the better ord=
+er.
+>=20
+> Am 06.11.19 um 22:45 schrieb Nicolas Saenz Julienne:
+> > This enables bcm2711's PCIe bus, wich is hardwired to a VIA Technologie=
+s
+> > XHCI USB 3.0 controller.
+> AFAIU this only applies to the Raspberry Pi 4, since the VIA is outside
+> of the SoC.
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  arch/arm/boot/dts/bcm2711.dtsi | 47 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711=
+.dtsi
+> > index a9d84e28f245..c7b2e7b57da6 100644
+> > --- a/arch/arm/boot/dts/bcm2711.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> > @@ -288,6 +288,53 @@
+> >  		arm,cpu-registers-not-fw-configured;
+> >  	};
+> >=20
+> > +	scb {
+> > +		compatible =3D "simple-bus";
+> > +		#address-cells =3D <2>;
+> > +		#size-cells =3D <1>;
+> > +
+> > +		ranges =3D <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
+> > +			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
+> > +
+> > +		pcie_0: pcie@7d500000 {
+> > +			compatible =3D "brcm,bcm2711-pcie";
+> > +			reg =3D <0x0 0x7d500000 0x9310>;
+> > +			msi-controller;
+> > +			msi-parent =3D <&pcie_0>;
+> > +			#address-cells =3D <3>;
+> > +			#interrupt-cells =3D <1>;
+> > +			#size-cells =3D <2>;
+> > +			linux,pci-domain =3D <0>;
+> > +			brcm,enable-ssc;
+> > +			interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> > +			interrupt-names =3D "pcie", "msi";
+> > +			interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
+> > +			interrupt-map =3D <0 0 0 1 &gicv2 GIC_SPI 143
+> > +							IRQ_TYPE_LEVEL_HIGH
+> > +					 0 0 0 2 &gicv2 GIC_SPI 144
+> > +							IRQ_TYPE_LEVEL_HIGH
+> > +					 0 0 0 3 &gicv2 GIC_SPI 145
+> > +							IRQ_TYPE_LEVEL_HIGH
+> > +					 0 0 0 4 &gicv2 GIC_SPI 146
+> > +							IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +			ranges =3D <0x02000000 0x0 0xf8000000 0x6 0x00000000
+> > +				  0x0 0x04000000>;
+> > +			/*
+> > +			 * The wrapper around the PCIe block has a bug
+> > +			 * preventing it from accessing beyond the first 3GB of
+> > +			 * memory. As the bus DMA mask is rounded up to the
+> > +			 * closest power of two of the dma-range size, we're
+> > +			 * forced to set the limit at 2GB. This can be
+> > +			 * harmlessly changed in the future once the DMA code
+> > +			 * handles non power of two DMA limits.
+> > +			 */
+> > +			dma-ranges =3D <0x02000000 0x0 0x00000000 0x0 0x00000000
+> > +				      0x0 0x80000000>;
+> In case this bug will ever be fixed, do you see this as a future proof
+> practical solution?
 
-On Mon, Nov 04, 2019 at 04:58:00PM +0000, Fabrizio Castro wrote:
-> lvds-encoder.c implementation is also suitable for LVDS decoders,
-> not just LVDS encoders.
-> Instead of creating a new driver for addressing support for
-> transparent LVDS decoders, repurpose lvds-encoder.c for the greater
-> good.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->
-> ---
-> v1->v2:
-> * No change
-> ---
->  drivers/gpu/drm/bridge/Kconfig        |   8 +-
->  drivers/gpu/drm/bridge/Makefile       |   2 +-
->  drivers/gpu/drm/bridge/lvds-codec.c   | 169 ++++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/bridge/lvds-encoder.c | 155 -------------------------------
->  4 files changed, 174 insertions(+), 160 deletions(-)
->  create mode 100644 drivers/gpu/drm/bridge/lvds-codec.c
->  delete mode 100644 drivers/gpu/drm/bridge/lvds-encoder.c
->
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 3436297..9e75ca4e 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -45,14 +45,14 @@ config DRM_DUMB_VGA_DAC
->  	  Support for non-programmable RGB to VGA DAC bridges, such as ADI
->  	  ADV7123, TI THS8134 and THS8135 or passive resistor ladder DACs.
->
-> -config DRM_LVDS_ENCODER
-> -	tristate "Transparent parallel to LVDS encoder support"
-> +config DRM_LVDS_CODEC
-> +	tristate "Transparent LVDS encoders and decoders support"
->  	depends on OF
->  	select DRM_KMS_HELPER
->  	select DRM_PANEL_BRIDGE
->  	help
-> -	  Support for transparent parallel to LVDS encoders that don't require
-> -	  any configuration.
-> +	  Support for transparent LVDS encoders and LVDS decoders that don't
-> +	  require any configuration.
->
->  config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
->  	tristate "MegaChips stdp4028-ge-b850v3-fw and stdp2690-ge-b850v3-fw"
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 4934fcf..8a9178a 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -2,7 +2,7 @@
->  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
-> -obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
-> +obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
->  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
->  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
->  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
-> diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
-> new file mode 100644
-> index 0000000..8a1979c
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/lvds-codec.c
-> @@ -0,0 +1,169 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2016 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> + */
-> +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <drm/drm_bridge.h>
-> +#include <drm/drm_panel.h>
-> +
-> +struct lvds_codec {
-> +	struct drm_bridge bridge;
-> +	struct drm_bridge *panel_bridge;
-> +	struct gpio_desc *powerdown_gpio;
-> +	u32 connector_type;
-> +};
-> +
-> +static int lvds_codec_attach(struct drm_bridge *bridge)
-> +{
-> +	struct lvds_codec *lvds_codec = container_of(bridge,
-> +							 struct lvds_codec,
-> +							 bridge);
-> +
+The dts I provide should work on any bcm2711 (fixed or not) and any future
+kernel, with the downside that we'll perform some unnecessary buffer bounci=
+ng.
 
-Weird indentation. Align to open ( to match the rest of the driver's
-style.
+If we were able to address the whole 32bit address space on some future bcm=
+2711
+we'd be forced to update the dma-ranges in the bootloader based on the SoC
+revision.
 
-> +	return drm_bridge_attach(bridge->encoder, lvds_codec->panel_bridge,
-> +				 bridge);
-> +}
-> +
-> +static void lvds_codec_enable(struct drm_bridge *bridge)
-> +{
-> +	struct lvds_codec *lvds_codec = container_of(bridge,
-> +							 struct lvds_codec,
-> +							 bridge);
-> +
+The driver should work with any sensible dma-range, I even did a test emula=
+ting
+the 4GB inbound memory setup.
 
-Here too
+Regards,
+Nicolas
 
-> +	if (lvds_codec->powerdown_gpio)
-> +		gpiod_set_value_cansleep(lvds_codec->powerdown_gpio, 0);
-> +}
-> +
-> +static void lvds_codec_disable(struct drm_bridge *bridge)
-> +{
-> +	struct lvds_codec *lvds_codec = container_of(bridge,
-> +							 struct lvds_codec,
-> +							 bridge);
-> +
-> +	if (lvds_codec->powerdown_gpio)
-> +		gpiod_set_value_cansleep(lvds_codec->powerdown_gpio, 1);
-> +}
-> +
-> +static struct drm_bridge_funcs funcs = {
-> +	.attach = lvds_codec_attach,
-> +	.enable = lvds_codec_enable,
-> +	.disable = lvds_codec_disable,
-> +};
-> +
-> +static int lvds_codec_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *port;
-> +	struct device_node *endpoint;
-> +	struct device_node *panel_node;
-> +	struct drm_panel *panel;
-> +	struct lvds_codec *lvds_codec;
-> +
-> +	lvds_codec = devm_kzalloc(dev, sizeof(*lvds_codec), GFP_KERNEL);
-> +	if (!lvds_codec)
-> +		return -ENOMEM;
-> +
-> +	lvds_codec->connector_type = (u32)
-> +		of_device_get_match_data(&pdev->dev);
 
-Fits in 1 line
-
-> +	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
-> +							       GPIOD_OUT_HIGH);
-> +	if (IS_ERR(lvds_codec->powerdown_gpio)) {
-> +		int err = PTR_ERR(lvds_codec->powerdown_gpio);
-> +
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(dev, "powerdown GPIO failure: %d\n", err);
-> +		return err;
-
-I know it was there already, but this seems a bit unusual for the
-minimal gain of having a printout in the very unlikely case the
-gpiod_get() operations fails. I would just return PTR_ERR().
-
-> +	}
-> +
-> +	/* Locate the panel DT node. */
-> +	port = of_graph_get_port_by_id(dev->of_node, 1);
-> +	if (!port) {
-> +		dev_dbg(dev, "port 1 not found\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	endpoint = of_get_child_by_name(port, "endpoint");
-> +	of_node_put(port);
-> +	if (!endpoint) {
-> +		dev_dbg(dev, "no endpoint for port 1\n");
-> +		return -ENXIO;
-> +	}
-
-I know it was there already, but this could be simplified with
-of_graph_get_endpoint_by_regs()
-> +
-> +	panel_node = of_graph_get_remote_port_parent(endpoint);
-> +	of_node_put(endpoint);
-> +	if (!panel_node) {
-> +		dev_dbg(dev, "no remote endpoint for port 1\n");
-> +		return -ENXIO;
-> +	}
-
-Or even better, simplify these three with of_graph_get_remote_node()
-
-> +
-> +	panel = of_drm_find_panel(panel_node);
-> +	of_node_put(panel_node);
-> +	if (IS_ERR(panel)) {
-> +		dev_dbg(dev, "panel not found, deferring probe\n");
-> +		return PTR_ERR(panel);
-> +	}
-> +
-> +	lvds_codec->panel_bridge =
-> +		devm_drm_panel_bridge_add_typed(dev, panel,
-> +						lvds_codec->connector_type);
-
-The function documentation reports this as deprecated and suggested to
-use the non-typed version. Do you think it could work for this new
-codec driver ?
-
-> +	if (IS_ERR(lvds_codec->panel_bridge))
-> +		return PTR_ERR(lvds_codec->panel_bridge);
-> +
-> +	/* The panel_bridge bridge is attached to the panel's of_node,
-> +	 * but we need a bridge attached to our of_node for our user
-> +	 * to look up.
-> +	 */
-> +	lvds_codec->bridge.of_node = dev->of_node;
-> +	lvds_codec->bridge.funcs = &funcs;
-> +	drm_bridge_add(&lvds_codec->bridge);
-> +
-> +	platform_set_drvdata(pdev, lvds_codec);
-> +
-> +	return 0;
-> +}
-> +
-> +static int lvds_codec_remove(struct platform_device *pdev)
-> +{
-> +	struct lvds_codec *lvds_codec = platform_get_drvdata(pdev);
-> +
-> +	drm_bridge_remove(&lvds_codec->bridge);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id lvds_codec_match[] = {
-> +	{
-> +		.compatible = "lvds-encoder",
-> +		.data = (void *)DRM_MODE_CONNECTOR_LVDS
-
-In case you for for drm_panel_bridge_add() you could drop the type
-
-> +	},
-> +	{
-> +		.compatible = "thine,thc63lvdm83d",
-> +		.data = (void *)DRM_MODE_CONNECTOR_LVDS,
-> +	},
-> +	{
-> +		.compatible = "lvds-decoder",
-> +		.data = (void *)DRM_MODE_CONNECTOR_Unknown,
-> +	},
-
-Which decoder are you using? This is a generic fallback, but I would
-expect compatible for a real device to appear in DTS.
-
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, lvds_codec_match);
-> +
-> +static struct platform_driver lvds_codec_driver = {
-> +	.probe	= lvds_codec_probe,
-> +	.remove	= lvds_codec_remove,
-> +	.driver		= {
-> +		.name		= "lvds-codec",
-> +		.of_match_table	= lvds_codec_match,
-> +	},
-> +};
-> +module_platform_driver(lvds_codec_driver);
-> +
-> +MODULE_AUTHOR("Laurent Pinchart <laurent.pinchart@ideasonboard.com>");
-> +MODULE_DESCRIPTION("Driver for transparent LVDS encoders and LVDS decoders");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/gpu/drm/bridge/lvds-encoder.c b/drivers/gpu/drm/bridge/lvds-encoder.c
-> deleted file mode 100644
-> index e2132a8..0000000
-> --- a/drivers/gpu/drm/bridge/lvds-encoder.c
-> +++ /dev/null
-> @@ -1,155 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-or-later
-> -/*
-> - * Copyright (C) 2016 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> - */
-> -
-> -#include <linux/gpio/consumer.h>
-> -#include <linux/module.h>
-> -#include <linux/of.h>
-> -#include <linux/of_graph.h>
-> -#include <linux/platform_device.h>
-> -
-> -#include <drm/drm_bridge.h>
-> -#include <drm/drm_panel.h>
-> -
-> -struct lvds_encoder {
-> -	struct drm_bridge bridge;
-> -	struct drm_bridge *panel_bridge;
-> -	struct gpio_desc *powerdown_gpio;
-> -};
-> -
-> -static int lvds_encoder_attach(struct drm_bridge *bridge)
-> -{
-> -	struct lvds_encoder *lvds_encoder = container_of(bridge,
-> -							 struct lvds_encoder,
-> -							 bridge);
-> -
-> -	return drm_bridge_attach(bridge->encoder, lvds_encoder->panel_bridge,
-> -				 bridge);
-> -}
-> -
-> -static void lvds_encoder_enable(struct drm_bridge *bridge)
-> -{
-> -	struct lvds_encoder *lvds_encoder = container_of(bridge,
-> -							 struct lvds_encoder,
-> -							 bridge);
-> -
-> -	if (lvds_encoder->powerdown_gpio)
-> -		gpiod_set_value_cansleep(lvds_encoder->powerdown_gpio, 0);
-> -}
-> -
-> -static void lvds_encoder_disable(struct drm_bridge *bridge)
-> -{
-> -	struct lvds_encoder *lvds_encoder = container_of(bridge,
-> -							 struct lvds_encoder,
-> -							 bridge);
-> -
-> -	if (lvds_encoder->powerdown_gpio)
-> -		gpiod_set_value_cansleep(lvds_encoder->powerdown_gpio, 1);
-> -}
-> -
-> -static struct drm_bridge_funcs funcs = {
-> -	.attach = lvds_encoder_attach,
-> -	.enable = lvds_encoder_enable,
-> -	.disable = lvds_encoder_disable,
-> -};
-> -
-> -static int lvds_encoder_probe(struct platform_device *pdev)
-> -{
-> -	struct device *dev = &pdev->dev;
-> -	struct device_node *port;
-> -	struct device_node *endpoint;
-> -	struct device_node *panel_node;
-> -	struct drm_panel *panel;
-> -	struct lvds_encoder *lvds_encoder;
-> -
-> -	lvds_encoder = devm_kzalloc(dev, sizeof(*lvds_encoder), GFP_KERNEL);
-> -	if (!lvds_encoder)
-> -		return -ENOMEM;
-> -
-> -	lvds_encoder->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
-> -							       GPIOD_OUT_HIGH);
-> -	if (IS_ERR(lvds_encoder->powerdown_gpio)) {
-> -		int err = PTR_ERR(lvds_encoder->powerdown_gpio);
-> -
-> -		if (err != -EPROBE_DEFER)
-> -			dev_err(dev, "powerdown GPIO failure: %d\n", err);
-> -		return err;
-> -	}
-> -
-> -	/* Locate the panel DT node. */
-> -	port = of_graph_get_port_by_id(dev->of_node, 1);
-> -	if (!port) {
-> -		dev_dbg(dev, "port 1 not found\n");
-> -		return -ENXIO;
-> -	}
-> -
-> -	endpoint = of_get_child_by_name(port, "endpoint");
-> -	of_node_put(port);
-> -	if (!endpoint) {
-> -		dev_dbg(dev, "no endpoint for port 1\n");
-> -		return -ENXIO;
-> -	}
-> -
-> -	panel_node = of_graph_get_remote_port_parent(endpoint);
-> -	of_node_put(endpoint);
-> -	if (!panel_node) {
-> -		dev_dbg(dev, "no remote endpoint for port 1\n");
-> -		return -ENXIO;
-> -	}
-> -
-> -	panel = of_drm_find_panel(panel_node);
-> -	of_node_put(panel_node);
-> -	if (IS_ERR(panel)) {
-> -		dev_dbg(dev, "panel not found, deferring probe\n");
-> -		return PTR_ERR(panel);
-> -	}
-> -
-> -	lvds_encoder->panel_bridge =
-> -		devm_drm_panel_bridge_add_typed(dev, panel,
-> -						DRM_MODE_CONNECTOR_LVDS);
-> -	if (IS_ERR(lvds_encoder->panel_bridge))
-> -		return PTR_ERR(lvds_encoder->panel_bridge);
-> -
-> -	/* The panel_bridge bridge is attached to the panel's of_node,
-> -	 * but we need a bridge attached to our of_node for our user
-> -	 * to look up.
-> -	 */
-> -	lvds_encoder->bridge.of_node = dev->of_node;
-> -	lvds_encoder->bridge.funcs = &funcs;
-> -	drm_bridge_add(&lvds_encoder->bridge);
-> -
-> -	platform_set_drvdata(pdev, lvds_encoder);
-> -
-> -	return 0;
-> -}
-> -
-> -static int lvds_encoder_remove(struct platform_device *pdev)
-> -{
-> -	struct lvds_encoder *lvds_encoder = platform_get_drvdata(pdev);
-> -
-> -	drm_bridge_remove(&lvds_encoder->bridge);
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct of_device_id lvds_encoder_match[] = {
-> -	{ .compatible = "lvds-encoder" },
-> -	{ .compatible = "thine,thc63lvdm83d" },
-> -	{},
-> -};
-> -MODULE_DEVICE_TABLE(of, lvds_encoder_match);
-> -
-> -static struct platform_driver lvds_encoder_driver = {
-> -	.probe	= lvds_encoder_probe,
-> -	.remove	= lvds_encoder_remove,
-> -	.driver		= {
-> -		.name		= "lvds-encoder",
-> -		.of_match_table	= lvds_encoder_match,
-> -	},
-> -};
-> -module_platform_driver(lvds_encoder_driver);
-> -
-> -MODULE_AUTHOR("Laurent Pinchart <laurent.pinchart@ideasonboard.com>");
-> -MODULE_DESCRIPTION("Transparent parallel to LVDS encoder");
-> -MODULE_LICENSE("GPL");
-> --
-> 2.7.4
->
-
---2jd77g337ufxysbc
+--=-TlMxNcfADV/A26dcLaFO
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3EYCgACgkQcjQGjxah
-Vjxzhg/7BbE1IZa6VF7Kjxsk7oQ0LxV0jzMTIvG4Lx1In/fwgK5hrZnq4XGH/W4P
-8NOlsphwFZRPjsd/NX4twd2ssocfsmgKnlaDm3dCVW2SA4k2RHHx1B2W7PKzlWxz
-3KXFqlg1Qz8dzJ6tYpvdi8mdQuGnQwl/9PZrjQH+/qJoZ7J7DeJlEWbqnlJTUjTK
-SAxOxOwwsxye88tgclbDVOsAmW7wL56iXK7rFBX6ZgRbZgtbduoJg+qVxLPnJ2JI
-+r3kW9v9DGaQa12zNe7Wdq5jf2HPbxz1vL5ZxpSfVLZeBPAVwiziMS31FqSI9ViS
-ttXe5XO+lI74NIfihrFvE0WlfE1D9ct09wmm2AqyTGTdJ4PTL4pWkdidGXTJukUR
-6uu3n+SEK2ur1EOcOTR4d9lJkDz2hGhwaapS6STw0STTdAPvBEoORAwcZvgoME3o
-tKAbbNg8TLcuVLh1B/PRcHWazCwmLD7UUHeFXODYSlMAu1LWNsQ1jcWJvZyaasvy
-/1akUG2HJxbp1mhRhPmNlgxyTAsKibVjun4RzAwSpKfNuVH39O9e6m0/p50PqSJf
-jclkaBibVvcsrLgkZfccYOHwX7WIgkeDhRS5joRtM6k9uFajOHIXbLeZinxcFTAl
-Iv2jtlJeGDnFDTDy5IUBZ4WI6dKB7wnZHfe7sutbvQQRS0VXPek=
-=RN/1
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3EYUMACgkQlfZmHno8
+x/7I8gf+Krf4eAVjY+gGoFj4B/+Wk2M4/i71Ubp+SIWiZarPgzumoZIAaDv91+YO
+qwHAuQGIEnx8YvltDs3CkbNUJBzwuQAZQ9Ve652E8P/f4+wM+XVegdIWTk3M1G2/
+t2N8OH87E+Ag8pGV9bfAtFi7oyFC3a+HDGLTAN1RezBLzlnn1EhN7fr4xXT7lQA7
+HPmn9BjtUkQaXDMSghNPH9TaEVpEVxeRx9pXrDVaNQGeQN3RtfpznjbQj7GFHnG/
+HYtWFf8ha82VlW+9EoWIXxKx0GQgZq9pehmr3cFgETyxUFf0AQCgVE0yhOXW/f5X
+4xQXvqZLhwYBafJgw6LKn6qwz0vlpw==
+=9wr0
 -----END PGP SIGNATURE-----
 
---2jd77g337ufxysbc--
+--=-TlMxNcfADV/A26dcLaFO--
+
