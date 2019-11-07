@@ -2,129 +2,111 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A166C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4113AC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D05B2178F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1771D218AE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 04:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="qI0AalYc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KeT43MVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733028AbfKGEDA (ORCPT
+        id S1733101AbfKGEYz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:03:00 -0500
-Received: from gateway36.websitewelcome.com ([192.185.198.13]:46957 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727279AbfKGEC5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 23:02:57 -0500
-X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 23:02:57 EST
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id C1F2540D99E4C
-        for <devicetree@vger.kernel.org>; Wed,  6 Nov 2019 20:25:50 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id SYIOiZwlMBnGaSYIOiC08Q; Wed, 06 Nov 2019 21:17:16 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8sv29UR8E5pLNoh42IdLCVMD0V6+Oaujyjo0kbs91yg=; b=qI0AalYcgbXWWtVOpw90rjH8TD
-        0G8wU+FJ58A8UwnSGAQ2AAy4JPjk+lkzyVeHE1zRPoC+k39UJdmDWFobT/B5LQfL+rkpkSzotzxnP
-        ZW/HtA8uyC6YQ7BUtxLx2TBuTh+vah3Rkxfh2mVFAWvTvD9e1iN/AiC61qzRa0nLTd74y3GIqlhIt
-        rY7QOhfPfhvJLomvLYrsK5GLma/9/ucXBOSyf8f8wc3eHKuraPtLg5kbmCYtv9CdJ9qNxCdW5YbO4
-        fk+W/OOq8EvP6f0VXvYoLQa6MhZBBjAvks/5lcQlOVp4fqvKRTraEn5uDStaa+6sNUhpGvKCKaeqP
-        YzRksQQg==;
-Received: from [191.31.194.59] (port=34854 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iSYIN-000Mrk-V1; Thu, 07 Nov 2019 00:17:16 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v6 0/5] power: supply: MAX17040: Add IRQ for low level and alert SOC changes
-Date:   Thu,  7 Nov 2019 00:17:05 -0300
-Message-Id: <20191107031710.5672-1-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191105095905.GA31721@pi3>
-References: <20191105095905.GA31721@pi3>
+        Wed, 6 Nov 2019 23:24:55 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35606 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733038AbfKGEYz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 23:24:55 -0500
+Received: by mail-il1-f193.google.com with SMTP id z12so579923ilp.2
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 20:24:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NkSeoMnuWg5T7g24I3SC9PrtQXIiA61Z2VNxVdt/qfE=;
+        b=KeT43MVjU2B4DpAy2SYkA6NIhlp0NXSIvrPo/xsJrBm01MgR7r5J7gwjL6ER2SKvvu
+         6zZI/iChBctFpUxgVnyp2K9HXsspnceqjcg0uSaOkMkVpQYDzb35q4B4mpiwWuV4v6yj
+         34iZRafJSCVKeLd8feC04XhdnMKrH3chAmGDQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NkSeoMnuWg5T7g24I3SC9PrtQXIiA61Z2VNxVdt/qfE=;
+        b=R5O6ORhijUifZLmi5Fz2HX5TyGqSw8mGCSxu3IHbhj89MbZKKI46K8VKXvaXanH8mw
+         ITTiPUFA0vPhDz0kD9MAepfQkjG7QUtkpqibLHPgjTo3AQUFmeWz+Jf9fQLfcZTG21Zt
+         ylrrVZgKhMojbVO+T5NORDxzYJEOiOilA0bta7CafrLhI9C+h7FV50rONqNDYssvNpmA
+         RIvCayxVM07uM4Xh3ihec7Mgsreg/O9GpDzCDPKV6pfn6EQ6xcJeMhBe6+4nQnZMNmER
+         XZ/hJwrQ8GmNdDh/Mwo7zfrKeLDOjmHttAdzXpyXsjnMRml/6LcauCjaa6ElVy7ES2EX
+         WMqw==
+X-Gm-Message-State: APjAAAUFt7I3KQRSzxv3BmOq22ZMOUmQIxXHL/reFUj+VasUNekjrkDV
+        E4EG+c5z946k/TVgCbBKUyTlWsO/UJI=
+X-Google-Smtp-Source: APXvYqxDmQBDO7hqVZEssxc0vqXEwEoto7MXa3IxsaypY+lfzSxN1FB5X1Dc0ITZlvzbbOXtCnASHw==
+X-Received: by 2002:a92:8dd9:: with SMTP id w86mr1665642ill.93.1573100694560;
+        Wed, 06 Nov 2019 20:24:54 -0800 (PST)
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com. [209.85.166.170])
+        by smtp.gmail.com with ESMTPSA id c83sm77690iof.48.2019.11.06.20.24.53
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 20:24:53 -0800 (PST)
+Received: by mail-il1-f170.google.com with SMTP id z10so556108ilo.8
+        for <devicetree@vger.kernel.org>; Wed, 06 Nov 2019 20:24:53 -0800 (PST)
+X-Received: by 2002:a92:109c:: with SMTP id 28mr1827293ilq.142.1573100692855;
+ Wed, 06 Nov 2019 20:24:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.194.59
-X-Source-L: No
-X-Exim-ID: 1iSYIN-000Mrk-V1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.194.59]:34854
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 17
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org> <1572524473-19344-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1572524473-19344-2-git-send-email-tdas@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 6 Nov 2019 20:24:41 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UjwO25HeVtYvzqEdUxyA4ED18ZxcwEaYVzBGRFTa2FTw@mail.gmail.com>
+Message-ID: <CAD=FV=UjwO25HeVtYvzqEdUxyA4ED18ZxcwEaYVzBGRFTa2FTw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/7] clk: qcom: clk-alpha-pll: Add support for Fabia
+ PLL calibration
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series add IRQ handler for low level SOC alert, define a devicetree
-binding attribute to configure the alert level threshold and check for
-changes in SOC and power supply status for send uevents.
+Hi,
 
-Max17043/17044 have a pin for alert host about low level state of charge and
-this alert can be configured in a threshold from 1% up to 32% of SOC.
+On Thu, Oct 31, 2019 at 5:21 AM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> @@ -1141,15 +1160,11 @@ static int alpha_pll_fabia_set_rate(struct clk_hw *hw, unsigned long rate,
+>                                                 unsigned long prate)
+>  {
+>         struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+> -       u32 val, l, alpha_width = pll_alpha_width(pll);
+> +       u32 l, alpha_width = pll_alpha_width(pll);
+>         u64 a;
+>         unsigned long rrate;
+>         int ret = 0;
+>
+> -       ret = regmap_read(pll->clkr.regmap, PLL_MODE(pll), &val);
+> -       if (ret)
+> -               return ret;
 
-Tested on Toradex Colibri iMX7D, with a SparkFun Lipo Fuel Gauge module
-based on MAXIM MAX17043.
+My compiler happened to notice that with the change to this function:
 
-Thanks Krzysztof for your time reviewing it. Let me know what you think about
-the fixes.
+drivers/clk/qcom/clk-alpha-pll.c:1166:6: error: unused variable 'ret'
+[-Werror,-Wunused-variable]
+        int ret = 0;
 
-Changes since v5:
-(Suggested by Krzysztof Kozlowski)
-- Rearrange code and add max17040_enable_alert_irq on patch 1/5
-- Remove useless dev_info
-
-Changes since v4:
-(Suggested by Krzysztof Kozlowski)
-- Fix code style and alignment issues
-- Keep IRQF_TRIGGER_FALLING | IRQF_ONESHOT instead client->flags
-
-(Suggested by Rob Herring)
-- Add reference to the MFD description
-- Fix the dt-bindings commit description
-
-Matheus Castello (5):
-  power: supply: max17040: Add IRQ handler for low SOC alert
-  dt-bindings: power: supply: Max17040: Add DT bindings for max17040
-    fuel gauge
-  devicetree: mfd: max14577: Add reference to max14040_battery.txt
-    descriptions
-  power: supply: max17040: Config alert SOC low level threshold from FDT
-  power: supply: max17040: Send uevent in SOC and status change
-
- .../devicetree/bindings/mfd/max14577.txt      |   2 +
- .../power/supply/max17040_battery.txt         |  33 ++++
- drivers/power/supply/max17040_battery.c       | 141 +++++++++++++++++-
- 3 files changed, 171 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-
---
-2.24.0.rc2
-
+-Doug
