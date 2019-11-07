@@ -4,80 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E651FC6194
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69324FC6194
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A58206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37909206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573087377;
-	bh=UTVHUVLnw94mErMgc3mb4c/r+hXx2TwuFuhCk/5qd+M=;
+	s=default; t=1573087445;
+	bh=OxsEy+Dfig77EH9KkLTDBIrpEo60kZmcoko9epPNKEQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x7dQd63IwsbmTNGwdL/Yunh2BnVfB3lavElqBM7RwILhwR8geCnigyecU+e1pfmIO
-	 VFeCt5/CbEUKj4tKbAyR2uSakSfjZtB0cA8ol9IH1illKpzdTnwjBGyT6IAr0Ehj8G
-	 +QEelu5y/pyybjz/1iR7TZwdk9W96+CDnlBr8dzo=
+	b=LkBiwVQu1CtxYeg33rVg6th81Hn/qZLOL62cz+KXXXFurMIjlB5o2ii+Ce02UEHuK
+	 y8p24Oer+M2GVxVI/uYO3YGARcU2Wuq1K3nvBa5lrmU3Rs4ESqnAynBfEKCsJuE+p0
+	 47Q8k2+3rJJcUri9TbROx+zrKx0VYEQsGHxE36NU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfKGAm4 (ORCPT
+        id S1727949AbfKGAoE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:42:56 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43215 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGAm4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:42:56 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l20so407036oie.10;
-        Wed, 06 Nov 2019 16:42:55 -0800 (PST)
+        Wed, 6 Nov 2019 19:44:04 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33741 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKGAoE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:44:04 -0500
+Received: by mail-ot1-f67.google.com with SMTP id u13so517742ote.0;
+        Wed, 06 Nov 2019 16:44:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+jCXm676NpywEWdAf4lo3fuBb+Mll4pKKjbBJhrgPA0=;
-        b=O0fVsbI10ZMEGFT/gz6kVs1MuQRh4flrEu7yMDeSQxYMrqRElWNXKk9yCZFu4zT5Hx
-         lwetC639HaAITNiGVOa83aPX3sn9d5f7RW6Oww2Tvfi5ti+frZK3uKb4Mu8IdiAqpknM
-         Q08ZemqrGBLrZmqYOz5Ug3sUmD1UdOv+6Bub628VlzH46vYocxEo07LBo3eGeLHOWbWj
-         LKGaScLUflivO55aZmPl9siBsbAuuRddHz9VkgiW1RSs1AFLrcGq7BOb8Z/c/9qlsEgu
-         GcYBys8CPTc3E4t4UehH08rzAsssBeuCrAKBU63+pztpdqzS7W1lfbpO35mzfjDmFYd1
-         W81Q==
-X-Gm-Message-State: APjAAAUjkjPw7dP4hGqFG84zWA4u2opmInZ/z7ZV11F5dH/yTBsOddTU
-        xq5a0XH1R2+e0ZFBhhdt7g==
-X-Google-Smtp-Source: APXvYqwFd7zCI9Il/rOvDXBEazmenzKa569K1JnbqfmXdXS7AQ3Ly2V2g0lny9aPjxdKR8Suc+ADSw==
-X-Received: by 2002:aca:dd0a:: with SMTP id u10mr787269oig.130.1573087375384;
-        Wed, 06 Nov 2019 16:42:55 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:content-language
+         :user-agent;
+        bh=0Caqne9b0+WL4rLkBbGp1GBAkgiKkmuIY6NX34hcg68=;
+        b=qXDyxn528zdhlTpZaNLtmze7P8oXx/DOo+jajTth4odCB5PRwCmNEqO1ElOfnpxKqc
+         v6MLBD2CWF6n9msC/768CcVVf7sK8P69kRCHe5nEfTb4MgAruGpqV0V8/BvjnqlqpIoh
+         ozE/os+AVu16bny43vpXhOYCV0Gr8WjmpIu2jBFxuXaA/HVgczJ70RpAJwCNy5+qYle4
+         24Ptqp0CdHaOiTvNLvu71VBu1r+gQjjmSYR0tEPFKVzLpAgpu3WDejy0iUowx07f0U6X
+         tKuHYSlPKc4lzMA0Znc3TERJWZBBRYaIug8j0X+1OV7gC1JXvza+CI8G8MgK5fXe9yu+
+         AnQA==
+X-Gm-Message-State: APjAAAVc2CJKJ3AZp0iAIdk7NcljGIbu2Bat4x0BZ5hd+VonRyTfQiS7
+        KGqygckelAzRacl+kZLidg==
+X-Google-Smtp-Source: APXvYqx92yPoPX4sYPoYWxsUDxAEC9WbCWpCzZTCzN77i7Mtz6MGpHeFiBva2FYZd5mcftwDWyN+yA==
+X-Received: by 2002:a9d:6452:: with SMTP id m18mr465800otl.325.1573087443454;
+        Wed, 06 Nov 2019 16:44:03 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g1sm209874otr.5.2019.11.06.16.42.54
+        by smtp.gmail.com with ESMTPSA id m12sm131094oih.46.2019.11.06.16.44.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:42:54 -0800 (PST)
-Date:   Wed, 6 Nov 2019 18:42:54 -0600
+        Wed, 06 Nov 2019 16:44:02 -0800 (PST)
+Date:   Wed, 6 Nov 2019 18:44:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] of: property: Add device link support for iommus,
-  mboxes and io-channels
-Message-ID: <20191107004254.GB11401@bogus>
-References: <20191105065000.50407-1-saravanak@google.com>
- <20191105065000.50407-4-saravanak@google.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH] dt-bindings: mmc: fsl-imx-esdhc: add imx8m compatible
+ string
+Message-ID: <20191107004402.GA13364@bogus>
+References: <1572949321-8193-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105065000.50407-4-saravanak@google.com>
+In-Reply-To: <1572949321-8193-1-git-send-email-peng.fan@nxp.com>
+Content-Language: en-US
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  4 Nov 2019 22:50:00 -0800, Saravana Kannan wrote:
-> Add support for creating device links out of more DT properties.
+On Tue, 5 Nov 2019 10:23:36 +0000, Peng Fan wrote:
 > 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Add imx8mq/m/n compatible string
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  drivers/of/property.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+> 
+> V1:
+>  imx8mq/m/n.dtsi already use this compatible string,
+>  but not listed in binding doc, so add it.
+> 
+>  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
