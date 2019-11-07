@@ -2,211 +2,232 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A699C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9483C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06873218AE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A109D206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:27:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JaRiVyVn"
+	dkim=pass (2048-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="VrcATMyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733142AbfKGJ0K (ORCPT
+        id S1728183AbfKGJ1c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:26:10 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39918 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfKGJ0K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 04:26:10 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v138so1361665oif.6;
-        Thu, 07 Nov 2019 01:26:09 -0800 (PST)
+        Thu, 7 Nov 2019 04:27:32 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45983 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGJ1c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 04:27:32 -0500
+Received: by mail-il1-f195.google.com with SMTP id o18so1151072ils.12
+        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 01:27:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=antmicro.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=svJecAxqhlBawitftrz5LXbFY8d5ATbDsx3obREbmBk=;
-        b=JaRiVyVnWoErWMwSLJsT3edCIFkLrM3bw9K+3t2YOtpGSIe5jPWeSfJJ3zV3UcGXyj
-         wwR2NS63eTI2jFJYHyvrY1LIrbvvYORCOjhiH8sOou1LG6PPH6s0hxYi668s+Ia/fGNp
-         mD+dKjP+i/vpXdma4xZtepheZ7yutdc9rzN+mceieTuhWlkhAMrPEFb/Jt3ett6SzSg9
-         ELmfrBZVVLKH9oU9mvJlKOogzz4Xf2ygwEAneNX6k9Q9/CL4uLnu6olfZ/Y8MyINIPDf
-         l05fDkGxYqctkz/xtGJFKge5gK+fg8G8ZLe5jNs9w3+fRrpZp6HQVuJW4G6WswW642hk
-         BRQw==
+         :cc:content-transfer-encoding;
+        bh=zxL2pu+aN0ZYRh9GalkED+BEbSMbqeXyiC5lDAJbwEg=;
+        b=VrcATMyUB9gM2h1qTNrx6x5YrZ3FNEr1qyLafDIYgxlmwfFjsqta2N4xNBRvzebR+4
+         BZ3b3ah/Aw87W/t81zuVu4SsbGYEc6gc/g3/b3VjTmzUOqhQFl7D+E5qWKRTrPltUdRM
+         c22lL2pQqtbbN65Pi32E5QEG0JL5LgZ8ontZIBqmZWmVIKDPQ3L0XTyw7OsSWCPxdwHH
+         UPNBZscOeDxelrb8gBYlPKFsz9v6R+VMitxFN4+NwB+Y4Ov2NigkJLa5vffsWwXNqK9b
+         98zr3ITZjSGkhmeaQznpVGjKnMOZCIGDEnzsK4cCvLGgaud2Du0pSch5zggw9hrntqT5
+         a+nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=svJecAxqhlBawitftrz5LXbFY8d5ATbDsx3obREbmBk=;
-        b=eWvCLpGlJ2B931V8o+ejF2ZRR2cbg1lISYEndpgZJ2HzTVpWuQbR8IeuDWUjFtDd+o
-         6fucU+L5TPQzoHalkxOKuWrHUWq3DW3hvU4RadKH45FcP6X1JusIKHClZVKqU3ytBsP7
-         Lf6oV+qc0CifUt1nbzAW1A6tJmc2+I6eqF9MO+1Dp82LcUumI0GhMXsHe0O8GATUBj/G
-         Sg76/eVBJvXJmdY6Ppd2S5uLd7NDVwdObjzqta5rMcIk4MB5vGoJQcKb+qrp1EMEz2AW
-         yHTQ52Po1a2DkT+hmHGuEgmNOhSxlfBYg//Lqxzr1pDWPKt7yG02osWQXo18lVm31Zie
-         Xqrw==
-X-Gm-Message-State: APjAAAVOi6G9kEFp7kl8s1QvE3I/qjfTyaL3ll1VKlwF/a3T8sKOj8E9
-        h25vMlN+mS/0reJgR4/SybIHS630Vv3sR252mBoSP8QtILzD0w==
-X-Google-Smtp-Source: APXvYqzl/mjJb58YCZv+1rPoz9YmBODStqICfxXp/t7vlm94pbfdzMz/foObeQbkPEnjt5Qa5497EWxx2Gk87u9uMzM=
-X-Received: by 2002:aca:5cc6:: with SMTP id q189mr2405318oib.101.1573118768684;
- Thu, 07 Nov 2019 01:26:08 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zxL2pu+aN0ZYRh9GalkED+BEbSMbqeXyiC5lDAJbwEg=;
+        b=ih5MlZYUOyXWw6jCLZh7w1Pzk/URcKuCMbEt8Ik5C2yDfArnHhOdls0N2EEa0IaTbJ
+         oZCvJBaq0TAin3TThxj8rriqP0nCmTxCmGdwnge/syiih+EESWvgm2FJ5hFog0CRzziv
+         kc4jerRELahmsBtbTSxY5qqaQGBnsNG3YYY9CRTvHNq/8tVtYJtH6hvYVmWz3Lzdps6X
+         qA3o4+8RWhz0bD9qN9Fa4gIDbOBwAp/wEx/oWUY/GfdI4sTTFWZoWWOaHGa9ykXmT8h+
+         GBt3bhlH4pnXg70XTwXFQlyutlIqLAoTuzBOuON2RDoGX4FoK8boiDxR5i6ZIs37CvdI
+         k07A==
+X-Gm-Message-State: APjAAAVUlznycr9q86ULTcP1j9Bey7iRuYg+qNyrBUbPKxHE07LaWh3j
+        bLgoBf/k4YIE/i3NnDRwfNGw8fbqBEDKpFSO986rbQ==
+X-Google-Smtp-Source: APXvYqw38hKm1x6/4pq2KfbrFU38zObiPQFdN2X04OcPIWVYeNi+hQaHBgFuDV5xYYxDsyS/D8qOOmpSMltMCoGQW4A=
+X-Received: by 2002:a92:3b9a:: with SMTP id n26mr3239330ilh.82.1573118850734;
+ Thu, 07 Nov 2019 01:27:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 Nov 2019 09:25:42 +0000
-Message-ID: <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
-Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+References: <20191023114634.13657-0-mholenko@antmicro.com> <20191023114634.13657-2-mholenko@antmicro.com>
+ <20191026000345.GA10810@bogus>
+In-Reply-To: <20191026000345.GA10810@bogus>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Thu, 7 Nov 2019 10:27:19 +0100
+Message-ID: <CAPk366Qo916k_UggtMog875J98s5PkagiReJbO8s7eNpGZrr=g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thank you for the review.
-
-On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+sob., 26 pa=C5=BA 2019 o 02:03 Rob Herring <robh@kernel.org> napisa=C5=82(a=
+):
 >
-> Hi Prabhakar,
->
-> On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
+> > It provides helper CSR access functions used by all
+> > LiteX drivers.
 > >
-> > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> > ---
+> > This commit has been introduced in v2 of the patchset.
 > >
-> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
+> >  MAINTAINERS           |  6 +++++
+> >  include/linux/litex.h | 59 +++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 65 insertions(+)
+> >  create mode 100644 include/linux/litex.h
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 296de2b51c83..eaa51209bfb2 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9493,6 +9493,12 @@ F:     Documentation/misc-devices/lis3lv02d.rst
+> >  F:   drivers/misc/lis3lv02d/
+> >  F:   drivers/platform/x86/hp_accel.c
+> >
+> > +LITEX PLATFORM
+> > +M:   Karol Gugala <kgugala@antmicro.com>
+> > +M:   Mateusz Holenko <mholenko@antmicro.com>
+> > +S:   Maintained
+> > +F:   include/linux/litex.h
+> > +
+> >  LIVE PATCHING
+> >  M:   Josh Poimboeuf <jpoimboe@redhat.com>
+> >  M:   Jiri Kosina <jikos@kernel.org>
+> > diff --git a/include/linux/litex.h b/include/linux/litex.h
+> > new file mode 100644
+> > index 000000000000..e793d2d7c881
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > @@ -0,0 +1,43 @@
-> > +* Renesas R-Car PCIe Endpoint Controller DT description
+> > +++ b/include/linux/litex.h
+> > @@ -0,0 +1,59 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Common LiteX header providing
+> > + * helper functions for accessing CSRs.
+> > + *
+> > + * Copyright (C) 2019 Antmicro <www.antmicro.com>
+> > + */
 > > +
-> > +Required properties:
-> > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
-> > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > +                                    RZ/G2 compatible device.
->
-> Unless I'm missing something, this is for the exact same hardware block as
-> Documentation/devicetree/bindings/pci/rcar-pci.txt?
-> So shouldn't you amend those bindings, instead of adding new compatible
-> values?
-> Please remember that DT describes hardware, not software policy.
-> So IMHO choosing between host and endpoint is purely a configuration
-> issue, and could be indicated by the presence or lack of some DT properties.
-> E.g. host mode requires both "bus-range" and "device_type" properties,
-> so their absence could indicate endpoint mode.
->
-yes its the same hardware block as described in the rcar-pci.txt, I
-did think about amending it
-but  it might turn out to be bit messy,
-
-required properties host ======required properties Endpoint
-====================||==================
-1: reg                                || reg
-2:bus-range                      || reg names
-3: device_type                  || resets
-4: ranges                          || clocks
-5: dma-ranges                  || clock-names
-6: interrupts                      ||
-7: interrupt-cells               ||
-8: interrupt-map-mask     ||
-9: clocks                          ||
-10: clock-names             ||
-
-and if I go ahead with the same compatible string that would mean to
-add support for endpoint
-mode in the host driver itself. I did follow the examples of
-rockchip/cadence/designware where
-its the same hardware block but has two different binding files one
-for host mode and other for
-endpoint mode.
-
-> > +- reg: Five register ranges as listed in the reg-names property
-> > +- reg-names: Must include the following names
-> > +       - "apb-base"
-> > +       - "memory0"
-> > +       - "memory1"
-> > +       - "memory2"
-> > +       - "memory3"
->
-> What is the purpose of the last 4 regions?
-> Can they be chosen by the driver, at runtime?
->
-no the driver cannot choose them at runtime, as these are the only
-PCIE memory(0/1/2/3) ranges
-in the AXI address space where host memory can be mapped.
-
-> > +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
-> > +- clocks: from common clock binding: clock specifiers for the PCIe controller
-> > +        clock.
-> > +- clock-names: from common clock binding: should be "pcie".
+> > +#ifndef _LINUX_LITEX_H
+> > +#define _LINUX_LITEX_H
 > > +
-> > +Optional Property:
-> > +- max-functions: Maximum number of functions that can be configured (default 1).
+> > +#include <linux/io.h>
+> > +#include <linux/types.h>
+> > +#include <linux/compiler_types.h>
 > > +
-> > +Example:
+> > +#define LITEX_REG_SIZE             0x4
+> > +#define LITEX_SUBREG_SIZE          0x1
+> > +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
 > > +
-> > +SoC-specific DT Entry:
-> > +
-> > +       pcie_ep: pcie_ep@fe000000 {
-> > +               compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-gen2";
+> > +#ifdef __LITTLE_ENDIAN
+> > +# define LITEX_READ_REG(addr)                  ioread32(addr)
+> > +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
+> > +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
+> > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + o=
+ff)
+> > +#else
+> > +# define LITEX_READ_REG(addr)                  ioread32be(addr)
+> > +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
+> > +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
+> > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr +=
+ off)
 >
-> These compatible values do not match with the ones above
-> (but they match with what I'd like to see ;-)
->
-my bad I'll update them to reflect the above.
+> Defining custom accessors makes it harder for others to understand
+> the code. The __raw_readl/writel accessors are native endian, so use
+> those. One difference though is they don't have a memory barrier, but
+> based on the below functions, you may want to do your own barrier
+> anyways. And if DMA is not involved you don't need the barriers either.
 
-Cheers,
---Prabhakar
+LiteX CSRs are always little endian (even when combined with a big endian C=
+PU),
+so using just __raw_readl/writel won't work in all cases. This is the reaso=
+n why
+we proposed a custom accessors defined based on host CPU endianness.
+Would adding a comment explaining this be enough or do you have other ideas=
+?
 
-> > +               reg = <0 0xfe000000 0 0x80000>,
-> > +                       <0x0 0xfe100000 0 0x100000>,
-> > +                       <0x0 0xfe200000 0 0x200000>,
-> > +                       <0x0 0x30000000 0 0x8000000>,
-> > +                       <0x0 0x38000000 0 0x8000000>;
-> > +               reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-> > +               clocks = <&cpg CPG_MOD 319>;
-> > +               clock-names = "pcie";
-> > +               power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> > +               resets = <&cpg 319>;
-> > +       };
+> The _OFF variants don't add anything. LITEX_READ_REG(addr + off) is just
+> as easy to read if not easier than LITEX_READ_REG_OFF(addr, off).
+
+I agree, LITEX_READ_REG/LITEX_WRITE_REG is enough.
+
+> > +#endif
+> > +
+> > +/* Helper functions for manipulating LiteX registers */
+> > +
+> > +static inline void litex_set_reg(void __iomem *reg, u32 reg_size, u32 =
+val)
+> > +{
+> > +     u32 shifted_data, shift, i;
+> > +
+> > +     for (i =3D 0; i < reg_size; ++i) {
+> > +             shift =3D ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> > +             shifted_data =3D val >> shift;
+> > +             LITEX_WRITE_REG(shifted_data, reg + (LITEX_REG_SIZE * i))=
+;
+> > +     }
+> > +}
 >
-> Gr{oetje,eeting}s,
+> The problem with this is it hides whether you need to do any locking.
+> Normally, you would assume a register access is atomic when it's not
+> here. You could add locking in this function, but then you're doing
+> locking even when not needed.
 >
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> It doesn't look like you actually use this in your series, so maybe
+> remove until you do.
+
+That's right. I added those functions in advance, having in mind
+further drivers,
+but maybe it will be better to drop them for now and re-introduce later.
+
+> > +
+> > +static inline u32 litex_get_reg(void __iomem *reg, u32 reg_size)
+> > +{
+> > +     u32 shifted_data, shift, i;
+> > +     u32 result =3D 0;
+> > +
+> > +     for (i =3D 0; i < reg_size; ++i) {
+> > +             shifted_data =3D LITEX_READ_REG(reg + (LITEX_REG_SIZE * i=
+));
+> > +             shift =3D ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> > +             result |=3D (shifted_data << shift);
+> > +     }
+> > +
+> > +     return result;
+> > +}
+> > +
+> > +#endif /* _LINUX_LITEX_H */
+> > --
+> > 2.23.0
+
+
+
+--
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
