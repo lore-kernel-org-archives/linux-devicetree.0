@@ -2,74 +2,109 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAE2C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23157C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3832087E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D41E2087E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="rFKGuEvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfKGLA5 (ORCPT
+        id S2388093AbfKGLGV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:00:57 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55293 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388133AbfKGLA4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 06:00:56 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1iSfX1-0004bX-2C; Thu, 07 Nov 2019 12:00:51 +0100
-Received: from mgr by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1iSfX0-0003fe-6L; Thu, 07 Nov 2019 12:00:50 +0100
-From:   Michael Grzeschik <m.grzeschik@pengutronix.de>
-To:     netdev@vger.kernel.org
-Cc:     Tristram.Ha@microchip.com, UNGLinuxDriver@microchip.com,
-        kernel@pengutronix.de, devicetree@vger.kernel.org
-Subject: [PATCH v1 4/4] dt-bindings: net: dsa: document additional Microchip KSZ8863/8873 switch
-Date:   Thu,  7 Nov 2019 12:00:30 +0100
-Message-Id: <20191107110030.25199-5-m.grzeschik@pengutronix.de>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191107110030.25199-1-m.grzeschik@pengutronix.de>
-References: <20191107110030.25199-1-m.grzeschik@pengutronix.de>
+        Thu, 7 Nov 2019 06:06:21 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:30961 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388022AbfKGLGV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 06:06:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573124779;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=NjEWunQz10C58eQ0gQdyDLr+7iljKIOVsgB4xAjyIIk=;
+        b=rFKGuEviAle7jCPFCN64E0GL7Unk7HBwCHJd6qC0e4KSmoVxC1XQDCOT9PoPWqHGiu
+        Qt/JyCu8piuBfKY95H/aum5LKYaba3PuCvESmNGzdHaM65sEhx8BmkuHovhU9ywMPxUO
+        13++Stu5ccmp3yho++r02KlMCWeLDvBfsD/A3zNk86y2jyVFS3DD7jCI60MfVRVMQlpu
+        x9Sd9LVWTwx333GCjumEvW2Dzr2phCrQQZQq7wdTPKfX9SYz5a1mXUhXARlkVrhm6zuk
+        IFR1Ppvp1GNHfkL7PglyP9Df1HslhS+/ZV2lUgd9MMBGbV6BulNVanBntyY0ijHELhWK
+        IWIA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7PR5/L9P0"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id L09db3vA7B6Edgw
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 7 Nov 2019 12:06:14 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2 3/8] ARM: DTS: am3517: add sgx gpu child node
+Date:   Thu,  7 Nov 2019 12:06:06 +0100
+Message-Id: <68d38ec5a6e9bcfcc398994acdbe86e3e80865b3.1573124770.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1573124770.git.hns@goldelico.com>
+References: <cover.1573124770.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: mgr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It is a 3-Port 10/100 Ethernet Switch. One CPU-Port and two
-Switch-Ports.
+and add interrupt.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- Documentation/devicetree/bindings/net/dsa/ksz.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/am3517.dtsi | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-index 95e91e84151c3..a5d71862f53cb 100644
---- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-@@ -8,6 +8,8 @@ Required properties:
-   - "microchip,ksz8765"
-   - "microchip,ksz8794"
-   - "microchip,ksz8795"
-+  - "microchip,ksz8863"
-+  - "microchip,ksz8873"
-   - "microchip,ksz9477"
-   - "microchip,ksz9897"
-   - "microchip,ksz9896"
+diff --git a/arch/arm/boot/dts/am3517.dtsi b/arch/arm/boot/dts/am3517.dtsi
+index bf3002009b00..48d5a250fd40 100644
+--- a/arch/arm/boot/dts/am3517.dtsi
++++ b/arch/arm/boot/dts/am3517.dtsi
+@@ -97,7 +97,7 @@
+ 		 * revision register instead of the unreadable OCP revision
+ 		 * register.
+ 		 */
+-		sgx_module: target-module@50000000 {
++		target-module@50000000 {
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			reg = <0x50000014 0x4>;
+ 			reg-names = "rev";
+@@ -107,10 +107,11 @@
+ 			#size-cells = <1>;
+ 			ranges = <0 0x50000000 0x4000>;
+ 
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
++			sgx: gpu@0 {
++				compatible = "ti,am3517-sgx530-125", "img,sgx530-125", "img,sgx530";
++				reg = <0x0 0x4000>;
++				interrupts = <21>;
++			};
+ 		};
+ 	};
+ };
 -- 
-2.24.0.rc1
+2.23.0
 
