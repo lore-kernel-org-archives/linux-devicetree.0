@@ -2,88 +2,103 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD25C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5633C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 19:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F52218AE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 18:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2CA2084D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 19:10:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RDPZUhW2"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gThPoZTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725851AbfKGSwy (ORCPT
+        id S1726843AbfKGTKE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:52:54 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37154 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfKGSwy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 13:52:54 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z24so2601451pgu.4
-        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 10:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:to:cc:user-agent:date;
-        bh=C1Udvg9FMxOUFKtX1EFlPrYF5BAQ0Gfet99gcsH4OkQ=;
-        b=RDPZUhW2GMjZQNBzTRog95xYEqHC62R7wRvDFPcNSjTizh86M+UZMspV5nR41HzlAd
-         223mequfRm19yKEKUWwXh6h57DPhTChHueGRlIKa0HqVRf7jWS+M1s3ER2zzuf3FRZdX
-         5H7SMfWCVsqRSRbgZAnAwW2fgNSCcOrlkOE0s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
-         :user-agent:date;
-        bh=C1Udvg9FMxOUFKtX1EFlPrYF5BAQ0Gfet99gcsH4OkQ=;
-        b=uoVvRQvIYSfw0mkmvjTDrnUoSBjQSkz2TB5coQifsPGEfTJr0lW7bLx/Y3RWO0M4PE
-         tRmsTXQfZFF9SNbnB6Wrq6rCF6ynmWMMtz/Naj2r1LPIVXKHzVGec9JmxZY1j8mqNL9m
-         X3r3eoNkIWKXZ8M7CeWgUpZjtcZnPkDlMN9J51+4Jek/Ozo6nlVPSyWuQ3BXIBFpcFxI
-         yJfP9QaSczhm3dY5UxpsJaWEx8uJw9AZrsCcuIE/TcOheGzZFYfY2wy+49Bm3yQwdIV8
-         BWzH4vtzSgLX0qKudXAbKPKgFOoGAGkTC7/VMaxP1qmy3GwD+uMIgrqQXoa7hcFT/yx9
-         aaew==
-X-Gm-Message-State: APjAAAV8YxgnQq/DvnIiFyPlzgCduCohvYgXTtfdGqhVaS1C2iHZVcKt
-        85LOIczLM3akhPfHlAJeMeil+w==
-X-Google-Smtp-Source: APXvYqyB1ZNXurx6OgmgxRyU2jt7yTNA6aM9Et3IiaHkfKyaOSY9/xmUAbjYahGijJqorxavaS49yQ==
-X-Received: by 2002:a62:1ad6:: with SMTP id a205mr5975230pfa.64.1573152773805;
-        Thu, 07 Nov 2019 10:52:53 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r15sm692550pfh.81.2019.11.07.10.52.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 10:52:53 -0800 (PST)
-Message-ID: <5dc46805.1c69fb81.7b5fa.1eea@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 7 Nov 2019 14:10:04 -0500
+Received: from mout.gmx.net ([212.227.15.15]:38345 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbfKGTKD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:10:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1573153788;
+        bh=+jCINLffjUOyT+IY08Y5zx4Vxskk9OJZTse82HsxTz4=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=gThPoZTR1eidwzNRwz/Rpz8F9GxRZbr8OjLint+Fa57V8TMbCKrq3pr5YwOSBFmIB
+         u4pqHGnosQL6RsGqMG2MM9FRiYx7qmMMECkcnuseUPXPHgvpdANoOHqHZcAuZE2PYk
+         con9IEykthBhd6QArNo0lkZaKfFxtOJCVOZH3daI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.167] ([37.4.249.112]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1fn0-1hn1Ge0GNM-011zQB; Thu, 07
+ Nov 2019 20:09:48 +0100
+Subject: Re: [PATCH v3 1/2] ARM: dts: bcm2711: force CMA into first GB of
+ memory
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191107095611.18429-1-nsaenzjulienne@suse.de>
+ <20191107095611.18429-2-nsaenzjulienne@suse.de>
+ <20191107112020.GA16965@arrakis.emea.arm.com>
+ <4f82d3b5-fe5e-03a5-220e-f1431cb3a50c@gmail.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <8c84654e-f91e-7865-0cf7-99b30820b7d0@gmx.net>
+Date:   Thu, 7 Nov 2019 20:09:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191106065017.22144-15-rnayak@codeaurora.org>
-References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-15-rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 14/14] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 10:52:52 -0800
+In-Reply-To: <4f82d3b5-fe5e-03a5-220e-f1431cb3a50c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:ds3wIfCrqN8mXv4xV2yOkIAZhuvU/WXha9+QIZbz4jW5afq1ugo
+ nxjvgEy4zXDiM3p6JevaZKdzdE1nVBUQS5rVNVX7LWE3+B06qt0Zdoi9xkuuhXBb+9hTNDK
+ qIM8qmvGI0T3IGX9yQlLDgzn2yIGy1ft1bPIHFQ7zXqXayblhOKRNUs6yC+9sbQHFggoFyH
+ EfjC1oBZCE8lPFuiBoHuQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fnoUzY9B470=:Ck+piXC91e3UO6kAhBaICU
+ 7ygijkBy5cG7QMTWiwVxlGSUIZ41eFePjzKTNBmlqFU6iyAYaxLvn5Yq9Z0oPwmQAzwRw47zX
+ 3oU3JDLceXv21bdCiFtvGtLi4/aC+gzHPr/wfv3SSZCJdprq4ncTsuZaa3SPabyiO7z6ZSMhW
+ FocRvE3+PuegJUKVimw3Lo4Y9U64vBcy6Q/gINOyZG2lNL+TJZ51VabJsNO6R1HRqbQr8PCJL
+ RnJnLnZIaB61JxLTqx/DWAJacDV1NW6WGDmkYwC8O9wCYOY568oQLIntI2MI/rIPfmBBdQRps
+ DZjO2AEd1Apd8MCL6NjxWyY1iAm3q/NsvdpCHEstg3fBtY0VwxWEnwRLM4fMOjYlKXBr1L00r
+ 5IwCLZWa/VWV828GOSqIotecrZmZm6OOSjG3u0UHzPqKLdUz0OKFcm8725FoSTazqAeMDDwbU
+ JTyyM/jB8vrTs5P07tkfHHVD3Z2GUJOwbqKGT7UCO/a96djW9iPasBBi1OzjN4t3BxLroMlh0
+ OYr8baQYeLQdSH7wWqZjMzM1tKewa5yV2WKUY2O1MNDimmseaO+Gw335DZg5RmnRKrtlvEb8K
+ uEjaI+iJCGK6OnX5Qb+Khm5dTHlGVNx1yRJ+08zlG29IEq+EqGsfhs7+wiksGu2qjusvALi7I
+ 8NaaLrjRoa7ATT16j2xuNbLpgjIp3lcKhzqsw+vIHZsPx91oVeNWuEAZCPnlZWihvtPkbQUor
+ 2u4pD7FlpOxAHOGMXRcpQoYhTlF7MPowy1cfUsBEvXBy9C83rvggrj2A2XqSvjkXLKoBM40eT
+ YIUG7RqiS/+2zS4bInx5b1OFicvrzYdemOuPoc/6p5g+WktzQZhZ+Wc9vzkbS038L46VopI+q
+ 0Fx3I91zjQ0gtnUytX8TKy7evYlxjAp13OTH11SIGXl7x0JFcWL5kOPrkiLlZ+s2qk+RL0V5m
+ qTDhxhgLQLjnjogcyW+G0gn9S82KIr1Oy8xa8dtVYrQw+3qsET16ky4cpsisAuxB4hixxVcxl
+ RI7BzRBqC2H7hwssXmBYs9yD9OGhXD/+CBeViiV4ORu4TsEfL+rzM+BIPyvbf5GDBPs+nxyUJ
+ Sf+RjIOfVKNH76+Xzd+Ctk1bfcxpzSF5DKWoPacS+u7CtKiO56DwwgdiE3w/icuO7fyKziVAM
+ Se46vmhmq61yCYmrTKjr7LxZZSk2XgxMDu+HlEiVa3oFJ9N+83ZcqKhHxrM9ZCPm+9g4rn0lV
+ 54Nf6g/sANuMDnSQ1LOmHGrG0UcVkaVaUbRdHbdrlGXj6xa4OIQGmuoxgCLk=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-11-05 22:50:17)
-> From: Roja Rani Yarubandi <rojay@codeaurora.org>
->=20
-> Add QUP SE instances configuration for sc7180.
->=20
-> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Am 07.11.19 um 18:59 schrieb Florian Fainelli:
+> On 11/7/19 3:20 AM, Catalin Marinas wrote:
+>> Hi Nicolas,
+...
+>> Sorry, I just realised I can't merge this as it depends on a patch
+>> that's only in -next: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi
+>> 4 support").
+>>
+>> I'll queue the second patch in the series to fix the regression
+>> introduces by the ZONE_DMA patches and, AFAICT, the dts update can be
+>> queued independently.
+> I will take it directly, unless you have more stuff coming Stefan?
+Please take. Thanks
 
-It has the weird qup numbering too, but I guess it's correct somehow.
-
+Stefan
