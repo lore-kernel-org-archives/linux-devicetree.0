@@ -2,74 +2,86 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C2AC5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 12:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FCAFC6195
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 12:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8312084D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 12:55:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="i7quXKN4"
+	by mail.kernel.org (Postfix) with ESMTP id 7F9262178F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 12:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388378AbfKGMzv (ORCPT
+        id S1733250AbfKGM7o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:55:51 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:54116 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388369AbfKGMzv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:55:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=6crDeBV71tB57uG0XSgtv/iBquw2Z6TwVlRm1/HaHSY=; b=i7quXKN40BxHA/oeJKUeiIKost
-        pMt1n+9n1KV6VJri4A6Xw4jo4oKf4IM0gRKDzQgfLNnkkGZVdO90GSPC5GILLzjf46SoiwABy1MYV
-        1syUbYuMVkpqClQ+xm/6bprK9vvy3fPMUlTtcJO0OkD5epuIsgqkrPK5UcW6t9TPSEF8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iShKF-00063A-4s; Thu, 07 Nov 2019 13:55:47 +0100
-Date:   Thu, 7 Nov 2019 13:55:47 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v2 4/6] net: phy: at803x: mention AR8033 as same as AR8031
-Message-ID: <20191107125547.GB22978@lunn.ch>
-References: <20191106223617.1655-1-michael@walle.cc>
- <20191106223617.1655-5-michael@walle.cc>
- <20191107020436.GD8978@lunn.ch>
- <1DE4295A-1D25-4FAD-8DAB-45BD97E511C9@walle.cc>
+        Thu, 7 Nov 2019 07:59:44 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37699 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfKGM7o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 07:59:44 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iShNt-0008Ok-BL; Thu, 07 Nov 2019 13:59:33 +0100
+Message-ID: <1bacac547977493e50bb1fadfaf4b9ad5b4fdf0c.camel@pengutronix.de>
+Subject: Re: [PATCH v5 0/3] reset: npcm: add NPCM reset driver support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Tomer Maimon <tmaimon77@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, yuenn@google.com, venture@google.com,
+        benjaminfair@google.com, avifishman70@gmail.com, joel@jms.id.au
+Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Date:   Thu, 07 Nov 2019 13:59:32 +0100
+In-Reply-To: <20191106145331.25740-1-tmaimon77@gmail.com>
+References: <20191106145331.25740-1-tmaimon77@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1DE4295A-1D25-4FAD-8DAB-45BD97E511C9@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Michael
+Hi Tomer,
 
-> I tried that actually.. There is a PTP enable bit. It's default is 1
-> (according to the AR8031 datasheet). Now guess what it's value is on
-> the AR8033.. its also 1. Not enough.. I also tried to enable the
-> realtime counter. well that worked too.
+On Wed, 2019-11-06 at 16:53 +0200, Tomer Maimon wrote:
+> This patch set adds reset controller support 
+> for the Nuvoton NPCM Baseboard Management Controller (BMC).
+> 
+> Apart of controlling all NPCM BMC reset module lines the NPCM reset driver
+> support NPCM BMC software reset to restarting the NPCM BMC.
+> 
+> Supporting NPCM USB-PHY reset as follow:
+> 
+> NPCM BMC USB-PHY connected to two modules USB device (UDC) and USB host.
+> 
+> If we will restart the USB-PHY at the UDC probe and later the 
+> USB host probe will restart USB-PHY again it will disable the UDC
+> and vice versa.
+> 
+> The solution is to reset the USB-PHY at the reset probe stage before 
+> the UDC and the USB host are initializing.
+> 
+> NPCM reset driver tested on NPCM750 evaluation board.
+> 
+> Addressed comments from:.
+>  - Philipp Zabel
+> 
+> Changes since version 4:
+>  - Check for stored GCR string in the of_device_id->data to gain
+>    GCR regmap access. 
+>  - Adding check if the user used undefined reset pins
+>    in the of_xlate function.
+>  - Remove nr_resets initialization since it of_xlate replaced 
+>    with the custom version.
 
-> And yes. I've double checked the package marking. It definitely was
-> an AR8033. So either I was just lucky, or maybe.. the AR8033 is just
-> a relabled AR8031 ;)
+Thanks, all three applied to reset/next with Rob's R-b.
 
-O.K, thanks for trying. We really only need to solve this mystery if
-anybody actually tries to make use of PTP.
+regards
+Philipp
 
-	Andrew
