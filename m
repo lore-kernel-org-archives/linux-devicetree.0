@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248EEFA372C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2617AC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D70214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00A6218AE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDfTEj1b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcXolU53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387870AbfKGJmp (ORCPT
+        id S2387925AbfKGJmy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:42:45 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45082 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387839AbfKGJmo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 04:42:44 -0500
-Received: by mail-pf1-f195.google.com with SMTP id z4so2219828pfn.12;
-        Thu, 07 Nov 2019 01:42:43 -0800 (PST)
+        Thu, 7 Nov 2019 04:42:54 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35124 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387839AbfKGJmx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 04:42:53 -0500
+Received: by mail-pl1-f194.google.com with SMTP id s10so1043167plp.2;
+        Thu, 07 Nov 2019 01:42:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5g0wg9nG73biBQBhbBMB+jIqV4+wI2At3m6HY4ADTtU=;
-        b=mDfTEj1bVZMTvTNRCsj15Nj061n/I8mVyj2v0DFN41iSeu9V2BH7F2TbURf46Fxl1t
-         +oD9cUmO/i5S+JpQAYlKhZtzzjA7geIp0jHI+lh79PQELBFCd7SesevLh/83K/PGpASI
-         8ffWhFcrM6F97uO44Z3ZWw5YogNoWbMBWD8Uq6HFtFWsCkhf3m05OTw7BqCvrLH8i6L8
-         qUg9d2v/DgdTxDhjm7RHKWoWXRSQ72X/ZL5P99jtI4QtLhRSMFJ7Z2RSiEAJA2UkwhAn
-         QWdNZ+E2Ourh0pmuIY7R80NqGMiB67yYAaOyMOLAA+ES51L16mJEETSyp1VZLF+ukKYr
-         vVYQ==
+        bh=l6fQtcELJmj8Ufi/6HsaS+YZlcVXTo33kel1eq2jWiM=;
+        b=FcXolU53yZMd7MxontPqybCpuQCOcNID8VJPWI8Ojv1IU1HtTdnaEs+LSzmCD0XPBv
+         PykuyNth+2KkAiFplj2GuansWh5sG3fAwVB+/3ewwP7gkfU/GnhxQWMl95sPhb+hEmem
+         jqDwUP+9SJlS8hkA0ZqSBoHXgduPrXGEkp12XOYHCLJlimcedaJQu7T6/yzfwRgfefrH
+         RGvqrGbfSM1HM1iGOrgd4adSjUW6o9/YGkiZid+TqlY/myY9RcGdQ6jdgavMPVaAi9m5
+         wvMTOFNq8cAQe2S9uqj4I7RwOyULG3bUhhHVN6TV3xny6rvMZ0ZoTJtZhp18GDNIkkz/
+         1q5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=5g0wg9nG73biBQBhbBMB+jIqV4+wI2At3m6HY4ADTtU=;
-        b=Abkle/povhO7KygiAUFuVqfv79tQ6BiL8ykOdKdmjF290l1LfdzT3nViqUpt1EzZMA
-         WClfcKiib7PoZPuUsX/RQVA3xFJHwRJOU6bA7yH8aNePowgX1tT1rhOOx7pt3AvdKUsN
-         QTcXwG48lP+2c3+c7uTLoXykT4ZjS9+img5ic5kufSt8+ohcrcfW4TXZushvDb3wf8NZ
-         QJsmXFvLPzi6gWhm7FHzfFUW0HGE0jE21LezvhAUObK/EOatiwTI/PnvVQGezyKUdTBF
-         sEN7mAW2cxU5PYDKdqN/FUEC2gFkJh8yVouLptIhd7kJ6ii+LCzfN/ldqiyqdA9PfPH5
-         zXuw==
-X-Gm-Message-State: APjAAAVlxhejqZgNXxTEIaBtcY5bmPjytgC9+6vnPBoVFDGLk0keU6dy
-        Jnf6ObGncXQzwH6+gXitQsZZ0lK7sTE=
-X-Google-Smtp-Source: APXvYqw1XQhbfb6dttDEP2IN6YNGoksIAys6RePn2ents3O0fOsdYTxgxR728iYc1a7PSlrEsmFC6w==
-X-Received: by 2002:a63:181f:: with SMTP id y31mr3207921pgl.186.1573119762904;
-        Thu, 07 Nov 2019 01:42:42 -0800 (PST)
+        bh=l6fQtcELJmj8Ufi/6HsaS+YZlcVXTo33kel1eq2jWiM=;
+        b=MSnKfCFvnLYua6O+ID5D5xR293UQvJyrmExPOmcgz2HdAsimRHckInqlN4Y+/l5SAy
+         Y7R9wuwXJbLRX/ppMbLmVVLsfWLjIR76zZoyDhIBb9yQxIII9N+Az2UCSNlz7JAyYx/3
+         QMiIjBdruPpVLR4PLHF55gnQ5CD+geUwtGJFCjuUjkfvQOgk74EIoRh5MRkOBgKHjGUp
+         Nup3/ukkOgqlg4A43QVBnwcqLNTZSQLVpMcozBOYwh+7PkNMV8uRbomK8LtBGH3ryEgH
+         pheCpSzPjS+9vxxN0iP00F3CqJoyqTEV1ZsMvUC6/61hSwyI/2ZUFH19wYBLDFO59RAN
+         RXwQ==
+X-Gm-Message-State: APjAAAVA0RqE8M+1DIAu13F6z/g4g89DeBegU3KUB3rIxFgf7tXT6POS
+        NEnpZXsgAupvu1osH5jRNDw=
+X-Google-Smtp-Source: APXvYqzN50Oa8h9XEMmNxQUiXMv10W2nkVb7jn1du5dGzeAaffSiEa9nTvbpbaX8ruc0v1SrNQE3KQ==
+X-Received: by 2002:a17:902:8348:: with SMTP id z8mr2825994pln.130.1573119771780;
+        Thu, 07 Nov 2019 01:42:51 -0800 (PST)
 Received: from voyager.lan ([45.124.203.14])
-        by smtp.gmail.com with ESMTPSA id 12sm1958195pfp.79.2019.11.07.01.42.38
+        by smtp.gmail.com with ESMTPSA id 12sm1958195pfp.79.2019.11.07.01.42.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 01:42:42 -0800 (PST)
+        Thu, 07 Nov 2019 01:42:51 -0800 (PST)
 From:   Joel Stanley <joel@jms.id.au>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -63,9 +63,9 @@ Cc:     =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 1/4] clocksource: fttmr010: Parametrise shutdown
-Date:   Thu,  7 Nov 2019 20:12:15 +1030
-Message-Id: <20191107094218.13210-2-joel@jms.id.au>
+Subject: [PATCH v2 3/4] clocksource: fttmr010: Add support for ast2600
+Date:   Thu,  7 Nov 2019 20:12:17 +1030
+Message-Id: <20191107094218.13210-4-joel@jms.id.au>
 X-Mailer: git-send-email 2.24.0.rc1
 In-Reply-To: <20191107094218.13210-1-joel@jms.id.au>
 References: <20191107094218.13210-1-joel@jms.id.au>
@@ -77,84 +77,90 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In preparation for supporting the ast2600 which uses a different method
-to clear bits in the control register, use a callback for performing the
-shutdown sequence.
+The ast2600 has some minor differences to previous versions. The
+interrupt handler must acknowledge the timer interrupt in a status
+register. Secondly the control register becomes write to set only,
+requiring the use of a separate set to clear register.
 
 Reviewed-by: Cédric Le Goater <clg@kaod.org>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
+--
+v2: Add ast2600 prefix to define to make it clear it's for ast2600 only
 ---
- drivers/clocksource/timer-fttmr010.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/clocksource/timer-fttmr010.c | 34 ++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
 diff --git a/drivers/clocksource/timer-fttmr010.c b/drivers/clocksource/timer-fttmr010.c
-index fadff7915dd9..c2d30eb9dc72 100644
+index 7c20a3debd96..1510ee106e8d 100644
 --- a/drivers/clocksource/timer-fttmr010.c
 +++ b/drivers/clocksource/timer-fttmr010.c
-@@ -97,6 +97,7 @@ struct fttmr010 {
- 	bool is_aspeed;
- 	u32 t1_enable_val;
- 	struct clock_event_device clkevt;
-+	int (*timer_shutdown)(struct clock_event_device *evt);
- #ifdef CONFIG_ARM
- 	struct delay_timer delay_timer;
- #endif
-@@ -140,9 +141,7 @@ static int fttmr010_timer_set_next_event(unsigned long cycles,
- 	u32 cr;
+@@ -37,6 +37,11 @@
+ #define TIMER3_MATCH2		(0x2c)
+ #define TIMER_CR		(0x30)
  
- 	/* Stop */
--	cr = readl(fttmr010->base + TIMER_CR);
--	cr &= ~fttmr010->t1_enable_val;
--	writel(cr, fttmr010->base + TIMER_CR);
-+	fttmr010->timer_shutdown(evt);
- 
- 	if (fttmr010->is_aspeed) {
- 		/*
-@@ -183,9 +182,7 @@ static int fttmr010_timer_set_oneshot(struct clock_event_device *evt)
- 	u32 cr;
- 
- 	/* Stop */
--	cr = readl(fttmr010->base + TIMER_CR);
--	cr &= ~fttmr010->t1_enable_val;
--	writel(cr, fttmr010->base + TIMER_CR);
-+	fttmr010->timer_shutdown(evt);
- 
- 	/* Setup counter start from 0 or ~0 */
- 	writel(0, fttmr010->base + TIMER1_COUNT);
-@@ -211,9 +208,7 @@ static int fttmr010_timer_set_periodic(struct clock_event_device *evt)
- 	u32 cr;
- 
- 	/* Stop */
--	cr = readl(fttmr010->base + TIMER_CR);
--	cr &= ~fttmr010->t1_enable_val;
--	writel(cr, fttmr010->base + TIMER_CR);
-+	fttmr010->timer_shutdown(evt);
- 
- 	/* Setup timer to fire at 1/HZ intervals. */
- 	if (fttmr010->is_aspeed) {
-@@ -350,6 +345,8 @@ static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
- 				     fttmr010->tick_rate);
- 	}
- 
-+	fttmr010->timer_shutdown = fttmr010_timer_shutdown;
++/*
++  Control register set to clear for ast2600 only.
++ */
++#define AST2600_TIMER_CR_CLR	(0x3c)
 +
- 	/*
- 	 * Setup clockevent timer (interrupt-driven) on timer 1.
- 	 */
-@@ -370,10 +367,10 @@ static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
- 	fttmr010->clkevt.features = CLOCK_EVT_FEAT_PERIODIC |
- 		CLOCK_EVT_FEAT_ONESHOT;
- 	fttmr010->clkevt.set_next_event = fttmr010_timer_set_next_event;
--	fttmr010->clkevt.set_state_shutdown = fttmr010_timer_shutdown;
-+	fttmr010->clkevt.set_state_shutdown = fttmr010->timer_shutdown;
- 	fttmr010->clkevt.set_state_periodic = fttmr010_timer_set_periodic;
- 	fttmr010->clkevt.set_state_oneshot = fttmr010_timer_set_oneshot;
--	fttmr010->clkevt.tick_resume = fttmr010_timer_shutdown;
-+	fttmr010->clkevt.tick_resume = fttmr010->timer_shutdown;
- 	fttmr010->clkevt.cpumask = cpumask_of(0);
- 	fttmr010->clkevt.irq = irq;
- 	clockevents_config_and_register(&fttmr010->clkevt,
+ /*
+  * Control register (TMC30) bit fields for fttmr010/gemini/moxart timers.
+  */
+@@ -163,6 +168,16 @@ static int fttmr010_timer_set_next_event(unsigned long cycles,
+ 	return 0;
+ }
+ 
++static int ast2600_timer_shutdown(struct clock_event_device *evt)
++{
++	struct fttmr010 *fttmr010 = to_fttmr010(evt);
++
++	/* Stop */
++	writel(fttmr010->t1_enable_val, fttmr010->base + AST2600_TIMER_CR_CLR);
++
++	return 0;
++}
++
+ static int fttmr010_timer_shutdown(struct clock_event_device *evt)
+ {
+ 	struct fttmr010 *fttmr010 = to_fttmr010(evt);
+@@ -244,6 +259,17 @@ static irqreturn_t fttmr010_timer_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
++static irqreturn_t ast2600_timer_interrupt(int irq, void *dev_id)
++{
++	struct clock_event_device *evt = dev_id;
++	struct fttmr010 *fttmr010 = to_fttmr010(evt);
++
++	writel(0x1, fttmr010->base + TIMER_INTR_STATE);
++
++	evt->event_handler(evt);
++	return IRQ_HANDLED;
++}
++
+ static int __init fttmr010_common_init(struct device_node *np,
+ 		bool is_aspeed,
+ 		int (*timer_shutdown)(struct clock_event_device *),
+@@ -404,6 +430,13 @@ static int __init fttmr010_common_init(struct device_node *np,
+ 	return ret;
+ }
+ 
++static __init int ast2600_timer_init(struct device_node *np)
++{
++	return fttmr010_common_init(np, true,
++			ast2600_timer_shutdown,
++			ast2600_timer_interrupt);
++}
++
+ static __init int aspeed_timer_init(struct device_node *np)
+ {
+ 	return fttmr010_common_init(np, true,
+@@ -423,3 +456,4 @@ TIMER_OF_DECLARE(gemini, "cortina,gemini-timer", fttmr010_timer_init);
+ TIMER_OF_DECLARE(moxart, "moxa,moxart-timer", fttmr010_timer_init);
+ TIMER_OF_DECLARE(ast2400, "aspeed,ast2400-timer", aspeed_timer_init);
+ TIMER_OF_DECLARE(ast2500, "aspeed,ast2500-timer", aspeed_timer_init);
++TIMER_OF_DECLARE(ast2600, "aspeed,ast2600-timer", ast2600_timer_init);
 -- 
 2.24.0.rc1
 
