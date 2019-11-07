@@ -2,113 +2,89 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBD6C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 23:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13701C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 23:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA1D222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 23:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E41721882
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 23:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G9f2QFqb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HmhgVhLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfKGX1q (ORCPT
+        id S1725928AbfKGXjf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 18:27:46 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42298 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfKGX1p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 18:27:45 -0500
-Received: by mail-pl1-f193.google.com with SMTP id j12so2671233plt.9
-        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 15:27:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7BmFIfu3M0HZwt+Q5j2ru4f7l0bIsWe0OLM9WwddihI=;
-        b=G9f2QFqbIpvPzP+ipqv0GmvyF0eGXGh9QMSFOoyB9+jjACRbO5OOZS7NIVxmaNMytG
-         n07iwrwawUQCkkQ+h2iJuX5tvkGdmj+06phZZtSy00G6NxWK5tA+YY4fFcpBzQ/aoZvN
-         vS+ECTdz67UOybb5+svMppyxtzMa3RqNcmQEY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7BmFIfu3M0HZwt+Q5j2ru4f7l0bIsWe0OLM9WwddihI=;
-        b=WCWWq+U64kFEsptF0ylKe9/W9Dn+Mv4cLH1c6nKEgeu2J82+uumR2gCPnr3RqjVY5z
-         2t7sIMd0u+L8IUiTt60NtrS3o/WfuUl5K+6qoVS5xldRKZKLl9UaM6ZDjIk/ll8Pk3te
-         bRA+bXUVpQKvyCza9IfIdExCbrX16KqaknYO4jJn7Gr1w3HEwQ0FJD4qKJssttN/lZg2
-         r+q4zZm/su2GQAa/AlCD+l7FjRnjdEgjmAxFiYk3IEFDrtL4xA8kxe34nT41NcYLulgg
-         iIhIq4vbWKIf1pgPczRhXBsWKyQGgiAzRur2W7Z+FUWEVzfqWG2C5l5X4IhpnwCyhSxp
-         uktQ==
-X-Gm-Message-State: APjAAAWpM0yrgXDH6cq96dprC83V9MMVBauSBNkX0ZVpCjeIZc9MrvKD
-        Uq1+fgSkcZbHDrBvHQQxoDo0jQ==
-X-Google-Smtp-Source: APXvYqwZ3sdkT/3KJlMbe4Hd1YyUWULxtkb2dkHIZqIJTqrSJI3u9TYS9VmzJM4iV2SkR6u0xQOIyQ==
-X-Received: by 2002:a17:902:9002:: with SMTP id a2mr6824143plp.133.1573169264975;
-        Thu, 07 Nov 2019 15:27:44 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id h3sm2857579pji.16.2019.11.07.15.27.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 15:27:44 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 0/4] Bluetooth: hci_bcm: Additional changes for BCM4354 support
-Date:   Thu,  7 Nov 2019 15:27:08 -0800
-Message-Id: <20191107232713.48577-1-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+        Thu, 7 Nov 2019 18:39:35 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:59868 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfKGXjf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 18:39:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1qs3twHrOv8/gUtMmC9w6XFHjj/oevpNdMaw8wOsiFs=; b=HmhgVhLYU5zOEYAsJyAWNV36y
+        qtTI1yT+j4t0goRi19K2HC9r/j7qFLN5Yd9Z06xCTd7nYkf9QuD+f3mDY5Zo6o3kLFr/440S5v+YX
+        VpDoyLub0gM0XtTv1Ta4bGPWIJqrFYhGqnYe/qFPnk/6ViWCPh9mNOFR9JFl78fXF9slInV08y2aW
+        SvVj3uGMwsgyoXuFwshkdXHwXQ8QgEpWwYyfTkZCTKBXHNGmn8HyQgWvcdrWaaqn41sWrOu2aiN9/
+        YUKIZMoyoU2ER4/xYUqckW3JnuEtT/YRKkVwTil2PoMKPKCP5vdZkmqMJQN29lImcz3IP1dJDo/OM
+        dXYUkrTfw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36606)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iSrN4-0006Zz-HV; Thu, 07 Nov 2019 23:39:22 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iSrMw-0005P4-BS; Thu, 07 Nov 2019 23:39:14 +0000
+Date:   Thu, 7 Nov 2019 23:39:14 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     megous@megous.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        mripard@kernel.org, kishon@ti.com, paul.kocialkowski@bootlin.com,
+        linux-sunxi@googlegroups.com, robh+dt@kernel.org,
+        tglx@linutronix.de, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Subject: Re: [PATCH] phy: allwinner: Fix GENMASK misuse
+Message-ID: <20191107233914.GW25745@shell.armlinux.org.uk>
+References: <20191020134229.1216351-3-megous@megous.com>
+ <20191107204645.13739-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107204645.13739-1-rikard.falkeborn@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Nov 07, 2019 at 09:46:45PM +0100, Rikard Falkeborn wrote:
+> Arguments are supposed to be ordered high then low.
+> 
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+> Spotted while trying to add compile time checks of GENMASK arguments.
+> Patch has only been compile tested.
 
-While adding support for the BCM4354, I discovered a few more things
-that weren't working as they should have.
+My feeling, personally, is that GENMASK() really isn't worth the pain
+it causes.  Can we instead get rid of this thing and just use easier
+to understand and less error-prone hex masks please?
 
-First, we disallow serdev from setting the baudrate on BCM4354. Serdev
-sets the oper_speed first before calling hu->setup() in
-hci_uart_setup(). On the BCM4354, this results in bcm_setup() failing
-when the hci reset times out.
-
-Next, we add support for setting the PCM parameters, which consists of
-a pair of vendor specific opcodes to set the pcm parameters. The
-documentation for these params are available in the brcm_patchram_plus
-package (i.e. https://github.com/balena-os/brcm_patchram_plus). This is
-necessary for PCM to work properly.
-
-All changes were tested with rk3288-veyron-minnie.dts.
-
-
-Changes in v2:
-- Use match data to disallow baudrate setting
-- Parse pcm parameters by name instead of as a byte string
-- Fix prefix for dt-bindings commit
-
-Abhishek Pandit-Subedi (4):
-  Bluetooth: hci_bcm: Disallow set_baudrate for BCM4354
-  Bluetooth: btbcm: Support pcm configuration
-  Bluetooth: hci_bcm: Support pcm params in dts
-  dt-bindings: net: broadcom-bluetooth: Add pcm config
-
- .../bindings/net/broadcom-bluetooth.txt       | 11 ++++
- drivers/bluetooth/btbcm.c                     | 35 +++++++++++
- drivers/bluetooth/btbcm.h                     | 10 ++++
- drivers/bluetooth/hci_bcm.c                   | 58 ++++++++++++++++++-
- 4 files changed, 112 insertions(+), 2 deletions(-)
+I don't care what anyone else says, personally I'm going to stick with
+using hex masks as I find them way easier to get right first time than
+a problematical opaque macro - and I really don't want the effort of
+finding out that I've got the arguments wrong when I build it.  It's
+just _way_ easier and less error prone to use a hex mask straight off.
 
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
