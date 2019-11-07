@@ -2,150 +2,584 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5652DC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECC3C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24353214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:35:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PtcZKf+I";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DTwZZgdX"
+	by mail.kernel.org (Postfix) with ESMTP id D343B2187F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573166582;
+	bh=6xz/ABRBrv++wXhElnR3QeBSuoGgLeNQrOoA813p7qg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rYkZDIQYqSbU6SGpCbMmbfhTHxMNt+oCi0FSkZ6ox9okmCiaMP/AkLAORbOPqpDGn
+	 AsNKItf4FdiIViQEBv46qRfso6+FcR8Oxx50+Yhzg/I4Udj5tQpYlv5TLMWGBgS/NG
+	 DCwl1iZJYjkajBmlRSQBcx6U/VJMXugp04GSWKX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbfKGWfZ (ORCPT
+        id S1727961AbfKGWm6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:35:25 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:54762 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfKGWfZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 17:35:25 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2233660D84; Thu,  7 Nov 2019 22:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573166124;
-        bh=Q2G6160efqVb5qVyhoWW92xY36mZ64vNPwsbgT5/UE0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PtcZKf+ImPi9b7/IEeCW5PC1sMgJs0tayIdJU7odKLCIQW5qSdh9JYWx/GS0LMZ/A
-         +wfuQ4IWq7q3ab3AwXG7Fi+qLZkTh52g6RyZT/jORds/ILyXnDmmPmlha/22jhS0Nw
-         ztqI2jjDqPJYa26YvjHkVrHpQCjaMhvn/FvoN3K4=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6EC2260AD9;
-        Thu,  7 Nov 2019 22:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573166123;
-        bh=Q2G6160efqVb5qVyhoWW92xY36mZ64vNPwsbgT5/UE0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DTwZZgdX2gyXbuubR1oBlne3TXog4s/aJUuw6fx3yjpqEItoi3QiqqYRalQ0tRYuR
-         0WDjzPPRqPCpNZWdiFV9EgjiBD8BbwVz+yBSqWkhBBVUqj5lAethZR0oETcXnt/GbP
-         CvThii+QifpN4FMQ6t25unnKHN6x+ntyUHNDk7Tk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6EC2260AD9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v6 4/6] dt-bindings: clock: Add support for the MSM8998
- mmcc
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, mturquette@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org>
- <1569959842-8399-1-git-send-email-jhugo@codeaurora.org>
- <20191107215506.8FBFA2084D@mail.kernel.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <7f3697ae-2e12-f306-b288-4dec19544275@codeaurora.org>
-Date:   Thu, 7 Nov 2019 15:35:21 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 17:42:58 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33924 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfKGWm6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 17:42:58 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so3557293oig.1;
+        Thu, 07 Nov 2019 14:42:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zJvK/6JW1krikKRy92QCVYywLVAzEehynOsXWSJxglE=;
+        b=YygxF9xG3PtD/qfIIpIr9JOMyjQYNNOuI+EfWeuSnE9vvUPi5rfHR6y3gW0lpVu3xB
+         4P7u+yqsmD1Wm3MYHSzB/8ZZlZ/kvD/jLDox8apCHrC19WzxOvcyoDkq6GGMlf/mRfXK
+         hNFR0rn1DYTa9CBUayjoNQSBiiI2n7PLPDMwA2uoUYlm4Bm28FLgMwFbsevkgXeJuzXt
+         xzTpKUEHkEpBaQ6QVT1p+l5NvhOhoV0yWNRcXeoX5j2tEULlrMeBsYpJZLfxY3ZEAZLg
+         OGUeB6MQG59TsBcKzgj3Q9zX7hy9uFVbNC7E2jopWAt7rcleBab6+S8ASJy2J1EJDfKu
+         eikA==
+X-Gm-Message-State: APjAAAUakn7S8JRlh6hpiQMDI3kw5/t0xHblIsvg0mwutPfy1iKnN4wx
+        X+37+56a8tVSRrdWHCBe62tGlrU=
+X-Google-Smtp-Source: APXvYqwKuBrT1J/M9g2v20XbY+whoCvslnbX1iEPr4ZmFqyDt+iMNZK8id4kkbZXCA/cP3anKux64Q==
+X-Received: by 2002:a54:4812:: with SMTP id j18mr6044989oij.53.1573166576240;
+        Thu, 07 Nov 2019 14:42:56 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id t206sm413509oib.30.2019.11.07.14.42.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 14:42:55 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: Convert generic pin mux and config properties to schema
+Date:   Thu,  7 Nov 2019 16:42:54 -0600
+Message-Id: <20191107224254.15712-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191107215506.8FBFA2084D@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/7/2019 2:55 PM, Stephen Boyd wrote:
-> Quoting Jeffrey Hugo (2019-10-01 12:57:22)
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
->> index 8b0f7841af8d..a92f3cbc9736 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
->> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
->> @@ -10,11 +10,32 @@ Required properties :
->>                          "qcom,mmcc-msm8960"
->>                          "qcom,mmcc-msm8974"
->>                          "qcom,mmcc-msm8996"
->> +                       "qcom,mmcc-msm8998"
-> 
-> Can you convert this binding to YAML? Makes it easier to validate it
-> against the dts files.
+As pinctrl bindings have a flexible structure and no standard child node
+naming convention, creating a single pinctrl schema doesn't work. Instead,
+create schemas for the pin mux and config nodes which device pinctrl schema
+can reference.
 
-I'll look at this since I'm already resending due to the merge conflict.
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
 
-> 
->>   
->>   - reg : shall contain base register location and length
->>   - #clock-cells : shall contain 1
->>   - #reset-cells : shall contain 1
->>   
->> +For MSM8998 only:
->> +       - clocks: a list of phandles and clock-specifier pairs,
->> +                 one for each entry in clock-names.
->> +       - clock-names: "xo" for the xo clock.
->> +                      "gpll0" for the global pll 0 clock.
->> +                      "dsi0dsi" for the dsi0 pll dsi clock (required if dsi is
->> +                               enabled, optional otherwise).
->> +                      "dsi0byte" for the dsi0 pll byte clock (required if dsi
->> +                               is enabled, optional otherwise).
->> +                      "dsi1dsi" for the dsi1 pll dsi clock (required if dsi is
->> +                               enabled, optional otherwise).
->> +                      "dsi1byte" for the dsi1 pll byte clock (required if dsi
->> +                               is enabled, optional otherwise).
->> +                      "hdmipll" for the hdmi pll clock (required if hdmi is
->> +                               enabled, optional otherwise).
->> +                      "dpvco" for the displayport pll vco clock (required if
->> +                               dp is enabled, optional otherwise).
->> +                      "dplink" for the displayport pll link clock (required if
->> +                               dp is enabled, optional otherwise).
-> 
-> I'm not sure why it's optional. The hardware is "fixed" in the sense
-> that the dp phy is always there and connected to this hardware block.
->  From a driver perspective I agree it's optional to be used, but from a
-> DT perspective it's always there so it should be required.
-> 
+We're starting to see pinctrl schema doing their own definitions for
+generic properties, so we need to get something in place to reference.
 
-Sure, the DP phy is technically always there, but does a particular 
-platform have an actual DP output connected to the phy?  If not, why 
-bother describing something that isn't even used?
+Maybe this could be combined into a single schema? Spliting it was
+easier in order to just copy over the existing documentation.
 
- From a more practical sense its undefined how to actually get the DP 
-clocks - the DP binding is implicitly a clock provider since it has 
-#clock-cells, but it doesn't specify how to actually get the clocks. 
-The DSI binding tells you which index is the dsi clock, and which is the 
-byte clock.
+Reading thru pinctrl-bindings.txt, I'm wondering if some of it is out
+of date. Do we let new bindings not use the generic muxing properties?
+Do we really need to be so flexible for child node structure?
 
-The HDMI binding is not a clock provider at all.  Needs to be revised, 
-which didn't appear trivial when I took a quick look while working on mmcc.
+Rob
 
-I want to do the right thing here by specifying all the external clocks 
-up front, and not have to worry about backwards compatibility with 
-pre-existing DTs later on, but I also would like to focus on one problem 
-at a time, and not go dig into all the problems with DP/HDMI before 
-landing this, particularly as those components also rely on the mmcc.
+ .../bindings/pinctrl/pincfg-node.yaml         | 140 +++++++++++++
+ .../bindings/pinctrl/pinctrl-bindings.txt     | 192 +-----------------
+ .../bindings/pinctrl/pinmux-node.yaml         | 132 ++++++++++++
+ 3 files changed, 274 insertions(+), 190 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
 
-Is that justification enough for you?  If not, how would you like to 
-proceed?  Make them required in the binding, and just have an invalid 
-(per the binding) DT until all the problems get sorted out?
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+new file mode 100644
+index 000000000000..13b7ab9dd6d5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+@@ -0,0 +1,140 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/pincfg-node.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic pin configuration node schema
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description:
++  Many data items that are represented in a pin configuration node are common
++  and generic. Pin control bindings should use the properties defined below
++  where they are applicable; not all of these properties are relevant or useful
++  for all hardware or binding structures. Each individual binding document
++  should state which of these generic properties, if any, are used, and the
++  structure of the DT nodes that contain these properties.
++
++properties:
++  bias-disable:
++    type: boolean
++    description: disable any pin bias
++
++  bias-high-impedance:
++    type: boolean
++    description: high impedance mode ("third-state", "floating")
++
++  bias-bus-hold:
++    type: boolean
++    description: latch weakly
++
++  bias-pull-up:
++    oneOf:
++      - type: boolean
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description: pull up the pin. Takes as optional argument on hardware
++      supporting it the pull strength in Ohm.
++
++  bias-pull-down:
++    oneOf:
++      - type: boolean
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description: pull down the pin. Takes as optional argument on hardware
++      supporting it the pull strength in Ohm.
++
++  bias-pull-pin-default:
++    oneOf:
++      - type: boolean
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description: use pin-default pull state. Takes as optional argument on
++      hardware supporting it the pull strength in Ohm.
++
++  drive-push-pull:
++    type: boolean
++    description: drive actively high and low
++
++  drive-open-drain:
++    type: boolean
++    description: drive with open drain
++
++  drive-open-source:
++    type: boolean
++    description: drive with open source
++
++  drive-strength:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: sink or source at most X mA
++
++  drive-strength-microamp:
++    description: sink or source at most X uA
++
++  input-enable:
++    type: boolean
++    description: enable input on pin (no effect on output, such as
++      enabling an input buffer)
++
++  input-disable:
++    type: boolean
++    description: disable input on pin (no effect on output, such as
++      disabling an input buffer)
++
++  input-schmitt-enable:
++    type: boolean
++    description: enable schmitt-trigger mode
++
++  input-schmitt-disable:
++    type: boolean
++    description: disable schmitt-trigger mode
++
++  input-debounce:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Takes the debounce time in usec as argument or 0 to disable
++      debouncing
++
++  power-source:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: select between different power supplies
++
++  low-power-enable:
++    type: boolean
++    description: enable low power mode
++
++  low-power-disable:
++    type: boolean
++    description: disable low power mode
++
++  output-disable:
++    type: boolean
++    description: disable output on a pin (such as disable an output buffer)
++
++  output-enable:
++    type: boolean
++    description: enable output on a pin without actively driving it
++      (such as enabling an output buffer)
++
++  output-low:
++    type: boolean
++    description: set the pin to output mode with low level
++
++  output-high:
++    type: boolean
++    description: set the pin to output mode with high level
++
++  sleep-hardware-state:
++    type: boolean
++    description: indicate this is sleep related state which will be
++      programmed into the registers for the sleep state.
++
++  slew-rate:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: set the slew rate
++
++  skew-delay:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      this affects the expected clock skew on input pins
++      and the delay before latching a value to an output
++      pin. Typically indicates how many double-inverters are
++      used to delay the signal.
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index fcd37e93ed4d..4613bb17ace3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -141,196 +141,8 @@ controller device.
+ 
+ == Generic pin multiplexing node content ==
+ 
+-pin multiplexing nodes:
+-
+-function		- the mux function to select
+-groups			- the list of groups to select with this function
+-			  (either this or "pins" must be specified)
+-pins			- the list of pins to select with this function (either
+-			  this or "groups" must be specified)
+-
+-Example:
+-
+-state_0_node_a {
+-	uart0 {
+-		function = "uart0";
+-		groups = "u0rxtx", "u0rtscts";
+-	};
+-};
+-state_1_node_a {
+-	spi0 {
+-		function = "spi0";
+-		groups = "spi0pins";
+-	};
+-};
+-state_2_node_a {
+-	function = "i2c0";
+-	pins = "mfio29", "mfio30";
+-};
+-
+-Optionally an alternative binding can be used if more suitable depending on the
+-pin controller hardware. For hardware where there is a large number of identical
+-pin controller instances, naming each pin and function can easily become
+-unmaintainable. This is especially the case if the same controller is used for
+-different pins and functions depending on the SoC revision and packaging.
+-
+-For cases like this, the pin controller driver may use pinctrl-pin-array helper
+-binding with a hardware based index and a number of pin configuration values:
+-
+-pincontroller {
+-	... /* Standard DT properties for the device itself elided */
+-	#pinctrl-cells = <2>;
+-
+-	state_0_node_a {
+-		pinctrl-pin-array = <
+-			0 A_DELAY_PS(0) G_DELAY_PS(120)
+-			4 A_DELAY_PS(0) G_DELAY_PS(360)
+-			...
+-		>;
+-	};
+-	...
+-};
+-
+-Above #pinctrl-cells specifies the number of value cells in addition to the
+-index of the registers. This is similar to the interrupts-extended binding with
+-one exception. There is no need to specify the phandle for each entry as that
+-is already known as the defined pins are always children of the pin controller
+-node. Further having the phandle pointing to another pin controller would not
+-currently work as the pinctrl framework uses named modes to group pins for each
+-pin control device.
+-
+-The index for pinctrl-pin-array must relate to the hardware for the pinctrl
+-registers, and must not be a virtual index of pin instances. The reason for
+-this is to avoid mapping of the index in the dts files and the pin controller
+-driver as it can change.
+-
+-For hardware where pin multiplexing configurations have to be specified for
+-each single pin the number of required sub-nodes containing "pin" and
+-"function" properties can quickly escalate and become hard to write and
+-maintain.
+-
+-For cases like this, the pin controller driver may use the pinmux helper
+-property, where the pin identifier is provided with mux configuration settings
+-in a pinmux group. A pinmux group consists of the pin identifier and mux
+-settings represented as a single integer or an array of integers.
+-
+-The pinmux property accepts an array of pinmux groups, each of them describing
+-a single pin multiplexing configuration.
+-
+-pincontroller {
+-	state_0_node_a {
+-		pinmux = <PINMUX_GROUP>, <PINMUX_GROUP>, ...;
+-	};
+-};
+-
+-Each individual pin controller driver bindings documentation shall specify
+-how pin IDs and pin multiplexing configuration are defined and assembled
+-together in a pinmux group.
++See pinmux-node.yaml
+ 
+ == Generic pin configuration node content ==
+ 
+-Many data items that are represented in a pin configuration node are common
+-and generic. Pin control bindings should use the properties defined below
+-where they are applicable; not all of these properties are relevant or useful
+-for all hardware or binding structures. Each individual binding document
+-should state which of these generic properties, if any, are used, and the
+-structure of the DT nodes that contain these properties.
+-
+-Supported generic properties are:
+-
+-pins			- the list of pins that properties in the node
+-			  apply to (either this, "group" or "pinmux" has to be
+-			  specified)
+-group			- the group to apply the properties to, if the driver
+-			  supports configuration of whole groups rather than
+-			  individual pins (either this, "pins" or "pinmux" has
+-			  to be specified)
+-pinmux			- the list of numeric pin ids and their mux settings
+-			  that properties in the node apply to (either this,
+-			  "pins" or "groups" have to be specified)
+-bias-disable		- disable any pin bias
+-bias-high-impedance	- high impedance mode ("third-state", "floating")
+-bias-bus-hold		- latch weakly
+-bias-pull-up		- pull up the pin
+-bias-pull-down		- pull down the pin
+-bias-pull-pin-default	- use pin-default pull state
+-drive-push-pull		- drive actively high and low
+-drive-open-drain	- drive with open drain
+-drive-open-source	- drive with open source
+-drive-strength		- sink or source at most X mA
+-drive-strength-microamp	- sink or source at most X uA
+-input-enable		- enable input on pin (no effect on output, such as
+-			  enabling an input buffer)
+-input-disable		- disable input on pin (no effect on output, such as
+-			  disabling an input buffer)
+-input-schmitt-enable	- enable schmitt-trigger mode
+-input-schmitt-disable	- disable schmitt-trigger mode
+-input-debounce		- debounce mode with debound time X
+-power-source		- select between different power supplies
+-low-power-enable	- enable low power mode
+-low-power-disable	- disable low power mode
+-output-disable		- disable output on a pin (such as disable an output
+-			  buffer)
+-output-enable		- enable output on a pin without actively driving it
+-			  (such as enabling an output buffer)
+-output-low		- set the pin to output mode with low level
+-output-high		- set the pin to output mode with high level
+-sleep-hardware-state	- indicate this is sleep related state which will be programmed
+-			  into the registers for the sleep state.
+-slew-rate		- set the slew rate
+-skew-delay		- this affects the expected clock skew on input pins
+-			  and the delay before latching a value to an output
+-			  pin. Typically indicates how many double-inverters are
+-			  used to delay the signal.
+-
+-For example:
+-
+-state_0_node_a {
+-	cts_rxd {
+-		pins = "GPIO0_AJ5", "GPIO2_AH4"; /* CTS+RXD */
+-		bias-pull-up;
+-	};
+-};
+-state_1_node_a {
+-	rts_txd {
+-		pins = "GPIO1_AJ3", "GPIO3_AH3"; /* RTS+TXD */
+-		output-high;
+-	};
+-};
+-state_2_node_a {
+-	foo {
+-		group = "foo-group";
+-		bias-pull-up;
+-	};
+-};
+-state_3_node_a {
+-	mux {
+-		pinmux = <GPIOx_PINm_MUXn>, <GPIOx_PINj_MUXk)>;
+-		input-enable;
+-	};
+-};
+-
+-Some of the generic properties take arguments. For those that do, the
+-arguments are described below.
+-
+-- pins takes a list of pin names or IDs as a required argument. The specific
+-  binding for the hardware defines:
+-  - Whether the entries are integers or strings, and their meaning.
+-
+-- pinmux takes a list of pin IDs and mux settings as required argument. The
+-  specific bindings for the hardware defines:
+-  - How pin IDs and mux settings are defined and assembled together in a single
+-    integer or an array of integers.
+-
+-- bias-pull-up, -down and -pin-default take as optional argument on hardware
+-  supporting it the pull strength in Ohm. bias-disable will disable the pull.
+-
+-- drive-strength takes as argument the target strength in mA.
+-
+-- drive-strength-microamp takes as argument the target strength in uA.
+-
+-- input-debounce takes the debounce time in usec as argument
+-  or 0 to disable debouncing
+-
+-More in-depth documentation on these parameters can be found in
+-<include/linux/pinctrl/pinconf-generic.h>
++See pincfg-node.yaml
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+new file mode 100644
+index 000000000000..777623a57fd5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+@@ -0,0 +1,132 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/pinmux-node.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic pin multiplexing node schema
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description: |
++  The contents of the pin configuration child nodes are defined by the binding
++  for the individual pin controller device. The pin configuration nodes need not
++  be direct children of the pin controller device; they may be grandchildren,
++  for example. Whether this is legal, and whether there is any interaction
++  between the child and intermediate parent nodes, is again defined entirely by
++  the binding for the individual pin controller device.
++
++  While not required to be used, there are 3 generic forms of pin muxing nodes
++  which pin controller devices can use.
++
++  pin multiplexing nodes:
++
++  Example:
++
++  state_0_node_a {
++    uart0 {
++      function = "uart0";
++      groups = "u0rxtx", "u0rtscts";
++    };
++  };
++  state_1_node_a {
++    spi0 {
++      function = "spi0";
++      groups = "spi0pins";
++    };
++  };
++  state_2_node_a {
++    function = "i2c0";
++    pins = "mfio29", "mfio30";
++  };
++
++  Optionally an alternative binding can be used if more suitable depending on the
++  pin controller hardware. For hardware where there is a large number of identical
++  pin controller instances, naming each pin and function can easily become
++  unmaintainable. This is especially the case if the same controller is used for
++  different pins and functions depending on the SoC revision and packaging.
++
++  For cases like this, the pin controller driver may use pinctrl-pin-array helper
++  binding with a hardware based index and a number of pin configuration values:
++
++  pincontroller {
++    ... /* Standard DT properties for the device itself elided */
++    #pinctrl-cells = <2>;
++
++    state_0_node_a {
++      pinctrl-pin-array = <
++        0 A_DELAY_PS(0) G_DELAY_PS(120)
++        4 A_DELAY_PS(0) G_DELAY_PS(360)
++        ...
++        >;
++    };
++    ...
++  };
++
++  Above #pinctrl-cells specifies the number of value cells in addition to the
++  index of the registers. This is similar to the interrupts-extended binding with
++  one exception. There is no need to specify the phandle for each entry as that
++  is already known as the defined pins are always children of the pin controller
++  node. Further having the phandle pointing to another pin controller would not
++  currently work as the pinctrl framework uses named modes to group pins for each
++  pin control device.
++
++  The index for pinctrl-pin-array must relate to the hardware for the pinctrl
++  registers, and must not be a virtual index of pin instances. The reason for
++  this is to avoid mapping of the index in the dts files and the pin controller
++  driver as it can change.
++
++  For hardware where pin multiplexing configurations have to be specified for
++  each single pin the number of required sub-nodes containing "pin" and
++  "function" properties can quickly escalate and become hard to write and
++  maintain.
++
++  For cases like this, the pin controller driver may use the pinmux helper
++  property, where the pin identifier is provided with mux configuration settings
++  in a pinmux group. A pinmux group consists of the pin identifier and mux
++  settings represented as a single integer or an array of integers.
++
++  The pinmux property accepts an array of pinmux groups, each of them describing
++  a single pin multiplexing configuration.
++
++  pincontroller {
++    state_0_node_a {
++      pinmux = <PINMUX_GROUP>, <PINMUX_GROUP>, ...;
++    };
++  };
++
++  Each individual pin controller driver bindings documentation shall specify
++  how pin IDs and pin multiplexing configuration are defined and assembled
++  together in a pinmux group.
++
++properties:
++  function:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: The mux function to select
++
++  pins:
++    oneOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - $ref: /schemas/types.yaml#/definitions/string-array
++    description:
++      The list of pin identifiers that properties in the node apply to. The
++      specific binding for the hardware defines whether the entries are integers
++      or strings, and their meaning.
++
++  group:
++    $ref: /schemas/types.yaml#/definitions/string-array
++    description:
++      the group to apply the properties to, if the driver supports
++      configuration of whole groups rather than individual pins (either
++      this, "pins" or "pinmux" has to be specified)
++
++  pinmux:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++      The list of numeric pin ids and their mux settings that properties in the
++      node apply to (either this, "pins" or "groups" have to be specified)
++
++  pinctrl-pin-array:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.20.1
+
