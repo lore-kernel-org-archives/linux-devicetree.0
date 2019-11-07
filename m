@@ -2,114 +2,151 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC261C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B06C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993C82166E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F2821D6C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SLiagC0n";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oFsWqQJO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lc05jcYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfKGWVr (ORCPT
+        id S1727813AbfKGWXe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:21:47 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:46444 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727625AbfKGWVr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 17:21:47 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CC69760D8F; Thu,  7 Nov 2019 22:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573165305;
-        bh=GawXUoGeUimTeAM5BUpkGaBlbU+H7gZBm0dmsexcDGE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SLiagC0nKiIydlfg0Gv3jKMGWNdUFqPJKBw8Mfuo7gwEhHR3FFMNaejEegEyvd7iv
-         sJBWSkwwUt8PD5VrQGmp0zPA9pL8t/MCBpiyNPqPycFwNs6K1D7rp2ZVBULssNzA8t
-         flPHFXzaZwMENpukGE9eScY/b3qW9BY5uUAKHxGY=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C33E160274;
-        Thu,  7 Nov 2019 22:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573165304;
-        bh=GawXUoGeUimTeAM5BUpkGaBlbU+H7gZBm0dmsexcDGE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=oFsWqQJO3bJYma9TWQcHmenWosFN5+JKGt9KB/XXYEHB7s3+mq8yhTINBalUEabqt
-         vlJrsHVoVXk/s5jY+tQs/YzDSD8C+rXg/CYjzQFMcJqOcrZD4zuL53KlfxEwO6REkB
-         H9kdUW70pC3a1KYgkv5S39uQAVrSvTlXNWtuDCUo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C33E160274
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v6 1/6] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-To:     Stephen Boyd <sboyd@kernel.org>, mturquette@baylibre.com
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org>
- <1569959718-5256-1-git-send-email-jhugo@codeaurora.org>
- <20191107214730.781622084C@mail.kernel.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <bc3d173d-6b87-29d1-475d-e569dec826b2@codeaurora.org>
-Date:   Thu, 7 Nov 2019 15:21:42 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 17:23:34 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40655 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfKGWXe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 17:23:34 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 22so3492065oip.7
+        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 14:23:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nZOXu8T4pF3RPpBQKh0YAfX9FS2U6WtIcpqxi844o2o=;
+        b=lc05jcYGrXd77mjvFh2st+MfjgbDAvcXo0am0zOpmLekG0wMNHS6UQKK5Fv7ICh9QW
+         lS8XQhqwhCipkOkSk6zhfV7iW657Ug2ftK3XaPoQ4y07t7r41kwJt2CjB2coTxyUhXNY
+         3T3MDaMPazQIU1CnQXWf2dCvm2vgdzcqfNojMrXHKPV6mnx8ABDe5H/ABYSDepRtGCkw
+         ePk2jg9N6xr+45Jm1fJDgZvg8XrE0tgusPHB8gJ/V8zqb/Ye05WNE0Cibz8rDDKQ6Ojt
+         2dERKMfhMPDH2/QPqET3sVJJ3WGHAVVwlR6HHrmWR6SWM9bmAQVY41eMP9sH8j0dO3kp
+         MZtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nZOXu8T4pF3RPpBQKh0YAfX9FS2U6WtIcpqxi844o2o=;
+        b=s37gf2CGELFfGPHWaagTW8JWoCo6xrnuG4MgW3Gp79XBhSLlM2AIFWPaTQmhdl/gq4
+         /44PgMyxvpLCTdHje/JjKrHzSWKzJLCn7qwJN/aWAkfl+i1uU9AvJhd7a5xpYQf6cI47
+         X42kPurhOUxk/imYgIOi8KyaAOR/A01BVUhYn7k3vcFW4fVAF5t5KGvMV82W7oCoAHMQ
+         Uk0jvz319AtvszcF0WjoJXuwheqs+aEdXkjoIhmOgtvzZGdm4Bdf7pZWgyK4E2a4NVOf
+         D9R7uavalmi/DjPa70WtUwb+Vq7Q28ftzwDkMw0vLAoHgB6Jb6DFunYMnFsWMfRVzZT+
+         8s0g==
+X-Gm-Message-State: APjAAAWm79AbpDc0JQ5+g1299slytxp/nLTWieZkSFfk92Kq1/3Rx/au
+        Q9tINCWZuS3/ee2BOz1GjP4MIPyo7wDsIbmw2C8HyA==
+X-Google-Smtp-Source: APXvYqyY6gqmhyUhh3I+7EzLkfqF4UECKiJdfaiTy6lvDg2Gv4yTuY9xtDeOsBizV8dGg8RKtFASWwMYJe6DdFIxXQQ=
+X-Received: by 2002:a05:6808:9bc:: with SMTP id e28mr425347oig.169.1573165411701;
+ Thu, 07 Nov 2019 14:23:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191107214730.781622084C@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-10-john.stultz@linaro.org> <878sp3j42w.fsf@gmail.com>
+In-Reply-To: <878sp3j42w.fsf@gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 7 Nov 2019 14:23:20 -0800
+Message-ID: <CALAqxLWZTevNPxBKBOGm2yMtevDkGXXninDGdZYj2qitFohvPw@mail.gmail.com>
+Subject: Re: [PATCH v4 9/9] usb: dwc3: Add host-mode as default support
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/7/2019 2:47 PM, Stephen Boyd wrote:
-> Quoting Jeffrey Hugo (2019-10-01 12:55:18)
->> The global clock controller on MSM8998 can consume a number of external
->> clocks.  Document them.
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>   Documentation/devicetree/bindings/clock/qcom,gcc.txt | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> index d14362ad4132..32d430718016 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> @@ -29,6 +29,16 @@ Required properties :
->>   - #clock-cells : shall contain 1
->>   - #reset-cells : shall contain 1
->>   
->> +For MSM8998 only:
->> +       - clocks: a list of phandles and clock-specifier pairs,
->> +                 one for each entry in clock-names.
->> +       - clock-names: "xo" (required)
->> +                      "usb3_pipe" (optional)
->> +                      "ufs_rx_symbol0" (optional)
->> +                      "ufs_rx_symbol1" (optional)
->> +                      "ufs_tx_symbol0" (optional)
->> +                      "pcie0_pipe" (optional)
-> 
-> This got wrecked by Taniya's changes to this file. Can you resend and
-> rebase it? Sorry for the troubles.
-> 
+On Tue, Oct 29, 2019 at 2:25 AM Felipe Balbi <balbi@kernel.org> wrote:
+> John Stultz <john.stultz@linaro.org> writes:
+> > diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> > index 61d4fd8aead4..0e3466fe5ac4 100644
+> > --- a/drivers/usb/dwc3/drd.c
+> > +++ b/drivers/usb/dwc3/drd.c
+> > @@ -489,7 +489,10 @@ static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
+> >               mode = DWC3_GCTL_PRTCAP_DEVICE;
+> >               break;
+> >       default:
+> > -             mode = DWC3_GCTL_PRTCAP_DEVICE;
+> > +             if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
+> > +                     mode = DWC3_GCTL_PRTCAP_HOST;
+> > +             else
+> > +                     mode = DWC3_GCTL_PRTCAP_DEVICE;
+> >               break;
+> >       }
+> >
+> > @@ -515,7 +518,10 @@ static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
+> >               role = dwc->current_otg_role;
+> >               break;
+> >       default:
+> > -             role = USB_ROLE_DEVICE;
+> > +             if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
+> > +                     role = USB_ROLE_HOST;
+>
+> look at this, we now have 3 different encodings for role which DWC3
+> needs to understand. One is its own PRTCAP_DIR, then there USB_DR_MODE_*
+> and now USB_ROLE_*, can we make it so that we only have one private
+> encoding and one generic encoding?
 
-I was afraid of that.  I will rewrite and resend.
+And you left out the DWC3_OTG_ROLE_* set too!
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+So I agree it can be easy to muddle up.  The enums are *almost* equivalent:
+
+include/linux/usb/role.h:
+enum usb_role {
+        USB_ROLE_NONE,
+        USB_ROLE_HOST,
+        USB_ROLE_DEVICE,
+};
+
+include/linux/usb/otg.h:
+enum usb_dr_mode {
+        USB_DR_MODE_UNKNOWN,
+        USB_DR_MODE_HOST,
+        USB_DR_MODE_PERIPHERAL,
+        USB_DR_MODE_OTG,
+};
+
+But both are widely used:
+$ git grep USB_ROLE_ | wc -l
+123
+$ git grep USB_DR_MODE_ | wc -l
+190
+
+So I'm not sure how easy it will be to condense down, since the usage
+is coming from different usb subsystems (otg and role switching)  and
+I worry assuming them equivalent in just one driver may run into
+trouble eventually if the values diverge (ie someone adds
+USB_ROLE_BRICK or something).
+
+Heikki/Greg: Any thoughts on this? Does it make sense to try to drop
+the usb_role enum and users and replace it with usb_dr_mode?
+
+thanks
+-john
