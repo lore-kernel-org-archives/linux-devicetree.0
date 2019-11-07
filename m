@@ -2,201 +2,167 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4658FC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD48C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12CF621D7F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hX/QIOjt"
+	by mail.kernel.org (Postfix) with ESMTP id 1CD3621D82
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 22:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573167311;
+	bh=jExGSxODnj6qW8jJKoeORibxwrOMTybXfuDaiSWa98s=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=t3iZCz5c57fEWo4cJqrGpbg8pZtSRAw3kSXkvQSAg2sya8RlD+z8Sc+KTvkK4LPOw
+	 l9p3dOm/28clcleH/h9LNRBakE+b2Dqoadz8kOSoJb22oJ6Fgjd+H19znQXOhrHgfp
+	 O7dW7QH1D7JnRxaGA8RSNRXNy7h4s4nfvxsDMlxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfKGWq4 (ORCPT
+        id S1725924AbfKGWzK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:46:56 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34184 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfKGWq4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 17:46:56 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l202so3565738oig.1;
-        Thu, 07 Nov 2019 14:46:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=amQWDmlGdEk6VIZvnzvC3PXl4QjX449VLWxbEA+kkns=;
-        b=hX/QIOjtVkzlExtn1LqyXrmyI9I9vZhyZHkCpvmC5Ale44vry7ayGIKDeCOW9S9eWE
-         JpeUDWKn0dzomnJvGQC6UlsW56ZHBQcAFlz9OGRK5JKMmF8OQJCvygqW3vGmRflED+jd
-         7TVoAMvk/E/hCIVf+TF4Rw15L3pIjoLxe6vzgKi3MMKtHJGRkQ4P3udSwk7lQ/KkFi1q
-         4+JwIHOVSXZPmO22hcGzdgMMwdD5dIgcqbDpY2MUuiExDnrRclHY9cxPzrywI1OJf+je
-         DHDOJuou1WQXs1iIbJn26gQ/7aneup7yHphtwjJ2VHCPP00fXPXSMgDrk47Jvp42ikcP
-         rLIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=amQWDmlGdEk6VIZvnzvC3PXl4QjX449VLWxbEA+kkns=;
-        b=kv5ry7P3CeYs2IUNiDHYP1YoOzaU5l4sYTVpZH8hQ6mfcbT9GSwEydPgovRgDYiOJr
-         KpbZxreDfnrxM6Uj86w1jiJtXy1AarpWdyKUVH+8BQGPYLY8aUBobu8a8xuS3llDdkES
-         1AvF2EuW/P5r82gi+UuqXvN5TjIVchPhHRTH4+/V1LrusDy2QODYKnujW2/mb1+nQLW9
-         wJEPYnofNSil0K5wKeEkbGl68xkUOQ6AyLgZd7C4JHdIQKiIyYyoi1WriIydc3duL0SH
-         mETUV88V7JmxobhLVdynCwkGc6TA7mEyiuz7hPETg5iJM1PeajhsiYVH8yFm+qoJKfuK
-         pN8g==
-X-Gm-Message-State: APjAAAXBlZqSjuNjvVcn+ckiUScICr1+JHxC3Sy2bvqnTJmcz2mokQXk
-        XGRY7qgn3NGZinFGDMFGQL49QPWyChzozKXEgfY=
-X-Google-Smtp-Source: APXvYqy7X5y3xi+caVjj34JWeqvFAD42ny9HBvVuYNQgKnsmmxiFAbNuD/jPPDzS6BjPiNY4G/MO7hwzdru7pOmcrd8=
-X-Received: by 2002:aca:2303:: with SMTP id e3mr5878670oie.162.1573166814674;
- Thu, 07 Nov 2019 14:46:54 -0800 (PST)
+        Thu, 7 Nov 2019 17:55:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbfKGWzK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 17:55:10 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C3732085B;
+        Thu,  7 Nov 2019 22:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573167309;
+        bh=jExGSxODnj6qW8jJKoeORibxwrOMTybXfuDaiSWa98s=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=CoYtf+xLGfDiQfquE2zCW0O1/SA4w1+/M3OThuKGMHV++4ZFRd6kg/yDEDY6ACVnf
+         zWTq4MY7EGiGMrRQElaTliKuFz7ml3CGC40OfboKtZEAOA1bialhhSgwlrz4MbJikR
+         x8CZmnN5FnxlQLarGfonSlGiXRYosy1u01MJFdlw=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
- <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com> <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
-In-Reply-To: <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 Nov 2019 22:46:28 +0000
-Message-ID: <CA+V-a8sS4gX8o__R_pHK2Otb=s_aAWbtvDLfOhAQAJb77Jz_Sw@mail.gmail.com>
-Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573111012-29095-1-git-send-email-rajan.vaja@xilinx.com>
+References: <1573111012-29095-1-git-send-email-rajan.vaja@xilinx.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>, mark.rutland@arm.com,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] dt-bindings: clock: Add bindings for versal clock driver
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 14:55:08 -0800
+Message-Id: <20191107225509.5C3732085B@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+Quoting Rajan Vaja (2019-11-06 23:16:52)
+> Add documentation to describe Xilinx Versal clock driver
+> bindings.
+>=20
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-On Thu, Nov 7, 2019 at 8:08 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > This patch adds the bindings for the R-Car PCIe endpoint driver.
-> > > >
-> > > > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > > > @@ -0,0 +1,43 @@
-> > > > +* Renesas R-Car PCIe Endpoint Controller DT description
-> > > > +
-> > > > +Required properties:
-> > > > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
-> > > > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > > > +                                    RZ/G2 compatible device.
-> > >
-> > > Unless I'm missing something, this is for the exact same hardware block as
-> > > Documentation/devicetree/bindings/pci/rcar-pci.txt?
-> > > So shouldn't you amend those bindings, instead of adding new compatible
-> > > values?
-> > > Please remember that DT describes hardware, not software policy.
-> > > So IMHO choosing between host and endpoint is purely a configuration
-> > > issue, and could be indicated by the presence or lack of some DT properties.
-> > > E.g. host mode requires both "bus-range" and "device_type" properties,
-> > > so their absence could indicate endpoint mode.
-> > >
-> > yes its the same hardware block as described in the rcar-pci.txt, I
-> > did think about amending it
-> > but  it might turn out to be bit messy,
-> >
-> > required properties host ======required properties Endpoint
-> > ====================||==================
-> > 1: reg                                || reg
-> > 2:bus-range                      || reg names
-> > 3: device_type                  || resets
-> > 4: ranges                          || clocks
-> > 5: dma-ranges                  || clock-names
-> > 6: interrupts                      ||
-> > 7: interrupt-cells               ||
-> > 8: interrupt-map-mask     ||
-> > 9: clocks                          ||
-> > 10: clock-names             ||
->
-> We have a similar situation with SPI, where a controller can operate in
-> master or slave mode, based on the absence or presence of the
-> "spi-slave" DT property.
->
-> > and if I go ahead with the same compatible string that would mean to
-> > add support for endpoint
-> > mode in the host driver itself. I did follow the examples of
->
-> You can still have two separate drivers, binding against the same
-> compatible value.  Just let the .probe() function return -ENODEV if it
-> discovers (by looking at DT properties) if the node is configured for
-> the other mode.
-> Which brings us to my next questions: is there any code that could be
-> shared between the drivers for the two modes?
->
-agreed driver probe could handle depending on the DT properties.
-yes there is bit of common code and the first patch of the series prepares
-for handling host and endpoint mode.
+Signoff chain is all wrong. The sender should come last. Please read up
+on how to submit patches to the kernel with proper SoB chains in kernel
+docs. I can dig it up if you can't find it.
 
-> > rockchip/cadence/designware where
-> > its the same hardware block but has two different binding files one
-> > for host mode and other for
-> > endpoint mode.
->
-> Having two separate DT binding documents sounds fine to me, if unifying
-> them makes things too complex.
-> However, I think they should use the same compatible value, because the
-> hardware block is the same, but just used in a different mode.
->
-agreed.
+> ---
+>  .../devicetree/bindings/clock/xlnx,versal-clk.txt  |  48 ++++++++
+>  include/dt-bindings/clock/xlnx-versal-clk.h        | 123 +++++++++++++++=
+++++++
+>  2 files changed, 171 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/xlnx,versal-c=
+lk.txt
+>  create mode 100644 include/dt-bindings/clock/xlnx-versal-clk.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.txt =
+b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.txt
+> new file mode 100644
+> index 0000000..398e751
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.txt
 
-> Rob/Mark: Any input from the DT maintainers?
->
-> > > > +- reg: Five register ranges as listed in the reg-names property
-> > > > +- reg-names: Must include the following names
-> > > > +       - "apb-base"
-> > > > +       - "memory0"
-> > > > +       - "memory1"
-> > > > +       - "memory2"
-> > > > +       - "memory3"
-> > >
-> > > What is the purpose of the last 4 regions?
-> > > Can they be chosen by the driver, at runtime?
-> > >
-> > no the driver cannot choose them at runtime, as these are the only
-> > PCIE memory(0/1/2/3) ranges
-> > in the AXI address space where host memory can be mapped.
->
-> Are they fixed by the PCIe hardware, i.e. could they be looked up by the
-> driver based on the compatible value?
->
-yes they are fixed by the PCIe hardware and could be looked up by the driver
-based on the compatible value.
+Can you write this in YAML so we can validate it?
 
-Cheers,
---Prabhakar
+> @@ -0,0 +1,48 @@
+> +------------------------------------------------------------------------=
+--
+> +Device Tree Clock bindings for the Xilinx Versal
+> +------------------------------------------------------------------------=
+--
+> +The clock controller is a h/w block of Xilinx versal clock tree. It reads
+> +required input clock frequencies from the devicetree and acts as clock p=
+rovider
+> +for all clock consumers of PS clocks.
+> +
+> +See clock_bindings.txt for more information on the generic clock binding=
+s.
+> +
+> +Required properties:
+> + - #clock-cells:       Must be 1
+> + - compatible:         Must contain:   "xlnx,versal-clk"
+> + - clocks:             List of clock specifiers which are external input
+> +                       clocks to the given clock controller. Please refer
+> +                       the next section to find the input clocks for a
+> +                       given controller.
+> + - clock-names:                List of clock names which are exteral inp=
+ut clocks
+> +                       to the given clock controller. Please refer to the
+> +                       clock bindings for more details.
+> +
+> +Input clocks for Xilinx Versal clock controller:
+> +
+> +The Xilinx Versal has one primary and two alternative reference clock in=
+puts.
+> +These required clock inputs are:
+> + - ref_clk
+> + - alt_ref_clk
+> + - pl_alt_ref_clk
+> +
+> +Output clocks are registered based on clock information received
+> +from firmware. Output clocks indexes are mentioned in
+> +include/dt-bindings/clock/xlnx-versal-clk.h.
+> +
+> +-------
+> +Example
+> +-------
+> +
+> +firmware {
+> +       versal_firmware: versal-firmware {
+> +               compatible =3D "xlnx,versal-firmware";
+> +               method =3D "smc";
+> +               versal_clk: clock-controller {
+> +                       #clock-cells =3D <1>;
+> +                       compatible =3D "xlnx,versal-clk";
+> +                       clocks =3D <&ref_clk>, <&alt_ref_clk>, <&pl_alt_r=
+ef_clk>;
+> +                       clock-names =3D "ref_clk", "alt_ref_clk", "pl_alt=
+_ref_clk";
+> +               };
+> +       };
+> +};
+> diff --git a/include/dt-bindings/clock/xlnx-versal-clk.h b/include/dt-bin=
+dings/clock/xlnx-versal-clk.h
+> new file mode 100644
+> index 0000000..264d634
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/xlnx-versal-clk.h
+> @@ -0,0 +1,123 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + *  Copyright (C) 2019 Xilinx Inc.
+> + *
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_VERSAL_H
+> +#define _DT_BINDINGS_CLK_VERSAL_H
+> +
+> +#define PMC_PLL                                        1
+
+Why not start with 0?
+
