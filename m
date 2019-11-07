@@ -2,87 +2,162 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B38BFC6194
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CC4FA372C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD468206DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1679D21848
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573086324;
-	bh=xhNvDEryn0+Nc32LvcJ1Woz2dRdItsFdczm9qImxRiY=;
+	s=default; t=1573087151;
+	bh=debsK+13aqMu0ZzQoraIQ1FU6TXEhvx7diB/xr4Glos=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fvu6BDyDeqwEu6NBdMGrW+YSdVzJSeSPrigNUJsGNLj/6OTfKocZC1cueeoNJeNWX
-	 rimytN/+V97QpwQ6yCLXaVLwq7fj9qm7eTvNzQUahasmsugUI6b/RaE3BHuUqHQ0Ou
-	 pomabZb7J7Zaoa0NNeUyb++RKyzf8gCeNg5TYVhA=
+	b=jHjMridQjwyksZrU9jEOmgcQVHRvkISUkvSRTlfjx36RP7552pBi9eA44m4lPeFtj
+	 yKR/SFx30RF5lsnasI4Nhr6/EnVw51BdYHKtF9L+eRUt8bNgB4q9PrmhlKBQoOF9e5
+	 Eqjd0AmFZZIzXNNKhSNKhpfBMonThsm3fJXvDh+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfKGAZV (ORCPT
+        id S1727807AbfKGAjK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:25:21 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35871 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGAZU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:25:20 -0500
-Received: by mail-ot1-f66.google.com with SMTP id f10so471305oto.3;
-        Wed, 06 Nov 2019 16:25:20 -0800 (PST)
+        Wed, 6 Nov 2019 19:39:10 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42430 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727718AbfKGAjK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:39:10 -0500
+Received: by mail-ot1-f67.google.com with SMTP id b16so465406otk.9;
+        Wed, 06 Nov 2019 16:39:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZzUL/AyiBPqE7zvVbE2IsIX3VerKJnUCOltXfkVkFZY=;
-        b=dX86UKYMpfY58LIBEor0FLDCHcTaXD2pV09/g5pViB9UzIb/e7e1ND6/ynuCxo4LVn
-         K5KLhPhDwTmfGwmNhhJ/o6XnUx2l4nXmSfEiC7xmC89sFLbOfsgCuKPwpsr4yAPHuoH3
-         rkTgTlN3GD1LPFODFnFkGrgXhh7c5V/Hvi3sS/LFJjRTGYgw4T5xbc3a5dSpXY+JNQKq
-         pwoj7BNlC07CIYK2/kUD0FYvZaW4ZaLI1SPMjhVXWaZlgEOWxP8Yu2RxeR1AsanT55YE
-         M0bdcAPwkEN7RH2ZRKlPtbSsSeji/GXZu2GNzvf1WQLEWOIb799gOhp/DTSdSRsZxc+E
-         MgkQ==
-X-Gm-Message-State: APjAAAXgyXKBVTetpfHUbyd3zHVCNtQN5kPZKgLCDgT9Qrc/yId4pToL
-        xsN1ASRvBY200taoCGnRbQ==
-X-Google-Smtp-Source: APXvYqySec/Ph58g0+X2o6i2pUtu7IO0vPN9Wq5qgoeq4sY3tbPZ/3k/MyDq8RuZ4cKgUSWTuIBluQ==
-X-Received: by 2002:a05:6830:15ca:: with SMTP id j10mr430974otr.276.1573086319746;
-        Wed, 06 Nov 2019 16:25:19 -0800 (PST)
+        bh=o+/HJxTvSCyoqhymvzvwCfhGsto5bnJFMBEXf55oU0g=;
+        b=K5VMsvzFXZw3llCAPttG7LMh0RYvA9uO/lHwYpexnh75Q3gBG5NwhyH8ex9Ekwxc1O
+         /+HZJm98OWZDEhKZfJzbxlTuLQiK7fSLvH4+hsxeM/u9DqQg5+bY+MXiDrLT33qIdVBi
+         i/OKMABGluO+kfAUJVxe0XwtnPec67Wq/tBct6KUVp0X27BLwU9GtOc7e3Tu2AHLIoA2
+         jztWF8N+MAVSpB60o9BFNlP3QQb9UZylSCvaNf+0L4NUylApXaypKnw0nbggA0Nx2Cq/
+         TYJNXYaQVNBr87zcLM/0RuaeYi4Haf5xtmZsHxmRI62cLzgoErecuiwc05env5UfSP9G
+         faeQ==
+X-Gm-Message-State: APjAAAXOsZ5uQkXsiR7gGcPEfyXNFEQ4uVKh8EmnBdZ9IQ0iuTBIPpwq
+        Wcuoza6gCMCyMdZpA9lvYg==
+X-Google-Smtp-Source: APXvYqx3kcit6yKTxQqdYPFidJcqRKe6j40BSePHIBgl4Ua3SYXRmKvqCgIbr9Lwwd4KmiWwvLiJEg==
+X-Received: by 2002:a9d:5c0e:: with SMTP id o14mr432330otk.361.1573087148994;
+        Wed, 06 Nov 2019 16:39:08 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w26sm191235otm.28.2019.11.06.16.25.19
+        by smtp.gmail.com with ESMTPSA id 63sm198561oty.58.2019.11.06.16.39.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:25:19 -0800 (PST)
-Date:   Wed, 6 Nov 2019 18:25:18 -0600
+        Wed, 06 Nov 2019 16:39:08 -0800 (PST)
+Date:   Wed, 6 Nov 2019 18:39:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Elaine Zhang <zhangqing@rock-chips.com>
-Cc:     heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        amit.kucheria@verdurent.com,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        huangtao@rock-chips.com, linux-pm@vger.kernel.org,
-        xxx@rock-chips.com, daniel.lezcano@linaro.org,
-        linux-kernel@vger.kernel.org, xf@rock-chips.com,
-        edubezval@gmail.com, linux-rockchip@lists.infradead.org,
-        robh+dt@kernel.org, andy.yan@rock-chips.com, rui.zhang@intel.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 1/3] dt-bindings: rockchip-thermal: Support the RK3308
- SoC  compatible
-Message-ID: <20191107002518.GA20339@bogus>
-References: <1572923846-23310-1-git-send-email-zhangqing@rock-chips.com>
- <1572923846-23310-2-git-send-email-zhangqing@rock-chips.com>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-mmc@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add
+ 'fixed-emmc-driver-type-hs{200,400}'
+Message-ID: <20191107003907.GA22634@bogus>
+References: <20191105055015.23656-1-erosca@de.adit-jv.com>
+ <20191105062223.GB1048@kunai>
+ <20191105083213.GA24603@vmlxhi-102.adit-jv.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572923846-23310-2-git-send-email-zhangqing@rock-chips.com>
+In-Reply-To: <20191105083213.GA24603@vmlxhi-102.adit-jv.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  5 Nov 2019 11:17:24 +0800, Elaine Zhang wrote:
-> Add a new compatible for thermal founding on RK3308 SoCs.
+On Tue, Nov 05, 2019 at 09:32:13AM +0100, Eugeniu Rosca wrote:
+> Hi Wolfram,
 > 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> ---
->  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 1 +
->  1 file changed, 1 insertion(+)
+> On Tue, Nov 05, 2019 at 07:22:23AM +0100, Wolfram Sang wrote:
+> > Hi Eugeniu,
+> > 
+> > thanks for this work!
 > 
+> Thanks for the prompt response. Very much appreciated.
+> 
+> > 
+> > > A certain eMMC manufacturer provided below requirement:
+> > >  ---snip---
+> > >  Use "drive strength" value of 4 or 1 for HS400 or 0 for HS200.
+> > >  ---snip---
+> > 
+> > I see.
+> > 
+> > > The existing "fixed-emmc-driver-type" property [1] is the closest one
+> > > to implement the above, but it falls short due to being unable to define
+> > > two values to differentiate between HS200 and HS400 (both modes may be
+> > > supported by the same non-removable MMC device).
+> > > 
+> > > To allow users to set a preferred HS200/HS400 "drive strength", provide
+> > > two more bindings inspired from [1]:
+> > >  - fixed-emmc-driver-type-hs200
+> > >  - fixed-emmc-driver-type-hs400
+> > 
+> > Main question before looking at the code: Can't we just extend the
+> > existing binding with an optional second parameter?
 
-Acked-by: Rob Herring <robh@kernel.org>
+I was thinking the same thing...
+
+> 
+> That's a great question/proposal, but before pushing the v2 right away,
+> I would like to first share some thoughts.
+> 
+> >         minItems: 1
+> >         maxItems: 2
+> > 
+> > I tend to favour this approach...
+> 
+> The first question which pops up in my mind is related to the meaning
+> of each item. The option which I envision based on your proposal is:
+> 
+>   * minItems: 1
+>   * maxItems: 2
+>   * Item[0]: Presumably equivalent to the current
+>     "fixed-emmc-driver-type", i.e. the strength value applied in both
+>     HS200 and HS400 modes.
+>   * Item[1] (optional): Presumably equivalent to
+>     "fixed-emmc-driver-type-hs400" proposed in this series. If this
+>     element is provided, the first one should likely change its role
+>     and become an equivalent of "fixed-emmc-driver-type-hs200" from
+>     this series.
+>   + Pro: Full backward compatibility. No need to touch the existing
+>     users of "fixed-emmc-driver-type".
+>   - Con: Not sure we have such DT bindings which dynamically change
+>     their semantics based on the usage pattern.
+>   - Con: Can't easily achieve the same flexibility as accomplished in
+>     this series. For example, current implementation allows users to
+>     define each of the three parameters (i.e. HSx00-agnostic drive
+>     strength, HS200 and HS400 specific drive strengths) individually,
+>     as well as in all possible combinations. This might be needed if,
+>     in certain HSx00 mode, users still need to rely on the
+>     RAW/unmodified drive strength. I am unsure if/how this can be
+>     achieved with an array OF property with a constant or variable
+>     number of elements (I try to sketch one solution below).
+> 
+> One option to achieve a similar degree of flexibility by using an array
+> OF property (instead of several u32 properties) would be to agree on a
+> convention based on magic values, i.e. below DT one-liner could be an
+> example of providing solely the "fixed-emmc-driver-type-hs200" value
+> (based on the agreement that 0xFF values are discarded by the driver):
+> 
+>     fixed-emmc-driver-type = <0xFF 0x1 0xFF>;
+
+I don't understand why you have 3 values instead of 2.
+
+I would just use -1 if you want to ignore an entry. If that's the common 
+case, then I'd stick with what you originally proposed. If rare, then I 
+think an array is the better route.
+
+Rob
