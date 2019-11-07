@@ -2,122 +2,95 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426F9C5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18481C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0BE2085B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 09:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6702187F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 10:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfKGJ6U (ORCPT
+        id S1727415AbfKGKDb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:58:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41222 "EHLO mx1.suse.de"
+        Thu, 7 Nov 2019 05:03:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42382 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727434AbfKGJ6U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:58:20 -0500
+        id S1726866AbfKGKDb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:03:31 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 68354AFA7;
-        Thu,  7 Nov 2019 09:58:18 +0000 (UTC)
-Message-ID: <6391b0574abbe9f669fd5b8c539d306fb64aaba7.camel@suse.de>
-Subject: Re: [PATCH 0/4] Raspberry Pi 4 PCIe support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, wahrenst@gmx.net,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 07 Nov 2019 10:58:16 +0100
-In-Reply-To: <5e3df7af-d7be-2408-7b53-13a0e38e9478@gmail.com>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-         <5e3df7af-d7be-2408-7b53-13a0e38e9478@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-9+CcCd+frESmTBhEBdh8"
-User-Agent: Evolution 3.34.1 
+        by mx1.suse.de (Postfix) with ESMTP id 1C88CB2EE;
+        Thu,  7 Nov 2019 10:03:28 +0000 (UTC)
+Subject: Re: [PATCH 1/7] dt-bindings: gpu: mali-midgard: Tidy up conversion to
+ YAML
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        LAKML <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Guillaume Gardet <guillaume.gardet@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+References: <20191104013932.22505-1-afaerber@suse.de>
+ <20191104013932.22505-2-afaerber@suse.de>
+ <CAL_JsqL3NOstoa5ZY1JE9e3Ay=WTmz153H-KbHErhi-GBX-5GA@mail.gmail.com>
+ <82d17114302562e0c553e2ea936974f77734e86b.camel@suse.de>
+ <CAL_JsqLDFefWVdiPuAktctuBpBeOvG-OVhX2aZn=UaiN55nodg@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <3c9d7a8c-94e4-60b9-9a84-f368e227666e@suse.de>
+Date:   Thu, 7 Nov 2019 11:03:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <CAL_JsqLDFefWVdiPuAktctuBpBeOvG-OVhX2aZn=UaiN55nodg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Am 06.11.19 um 16:34 schrieb Rob Herring:
+> On Wed, Nov 6, 2019 at 9:07 AM Andreas Färber <afaerber@suse.de> wrote:
+>> Am Mittwoch, den 06.11.2019, 08:24 -0600 schrieb Rob Herring:
+>>> This patch is problematic because there's changes in arm-soc juno/dt
+>>> branch and there's now a patch for exynos5420 (t628). I'd propose I
+>>> apply this such that we don't get a merge conflict with juno/dt and
+>>> we
+>>> finish resorting after rc1 (or when both branches are in Linus'
+>>> tree).
+>>
+>> This series has dependencies for the Realtek-side RFC patches and is
+>> not yet ready to merge, so you can take this prep PATCH through your
+>> tree for v5.6 probably, or feel free to rebase/rework as you see fit -
+>> I'd just appreciate being credited at least via Reported-by. :)
+> 
+> I was assuming the non-RFC patches are good to go, so I was going to
+> pick up 1, 2, and 7.
 
---=-9+CcCd+frESmTBhEBdh8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Actually 1, 2 and 4 should be good to go; 7 if you fix the subject or if
+I respin. Also 6 if you can have someone check that no new properties
+will be needed for 470 (no Linux driver support yet).
 
-On Wed, 2019-11-06 at 13:51 -0800, Florian Fainelli wrote:
-> On 11/6/19 1:45 PM, Nicolas Saenz Julienne wrote:
-> > This series aims at providing support for Raspberry Pi 4's PCIe
-> > controller, which is also shared with the Broadcom STB family of
-> > devices.
-> >=20
-> > There was a previous attempt to upstream this some years ago[1] but was
-> > blocked as most STB PCIe integrations have a sparse DMA mapping[2] whic=
-h
-> > is something currently not supported by the kernel.  Luckily this is no=
-t
-> > the case for the Raspberry Pi 4.
-> >=20
-> > Note that the driver code is to be based on top of Rob Herring's series
-> > simplifying inbound and outbound range parsing.
-> >=20
-> > [1] https://patchwork.kernel.org/cover/10605933/
-> > [2] https://patchwork.kernel.org/patch/10605957/
->=20
-> Thanks for picking up on this Nicolas. Can you amend the MAINTAINERS
-> file with something along those lines such that PCIe binding and driver
-> changes are picked up by both the BCM2835 and BCM7XXX entries?
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cba1095547fd..4276a30f3294 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3196,6 +3196,8 @@ S:        Maintained
->  N:     bcm2711
->  N:     bcm2835
->  F:     drivers/staging/vc04_services
-> +F:     Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +F:     drivers/pci/controller/pcie-brcmstb.c
->=20
->  BROADCOM BCM47XX MIPS ARCHITECTURE
->  M:     Hauke Mehrtens <hauke@hauke-m.de>
-> @@ -3251,6 +3253,7 @@ F:        drivers/bus/brcmstb_gisb.c
->  F:     arch/arm/mm/cache-b15-rac.c
->  F:     arch/arm/include/asm/hardware/cache-b15-rac.h
->  N:     brcmstb
-> +F:     Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->=20
->  BROADCOM BMIPS CPUFREQ DRIVER
->  M:     Markus Mayer <mmayer@broadcom.com>
->=20
+All but 1 assuming you'll be okay to add SoC-specific restrictions on
+clocks/resets/domains later, once we've fully figured it out (cf. cover
+letter for current errors - looking into power domains next).
 
-Ok, noted, I'll add that patch to v2.
+Regards,
+Andreas
 
-
---=-9+CcCd+frESmTBhEBdh8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3D6rgACgkQlfZmHno8
-x/7uuwf/dOmDBfR85tFZWNiXZ87/YYUeVY/OGHACLI0ieSBKa2qdCJSFl4TzWe6I
-Ur9nlLsi4MEtNTtUlE919ZlLuC7Y8R4J0bIK5vCY/AnRcnWvPyQXqyjMnv+BkhDu
-sLc8I3YEGAtVL05o7P+63+Jb8RqDoQVOBOXPP6LAHSn2amevOGp6UUETlsW7KNVo
-FHMO7fHmlpdW+Wdk9nzzVJ65NEk8SeyqM8AgCCm5QVrvMVwkiMHemcYoN7UH/SuJ
-oHZVup66FLWCxOqOWdQHcb4cUMPh9da0ZmJwSJJ40yBH4Q7UP6HYzhMlHjkVED5Y
-QzNn1tWx78yWq5mKFaSMxBNhWBUSDQ==
-=XJ+I
------END PGP SIGNATURE-----
-
---=-9+CcCd+frESmTBhEBdh8--
-
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
