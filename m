@@ -2,309 +2,146 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1E7FA372C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D882AFC6194
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF8D218AE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573088226;
-	bh=rIyCffxcmihkDULsad67SDzkWDsjiTX9ZPVgQtOi6a0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MWhq3L2R/qYQ4qoYcAnzRjgRsdXFO6U1EeefA3ckyFVC5cN2FXH9rkUo7aYzWxI8i
-	 2014uw07A67lSGZpTbiiLHDKpIU65dHaiukSRCCeIcew1RrLsj/6+WFEMN5X9/FN1O
-	 P1mhMdTpd9U4HOfi/3uIOXvxkLf5oubSi2+pcWIw=
+	by mail.kernel.org (Postfix) with ESMTP id AF26E217F5
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 00:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732831AbfKGA5G (ORCPT
+        id S1732853AbfKGA5J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:57:06 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36102 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGA5E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:57:04 -0500
-Received: by mail-oi1-f193.google.com with SMTP id j7so471770oib.3;
-        Wed, 06 Nov 2019 16:57:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wVopP65af2cBXxzoana9KSKEMsEoxhrG9UviCULOUg4=;
-        b=WfXqhr91JSsFNCTC2KnZrddnLYR4lhhNF04xhaxZ5FILgYpr1mq83Rd9NqXo4r0GhF
-         3tjZ5A8Z1k85fAjOvYOIjJtUHgeCxtzT4Vo97GahaV4DTzqevLqJEeNBywMv6ikX8dEG
-         Xk8Vyu4tXsyCaCMPnviESSQJEOYG2J22Vkg9jMtn+jh9Yy+XsWzHix2muhBohGshabQ3
-         kPExhC/6IdEB0ikTUEVTV0LZ5DOuCqN3QflUgUtRAIBR9cIFTHqBeIP3FmvnXTz6GQ76
-         FtieUWtly9B4vbhrtWlwBesste1ygJtyYA7bw+Cjsznbayo2Yl8+2G5hipZZqQsWUnuC
-         6sjw==
-X-Gm-Message-State: APjAAAVQLpB7IrvxU9EEVNIXeVrSebMBJtj7gOEjAGzQX3672VdIBNoF
-        EV8QDW3TeXJ9bSsoVhOO7w==
-X-Google-Smtp-Source: APXvYqzgyGiNH/+b07+ECaPHE7xfGIlXeKVgv1JewsJCDXnRFj3BROp9D0klxCcE7xKAxgV91Gsdqg==
-X-Received: by 2002:aca:ad03:: with SMTP id w3mr816187oie.96.1573088221287;
-        Wed, 06 Nov 2019 16:57:01 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f9sm218449otq.52.2019.11.06.16.57.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:57:00 -0800 (PST)
-Date:   Wed, 6 Nov 2019 18:57:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     gregkh@linuxfoundation.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: usb: renesas_usbhs: convert bindings to
- json-schema
-Message-ID: <20191107005700.GA26323@bogus>
-References: <1573036483-16477-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Wed, 6 Nov 2019 19:57:09 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41116 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKGA5I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Nov 2019 19:57:08 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 23141283CE4
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-rockchip@lists.infradead.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        kernel@collabora.com, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        zhengsq@rock-chips.com, Jacob Chen <jacob2.chen@rock-chips.com>,
+        Jacob Chen <jacob-chen@rock-chips.com>,
+        Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH v10 02/11] media: staging: rkisp1: add document for rkisp1 meta buffer format
+Date:   Wed,  6 Nov 2019 21:56:08 -0300
+Message-Id: <20191107005617.12302-3-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191107005617.12302-1-helen.koike@collabora.com>
+References: <20191107005617.12302-1-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573036483-16477-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 07:34:43PM +0900, Yoshihiro Shimoda wrote:
-> Convert Renesas USBHS (HS-USB) controller bindings documentation
-> to json-schema.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  Changes from v1:
->  - Remove enum from RZ/A[12] compatibles.
->  - Remove comments from reg and clocks.
->  - Change maxItems from 2 to 3 on clocks for USB 2.0 clock selector.
->  - Add items on clocks.
->  - Remove $ref from a gpio property.
->  - Add maxItems on phys, phy-names and resets.
->  - Remove generic.txt file reference.
->  - Remove the last blank line.
->  https://patchwork.kernel.org/patch/11205919/
-> 
->  .../devicetree/bindings/usb/renesas,usbhs.txt      |  58 ----------
->  .../devicetree/bindings/usb/renesas,usbhs.yaml     | 128 +++++++++++++++++++++
->  2 files changed, 128 insertions(+), 58 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/renesas,usbhs.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.txt b/Documentation/devicetree/bindings/usb/renesas,usbhs.txt
-> deleted file mode 100644
-> index 06abe99..00000000
-> --- a/Documentation/devicetree/bindings/usb/renesas,usbhs.txt
-> +++ /dev/null
-> @@ -1,58 +0,0 @@
-> -Renesas Electronics USBHS driver
-> -
-> -Required properties:
-> -  - compatible: Must contain one or more of the following:
-> -
-> -	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
-> -	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
-> -	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
-> -	- "renesas,usbhs-r8a77470" for r8a77470 (RZ/G1C) compatible device
-> -	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
-> -	- "renesas,usbhs-r8a774b1" for r8a774b1 (RZ/G2N) compatible device
-> -	- "renesas,usbhs-r8a774c0" for r8a774c0 (RZ/G2E) compatible device
-> -	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
-> -	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
-> -	- "renesas,usbhs-r8a7792" for r8a7792 (R-Car V2H) compatible device
-> -	- "renesas,usbhs-r8a7793" for r8a7793 (R-Car M2-N) compatible device
-> -	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
-> -	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
-> -	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
-> -	- "renesas,usbhs-r8a77965" for r8a77965 (R-Car M3-N) compatible device
-> -	- "renesas,usbhs-r8a77990" for r8a77990 (R-Car E3) compatible device
-> -	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
-> -	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
-> -	- "renesas,usbhs-r7s9210" for r7s9210 (RZ/A2) compatible device
-> -	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
-> -	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 or RZ/G2 compatible devices
-> -	- "renesas,rza1-usbhs" for RZ/A1 compatible device
-> -	- "renesas,rza2-usbhs" for RZ/A2 compatible device
-> -
-> -	When compatible with the generic version, nodes must list the
-> -	SoC-specific version corresponding to the platform first followed
-> -	by the generic version.
-> -
-> -  - reg: Base address and length of the register for the USBHS
-> -  - interrupts: Interrupt specifier for the USBHS
-> -  - clocks: A list of phandle + clock specifier pairs.
-> -	    - In case of "renesas,rcar-gen3-usbhs", two clocks are required.
-> -	      First clock should be peripheral and second one should be host.
-> -	    - In case of except above, one clock is required. First clock
-> -	      should be peripheral.
-> -
-> -Optional properties:
-> -  - renesas,buswait: Integer to use BUSWAIT register
-> -  - renesas,enable-gpio: A gpio specifier to check GPIO determining if USB
-> -			 function should be enabled
-> -  - phys: phandle + phy specifier pair
-> -  - phy-names: must be "usb"
-> -  - dmas: Must contain a list of references to DMA specifiers.
-> -  - dma-names : named "ch%d", where %d is the channel number ranging from zero
-> -                to the number of channels (DnFIFOs) minus one.
-> -
-> -Example:
-> -	usbhs: usb@e6590000 {
-> -		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-gen2-usbhs";
-> -		reg = <0 0xe6590000 0 0x100>;
-> -		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-> new file mode 100644
-> index 00000000..1d776d1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-> @@ -0,0 +1,128 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/usb/renesas,usbhs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas USBHS (HS-USB) controller
-> +
-> +maintainers:
-> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - const: renesas,usbhs-r7s72100 # RZ/A1
-> +          - const: renesas,rza1-usbhs
-> +
-> +      - items:
-> +          - const: renesas,usbhs-r7s9210 # RZ/A2
-> +          - const: renesas,rza2-usbhs
-> +
-> +      - items:
-> +          - enum:
-> +              - renesas,usbhs-r8a7743  # RZ/G1M
-> +              - renesas,usbhs-r8a7744  # RZ/G1N
-> +              - renesas,usbhs-r8a7745  # RZ/G1E
-> +              - renesas,usbhs-r8a77470 # RZ/G1C
-> +              - renesas,usbhs-r8a7790  # R-Car H2
-> +              - renesas,usbhs-r8a7791  # R-Car M2-W
-> +              - renesas,usbhs-r8a7792  # R-Car V2H
-> +              - renesas,usbhs-r8a7793  # R-Car M2-N
-> +              - renesas,usbhs-r8a7794  # R-Car E2
-> +          - const: renesas,rcar-gen2-usbhs
-> +
-> +      - items:
-> +          - enum:
-> +              - renesas,usbhs-r8a774a1 # RZ/G2M
-> +              - renesas,usbhs-r8a774b1 # RZ/G2N
-> +              - renesas,usbhs-r8a774c0 # RZ/G2E
-> +              - renesas,usbhs-r8a7795  # R-Car H3
-> +              - renesas,usbhs-r8a7796  # R-Car M3-W
-> +              - renesas,usbhs-r8a77965 # R-Car M3-N
-> +              - renesas,usbhs-r8a77990 # R-Car E3
-> +              - renesas,usbhs-r8a77995 # R-Car D3
-> +          - const: renesas,rcar-gen3-usbhs
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 3
-> +    items:
-> +      - description: USB 2.0 host
-> +      - description: USB 2.0 peripheral
-> +      - description: USB 2.0 clock selector
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  renesas,buswait:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Integer to use BUSWAIT register.
-> +
-> +  renesas,enable-gpio:
-> +    description: |
-> +      gpio specifier to check GPIO determining if USB function should be
-> +      enabled.
-> +
-> +  phys:
-> +    maxItems: 1
-> +    items:
-> +      - description: phandle + phy specifier pair.
-> +
-> +  phy-names:
-> +    maxItems: 1
-> +    items:
-> +      - const: usb
-> +
-> +  dmas:
-> +    minItems: 2
-> +    maxItems: 4
-> +
-> +  dma-names:
-> +    minItems: 2
-> +    maxItems: 4
-> +    items:
-> +      - enum: [ch0, ch1, ch2, ch3]
+From: Jacob Chen <jacob2.chen@rock-chips.com>
 
-This is saying the 1st item is one of the 4 values and the others are 
-undefined. I think you want:
+This commit add document for rkisp1 meta buffer format
 
-items:
-  - const: ch0
-  - const: ch1
-  - const: ch2
-  - const: ch3
+Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+[refactored for upstream]
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
-> +
-> +  dr_mode:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description: |
-> +      tells Dual-Role USB controllers that we want to work on a particular
-> +      mode. Valid arguments are "host", "peripheral" and "otg". In case this
-> +      attribute isn't passed via DT, USB DRD controllers should default to OTG.
+---
 
-Assume we have a common binding for this and all you need is:
+Changes in v10:
+- unsquash
 
-dr_mode: true
+Changes in v9:
+- squash
+- migrate to staging
+- remove meta-formats.rst update
 
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: USB 2.0 host
-> +      - description: USB 2.0 peripheral
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/r8a7790-sysc.h>
-> +
-> +    usbhs: usb@e6590000 {
-> +        compatible = "renesas,usbhs-r8a7790", "renesas,rcar-gen2-usbhs";
-> +        reg = <0 0xe6590000 0 0x100>;
-> +        interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&cpg CPG_MOD 704>;
-> +    };
-> -- 
-> 2.7.4
-> 
+Changes in v8:
+- Add SPDX in the header
+- Remove emacs configs
+- Fix doc style
+
+Changes in v7:
+- s/correspond/corresponding
+- s/use/uses
+- s/docuemnt/document
+
+ .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
+ .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+
+diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+new file mode 100644
+index 000000000000..103b5cb79b7c
+--- /dev/null
++++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+@@ -0,0 +1,23 @@
++.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++.. _v4l2-meta-fmt-rkisp1-params:
++
++============================
++V4L2_META_FMT_RK_ISP1_PARAMS
++============================
++
++Rockchip ISP1 Parameters Data
++
++Description
++===========
++
++This format describes input parameters for the Rockchip ISP1.
++
++It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
++the ``linux/rkisp1-config.h`` header file.
++
++The parameters consist of multiple modules.
++The module won't be updated if the corresponding bit was not set in module_*_update.
++
++.. kernel-doc:: include/uapi/linux/rkisp1-config.h
++   :functions: rkisp1_isp_params_cfg
+diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+new file mode 100644
+index 000000000000..4ad303f96421
+--- /dev/null
++++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+@@ -0,0 +1,22 @@
++.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++.. _v4l2-meta-fmt-rkisp1-stat:
++
++=============================
++V4L2_META_FMT_RK_ISP1_STAT_3A
++=============================
++
++
++Rockchip ISP1 Statistics Data
++
++Description
++===========
++
++This format describes image color statistics information generated by the Rockchip
++ISP1.
++
++It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
++the ``linux/rkisp1-config.h`` header file.
++
++.. kernel-doc:: include/uapi/linux/rkisp1-config.h
++   :functions: rkisp1_stat_buffer
+-- 
+2.22.0
+
