@@ -2,144 +2,89 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86041C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47D3C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3AA214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=softbankrobotics.com header.i=@softbankrobotics.com header.b="B+ofl552"
+	by mail.kernel.org (Postfix) with ESMTP id 747D221882
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 15:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388860AbfKGPVm (ORCPT
+        id S1727779AbfKGPet (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:21:42 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:44561 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729981AbfKGPVl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 10:21:41 -0500
-Received: by mail-yb1-f193.google.com with SMTP id g38so1049477ybe.11
-        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 07:21:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=softbankrobotics.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HJLa0gPMAUv5bPhTtGaJLnlnj68hKkWBcQTQp2Y8E34=;
-        b=B+ofl552YPgYG6agLUogYSqjMLA2umxOSGn21yV1uEwT31g7O/XQa+bfA7zal3lIlY
-         n9FXKNbKV2UT5TdYkLKYcZGqkawb6fbGuxNB33XRqxyHnMdeSGvV1SKbkTwxOM29YHdK
-         CTrk65dnI2YI5M4ulWsWC41tW6TfgkvudMBFZV5zKvTuWt1b90gCuBZhce45pu1S6RSs
-         eJ4hxSJDrze95oS+eMpi8ZNIl7HKN76svCna85rwnt3IK9gDHoK/o5xm7E3YXvvjqKfz
-         zEfyMTwyNPUxJf3CRAuhXBm+RFlTF3JObOTVrzUSSy0OtEK3Fh5b6UnIiz4+n3DZYdru
-         9LLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HJLa0gPMAUv5bPhTtGaJLnlnj68hKkWBcQTQp2Y8E34=;
-        b=MYjGLWGK9Ba2sWGZUXFOHzPTA4X9WmXJ72j7YTStR6W5LAcm/r68WYT+2NeHeeeYsQ
-         Z/68bCO1B0CyERUdL358g/xb+SKWHflpKpL9utK9tEpUdeqqJvpAw1JRkm6Y8pl/cPsU
-         x4b2/lOtUwkESssC1mO06gSkUVOvXu3hOkxdZdiBEy650v29vWXIRJw6MXoZIn7Q2+ur
-         jWM7SURmZJTlXXYGHHOESMBN42LdY+xZi43otYogwup9eMCL8/6IBWuYxOzZt4WTCJbp
-         FmhSJm7TZsTWVcdOKPs4pUI3oc1Bdi+amB8RwljqqB55vVCCM64PqRhOCazOHZOGbR8Y
-         HADg==
-X-Gm-Message-State: APjAAAUNO/FaxLJDnzAk1tECRF0bcPZdbiGfha1EOBDo8P3pBdWhkcRS
-        jv0+nnmBY0QMwZIPH5muTjFXlBuTQkEJ+7MNBXvkv3dGlf0HBdSeFxQ+5ULHqvhOOeCUYCWC5+l
-        S0hTeru50ta5yldoWEHPTRQ9hYpI5
-X-Google-Smtp-Source: APXvYqzRuP0KRS6kNgXL+k/rx599gZ4zi3AP+E1yvYWTX39dSFoKRwBgmZ5zlQmRjqF3lwYHFQD1X1VHI+OdjPHCIg4=
-X-Received: by 2002:a25:3b56:: with SMTP id i83mr3914294yba.496.1573140099285;
- Thu, 07 Nov 2019 07:21:39 -0800 (PST)
+        Thu, 7 Nov 2019 10:34:49 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:56341 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729698AbfKGPes (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 10:34:48 -0500
+X-Originating-IP: 92.137.17.54
+Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 938F14000E;
+        Thu,  7 Nov 2019 15:34:45 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH 0/3] Remove the USB EP configuration from device tree
+Date:   Thu,  7 Nov 2019 16:31:25 +0100
+Message-Id: <20191107153128.11038-1-gregory.clement@bootlin.com>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
-From:   Julien Massot <jmassot@softbankrobotics.com>
-Date:   Thu, 7 Nov 2019 16:21:28 +0100
-Message-ID: <CADGp=QcwM8MhkRCjKz0wwHuz5vZGdfHOn0qYp4g_TBjHWzY6CA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] PCI: qcom: Add support for SDM845 PCIe
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hello,
 
-On Thu, Nov 7, 2019 at 1:16 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> This adds support necessary for the two PCIe controllers found in Qualcom=
-m
-> SDM845.
+The Atmel USB device controller is the only one having the description
+of the End Point configuration in the device tree.
 
-Thanks a lot the gen 3 PCIE works on my 845 platform.
-Tested-by: Julien Massot <jmassot@softbankrobotics.com>
+This configuration depend on the version of the controller used in the
+SoC. This variation is already documented by the compatible string of
+the controller.
 
---=20
+In this series the configuration is associated to the compatible
+string which allows to remove the EP child node from the device
+tree. The main benefit of it, beyond the simplification of the device
+tree, is the reduction of the size of the dtb which was too big to be
+managed by the bootloader.
 
+The first two patches should be merged through the USB subsystem while
+the last one should be take by the a91 subsystem. Moreover this last
+patch should be merged only once the change in the driver is merged.
 
-*This email and any attachment thereto are confidential and intended=20
-solely for the use of the individual or entity to whom they are addressed.
+Gregory
 
-If you are not the intended recipient, please be advised that disclosing,=
-=20
-copying, distributing or taking any action in reliance on the contents of=
-=20
-this email is strictly prohibited. In such case, please immediately advise=
-=20
-the sender, and delete all copies and attachment from your system.
-This=20
-email shall not be construed and is not tantamount to an offer, an=20
-acceptance of offer, or an agreement by SoftBank Robotics Europe on any=20
-discussion or contractual document whatsoever. No employee or agent is=20
-authorized to represent or bind SoftBank Robotics Europe to third parties=
-=20
-by email, or act on behalf of SoftBank Robotics Europe by email, without=20
-express written confirmation by SoftBank Robotics Europe=E2=80=99 duly auth=
-orized=20
-representatives.
-*
+Gregory CLEMENT (3):
+  usb: gadget: udc: atmel: Don't use DT to configure end point
+  dt-bindings: usb: atmel: Mark EP child node as deprecated
+  ARM: dts: at91: Remove the USB EP child node
 
+ .../devicetree/bindings/usb/atmel-usb.txt     |  56 +--------
+ arch/arm/boot/dts/at91sam9g45.dtsi            |  52 --------
+ arch/arm/boot/dts/at91sam9rl.dtsi             |  52 --------
+ arch/arm/boot/dts/at91sam9x5.dtsi             |  52 --------
+ arch/arm/boot/dts/sama5d2.dtsi                | 118 ------------------
+ arch/arm/boot/dts/sama5d3.dtsi                | 105 ----------------
+ arch/arm/boot/dts/sama5d4.dtsi                | 118 ------------------
+ drivers/usb/gadget/udc/atmel_usba_udc.c       | 112 +++++++++++------
+ drivers/usb/gadget/udc/atmel_usba_udc.h       |  12 ++
+ 9 files changed, 87 insertions(+), 590 deletions(-)
 
+-- 
+2.24.0.rc1
 
-*Ce message =C3=A9lectronique et =C3=A9ventuelles pi=C3=A8ces=20
-jointes sont confidentiels, et exclusivement destin=C3=A9s =C3=A0 la person=
-ne ou=20
-l'entit=C3=A9 =C3=A0 qui ils sont adress=C3=A9s.
-Si vous n'=C3=AAtes pas le destinataire vis=C3=A9,=20
-vous =C3=AAtes pri=C3=A9 de ne pas divulguer, copier, distribuer ou prendre=
- toute=20
-d=C3=A9cision sur la foi de ce message =C3=A9lectronique. Merci d'en aviser=
-=20
-imm=C3=A9diatement l'exp=C3=A9diteur et de supprimer toutes les copies et =
-=C3=A9ventuelles=20
-pi=C3=A8ces jointes de votre syst=C3=A8me.
-Ce message =C3=A9lectronique n'=C3=A9quivaut pas =C3=A0=20
-une offre, =C3=A0 une acceptation d=E2=80=99offre, ou =C3=A0 un accord de S=
-oftBank Robotics=20
-Europe sur toute discussion ou document contractuel quel qu=E2=80=99il soit=
-, et ne=20
-peut =C3=AAtre interpr=C3=A9t=C3=A9 comme tel. Aucun employ=C3=A9 ou agent =
-de SoftBank Robotics=20
-Europe n'est autoris=C3=A9 =C3=A0 repr=C3=A9senter ou =C3=A0 engager la soc=
-i=C3=A9t=C3=A9 par email, ou =C3=A0=20
-agir au nom et pour le compte de la soci=C3=A9t=C3=A9 par email, sans qu=E2=
-=80=99une=20
-confirmation =C3=A9crite soit donn=C3=A9e par le repr=C3=A9sentant l=C3=A9g=
-al de SoftBank=20
-Robotics Europe ou par toute autre personne ayant re=C3=A7u d=C3=A9l=C3=A9g=
-ation de=20
-pouvoir appropri=C3=A9e.
-*
-
-**
