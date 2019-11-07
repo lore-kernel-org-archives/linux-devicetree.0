@@ -2,228 +2,116 @@ Return-Path: <SRS0=C4ig=Y7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF9BC5DF61
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 13:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5266C5DF61
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 13:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF6E2075C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 13:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573132411;
-	bh=YvaEw7f+Pi2zsv4virbZKuzEazfd/I/UAKKlVWuOnZc=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Bu7/nNgAL9eadUWAd6LRMcOSB1c5WpLqb0kFNj4tSlaMY4xuDLRJOWAIitBtC/eYF
-	 /1n/IlRYmzbaOsip6CZQOx3V/WXclelXe0vl9YT+UJgRB7PdzyQaYn0xxdT49+VE0u
-	 +Dc4VUdd2drGqj7KcIxmuoGJjurd32tyvvErhDoA=
+	by mail.kernel.org (Postfix) with ESMTP id 94C58214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  7 Nov 2019 13:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bqmZ+5Yo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfKGNNa (ORCPT
+        id S2388911AbfKGNTF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:13:30 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38950 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKGNNa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 08:13:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=2ZXzsRWVNgVDHC1TW5lPvBuXZEozJzMVEssgd44PovQ=; b=EC7Iv0wio0P+
-        q4IL4TBR8jSnnaxaDrqmud1pJmv3gO4+D6K/JksXOuai6DNQJeowLxBR+DNS75Jb4kPjqp4Z80Jwe
-        mQGGAjFq3i97xc9rZzmpAgtTv7m/u4PsO6ygZGUO4p+l/NTWVd+SnS18BIJnzGvLcSO5bsAi/S4yN
-        HRSf0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iShbJ-0004ND-VR; Thu, 07 Nov 2019 13:13:26 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3895127431AF; Thu,  7 Nov 2019 13:13:25 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "ASoC: fsi: switch to yaml base Documentation" to the asoc tree
-In-Reply-To: <878sp4jaqy.wl-kuninori.morimoto.gx@renesas.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191107131325.3895127431AF@ypsilon.sirena.org.uk>
-Date:   Thu,  7 Nov 2019 13:13:25 +0000 (GMT)
+        Thu, 7 Nov 2019 08:19:05 -0500
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:40727 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbfKGNTE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 08:19:04 -0500
+Received: by mail-wm1-f53.google.com with SMTP id f3so2378646wmc.5
+        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 05:19:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=7RnYyZPkuF3R6Pjdl6TQ7ksG73Gxu8ALHEDQIVRgO5I=;
+        b=bqmZ+5YoXw4bugzXvLjciuo6mzPa5nyO0K76U+A9AKoN3Pv6gsosxLpK8HuZllTFsv
+         S3qemF+5yCBzBp5XLJKVKmMOhhjZLGA+g6Xt95YGBsrYqWXuvUafxIDfy63kkEhc/OR3
+         cVp/wNNRDIGjjAdzLBKcpeN8B7Zqg57Hs/WdeJOyQKBz4+FbcSqGrMewtb9O8jk5dOdY
+         +nj+e4GUFlPQBO5igtlpWLSrChWi2e6ZVx1yWfo1YuvmPOnOWd9dRR0lCjL3RmeVLIFV
+         6UBOeaLRj+8l2d8w9Djk9a2YfUzdq89YoZwqAkurVQPF8c855vwkwHeEthD9yPbgGDLo
+         T8Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7RnYyZPkuF3R6Pjdl6TQ7ksG73Gxu8ALHEDQIVRgO5I=;
+        b=J6hFD5XnwlQXNVGxkMbJKrv16I3BDdzG1fw+oUT+WctFxJoaVWO+M29NopW6BKQ1dF
+         mqoW8OB4+y1HEy5BvrELV86FrziS/zSAlIiVs4gAmfcHr8PuSfG2kW/6Xya/S3HkiM2V
+         JDK6KGshxm+fCR+LT5B2c3nKYxSUG/ISKwIJkaAfNBwF3/wUPlqz8ycgCS9ibZWtSF7x
+         nK3kvSbgCmarFSWYpYkuRclmNPwGBQtF6+f8nXhjzcDMs6INka9Q4NGJVqqPx3fWBdIk
+         jE1OwEdyLNEgW05LIy/o0ICD+Kf5Ke1qGUU7lFDTE4HdQgxwv9Sz9h/ib8RUMi6CysI1
+         PO3w==
+X-Gm-Message-State: APjAAAW2BGpg473Ip7mpV5M4ns0LvEc2gd/Y9pMqg7MHUbSTYMrBU+5t
+        J+z4Ztv6sJhrm6JA1hAUbo3NSHsvH92WBA==
+X-Google-Smtp-Source: APXvYqw/i0KiWaCW8SyOAKM9ExPV9nTUFYFx/CvpZN/+KyvlOHC0a/Gjmp8cY2Il2204AKsBsrN+BQ==
+X-Received: by 2002:a1c:38c3:: with SMTP id f186mr2971778wma.58.1573132743111;
+        Thu, 07 Nov 2019 05:19:03 -0800 (PST)
+Received: from cheddar.halon.org.uk (cheddar.halon.org.uk. [93.93.131.118])
+        by smtp.gmail.com with ESMTPSA id w10sm1841695wmd.26.2019.11.07.05.19.02
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Nov 2019 05:19:02 -0800 (PST)
+Received: from bsmtp by cheddar.halon.org.uk with local-bsmtp (Exim 4.89)
+        (envelope-from <steve.mcintyre@linaro.org>)
+        id 1iShgk-0000pB-52
+        for devicetree@vger.kernel.org; Thu, 07 Nov 2019 13:19:02 +0000
+Received: from stemci01 by c30-smcintyre.einval.org with local (Exim 4.92)
+        (envelope-from <steve.mcintyre@linaro.org>)
+        id 1iShgg-00022e-FP
+        for devicetree@vger.kernel.org; Thu, 07 Nov 2019 13:18:58 +0000
+Date:   Thu, 7 Nov 2019 13:18:58 +0000
+From:   Steve McIntyre <steve.mcintyre@linaro.org>
+To:     devicetree@vger.kernel.org
+Subject: Device Tree Evolution Project - call notes - 6th November (pointer)
+Message-ID: <20191107131858.GF3697@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-attached: unknown
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-wibble: sender_address steve.mcintyre@linaro.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Hi folks,
 
-   ASoC: fsi: switch to yaml base Documentation
+Just as a heads-up:
 
-has been applied to the asoc tree at
+We held our bi-weekly call about DTE yesterday. I've forwarded a copy
+of the notes to the devicetree-spec list. In case anybody here hasn't
+seen it and may be interested, here's a link to that mail in the
+spinics archive:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+  https://www.spinics.net/lists/devicetree-spec/msg00888.html
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Background information about DTE
+================================
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Linaro engineers are working on a range of initiatives in the DT
+space, collected together as a project called Device Tree Evolution
+(DTE). We hold a discussion call every second Wednesday at
+1700 GMT / 1200 EST / 0900 PST. If you would like to be invited, please
+ask me (Steve McIntyre).
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+This is a summary of the notes from the most recent meeting. I aim to
+tidy up and post the meeting notes shortly after each meeting. The raw
+notes are published at
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+https://docs.google.com/document/d/e/2PACX-1vRVDrVFWjIOascqZFCO--T8pIqyFB_MDh9cvgyoqhI6Y0tqaA9TcCcvQhcmxi5IY7CG44JfIrCdAUDL/pub
 
-Thanks,
-Mark
+For more information about DTE, see:
 
-From 2f52475bac7e1572cdc1f045bbd69205f828ed68 Mon Sep 17 00:00:00 2001
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Date: Tue, 29 Oct 2019 16:01:41 +0900
-Subject: [PATCH] ASoC: fsi: switch to yaml base Documentation
+ * https://www.linaro.org/engineering/core/devicetree-evolution/
+ * https://www.linaro.org/assets/pdf/Linaro-White-Paper--Device-Tree-Evolution.pdf
 
-This patch switches from .txt base to .yaml base Document for FSI.
-
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/878sp4jaqy.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/renesas,fsi.txt | 31 --------
- .../bindings/sound/renesas,fsi.yaml           | 76 +++++++++++++++++++
- 2 files changed, 76 insertions(+), 31 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/renesas,fsi.txt
- create mode 100644 Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-
-diff --git a/Documentation/devicetree/bindings/sound/renesas,fsi.txt b/Documentation/devicetree/bindings/sound/renesas,fsi.txt
-deleted file mode 100644
-index 0cf0f819b823..000000000000
---- a/Documentation/devicetree/bindings/sound/renesas,fsi.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--Renesas FSI
--
--Required properties:
--- compatible			: "renesas,fsi2-<soctype>",
--				  "renesas,sh_fsi2" or "renesas,sh_fsi" as
--				  fallback.
--				  Examples with soctypes are:
--				    - "renesas,fsi2-r8a7740" (R-Mobile A1)
--				    - "renesas,fsi2-sh73a0" (SH-Mobile AG5)
--- reg				: Should contain the register physical address and length
--- interrupts			: Should contain FSI interrupt
--
--- fsia,spdif-connection		: FSI is connected by S/PDIF
--- fsia,stream-mode-support	: FSI supports 16bit stream mode.
--- fsia,use-internal-clock	: FSI uses internal clock when master mode.
--
--- fsib,spdif-connection		: same as fsia
--- fsib,stream-mode-support	: same as fsia
--- fsib,use-internal-clock	: same as fsia
--
--Example:
--
--sh_fsi2: sh_fsi2@ec230000 {
--	compatible = "renesas,sh_fsi2";
--	reg = <0xec230000 0x400>;
--	interrupts = <0 146 0x4>;
--
--	fsia,spdif-connection;
--	fsia,stream-mode-support;
--	fsia,use-internal-clock;
--};
-diff --git a/Documentation/devicetree/bindings/sound/renesas,fsi.yaml b/Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-new file mode 100644
-index 000000000000..140a37fc3c0b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/renesas,fsi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas FSI Sound Driver Device Tree Bindings
-+
-+maintainers:
-+  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-+
-+properties:
-+  $nodename:
-+    pattern: "^sound@.*"
-+
-+  compatible:
-+    oneOf:
-+      # for FSI2 SoC
-+      - items:
-+        - enum:
-+          - renesas,fsi2-sh73a0
-+          - renesas,fsi2-r8a7740
-+        - enum:
-+          - renesas,sh_fsi2
-+      # for Generic
-+      - items:
-+        - enum:
-+          - renesas,sh_fsi
-+          - renesas,sh_fsi2
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsia,spdif-connection:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: FSI is connected by S/PDIF
-+
-+  fsia,stream-mode-support:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: FSI supports 16bit stream mode
-+
-+  fsia,use-internal-clock:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: FSI uses internal clock when master mode
-+
-+  fsib,spdif-connection:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: same as fsia
-+
-+  fsib,stream-mode-support:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: same as fsia
-+
-+  fsib,use-internal-clock:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: same as fsia
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    sh_fsi2: sound@ec230000 {
-+            compatible = "renesas,fsi2-r8a7740", "renesas,sh_fsi2";
-+            reg = <0xec230000 0x400>;
-+            interrupts = <0 146 0x4>;
-+
-+            fsia,spdif-connection;
-+            fsia,stream-mode-support;
-+            fsia,use-internal-clock;
-+    };
+Cheers,
 -- 
-2.20.1
+Steve McIntyre                                steve.mcintyre@linaro.org
+<http://www.linaro.org/> Linaro.org | Open source software for ARM SoCs
 
