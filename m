@@ -2,99 +2,127 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B43C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B824FC6194
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B598D2085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214545;
-	bh=dkQQjEz/3AL8lCoqR+WhrS+wxdB8zSvy0TZOHAZ0ujY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q4WYMOWhVrDkK2hdD26qyldmYMKwqIVbRw5BV10LJP+nkKwOGUau4/wgjAI5R8YpQ
-	 bBbvruuC7bp12gLOQ3pMZIvOiW6uia0QApITpny1QzAVxY4bjIlGIGm5Ns6hyfq8gp
-	 N8pDblKOj75UqyH8DbPTxuSBIDlDLztTCG4YY/OA=
+	by mail.kernel.org (Postfix) with ESMTP id 7347C215EA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="N02473gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390484AbfKHMCU (ORCPT
+        id S1732757AbfKHLnE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:02:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57732 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:43:04 -0500
+Received: from vps.xff.cz ([195.181.215.36]:46966 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388506AbfKHLnT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:19 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85E95222CE;
-        Fri,  8 Nov 2019 11:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213399;
-        bh=dkQQjEz/3AL8lCoqR+WhrS+wxdB8zSvy0TZOHAZ0ujY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r3GvHRLAXFL3mkPir24mZGKmJXlKkmu5zTrbhM+t83COXBacYNiI1vZeI1XUGMSKj
-         rVTm0puyt52LELRiBcyV3CoLusYb6fCJVjOxIO9sHkPZsl9WJYhPtYccyWb96DFEKs
-         erXfWMRtdJojGHXb4icVXXOWr7BOcfYVHxCuv0Ig=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 006/103] arm64: dts: allwinner: a64: NanoPi-A64: Fix DCDC1 voltage
-Date:   Fri,  8 Nov 2019 06:41:31 -0500
-Message-Id: <20191108114310.14363-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
-References: <20191108114310.14363-1-sashal@kernel.org>
+        id S2390303AbfKHLnC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:43:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1573213381; bh=lE0IEyhRZdzSCV11eufQ/7MoeNiErKeSnathaLA1lNU=;
+        h=Date:From:To:Subject:X-My-GPG-KeyId:References:From;
+        b=N02473gjGfoh4FNolyioo32WH6IieZfnLJyQNsMA0nPAvDQkTSDPisLlvb3n3SXHO
+         7AVe8qFjWddBloPUZwFm5DUw3VMc4Aqy730ScMHIW1+8dTjaChczSKoMoNEdUB//M4
+         Lb5+/V0MW/FyCAzq0khvPJrtjxUGzimQera7k3vI=
+Date:   Fri, 8 Nov 2019 12:43:01 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Icenowy Zheng <icenowy@aosc.io>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>, arnd@arndb.de,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        kishon@ti.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        mark.rutland@arm.com, mripard@kernel.org,
+        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
+        tglx@linutronix.de, wens@csie.org
+Subject: Re: [PATCH] phy: allwinner: Fix GENMASK misuse
+Message-ID: <20191108114301.v3663hs5ftjsoec3@core.my.home>
+Mail-Followup-To: Icenowy Zheng <icenowy@aosc.io>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>, arnd@arndb.de,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        kishon@ti.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        mark.rutland@arm.com, mripard@kernel.org,
+        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
+        tglx@linutronix.de, wens@csie.org
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20191020134229.1216351-3-megous@megous.com>
+ <20191107204645.13739-1-rikard.falkeborn@gmail.com>
+ <20191107214514.kcz42mcehyrrif4o@core.my.home>
+ <F563E52E-72BF-4297-A14F-DDE2B490DADB@aosc.io>
+ <20191108114138.snghk5n7kwuw7zz3@core.my.home>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191108114138.snghk5n7kwuw7zz3@core.my.home>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+On Fri, Nov 08, 2019 at 12:41:39PM +0100, megous hlavni wrote:
+> On Fri, Nov 08, 2019 at 07:29:21PM +0800, Icenowy Zheng wrote:
+> > 
+> > 
+> > 于 2019年11月8日 GMT+08:00 上午5:45:14, "Ondřej Jirman" <megous@megous.com> 写到:
+> > >Hello Rikard,
+> > >
+> > >On Thu, Nov 07, 2019 at 09:46:45PM +0100, Rikard Falkeborn wrote:
+> > >> Arguments are supposed to be ordered high then low.
+> > >> 
+> > >> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> > >> ---
+> > >> Spotted while trying to add compile time checks of GENMASK arguments.
+> > >> Patch has only been compile tested.
+> > >
+> > >thank you!
+> > >
+> > >Tested-by: Ondrej Jirman <megous@megous.com>
+> > 
+> > Does it affect or fix the performance?
+> 
+> See here: https://forum.armbian.com/topic/10131-orange-pi-lite2-usb3-now-working/?do=findComment&comment=88904
+> 
+> Quote:
+> 
+> > It may or may not help. On Opi3 I see no change, probably because HUB is
+> > really close to the SoC, but on boards without a HUB, SoC's USB3 phy will
+> > have to drive the signal over the longer cable and this patch might benefit
+> > those boards. 
+> 
+> Maybe someone with boards without PHY will test it more.
 
-[ Upstream commit 480f58cdbe392d4387a2193b6131a277e0111dd0 ]
+Eh, on boards without a USB3 HUB.
 
-According to the NanoPi-A64 schematics, DCDC1 is connected to a voltage
-rail named "VDD_SYS_3.3V". All users seem to expect 3.3V here: the
-Ethernet PHY, the uSD card slot, the camera interface and the GPIO pins
-on the headers.
-Fix up the voltage on the regulator to lift it up to 3.3V.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index 2beef9e6cb885..aa0b3844ad63e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -126,9 +126,9 @@
- 
- &reg_dcdc1 {
- 	regulator-always-on;
--	regulator-min-microvolt = <3000000>;
--	regulator-max-microvolt = <3000000>;
--	regulator-name = "vcc-3v";
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-3v3";
- };
- 
- &reg_dcdc2 {
--- 
-2.20.1
-
+> regards,
+> 	o.
+> 
+> > >
+> > >regards,
+> > >	o.
+> > >
+> > >>  drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
+> > >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >> 
+> > >> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c
+> > >b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> > >> index 1169f3e83a6f..b1c04f71a31d 100644
+> > >> --- a/drivers/phy/allwinner/phy-sun50i-usb3.c
+> > >> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> > >> @@ -49,7 +49,7 @@
+> > >>  #define SUNXI_LOS_BIAS(n)		((n) << 3)
+> > >>  #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
+> > >>  #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
+> > >> -#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
+> > >> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
+> > >>  
+> > >>  struct sun50i_usb3_phy {
+> > >>  	struct phy *phy;
+> > >> -- 
+> > >> 2.24.0
+> > >> 
