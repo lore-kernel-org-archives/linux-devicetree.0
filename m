@@ -2,163 +2,86 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D6DC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 05:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F189CC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C248A214DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 05:21:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxjdFP0W"
+	by mail.kernel.org (Postfix) with ESMTP id C39B920865
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbfKHFVC (ORCPT
+        id S1726072AbfKHGMH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 00:21:02 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34791 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfKHFVB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 00:21:01 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n13so3911965pff.1;
-        Thu, 07 Nov 2019 21:20:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pGFx+amGu93F2A50py9iOALjdTJpw7/ItloLfCzH0sg=;
-        b=FxjdFP0WXWrfIrLD+8gcWy/umEQbWOunx9yjkSz/LLLs4K/VyjyX0EgEYa5CMm5F6w
-         SAUoch3awY5CzsHatHgtVRC9h1rmotllGqaN7eQVFoLIwA4Q7Zfr1e8Z2B18dGZ8xAu8
-         QoYbA/t5omu9u3U2icdTWcCYwlPbKzMHqD+IgJulOgosUZgxH5W3MHmYQI71tuBjOFFx
-         BR8e64XCMSY5iGEB4Z+DLlWTaRinUpFPqPcq4EDdv7x59vVinY1VwRfkEjmIHzX0rDCi
-         +62w0PF625kC9XHstmRDdqFR5vEHmEAF85ioDHVJZVjWR+jFhBb7oYGuTP7cAbiCvHCX
-         TScg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=pGFx+amGu93F2A50py9iOALjdTJpw7/ItloLfCzH0sg=;
-        b=EdKyxzsWvPDMvN8XpZcmpbIcdgYO6f6rCRytxfyQWlAIeBjNpa4VvfHLvj8exCWAHI
-         3FyGZRKYrDIJOZGsL7XrfriftSDcXBVLOkCdkvtb6HW3aeHNHD4C0LmYfJ9DCQvzERvg
-         3Ex7zamrQv1XjxQh6NYU4cV9Dde+EMC8L9/Y7JwKnLS680vM0uFyxypKDi1Mh8Zm1Mbc
-         stK2pR8HV7zC50ADaG+T2rV85yGxeEfHQ3HThHuWzg8AuaTbzN56kPBElSe1a3bWciXk
-         2LYZv1zvgapvmfsX7XcEu9r2Cw3tm9u3hx7v8s2N/ELjunUl73mPyR4itUWnlYfma6lN
-         5f6Q==
-X-Gm-Message-State: APjAAAUeEIjlls39I0r/5S5tj9x7QP6VN6mvN3BPmW/wu5a9FsXmbV9v
-        ZbqylMuNPRIKnP1wYckKMKs=
-X-Google-Smtp-Source: APXvYqxciNZfaCcNzGy2TBZD43B3E6OOWrVWrEa5IIAHVWjFI1D487hSYs23XimTIBVclBiUU770SA==
-X-Received: by 2002:a63:234c:: with SMTP id u12mr9244517pgm.384.1573190458914;
-        Thu, 07 Nov 2019 21:20:58 -0800 (PST)
-Received: from voyager.ibm.com ([36.255.48.244])
-        by smtp.gmail.com with ESMTPSA id v19sm3798443pjr.14.2019.11.07.21.20.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 21:20:58 -0800 (PST)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsi@lists.ozlabs.org
-Subject: [PATCH v2 11/11] fsi: aspeed: Fix OPB0 byte order register values
-Date:   Fri,  8 Nov 2019 15:49:45 +1030
-Message-Id: <20191108051945.7109-12-joel@jms.id.au>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191108051945.7109-1-joel@jms.id.au>
-References: <20191108051945.7109-1-joel@jms.id.au>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 8 Nov 2019 01:12:07 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:43990 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfKHGMH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 01:12:07 -0500
+Received: from marcel-macpro.fritz.box (p5B3D2BA4.dip0.t-ipconnect.de [91.61.43.164])
+        by mail.holtmann.org (Postfix) with ESMTPSA id D24F8CED12;
+        Fri,  8 Nov 2019 07:21:09 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v2 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm
+ config
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191107232713.48577-5-abhishekpandit@chromium.org>
+Date:   Fri, 8 Nov 2019 07:12:05 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
+        devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <48D0B4BB-2819-4C4D-B52D-4727FB344C19@holtmann.org>
+References: <20191107232713.48577-1-abhishekpandit@chromium.org>
+ <20191107232713.48577-5-abhishekpandit@chromium.org>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+Hi Abhishek,
 
-The data byte order selection registers in the APB2OPB primarily expose some
-internal plumbing necessary to get correct write accesses onto the OPB.
-OPB write cycles require "data mirroring" across the 32-bit data bus to
-support variable data width slaves that don't implement "byte enables".
-For slaves that do implement byte enables the master can signal which
-bytes on the data bus the slave should consider valid.
+> Add documentation for pcm parameters.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> 
+> ---
+> 
+> Changes in v2:
+> - Use match data to disallow baudrate setting
+> - Parse pcm parameters by name instead of as a byte string
+> - Fix prefix for dt-bindings commit
+> 
+> .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
+> 1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> index c749dc297624..b5de8a6a3980 100644
+> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> @@ -29,6 +29,11 @@ Optional properties:
+>    - "lpo": external low power 32.768 kHz clock
+>  - vbat-supply: phandle to regulator supply for VBAT
+>  - vddio-supply: phandle to regulator supply for VDDIO
+> + - brcm,sco-routing: 0-3 (PCM, Transport, Codec, I2S)
+> + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
+> + - brcm,pcm-frame-type: 0-1 (short, long)
+> + - brcm,pcm-sync-mode: 0-1 (slave, master)
+> + - brcm,pcm-clock-mode: 0-1 (slave, master)
 
-The data mirroring behaviour is specified by the following table:
+should we do brcm,bt-sco-routing etc.
 
-    +-----------------+----------+-----------------------------------+
-    |                 |          |          32-bit Data Bus          |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |         |       |          |         |         |       |       |
-    |   ABus  | Mn_BE |  Request |   Dbus  |   Dbus  |  Dbus |  Dbus |
-    | (30:31) | (0:3) | Transfer |   0:7   |   8:15  | 16:23 | 24:31 |
-    |         |       |   Size   |  byte0  |  byte1  | byte2 | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    00   |  1111 | fullword |  byte0  |  byte1  | byte2 | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    00   |  1110 | halfword |  byte0  |  byte1  | byte2 |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    01   |  0111 |   byte   | _byte1_ |  byte1  | byte2 | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    00   |  1100 | halfword |  byte0  |  byte1  |       |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    01   |  0110 |   byte   | _byte1_ |  byte1  | byte2 |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    10   |  0011 | halfword | _byte2_ | _byte3_ | byte2 | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    00   |  1000 |   byte   |  byte0  |         |       |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    01   |  0100 |   byte   | _byte1_ |  byte1  |       |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    10   |  0010 |   byte   | _byte2_ |         | byte2 |       |
-    +---------+-------+----------+---------+---------+-------+-------+
-    |    11   |  0001 |   byte   | _byte3_ | _byte3_ |       | byte3 |
-    +---------+-------+----------+---------+---------+-------+-------+
+Regards
 
-Mirrored data values are highlighted by underscores in the Dbus columns.
-The values in the ABus and Request Transfer Size columns correspond to
-values in the field names listed in the write data order select register
-descriptions.
-
-Similar configuration registers are exposed for reads which enables the
-secondary purpose of configuring hardware endian conversions. It appears the
-data bus byte order is switched around in hardware so set the registers such
-that we can access the correct values for all widths. The values were
-determined by experimentation on hardware against fixed CFAM register
-values to configure the read data order, then in combination with the
-table above and the register layout documentation in the AST2600
-datasheet performing write/read cycles to configure the write data order
-registers.
-
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/fsi/fsi-master-aspeed.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
-index 95e226ac78b9..f49742b310c2 100644
---- a/drivers/fsi/fsi-master-aspeed.c
-+++ b/drivers/fsi/fsi-master-aspeed.c
-@@ -459,11 +459,11 @@ static int fsi_master_aspeed_probe(struct platform_device *pdev)
- 	writel(fsi_base, aspeed->base + OPB_FSI_BASE);
- 
- 	/* Set read data order */
--	writel(0x0011bb1b, aspeed->base + OPB0_READ_ORDER1);
-+	writel(0x00030b1b, aspeed->base + OPB0_READ_ORDER1);
- 
- 	/* Set write data order */
--	writel(0x0011bb1b, aspeed->base + OPB0_WRITE_ORDER1);
--	writel(0xffaa5500, aspeed->base + OPB0_WRITE_ORDER2);
-+	writel(0x0011101b, aspeed->base + OPB0_WRITE_ORDER1);
-+	writel(0x0c330f3f, aspeed->base + OPB0_WRITE_ORDER2);
- 
- 	/*
- 	 * Select OPB0 for all operations.
--- 
-2.24.0.rc1
+Marcel
 
