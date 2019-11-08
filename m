@@ -2,112 +2,100 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C28FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 10:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94592C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 10:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F9F2178F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 10:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573208890;
-	bh=AOSjNRac0P9NEqExaxB0xZTWmcyhkd13as5AIA1QlAA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ogrs6K3dj6Q4i3hWxn8xNeD+L65X3Cgfjdn/o3Es3PvUrIgt1s+PEzAXmw2cEack5
-	 dhT7Gr8/7bgNtiMOphSlUnlD0ftwPW8xih/9DwnwMQ6m4WKy7pzUklM9+oMLtAqnx4
-	 u5Pa0Juwd0wce/jePTgE7ADwAzt+H0kF4GAPnKL0=
+	by mail.kernel.org (Postfix) with ESMTP id 64B2821848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 10:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GH9uAbmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfKHK2K (ORCPT
+        id S1727016AbfKHKfu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:28:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfKHK2K (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 05:28:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 997DF206BA;
-        Fri,  8 Nov 2019 10:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573208889;
-        bh=AOSjNRac0P9NEqExaxB0xZTWmcyhkd13as5AIA1QlAA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MMCWRLIPqRMeWNaDQUiiTnuQ2uS0dICkTS3gRPk7P+iNA8cyh/JeygV57zPG+NxmY
-         kYgXxnjTO11HViK4KzLlph40W+a6qDazZbXc9CnT8tRfliiAzNCMxJTKq4Fdbir8td
-         0KJT3vLj5HkWsVy6nOJNtxnn8ZKJlJtgBFH2cHHg=
-Date:   Fri, 8 Nov 2019 11:28:06 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsi@lists.ozlabs.org
-Subject: Re: [PATCH v2 08/11] dt-bindings: fsi: Add description of FSI master
-Message-ID: <20191108102806.GA656785@kroah.com>
-References: <20191108051945.7109-1-joel@jms.id.au>
- <20191108051945.7109-9-joel@jms.id.au>
+        Fri, 8 Nov 2019 05:35:50 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1675 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726180AbfKHKft (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 05:35:49 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8ARHkc030061;
+        Fri, 8 Nov 2019 11:35:30 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=C7Ytb5ccJx46yUXyoXndkBMI9CQtxWg5KpH5r3iInZ8=;
+ b=GH9uAbmNuzAIytWfQHvJoGGcaa3XfQizakPDih9XTMQcZNv9yhOju/+XEwD4dxMSI6Et
+ MYAEj0TBlE1+zZj1WX/k00K4MA/26XQLwWeyUnpBmEOdzBDBNbdypQ0BZzflaf8BJOz7
+ O/0OGDlxp3dnVm4cSnw9csIVXklDl+80lcd5vGDItgAMhtlHmLyh2z5jRgtowtpdyXYJ
+ 3FQuE9kZv35hNGwaI6s2LdO/E2srBP4ovFUwTVnJzax/VeQDlLG3rT9N5MOlbafFP+2R
+ 1TkjiJ9OaxFD89XLs3rqxWGcTNpX6T1WMPD0OeQ3PssVxWMrlpA2Ejms/k0v8F27yeLk 7g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w41vmu27x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 11:35:30 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 93442100034;
+        Fri,  8 Nov 2019 11:35:26 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7CB1F2B0FED;
+        Fri,  8 Nov 2019 11:35:26 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 8 Nov
+ 2019 11:35:23 +0100
+Subject: Re: [PATCH V4 net-next 0/4] net: ethernet: stmmac: cleanup clock and
+ optimization
+To:     David Miller <davem@davemloft.net>, <christophe.roullier@st.com>
+CC:     <robh@kernel.org>, <joabreu@synopsys.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <peppe.cavallaro@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>
+References: <20191107084757.17910-1-christophe.roullier@st.com>
+ <20191107.152640.1457462659040029467.davem@davemloft.net>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <8c4efcce-b46f-ac94-a367-50ff5d78c8a2@st.com>
+Date:   Fri, 8 Nov 2019 11:35:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191108051945.7109-9-joel@jms.id.au>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191107.152640.1457462659040029467.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-08_02:2019-11-07,2019-11-08 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 03:49:42PM +1030, Joel Stanley wrote:
-> This describes the FSI master present in the AST2600.
+Hi David
+
+On 11/8/19 12:26 AM, David Miller wrote:
+> From: Christophe Roullier <christophe.roullier@st.com>
+> Date: Thu, 7 Nov 2019 09:47:53 +0100
 > 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> Acked-by: Alistair Popple <alistair@popple.id.au>
-> ---
->  .../bindings/fsi/fsi-master-aspeed.txt        | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
+>> Some improvements:
+>>   - manage syscfg as optional clock,
+>>   - update slew rate of ETH_MDIO pin,
+>>   - Enable gating of the MAC TX clock during TX low-power mode
+>>
+>> V4: Update with Andrew Lunn remark
 > 
-> diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-> new file mode 100644
-> index 000000000000..b758f91914f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-> @@ -0,0 +1,24 @@
-> +Device-tree bindings for AST2600 FSI master
-> +-------------------------------------------
-> +
-> +The AST2600 contains two identical FSI masters. They share a clock and have a
-> +separate interrupt line and output pins.
-> +
-> +Required properties:
-> + - compatible: "aspeed,ast2600-fsi-master"
-> + - reg: base address and length
-> + - clocks: phandle and clock number
-> + - interrupts: platform dependent interrupt description
-> + - pinctrl-0: phandle to pinctrl node
-> + - pinctrl-names: pinctrl state
-> +
-> +Examples:
-> +
-> +    fsi-master {
-> +        compatible = "aspeed,ast2600-fsi-master", "fsi-master";
-> +        reg = <0x1e79b000 0x94>;
-> +	interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fsi1_default>;
-> +	clocks = <&syscon ASPEED_CLK_GATE_FSICLK>;
-> +    };
-> -- 
-> 2.24.0.rc1
+> This is mostly ARM DT updates, which tree should this go through?
+> 
+> I don't want to step on toes this time :-)
 > 
 
-As these all seem like bog-standard properties, I'll take this now,
-thanks.
+I'll take DT patches in my STM32 tree.
 
-greg k-h
+Thanks
+Alex
