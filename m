@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7604FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7545FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEB2207FA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C793207FA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214049;
-	bh=Gau1vM/kScUGBLToqhhxhKTc3RPJfU9dshLIcUAb4cA=;
+	s=default; t=1573214051;
+	bh=Gr3SZ9VHa90+tcO5hNJcOPzYgigEHZhDGHk6WUMb78c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hlIWtKYnkEqwfHYSKHxZkhpjUjL1xYUlUz2NeqFsYx9obcsQFns3rucgsJHQx6G1F
-	 o4UUx5DJjETqXMoEqCiQJ7csr4Sx5/L+d7W/nycuZHIgRW3QNENClxfXGFhiW6gdx1
-	 By9qGS8/zc8CJdn2HtgAgveZxQ2Z/zwgwgeM6mlQ=
+	b=UEUYr4iq2Jsah1PVOe1oJAQLqebRFYSlRZ5EspZSR8VSk3tfFofJOb0x3SfY2VN5F
+	 1nwx2W5pHqraSYgL8ef6a5eCbZOVzdb8EK7ycJByDfWzHYGwjWQpRclwa1z5DQLWSQ
+	 gSH1w30NfrNTBB2Hy2hUWzs6FhT0EKDcd/hHVS60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391418AbfKHLyA (ORCPT
+        id S2391347AbfKHLq1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:54:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34218 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391352AbfKHLq3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:29 -0500
+        id S2391281AbfKHLq1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5093E222C2;
-        Fri,  8 Nov 2019 11:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3C6521D82;
+        Fri,  8 Nov 2019 11:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213589;
-        bh=Gau1vM/kScUGBLToqhhxhKTc3RPJfU9dshLIcUAb4cA=;
+        s=default; t=1573213586;
+        bh=Gr3SZ9VHa90+tcO5hNJcOPzYgigEHZhDGHk6WUMb78c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GGq6xnb9FxQEWmMpOICP9U69Du+a8hs4otvmTIN5b8btAUaPKrKHE2OXx25CrkYRo
-         UUuoHI5uGZqgZGnqHUwxBszfYI0UVKoM5p1LYk89+WO9f8tIpRZSvxcshFciMgMrWX
-         HvcZa7txZJb6aKStmL+S+/WKO7buk/0yjri2b0PI=
+        b=hbnPyiJUFzgmNcsl+TGGyjQgv6KoRP7hbxey7u2f6vnAEkvMfOb5nO9FsfP9bqNc6
+         /gGqrImQLn506VE154O96n2qVFh7vDSkez8xslw5fVP/mZwoB7em4LZzDulowHqDXq
+         wOdcvym8NLcpE8fm4J/i3D3isKqEz9UaFa7uAqeY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 31/64] ARM: dts: omap3-gta04: fix touchscreen tsc2007
-Date:   Fri,  8 Nov 2019 06:45:12 -0500
-Message-Id: <20191108114545.15351-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 29/64] ARM: dts: omap3-gta04: fixes for tvout / venc
+Date:   Fri,  8 Nov 2019 06:45:10 -0500
+Message-Id: <20191108114545.15351-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -62,57 +62,58 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 7384a24248eda140a234d356b6c840701ee9f055 ]
+[ Upstream commit f6591391373dbff2c0200e1055d4ff86191578d2 ]
 
-we fix penirq polarity, add penirq pinmux and touchscreen
-properties.
+* fix connector compatibility (composite)
+* add comment for gpio1 23
+* add proper #address-cells
+* we use only one venc_out channel for composite
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index e86f42086a29b..6e809b0ff5c9f 100644
+index 95c6ac44e307f..67b50dbe28189 100644
 --- a/arch/arm/boot/dts/omap3-gta04.dtsi
 +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -274,6 +274,13 @@
- 			OMAP3_CORE1_IOPAD(0x2134, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio112 */
- 		>;
+@@ -122,7 +122,7 @@
  	};
+ 
+ 	tv0: connector {
+-		compatible = "svideo-connector";
++		compatible = "composite-video-connector";
+ 		label = "tv";
+ 
+ 		port {
+@@ -134,7 +134,7 @@
+ 
+ 	tv_amp: opa362 {
+ 		compatible = "ti,opa362";
+-		enable-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
++		enable-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;	/* GPIO_23 to enable video out amplifier */
+ 
+ 		ports {
+ 			#address-cells = <1>;
+@@ -539,10 +539,14 @@
+ 
+ 	vdda-supply = <&vdac>;
+ 
++	#address-cells = <1>;
++	#size-cells = <0>;
 +
-+	penirq_pins: pinmux_penirq_pins {
-+		pinctrl-single,pins = <
-+			/* here we could enable to wakeup the cpu from suspend by a pen touch */
-+			OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio160 */
-+		>;
-+	};
- };
- 
- &omap3_pmx_core2 {
-@@ -411,10 +418,19 @@
- 	tsc2007@48 {
- 		compatible = "ti,tsc2007";
- 		reg = <0x48>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&penirq_pins>;
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <0 IRQ_TYPE_EDGE_FALLING>; /* GPIO_160 */
--		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
-+		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;	/* GPIO_160 */
- 		ti,x-plate-ohms = <600>;
-+		touchscreen-size-x = <480>;
-+		touchscreen-size-y = <640>;
-+		touchscreen-max-pressure = <1000>;
-+		touchscreen-fuzz-x = <3>;
-+		touchscreen-fuzz-y = <8>;
-+		touchscreen-fuzz-pressure = <10>;
-+		touchscreen-inverted-y;
+ 	port {
++		reg = <0>;
+ 		venc_out: endpoint {
+ 			remote-endpoint = <&opa_in>;
+-			ti,channels = <2>;
++			ti,channels = <1>;
+ 			ti,invert-polarity;
+ 		};
  	};
- 
- 	/* RFID EEPROM */
 -- 
 2.20.1
 
