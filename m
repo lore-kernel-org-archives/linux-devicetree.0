@@ -2,80 +2,118 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C15FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188F0C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9925521D82
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:13:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gaNzLAbH"
+	by mail.kernel.org (Postfix) with ESMTP id E751720869
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfKHINh (ORCPT
+        id S1725975AbfKHI3L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:13:37 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:62012 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726072AbfKHINh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:13:37 -0500
-X-UUID: 167b119e3f294fcbaa365433fb373abf-20191108
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=xBlkyXC6QXDUVtiAo1Ep4CtUp9rzUNb55vuuwtwgRxQ=;
-        b=gaNzLAbHUbPc8cHrLJOCkW0kG80ufIGtRF9iUaqDaRtsVQh8ow/lZUTpXlzHkhwouwrhoa21FFfCtS57v/v6pwjhTJvW4jAuON/iUmw/aSuFcmWC7kIVENw0Wf65Tk2ZBpSHD7KJxJVMtyTRWB33G0p+Oa/7YKSqEFo251Z65m0=;
-X-UUID: 167b119e3f294fcbaa365433fb373abf-20191108
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <mark-mc.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 72878197; Fri, 08 Nov 2019 16:13:30 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 8 Nov 2019 16:13:26 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 8 Nov 2019 16:13:26 +0800
-Message-ID: <1573200809.10348.9.camel@mtksdccf07>
-Subject: Re: [PATCH net] net: ethernet: mediatek: rework GDM setup flow
-From:   mtk15127 <Mark-MC.Lee@mediatek.com>
-To:     David Miller <davem@davemloft.net>
-CC:     <sean.wang@mediatek.com>, <john@phrozen.org>,
-        <matthias.bgg@gmail.com>, <andrew@lunn.ch>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <opensource@vdorst.com>,
-        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <jakub.kicinski@netronome.com>,
-        <Mark-MC.Lee@mediatek.com>
-Date:   Fri, 8 Nov 2019 16:13:29 +0800
-In-Reply-To: <20191107.154922.1123372183066604716.davem@davemloft.net>
-References: <20191107105135.1403-1-Mark-MC.Lee@mediatek.com>
-         <20191107.154922.1123372183066604716.davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 8 Nov 2019 03:29:11 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:43033 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbfKHI3L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:29:11 -0500
+Received: from aptenodytes (lfbn-tou-1-421-123.w86-206.abo.wanadoo.fr [86.206.246.123])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8DD8924000F;
+        Fri,  8 Nov 2019 08:29:07 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 09:29:07 +0100
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>, megous@megous.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        mripard@kernel.org, kishon@ti.com, linux-sunxi@googlegroups.com,
+        robh+dt@kernel.org, tglx@linutronix.de, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Subject: Re: [PATCH] phy: allwinner: Fix GENMASK misuse
+Message-ID: <20191108082907.GA848664@aptenodytes>
+References: <20191020134229.1216351-3-megous@megous.com>
+ <20191107204645.13739-1-rikard.falkeborn@gmail.com>
+ <20191107233914.GW25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Disposition: inline
+In-Reply-To: <20191107233914.GW25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTExLTA3IGF0IDE1OjQ5IC0wODAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
-IEZyb206IE1hcmtMZWUgPE1hcmstTUMuTGVlQG1lZGlhdGVrLmNvbT4NCj4gRGF0ZTogVGh1LCA3
-IE5vdiAyMDE5IDE4OjUxOjM1ICswODAwDQo+IA0KPiA+ICsJZm9yIChpID0gMDsgaSA8IDI7IGkr
-Kykgew0KPiANCj4gVGhpcyBpcyBhIHJlZ3Jlc3Npb24sIGJlY2F1c2UgaW4gdGhlIGV4aXN0aW5n
-IGNvZGUuLi4NCj4gDQo+ID4gLQlmb3IgKGkgPSAwOyBpIDwgTVRLX01BQ19DT1VOVDsgaSsrKSB7
-DQo+IA0KPiB0aGUgcHJvcGVyIG1hY3JvIGlzIHVzZWQgaW5zdGVhZCBvZiBhIG1hZ2ljIGNvbnN0
-YW50Lg0KIFllcywgeW91IGFyZSByaWdodCwgSSBtYWtlIGEgbWlzdGFrZSBoZXJlLCB3aWxsIGNv
-cnJlY3QgaXQgaW4gdGhlIG5leHQNCnBhdGNoDQo+IA0KPiBZb3UncmUgZG9pbmcgc28gbWFueSB0
-aGluZ3MgaW4gb25lIGNoYW5nZSwgaXQncyBoYXJkIHRvIHJldmlldw0KPiBhbmQgYXVkaXQuDQo+
-IA0KPiBJZiB5b3UncmUgZ29pbmcgdG8gY29uc29saWRhdGUgY29kZSwgZG8gdGhhdCBvbmx5IGlu
-IG9uZSBjaGFuZ2UuDQo+IA0KPiBUaGVuIG1ha2Ugb3RoZXIgZnVuY3Rpb25hbCBjaGFuZ2VzIHN1
-Y2ggYXMgcHV0dGluZyB0aGUgY2hpcCBpbnRvDQo+IEdETUFfRFJPUF9BTEwgbW9kZSBkdXJpbmcg
-dGhlIHN0b3Agb3BlcmF0aW9uIGV0Yy4NClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uLCBJIHdp
-bGwgc2VwYXJhdGUgdGhlc2UgY2hhbmdlcyBpbnRvDQphIHBhdGNoIHNlcmllcyB0byBtYWtlIGV2
-ZXJ5IGNoYW5nZSB0byBiZSBtb3JlIGNsZWFyIGZvciBpdHMgDQpwdXJwb3NlLg0KDQoNCg==
 
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu 07 Nov 19, 23:39, Russell King - ARM Linux admin wrote:
+> On Thu, Nov 07, 2019 at 09:46:45PM +0100, Rikard Falkeborn wrote:
+> > Arguments are supposed to be ordered high then low.
+> >=20
+> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> > ---
+> > Spotted while trying to add compile time checks of GENMASK arguments.
+> > Patch has only been compile tested.
+>=20
+> My feeling, personally, is that GENMASK() really isn't worth the pain
+> it causes.  Can we instead get rid of this thing and just use easier
+> to understand and less error-prone hex masks please?
+
+One advantage it has is that is matches the order in which bit fields are
+usually given in datasheets, so I personally found that it makes verificati=
+on
+of fields much more straightforward and immediate.
+
+My 2 cents are that it makes sense for hardware registers.
+
+Note that I have recently introduced a SHIFT_AND_MASK_BITS macro[0] for a V=
+4L2
+driver, that I (and Mauro) would like to move to linux/bits.h eventually.
+
+> I don't care what anyone else says, personally I'm going to stick with
+> using hex masks as I find them way easier to get right first time than
+> a problematical opaque macro - and I really don't want the effort of
+> finding out that I've got the arguments wrong when I build it.  It's
+> just _way_ easier and less error prone to use a hex mask straight off.
+
+I guess it's a matter of personal habit.
+
+[0]: https://git.linuxtv.org/media_tree.git/commit/?id=3D06eff2150d4db991ca=
+236f3d05a9dc0101475aea
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3FJ1MACgkQ3cLmz3+f
+v9HD6QgAnn9qVrsChDkN0XT8+hfqz14mCavgmtmc/ATR+52Gp7hcnN1ADnJ1lK5D
+Fg3+wdQMcs3sxpVFFPvfr1mNlGy1/OCSUerruFRSXwj+oMdv3E5foi7Y5GdrS5G2
+bUFCVGT9h5MS7TrwHoiLV7I8ZgRg2/j1MyPWH4sgjSpres2BwU+0vkxh8DvJc+Hm
+tJx1mzGPSFsA+RoRHdfRtSAE3iDcNibJXnct/qz6s+wtZRT/lTrAeoO2Cd6683dU
+FbegbM5v+j7dhZpZ7bkbgaKrCd9EAfKYpu0WP1YOUEGes00K5J4fhvk9RpA/+l9p
+l6BhN4YGDy1HqSdqxIzSiN4JXUNtag==
+=aPHq
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
