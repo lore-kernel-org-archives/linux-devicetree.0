@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EBEC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF5AFC6196
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347BD215EA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2D3207FA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213960;
-	bh=DpxXol/N+y1B3DaIv9bxMgSgTTtMjnNY+SmzKS17Jhs=;
+	s=default; t=1573213982;
+	bh=MS9vzgBV7doMrucn8+8vEnLYd4jnbrbZQAPY4YZ0r2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTSUMSvgDSEjRid+kAl0R9uQ8Ojkkipriwc74AxD3nVupzg/awqlgYlBFp5ITg2CC
-	 csRbU5CLwWSO+ed/CleDcNpWl9BVHTariHENDjpPtOkhZLlaXT6CeHMaocMXBFDLc1
-	 B/m/nkmczqmtBr+mozHO/pyefubZLINs2sPXj0KI=
+	b=j0KlCQeKWVckR2CBRMgn5irdrmO0U7hF21KxgbgQy2STSGwSSltO/EMXRr6BEsAF9
+	 TQMHgPI7reFMSsiD7ce+8vCOUvZMsjAn7QL+V3x+9powHF38o671st5bvF+u9ZPrtK
+	 NOHsbIPqbWtQK0oldVVFw/JteGEA/1vqxNVeGXwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388922AbfKHLwe (ORCPT
+        id S1732544AbfKHLwu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:52:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:52:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403834AbfKHLrH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:07 -0500
+        id S2391404AbfKHLrA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4649621D82;
-        Fri,  8 Nov 2019 11:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1003321D82;
+        Fri,  8 Nov 2019 11:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213626;
-        bh=DpxXol/N+y1B3DaIv9bxMgSgTTtMjnNY+SmzKS17Jhs=;
+        s=default; t=1573213619;
+        bh=MS9vzgBV7doMrucn8+8vEnLYd4jnbrbZQAPY4YZ0r2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q+Qt4sb9YAe/2l6y2O8MEK6O6+i2AHOdoYXfs9loEBZIxRHYqosFoJZy0I1ABlLU0
-         tOVEjQ684fty7Ud208+/4h/49AfMJ9lChdqYekQPKfCyBiYvypP7TwsZAC64a1lIzc
-         AJuY9G6iScdG/g78NH7P4Z73vZoXB4U/GoGEFD8M=
+        b=UUiMUjZiwg7OFz03tuMI/2X8cN9HqV0Ao9s4lnghHgTy3OcgfQTMjl/367K+Mb0jX
+         6unN37uCDAVNyWzGbTAxtUcbLAY4ZOtBpY8sGTvgH9VUfOTKapP6hT6v/eMwPYKoWc
+         SZUJPOmH5RgKJEfOBRXbofR80uPq+tOqKKAYQlIE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 54/64] ARM: dts: socfpga: Fix I2C bus unit-address error
-Date:   Fri,  8 Nov 2019 06:45:35 -0500
-Message-Id: <20191108114545.15351-54-sashal@kernel.org>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 52/64] ARM: dts: qcom: ipq4019: fix cpu0's qcom,saw2 reg value
+Date:   Fri,  8 Nov 2019 06:45:33 -0500
+Message-Id: <20191108114545.15351-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -58,33 +61,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@kernel.org>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-[ Upstream commit cbbc488ed85061a765cf370c3e41f383c1e0add6 ]
+[ Upstream commit bd73a3dd257fb838bd456a18eeee0ef0224b7a40 ]
 
-dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
+while compiling an ipq4019 target, dtc will complain:
+regulator@b089000 unit address format error, expected "2089000"
 
-arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dtb: Warning (i2c_bus_reg): /soc/i2c@ffc04000/adxl345@0: I2C bus unit address format error, expected "53"
+The saw0 regulator reg value seems to be
+copied and pasted from qcom-ipq8064.dtsi.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+This patch fixes the reg value to match that of the
+unit address which in turn silences the warning.
+(There is no driver for qcom,saw2 right now.
+So this went unnoticed)
+
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 2 +-
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-index afea3645ada43..89d55894d9162 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-@@ -88,7 +88,7 @@
- 	status = "okay";
- 	speed-mode = <0>;
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 4b7d97275c621..5ee84e3cb3e97 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -211,7 +211,7 @@
  
--	adxl345: adxl345@0 {
-+	adxl345: adxl345@53 {
- 		compatible = "adi,adxl345";
- 		reg = <0x53>;
+                 saw0: regulator@b089000 {
+                         compatible = "qcom,saw2";
+-                        reg = <0x02089000 0x1000>, <0x0b009000 0x1000>;
++			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
+                         regulator;
+                 };
  
 -- 
 2.20.1
