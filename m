@@ -2,99 +2,109 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECF6C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E60FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB24218AE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573206034;
-	bh=+kAn38SlNQx+enZp3ui7K4vQsEshtEH4jF/q1fGyPeY=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=KP1uoRnQNw1rWi3rW8b4ZPw+AzOKBPa1RSpzXZB2hS5jnVPcKnL6lg7kyeEwT6UFh
-	 9cM7asxkmTcqaIW05VPc0NSbO/Ul/MgsN0xPmtQ97CWLaBecf+3eb7Unp78NHfRSLy
-	 NBIMBp2z0bKxvoSj96G3LHSh+mNqixuo0QAScgmY=
+	by mail.kernel.org (Postfix) with ESMTP id 8908B214DA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbfKHJkd (ORCPT
+        id S1730719AbfKHJmb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:40:33 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:50120 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728513AbfKHJkd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:40:33 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iT0kn-00040k-Hh; Fri, 08 Nov 2019 10:40:29 +0100
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v5 06/13] drivers: irqchip: qcom-pdc: Move to an SoC  independent compatible
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 08 Nov 2019 10:49:50 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <agross@kernel.org>, <robh+dt@kernel.org>,
-        <bjorn.andersson@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mka@chromium.org>, <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>
-In-Reply-To: <20191108092824.9773-7-rnayak@codeaurora.org>
-References: <20191108092824.9773-1-rnayak@codeaurora.org>
- <20191108092824.9773-7-rnayak@codeaurora.org>
-Message-ID: <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: rnayak@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mka@chromium.org, swboyd@chromium.org, ilina@codeaurora.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Fri, 8 Nov 2019 04:42:31 -0500
+Received: from mga09.intel.com ([134.134.136.24]:44316 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728513AbfKHJmb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 04:42:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 01:42:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
+   d="scan'208";a="213213601"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Nov 2019 01:42:27 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v5 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Fri,  8 Nov 2019 17:42:21 +0800
+Message-Id: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-08 10:37, Rajendra Nayak wrote:
-> Remove the sdm845 SoC specific compatible to make the driver
-> easily reusable across other SoC's with the same IP block.
-> This will reduce further churn adding any SoC specific
-> compatibles unless really needed.
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Lina Iyer <ilina@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/irqchip/qcom-pdc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index faa7d61b9d6c..c175333bb646 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node
-> *node, struct device_node *parent)
->  	return ret;
->  }
->
-> -IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
-> +IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
+Hi,
 
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-How do you want me get this (and the DT change) merged? I can either 
-take
-these two patches in the irqchip tree, or you arrange them to be taken
-by the platform maintainers. Your call.
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 
-Thanks,
+v5:
+- Fix code style/readability related review concerns.
+- Change data type of groups property to uint32-array in dt bindings.
 
-         M.
+v4:
+- Correct data types for some pin config properties in dt bindings.
+- Improve pattern regex as per review feedback in dt bindings.
+- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
+  do reg updates in eqbr_pinconf_set() routine itself.
+- Add locking in few ops where it was missing.
+- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
+  in variable namings so as not to confuse with GPIO descriptors.
+- Address code quality/convention/style related review concerns.
+
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 104 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 962 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 144 +++
+ 5 files changed, 1229 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
 -- 
-Jazz is not dead. It just smells funny...
+2.11.0
+
