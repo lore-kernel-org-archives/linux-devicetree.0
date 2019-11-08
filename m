@@ -2,86 +2,130 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3164FC6196
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 22:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546D4FC6196
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 22:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80671215EA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 22:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26ED1214DA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 22:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfKHWjI (ORCPT
+        id S1730154AbfKHWkM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:39:08 -0500
-Received: from mga07.intel.com ([134.134.136.100]:9337 "EHLO mga07.intel.com"
+        Fri, 8 Nov 2019 17:40:12 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:51082 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731203AbfKHWjE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 17:39:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 14:39:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
-   d="scan'208";a="206137930"
-Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by orsmga003.jf.intel.com with ESMTP; 08 Nov 2019 14:39:03 -0800
-From:   thor.thayer@linux.intel.com
-To:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     richard.gong@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [PATCH 2/2] arm64: dts: agilex: Add SysMgr to Ethernet nodes
-Date:   Fri,  8 Nov 2019 16:40:54 -0600
-Message-Id: <1573252854-25801-3-git-send-email-thor.thayer@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573252854-25801-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1573252854-25801-1-git-send-email-thor.thayer@linux.intel.com>
+        id S1727798AbfKHWkM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 17:40:12 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6086F1A01BE;
+        Fri,  8 Nov 2019 23:40:09 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 48F2F1A0181;
+        Fri,  8 Nov 2019 23:40:09 +0100 (CET)
+Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 387D5205CD;
+        Fri,  8 Nov 2019 23:40:08 +0100 (CET)
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 0/6] PM / devfreq: Add dynamic scaling for imx8m ddr controller
+Date:   Sat,  9 Nov 2019 00:39:50 +0200
+Message-Id: <cover.1573252696.git.leonard.crestez@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+This adds support for dynamic scaling of the DDR Controller (ddrc) present in
+imx8m series. Actual frequency switching is implemented inside TF-A, this
+driver wraps the SMC calls and synchronizes the clk tree.
 
-Ethernet needs the System Manager to setup the low-level
-interface and PHY.
+DRAM frequency switching requires clock manipulation but during this operation
+DRAM itself is briefly inaccessible so this operation is performed a SMC call
+to by TF-A which runs from a SRAM area. Upon returning to linux the clock tree
+is updated to correspond to hardware configuration.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+This is handled via CLK_GET_RATE_NO_CACHE for dividers but muxes are handled
+manually: the driver will prepare/enable the new parents ahead of switching (so
+that the expected roots are enabled) and afterwards it will call clk_set_parent
+to ensure the parents in clock framework are up-to-date.
 
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-index 7e8dc85fcebc..d8caa3f609b5 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-@@ -150,6 +150,7 @@
- 			iommus = <&smmu 1>;
- 			clocks = <&clkmgr AGILEX_EMAC0_CLK>;
- 			clock-names = "stmmaceth";
-+			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
- 			status = "disabled";
- 		};
- 
-@@ -167,6 +168,7 @@
- 			iommus = <&smmu 2>;
- 			clocks = <&clkmgr AGILEX_EMAC1_CLK>;
- 			clock-names = "stmmaceth";
-+			altr,sysmgr-syscon = <&sysmgr 0x48 8>;
- 			status = "disabled";
- 		};
- 
-@@ -184,6 +186,7 @@
- 			iommus = <&smmu 3>;
- 			clocks = <&clkmgr AGILEX_EMAC2_CLK>;
- 			clock-names = "stmmaceth";
-+			altr,sysmgr-syscon = <&sysmgr 0x4c 16>;
- 			status = "disabled";
- 		};
- 
+This series is atomically useful and roughly similar to devfreq drivers for
+tegra and rockchip.
+
+Running at lower dram rates saves power but can affect the functionality of
+other blocks in the chip (display, vpu etc). Support for in-kernel constraints
+will some separately.
+
+Angus/Martin: You previously attempted to test on purism boards, this updated
+version should work without hacks and has no dependencies.
+
+Changes since v3:
+* Rename to imx8m-ddrc. Similar blocks are present on imx7d and imx8qxp/imx8qm
+but soc integration is different.
+* Move dt bindings to /memory-controllers/fsl/
+* Fix dt validation issues
+* Fix imx8mm.dtsi ddrc referencing ddrc_opp_table which is only defined in evk
+* Move opps to child of ddrc device node
+* Only add imx_ddrc_get_dev_status in perf patch.
+* Adjust print messages
+Link to v3: https://patchwork.kernel.org/cover/11221935/
+
+Leonard Crestez (6):
+  clk: imx8m: Set CLK_GET_RATE_NOCACHE on dram clocks
+  clk: imx: Mark dram pll on 8mm and 8mn with CLK_GET_RATE_NOCACHE
+  dt-bindings: memory: Add bindings for imx8m ddr controller
+  PM / devfreq: Add dynamic scaling for imx8m ddr controller
+  PM / devfreq: imx8m-ddrc: Measure bandwidth with perf
+  arm64: dts: imx8m: Add ddr controller nodes
+
+ .../memory-controllers/fsl/imx8m-ddrc.yaml    |  61 ++
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts  |  18 +
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  13 +-
+ .../boot/dts/freescale/imx8mn-ddr4-evk.dts    |  18 +
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  13 +-
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  24 +
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  13 +-
+ drivers/clk/imx/clk-imx8mm.c                  |  13 +-
+ drivers/clk/imx/clk-imx8mn.c                  |  14 +-
+ drivers/clk/imx/clk-imx8mq.c                  |  15 +-
+ drivers/clk/imx/clk-pll14xx.c                 |   7 +
+ drivers/clk/imx/clk.h                         |   1 +
+ drivers/devfreq/Kconfig                       |  10 +
+ drivers/devfreq/Makefile                      |   1 +
+ drivers/devfreq/imx8m-ddrc.c                  | 569 ++++++++++++++++++
+ 15 files changed, 777 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/imx8m-ddrc.yaml
+ create mode 100644 drivers/devfreq/imx8m-ddrc.c
+
 -- 
-2.7.4
+2.17.1
 
