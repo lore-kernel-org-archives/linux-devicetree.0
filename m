@@ -2,249 +2,453 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE3AFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 17:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B863FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493C5206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 17:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C40214DB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fS9Cf1UP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="m6MIqM2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfKHR7z (ORCPT
+        id S1727033AbfKHSFS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 12:59:55 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:50250 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfKHR7z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 12:59:55 -0500
-Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0581031D;
-        Fri,  8 Nov 2019 18:59:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1573235991;
-        bh=VyloTpR4Cy9JmAB7UPEVI+Tg4F9H2KlS0W+8W1VZ7VU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fS9Cf1UPdf91MnyylSKnKsLiLyV7A9WtNMX979QjJNNxjbx6Wy9BirP8vSS7pzwYF
-         OeKQkZZWgXAylSwf9db0kFfnbhD++4XXLgtYbIotxOG6Ho5S/hysc/grc9HTOwjyAG
-         S8AhZXobHp42hDMAt7IaPVLWrvdfR0pQnhoBFY5E=
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v10 1/4] dt-bindings: display: xlnx: Add ZynqMP DP subsystem bindings
-Date:   Fri,  8 Nov 2019 19:59:32 +0200
-Message-Id: <20191108175935.29766-2-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191108175935.29766-1-laurent.pinchart@ideasonboard.com>
-References: <20191108175935.29766-1-laurent.pinchart@ideasonboard.com>
+        Fri, 8 Nov 2019 13:05:18 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:42698 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfKHSFS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 13:05:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1573236315; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ima9tREMzCyUlw9FPEW17NTBz0/V5NZJczR4kaq9Z0U=;
+        b=m6MIqM2rEMicTH6fQTC0F6YvsXbtxUVmyxV6t6L0pRbh9gUYUIAI49ZAuSDMC199kjosKJ
+        HsccfkutbE0AU0vEI5dK+5+WqyxCw7k2HHV60DnBJtuPbrCbnqMyygpP6kALnzWIPuihvx
+        e0bnf7FjAAk/OyAvv7PP0DO6FUwM8vA=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 08 Nov 2019 19:05:15 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] remoteproc: ingenic: Added remoteproc driver
+In-Reply-To: <20190826222511.GJ1263@builder>
+References: <20190729183109.18283-1-paul@crapouillou.net>
+ <20190729183109.18283-3-paul@crapouillou.net>
+ <20190826222511.GJ1263@builder>
+Message-ID: <4343f5b53ff3e400324f03689737854a@crapouillou.net>
+X-Sender: paul@crapouillou.net
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Hyun Kwon <hyun.kwon@xilinx.com>
+Hi Bjorn,
 
-The bindings describe the ZynqMP DP subsystem. They don't support the
-interface with the programmable logic (FPGA) or audio yet.
+On 2019-08-27 00:25, Bjorn Andersson wrote:
+> On Mon 29 Jul 11:31 PDT 2019, Paul Cercueil wrote:
+> 
+>> This driver is used to boot, communicate with and load firmwares to 
+>> the
+>> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
+>> Ingenic.
+>> 
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>> 
+>> Notes:
+>>     v2: Remove exception for always-mapped memories
+>> 
+>>  drivers/remoteproc/Kconfig         |   8 +
+>>  drivers/remoteproc/Makefile        |   1 +
+>>  drivers/remoteproc/ingenic_rproc.c | 285 
+>> +++++++++++++++++++++++++++++
+>>  3 files changed, 294 insertions(+)
+>>  create mode 100644 drivers/remoteproc/ingenic_rproc.c
+>> 
+>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>> index 28ed306982f7..a0be40e2098d 100644
+>> --- a/drivers/remoteproc/Kconfig
+>> +++ b/drivers/remoteproc/Kconfig
+>> @@ -214,6 +214,14 @@ config STM32_RPROC
+>> 
+>>  	  This can be either built-in or a loadable module.
+>> 
+>> +config INGENIC_RPROC
+>> +	tristate "Ingenic JZ47xx VPU remoteproc support"
+>> +	depends on MIPS || COMPILE_TEST
+>> +	help
+>> +	  Say y or m here to support the VPU in the JZ47xx SoCs from 
+>> Ingenic.
+>> +	  This can be either built-in or a loadable module.
+>> +	  If unsure say N.
+>> +
+>>  endif # REMOTEPROC
+>> 
+>>  endmenu
+>> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+>> index 00f09e658cb3..6eb0137abbc7 100644
+>> --- a/drivers/remoteproc/Makefile
+>> +++ b/drivers/remoteproc/Makefile
+>> @@ -10,6 +10,7 @@ remoteproc-y				+= remoteproc_sysfs.o
+>>  remoteproc-y				+= remoteproc_virtio.o
+>>  remoteproc-y				+= remoteproc_elf_loader.o
+>>  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+>> +obj-$(CONFIG_INGENIC_RPROC)			+= ingenic_rproc.o
+>>  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+>>  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+>>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+>> diff --git a/drivers/remoteproc/ingenic_rproc.c 
+>> b/drivers/remoteproc/ingenic_rproc.c
+>> new file mode 100644
+>> index 000000000000..6fe0530c83a6
+>> --- /dev/null
+>> +++ b/drivers/remoteproc/ingenic_rproc.c
+>> @@ -0,0 +1,285 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * Ingenic JZ47xx remoteproc driver
+>> + * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
+>> + */
+>> +
+>> +#include <linux/bitops.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/err.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/remoteproc.h>
+>> +
+>> +#include "remoteproc_internal.h"
+>> +
+>> +#define REG_AUX_CTRL		0x0
+>> +#define REG_AUX_MSG_ACK		0x10
+>> +#define REG_AUX_MSG		0x14
+>> +#define REG_CORE_MSG_ACK	0x18
+>> +#define REG_CORE_MSG		0x1C
+>> +
+>> +#define AUX_CTRL_SLEEP		BIT(31)
+>> +#define AUX_CTRL_MSG_IRQ_EN	BIT(3)
+>> +#define AUX_CTRL_NMI_RESETS	BIT(2)
+>> +#define AUX_CTRL_NMI		BIT(1)
+>> +#define AUX_CTRL_SW_RESET	BIT(0)
+>> +
+>> +struct vpu_mem_map {
+>> +	const char *name;
+>> +	unsigned int da;
+>> +};
+>> +
+>> +struct vpu_mem_info {
+>> +	const struct vpu_mem_map *map;
+>> +	unsigned long len;
+>> +	void __iomem *base;
+>> +};
+>> +
+>> +static const struct vpu_mem_map vpu_mem_map[] = {
+>> +	{ "tcsm0", 0x132b0000 },
+>> +	{ "tcsm1", 0xf4000000 },
+>> +	{ "sram",  0x132f0000 },
+>> +};
+>> +
+>> +/* Device data */
+>> +struct vpu {
+>> +	int irq;
+>> +	struct clk *vpu_clk;
+>> +	struct clk *aux_clk;
+>> +	void __iomem *aux_base;
+>> +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
+>> +	struct device *dev;
+>> +};
+>> +
+>> +static int ingenic_rproc_prepare(struct rproc *rproc)
+> 
+> So I presume aux_clk and vpu_clk are required by the load callback?
 
-Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
-Changes since v9:
+Sorry, I really thought I answered that email.
 
-- Fix constraints on clock-names
-- Document dp_apb_clk as the APB clock, not the AXI clock
+The clocks are required to be enabled for the firmware to be loaded to 
+one of the available memories, that's the reason behind patch [2/3].
 
-Changes since v8:
+>> +{
+>> +	struct vpu *vpu = rproc->priv;
+>> +	int ret;
+>> +
+>> +	ret = clk_prepare_enable(vpu->vpu_clk);
+> 
+> Please use the clk_bulk API instead.
 
-- Convert to yaml
-- Rename aclk to dp_apb_clk
----
- .../display/xlnx/xlnx,zynqmp-dpsub.yaml       | 164 ++++++++++++++++++
- 1 file changed, 164 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+Will do.
 
-diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
-new file mode 100644
-index 000000000000..ffdebe195751
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
-@@ -0,0 +1,164 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/xlnx/xlnx,zynqmp-dpsub.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Xilinx ZynqMP DisplayPort Subsystem
-+
-+description: |
-+  The DisplayPort subsystem of Xilinx ZynqMP (Zynq UltraScale+ MPSoC)
-+  implements the display and audio pipelines based on the DisplayPort v1.2
-+  standard. The subsystem includes multiple functional blocks as below:
-+
-+               +------------------------------------------------------------+
-+  +--------+   | +----------------+     +-----------+                       |
-+  | DPDMA  | --->|                | --> |   Video   | Video +-------------+ |
-+  | 4x vid |   | |                |     | Rendering | -+--> |             | |   +------+
-+  | 2x aud |   | |  Audio/Video   | --> | Pipeline  |  |    | DisplayPort |---> | PHY0 |
-+  +--------+   | | Buffer Manager |     +-----------+  |    |   Source    | |   +------+
-+               | |    and STC     |     +-----------+  |    | Controller  | |   +------+
-+  Live Video --->|                | --> |   Audio   | Audio |             |---> | PHY1 |
-+               | |                |     |   Mixer   | --+-> |             | |   +------+
-+  Live Audio --->|                | --> |           |  ||   +-------------+ |
-+               | +----------------+     +-----------+  ||                   |
-+               +---------------------------------------||-------------------+
-+                                                       vv
-+                                                 Blended Video and
-+                                                 Mixed Audio to PL
-+
-+  The Buffer Manager interacts with external interface such as DMA engines or
-+  live audio/video streams from the programmable logic. The Video Rendering
-+  Pipeline blends the video and graphics layers and performs colorspace
-+  conversion. The Audio Mixer mixes the incoming audio streams. The DisplayPort
-+  Source Controller handles the DisplayPort protocol and connects to external
-+  PHYs.
-+
-+  The subsystem supports 2 video and 2 audio streams, and various pixel formats
-+  and depths up to 4K@30 resolution.
-+
-+  Please refer to "Zynq UltraScale+ Device Technical Reference Manual"
-+  (https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf)
-+  for more details.
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+properties:
-+  compatible:
-+    const: xlnx,zynqmp-dpsub-1.7
-+
-+  reg:
-+    maxItems: 4
-+  reg-names:
-+    items:
-+      - const: dp
-+      - const: blend
-+      - const: av_buf
-+      - const: aud
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      The APB clock and at least one video clock are mandatory, the audio clock
-+      is optional.
-+    minItems: 2
-+    maxItems: 4
-+    items:
-+      - description: dp_apb_clk is the APB clock
-+      - description: dp_aud_clk is the Audio clock
-+      - description:
-+          dp_vtc_pixel_clk_in is the non-live video clock (from Processing
-+          System)
-+      - description:
-+          dp_live_video_in_clk is the live video clock (from Programmable
-+          Logic)
-+  clock-names:
-+    oneOf:
-+      - minItems: 2
-+        maxItems: 3
-+        items:
-+          - const: dp_apb_clk
-+          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-+          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-+      - minItems: 3
-+        maxItems: 4
-+        items:
-+          - const: dp_apb_clk
-+          - const: dp_aud_clk
-+          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-+          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 4
-+    items:
-+      - description: Video layer, plane 0 (RGB or luma)
-+      - description: Video layer, plane 1 (U/V or U)
-+      - description: Video layer, plane 2 (V)
-+      - description: Graphics layer
-+  dma-names:
-+    items:
-+      - const: vid0
-+      - const: vid1
-+      - const: vid2
-+      - const: gfx0
-+
-+  phys:
-+    description: PHYs for the DP data lanes
-+    minItems: 1
-+    maxItems: 2
-+  phy-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: dp-phy0
-+      - const: dp-phy1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - dmas
-+  - dma-names
-+  - phys
-+  - phy-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    display@fd4a0000 {
-+      compatible = "xlnx,zynqmp-dpsub-1.7";
-+      reg = <0x0 0xfd4a0000 0x0 0x1000>,
-+            <0x0 0xfd4aa000 0x0 0x1000>,
-+            <0x0 0xfd4ab000 0x0 0x1000>,
-+            <0x0 0xfd4ac000 0x0 0x1000>;
-+      reg-names = "dp", "blend", "av_buf", "aud";
-+      interrupts = <0 119 4>;
-+      interrupt-parent = <&gic>;
-+
-+      clock-names = "dp_apb_clk", "dp_aud_clk", "dp_live_video_in_clk";
-+      clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
-+
-+      power-domains = <&pd_dp>;
-+
-+      dma-names = "vid0", "vid1", "vid2", "gfx0";
-+      dmas = <&xlnx_dpdma 0>,
-+             <&xlnx_dpdma 1>,
-+             <&xlnx_dpdma 2>,
-+             <&xlnx_dpdma 3>;
-+
-+      phys = <&lane1>, <&lane0>;
-+      phy-names = "dp-phy0", "dp-phy1";
-+    };
-+
-+...
--- 
-Regards,
+>> +	if (ret) {
+>> +		dev_err(vpu->dev, "Unable to start VPU clock: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(vpu->aux_clk);
+>> +	if (ret) {
+>> +		dev_err(vpu->dev, "Unable to start AUX clock: %d\n", ret);
+>> +		goto err_disable_vpu_clk;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err_disable_vpu_clk:
+>> +	clk_disable_unprepare(vpu->vpu_clk);
+>> +	return ret;
+>> +}
+>> +
+>> +static void ingenic_rproc_unprepare(struct rproc *rproc)
+>> +{
+>> +	struct vpu *vpu = rproc->priv;
+>> +
+>> +	clk_disable_unprepare(vpu->aux_clk);
+>> +	clk_disable_unprepare(vpu->vpu_clk);
+>> +}
+>> +
+>> +static int ingenic_rproc_start(struct rproc *rproc)
+>> +{
+>> +	struct vpu *vpu = rproc->priv;
+>> +	u32 ctrl;
+>> +
+>> +	enable_irq(vpu->irq);
+>> +
+>> +	/* Reset the AUX and enable message IRQ */
+>> +	ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
+>> +	writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ingenic_rproc_stop(struct rproc *rproc)
+>> +{
+>> +	struct vpu *vpu = rproc->priv;
+>> +
+>> +	/* Keep AUX in reset mode */
+>> +	writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
+>> +
+>> +	disable_irq_nosync(vpu->irq);
+> 
+> The _nosync here mean that we might return to rproc_stop(), which will
+> call ingenic_rproc_unprepare(). Is there any relationship between your
+> clocks and the memory used by virtio?
 
-Laurent Pinchart
+Yes, the memory is only accessible when the clocks are enabled, the 
+system locks up otherwise.
 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
+>> +{
+>> +	struct vpu *vpu = rproc->priv;
+>> +
+>> +	writel(vqid, vpu->aux_base + REG_CORE_MSG);
+>> +}
+>> +
+>> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, int 
+>> len)
+>> +{
+>> +	struct vpu *vpu = rproc->priv;
+>> +	void __iomem *va = NULL;
+>> +	unsigned int i;
+>> +
+>> +	if (len <= 0)
+>> +		return NULL;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+>> +		const struct vpu_mem_info *info = &vpu->mem_info[i];
+>> +		const struct vpu_mem_map *map = info->map;
+>> +
+>> +		if (da >= map->da && (da + len) < (map->da + info->len)) {
+>> +			va = info->base + (da - map->da);
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	return (__force void *)va;
+>> +}
+>> +
+>> +static struct rproc_ops ingenic_rproc_ops = {
+>> +	.prepare = ingenic_rproc_prepare,
+>> +	.unprepare = ingenic_rproc_unprepare,
+>> +	.start = ingenic_rproc_start,
+>> +	.stop = ingenic_rproc_stop,
+>> +	.kick = ingenic_rproc_kick,
+>> +	.da_to_va = ingenic_rproc_da_to_va,
+>> +};
+>> +
+>> +static irqreturn_t vpu_interrupt(int irq, void *data)
+>> +{
+>> +	struct rproc *rproc = data;
+>> +	struct vpu *vpu = rproc->priv;
+>> +	u32 vring;
+>> +
+>> +	vring = readl(vpu->aux_base + REG_AUX_MSG);
+>> +
+>> +	/* Ack the interrupt */
+>> +	writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
+>> +
+>> +	return rproc_vq_interrupt(rproc, vring);
+>> +}
+>> +
+>> +#ifdef CONFIG_OF
+> 
+> You don't need #ifdef here.
+> 
+>> +static const struct of_device_id ingenic_rproc_of_matches[] = {
+> 
+> Please move this down just before the ingenic_rproc_driver.
+> 
+>> +	{ .compatible = "ingenic,jz4770-vpu-rproc", },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
+>> +#endif
+>> +
+>> +static void ingenic_rproc_free(void *rproc)
+>> +{
+>> +	rproc_free(rproc);
+>> +}
+>> +
+>> +static void ingenic_rproc_unregister(void *rproc)
+>> +{
+>> +	rproc_del(rproc);
+>> +	rproc_shutdown(rproc);
+>> +}
+>> +
+>> +static int ingenic_rproc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct resource *mem;
+>> +	struct rproc *rproc;
+>> +	struct vpu *vpu;
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	rproc = rproc_alloc(dev, "ingenic-vpu",
+>> +			    &ingenic_rproc_ops, NULL, sizeof(*vpu));
+>> +	if (!rproc)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = devm_add_action_or_reset(dev, ingenic_rproc_free, rproc);
+> 
+> Please write a patch adding devm_rproc_alloc() to the core.
+
+Ok.
+
+>> +	if (ret) {
+>> +		dev_err(dev, "Unable to add action");
+>> +		return ret;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, rproc);
+> 
+> I don't see you getting the drvdata, so please skip this.
+> 
+>> +	vpu = rproc->priv;
+>> +	vpu->dev = &pdev->dev;
+>> +
+>> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
+>> +	vpu->aux_base = devm_ioremap_resource(dev, mem);
+>> +	if (IS_ERR(vpu->aux_base)) {
+>> +		dev_err(dev, "Failed to ioremap");
+>> +		return PTR_ERR(vpu->aux_base);
+>> +	}
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+>> +		mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   vpu_mem_map[i].name);
+>> +
+>> +		vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
+>> +		if (IS_ERR(vpu->mem_info[i].base)) {
+>> +			ret = PTR_ERR(vpu->mem_info[i].base);
+>> +			dev_err(dev, "Failed to ioremap");
+>> +			return ret;
+>> +		}
+>> +
+>> +		vpu->mem_info[i].len = resource_size(mem);
+>> +		vpu->mem_info[i].map = &vpu_mem_map[i];
+>> +	}
+>> +
+>> +	vpu->vpu_clk = devm_clk_get(dev, "vpu");
+>> +	if (IS_ERR(vpu->vpu_clk)) {
+>> +		dev_err(dev, "Failed to get VPU clock");
+>> +		return PTR_ERR(vpu->vpu_clk);
+>> +	}
+>> +
+>> +	vpu->aux_clk = devm_clk_get(dev, "aux");
+>> +	if (IS_ERR(vpu->aux_clk)) {
+>> +		dev_err(dev, "Failed to get AUX clock");
+>> +		return PTR_ERR(vpu->aux_clk);
+>> +	}
+>> +
+>> +	vpu->irq = platform_get_irq(pdev, 0);
+>> +	if (vpu->irq < 0) {
+>> +		dev_err(dev, "Failed to get platform IRQ");
+>> +		return vpu->irq;
+>> +	}
+>> +
+>> +	ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", 
+>> rproc);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to request IRQ");
+>> +		return ret;
+>> +	}
+>> +
+>> +	disable_irq_nosync(vpu->irq);
+>> +
+>> +	ret = rproc_add(rproc);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to register remote processor");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = devm_add_action_or_reset(dev, ingenic_rproc_unregister, 
+>> rproc);
+> 
+> Please add a devm_rproc_add() to the core.
+> 
+>> +	if (ret) {
+>> +		dev_err(dev, "Unable to add action");
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver ingenic_rproc_driver = {
+>> +	.probe = ingenic_rproc_probe,
+>> +	.driver = {
+>> +		.name = "ingenic-vpu",
+>> +		.owner = THIS_MODULE,
+> 
+> module_platform_driver() will assign .module for you.
+> 
+> Regards,
+> Bjorn
+> 
+>> +		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
+>> +	},
+>> +};
+>> +module_platform_driver(ingenic_rproc_driver);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+>> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
+>> --
+>> 2.21.0.593.g511ec345e18
+>> 
