@@ -2,222 +2,94 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3058EFC6195
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF74C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071B02085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:08:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="em/ney5+"
+	by mail.kernel.org (Postfix) with ESMTP id 3814D214DA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388987AbfKHUIn (ORCPT
+        id S2387821AbfKHUTB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:08:43 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36942 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388674AbfKHUIm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 15:08:42 -0500
-Received: by mail-il1-f196.google.com with SMTP id s5so6226823iln.4;
-        Fri, 08 Nov 2019 12:08:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eltmz3pR3Soq+1V6jMFmgjGcnWDU/PywdSSSznftPO8=;
-        b=em/ney5+BG/mSj4/tLUCSyIi6YGffQpErAmyo2xXvZj63pMCyXedAt1Ck+Yu+o7KKN
-         nHmkcta2DhxLMIlPCzKV8TWLy1j68LJ1tovWEnWvELu07sy4hRyMs2PlCo6O5/e4H1v8
-         cEbVYqDEJQjziv2mLoh0O3wJGVX3GB4S+ETNkoq9iIILGbAXjUHkNknaqAk/7TMT+drP
-         3wwIfa+nUv7daxm28EFNmdFwelbYicG2Fs4xiH4IBq0JTl98V71pxgkHnHCEZHsG9b/U
-         hFmB7DTIuU5LsjLfNim+TUwUGLZRbfrT+zhTgLjkJ1/zc/g7RD+lYhysAZ3xtmyvUM7M
-         RBoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eltmz3pR3Soq+1V6jMFmgjGcnWDU/PywdSSSznftPO8=;
-        b=CJNqRJXR7nAks6TFNxix8BbcLhi90ma061DN2eXr5kRkr8ccCBAC0l1KdNED0nLh7F
-         tYii3Jlzbc7z48Z5IebHyRNU2H86U1nxfc18DWEOvKJZHlyxseRmU9HspGQb4p0FSq4d
-         yOHdEfW8zz3uGfBvWO4pJ2sKVHx9JXwG+zD+q7CK0k9FIX3FYuew3PRqEQQ+HXZMbEwu
-         oruuj4D3D6DQzwRAnOlMMo5Axodd0NlNryQXQsOOwAB3rMmKKVMImHi4up0n2pdIFcfv
-         gdgsH26H2goGJHHZTlZ1j/q9VZHJbav0j43TiFdULI6dZoAGzdUkvsSrsPVO3pBsGYYg
-         kPGw==
-X-Gm-Message-State: APjAAAX8cRiC2tVFiP9JV72Op0KPQVHSBQKJsMUZevmZL+VJCZ5gllow
-        p3rz3uqVxBySxDnlm9XVE3yJLeL+yAxMjdL9zUc=
-X-Google-Smtp-Source: APXvYqzlpqxccwG6GmOvqxQWjLmMqeCjkjEvuMNKiJOC5iuogUVoY2OtFXA6DFnWbW2+pVaD6tVfy5dh8N1zzlMwFZ0=
-X-Received: by 2002:a92:cb84:: with SMTP id z4mr15604238ilo.78.1573243720775;
- Fri, 08 Nov 2019 12:08:40 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1568224032.git.hns@goldelico.com>
-In-Reply-To: <cover.1568224032.git.hns@goldelico.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 8 Nov 2019 14:08:29 -0600
-Message-ID: <CAHCN7xLvuj_LkvOV3YG5=0MZYsohbQArE0UCZx6pcRPwM5pkYg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] OMAP3: convert opp-v1 to opp-v2 and read speed
- binned / 720MHz grade bits
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Roger Quadros <rogerq@ti.com>,
-        Teresa Remmet <t.remmet@phytec.de>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 8 Nov 2019 15:19:01 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19602 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727794AbfKHUS7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 15:18:59 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8KHebi145253;
+        Fri, 8 Nov 2019 15:18:47 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w5bydxxua-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 15:18:47 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA8KGOS7021312;
+        Fri, 8 Nov 2019 20:18:50 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma01wdc.us.ibm.com with ESMTP id 2w41ukn704-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Nov 2019 20:18:50 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8KIkOB48628146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 20:18:46 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4BB0828058;
+        Fri,  8 Nov 2019 20:18:46 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DC1228059;
+        Fri,  8 Nov 2019 20:18:45 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.103.158])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Nov 2019 20:18:45 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au,
+        maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH 12/12] ARM: dts: aspeed: tacoma: Enable XDMA engine
+Date:   Fri,  8 Nov 2019 14:18:33 -0600
+Message-Id: <1573244313-9190-13-git-send-email-eajames@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
+References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=650 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080195
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:47 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> CHANGES V3:
-> * make omap36xx control the abb-ldo and properly switch mode
->   (suggested by Adam Ford <aford173@gmail.com>)
-> * add a note about enabling the turbo-mode OPPs
->
-> PATCH V2 2019-09-07 19:46:58:
-> * fix ti-cpufreq to properly describe which compatible string is legacy
-> * add some reviewed-by and acked-by Tony Lindgren <tony@atomide.com>
-> * include am3517 patches by Adam Ford <aford173@gmail.com>
-> * review opp-suspend; and add turbo-mode; opp properties
-> * add a note how to disable an OPP in a board.dts file
->
-> PATCH V1 2019-09-07 08:56:19:
-> * fix typo in omap3-ldp.dts
->   (reported by Tony Lindgren <tony@atomide.com>)
-> * extend commit message to describe the bit patterns needed
->   for opp-supported-hw
-> * add error check to ioremap()
->   (suggested by Christ van Willegen <cvwillegen@gmail.com>)
-> * update Documentation/devicetree/bindings/arm/omap/omap.txt
-> * change bulk update to use "ti,omap3430" and "ti,omap3630"
-> * update OPP4 of omap3430 to 1275 mV since it was not a valid
->   voltage for the twl4030 driver (reported by Tony Lindgren
->   <tony@atomide.com>)
->
-> RFC V2 2019-09-04 10:53:43:
-> * merge separate patch to remove opp-v1 table from n950-n9 into
->   the general omap3xxx.dtsi patch
->   (suggested by Viresh Kumar <viresh.kumar@linaro.org>)
-> * add legacy compatibility to ti,omap3430 and ti,omap3630 for
->   the ti-cpufreq driver
-> * make driver and omap3xxx.dtsi patches pass checkpatch
-> * add bulk patch to explicitly define compatibility to ti,omap3430
->   and ti,omap36xx in addition to ti,omap3 of all in-tree boards
->   where it was missing
->
-> RFC V1 2019-09-02 12:55:55:
->
-> This patch set converts the omap3 opp tables to opp-v2 format
-> and extends the ti-cpufreq to support omap3.
->
-> It adds 720 MHz (omap34xx) and 1 GHz (omap36xx) OPPs but
-> tells the ti-cpufreq driver to disable them if the speed
-> binned / 720MHz grade eFuse bits indicate that the chip
-> is not rated for that speed.
->
-> It has been tested (for chip variant detection, not reliability
-> of the high speed OPPs) on:
->
-> * BeagleBoard C2 (omap3530 600MHz)
-> * BeagleBoard XM B (dm3730 800MHz)
-> * GTA04A4 (dm3730 800MHz)
-> * GTA04A5 (dm3730 1GHz)
->
->
-> Adam Ford (2):
->   cpufreq: ti-cpufreq: Add support for AM3517
->   ARM: dts: Add OPP-V2 table for AM3517
->
+Enable the XDMA engine node.
 
-Nikolaus,
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I am getting some notices sent to me when I apply your series.  It
-works, but I want to clean up the notice.  Can you suggest what might
-cause this:
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+index f02de4a..cbaa1bd 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+@@ -1193,3 +1193,7 @@
+ 	pinctrl-0 = <&pinctrl_lpc_default>,
+ 		    <&pinctrl_lsirq_default>;
+ };
++
++&xdma {
++	status = "okay";
++};
+-- 
+1.8.3.1
 
-     debugfs: Directory 'cpu0-cpu0' with parent
-'48070000.i2c:twl@48:regulator-vdd1-VDD1' already present!
-
-It wasn't present before your series.  It's not a big deal, but I'd
-like to quiet down the messages if I can.
-Thanks.
-
-adam
-
-> H. Nikolaus Schaller (6):
->   cpufreq: ti-cpufreq: add support for omap34xx and omap36xx
->   ARM: dts: omap34xx & omap36xx: replace opp-v1 tables by opp-v2 for
->   DTS: bindings: omap: update bindings documentation
->   ARM: dts: omap3: bulk convert compatible to be explicitly ti,omap3430
->     or ti,omap3630 or ti,am3517
->   cpufreq: ti-cpufreq: omap36xx use "cpu0","vbb" if run in
->     multi_regulator mode
->   ARM: dts: omap36xx: using OPP1G needs to control the abb_ldo
->
->  .../devicetree/bindings/arm/omap/omap.txt     |  30 +++--
->  .../bindings/cpufreq/ti-cpufreq.txt           |   6 +-
->  arch/arm/boot/dts/am3517.dtsi                 |  31 +++++
->  arch/arm/boot/dts/am3517_mt_ventoux.dts       |   2 +-
->  .../boot/dts/logicpd-som-lv-35xx-devkit.dts   |   2 +-
->  .../boot/dts/logicpd-torpedo-35xx-devkit.dts  |   2 +-
->  arch/arm/boot/dts/omap3-beagle-xm.dts         |   2 +-
->  arch/arm/boot/dts/omap3-beagle.dts            |   2 +-
->  arch/arm/boot/dts/omap3-cm-t3530.dts          |   2 +-
->  arch/arm/boot/dts/omap3-cm-t3730.dts          |   2 +-
->  arch/arm/boot/dts/omap3-devkit8000-lcd43.dts  |   2 +-
->  arch/arm/boot/dts/omap3-devkit8000-lcd70.dts  |   2 +-
->  arch/arm/boot/dts/omap3-devkit8000.dts        |   2 +-
->  arch/arm/boot/dts/omap3-gta04.dtsi            |   2 +-
->  arch/arm/boot/dts/omap3-ha-lcd.dts            |   2 +-
->  arch/arm/boot/dts/omap3-ha.dts                |   2 +-
->  arch/arm/boot/dts/omap3-igep0020-rev-f.dts    |   2 +-
->  arch/arm/boot/dts/omap3-igep0020.dts          |   2 +-
->  arch/arm/boot/dts/omap3-igep0030-rev-g.dts    |   2 +-
->  arch/arm/boot/dts/omap3-igep0030.dts          |   2 +-
->  arch/arm/boot/dts/omap3-ldp.dts               |   2 +-
->  arch/arm/boot/dts/omap3-lilly-a83x.dtsi       |   2 +-
->  arch/arm/boot/dts/omap3-lilly-dbb056.dts      |   2 +-
->  arch/arm/boot/dts/omap3-n9.dts                |   2 +-
->  arch/arm/boot/dts/omap3-n950-n9.dtsi          |   7 --
->  arch/arm/boot/dts/omap3-n950.dts              |   2 +-
->  .../arm/boot/dts/omap3-overo-storm-alto35.dts |   2 +-
->  .../boot/dts/omap3-overo-storm-chestnut43.dts |   2 +-
->  .../boot/dts/omap3-overo-storm-gallop43.dts   |   2 +-
->  .../arm/boot/dts/omap3-overo-storm-palo35.dts |   2 +-
->  .../arm/boot/dts/omap3-overo-storm-palo43.dts |   2 +-
->  .../arm/boot/dts/omap3-overo-storm-summit.dts |   2 +-
->  arch/arm/boot/dts/omap3-overo-storm-tobi.dts  |   2 +-
->  .../boot/dts/omap3-overo-storm-tobiduo.dts    |   2 +-
->  arch/arm/boot/dts/omap3-pandora-1ghz.dts      |   2 +-
->  arch/arm/boot/dts/omap3-sbc-t3530.dts         |   2 +-
->  arch/arm/boot/dts/omap3-sbc-t3730.dts         |   2 +-
->  arch/arm/boot/dts/omap3-sniper.dts            |   2 +-
->  arch/arm/boot/dts/omap3-thunder.dts           |   2 +-
->  arch/arm/boot/dts/omap3-zoom3.dts             |   2 +-
->  arch/arm/boot/dts/omap3430-sdp.dts            |   2 +-
->  arch/arm/boot/dts/omap34xx.dtsi               |  66 ++++++++--
->  arch/arm/boot/dts/omap36xx.dtsi               |  65 ++++++++--
->  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +-
->  drivers/cpufreq/ti-cpufreq.c                  | 119 +++++++++++++++++-
->  45 files changed, 320 insertions(+), 80 deletions(-)
->
-> --
-> 2.19.1
->
