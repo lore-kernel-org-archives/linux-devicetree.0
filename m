@@ -2,174 +2,390 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C61C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5A6C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4C22085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EA12178F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Twy3xq/J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgNwXhZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731256AbfKHNCm (ORCPT
+        id S1727492AbfKHNJz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:02:42 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57542 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730662AbfKHNCk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 08:02:40 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8D1tQv019203;
-        Fri, 8 Nov 2019 14:02:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=WOEu20nR0i4xRSiZf53WXogNt8wyvzvdiHSB58BEZaY=;
- b=Twy3xq/J78m2GKUL7TQSQjyWs+R+K39EqeKWroBU2aDiseZJMmNvT8BM4PGMG7y1h2uX
- P5gHZtJtXLx3yUbnAimdEnCyowD5rige5Fb/6JssRcKE0KCXyxpL37sIG27zoORNhYKX
- py3Rn/Om7hDf+LRh67Vf7Nzo71XzRjvWNQUOdlW1Hixjaob4RpQMP5U/gizvYW7SlxFM
- VmBnSpzIf6W8E1z/2NeKWQtJiA5KJIBBKIPXhUn0PSy3KhfvIax13AQF/w0H1wnGahs4
- YAwEPXAPBqqWL8F3CNlkI/kpJWe62+GDn5gnyBAtVYxUkqqiUAKH7pWtFg4l7MltL8fq 6Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w41vd3kmx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 14:02:15 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 223DF10003A;
-        Fri,  8 Nov 2019 14:02:15 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 068212B7DEF;
-        Fri,  8 Nov 2019 14:02:15 +0100 (CET)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 8 Nov
- 2019 14:02:14 +0100
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Fri, 8 Nov 2019 14:02:14 +0100
-From:   Christophe ROULLIER <christophe.roullier@st.com>
-To:     Maxime Ripard <mripard@kernel.org>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
- 'clocks', 'clock-names' properties
-Thread-Topic: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
- 'clocks', 'clock-names' properties
-Thread-Index: AQHVljS9qESSyYnraEKgryyZ/0O5Aw==
-Date:   Fri, 8 Nov 2019 13:02:14 +0000
-Message-ID: <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
-References: <20191108103526.22254-1-christophe.roullier@st.com>
- <20191108103526.22254-2-christophe.roullier@st.com>
- <20191108104231.GE4345@gilmour.lan>
-In-Reply-To: <20191108104231.GE4345@gilmour.lan>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <24D71ECBC6C48E469CDC8390CA3DFA02@st.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-08_03:2019-11-08,2019-11-08 signatures=0
+        Fri, 8 Nov 2019 08:09:55 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34367 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfKHNJz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 08:09:55 -0500
+Received: by mail-pg1-f196.google.com with SMTP id e4so3951436pgs.1;
+        Fri, 08 Nov 2019 05:09:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GcSRBv+6yTz1aWV2wpvc++0ONMW5Gc651FnwYD+LCXY=;
+        b=AgNwXhZjuQufrlApx1Jt4Pc0HtcVyvwwVSLlsT0Y0iUejJKTiLItU0kX2vW9nbTulQ
+         y8oUnlCp/keIMjsp4eE1qOqq6FaCFY7BpYN2GaPGHicCpYe02HrCmJt+Pyou5zsntIlq
+         hvN+AXnd4MMjA1DvaTIrq1RRnkizwggFpRaFwKqgyAjlHPFlWecpJAWNmK9MS0000bkL
+         ZoI9CRzQM75ObTfSPARlY7juiBvzzdVnTqGyqv9X/Qg1P/QzI2sgijADyR9bZcD/dJed
+         +7BqyiqP2gyi2g2T4qbg0sO2jCexf6NG2a4XdjWEcxim3ikpt8X2b46p/MCKk5jCgK+Z
+         wrJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GcSRBv+6yTz1aWV2wpvc++0ONMW5Gc651FnwYD+LCXY=;
+        b=pGiBRXEAWVxDmWOIx4UN0l5lIR44rcZj7fU0OIzjXVBpQsUmuLrxXKGnErl73u0+mO
+         CAAEyGfakU7uwL4SIPlTCx0f+oF3/x37xE64wyEYIJ1WKvKYQoz5iHUSEbJah/WhQGnP
+         ZhAVxbW8EAeNvgFcrbdHoH0rVMZFc2egEJAxOmOcl3hD1cbG7VDtECsScth2aF0g/v4k
+         mMOYTiVUUwj+ynYv6lFU4ssH4pUyOhZ+qlEW/uvG03bExUmkWoMIXqzmpUJd4isPb9jT
+         ePimt8cIUF1mO6eTttKgyGa61+ZXWcK9wt0Kf5nP3swSMNSUqNDXISfGA4nslJcRm/fG
+         ExFw==
+X-Gm-Message-State: APjAAAXumxfSIguNUAq/QHN6LAUsJ0ra7ESkJri4PPssK6jWzzGdL4Qr
+        gBH8c3n/DoCWQA3xo/GFC1I=
+X-Google-Smtp-Source: APXvYqxxrcn6kFUEnC0t1jD0cIy6EM9JE3qdhbm9La/8uN+duByFOP1K8RDli97qPAJSimst4cYNSA==
+X-Received: by 2002:a63:f94e:: with SMTP id q14mr7489585pgk.411.1573218593385;
+        Fri, 08 Nov 2019 05:09:53 -0800 (PST)
+Received: from localhost (97.64.17.87.16clouds.com. [97.64.17.87])
+        by smtp.gmail.com with ESMTPSA id n21sm3384316pjq.13.2019.11.08.05.09.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Nov 2019 05:09:52 -0800 (PST)
+From:   Song Qiang <songqiang1304521@gmail.com>
+To:     lars@metafoo.de, Michael.Hennerich@analog.com,
+        stefan.popa@analog.com, jic23@kernel.org, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Song Qiang <songqiang1304521@gmail.com>
+Subject: [PATCH 1/3] dt-bindings: iio: adc: add support for AD5940
+Date:   Fri,  8 Nov 2019 21:09:44 +0800
+Message-Id: <20191108130946.14740-1-songqiang1304521@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/8/19 11:42 AM, Maxime Ripard wrote:
-> Hi,
->
-> On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
->> This change is needed for some soc based on snps,dwmac, which have
->> more than 3 clocks.
->>
->> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
->> ---
->>   Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Doc=
-umentation/devicetree/bindings/net/snps,dwmac.yaml
->> index 4845e29411e4..376a531062c2 100644
->> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
->> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
->> @@ -27,6 +27,7 @@ select:
->>             - snps,dwmac-3.710
->>             - snps,dwmac-4.00
->>             - snps,dwmac-4.10a
->> +          - snps,dwmac-4.20a
->>             - snps,dwxgmac
->>             - snps,dwxgmac-2.10
->>
->> @@ -62,6 +63,7 @@ properties:
->>           - snps,dwmac-3.710
->>           - snps,dwmac-4.00
->>           - snps,dwmac-4.10a
->> +        - snps,dwmac-4.20a
->>           - snps,dwxgmac
->>           - snps,dwxgmac-2.10
->>
->> @@ -87,7 +89,8 @@ properties:
->>
->>     clocks:
->>       minItems: 1
->> -    maxItems: 3
->> +    maxItems: 5
->> +    additionalItems: true
-> Those additional clocks should be documented
->
-> Maxime
+Add yaml devicetree description file and a header file for
+helping configure positive and negtive input of AD5940.
 
-Hi Maxime,
+Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+---
+ .../bindings/iio/adc/adi,ad5940.yaml          | 240 ++++++++++++++++++
+ include/dt-bindings/iio/adc/adi,ad5940.h      |  52 ++++
+ 2 files changed, 292 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+ create mode 100644 include/dt-bindings/iio/adc/adi,ad5940.h
 
-The problem it is specific to our soc, so is it possible to
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+new file mode 100644
+index 000000000000..f7f034fdd8ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+@@ -0,0 +1,240 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright 2019 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5940.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD5940 Device Tree Bindings
++
++maintainers:
++  - Song Qiang <songqiang1304521@gmail.com>
++
++description: |
++  Analog Devices AD5940 High Precision, Impedance, and Electrochemical Front End.
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5940.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad5940
++
++  reg:
++    maxItems: 1
++
++  vref-supply:
++    description:
++      The regulator to be used to supply the reference voltage.
++    maxItems: 1
++
++  adi,interrupt-io:
++    description:
++      Output GPIO index of interrupt controller of AD5940.
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [0, 3, 6, 7]
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - adi,interrupt-io
++
++patternProperties:
++  # 'channel@0-255'
++  "^channel@([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$":
++    type: object
++    description: |
++      Represents the external channels which are connected to the ADC.
++      See Documentation/devicetree/bindings/iio/adc/adc.txt.
++    properties:
++      reg:
++        description:
++          Index of this channel, must be starting from 0.
++        maxItems: 1
++
++      diff-channels:
++        description:
++          Positive input and negtive input of the ADC buffer of this channel.
++          Input candidates are defined in include/dt-bindings/iio/adc/adi,ad5940.h.
++        minItems: 2
++        maxItems: 2
++        items:
++          - description: Positive input channel
++          - enum:
++            - AD5940_ADC_INPUTP_EXCITATION
++            - AD5940_ADC_INPUTP_FLOATING
++            - AD5940_ADC_INPUTP_HSTIA
++            - AD5940_ADC_INPUTP_LPTIA_LP
++            - AD5940_ADC_INPUTP_AIN0
++            - AD5940_ADC_INPUTP_AIN1
++            - AD5940_ADC_INPUTP_AIN2
++            - AD5940_ADC_INPUTP_AIN3
++            - AD5940_ADC_INPUTP_AVDD_2
++            - AD5940_ADC_INPUTP_DVDD_2
++            - AD5940_ADC_INPUTP_AVDD_REG_2
++            - AD5940_ADC_INPUTP_TEMP
++            - AD5940_ADC_INPUTP_VBIAS_CAP
++            - AD5940_ADC_INPUTP_DE0
++            - AD5940_ADC_INPUTP_SE0
++            - AD5940_ADC_INPUTP_VREF_2V5_2
++            - AD5940_ADC_INPUTP_VREF_1V82
++            - AD5940_ADC_INPUTP_P_TEMP_N
++            - AD5940_ADC_INPUTP_AIN4
++            - AD5940_ADC_INPUTP_AIN6
++            - AD5940_ADC_INPUTP_VZERO
++            - AD5940_ADC_INPUTP_VBIAS0
++            - AD5940_ADC_INPUTP_VCE0
++            - AD5940_ADC_INPUTP_VRE0
++            - AD5940_ADC_INPUTP_VCE0_2
++            - AD5940_ADC_INPUTP_LPTIA
++            - AD5940_ADC_INPUTP_AGND_REF
++
++          - description: Negtive input channel
++          - enum:
++              # Negtive input candidates
++              - AD5940_ADC_INPUTN_FLOATING
++              - AD5940_ADC_INPUTN_HSTIA
++              - AD5940_ADC_INPUTN_LPTIA
++              - AD5940_ADC_INPUTN_AIN0
++              - AD5940_ADC_INPUTN_AIN1
++              - AD5940_ADC_INPUTN_AIN2
++              - AD5940_ADC_INPUTN_AIN3
++              - AD5940_ADC_INPUTN_VBIAS_CA8
++              - AD5940_ADC_INPUTN_TEMP_N
++              - AD5940_ADC_INPUTN_AIN4
++              - AD5940_ADC_INPUTN_AIN6
++              - AD5940_ADC_INPUTN_VZERO
++              - AD5940_ADC_INPUTN_VBIAS0
++              - AD5940_ADC_INPUTN_EXCITATION
++
++      channel-name:
++        description:
++          Any string format name you would like to assign to this channel.
++        maxItems: 1
++
++    required:
++      - reg
++      - diff-channels
++      - channel-name
++
++examples:
++  - |
++    ad5940: ad5940@0 {
++      compatible = "adi,ad5940";
++      reg = <0>;
++      spi-max-frequency = <16000000>;
++      vref-supply = <&adc_vref>;
++      interrupt-parent = <&gpio>;
++      interrupts = <24 2>;
++
++      adi,interrupt-io = <0>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      channel@0 {
++        reg = <0>;
++        diff-channels = <AD5940_ADC_INPUTP_VCE0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Vce-Vbias";
++      };
++
++      channel@1 {
++        reg = <1>;
++        diff-channels = <AD5940_ADC_INPUTP_VRE0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Vre-Vbias";
++      };
++
++      channel@2 {
++        reg = <2>;
++        diff-channels = <AD5940_ADC_INPUTP_SE0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Vse-Vbias";
++      };
++
++      channel@3 {
++        reg = <3>;
++        diff-channels = <AD5940_ADC_INPUTP_DE0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Vde-Vbias";
++      };
++
++      channel@4 {
++        reg = <4>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN0
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain0-Vbias";
++      };
++
++      channel@5 {
++        reg = <5>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN1
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain1-Vbias";
++      };
++
++      channel@6 {
++        reg = <6>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN2
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain2-Vbias";
++      };
++
++      channel@7 {
++        reg = <7>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN3
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain3-Vbias";
++      };
++
++      channel@8 {
++        reg = <8>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN4
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain4-Vbias";
++      };
++
++      channel@9 {
++        reg = <9>;
++        diff-channels = <AD5940_ADC_INPUTP_AIN6
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "ain6-Vbias";
++      };
++
++      channel@10 {
++        reg = <10>;
++        diff-channels = <AD5940_ADC_INPUTP_LPTIA_LP
++                         AD5940_ADC_INPUTN_LPTIA>;
++        channel-name = "Low power TIA DC";
++      };
++
++      channel@11 {
++        reg = <11>;
++        diff-channels = <AD5940_ADC_INPUTP_LPTIA
++                         AD5940_ADC_INPUTN_LPTIA>;
++        channel-name = "Low power TIA AC";
++      };
++
++      channel@12 {
++        reg = <12>;
++        diff-channels = <AD5940_ADC_INPUTP_HSTIA
++                         AD5940_ADC_INPUTN_HSTIA>;
++        channel-name = "High Speed TIA";
++      };
++
++      channel@13 {
++        reg = <13>;
++        diff-channels = <AD5940_ADC_INPUTP_TEMP
++                         AD5940_ADC_INPUTN_VBIAS0>;
++        channel-name = "Temperature";
++      };
++    };
+diff --git a/include/dt-bindings/iio/adc/adi,ad5940.h b/include/dt-bindings/iio/adc/adi,ad5940.h
+new file mode 100644
+index 000000000000..c17826f2f654
+--- /dev/null
++++ b/include/dt-bindings/iio/adc/adi,ad5940.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides constants for configuring the AD5940 AFE
++ */
++
++#ifndef _DT_BINDINGS_IIO_ADC_AD5940_H
++#define _DT_BINDINGS_IIO_ADC_AD5940_H
++
++#define AD5940_ADC_INPUTN_FLOATING	0
++#define AD5940_ADC_INPUTN_HSTIA		1
++#define AD5940_ADC_INPUTN_LPTIA		2
++#define AD5940_ADC_INPUTN_AIN0		4
++#define AD5940_ADC_INPUTN_AIN1		5
++#define AD5940_ADC_INPUTN_AIN2		6
++#define AD5940_ADC_INPUTN_AIN3		7
++#define AD5940_ADC_INPUTN_VBIAS_CA8	10
++#define AD5940_ADC_INPUTN_TEMP_N	11
++#define AD5940_ADC_INPUTN_AIN4		12
++#define AD5940_ADC_INPUTN_AIN6		14
++#define AD5940_ADC_INPUTN_VZERO		16
++#define AD5940_ADC_INPUTN_VBIAS0	17
++#define AD5940_ADC_INPUTN_EXCITATION	20
++
++#define AD5940_ADC_INPUTP_FLOATING	0
++#define AD5940_ADC_INPUTP_HSTIA		1
++#define AD5940_ADC_INPUTP_LPTIA_LP	2
++#define AD5940_ADC_INPUTP_AIN0		4
++#define AD5940_ADC_INPUTP_AIN1		5
++#define AD5940_ADC_INPUTP_AIN2		6
++#define AD5940_ADC_INPUTP_AIN3		7
++#define AD5940_ADC_INPUTP_AVDD_2	8
++#define AD5940_ADC_INPUTP_DVDD_2	9
++#define AD5940_ADC_INPUTP_AVDD_REG_2	10
++#define AD5940_ADC_INPUTP_TEMP		11
++#define AD5940_ADC_INPUTP_VBIAS_CAP	12
++#define AD5940_ADC_INPUTP_DE0		13
++#define AD5940_ADC_INPUTP_SE0		14
++#define AD5940_ADC_INPUTP_VREF_2V5_2	16
++#define AD5940_ADC_INPUTP_VREF_1V82	18
++#define AD5940_ADC_INPUTP_P_TEMP_N	19
++#define AD5940_ADC_INPUTP_AIN4		20
++#define AD5940_ADC_INPUTP_AIN6		22
++#define AD5940_ADC_INPUTP_VZERO		23
++#define AD5940_ADC_INPUTP_VBIAS0	24
++#define AD5940_ADC_INPUTP_VCE0		25
++#define AD5940_ADC_INPUTP_VRE0		26
++#define AD5940_ADC_INPUTP_VCE0_2	31
++#define AD5940_ADC_INPUTP_LPTIA		33
++#define AD5940_ADC_INPUTP_AGND_REF	35
++#define AD5940_ADC_INPUTP_EXCITATION	36
++
++#endif /* _DT_BINDINGS_IIO_ADC_AD5940 */
+-- 
+2.17.1
 
-propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
-
-and "official" description in soc yaml file (stm32-dwmac.yaml) ?
-
- =A0 clocks:
- =A0=A0=A0 minItems: 1
- =A0=A0=A0 maxItems: 5
- =A0=A0=A0 additionalItems: true
- =A0=A0=A0 items:
- =A0=A0=A0=A0=A0 - description: GMAC main clock
- =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
- =A0=A0=A0=A0=A0 - description:
- =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used for pr=
-ogramming the
- =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed then =
-the system
- =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on some pl=
-atforms.
-
-+=A0=A0=A0=A0=A0 - description: optional clock
-
-+=A0=A0=A0=A0=A0 - description: optional clock
-
-Thanks
-
-Christophe
