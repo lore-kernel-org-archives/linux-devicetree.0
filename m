@@ -2,171 +2,100 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AD7FC6196
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8B5FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D69218AE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25410218AE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573206176;
+	bh=+Aa0V7BwrZT7QBWcosv4UvZruk3ubTgmpCYKAqi9iZw=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=02qOcFgRIQRGL4lbKumhXTkZ3xFZima25ZoP6QHFgXBg23KTqn0JqghLYw3iDFTl6
+	 V2b9sKTQZXUM3LpRsipqNlTg/voC8etPCl5y5ar9U2tPdihmLojzeuKFF4QSEb+Ht5
+	 3SUa6hC8wEo+W1i6ylSP6HGZeyHj8JlO6Sc5GLb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbfKHJmi (ORCPT
+        id S1731610AbfKHJmz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:42:38 -0500
-Received: from mga05.intel.com ([192.55.52.43]:10456 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731411AbfKHJmi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:42:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 01:42:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,281,1569308400"; 
-   d="scan'208";a="354053281"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 08 Nov 2019 01:42:35 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v5 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Fri,  8 Nov 2019 17:42:23 +0800
-Message-Id: <5e0396e0e95e042b968b70b8c1f66d6432981ce4.1573196057.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
+        Fri, 8 Nov 2019 04:42:55 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:33239 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731373AbfKHJmz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:42:55 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iT0n5-00043G-RF; Fri, 08 Nov 2019 10:42:51 +0100
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v5 06/13] drivers: irqchip: qcom-pdc: Move to an SoC  independent compatible
+X-PHP-Originating-Script: 0:main.inc
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 08 Nov 2019 10:52:12 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <agross@kernel.org>, <robh+dt@kernel.org>,
+        <bjorn.andersson@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mka@chromium.org>, <swboyd@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>
+In-Reply-To: <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
+References: <20191108092824.9773-1-rnayak@codeaurora.org>
+ <20191108092824.9773-7-rnayak@codeaurora.org>
+ <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
+Message-ID: <08b53aa7c448aad4fce71709b0385d4c@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: rnayak@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mka@chromium.org, swboyd@chromium.org, ilina@codeaurora.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+On 2019-11-08 10:50, Marc Zyngier wrote:
+> On 2019-11-08 10:37, Rajendra Nayak wrote:
+>> Remove the sdm845 SoC specific compatible to make the driver
+>> easily reusable across other SoC's with the same IP block.
+>> This will reduce further churn adding any SoC specific
+>> compatibles unless really needed.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+>> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/irqchip/qcom-pdc.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+>> index faa7d61b9d6c..c175333bb646 100644
+>> --- a/drivers/irqchip/qcom-pdc.c
+>> +++ b/drivers/irqchip/qcom-pdc.c
+>> @@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node
+>> *node, struct device_node *parent)
+>>  	return ret;
+>>  }
+>>
+>> -IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
+>> +IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
+>
+> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 104 +++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+I need to have my hands fixed. The real tag is:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..64edd3115131
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,104 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+          - enum:
-+              - 0 #PINMUX_GPIO
-+              - 1
-+              - 2
-+              - 3
-+              - 4
-+
-+      bias-pull-up:
-+        type: boolean
-+      bias-pull-down:
-+        type: boolean
-+      drive-strength:
-+        type: boolean
-+      slew-rate:
-+        type: boolean
-+      drive-open-drain:
-+        type: boolean
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+
-+          # Client device subnode
-+          uart0-pins: uart0 {
-+                pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+                function = "CONSOLE_UART0";
-+                pinmux = <1>,
-+                         <1>;
-+                groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+One day, I'll manage that...
+
+         M.
 -- 
-2.11.0
-
+Jazz is not dead. It just smells funny...
