@@ -2,141 +2,156 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1058C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 14:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89090FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 14:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDA22178F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 14:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1B221848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 14:07:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qI76zDWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfKHOGd (ORCPT
+        id S1726684AbfKHOHo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 09:06:33 -0500
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:60767 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfKHOGc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 09:06:32 -0500
-Received: from [IPv6:2001:420:44c1:2577:2d08:b535:4aeb:85f0]
- ([IPv6:2001:420:44c1:2577:2d08:b535:4aeb:85f0])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id T4u9iG8nuXYiTT4uDi0g6M; Fri, 08 Nov 2019 15:06:30 +0100
-Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
- <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
- <1573058741.16477.18.camel@nxp.com>
- <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
- <1573220200.16477.32.camel@nxp.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <ffbc7501-bb56-b5f2-cd43-209f099be594@xs4all.nl>
-Date:   Fri, 8 Nov 2019 15:06:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 8 Nov 2019 09:07:44 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48788 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfKHOHo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 09:07:44 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 798AD2D1;
+        Fri,  8 Nov 2019 15:07:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1573222062;
+        bh=cfQskFVKDBmhqT8dy6gfEBopqXvAlZko8/zIfiIVSLQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qI76zDWU1Mh7+zpD/LOd6hoocj3RzM8CPdLjOzXtsrbTxg0Ebz4ax6+O1BfY7uXMY
+         SvFQr/o9XlqOiRw6SAhoyjDON+13+V2trgpDFJke77uWowz5TNz1oEWZtCrvGjEbuq
+         w5wsU76e778+kBQShalcdsEmHaKt1aRuegoqy80c=
+Date:   Fri, 8 Nov 2019 16:07:33 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v9 1/4] dt-bindings: display: xlnx: Add ZynqMP DP
+ subsystem bindings
+Message-ID: <20191108140733.GJ4866@pendragon.ideasonboard.com>
+References: <20190925235544.11524-1-laurent.pinchart@ideasonboard.com>
+ <20190925235544.11524-2-laurent.pinchart@ideasonboard.com>
+ <CAL_JsqL7-33B4CaEX0r5V7PhX9EnghxNfcbZNLT4yo+FLeCOCA@mail.gmail.com>
+ <20190926142318.GB16469@pendragon.ideasonboard.com>
+ <CAL_JsqJTPzXkoyhTwWtc_Rsb5tkY-kggXhJj67EfcYgEk5tq=A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1573220200.16477.32.camel@nxp.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfFtHvLism700l44mHiTDlkoGsJR8q8LtIaDRa1DTgNp3cGSGFuG+AfyW/O4wXjgBv9ZLWv4URjd4wl6Ld6p/gwsGJxnWGp20bWz/6JCpoSqH7AfIuHTa
- ko5FOBAcEuspTdRHfTEWIIBPwebHCR0plxObGh8VO3pHLAXmXsiPhAchMpiRF2I72k0CY9VUDc0r9eVZQWZP7C6X/vgzmxbfNvcJaRop+LaUfu/QvglqhImF
- 3PnqaDVkI/ZRF07ckuObAqr2pdWFVQ1MLPbruqHftvev2ZE9NNo6ndK6iXGbfB4TA3O05C/uJFh9HsXYPgfjXdRwQU5lHgLRpEcJxFrQ9YzS2VQUtJCTtnNY
- KFntJPQ+ZhBYMM59lK0blIf6/EbT/GL43IapW2TdzeXlLQ7+zTE0oCVa+O2tIDawNnRgc7ueJkX8wtQwHYvMyRvOx7MWgoeRMoT9sm7CllGCd+7Q/hgmJKeE
- OnA6GdTx/MUnTKfiIIpbfYGvSpUt70w5+la0pi/srt7sa5XGyIlaPCo8IpSwNJZq5L/v4aH26o1kcoAnqNhthX8+djE+K+VBOfJpW1/rar/vs4+EnndeR15C
- gYHqQuvgMx2FaQrwHYyDzCy/e8AvLRyk9FIQsjzwolWN2jguexMmrq2D8+KGSS1faroHSlcSQQRvAY3gXdsQh0/26m2YbFE/R5Gs4nk2UWScrcZvAfbT65hy
- dVl0QDXA9bNdkOi6uOuYg0X6N9xL5oHrtZz9oH55dFGL5lVdnl1WQupFDw32A/PXRQBJ0VskbuOIUzUb/Y+53iSKrO22s7zmc/HeWiGoPmBBPjxkfIKNm3R9
- lt0TPkuqDUc93an56uMutzsa8CXyzBxdEvPFP2HcicYMfo4bsJhY3T5GIDB6vxCbPayE0S9HRMVgGQAR/vXDahkF0d1aLqLO081Iuno8BAmRx95KI8OybP8F
- vNTOaIlrmHzf731D6tf6cXPMqGIk/RdjyLfOeFAiWEbBKpCMcAtxREUDIh2v1KuEbob8VVFNrN2yKq5wzmho9rqihlA=
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJTPzXkoyhTwWtc_Rsb5tkY-kggXhJj67EfcYgEk5tq=A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/8/19 2:36 PM, Mirela Rabulea wrote:
-> Hi Hans,
-> 
-> On Mi, 2019-11-06 at 17:52 +0100, Hans Verkuil wrote:
->>       test Scaling: OK
->> The presence of a scaler is suspicious: is the encoder indeed
->> capable of scaling? I suspect this is a bug.
-> 
-> No, it's not capable of scaling. You suspect a bug in the driver or the
-> tests?
+Hi Rob,
 
-Actually, I think that's an outstanding bug in v4l-utils. It doesn't
-correctly handle the m2m case with respect to scaling. I think. I'll
-look into this a bit more.
-
+On Thu, Sep 26, 2019 at 09:57:29AM -0500, Rob Herring wrote:
+> On Thu, Sep 26, 2019 at 9:23 AM Laurent Pinchart wrote:
+> > On Thu, Sep 26, 2019 at 09:15:01AM -0500, Rob Herring wrote:
+> > > On Wed, Sep 25, 2019 at 6:56 PM Laurent Pinchart wrote:
+> > > >
+> > > > From: Hyun Kwon <hyun.kwon@xilinx.com>
+> > > >
+> > > > The bindings describe the ZynqMP DP subsystem. They don't support the
+> > > > interface with the programmable logic (FPGA) or audio yet.
+> > > >
+> > > > Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > ---
+> > > > Changes since v8:
+> > > >
+> > > > - Convert to yaml
+> > > > - Rename aclk to dp_apb_clk
+> > >
+> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.example.dt.yaml:
+> > > display@fd4a0000: clock-names:2: 'dp_vtc_pixel_clk_in' was expected
+> >
+> > If you allow me to steal a bit of your brain time, could you help me
+> > expressing the clocks constraint ?
+> >
+> >   clocks:
+> >     description:
+> >       The AXI clock and at least one video clock are mandatory, the audio clock
+> >       optional.
+> >     minItems: 2
+> >     maxItems: 4
+> >     items:
+> >       - description: AXI clock
+> >       - description: Audio clock
+> >       - description: Non-live video clock (from Processing System)
+> >       - description: Live video clock (from Programmable Logic)
+> >   clock-names:
+> >     minItems: 2
+> >     maxItems: 4
+> >     items:
+> >       - const: dp_apb_clk
+> >       - const: dp_aud_clk
+> >       - const: dp_vtc_pixel_clk_in
+> >       - const: dp_live_video_in_clk
+> >
+> > dp_apb_clk is required, dp_aud_clk is optional, and at least one of
+> > dp_vtc_pixel_clk_in and dp_live_video_in_clk is required.
 > 
->> Codec ioctls:
->>>       test VIDIOC_(TRY_)ENCODER_CMD: OK
->> The presence of this...
->>
->>>
->>>       test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->>>       test VIDIOC_(TRY_)DECODER_CMD: OK
->> ...and this is also strange for a JPEG codec. These ioctls are
->> typically only
->> needed for MPEG/H264/etc. codecs, and not for a simple JPEG codec.
->>
->> The same issues are found for the JPEG decoder.
+> I'm hoping people's inability to express the schema will prevent
+> complicated ones like this in the first place...
 > 
-> I implemented the CMD_STOP for both encoder & decoder, because it was
-> requested by our developer for gstreamer plugin for this codec.
-> The context in which this was requested was for playing MJPEG videos (a
-> concatenation of JPEG frames).
+> clock-names:
+>   oneOf:
+>     - minItems: 3
+>       maxItems: 4
+>       items:
+>         - const: dp_apb_clk
+>         - const: dp_aud_clk
+>         - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+>         - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+>     - minItems: 2
+>       maxItems: 3
+>       items:
+>         - const: dp_apb_clk
+>         - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+>         - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
 
-This ioctl makes no sense for JPEG codecs, and in fact jpeg drivers like
-s5p-jpeg or mtk-jpeg do not implement this. This sounds like a gstreamer bug.
-Nicolas, do you know anything about this?
+The above would make
 
-> 
->> Streaming ioctls:
->>>       test read/write: OK (Not Supported)
->>>       test blocking wait: OK
->>>               fail: v4l2-test-buffers.cpp(254): g_field() ==
->>> V4L2_FIELD_ANY
->> The driver shall never return FIELD_ANY. This needs to be FIELD_NONE.
-> 
-> Is there a "good example" of a v4l m2m driver that passes these
+	clock-names = "dp_apb_clk", "dp_vtc_pixel_clk_in", "dp_vtc_pixel_clk_in";
 
-vim2m. Also drivers/media/platform/mtk-jpeg/ (although I'm not sure when
-it was last tested with v4l2-compliance, so it might be a bit out of date).
+valid. I've investigated a little bit and found uniqueItems which solves
+my issue.
 
-> streaming tests? That would save some time on my side.
-> For the FIELD_ANY issue, I got inspired from your commit:
-> ab7afaf3 media: vim2m: add buf_out_validate callback
-> But there's a lot more to go...
-> 
-> Thanks,
-> Mirela
-> 
+Would the following simpler solution be acceptable ?
 
+clock-names:
+    minItems: 2
+    maxItems: 4
+    items:
+      - const: dp_apb_clk
+      - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+      - const: dp_aud_clk
+      - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+    uniqueItems: true
+
+> Strictly speaking, that leaves items clocks wrong, but 'description'
+> doesn't do anything. So I'd just leave it as is.
+
+Speaking of which, there doesn't seem to be anything that validates the
+size of clocks and clock-names being identical. Is that a known issue ?
+
+-- 
 Regards,
 
-	Hans
+Laurent Pinchart
