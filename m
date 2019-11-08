@@ -2,188 +2,94 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3FBC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DAAC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771942178F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573236772;
-	bh=ELQr5f48u8UP3gTQ4f0O6v3rgM59jKm+kt9ggY9rv9s=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=uSGUjC2Nrq6jMHBUUmyvDaYCjjF5MtdBnUkkAw+GK0wqNiEBnZYCFNYNVg81Vr5rb
-	 rfNrf2q0aySEZqhRialqp0ibiaZv6CB+M6kro69hJYF+dSnZ4rlKG/pAeUciEI9vEz
-	 3m8G9YtaYWmEPbidroRA23SvkLVBej229SUlsKZs=
+	by mail.kernel.org (Postfix) with ESMTP id 7162C2075C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:34:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Tmmx0Hjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfKHSMv (ORCPT
+        id S1728235AbfKHSeo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:12:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbfKHSMv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 13:12:51 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E284E214DB;
-        Fri,  8 Nov 2019 18:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573236770;
-        bh=ELQr5f48u8UP3gTQ4f0O6v3rgM59jKm+kt9ggY9rv9s=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=bOSP1g9YSgcPhvpPAlL+a9JRxoTij3qU1HwCLePyjL/IOXi+sJLpbHKsEH1gLuhqO
-         AhekoDy5jkd3MDdy7HhsZZoxylHaNfro54qAvKiCVLal478ISREwfbOcvq5jWDC4W2
-         2RYU+3Bt4uPMUGJxhiOjNEqvgvwJuki6MI+L4owo=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Fri, 8 Nov 2019 13:34:44 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:29494 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbfKHSen (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 13:34:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573238079;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=vJ+74fn3Vf4Saca/F02gUt/u2deD5EnYg79w7uayWuk=;
+        b=Tmmx0HjfM9rDZXEw3LNe8dEKmY0Rkwm+K0YXxCNhiUm5pI2Um3GVR7Rk33k5UNTgw/
+        w9uN/5kmfX8+tVtBwFGYw58eAzGyDMuq46Yh4BCoWFTUdn49EE8XGmoZgSQK9z1Kvw6m
+        BzAVXX6A6oJTozdb1p+AMo2q4956crUmcB1dgWtuRs4SpcWpZe8BIcIIz1BQfE0CXmow
+        bzkvPyW5HaMhqOHH8+ic3i0xwH9VZAWpRTPQdrsAImUGGXKzSN4MrGJOeQeYMCgsGcbB
+        xqeg63PcC25aXpRl74K4M5aa4NYbniW9sjxehV/3VJdQKbyLQev4Zy4HHEFqcdKmMaVx
+        +JsQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDleUXAoPgQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id L09db3vA8IYFmD0
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 8 Nov 2019 19:34:15 +0100 (CET)
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: add compatible string for Tolino Shine 3
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191108111834.18610-2-andreas@kemnade.info>
+Date:   Fri, 8 Nov 2019 19:34:14 +0100
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, andrew.smirnov@gmail.com,
+        manivannan.sadhasivam@linaro.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        j.neuschaefer@gmx.net
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191108101116.GA2583136@ulmo>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com> <20191106231005.F2CD820869@mail.kernel.org> <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com> <20191107152115.GA2580600@ulmo> <20191107191933.0B18021D6C@mail.kernel.org> <20191108101116.GA2583136@ulmo>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        jason@lakedaemon.net, jonathanh@nvidia.com,
-        linus.walleij@linaro.org, marc.zyngier@arm.com,
-        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
-User-Agent: alot/0.8.1
-Date:   Fri, 08 Nov 2019 10:12:49 -0800
-Message-Id: <20191108181249.E284E214DB@mail.kernel.org>
+Message-Id: <015ED275-1F30-4ECB-B248-AD91D8874B13@goldelico.com>
+References: <20191108111834.18610-1-andreas@kemnade.info> <20191108111834.18610-2-andreas@kemnade.info>
+To:     Andreas Kemnade <andreas@kemnade.info>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Thierry Reding (2019-11-08 02:11:16)
-> On Thu, Nov 07, 2019 at 11:19:32AM -0800, Stephen Boyd wrote:
-> > Quoting Thierry Reding (2019-11-07 07:21:15)
-> > > On Thu, Nov 07, 2019 at 03:54:03AM +0300, Dmitry Osipenko wrote:
-> > > > 07.11.2019 02:10, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > > > > Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
-> > > > >> This patch adds an API clk_hw_get_parent_index to get index of t=
-he
-> > > > >> clock parent to use during the clock restore operations on system
-> > > > >> resume.
-> > > > > =20
-> > > > > Is there a reason we can't save the clk hw index at suspend time =
-by
-> > > > > reading the hardware to understand the current parent? The parent=
- index
-> > > > > typically doesn't matter unless we're trying to communicate somet=
-hing
-> > > > > from the framework to the provider driver. Put another way, I wou=
-ld
-> > > > > think the provider driver can figure out the index itself without=
- having
-> > > > > to go through the framework to do so.
-> > > >=20
-> > > > Isn't it a bit wasteful to duplicate information about the parent w=
-ithin
-> > > > a provider if framework already has that info? The whole point of t=
-his
-> > > > new API is to allow providers to avoid that unnecessary duplication.
-> > > >=20
-> > > > Please note that clk_hw_get_parent_index is getting used only at the
-> > > > resume time and not at suspend.
-> > >=20
-> > > I agree with this. All of the information that we need is already cac=
-hed
-> > > in the framework. Doing this in the driver would mean essentially add=
-ing
-> > > a "saved parent" field along with code to read the value at suspend t=
-ime
-> > > to the three types of clocks that currently use this core helper.
-> >=20
-> > Don't we already have a "saved parent" field by storing the pointer to
-> > the clk_hw?
-> >=20
-> > >=20
-> > > That's certainly something that we *can* do, but it doesn't sound lik=
-e a
-> > > better option than simply querying the framework for the value that we
-> > > need.
-> > >=20
-> >=20
-> > Let me say this another way. Why does this driver want to know the index
-> > that the framework uses for some clk_hw pointer? Perhaps it happens to
-> > align with the same value that hardware uses, but I still don't
-> > understand why the driver wants to know what the framework has decided
-> > is the index for some clk_hw pointer.
-> >=20
-> > Or is this something like "give me the index for the parent that the
-> > framework thinks I currently have but in reality don't have anymore
-> > because the register contents were wiped and we need to reparent it"?
->=20
-> Yeah, that's exactly what this is being used for. It's used to restore
-> the parent/child relationship during resume after the registers have
-> been wiped during supend.
 
-Ok cool. Our whole suspend/resume and save/restore story hasn't really
-been well thought out so we may want to pull all this logic into the
-core one day. For now it's OK to do the heavy lifting from provider
-drivers until someone gets a better grasp on how this should all work.
+> Am 08.11.2019 um 12:18 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> This adds a compatible string for the Tolino Shine 3 eBook reader.
+>=20
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+> 1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml =
+b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 4a8ce4a56e0b..663964134604 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -142,6 +142,7 @@ properties:
+>         items:
+>           - enum:
+>               - fsl,imx6sl-evk            # i.MX6 SoloLite EVK Board
+> +              - kobo,tolino-shine3
+>           - const: fsl,imx6sl
+>=20
+>       - description: i.MX6SLL based Boards
+> --=20
+> 2.11.0
 
->=20
-> > A generic API to get any index for this question is overkill and we sho=
-uld
-> > consider adding some sort of API like clk_hw_get_current_parent_index(),
-> > or a framework flag that tells the framework this parent is incorrect
-> > and we need to call the .set_parent() op again to reconfigure it.
->=20
-> Okay, I think I see what you're saying. The current implementation does
-> carry a bit of a risk because users could be calling this function with
-> any arbitrary pair of struct clk_hw *, even completely unrelated ones.
->=20
-> How about we turn it into this instead:
->=20
->         /**
->          * clk_hw_get_parent_index - return the index of the parent clock
->          * @hw: clk_hw associated with the clk being consumed
->          *
->          * Fetches and returns the index of parent clock. Returns -EINVAL=
- if the given
->          * clock does not have a current parent.
->          */
->         int clk_hw_get_parent_index(struct clk_hw *hw)
->         {
->                 struct clk_hw *parent =3D clk_hw_get_parent(hw);
->=20
->                 if (!parent)
->                         return -EINVAL;
->=20
->                 return clk_fetch_parent_index(hw->core, parent->core);
->         }
->         EXPORT_SYMBOL_GPL(clk_hw_get_parent_index);
->=20
-> I think that has the advantage that we can't pass it a parent that's not
-> really a parent. There's still the slightly weird case where the clock
-> doesn't have a current parent, but hopefully that's something we are not
-> going to encounter much. After all this only makes sense to be called on
-> mux clocks and they always do have a parent by definition.
-
-Right.
-
->=20
-> Perhaps we should be more explicit and wrap that !parent conditional in
-> a WARN_ON()? In my local patches I do that at the call sites because
-> they are all functions returning void, so we'd be silently ignoring the
-> cases, but I think it may make sense to have it in the core.
->=20
-
-Sure a WARN_ON() sounds fair. That will not take the whole task down
-and makes sure that drivers aren't doing something incorrect. Otherwise,
-this looks good and we can optimize by caching the parent index later if
-we really need to.
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # Tolino Shine3
 
