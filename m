@@ -2,347 +2,450 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA69FC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D647C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628D7206DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:07:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="is0tgjwy"
+	by mail.kernel.org (Postfix) with ESMTP id EEA772084D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfKHLHL (ORCPT
+        id S1731299AbfKHLNa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:07:11 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47638 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfKHLHL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 06:07:11 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCA1523F;
-        Fri,  8 Nov 2019 12:07:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1573211228;
-        bh=A1GE+LvUJJeniin3sR7uRg+7G9wdgGzZNjmAlbuj/4o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=is0tgjwy2naMEpGo2i7yuLOBetl/sMHmrbnpN+EMDS+KaDgdsTgo9EtN6YI+I/UJm
-         6xbkcedmYw2ugjO8TPHYEnagpjiFOjNc5G8ca0m/8AMhhx2q3iLdZKjJL6W0nm62Nr
-         34NtxeuCRXWaz+QuAch12BnN5ikZQ7qSInq7Up/k=
-Date:   Fri, 8 Nov 2019 13:06:58 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Peter Rosin <peda@axentia.se>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v3 2/7] drm/bridge: Repurpose lvds-encoder.c
-Message-ID: <20191108110658.GD4866@pendragon.ideasonboard.com>
-References: <1573157463-14070-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573157463-14070-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20191107203454.GN24983@pendragon.ideasonboard.com>
- <TYXPR01MB177573D7BD9DAA139F7FAB8FC07B0@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <20191108093927.2g7dwgdwrcr4rov7@uno.localdomain>
+        Fri, 8 Nov 2019 06:13:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48304 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727573AbfKHLN3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:13:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BF5EEAF62;
+        Fri,  8 Nov 2019 11:13:25 +0000 (UTC)
+Message-ID: <50e0292949a9f95cf756688eafe0b15a1cf3136e.camel@suse.de>
+Subject: Re: [PATCH 3/4] PCI: brcmstb: add Broadcom STB PCIe host controller
+ driver
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     mbrugger@suse.com, phil@raspberrypi.org,
+        linux-kernel@vger.kernel.org, james.quinlan@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>
+Date:   Fri, 08 Nov 2019 12:13:20 +0100
+In-Reply-To: <87e5117a-f8ff-2a1b-379b-5f43383aa7c0@gmx.net>
+References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
+         <20191106214527.18736-4-nsaenzjulienne@suse.de>
+         <87e5117a-f8ff-2a1b-379b-5f43383aa7c0@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-7LN/3ZhiuzOWe383zsu9"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191108093927.2g7dwgdwrcr4rov7@uno.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Jacopo,
 
-On Fri, Nov 08, 2019 at 10:39:27AM +0100, Jacopo Mondi wrote:
-> On Fri, Nov 08, 2019 at 09:22:56AM +0000, Fabrizio Castro wrote:
-> > On 07 November 2019 20:35 Laurent Pinchart wrote:
-> > > On Thu, Nov 07, 2019 at 08:10:58PM +0000, Fabrizio Castro wrote:
-> > > > lvds-encoder.c implementation is also suitable for LVDS decoders,
-> > > > not just LVDS encoders.
-> > > > Instead of creating a new driver for addressing support for
-> > > > transparent LVDS decoders, repurpose lvds-encoder.c for the greater
-> > > > good.
-> > > >
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > >
-> > > > ---
-> > > > v2->v3:
-> > > > * No change
-> > > > v1->v2:
-> > > > * No change
-> > > > ---
-> > > >  drivers/gpu/drm/bridge/Kconfig        |   8 +-
-> > > >  drivers/gpu/drm/bridge/Makefile       |   2 +-
-> > > >  drivers/gpu/drm/bridge/lvds-codec.c   | 131 ++++++++++++++++++++++++++++
-> > > >  drivers/gpu/drm/bridge/lvds-encoder.c | 155 ----------------------------------
-> > > >  4 files changed, 136 insertions(+), 160 deletions(-)
-> > >
-> > > It would help if you added the -M1 option to git-format-patch to detect
-> > > the rename, the result would be easier to review.
-> >
-> > Will do, thank you for the hint
-> >
-> > > >  create mode 100644 drivers/gpu/drm/bridge/lvds-codec.c
-> > > >  delete mode 100644 drivers/gpu/drm/bridge/lvds-encoder.c
-> > > >
-> > > > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> > > > index 3436297..9e75ca4e 100644
-> > > > --- a/drivers/gpu/drm/bridge/Kconfig
-> > > > +++ b/drivers/gpu/drm/bridge/Kconfig
-> > > > @@ -45,14 +45,14 @@ config DRM_DUMB_VGA_DAC
-> > > >  	  Support for non-programmable RGB to VGA DAC bridges, such as ADI
-> > > >  	  ADV7123, TI THS8134 and THS8135 or passive resistor ladder DACs.
-> > > >
-> > > > -config DRM_LVDS_ENCODER
-> > > > -	tristate "Transparent parallel to LVDS encoder support"
-> > > > +config DRM_LVDS_CODEC
-> > > > +	tristate "Transparent LVDS encoders and decoders support"
-> > > >  	depends on OF
-> > > >  	select DRM_KMS_HELPER
-> > > >  	select DRM_PANEL_BRIDGE
-> > > >  	help
-> > > > -	  Support for transparent parallel to LVDS encoders that don't require
-> > > > -	  any configuration.
-> > > > +	  Support for transparent LVDS encoders and LVDS decoders that don't
-> > > > +	  require any configuration.
-> > > >
-> > > >  config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
-> > > >  	tristate "MegaChips stdp4028-ge-b850v3-fw and stdp2690-ge-b850v3-fw"
-> > > > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> > > > index 4934fcf..8a9178a 100644
-> > > > --- a/drivers/gpu/drm/bridge/Makefile
-> > > > +++ b/drivers/gpu/drm/bridge/Makefile
-> > > > @@ -2,7 +2,7 @@
-> > > >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
-> > > >  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
-> > > >  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
-> > > > -obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
-> > > > +obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
-> > > >  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
-> > > >  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
-> > > >  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
-> > > > diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
-> > > > new file mode 100644
-> > > > index 0000000..d57a8eb
-> > > > --- /dev/null
-> > > > +++ b/drivers/gpu/drm/bridge/lvds-codec.c
-> > > > @@ -0,0 +1,131 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > > +/*
-> > > > + * Copyright (C) 2019 Renesas Electronics Corporation
-> > > > + * Copyright (C) 2016 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > + */
-> > > > +
-> > > > +#include <linux/gpio/consumer.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/of_device.h>
-> > > > +#include <linux/of_graph.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +
-> > > > +#include <drm/drm_bridge.h>
-> > > > +#include <drm/drm_panel.h>
-> > > > +
-> > > > +struct lvds_codec {
-> > > > +	struct drm_bridge bridge;
-> > > > +	struct drm_bridge *panel_bridge;
-> > > > +	struct gpio_desc *powerdown_gpio;
-> > > > +};
-> > > > +
-> > > > +static int lvds_codec_attach(struct drm_bridge *bridge)
-> > > > +{
-> > > > +	struct lvds_codec *lvds_codec = container_of(bridge,
-> > > > +						     struct lvds_codec, bridge);
-> > > > +
-> > > > +	return drm_bridge_attach(bridge->encoder, lvds_codec->panel_bridge,
-> > > > +				 bridge);
-> > > > +}
-> > > > +
-> > > > +static void lvds_codec_enable(struct drm_bridge *bridge)
-> > > > +{
-> > > > +	struct lvds_codec *lvds_codec = container_of(bridge,
-> > > > +						     struct lvds_codec, bridge);
-> > > > +
-> > > > +	if (lvds_codec->powerdown_gpio)
-> > > > +		gpiod_set_value_cansleep(lvds_codec->powerdown_gpio, 0);
-> > > > +}
-> > > > +
-> > > > +static void lvds_codec_disable(struct drm_bridge *bridge)
-> > > > +{
-> > > > +	struct lvds_codec *lvds_codec = container_of(bridge,
-> > > > +						     struct lvds_codec, bridge);
-> > > > +
-> > > > +	if (lvds_codec->powerdown_gpio)
-> > > > +		gpiod_set_value_cansleep(lvds_codec->powerdown_gpio, 1);
-> > > > +}
-> > > > +
-> > > > +static struct drm_bridge_funcs funcs = {
-> > > > +	.attach = lvds_codec_attach,
-> > > > +	.enable = lvds_codec_enable,
-> > > > +	.disable = lvds_codec_disable,
-> > > > +};
-> > > > +
-> > > > +static int lvds_codec_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct device *dev = &pdev->dev;
-> > > > +	struct device_node *panel_node;
-> > > > +	struct drm_panel *panel;
-> > > > +	struct lvds_codec *lvds_codec;
-> > > > +
-> > > > +	lvds_codec = devm_kzalloc(dev, sizeof(*lvds_codec), GFP_KERNEL);
-> > > > +	if (!lvds_codec)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
-> > > > +							     GPIOD_OUT_HIGH);
-> > > > +	if (IS_ERR(lvds_codec->powerdown_gpio))
-> > > > +		return PTR_ERR(lvds_codec->powerdown_gpio);
-> > >
-> > > The driver had an error message here, any reason it got removed ?
-> >
-> > I am quoting from https://www.spinics.net/lists/devicetree/msg318602.html :
-> > "I know it was there already, but this seems a bit unusual for the
-> > minimal gain of having a printout in the very unlikely case the
-> > gpiod_get() operations fails. I would just return PTR_ERR()."
-> >
-> > I am OK with reinstating it, just let me know what you want me to do here.
-> 
-> Yeah, I suggested that as it seemed to me quite unusual pattern for the
-> minimal gain of having an error message in an unlikely case. Sorry Fab
-> for the double effort if Laurent wants it back again.
-> 
-> > > > +
-> > > > +	panel_node = of_graph_get_remote_node(dev->of_node, 1, 0);
-> > > > +	if (!panel_node) {
-> > > > +		dev_dbg(dev, "panel DT node not found\n");
-> > > > +		return -ENXIO;
-> > > > +	}
-> > > > +
-> > > > +	panel = of_drm_find_panel(panel_node);
-> > > > +	of_node_put(panel_node);
-> > > > +	if (IS_ERR(panel)) {
-> > > > +		dev_dbg(dev, "panel not found, deferring probe\n");
-> > > > +		return PTR_ERR(panel);
-> > > > +	}
-> > > > +
-> > > > +	lvds_codec->panel_bridge = devm_drm_panel_bridge_add(dev, panel);
-> > >
-> > > This was devm_drm_panel_bridge_add_typed(), do you think there's a risk
-> > > of breaking userspace ? Of course as noted in the documentation of
-> > > devm_drm_panel_bridge_add_typed() the right solution is to fix panel
-> > > drivers, but I'm still slightly worried.
-> >
-> > Things break when the panel doesn't define connector_type, leading to the below
-> > check from devm_drm_panel_bridge_add:
-> > if (WARN_ON(panel->connector_type == DRM_MODE_CONNECTOR_Unknown))
-> >     return NULL;
-> >
-> > Please advise on the best course of action here.
-> 
-> I pointed out that function was described as deprecated and probably
-> fixing the panel driver would be best. Why are you concerned about
-> userspace ? is the panel driver that should correctly report its
-> connector type, isn't it ? In case it's not, sorry again Fab for the
-> double effort.
+--=-7LN/3ZhiuzOWe383zsu9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I'm concerned that this change may turn a working system in a
-non-working system. The issue has to be fixed in panel drivers of
-course, but switching from devm_drm_panel_bridge_add_typed() to
-devm_drm_panel_bridge_add() should only be done once all the drivers
-that are used with lvds-encoder behave properly.
+Hi Stefan,
+thanks for the review!
 
-> > > Actually, could you split this patch in two, with a patch that only
-> > > renames the driver (and the symbols internally) without any functional
-> > > change, and another patch that performs the modifications ? That would
-> > > be much easier to review and discuss.
-> 
-> This is more work for something that could be simply addressed by the
-> reviewer by passing -M10 to git show. For such a simple driver isn't
-> this fine the way it is ?
+On Thu, 2019-11-07 at 18:50 +0100, Stefan Wahren wrote:
+> Hi Nicolas,
+>=20
+> Am 06.11.19 um 22:45 schrieb Nicolas Saenz Julienne:
+> > From: Jim Quinlan <james.quinlan@broadcom.com>
+> >=20
+> > This commit adds the basic Broadcom STB PCIe controller.  Missing is th=
+e
+> > ability to process MSI. This functionality is added in a subsequent
+> > commit.
+> >=20
+> > The PCIe block contains an MDIO interface.  This is a local interface
+> > only accessible by the PCIe controller.  It cannot be used or shared
+> > by any other HW.  As such, the small amount of code for this
+> > controller is included in this driver as there is little upside to put
+> > it elsewhere.
+> >=20
+> > This is based on Jim's original submission[1] but adapted and tailored
+> > specifically to bcm2711's needs (that's the Raspberry Pi 4). Support fo=
+r
+> > the rest of the brcmstb family will soon follow once we get support for
+> > multiple dma-ranges in dma/direct.
+> >=20
+> > [1] https://patchwork.kernel.org/patch/10605959/
+> >=20
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/pci/controller/Kconfig        |  12 +
+> >  drivers/pci/controller/Makefile       |   1 +
+> >  drivers/pci/controller/pcie-brcmstb.c | 973 ++++++++++++++++++++++++++
+> >  3 files changed, 986 insertions(+)
+> >  create mode 100644 drivers/pci/controller/pcie-brcmstb.c
+> >=20
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kc=
+onfig
+> > index f5de9119e8d3..8b3aae91d8af 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -281,6 +281,18 @@ config VMD
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called vmd.
+> >=20
+> > +config PCIE_BRCMSTB
+> > +	bool "Broadcom Brcmstb PCIe host controller"
+> looking at the driver suggests me a tristate instead of bool.
+> > +	depends on ARCH_BRCMSTB || BMIPS_GENERIC
+> please add ARCH_BCM2835 for the Raspberry Pi 4
+> > +	depends on OF
+> > +	depends on SOC_BRCMSTB
+> Why is this needed?
 
-Don't make it difficult for the reviewer. I've reviewed this patch in my
-e-mail client, not in git. The patch itself should be generated with
--M10, but in any case, such renames should not be bundled with other
-changes. One logical change by patch is the rule, and we can sometimes
-bundle a semi-unrelated minor change (such as a typo or indentation
-fix), but certainly not a potentially dangerous functional change that
-needs to be carefully reviewed.
+It's not, I missed it. For now, I edited it so it only depends on ARCH_BCM2=
+835.
 
-> > Will do
-> >
-> > > > +	if (IS_ERR(lvds_codec->panel_bridge))
-> > > > +		return PTR_ERR(lvds_codec->panel_bridge);
-> > > > +
-> > > > +	/* The panel_bridge bridge is attached to the panel's of_node,
-> > > > +	 * but we need a bridge attached to our of_node for our user
-> > > > +	 * to look up.
-> > > > +	 */
-> > > > +	lvds_codec->bridge.of_node = dev->of_node;
-> > > > +	lvds_codec->bridge.funcs = &funcs;
-> > > > +	drm_bridge_add(&lvds_codec->bridge);
-> > > > +
-> > > > +	platform_set_drvdata(pdev, lvds_codec);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int lvds_codec_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct lvds_codec *lvds_codec = platform_get_drvdata(pdev);
-> > > > +
-> > > > +	drm_bridge_remove(&lvds_codec->bridge);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static const struct of_device_id lvds_codec_match[] = {
-> > > > +	{ .compatible = "lvds-encoder"  },
-> > > > +	{ .compatible = "thine,thc63lvdm83d" },
-> > > > +	{ .compatible = "lvds-decoder" },
-> > > > +	{},
-> > > > +};
-> > > > +MODULE_DEVICE_TABLE(of, lvds_codec_match);
-> > > > +
-> > > > +static struct platform_driver lvds_codec_driver = {
-> > > > +	.probe	= lvds_codec_probe,
-> > > > +	.remove	= lvds_codec_remove,
-> > > > +	.driver		= {
-> > > > +		.name		= "lvds-codec",
-> > > > +		.of_match_table	= lvds_codec_match,
-> > > > +	},
-> > > > +};
-> > > > +module_platform_driver(lvds_codec_driver);
-> > > > +
-> > > > +MODULE_AUTHOR("Laurent Pinchart <laurent.pinchart@ideasonboard.com>");
-> > > > +MODULE_DESCRIPTION("Driver for transparent LVDS encoders and LVDS decoders");
-> > >
-> > > Maybe "LVDS encoders and decoders" ?
-> > >
-> > > > +MODULE_LICENSE("GPL");
-> > >
-> > > [snip]
+> > +	default ARCH_BRCMSTB || BMIPS_GENERIC
+> also this needs ARCH_BCM2835
+> > +	help
+> > +	  Say Y here to enable PCIe host controller support for
+> > +	  Broadcom Settop Box SOCs.  A Broadcom SOC will may have
+> > +	  multiple host controllers as opposed to a single host
+> > +	  controller with multiple ports.
+> > +
+> >  config PCI_HYPERV_INTERFACE
+> >  	tristate "Hyper-V PCI Interface"
+> >  	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+> > diff --git a/drivers/pci/controller/Makefile
+> > b/drivers/pci/controller/Makefile
+> > index a2a22c9d91af..3fc0b0cf5b5b 100644
+> > --- a/drivers/pci/controller/Makefile
+> > +++ b/drivers/pci/controller/Makefile
+> > @@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) +=3D pcie-mediatek.o
+> >  obj-$(CONFIG_PCIE_MOBIVEIL) +=3D pcie-mobiveil.o
+> >  obj-$(CONFIG_PCIE_TANGO_SMP8759) +=3D pcie-tango.o
+> >  obj-$(CONFIG_VMD) +=3D vmd.o
+> > +obj-$(CONFIG_PCIE_BRCMSTB) +=3D pcie-brcmstb.o
+> >  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+> >  obj-y				+=3D dwc/
+> >=20
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> > b/drivers/pci/controller/pcie-brcmstb.c
+> > new file mode 100644
+> > index 000000000000..880ec11d06a1
+> > --- /dev/null
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -0,0 +1,973 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (C) 2009 - 2019 Broadcom */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/compiler.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/init.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/ioport.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/list.h>
+> > +#include <linux/log2.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/of_pci.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/printk.h>
+> > +#include <linux/sizes.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/string.h>
+> > +#include <linux/types.h>
+> > +
+> > +#include "../pci.h"
+> > +
+> > ...
+> >=20
+> > +
+> > +/* L23 is a low-power PCIe link state */
+> > +static void enter_l23(struct brcm_pcie *pcie)
+> > +{
+> > +	void __iomem *base =3D pcie->base;
+> > +	int l23, i;
+> > +
+> > +	/* assert request for L23 */
+> > +	WR_FLD_RB(base, PCIE_MISC_PCIE_CTRL, PCIE_L23_REQUEST, 1);
+> > +
+> > +	/* Wait up to 30 msec for L23 */
+> 36 msec?
 
--- 
+Yes :)
+
+> > +	l23 =3D RD_FLD(base, PCIE_MISC_PCIE_STATUS, PCIE_LINK_IN_L23);
+> > +	for (i =3D 0; i < 15 && !l23; i++) {
+> > +		usleep_range(2000, 2400);
+> > +		l23 =3D RD_FLD(base, PCIE_MISC_PCIE_STATUS, PCIE_LINK_IN_L23);
+> > +	}
+> > +
+> > +	if (!l23)
+> > +		dev_err(pcie->dev, "failed to enter L23\n");
+>=20
+> I think most user don't know anything about L23.
+>=20
+> How about:
+>=20
+> failed to enter low-power link state
+
+Noted
+
+> > +}
+> > +
+> > +static void turn_off(struct brcm_pcie *pcie)
+> > +{
+> > +	void __iomem *base =3D pcie->base;
+> > +
+> > +	if (brcm_pcie_link_up(pcie))
+> > +		enter_l23(pcie);
+> > +	/* Assert fundamental reset */
+> > +	brcm_pcie_perst_set(pcie, 1);
+> > +	/* Deassert request for L23 in case it was asserted */
+> > +	WR_FLD_RB(base, PCIE_MISC_PCIE_CTRL, PCIE_L23_REQUEST, 0);
+> > +	/* Turn off SerDes */
+> > +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 1);
+> > +	/* Shutdown PCIe bridge */
+> > +	brcm_pcie_bridge_sw_init_set(pcie, 1);
+> > +}
+> > +
+> > +static int brcm_pcie_suspend(struct device *dev)
+> > +{
+> > +	struct brcm_pcie *pcie =3D dev_get_drvdata(dev);
+> > +
+> > +	turn_off(pcie);
+> > +	clk_disable_unprepare(pcie->clk);
+> > +	pcie->suspended =3D true;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int brcm_pcie_resume(struct device *dev)
+> > +{
+> > +	struct brcm_pcie *pcie =3D dev_get_drvdata(dev);
+> > +	void __iomem *base;
+> > +	int ret;
+> > +
+> > +	base =3D pcie->base;
+> > +	clk_prepare_enable(pcie->clk);
+> > +
+> > +	/* Take bridge out of reset so we can access the SerDes reg */
+> > +	brcm_pcie_bridge_sw_init_set(pcie, 0);
+> > +
+> > +	/* Turn on SerDes */
+> > +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 0);
+> > +	/* Wait for SerDes to be stable */
+> > +	usleep_range(100, 200);
+> > +
+> > +	ret =3D brcm_pcie_setup(pcie);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	pcie->suspended =3D false;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void _brcm_pcie_remove(struct brcm_pcie *pcie)
+> > +{
+> > +	turn_off(pcie);
+> > +	clk_disable_unprepare(pcie->clk);
+> > +	clk_put(pcie->clk);
+> > +}
+> > +
+> > +static int brcm_pcie_remove(struct platform_device *pdev)
+> > +{
+> > +	struct brcm_pcie *pcie =3D platform_get_drvdata(pdev);
+> > +
+> > +	pci_stop_root_bus(pcie->root_bus);
+> > +	pci_remove_root_bus(pcie->root_bus);
+> > +	_brcm_pcie_remove(pcie);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id brcm_pcie_match[] =3D {
+> > +	{ .compatible =3D "brcm,bcm2711-pcie", .data =3D &bcm2711_cfg },
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+> > +
+> > +static int brcm_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device_node *dn =3D pdev->dev.of_node;
+> > +	const struct of_device_id *of_id;
+> > +	const struct pcie_cfg_data *data;
+> > +	struct resource *res;
+> > +	int ret;
+> > +	struct brcm_pcie *pcie;
+> > +	void __iomem *base;
+> > +	struct pci_host_bridge *bridge;
+> > +	struct pci_bus *child;
+> > +
+> > +	bridge =3D devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
+> > +	if (!bridge)
+> > +		return -ENOMEM;
+> > +
+> > +	pcie =3D pci_host_bridge_priv(bridge);
+> > +
+> > +	of_id =3D of_match_node(brcm_pcie_match, dn);
+> > +	if (!of_id) {
+> > +		dev_err(&pdev->dev, "failed to look up compatible string\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	data =3D of_id->data;
+> > +	pcie->reg_offsets =3D data->offsets;
+> > +	pcie->reg_field_info =3D data->reg_field_info;
+> > +	pcie->type =3D data->type;
+> > +	pcie->dn =3D dn;
+> > +	pcie->dev =3D &pdev->dev;
+> > +
+> > +	/* We use the domain number as our controller number */
+> > +	pcie->id =3D of_get_pci_domain_nr(dn);
+> > +	if (pcie->id < 0)
+> > +		return pcie->id;
+> > +
+> > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	if (!res)
+> > +		return -EINVAL;
+> > +
+> > +	base =3D devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	pcie->clk =3D of_clk_get_by_name(dn, "sw_pcie");
+> > +	if (IS_ERR(pcie->clk)) {
+> we should handle EPROBE_DEFER here
+
+Yes, I'll keep it in mind.
+
+> > +		dev_err(&pdev->dev, "could not get clock\n");
+> > +		pcie->clk =3D NULL;
+> > +	}
+> > +	pcie->base =3D base;
+> > +
+> > +	ret =3D of_pci_get_max_link_speed(dn);
+> > +	pcie->gen =3D (ret < 0) ? 0 : ret;
+> > +
+> > +	pcie->ssc =3D of_property_read_bool(dn, "brcm,enable-ssc");
+> > +
+> > +	ret =3D irq_of_parse_and_map(pdev->dev.of_node, 0);
+> > +	if (ret =3D=3D 0)
+> > +		/* keep going, as we don't use this intr yet */
+> > +		dev_warn(pcie->dev, "cannot get PCIe interrupt\n");
+> > +	else
+> > +		pcie->irq =3D ret;
+> > +
+> > +	ret =3D pci_parse_request_of_pci_ranges(pcie->dev, &bridge->windows,
+> > +					      &bridge->dma_ranges, NULL);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D clk_prepare_enable(pcie->clk);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "could not enable clock\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret =3D brcm_pcie_setup(pcie);
+> > +	if (ret)
+> > +		goto fail;
+> > +
+> > +	bridge->dev.parent =3D &pdev->dev;
+> > +	bridge->busnr =3D 0;
+> > +	bridge->ops =3D &brcm_pcie_ops;
+> > +	bridge->sysdata =3D pcie;
+> > +	bridge->map_irq =3D of_irq_parse_and_map_pci;
+> > +	bridge->swizzle_irq =3D pci_common_swizzle;
+> > +
+> > +	ret =3D pci_scan_root_bus_bridge(bridge);
+> > +	if (ret < 0) {
+> > +		dev_err(pcie->dev, "Scanning root bridge failed\n");
+> > +		goto fail;
+> > +	}
+> > +
+> > +	pci_assign_unassigned_bus_resources(bridge->bus);
+> > +	list_for_each_entry(child, &bridge->bus->children, node)
+> > +		pcie_bus_configure_settings(child);
+> > +	pci_bus_add_devices(bridge->bus);
+> > +	platform_set_drvdata(pdev, pcie);
+> > +	pcie->root_bus =3D bridge->bus;
+> > +
+> > +	return 0;
+> > +
+> > +fail:
+> > +	_brcm_pcie_remove(pcie);
+> > +	return ret;
+> > +}
+> > +
+> > +static const struct dev_pm_ops brcm_pcie_pm_ops =3D {
+> > +	.suspend_noirq =3D brcm_pcie_suspend,
+> > +	.resume_noirq =3D brcm_pcie_resume,
+> > +};
+> > +
+> > +static struct platform_driver brcm_pcie_driver =3D {
+> > +	.probe =3D brcm_pcie_probe,
+> > +	.remove =3D brcm_pcie_remove,
+> > +	.driver =3D {
+> > +		.name =3D "brcm-pcie",
+> > +		.owner =3D THIS_MODULE,
+> This is already done by module_platform_driver
+
+Noted
+
+> > +		.of_match_table =3D brcm_pcie_match,
+> > +		.pm =3D &brcm_pcie_pm_ops,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(brcm_pcie_driver);
+> > +
+> > +MODULE_LICENSE("GPL v2");
+>=20
+> This is a mismatch to the SPDX (GPL 2 and higher), because this says GPL
+> v2 only
+
+Noted
+
 Regards,
+Nicolas
 
-Laurent Pinchart
+
+--=-7LN/3ZhiuzOWe383zsu9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3FTdAACgkQlfZmHno8
+x/4phggAp6vKbULup21um9NuRa1mXPrMJTBuptz2RdcIJ8hKYs6itL0vP/dyYCsK
+es3Ibkd6EUWwX6yYlKPCGju0kvsZwR1DQ+Nqwmz/yW2abbKRt7K0e0m7xsnSzGmI
+D5C4SZh9LLdjwEcUFq27ZoDG9SbkxXoAzivEZ4oumhLQJa1ie+PdjJ0gJKN0t5pD
+XflTJ7sAIU3jNf0SucygBLVDzrnn3fO6Ml/D/qr7m2VfzqKKrods5SsBsqL2NjJ3
+KxVUMP0Pk3rj3l85bmUXL1Awab2s6BMPYAXmKDZHerAcc3VMtAW55Pm85mPtIh6w
+yZFRF088gUmXSdz9DmRTV59q9UqvNA==
+=3++k
+-----END PGP SIGNATURE-----
+
+--=-7LN/3ZhiuzOWe383zsu9--
+
