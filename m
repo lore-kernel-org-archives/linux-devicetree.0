@@ -6,106 +6,121 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850B8FC6197
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 21:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D1DFC6197
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 21:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6429B214DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 21:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758BD215EA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 21:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731987AbfKHVb3 (ORCPT
+        id S1726349AbfKHVse (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 16:31:29 -0500
-Received: from muru.com ([72.249.23.125]:41290 "EHLO muru.com"
+        Fri, 8 Nov 2019 16:48:34 -0500
+Received: from mga17.intel.com ([192.55.52.151]:20333 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfKHVb3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 16:31:29 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 9FC5780D4;
-        Fri,  8 Nov 2019 21:32:04 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Filip=20Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH] ARM: dts: Configure interconnect target module for am437x sgx
-Date:   Fri,  8 Nov 2019 13:31:25 -0800
-Message-Id: <20191108213125.58522-1-tony@atomide.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1726231AbfKHVsd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 16:48:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Nov 2019 13:48:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,283,1569308400"; 
+   d="scan'208";a="197038024"
+Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
+  by orsmga008.jf.intel.com with ESMTP; 08 Nov 2019 13:48:32 -0800
+From:   thor.thayer@linux.intel.com
+To:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thor Thayer <thor.thayer@linux.intel.com>
+Subject: [PATCH] arm64: dts: agilex: Add EDAC Device Tree
+Date:   Fri,  8 Nov 2019 15:50:25 -0600
+Message-Id: <1573249825-21769-1-git-send-email-thor.thayer@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This seems to be similar to what we have for am335x. The following can be
-tested via sysfs with the to ensure the SGX module gets enabled and disabled
-properly:
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-# echo on > /sys/bus/platform/devices/5600fe00.target-module/power/control
-# rwmem 0x5600fe00              # revision register
-0x5600fe00 = 0x40000000
-# echo auto > /sys/bus/platform/devices/5600fe00.target-module/power/control
-# rwmem 0x5000fe00
-Bus error
+Add the device tree nodes required to support the Intel
+Agilex SoCFPGA EDAC framework.
 
-Note that this patch depends on the PRM rstctrl driver that has
-been recently posted. If the child device driver(s) need to prevent
-rstctrl reset on PM runtime suspend, the drivers need to increase
-the usecount for the shared rstctrl reset that can be mapped also
-for the child device(s) or accessed via dev->parent.
-
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Filip Matijević <filip.matijevic.pz@gmail.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: moaz korena <moaz@korena.xyz>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Philipp Rossak <embed3d@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- arch/arm/boot/dts/am4372.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 59 +++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -384,6 +384,26 @@
- 				pool;
- 			};
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+index f9d1b26a3384..2b3468590f30 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+@@ -534,6 +534,65 @@
+ 			reg = <0xf8011100 0xc0>;
  		};
-+
-+		target-module@56000000 {
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0x5600fe00 0x4>,
-+			      <0x5600fe10 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&gfx_l3_clkctrl AM4_GFX_L3_GFX_CLKCTRL 0>;
-+			clock-names = "fck";
-+			resets = <&prm_gfx 0>;
-+			reset-names = "rstctrl";
+ 
++		eccmgr {
++			compatible = "altr,socfpga-s10-ecc-manager",
++				     "altr,socfpga-a10-ecc-manager";
++			altr,sysmgr-syscon = <&sysmgr>;
 +			#address-cells = <1>;
 +			#size-cells = <1>;
-+			ranges = <0 0x56000000 0x1000000>;
++			interrupts = <0 15 4>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			ranges;
++
++			sdramedac {
++				compatible = "altr,sdram-edac-s10";
++				altr,sdr-syscon = <&sdr>;
++				interrupts = <16 4>;
++			};
++
++			ocram-ecc@ff8cc000 {
++				compatible = "altr,socfpga-s10-ocram-ecc",
++					     "altr,socfpga-a10-ocram-ecc";
++				reg = <0xff8cc000 0x100>;
++				altr,ecc-parent = <&ocram>;
++				interrupts = <1 4>;
++			};
++
++			usb0-ecc@ff8c4000 {
++				compatible = "altr,socfpga-s10-usb-ecc",
++					     "altr,socfpga-usb-ecc";
++				reg = <0xff8c4000 0x100>;
++				altr,ecc-parent = <&usb0>;
++				interrupts = <2 4>;
++			};
++
++			emac0-rx-ecc@ff8c0000 {
++				compatible = "altr,socfpga-s10-eth-mac-ecc",
++					     "altr,socfpga-eth-mac-ecc";
++				reg = <0xff8c0000 0x100>;
++				altr,ecc-parent = <&gmac0>;
++				interrupts = <4 4>;
++			};
++
++			emac0-tx-ecc@ff8c0400 {
++				compatible = "altr,socfpga-s10-eth-mac-ecc",
++					     "altr,socfpga-eth-mac-ecc";
++				reg = <0xff8c0400 0x100>;
++				altr,ecc-parent = <&gmac0>;
++				interrupts = <5 4>;
++			};
++
++			sdmmca-ecc@ff8c8c00 {
++				compatible = "altr,socfpga-s10-sdmmc-ecc",
++					     "altr,socfpga-sdmmc-ecc";
++				reg = <0xff8c8c00 0x100>;
++				altr,ecc-parent = <&mmc>;
++				interrupts = <14 4>,
++					     <15 4>;
++			};
 +		};
- 	};
- };
- 
++
+ 		qspi: spi@ff8d2000 {
+ 			compatible = "cdns,qspi-nor";
+ 			#address-cells = <1>;
 -- 
-2.23.0
+2.7.4
+
