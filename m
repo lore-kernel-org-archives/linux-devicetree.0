@@ -2,88 +2,169 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257E4C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71995C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1FA214DA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA5921D7F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbfKHJdn convert rfc822-to-8bit (ORCPT
+        id S1730687AbfKHJgD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:33:43 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34242 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfKHJdn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:33:43 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l202so4704803oig.1;
-        Fri, 08 Nov 2019 01:33:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2dWaxqF8rfWEKlhxrUDolmxOv7bMB+rw5GOiRRDS8Zw=;
-        b=lSh0YTOc4PZLvcvqAVqcHsFKVY8WBFYLQadqvw8nGpcxV1O1TuxZbJFmzkVmNMyP3L
-         ZQAZI2g7kDA03ONsr+d+zDsIw2ywuXmEeuVrpiHz6USElU9XaXT5U+rSaIQ4ajJhsuoX
-         mNuNtJkkSYatFrcJcg8IYHADQFHYp+AQ+d3fPo1ajzS0C6XZO+y3hJqQkVaPFez7nE2E
-         R+TFse1t0giG7ayfRbPGA42yB0vgqMqoTUguwT3xGyJdOLF9TQ8UVwIt7Ef6YOiJZdEh
-         BojFgbgwRcEkiolbSafAklFpCIQgdiKXclVc1mJc1vR+ENH9z6c1Ks9Vk+rNYmAWCzvt
-         VWbA==
-X-Gm-Message-State: APjAAAVAAOQJAkwjrftKthBJcGnKFoLqJnO+q4EIq8CYYj4AaIzIO3fX
-        ebLXQFq0UEvFs68wBALwv9ml7o7YC/tTFtOwSVs=
-X-Google-Smtp-Source: APXvYqzfQjea78gd4p8b62nSkVFUDVwI7knisR46MH7d3a9aIY+g6wy9d+QJK4Mm5iAoZgtA6JoYH/ckk+tbgbS4ZxI=
-X-Received: by 2002:aca:fc92:: with SMTP id a140mr8161860oii.153.1573205622066;
- Fri, 08 Nov 2019 01:33:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20191108021609.2584272-1-niklas.soderlund+renesas@ragnatech.se> <20191108021609.2584272-3-niklas.soderlund+renesas@ragnatech.se>
-In-Reply-To: <20191108021609.2584272-3-niklas.soderlund+renesas@ragnatech.se>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 8 Nov 2019 10:33:31 +0100
-Message-ID: <CAMuHMdW3cidfTp-GK_3oO-jLJpF310R4Cojvme8oMfpwqSX73g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: rcar-vin: Document compatibility string
- for R8A77470
-To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
+        Fri, 8 Nov 2019 04:36:03 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38154 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730308AbfKHJgD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:36:03 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA89WpQU139672
+        for <devicetree@vger.kernel.org>; Fri, 8 Nov 2019 04:36:02 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w53xacb1d-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <devicetree@vger.kernel.org>; Fri, 08 Nov 2019 04:36:01 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <devicetree@vger.kernel.org> from <alistair@popple.id.au>;
+        Fri, 8 Nov 2019 09:35:59 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Nov 2019 09:35:56 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA89ZtZm24510474
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 09:35:55 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD9AA4C04E;
+        Fri,  8 Nov 2019 09:35:54 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4DAD34C046;
+        Fri,  8 Nov 2019 09:35:54 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Nov 2019 09:35:54 +0000 (GMT)
+Received: from townsend.localnet (unknown [9.81.221.11])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id B17F9A0273;
+        Fri,  8 Nov 2019 20:35:51 +1100 (AEDT)
+From:   Alistair Popple <alistair@popple.id.au>
+To:     Joel Stanley <joel@jms.id.au>
 Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Eddie James <eajames@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsi@lists.ozlabs.org
+Subject: Re: [PATCH v2 03/11] ABI: Update FSI path documentation
+Date:   Fri, 08 Nov 2019 20:27:47 +1100
+In-Reply-To: <20191108051945.7109-4-joel@jms.id.au>
+References: <20191108051945.7109-1-joel@jms.id.au> <20191108051945.7109-4-joel@jms.id.au>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-TM-AS-GCONF: 00
+x-cbid: 19110809-0028-0000-0000-000003B416AA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110809-0029-0000-0000-00002477177B
+Message-Id: <3563232.FuPAt9pb84@townsend>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080093
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Niklas,
+On Friday, 8 November 2019 4:19:37 PM AEDT Joel Stanley wrote:
+> The paths added back in 4.13 weren't quite correct. The in reality the
 
-On Fri, Nov 8, 2019 at 3:17 AM Niklas Söderlund
-<niklas.soderlund+renesas@ragnatech.se> wrote:
-> When adding the compatibility string for R8A77470 (RZ/G1C) to the
-> rcar-vin driver the string was never document in the bindings, add it
+Minor nit-pick, it should read "In reality the...". Otherwise looks reasonable.
 
-... adding to the DTS? The driver didn't need an update.
+Acked-by: Alistair Popple <alistair@popple.id.au>
 
-Seems like it fell through the cracks:
-https://lore.kernel.org/linux-renesas-soc/1554969262-15028-16-git-send-email-cv-dong@jinso.co.jp/
+> files documented lived under
+> 
+>   /sys/devices/../fsi0/rescan
+>   /sys/devices/../fsi0/break
+>   /sys/devices/../fsi0/slave@00:00/term
+>   /sys/devices/../fsi0/slave@00:00/raw
+> 
+> In 5.5 with the addition of the FSI class they move to
+> 
+>   /sys/devices/../fsi-master/fsi0/rescan
+>   /sys/devices/../fsi-master/fsi0/break
+>   /sys/devices/../fsi-master/fsi0/slave@00:00/term
+>   /sys/devices/../fsi-master/fsi0/slave@00:00/raw
+> 
+> This is closer to how the (incorrect) documentation described them.
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-fsi | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-fsi b/Documentation/ABI/testing/sysfs-bus-fsi
+> index 57c806350d6c..320697bdf41d 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-fsi
+> +++ b/Documentation/ABI/testing/sysfs-bus-fsi
+> @@ -1,25 +1,25 @@
+> -What:           /sys/bus/platform/devices/fsi-master/rescan
+> +What:           /sys/bus/platform/devices/../fsi-master/fsi0/rescan
+>  Date:		May 2017
+>  KernelVersion:  4.12
+> -Contact:        cbostic@linux.vnet.ibm.com
+> +Contact:        linux-fsi@lists.ozlabs.org
+>  Description:
+>                  Initiates a FSI master scan for all connected slave devices
+>  		on its links.
+>  
+> -What:           /sys/bus/platform/devices/fsi-master/break
+> +What:           /sys/bus/platform/devices/../fsi-master/fsi0/break
+>  Date:		May 2017
+>  KernelVersion:  4.12
+> -Contact:        cbostic@linux.vnet.ibm.com
+> +Contact:        linux-fsi@lists.ozlabs.org
+>  Description:
+>  		Sends an FSI BREAK command on a master's communication
+>  		link to any connnected slaves.  A BREAK resets connected
+>  		device's logic and preps it to receive further commands
+>  		from the master.
+>  
+> -What:           /sys/bus/platform/devices/fsi-master/slave@00:00/term
+> +What:           /sys/bus/platform/devices/../fsi-master/fsi0/slave@00:00/term
+>  Date:		May 2017
+>  KernelVersion:  4.12
+> -Contact:        cbostic@linux.vnet.ibm.com
+> +Contact:        linux-fsi@lists.ozlabs.org
+>  Description:
+>  		Sends an FSI terminate command from the master to its
+>  		connected slave. A terminate resets the slave's state machines
+> @@ -29,10 +29,10 @@ Description:
+>  		ongoing operation in case of an expired 'Master Time Out'
+>  		timer.
+>  
+> -What:           /sys/bus/platform/devices/fsi-master/slave@00:00/raw
+> +What:           /sys/bus/platform/devices/../fsi-master/fsi0/slave@00:00/raw
+>  Date:		May 2017
+>  KernelVersion:  4.12
+> -Contact:        cbostic@linux.vnet.ibm.com
+> +Contact:        linux-fsi@lists.ozlabs.org
+>  Description:
+>  		Provides a means of reading/writing a 32 bit value from/to a
+>  		specified FSI bus address.
+> 
 
-> now.
->
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
