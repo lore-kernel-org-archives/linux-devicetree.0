@@ -2,86 +2,155 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F189CC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D3C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39B920865
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229E421D6C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573194945;
+	bh=WtlyHdXzYR6zFb9CyoGvL3jaNaSQ59dn8PybAwn/UWk=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=sxjO1hjTX0CIzA9PqzTk0uq9B4nv4NSpR0TykSnPYB5bem/Qz8CmPt0PtaJtVMBxU
+	 r5weOX70s5CBe2N18QMtCV1n9B7P+F9Sx7yvsUj2zSgoUHk1XeBi8Au5G7Q/jrSPim
+	 SUqjR6D2UTJVeQn9mlMYju4pWzih55HIpYHuZl58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfKHGMH convert rfc822-to-8bit (ORCPT
+        id S1725900AbfKHGfo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 01:12:07 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:43990 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfKHGMH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 01:12:07 -0500
-Received: from marcel-macpro.fritz.box (p5B3D2BA4.dip0.t-ipconnect.de [91.61.43.164])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D24F8CED12;
-        Fri,  8 Nov 2019 07:21:09 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v2 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm
- config
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191107232713.48577-5-abhishekpandit@chromium.org>
-Date:   Fri, 8 Nov 2019 07:12:05 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <48D0B4BB-2819-4C4D-B52D-4727FB344C19@holtmann.org>
-References: <20191107232713.48577-1-abhishekpandit@chromium.org>
- <20191107232713.48577-5-abhishekpandit@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Fri, 8 Nov 2019 01:35:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbfKHGfo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 01:35:44 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0262921882;
+        Fri,  8 Nov 2019 06:35:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573194943;
+        bh=WtlyHdXzYR6zFb9CyoGvL3jaNaSQ59dn8PybAwn/UWk=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=C8RPxjnRf/hUxQQB3nIelAjN8AOWykVxtOvebXxVnI5p07Zuxo5v/ONyFiTk5YXNG
+         4lWRDtXRbzTaXbh9BvuFkk5NDeUMfupG5f8Afd8K8t5yLtRoB7c3LJOACpRIK4BmiF
+         b7YZkHZhv9917xZyQUZ9VHTJMha+Z/awAExilEqw=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com>
+References: <20191014102308.27441-1-tdas@codeaurora.org> <20191014102308.27441-6-tdas@codeaurora.org> <20191029175941.GA27773@google.com> <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org> <20191031174149.GD27773@google.com> <20191107210606.E536F21D79@mail.kernel.org> <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 22:35:42 -0800
+Message-Id: <20191108063543.0262921882@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Abhishek,
+Quoting Rob Clark (2019-11-07 18:06:19)
+> On Thu, Nov 7, 2019 at 1:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Matthias Kaehlcke (2019-10-31 10:41:49)
+> > > Hi Taniya,
+> > >
+> > > On Thu, Oct 31, 2019 at 04:59:26PM +0530, Taniya Das wrote:
+> > > > Hi Matthias,
+> > > >
+> > > > Thanks for your comments.
+> > > >
+> > > > On 10/29/2019 11:29 PM, Matthias Kaehlcke wrote:
+> > > > > Hi Taniya,
+> > > > >
+> > > > > On Mon, Oct 14, 2019 at 03:53:08PM +0530, Taniya Das wrote:
+> > > > > > Add support for the global clock controller found on SC7180
+> > > > > > based devices. This should allow most non-multimedia device
+> > > > > > drivers to probe and control their clocks.
+> > > > > >
+> > > > > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> > > >
+> > > > >
+> > > > > v3 also had
+> > > > >
+> > > > > +   [GCC_DISP_AHB_CLK] =3D &gcc_disp_ahb_clk.clkr,
+> > > > >
+> > > > > Removing it makes the dpu_mdss driver unhappy:
+> > > > >
+> > > > > [    2.999855] dpu_mdss_enable+0x2c/0x58->msm_dss_enable_clk: 'if=
+ace' is not available
+> > > > >
+> > > > > because:
+> > > > >
+> > > > >          mdss: mdss@ae00000 {
+> > > > >                     ...
+> > > > >
+> > > > >   =3D>             clocks =3D <&gcc GCC_DISP_AHB_CLK>,
+> > > > >                           <&gcc GCC_DISP_HF_AXI_CLK>,
+> > > > >                           <&dispcc DISP_CC_MDSS_MDP_CLK>;
+> > > > >                  clock-names =3D "iface", "gcc_bus", "core";
+> > > > >     };
+> > > > >
+> > > >
+> > > > The basic idea as you mentioned below was to move the CRITICAL cloc=
+ks to
+> > > > probe. The clock provider to return NULL in case the clocks are not
+> > > > registered.
+> > > > This was discussed with Stephen on v3. Thus I submitted the below p=
+atch.
+> > > > clk: qcom: common: Return NULL from clk_hw OF provider.
+> > >
+> > > I see. My assumption was that the entire clock hierarchy should be re=
+gistered,
+> > > but Stephen almost certainly knows better :)
+> > >
+> > > > Yes it would throw these warnings, but no functional issue is obser=
+ved from
+> > > > display. I have tested it on the cheza board.
+> > >
+> > > The driver considers it an error (uses DEV_ERR to log the message) an=
+d doesn't
+> > > handle other clocks when one is found missing. I'm not really familil=
+ar with
+> > > the dpu_mdss driver, but I imagine this can have some side effects. A=
+dded some
+> > > of the authors/contributors to cc.
+> >
+> > NULL is a valid clk pointer returned by clk_get(). What is the display
+> > driver doing that makes it consider NULL an error?
+> >
+>=20
+> do we not have an iface clk?  I think the driver assumes we should
+> have one, rather than it being an optional thing.. we could ofc change
+> that
 
-> Add documentation for pcm parameters.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> 
-> ---
-> 
-> Changes in v2:
-> - Use match data to disallow baudrate setting
-> - Parse pcm parameters by name instead of as a byte string
-> - Fix prefix for dt-bindings commit
-> 
-> .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
-> 1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> index c749dc297624..b5de8a6a3980 100644
-> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> @@ -29,6 +29,11 @@ Optional properties:
->    - "lpo": external low power 32.768 kHz clock
->  - vbat-supply: phandle to regulator supply for VBAT
->  - vddio-supply: phandle to regulator supply for VDDIO
-> + - brcm,sco-routing: 0-3 (PCM, Transport, Codec, I2S)
-> + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
-> + - brcm,pcm-frame-type: 0-1 (short, long)
-> + - brcm,pcm-sync-mode: 0-1 (slave, master)
-> + - brcm,pcm-clock-mode: 0-1 (slave, master)
+I think some sort of AHB clk is always enabled so the plan is to just
+hand back NULL to the caller when they call clk_get() on it and nobody
+should be the wiser when calling clk APIs with a NULL iface clk. The
+common clk APIs typically just return 0 and move along. Of course, we'll
+also turn the clk on in the clk driver so that hardware can function
+properly, but we don't need to expose it as a clk object and all that
+stuff if we're literally just slamming a bit somewhere and never looking
+back.
 
-should we do brcm,bt-sco-routing etc.
-
-Regards
-
-Marcel
+But it sounds like we can't return NULL for this clk for some reason? I
+haven't tried to track it down yet but I think Matthias has found it
+causes some sort of problem in the display driver.
 
