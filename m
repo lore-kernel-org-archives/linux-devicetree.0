@@ -2,93 +2,204 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427D0C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB898C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1576E206DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573242258;
-	bh=CYTJ8EkCmbONgQ+gSSZpuuJnZdhj19ctWYnfS2790fg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lml5YZAPSbYytR+2dDqWucnc/9dUPUJm1HwJtOjS+iM51Mx7LZtgXoKAy0riLLzM6
-	 ueQAyDRFfw5MEf+UhyyH7sABuJUXX10PLffIOwX8lxZqW8I+3doMLyjN4TZ4ebm7MS
-	 F6oXWEUaUthNjoflFSAkLFJW2gYVJ46jHvrzC//s=
+	by mail.kernel.org (Postfix) with ESMTP id 6E01A2085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M/VKpoLA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cmd8pXp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbfKHToR (ORCPT
+        id S2387476AbfKHT4P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:44:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729895AbfKHToR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:44:17 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        Fri, 8 Nov 2019 14:56:15 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:34392 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387487AbfKHT4O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 14:56:14 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 056DB60909; Fri,  8 Nov 2019 19:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573242862;
+        bh=RI8pAJ2oaXVf01TTf6CIgXgIZlbNFOUYc89nvR7jJEg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M/VKpoLAh4IuqvpTb4l6Ncc/ysc3Z3wdcQpAum90P8DyPhePEqjDGjQvfAj9XIVOV
+         uIfYpr7taPThwDehSXhnkIKyfwHbI7tnY2qzVvJIFzlSBCMHoxU6HLy9y5Um6Wp+D+
+         xtNLXBlttgX/obSW1G3HuPG6EKj7nUQHakOv+3Eg=
+Received: from [10.226.59.103] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95DD3206DF
-        for <devicetree@vger.kernel.org>; Fri,  8 Nov 2019 19:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573242256;
-        bh=CYTJ8EkCmbONgQ+gSSZpuuJnZdhj19ctWYnfS2790fg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=K+fxwtzo8kpieI4ckDvG09ctQMVNVdEg2xHB6uGY8qoO16+TkaclAEXMknvQzSUhq
-         T3gSkB2Srrtw+5R9AQEV7M7kTzvgWSG1jueqvZSFRDSzfl/rvrm1m4T2PFpdY0Mbti
-         QTkLucRcdrqqJoD9VNV4Ydvnp5SG6zMsQOELwQm4=
-Received: by mail-qk1-f169.google.com with SMTP id q70so6303443qke.12
-        for <devicetree@vger.kernel.org>; Fri, 08 Nov 2019 11:44:16 -0800 (PST)
-X-Gm-Message-State: APjAAAVZUko8L6MV1miAw/Lpz1QmDxM2LML/Gmzf60sxB4x0D1Z9BFlK
-        fM82BljUrM/GLulu8OR27iDe4bYdSQ/Pwhjq8g==
-X-Google-Smtp-Source: APXvYqyR6InH9U1ZQNnYFe7R+4+AwlzcFwQE6za+shn0A87ntD07L+I+SdXpy/7+IQlPo5d/oHQ/KPeWmY3Qvb44P8w=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr10922713qka.152.1573242255720;
- Fri, 08 Nov 2019 11:44:15 -0800 (PST)
+        (Authenticated sender: rkumbako@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6C7A60909;
+        Fri,  8 Nov 2019 19:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573242857;
+        bh=RI8pAJ2oaXVf01TTf6CIgXgIZlbNFOUYc89nvR7jJEg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cmd8pXp8cny6HvbtoRaaeL+v89GwX7T+3TJVCplfb1vn9gbzYgVYosD99CiYGQKXC
+         eOBVJzkyqodeqqXyvXMe0JZSfwO+jG07B+tXm8tSTIDAH1B9gdO3d2wadMGakTdcfv
+         d7i6VVRqw5o7Zex0DDfCo+lXF2+N8xfp1uOLdk9U=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6C7A60909
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rkumbako@codeaurora.org
+Subject: Re: [PATCH 4/4] thermal: step_wise: Extend thermal step-wise governor
+ to monitor falling temperature.
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org>
+ <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
+From:   Ram Chandrasekar <rkumbako@codeaurora.org>
+Message-ID: <7dbe01d9-6687-f4f8-0739-6b4ff6d4e59b@codeaurora.org>
+Date:   Fri, 8 Nov 2019 12:54:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191108175935.29766-1-laurent.pinchart@ideasonboard.com> <20191108175935.29766-2-laurent.pinchart@ideasonboard.com>
-In-Reply-To: <20191108175935.29766-2-laurent.pinchart@ideasonboard.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 8 Nov 2019 13:44:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKiQGmMsDkk6WQZU2Q4TfuXfDqMp-iUs62t23dfqpxdBg@mail.gmail.com>
-Message-ID: <CAL_JsqKiQGmMsDkk6WQZU2Q4TfuXfDqMp-iUs62t23dfqpxdBg@mail.gmail.com>
-Subject: Re: [PATCH v10 1/4] dt-bindings: display: xlnx: Add ZynqMP DP
- subsystem bindings
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 11:59 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> From: Hyun Kwon <hyun.kwon@xilinx.com>
->
-> The bindings describe the ZynqMP DP subsystem. They don't support the
-> interface with the programmable logic (FPGA) or audio yet.
->
-> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
-> Changes since v9:
->
-> - Fix constraints on clock-names
-> - Document dp_apb_clk as the APB clock, not the AXI clock
->
-> Changes since v8:
->
-> - Convert to yaml
-> - Rename aclk to dp_apb_clk
-> ---
->  .../display/xlnx/xlnx,zynqmp-dpsub.yaml       | 164 ++++++++++++++++++
->  1 file changed, 164 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+On 9/18/2019 8:18 PM, Thara Gopinath wrote:
+>>From the step wise governor point of view, the policy decisions
+> that has to taken on a thermal trip point that is defined to be monitored
+> for falling temprature is the mirror opposite of the decisions it has
+> to take on a trip point that is monitored for rising temperature.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>   drivers/thermal/step_wise.c | 59 +++++++++++++++++++++++++++++++++------------
+>   1 file changed, 44 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
+> index 6e051cb..aa8e0a0 100644
+> --- a/drivers/thermal/step_wise.c
+> +++ b/drivers/thermal/step_wise.c
+> @@ -35,7 +35,8 @@
+>    *       deactivate the thermal instance
+>    */
+>   static unsigned long get_target_state(struct thermal_instance *instance,
+> -				enum thermal_trend trend, bool throttle)
+> +				enum thermal_trend trend, bool throttle,
+> +				enum thermal_trip_monitor_type type)
+>   {
+>   	struct thermal_cooling_device *cdev = instance->cdev;
+>   	unsigned long cur_state;
+> @@ -65,11 +66,21 @@ static unsigned long get_target_state(struct thermal_instance *instance,
+>   
+>   	switch (trend) {
+>   	case THERMAL_TREND_RAISING:
+> -		if (throttle) {
+> -			next_target = cur_state < instance->upper ?
+> -				    (cur_state + 1) : instance->upper;
+> -			if (next_target < instance->lower)
+> -				next_target = instance->lower;
+> +		if (type == THERMAL_TRIP_MONITOR_FALLING) {
+> +			if (cur_state <= instance->lower) {
+> +				if (!throttle)
+> +					next_target = THERMAL_NO_TARGET;
+> +			} else {
+> +				if (!throttle)
+> +					next_target = cur_state - 1;
+> +			}
+> +		} else {
+> +			if (throttle) {
+> +				next_target = cur_state < instance->upper ?
+> +					    (cur_state + 1) : instance->upper;
+> +				if (next_target < instance->lower)
+> +					next_target = instance->lower;
+> +			}
+>   		}
+>   		break;
+>   	case THERMAL_TREND_RAISE_FULL:
+> @@ -77,14 +88,23 @@ static unsigned long get_target_state(struct thermal_instance *instance,
+>   			next_target = instance->upper;
+>   		break;
+>   	case THERMAL_TREND_DROPPING:
+> -		if (cur_state <= instance->lower) {
+> -			if (!throttle)
+> -				next_target = THERMAL_NO_TARGET;
+> +		if (type == THERMAL_TRIP_MONITOR_FALLING) {
+> +			if (throttle) {
+> +				next_target = cur_state < instance->upper ?
+> +					(cur_state + 1) : instance->upper;
+> +				if (next_target < instance->lower)
+> +					next_target = instance->lower;
+> +			}
+>   		} else {
+> -			if (!throttle) {
+> -				next_target = cur_state - 1;
+> -				if (next_target > instance->upper)
+> -					next_target = instance->upper;
+> +			if (cur_state <= instance->lower) {
+> +				if (!throttle)
+> +					next_target = THERMAL_NO_TARGET;
+> +			} else {
+> +				if (!throttle) {
+> +					next_target = cur_state - 1;
+> +					if (next_target > instance->upper)
+> +						next_target = instance->upper;
+> +				}
+>   			}
+>   		}
+>   		break;
+> @@ -117,6 +137,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
+>   {
+>   	int trip_temp;
+>   	enum thermal_trip_type trip_type;
+> +	enum thermal_trip_monitor_type monitor_type =
+> +					THERMAL_TRIP_MONITOR_RISING;
+>   	enum thermal_trend trend;
+>   	struct thermal_instance *instance;
+>   	bool throttle = false;
+> @@ -130,9 +152,15 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
+>   		tz->ops->get_trip_type(tz, trip, &trip_type);
+>   	}
+>   
+> +	if (tz->ops->get_trip_monitor_type)
+> +		tz->ops->get_trip_monitor_type(tz, trip, &monitor_type);
+> +
+>   	trend = get_tz_trend(tz, trip);
+>   
+> -	if (tz->temperature >= trip_temp) {
+> +	if (((monitor_type == THERMAL_TRIP_MONITOR_RISING) &&
+> +	      (tz->temperature >= trip_temp)) ||
+> +	      ((monitor_type == THERMAL_TRIP_MONITOR_FALLING) &&
+> +	      (tz->temperature <= trip_temp))) {
+Governors monitoring warming devices need to have support for 
+hysteresis. Assume a case where the device is in idle when the 
+temperature goes below threshold and we trigger a mitigation. Even a 
+minimal workload or even the processing of the threshold by the governor 
+could warm the device and put the temperature above the threshold and we 
+will have to remove any mitigation. To avoid this ping-pong, its best to 
+add a hysteresis support.
+>   		throttle = true;
+>   		trace_thermal_zone_trip(tz, trip, trip_type);
+>   	}
+> @@ -147,7 +175,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
+>   			continue;
+>   
+>   		old_target = instance->target;
+> -		instance->target = get_target_state(instance, trend, throttle);
+> +		instance->target = get_target_state(instance, trend, throttle,
+> +						    monitor_type);
+>   		dev_dbg(&instance->cdev->device, "old_target=%d, target=%d\n",
+>   					old_target, (int)instance->target);
+>   
+> 
