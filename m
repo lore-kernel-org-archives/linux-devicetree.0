@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBD5FC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E3FFA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC5F2085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F53A2085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214664;
-	bh=qpvMGZ3IB0+wiopYrxiriRauFzfeubkGQ+P4ZAm2Ydc=;
+	s=default; t=1573214675;
+	bh=xOtDzkhUjWvNRIE+cw+dW0K6vbxuhfoT/WYH8izDoCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hXieVJu9UNS+O+EIBGou5dk8UcLMm79zlgUoTs/9JxXPAds6BtKErrVE58ztYERZC
-	 Em+ZhSVvOmo9KnXgiLb0bokWa5tWY8LvSowLMILuTjWc0V6umGBtxG4Gh6up+1Mnp8
-	 oULGo6055f+Xz4R2vQcpsxcWBUBwS1NJ+Ud4Kdvs=
+	b=aXqqjSL4MXGoakpqcocq4hwfJVtwKC4Ybt20fwgZaGkrMxQTL0PnpKucy6mKCe5Kb
+	 GIZa9bWheCl3AZxDXYzmjy4n2S6Sj7V00upyfY/AMg7lIBf8NGdQyvmbrrW/34a2vE
+	 +ZYoIYhmuCwGJ4qOv6z07Wpo/UUtK90O3DJAAYuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389900AbfKHMEW (ORCPT
+        id S2389778AbfKHLmG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:04:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbfKHLmQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:16 -0500
+        id S2389769AbfKHLmF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E480521D82;
-        Fri,  8 Nov 2019 11:42:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4752F21D82;
+        Fri,  8 Nov 2019 11:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213335;
-        bh=qpvMGZ3IB0+wiopYrxiriRauFzfeubkGQ+P4ZAm2Ydc=;
+        s=default; t=1573213325;
+        bh=xOtDzkhUjWvNRIE+cw+dW0K6vbxuhfoT/WYH8izDoCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sj3M5RR+41T4TrcmAGjMmSE8c1qcNRicsd5UuWUIp/VbIflmTJ8oK54G7o+wnugpO
-         DbDnshM7atjK+rr/9NJQRzmewXmJ2AzP+CtroCcGp7pJHMwDFEqLX3VlKVCyTDCFOV
-         +rv58CFCYWCoR0l+BjWBvXrMN3SMZJzNfJ658ecQ=
+        b=yzM/i+MRIwzcICvMcwgFRTgXnXpO2xsvxP4dSMXYynyzfszjb0JR3pkdhOQhTgyY9
+         7hO4Uo++sXZuoB9CpMu4cUZEqPbo+roeIcPI0Z8EQQ6Ba3UNWoD19R2NaZIVAFmzTr
+         TWB05034Rf9JEcNfPBygR6LRg4LVZuPKPNFdOpUM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 173/205] ARM: dts: qcom: ipq4019: fix cpu0's qcom,saw2 reg value
-Date:   Fri,  8 Nov 2019 06:37:20 -0500
-Message-Id: <20191108113752.12502-173-sashal@kernel.org>
+Cc:     Magnus Damm <damm+renesas@opensource.se>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 167/205] arm64: dts: renesas: r8a77965: Attach the SYS-DMAC to the IPMMU
+Date:   Fri,  8 Nov 2019 06:37:14 -0500
+Message-Id: <20191108113752.12502-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,42 +60,70 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Magnus Damm <damm+renesas@opensource.se>
 
-[ Upstream commit bd73a3dd257fb838bd456a18eeee0ef0224b7a40 ]
+[ Upstream commit 4d76ad7d9de05506f1ee9a7b22416440468be090 ]
 
-while compiling an ipq4019 target, dtc will complain:
-regulator@b089000 unit address format error, expected "2089000"
+For R-Car M3-N hook up SYS-DMAC0, SYS-DMAC1 and SYS-DMAC2 to
+IPMMU-DS0 and IPMMU-DS1 in same way as for R-Car M3-W.
+This follows the R-Car Gen3 Rev.1.00 (April 2018) datasheet.
 
-The saw0 regulator reg value seems to be
-copied and pasted from qcom-ipq8064.dtsi.
-
-This patch fixes the reg value to match that of the
-unit address which in turn silences the warning.
-(There is no driver for qcom,saw2 right now.
-So this went unnoticed)
-
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 24 +++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 54d056b01bb51..8328ad589e2ba 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -313,7 +313,7 @@
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index f60f08ba1a6f9..0da4841162610 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -634,6 +634,14 @@
+ 			resets = <&cpg 219>;
+ 			#dma-cells = <1>;
+ 			dma-channels = <16>;
++			iommus = <&ipmmu_ds0 0>, <&ipmmu_ds0 1>,
++			       <&ipmmu_ds0 2>, <&ipmmu_ds0 3>,
++			       <&ipmmu_ds0 4>, <&ipmmu_ds0 5>,
++			       <&ipmmu_ds0 6>, <&ipmmu_ds0 7>,
++			       <&ipmmu_ds0 8>, <&ipmmu_ds0 9>,
++			       <&ipmmu_ds0 10>, <&ipmmu_ds0 11>,
++			       <&ipmmu_ds0 12>, <&ipmmu_ds0 13>,
++			       <&ipmmu_ds0 14>, <&ipmmu_ds0 15>;
+ 		};
  
-                 saw0: regulator@b089000 {
-                         compatible = "qcom,saw2";
--                        reg = <0x02089000 0x1000>, <0x0b009000 0x1000>;
-+			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
-                         regulator;
-                 };
+ 		dmac1: dma-controller@e7300000 {
+@@ -668,6 +676,14 @@
+ 			resets = <&cpg 218>;
+ 			#dma-cells = <1>;
+ 			dma-channels = <16>;
++			iommus = <&ipmmu_ds1 0>, <&ipmmu_ds1 1>,
++			       <&ipmmu_ds1 2>, <&ipmmu_ds1 3>,
++			       <&ipmmu_ds1 4>, <&ipmmu_ds1 5>,
++			       <&ipmmu_ds1 6>, <&ipmmu_ds1 7>,
++			       <&ipmmu_ds1 8>, <&ipmmu_ds1 9>,
++			       <&ipmmu_ds1 10>, <&ipmmu_ds1 11>,
++			       <&ipmmu_ds1 12>, <&ipmmu_ds1 13>,
++			       <&ipmmu_ds1 14>, <&ipmmu_ds1 15>;
+ 		};
  
+ 		dmac2: dma-controller@e7310000 {
+@@ -702,6 +718,14 @@
+ 			resets = <&cpg 217>;
+ 			#dma-cells = <1>;
+ 			dma-channels = <16>;
++			iommus = <&ipmmu_ds1 16>, <&ipmmu_ds1 17>,
++			       <&ipmmu_ds1 18>, <&ipmmu_ds1 19>,
++			       <&ipmmu_ds1 20>, <&ipmmu_ds1 21>,
++			       <&ipmmu_ds1 22>, <&ipmmu_ds1 23>,
++			       <&ipmmu_ds1 24>, <&ipmmu_ds1 25>,
++			       <&ipmmu_ds1 26>, <&ipmmu_ds1 27>,
++			       <&ipmmu_ds1 28>, <&ipmmu_ds1 29>,
++			       <&ipmmu_ds1 30>, <&ipmmu_ds1 31>;
+ 		};
+ 
+ 		ipmmu_ds0: mmu@e6740000 {
 -- 
 2.20.1
 
