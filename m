@@ -2,157 +2,112 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAEDFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 10:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C28FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 10:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3C5218AE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 10:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F9F2178F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 10:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573208890;
+	bh=AOSjNRac0P9NEqExaxB0xZTWmcyhkd13as5AIA1QlAA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ogrs6K3dj6Q4i3hWxn8xNeD+L65X3Cgfjdn/o3Es3PvUrIgt1s+PEzAXmw2cEack5
+	 dhT7Gr8/7bgNtiMOphSlUnlD0ftwPW8xih/9DwnwMQ6m4WKy7pzUklM9+oMLtAqnx4
+	 u5Pa0Juwd0wce/jePTgE7ADwAzt+H0kF4GAPnKL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKHKZM (ORCPT
+        id S1726180AbfKHK2K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 05:25:12 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34253 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfKHKZL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 05:25:11 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iT1Rv-0002k6-SC; Fri, 08 Nov 2019 11:25:03 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iT1Ru-0007OD-5N; Fri, 08 Nov 2019 11:25:02 +0100
-Date:   Fri, 8 Nov 2019 11:25:02 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
-        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
-        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-media@vger.kernel.org
-Subject: Re: [PATCH v11 11/15] media: tvp5150: add s_power callback
-Message-ID: <20191108102502.6bzhzip7x3qsidem@pengutronix.de>
-References: <20190930093900.16524-1-m.felsch@pengutronix.de>
- <20190930093900.16524-12-m.felsch@pengutronix.de>
- <20191024115905.GB3966@mara.localdomain>
+        Fri, 8 Nov 2019 05:28:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbfKHK2K (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 05:28:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997DF206BA;
+        Fri,  8 Nov 2019 10:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573208889;
+        bh=AOSjNRac0P9NEqExaxB0xZTWmcyhkd13as5AIA1QlAA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MMCWRLIPqRMeWNaDQUiiTnuQ2uS0dICkTS3gRPk7P+iNA8cyh/JeygV57zPG+NxmY
+         kYgXxnjTO11HViK4KzLlph40W+a6qDazZbXc9CnT8tRfliiAzNCMxJTKq4Fdbir8td
+         0KJT3vLj5HkWsVy6nOJNtxnn8ZKJlJtgBFH2cHHg=
+Date:   Fri, 8 Nov 2019 11:28:06 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>,
+        Alistar Popple <alistair@popple.id.au>,
+        Eddie James <eajames@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsi@lists.ozlabs.org
+Subject: Re: [PATCH v2 08/11] dt-bindings: fsi: Add description of FSI master
+Message-ID: <20191108102806.GA656785@kroah.com>
+References: <20191108051945.7109-1-joel@jms.id.au>
+ <20191108051945.7109-9-joel@jms.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024115905.GB3966@mara.localdomain>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:03:44 up 174 days, 15:21, 119 users,  load average: 0.18, 0.21,
- 0.15
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20191108051945.7109-9-joel@jms.id.au>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On 19-10-24 14:59, Sakari Ailus wrote:
-> Hi Marco,
+On Fri, Nov 08, 2019 at 03:49:42PM +1030, Joel Stanley wrote:
+> This describes the FSI master present in the AST2600.
 > 
-> On Mon, Sep 30, 2019 at 11:38:56AM +0200, Marco Felsch wrote:
-> > Don't en-/disable the interrupts during s_stream because someone can
-> > disable the stream but wants to get informed if the stream is locked
-> > again. So keep the interrupts enabled the whole time the pipeline is
-> > opened.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
-> >  1 file changed, 17 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-> > index dda9f0a2995f..4afe2093b950 100644
-> > --- a/drivers/media/i2c/tvp5150.c
-> > +++ b/drivers/media/i2c/tvp5150.c
-> > @@ -1356,11 +1356,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
-> >  /****************************************************************************
-> >  			I2C Command
-> >   ****************************************************************************/
-> > +static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
-> > +{
-> > +	struct tvp5150 *decoder = to_tvp5150(sd);
-> > +	unsigned int val = 0;
-> > +
-> > +	if (on)
-> > +		val = TVP5150_INT_A_LOCK;
-> > +
-> > +	if (decoder->irq)
-> > +		/* Enable / Disable lock interrupt */
-> > +		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
-> > +				   TVP5150_INT_A_LOCK, val);
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> Acked-by: Alistair Popple <alistair@popple.id.au>
+> ---
+>  .../bindings/fsi/fsi-master-aspeed.txt        | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
 > 
-> Could you use runtime PM to do this instead?
-
-You mean I should add a simple runtime_resume/suspend() which is called
-during v4l2_subdev_internal_ops.open/close()? Of course I can do that
-but why?
-
-Regards,
-  Marco
-
-> > +
-> > +	return 0;
-> > +}
-> >  
-> >  static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
-> >  {
-> >  	struct tvp5150 *decoder = to_tvp5150(sd);
-> > -	unsigned int mask, val = 0, int_val = 0;
-> > +	unsigned int mask, val = 0;
-> >  
-> >  	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
-> >  	       TVP5150_MISC_CTL_CLOCK_OE;
-> > @@ -1373,15 +1388,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
-> >  			val = decoder->lock ? decoder->oe : 0;
-> >  		else
-> >  			val = decoder->oe;
-> > -		int_val = TVP5150_INT_A_LOCK;
-> >  		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
-> >  	}
-> >  
-> >  	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
-> > -	if (decoder->irq)
-> > -		/* Enable / Disable lock interrupt */
-> > -		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
-> > -				   TVP5150_INT_A_LOCK, int_val);
-> >  
-> >  	return 0;
-> >  }
-> > @@ -1580,6 +1590,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
-> >  	.g_register = tvp5150_g_register,
-> >  	.s_register = tvp5150_s_register,
-> >  #endif
-> > +	.s_power = tvp5150_s_power,
-> >  };
-> >  
-> >  static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
-> > -- 
-> > 2.20.1
-> > 
-> 
+> diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
+> new file mode 100644
+> index 000000000000..b758f91914f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
+> @@ -0,0 +1,24 @@
+> +Device-tree bindings for AST2600 FSI master
+> +-------------------------------------------
+> +
+> +The AST2600 contains two identical FSI masters. They share a clock and have a
+> +separate interrupt line and output pins.
+> +
+> +Required properties:
+> + - compatible: "aspeed,ast2600-fsi-master"
+> + - reg: base address and length
+> + - clocks: phandle and clock number
+> + - interrupts: platform dependent interrupt description
+> + - pinctrl-0: phandle to pinctrl node
+> + - pinctrl-names: pinctrl state
+> +
+> +Examples:
+> +
+> +    fsi-master {
+> +        compatible = "aspeed,ast2600-fsi-master", "fsi-master";
+> +        reg = <0x1e79b000 0x94>;
+> +	interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_fsi1_default>;
+> +	clocks = <&syscon ASPEED_CLK_GATE_FSICLK>;
+> +    };
 > -- 
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
+> 2.24.0.rc1
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+As these all seem like bog-standard properties, I'll take this now,
+thanks.
+
+greg k-h
