@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35702C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FDAC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D08D222D4
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A4821D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213840;
-	bh=4weDkqTsOQdRJ1VVtlFZaJNDdQk1IFqH0ZSgQo7C+Gw=;
+	s=default; t=1573213841;
+	bh=FLrZUAJxqE66ntrcwZrEwlMUK/iTsrqp5/weqZpUvMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fgcCmiAPgef5XUS7sRoT0/6u5ffY+7A6IpR1HZXfD5RKUUBB4hSyxBoZ02QV/+Gn9
-	 i4eJCriQZQbdwLulDcQI4FlELONHI7urmKvM7HGRJGDWOyOzN58O0NyeWxjkJD1Jar
-	 i7cdeOU7JSmWu1mrdiclwH9WMlhkdLOC8oDafH3M=
+	b=pxdy79Cxb0pM6gWBnT4OtLprHuIsKXlJ4GCmqUCJajogPSjVtM/67I8C+pzL7D3Sv
+	 VnmG+musBRExRizXGnjhd+rwfUXmpRVNe4GVu4rx1g7TXRtnbsvxHFoBDkFMfB181T
+	 Jp5CMCB6L9rkPRP7lg39IcdluhpwBbFRZP9alwOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391667AbfKHLrt (ORCPT
+        id S2391660AbfKHLrt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Fri, 8 Nov 2019 06:47:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36582 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:36534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391661AbfKHLrt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:49 -0500
+        id S2390773AbfKHLrs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04147206A3;
-        Fri,  8 Nov 2019 11:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC3AD222C5;
+        Fri,  8 Nov 2019 11:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213668;
-        bh=4weDkqTsOQdRJ1VVtlFZaJNDdQk1IFqH0ZSgQo7C+Gw=;
+        s=default; t=1573213667;
+        bh=FLrZUAJxqE66ntrcwZrEwlMUK/iTsrqp5/weqZpUvMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZCzbuIE/DblqSWBaBi0mK4evRLCf2FBQdlxdnuPi5JepE4cYVZWhU17f7zE0G0Soz
-         wiXgl6gm5tinOttn4yhC52IK4+3l5pJZRtJT1+/se8URKugIcIWB1WZ+0JEYWFZoPh
-         /NfzySOF2leba06tARq/vEt54wfLe0zsi534eO/E=
+        b=L3yZUHxHqKO/1O28CBaW6HPZddICAk0T0Eb3ViqGnPgQ0j4DhZ/zDCFgFr8wFxSB4
+         XhXOplI4mVzpo/NrBPDioMFeBSANEl2GXUMY96YpJZLkuITcy1RcDiGXFKS5mV6lxb
+         QRKv16D1A2K5m4re/g2iznPFqd1dq0n31zfzt/iw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/44] ARM: dts: omap3-gta04: tvout: enable as display1 alias
-Date:   Fri,  8 Nov 2019 06:46:57 -0500
-Message-Id: <20191108114721.15944-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 20/44] ARM: dts: omap3-gta04: give spi_lcd node a label so that we can overwrite in other DTS files
+Date:   Fri,  8 Nov 2019 06:46:56 -0500
+Message-Id: <20191108114721.15944-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -62,31 +62,31 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
+[ Upstream commit fa0d7dc355c890725b6178dab0cc11b194203afa ]
 
-The omap dss susbystem takes the display aliases to find
-out which displays exist. To enable tv-out we must define
-an alias.
+needed for device variants based on GTA04 board but with
+different display panel (driver).
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 9b9510e057f3f..196b3f5158c90 100644
+index e14d15e5abc89..9b9510e057f3f 100644
 --- a/arch/arm/boot/dts/omap3-gta04.dtsi
 +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -28,6 +28,7 @@
- 
- 	aliases {
- 		display0 = &lcd;
-+		display1 = &tv0;
+@@ -70,7 +70,7 @@
+ 		#sound-dai-cells = <0>;
  	};
  
- 	gpio-keys {
+-	spi_lcd {
++	spi_lcd: spi_lcd {
+ 		compatible = "spi-gpio";
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x0>;
 -- 
 2.20.1
 
