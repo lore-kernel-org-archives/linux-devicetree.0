@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B78FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42777C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B142085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5B42085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214942;
-	bh=Ne3xpqHDEVTaOIwtvgtj6SoGrIn4XBahTRxtBYOMvZ0=;
+	s=default; t=1573214995;
+	bh=kxpznDMExbY+NIj9/CH/dtzZrDEOQHhlfV8VAdGz+C4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Db/OpVFimR7R0UGnQbD1ieRdiiqZMT2RC6BnBUUXwRXDFQiHK9KNOpeQExobI7Zw2
-	 vdoiBXSCcpUAMZjPkG7SMjg9ozPtcHS0+L2EdrTarobxH8gJaTi/G4Urxmm1xbEgfG
-	 gIZXXl3V1NbO3ZzvlwaOkNu7c0ljPLRlFpBSmyZg=
+	b=Y+FGjbUUcB5buKn5cJqy+ZOChtcpa60G9DOc8787ZtmxdjxAcpJMOd4ON3Gcpr5C5
+	 Ac1zJSpPzV7/sIdF/QNjU2B6cnu8IEU6nQ1CvGyncZ0aorflB0dga1S3o/Fxbo8Bkg
+	 JlgG0AfF/8HEffpmf1EzKENR4VnjbUa4uT5BXvd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732262AbfKHLkR (ORCPT
+        id S2390290AbfKHMJy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53216 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:09:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388528AbfKHLkN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:13 -0500
+        id S2388041AbfKHLjt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:39:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D6FC20869;
-        Fri,  8 Nov 2019 11:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E3E5222C4;
+        Fri,  8 Nov 2019 11:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213212;
-        bh=Ne3xpqHDEVTaOIwtvgtj6SoGrIn4XBahTRxtBYOMvZ0=;
+        s=default; t=1573213188;
+        bh=kxpznDMExbY+NIj9/CH/dtzZrDEOQHhlfV8VAdGz+C4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8j4RTqw9jELV558r0fjuJwDIA3GRzvSYI0MD34OFyB4PyUmxeZgtUk4izG79iZHE
-         DBChrRjSHqkkn1FVhvwL2SAcgNL6s81WWzwGx1hxWHZp7fOshzIzSW8CW5wmWrII7U
-         iruLA+kpsBu4N7Xg+BNme/cX9OMKa97MkQ+IVAc0=
+        b=m2tQBUebA1Q2+/HYXzlfJoNaGMlSxpEi7po7k9O+JE5PejkWP9QrXqiUCPcQfMhWt
+         HadUF2gmWFJJPJT69YcZV3tg6JskiPlEdZm0w12xbrpMFNAIb9f6IguYI5aDrtpLHN
+         LgXsbYguTY8gtGpobZDDG4wpXrql+hwIzeq5WanQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 093/205] ARM: dts: exynos: Disable pull control for S5M8767 PMIC
-Date:   Fri,  8 Nov 2019 06:36:00 -0500
-Message-Id: <20191108113752.12502-93-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 078/205] ARM: dts: meson8: fix the clock controller register size
+Date:   Fri,  8 Nov 2019 06:35:45 -0500
+Message-Id: <20191108113752.12502-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -59,49 +61,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit ef2ecab9af5feae97c47b7f61cdd96f7f49b2c23 ]
+[ Upstream commit f7f9da89bc4f61e33f7b9f5c75c4efdc1f0455d8 ]
 
-S5M8767 PMIC interrupt line on Exynos5250-based Arndale board has
-external pull-up resistors, so disable any pull control for it in
-in controller node. This fixes support for S5M8767 interrupts and
-enables operation of wakeup from S5M8767 RTC alarm.
+The clock controller registers are not 0x460 wide because the reset
+controller starts at CBUS 0x4404. This currently overlaps with the
+clock controller (which is at CBUS 0x4000).
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+There is no public documentation available on the actual size of the
+clock controller's register area (also called "HHI"). However, in
+Amlogic's GPL kernel sources the last "HHI" register is
+HHI_HDMI_PHY_CNTL2 at CBUS + 0x43a8. 0x400 was chosen because that size
+doesn't seem unlikely.
+
+Fixes: 2c323c43a3d619 ("ARM: dts: meson8: add and use the real clock controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-arndale.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/meson8.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 9c8ab4b7fb2cf..4ab1f1c66c27f 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -170,6 +170,8 @@
- 		reg = <0x66>;
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&s5m8767_irq>;
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index d77dcf890cfc8..7162e0ca05b0a 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -194,7 +194,7 @@
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+ 		compatible = "amlogic,meson8-clkc";
+-		reg = <0x8000 0x4>, <0x4000 0x460>;
++		reg = <0x8000 0x4>, <0x4000 0x400>;
+ 	};
  
- 		vinb1-supply = <&main_dc_reg>;
- 		vinb2-supply = <&main_dc_reg>;
-@@ -530,6 +532,13 @@
- 	cap-sd-highspeed;
- };
- 
-+&pinctrl_0 {
-+	s5m8767_irq: s5m8767-irq {
-+		samsung,pins = "gpx3-2";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+};
-+
- &rtc {
- 	status = "okay";
- };
+ 	reset: reset-controller@4404 {
 -- 
 2.20.1
 
