@@ -2,61 +2,68 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEFCFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 15:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E7EFA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 15:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A8B21882
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 15:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573227343;
-	bh=kIAf46wtogcVIqzw5kroWn6NGwzlDD8M+MZF+eyeihU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mp8YSsluBMOohtL/CAU3p4hL5IvZKeplrRxoFivGMTh5rdtFUsTHiXnyL2jeHqMho
-	 e41SEN1Dsuq3ll1B5nRYiy/sEx8NtqTP6I5OSjwbQlpCU/Xozvx+OM9ZezzMx5Fd6/
-	 o9thtE/ySu7+Ljq4HTUJg8IgcxbjLEGNyOHtA+Sk=
+	by mail.kernel.org (Postfix) with ESMTP id 2289921924
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 15:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5v6w5QJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbfKHPfm (ORCPT
+        id S1726039AbfKHPhY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 10:35:42 -0500
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:33279 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfKHPfm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 10:35:42 -0500
-Received: by mail-oi1-f176.google.com with SMTP id m193so5605022oig.0
-        for <devicetree@vger.kernel.org>; Fri, 08 Nov 2019 07:35:42 -0800 (PST)
+        Fri, 8 Nov 2019 10:37:24 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37679 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfKHPhY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 10:37:24 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t1so7555817wrv.4;
+        Fri, 08 Nov 2019 07:37:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zNRVMI5c64DIG9dO1ZAUvic71PHcwBHzn7HAnMaKCXM=;
+        b=K5v6w5QJxVvJXtQb3oxMYRaIOs9fVA4Ns5S2BVB2Kjg9SLSaN98Nu12vgXEBfLJQuy
+         ig1gDRdXyEXWtFve7nFod26k+96VkufujXAID5240QzNOIcoaMX/tC72Ks3HvsmKiLGt
+         2IiOHBI8KheknKLWi2Ps87Yaxkj79aQ065o73xHD+rKaG/mK1VGc36bqMf/Z7Yssm2eY
+         aSHI4bKbDne8eM01nYJTtB+SCfP/c4p6MYkiZuFDng46ImQtoFP/32K1ovtHsDufRsif
+         yww/N7+EUTBU7INvBeXJ2bQjxt/8HZxIvm7B7wRZupFAZXxLRXpFfpNAjmnY2DaU1iox
+         MJKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=NfUR7AY48iGFIM63M9JPwQgnYKrGoOgxnaqbx8BPJk8=;
-        b=cuMiX3A4+YnrLxgHbBwqvuhoqzVZTkqOTG3ZRWDEtAU9TWMs0BBVXAnwFpd8XvsRVm
-         eohMhTvtxvcR+799aJbtXj2qv73/Gtt0VXNbhFPJAezEr6uu8inlgOfaRfcmt2bBsrVC
-         sT8ftDKUTaT3KVQFXoMkMC8grNm30z1pAFPyNkNbJ1v/KedzCxFF+MqziSm+5/llly/B
-         t9wXn2AlOr7GFD9mPLtuCJKnwK+7T7iAUTr2/36YuugU0SGu8I+OFFTXzMSgeovPsN35
-         UsFwLQ2NK20BkjndKw3t+ULZFyVwNzyb2TdL/oktPibJBnT3LSRxDtcs+YRSZW3NT4GG
-         lNpw==
-X-Gm-Message-State: APjAAAX0jyZqi/j6twFKrfGrAMN+3l2GXRMxZbG4Q+ZhymKnfHBxxNkk
-        hpA1wNdqS/jRomlv+7TW6g==
-X-Google-Smtp-Source: APXvYqx68DVoAj2vGw2SptgDRf5u6t42E0asrMtHMURk1fJLAHVzUY4jKd1c0hgskKtnqGcWkLyxMQ==
-X-Received: by 2002:a05:6808:6c5:: with SMTP id m5mr10126783oih.16.1573227341487;
-        Fri, 08 Nov 2019 07:35:41 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id d205sm1861423oig.28.2019.11.08.07.35.38
+        bh=zNRVMI5c64DIG9dO1ZAUvic71PHcwBHzn7HAnMaKCXM=;
+        b=HiZtLyr7dt1f8h2daSJygB7FcBx16ZvNwJfXzEzjLu8JDDb9xVVHdEZcWvoGFAS+vU
+         lO/N22AsfTn9jHdBSS1dihmv/L6nPCBtmmbYiElsiPWUDh5VJmaWx+psjPwGpN1fLXlt
+         8yBfg8eKybJH81tJoY26pHOcEzQSmSs0ksGXM47CJ2av6dg1n8+o4aP5r+HnxDMuPMyT
+         qhcFWC53QzKf5dSOGl7xajWiYpXO5/yodThGNv7hVrHfdrm5iLNDLCtro9/Lph97ozxF
+         LlfLqD84Bg7opN0HTwgb7xLgkfAW3ARsEnzQ1MvHhp1S3hpDtZOSYJogeOV5+UVczfr8
+         TxqQ==
+X-Gm-Message-State: APjAAAUtliZmDXYKBFaNDNCu0X7Us2rfFSU7I4PZDNF2E9bejho7rugC
+        17VlQEhSm/Zxw3KYFKNbEmw=
+X-Google-Smtp-Source: APXvYqwUn293JDxKiGB6AqkYr9f4GobNYRLLfQyY9AL2KPslvHnP2tiV8O/IrhIUnA6Cb3AFzZBWNg==
+X-Received: by 2002:adf:f4c9:: with SMTP id h9mr8478984wrp.354.1573227441918;
+        Fri, 08 Nov 2019 07:37:21 -0800 (PST)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id j10sm732972wrx.30.2019.11.08.07.37.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 07:35:39 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH] dt-bindings: vendor-prefixes: Add 'fsi[ab]' to the list of non-vendor prefixes
-Date:   Fri,  8 Nov 2019 09:35:38 -0600
-Message-Id: <20191108153538.11970-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 08 Nov 2019 07:37:20 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH] arm64: tegra: Disable secondary CPUs on Tegra194
+Date:   Fri,  8 Nov 2019 16:37:19 +0100
+Message-Id: <20191108153719.3166002-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -64,41 +71,81 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-'fsia' and 'fsib' property prefixes were added as schema in commit
-2f52475bac7e ("ASoC: fsi: switch to yaml base Documentation").
-Unfortunately to do checks on actual vendor prefixes, we have to track
-the handful of prefixes which are not vendors like 'fsia' and 'fsib'.
+From: Thierry Reding <treding@nvidia.com>
 
-Fixes: 2f52475bac7e ASoC: fsi: switch to yaml base Documentation
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
+According to ePAPR, CPUs that are quiescent should have the "status"
+property of the corresponding device tree node set to "disabled". Since
+all but the boot CPU are in a quiescent state on boot, mark all
+secondary CPUs as "disabled".
+
+Note that this does not have an impact on SMP. Linux will still be able
+to boot these secondary CPUs like before.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
-Seems to be an old binding, but there aren't any upstream dts files 
-using these properties. If there's not backwards compatibility concerns, 
-another option would be to rename these properties.
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Mark, probably should go via your tree as that is where the error is 
-introduced.
-
-Rob
-
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 967e78c5ec0a..67b89db54aa2 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -16,7 +16,7 @@ properties: {}
- patternProperties:
-   # Prefixes which are not vendors, but followed the pattern
-   # DO NOT ADD NEW PROPERTIES TO THIS LIST
--  "^(at25|devbus|dmacap|dsa|exynos|gpio-fan|gpio|gpmc|hdmi|i2c-gpio),.*": true
-+  "^(at25|devbus|dmacap|dsa|exynos|fsi[ab]|gpio-fan|gpio|gpmc|hdmi|i2c-gpio),.*": true
-   "^(keypad|m25p|max8952|max8997|max8998|mpmc),.*": true
-   "^(pinctrl-single|#pinctrl-single|PowerPC),.*": true
-   "^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*": true
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 59485976db64..ea165b2998f9 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1661,6 +1661,7 @@
+ 			compatible = "nvidia,tegra194-carmel";
+ 			device_type = "cpu";
+ 			reg = <0x001>;
++			status = "disabled";
+ 			enable-method = "psci";
+ 			i-cache-size = <131072>;
+ 			i-cache-line-size = <64>;
+@@ -1675,6 +1676,7 @@
+ 			compatible = "nvidia,tegra194-carmel";
+ 			device_type = "cpu";
+ 			reg = <0x100>;
++			status = "disabled";
+ 			enable-method = "psci";
+ 			i-cache-size = <131072>;
+ 			i-cache-line-size = <64>;
+@@ -1689,6 +1691,7 @@
+ 			compatible = "nvidia,tegra194-carmel";
+ 			device_type = "cpu";
+ 			reg = <0x101>;
++			status = "disabled";
+ 			enable-method = "psci";
+ 			i-cache-size = <131072>;
+ 			i-cache-line-size = <64>;
+@@ -1703,6 +1706,7 @@
+ 			compatible = "nvidia,tegra194-carmel";
+ 			device_type = "cpu";
+ 			reg = <0x200>;
++			status = "disabled";
+ 			enable-method = "psci";
+ 			i-cache-size = <131072>;
+ 			i-cache-line-size = <64>;
+@@ -1717,6 +1721,7 @@
+ 			compatible = "nvidia,tegra194-carmel";
+ 			device_type = "cpu";
+ 			reg = <0x201>;
++			status = "disabled";
+ 			enable-method = "psci";
+ 			i-cache-size = <131072>;
+ 			i-cache-line-size = <64>;
+@@ -1731,6 +1736,7 @@
+ 			compatible = "nvidia,tegra194-carmel";
+ 			device_type = "cpu";
+ 			reg = <0x300>;
++			status = "disabled";
+ 			enable-method = "psci";
+ 			i-cache-size = <131072>;
+ 			i-cache-line-size = <64>;
+@@ -1745,6 +1751,7 @@
+ 			compatible = "nvidia,tegra194-carmel";
+ 			device_type = "cpu";
+ 			reg = <0x301>;
++			status = "disabled";
+ 			enable-method = "psci";
+ 			i-cache-size = <131072>;
+ 			i-cache-line-size = <64>;
 -- 
-2.20.1
+2.23.0
 
