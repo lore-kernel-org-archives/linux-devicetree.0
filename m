@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9CAC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78817C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9959E21D7B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0C8222D1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213886;
-	bh=yb2jTU2J1Pcb1tIvnOIHJBWKHeSbxjsNa/OwZZEyHl0=;
+	s=default; t=1573213904;
+	bh=hjgsGYra9ME33CEuTHD6rBp6RT0p7NsNyjSyCJszLY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXI+tiaHs1fGb0wAQJ+DMrr3kgFemMrL0GOZE23fNHKabIXjxN/lfLAaF+fM9ODnF
-	 BhOEc+GoGM8/l2Y89igQEqJn5P4USMXXVeY2DdXKcsaC1Z8HeDL9Gy9lM7oVos0Zbh
-	 7EF41bUTerngqxUMGixiGPQzAnmeX8KGAXX5lFpk=
+	b=j3Z/62cuQFt/MDs0t5am+Oy11g7htIeNh4oTcFT0myLP3qgFC70DH5BcEX5OO1xRw
+	 ZnWx4XFuxGLBjJrBexRI2sB3QmXceOwp1GgBydCnwZ20LHk8cna9IQXN9RyO7JFQfb
+	 igvUgr8A2chtE0wJqqHYLpOFuXw0xxPc0g5+QL7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbfKHLvV (ORCPT
+        id S2387792AbfKHLvj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:51:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36112 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:51:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391573AbfKHLrd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:33 -0500
+        id S2389733AbfKHLr1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67904206A3;
-        Fri,  8 Nov 2019 11:47:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A289206A3;
+        Fri,  8 Nov 2019 11:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213653;
-        bh=yb2jTU2J1Pcb1tIvnOIHJBWKHeSbxjsNa/OwZZEyHl0=;
+        s=default; t=1573213646;
+        bh=hjgsGYra9ME33CEuTHD6rBp6RT0p7NsNyjSyCJszLY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zVLf1nRQIFS4AheG/eZhECrq/SlNz54FyxVp7Rx8WCvKB/9WM/CKLcGI+9T0WudCT
-         RmiCbttWpIOMLEW0JDCINcE6OvYqjViNToZzgG/Tu/nkLrBpMaGS1idRgZpCn2Eg1M
-         mePKSJTBuQaPiaE54npHZOjhqs5JdS5s5TQ5afoo=
+        b=ovMOaV2YqGZaEkDz35DToX47M8DsTfc9m40NBunOt3a2yoMIBv118XlD2RDo0xbYK
+         TukcMApjTsYUi1CoQbVAqc2Eoxw4YV/d08oCW2xbvFhp7PXb0nNxJSYLZrrHzHQAyT
+         2MpnXjQ7qFSFB4urB8sYKgQ2eKXcjlHOFjDaiQ3E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+Cc:     Jay Foster <jayfoster@ieee.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/44] ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
-Date:   Fri,  8 Nov 2019 06:46:44 -0500
-Message-Id: <20191108114721.15944-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 03/44] ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
+Date:   Fri,  8 Nov 2019 06:46:39 -0500
+Message-Id: <20191108114721.15944-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -59,55 +60,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Jay Foster <jayfoster@ieee.org>
 
-[ Upstream commit 64858773d78e820003a94e5a7179d368213655d6 ]
+[ Upstream commit 10af10db8c76fa5b9bf1f52a895c1cb2c0ac24da ]
 
-This patch adds missing properties to the CODEC and sound nodes, so the
-audio will work also on Snow rev5 Chromebook. This patch is an extension
-to the commit e9eefc3f8ce0 ("ARM: dts: exynos: Add missing clock and
-DAI properties to the max98095 node in Snow Chromebook")
-and commit 6ab569936d60 ("ARM: dts: exynos: Enable HDMI audio on Snow
-Chromebook").  It has been reported that such changes work fine on the
-rev5 board too.
+Fix a typo. No functional change made by this patch.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-[krzk: Fixed typo in phandle to &max98090]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Jay Foster <jayfoster@ieee.org>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-snow-rev5.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-snow-rev5.dts b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-index f811dc8006605..0d46f754070e4 100644
---- a/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-@@ -23,6 +23,14 @@
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index af8b708ac312a..53a5a0e311e9d 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -546,7 +546,7 @@
+ 					};
+ 				};
  
- 		samsung,model = "Snow-I2S-MAX98090";
- 		samsung,audio-codec = <&max98090>;
-+
-+		cpu {
-+			sound-dai = <&i2s0 0>;
-+		};
-+
-+		codec {
-+			sound-dai = <&max98090 0>, <&hdmi>;
-+		};
- 	};
- };
- 
-@@ -34,6 +42,9 @@
- 		interrupt-parent = <&gpx0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&max98090_irq>;
-+		clocks = <&pmu_system_controller 0>;
-+		clock-names = "mclk";
-+		#sound-dai-cells = <1>;
- 	};
- };
- 
+-				uart1 {
++				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+ 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB4 periph A with pullup */
 -- 
 2.20.1
 
