@@ -2,83 +2,97 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA38FC6197
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78854FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C79218AE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9E721924
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:55:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s4ZzLVYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfKHNpj (ORCPT
+        id S1727685AbfKHNze (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 08:45:39 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:58971 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfKHNpi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 08:45:38 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 08 Nov 2019 19:09:24 +0530
-IronPort-SDR: /dWwmR7yT4WPqU0ZJdl9Bkgn1+ARTLzU8YFofnkUToUpDd8pvnMoBF9kWJQNo+3/WeTDy4Amg0
- DAAHDoqTLUtLFymohXXVondDWDmRlKTev7LE7Oqp82lhz6/21IPkj6ImeSlxTwLHMTzcdYGwA5
- l3lRJ4Yamw/XJKxlFOqTTtgj2PzSOD/jv95lDs6d2la7nSETWcYFS4usjU1w82UYOofFo1Fbwe
- oQYM+SUyZSG0Y5AebSpTm1h3FMCcEARLakoVZF/7aLkPnL/PzmZAvHpSUr+Ms8pPzrrt3UJcsY
- MYHbN0e14eQcLPvHjl4Yq+RZ
-Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 08 Nov 2019 19:08:54 +0530
-Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id 83C5F4949; Fri,  8 Nov 2019 19:08:53 +0530 (IST)
-From:   Pradeep P V K <ppvk@codeaurora.org>
-To:     adrian.hunter@intel.com, georgi.djakov@linaro.org,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, vbadigan@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        rampraka@codeaurora.org, sboyd@kernel.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Pradeep P V K <ppvk@codeaurora.org>
-Subject: [RFC-v2 0/2] Add Support for SDHC bus bandwidth voting
-Date:   Fri,  8 Nov 2019 19:08:37 +0530
-Message-Id: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 8 Nov 2019 08:55:34 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36003 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbfKHNze (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 08:55:34 -0500
+Received: by mail-qt1-f194.google.com with SMTP id y10so6578069qto.3;
+        Fri, 08 Nov 2019 05:55:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=1ikag6bSZ0eCN7wwCHRChu0lBnRPoED7I4M1hqoKUdY=;
+        b=s4ZzLVYOMJCoTlwZHpe25JMCQ2NRQND8JzH25vfMDoIdZBdPiHD61LpltjVedeN4fW
+         j5EUfP6vyPWBQffboP+AIj18SzxULI9kBIMRxhjDCKS8kXHRGynMIT8By6sSiiz2zxaG
+         5vHTW9gnC1WJU0305YNyiHbwtqLzi3f36V8U5/C5uJZItGyWPc+NwKtqB7K5w6vl0P72
+         we8fB+y7WbZFfx0BEjAEs5Vd6gqQYtQbums4g9r96tuH2MdjRspqcMMSFVbq3lbxaUQ6
+         XiVxeNhy1CdABBfXaMje0kkXkf4UerFmN+C4eTA6gAkfAiGP6LxyFd1sSKgcugwFWsbv
+         tTYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=1ikag6bSZ0eCN7wwCHRChu0lBnRPoED7I4M1hqoKUdY=;
+        b=iqyBY8hYXq8nNASv+T7zsoJurm4AZbJ8xIyLp5HHPJTOv7/iZmj5TcZYYrt2JsUHDJ
+         zcMvIVkpfyZk/D3fDvsOpUBjEF+yyFgrakmawF/YlyyPDqtk64/ocuuKW4bppoZKorV3
+         S7WQrN60WiuRofrEKFzIlSs2pa1q7lYgg0w4XMH5GpnjvvPOhDXaOoUT0QhAi/PerIoD
+         sqT8L75SZQuvROZ29kb8k4EDZXIVbZw0OI0TgM7IDxhjl6dANb3fqL7LeNsdmaa8HJQu
+         ry7e5Bqt3nY8aut0A3kIlT27il0ey/sb4dbiFGyhgTPVcmjUrbSliyVb5VOpv21to/27
+         IAzw==
+X-Gm-Message-State: APjAAAWHIhKXP7fTiCBshVqCLca1kcNpAfguen1V0/l+wqQh6MiZIBP+
+        SXEtuaRkN2zNFVjYxwFQ44Q=
+X-Google-Smtp-Source: APXvYqw/GH6PiCQFOfz/yT3uVIv0OGRs4v0gq7Kk0f61TESAAuUMLjQnqAFQEEqTTh4MPX0folAOQA==
+X-Received: by 2002:ac8:6f57:: with SMTP id n23mr10539690qtv.46.1573221333396;
+        Fri, 08 Nov 2019 05:55:33 -0800 (PST)
+Received: from smtp.gmail.com ([2804:d43:422:3955:b4df:7a81:96e1:236e])
+        by smtp.gmail.com with ESMTPSA id f39sm3047208qtb.26.2019.11.08.05.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 05:55:33 -0800 (PST)
+Date:   Fri, 8 Nov 2019 10:55:27 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     jic23@kernel.org, robh@kernel.org
+Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH v4 0/2] iio: adc: Add support for AD7292
+Message-ID: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Vote for the MSM bus bandwidth required by SDHC driver
-based on the clock speed and bus width of the card.
-Otherwise, the system clocks may run at minimum clock
-speed and thus affecting the performance.
+This patchset adds a basic driver for the AD7292 ADC/DAC system along
+with devicetree binding documentation.
 
-Adapt to the new ICB framework for bus bandwidth voting.
+Changelog V4:
+- dt-binding: updated SPDX identifier to GPL-2.0-only
+- dt-binding: changed maxitems constraint on channel property
+- ad7292: added brackets to shield macro parameters
 
-This requires the source/destination port ids.
-Also this requires a tuple of values.
+Marcelo Schmitt (2):
+  dt-bindings: iio: adc: Add dt-schema for AD7292
+  iio: adc: Add driver support for AD7292
 
-The tuple is for two different paths - from SDHC master
-to BIMC slave. The other is from CPU master to SDHC slave.
-This tuple consists of the average and peak bandwidth.
-
-This change is based on Georgi Djakov [RFC]
-(https://lkml.org/lkml/2018/10/11/499)
-
----
-changed since v1:
-* Addressed all the Review comments.
-* Minor code rebasing.
-
-Pradeep P V K (2):
-  dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported strings
-  mmc: sdhci-msm: Add support for bus bandwidth voting
-
- .../devicetree/bindings/mmc/sdhci-msm.txt          |  32 ++
- drivers/mmc/host/sdhci-msm.c                       | 366 ++++++++++++++++++++-
- 2 files changed, 395 insertions(+), 3 deletions(-)
+ .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++
+ MAINTAINERS                                   |   8 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/ad7292.c                      | 350 ++++++++++++++++++
+ 5 files changed, 473 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+ create mode 100644 drivers/iio/adc/ad7292.c
 
 -- 
-1.9.1
+2.23.0
 
