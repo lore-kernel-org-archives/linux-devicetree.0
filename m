@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FCDFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CCEC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C24821924
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09A12084D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214061;
-	bh=H9WHMuJKONkrdmTXS911D1LW5nFnegvaA9HCD7XFBuU=;
+	s=default; t=1573214075;
+	bh=WGnB8l6nh78KgnYEQaV1JLhwTwx6oRVh2j+0HHYbXbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Locrc5wg6BUHF1dyIu+kaadLtzJpGEZnDGd3kd+juygOMyk2PZxcarH7TqpF7+UQu
-	 CSB6ekyohSAWPcTqmEABJvFGrfT/QF/2kEEt08DkF4pygukurkub/7JXnHx7qtYdy2
-	 D1Za9HhmEZKvRFEhpccuNqtOzfTYjwDXOiQGdkHg=
+	b=tiB3E92WOsEw6aS3Hqt+9XagVDqAW39kb6fJez0gqw2Fc9nZr9BVxEAjedP3vUo+m
+	 CBk1sTwCc3vUw4nE/lADm88Z+rfE6RWSMeeU9dTKnjdg2BUVipFIspo4gmRRqn5tIl
+	 YrRvvBxsKrat0AQF6L+AyX2C9y+KeWpxEiNEEZL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388543AbfKHLyS (ORCPT
+        id S2391313AbfKHLqS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:54:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34154 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387396AbfKHLq0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:26 -0500
+        id S2391305AbfKHLqS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC2FA22480;
-        Fri,  8 Nov 2019 11:46:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D177921D82;
+        Fri,  8 Nov 2019 11:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213585;
-        bh=H9WHMuJKONkrdmTXS911D1LW5nFnegvaA9HCD7XFBuU=;
+        s=default; t=1573213577;
+        bh=WGnB8l6nh78KgnYEQaV1JLhwTwx6oRVh2j+0HHYbXbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TB5xmufmBP2GtXEL8XlYALYua72jHi6k7sbfiNy+web34tF2b+IFnAYYoGH6ciRrh
-         bnPecutFNrXHpKlQZoSVeTkkrtgy6jAuidW7VOz55qS0I0lDwaUZnGhIdiXYV7b4UY
-         37i9hKsoWIumFF53lkinsH8zts+pin7RBr/A8iyU=
+        b=Wn0DSKfTsiaodwrHwTBowms2Ddu2LEa5cguY7G9wov3COlyucby6j5jBf8CoiEsln
+         rqTokERLLev8xXy7QZOlOtsKi8o5cHdV1XiNtNlYI0qZvG2+TEjpIxVcFLPl2OpfLx
+         RHDVSMJB78l7s44vU3CL2jyu3wePKP2ovpGMhilk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 28/64] ARM: dts: omap3-gta04: give spi_lcd node a label so that we can overwrite in other DTS files
-Date:   Fri,  8 Nov 2019 06:45:09 -0500
-Message-Id: <20191108114545.15351-28-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 23/64] ARM: dts: exynos: Disable pull control for S5M8767 PMIC
+Date:   Fri,  8 Nov 2019 06:45:04 -0500
+Message-Id: <20191108114545.15351-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,33 +59,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit fa0d7dc355c890725b6178dab0cc11b194203afa ]
+[ Upstream commit ef2ecab9af5feae97c47b7f61cdd96f7f49b2c23 ]
 
-needed for device variants based on GTA04 board but with
-different display panel (driver).
+S5M8767 PMIC interrupt line on Exynos5250-based Arndale board has
+external pull-up resistors, so disable any pull control for it in
+in controller node. This fixes support for S5M8767 interrupts and
+enables operation of wakeup from S5M8767 RTC alarm.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5250-arndale.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index b3a8b1f24499a..95c6ac44e307f 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -70,7 +70,7 @@
- 		#sound-dai-cells = <0>;
- 	};
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index 6098dacd09f11..1b2709af2a42b 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -170,6 +170,8 @@
+ 		reg = <0x66>;
+ 		interrupt-parent = <&gpx3>;
+ 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&s5m8767_irq>;
  
--	spi_lcd {
-+	spi_lcd: spi_lcd {
- 		compatible = "spi-gpio";
- 		#address-cells = <0x1>;
- 		#size-cells = <0x0>;
+ 		vinb1-supply = <&main_dc_reg>;
+ 		vinb2-supply = <&main_dc_reg>;
+@@ -547,6 +549,13 @@
+ 	cap-sd-highspeed;
+ };
+ 
++&pinctrl_0 {
++	s5m8767_irq: s5m8767-irq {
++		samsung,pins = "gpx3-2";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++	};
++};
++
+ &rtc {
+ 	status = "okay";
+ };
 -- 
 2.20.1
 
