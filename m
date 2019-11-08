@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E674FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194BFFC6194
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8E12084D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB09A215EA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214257;
-	bh=hVTmL0FORV+KWz1VpzuweX8Ats/8839pboW72CRooBI=;
+	s=default; t=1573214327;
+	bh=HdPHDp3BlBc7LAHKrrfU2bGbLW19OD8QFTgc6uk6uuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KRdB6uBbn+0Tak5lNZORArk4zl9vv08lSWB4OenbyNI8Fdx82v0xxBMwaistIwYb6
-	 UxI5r/W2aUF0t19hKx/Re+Lr0LiFb/i8HLkDF2sXxiatsSSGw6wlmoafSDsWuaPx4K
-	 anZLUUZWIzALwMhEmh0B3+P9epIszYNfqJPD1DaE=
+	b=fB4YRCQn898wdLnB0gGHKrabHGXl3MDdX86iRCUADCxyV9dvkTZAKz7EkE3fS2Hya
+	 kv0Dnjq80fnsS8SZqns4H3MjLPckBbKuWSFYH/jc+2bkyPSkzzDMFbbYUbeiFwll9s
+	 vYQbzdD4vTZ4TcTOR/QkVIUDA3zTt22rfrLPRWqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733107AbfKHL5a (ORCPT
+        id S2390806AbfKHLof (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:57:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60210 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:44:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391008AbfKHLpE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:04 -0500
+        id S2390801AbfKHLoe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CB3A222C5;
-        Fri,  8 Nov 2019 11:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D40B221D82;
+        Fri,  8 Nov 2019 11:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213504;
-        bh=hVTmL0FORV+KWz1VpzuweX8Ats/8839pboW72CRooBI=;
+        s=default; t=1573213473;
+        bh=HdPHDp3BlBc7LAHKrrfU2bGbLW19OD8QFTgc6uk6uuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tP31o3ouEF+FOpOXxu185ZZWS2t0Z9KhXST77iBY8vT43vJsAQ+N+y9P6UHYqyhLD
-         P9yL6RKUxUPymPW8Td/Y4f8kOAfbqBT3zgHLTZKRTksGK246PFqKPptU3yo/6uO9AP
-         2sdgpwbNw+H8fC6NQasTySGSqP1nWObaY3egzpqI=
+        b=x8w/eX+6Fsu9a4UThHjjnT5DN5F5kjJq9GykO3C1rbjmwMKcu8emauQ/xA6pWV7Hu
+         OwcAyIw0GsXnn+cN4xvkJaOO/TcEUj38l1kGMg8t9A2LWQ69FGXFFdtcXPlFi0njG8
+         3G7aWV6yqB9a2bTlvHOML4hAtpvd3eNquldKQ9sw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 079/103] media: dt-bindings: adv748x: Fix decimal unit addresses
-Date:   Fri,  8 Nov 2019 06:42:44 -0500
-Message-Id: <20191108114310.14363-79-sashal@kernel.org>
+Cc:     Vicente Bergas <vicencb@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 056/103] arm64: dts: rockchip: Fix VCC5V0_HOST_EN on rk3399-sapphire
+Date:   Fri,  8 Nov 2019 06:42:21 -0500
+Message-Id: <20191108114310.14363-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -62,51 +60,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Vicente Bergas <vicencb@gmail.com>
 
-[ Upstream commit 27582f0ea97fe3e4a38beb98ab36cce4b6f029d5 ]
+[ Upstream commit bcdb578a5f5b4aea79441606ab7f0a2e076b4474 ]
 
-With recent dtc and W=1:
+The pin is GPIO4-D1 not GPIO1-D1, see schematic, page 15 for reference.
 
-    Warning (graph_port): video-receiver@70/port@10: graph node unit address error, expected "a"
-    Warning (graph_port): video-receiver@70/port@11: graph node unit address error, expected "b"
-
-Unit addresses are always hexadecimal (without prefix), while the bases
-of reg property values depend on their prefixes.
-
-Fixes: e69595170b1cad85 ("media: adv748x: Add adv7481, adv7482 bindings")
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Vicente Bergas <vicencb@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/media/i2c/adv748x.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 21ffb5ed81830..54d1d3bc18694 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -73,7 +73,7 @@ Example:
- 			};
- 		};
- 
--		port@10 {
-+		port@a {
- 			reg = <10>;
- 
- 			adv7482_txa: endpoint {
-@@ -83,7 +83,7 @@ Example:
- 			};
- 		};
- 
--		port@11 {
-+		port@b {
- 			reg = <11>;
- 
- 			adv7482_txb: endpoint {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+index ce592a4c0c4cd..82576011b959b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+@@ -136,7 +136,7 @@
+ 	vcc5v0_host: vcc5v0-host-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio1 RK_PD1 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&vcc5v0_host_en>;
+ 		regulator-name = "vcc5v0_host";
 -- 
 2.20.1
 
