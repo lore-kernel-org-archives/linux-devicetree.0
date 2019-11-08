@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FB9C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9A3C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CD42085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C9C2085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214890;
-	bh=fWtPXVPplsA/Gde7Z7fqq1we4Hu+U0G1fSE9qkDMiYk=;
+	s=default; t=1573214895;
+	bh=Y/lSeFUj09NRedzoVHJVECoGjBONRK90FvfRc4l06y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWC3D9hKkbP2OrEoP4ScCDJUP8XYmg6nwFDXvUqjPHfMRucINpglJH676tLGoCnUE
-	 X0ooAwijMGisdD6KKVxWt2aAV+qiuKzw9GriAUOFVU9ATMVHJmVK135W+gxahVli/Q
-	 FUgjYrN4W9Q2rWvf6L147zw++gTDzlBBB0b0UMPk=
+	b=LdxcnCvsmI8WLGjzW+D42Kc1SyKGhsA6hkmYj/PJdAmXCiPRurUCq9GJczkBBAPJC
+	 sIFWDXShHR1Q0gZkUSo177VbkmNuvgyEKiVCS3m/unRTNQ3UnGlx7JPDFcrNpJhSiz
+	 nqCSVG398uNmof4SQwqS0N58Uj3/g5hjM8MOdpEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388868AbfKHLki (ORCPT
+        id S2389468AbfKHMIN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:40:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53554 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:08:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388839AbfKHLki (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:38 -0500
+        id S2388802AbfKHLkh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFA5221D7E;
-        Fri,  8 Nov 2019 11:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C56FC21D7B;
+        Fri,  8 Nov 2019 11:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213237;
-        bh=fWtPXVPplsA/Gde7Z7fqq1we4Hu+U0G1fSE9qkDMiYk=;
+        s=default; t=1573213236;
+        bh=Y/lSeFUj09NRedzoVHJVECoGjBONRK90FvfRc4l06y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jD8BMVWAhTqFmKbCIC8QcZ5/StHSsRDNhGHmMyUiEeL8jv7C0JQNun4FWWkrdJVRQ
-         ZLCIBzw3R/qiNGBfgYfLNB37FleFp3LJDXohyzbv8/cfTJnqE9EATpcR4Zr0ttQBzs
-         fj8n2+H0cF9KxL/qQhBWq6qpe7Gn8AKvqUDsAF/s=
+        b=YaOF1cCVt2DmfoMdaZWWv/fx/bTDQ83EztKWA8Ag+wwwbJAezMJBBrKrAqUXNcYBZ
+         6HWWgfGqDuzrsHn/2hORTUTUcoAOrYv9ZN7mw22A+83QAjELr1IBvHY3VzLAuTQuHZ
+         7ajhAgGkFbbjtELgYGwlZEPeA3kI9ypV/5HreiHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 107/205] ARM: dts: omap3-gta04: fixes for tvout / venc
-Date:   Fri,  8 Nov 2019 06:36:14 -0500
-Message-Id: <20191108113752.12502-107-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 106/205] ARM: dts: omap3-gta04: give spi_lcd node a label so that we can overwrite in other DTS files
+Date:   Fri,  8 Nov 2019 06:36:13 -0500
+Message-Id: <20191108113752.12502-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -62,58 +62,31 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit f6591391373dbff2c0200e1055d4ff86191578d2 ]
+[ Upstream commit fa0d7dc355c890725b6178dab0cc11b194203afa ]
 
-* fix connector compatibility (composite)
-* add comment for gpio1 23
-* add proper #address-cells
-* we use only one venc_out channel for composite
+needed for device variants based on GTA04 board but with
+different display panel (driver).
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index ae33e0e0f1d2c..eee5fa0035071 100644
+index ac830b9177763..ae33e0e0f1d2c 100644
 --- a/arch/arm/boot/dts/omap3-gta04.dtsi
 +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -131,7 +131,7 @@
+@@ -78,7 +78,7 @@
+ 		#sound-dai-cells = <0>;
  	};
  
- 	tv0: connector {
--		compatible = "svideo-connector";
-+		compatible = "composite-video-connector";
- 		label = "tv";
- 
- 		port {
-@@ -143,7 +143,7 @@
- 
- 	tv_amp: opa362 {
- 		compatible = "ti,opa362";
--		enable-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
-+		enable-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;	/* GPIO_23 to enable video out amplifier */
- 
- 		ports {
- 			#address-cells = <1>;
-@@ -551,10 +551,14 @@
- 
- 	vdda-supply = <&vdac>;
- 
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
- 	port {
-+		reg = <0>;
- 		venc_out: endpoint {
- 			remote-endpoint = <&opa_in>;
--			ti,channels = <2>;
-+			ti,channels = <1>;
- 			ti,invert-polarity;
- 		};
- 	};
+-	spi_lcd {
++	spi_lcd: spi_lcd {
+ 		compatible = "spi-gpio";
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x0>;
 -- 
 2.20.1
 
