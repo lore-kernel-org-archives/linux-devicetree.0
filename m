@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CF3FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF0AFA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639A02084D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA76B207FA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214085;
-	bh=Jeo/39pPQmoT6D0knHh+tThuVePJ8AIQxDESlg922GI=;
+	s=default; t=1573214112;
+	bh=BPCOPpeQbZWj52xinWEfuf+g4VQnSwbdAi1/ET2hRTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GVU5otbN6458fyNEDetmsx1HJkAKN3O1D2EGod3qULj0l41WyU6+e1qIBfkB7dbBM
-	 I9KTxbnEtNyj4Q6Z4qnmHuFoLOzJ79cxHWOTP5N5kCOu+NdO6TdSJqg/ev4a9KEGRQ
-	 ve0XzcbcsArm3kVQFD0/DQ6IzuIMsiFw9Or4K0Xs=
+	b=tqmQnwK2dldCWkCD9FwQbUb4ofGFwJ3YGHFOTiVBVZMZDAYVzyQoguAGC+6EW10JC
+	 njMtbmbmThOGWBEJHyqqExzaXO8l/CzVkdzkxZk9pHMTqoPrGpeNOmUju69/7DMeu/
+	 4VpTXyR2P0Ck3+7hx4RrIFk8PCCBT+w0tt6CYlvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391284AbfKHLqP (ORCPT
+        id S2391157AbfKHLzI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33862 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:55:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391279AbfKHLqN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:13 -0500
+        id S2387856AbfKHLqG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C95C2084D;
-        Fri,  8 Nov 2019 11:46:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5035F222C2;
+        Fri,  8 Nov 2019 11:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213573;
-        bh=Jeo/39pPQmoT6D0knHh+tThuVePJ8AIQxDESlg922GI=;
+        s=default; t=1573213565;
+        bh=BPCOPpeQbZWj52xinWEfuf+g4VQnSwbdAi1/ET2hRTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBkuRYekczZ/EshlOU6MYWR+Rbe9eKnJpWX+6pTZA5TaVjOiphNG6trpXOKAsQmyA
-         8l1kQgb8tOhVeKm2pe9737YoNb2f4K8L5vmLJMBnxVqjj6VEW6iIzfopKCL52jN3CL
-         /sC3qvQgwVwE40bdHwuIAH0NkccbV1tJWjHB8XNE=
+        b=lN8zU55c+R3rQYIYzj7hUglWdvSdIJhms82WagUI+w3HcxRbrAPScO+v9lLV2unpR
+         gUQLdUOiSJzJSAk8g1fW6ocky4omFNocYPM+iTuxMXfjJF9gVeihATSLIhFLCAnzeR
+         YlU5JH8Rq5vLM2jvdzfbcrBYG+ZKaJg0TxRzNNdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel@ziswiler.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/64] ARM: dts: pxa: fix power i2c base address
-Date:   Fri,  8 Nov 2019 06:45:00 -0500
-Message-Id: <20191108114545.15351-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 13/64] ARM: dts: exynos: Fix regulators configuration on Peach Pi/Pit Chromebooks
+Date:   Fri,  8 Nov 2019 06:44:54 -0500
+Message-Id: <20191108114545.15351-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,32 +60,84 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel@ziswiler.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 8a1ecc01a473b75ab97be9b36f623e4551a6e9ae ]
+[ Upstream commit f8f3b7fc21b1cb59385b780acd9b9a26d04cb7b2 ]
 
-There is one too many zeroes in the Power I2C base address. Fix this.
+Regulators, which are marked as 'on-in-suspend' seems to be critical for
+board operation, thus they must not be disabled anytime. This can be
+only assured by marking them as 'always-on', because otherwise some
+actions of their clients might result in turning them off. This patch
+restores suspend/resume operation on Peach-Pit Chromebook board. It
+partially reverts 'always-on' property removal done by the commit
+mentioned in the Fixes tag.
 
-Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Fixes: 665c441eea3d ("ARM: dts: exynos: Remove unneded always-on for regulators on Peach boards")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Tomasz Figa <tfiga@chromium.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/pxa27x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 3 +++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 9e73dc6b3ed3e..0e1320afa1562 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -70,7 +70,7 @@
- 			clocks = <&clks CLK_PWM1>;
- 		};
- 
--		pwri2c: i2c@40f000180 {
-+		pwri2c: i2c@40f00180 {
- 			compatible = "mrvl,pxa-i2c";
- 			reg = <0x40f00180 0x24>;
- 			interrupts = <6>;
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index 8b754ae8c8f7d..c9d379b1a1669 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -302,6 +302,7 @@
+ 				regulator-name = "vdd_1v35";
+ 				regulator-min-microvolt = <1350000>;
+ 				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+@@ -323,6 +324,7 @@
+ 				regulator-name = "vdd_2v";
+ 				regulator-min-microvolt = <2000000>;
+ 				regulator-max-microvolt = <2000000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+@@ -333,6 +335,7 @@
+ 				regulator-name = "vdd_1v8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 1f90df2d7ecd8..ae58b8d6f6144 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -302,6 +302,7 @@
+ 				regulator-name = "vdd_1v35";
+ 				regulator-min-microvolt = <1350000>;
+ 				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+@@ -323,6 +324,7 @@
+ 				regulator-name = "vdd_2v";
+ 				regulator-min-microvolt = <2000000>;
+ 				regulator-max-microvolt = <2000000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
+@@ -333,6 +335,7 @@
+ 				regulator-name = "vdd_1v8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-state-mem {
+ 					regulator-on-in-suspend;
 -- 
 2.20.1
 
