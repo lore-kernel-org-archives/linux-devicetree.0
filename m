@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DE1C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA74BFC6196
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9506421924
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C6021D6C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214056;
-	bh=nbUx30j9luTBxIEqhRnCBsr/cQ5+S9X8aV3HMR9SE3k=;
+	s=default; t=1573214058;
+	bh=NNy9gPCO4JUqhtpquihz7LUYZZvWXZ2gaAYc6Wye+qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gy8Jd/sfORMUL6bJnL14JJ/B0s6G/3q7Qvg4hcbTqi2LljP9iJciv421uI6TDdoC5
-	 nOW56HboHiYUyf/yeWNQNNzQz2tflCRZwPiPukrazoUN2ceDD6ym6c5u4cP1klQEP1
-	 tyaZlVG+0hs0mb2ZKHROiho8nHRjrwKlDdQ3YuTc=
+	b=eGVTA++h/KppCxi/jvnuidn9D0y7FAnuHhNwM5wB7M1P6ePYJuu2hO5aWZkepFOU9
+	 8lwPRO1nkNt4xLgKk4fubF0mUa40HGJIoeMUnTQz++QwyJy6005wHi5+yMY44okCZv
+	 vI5XlozpTkUO3qKME+NtLph6q0FUjsgy7MK2W5Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389382AbfKHLyK (ORCPT
+        id S2391338AbfKHLq0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:54:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:46:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391348AbfKHLq2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:28 -0500
+        id S2391334AbfKHLqY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:46:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E852222CE;
-        Fri,  8 Nov 2019 11:46:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2052222CB;
+        Fri,  8 Nov 2019 11:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213587;
-        bh=nbUx30j9luTBxIEqhRnCBsr/cQ5+S9X8aV3HMR9SE3k=;
+        s=default; t=1573213584;
+        bh=NNy9gPCO4JUqhtpquihz7LUYZZvWXZ2gaAYc6Wye+qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lSy29nTk4qY4WXR13SBZmHRY1tOUiPonP0KWKUEyhe7YUZfl3VKzgnUvzilNoSSVt
-         3Ou/flz6SOqS3QZ1O6t5gCU7NVq82QMFuywhTJSOEfvf4fcvZUPBm0jA+Z8b6o3aOe
-         88DEH4MM4atnMaXEKJd/nzHCOC4lg99bmvJF2geU=
+        b=Y79nU3jObrm01O/9OvNNS7CX/9nCYaZ68jo7/b8NIcZaDEcZEaNnPSWOjICQ/hvno
+         4C2n3nV8fAH/D1AezPgn2HpWPgBC0jQs1c7BlZt1Y94/z1EcvaHFEfqqRR7pJTeMf5
+         mMQmblKcShwH0g3cmQzhPoEotbxOLhEa+2eDmBDk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+Cc:     Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 30/64] ARM: dts: omap3-gta04: tvout: enable as display1 alias
-Date:   Fri,  8 Nov 2019 06:45:11 -0500
-Message-Id: <20191108114545.15351-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 27/64] of: make PowerMac cache node search conditional on CONFIG_PPC_PMAC
+Date:   Fri,  8 Nov 2019 06:45:08 -0500
+Message-Id: <20191108114545.15351-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -60,33 +58,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
+[ Upstream commit f6707fd6241e483f6fea2caae82d876e422bb11a ]
 
-The omap dss susbystem takes the display aliases to find
-out which displays exist. To enable tv-out we must define
-an alias.
+Cache nodes under the cpu node(s) is PowerMac specific according to the
+comment above, so make the code enforce that.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/of/base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 67b50dbe28189..e86f42086a29b 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -28,6 +28,7 @@
- 
- 	aliases {
- 		display0 = &lcd;
-+		display1 = &tv0;
- 	};
- 
- 	gpio-keys {
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index f366af135d5b7..c66cdc4307fd7 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2281,7 +2281,7 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+ 	/* OF on pmac has nodes instead of properties named "l2-cache"
+ 	 * beneath CPU nodes.
+ 	 */
+-	if (!strcmp(np->type, "cpu"))
++	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
+ 		for_each_child_of_node(np, child)
+ 			if (!strcmp(child->type, "cache"))
+ 				return child;
 -- 
 2.20.1
 
