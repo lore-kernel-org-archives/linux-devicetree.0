@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F10FC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33C2FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C691E218AE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DC420869
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214387;
-	bh=dEzwLHn/gns28QI/I6DAD2PkbwsGSScjoL8rw/ea1jA=;
+	s=default; t=1573214398;
+	bh=wa7YDgehiZ0AGsCxw7mUn8MD6uR/Hfws7/JZg4+w6Mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CoPSJ69QSKJ9JIQr+K2veuA3VAi53C7fW3PdRn8A86iMimHxKb3+37b7C7hzOCbUO
-	 j9dD6kddiRvdcj52DRH9+vwIDm7FKlK0bX+a8PoSu524+ri2c7hBd7qDZiuBdQqqXt
-	 ZFJpgU0Akzuov9pxo42fUp3a7ZVLt9l7r0rw9S9g=
+	b=bwzbC1yzSf7rGWSfg6Q/aGMytuMkRapSA2RsuqNDEMh9QjiZrTRUua0nwc5Vygkay
+	 N9BeehyzGDOiTkdFZWXYhL+rMdnPEN/e/6Q77EEWk9of4MhMck9ZKkVaGbROaVm7V0
+	 OdRbRN4El+wavNvzn+gkPObDAyedHdpZNzqu8qT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390661AbfKHLoG (ORCPT
+        id S2389556AbfKHL7y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:44:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58818 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:59:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390658AbfKHLoF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:05 -0500
+        id S2390645AbfKHLoD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86A0222C2;
-        Fri,  8 Nov 2019 11:44:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E9B9222C4;
+        Fri,  8 Nov 2019 11:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213444;
-        bh=dEzwLHn/gns28QI/I6DAD2PkbwsGSScjoL8rw/ea1jA=;
+        s=default; t=1573213443;
+        bh=wa7YDgehiZ0AGsCxw7mUn8MD6uR/Hfws7/JZg4+w6Mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXOcH+1QdlZQcZwtpZ99vzQoGwVYt7X2+fbqg6zshLjSBU54WWNdkg28KPRQ8+QD2
-         v28I+rKNS2ICde3hr1x7jmLwUaIH2sojt5wqUjiUIsIj9ZJ6eiRuUei0XicZhX69YH
-         Q8e7ObW+Uj+Qe//lkKwgTowlWMlxKUmG6Fkwq+e4=
+        b=dKyixJ7orJKDAM02MQHbef5iWXC1/NxoZaO6lk+XLaHM+QW4QdYwvhdbc5wbFEcIy
+         PUiigw3v2S125JLGyFcF4lIdSOeig8QroQb0bcKpDjPao1E8DqlWktIRIwk3f2LwEz
+         K1hSUgXvyViWk/fwQGPJ6apFP0iutygpfXue8e/k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
@@ -46,9 +46,9 @@ Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 038/103] ARM: dts: meson8b: fix the clock controller register size
-Date:   Fri,  8 Nov 2019 06:42:03 -0500
-Message-Id: <20191108114310.14363-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 037/103] ARM: dts: meson8: fix the clock controller register size
+Date:   Fri,  8 Nov 2019 06:42:02 -0500
+Message-Id: <20191108114310.14363-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -63,7 +63,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit f31094fe8c16fbd2ca47921acf93b744b045aace ]
+[ Upstream commit f7f9da89bc4f61e33f7b9f5c75c4efdc1f0455d8 ]
 
 The clock controller registers are not 0x460 wide because the reset
 controller starts at CBUS 0x4404. This currently overlaps with the
@@ -75,28 +75,28 @@ Amlogic's GPL kernel sources the last "HHI" register is
 HHI_HDMI_PHY_CNTL2 at CBUS + 0x43a8. 0x400 was chosen because that size
 doesn't seem unlikely.
 
-Fixes: 4a69fcd3a10803 ("ARM: meson: Add DTS for Odroid-C1 and Tronfy MXQ boards")
+Fixes: 2c323c43a3d619 ("ARM: dts: meson8: add and use the real clock controller")
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 2 +-
+ arch/arm/boot/dts/meson8.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index bc278da7df0d9..0f76da280ee76 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -121,7 +121,7 @@
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index b98d44fde6b60..e3ae85d65b39b 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -170,7 +170,7 @@
  		#clock-cells = <1>;
  		#reset-cells = <1>;
- 		compatible = "amlogic,meson8b-clkc";
+ 		compatible = "amlogic,meson8-clkc";
 -		reg = <0x8000 0x4>, <0x4000 0x460>;
 +		reg = <0x8000 0x4>, <0x4000 0x400>;
  	};
  
- 	reset: reset-controller@4404 {
+ 	pwm_ef: pwm@86c0 {
 -- 
 2.20.1
 
