@@ -2,127 +2,98 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B824FC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9AFC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7347C215EA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="N02473gj"
+	by mail.kernel.org (Postfix) with ESMTP id 225C42085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573214576;
+	bh=jSGFsiKCQFZBLSEAsjsqgfDUw/IFfM12cjJ2KDf7CbU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cGTYLhe9DeExMa72mHrnC38waZDJ5t8arDNZXO5t9s2c5WB2ac0iYAwKPV/rcd0Qn
+	 ch60HGi0zbSP4kMeqMlbGHqk1/mjVC8JGGClZVaqw9oFdDQ/Jylf+UssUUNX7XHJiS
+	 JNgR34aW/we9pnDfqj5lGWGCZPxWLwMDMsd1MDgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732757AbfKHLnE (ORCPT
+        id S1732701AbfKHMCv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:43:04 -0500
-Received: from vps.xff.cz ([195.181.215.36]:46966 "EHLO vps.xff.cz"
+        Fri, 8 Nov 2019 07:02:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390303AbfKHLnC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1573213381; bh=lE0IEyhRZdzSCV11eufQ/7MoeNiErKeSnathaLA1lNU=;
-        h=Date:From:To:Subject:X-My-GPG-KeyId:References:From;
-        b=N02473gjGfoh4FNolyioo32WH6IieZfnLJyQNsMA0nPAvDQkTSDPisLlvb3n3SXHO
-         7AVe8qFjWddBloPUZwFm5DUw3VMc4Aqy730ScMHIW1+8dTjaChczSKoMoNEdUB//M4
-         Lb5+/V0MW/FyCAzq0khvPJrtjxUGzimQera7k3vI=
-Date:   Fri, 8 Nov 2019 12:43:01 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Icenowy Zheng <icenowy@aosc.io>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>, arnd@arndb.de,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        kishon@ti.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        mark.rutland@arm.com, mripard@kernel.org,
-        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
-        tglx@linutronix.de, wens@csie.org
-Subject: Re: [PATCH] phy: allwinner: Fix GENMASK misuse
-Message-ID: <20191108114301.v3663hs5ftjsoec3@core.my.home>
-Mail-Followup-To: Icenowy Zheng <icenowy@aosc.io>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>, arnd@arndb.de,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        kishon@ti.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        mark.rutland@arm.com, mripard@kernel.org,
-        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
-        tglx@linutronix.de, wens@csie.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20191020134229.1216351-3-megous@megous.com>
- <20191107204645.13739-1-rikard.falkeborn@gmail.com>
- <20191107214514.kcz42mcehyrrif4o@core.my.home>
- <F563E52E-72BF-4297-A14F-DDE2B490DADB@aosc.io>
- <20191108114138.snghk5n7kwuw7zz3@core.my.home>
+        id S2388148AbfKHLmz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:55 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87439222C5;
+        Fri,  8 Nov 2019 11:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573213375;
+        bh=jSGFsiKCQFZBLSEAsjsqgfDUw/IFfM12cjJ2KDf7CbU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pvvv4hqxrIF3SsUrIENelz8BGnmuk/l8GD16SaoEdXmeuLJlX+3hnyIsJFwZIFoWM
+         C+CrGibob3vq1EsN6PeRXZos6u+sjQEY2Q+cwJjopbXhWhu7bVPwP8LmVUqREOgrE8
+         pJIpIsMPotLu6+DPd/awFiJB9b/Lj0/5YYTv8GN8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 200/205] ARM: dts: rockchip: Fix erroneous SPI bus dtc warnings on rk3036
+Date:   Fri,  8 Nov 2019 06:37:47 -0500
+Message-Id: <20191108113752.12502-200-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
+References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191108114138.snghk5n7kwuw7zz3@core.my.home>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 12:41:39PM +0100, megous hlavni wrote:
-> On Fri, Nov 08, 2019 at 07:29:21PM +0800, Icenowy Zheng wrote:
-> > 
-> > 
-> > 于 2019年11月8日 GMT+08:00 上午5:45:14, "Ondřej Jirman" <megous@megous.com> 写到:
-> > >Hello Rikard,
-> > >
-> > >On Thu, Nov 07, 2019 at 09:46:45PM +0100, Rikard Falkeborn wrote:
-> > >> Arguments are supposed to be ordered high then low.
-> > >> 
-> > >> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> > >> ---
-> > >> Spotted while trying to add compile time checks of GENMASK arguments.
-> > >> Patch has only been compile tested.
-> > >
-> > >thank you!
-> > >
-> > >Tested-by: Ondrej Jirman <megous@megous.com>
-> > 
-> > Does it affect or fix the performance?
-> 
-> See here: https://forum.armbian.com/topic/10131-orange-pi-lite2-usb3-now-working/?do=findComment&comment=88904
-> 
-> Quote:
-> 
-> > It may or may not help. On Opi3 I see no change, probably because HUB is
-> > really close to the SoC, but on boards without a HUB, SoC's USB3 phy will
-> > have to drive the signal over the longer cable and this patch might benefit
-> > those boards. 
-> 
-> Maybe someone with boards without PHY will test it more.
+From: Rob Herring <robh@kernel.org>
 
-Eh, on boards without a USB3 HUB.
+[ Upstream commit 131c3eb428ccd5f0c784b9edb4f72ec296a045d2 ]
 
-> regards,
-> 	o.
-> 
-> > >
-> > >regards,
-> > >	o.
-> > >
-> > >>  drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
-> > >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >> 
-> > >> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> > >b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> > >> index 1169f3e83a6f..b1c04f71a31d 100644
-> > >> --- a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> > >> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> > >> @@ -49,7 +49,7 @@
-> > >>  #define SUNXI_LOS_BIAS(n)		((n) << 3)
-> > >>  #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
-> > >>  #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
-> > >> -#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
-> > >> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
-> > >>  
-> > >>  struct sun50i_usb3_phy {
-> > >>  	struct phy *phy;
-> > >> -- 
-> > >> 2.24.0
-> > >> 
+dtc has new checks for SPI buses. The rk3036 dts file has a node named
+spi' which causes false positive warnings. As the node is a pinctrl child
+node, change the node name to be 'spi-pins' to fix the warnings.
+
+arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
+arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
+arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
+arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
+
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/rk3036.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 67f57200d9a06..d560fc4051c5f 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -733,7 +733,7 @@
+ 			/* no rts / cts for uart2 */
+ 		};
+ 
+-		spi {
++		spi-pins {
+ 			spi_txd:spi-txd {
+ 				rockchip,pins = <1 29 RK_FUNC_3 &pcfg_pull_default>;
+ 			};
+-- 
+2.20.1
+
