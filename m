@@ -2,100 +2,86 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8B5FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B13C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25410218AE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573206176;
-	bh=+Aa0V7BwrZT7QBWcosv4UvZruk3ubTgmpCYKAqi9iZw=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=02qOcFgRIQRGL4lbKumhXTkZ3xFZima25ZoP6QHFgXBg23KTqn0JqghLYw3iDFTl6
-	 V2b9sKTQZXUM3LpRsipqNlTg/voC8etPCl5y5ar9U2tPdihmLojzeuKFF4QSEb+Ht5
-	 3SUa6hC8wEo+W1i6ylSP6HGZeyHj8JlO6Sc5GLb4=
+	by mail.kernel.org (Postfix) with ESMTP id 325C8214DA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbfKHJmz (ORCPT
+        id S1731753AbfKHJn0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:42:55 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:33239 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731373AbfKHJmz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:42:55 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iT0n5-00043G-RF; Fri, 08 Nov 2019 10:42:51 +0100
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v5 06/13] drivers: irqchip: qcom-pdc: Move to an SoC  independent compatible
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 8 Nov 2019 04:43:26 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:56621 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730005AbfKHJn0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:43:26 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xA89guVu009625, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xA89guVu009625
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 8 Nov 2019 17:42:56 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Fri, 8 Nov
+ 2019 17:42:56 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?iso-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "'DTML'" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+Subject: [PATCH v2 0/2] Initial RTD1619 SoC and Realtek Mjolnir EVB support
+Thread-Topic: [PATCH v2 0/2] Initial RTD1619 SoC and Realtek Mjolnir EVB
+ support
+Thread-Index: AdWWGJhW6hHY3ZYJQ8qKkqaxghH5QQ==
+Date:   Fri, 8 Nov 2019 09:42:55 +0000
+Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF91F9CB@RTITMBSVM04.realtek.com.tw>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.190.187]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 08 Nov 2019 10:52:12 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <agross@kernel.org>, <robh+dt@kernel.org>,
-        <bjorn.andersson@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mka@chromium.org>, <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>
-In-Reply-To: <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
-References: <20191108092824.9773-1-rnayak@codeaurora.org>
- <20191108092824.9773-7-rnayak@codeaurora.org>
- <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
-Message-ID: <08b53aa7c448aad4fce71709b0385d4c@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: rnayak@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mka@chromium.org, swboyd@chromium.org, ilina@codeaurora.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-08 10:50, Marc Zyngier wrote:
-> On 2019-11-08 10:37, Rajendra Nayak wrote:
->> Remove the sdm845 SoC specific compatible to make the driver
->> easily reusable across other SoC's with the same IP block.
->> This will reduce further churn adding any SoC specific
->> compatibles unless really needed.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Reviewed-by: Lina Iyer <ilina@codeaurora.org>
->> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->> Cc: Marc Zyngier <maz@kernel.org>
->> ---
->>  drivers/irqchip/qcom-pdc.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->> index faa7d61b9d6c..c175333bb646 100644
->> --- a/drivers/irqchip/qcom-pdc.c
->> +++ b/drivers/irqchip/qcom-pdc.c
->> @@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node
->> *node, struct device_node *parent)
->>  	return ret;
->>  }
->>
->> -IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
->> +IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
->
-> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Hi Andreas,
 
-I need to have my hands fixed. The real tag is:
+This series adds Device Trees for the Realtek RTD1619 SoC and Realtek's
+Mjolnir EVB.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+v1 -> v2:
+* Define compatible strings for Realtek RTD1619 SoC and Realtek Mjolnir
+* Add uart1 and uart2 device node into rtd16xx.dtsi
+* move cpus node and the interrupt-affinity into rtd16xx.dtsi
+* Specify the r-bus ranges
 
-One day, I'll manage that...
+James Tai (2):
+  dt-bindings: arm: realtek: Document RTD1619 and Realtek Mjolnir EVB
+  arm64: dts: Initial RTD1619 SoC and Realtek Mjolnir EVB support
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+ .../devicetree/bindings/arm/realtek.yaml      |   6 +
+ arch/arm64/boot/dts/realtek/Makefile          |   2 +
+ .../boot/dts/realtek/rtd1619-mjolnir.dts      |  40 +++++
+ arch/arm64/boot/dts/realtek/rtd1619.dtsi      |  12 ++
+ arch/arm64/boot/dts/realtek/rtd16xx.dtsi      | 154 ++++++++++++++++++
+ 5 files changed, 214 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1619.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+
+--
+2.17.1
+
