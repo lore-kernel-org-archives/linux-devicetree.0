@@ -2,145 +2,172 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F88FC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6527FC6196
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3517C222C6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215167;
-	bh=Q4mGNBQr66Q94q9GgnenfCd+MuSvKRlgye09kJ8YuMQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wo1aRuAU/5AAasL7r8RRkRN7+1B4on6pGf4x6r8ABixzfokNmmdLS5ESDdCObAl6z
-	 GTneh6WiCTVxU7Xc7PyiSK2qSJO/9yB3qlSsk13eexP03WYJVV7IP8zrVo6Dsi2+yS
-	 3rGFHMAf9RXzPM2wFfVyiQQp5LMO6nq1O6L4nStA=
+	by mail.kernel.org (Postfix) with ESMTP id 7CF5121848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:13:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="fySMvovR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390884AbfKHMMl (ORCPT
+        id S1732607AbfKHMNZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:12:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732771AbfKHLil (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:41 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 655E421D6C;
-        Fri,  8 Nov 2019 11:38:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213121;
-        bh=Q4mGNBQr66Q94q9GgnenfCd+MuSvKRlgye09kJ8YuMQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IlPVRw/hJOxJNi5OclxYXM1GMNU30Y7f6Oq3eXWL8UmxrUv8k4Dbjp9l1KJdO67sW
-         jRb++jGVc0wbBx446EMctI3Ea9ktvcMDPYi99Ju5O6rPUO4lpwE7REIWsB3eYKh6Ln
-         qiBXi0dCDyL3V3Nqjev+k7V9htNh+3ZWYDrBcTqo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 040/205] ARM: dts: exynos: Use i2c-gpio for HDMI-DDC on Arndale
-Date:   Fri,  8 Nov 2019 06:35:07 -0500
-Message-Id: <20191108113752.12502-40-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
-References: <20191108113752.12502-1-sashal@kernel.org>
+        Fri, 8 Nov 2019 07:13:25 -0500
+Received: from mail-eopbgr1400103.outbound.protection.outlook.com ([40.107.140.103]:27067
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387738AbfKHMNY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 07:13:24 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E+NUd0xwk/qeLYGLX98r7HHG9XieoHqG1I/bSccunVyPl9fq7fGTOvoXW74FNvaR7KLcCA9pjnviJCsSA0LNROpDAqDw1Mwy6lYRNMsIZBi/doU41fKQ0Qj8pRT+AsRLMtAiiUxJkzTQH+upqAyUM+etTWF71Wv11kphDBDrH5wc+lvFYqmnU6JPj9XdnaJ1370G4Wof96hBI+23rI8UHnH9+iQ16mLloXlnsz7H/KatN45mlqBCHZy67yCI9O1+wujPDZswOH1Gp3Nz79rFDEXG1RIJDiY/Eb+Ms6nefAd2TIvSSppd/MRLourey8I0TuLjrdiyfMNO2kfdxUUmsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yn0OhmUTiyWlTNGR7Ad3vhBuRXQSBmEDq8cXlFIeUQk=;
+ b=dzWuGbRQr7v7Xrq3ZIGryacKJQVxkO/QOEUU1pjQSFR4PPCWOKnViV3Bc9QF28RqghOzjQh1+9YhQus9cmxJYngE3utKcBcj6Tsg4mInDTcfxqDQuLdHYHmkjlMer2mag8wQKqHoqY3YDtbLt3ZHEh++WlXytUKWkH8CbyC9tdUQyO3vzGJehv5uXBz4St9IM3sF6tY5ecnI+n4s55DyhGdlDdYHx6ErQXRpRyctsceWzKb0lvINwpwe9ToB+z6DlCbJmkcDEaey3sGZJSnzsv6wvnRUz0mE2X+M9d7RDBwC+lK0opcceHogaWIt/YZv+FnANCUwK+CrQFP7jgbN+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yn0OhmUTiyWlTNGR7Ad3vhBuRXQSBmEDq8cXlFIeUQk=;
+ b=fySMvovRqIqlsTOqtB3lCA6kQ9L886LWbeA6KrFjnnOuO6e7egQRI2scsfpwnrgRe9Vdlc/nQwzuZIjuINSLXSzjM+wXVOc7locYGYicPTYK1c6IJ64NlwKvRWcZxHFY47vtQYWqAlfYpUkZSmpdRwRFVzl8od/glZ3RJ0ppElQ=
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
+ TY1PR01MB1675.jpnprd01.prod.outlook.com (52.133.163.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Fri, 8 Nov 2019 12:13:21 +0000
+Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::18df:cd2b:3b80:f287]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
+ ([fe80::18df:cd2b:3b80:f287%7]) with mapi id 15.20.2430.023; Fri, 8 Nov 2019
+ 12:13:21 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Peter Rosin <peda@axentia.se>
+Subject: RE: [PATCH 1/4] drm/bridge: Repurpose lvds-encoder.c
+Thread-Topic: [PATCH 1/4] drm/bridge: Repurpose lvds-encoder.c
+Thread-Index: AQHVjygQz2Y+psEDEE+CHimQYeCp+qd6w0qAgAAWDsCABjPkAIAALmwA
+Date:   Fri, 8 Nov 2019 12:13:20 +0000
+Message-ID: <TY1PR01MB1770177F163134D477EFE9E0C07B0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1572443014-17335-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1572443014-17335-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <870bea7e-5e5d-c0ba-2f5d-ebd0fd493c7e@baylibre.com>
+ <TY1PR01MB1770C9189BE24444BECCDC28C07F0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <CAMuHMdXr00yvtdOkZ9JW2EZwWmT_hBiomvnU_sbCE9MyBKs8uA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXr00yvtdOkZ9JW2EZwWmT_hBiomvnU_sbCE9MyBKs8uA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2909aa0e-5b4b-4b9e-b77f-08d764450be2
+x-ms-traffictypediagnostic: TY1PR01MB1675:|TY1PR01MB1675:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY1PR01MB167574E13252EBC2988F09D1C07B0@TY1PR01MB1675.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1227;
+x-forefront-prvs: 0215D7173F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(199004)(189003)(11346002)(66476007)(66556008)(64756008)(7696005)(26005)(99286004)(76116006)(66946007)(6506007)(5660300002)(3846002)(7736002)(305945005)(6246003)(186003)(102836004)(316002)(53546011)(66446008)(478600001)(71200400001)(6116002)(25786009)(71190400001)(14444005)(55016002)(256004)(6436002)(8676002)(74316002)(52536014)(229853002)(76176011)(446003)(86362001)(66066001)(476003)(44832011)(81166006)(8936002)(6916009)(486006)(14454004)(9686003)(54906003)(2906002)(81156014)(7416002)(4326008)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1675;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iXJ20JnrRnTR9vq1D5XmZItGRlqQXfpiQw3vGEdvQc9TIGM5lfHv1mlXIs6xjo1PYoeM9/l4v2SQxCYK0+rPqpvieaEIX95H0oCcJN6TtIwMyjPXnhz+C4bbZj2STeaFZlHX5jD80GLbInbI1d79CkPxWDcPYesw4SBDdHbw9aDJmkXXuYrosauLUI874ml7vyCEAqQ0nDB+02VPtlq60zHRjUDLEvB84x56aPDLj3ai1LEkJVS7qiFC2FQ5vWm+/1EEHm7NZ3Ch48s7xc9oCApqHjh5cGY+oeG25Zu/XDxrgp2PnmuoJBr5niU1Pe+ifcP/zaKSwH1feNnXy3VwgyAy4P8jPG8Is3KL01PjNIXamlkmy8PrMmBklhmUas09VpXF6pBTpdsLhuH22j/FsJu49nsr9B2zRCPEt/CYNHbvngQRIj7qtLTXk2mQzwaO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2909aa0e-5b4b-4b9e-b77f-08d764450be2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2019 12:13:20.9945
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kE2puSfHYuMj2HE87rp5pHiJ/5+AWRAwD+jOjf+OwO2gRJSGjmx8Bx/R/j4wQI5qkW64FVp/xgMoSsyq6lCFdueRdMVHoR9Z5e4+BkPr390=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1675
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrzej Hajda <a.hajda@samsung.com>
-
-[ Upstream commit 620375c8fdf2f9f5110ed48d6c407cc4b7554f86 ]
-
-HDMI-DDC for unknown reasons doesn't work with Exynos I2C controllers.
-Fortunately i2c-gpio comes to the rescue.
-
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/exynos5250-arndale.dts  | 28 ++++++++++++++++-------
- arch/arm/boot/dts/exynos5250-pinctrl.dtsi |  6 +++++
- 2 files changed, 26 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 7a8a5c55701a8..bb3fcd652b5d7 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -150,7 +150,7 @@
- 
- &hdmi {
- 	status = "okay";
--	ddc = <&i2c_2>;
-+	ddc = <&i2c_ddc>;
- 	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_LOW>;
- 	vdd_osc-supply = <&ldo10_reg>;
- 	vdd_pll-supply = <&ldo8_reg>;
-@@ -452,13 +452,6 @@
- 	};
- };
- 
--&i2c_2 {
--	status = "okay";
--	/* used by HDMI DDC */
--	samsung,i2c-sda-delay = <100>;
--	samsung,i2c-max-bus-freq = <66000>;
--};
--
- &i2c_3 {
- 	status = "okay";
- 
-@@ -547,3 +540,22 @@
- 	status = "okay";
- 	samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
- };
-+
-+&soc {
-+	/*
-+	 * For unknown reasons HDMI-DDC does not work with Exynos I2C
-+	 * controllers. Lets use software I2C over GPIO pins as a workaround.
-+	 */
-+	i2c_ddc: i2c-gpio {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2_gpio_bus>;
-+		status = "okay";
-+		compatible = "i2c-gpio";
-+		gpios = <&gpa0 6 0 /* sda */
-+			 &gpa0 7 0 /* scl */
-+			>;
-+		i2c-gpio,delay-us = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-index 6ff6dea29d449..b25d520393b8b 100644
---- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-@@ -225,6 +225,12 @@
- 		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
- 	};
- 
-+	i2c2_gpio_bus: i2c2-gpio-bus {
-+		samsung,pins = "gpa0-6", "gpa0-7";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+	};
-+
- 	uart2_data: uart2-data {
- 		samsung,pins = "gpa1-0", "gpa1-1";
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
--- 
-2.20.1
-
+SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBHZWVy
+dCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAwOCBOb3ZlbWJl
+ciAyMDE5IDA5OjIxDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS80XSBkcm0vYnJpZGdlOiBSZXB1
+cnBvc2UgbHZkcy1lbmNvZGVyLmMNCj4gDQo+IEhpIEZhYnJpemlvLA0KPiANCj4gT24gTW9uLCBO
+b3YgNCwgMjAxOSBhdCAxMTo0MiBBTSBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ry
+b0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gPiBGcm9tOiBOZWlsIEFybXN0cm9uZyA8bmFy
+bXN0cm9uZ0BiYXlsaWJyZS5jb20+DQo+ID4gPiBTZW50OiAwNCBOb3ZlbWJlciAyMDE5IDA5OjE4
+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvNF0gZHJtL2JyaWRnZTogUmVwdXJwb3NlIGx2
+ZHMtZW5jb2Rlci5jDQo+ID4gPg0KPiA+ID4gT24gMzAvMTAvMjAxOSAxNDo0MywgRmFicml6aW8g
+Q2FzdHJvIHdyb3RlOg0KPiA+ID4gPiBsdmRzLWVuY29kZXIuYyBpbXBsZW1lbnRhdGlvbiBpcyBh
+bHNvIHN1aXRhYmxlIGZvciBMVkRTIGRlY29kZXJzLA0KPiA+ID4gPiBub3QganVzdCBMVkRTIGVu
+Y29kZXJzLg0KPiA+ID4gPiBJbnN0ZWFkIG9mIGNyZWF0aW5nIGEgbmV3IGRyaXZlciBmb3IgYWRk
+cmVzc2luZyBzdXBwb3J0IGZvcg0KPiA+ID4gPiB0cmFuc3BhcmVudCBMVkRTIGRlY29kZXJzLCBy
+ZXB1cnBvc2UgbHZkcy1lbmNvZGVyLmMgZm9yIHRoZSBncmVhdGVyDQo+ID4gPiA+IGdvb2QuDQo+
+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8u
+Y2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgfCAgIDggKy0NCj4gPiA+ID4gIGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgfCAgIDIgKy0NCj4gPiA+ID4gIGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvbHZkcy1jb2RlYy5jICAgfCAxNjkgKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKw0KPiA+ID4gPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWVuY29kZXIu
+YyB8IDE1NSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gPiA+ICA0IGZpbGVz
+IGNoYW5nZWQsIDE3NCBpbnNlcnRpb25zKCspLCAxNjAgZGVsZXRpb25zKC0pDQo+ID4gPiA+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9sdmRzLWNvZGVjLmMNCj4g
+PiA+ID4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2x2ZHMtZW5j
+b2Rlci5jDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcNCj4gPiA+ID4gaW5k
+ZXggMzQzNjI5Ny4uOWU3NWNhNGUgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2UvS2NvbmZpZw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tj
+b25maWcNCj4gPiA+ID4gQEAgLTQ1LDE0ICs0NSwxNCBAQCBjb25maWcgRFJNX0RVTUJfVkdBX0RB
+Qw0KPiA+ID4gPiAgICAgICBTdXBwb3J0IGZvciBub24tcHJvZ3JhbW1hYmxlIFJHQiB0byBWR0Eg
+REFDIGJyaWRnZXMsIHN1Y2ggYXMgQURJDQo+ID4gPiA+ICAgICAgIEFEVjcxMjMsIFRJIFRIUzgx
+MzQgYW5kIFRIUzgxMzUgb3IgcGFzc2l2ZSByZXNpc3RvciBsYWRkZXIgREFDcy4NCj4gPiA+ID4N
+Cj4gPiA+ID4gLWNvbmZpZyBEUk1fTFZEU19FTkNPREVSDQo+ID4gPiA+IC0gICB0cmlzdGF0ZSAi
+VHJhbnNwYXJlbnQgcGFyYWxsZWwgdG8gTFZEUyBlbmNvZGVyIHN1cHBvcnQiDQo+ID4gPiA+ICtj
+b25maWcgRFJNX0xWRFNfQ09ERUMNCj4gPiA+DQo+ID4gPg0KPiA+ID4gSSdtIG5vdCBDQ2VkIG9u
+IG90aGVyIHBhdGNoZXMsIGJ1dCBJJ20gcHJldHR5IHN1cmUgeW91IHNob3VsZCBmaXggb3RoZXIN
+Cj4gPiA+IEtjb25maWcgYW5kIGRlZmNvbmZpZ3Mgc2VsZWN0aW5nIHRoaXMgY29uZmlnIGluIHRo
+aXMgcGF0Y2ggdG8gYXZvaWQgYnJlYWtpbmcgYmlzZWN0Lg0KPiA+DQo+ID4gTXkgdW5kZXJzdGFu
+ZGluZyBpcyB0aGF0IG5vIGRlZmNvbmZpZyBhbmQgbm8gb3RoZXIgb3B0aW9uIHJlZmVyIGRpcmVj
+dGx5IHRvIERSTV9MVkRTX0VOQ09ERVIsIGRvIHlvdSBtaW5kIGJlaW5nIGEgbGl0dGxlIGJpdA0K
+PiBtb3JlIHNwZWNpZmljIGhlcmU/DQo+IA0KPiBTaWRlbm90ZTogaXQgbG9va3MgbGlrZSBDT05G
+SUdfRFJNX0xWRFNfRU5DT0RFUiBzaG91bGQgaGF2ZSBiZWVuIGVuYWJsZWQNCj4gaW4gc2htb2Jp
+bGVfZGVmY29uZmlnIHNpbmNlIGNvbW1pdHMgMzgxZGRmZTQ3ODg3MTU4OCAoImRybTogcmNhci1k
+dToNCj4gSGFyZGNvZGUgZW5jb2RlcnMgdHlwZXMgdG8gRFJNX01PREVfRU5DT0RFUl9OT05FIikg
+YW5kIDcxNjBkNTdiNmY4MTE4NWMNCj4gKCJkcm06IGJyaWRnZTogbHZkcy1lbmNvZGVyOiBBZGQg
+dGhpbmUsdGhjNjNsdmRtODNkIGNvbXBhdGlibGUgc3RyaW5nIiksDQo+IHRvIHN1cHBvcnQgdGhp
+bmUsdGhjNjNsdmRtODNkIGluIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NzktbWFyemVuLmR0cz8N
+Cg0KSW50ZXJlc3RpbmcsIHdlbGwgdGhlIGRlZmNvbmZpZyBwYXRjaCBmcm9tIHRoaXMgc2VyaWVz
+IHNob3VsZCBoZWxwIHRoZW4uDQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiBHcntvZXRqZSxlZXRp
+bmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBH
+ZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0t
+IGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdp
+dGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4g
+SSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29t
+ZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBM
+aW51cyBUb3J2YWxkcw0K
