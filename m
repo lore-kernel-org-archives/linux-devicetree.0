@@ -2,109 +2,99 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C09C17440
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 23:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FC6C17440
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 23:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B4F2178F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 23:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g4c+EHEm"
+	by mail.kernel.org (Postfix) with ESMTP id B7132215EA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 23:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573256780;
+	bh=DVj4e+5dUvj9CfxICEqKu/slf5ah4O7Xbig8CEBOmbA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZIQul2XjyYZKxvqAb5LkZjXU7iYNobvK9J1dhwGhrOBHfT8H/r/hwUgcSa3EiFHrR
+	 /Zn+juaXlmvoA3es1RGTt9OXorrIYLcW/jn5TV+YGSORZh7LhaSi021dxXf4ELCIGC
+	 po6Rv+SYKhB3BiaFiwPQT2e1VqM8BnEN4igkcTnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfKHXiX (ORCPT
+        id S1730083AbfKHXqU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 18:38:23 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34821 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfKHXiX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 18:38:23 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r7so7949318ljg.2;
-        Fri, 08 Nov 2019 15:38:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7g5vTbYZHmeYxWc2Gp9Pqp9iJ2yMYEuiir3i4U6QyGc=;
-        b=g4c+EHEmb/zwM04L6VsDL30KBvGNvRnetX4OgsnUMzeSIvfsNNMpr7R04r1t36mD1g
-         9N1m/Zxmz0XL4qs1HL0kX9pb93U58ukQJP0DOpUqVsSj8z+XhQ0K1I3NzRuQSX/Xly41
-         m0SRo/ziYu2HH+QVrBiQAj2HXcgyCOQMsbnr/dEg6BqOxBMiHQTxohH10+5PANOlmaoQ
-         Tl9TvVkcHRxwnCh3TW0Vnd5nB8sDfxpwqAa9ImpAL8ANI8tsp/axNPL4rQZZ0bogO231
-         c8vhCOauNTFoeu/q2r5NsyQNJBMc9U1ywy5Nt+reRVSwvIfee+ONnXutViIQR48cU2HG
-         /fDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7g5vTbYZHmeYxWc2Gp9Pqp9iJ2yMYEuiir3i4U6QyGc=;
-        b=ayX8AKH753WRo4COxGRoPSlSNmRK3BjEkr4XRNTLPc6m84WeQ1BC9GeRf1YsjHlG2T
-         PstL5nTdKcoQMe6BEan/eD0kmvoTEbMj31m4aa1+1/vV+nC0/F74swJFjI26x8irnmFB
-         mtIPBuobasgkt9ytlf7mxhFKv8PE0We39DeTfOAzvatPdC1sJK8egKTP+yrMSOkUtPSx
-         eQ7chU1YtdHNyRsNpXwLoDYA26mGU7goW7RgmSoFMWkmMZ1ATiFRPD0AyYqdcKG69Zv+
-         gJ8IzrCjdFGT5LkaW/7+ThfOz/SLv5GvecC0GI8djMqWEL14E0SLXUJA9SkybWE73HSH
-         EsoA==
-X-Gm-Message-State: APjAAAVkv0ybh1VoGEKqVOZ4Opj+GuMA/8i7ki6cadCSnRg2TiVa+tYv
-        VsHi3A2vaO53964vml/RrXk5UL4s
-X-Google-Smtp-Source: APXvYqxaj9XZxFaWcLquzKkYuOY6emBFDT9DQB76RUhm8CVhIxzy0iJ36Ofx4pSQCHKNBl6ONxjr1g==
-X-Received: by 2002:a2e:b0f6:: with SMTP id h22mr8250988ljl.171.1573256300397;
-        Fri, 08 Nov 2019 15:38:20 -0800 (PST)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id n21sm3053273ljc.67.2019.11.08.15.38.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Nov 2019 15:38:19 -0800 (PST)
-Subject: Re: [PATCH v9 11/22] clk: tegra: clk-dfll: Add suspend and resume
- support
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        jason@lakedaemon.net, jonathanh@nvidia.com,
-        linus.walleij@linaro.org, marc.zyngier@arm.com,
-        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
-        thierry.reding@gmail.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
- <1565984527-5272-12-git-send-email-skomatineni@nvidia.com>
- <20191108212015.07BC720869@mail.kernel.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f644adda-dc6b-9b7e-3fc2-94091a38c99a@gmail.com>
-Date:   Sat, 9 Nov 2019 02:38:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 8 Nov 2019 18:46:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726640AbfKHXqT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 18:46:19 -0500
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3CB52178F;
+        Fri,  8 Nov 2019 23:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573256778;
+        bh=DVj4e+5dUvj9CfxICEqKu/slf5ah4O7Xbig8CEBOmbA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2Q08bsrwaIq1CxO+JYAxaR0HUa1jeyfp5ofNTHcm+BRf6M0SaPGm9MLqCgX8L/zg7
+         k6LruowSA87rOvg93jts7y6yRTyYov/GR2hmgCxVhvcGodHBjXjbxcd1poMHZnG5Ip
+         zvpJxMCBbqxeaym7O2RcZ7uxqJ0l9Bp+/oIEp4Ys=
+Received: by mail-qv1-f47.google.com with SMTP id cg2so2903043qvb.10;
+        Fri, 08 Nov 2019 15:46:18 -0800 (PST)
+X-Gm-Message-State: APjAAAXMrZQKQ2Jm+6+cMQuAI+93YTu/7a6xD+tlVD3wRqtVQs5LZhFX
+        dbrFUEYSfhBHj1DMydR12ANqjrp/6nocAlZPgA==
+X-Google-Smtp-Source: APXvYqxK4HOtNnah0NRINiwTwCR12VgWOScEENJQK+B+kNIZk+sXgNhwk2CFPqmGQZ4pNC4OirtSwuoSGI2+NgYHZ+Q=
+X-Received: by 2002:ad4:43e9:: with SMTP id f9mr12596446qvu.66.1573256777935;
+ Fri, 08 Nov 2019 15:46:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191108212015.07BC720869@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-9-rnayak@codeaurora.org>
+ <20191106165632.GA15103@bogus> <3302bde7-2299-476e-e3cc-35c84a459d63@codeaurora.org>
+In-Reply-To: <3302bde7-2299-476e-e3cc-35c84a459d63@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 8 Nov 2019 17:46:06 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+iO8mFZDPCGBA+yhuwdSxKq6AJk2cHZK4QDB7VA3gWUw@mail.gmail.com>
+Message-ID: <CAL_Jsq+iO8mFZDPCGBA+yhuwdSxKq6AJk2cHZK4QDB7VA3gWUw@mail.gmail.com>
+Subject: Re: [PATCH v4 08/14] dt-bindings: qcom,pdc: Add compatible for sc7180
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-09.11.2019 00:20, Stephen Boyd пишет:
-> Quoting Sowjanya Komatineni (2019-08-16 12:41:56)
->> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
->> index f8688c2ddf1a..c051d92c2bbf 100644
->> --- a/drivers/clk/tegra/clk-dfll.c
->> +++ b/drivers/clk/tegra/clk-dfll.c
->> @@ -1487,6 +1487,7 @@ static int dfll_init(struct tegra_dfll *td)
->>         td->last_unrounded_rate = 0;
->>  
->>         pm_runtime_enable(td->dev);
->> +       pm_runtime_irq_safe(td->dev);
-> 
-> Why irq_safe? It would be good to mention it in the commit text or
-> something.
+On Wed, Nov 6, 2019 at 11:46 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+>
+>
+> On 11/6/2019 10:26 PM, Rob Herring wrote:
+> > On Wed,  6 Nov 2019 12:20:11 +0530, Rajendra Nayak wrote:
+> >> Add the compatible string for sc7180 SoC from Qualcomm.
+> >>
+> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> >> Cc: Lina Iyer <ilina@codeaurora.org>
+> >> Cc: Marc Zyngier <maz@kernel.org>
+> >> ---
+> >>   .../devicetree/bindings/interrupt-controller/qcom,pdc.txt      | 3 ++-
+> >>   1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> >
+> > If a tag was not added on purpose, please state why and what changed.
+>
+> Sorry I missed mentioning the delta and the reason for not including your Acked-by.
+> The previous patch was proposing using just a SoC specific compatible, and this
+> one adds a SoC independent one along with the SoC specific one as discussed here [1]
 
-That's a good catch. It was somewhat relevant for some older version of
-this patch, but should be irrelevant now.
+Okay.
 
-[snip]
+Reviewed-by: Rob Herring <robh@kernel.org>
