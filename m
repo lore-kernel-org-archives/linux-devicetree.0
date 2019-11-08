@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D971CFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EB6C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67B92085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D32D2085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214625;
-	bh=ITiLQa7PhFYebKtxc6Fl3GvTzg0Y6H8CyAE5H5v51fg=;
+	s=default; t=1573214638;
+	bh=3R1O+2sefDUBuO2KrxNRutCSxBn0BF/KyQKfUA/8QQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EnONu55Ci9VtNS0EQORfleLSyPgqQpzVDp0dlo01mvkwcXQgJucxTrqVkmgPmkubq
-	 /FB224nwayfvyHud5s0/NHWAuUz7aCt300bc2ShcxeWD8+j3Vy3QBLh/r4LCt4DL49
-	 JPCLm5mKvwIG10Da1o25LwIZivGbZQlDWgZeuJrA=
+	b=OoT1vTB72rZeW/rsyOxs0dp4jpiwl94bQAyx48LSkvgbG+9RchWhiHb8gpogYCsR7
+	 +1AjJtLr1GVrF5kge6s9PRkx3GZARVvK4FggD3YrpD7s11klIgcDCPqzgwJ6yvvcU6
+	 r0QFlo2G31DvpZu4zTlCh8YAjQzAw7tX9yV1MbB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732734AbfKHMDk (ORCPT
+        id S2387835AbfKHMDx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:03:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56632 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:03:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390057AbfKHLmg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:36 -0500
+        id S2390040AbfKHLme (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E18E222C4;
-        Fri,  8 Nov 2019 11:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E93222C5;
+        Fri,  8 Nov 2019 11:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213355;
-        bh=ITiLQa7PhFYebKtxc6Fl3GvTzg0Y6H8CyAE5H5v51fg=;
+        s=default; t=1573213353;
+        bh=3R1O+2sefDUBuO2KrxNRutCSxBn0BF/KyQKfUA/8QQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lwm2Rqkn5RfLXYUu7Zv9+THrcc6xfEhiSaobpBIVyW3aw0MFnB7rv3j9hPqmwdGAc
-         vL9vpSJhkaQmo3pS+IUdID6XljiHFLEleFdaaL0G2ii3cvUCp86k/xuvIeMxhRGxHl
-         bnzDisgbYqjJ/kw3WZpHp+8Ynqk+rrrcyMTo8KsI=
+        b=h+t6PNKaSH0k4ywBttqLBwyLX9XJPN8ubG3z+zPROr1GK3oHOZEarrRIA4jfWxu3/
+         FQViyZiw6tHGkRMsEWBxZnxCD3M2sp/T9LCEj2X8CturUvT4E+RHPrJRL+w0iUyx+K
+         wdy1p6SNqy7jGSjbb2tXHhjRXFDJCvaO7M+/yGt0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Rob Herring <robh@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 186/205] ARM: dts: sun9i: Fix I2C bus warnings
-Date:   Fri,  8 Nov 2019 06:37:33 -0500
-Message-Id: <20191108113752.12502-186-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 184/205] ARM: dts: sunxi: Fix I2C bus warnings
+Date:   Fri,  8 Nov 2019 06:37:31 -0500
+Message-Id: <20191108113752.12502-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -62,16 +62,23 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 57a83c5222c1b5e7b3acc72c6e60fce00a38991a ]
+[ Upstream commit 0729b4af5753b65aa031f58c435da53dbbf56d19 ]
 
-dtc has new checks for I2C buses. The sun9i-a80 dts file has a node named
-'i2c' which causes a false positive warning. As the node is a RSB bus,
-correct the node name to be 'rsb' to fix the warnings.
+dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
 
-arch/arm/boot/dts/sun9i-a80-cubieboard4.dtb: Warning (i2c_bus_reg): /soc/i2c@8003400/codec@e89:reg: I2C address must be less than 10-bits, got "0xe89"
-arch/arm/boot/dts/sun9i-a80-cubieboard4.dtb: Warning (i2c_bus_reg): /soc/i2c@8003400/pmic@745:reg: I2C address must be less than 10-bits, got "0x745"
-arch/arm/boot/dts/sun9i-a80-optimus.dtb: Warning (i2c_bus_reg): /soc/i2c@8003400/codec@e89:reg: I2C address must be less than 10-bits, got "0xe89"
-arch/arm/boot/dts/sun9i-a80-optimus.dtb: Warning (i2c_bus_reg): /soc/i2c@8003400/pmic@745:reg: I2C address must be less than 10-bits, got "0x745"
+arch/arm/boot/dts/sun8i-a23-gt90h-v4.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2ac00/touchscreen@0: I2C bus unit address format error, expected "40"
+arch/arm/boot/dts/sun8i-a23-inet86dz.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2ac00/touchscreen@0: I2C bus unit address format error, expected "40"
+arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2ac00/touchscreen@0: I2C bus unit address format error, expected "40"
+arch/arm/boot/dts/sun8i-a23-polaroid-mid2809pxe04.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2ac00/touchscreen@0: I2C bus unit address format error, expected "40"
+arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2ac00/touchscreen@0: I2C bus unit address format error, expected "40"
+arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2ac00/touchscreen@0: missing or empty reg property
+arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2ac00/touchscreen@0: missing or empty reg property
+arch/arm/boot/dts/sun8i-a33-q8-tablet.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2ac00/touchscreen@0: missing or empty reg property
+arch/arm/boot/dts/sun5i-a13-utoo-p66.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2b000/touchscreen: I2C bus unit address format error, expected "40"
+arch/arm/boot/dts/sun5i-a13-difrnce-dit4350.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2b000/touchscreen: missing or empty reg property
+arch/arm/boot/dts/sun5i-a13-empire-electronix-m712.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2b000/touchscreen: missing or empty reg property
+arch/arm/boot/dts/sun5i-a13-inet-98v-rev2.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2b000/touchscreen: missing or empty reg property
+arch/arm/boot/dts/sun5i-a13-q8-tablet.dtb: Warning (i2c_bus_reg): /soc@1c00000/i2c@1c2b000/touchscreen: missing or empty reg property
 
 Cc: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Chen-Yu Tsai <wens@csie.org>
@@ -79,22 +86,52 @@ Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun9i-a80.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi | 3 ++-
+ arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi | 3 ++-
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts    | 2 +-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 25591d6883ef2..d9532fb1ef650 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -1196,7 +1196,7 @@
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+index 8acbaab14fe51..d2a2eb8b3f262 100644
+--- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
++++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+@@ -92,7 +92,8 @@
+ 	 */
+ 	clock-frequency = <400000>;
  
--		r_rsb: i2c@8003400 {
-+		r_rsb: rsb@8003400 {
- 			compatible = "allwinner,sun8i-a23-rsb";
- 			reg = <0x08003400 0x400>;
- 			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+-	touchscreen: touchscreen {
++	touchscreen: touchscreen@40 {
++		reg = <0x40>;
+ 		interrupt-parent = <&pio>;
+ 		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>; /* EINT11 (PG11) */
+ 		pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
+index 880096c7e2523..5e8a95af89b8c 100644
+--- a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
++++ b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
+@@ -69,7 +69,8 @@
+ 	 */
+ 	clock-frequency = <400000>;
+ 
+-	touchscreen: touchscreen@0 {
++	touchscreen: touchscreen@40 {
++		reg = <0x40>;
+ 		interrupt-parent = <&pio>;
+ 		interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
+ 		pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+index 35859d8f3267f..bf97f6244c233 100644
+--- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -95,7 +95,7 @@
+ &i2c0 {
+ 	status = "okay";
+ 
+-	axp22x: pmic@68 {
++	axp22x: pmic@34 {
+ 		compatible = "x-powers,axp221";
+ 		reg = <0x34>;
+ 		interrupt-parent = <&nmi_intc>;
 -- 
 2.20.1
 
