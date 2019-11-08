@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605ACFC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43379FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3A3206A3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4E720656
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215260;
-	bh=0ELM6zDJ08rmARJey1y7Zf1Nztqs6EAE8lZ79+tiF/U=;
+	s=default; t=1573215266;
+	bh=vFmPq7PNhXDOpLhB/RDsLsk5lYZk6ybGv47b1LMINsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9mG2A9+HZv8ibbFv4/ij7wCdgEK4+bsVAorhzpukjAKQdceugUFvhJdVGDe7ME0n
-	 Pu+ZyPeaSAgxXIJ+IqEqUztGJMMJmc32YHU/jKy8SK+2n7dM0Fmlpr2PgKyANDQ3m0
-	 7y8ghjnOVtntcHduwAnlvbXtLnT2bSOOERMO5BUQ=
+	b=nB1NORQMA2B0UV6wQHzq2FbRDc/mTvzKfMlFMna8RgQIY1dx1fRo+QFDpfWAaxzBo
+	 tUX+SD/TYOA4KEZhLacxJDg2znxwJu7+HGRScgTFBiHc0DeoWab02r6WMZzvi61qPv
+	 QZy4qRnP5jAd1/aG32x62ZZjS2M5PERltVCYa6PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732293AbfKHLiN (ORCPT
+        id S1732258AbfKHLiL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:38:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:38:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732259AbfKHLiM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:12 -0500
+        id S1732217AbfKHLiL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFEBC2245A;
-        Fri,  8 Nov 2019 11:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 959F220869;
+        Fri,  8 Nov 2019 11:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213091;
-        bh=0ELM6zDJ08rmARJey1y7Zf1Nztqs6EAE8lZ79+tiF/U=;
+        s=default; t=1573213090;
+        bh=vFmPq7PNhXDOpLhB/RDsLsk5lYZk6ybGv47b1LMINsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kh9T7ePP7rcN/MTHyaO2VplcaJW5wP18wAy80ikG+jCga6NEI1c3uX0Pmz13QJIev
-         FKeUFtCfBc++EjsFgOcuYLYueYMOdCZQWXmryKV/e0cgYKms98hLPD4LLKdDYS6Ss5
-         A9K8Sog9C0IBOA42TsHJ3ORMUywQ3bP315aqlyjU=
+        b=tgINtxYdzVMrAmHQxRLki+8aaTHqlPAO5qLAYjl3jiIq0NePqRYciVW2pOhWG1Ot0
+         Q90J+Safv3Zc724GEl/T4AXYil0TlV8AQfrymxoeQpDpt65ifKsqPit+mN7ziZF8PZ
+         VNfRQJWO4B3Snu5YNqqeQ43pL+PKfnFMvytPUIHk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jay Foster <jayfoster@ieee.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 016/205] ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
-Date:   Fri,  8 Nov 2019 06:34:43 -0500
-Message-Id: <20191108113752.12502-16-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 015/205] ARM: dts: rcar: Correct SATA device sizes to 2 MiB
+Date:   Fri,  8 Nov 2019 06:34:42 -0500
+Message-Id: <20191108113752.12502-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,33 +60,83 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jay Foster <jayfoster@ieee.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 10af10db8c76fa5b9bf1f52a895c1cb2c0ac24da ]
+[ Upstream commit 441f61e3aa9e7386731ce1405044d484bd81f911 ]
 
-Fix a typo. No functional change made by this patch.
+Update the SATA device nodes on R-Car H1, H2, and M2-W to use a 2 MiB
+I/O space, as specified in Rev.1.0 of the R-Car H1 and R-Car Gen2
+hardware user manuals.
 
-Signed-off-by: Jay Foster <jayfoster@ieee.org>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+See also commit e9f0089b2d8a3d45 ("arm64: dts: r8a7795: Correct SATA
+device size to 2MiB").
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 2 +-
+ arch/arm/boot/dts/r8a7790.dtsi | 4 ++--
+ arch/arm/boot/dts/r8a7791.dtsi | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 1ee25a475be87..d16db1fa7e15c 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -570,7 +570,7 @@
- 					};
- 				};
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index 6b997bc016ee8..03919714645ae 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -344,7 +344,7 @@
  
--				uart1 {
-+				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
- 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
+ 	sata: sata@fc600000 {
+ 		compatible = "renesas,sata-r8a7779", "renesas,rcar-sata";
+-		reg = <0xfc600000 0x2000>;
++		reg = <0xfc600000 0x200000>;
+ 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7779_CLK_SATA>;
+ 		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 0925bdca438fe..52a757f47bf08 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1559,7 +1559,7 @@
+ 		sata0: sata@ee300000 {
+ 			compatible = "renesas,sata-r8a7790",
+ 				     "renesas,rcar-gen2-sata";
+-			reg = <0 0xee300000 0 0x2000>;
++			reg = <0 0xee300000 0 0x200000>;
+ 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 815>;
+ 			power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
+@@ -1570,7 +1570,7 @@
+ 		sata1: sata@ee500000 {
+ 			compatible = "renesas,sata-r8a7790",
+ 				     "renesas,rcar-gen2-sata";
+-			reg = <0 0xee500000 0 0x2000>;
++			reg = <0 0xee500000 0 0x200000>;
+ 			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 814>;
+ 			power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index 991ac6feedd5b..25b6a99dd87a2 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -1543,7 +1543,7 @@
+ 		sata0: sata@ee300000 {
+ 			compatible = "renesas,sata-r8a7791",
+ 				     "renesas,rcar-gen2-sata";
+-			reg = <0 0xee300000 0 0x2000>;
++			reg = <0 0xee300000 0 0x200000>;
+ 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 815>;
+ 			power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+@@ -1554,7 +1554,7 @@
+ 		sata1: sata@ee500000 {
+ 			compatible = "renesas,sata-r8a7791",
+ 				     "renesas,rcar-gen2-sata";
+-			reg = <0 0xee500000 0 0x2000>;
++			reg = <0 0xee500000 0 0x200000>;
+ 			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 814>;
+ 			power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
 -- 
 2.20.1
 
