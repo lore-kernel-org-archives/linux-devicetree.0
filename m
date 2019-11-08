@@ -2,231 +2,156 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE0CC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 00:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB63CC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 00:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789A520674
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 00:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BE12084D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 00:57:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IG/WqwKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbfKHAfJ (ORCPT
+        id S1726054AbfKHA5D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:35:09 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49881 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfKHAfJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 19:35:09 -0500
-Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 7b14bd24d1bbac4d; Fri, 8 Nov 2019 01:35:04 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thu, 7 Nov 2019 19:57:03 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34512 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfKHA5D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 19:57:03 -0500
+Received: by mail-pg1-f193.google.com with SMTP id e4so3050820pgs.1
+        for <devicetree@vger.kernel.org>; Thu, 07 Nov 2019 16:57:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=GYRc8Evk3wu8EUiuELp77RSTyUut+SJabJSgyybQCKc=;
+        b=IG/WqwKZ2wj070Ivn9cX57KoAHKqmal5mE3JH+W8mKSon9hw52loHkmdZbFDPSY2jQ
+         ys//zHpsG8iMG1uowgXBTGA6cMxirTsWQbwgo8PxEn2jzNTyxFLfM36y1EIle/CQRs+7
+         /KWVfR0o3Ux8s96ccSNEaM0VutEx10G0bdWYpi0I2p2daN3OI9L5FR5gX9kM5PI7ITtd
+         STXZXrQttfyRbiihP4ut0CDumS0MZn7lzPNLc0wTwX7PXm1yHkRzjqUttYkybqHkKawH
+         DR67xXkD9kukt9EXFs2jfpIxVTAYZkY7vkYf7EtJpSPf6OSJv+R5de6XfRc6woF0fc0J
+         244Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GYRc8Evk3wu8EUiuELp77RSTyUut+SJabJSgyybQCKc=;
+        b=d7ptrjIy26+hfwWq5g793xOiULs7jx0QaN8Mdtm9Bce8yfLDDvZ5fmQKTpHCDK1not
+         YpJs1f2Qdmosj1F3bL2RZAZ0DXaTLbS0ZlcBeaCePK7uc5uOpYkNXWzAeQUbAlzeBKKl
+         uZ555oVQKSOPEua9upORqndsjQ3n+u9vkhkxSWrfnVGJF+U3FyUrjtSxaPuMLgjHQNUM
+         swKJG1xJ+4Rjmj5s3xQAaX3gHL3PcQfX6XW1tlnQbpIcRvsVrcUBgQ0nh1x0Fg7t4gfc
+         DI8Q0PkrLb++yUKyYKW6JEtCMvv810jb/lmuln9L52GNCCoLiKqqWId7wbMYLLNOchDu
+         zgUw==
+X-Gm-Message-State: APjAAAUd/NARw0T0UgJ1HaDXbvm/PdUOBugCDXCQZORm8EWsQSRloiLf
+        Qd6v86GnSkbtG7ORpH2pjLNrNA==
+X-Google-Smtp-Source: APXvYqxPGuXcyQs3WEAMRMpy19Q/rGB2EPMqpq/E5qQg+lPEgnZi1NCqdVAh1vI3toPeT3a4iri5yA==
+X-Received: by 2002:a63:ae02:: with SMTP id q2mr8519964pgf.210.1573174622801;
+        Thu, 07 Nov 2019 16:57:02 -0800 (PST)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id j14sm3527477pje.17.2019.11.07.16.57.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 16:57:02 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to differentiate errors
-Date:   Fri, 08 Nov 2019 01:35:04 +0100
-Message-ID: <6671524.6K7l14UQst@kreacher>
-In-Reply-To: <CAGETcx-X938BxBeqYD8m8Wrx-hRaXk6EEeR4szh34CS5Sv7EgA@mail.gmail.com>
-References: <20191028220027.251605-1-saravanak@google.com> <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com> <CAGETcx-X938BxBeqYD8m8Wrx-hRaXk6EEeR4szh34CS5Sv7EgA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [RESEND][PATCH] dt-bindings: usb: rt1711h: Add connector bindings
+Date:   Fri,  8 Nov 2019 00:56:57 +0000
+Message-Id: <20191108005657.31464-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wednesday, November 6, 2019 1:00:18 AM CET Saravana Kannan wrote:
-> On Tue, Nov 5, 2019 at 3:07 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Tue, Nov 5, 2019 at 11:52 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > Thanks for the review.
-> > >
-> > > On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > >
-> > > > On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
-> > > > > When add_links() still has suppliers that it needs to link to in the
-> > > > > future, this patch allows it to differentiate between suppliers that are
-> > > > > needed for probing vs suppliers that are needed for sync_state()
-> > > > > correctness.
-> > > >
-> > > > I guess you mean that it will return different error codes in the different
-> > > > cases.
-> > >
-> > > Yes.
-> > >
-> > > >
-> > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > > ---
-> > > > >  drivers/base/core.c    | 12 ++++++++----
-> > > > >  include/linux/fwnode.h | 13 +++++++++----
-> > > > >  2 files changed, 17 insertions(+), 8 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > > > index 48cd43a91ce6..e6d3e6d485da 100644
-> > > > > --- a/drivers/base/core.c
-> > > > > +++ b/drivers/base/core.c
-> > > > > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
-> > > > >       struct device *parent;
-> > > > >       struct kobject *kobj;
-> > > > >       struct class_interface *class_intf;
-> > > > > -     int error = -EINVAL;
-> > > > > +     int error = -EINVAL, fw_ret;
-> > > > >       struct kobject *glue_dir = NULL;
-> > > > >
-> > > > >       dev = get_device(dev);
-> > > > > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
-> > > > >        */
-> > > > >       device_link_add_missing_supplier_links();
-> > > > >
-> > > > > -     if (fwnode_has_op(dev->fwnode, add_links)
-> > > > > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > > > > -             device_link_wait_for_mandatory_supplier(dev, true);
-> > > > > +     if (fwnode_has_op(dev->fwnode, add_links)) {
-> > > >
-> > > > fw_ret can be defined here and I'd just call it "ret".
-> > >
-> > > I thought that style of variable declaration is frowned up in the
-> > > kernel coding style.
-> >
-> > Well, I'm not aware of that. :-)
-> 
-> I've definitely seen such comments before. So I'll leave fw_ret as is.
-> If you and Greg both want to change it to the way you mentioned, I'm
-> happy to do it.
+Add connector binding documentation for Richtek RT1711H Type-C
+chip driver
 
-If this has been committed the way it is, there's not so much of a difference,
-but I generally like variables to not be seen out of the scope in which they
-are used, as that allows bugs to be caught at compile time sometimes.
+It was noted by Rob Herring that the rt1711h binding docs
+doesn't include the connector binding.
 
-> > > >
-> > > > > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > > > > +             if (fw_ret == -ENODEV)
-> > > > > +                     device_link_wait_for_mandatory_supplier(dev);
-> > > > > +             else if (fw_ret)
-> > > > > +                     device_link_wait_for_optional_supplier(dev);
-> > > > > +     }
-> > > > >
-> > > > >       bus_probe_device(dev);
-> > > > >       if (parent)
-> > > > > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> > > > > index 25bb81f8ded8..a19134eae5a5 100644
-> > > > > --- a/include/linux/fwnode.h
-> > > > > +++ b/include/linux/fwnode.h
-> > > > > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
-> > > > >   *           available suppliers.
-> > > > >   *
-> > > > >   *           Return 0 if device links have been successfully created to all
-> > > > > - *           the suppliers of this device or if the supplier information is
-> > > > > - *           not known. Return an error if and only if the supplier
-> > > > > - *           information is known but some of the suppliers are not yet
-> > > > > - *           available to create device links to.
-> > > > > + *           the suppliers this device needs to create device links to or if
-> > > > > + *           the supplier information is not known.
-> > > >
-> > > > "the known suppliers of this device or if the supplier information is not known."
-> > >
-> > > "suppliers it needs to create device links to" is a subset of known
-> > > suppliers. There's no requirement that fw needs to create links to ALL
-> > > known suppliers. Just a minor distinction.
-> >
-> > That depends on what exactly you mean by "known suppliers".  The
-> > suppliers that are not listed by the firmware are not known at this
-> > point.
-> 
-> Ok, I'll rephrase my comment:
-> "suppliers it needs to create device links to" is a subset of listed
-> suppliers. There's no requirement that fw needs to create links to ALL
-> listed suppliers. For example, I can't think of any reason for
-> sync_state() to be necessary for an interrupt controller driver.
+Thus this patch adds such documentation following the details
+in Documentation/devicetree/bindings/usb/typec-tcpci.txt
 
-A sync_state() may not be, but it may be a good idea to create device links
-to the controller device from all devices that rely on it, so as to ensure
-the right system suspend/resume ordering if nothing else.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+CC: ShuFan Lee <shufan_lee@richtek.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ .../bindings/usb/richtek,rt1711h.txt          | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-> So, fw doesn't need to create device links from consumer to interrupt
-> supplier. So I'm being more explicit and saying "the suppliers this
-> device needs to create device links to" instead of "the listed
-> suppliers of this device".
-
-This gives me the feeling of splitting hairs to be honest. :-)
-
-In fact, the FW indicates to the OS that there are some dependencies (either
-hard or soft) between devices and adding device links is a way to act on that
-information.
-
-The "device link" notion is not actually defined at the FW level.  What it
-knows about is a "probe dependency" or an "ordering constraint" which then
-is represented by a device link at the OS level.
-
-> Long story short, I wrote the comment this way intentionally and
-> changing it to what you suggest makes it inaccurate IMHO. But I'm open
-> to other wording suggestions to improve the clarity of this comment.
-
-My point basically is that the way you phrased it may lead to some confusion
-(regardless of whether or not it is intentional).
-
-> >
-> > > > > + *
-> > > > > + *           Return -ENODEV if and only if the suppliers needed for probing
-> > > > > + *           the device are not yet available to create device links to.
-> > > >
-> > > > It would be more precise to say something like this:
-> > > >
-> > > > "Return -ENODEV if an attempt to create a device link to one of the device's
-> > > > suppliers needed for probing it fails."
-> > >
-> > > "attempt to create a device link to one of the device's suppliers
-> > > needed for probing it fails" to me means device_link_add() fails.
-> > > But I'm trying to say that it should return an error if the struct
-> > > device isn't even there yet.
-> >
-> > OK, so it should be something like "if the supplier device has not
-> > been registered yet".
-> >
-> > My point is that "not yet available" is kind of ambiguous.
-> 
-> Agree, the latest suggestion sounds better.
-> 
-> > > > > + *
-> > > > > + *           Return -EAGAIN if there are suppliers that need to be linked to
-> > > > > + *           that are not yet available but none of those suppliers are
-> > > > > + *           necessary for probing this device.
-> > > >
-> > > > "Return -EAGAIN if attempts to create device links to some of the device's
-> > > > suppliers have failed, but those suppliers are not necessary for probing the
-> > > > device."
-> > >
-> > > Same comment as before. The distinction I'm making here is that
-> > > -EAGAIN is needed when the struct device itself isn't there.
-> > >
-> > > Btw, Greg already pulled these into driver-core-next. Let me know if
-> > > you want me to send a delta patch to fix any of these comments.
-> >
-> > Well, it's a Greg's call if he has taken the patches, but it also
-> > depends on you (if you agree with the comments, it would be prudent to
-> > send updates).
-> 
-> I don't mind sending updates at all. Just trying to make sure I follow
-> the maintainers' preference in case they don't want trivial (because
-> my current ones aren't terrible :)) comment update patches.
-
-If it can be improved, then improve it.  Worst case you can hear from the
-maintainers that they don't agree with the proposed changes.
-
-
+diff --git a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+index d4cf53c071d9..e3fc57e605ed 100644
+--- a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
++++ b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+@@ -6,10 +6,39 @@ Required properties:
+  - interrupts : <a b> where a is the interrupt number and b represents an
+    encoding of the sense and level information for the interrupt.
+ 
++Required sub-node:
++- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
++  of connector node are specified in
++  Documentation/devicetree/bindings/connector/usb-connector.txt
++
+ Example :
+ rt1711h@4e {
+ 	compatible = "richtek,rt1711h";
+ 	reg = <0x4e>;
+ 	interrupt-parent = <&gpio26>;
+ 	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		data-role = "dual";
++		power-role = "dual";
++		try-power-role = "sink";
++		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
++		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
++			     PDO_VAR(5000, 12000, 2000)>;
++		op-sink-microwatt = <10000000>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@1 {
++				reg = <1>;
++				usb_con_ss: endpoint {
++					remote-endpoint = <&usb3_data_ss>;
++				};
++			};
++		};
++	};
+ };
+-- 
+2.17.1
 
