@@ -2,85 +2,170 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057E9C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 00:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6B1C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 00:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7C6214DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 00:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342BA214DB
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 00:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfKHADb (ORCPT
+        id S1727428AbfKHAF7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 7 Nov 2019 19:03:31 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:49638 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfKHADR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 7 Nov 2019 19:03:17 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko.stuebner@theobroma-systems.com>)
-        id 1iSrk0-00065H-TQ; Fri, 08 Nov 2019 01:03:04 +0100
-From:   Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-To:     dri-devel@lists.freedesktop.org, a.hajda@samsung.com
-Cc:     hjc@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, philippe.cornu@st.com,
-        yannick.fertre@st.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        heiko@sntech.de, christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v2 2/5] dt-bindings: display: rockchip-dsi: document external phys
-Date:   Fri,  8 Nov 2019 01:02:50 +0100
-Message-Id: <20191108000253.8560-3-heiko.stuebner@theobroma-systems.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191108000253.8560-1-heiko.stuebner@theobroma-systems.com>
-References: <20191108000253.8560-1-heiko.stuebner@theobroma-systems.com>
+        Thu, 7 Nov 2019 19:05:59 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48637 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfKHAF7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Nov 2019 19:05:59 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 657f9753bd504601; Fri, 8 Nov 2019 01:05:55 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 2/5] driver core: Allow a device to wait on optional suppliers
+Date:   Fri, 08 Nov 2019 01:05:55 +0100
+Message-ID: <2876287.EbKXPN90gv@kreacher>
+In-Reply-To: <CAGETcx9KSwXgrc0PaWQtBuiET-0ts9HNgjzRcioewjqzjuQGSg@mail.gmail.com>
+References: <20191028220027.251605-1-saravanak@google.com> <1593797.btdyhENphq@kreacher> <CAGETcx9KSwXgrc0PaWQtBuiET-0ts9HNgjzRcioewjqzjuQGSg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some dw-mipi-dsi instances in Rockchip SoCs use external dphys.
-In these cases the needs clock will also be generated externally
-so these don't need the ref-clock as well.
+On Tuesday, November 5, 2019 11:35:28 PM CET Saravana Kannan wrote:
+> Looks like I squashed/rebased a bit incorrectly. It's fixed in the
+> next patch in the series.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- .../bindings/display/rockchip/dw_mipi_dsi_rockchip.txt     | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Well, that still is somewhat bisection-unfriendly.
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-index ce4c1fc9116c..1ba9237d0ac0 100644
---- a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-+++ b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-@@ -9,8 +9,9 @@ Required properties:
- - reg: Represent the physical address range of the controller.
- - interrupts: Represent the controller's interrupt to the CPU(s).
- - clocks, clock-names: Phandles to the controller's pll reference
--  clock(ref) and APB clock(pclk). For RK3399, a phy config clock
--  (phy_cfg) and a grf clock(grf) are required. As described in [1].
-+  clock(ref) when using an internal dphy and APB clock(pclk).
-+  For RK3399, a phy config clock (phy_cfg) and a grf clock(grf)
-+  are required. As described in [1].
- - rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
- - ports: contain a port node with endpoint definitions as defined in [2].
-   For vopb,set the reg = <0> and set the reg = <1> for vopl.
-@@ -18,6 +19,8 @@ Required properties:
- - video port 1 for either a panel or subsequent encoder
- 
- Optional properties:
-+- phys: from general PHY binding: the phandle for the PHY device.
-+- phy-names: Should be "dphy" if phys references an external phy.
- - power-domains: a phandle to mipi dsi power domain node.
- - resets: list of phandle + reset specifier pairs, as described in [3].
- - reset-names: string reset name, must be "apb".
--- 
-2.23.0
+> On Tue, Nov 5, 2019 at 2:29 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Monday, October 28, 2019 11:00:23 PM CET Saravana Kannan wrote:
+> > > Before this change, if a device is waiting on suppliers, it's assumed
+> > > that all those suppliers are needed for the device to probe
+> > > successfully. This change allows marking a devices as waiting only on
+> > > optional suppliers. This allows a device to wait on suppliers (and link
+> > > to them as soon as they are available) without preventing the device
+> > > from being probed.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/base/core.c    | 28 +++++++++++++++++++++++++---
+> > >  include/linux/device.h |  3 +++
+> > >  2 files changed, 28 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > index 17ed054c4132..48cd43a91ce6 100644
+> > > --- a/drivers/base/core.c
+> > > +++ b/drivers/base/core.c
+> > > @@ -480,13 +480,25 @@ EXPORT_SYMBOL_GPL(device_link_add);
+> > >   * This function is NOT meant to be called from the probe function of the
+> > >   * consumer but rather from code that creates/adds the consumer device.
+> > >   */
+> > > -static void device_link_wait_for_supplier(struct device *consumer)
+> > > +static void device_link_wait_for_supplier(struct device *consumer,
+> > > +                                       bool need_for_probe)
+> > >  {
+> > >       mutex_lock(&wfs_lock);
+> > >       list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
+> > > +     consumer->links.need_for_probe = need_for_probe;
+> > >       mutex_unlock(&wfs_lock);
+> > >  }
+> > >
+> > > +static void device_link_wait_for_mandatory_supplier(struct device *consumer)
+> > > +{
+> > > +     device_link_wait_for_supplier(consumer, true);
+> > > +}
+> > > +
+> > > +static void device_link_wait_for_optional_supplier(struct device *consumer)
+> > > +{
+> > > +     device_link_wait_for_supplier(consumer, false);
+> > > +}
+> > > +
+> > >  /**
+> > >   * device_link_add_missing_supplier_links - Add links from consumer devices to
+> > >   *                                       supplier devices, leaving any
+> > > @@ -656,7 +668,8 @@ int device_links_check_suppliers(struct device *dev)
+> > >        * probe.
+> > >        */
+> > >       mutex_lock(&wfs_lock);
+> > > -     if (!list_empty(&dev->links.needs_suppliers)) {
+> > > +     if (!list_empty(&dev->links.needs_suppliers) &&
+> > > +         dev->links.need_for_probe) {
+> > >               mutex_unlock(&wfs_lock);
+> > >               return -EPROBE_DEFER;
+> > >       }
+> > > @@ -760,6 +773,15 @@ void device_links_driver_bound(struct device *dev)
+> > >  {
+> > >       struct device_link *link;
+> > >
+> > > +     /*
+> > > +      * If a device probes successfully, it's expected to have created all
+> > > +      * the device links it needs to or make new device links as it needs
+> > > +      * them. So, it no longer needs to wait on any suppliers.
+> > > +      */
+> > > +     mutex_lock(&wfs_lock);
+> > > +     list_del_init(&dev->links.needs_suppliers);
+> > > +     mutex_unlock(&wfs_lock);
+> > > +
+> > >       device_links_write_lock();
+> > >
+> > >       list_for_each_entry(link, &dev->links.consumers, s_node) {
+> > > @@ -2393,7 +2415,7 @@ int device_add(struct device *dev)
+> > >
+> > >       if (fwnode_has_op(dev->fwnode, add_links)
+> > >           && fwnode_call_int_op(dev->fwnode, add_links, dev))
+> > > -             device_link_wait_for_supplier(dev);
+> > > +             device_link_wait_for_mandatory_supplier(dev, true);
+> >
+> > Does this compile even?
+> >
+> > The function takes one argument according to the definition above ...
+> >
+> > >       bus_probe_device(dev);
+> > >       if (parent)
+> > > diff --git a/include/linux/device.h b/include/linux/device.h
+> > > index f1f2aa0b19da..4fd33da9a848 100644
+> > > --- a/include/linux/device.h
+> > > +++ b/include/linux/device.h
+> > > @@ -1156,6 +1156,8 @@ enum dl_dev_state {
+> > >   * @consumers: List of links to consumer devices.
+> > >   * @needs_suppliers: Hook to global list of devices waiting for suppliers.
+> > >   * @defer_sync: Hook to global list of devices that have deferred sync_state.
+> > > + * @need_for_probe: If needs_suppliers is on a list, this indicates if the
+> > > + *               suppliers are needed for probe or not.
+> > >   * @status: Driver status information.
+> > >   */
+> > >  struct dev_links_info {
+> > > @@ -1163,6 +1165,7 @@ struct dev_links_info {
+> > >       struct list_head consumers;
+> > >       struct list_head needs_suppliers;
+> > >       struct list_head defer_sync;
+> > > +     bool need_for_probe;
+> > >       enum dl_dev_state status;
+> > >  };
+> > >
+> > >
+> >
+> >
+> >
+> >
+> 
+
+
+
 
