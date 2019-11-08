@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B234C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8A3FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197952085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B452085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214681;
-	bh=4q0wxmlT8LNfXIg3Vz5jn72hLNxKgjL8rMq45doAlCg=;
+	s=default; t=1573214682;
+	bh=ypa3wOs131kORiY+6JAWO3HBW3gIyp6YubYc/0p5glQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kqGu/n+t6npZ+KaMzvAb0yz5XNpqcxNGO0gBgFliwTRz3Bw0QUSnmgUu+aIwkcwYW
-	 S1aP1Ko5b8gSUWzM1tcZHNhbwGWE6dxEbp5yWg/I+JgnzszY/6zGl0/ecoFjnScMVY
-	 EUorB7qJTZeH94oJEmzQgVYfig2wHgHNHsdlP5xw=
+	b=EWfnmKz8zXCm1RzMpQy8nkQkwOeFwO/BF0ken9IyFgvM/H+HwPLbZSPysjTfoOcb7
+	 detVc9FW9KvnqzTt1DQNmrBoGPak33fczJcJOdUm6zFZn5i8t74rp/jArQe46/eAPM
+	 DgtC7nWqcoIRSiqnZbWTwLAlV2z3bwyytD2w2XTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfKHMEf (ORCPT
+        id S1732673AbfKHLmC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:04:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55790 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:42:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389773AbfKHLmG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:06 -0500
+        id S2389727AbfKHLmA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6573E222C5;
-        Fri,  8 Nov 2019 11:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9BD222C5;
+        Fri,  8 Nov 2019 11:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213326;
-        bh=4q0wxmlT8LNfXIg3Vz5jn72hLNxKgjL8rMq45doAlCg=;
+        s=default; t=1573213319;
+        bh=ypa3wOs131kORiY+6JAWO3HBW3gIyp6YubYc/0p5glQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fUDzYVoGP3euwLnEOkThbzbyljtrqvitknHJ8LAvYUz0/p0MCfgwVHjSl2hqXyBuG
-         lAMDKJFdBtjwQAOpGhztPwRK6ptiEItck0/f/uwxRkEgqwv5+e3RmnPcahEd6BuGts
-         3VznNQC81XAWYbFwuQzA5yfR6Agz0/yUX9QwL3ZE=
+        b=jgQFdD6FIjxxD50NenAKo5J9DY47ASepMhQkAWC29TCB48waRVy4O1GxHoDm83t3A
+         qDSy7tIkSfIDbHW6gEy4UD1G/F8neMWHd0foiUhX/tc/YBoke5KWd67TLVXKLmZBuS
+         DE9SZVLvMJhuogv5XgpHyTL6L5uSh3T5l3a0uR5k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 168/205] arm64: dts: renesas: r8a77965: Fix HS-USB compatible
-Date:   Fri,  8 Nov 2019 06:37:15 -0500
-Message-Id: <20191108113752.12502-168-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, Da Xue <da@lessconfused.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 163/205] arm64: dts: meson: libretech: update board model
+Date:   Fri,  8 Nov 2019 06:37:10 -0500
+Message-Id: <20191108113752.12502-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,34 +60,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 99584d93e301d820d817bba2eb77b9152e13009c ]
+[ Upstream commit b7eb0e26cc4a212fde09144cd49d4103170d2b9e ]
 
-Should be "renesas,usbhs-r8a77965", not "renesas,usbhs-r8a7796".
+There is actually several different libretech board with the CC suffix
+so the model name is not appropriate here. Update to something more
+specific
 
-Fixes: a06e8af801760a98 ("arm64: dts: renesas: r8a77965: add HS-USB node")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Reported-by: Da Xue <da@lessconfused.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 0da4841162610..2ccb1138cdf0c 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -545,7 +545,7 @@
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index f63bceb88caaf..90a56af967a7f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -13,7 +13,7 @@
  
- 		hsusb: usb@e6590000 {
--			compatible = "renesas,usbhs-r8a7796",
-+			compatible = "renesas,usbhs-r8a77965",
- 				     "renesas,rcar-gen3-usbhs";
- 			reg = <0 0xe6590000 0 0x100>;
- 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+ / {
+ 	compatible = "libretech,cc", "amlogic,s905x", "amlogic,meson-gxl";
+-	model = "Libre Technology CC";
++	model = "Libre Computer Board AML-S905X-CC";
+ 
+ 	aliases {
+ 		serial0 = &uart_AO;
 -- 
 2.20.1
 
