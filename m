@@ -2,118 +2,107 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188F0C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30CAFC6194
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E751720869
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B812C207FA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="xb6ldzK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbfKHI3L (ORCPT
+        id S1727459AbfKHI33 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:29:11 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:43033 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbfKHI3L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:29:11 -0500
-Received: from aptenodytes (lfbn-tou-1-421-123.w86-206.abo.wanadoo.fr [86.206.246.123])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8DD8924000F;
-        Fri,  8 Nov 2019 08:29:07 +0000 (UTC)
-Date:   Fri, 8 Nov 2019 09:29:07 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>, megous@megous.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        mripard@kernel.org, kishon@ti.com, linux-sunxi@googlegroups.com,
-        robh+dt@kernel.org, tglx@linutronix.de, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
-Subject: Re: [PATCH] phy: allwinner: Fix GENMASK misuse
-Message-ID: <20191108082907.GA848664@aptenodytes>
-References: <20191020134229.1216351-3-megous@megous.com>
- <20191107204645.13739-1-rikard.falkeborn@gmail.com>
- <20191107233914.GW25745@shell.armlinux.org.uk>
+        Fri, 8 Nov 2019 03:29:29 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39608 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbfKHI33 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:29:29 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z24so834105lfh.6
+        for <devicetree@vger.kernel.org>; Fri, 08 Nov 2019 00:29:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=zxeEfWsa7VjzhrdJtRRrSoIXfZ05RVStGSw687ppLB8=;
+        b=xb6ldzK8yAx9DRAphSYdhgJNxAG/hZZbI3+r+SQfVlcFeJMZZaegi8dfqrSPPDJVHT
+         VLmv3sS43FKG9dgAqv8N/I2AbDFp3uugY1ed2NU/jvCjmeWTCNl62KjkG1B+LvMlpphB
+         JoMu13wrQTpdnEeF8Z02wxeGo+Onbx6OyQIT7D7CVARCzijIBuOJPOkNn8E0apR8y4xD
+         VQem25IjObMb8kdYi+SIoS+Ks8u5A+DzVqTIzXrdzNDGXWnlFwy9+ZAkwZtCxYcYE4Ta
+         yEyMyZfhL0TW85XMzQ70o7w6TEZASJ7PTfK2YdNVoUN5J2x+/yCP+qIeZyPUaUijtWXy
+         WrcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=zxeEfWsa7VjzhrdJtRRrSoIXfZ05RVStGSw687ppLB8=;
+        b=iv51pGUpP4vL1Onte44L66wkyQcJCndM9z2yKvpVd2EjohNIFUpvNH0uxKTrm/utj0
+         bU5pZ30j85tSEOhOHVqBx8/V0qJe9IHXuK/eUxbvVL2p5rvHJNmfdTTC8UgS3uu5uL0X
+         CTVOqDEBL5Adjv3hg6Y9IVfn6cr/l7iET9XXdXdniG44m/C25ktce+fcW+is09idRciv
+         9PnG1GcqcfGZThEsZKZkYOK9DsyUc5HFUo2R9gaJ3UL6wPLuZ1TA3pZmFTwQp9UKataf
+         9OzfOLz68fzm++hyrx9C7rP/OTk6jAQgDInkoIoSYQX4wOYRz3cCi3ZrPrlW6+EGGswT
+         lx0A==
+X-Gm-Message-State: APjAAAWQAd49hukQA7jt/8rd8g2abAmF2+cVrDt+WnI7ORsTtbBQDtAQ
+        cn4SewhJ1T4XXvxNY4bX/tgn7w==
+X-Google-Smtp-Source: APXvYqxn3X7t2eeYkVSs8EGGMN2YmD4eBs9wgN9WHox/TL/aZ7jv7fRKTQFb31OKCDaXpUtnH+6Y4g==
+X-Received: by 2002:a19:f608:: with SMTP id x8mr6038466lfe.112.1573201766579;
+        Fri, 08 Nov 2019 00:29:26 -0800 (PST)
+Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
+        by smtp.gmail.com with ESMTPSA id s7sm2215314ljo.98.2019.11.08.00.29.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 00:29:25 -0800 (PST)
+Date:   Fri, 8 Nov 2019 09:29:24 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: media: Fix Allwinner A10 CSI binding
+Message-ID: <20191108082924.GB22781@bigcity.dyn.berto.se>
+References: <20191107222027.2529654-1-niklas.soderlund+renesas@ragnatech.se>
+ <20191108074749.GB4345@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191107233914.GW25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191108074749.GB4345@gilmour.lan>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Maxime,
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019-11-08 08:47:49 +0100, Maxime Ripard wrote:
+> Hi Niklas,
+> 
+> On Thu, Nov 07, 2019 at 11:20:27PM +0100, Niklas Söderlund wrote:
+> > Running 'make dt_binding_check' on the binding results in error and
+> > message:
+> >
+> >   Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> >
+> > Fix this by using the correct path in $id.
+> >
+> > Fixes: c5e8f4ccd7750487 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> 
+> Which tag / tree are you using to see this? We should have a fix in
+> -rc5 already
 
-Hi,
+I was working at the media-tree master when I spotted this and check 
+Rob's tree dt/next branch [1] if it was fixed before sending this. But 
+I'm glad to learn it is fixed elsewhere, so please drop/ignore this 
+patch.
 
-On Thu 07 Nov 19, 23:39, Russell King - ARM Linux admin wrote:
-> On Thu, Nov 07, 2019 at 09:46:45PM +0100, Rikard Falkeborn wrote:
-> > Arguments are supposed to be ordered high then low.
-> >=20
-> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> > ---
-> > Spotted while trying to add compile time checks of GENMASK arguments.
-> > Patch has only been compile tested.
->=20
-> My feeling, personally, is that GENMASK() really isn't worth the pain
-> it causes.  Can we instead get rid of this thing and just use easier
-> to understand and less error-prone hex masks please?
+1. git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
 
-One advantage it has is that is matches the order in which bit fields are
-usually given in datasheets, so I personally found that it makes verificati=
-on
-of fields much more straightforward and immediate.
-
-My 2 cents are that it makes sense for hardware registers.
-
-Note that I have recently introduced a SHIFT_AND_MASK_BITS macro[0] for a V=
-4L2
-driver, that I (and Mauro) would like to move to linux/bits.h eventually.
-
-> I don't care what anyone else says, personally I'm going to stick with
-> using hex masks as I find them way easier to get right first time than
-> a problematical opaque macro - and I really don't want the effort of
-> finding out that I've got the arguments wrong when I build it.  It's
-> just _way_ easier and less error prone to use a hex mask straight off.
-
-I guess it's a matter of personal habit.
-
-[0]: https://git.linuxtv.org/media_tree.git/commit/?id=3D06eff2150d4db991ca=
-236f3d05a9dc0101475aea
-
-Cheers,
-
-Paul
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3FJ1MACgkQ3cLmz3+f
-v9HD6QgAnn9qVrsChDkN0XT8+hfqz14mCavgmtmc/ATR+52Gp7hcnN1ADnJ1lK5D
-Fg3+wdQMcs3sxpVFFPvfr1mNlGy1/OCSUerruFRSXwj+oMdv3E5foi7Y5GdrS5G2
-bUFCVGT9h5MS7TrwHoiLV7I8ZgRg2/j1MyPWH4sgjSpres2BwU+0vkxh8DvJc+Hm
-tJx1mzGPSFsA+RoRHdfRtSAE3iDcNibJXnct/qz6s+wtZRT/lTrAeoO2Cd6683dU
-FbegbM5v+j7dhZpZ7bkbgaKrCd9EAfKYpu0WP1YOUEGes00K5J4fhvk9RpA/+l9p
-l6BhN4YGDy1HqSdqxIzSiN4JXUNtag==
-=aPHq
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
+-- 
+Regards,
+Niklas Söderlund
