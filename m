@@ -2,107 +2,154 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30CAFC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038EEFA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B812C207FA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFA721D6C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="xb6ldzK8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYDgk1cd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfKHI33 (ORCPT
+        id S1727421AbfKHIej (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:29:29 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39608 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbfKHI33 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:29:29 -0500
-Received: by mail-lf1-f66.google.com with SMTP id z24so834105lfh.6
-        for <devicetree@vger.kernel.org>; Fri, 08 Nov 2019 00:29:27 -0800 (PST)
+        Fri, 8 Nov 2019 03:34:39 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38509 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfKHIej (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:34:39 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z19so5276029wmk.3;
+        Fri, 08 Nov 2019 00:34:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=zxeEfWsa7VjzhrdJtRRrSoIXfZ05RVStGSw687ppLB8=;
-        b=xb6ldzK8yAx9DRAphSYdhgJNxAG/hZZbI3+r+SQfVlcFeJMZZaegi8dfqrSPPDJVHT
-         VLmv3sS43FKG9dgAqv8N/I2AbDFp3uugY1ed2NU/jvCjmeWTCNl62KjkG1B+LvMlpphB
-         JoMu13wrQTpdnEeF8Z02wxeGo+Onbx6OyQIT7D7CVARCzijIBuOJPOkNn8E0apR8y4xD
-         VQem25IjObMb8kdYi+SIoS+Ks8u5A+DzVqTIzXrdzNDGXWnlFwy9+ZAkwZtCxYcYE4Ta
-         yEyMyZfhL0TW85XMzQ70o7w6TEZASJ7PTfK2YdNVoUN5J2x+/yCP+qIeZyPUaUijtWXy
-         WrcQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VkI4cvX4wkJb9cEinKhbBlP59eTt5rxMwM6muY3FHmk=;
+        b=XYDgk1cdeJqtjFrCaSfVAgN96MN8Wbcax5Ms1Zmp3POWOH5hCw5s3PzxCbXFlQXi5g
+         VIj6YS+7ahGPRoYeYJVzmrrso7zR6fsGoivRWpxRazhvttcgSYZ2KPKyRZ03wLOgc7Ro
+         MCZ0+7QWURO9Q3NUIAhWIKVnhdctT9HQOJSZ6g2uS7WixsIYGNUGlxij3St1kqcdyOqW
+         o32ylKXs7abPggaMHFdEltPD1VLuEoEQ8dtKc9OiZms/xdTvYqJjlFHkRlhlF9qr1fYz
+         vJT6Fj+DkECLmOqOggYzC1J4wxAp/KKUDCF+7DqOFlWmolcSNaY79j6r4WLCrHLr2L7u
+         l2rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=zxeEfWsa7VjzhrdJtRRrSoIXfZ05RVStGSw687ppLB8=;
-        b=iv51pGUpP4vL1Onte44L66wkyQcJCndM9z2yKvpVd2EjohNIFUpvNH0uxKTrm/utj0
-         bU5pZ30j85tSEOhOHVqBx8/V0qJe9IHXuK/eUxbvVL2p5rvHJNmfdTTC8UgS3uu5uL0X
-         CTVOqDEBL5Adjv3hg6Y9IVfn6cr/l7iET9XXdXdniG44m/C25ktce+fcW+is09idRciv
-         9PnG1GcqcfGZThEsZKZkYOK9DsyUc5HFUo2R9gaJ3UL6wPLuZ1TA3pZmFTwQp9UKataf
-         9OzfOLz68fzm++hyrx9C7rP/OTk6jAQgDInkoIoSYQX4wOYRz3cCi3ZrPrlW6+EGGswT
-         lx0A==
-X-Gm-Message-State: APjAAAWQAd49hukQA7jt/8rd8g2abAmF2+cVrDt+WnI7ORsTtbBQDtAQ
-        cn4SewhJ1T4XXvxNY4bX/tgn7w==
-X-Google-Smtp-Source: APXvYqxn3X7t2eeYkVSs8EGGMN2YmD4eBs9wgN9WHox/TL/aZ7jv7fRKTQFb31OKCDaXpUtnH+6Y4g==
-X-Received: by 2002:a19:f608:: with SMTP id x8mr6038466lfe.112.1573201766579;
-        Fri, 08 Nov 2019 00:29:26 -0800 (PST)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id s7sm2215314ljo.98.2019.11.08.00.29.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2019 00:29:25 -0800 (PST)
-Date:   Fri, 8 Nov 2019 09:29:24 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: media: Fix Allwinner A10 CSI binding
-Message-ID: <20191108082924.GB22781@bigcity.dyn.berto.se>
-References: <20191107222027.2529654-1-niklas.soderlund+renesas@ragnatech.se>
- <20191108074749.GB4345@gilmour.lan>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VkI4cvX4wkJb9cEinKhbBlP59eTt5rxMwM6muY3FHmk=;
+        b=ER0gdoYW71mu6e/TqbmCminsoLcVQq9R4031jrxTX/hKbl9oL5g49YfR5mBr5OF8t9
+         MuOxiOXpE72feJPRcu6TqZxu3q1pq0aI2BZokldGG6D6AaF4k6A1Haz7SA5qaWOVBYOB
+         yByFA5H0Igfc0amCP65Ev3Uw65OL8J8lGtjduKuM6Az5JaV8jtM6USdj3oclICQSlJu6
+         35aMt8TjVPslOwCH+JRSN2MyjGLbHaIblhF8JbfsVyjMk7TnR/l1Sfh1NS+T8wan27sV
+         rp4x7eEqqRWh2kRQVyL37hMPynKBL7EorzuZqbwgnHtl69elty3yL9BSR4cKvzACz+Pq
+         q3qg==
+X-Gm-Message-State: APjAAAUMf+PTWtqjSHVIzU+j+1LnDhy46AhCx61EDD3BYJcetsvPEq3N
+        wO+gjXGuXX0cAD9YdT4TKvL0Stzt2suygEBpPS0=
+X-Google-Smtp-Source: APXvYqwO5LNjRjZqBsLm0rx2ZVFBShCv1CuuOkko/vXZhWR0gKobSrxO8D2AYRmTGsvhPEQK7KDzYl1RD1/Hmamx/oc=
+X-Received: by 2002:a1c:a512:: with SMTP id o18mr6701777wme.4.1573202075843;
+ Fri, 08 Nov 2019 00:34:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191108074749.GB4345@gilmour.lan>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191105131456.32400-1-peron.clem@gmail.com> <20191105131456.32400-5-peron.clem@gmail.com>
+ <20191105145659.ffezqntodsys4phn@pengutronix.de> <CAJiuCcdXr3y0oe19ZNaiQoN7Y39p54p8LjQjXfjHbTH8tbnrpw@mail.gmail.com>
+ <20191107065118.j4s5cghj4ark7sql@pengutronix.de>
+In-Reply-To: <20191107065118.j4s5cghj4ark7sql@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Fri, 8 Nov 2019 09:34:24 +0100
+Message-ID: <CAJiuCcd3qAP=xODJWcvay6q-MbLeBvX5tAtuUj7dFcp8biXzOw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi Uwe,
 
-On 2019-11-08 08:47:49 +0100, Maxime Ripard wrote:
-> Hi Niklas,
-> 
-> On Thu, Nov 07, 2019 at 11:20:27PM +0100, Niklas Söderlund wrote:
-> > Running 'make dt_binding_check' on the binding results in error and
-> > message:
+On Thu, 7 Nov 2019 at 07:51, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Cl=C3=A9ment,
+>
+> On Wed, Nov 06, 2019 at 10:24:39PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > On Tue, 5 Nov 2019 at 15:57, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Tue, Nov 05, 2019 at 02:14:53PM +0100, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > +     bypass =3D state->enabled &&
+> > > > +              (state->period * clk_rate >=3D NSEC_PER_SEC) &&
+> > >
+> > > This is too coarse. With state->period =3D 1000000 this is fulfilled
+> > > (unless the multiplication overflows).
 > >
-> >   Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> > Sorry, misunderstood the previous mail
 > >
-> > Fix this by using the correct path in $id.
+> > What about something like this ?
+> > ((state->period - 1) * clk_rate <=3D NSEC_PER_SEC) &&
+> > ((state->period + 1) * clk_rate >=3D NSEC_PER_SEC) &&
+> >  ((state->duty_cycle - 1) * 2 <=3D state->period) &&
+> >  ((state->duty_cycle + 1) * 2 >=3D state->period);
 > >
-> > Fixes: c5e8f4ccd7750487 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> 
-> Which tag / tree are you using to see this? We should have a fix in
-> -rc5 already
+> > We are sure that the user is looking for a PWM around the OSC with a
+> > 50% duty cycle ?
+>
+> This again is too strict. The general policy to fulfill a request is:
+>
+>  1) provide the longest possible period not bigger than requested
+>  2) provide the longest possible duty cycle not bigger than requested
+>  3) if possible complete the currently running period before switching
+>     and don't return to the user before the new setting is active.
+>     Document the behaviour prominently because the code (usually)
+>     doesn't allow to understand the hardware's features here.
+>  4) A disabled PWM should output the inactive level
 
-I was working at the media-tree master when I spotted this and check 
-Rob's tree dt/next branch [1] if it was fixed before sending this. But 
-I'm glad to learn it is fixed elsewhere, so please drop/ignore this 
-patch.
+Thanks for the explanation
 
-1. git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+>
+> And then there is a corner case: If the user requests .duty_cycle =3D 0,
+> .enabled =3D 1 it is ok to provide .enabled =3D 0 iff otherwise 0% isn't
+> possible.
+>
+> So the right check for bypass is:
+>
+>   state->period * clk_rate >=3D NSEC_PER_SEC &&
+>   state->period * clk_rate < whatevercanbereachedwithoutbypass &&
+>   state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_SEC
 
--- 
+The shortest PWM ratio which is not a constant output is 12MHz.
+(Prescal 1, 2 entire cycle and 1 active cycle)
+
+So something like this :
+state->period * clk_rate >=3D NSEC_PER_SEC &&
+state->period * clk_rate < 2 * NSEC_PER_SEC &&
+state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_SEC
+
+I will send a v4,
+Thanks for the help
 Regards,
-Niklas Söderlund
+Cl=C3=A9ment
+
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
