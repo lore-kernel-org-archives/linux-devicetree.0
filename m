@@ -7,70 +7,76 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E06BC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3058EFC6195
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1AEE207FA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071B02085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hULN7kc6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="em/ney5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbfKHUCo (ORCPT
+        id S2388987AbfKHUIn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:02:44 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38503 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730685AbfKHUCn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 15:02:43 -0500
-Received: by mail-il1-f194.google.com with SMTP id u17so1316262ilq.5;
-        Fri, 08 Nov 2019 12:02:41 -0800 (PST)
+        Fri, 8 Nov 2019 15:08:43 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36942 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388674AbfKHUIm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 15:08:42 -0500
+Received: by mail-il1-f196.google.com with SMTP id s5so6226823iln.4;
+        Fri, 08 Nov 2019 12:08:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mYf/nyD6rltSVBlJ1rEzYYkSo9gCsLs6tcnYeIJug6o=;
-        b=hULN7kc6Ntx0VJDf3/r/Ug9KysUhIby/9+oydfz0Fpzli6ZoQi5By2We85qloWst6B
-         KxA7mlmhvc4EGkfx4O5/Rjo3X4lURuasgZxveoz5Rwc7Vu3TEPnThe95kgYLEtF/T9NS
-         2d3emfu3AjAaSsvEo1kUuny8w3oBima7EHy72jpIdQJZYvTqOgozrbFgbFfJPN10rZts
-         E5uMw+UwJ8+Efan0vuD+xVy7VFvetRj4c7eIuMVTxPNafABcb0qCm6CJX+POcsypAcSO
-         I5muVAbCYSUVpAjhtGzYGl88oG9TF1ym7IOsepCWEORdapjFaCV1D2GUqlWBkEtzoWuY
-         +eyg==
+        bh=eltmz3pR3Soq+1V6jMFmgjGcnWDU/PywdSSSznftPO8=;
+        b=em/ney5+BG/mSj4/tLUCSyIi6YGffQpErAmyo2xXvZj63pMCyXedAt1Ck+Yu+o7KKN
+         nHmkcta2DhxLMIlPCzKV8TWLy1j68LJ1tovWEnWvELu07sy4hRyMs2PlCo6O5/e4H1v8
+         cEbVYqDEJQjziv2mLoh0O3wJGVX3GB4S+ETNkoq9iIILGbAXjUHkNknaqAk/7TMT+drP
+         3wwIfa+nUv7daxm28EFNmdFwelbYicG2Fs4xiH4IBq0JTl98V71pxgkHnHCEZHsG9b/U
+         hFmB7DTIuU5LsjLfNim+TUwUGLZRbfrT+zhTgLjkJ1/zc/g7RD+lYhysAZ3xtmyvUM7M
+         RBoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mYf/nyD6rltSVBlJ1rEzYYkSo9gCsLs6tcnYeIJug6o=;
-        b=N9+s+A61s+RnBvEmh/z6TRHBcvO1QsuX4HNOZPVOspjln3V/Tap4oafdzm91vGhhbl
-         eRwzF73SW/BPl0bcFPBq+mn3Ht2/BeJsWtdXuOExszcg0voDCQ7hPRtlFeoDIrDvTN3K
-         W3N60LDyfws4MK+7+Yg615RBvZ8Y1TuKX2r/BD2IpmE4wCVh0A6IGWbuAA6k5s7tm19O
-         TQNyuEhkB23kAjwt/bo25IJc+JgILqh70JDqutJlPWZmb2n9un78p6oT/qODHZl5fbiP
-         sRoXh+vGbDW2/vN/M2W/YEXcpJLxtR6uZbmMZ+eIyQZp8c7PN4C31zq3SWzgikU5EpKD
-         /n7Q==
-X-Gm-Message-State: APjAAAUQ38K3mKBGdcWG767/hL1IaDAPdhFItyvpEL+WiUkn26kxTq0Z
-        rRl91oKxVbYr/87p660SP1/blbH9jXIHBWhZgRo=
-X-Google-Smtp-Source: APXvYqwFjCYO6s12BEyvIYjLOyp6JD59hgPbNgslBpXqVMXVo7xFRqxpwstlboDNb3up2WkJsPVmP6NtsZNsXXoTNKo=
-X-Received: by 2002:a92:ca8d:: with SMTP id t13mr14120645ilo.58.1573243361073;
- Fri, 08 Nov 2019 12:02:41 -0800 (PST)
+        bh=eltmz3pR3Soq+1V6jMFmgjGcnWDU/PywdSSSznftPO8=;
+        b=CJNqRJXR7nAks6TFNxix8BbcLhi90ma061DN2eXr5kRkr8ccCBAC0l1KdNED0nLh7F
+         tYii3Jlzbc7z48Z5IebHyRNU2H86U1nxfc18DWEOvKJZHlyxseRmU9HspGQb4p0FSq4d
+         yOHdEfW8zz3uGfBvWO4pJ2sKVHx9JXwG+zD+q7CK0k9FIX3FYuew3PRqEQQ+HXZMbEwu
+         oruuj4D3D6DQzwRAnOlMMo5Axodd0NlNryQXQsOOwAB3rMmKKVMImHi4up0n2pdIFcfv
+         gdgsH26H2goGJHHZTlZ1j/q9VZHJbav0j43TiFdULI6dZoAGzdUkvsSrsPVO3pBsGYYg
+         kPGw==
+X-Gm-Message-State: APjAAAX8cRiC2tVFiP9JV72Op0KPQVHSBQKJsMUZevmZL+VJCZ5gllow
+        p3rz3uqVxBySxDnlm9XVE3yJLeL+yAxMjdL9zUc=
+X-Google-Smtp-Source: APXvYqzlpqxccwG6GmOvqxQWjLmMqeCjkjEvuMNKiJOC5iuogUVoY2OtFXA6DFnWbW2+pVaD6tVfy5dh8N1zzlMwFZ0=
+X-Received: by 2002:a92:cb84:: with SMTP id z4mr15604238ilo.78.1573243720775;
+ Fri, 08 Nov 2019 12:08:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20191007220540.30690-1-aford173@gmail.com> <20191022162223.GU5610@atomide.com>
- <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
- <20191022221919.GF5610@atomide.com> <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
- <20191023143646.GG5610@atomide.com>
-In-Reply-To: <20191023143646.GG5610@atomide.com>
+References: <cover.1568224032.git.hns@goldelico.com>
+In-Reply-To: <cover.1568224032.git.hns@goldelico.com>
 From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 8 Nov 2019 14:02:29 -0600
-Message-ID: <CAHCN7xKi4oSoVbRM=-D1s2GnMig8xs6iYNwUWj2Ohfj+1okx=Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Fri, 8 Nov 2019 14:08:29 -0600
+Message-ID: <CAHCN7xLvuj_LkvOV3YG5=0MZYsohbQArE0UCZx6pcRPwM5pkYg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] OMAP3: convert opp-v1 to opp-v2 and read speed
+ binned / 720MHz grade bits
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Roger Quadros <rogerq@ti.com>,
+        Teresa Remmet <t.remmet@phytec.de>,
         Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
         arm-soc <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
@@ -78,88 +84,140 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 9:36 AM Tony Lindgren <tony@atomide.com> wrote:
+On Wed, Sep 11, 2019 at 12:47 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 >
-> * H. Nikolaus Schaller <hns@goldelico.com> [191023 04:42]:
-> >
-> > > Am 23.10.2019 um 00:19 schrieb Tony Lindgren <tony@atomide.com>:
-> > >
-> > > * Adam Ford <aford173@gmail.com> [191022 19:01]:
-> > >> On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
-> > >>>
-> > >>> Hi,
-> > >>>
-> > >>> * Adam Ford <aford173@gmail.com> [191007 15:06]:
-> > >>>> The some in the OMAP3 family have a bandgap thermal sensor, but
-> > >>>> omap2plus has it disabled.
-> > >>>>
-> > >>>> This patch enables the OMAP3_THERMAL by default like the rest of
-> > >>>> the OMAP family.
-> > >>>
-> > >>> Looks like this breaks off mode during idle for omap3, and that's
-> > >>> probably why it never got enabled. The difference in power
-> > >>> consumption during idle is about 7mW vs 32mW for the SoC as
-> > >>> measured from torpedo shunt for main_battery_som.
-> > >>>
-> > >>> I think the right fix might be simply to add handling for
-> > >>> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
-> > >>> it during idle like we have for gpio-omap.c for example.
-> > >>
-> > >> I am not sure I know where to start on fixing that issue.  Would you
-> > >> entertain enabling the driver if we set the device tree to 'disabled'
-> > >> by default?  This way if people want to to use it, it can be enabled
-> > >> on a per-device option.  Once the power stuff gets resolved, we might
-> > >> be able to enable it by default.  For people who are planning on using
-> > >> the DM3730 @ 1GHz in high temp environments, I am not sure they'll
-> > >> care about low power.
-> > >
-> > > They should both work fine together though. They are not mutually
-> > > exclusive features.
-> > >
-> > >> I'll try to look into it when I have time, but I was hoping a
-> > >> compromise might be a reasonable work-around.
-> > >
-> > > It should be hopefully a trivial fix.. I have not looked at the
-> > > driver code though.
-> >
-> > If I am taken right, it is the drivers/thermal/ti-soc-thermal/ti-*.c
-> > which is a common driver for omap3, omap4, omap5. They only differ
-> > in the thermal data and which registers and bits are used to access
-> > the ADC.
+> CHANGES V3:
+> * make omap36xx control the abb-ldo and properly switch mode
+>   (suggested by Adam Ford <aford173@gmail.com>)
+> * add a note about enabling the turbo-mode OPPs
 >
-> Yes so it seems. Enabling OMAP3_THERMAL adds support to
-> of_ti_bandgap_match[] for omap3 and causes the issue.
+> PATCH V2 2019-09-07 19:46:58:
+> * fix ti-cpufreq to properly describe which compatible string is legacy
+> * add some reviewed-by and acked-by Tony Lindgren <tony@atomide.com>
+> * include am3517 patches by Adam Ford <aford173@gmail.com>
+> * review opp-suspend; and add turbo-mode; opp properties
+> * add a note how to disable an OPP in a board.dts file
 >
-> > So is this problem with off mode also known for omap4 and omap5?
+> PATCH V1 2019-09-07 08:56:19:
+> * fix typo in omap3-ldp.dts
+>   (reported by Tony Lindgren <tony@atomide.com>)
+> * extend commit message to describe the bit patterns needed
+>   for opp-supported-hw
+> * add error check to ioremap()
+>   (suggested by Christ van Willegen <cvwillegen@gmail.com>)
+> * update Documentation/devicetree/bindings/arm/omap/omap.txt
+> * change bulk update to use "ti,omap3430" and "ti,omap3630"
+> * update OPP4 of omap3430 to 1275 mV since it was not a valid
+>   voltage for the twl4030 driver (reported by Tony Lindgren
+>   <tony@atomide.com>)
 >
-> Probably. But we don't have off mode working for omap4, and
-> it cannot be used for omap5 AFAIK.
+> RFC V2 2019-09-04 10:53:43:
+> * merge separate patch to remove opp-v1 table from n950-n9 into
+>   the general omap3xxx.dtsi patch
+>   (suggested by Viresh Kumar <viresh.kumar@linaro.org>)
+> * add legacy compatibility to ti,omap3430 and ti,omap3630 for
+>   the ti-cpufreq driver
+> * make driver and omap3xxx.dtsi patches pass checkpatch
+> * add bulk patch to explicitly define compatibility to ti,omap3430
+>   and ti,omap36xx in addition to ti,omap3 of all in-tree boards
+>   where it was missing
 >
-> My guess is we need to call clk_disable() and call
-> ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
-> what ti_bandgap_suspend does. And then restore it on
-> CPU_CLUSTER_PM_EXIT.
+> RFC V1 2019-09-02 12:55:55:
 >
-> There's a similar example already in gpio_omap_cpu_notifier().
-> Not sure if there is some related errata to deal with too,
-> probably the old Nokia n900 or n9 would provide some hints
-> on what exactly needs to be done.
+> This patch set converts the omap3 opp tables to opp-v2 format
+> and extends the ti-cpufreq to support omap3.
+>
+> It adds 720 MHz (omap34xx) and 1 GHz (omap36xx) OPPs but
+> tells the ti-cpufreq driver to disable them if the speed
+> binned / 720MHz grade eFuse bits indicate that the chip
+> is not rated for that speed.
+>
+> It has been tested (for chip variant detection, not reliability
+> of the high speed OPPs) on:
+>
+> * BeagleBoard C2 (omap3530 600MHz)
+> * BeagleBoard XM B (dm3730 800MHz)
+> * GTA04A4 (dm3730 800MHz)
+> * GTA04A5 (dm3730 1GHz)
+>
+>
+> Adam Ford (2):
+>   cpufreq: ti-cpufreq: Add support for AM3517
+>   ARM: dts: Add OPP-V2 table for AM3517
+>
 
-I 'think' I have a patch ready that does what you're asking, but I
-will fully admit that I don't completely grasp what's going on.
+Nikolaus,
 
-I'll submit it as an RFC, but I am not even sure I understand what to
-put into the description, so if you're OK with reviewing the RFC, feel
-free to mark up the actual commit message as well.
+I am getting some notices sent to me when I apply your series.  It
+works, but I want to clean up the notice.  Can you suggest what might
+cause this:
 
-From what I can see, the changes haven't negatively impact stuff. I
-didn't see the power consumption go up before, so I am not sure I can
-replicate your findings.
+     debugfs: Directory 'cpu0-cpu0' with parent
+'48070000.i2c:twl@48:regulator-vdd1-VDD1' already present!
 
-It'll be posted shortly.
+It wasn't present before your series.  It's not a big deal, but I'd
+like to quiet down the messages if I can.
+Thanks.
 
 adam
+
+> H. Nikolaus Schaller (6):
+>   cpufreq: ti-cpufreq: add support for omap34xx and omap36xx
+>   ARM: dts: omap34xx & omap36xx: replace opp-v1 tables by opp-v2 for
+>   DTS: bindings: omap: update bindings documentation
+>   ARM: dts: omap3: bulk convert compatible to be explicitly ti,omap3430
+>     or ti,omap3630 or ti,am3517
+>   cpufreq: ti-cpufreq: omap36xx use "cpu0","vbb" if run in
+>     multi_regulator mode
+>   ARM: dts: omap36xx: using OPP1G needs to control the abb_ldo
 >
-> Regards,
+>  .../devicetree/bindings/arm/omap/omap.txt     |  30 +++--
+>  .../bindings/cpufreq/ti-cpufreq.txt           |   6 +-
+>  arch/arm/boot/dts/am3517.dtsi                 |  31 +++++
+>  arch/arm/boot/dts/am3517_mt_ventoux.dts       |   2 +-
+>  .../boot/dts/logicpd-som-lv-35xx-devkit.dts   |   2 +-
+>  .../boot/dts/logicpd-torpedo-35xx-devkit.dts  |   2 +-
+>  arch/arm/boot/dts/omap3-beagle-xm.dts         |   2 +-
+>  arch/arm/boot/dts/omap3-beagle.dts            |   2 +-
+>  arch/arm/boot/dts/omap3-cm-t3530.dts          |   2 +-
+>  arch/arm/boot/dts/omap3-cm-t3730.dts          |   2 +-
+>  arch/arm/boot/dts/omap3-devkit8000-lcd43.dts  |   2 +-
+>  arch/arm/boot/dts/omap3-devkit8000-lcd70.dts  |   2 +-
+>  arch/arm/boot/dts/omap3-devkit8000.dts        |   2 +-
+>  arch/arm/boot/dts/omap3-gta04.dtsi            |   2 +-
+>  arch/arm/boot/dts/omap3-ha-lcd.dts            |   2 +-
+>  arch/arm/boot/dts/omap3-ha.dts                |   2 +-
+>  arch/arm/boot/dts/omap3-igep0020-rev-f.dts    |   2 +-
+>  arch/arm/boot/dts/omap3-igep0020.dts          |   2 +-
+>  arch/arm/boot/dts/omap3-igep0030-rev-g.dts    |   2 +-
+>  arch/arm/boot/dts/omap3-igep0030.dts          |   2 +-
+>  arch/arm/boot/dts/omap3-ldp.dts               |   2 +-
+>  arch/arm/boot/dts/omap3-lilly-a83x.dtsi       |   2 +-
+>  arch/arm/boot/dts/omap3-lilly-dbb056.dts      |   2 +-
+>  arch/arm/boot/dts/omap3-n9.dts                |   2 +-
+>  arch/arm/boot/dts/omap3-n950-n9.dtsi          |   7 --
+>  arch/arm/boot/dts/omap3-n950.dts              |   2 +-
+>  .../arm/boot/dts/omap3-overo-storm-alto35.dts |   2 +-
+>  .../boot/dts/omap3-overo-storm-chestnut43.dts |   2 +-
+>  .../boot/dts/omap3-overo-storm-gallop43.dts   |   2 +-
+>  .../arm/boot/dts/omap3-overo-storm-palo35.dts |   2 +-
+>  .../arm/boot/dts/omap3-overo-storm-palo43.dts |   2 +-
+>  .../arm/boot/dts/omap3-overo-storm-summit.dts |   2 +-
+>  arch/arm/boot/dts/omap3-overo-storm-tobi.dts  |   2 +-
+>  .../boot/dts/omap3-overo-storm-tobiduo.dts    |   2 +-
+>  arch/arm/boot/dts/omap3-pandora-1ghz.dts      |   2 +-
+>  arch/arm/boot/dts/omap3-sbc-t3530.dts         |   2 +-
+>  arch/arm/boot/dts/omap3-sbc-t3730.dts         |   2 +-
+>  arch/arm/boot/dts/omap3-sniper.dts            |   2 +-
+>  arch/arm/boot/dts/omap3-thunder.dts           |   2 +-
+>  arch/arm/boot/dts/omap3-zoom3.dts             |   2 +-
+>  arch/arm/boot/dts/omap3430-sdp.dts            |   2 +-
+>  arch/arm/boot/dts/omap34xx.dtsi               |  66 ++++++++--
+>  arch/arm/boot/dts/omap36xx.dtsi               |  65 ++++++++--
+>  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +-
+>  drivers/cpufreq/ti-cpufreq.c                  | 119 +++++++++++++++++-
+>  45 files changed, 320 insertions(+), 80 deletions(-)
 >
-> Tony
+> --
+> 2.19.1
+>
