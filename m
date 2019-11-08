@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D91FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C66CFA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F642085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486C9215EA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214691;
-	bh=O+hpQNM8vSWD7A1+s0aJwWD0EvD+GBBQijCDJuTiYxc=;
+	s=default; t=1573214712;
+	bh=hVTmL0FORV+KWz1VpzuweX8Ats/8839pboW72CRooBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zE5Cm3xE+ktwiqsd8lztjnUXcmi2KY/+L5pHbS0Z/uHHviUFXH5kz4TJrzDaohGKQ
-	 b5nlNKERC3TQVHoMRlNBDEy6fAcCcI2UonqM6e8wBcYVbtNv4Tnx8a97WYvFm16VCo
-	 3yGaib4ZDnG1d0wFuLsgoZD89zvv2/DSVn/so8mo=
+	b=2PIffZWMvwZI5Zy8VYtM7hqvk8o3HoYQjDcH4uusfQqvgyy4rqctHOYblD+zA66DY
+	 XoqF8YwyhytKzKJ2+WGx7kh+ifiVGg6VRhytlPJOApZu4N1KxybEu3lxWAf04obegr
+	 cHSdn+oWTvNRkL6LpT/YVcmNfuusLc2Qfh2lfKEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389693AbfKHMEq (ORCPT
+        id S2389681AbfKHLlw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:04:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55602 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:41:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733104AbfKHLmB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:42:01 -0500
+        id S2389673AbfKHLlw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF7BB21D82;
-        Fri,  8 Nov 2019 11:41:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBFD621D7B;
+        Fri,  8 Nov 2019 11:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213320;
-        bh=O+hpQNM8vSWD7A1+s0aJwWD0EvD+GBBQijCDJuTiYxc=;
+        s=default; t=1573213311;
+        bh=hVTmL0FORV+KWz1VpzuweX8Ats/8839pboW72CRooBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uRx+gVqzzuoazu4GYljMpM/ortNfG/NbCefMYhm33XWKUWyLZrq0R+fSv/9e7XqAa
-         jAA84ymRkoiBt3heJJQGGOxihzJgQh+g1WxgfZ2ufM8JcUm7ljKPrLpHFSb4v2dQCw
-         xgRANwWWIOHk+SYja8LITBLE+sBeRPUKZmMPK288=
+        b=SCT51chryrurGhdtaopz153rkWZEITV7g1WAdPJ5oKby6uyyErRAFr9am/df+6XpA
+         GdNvl8qkbQCYL+1yd77NMucZjekEahILR/dO0SEnahrQee6bN8OMAkaPRRWZbOIa3x
+         c8O/YsBOwvu9CcgIjzAbDhFV93Z05gUNw7JeIQWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 164/205] arm64: dts: meson-axg: use the proper compatible for ethmac
-Date:   Fri,  8 Nov 2019 06:37:11 -0500
-Message-Id: <20191108113752.12502-164-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 158/205] media: dt-bindings: adv748x: Fix decimal unit addresses
+Date:   Fri,  8 Nov 2019 06:37:05 -0500
+Message-Id: <20191108113752.12502-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,33 +62,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit eaf8f57c0bf5451132932616ab62f9481adefb55 ]
+[ Upstream commit 27582f0ea97fe3e4a38beb98ab36cce4b6f029d5 ]
 
-Use the correct compatible for the AXG ethernet mac node.
+With recent dtc and W=1:
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+    Warning (graph_port): video-receiver@70/port@10: graph node unit address error, expected "a"
+    Warning (graph_port): video-receiver@70/port@11: graph node unit address error, expected "b"
+
+Unit addresses are always hexadecimal (without prefix), while the bases
+of reg property values depend on their prefixes.
+
+Fixes: e69595170b1cad85 ("media: adv748x: Add adv7481, adv7482 bindings")
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/media/i2c/adv748x.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index c518130e5ce73..3c34f14fa5086 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -458,7 +458,7 @@
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+index 21ffb5ed81830..54d1d3bc18694 100644
+--- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
++++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+@@ -73,7 +73,7 @@ Example:
+ 			};
  		};
  
- 		ethmac: ethernet@ff3f0000 {
--			compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
-+			compatible = "amlogic,meson-axg-dwmac", "snps,dwmac";
- 			reg = <0x0 0xff3f0000 0x0 0x10000
- 				0x0 0xff634540 0x0 0x8>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
+-		port@10 {
++		port@a {
+ 			reg = <10>;
+ 
+ 			adv7482_txa: endpoint {
+@@ -83,7 +83,7 @@ Example:
+ 			};
+ 		};
+ 
+-		port@11 {
++		port@b {
+ 			reg = <11>;
+ 
+ 			adv7482_txb: endpoint {
 -- 
 2.20.1
 
