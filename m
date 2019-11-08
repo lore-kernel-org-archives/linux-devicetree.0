@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02FBFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3977C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79833222CF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBD8222CE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213566;
-	bh=aluBxgyG66rH0miEhxbojvxTsEkxqtA5iSpzk78LF4M=;
+	s=default; t=1573213768;
+	bh=Utzkaksfpu3Lct4rFLnmEDm/He7L40Lde6OkD4hNLUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sZSB1mVwNyVR+m1cyDVwJD+hs05yvjNptk9ZCEbsbd8whiORpZn14tclw3Yh0MiQ6
-	 eaobUGCLAEWYqO5Dj8RyriFGjKjwkf+M9yKLxg58mKgExZusMRDq2aPuGo0oWcZQZv
-	 r9xIr2FygiVUtN/PtB+hq3JYkIzE3f2NNJAGkEOw=
+	b=l0YHvXqw80SNJdfnEP75b4uKSED3jFMgoHZ54XOAB+3j5F0RYes3OaRR8ehpXmcO7
+	 8qRi0Ta+QJhYX270ryIbrQm2pgqY88V8BIsza2Gld+bZKZ3d47LEfe4Bnld7q980iV
+	 BwD1sCk58MjEnA5VL2EP05XXHK8Ec1K5c1c8y5ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391255AbfKHLqF (ORCPT
+        id S2387805AbfKHLt1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:46:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33612 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:49:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391232AbfKHLqE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:04 -0500
+        id S2391729AbfKHLsU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:48:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 335A12084D;
-        Fri,  8 Nov 2019 11:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4639C222D1;
+        Fri,  8 Nov 2019 11:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213563;
-        bh=aluBxgyG66rH0miEhxbojvxTsEkxqtA5iSpzk78LF4M=;
+        s=default; t=1573213699;
+        bh=Utzkaksfpu3Lct4rFLnmEDm/He7L40Lde6OkD4hNLUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wh/NAhMz2ugnDDXVkMJErAREJwXNz513BndFE57sYvF5SKuvFlAnkRylC/ZLEXiQI
-         Uo+e84+SKaUaPuE4HJeka3RexGpvjz1J4TF8g257lEeT3VTLTUnGl0S+N5Ky8qUjox
-         8D5c7Of0DMV/MzzbXSbBNukEAa35RC/khc01fRH4=
+        b=y2WuO5tkvrHLcGzWE5jXrhKenGLtB9by1iCZdIEZbahelKKdtShbYz1JeIRICJB0F
+         uQWXp/MG124gLYkuPYRWqR6vK3IRwOcefj5TKjGwEpcMbv1+Hq6qeIYeUOEEG+6vc5
+         4myO5fJki78dLPI/7zjgPYBVESvSKWzgqpv3pSbY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+Cc:     Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/64] ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
-Date:   Fri,  8 Nov 2019 06:44:53 -0500
-Message-Id: <20191108114545.15351-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 39/44] ARM: dts: socfpga: Fix I2C bus unit-address error
+Date:   Fri,  8 Nov 2019 06:47:15 -0500
+Message-Id: <20191108114721.15944-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
-References: <20191108114545.15351-1-sashal@kernel.org>
+In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
+References: <20191108114721.15944-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,54 +58,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-[ Upstream commit 64858773d78e820003a94e5a7179d368213655d6 ]
+[ Upstream commit cbbc488ed85061a765cf370c3e41f383c1e0add6 ]
 
-This patch adds missing properties to the CODEC and sound nodes, so the
-audio will work also on Snow rev5 Chromebook. This patch is an extension
-to the commit e9eefc3f8ce0 ("ARM: dts: exynos: Add missing clock and
-DAI properties to the max98095 node in Snow Chromebook")
-and commit 6ab569936d60 ("ARM: dts: exynos: Enable HDMI audio on Snow
-Chromebook").  It has been reported that such changes work fine on the
-rev5 board too.
+dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-[krzk: Fixed typo in phandle to &max98090]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dtb: Warning (i2c_bus_reg): /soc/i2c@ffc04000/adxl345@0: I2C bus unit address format error, expected "53"
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-snow-rev5.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-snow-rev5.dts b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-index 90560c316f644..cb986175b69b4 100644
---- a/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-@@ -23,6 +23,14 @@
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+index 555e9caf21e16..7b8e1c4215b51 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -88,7 +88,7 @@
+ 	status = "okay";
+ 	speed-mode = <0>;
  
- 		samsung,model = "Snow-I2S-MAX98090";
- 		samsung,audio-codec = <&max98090>;
-+
-+		cpu {
-+			sound-dai = <&i2s0 0>;
-+		};
-+
-+		codec {
-+			sound-dai = <&max98090 0>, <&hdmi>;
-+		};
- 	};
- };
- 
-@@ -34,6 +42,9 @@
- 		interrupt-parent = <&gpx0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&max98090_irq>;
-+		clocks = <&pmu_system_controller 0>;
-+		clock-names = "mclk";
-+		#sound-dai-cells = <1>;
- 	};
- };
+-	adxl345: adxl345@0 {
++	adxl345: adxl345@53 {
+ 		compatible = "adi,adxl345";
+ 		reg = <0x53>;
  
 -- 
 2.20.1
