@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDACFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EBEC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53564207FA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 347BD215EA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213920;
-	bh=FQ0vCQXPL083ioe8KY+j+YwWNQrwcnxBwoqJ1vEg9Fw=;
+	s=default; t=1573213960;
+	bh=DpxXol/N+y1B3DaIv9bxMgSgTTtMjnNY+SmzKS17Jhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=luN54yMD4KB7VLg9+M9ST2WLbIjf6AxihuxXNknvd1vcFmd5lyuaQYd2cuY1b9Xo3
-	 6exyzQwz5KGhThogGPrwLsNJz3M/KCkJlDvEuwhxsw20cwjZbLORYEEI84IYTZqNu0
-	 aBg4FtxP9APKUrH/3x/N7f2/716xeuUMGJdaSSI4=
+	b=JTSUMSvgDSEjRid+kAl0R9uQ8Ojkkipriwc74AxD3nVupzg/awqlgYlBFp5ITg2CC
+	 csRbU5CLwWSO+ed/CleDcNpWl9BVHTariHENDjpPtOkhZLlaXT6CeHMaocMXBFDLc1
+	 B/m/nkmczqmtBr+mozHO/pyefubZLINs2sPXj0KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387955AbfKHLvz (ORCPT
+        id S2388922AbfKHLwe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:51:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35676 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:52:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391522AbfKHLrR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:17 -0500
+        id S2403834AbfKHLrH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3F04222D1;
-        Fri,  8 Nov 2019 11:47:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4649621D82;
+        Fri,  8 Nov 2019 11:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213636;
-        bh=FQ0vCQXPL083ioe8KY+j+YwWNQrwcnxBwoqJ1vEg9Fw=;
+        s=default; t=1573213626;
+        bh=DpxXol/N+y1B3DaIv9bxMgSgTTtMjnNY+SmzKS17Jhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbcls3EKDyoPo9SLpcWRO5UAZBPQAbeOGUYSVF6lrfIR/qEiFaWNk0SZY/lKHqRn7
-         2k3ohU+p0if34ZrKEGq+I7qmJC+fex/1ZB/HxxXDuJLRC939tYEXs2+qhrA8gNXSi/
-         XYDuKarER+oS9Rda7Q6xz16Zuoye2EnEcmgQdhjY=
+        b=Q+Qt4sb9YAe/2l6y2O8MEK6O6+i2AHOdoYXfs9loEBZIxRHYqosFoJZy0I1ABlLU0
+         tOVEjQ684fty7Ud208+/4h/49AfMJ9lChdqYekQPKfCyBiYvypP7TwsZAC64a1lIzc
+         AJuY9G6iScdG/g78NH7P4Z73vZoXB4U/GoGEFD8M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
+Cc:     Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 63/64] ARM: dts: rockchip: Fix erroneous SPI bus dtc warnings on rk3036
-Date:   Fri,  8 Nov 2019 06:45:44 -0500
-Message-Id: <20191108114545.15351-63-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 54/64] ARM: dts: socfpga: Fix I2C bus unit-address error
+Date:   Fri,  8 Nov 2019 06:45:35 -0500
+Message-Id: <20191108114545.15351-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
 References: <20191108114545.15351-1-sashal@kernel.org>
@@ -59,41 +58,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-[ Upstream commit 131c3eb428ccd5f0c784b9edb4f72ec296a045d2 ]
+[ Upstream commit cbbc488ed85061a765cf370c3e41f383c1e0add6 ]
 
-dtc has new checks for SPI buses. The rk3036 dts file has a node named
-spi' which causes false positive warnings. As the node is a pinctrl child
-node, change the node name to be 'spi-pins' to fix the warnings.
+dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
 
-arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
-arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
-arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
-arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
+arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dtb: Warning (i2c_bus_reg): /soc/i2c@ffc04000/adxl345@0: I2C bus unit address format error, expected "53"
 
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3036.dtsi | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index a935523a1eb85..147c73f68f1d9 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -744,7 +744,7 @@
- 			/* no rts / cts for uart2 */
- 		};
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+index afea3645ada43..89d55894d9162 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -88,7 +88,7 @@
+ 	status = "okay";
+ 	speed-mode = <0>;
  
--		spi {
-+		spi-pins {
- 			spi_txd:spi-txd {
- 				rockchip,pins = <1 29 RK_FUNC_3 &pcfg_pull_default>;
- 			};
+-	adxl345: adxl345@0 {
++	adxl345: adxl345@53 {
+ 		compatible = "adi,adxl345";
+ 		reg = <0x53>;
+ 
 -- 
 2.20.1
 
