@@ -2,72 +2,96 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D903FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C61C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E27222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4C22085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 13:02:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mwDBKYuD"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Twy3xq/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfKHMxU (ORCPT
+        id S1731256AbfKHNCm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:53:20 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13472 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726335AbfKHMxU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 07:53:20 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8Cq5Kk024045;
-        Fri, 8 Nov 2019 13:52:50 +0100
+        Fri, 8 Nov 2019 08:02:42 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57542 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730662AbfKHNCk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 08:02:40 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8D1tQv019203;
+        Fri, 8 Nov 2019 14:02:15 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=U42CzDCTjvGgKHPDdujEizpP/MuGbL64x7aocKvP598=;
- b=mwDBKYuDjJj4/kG3Ia92rMuR1ojDDvT0Q/HagfYo0vu92FbgZpMc4b+0j9PnLlM4Dj2m
- ofeR0UXVkCROk2BB9ZcmcEqV2T68xXwo07mGPubntHwsAIsThWESPvKlVa8TrBmyF/Zr
- EYCLZHITplwcDmEzXNv1TJRMPezkHmJeDWkRCehV90C4we5ZAUhRWGX2ikyXgbvpsr9f
- blV2b7kOMbRfSOhkEDbHV4w0doWBPdyUmmVTaHUmLHXOtQMWfsOmDfUlkBtMQHx5SZgn
- /t4XjicIsnp7RXnz8Dz8AuaVrOt9RmBBIUXlXXL1ae7nVm2XUh/UV8aEcMmmuNSYTjUU qQ== 
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=WOEu20nR0i4xRSiZf53WXogNt8wyvzvdiHSB58BEZaY=;
+ b=Twy3xq/J78m2GKUL7TQSQjyWs+R+K39EqeKWroBU2aDiseZJMmNvT8BM4PGMG7y1h2uX
+ P5gHZtJtXLx3yUbnAimdEnCyowD5rige5Fb/6JssRcKE0KCXyxpL37sIG27zoORNhYKX
+ py3Rn/Om7hDf+LRh67Vf7Nzo71XzRjvWNQUOdlW1Hixjaob4RpQMP5U/gizvYW7SlxFM
+ VmBnSpzIf6W8E1z/2NeKWQtJiA5KJIBBKIPXhUn0PSy3KhfvIax13AQF/w0H1wnGahs4
+ YAwEPXAPBqqWL8F3CNlkI/kpJWe62+GDn5gnyBAtVYxUkqqiUAKH7pWtFg4l7MltL8fq 6Q== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w41vmuntd-1
+        by mx07-00178001.pphosted.com with ESMTP id 2w41vd3kmx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 13:52:50 +0100
+        Fri, 08 Nov 2019 14:02:15 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 50D1510002A;
-        Fri,  8 Nov 2019 13:52:50 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 442D42B6A0D;
-        Fri,  8 Nov 2019 13:52:50 +0100 (CET)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 8 Nov 2019
- 13:52:50 +0100
-Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 8 Nov 2019 13:52:49
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <lionel.debieve@st.com>
-CC:     <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 223DF10003A;
+        Fri,  8 Nov 2019 14:02:15 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 068212B7DEF;
+        Fri,  8 Nov 2019 14:02:15 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 8 Nov
+ 2019 14:02:14 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Fri, 8 Nov 2019 14:02:14 +0100
+From:   Christophe ROULLIER <christophe.roullier@st.com>
+To:     Maxime Ripard <mripard@kernel.org>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
         <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: crypto: Convert stm32 HASH bindings to json-schema
-Date:   Fri, 8 Nov 2019 13:52:44 +0100
-Message-ID: <20191108125244.23001-3-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20191108125244.23001-1-benjamin.gaignard@st.com>
-References: <20191108125244.23001-1-benjamin.gaignard@st.com>
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Thread-Topic: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Thread-Index: AQHVljS9qESSyYnraEKgryyZ/0O5Aw==
+Date:   Fri, 8 Nov 2019 13:02:14 +0000
+Message-ID: <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
+References: <20191108103526.22254-1-christophe.roullier@st.com>
+ <20191108103526.22254-2-christophe.roullier@st.com>
+ <20191108104231.GE4345@gilmour.lan>
+In-Reply-To: <20191108104231.GE4345@gilmour.lan>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <24D71ECBC6C48E469CDC8390CA3DFA02@st.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-11-08_03:2019-11-08,2019-11-08 signatures=0
 Sender: devicetree-owner@vger.kernel.org
@@ -75,122 +99,77 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 HASH binding to DT schema format using json-schema
+On 11/8/19 11:42 AM, Maxime Ripard wrote:
+> Hi,
+>
+> On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
+>> This change is needed for some soc based on snps,dwmac, which have
+>> more than 3 clocks.
+>>
+>> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+>> ---
+>>   Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
+>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Doc=
+umentation/devicetree/bindings/net/snps,dwmac.yaml
+>> index 4845e29411e4..376a531062c2 100644
+>> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>> @@ -27,6 +27,7 @@ select:
+>>             - snps,dwmac-3.710
+>>             - snps,dwmac-4.00
+>>             - snps,dwmac-4.10a
+>> +          - snps,dwmac-4.20a
+>>             - snps,dwxgmac
+>>             - snps,dwxgmac-2.10
+>>
+>> @@ -62,6 +63,7 @@ properties:
+>>           - snps,dwmac-3.710
+>>           - snps,dwmac-4.00
+>>           - snps,dwmac-4.10a
+>> +        - snps,dwmac-4.20a
+>>           - snps,dwxgmac
+>>           - snps,dwxgmac-2.10
+>>
+>> @@ -87,7 +89,8 @@ properties:
+>>
+>>     clocks:
+>>       minItems: 1
+>> -    maxItems: 3
+>> +    maxItems: 5
+>> +    additionalItems: true
+> Those additional clocks should be documented
+>
+> Maxime
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../devicetree/bindings/crypto/st,stm32-hash.txt   | 30 ----------
- .../devicetree/bindings/crypto/st,stm32-hash.yaml  | 64 ++++++++++++++++++++++
- 2 files changed, 64 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/crypto/st,stm32-hash.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
+Hi Maxime,
 
-diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-hash.txt b/Documentation/devicetree/bindings/crypto/st,stm32-hash.txt
-deleted file mode 100644
-index 04fc246f02f7..000000000000
---- a/Documentation/devicetree/bindings/crypto/st,stm32-hash.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--* STMicroelectronics STM32 HASH
--
--Required properties:
--- compatible: Should contain entries for this and backward compatible
--  HASH versions:
--  - "st,stm32f456-hash" for stm32 F456.
--  - "st,stm32f756-hash" for stm32 F756.
--- reg: The address and length of the peripheral registers space
--- interrupts: the interrupt specifier for the HASH
--- clocks: The input clock of the HASH instance
--
--Optional properties:
--- resets: The input reset of the HASH instance
--- dmas: DMA specifiers for the HASH. See the DMA client binding,
--	 Documentation/devicetree/bindings/dma/dma.txt
--- dma-names: DMA request name. Should be "in" if a dma is present.
--- dma-maxburst: Set number of maximum dma burst supported
--
--Example:
--
--hash1: hash@50060400 {
--	compatible = "st,stm32f756-hash";
--	reg = <0x50060400 0x400>;
--	interrupts = <80>;
--	clocks = <&rcc 0 STM32F7_AHB2_CLOCK(HASH)>;
--	resets = <&rcc STM32F7_AHB2_RESET(HASH)>;
--	dmas = <&dma2 7 2 0x400 0x0>;
--	dma-names = "in";
--	dma-maxburst = <0>;
--};
-diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml b/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
-new file mode 100644
-index 000000000000..3c09c9899021
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/st,stm32-hash.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 HASH bindings
-+
-+maintainers:
-+  - Lionel Debieve <lionel.debieve@st.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32f456-hash
-+      - st,stm32f756-hash
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    items:
-+      - const: in
-+
-+  dma-maxburst:
-+    description: Set number of maximum dma burst supported
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    hash@54002000 {
-+      compatible = "st,stm32f756-hash";
-+      reg = <0x54002000 0x400>;
-+      interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&rcc HASH1>;
-+      resets = <&rcc HASH1_R>;
-+      dmas = <&mdma1 31 0x10 0x1000A02 0x0 0x0>;
-+      dma-names = "in";
-+      dma-maxburst = <2>;
-+    };
-+
-+...
--- 
-2.15.0
+The problem it is specific to our soc, so is it possible to
 
+propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
+
+and "official" description in soc yaml file (stm32-dwmac.yaml) ?
+
+ =A0 clocks:
+ =A0=A0=A0 minItems: 1
+ =A0=A0=A0 maxItems: 5
+ =A0=A0=A0 additionalItems: true
+ =A0=A0=A0 items:
+ =A0=A0=A0=A0=A0 - description: GMAC main clock
+ =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
+ =A0=A0=A0=A0=A0 - description:
+ =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used for pr=
+ogramming the
+ =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed then =
+the system
+ =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on some pl=
+atforms.
+
++=A0=A0=A0=A0=A0 - description: optional clock
+
++=A0=A0=A0=A0=A0 - description: optional clock
+
+Thanks
+
+Christophe
