@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3B2FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9ADFA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978D9222D4
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94ABD2245B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213526;
-	bh=UJIkCko1T/uvwuZdVtUds6NrBGotpYuWsGiGTTT/KO8=;
+	s=default; t=1573213556;
+	bh=dAPt4graksuksjvv/o+AlSO91d3Zkvj/R95vatbllrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vtzj126TWCEW2HGJE7MvR47pkxa+6VFBkwxuEwcZpmDh64vq1kr1YeBLn05LouUTz
-	 LjRr42neZpXkCHSphSFGEZXpe1Pz1PKyN2IaMZuHDs2RFOiSf/TwuHEDW4E+y9W3WF
-	 638P/phrKbYdlXMtWaNbh5SGkssXEswwC3N2ahd4=
+	b=vsav7cVIRa9fslDCN/ItsxPS2CIVmQTbsSoDWxVkTHIdK/gHLJBk6AynU36w7WbB8
+	 HLuhQR64s0CG/6R1dF3eZjFyqqYkxvJr5siZi19OPpn92kyRT1OsuogzKiw37YK7Yp
+	 wEXud3pp9dX6lsOuh3FSGFYAYEBWXb7PgToqChY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391092AbfKHLpV (ORCPT
+        id S2389994AbfKHLpz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:45:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391087AbfKHLpU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:20 -0500
+        id S2391194AbfKHLpy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4211C222C5;
-        Fri,  8 Nov 2019 11:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E08F21D82;
+        Fri,  8 Nov 2019 11:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213519;
-        bh=UJIkCko1T/uvwuZdVtUds6NrBGotpYuWsGiGTTT/KO8=;
+        s=default; t=1573213553;
+        bh=dAPt4graksuksjvv/o+AlSO91d3Zkvj/R95vatbllrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fwVN+FXGr7rTZeoHO7PtocShsTlWj5tgijID86FXsjZmVhbJ6w33P7AI2QxIG+zoA
-         K2SOSofT0YF3GpwpPP6YcadGUmhvaS31ahnTh0GbXnMqcE8KL2UkgT1ewNvixv4Va4
-         /Kancl42HDg4mcM1jarLJLzppPozGgauxim+MCRo=
+        b=J2PmvlrzDX72vytK3tWYKWs0y6fyyXLLmGRRXy7/fbS363jwpaxQsQOzfDQZtj8i+
+         y/M17nMUzAAOnBwGFiD4/PKo4QInAedfqWEtozx8O6+g2k9w71PUNh80jzrJZt6AGz
+         +ovEowcsVPwUHFjSynOHK3Yb6v/ksMqOUGo3iTmo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 087/103] ARM: dts: qcom: ipq4019: fix cpu0's qcom,saw2 reg value
-Date:   Fri,  8 Nov 2019 06:42:52 -0500
-Message-Id: <20191108114310.14363-87-sashal@kernel.org>
+Cc:     Aapo Vienamo <avienamo@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/64] arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
+Date:   Fri,  8 Nov 2019 06:44:45 -0500
+Message-Id: <20191108114545.15351-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
-References: <20191108114310.14363-1-sashal@kernel.org>
+In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
+References: <20191108114545.15351-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,42 +61,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Aapo Vienamo <avienamo@nvidia.com>
 
-[ Upstream commit bd73a3dd257fb838bd456a18eeee0ef0224b7a40 ]
+[ Upstream commit 6ff7705da8806de45ca1490194f0b4eb07725804 ]
 
-while compiling an ipq4019 target, dtc will complain:
-regulator@b089000 unit address format error, expected "2089000"
+On p2180 sdmmc4 is powered from a fixed 1.8 V regulator.
 
-The saw0 regulator reg value seems to be
-copied and pasted from qcom-ipq8064.dtsi.
-
-This patch fixes the reg value to match that of the
-unit address which in turn silences the warning.
-(There is no driver for qcom,saw2 right now.
-So this went unnoticed)
-
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 10d112a4078ec..19156cbb60034 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -234,7 +234,7 @@
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+index 6a51d282ec636..d1e687b4911f5 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+@@ -281,6 +281,7 @@
+ 		status = "okay";
+ 		bus-width = <8>;
+ 		non-removable;
++		vqmmc-supply = <&vdd_1v8>;
+ 	};
  
-                 saw0: regulator@b089000 {
-                         compatible = "qcom,saw2";
--                        reg = <0x02089000 0x1000>, <0x0b009000 0x1000>;
-+			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
-                         regulator;
-                 };
- 
+ 	clocks {
 -- 
 2.20.1
 
