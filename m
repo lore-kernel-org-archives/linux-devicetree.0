@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CD3FC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD0BFC6194
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D7521D7B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEA2222CE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213843;
-	bh=38CvKTUEfYqjatSWeb66xhp68C1ENMnN+gyu0nGU6rs=;
+	s=default; t=1573213863;
+	bh=gMqcaMz6j2FWdYm0XIoeIVYKUfS15ZJ0xT91Kpz2NNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IBHwrp4A8wHgZArBs0LcgixWv6TBgJRN3U4U0zvODXCFaQDW7Rb5dok6kU16qvn68
-	 KoGUcitgnFpmdtk68dPkS3IfFcspduMMTe/QA9qNfElKV0q+eX8NzlRR08JEZCNaiq
-	 TGWHOLh8XICXLfVnrv1F+7khKlZL2CTBDUmORjIE=
+	b=d1kcK7lGEoKbUU0HId87K/BvhYU6Lx0/PdchiHm/+8mjufI7VrPMwepwHuq3CDTqR
+	 YyGysgUWBaqm3pkFDA0ZJM9yxY9JTnhejtRgcm9WnAgFh/jhXFM4YeavbpDmVMoRW9
+	 YiBo200QHZYH9Z+jpUFFu9PcjPYQfociU6UdNLbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391652AbfKHLrr (ORCPT
+        id S2391621AbfKHLrn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:47:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:47:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391646AbfKHLrr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:47 -0500
+        id S2388286AbfKHLrm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E772721924;
-        Fri,  8 Nov 2019 11:47:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3069321924;
+        Fri,  8 Nov 2019 11:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213666;
-        bh=38CvKTUEfYqjatSWeb66xhp68C1ENMnN+gyu0nGU6rs=;
+        s=default; t=1573213661;
+        bh=gMqcaMz6j2FWdYm0XIoeIVYKUfS15ZJ0xT91Kpz2NNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQ7AF/ICRy8AhnPbiAZ7qnfbPxyaXVGfWbpST2vrW2YTjWRK3Jt4PAVt8sYUTzymU
-         EgvG0/82oi1K/IlLouGR6RA61k7XjFUJuBbOe4lFiX8kNq/dHBeEdG1u8lrKkmwpat
-         Kot9blQ7F4sLcrzqnmphtQS4wh1PcGU2Al/FrD0Y=
+        b=QdrjB2F1IB2DOkaTtGbYVQOTXcoiRZPa6W3dQ3MduJ5bbAJdXVpvcxa7Ko+3xljvI
+         ED2x2S/Ktr7uje97t/FvFftr4hn+cZPnko+FujuaW/8DE0kfe46Rmfo5rPwhOoqHXx
+         F+En0Wj4KfAY5ohlHSB+b7HGp68H7WNzkZWzy5cw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 19/44] of: make PowerMac cache node search conditional on CONFIG_PPC_PMAC
-Date:   Fri,  8 Nov 2019 06:46:55 -0500
-Message-Id: <20191108114721.15944-19-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 16/44] ARM: dts: exynos: Disable pull control for S5M8767 PMIC
+Date:   Fri,  8 Nov 2019 06:46:52 -0500
+Message-Id: <20191108114721.15944-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
 References: <20191108114721.15944-1-sashal@kernel.org>
@@ -58,32 +59,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit f6707fd6241e483f6fea2caae82d876e422bb11a ]
+[ Upstream commit ef2ecab9af5feae97c47b7f61cdd96f7f49b2c23 ]
 
-Cache nodes under the cpu node(s) is PowerMac specific according to the
-comment above, so make the code enforce that.
+S5M8767 PMIC interrupt line on Exynos5250-based Arndale board has
+external pull-up resistors, so disable any pull control for it in
+in controller node. This fixes support for S5M8767 interrupts and
+enables operation of wakeup from S5M8767 RTC alarm.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5250-arndale.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index c6e019208d171..27783223ca5cd 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2125,7 +2125,7 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
- 	/* OF on pmac has nodes instead of properties named "l2-cache"
- 	 * beneath CPU nodes.
- 	 */
--	if (!strcmp(np->type, "cpu"))
-+	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
- 		for_each_child_of_node(np, child)
- 			if (!strcmp(child->type, "cache"))
- 				return child;
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index c000532c14446..b425b77f8fb65 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -170,6 +170,8 @@
+ 		reg = <0x66>;
+ 		interrupt-parent = <&gpx3>;
+ 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&s5m8767_irq>;
+ 
+ 		vinb1-supply = <&main_dc_reg>;
+ 		vinb2-supply = <&main_dc_reg>;
+@@ -552,6 +554,13 @@
+ 	cap-sd-highspeed;
+ };
+ 
++&pinctrl_0 {
++	s5m8767_irq: s5m8767-irq {
++		samsung,pins = "gpx3-2";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++	};
++};
++
+ &rtc {
+ 	status = "okay";
+ };
 -- 
 2.20.1
 
