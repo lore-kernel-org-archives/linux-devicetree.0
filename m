@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C401FFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E097FC6194
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F5C22459
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8FD22473
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213467;
-	bh=utalv8UnxeKAQcyj8qQjOefjpljCFP303TKu8m6TKdQ=;
+	s=default; t=1573213511;
+	bh=dkRw0NLgbZfCKxHUgfLgac8iE4OQLyV4NXNb7ARPpdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6e9FE0mRbwG6vYGhcyVt8SSvBuMoXAsUxWbsxLq43baCiscu2zQDtGFkahtbtyI/
-	 vNahcnvgazCEVyqYxfyl3kRBYxcjSq4LMO5eK1Z1yUtPOB15Y3li4PjaswHEMZpXvG
-	 hyEKLIMN7lEJGgEgHZV5KbFkJLyhqJ7bmXF3dgCs=
+	b=Z8nn887nGFxIJHsDh0gIXIl/ZR8S5gPVxvl/MzCcn2L6xGI6EXtBuaM6e59s00LYH
+	 /3HsBrGRJZLtmVbCnAg4rQjgV27MWDJ1u+V+ZxTQrF/VIpVFpYR6MnnRluosOc3iSM
+	 RrQQ2Ps5qWmod8fqaUTgsV3z7nOWClkk5Jmgypcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390765AbfKHLo0 (ORCPT
+        id S2389565AbfKHLpJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:44:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59336 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390762AbfKHLo0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:44:26 -0500
+        id S2391036AbfKHLpJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5B6821D82;
-        Fri,  8 Nov 2019 11:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C027822459;
+        Fri,  8 Nov 2019 11:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213465;
-        bh=utalv8UnxeKAQcyj8qQjOefjpljCFP303TKu8m6TKdQ=;
+        s=default; t=1573213508;
+        bh=dkRw0NLgbZfCKxHUgfLgac8iE4OQLyV4NXNb7ARPpdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuTGtS4pUOILk5itDIr7XVDs41VeSWtwt705OadQo3cJAZVBt/jWBYNI8E9x2X0cM
-         76mJyYz5qFwXaGxalIrzo/GAZfpSFyLnBS633yXDwAckiWpk0+v4K9dYVqnHIV5cgZ
-         tFk5uJz9CEo7Im0gnvIm0RKHDJa3tHq++U6WzdaU=
+        b=KDvqE5xyLWGylC4bxHy1qSRHksMQVuZAoV5xjHE03ur+0UoquFJb6eLk7XBv72j2L
+         22gQGdmtBTk5uWLWIV6opCtfJsyiXFS5c4ecfmYCOy7sgTLPsTOa6vji8YqFfKk7Xw
+         JR9vBVKKiD0uouklvmUUyDJirafsAt0yVil7btnQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 051/103] ARM: dts: omap3-gta04: tvout: enable as display1 alias
-Date:   Fri,  8 Nov 2019 06:42:16 -0500
-Message-Id: <20191108114310.14363-51-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, Da Xue <da@lessconfused.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 082/103] arm64: dts: meson: libretech: update board model
+Date:   Fri,  8 Nov 2019 06:42:47 -0500
+Message-Id: <20191108114310.14363-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -60,33 +60,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
+[ Upstream commit b7eb0e26cc4a212fde09144cd49d4103170d2b9e ]
 
-The omap dss susbystem takes the display aliases to find
-out which displays exist. To enable tv-out we must define
-an alias.
+There is actually several different libretech board with the CC suffix
+so the model name is not appropriate here. Update to something more
+specific
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Reported-by: Da Xue <da@lessconfused.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 5f62b2f3c6e93..7e9d6c4cdbfb6 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -28,6 +28,7 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index d71cbf596d1f7..0814b6b29b86a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -14,7 +14,7 @@
+ 
+ / {
+ 	compatible = "libretech,cc", "amlogic,s905x", "amlogic,meson-gxl";
+-	model = "Libre Technology CC";
++	model = "Libre Computer Board AML-S905X-CC";
  
  	aliases {
- 		display0 = &lcd;
-+		display1 = &tv0;
- 	};
- 
- 	gpio-keys {
+ 		serial0 = &uart_AO;
 -- 
 2.20.1
 
