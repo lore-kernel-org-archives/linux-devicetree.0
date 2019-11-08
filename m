@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44359C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C401FFA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A3E222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F5C22459
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213422;
-	bh=aluBxgyG66rH0miEhxbojvxTsEkxqtA5iSpzk78LF4M=;
+	s=default; t=1573213467;
+	bh=utalv8UnxeKAQcyj8qQjOefjpljCFP303TKu8m6TKdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1pkTYs352vzBqc0jWk3NZ60vWUXmadJdI68YmreVRs5JCt/B3l/yCQDTV+sNPGFP
-	 sMIOTUTFdu/KNRPpmrpAZ7zI57zVg9B/2pYTW5CAY3qkFODWTDfdQwfpzqsUrIzqMg
-	 StRpHHuJkQptubLnFE49KgL/aHrxn1kZBr+gjY0c=
+	b=k6e9FE0mRbwG6vYGhcyVt8SSvBuMoXAsUxWbsxLq43baCiscu2zQDtGFkahtbtyI/
+	 vNahcnvgazCEVyqYxfyl3kRBYxcjSq4LMO5eK1Z1yUtPOB15Y3li4PjaswHEMZpXvG
+	 hyEKLIMN7lEJGgEgHZV5KbFkJLyhqJ7bmXF3dgCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732926AbfKHLnk (ORCPT
+        id S2390765AbfKHLo0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:43:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58220 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:44:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390511AbfKHLnj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:43:39 -0500
+        id S2390762AbfKHLo0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:44:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F1E52245A;
-        Fri,  8 Nov 2019 11:43:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5B6821D82;
+        Fri,  8 Nov 2019 11:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213418;
-        bh=aluBxgyG66rH0miEhxbojvxTsEkxqtA5iSpzk78LF4M=;
+        s=default; t=1573213465;
+        bh=utalv8UnxeKAQcyj8qQjOefjpljCFP303TKu8m6TKdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LuPdXr45g54fiqLUYt3XHc0R85+PTwesfGhXcA9ujPyz+2VisGuACp9RlwpwC6yEb
-         ISrn15QOURcctIYeLxul47RZ/BJNXX7e0m0v6L/gbavqbUw1sAqXhJb9Kq/2GGbncF
-         wn++LykZbrfSsImALla9ONFaC8WJICTU6Wv+fVY0=
+        b=iuTGtS4pUOILk5itDIr7XVDs41VeSWtwt705OadQo3cJAZVBt/jWBYNI8E9x2X0cM
+         76mJyYz5qFwXaGxalIrzo/GAZfpSFyLnBS633yXDwAckiWpk0+v4K9dYVqnHIV5cgZ
+         tFk5uJz9CEo7Im0gnvIm0RKHDJa3tHq++U6WzdaU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 021/103] ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
-Date:   Fri,  8 Nov 2019 06:41:46 -0500
-Message-Id: <20191108114310.14363-21-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 051/103] ARM: dts: omap3-gta04: tvout: enable as display1 alias
+Date:   Fri,  8 Nov 2019 06:42:16 -0500
+Message-Id: <20191108114310.14363-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -59,55 +60,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 64858773d78e820003a94e5a7179d368213655d6 ]
+[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
 
-This patch adds missing properties to the CODEC and sound nodes, so the
-audio will work also on Snow rev5 Chromebook. This patch is an extension
-to the commit e9eefc3f8ce0 ("ARM: dts: exynos: Add missing clock and
-DAI properties to the max98095 node in Snow Chromebook")
-and commit 6ab569936d60 ("ARM: dts: exynos: Enable HDMI audio on Snow
-Chromebook").  It has been reported that such changes work fine on the
-rev5 board too.
+The omap dss susbystem takes the display aliases to find
+out which displays exist. To enable tv-out we must define
+an alias.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-[krzk: Fixed typo in phandle to &max98090]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-snow-rev5.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/exynos5250-snow-rev5.dts b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-index 90560c316f644..cb986175b69b4 100644
---- a/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
-@@ -23,6 +23,14 @@
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 5f62b2f3c6e93..7e9d6c4cdbfb6 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -28,6 +28,7 @@
  
- 		samsung,model = "Snow-I2S-MAX98090";
- 		samsung,audio-codec = <&max98090>;
-+
-+		cpu {
-+			sound-dai = <&i2s0 0>;
-+		};
-+
-+		codec {
-+			sound-dai = <&max98090 0>, <&hdmi>;
-+		};
+ 	aliases {
+ 		display0 = &lcd;
++		display1 = &tv0;
  	};
- };
  
-@@ -34,6 +42,9 @@
- 		interrupt-parent = <&gpx0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&max98090_irq>;
-+		clocks = <&pmu_system_controller 0>;
-+		clock-names = "mclk";
-+		#sound-dai-cells = <1>;
- 	};
- };
- 
+ 	gpio-keys {
 -- 
 2.20.1
 
