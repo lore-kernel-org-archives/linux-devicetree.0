@@ -2,123 +2,96 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BF6FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1A7FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9811120656
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:41:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="L1r9uYB1"
+	by mail.kernel.org (Postfix) with ESMTP id 9770721D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573213329;
+	bh=Namszi3+CY32Cp3LiVs8v5sb0kNQove0cRjpl1dbsm0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=atNUhByexOqef46guMfUIBb2h3PfARrYpIewQxvJfo7rAedop/VfySPGuJ1MN9EoY
+	 1B2MPt0l0yu/G7Ii4ZTO3E8Wf042iErZ3aqlo5M76RVQQy3MfDCWN8XezzKD59totO
+	 TvlQfdWuSwykmTrt7h9TApbO34E9hWcEx89nomxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732907AbfKHLlo (ORCPT
+        id S2389801AbfKHLmJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:41:44 -0500
-Received: from vps.xff.cz ([195.181.215.36]:46878 "EHLO vps.xff.cz"
+        Fri, 8 Nov 2019 06:42:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732905AbfKHLll (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1573213299; bh=DTFELkY0GJEkB2dfExMBAyshl9VFk13qMOSBa5R8u4o=;
-        h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-        b=L1r9uYB1CgSwNl9LXzNO62rthSHIe/gMXCu/3zCOzUnXu9jtABcZOiGkCRdIBBXQ3
-         p709SVqoWgeWqfqkUYRVnP79lTFH0l2ONEfdVLhK+M8gou89gfL0kLVV3sQKXwyxBN
-         Qr52LP/xxXm00qR9AW+tn/NHI5FtWtHt88AMDIDw=
-Date:   Fri, 8 Nov 2019 12:41:38 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>, arnd@arndb.de,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        kishon@ti.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        mark.rutland@arm.com, mripard@kernel.org,
-        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
-        tglx@linutronix.de, wens@csie.org
-Subject: Re: [PATCH] phy: allwinner: Fix GENMASK misuse
-Message-ID: <20191108114138.snghk5n7kwuw7zz3@core.my.home>
-Mail-Followup-To: Icenowy Zheng <icenowy@aosc.io>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>, arnd@arndb.de,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        kishon@ti.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        mark.rutland@arm.com, mripard@kernel.org,
-        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
-        tglx@linutronix.de, wens@csie.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20191020134229.1216351-3-megous@megous.com>
- <20191107204645.13739-1-rikard.falkeborn@gmail.com>
- <20191107214514.kcz42mcehyrrif4o@core.my.home>
- <F563E52E-72BF-4297-A14F-DDE2B490DADB@aosc.io>
+        id S2389788AbfKHLmI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:08 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97CBC222C4;
+        Fri,  8 Nov 2019 11:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573213327;
+        bh=Namszi3+CY32Cp3LiVs8v5sb0kNQove0cRjpl1dbsm0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jNDRgzAibqVKfFjuL6ARILEbza7nyeX9xAuESpt/IiiUhVE/26TeJis8ERjeJlqB7
+         mXSpKDtbNxCznT4dKsgeZv/SN9WzdMm8nzj1LmL3cmPaf8Nre3ruqmIgI8IrBcCOZR
+         bmKZ9cDIfJj74u/lEdEVo/1qAWXqymwX8mOwIWpU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 169/205] arm64: dts: renesas: r8a77965: Fix clock/reset for usb2_phy1
+Date:   Fri,  8 Nov 2019 06:37:16 -0500
+Message-Id: <20191108113752.12502-169-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
+References: <20191108113752.12502-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <F563E52E-72BF-4297-A14F-DDE2B490DADB@aosc.io>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 07:29:21PM +0800, Icenowy Zheng wrote:
-> 
-> 
-> 于 2019年11月8日 GMT+08:00 上午5:45:14, "Ondřej Jirman" <megous@megous.com> 写到:
-> >Hello Rikard,
-> >
-> >On Thu, Nov 07, 2019 at 09:46:45PM +0100, Rikard Falkeborn wrote:
-> >> Arguments are supposed to be ordered high then low.
-> >> 
-> >> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> >> ---
-> >> Spotted while trying to add compile time checks of GENMASK arguments.
-> >> Patch has only been compile tested.
-> >
-> >thank you!
-> >
-> >Tested-by: Ondrej Jirman <megous@megous.com>
-> 
-> Does it affect or fix the performance?
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-See here: https://forum.armbian.com/topic/10131-orange-pi-lite2-usb3-now-working/?do=findComment&comment=88904
+[ Upstream commit 7a590fe317488783a229e5a80e91868942e8463f ]
 
-Quote:
+usb2_phy1 accidentally uses the same clock/reset as usb2_phy0.
 
-> It may or may not help. On Opi3 I see no change, probably because HUB is
-> really close to the SoC, but on boards without a HUB, SoC's USB3 phy will
-> have to drive the signal over the longer cable and this patch might benefit
-> those boards. 
+Fixes: b5857630a829a8d5 ("arm64: dts: renesas: r8a77965: add usb2_phy nodes")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Maybe someone with boards without PHY will test it more.
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 2ccb1138cdf0c..f1dfd17413b9e 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -1479,9 +1479,9 @@
+ 			compatible = "renesas,usb2-phy-r8a77965",
+ 				     "renesas,rcar-gen3-usb2-phy";
+ 			reg = <0 0xee0a0200 0 0x700>;
+-			clocks = <&cpg CPG_MOD 703>;
++			clocks = <&cpg CPG_MOD 702>;
+ 			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+-			resets = <&cpg 703>;
++			resets = <&cpg 702>;
+ 			#phy-cells = <0>;
+ 			status = "disabled";
+ 		};
+-- 
+2.20.1
 
-regards,
-	o.
-
-> >
-> >regards,
-> >	o.
-> >
-> >>  drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> 
-> >> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> >b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> >> index 1169f3e83a6f..b1c04f71a31d 100644
-> >> --- a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> >> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> >> @@ -49,7 +49,7 @@
-> >>  #define SUNXI_LOS_BIAS(n)		((n) << 3)
-> >>  #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
-> >>  #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
-> >> -#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
-> >> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
-> >>  
-> >>  struct sun50i_usb3_phy {
-> >>  	struct phy *phy;
-> >> -- 
-> >> 2.24.0
-> >> 
