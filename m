@@ -2,81 +2,82 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21965FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EC8FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C932178F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D505218AE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbfKHJY1 (ORCPT
+        id S1730069AbfKHJ0R convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:24:27 -0500
-Received: from smtp1.axis.com ([195.60.68.17]:3009 "EHLO smtp1.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfKHJY1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 04:24:27 -0500
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Nov 2019 04:24:26 EST
-IronPort-SDR: uaoumzGobxbV3e0roywZVsx2sbPNsuaHcEGKR++2PNBV/YlAYkOUmOc54na2q0w/FdoSB812q8
- nR36LGkkqHApqjYMV3Xazy/J3+agPWGTIR62fvoAsp5rEKl90sjW4HID3JuCI1c90jno0wlG0l
- CiwEIByEA0BVpb3BlHfa7DDhZTD+pUeS/2lmPrX+NesCuwka4/q41x+lTZuse9aMdo/TvsUAxT
- D2i37qotolBVDyfGb1bbSMygjv3Gm8UIh6fKfLric7NAaNFp54WMISimcw68SvGxPlFSFCL5gu
- yng=
-X-IronPort-AV: E=Sophos;i="5.68,280,1569276000"; 
-   d="scan'208";a="2309653"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-From:   Pavel Modilaynen <pavel.modilaynen@axis.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Frank Rowand <frowand.list@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: RE: [PATCH] dtc: Use pkg-config to locate libyaml
-Thread-Topic: [PATCH] dtc: Use pkg-config to locate libyaml
-Thread-Index: AQHVOKhfMuBY6u5s2UOc2e9G575Aw6d76EyAgAXLEDA=
-Date:   Fri, 8 Nov 2019 09:17:17 +0000
-Message-ID: <66bc78ec83c940cd92932221a0c5c387@XBOX07.axis.com>
-References: <20190712115219.25997-1-pavelmn@axis.com>
- <CAL_JsqK-NqxuNKGv5s68DMrxpnHdU-M-vKkP4pTgdfrYRo=09A@mail.gmail.com>
-In-Reply-To: <CAL_JsqK-NqxuNKGv5s68DMrxpnHdU-M-vKkP4pTgdfrYRo=09A@mail.gmail.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 8 Nov 2019 04:26:17 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43786 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfKHJ0R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:26:17 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so4624217oti.10;
+        Fri, 08 Nov 2019 01:26:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W4tFhyNk88cLiIrk7U2U2GoifjJU+33k2wwxbR/jqPk=;
+        b=RzF2f/wcbzEkod/VDjEgOqfK25NM0H7z6S1GHROZFg+2yhE64pC8QqgxBlTaMUu/fa
+         /QQM+fmgsouR2ylu1MDCOnAv6EM4FrGG/qSJCuC6FJDwpkQJ5wZkJaI+3Hq69MVqoGOF
+         luZN7YHrPEoNoMMkMkPPWdaREY5EGPc2WPHzt+EvipmYm6ZCr0/hulZHODFfei1J6xrK
+         wnsEd6c+vFk5n48FM0U9xJZayXXNLxGnU1nbHb5GGpTNiRwhcIc874ZQas4Xz82YwY/9
+         JnLR0uB0Im7NrejRWLgUBiZJBINF7o+J6GEkagmcBylNzkAUk2Z0/ctgK7/XDQ1IMOC0
+         q+7w==
+X-Gm-Message-State: APjAAAU7YoTTnw1bVhzG+T4lu499SDULcoCxEch5/CYIV/1kxH6jqgm/
+        wc5a+kJZnRJRjXxHzdB3H8bDAbneztrLBEjdL5A=
+X-Google-Smtp-Source: APXvYqwwwouz8e1guwW53BVrMfC0XprXStF89g2i5zeMHVrbFgP/m08Q0SJTAb2mfIIKJ3+VZSD0KgG2aIoxhMye6mc=
+X-Received: by 2002:a05:6830:2363:: with SMTP id r3mr7925099oth.39.1573205176362;
+ Fri, 08 Nov 2019 01:26:16 -0800 (PST)
 MIME-Version: 1.0
+References: <20191108021609.2584272-1-niklas.soderlund+renesas@ragnatech.se> <20191108021609.2584272-2-niklas.soderlund+renesas@ragnatech.se>
+In-Reply-To: <20191108021609.2584272-2-niklas.soderlund+renesas@ragnatech.se>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 8 Nov 2019 10:26:05 +0100
+Message-ID: <CAMuHMdWQXj_asxRuG4JD+YD2z1kVWEHUND9yV-T7VafkTd4O3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: rcar-vin: Remove paragraph about aliases
+To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBGcm9tOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KDQo+ID4gVXNpbmcgTWFr
-ZWZpbGUncyB3aWxkY2FyZCB3aXRoIGFic29sdXRlIHBhdGggdG8gZGV0ZWN0IHRoZSBwcmVzZW5j
-ZSBvZg0KPiA+IGxpYnlhbWwgcmVzdWx0cyBpbiBmYWxzZS1wb3NpdGl2ZSBkZXRlY3Rpb24gd2hl
-biBjcm9zcy1jb21waWxpbmcgZS5nLg0KPiA+IGluIHlvY3RvIGVudmlyb25tZW50Lg0KPiANCj4g
-QXMgdGhpcyBpcyBhIGhvc3QgdG9vbCwgaXQncyBub3QgcmVhbGx5IGFib3V0IGNyb3NzLWNvbXBp
-bGluZywgYnV0IHNhbmRib3hpbmcgdGhlDQo+IGhvc3QgZW52PyBJT1csIEkgY3Jvc3MtY29tcGls
-ZSBhbGwgdGhlIHRpbWUgYW5kIGRvbid0IGhhdmUgYW4gaXNzdWUuDQoNClllcywgeW91IGFyZSBj
-b3JyZWN0LCB0aGlzIGlzIHRvIGFkZHJlc3Mgc2FuZGJveGluZywgdG9vIGxhdGUgdG8gY29ycmVj
-dD8NCg0KPiANCj4gPiBVc2UgcGtnLWNvbmZpZyB0byBsb2NhdGUgbGlieWFtbCB0byBhZGRyZXNz
-IHRoaXMgc2NlbmFyaW8uDQo+IA0KPiBUaGUgcmVhc29uIEkgZGlkbid0IHVzZSBwa2ctY29uZmln
-IGluIHRoZSBmaXJzdCBwbGFjZSBpcyBpdCBhZGRzIGFub3RoZXINCj4gZGVwZW5kZW5jeS4gQUlV
-SSwgaXQncyBvbmx5IG5lZWRlZCBmb3IgZ2NvbmZpZy94Y29uZmlnIHdoaWNoIGFyZSBwcm9iYWJs
-eQ0KPiBub3Qgd2lkZWx5IHVzZWQgZXNwZWNpYWxseSBmb3IgQ0kuIExvb2tzIGxpa2Ugb2JqdG9v
-bCBuZWVkcyBpdCB0b28sIGJ1dCB0aGF0J3MNCj4geDg2IG9ubHkgdGhvdWdoIGFybTY0IHN1cHBv
-cnQgaXMgYmVpbmcgd29ya2VkIG9uLiBTbyBJIGd1ZXNzIGl0IGlzIHByZXR0eQ0KPiBtdWNoIGJl
-Y29taW5nIGEgcmVxdWlyZW1lbnQuDQoNCkV4YWN0bHksIHRoZSBwYXRjaCB3YXMgaW5zcGlyZWQg
-YnkgdXNhZ2Ugb2YgcGtnLWNvbmZpZyBpbiB0aGF0IHNoZWxsIHNjcmlwdHMgDQphc3N1bWluZyB0
-aGF0IGl0J3MgbW9yZSBjb3JyZWN0IHdheSB0byBoYW5kbGUgbGlieWFtbCBkZXBlbmRlbmN5Li4u
-DQpJIHNlZSBpdCBhbHNvIHVzZWQgZm9yIGJ1aWxkaW5nIHRvb2xzLg0KDQpTaG91bGQgSSBtYXli
-ZSBhZGQgbmV3IHBhdGNoIHRvIGZhbGxiYWNrIHRvIHdpbGRjYXJkIHdoZW4gcGtnLWNvbmZpZyBp
-cyBub3QgZm91bmQ/DQoNCj4gDQo+IFNvIEkndmUgYXBwbGllZCBpdC4gSSBhZGRlZCBzdXBwcmVz
-c2luZyBzdGRlcnIgaW4gY2FzZSBwa2ctY29uZmlnIGlzbid0IHByZXNlbnQuDQoNClRoYW5rIHlv
-dSENCg0KUGF2ZWwNCg==
+Hi Niklas,
+
+On Fri, Nov 8, 2019 at 3:17 AM Niklas Söderlund
+<niklas.soderlund+renesas@ragnatech.se> wrote:
+> It might be convenient to have aliases but it's not required, drop the
+> sentence as it's not true and not used in Gen3 DTS files.
+>
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Good (said "anti-aliasing" Geert ;-)
+
+Gr{oetje,eeting}s,
+
+                       Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
