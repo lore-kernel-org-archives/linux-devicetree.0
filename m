@@ -2,96 +2,138 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE3EC17440
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 22:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4B3C17440
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 23:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F283A214DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 22:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FAD21848
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 23:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XbYk7+Pd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F3Y107ts"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RQP9s7ub";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OwLf3n5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfKHW4n (ORCPT
+        id S1726843AbfKHXR1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 17:56:43 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:50582 "EHLO
+        Fri, 8 Nov 2019 18:17:27 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:60420 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfKHW4n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 17:56:43 -0500
+        with ESMTP id S1726231AbfKHXR1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 18:17:27 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A980760D88; Fri,  8 Nov 2019 22:56:42 +0000 (UTC)
+        id 1A0DE612C8; Fri,  8 Nov 2019 23:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573253802;
-        bh=bpzQIR/rtrIUydYIqqjWT+9eSVprmONvp/FnuZUE9h0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XbYk7+Pd79sU4LsT8zhN7fAymmLTG/oB8VMfGkYsWCpHlWUz787gQtqjBnRtr4GLZ
-         XGWY9+UcvF857Qxy54RW5ntndPnD/u2YU4qtIgE7tZGWc/yhIOYi5m1cqvjBDgBVi2
-         ztDBB5XoUpOmNsVjfRnLyOLDevRgWV95USyOPwWw=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        s=default; t=1573255002;
+        bh=8M/QhUhPyQVnQEz/O/iwKGOaISD+goxqLlUSrKk39v4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RQP9s7ubYlCzrW5AonMwtnRFCoWcbW+E1MaJaVwtNJyt8PjU0xZYuRFms+a5m/ysV
+         ZUdcpyIB92ZwCwhVx+kXJT4FLGwd2MMb51Y7l0lJ3kWTOltPaHPrSH491fOrrb52jw
+         HNwoe5UbKsFA9rwvJzdir0DNbgl4S1nLXMq81n5g=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7375F601B4;
-        Fri,  8 Nov 2019 22:56:40 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3181C60591;
+        Fri,  8 Nov 2019 23:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573253801;
-        bh=bpzQIR/rtrIUydYIqqjWT+9eSVprmONvp/FnuZUE9h0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=F3Y107tsHPpi9QBssxvMlOvNuAWnVXPT8uhP3DfzfiOze6GDJRqMxv/r1lm2gPmty
-         w4oZALc+YUMBo+xKHjxMifNNnHNGfZnFZPLofmn4UVQKimjEulVjgQpLq3OTKHF3rJ
-         lB1m9m6XWaK/qaPdOth3EeFB9cwHGg4lN/rZiJME=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7375F601B4
+        s=default; t=1573255001;
+        bh=8M/QhUhPyQVnQEz/O/iwKGOaISD+goxqLlUSrKk39v4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OwLf3n5b0oEbvaNu4B0eo4zwOT4Uq9LXoZkVR5PjMqSpJOFTkJ7C68FlS8E4O71Uy
+         j7aS/Wwbka7RuIMlVt/qJl/VCcxav9LvpNtWNLBUtn1DfJ/VWiysBfPCvoL/eugILK
+         BfjPpE2di2REx3mxGPIacT7NmbNCn1zfmxferiGw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3181C60591
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v7 5/6] clk: qcom: Add MSM8998 Multimedia Clock Controller
- (MMCC) driver
-To:     Stephen Boyd <sboyd@kernel.org>, mturquette@baylibre.com
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1573247450-19738-1-git-send-email-jhugo@codeaurora.org>
- <1573247677-20965-1-git-send-email-jhugo@codeaurora.org>
- <20191108224446.3A84A214DA@mail.kernel.org>
 From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <21ed58f1-cad3-2a19-5cd0-d162a5dc7332@codeaurora.org>
-Date:   Fri, 8 Nov 2019 15:56:39 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191108224446.3A84A214DA@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v8 0/4] MSM8998 Multimedia Clock Controller
+Date:   Fri,  8 Nov 2019 16:16:27 -0700
+Message-Id: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/8/2019 3:44 PM, Stephen Boyd wrote:
-> Quoting Jeffrey Hugo (2019-11-08 13:14:37)
->> Add a driver for the multimedia clock controller found on MSM8998
->> based devices. This should allow most multimedia device drivers
->> to probe and control their clocks.
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
-> 
-> Driver looks good.
-> 
-> Can you resend with minor fixes to binding and not include dts changes
-> in the series? I can then apply the whole series once Rob acks/reviews
-> the binding updates.
-> 
+The multimedia clock controller (mmcc) is the main clock controller for
+the multimedia subsystem and is required to enable things like display and
+camera.
 
-Sounds good.  Will do.
+v8:
+-drop dts changes from series per Stephen's request
+-fix the mislabeled mmcc example
+-drop Stephen as maintainer of the mmcc binding
+
+v7:
+-port to gcc.yaml.  Drop reviewed-by for DT changes as they got completely
+rewritten
+-drop "clk: qcom: smd: Add XO clock for MSM8998".  Will need to find another
+solution and this is not blocking right now
+-convert mmcc to yaml
+-drop errant clk.h include
+-use blank entries in the DT when no clock is available
+
+v6:
+-drop clk_get from mmcc clock provider
+
+v5:
+-handle the case where gcc uses rpmcc for xo, but the link is not specified in dt
+-have gcc select rpmcc
+
+v4:
+-fix makefile to use correct config item
+-pick up tags
+-fix ordering of clocks and clock-names in dt
+-drop MODULE_ALIAS
+-wait for xo in mmcc since that was found to be useful in some debug configs
+
+v3:
+-Rebase onto linux-next to get the final version of the clk parent rewrite
+series
+-Moved the bindings header to the bindings patch per Rob
+-Made xo manditory for GCC to work around the lack of clk orphan probe defer
+to avoid the uart console glitch
+
+v2:
+-Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+mechanisms introduced there.
+-Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+"incorrectly" during late init
+-Corrected the name of the XO clock to "xo"
+-Dropped the fake XO clock in GCC to prevent a namespace conflict
+-Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+-Cleaned up the weird newlines in the added DT node
+-Added DT header file to msm8998 DT for future clients
+
+Jeffrey Hugo (4):
+  dt-bindings: clock: Document external clocks for MSM8998 gcc
+  dt-bindings: clock: Convert qcom,mmcc to DT schema
+  dt-bindings: clock: Add support for the MSM8998 mmcc
+  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |   47 +-
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |   28 -
+ .../devicetree/bindings/clock/qcom,mmcc.yaml       |   95 +
+ drivers/clk/qcom/Kconfig                           |    9 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/mmcc-msm8998.c                    | 2913 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,mmcc-msm8998.h      |  210 ++
+ 7 files changed, 3261 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+ create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
 
 -- 
-Jeffrey Hugo
 Qualcomm Technologies, Inc. is a member of the
 Code Aurora Forum, a Linux Foundation Collaborative Project.
+
