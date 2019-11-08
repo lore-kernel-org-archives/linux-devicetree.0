@@ -2,204 +2,164 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB898C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E06BC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E01A2085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1AEE207FA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M/VKpoLA";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cmd8pXp8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hULN7kc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387476AbfKHT4P (ORCPT
+        id S1730799AbfKHUCo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:56:15 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:34392 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387487AbfKHT4O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 14:56:14 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 056DB60909; Fri,  8 Nov 2019 19:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573242862;
-        bh=RI8pAJ2oaXVf01TTf6CIgXgIZlbNFOUYc89nvR7jJEg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=M/VKpoLAh4IuqvpTb4l6Ncc/ysc3Z3wdcQpAum90P8DyPhePEqjDGjQvfAj9XIVOV
-         uIfYpr7taPThwDehSXhnkIKyfwHbI7tnY2qzVvJIFzlSBCMHoxU6HLy9y5Um6Wp+D+
-         xtNLXBlttgX/obSW1G3HuPG6EKj7nUQHakOv+3Eg=
-Received: from [10.226.59.103] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rkumbako@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6C7A60909;
-        Fri,  8 Nov 2019 19:54:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573242857;
-        bh=RI8pAJ2oaXVf01TTf6CIgXgIZlbNFOUYc89nvR7jJEg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cmd8pXp8cny6HvbtoRaaeL+v89GwX7T+3TJVCplfb1vn9gbzYgVYosD99CiYGQKXC
-         eOBVJzkyqodeqqXyvXMe0JZSfwO+jG07B+tXm8tSTIDAH1B9gdO3d2wadMGakTdcfv
-         d7i6VVRqw5o7Zex0DDfCo+lXF2+N8xfp1uOLdk9U=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6C7A60909
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rkumbako@codeaurora.org
-Subject: Re: [PATCH 4/4] thermal: step_wise: Extend thermal step-wise governor
- to monitor falling temperature.
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1568859503-19725-1-git-send-email-thara.gopinath@linaro.org>
- <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
-From:   Ram Chandrasekar <rkumbako@codeaurora.org>
-Message-ID: <7dbe01d9-6687-f4f8-0739-6b4ff6d4e59b@codeaurora.org>
-Date:   Fri, 8 Nov 2019 12:54:15 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 8 Nov 2019 15:02:44 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38503 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730685AbfKHUCn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 15:02:43 -0500
+Received: by mail-il1-f194.google.com with SMTP id u17so1316262ilq.5;
+        Fri, 08 Nov 2019 12:02:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mYf/nyD6rltSVBlJ1rEzYYkSo9gCsLs6tcnYeIJug6o=;
+        b=hULN7kc6Ntx0VJDf3/r/Ug9KysUhIby/9+oydfz0Fpzli6ZoQi5By2We85qloWst6B
+         KxA7mlmhvc4EGkfx4O5/Rjo3X4lURuasgZxveoz5Rwc7Vu3TEPnThe95kgYLEtF/T9NS
+         2d3emfu3AjAaSsvEo1kUuny8w3oBima7EHy72jpIdQJZYvTqOgozrbFgbFfJPN10rZts
+         E5uMw+UwJ8+Efan0vuD+xVy7VFvetRj4c7eIuMVTxPNafABcb0qCm6CJX+POcsypAcSO
+         I5muVAbCYSUVpAjhtGzYGl88oG9TF1ym7IOsepCWEORdapjFaCV1D2GUqlWBkEtzoWuY
+         +eyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mYf/nyD6rltSVBlJ1rEzYYkSo9gCsLs6tcnYeIJug6o=;
+        b=N9+s+A61s+RnBvEmh/z6TRHBcvO1QsuX4HNOZPVOspjln3V/Tap4oafdzm91vGhhbl
+         eRwzF73SW/BPl0bcFPBq+mn3Ht2/BeJsWtdXuOExszcg0voDCQ7hPRtlFeoDIrDvTN3K
+         W3N60LDyfws4MK+7+Yg615RBvZ8Y1TuKX2r/BD2IpmE4wCVh0A6IGWbuAA6k5s7tm19O
+         TQNyuEhkB23kAjwt/bo25IJc+JgILqh70JDqutJlPWZmb2n9un78p6oT/qODHZl5fbiP
+         sRoXh+vGbDW2/vN/M2W/YEXcpJLxtR6uZbmMZ+eIyQZp8c7PN4C31zq3SWzgikU5EpKD
+         /n7Q==
+X-Gm-Message-State: APjAAAUQ38K3mKBGdcWG767/hL1IaDAPdhFItyvpEL+WiUkn26kxTq0Z
+        rRl91oKxVbYr/87p660SP1/blbH9jXIHBWhZgRo=
+X-Google-Smtp-Source: APXvYqwFjCYO6s12BEyvIYjLOyp6JD59hgPbNgslBpXqVMXVo7xFRqxpwstlboDNb3up2WkJsPVmP6NtsZNsXXoTNKo=
+X-Received: by 2002:a92:ca8d:: with SMTP id t13mr14120645ilo.58.1573243361073;
+ Fri, 08 Nov 2019 12:02:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1568859503-19725-5-git-send-email-thara.gopinath@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191007220540.30690-1-aford173@gmail.com> <20191022162223.GU5610@atomide.com>
+ <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
+ <20191022221919.GF5610@atomide.com> <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
+ <20191023143646.GG5610@atomide.com>
+In-Reply-To: <20191023143646.GG5610@atomide.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 8 Nov 2019 14:02:29 -0600
+Message-ID: <CAHCN7xKi4oSoVbRM=-D1s2GnMig8xs6iYNwUWj2Ohfj+1okx=Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 9:36 AM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * H. Nikolaus Schaller <hns@goldelico.com> [191023 04:42]:
+> >
+> > > Am 23.10.2019 um 00:19 schrieb Tony Lindgren <tony@atomide.com>:
+> > >
+> > > * Adam Ford <aford173@gmail.com> [191022 19:01]:
+> > >> On Tue, Oct 22, 2019 at 11:22 AM Tony Lindgren <tony@atomide.com> wrote:
+> > >>>
+> > >>> Hi,
+> > >>>
+> > >>> * Adam Ford <aford173@gmail.com> [191007 15:06]:
+> > >>>> The some in the OMAP3 family have a bandgap thermal sensor, but
+> > >>>> omap2plus has it disabled.
+> > >>>>
+> > >>>> This patch enables the OMAP3_THERMAL by default like the rest of
+> > >>>> the OMAP family.
+> > >>>
+> > >>> Looks like this breaks off mode during idle for omap3, and that's
+> > >>> probably why it never got enabled. The difference in power
+> > >>> consumption during idle is about 7mW vs 32mW for the SoC as
+> > >>> measured from torpedo shunt for main_battery_som.
+> > >>>
+> > >>> I think the right fix might be simply to add handling for
+> > >>> CPU_CLUSTER_PM_ENTER to the related thermal driver to disable
+> > >>> it during idle like we have for gpio-omap.c for example.
+> > >>
+> > >> I am not sure I know where to start on fixing that issue.  Would you
+> > >> entertain enabling the driver if we set the device tree to 'disabled'
+> > >> by default?  This way if people want to to use it, it can be enabled
+> > >> on a per-device option.  Once the power stuff gets resolved, we might
+> > >> be able to enable it by default.  For people who are planning on using
+> > >> the DM3730 @ 1GHz in high temp environments, I am not sure they'll
+> > >> care about low power.
+> > >
+> > > They should both work fine together though. They are not mutually
+> > > exclusive features.
+> > >
+> > >> I'll try to look into it when I have time, but I was hoping a
+> > >> compromise might be a reasonable work-around.
+> > >
+> > > It should be hopefully a trivial fix.. I have not looked at the
+> > > driver code though.
+> >
+> > If I am taken right, it is the drivers/thermal/ti-soc-thermal/ti-*.c
+> > which is a common driver for omap3, omap4, omap5. They only differ
+> > in the thermal data and which registers and bits are used to access
+> > the ADC.
+>
+> Yes so it seems. Enabling OMAP3_THERMAL adds support to
+> of_ti_bandgap_match[] for omap3 and causes the issue.
+>
+> > So is this problem with off mode also known for omap4 and omap5?
+>
+> Probably. But we don't have off mode working for omap4, and
+> it cannot be used for omap5 AFAIK.
+>
+> My guess is we need to call clk_disable() and call
+> ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
+> what ti_bandgap_suspend does. And then restore it on
+> CPU_CLUSTER_PM_EXIT.
+>
+> There's a similar example already in gpio_omap_cpu_notifier().
+> Not sure if there is some related errata to deal with too,
+> probably the old Nokia n900 or n9 would provide some hints
+> on what exactly needs to be done.
 
+I 'think' I have a patch ready that does what you're asking, but I
+will fully admit that I don't completely grasp what's going on.
 
-On 9/18/2019 8:18 PM, Thara Gopinath wrote:
->>From the step wise governor point of view, the policy decisions
-> that has to taken on a thermal trip point that is defined to be monitored
-> for falling temprature is the mirror opposite of the decisions it has
-> to take on a trip point that is monitored for rising temperature.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->   drivers/thermal/step_wise.c | 59 +++++++++++++++++++++++++++++++++------------
->   1 file changed, 44 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
-> index 6e051cb..aa8e0a0 100644
-> --- a/drivers/thermal/step_wise.c
-> +++ b/drivers/thermal/step_wise.c
-> @@ -35,7 +35,8 @@
->    *       deactivate the thermal instance
->    */
->   static unsigned long get_target_state(struct thermal_instance *instance,
-> -				enum thermal_trend trend, bool throttle)
-> +				enum thermal_trend trend, bool throttle,
-> +				enum thermal_trip_monitor_type type)
->   {
->   	struct thermal_cooling_device *cdev = instance->cdev;
->   	unsigned long cur_state;
-> @@ -65,11 +66,21 @@ static unsigned long get_target_state(struct thermal_instance *instance,
->   
->   	switch (trend) {
->   	case THERMAL_TREND_RAISING:
-> -		if (throttle) {
-> -			next_target = cur_state < instance->upper ?
-> -				    (cur_state + 1) : instance->upper;
-> -			if (next_target < instance->lower)
-> -				next_target = instance->lower;
-> +		if (type == THERMAL_TRIP_MONITOR_FALLING) {
-> +			if (cur_state <= instance->lower) {
-> +				if (!throttle)
-> +					next_target = THERMAL_NO_TARGET;
-> +			} else {
-> +				if (!throttle)
-> +					next_target = cur_state - 1;
-> +			}
-> +		} else {
-> +			if (throttle) {
-> +				next_target = cur_state < instance->upper ?
-> +					    (cur_state + 1) : instance->upper;
-> +				if (next_target < instance->lower)
-> +					next_target = instance->lower;
-> +			}
->   		}
->   		break;
->   	case THERMAL_TREND_RAISE_FULL:
-> @@ -77,14 +88,23 @@ static unsigned long get_target_state(struct thermal_instance *instance,
->   			next_target = instance->upper;
->   		break;
->   	case THERMAL_TREND_DROPPING:
-> -		if (cur_state <= instance->lower) {
-> -			if (!throttle)
-> -				next_target = THERMAL_NO_TARGET;
-> +		if (type == THERMAL_TRIP_MONITOR_FALLING) {
-> +			if (throttle) {
-> +				next_target = cur_state < instance->upper ?
-> +					(cur_state + 1) : instance->upper;
-> +				if (next_target < instance->lower)
-> +					next_target = instance->lower;
-> +			}
->   		} else {
-> -			if (!throttle) {
-> -				next_target = cur_state - 1;
-> -				if (next_target > instance->upper)
-> -					next_target = instance->upper;
-> +			if (cur_state <= instance->lower) {
-> +				if (!throttle)
-> +					next_target = THERMAL_NO_TARGET;
-> +			} else {
-> +				if (!throttle) {
-> +					next_target = cur_state - 1;
-> +					if (next_target > instance->upper)
-> +						next_target = instance->upper;
-> +				}
->   			}
->   		}
->   		break;
-> @@ -117,6 +137,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->   {
->   	int trip_temp;
->   	enum thermal_trip_type trip_type;
-> +	enum thermal_trip_monitor_type monitor_type =
-> +					THERMAL_TRIP_MONITOR_RISING;
->   	enum thermal_trend trend;
->   	struct thermal_instance *instance;
->   	bool throttle = false;
-> @@ -130,9 +152,15 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->   		tz->ops->get_trip_type(tz, trip, &trip_type);
->   	}
->   
-> +	if (tz->ops->get_trip_monitor_type)
-> +		tz->ops->get_trip_monitor_type(tz, trip, &monitor_type);
-> +
->   	trend = get_tz_trend(tz, trip);
->   
-> -	if (tz->temperature >= trip_temp) {
-> +	if (((monitor_type == THERMAL_TRIP_MONITOR_RISING) &&
-> +	      (tz->temperature >= trip_temp)) ||
-> +	      ((monitor_type == THERMAL_TRIP_MONITOR_FALLING) &&
-> +	      (tz->temperature <= trip_temp))) {
-Governors monitoring warming devices need to have support for 
-hysteresis. Assume a case where the device is in idle when the 
-temperature goes below threshold and we trigger a mitigation. Even a 
-minimal workload or even the processing of the threshold by the governor 
-could warm the device and put the temperature above the threshold and we 
-will have to remove any mitigation. To avoid this ping-pong, its best to 
-add a hysteresis support.
->   		throttle = true;
->   		trace_thermal_zone_trip(tz, trip, trip_type);
->   	}
-> @@ -147,7 +175,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->   			continue;
->   
->   		old_target = instance->target;
-> -		instance->target = get_target_state(instance, trend, throttle);
-> +		instance->target = get_target_state(instance, trend, throttle,
-> +						    monitor_type);
->   		dev_dbg(&instance->cdev->device, "old_target=%d, target=%d\n",
->   					old_target, (int)instance->target);
->   
-> 
+I'll submit it as an RFC, but I am not even sure I understand what to
+put into the description, so if you're OK with reviewing the RFC, feel
+free to mark up the actual commit message as well.
+
+From what I can see, the changes haven't negatively impact stuff. I
+didn't see the power consumption go up before, so I am not sure I can
+replicate your findings.
+
+It'll be posted shortly.
+
+adam
+>
+> Regards,
+>
+> Tony
