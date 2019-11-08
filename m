@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C580DFC6194
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FB9C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D55B21848
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CD42085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214887;
-	bh=I8899XURCcNTrmRjzcWzfGjS7gs6WoDWHJ2mk6t3b/M=;
+	s=default; t=1573214890;
+	bh=fWtPXVPplsA/Gde7Z7fqq1we4Hu+U0G1fSE9qkDMiYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EvI3sXkXWMvQkOvgNG5mhwPvDDb1SVFOokLcLMlkggOWg5oQwORJzjCDw2Mmc6F4t
-	 24rv28zIo7tZ0tTHZe4NFwH7ssVmeU/EUd+0d1ak6sc1LBnPZAMx2uGmSA0JOvHuyu
-	 HA96hNMYJKG63l6pWX9EG0fbMKpLxZmiWjCGHeOM=
+	b=iWC3D9hKkbP2OrEoP4ScCDJUP8XYmg6nwFDXvUqjPHfMRucINpglJH676tLGoCnUE
+	 X0ooAwijMGisdD6KKVxWt2aAV+qiuKzw9GriAUOFVU9ATMVHJmVK135W+gxahVli/Q
+	 FUgjYrN4W9Q2rWvf6L147zw++gTDzlBBB0b0UMPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390598AbfKHMH7 (ORCPT
+        id S2388868AbfKHLki (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 07:07:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53574 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:40:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388875AbfKHLkj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:39 -0500
+        id S2388839AbfKHLki (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:40:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05437222C2;
-        Fri,  8 Nov 2019 11:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFA5221D7E;
+        Fri,  8 Nov 2019 11:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213238;
-        bh=I8899XURCcNTrmRjzcWzfGjS7gs6WoDWHJ2mk6t3b/M=;
+        s=default; t=1573213237;
+        bh=fWtPXVPplsA/Gde7Z7fqq1we4Hu+U0G1fSE9qkDMiYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0lT/sPuPgxE4rIvy7zUqOkLjHO+V1Ryj+AiNrCKLCeixGONbTrEvz+vUJsvfixkUc
-         2y8UqKa65JN8jeqs+EUFI0qnUQKML0Jw9YlEjIDn/ZLl5b1YeiZFMlRolAlxgB5crB
-         7GddPXriCwhGsR+e20T8hBOAOFUyFJGP6/I86oYo=
+        b=jD8BMVWAhTqFmKbCIC8QcZ5/StHSsRDNhGHmMyUiEeL8jv7C0JQNun4FWWkrdJVRQ
+         ZLCIBzw3R/qiNGBfgYfLNB37FleFp3LJDXohyzbv8/cfTJnqE9EATpcR4Zr0ttQBzs
+         fj8n2+H0cF9KxL/qQhBWq6qpe7Gn8AKvqUDsAF/s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 108/205] ARM: dts: omap3-gta04: tvout: enable as display1 alias
-Date:   Fri,  8 Nov 2019 06:36:15 -0500
-Message-Id: <20191108113752.12502-108-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 107/205] ARM: dts: omap3-gta04: fixes for tvout / venc
+Date:   Fri,  8 Nov 2019 06:36:14 -0500
+Message-Id: <20191108113752.12502-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -62,31 +62,58 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
+[ Upstream commit f6591391373dbff2c0200e1055d4ff86191578d2 ]
 
-The omap dss susbystem takes the display aliases to find
-out which displays exist. To enable tv-out we must define
-an alias.
+* fix connector compatibility (composite)
+* add comment for gpio1 23
+* add proper #address-cells
+* we use only one venc_out channel for composite
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index eee5fa0035071..79d708ce3a93f 100644
+index ae33e0e0f1d2c..eee5fa0035071 100644
 --- a/arch/arm/boot/dts/omap3-gta04.dtsi
 +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -28,6 +28,7 @@
- 
- 	aliases {
- 		display0 = &lcd;
-+		display1 = &tv0;
+@@ -131,7 +131,7 @@
  	};
  
- 	/* fixed 26MHz oscillator */
+ 	tv0: connector {
+-		compatible = "svideo-connector";
++		compatible = "composite-video-connector";
+ 		label = "tv";
+ 
+ 		port {
+@@ -143,7 +143,7 @@
+ 
+ 	tv_amp: opa362 {
+ 		compatible = "ti,opa362";
+-		enable-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
++		enable-gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;	/* GPIO_23 to enable video out amplifier */
+ 
+ 		ports {
+ 			#address-cells = <1>;
+@@ -551,10 +551,14 @@
+ 
+ 	vdda-supply = <&vdac>;
+ 
++	#address-cells = <1>;
++	#size-cells = <0>;
++
+ 	port {
++		reg = <0>;
+ 		venc_out: endpoint {
+ 			remote-endpoint = <&opa_in>;
+-			ti,channels = <2>;
++			ti,channels = <1>;
+ 			ti,invert-polarity;
+ 		};
+ 	};
 -- 
 2.20.1
 
