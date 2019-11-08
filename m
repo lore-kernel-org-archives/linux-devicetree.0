@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E3FFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B435EFC6196
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F53A2085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD652085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214675;
-	bh=xOtDzkhUjWvNRIE+cw+dW0K6vbxuhfoT/WYH8izDoCg=;
+	s=default; t=1573214676;
+	bh=ycY+drilEGsuAc0TqZW982ftVP8L7XHLLduCT27lNnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aXqqjSL4MXGoakpqcocq4hwfJVtwKC4Ybt20fwgZaGkrMxQTL0PnpKucy6mKCe5Kb
-	 GIZa9bWheCl3AZxDXYzmjy4n2S6Sj7V00upyfY/AMg7lIBf8NGdQyvmbrrW/34a2vE
-	 +ZYoIYhmuCwGJ4qOv6z07Wpo/UUtK90O3DJAAYuE=
+	b=VU3nNGdVrpj1hVOljcgJjEUxA2hAvEatotvvS6zUhQm2G+lY6wUA57ryyOqwHj+of
+	 iny3et3WYdcSc8rgIGUG5X7u8WMzY/Ms+55XAPV1/W5AwUKnM60KQV9I2KY+cij5P3
+	 bUy6vSnHiMNwwZnCMsDxmczsUH5ZfRXhqclfd+jI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389778AbfKHLmG (ORCPT
+        id S2389727AbfKHLmF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:42:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389769AbfKHLmF (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Fri, 8 Nov 2019 06:42:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389755AbfKHLmE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:42:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4752F21D82;
-        Fri,  8 Nov 2019 11:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20C5C222C4;
+        Fri,  8 Nov 2019 11:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213325;
-        bh=xOtDzkhUjWvNRIE+cw+dW0K6vbxuhfoT/WYH8izDoCg=;
+        s=default; t=1573213323;
+        bh=ycY+drilEGsuAc0TqZW982ftVP8L7XHLLduCT27lNnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yzM/i+MRIwzcICvMcwgFRTgXnXpO2xsvxP4dSMXYynyzfszjb0JR3pkdhOQhTgyY9
-         7hO4Uo++sXZuoB9CpMu4cUZEqPbo+roeIcPI0Z8EQQ6Ba3UNWoD19R2NaZIVAFmzTr
-         TWB05034Rf9JEcNfPBygR6LRg4LVZuPKPNFdOpUM=
+        b=sCL5RmDDusTZgove/q9ztclYeIG7sKbTDQrAaA7exScOLvt2jrRaxgQ69UR7BeTwX
+         rfv3Vpv8EmsGlQv8dodRvMVz6fPak9pRz1ZNbmg1+pbjwoySf2KO8Zq2VdH5wSZF3n
+         bQxtdbaRdldxjXWqQqD1tiq0ZLU8ekVYpf4FeoYg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Magnus Damm <damm+renesas@opensource.se>,
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 167/205] arm64: dts: renesas: r8a77965: Attach the SYS-DMAC to the IPMMU
-Date:   Fri,  8 Nov 2019 06:37:14 -0500
-Message-Id: <20191108113752.12502-167-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 166/205] arm64: dts: renesas: salvator-common: adv748x: Override secondary addresses
+Date:   Fri,  8 Nov 2019 06:37:13 -0500
+Message-Id: <20191108113752.12502-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -60,70 +60,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
 
-[ Upstream commit 4d76ad7d9de05506f1ee9a7b22416440468be090 ]
+[ Upstream commit e3da41a6c28f9b61ea03df987f1c9ffffc8b8e60 ]
 
-For R-Car M3-N hook up SYS-DMAC0, SYS-DMAC1 and SYS-DMAC2 to
-IPMMU-DS0 and IPMMU-DS1 in same way as for R-Car M3-W.
-This follows the R-Car Gen3 Rev.1.00 (April 2018) datasheet.
+Ensure that the ADV748x device addresses do not conflict, and group them
+together (visually in i2cdetect)
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index f60f08ba1a6f9..0da4841162610 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -634,6 +634,14 @@
- 			resets = <&cpg 219>;
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
-+			iommus = <&ipmmu_ds0 0>, <&ipmmu_ds0 1>,
-+			       <&ipmmu_ds0 2>, <&ipmmu_ds0 3>,
-+			       <&ipmmu_ds0 4>, <&ipmmu_ds0 5>,
-+			       <&ipmmu_ds0 6>, <&ipmmu_ds0 7>,
-+			       <&ipmmu_ds0 8>, <&ipmmu_ds0 9>,
-+			       <&ipmmu_ds0 10>, <&ipmmu_ds0 11>,
-+			       <&ipmmu_ds0 12>, <&ipmmu_ds0 13>,
-+			       <&ipmmu_ds0 14>, <&ipmmu_ds0 15>;
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+index 7d3d866a00635..3b90f816dfefc 100644
+--- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+@@ -420,7 +420,10 @@
  
- 		dmac1: dma-controller@e7300000 {
-@@ -668,6 +676,14 @@
- 			resets = <&cpg 218>;
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
-+			iommus = <&ipmmu_ds1 0>, <&ipmmu_ds1 1>,
-+			       <&ipmmu_ds1 2>, <&ipmmu_ds1 3>,
-+			       <&ipmmu_ds1 4>, <&ipmmu_ds1 5>,
-+			       <&ipmmu_ds1 6>, <&ipmmu_ds1 7>,
-+			       <&ipmmu_ds1 8>, <&ipmmu_ds1 9>,
-+			       <&ipmmu_ds1 10>, <&ipmmu_ds1 11>,
-+			       <&ipmmu_ds1 12>, <&ipmmu_ds1 13>,
-+			       <&ipmmu_ds1 14>, <&ipmmu_ds1 15>;
- 		};
+ 	video-receiver@70 {
+ 		compatible = "adi,adv7482";
+-		reg = <0x70>;
++		reg = <0x70 0x71 0x72 0x73 0x74 0x75
++		       0x60 0x61 0x62 0x63 0x64 0x65>;
++		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
++			    "infoframe", "cbus", "cec", "sdp", "txa", "txb" ;
  
- 		dmac2: dma-controller@e7310000 {
-@@ -702,6 +718,14 @@
- 			resets = <&cpg 217>;
- 			#dma-cells = <1>;
- 			dma-channels = <16>;
-+			iommus = <&ipmmu_ds1 16>, <&ipmmu_ds1 17>,
-+			       <&ipmmu_ds1 18>, <&ipmmu_ds1 19>,
-+			       <&ipmmu_ds1 20>, <&ipmmu_ds1 21>,
-+			       <&ipmmu_ds1 22>, <&ipmmu_ds1 23>,
-+			       <&ipmmu_ds1 24>, <&ipmmu_ds1 25>,
-+			       <&ipmmu_ds1 26>, <&ipmmu_ds1 27>,
-+			       <&ipmmu_ds1 28>, <&ipmmu_ds1 29>,
-+			       <&ipmmu_ds1 30>, <&ipmmu_ds1 31>;
- 		};
- 
- 		ipmmu_ds0: mmu@e6740000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.20.1
 
