@@ -2,100 +2,115 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDF6FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 16:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA31C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 16:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B171821848
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 16:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="x2eGZ2fB"
+	by mail.kernel.org (Postfix) with ESMTP id 035BE20865
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 16:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573231380;
+	bh=g4CoKvF3KBeAiTVPLjlckAUsjTuuIjtO+HohvgouYnY=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=wMkXQqLgDBjeP3SeYqGhHhhuQW+LZjH16asugtkW3ztV4ZMM1C6AbDYlY6dpFpXvr
+	 oFqFCmHc5vN/WjyZbn97eL+2juBmbCqeQcomuak242vp+SOyIXg2cxFy8pcEQDVvK+
+	 60UfnUDUPRLg4ANifRqDc27p7v2D6vjpXwyma4dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfKHQiB (ORCPT
+        id S1726101AbfKHQm4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 11:38:01 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:17004 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727233AbfKHQiA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 11:38:00 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA8GMEND032766;
-        Fri, 8 Nov 2019 17:37:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=yLObshd9hzUy4IWMSCmF/oQKkuoRU3dJhdKjXSa8dCs=;
- b=x2eGZ2fBJ4xnI/zqAq4URJLuQMfMCttuVjYzzNxK/JfOqT3xol5soiW//M4Y1dZdiko2
- JxIhkxJGOCzOxfSezvc7vHvtPM9R24N02ptS12C9o+78Yq5ryFO4n5wqpEletTEeOvG7
- MWGBctp8zWQNTo5QgfTSKO5s3BSiLLBVZ17E07dobHSScctgfKHx09qPe+sTBwi0RKEy
- wAgCObqQVfJAqrAbowokBg2HPME7IcRx/Ghr2BA4fz2fYljcOQM7EVCEfML147j9SZsJ
- nbbhFRlVSZCU1rj/55sfa3Ro1Duy4/M/hxeTs00B392/esR43YMiY7hfPIZ8pICpwjRl PA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w41vmvpvu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 17:37:49 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CC658100034;
-        Fri,  8 Nov 2019 17:37:48 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C10492C38AC;
-        Fri,  8 Nov 2019 17:37:48 +0100 (CET)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 8 Nov 2019
- 17:37:48 +0100
-Received: from localhost (10.48.0.192) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 8 Nov 2019 17:37:48 +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <alexandre.torgue@st.com>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <fabrice.gasnier@st.com>
-Subject: [PATCH 1/2] ARM: dts: stm32: add ADC pins used for stm32mp157c-ed1
-Date:   Fri, 8 Nov 2019 17:37:38 +0100
-Message-ID: <1573231059-395-2-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
-References: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
+        Fri, 8 Nov 2019 11:42:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbfKHQm4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 11:42:56 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44B1F206A3;
+        Fri,  8 Nov 2019 16:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573231375;
+        bh=g4CoKvF3KBeAiTVPLjlckAUsjTuuIjtO+HohvgouYnY=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=0ZpsztU1FYRY6L52Ezgj7+jOOs1x/hVT/ozS92H5H+GQTKKKDb+rMwk7lVULhGsF/
+         dGkdS59Ii91Y5vgj+xTa/pyKyS5XkSwV6lSpK4251lQ1R6b0j49oYgNTuw3uUfeI3I
+         WaQv+j6fKwqgsZhzEUdOkSDt+Np7ZYDzDQDg98no=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.192]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-08_05:2019-11-08,2019-11-08 signatures=0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACPK8Xe7dmeVjQYObzOw9LdwxH3+1XTcU+RJOZo5C69j8d-yOg@mail.gmail.com>
+References: <20191010020725.3990-1-andrew@aj.id.au> <20191010020725.3990-2-andrew@aj.id.au> <CACPK8XcGgGsoLNpCccKPb-5bojQS4c5BePewwocc-z29On7Rjg@mail.gmail.com> <20191107230029.75ED72178F@mail.kernel.org> <CACPK8Xe7dmeVjQYObzOw9LdwxH3+1XTcU+RJOZo5C69j8d-yOg@mail.gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: Add AST2600 RMII RCLK gate definitions
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 08:42:54 -0800
+Message-Id: <20191108164255.44B1F206A3@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define adc1_in6 pin used on stm32mp157c eval board.
+Quoting Joel Stanley (2019-11-08 03:29:41)
+> On Thu, 7 Nov 2019 at 23:00, Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Joel Stanley (2019-10-31 21:50:42)
+> > > Hi clock maintainers,
+> > >
+> > > On Thu, 10 Oct 2019 at 02:06, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > > >
+> > > > The AST2600 has an explicit gate for the RMII RCLK for each of the =
+four
+> > > > MACs.
+> > > >
+> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > >
+> > > I needed this patch and the aspeed-clock.h one for the aspeed dts
+> > > tree, so I've put them in a branch called "aspeed-clk-for-v5.5" and
+> > > merged that into the aspeed tree. Could you merge that into the clock
+> > > tree when you get to merging these ones?
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed.git/log/?=
+h=3Daspeed-clk-for-v5.5
+> > >
+> >
+> > Can you send a pull request please?
+>=20
+> Sure. Here you go. Let me know if you need it in a separate email.
+>=20
+> The following changes since commit d8d9ad83a497f78edd4016df0919a49628dcaf=
+bc:
+>=20
+>   dt-bindings: clock: Add AST2600 RMII RCLK gate definitions
+> (2019-11-01 15:01:18 +1030)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed.git
+> tags/aspeed-5.5-clk
+>=20
+> for you to fetch changes up to d8d9ad83a497f78edd4016df0919a49628dcafbc:
+>=20
+>   dt-bindings: clock: Add AST2600 RMII RCLK gate definitions
+> (2019-11-01 15:01:18 +1030)
+>=20
+> ----------------------------------------------------------------
+> ASPEED clock device tree bindings for 5.5
+>=20
+> ----------------------------------------------------------------
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 1e45b75..41cb211 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -137,6 +137,12 @@
- 				status = "disabled";
- 			};
- 
-+			adc1_in6_pins_a: adc1-in6 {
-+				pins {
-+					pinmux = <STM32_PINMUX('F', 12, ANALOG)>;
-+				};
-+			};
-+
- 			adc12_ain_pins_a: adc12-ain-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('C', 3, ANALOG)>, /* ADC1 in13 */
--- 
-2.7.4
+The diffstat got lost? Anyway, thanks! I pulled it into clk-next.
 
