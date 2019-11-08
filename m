@@ -2,94 +2,83 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D712C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FE8FC6196
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657212087E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FA12085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 20:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbfKHUVl (ORCPT
+        id S1728265AbfKHUvn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 15:21:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34732 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727296AbfKHUVl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 15:21:41 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8KLBLV119507;
-        Fri, 8 Nov 2019 15:21:28 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w5a9cgpa9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 15:21:27 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA8KGME7032486;
-        Fri, 8 Nov 2019 20:18:46 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma01dal.us.ibm.com with ESMTP id 2w41uk2ebp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Nov 2019 20:18:46 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8KIj6I35193200
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 20:18:45 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E7CC2805A;
-        Fri,  8 Nov 2019 20:18:45 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89A4D28059;
-        Fri,  8 Nov 2019 20:18:44 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.103.158])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Nov 2019 20:18:44 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au,
-        maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: [PATCH 11/12] ARM: dts: aspeed: rainier: Enable XDMA engine
-Date:   Fri,  8 Nov 2019 14:18:32 -0600
-Message-Id: <1573244313-9190-12-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
-References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=785 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911080195
+        Fri, 8 Nov 2019 15:51:43 -0500
+Received: from muru.com ([72.249.23.125]:41202 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726670AbfKHUvn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 15:51:43 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 4755C80D4;
+        Fri,  8 Nov 2019 20:52:18 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 12:51:39 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
+Message-ID: <20191108205139.GP5610@atomide.com>
+References: <20191007220540.30690-1-aford173@gmail.com>
+ <20191022162223.GU5610@atomide.com>
+ <CAHCN7xLy975mxX+cm56PMx-TKODEZjYPfMHb=byspKxYXXq7OA@mail.gmail.com>
+ <20191022221919.GF5610@atomide.com>
+ <1CE62E4E-1A38-448C-9197-8FA16747F942@goldelico.com>
+ <20191023143646.GG5610@atomide.com>
+ <CAHCN7xKi4oSoVbRM=-D1s2GnMig8xs6iYNwUWj2Ohfj+1okx=Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xKi4oSoVbRM=-D1s2GnMig8xs6iYNwUWj2Ohfj+1okx=Q@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable the XDMA engine node.
+* Adam Ford <aford173@gmail.com> [191108 20:03]:
+> On Wed, Oct 23, 2019 at 9:36 AM Tony Lindgren <tony@atomide.com> wrote:
+> > My guess is we need to call clk_disable() and call
+> > ti_bandgap_save_ctxt() on CPU_CLUSTER_PM_ENTER similar to
+> > what ti_bandgap_suspend does. And then restore it on
+> > CPU_CLUSTER_PM_EXIT.
+> >
+> > There's a similar example already in gpio_omap_cpu_notifier().
+> > Not sure if there is some related errata to deal with too,
+> > probably the old Nokia n900 or n9 would provide some hints
+> > on what exactly needs to be done.
+> 
+> I 'think' I have a patch ready that does what you're asking, but I
+> will fully admit that I don't completely grasp what's going on.
+> 
+> I'll submit it as an RFC, but I am not even sure I understand what to
+> put into the description, so if you're OK with reviewing the RFC, feel
+> free to mark up the actual commit message as well.
+> 
+> From what I can see, the changes haven't negatively impact stuff. I
+> didn't see the power consumption go up before, so I am not sure I can
+> replicate your findings.
+> 
+> It'll be posted shortly.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Yeah seems to do the job, thanks for fixing this issue.
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-index c1c9cd3..2cd53d9 100644
---- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-@@ -970,3 +970,7 @@
- 		spi-max-frequency = <100000000>;
- 	};
- };
-+
-+&xdma {
-+	status = "okay";
-+};
--- 
-1.8.3.1
-
+Tony
