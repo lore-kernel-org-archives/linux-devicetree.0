@@ -2,118 +2,106 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E69FFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE20FC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC062178F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BD321D7F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:45:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fewmUdz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfKHIjF (ORCPT
+        id S1730862AbfKHIpf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:39:05 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46481 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfKHIjF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:39:05 -0500
-Received: by mail-oi1-f193.google.com with SMTP id n14so4534097oie.13;
-        Fri, 08 Nov 2019 00:39:05 -0800 (PST)
+        Fri, 8 Nov 2019 03:45:35 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33192 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730743AbfKHIpe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:45:34 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a17so6017714wmb.0;
+        Fri, 08 Nov 2019 00:45:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
+        b=fewmUdz8Bc1voBvS9gkVz79gCkt7venyCUove7xWvuUQ7Y4j/5GuWd2AXvvgJu1Kfj
+         N0dQ5nNqgLQudUbMeirlTSoTROX+NXDVjv7tmF7iOf3rJrWmkKmh2vS/eJjIzlX3uqx4
+         STJgeC8x6DSUy9PENPKGwtPtmXM483oVZq4Tm20Sg9l4PF42SkfQzBy8FNi7A54AoFCP
+         k5F6YhLTTRPhmtsmFWLs8KjOql5qNPJDr74p2c7q4oNgfFgToC/aHzfjzHqwBIH5YJcz
+         u/9zV1l8RwIgs5Kml7dx0uYElJGbgKN5fExDkFmeNqi4iAmfvBOItS7w5LRN0zL+qcHs
+         ssbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ab7roXemwsexQ4pZVt0+wLuisyumzWp4nsGXFOH95TE=;
-        b=Eqv88tFAnDf7OjG5p/uw/sEZviLHfwankmexg+/wDAWQSjEuFSJjk2O66zp0JhUi1g
-         +9hSoPgn4dF0pilhjrtb/c/NkYar+r9TeVi4UUQo6O1nh/fRlqhdCYHJg4D0ozjPA98P
-         oso903MiEbNqsgKGI3DbF8FRodR57WqR4PqYCPPWkXxKAEDaWwSljhb3tHikD37ParXv
-         kmlMuuaIIgW1/OS8f2gel98mRClFM6472cEzMkWcabqdUkB8PeRUY+D9y5jNc+LAycCT
-         bgFVU5y0w/RkYCGuSMJZmjOsrJS7BgVItRazJMpaytFMhy6cfT8fCu5LOPxe525B3Vs5
-         r/wA==
-X-Gm-Message-State: APjAAAWV+hVKJagIcpRUIi1DJ2xFjjVI0VsAkQ6wIxyPo/DrmzgflOcQ
-        vc8JKEkT9f2Dapq/WsCB2f6J6EWMEfxKF0lEOes=
-X-Google-Smtp-Source: APXvYqx1pYglmvIlKKi2hmb01xlG+jxOqv5ULo4mbjRsK0Uyjgk44sHfMZS77WJg/zzTBmxr52XsKToqRgTubSJYBag=
-X-Received: by 2002:a05:6808:b17:: with SMTP id s23mr8565059oij.102.1573202344561;
- Fri, 08 Nov 2019 00:39:04 -0800 (PST)
-MIME-Version: 1.0
-References: <1573157463-14070-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573157463-14070-8-git-send-email-fabrizio.castro@bp.renesas.com> <20191107205618.GS24983@pendragon.ideasonboard.com>
-In-Reply-To: <20191107205618.GS24983@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 8 Nov 2019 09:38:53 +0100
-Message-ID: <CAMuHMdXePqHtaBqocXLPd0WPsNK_CyQMwGnGL=oUVPx=HM-8wQ@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] ARM: shmobile_defconfig: Enable support for panels
- from EDT
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9aSxRdpuFtWHR4fiaYF0NucipXPgTqmHceHSDmByEc8=;
+        b=rJg1cIZnjA1j/18+0GfLSqJG7FV3ZyFOozrzAgJX1OKGg5PBwbwldvO+Ft/6fg7swT
+         UqwfIOQ+8ccayn/7xEmLiwFyIWLUPxyvyQlWoiMBB7/5tOhm64KEt498nz/VtuOi/C1A
+         Xgn26Bf5h70ZwvEnjU20VOPktKNVCtN7+z0S0AYaw4egVa9dJeQIJY8udfeeHWsP6V/C
+         BCxbAOhUwcZUQE8aM4QqOCcUn4sQAdJBzpU/ONK/5qf7g6mh7uyrJcK/kQTpZfMYUZMW
+         6zdHTDfgP52FfiFYW2eEy6y2T1GWVQt3UPgXuO8zBLb0PAeCLs1sohxCsRcErqvM6K+i
+         cgoA==
+X-Gm-Message-State: APjAAAVmE3+dSPATC3w3YnyKwhpm4//U2H+IuChlE4Ad0gfzNKbxu313
+        WOcvSBJxwQXtA+m6lenBG/4=
+X-Google-Smtp-Source: APXvYqzDrSyXBmSgmOwIGNCEnIg0mdtNJewcjpzu3/9Z4+a5/R+2nI67UgxKiYB47MIydRckpkp04g==
+X-Received: by 2002:a1c:558a:: with SMTP id j132mr6983373wmb.21.1573202731677;
+        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
+Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id q25sm6662665wra.3.2019.11.08.00.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 00:45:31 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Peter Rosin <peda@axentia.se>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v4 7/7] [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
+Date:   Fri,  8 Nov 2019 09:45:17 +0100
+Message-Id: <20191108084517.21617-8-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108084517.21617-1-peron.clem@gmail.com>
+References: <20191108084517.21617-1-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Thu, Nov 7, 2019 at 9:56 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Thu, Nov 07, 2019 at 08:11:03PM +0000, Fabrizio Castro wrote:
-> > The iwg20d comes with an LCD panel from Emerging Display
-> > Technologies Corporation (EDT), therefore enable what's
-> > required to support it.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >
-> > ---
-> > v2->v3:
-> > * No change
-> > v1->v2:
-> > * No change
-> > ---
-> >  arch/arm/configs/shmobile_defconfig | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
-> > index c6c7035..ab416a5 100644
-> > --- a/arch/arm/configs/shmobile_defconfig
-> > +++ b/arch/arm/configs/shmobile_defconfig
-> > @@ -66,6 +66,7 @@ CONFIG_INPUT_EVDEV=y
-> >  CONFIG_KEYBOARD_GPIO=y
-> >  # CONFIG_INPUT_MOUSE is not set
-> >  CONFIG_INPUT_TOUCHSCREEN=y
-> > +CONFIG_TOUCHSCREEN_EDT_FT5X06=y
->
-> Do these options need to be built-in, or could modules work too ?
-
-All Renesas-specific config options in shmobile_defconfig are builtin,
-unlike in multi_v7_defconfig and arm64_defconfig.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 1d05d570142f..38aba7e5bbd9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -131,6 +131,10 @@
+ 	vcc-pg-supply = <&reg_aldo1>;
+ };
+ 
++&pwm {
++	status = "okay";
++};
++
+ &r_i2c {
+ 	status = "okay";
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
