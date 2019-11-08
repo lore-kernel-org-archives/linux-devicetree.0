@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61091FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3568AC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC122085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029982085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 12:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573215268;
-	bh=di6FP3t2dGpX6xM3L7mS/22x0dtDKEQ8IHSmiLUVGBQ=;
+	s=default; t=1573215281;
+	bh=ujdttuElqsOnSKDmfVVumqMuvbvm6Lae0q5bpYUe7iE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iigj3TDSiDU3d4ceYaKmmSCNSiENk0LfRnrDGlsKCYxkBxXZkjYK5iO/g3aD/aX9T
-	 Wdv7zi7CrG6VgC3f8TA91qBpv32z/09PZnRp5pK+LXYIyTkdkUnxyB0ItH3dpHNoa8
-	 9uKLcFGu8ovK+CeaC4ZE/sSpQIZaw8DX+zhKH+E4=
+	b=aDPlqNYB8fgwskjPGUXqt/zg3AgnDPOi4mHXLIEhHmA5hJjBpNtaGOLboWkwMZUGc
+	 QRfOidknfBQJol4/uMNr3nzwfbE91FiMfjOIE9ii8DvcLVhRdgTGo4bBjZBXgpSg3V
+	 lukbPCfPsL10fLE6tLTzIkGhqLu1TpeHIEdGFooY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732214AbfKHLiJ (ORCPT
+        id S1732193AbfKHMOe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:38:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 07:14:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732217AbfKHLiI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:38:08 -0500
+        id S1732179AbfKHLiF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:38:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E8C220869;
-        Fri,  8 Nov 2019 11:38:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C62E620869;
+        Fri,  8 Nov 2019 11:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213088;
-        bh=di6FP3t2dGpX6xM3L7mS/22x0dtDKEQ8IHSmiLUVGBQ=;
+        s=default; t=1573213084;
+        bh=ujdttuElqsOnSKDmfVVumqMuvbvm6Lae0q5bpYUe7iE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6SCAxeeIh7IrIlo/noD7LkohzBwwByjk5OQtc0LjZKEOZG49WnsKdQnp6NQXmywy
-         XKImO9aUyuCahTzyctfp0ulm72ihoBnGjpL17FMgk97PdB7B5fGsz1psPjCb8eBCDh
-         ZXmcuvBCdd0zb3//9UtBsXYYWuO2c82K243zb1to=
+        b=gG034E9g1jmZ9EmYDQ354GCecJwN4BebTVZuoSe3iBhDFR4MzX6Keuwz4j3R7fz+6
+         U/6sGpRzJhQ2XTrWqY45AfmPkN8oWQmSSx2RX7aEuxnhdddpBMD9LkW3ihlTCdf8uo
+         lmnuf78SJXNEsrpCROrspfbVqr8VckLEOfHkmSbw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aapo Vienamo <avienamo@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/205] arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
-Date:   Fri,  8 Nov 2019 06:34:40 -0500
-Message-Id: <20191108113752.12502-13-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 010/205] arm64: dts: allwinner: a64: NanoPi-A64: Fix DCDC1 voltage
+Date:   Fri,  8 Nov 2019 06:34:37 -0500
+Message-Id: <20191108113752.12502-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -61,32 +60,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Aapo Vienamo <avienamo@nvidia.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 6ff7705da8806de45ca1490194f0b4eb07725804 ]
+[ Upstream commit 480f58cdbe392d4387a2193b6131a277e0111dd0 ]
 
-On p2180 sdmmc4 is powered from a fixed 1.8 V regulator.
+According to the NanoPi-A64 schematics, DCDC1 is connected to a voltage
+rail named "VDD_SYS_3.3V". All users seem to expect 3.3V here: the
+Ethernet PHY, the uSD card slot, the camera interface and the GPIO pins
+on the headers.
+Fix up the voltage on the regulator to lift it up to 3.3V.
 
-Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-index 7398ae8856dc0..ccaa555180dc0 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-@@ -282,6 +282,7 @@
- 		status = "okay";
- 		bus-width = <8>;
- 		non-removable;
-+		vqmmc-supply = <&vdd_1v8>;
- 	};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+index 98dbff19f5ccc..5caba225b4f78 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+@@ -125,9 +125,9 @@
  
- 	clocks {
+ &reg_dcdc1 {
+ 	regulator-always-on;
+-	regulator-min-microvolt = <3000000>;
+-	regulator-max-microvolt = <3000000>;
+-	regulator-name = "vcc-3v";
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-3v3";
+ };
+ 
+ &reg_dcdc2 {
 -- 
 2.20.1
 
