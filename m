@@ -3,154 +3,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D3C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEACDFC6194
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229E421D6C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943C921D7B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 06:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573194945;
-	bh=WtlyHdXzYR6zFb9CyoGvL3jaNaSQ59dn8PybAwn/UWk=;
+	s=default; t=1573195330;
+	bh=cl6ZS58VdbvS4YiW96ap38rwmt3DLpIvcS0JMa4AI60=;
 	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=sxjO1hjTX0CIzA9PqzTk0uq9B4nv4NSpR0TykSnPYB5bem/Qz8CmPt0PtaJtVMBxU
-	 r5weOX70s5CBe2N18QMtCV1n9B7P+F9Sx7yvsUj2zSgoUHk1XeBi8Au5G7Q/jrSPim
-	 SUqjR6D2UTJVeQn9mlMYju4pWzih55HIpYHuZl58=
+	b=sgGajV2+dMN0aXsOua13GYV5LCj3/yQimQIpy/sF9u/azNzH1u8p3DGfI1nnH61uc
+	 6JfiMG/g6agxcqsWebD8syvSh+9cm87HSgl9Uuiiz0mOOQWNclR82VP8wX24anJ/DC
+	 efGFcZJuXlj8AitjNUi2GKFR7l9gz3AInfXlUq5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbfKHGfo (ORCPT
+        id S1727832AbfKHGmK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 01:35:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 01:42:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfKHGfo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 01:35:44 -0500
+        id S1726103AbfKHGmJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 01:42:09 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0262921882;
-        Fri,  8 Nov 2019 06:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E978C21D7E;
+        Fri,  8 Nov 2019 06:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573194943;
-        bh=WtlyHdXzYR6zFb9CyoGvL3jaNaSQ59dn8PybAwn/UWk=;
+        s=default; t=1573195328;
+        bh=cl6ZS58VdbvS4YiW96ap38rwmt3DLpIvcS0JMa4AI60=;
         h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=C8RPxjnRf/hUxQQB3nIelAjN8AOWykVxtOvebXxVnI5p07Zuxo5v/ONyFiTk5YXNG
-         4lWRDtXRbzTaXbh9BvuFkk5NDeUMfupG5f8Afd8K8t5yLtRoB7c3LJOACpRIK4BmiF
-         b7YZkHZhv9917xZyQUZ9VHTJMha+Z/awAExilEqw=
+        b=oegjtXRVFGMs9ibbPbFM5x4nAuh1XClhQc1/gMTciwe4ATeIEATj/Rz2liR3wiZSO
+         vIQplbI2ZykzuY5OX+T2D2ltcwkm1c5xSAkpC5ZqM7uI2DkZJZ3LA1lyO3NWDSHbzS
+         4gEDzmnUHXA/YxoysqU9thWqWwCkyFUCT/GhjUiM=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com>
-References: <20191014102308.27441-1-tdas@codeaurora.org> <20191014102308.27441-6-tdas@codeaurora.org> <20191029175941.GA27773@google.com> <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org> <20191031174149.GD27773@google.com> <20191107210606.E536F21D79@mail.kernel.org> <CAJs_Fx60uEdGFjJXAjvVy5LLBXXmergRi8diWxhgGqde1wiXXQ@mail.gmail.com>
+In-Reply-To: <7f3697ae-2e12-f306-b288-4dec19544275@codeaurora.org>
+References: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org> <1569959842-8399-1-git-send-email-jhugo@codeaurora.org> <20191107215506.8FBFA2084D@mail.kernel.org> <7f3697ae-2e12-f306-b288-4dec19544275@codeaurora.org>
 From:   Stephen Boyd <sboyd@kernel.org>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, mturquette@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 4/6] dt-bindings: clock: Add support for the MSM8998 mmcc
 User-Agent: alot/0.8.1
-Date:   Thu, 07 Nov 2019 22:35:42 -0800
-Message-Id: <20191108063543.0262921882@mail.kernel.org>
+Date:   Thu, 07 Nov 2019 22:42:07 -0800
+Message-Id: <20191108064207.E978C21D7E@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Rob Clark (2019-11-07 18:06:19)
-> On Thu, Nov 7, 2019 at 1:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Matthias Kaehlcke (2019-10-31 10:41:49)
-> > > Hi Taniya,
-> > >
-> > > On Thu, Oct 31, 2019 at 04:59:26PM +0530, Taniya Das wrote:
-> > > > Hi Matthias,
-> > > >
-> > > > Thanks for your comments.
-> > > >
-> > > > On 10/29/2019 11:29 PM, Matthias Kaehlcke wrote:
-> > > > > Hi Taniya,
-> > > > >
-> > > > > On Mon, Oct 14, 2019 at 03:53:08PM +0530, Taniya Das wrote:
-> > > > > > Add support for the global clock controller found on SC7180
-> > > > > > based devices. This should allow most non-multimedia device
-> > > > > > drivers to probe and control their clocks.
-> > > > > >
-> > > > > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > > >
-> > > > >
-> > > > > v3 also had
-> > > > >
-> > > > > +   [GCC_DISP_AHB_CLK] =3D &gcc_disp_ahb_clk.clkr,
-> > > > >
-> > > > > Removing it makes the dpu_mdss driver unhappy:
-> > > > >
-> > > > > [    2.999855] dpu_mdss_enable+0x2c/0x58->msm_dss_enable_clk: 'if=
-ace' is not available
-> > > > >
-> > > > > because:
-> > > > >
-> > > > >          mdss: mdss@ae00000 {
-> > > > >                     ...
-> > > > >
-> > > > >   =3D>             clocks =3D <&gcc GCC_DISP_AHB_CLK>,
-> > > > >                           <&gcc GCC_DISP_HF_AXI_CLK>,
-> > > > >                           <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> > > > >                  clock-names =3D "iface", "gcc_bus", "core";
-> > > > >     };
-> > > > >
-> > > >
-> > > > The basic idea as you mentioned below was to move the CRITICAL cloc=
-ks to
-> > > > probe. The clock provider to return NULL in case the clocks are not
-> > > > registered.
-> > > > This was discussed with Stephen on v3. Thus I submitted the below p=
-atch.
-> > > > clk: qcom: common: Return NULL from clk_hw OF provider.
-> > >
-> > > I see. My assumption was that the entire clock hierarchy should be re=
-gistered,
-> > > but Stephen almost certainly knows better :)
-> > >
-> > > > Yes it would throw these warnings, but no functional issue is obser=
-ved from
-> > > > display. I have tested it on the cheza board.
-> > >
-> > > The driver considers it an error (uses DEV_ERR to log the message) an=
-d doesn't
-> > > handle other clocks when one is found missing. I'm not really familil=
-ar with
-> > > the dpu_mdss driver, but I imagine this can have some side effects. A=
-dded some
-> > > of the authors/contributors to cc.
-> >
-> > NULL is a valid clk pointer returned by clk_get(). What is the display
-> > driver doing that makes it consider NULL an error?
-> >
+Quoting Jeffrey Hugo (2019-11-07 14:35:21)
+> On 11/7/2019 2:55 PM, Stephen Boyd wrote:
+> > Quoting Jeffrey Hugo (2019-10-01 12:57:22)
+> >> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/D=
+ocumentation/devicetree/bindings/clock/qcom,mmcc.txt
+> >> index 8b0f7841af8d..a92f3cbc9736 100644
+> >> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+> >> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+> >=20
+> >>  =20
+> >>   - reg : shall contain base register location and length
+> >>   - #clock-cells : shall contain 1
+> >>   - #reset-cells : shall contain 1
+> >>  =20
+> >> +For MSM8998 only:
+> >> +       - clocks: a list of phandles and clock-specifier pairs,
+> >> +                 one for each entry in clock-names.
+> >> +       - clock-names: "xo" for the xo clock.
+> >> +                      "gpll0" for the global pll 0 clock.
+> >> +                      "dsi0dsi" for the dsi0 pll dsi clock (required =
+if dsi is
+> >> +                               enabled, optional otherwise).
+> >> +                      "dsi0byte" for the dsi0 pll byte clock (require=
+d if dsi
+> >> +                               is enabled, optional otherwise).
+> >> +                      "dsi1dsi" for the dsi1 pll dsi clock (required =
+if dsi is
+> >> +                               enabled, optional otherwise).
+> >> +                      "dsi1byte" for the dsi1 pll byte clock (require=
+d if dsi
+> >> +                               is enabled, optional otherwise).
+> >> +                      "hdmipll" for the hdmi pll clock (required if h=
+dmi is
+> >> +                               enabled, optional otherwise).
+> >> +                      "dpvco" for the displayport pll vco clock (requ=
+ired if
+> >> +                               dp is enabled, optional otherwise).
+> >> +                      "dplink" for the displayport pll link clock (re=
+quired if
+> >> +                               dp is enabled, optional otherwise).
+> >=20
+> > I'm not sure why it's optional. The hardware is "fixed" in the sense
+> > that the dp phy is always there and connected to this hardware block.
+> >  From a driver perspective I agree it's optional to be used, but from a
+> > DT perspective it's always there so it should be required.
+> >=20
 >=20
-> do we not have an iface clk?  I think the driver assumes we should
-> have one, rather than it being an optional thing.. we could ofc change
-> that
+> Sure, the DP phy is technically always there, but does a particular=20
+> platform have an actual DP output connected to the phy?  If not, why=20
+> bother describing something that isn't even used?
 
-I think some sort of AHB clk is always enabled so the plan is to just
-hand back NULL to the caller when they call clk_get() on it and nobody
-should be the wiser when calling clk APIs with a NULL iface clk. The
-common clk APIs typically just return 0 and move along. Of course, we'll
-also turn the clk on in the clk driver so that hardware can function
-properly, but we don't need to expose it as a clk object and all that
-stuff if we're literally just slamming a bit somewhere and never looking
-back.
+If the DP phy isn't connected then having it be marked as status =3D
+"disabled" is the typical approach to the problem. I agree it may not be
+used on some particular board using the SoC, but this is an SoC that is
+made once so we should be able to describe it regardless of how it's
+used by some board.
 
-But it sounds like we can't return NULL for this clk for some reason? I
-haven't tried to track it down yet but I think Matthias has found it
-causes some sort of problem in the display driver.
+>=20
+>  From a more practical sense its undefined how to actually get the DP=20
+> clocks - the DP binding is implicitly a clock provider since it has=20
+> #clock-cells, but it doesn't specify how to actually get the clocks.=20
+> The DSI binding tells you which index is the dsi clock, and which is the =
+
+> byte clock.
+>=20
+> The HDMI binding is not a clock provider at all.  Needs to be revised,=20
+> which didn't appear trivial when I took a quick look while working on mmc=
+c.
+>=20
+> I want to do the right thing here by specifying all the external clocks=20
+> up front, and not have to worry about backwards compatibility with=20
+> pre-existing DTs later on, but I also would like to focus on one problem =
+
+> at a time, and not go dig into all the problems with DP/HDMI before=20
+> landing this, particularly as those components also rely on the mmcc.
+>=20
+> Is that justification enough for you?  If not, how would you like to=20
+> proceed?  Make them required in the binding, and just have an invalid=20
+> (per the binding) DT until all the problems get sorted out?
+>=20
+
+If we can make the clks 'required' and not cause the DTS checker system
+to blow up then I'll be happy.
+
+I hope we can have a property like:
+=09
+	clocks =3D <&gcc KNOWN_CLK>, <0>, <0>, <&dp_phy 1>;
+
+where <0> means "I don't know right now", and that will be enough to
+please the checker and can be filled in later on when we sort out the
+HDMI and DP bindings. If this doesn't work then I guess I'll just have
+to get over it and complain to Rob Herring.
 
