@@ -2,453 +2,188 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B863FA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3FBC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C40214DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:05:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="m6MIqM2r"
+	by mail.kernel.org (Postfix) with ESMTP id 771942178F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 18:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573236772;
+	bh=ELQr5f48u8UP3gTQ4f0O6v3rgM59jKm+kt9ggY9rv9s=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=uSGUjC2Nrq6jMHBUUmyvDaYCjjF5MtdBnUkkAw+GK0wqNiEBnZYCFNYNVg81Vr5rb
+	 rfNrf2q0aySEZqhRialqp0ibiaZv6CB+M6kro69hJYF+dSnZ4rlKG/pAeUciEI9vEz
+	 3m8G9YtaYWmEPbidroRA23SvkLVBej229SUlsKZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfKHSFS (ORCPT
+        id S1728589AbfKHSMv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 13:05:18 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:42698 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfKHSFS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 13:05:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1573236315; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ima9tREMzCyUlw9FPEW17NTBz0/V5NZJczR4kaq9Z0U=;
-        b=m6MIqM2rEMicTH6fQTC0F6YvsXbtxUVmyxV6t6L0pRbh9gUYUIAI49ZAuSDMC199kjosKJ
-        HsccfkutbE0AU0vEI5dK+5+WqyxCw7k2HHV60DnBJtuPbrCbnqMyygpP6kALnzWIPuihvx
-        e0bnf7FjAAk/OyAvv7PP0DO6FUwM8vA=
+        Fri, 8 Nov 2019 13:12:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbfKHSMv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 13:12:51 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E284E214DB;
+        Fri,  8 Nov 2019 18:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573236770;
+        bh=ELQr5f48u8UP3gTQ4f0O6v3rgM59jKm+kt9ggY9rv9s=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=bOSP1g9YSgcPhvpPAlL+a9JRxoTij3qU1HwCLePyjL/IOXi+sJLpbHKsEH1gLuhqO
+         AhekoDy5jkd3MDdy7HhsZZoxylHaNfro54qAvKiCVLal478ISREwfbOcvq5jWDC4W2
+         2RYU+3Bt4uPMUGJxhiOjNEqvgvwJuki6MI+L4owo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 08 Nov 2019 19:05:15 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] remoteproc: ingenic: Added remoteproc driver
-In-Reply-To: <20190826222511.GJ1263@builder>
-References: <20190729183109.18283-1-paul@crapouillou.net>
- <20190729183109.18283-3-paul@crapouillou.net>
- <20190826222511.GJ1263@builder>
-Message-ID: <4343f5b53ff3e400324f03689737854a@crapouillou.net>
-X-Sender: paul@crapouillou.net
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191108101116.GA2583136@ulmo>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-8-git-send-email-skomatineni@nvidia.com> <20191106231005.F2CD820869@mail.kernel.org> <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com> <20191107152115.GA2580600@ulmo> <20191107191933.0B18021D6C@mail.kernel.org> <20191108101116.GA2583136@ulmo>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 10:12:49 -0800
+Message-Id: <20191108181249.E284E214DB@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Quoting Thierry Reding (2019-11-08 02:11:16)
+> On Thu, Nov 07, 2019 at 11:19:32AM -0800, Stephen Boyd wrote:
+> > Quoting Thierry Reding (2019-11-07 07:21:15)
+> > > On Thu, Nov 07, 2019 at 03:54:03AM +0300, Dmitry Osipenko wrote:
+> > > > 07.11.2019 02:10, Stephen Boyd =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > > > Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
+> > > > >> This patch adds an API clk_hw_get_parent_index to get index of t=
+he
+> > > > >> clock parent to use during the clock restore operations on system
+> > > > >> resume.
+> > > > > =20
+> > > > > Is there a reason we can't save the clk hw index at suspend time =
+by
+> > > > > reading the hardware to understand the current parent? The parent=
+ index
+> > > > > typically doesn't matter unless we're trying to communicate somet=
+hing
+> > > > > from the framework to the provider driver. Put another way, I wou=
+ld
+> > > > > think the provider driver can figure out the index itself without=
+ having
+> > > > > to go through the framework to do so.
+> > > >=20
+> > > > Isn't it a bit wasteful to duplicate information about the parent w=
+ithin
+> > > > a provider if framework already has that info? The whole point of t=
+his
+> > > > new API is to allow providers to avoid that unnecessary duplication.
+> > > >=20
+> > > > Please note that clk_hw_get_parent_index is getting used only at the
+> > > > resume time and not at suspend.
+> > >=20
+> > > I agree with this. All of the information that we need is already cac=
+hed
+> > > in the framework. Doing this in the driver would mean essentially add=
+ing
+> > > a "saved parent" field along with code to read the value at suspend t=
+ime
+> > > to the three types of clocks that currently use this core helper.
+> >=20
+> > Don't we already have a "saved parent" field by storing the pointer to
+> > the clk_hw?
+> >=20
+> > >=20
+> > > That's certainly something that we *can* do, but it doesn't sound lik=
+e a
+> > > better option than simply querying the framework for the value that we
+> > > need.
+> > >=20
+> >=20
+> > Let me say this another way. Why does this driver want to know the index
+> > that the framework uses for some clk_hw pointer? Perhaps it happens to
+> > align with the same value that hardware uses, but I still don't
+> > understand why the driver wants to know what the framework has decided
+> > is the index for some clk_hw pointer.
+> >=20
+> > Or is this something like "give me the index for the parent that the
+> > framework thinks I currently have but in reality don't have anymore
+> > because the register contents were wiped and we need to reparent it"?
+>=20
+> Yeah, that's exactly what this is being used for. It's used to restore
+> the parent/child relationship during resume after the registers have
+> been wiped during supend.
 
-On 2019-08-27 00:25, Bjorn Andersson wrote:
-> On Mon 29 Jul 11:31 PDT 2019, Paul Cercueil wrote:
-> 
->> This driver is used to boot, communicate with and load firmwares to 
->> the
->> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
->> Ingenic.
->> 
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> ---
->> 
->> Notes:
->>     v2: Remove exception for always-mapped memories
->> 
->>  drivers/remoteproc/Kconfig         |   8 +
->>  drivers/remoteproc/Makefile        |   1 +
->>  drivers/remoteproc/ingenic_rproc.c | 285 
->> +++++++++++++++++++++++++++++
->>  3 files changed, 294 insertions(+)
->>  create mode 100644 drivers/remoteproc/ingenic_rproc.c
->> 
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index 28ed306982f7..a0be40e2098d 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -214,6 +214,14 @@ config STM32_RPROC
->> 
->>  	  This can be either built-in or a loadable module.
->> 
->> +config INGENIC_RPROC
->> +	tristate "Ingenic JZ47xx VPU remoteproc support"
->> +	depends on MIPS || COMPILE_TEST
->> +	help
->> +	  Say y or m here to support the VPU in the JZ47xx SoCs from 
->> Ingenic.
->> +	  This can be either built-in or a loadable module.
->> +	  If unsure say N.
->> +
->>  endif # REMOTEPROC
->> 
->>  endmenu
->> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->> index 00f09e658cb3..6eb0137abbc7 100644
->> --- a/drivers/remoteproc/Makefile
->> +++ b/drivers/remoteproc/Makefile
->> @@ -10,6 +10,7 @@ remoteproc-y				+= remoteproc_sysfs.o
->>  remoteproc-y				+= remoteproc_virtio.o
->>  remoteproc-y				+= remoteproc_elf_loader.o
->>  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
->> +obj-$(CONFIG_INGENIC_RPROC)			+= ingenic_rproc.o
->>  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->>  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
->> diff --git a/drivers/remoteproc/ingenic_rproc.c 
->> b/drivers/remoteproc/ingenic_rproc.c
->> new file mode 100644
->> index 000000000000..6fe0530c83a6
->> --- /dev/null
->> +++ b/drivers/remoteproc/ingenic_rproc.c
->> @@ -0,0 +1,285 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Ingenic JZ47xx remoteproc driver
->> + * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
->> + */
->> +
->> +#include <linux/bitops.h>
->> +#include <linux/clk.h>
->> +#include <linux/err.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/remoteproc.h>
->> +
->> +#include "remoteproc_internal.h"
->> +
->> +#define REG_AUX_CTRL		0x0
->> +#define REG_AUX_MSG_ACK		0x10
->> +#define REG_AUX_MSG		0x14
->> +#define REG_CORE_MSG_ACK	0x18
->> +#define REG_CORE_MSG		0x1C
->> +
->> +#define AUX_CTRL_SLEEP		BIT(31)
->> +#define AUX_CTRL_MSG_IRQ_EN	BIT(3)
->> +#define AUX_CTRL_NMI_RESETS	BIT(2)
->> +#define AUX_CTRL_NMI		BIT(1)
->> +#define AUX_CTRL_SW_RESET	BIT(0)
->> +
->> +struct vpu_mem_map {
->> +	const char *name;
->> +	unsigned int da;
->> +};
->> +
->> +struct vpu_mem_info {
->> +	const struct vpu_mem_map *map;
->> +	unsigned long len;
->> +	void __iomem *base;
->> +};
->> +
->> +static const struct vpu_mem_map vpu_mem_map[] = {
->> +	{ "tcsm0", 0x132b0000 },
->> +	{ "tcsm1", 0xf4000000 },
->> +	{ "sram",  0x132f0000 },
->> +};
->> +
->> +/* Device data */
->> +struct vpu {
->> +	int irq;
->> +	struct clk *vpu_clk;
->> +	struct clk *aux_clk;
->> +	void __iomem *aux_base;
->> +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
->> +	struct device *dev;
->> +};
->> +
->> +static int ingenic_rproc_prepare(struct rproc *rproc)
-> 
-> So I presume aux_clk and vpu_clk are required by the load callback?
+Ok cool. Our whole suspend/resume and save/restore story hasn't really
+been well thought out so we may want to pull all this logic into the
+core one day. For now it's OK to do the heavy lifting from provider
+drivers until someone gets a better grasp on how this should all work.
 
-Sorry, I really thought I answered that email.
+>=20
+> > A generic API to get any index for this question is overkill and we sho=
+uld
+> > consider adding some sort of API like clk_hw_get_current_parent_index(),
+> > or a framework flag that tells the framework this parent is incorrect
+> > and we need to call the .set_parent() op again to reconfigure it.
+>=20
+> Okay, I think I see what you're saying. The current implementation does
+> carry a bit of a risk because users could be calling this function with
+> any arbitrary pair of struct clk_hw *, even completely unrelated ones.
+>=20
+> How about we turn it into this instead:
+>=20
+>         /**
+>          * clk_hw_get_parent_index - return the index of the parent clock
+>          * @hw: clk_hw associated with the clk being consumed
+>          *
+>          * Fetches and returns the index of parent clock. Returns -EINVAL=
+ if the given
+>          * clock does not have a current parent.
+>          */
+>         int clk_hw_get_parent_index(struct clk_hw *hw)
+>         {
+>                 struct clk_hw *parent =3D clk_hw_get_parent(hw);
+>=20
+>                 if (!parent)
+>                         return -EINVAL;
+>=20
+>                 return clk_fetch_parent_index(hw->core, parent->core);
+>         }
+>         EXPORT_SYMBOL_GPL(clk_hw_get_parent_index);
+>=20
+> I think that has the advantage that we can't pass it a parent that's not
+> really a parent. There's still the slightly weird case where the clock
+> doesn't have a current parent, but hopefully that's something we are not
+> going to encounter much. After all this only makes sense to be called on
+> mux clocks and they always do have a parent by definition.
 
-The clocks are required to be enabled for the firmware to be loaded to 
-one of the available memories, that's the reason behind patch [2/3].
+Right.
 
->> +{
->> +	struct vpu *vpu = rproc->priv;
->> +	int ret;
->> +
->> +	ret = clk_prepare_enable(vpu->vpu_clk);
-> 
-> Please use the clk_bulk API instead.
+>=20
+> Perhaps we should be more explicit and wrap that !parent conditional in
+> a WARN_ON()? In my local patches I do that at the call sites because
+> they are all functions returning void, so we'd be silently ignoring the
+> cases, but I think it may make sense to have it in the core.
+>=20
 
-Will do.
+Sure a WARN_ON() sounds fair. That will not take the whole task down
+and makes sure that drivers aren't doing something incorrect. Otherwise,
+this looks good and we can optimize by caching the parent index later if
+we really need to.
 
->> +	if (ret) {
->> +		dev_err(vpu->dev, "Unable to start VPU clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(vpu->aux_clk);
->> +	if (ret) {
->> +		dev_err(vpu->dev, "Unable to start AUX clock: %d\n", ret);
->> +		goto err_disable_vpu_clk;
->> +	}
->> +
->> +	return 0;
->> +
->> +err_disable_vpu_clk:
->> +	clk_disable_unprepare(vpu->vpu_clk);
->> +	return ret;
->> +}
->> +
->> +static void ingenic_rproc_unprepare(struct rproc *rproc)
->> +{
->> +	struct vpu *vpu = rproc->priv;
->> +
->> +	clk_disable_unprepare(vpu->aux_clk);
->> +	clk_disable_unprepare(vpu->vpu_clk);
->> +}
->> +
->> +static int ingenic_rproc_start(struct rproc *rproc)
->> +{
->> +	struct vpu *vpu = rproc->priv;
->> +	u32 ctrl;
->> +
->> +	enable_irq(vpu->irq);
->> +
->> +	/* Reset the AUX and enable message IRQ */
->> +	ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
->> +	writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
->> +
->> +	return 0;
->> +}
->> +
->> +static int ingenic_rproc_stop(struct rproc *rproc)
->> +{
->> +	struct vpu *vpu = rproc->priv;
->> +
->> +	/* Keep AUX in reset mode */
->> +	writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
->> +
->> +	disable_irq_nosync(vpu->irq);
-> 
-> The _nosync here mean that we might return to rproc_stop(), which will
-> call ingenic_rproc_unprepare(). Is there any relationship between your
-> clocks and the memory used by virtio?
-
-Yes, the memory is only accessible when the clocks are enabled, the 
-system locks up otherwise.
-
->> +
->> +	return 0;
->> +}
->> +
->> +static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
->> +{
->> +	struct vpu *vpu = rproc->priv;
->> +
->> +	writel(vqid, vpu->aux_base + REG_CORE_MSG);
->> +}
->> +
->> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, int 
->> len)
->> +{
->> +	struct vpu *vpu = rproc->priv;
->> +	void __iomem *va = NULL;
->> +	unsigned int i;
->> +
->> +	if (len <= 0)
->> +		return NULL;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
->> +		const struct vpu_mem_info *info = &vpu->mem_info[i];
->> +		const struct vpu_mem_map *map = info->map;
->> +
->> +		if (da >= map->da && (da + len) < (map->da + info->len)) {
->> +			va = info->base + (da - map->da);
->> +			break;
->> +		}
->> +	}
->> +
->> +	return (__force void *)va;
->> +}
->> +
->> +static struct rproc_ops ingenic_rproc_ops = {
->> +	.prepare = ingenic_rproc_prepare,
->> +	.unprepare = ingenic_rproc_unprepare,
->> +	.start = ingenic_rproc_start,
->> +	.stop = ingenic_rproc_stop,
->> +	.kick = ingenic_rproc_kick,
->> +	.da_to_va = ingenic_rproc_da_to_va,
->> +};
->> +
->> +static irqreturn_t vpu_interrupt(int irq, void *data)
->> +{
->> +	struct rproc *rproc = data;
->> +	struct vpu *vpu = rproc->priv;
->> +	u32 vring;
->> +
->> +	vring = readl(vpu->aux_base + REG_AUX_MSG);
->> +
->> +	/* Ack the interrupt */
->> +	writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
->> +
->> +	return rproc_vq_interrupt(rproc, vring);
->> +}
->> +
->> +#ifdef CONFIG_OF
-> 
-> You don't need #ifdef here.
-> 
->> +static const struct of_device_id ingenic_rproc_of_matches[] = {
-> 
-> Please move this down just before the ingenic_rproc_driver.
-> 
->> +	{ .compatible = "ingenic,jz4770-vpu-rproc", },
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
->> +#endif
->> +
->> +static void ingenic_rproc_free(void *rproc)
->> +{
->> +	rproc_free(rproc);
->> +}
->> +
->> +static void ingenic_rproc_unregister(void *rproc)
->> +{
->> +	rproc_del(rproc);
->> +	rproc_shutdown(rproc);
->> +}
->> +
->> +static int ingenic_rproc_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct resource *mem;
->> +	struct rproc *rproc;
->> +	struct vpu *vpu;
->> +	unsigned int i;
->> +	int ret;
->> +
->> +	rproc = rproc_alloc(dev, "ingenic-vpu",
->> +			    &ingenic_rproc_ops, NULL, sizeof(*vpu));
->> +	if (!rproc)
->> +		return -ENOMEM;
->> +
->> +	ret = devm_add_action_or_reset(dev, ingenic_rproc_free, rproc);
-> 
-> Please write a patch adding devm_rproc_alloc() to the core.
-
-Ok.
-
->> +	if (ret) {
->> +		dev_err(dev, "Unable to add action");
->> +		return ret;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, rproc);
-> 
-> I don't see you getting the drvdata, so please skip this.
-> 
->> +	vpu = rproc->priv;
->> +	vpu->dev = &pdev->dev;
->> +
->> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
->> +	vpu->aux_base = devm_ioremap_resource(dev, mem);
->> +	if (IS_ERR(vpu->aux_base)) {
->> +		dev_err(dev, "Failed to ioremap");
->> +		return PTR_ERR(vpu->aux_base);
->> +	}
->> +
->> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
->> +		mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> +						   vpu_mem_map[i].name);
->> +
->> +		vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
->> +		if (IS_ERR(vpu->mem_info[i].base)) {
->> +			ret = PTR_ERR(vpu->mem_info[i].base);
->> +			dev_err(dev, "Failed to ioremap");
->> +			return ret;
->> +		}
->> +
->> +		vpu->mem_info[i].len = resource_size(mem);
->> +		vpu->mem_info[i].map = &vpu_mem_map[i];
->> +	}
->> +
->> +	vpu->vpu_clk = devm_clk_get(dev, "vpu");
->> +	if (IS_ERR(vpu->vpu_clk)) {
->> +		dev_err(dev, "Failed to get VPU clock");
->> +		return PTR_ERR(vpu->vpu_clk);
->> +	}
->> +
->> +	vpu->aux_clk = devm_clk_get(dev, "aux");
->> +	if (IS_ERR(vpu->aux_clk)) {
->> +		dev_err(dev, "Failed to get AUX clock");
->> +		return PTR_ERR(vpu->aux_clk);
->> +	}
->> +
->> +	vpu->irq = platform_get_irq(pdev, 0);
->> +	if (vpu->irq < 0) {
->> +		dev_err(dev, "Failed to get platform IRQ");
->> +		return vpu->irq;
->> +	}
->> +
->> +	ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", 
->> rproc);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to request IRQ");
->> +		return ret;
->> +	}
->> +
->> +	disable_irq_nosync(vpu->irq);
->> +
->> +	ret = rproc_add(rproc);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to register remote processor");
->> +		return ret;
->> +	}
->> +
->> +	ret = devm_add_action_or_reset(dev, ingenic_rproc_unregister, 
->> rproc);
-> 
-> Please add a devm_rproc_add() to the core.
-> 
->> +	if (ret) {
->> +		dev_err(dev, "Unable to add action");
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static struct platform_driver ingenic_rproc_driver = {
->> +	.probe = ingenic_rproc_probe,
->> +	.driver = {
->> +		.name = "ingenic-vpu",
->> +		.owner = THIS_MODULE,
-> 
-> module_platform_driver() will assign .module for you.
-> 
-> Regards,
-> Bjorn
-> 
->> +		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
->> +	},
->> +};
->> +module_platform_driver(ingenic_rproc_driver);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
->> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
->> --
->> 2.21.0.593.g511ec345e18
->> 
