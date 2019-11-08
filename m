@@ -2,177 +2,370 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05647C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008E3C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF86214DA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A73218AE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 09:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbfKHJgE (ORCPT
+        id S1730069AbfKHJhj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 04:36:04 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43950 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730614AbfKHJgD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:36:03 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA89WGA9086772
-        for <devicetree@vger.kernel.org>; Fri, 8 Nov 2019 04:36:02 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w54r2tgmj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <devicetree@vger.kernel.org>; Fri, 08 Nov 2019 04:36:02 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <devicetree@vger.kernel.org> from <alistair@popple.id.au>;
-        Fri, 8 Nov 2019 09:36:00 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Nov 2019 09:35:55 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA89Zsv937224532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Nov 2019 09:35:54 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96EFC5204F;
-        Fri,  8 Nov 2019 09:35:54 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id F40635204E;
-        Fri,  8 Nov 2019 09:35:53 +0000 (GMT)
-Received: from townsend.localnet (unknown [9.81.221.11])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C9C28A01E3;
-        Fri,  8 Nov 2019 20:35:49 +1100 (AEDT)
-From:   Alistair Popple <alistair@popple.id.au>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsi@lists.ozlabs.org
-Subject: Re: [PATCH v2 11/11] fsi: aspeed: Fix OPB0 byte order register values
-Date:   Fri, 08 Nov 2019 20:31:12 +1100
-In-Reply-To: <20191108051945.7109-12-joel@jms.id.au>
-References: <20191108051945.7109-1-joel@jms.id.au> <20191108051945.7109-12-joel@jms.id.au>
+        Fri, 8 Nov 2019 04:37:39 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:45181 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730005AbfKHJhj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 04:37:39 -0500
+X-Originating-IP: 93.34.114.233
+Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 67626C0014;
+        Fri,  8 Nov 2019 09:37:28 +0000 (UTC)
+Date:   Fri, 8 Nov 2019 10:39:27 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Peter Rosin <peda@axentia.se>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v3 2/7] drm/bridge: Repurpose lvds-encoder.c
+Message-ID: <20191108093927.2g7dwgdwrcr4rov7@uno.localdomain>
+References: <1573157463-14070-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1573157463-14070-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20191107203454.GN24983@pendragon.ideasonboard.com>
+ <TYXPR01MB177573D7BD9DAA139F7FAB8FC07B0@TYXPR01MB1775.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-TM-AS-GCONF: 00
-x-cbid: 19110809-0008-0000-0000-0000032CAD21
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110809-0009-0000-0000-00004A4BB52E
-Message-Id: <1856299.kAykGyoYJU@townsend>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911080093
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kxktsjfowcqyta6k"
+Content-Disposition: inline
+In-Reply-To: <TYXPR01MB177573D7BD9DAA139F7FAB8FC07B0@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-OPB data mirroring is pretty special, glad someone has figured it out and made 
-some artwork in the process.
 
-Acked-by: Alistair Popple <alistair@popple.id.au>
+--kxktsjfowcqyta6k
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Friday, 8 November 2019 4:19:45 PM AEDT Joel Stanley wrote:
-> From: Andrew Jeffery <andrew@aj.id.au>
-> 
-> The data byte order selection registers in the APB2OPB primarily expose some
-> internal plumbing necessary to get correct write accesses onto the OPB.
-> OPB write cycles require "data mirroring" across the 32-bit data bus to
-> support variable data width slaves that don't implement "byte enables".
-> For slaves that do implement byte enables the master can signal which
-> bytes on the data bus the slave should consider valid.
-> 
-> The data mirroring behaviour is specified by the following table:
-> 
->     +-----------------+----------+-----------------------------------+
->     |                 |          |          32-bit Data Bus          |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |         |       |          |         |         |       |       |
->     |   ABus  | Mn_BE |  Request |   Dbus  |   Dbus  |  Dbus |  Dbus |
->     | (30:31) | (0:3) | Transfer |   0:7   |   8:15  | 16:23 | 24:31 |
->     |         |       |   Size   |  byte0  |  byte1  | byte2 | byte3 |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    00   |  1111 | fullword |  byte0  |  byte1  | byte2 | byte3 |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    00   |  1110 | halfword |  byte0  |  byte1  | byte2 |       |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    01   |  0111 |   byte   | _byte1_ |  byte1  | byte2 | byte3 |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    00   |  1100 | halfword |  byte0  |  byte1  |       |       |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    01   |  0110 |   byte   | _byte1_ |  byte1  | byte2 |       |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    10   |  0011 | halfword | _byte2_ | _byte3_ | byte2 | byte3 |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    00   |  1000 |   byte   |  byte0  |         |       |       |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    01   |  0100 |   byte   | _byte1_ |  byte1  |       |       |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    10   |  0010 |   byte   | _byte2_ |         | byte2 |       |
->     +---------+-------+----------+---------+---------+-------+-------+
->     |    11   |  0001 |   byte   | _byte3_ | _byte3_ |       | byte3 |
->     +---------+-------+----------+---------+---------+-------+-------+
-> 
-> Mirrored data values are highlighted by underscores in the Dbus columns.
-> The values in the ABus and Request Transfer Size columns correspond to
-> values in the field names listed in the write data order select register
-> descriptions.
-> 
-> Similar configuration registers are exposed for reads which enables the
-> secondary purpose of configuring hardware endian conversions. It appears the
-> data bus byte order is switched around in hardware so set the registers such
-> that we can access the correct values for all widths. The values were
-> determined by experimentation on hardware against fixed CFAM register
-> values to configure the read data order, then in combination with the
-> table above and the register layout documentation in the AST2600
-> datasheet performing write/read cycles to configure the write data order
-> registers.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->  drivers/fsi/fsi-master-aspeed.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-
-aspeed.c
-> index 95e226ac78b9..f49742b310c2 100644
-> --- a/drivers/fsi/fsi-master-aspeed.c
-> +++ b/drivers/fsi/fsi-master-aspeed.c
-> @@ -459,11 +459,11 @@ static int fsi_master_aspeed_probe(struct 
-platform_device *pdev)
->  	writel(fsi_base, aspeed->base + OPB_FSI_BASE);
->  
->  	/* Set read data order */
-> -	writel(0x0011bb1b, aspeed->base + OPB0_READ_ORDER1);
-> +	writel(0x00030b1b, aspeed->base + OPB0_READ_ORDER1);
->  
->  	/* Set write data order */
-> -	writel(0x0011bb1b, aspeed->base + OPB0_WRITE_ORDER1);
-> -	writel(0xffaa5500, aspeed->base + OPB0_WRITE_ORDER2);
-> +	writel(0x0011101b, aspeed->base + OPB0_WRITE_ORDER1);
-> +	writel(0x0c330f3f, aspeed->base + OPB0_WRITE_ORDER2);
->  
->  	/*
->  	 * Select OPB0 for all operations.
-> 
+Hello,
+
+On Fri, Nov 08, 2019 at 09:22:56AM +0000, Fabrizio Castro wrote:
+> Hello Laurent,
+>
+> Thank you for your feedback!
+>
+> > From: devicetree-owner@vger.kernel.org <devicetree-owner@vger.kernel.org> On Behalf Of Laurent Pinchart
+> > Sent: 07 November 2019 20:35
+> > Subject: Re: [PATCH v3 2/7] drm/bridge: Repurpose lvds-encoder.c
+> >
+> > Hi Fabrizio,
+> >
+> > Thank you for the patch.
+> >
+> > On Thu, Nov 07, 2019 at 08:10:58PM +0000, Fabrizio Castro wrote:
+> > > lvds-encoder.c implementation is also suitable for LVDS decoders,
+> > > not just LVDS encoders.
+> > > Instead of creating a new driver for addressing support for
+> > > transparent LVDS decoders, repurpose lvds-encoder.c for the greater
+> > > good.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > >
+> > > ---
+> > > v2->v3:
+> > > * No change
+> > > v1->v2:
+> > > * No change
+> > > ---
+> > >  drivers/gpu/drm/bridge/Kconfig        |   8 +-
+> > >  drivers/gpu/drm/bridge/Makefile       |   2 +-
+> > >  drivers/gpu/drm/bridge/lvds-codec.c   | 131 ++++++++++++++++++++++++++++
+> > >  drivers/gpu/drm/bridge/lvds-encoder.c | 155 ----------------------------------
+> > >  4 files changed, 136 insertions(+), 160 deletions(-)
+> >
+> > It would help if you added the -M1 option to git-format-patch to detect
+> > the rename, the result would be easier to review.
+>
+> Will do, thank you for the hint
+>
+> >
+> > >  create mode 100644 drivers/gpu/drm/bridge/lvds-codec.c
+> > >  delete mode 100644 drivers/gpu/drm/bridge/lvds-encoder.c
+> > >
+> > > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> > > index 3436297..9e75ca4e 100644
+> > > --- a/drivers/gpu/drm/bridge/Kconfig
+> > > +++ b/drivers/gpu/drm/bridge/Kconfig
+> > > @@ -45,14 +45,14 @@ config DRM_DUMB_VGA_DAC
+> > >  	  Support for non-programmable RGB to VGA DAC bridges, such as ADI
+> > >  	  ADV7123, TI THS8134 and THS8135 or passive resistor ladder DACs.
+> > >
+> > > -config DRM_LVDS_ENCODER
+> > > -	tristate "Transparent parallel to LVDS encoder support"
+> > > +config DRM_LVDS_CODEC
+> > > +	tristate "Transparent LVDS encoders and decoders support"
+> > >  	depends on OF
+> > >  	select DRM_KMS_HELPER
+> > >  	select DRM_PANEL_BRIDGE
+> > >  	help
+> > > -	  Support for transparent parallel to LVDS encoders that don't require
+> > > -	  any configuration.
+> > > +	  Support for transparent LVDS encoders and LVDS decoders that don't
+> > > +	  require any configuration.
+> > >
+> > >  config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
+> > >  	tristate "MegaChips stdp4028-ge-b850v3-fw and stdp2690-ge-b850v3-fw"
+> > > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> > > index 4934fcf..8a9178a 100644
+> > > --- a/drivers/gpu/drm/bridge/Makefile
+> > > +++ b/drivers/gpu/drm/bridge/Makefile
+> > > @@ -2,7 +2,7 @@
+> > >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+> > >  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+> > >  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+> > > -obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+> > > +obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
+> > >  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+> > >  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+> > >  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
+> > > diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
+> > > new file mode 100644
+> > > index 0000000..d57a8eb
+> > > --- /dev/null
+> > > +++ b/drivers/gpu/drm/bridge/lvds-codec.c
+> > > @@ -0,0 +1,131 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > +/*
+> > > + * Copyright (C) 2019 Renesas Electronics Corporation
+> > > + * Copyright (C) 2016 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > + */
+> > > +
+> > > +#include <linux/gpio/consumer.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_device.h>
+> > > +#include <linux/of_graph.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +#include <drm/drm_bridge.h>
+> > > +#include <drm/drm_panel.h>
+> > > +
+> > > +struct lvds_codec {
+> > > +	struct drm_bridge bridge;
+> > > +	struct drm_bridge *panel_bridge;
+> > > +	struct gpio_desc *powerdown_gpio;
+> > > +};
+> > > +
+> > > +static int lvds_codec_attach(struct drm_bridge *bridge)
+> > > +{
+> > > +	struct lvds_codec *lvds_codec = container_of(bridge,
+> > > +						     struct lvds_codec, bridge);
+> > > +
+> > > +	return drm_bridge_attach(bridge->encoder, lvds_codec->panel_bridge,
+> > > +				 bridge);
+> > > +}
+> > > +
+> > > +static void lvds_codec_enable(struct drm_bridge *bridge)
+> > > +{
+> > > +	struct lvds_codec *lvds_codec = container_of(bridge,
+> > > +						     struct lvds_codec, bridge);
+> > > +
+> > > +	if (lvds_codec->powerdown_gpio)
+> > > +		gpiod_set_value_cansleep(lvds_codec->powerdown_gpio, 0);
+> > > +}
+> > > +
+> > > +static void lvds_codec_disable(struct drm_bridge *bridge)
+> > > +{
+> > > +	struct lvds_codec *lvds_codec = container_of(bridge,
+> > > +						     struct lvds_codec, bridge);
+> > > +
+> > > +	if (lvds_codec->powerdown_gpio)
+> > > +		gpiod_set_value_cansleep(lvds_codec->powerdown_gpio, 1);
+> > > +}
+> > > +
+> > > +static struct drm_bridge_funcs funcs = {
+> > > +	.attach = lvds_codec_attach,
+> > > +	.enable = lvds_codec_enable,
+> > > +	.disable = lvds_codec_disable,
+> > > +};
+> > > +
+> > > +static int lvds_codec_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct device_node *panel_node;
+> > > +	struct drm_panel *panel;
+> > > +	struct lvds_codec *lvds_codec;
+> > > +
+> > > +	lvds_codec = devm_kzalloc(dev, sizeof(*lvds_codec), GFP_KERNEL);
+> > > +	if (!lvds_codec)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
+> > > +							     GPIOD_OUT_HIGH);
+> > > +	if (IS_ERR(lvds_codec->powerdown_gpio))
+> > > +		return PTR_ERR(lvds_codec->powerdown_gpio);
+> >
+> > The driver had an error message here, any reason it got removed ?
+>
+> I am quoting from https://www.spinics.net/lists/devicetree/msg318602.html :
+> "I know it was there already, but this seems a bit unusual for the
+> minimal gain of having a printout in the very unlikely case the
+> gpiod_get() operations fails. I would just return PTR_ERR()."
+>
+> I am OK with reinstating it, just let me know what you want me to do here.
+>
+
+Yeah, I suggested that as it seemed to me quite unusual pattern for the
+minimal gain of having an error message in an unlikely case. Sorry Fab
+for the double effort if Laurent wants it back again.
 
 
+> >
+> > > +
+> > > +	panel_node = of_graph_get_remote_node(dev->of_node, 1, 0);
+> > > +	if (!panel_node) {
+> > > +		dev_dbg(dev, "panel DT node not found\n");
+> > > +		return -ENXIO;
+> > > +	}
+> > > +
+> > > +	panel = of_drm_find_panel(panel_node);
+> > > +	of_node_put(panel_node);
+> > > +	if (IS_ERR(panel)) {
+> > > +		dev_dbg(dev, "panel not found, deferring probe\n");
+> > > +		return PTR_ERR(panel);
+> > > +	}
+> > > +
+> > > +	lvds_codec->panel_bridge = devm_drm_panel_bridge_add(dev, panel);
+> >
+> > This was devm_drm_panel_bridge_add_typed(), do you think there's a risk
+> > of breaking userspace ? Of course as noted in the documentation of
+> > devm_drm_panel_bridge_add_typed() the right solution is to fix panel
+> > drivers, but I'm still slightly worried.
+>
+> Things break when the panel doesn't define connector_type, leading to the below
+> check from devm_drm_panel_bridge_add:
+> if (WARN_ON(panel->connector_type == DRM_MODE_CONNECTOR_Unknown))
+>     return NULL;
+>
+> Please advise on the best course of action here.
 
+I pointed out that function was described as deprecated and probably
+fixing the panel driver would be best. Why are you concerned about
+userspace ? is the panel driver that should correctly report its
+connector type, isn't it ? In case it's not, sorry again Fab for the
+double effort.
 
+>
+> >
+> > Actually, could you split this patch in two, with a patch that only
+> > renames the driver (and the symbols internally) without any functional
+> > change, and another patch that performs the modifications ? That would
+> > be much easier to review and discuss.
+
+This is more work for something that could be simply addressed by the
+reviewer by passing -M10 to git show. For such a simple driver isn't
+this fine the way it is ?
+
+>
+> Will do
+>
+> >
+> > > +	if (IS_ERR(lvds_codec->panel_bridge))
+> > > +		return PTR_ERR(lvds_codec->panel_bridge);
+> > > +
+> > > +	/* The panel_bridge bridge is attached to the panel's of_node,
+> > > +	 * but we need a bridge attached to our of_node for our user
+> > > +	 * to look up.
+> > > +	 */
+> > > +	lvds_codec->bridge.of_node = dev->of_node;
+> > > +	lvds_codec->bridge.funcs = &funcs;
+> > > +	drm_bridge_add(&lvds_codec->bridge);
+> > > +
+> > > +	platform_set_drvdata(pdev, lvds_codec);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int lvds_codec_remove(struct platform_device *pdev)
+> > > +{
+> > > +	struct lvds_codec *lvds_codec = platform_get_drvdata(pdev);
+> > > +
+> > > +	drm_bridge_remove(&lvds_codec->bridge);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct of_device_id lvds_codec_match[] = {
+> > > +	{ .compatible = "lvds-encoder"  },
+> > > +	{ .compatible = "thine,thc63lvdm83d" },
+> > > +	{ .compatible = "lvds-decoder" },
+> > > +	{},
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, lvds_codec_match);
+> > > +
+> > > +static struct platform_driver lvds_codec_driver = {
+> > > +	.probe	= lvds_codec_probe,
+> > > +	.remove	= lvds_codec_remove,
+> > > +	.driver		= {
+> > > +		.name		= "lvds-codec",
+> > > +		.of_match_table	= lvds_codec_match,
+> > > +	},
+> > > +};
+> > > +module_platform_driver(lvds_codec_driver);
+> > > +
+> > > +MODULE_AUTHOR("Laurent Pinchart <laurent.pinchart@ideasonboard.com>");
+> > > +MODULE_DESCRIPTION("Driver for transparent LVDS encoders and LVDS decoders");
+> >
+> > Maybe "LVDS encoders and decoders" ?
+> >
+> > > +MODULE_LICENSE("GPL");
+> >
+> > [snip]
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
+
+--kxktsjfowcqyta6k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3FN88ACgkQcjQGjxah
+Vjw28A/+KtDlWIXU4ked6o61Ypl9PCoBKzFeX/ACF5u2oJuqiEMRfQIDnFUMzlTY
+gk/if4nfForiQcTdf0kCi+b8qRJlKH/HKBVA61a7b/PMxkdUT5UEQZA3jvb+t2JL
+R7nI5EgZDTOT0sTiMLl208/vCCco90QXw/r9imBjjnD7TIrEdA7SS5xfeeOrIbMJ
+IWUaoc4HFA2zaiYrydJG9/kK7D8EumwbJEyeBebpZTkrxIkm8+HSzpP26aJ7gqoK
+a1IGmSMH19gz1a9n+cvKtf3ct+KXLkMr7KihvoMLdf8bKmxU+2uQvkNMJHAeSKQ8
+MS1FcckVYKmeAD2NDtvQMC1ep/zvflN4Mtt+aVPIOXJItmRrh1Y339D7cOG0mh/F
+WTSJR6u0y+v5DC5epeOIGkjiYFAPGtcwkdzhkV6tBbD2KxHSDyL0WzW8wV3X1cF0
+0QYTnPsyiEArDXFZCcDV0hwNsC4ahvWQzliRVNk8+6b4lgq4XGvT20ZGyhuTg2Mz
+Z35CBdL+s9H/hTK8AwDi/FgVk5woOOzrTBGrAYbEoxxK7wwuUxrC22Q7/wIWguWZ
+OiUkQrB0KekQ1H8DWtfnXIYKoBpb0pLVY3XL/vsU058wI9BzB5Dr+ZG4pf6yM5Vf
+xs0oyBCfdjL1lJ5PWjOid4ruqS6gtssvdQIIuzbTAoinYUsSVnM=
+=N9AQ
+-----END PGP SIGNATURE-----
+
+--kxktsjfowcqyta6k--
