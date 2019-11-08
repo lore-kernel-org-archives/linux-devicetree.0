@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A928C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005B0C5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D8321D6C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15F9215EA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573214164;
-	bh=F0f1DFQic3UsgOCXhcyyXPEfDgitzNZkVWAjT/PbzZY=;
+	s=default; t=1573214192;
+	bh=ZeDtjHcS4F7h4sPEOoNT2gxFQHsLvg4xtMYXjgeG0y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZCeooKN2hQjFXph8GBsSgXzIFY4ZzlKAxXMMybi7fOqYy7eeSWdoDEECrSpeFbZB
-	 e4C2OY3V5pOnr/3qxGOJtphssborxi0hALOGi16QmuzVuNyWDTISSIp6lgqcW7sWmX
-	 EOifgZuptxXiFeoemnCUCrR3ZDMFSMy2FBErexpU=
+	b=Qj3Te2Sg5uBtvAC2EK3EzyyJMXxA5OBddckiVQY4eT+5bFybLCh3DpVJyC9dvJz8z
+	 6MhmJM1wHCB12Lx1u19AQCRKfPERLY6wQwK267Qc039yq24wi8ir7MdIm+LAcUor7W
+	 wUGOUCfKToe41X8bboDn1fb8zmcNZi46FlghoQN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391163AbfKHLpk (ORCPT
+        id S2391114AbfKHLpc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:45:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:45:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388716AbfKHLpj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:45:39 -0500
+        id S2391125AbfKHLpb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB4E222CB;
-        Fri,  8 Nov 2019 11:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46C7D222C2;
+        Fri,  8 Nov 2019 11:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213538;
-        bh=F0f1DFQic3UsgOCXhcyyXPEfDgitzNZkVWAjT/PbzZY=;
+        s=default; t=1573213531;
+        bh=ZeDtjHcS4F7h4sPEOoNT2gxFQHsLvg4xtMYXjgeG0y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUWNqVkZLyvbq9UUMBsY6fM9DSzhUnJBa1MW75U/jQnVSknWW42PX9Ur6M90bzT2A
-         J81+BBdF4edQENgeELqxUdj3QEP4fScl4eUBuafnWvADYfleEZjJVNmNqmkysNjowQ
-         WzfDYxkBj4FSGSLWNUdzLSyk6okn0XLjkC9NXkxE=
+        b=MZKCfnES2s4CYPqII3Fizsg27YmflcYy1KaTDpCOxFyNDGpNbIBqa6gTBNvbl1hnj
+         ugxGzKECGot2KyC1iX0ORGrfEA1i8CrqZNaPWfuPqCavHocLyiS8sVJpTTKBhpZhz1
+         GSGeN/+D36kdCvTGGTGY54ty55T/q8hAyu+dYo58=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 101/103] ARM: dts: rockchip: Fix erroneous SPI bus dtc warnings on rk3036
-Date:   Fri,  8 Nov 2019 06:43:06 -0500
-Message-Id: <20191108114310.14363-101-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Carlo Caione <carlo@caione.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 094/103] arm64: dts: meson: Fix erroneous SPI bus warnings
+Date:   Fri,  8 Nov 2019 06:42:59 -0500
+Message-Id: <20191108114310.14363-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
 References: <20191108114310.14363-1-sashal@kernel.org>
@@ -61,39 +62,51 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 131c3eb428ccd5f0c784b9edb4f72ec296a045d2 ]
+[ Upstream commit 68ecb5c1920c5b98b1e717fd2349fba2ee5d4031 ]
 
-dtc has new checks for SPI buses. The rk3036 dts file has a node named
+dtc has new checks for SPI buses. The meson dts files have a node named
 spi' which causes false positive warnings. As the node is a pinctrl child
 node, change the node name to be 'spi-pins' to fix the warnings.
 
-arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
-arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
-arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
-arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
+arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb: Warning (spi_bus_bridge): /soc/periphs@c8834000/pinctrl@4b0/spi: incorrect #address-cells for SPI bus
 
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org
+Cc: Carlo Caione <carlo@caione.org>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3036.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 5c0a76493d22a..03cf0c84ac0aa 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -750,7 +750,7 @@
- 			/* no rts / cts for uart2 */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index af834cdbba791..250b5c11c0e25 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -413,7 +413,7 @@
+ 			};
  		};
  
--		spi {
-+		spi-pins {
- 			spi_txd:spi-txd {
- 				rockchip,pins = <1 29 RK_FUNC_3 &pcfg_pull_default>;
+-		spi_pins: spi {
++		spi_pins: spi-pins {
+ 			mux {
+ 				groups = "spi_miso",
+ 					"spi_mosi",
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index fb8d76a17bc5d..3c30579449608 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -310,7 +310,7 @@
  			};
+ 		};
+ 
+-		spi_pins: spi {
++		spi_pins: spi-pins {
+ 			mux {
+ 				groups = "spi_miso",
+ 					"spi_mosi",
 -- 
 2.20.1
 
