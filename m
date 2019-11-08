@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78817C5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDACFA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0C8222D1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53564207FA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 11:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573213904;
-	bh=hjgsGYra9ME33CEuTHD6rBp6RT0p7NsNyjSyCJszLY0=;
+	s=default; t=1573213920;
+	bh=FQ0vCQXPL083ioe8KY+j+YwWNQrwcnxBwoqJ1vEg9Fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3Z/62cuQFt/MDs0t5am+Oy11g7htIeNh4oTcFT0myLP3qgFC70DH5BcEX5OO1xRw
-	 ZnWx4XFuxGLBjJrBexRI2sB3QmXceOwp1GgBydCnwZ20LHk8cna9IQXN9RyO7JFQfb
-	 igvUgr8A2chtE0wJqqHYLpOFuXw0xxPc0g5+QL7E=
+	b=luN54yMD4KB7VLg9+M9ST2WLbIjf6AxihuxXNknvd1vcFmd5lyuaQYd2cuY1b9Xo3
+	 6exyzQwz5KGhThogGPrwLsNJz3M/KCkJlDvEuwhxsw20cwjZbLORYEEI84IYTZqNu0
+	 aBg4FtxP9APKUrH/3x/N7f2/716xeuUMGJdaSSI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387792AbfKHLvj (ORCPT
+        id S2387955AbfKHLvz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 06:51:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35968 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 06:51:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389733AbfKHLr1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:47:27 -0500
+        id S2391522AbfKHLrR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A289206A3;
-        Fri,  8 Nov 2019 11:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3F04222D1;
+        Fri,  8 Nov 2019 11:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213646;
-        bh=hjgsGYra9ME33CEuTHD6rBp6RT0p7NsNyjSyCJszLY0=;
+        s=default; t=1573213636;
+        bh=FQ0vCQXPL083ioe8KY+j+YwWNQrwcnxBwoqJ1vEg9Fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ovMOaV2YqGZaEkDz35DToX47M8DsTfc9m40NBunOt3a2yoMIBv118XlD2RDo0xbYK
-         TukcMApjTsYUi1CoQbVAqc2Eoxw4YV/d08oCW2xbvFhp7PXb0nNxJSYLZrrHzHQAyT
-         2MpnXjQ7qFSFB4urB8sYKgQ2eKXcjlHOFjDaiQ3E=
+        b=hbcls3EKDyoPo9SLpcWRO5UAZBPQAbeOGUYSVF6lrfIR/qEiFaWNk0SZY/lKHqRn7
+         2k3ohU+p0if34ZrKEGq+I7qmJC+fex/1ZB/HxxXDuJLRC939tYEXs2+qhrA8gNXSi/
+         XYDuKarER+oS9Rda7Q6xz16Zuoye2EnEcmgQdhjY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jay Foster <jayfoster@ieee.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc:     Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 03/44] ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
-Date:   Fri,  8 Nov 2019 06:46:39 -0500
-Message-Id: <20191108114721.15944-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 63/64] ARM: dts: rockchip: Fix erroneous SPI bus dtc warnings on rk3036
+Date:   Fri,  8 Nov 2019 06:45:44 -0500
+Message-Id: <20191108114545.15351-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
-References: <20191108114721.15944-1-sashal@kernel.org>
+In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
+References: <20191108114545.15351-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,33 +59,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jay Foster <jayfoster@ieee.org>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 10af10db8c76fa5b9bf1f52a895c1cb2c0ac24da ]
+[ Upstream commit 131c3eb428ccd5f0c784b9edb4f72ec296a045d2 ]
 
-Fix a typo. No functional change made by this patch.
+dtc has new checks for SPI buses. The rk3036 dts file has a node named
+spi' which causes false positive warnings. As the node is a pinctrl child
+node, change the node name to be 'spi-pins' to fix the warnings.
 
-Signed-off-by: Jay Foster <jayfoster@ieee.org>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
+arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
+arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
+arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
+
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
+ arch/arm/boot/dts/rk3036.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index af8b708ac312a..53a5a0e311e9d 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -546,7 +546,7 @@
- 					};
- 				};
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index a935523a1eb85..147c73f68f1d9 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -744,7 +744,7 @@
+ 			/* no rts / cts for uart2 */
+ 		};
  
--				uart1 {
-+				usart1 {
- 					pinctrl_usart1: usart1-0 {
- 						atmel,pins =
- 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PB4 periph A with pullup */
+-		spi {
++		spi-pins {
+ 			spi_txd:spi-txd {
+ 				rockchip,pins = <1 29 RK_FUNC_3 &pcfg_pull_default>;
+ 			};
 -- 
 2.20.1
 
