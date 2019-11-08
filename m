@@ -2,154 +2,128 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038EEFA372C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B592EC5DF60
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFA721D6C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:34:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYDgk1cd"
+	by mail.kernel.org (Postfix) with ESMTP id 9189C2178F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 08:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfKHIej (ORCPT
+        id S1729873AbfKHIhJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 03:34:39 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38509 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfKHIej (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:34:39 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z19so5276029wmk.3;
-        Fri, 08 Nov 2019 00:34:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VkI4cvX4wkJb9cEinKhbBlP59eTt5rxMwM6muY3FHmk=;
-        b=XYDgk1cdeJqtjFrCaSfVAgN96MN8Wbcax5Ms1Zmp3POWOH5hCw5s3PzxCbXFlQXi5g
-         VIj6YS+7ahGPRoYeYJVzmrrso7zR6fsGoivRWpxRazhvttcgSYZ2KPKyRZ03wLOgc7Ro
-         MCZ0+7QWURO9Q3NUIAhWIKVnhdctT9HQOJSZ6g2uS7WixsIYGNUGlxij3St1kqcdyOqW
-         o32ylKXs7abPggaMHFdEltPD1VLuEoEQ8dtKc9OiZms/xdTvYqJjlFHkRlhlF9qr1fYz
-         vJT6Fj+DkECLmOqOggYzC1J4wxAp/KKUDCF+7DqOFlWmolcSNaY79j6r4WLCrHLr2L7u
-         l2rw==
+        Fri, 8 Nov 2019 03:37:09 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38724 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfKHIhI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 03:37:08 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a14so4563048oid.5;
+        Fri, 08 Nov 2019 00:37:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VkI4cvX4wkJb9cEinKhbBlP59eTt5rxMwM6muY3FHmk=;
-        b=ER0gdoYW71mu6e/TqbmCminsoLcVQq9R4031jrxTX/hKbl9oL5g49YfR5mBr5OF8t9
-         MuOxiOXpE72feJPRcu6TqZxu3q1pq0aI2BZokldGG6D6AaF4k6A1Haz7SA5qaWOVBYOB
-         yByFA5H0Igfc0amCP65Ev3Uw65OL8J8lGtjduKuM6Az5JaV8jtM6USdj3oclICQSlJu6
-         35aMt8TjVPslOwCH+JRSN2MyjGLbHaIblhF8JbfsVyjMk7TnR/l1Sfh1NS+T8wan27sV
-         rp4x7eEqqRWh2kRQVyL37hMPynKBL7EorzuZqbwgnHtl69elty3yL9BSR4cKvzACz+Pq
-         q3qg==
-X-Gm-Message-State: APjAAAUMf+PTWtqjSHVIzU+j+1LnDhy46AhCx61EDD3BYJcetsvPEq3N
-        wO+gjXGuXX0cAD9YdT4TKvL0Stzt2suygEBpPS0=
-X-Google-Smtp-Source: APXvYqwO5LNjRjZqBsLm0rx2ZVFBShCv1CuuOkko/vXZhWR0gKobSrxO8D2AYRmTGsvhPEQK7KDzYl1RD1/Hmamx/oc=
-X-Received: by 2002:a1c:a512:: with SMTP id o18mr6701777wme.4.1573202075843;
- Fri, 08 Nov 2019 00:34:35 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=Y06rTA9jyJ3Mxb7FOxzfvb/JyrQ6mJjiIx0NSmTLT3w=;
+        b=AWGAXSm2c0Yspjg8qNfi6qHsKYdT1nOowipVHrrzRIY4GxtI7ot9O1Zfw5uq7Adp4D
+         7KfRmLixTQMMcHFngqAPbmevJXWNkAFvVp2FGkS/uTgGnJo0jmGk7tLLqX4G/YHHLvGT
+         ibBR54MlIv1+6/lMYCcfxYHazihL/v3mSsfp9o1jEqaBSAZ3sdAgc36l/8UWMZlyN8PX
+         bUsafmAfcbSAcF1YsJwSH+a6wkfcIbcgwEOoJ2aaB/+QRPVOCYNHmREqkROQb8cxTlum
+         jALbQIj5xwQApIVc7L1uH0gCudKUV4DxpiZIUWmmYaOehXsJ8E3KpW5Jb30VK47HvwIm
+         ZIbA==
+X-Gm-Message-State: APjAAAUSMGdMvDVklv3rjLryuFKYu1rOj0IhzB18+1Psp8NdeXGr7EtS
+        yE2/G58kgV/i2hcCJbqH7LJI+yt+fMKEVFOHUJ0=
+X-Google-Smtp-Source: APXvYqw443xjtR/GhQGqZswNAQFjWLyPmQgXA4uSDYnc1ZjfU91/njipFK4I8i0EWJx17iUi7lyKc1yYaFBEyegxbZY=
+X-Received: by 2002:aca:fc92:: with SMTP id a140mr7932910oii.153.1573202227574;
+ Fri, 08 Nov 2019 00:37:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20191105131456.32400-1-peron.clem@gmail.com> <20191105131456.32400-5-peron.clem@gmail.com>
- <20191105145659.ffezqntodsys4phn@pengutronix.de> <CAJiuCcdXr3y0oe19ZNaiQoN7Y39p54p8LjQjXfjHbTH8tbnrpw@mail.gmail.com>
- <20191107065118.j4s5cghj4ark7sql@pengutronix.de>
-In-Reply-To: <20191107065118.j4s5cghj4ark7sql@pengutronix.de>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 8 Nov 2019 09:34:24 +0100
-Message-ID: <CAJiuCcd3qAP=xODJWcvay6q-MbLeBvX5tAtuUj7dFcp8biXzOw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] pwm: sun4i: Add support to output source clock directly
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
+ <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+ <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com> <CA+V-a8sS4gX8o__R_pHK2Otb=s_aAWbtvDLfOhAQAJb77Jz_Sw@mail.gmail.com>
+In-Reply-To: <CA+V-a8sS4gX8o__R_pHK2Otb=s_aAWbtvDLfOhAQAJb77Jz_Sw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 8 Nov 2019 09:36:56 +0100
+Message-ID: <CAMuHMdVDdweR5Mx+RLnKCkw0kb2J=AMsAPoFm8PVbxsY2u-EvA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Uwe,
+Hi Prabhakar,
 
-On Thu, 7 Nov 2019 at 07:51, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello Cl=C3=A9ment,
->
-> On Wed, Nov 06, 2019 at 10:24:39PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > On Tue, 5 Nov 2019 at 15:57, Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Tue, Nov 05, 2019 at 02:14:53PM +0100, Cl=C3=A9ment P=C3=A9ron wro=
-te:
-> > > > +     bypass =3D state->enabled &&
-> > > > +              (state->period * clk_rate >=3D NSEC_PER_SEC) &&
-> > >
-> > > This is too coarse. With state->period =3D 1000000 this is fulfilled
-> > > (unless the multiplication overflows).
+On Thu, Nov 7, 2019 at 11:46 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Thu, Nov 7, 2019 at 8:08 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > > On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > >
+> > > > > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> > > > >
+> > > > > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+
+> > > > > +- reg: Five register ranges as listed in the reg-names property
+> > > > > +- reg-names: Must include the following names
+> > > > > +       - "apb-base"
+> > > > > +       - "memory0"
+> > > > > +       - "memory1"
+> > > > > +       - "memory2"
+> > > > > +       - "memory3"
+> > > >
+> > > > What is the purpose of the last 4 regions?
+> > > > Can they be chosen by the driver, at runtime?
+> > > >
+> > > no the driver cannot choose them at runtime, as these are the only
+> > > PCIE memory(0/1/2/3) ranges
+> > > in the AXI address space where host memory can be mapped.
 > >
-> > Sorry, misunderstood the previous mail
+> > Are they fixed by the PCIe hardware, i.e. could they be looked up by the
+> > driver based on the compatible value?
 > >
-> > What about something like this ?
-> > ((state->period - 1) * clk_rate <=3D NSEC_PER_SEC) &&
-> > ((state->period + 1) * clk_rate >=3D NSEC_PER_SEC) &&
-> >  ((state->duty_cycle - 1) * 2 <=3D state->period) &&
-> >  ((state->duty_cycle + 1) * 2 >=3D state->period);
-> >
-> > We are sure that the user is looking for a PWM around the OSC with a
-> > 50% duty cycle ?
->
-> This again is too strict. The general policy to fulfill a request is:
->
->  1) provide the longest possible period not bigger than requested
->  2) provide the longest possible duty cycle not bigger than requested
->  3) if possible complete the currently running period before switching
->     and don't return to the user before the new setting is active.
->     Document the behaviour prominently because the code (usually)
->     doesn't allow to understand the hardware's features here.
->  4) A disabled PWM should output the inactive level
+> yes they are fixed by the PCIe hardware and could be looked up by the driver
+> based on the compatible value.
 
-Thanks for the explanation
+Thanks, so we don't need to describe them in DT.
 
->
-> And then there is a corner case: If the user requests .duty_cycle =3D 0,
-> .enabled =3D 1 it is ok to provide .enabled =3D 0 iff otherwise 0% isn't
-> possible.
->
-> So the right check for bypass is:
->
->   state->period * clk_rate >=3D NSEC_PER_SEC &&
->   state->period * clk_rate < whatevercanbereachedwithoutbypass &&
->   state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_SEC
+Gr{oetje,eeting}s,
 
-The shortest PWM ratio which is not a constant output is 12MHz.
-(Prescal 1, 2 entire cycle and 1 active cycle)
+                        Geert
 
-So something like this :
-state->period * clk_rate >=3D NSEC_PER_SEC &&
-state->period * clk_rate < 2 * NSEC_PER_SEC &&
-state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_SEC
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-I will send a v4,
-Thanks for the help
-Regards,
-Cl=C3=A9ment
-
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
