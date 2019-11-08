@@ -2,167 +2,87 @@ Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AAAC5DF60
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB78FA372C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCD3206A3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573240406;
-	bh=FRfSfBQVULDXdAO520uMvwwd2i4lO+PEwK/kcFWv+wc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hotNXRimU6ntxMW/eLB/mkUo3tdfqhbvSIEvFE0O08syizActZ4Yz42mloRMnTzTI
-	 66inJ6I4RRlpW0B5dFVRESwYqAQd3vA58xvvMU+fA2Tr75zzPWk0GFYjL6+HfMJzJK
-	 DcRxeUUHgZxEn7t2UKwjFHpFjRArfF2wasaU/Ezo=
+	by mail.kernel.org (Postfix) with ESMTP id 6F2BE206A3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 19:13:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JFDvfMdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390935AbfKHTHg (ORCPT
+        id S1732685AbfKHTN0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 14:07:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391459AbfKHTHd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 14:07:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA364206A3;
-        Fri,  8 Nov 2019 19:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573240052;
-        bh=FRfSfBQVULDXdAO520uMvwwd2i4lO+PEwK/kcFWv+wc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mC2WNHRA19d3FDINKq6tq7iitlyJET7UcTStlJF5vbgcv9ZrwO9he97MmC38egpt0
-         wEfu/2So4tOvOJZfhhupuJOsVchJFtGEOa2bLsFVa8rWPilnF1fFwAZHYSAVTH+pX0
-         LjMNJmnVd459r/IRsrEv8s4gK00kZY2vGCnCixRk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 030/140] ARM: dts: am3874-iceboard: Fix i2c-mux-idle-disconnect usage
-Date:   Fri,  8 Nov 2019 19:49:18 +0100
-Message-Id: <20191108174905.818458961@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191108174900.189064908@linuxfoundation.org>
-References: <20191108174900.189064908@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 8 Nov 2019 14:13:26 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:47064 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390878AbfKHTHf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Nov 2019 14:07:35 -0500
+Received: by mail-pl1-f195.google.com with SMTP id l4so4470282plt.13
+        for <devicetree@vger.kernel.org>; Fri, 08 Nov 2019 11:07:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=kikk2WY5kfcxGjTzJAhY6RUjMX79xyo2nvmOqI9NKHM=;
+        b=JFDvfMdZ5Y0xxtanpVxlYiQHlNVk+Z9yQ83f74eGrenWkdufHlpK8NqhFqwY1ff20M
+         buoDVI3VxY5kZG4l5Ob1JEvmUj+eb5L0Ma02ASUUGACaYD6gU/TLztfHmscpQsj8xP+R
+         MsYzNvmY8GqYQonkW8iFXop4RnW+pIJHoGoMc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=kikk2WY5kfcxGjTzJAhY6RUjMX79xyo2nvmOqI9NKHM=;
+        b=ZZ0Lm7HS9Nd7QKcPj13BoAO0RSJ5KKvsSNRxf0gH5OGvICB5/DiSZ+WBq4Ibs0tA9f
+         AlIh2Zs+NiBoTzx7mkqEAh3n5xysAfL4crhmqbGo8w8PVdm5MJ/ACjD3bu0v1nGsEIDy
+         ip3kXpxeVm36OWVFT05CzYr4x22GoNa6XzPFhMf656y7vjpDZxr7ZhM2tyLOPc4zX43K
+         0TkLnQW9E5IkSqnqAO63ZtvWo04pnRi7+HhzIufMSfqhe0LsyLqjcu29e8hucn/4hno6
+         74hVsDakdq01kdhtm+RK9fBPp5SiJQ3Pve/EabbUD7xAfN8xW/N1VcbxX8QPimZMrUUB
+         1skg==
+X-Gm-Message-State: APjAAAWmiG2/DTT8TNuQhRm9cgmYaxgVz3Oj66dpIcZZLWefqmxGbvkQ
+        nS/0Nr8+skWMV5Ikc/TW9lFPZg==
+X-Google-Smtp-Source: APXvYqxoH5Z0CCe1PUE3xdaqaiDsVPjDsTLej5DIBq/bQpgGRGi2K8JEAyDFmgRNW/c+v8ue+O5XoA==
+X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr11544949plo.319.1573240054508;
+        Fri, 08 Nov 2019 11:07:34 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id d4sm7368030pjs.9.2019.11.08.11.07.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2019 11:07:34 -0800 (PST)
+Message-ID: <5dc5bcf6.1c69fb81.f3fb6.2bf3@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191108092824.9773-12-rnayak@codeaurora.org>
+References: <20191108092824.9773-1-rnayak@codeaurora.org> <20191108092824.9773-12-rnayak@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v5 11/13] arm64: dts: qcom: sc7180-idp: Add RPMh regulators
+User-Agent: alot/0.8.1
+Date:   Fri, 08 Nov 2019 11:07:33 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Quoting Rajendra Nayak (2019-11-08 01:28:22)
+> From: Kiran Gunda <kgunda@codeaurora.org>
+>=20
+> Add the rpmh regulators for the sc7180 idp platform. This platform
+> consists of PMIC PM6150 and PM6150l
+>=20
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
 
-[ Upstream commit 647c8977e111c0a62c93a489ebc4b045c833fdb4 ]
-
-According to
-Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
-i2c-mux-idle-disconnect is a property of a parent node since it
-pertains to the mux/switch as a whole, so move it there and drop all
-of the concurrences in child nodes.
-
-Fixes: d031773169df ("ARM: dts: Adds device tree file for McGill's IceBoard, based on TI AM3874")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Benoît Cousson <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
-Cc: linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Tested-by: Graeme Smecher <gsmecher@threespeedlogic.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/am3874-iceboard.dts | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am3874-iceboard.dts b/arch/arm/boot/dts/am3874-iceboard.dts
-index 883fb85135d46..1b4b2b0500e4c 100644
---- a/arch/arm/boot/dts/am3874-iceboard.dts
-+++ b/arch/arm/boot/dts/am3874-iceboard.dts
-@@ -111,13 +111,13 @@
- 		reg = <0x70>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;
- 
- 		i2c@0 {
- 			/* FMC A */
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@1 {
-@@ -125,7 +125,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <1>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@2 {
-@@ -133,7 +132,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <2>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@3 {
-@@ -141,7 +139,6 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <3>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@4 {
-@@ -149,14 +146,12 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <4>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@5 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <5>;
--			i2c-mux-idle-disconnect;
- 
- 			ina230@40 { compatible = "ti,ina230"; reg = <0x40>; shunt-resistor = <5000>; };
- 			ina230@41 { compatible = "ti,ina230"; reg = <0x41>; shunt-resistor = <5000>; };
-@@ -182,14 +177,12 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <6>;
--			i2c-mux-idle-disconnect;
- 		};
- 
- 		i2c@7 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <7>;
--			i2c-mux-idle-disconnect;
- 
- 			u41: pca9575@20 {
- 				compatible = "nxp,pca9575";
--- 
-2.20.1
-
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
