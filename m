@@ -2,142 +2,110 @@ Return-Path: <SRS0=1yYv=ZB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A00C43331
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 16:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7260C17443
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 17:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F3821882
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 16:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE8D2077C
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 17:21:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Wwy+QwH+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WMLHZ2Pk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfKIQUu (ORCPT
+        id S1726227AbfKIRVv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 11:20:50 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40922 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfKIQUu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 11:20:50 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f3so9169682wmc.5
-        for <devicetree@vger.kernel.org>; Sat, 09 Nov 2019 08:20:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rOI6QUOBK9QSogmnbQtU7q55r9yQbW3Ua9QOoR9QkrY=;
-        b=Wwy+QwH+P9UqoP8oujilPKtig1715dkzgWKvceZrPvhHTJlIXIZccGusWFTVJ03w0K
-         qpCLCDsPwYahI6hQnmMk0PmpnS4cSuliDSh0zimgWFA9MYqqgOJRbSNoFpyVBu8JbXgA
-         2pUgUVP0tV2C3Il/VGI4Fw631Rp5dYEJqWy7eDdEZhKPt0sZcygq3ZUlxd5UqU6PSW+W
-         Gnu95MAF3BmQ2IFG7eQy5OSrRpQAY/8A3Dzskm308+G4XB3al5xNPmHo/sND2rnzEmWY
-         0Qz+OaBc0octysH9Hq+Z5V4Q4spiNyk63WGC7W8zfrIrDcj12WcVLN7tH6gVB8RlXl+Q
-         TA+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rOI6QUOBK9QSogmnbQtU7q55r9yQbW3Ua9QOoR9QkrY=;
-        b=l+nDGOHrBciK42kDTVbC3lQZuSjj/E71v3ZbGpfTPCGcaiY9OsLJwKB0hFyI3ouUMn
-         DK/4gvvIfYIX3aWgRwPZiifE4tr/69Jj+9pMR5vAQ90M8lB22ntOUqfk0rLAcjtnz7iw
-         cOeFJz7TK8GR6LoSYWYBijaMUNmBov5bFi5MjcIV8fm/jwAAtmPrb/3H62uoVBtuBcvh
-         kwmjmyqY5m+QoiQJrDkoXTr4Ugrlz4J3rJ7setXFKTxfbT7Ap7L3LLfR5G844+wtjMGU
-         fD1gmhlFqEGdJjLTA9LarjkEmkKRtIOFAGRqo+6xuTjRv3YTawFgH6fhJJe5RfJYnB1E
-         VamA==
-X-Gm-Message-State: APjAAAXkvfAg3sQUR+8TssulVkoobxhhlsgJ8WaxIdr2x0PDZj2S5KvW
-        oxyaVKd0rSnW8VEmTIlwpV8m4g==
-X-Google-Smtp-Source: APXvYqw4Bxj4tYYWUbk4jo5BvOUd32pF74MDX477Ax1+OvNU4Gn2ClWcfzN9u9Pt+5aq5JWKGp3OpQ==
-X-Received: by 2002:a7b:c747:: with SMTP id w7mr14087795wmk.62.1573316447064;
-        Sat, 09 Nov 2019 08:20:47 -0800 (PST)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id v8sm14534975wra.79.2019.11.09.08.20.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 09 Nov 2019 08:20:46 -0800 (PST)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, jernej.skrabec@siol.net
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v4 2/2] ARM64: dts: allwinner: add pineh64 model B
-Date:   Sat,  9 Nov 2019 16:20:33 +0000
-Message-Id: <1573316433-40669-3-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
-References: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
+        Sat, 9 Nov 2019 12:21:51 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:58318 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726204AbfKIRVu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 12:21:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GnBQ82YlwA0ID38IFrxIGR1cO4p7JxsUcnjCyBe4x6E=; b=WMLHZ2PkZVx00hZyvDfl5UIP9s
+        gxOZwLATHW98FpyGk4aPz/fdyyErcYH6+PsWU9Tvl96ExhmGlT5yQgcO3HNlC8WAjmgDTVuz2JJL+
+        0k+cYrj8jVYxbCpGO/3yPXL3w68p1vm4H2Of5dZz/8GRYVTfN3y1LjhbqcdCg4LSM9z8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iTUQf-0003Ct-CI; Sat, 09 Nov 2019 18:21:41 +0100
+Date:   Sat, 9 Nov 2019 18:21:41 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
+Message-ID: <20191109172141.GL22978@lunn.ch>
+References: <20191109105642.30700-1-olteanv@gmail.com>
+ <20191109150953.GJ22978@lunn.ch>
+ <CA+h21hrqczuOhTzWFZKX0XvgjgTzHT=3AdCPvO_eSabOzA3OCQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+h21hrqczuOhTzWFZKX0XvgjgTzHT=3AdCPvO_eSabOzA3OCQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the model B of the PineH64.
-The model B is smaller than the pine64 model A and has no PCIE slot.
+On Sat, Nov 09, 2019 at 05:16:48PM +0200, Vladimir Oltean wrote:
+> On Saturday, 9 November 2019, Andrew Lunn <andrew@lunn.ch> wrote:
+> > On Sat, Nov 09, 2019 at 12:56:42PM +0200, Vladimir Oltean wrote:
+> >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
+> >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+> >>
+> >> The interrupts are active low, but the GICv2 controller does not support
+> >> active-low and falling-edge interrupts, so the only mode it can be
+> >> configured in is rising-edge.
+> >
+> > Hi Vladimir
+> >
+> > So how does this work? The rising edge would occur after the interrupt
+> > handler has completed? What triggers the interrupt handler?
+> >
+> >         Andrew
+> >
+> 
+> Hi Andrew,
+> 
+> I hope I am not terribly confused about this. I thought I am telling the
+> interrupt controller to raise an IRQ as a result of the low-to-high transition
+> of the electrical signal. Experimentation sure seems to agree with me. So the
+> IRQ is generated immediately _after_ the PHY has left the line in open drain
+> and it got pulled up to Vdd.
 
-The only devicetree difference with the pineH64 model A, is the PHY
-regulator and the HDMI connector node.
+Hi Vladimir
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- .../devicetree/bindings/arm/sunxi.yaml        |  5 +++++
- arch/arm64/boot/dts/allwinner/Makefile        |  1 +
- .../allwinner/sun50i-h6-pine-h64-modelB.dts   | 21 +++++++++++++++++++
- 3 files changed, 27 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
+                       t1                    t2
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index b8ec616c2538..227217bf28df 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -604,6 +604,11 @@ properties:
-           - const: pine64,pine-h64-modelA
-           - const: allwinner,sun50i-h6
- 
-+      - description: Pine64 PineH64 model B
-+        items:
-+          - const: pine64,pine-h64-modelB
-+          - const: allwinner,sun50i-h6
-+
-       - description: Pine64 LTS
-         items:
-           - const: pine64,pine64-lts
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index d2418021768b..bda89b9ccb4a 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -26,4 +26,5 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelB.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-tanix-tx6.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
-new file mode 100644
-index 000000000000..063a85223faa
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (C) 2019 Corentin LABBE <clabbe@baylibre.com>
-+ */
-+
-+#include "sun50i-h6-pine-h64.dts"
-+
-+/ {
-+	model = "Pine H64 model B";
-+	compatible = "pine64,pine-h64-modelB", "allwinner,sun50i-h6";
-+
-+	/delete-node/ reg_gmac_3v3;
-+};
-+
-+&hdmi_connector {
-+	/delete-property/ ddc-en-gpios;
-+};
-+
-+&emac {
-+	phy-supply = <&reg_aldo2>;
-+};
--- 
-2.23.0
+     ------------------\                     /----------------
+                        \-------------------/
 
+The interrupt output is active low. So it is high by default. At time
+t1 something happens, say the link is established. The interrupt
+becomes active, we have a failing edge. We want the interrupt
+controller to fire. Lets say it does. The interrupt handler runs, and
+clears the interrupt cause. This is at time t2. We then get a rising
+edge and the PHY releases the interrupt, and the level returns to
+high.
+
+So how does this work if you have the interrupt controller triggering
+on a rising edge? The edge won't rise until the interrupt handler
+finishes its work.
+
+	 Andrew
+
+   
