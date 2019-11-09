@@ -2,89 +2,102 @@ Return-Path: <SRS0=1yYv=ZB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C240C43331
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 15:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C419FC43331
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 16:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169C520578
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 15:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99878207FA
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 16:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jAp8hBi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbfKIPvp (ORCPT
+        id S1726530AbfKIQUs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 10:51:45 -0500
-Received: from mailoutvs39.siol.net ([185.57.226.230]:40976 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726026AbfKIPvp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 10:51:45 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 26EA4522776;
-        Sat,  9 Nov 2019 16:51:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id sENraahnSVkF; Sat,  9 Nov 2019 16:51:42 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id D20A2522784;
-        Sat,  9 Nov 2019 16:51:42 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id 7E09B52272F;
-        Sat,  9 Nov 2019 16:51:39 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Andre Heider <a.heider@gmail.com>
-Cc:     mripard@kernel.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: allwinner: orange-pi-3: Enable IR receiver
-Date:   Sat, 09 Nov 2019 16:51:39 +0100
-Message-ID: <1875943.ZifhFTZG3p@jernej-laptop>
-In-Reply-To: <20191109113436.17979-1-a.heider@gmail.com>
-References: <20191109113436.17979-1-a.heider@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Sat, 9 Nov 2019 11:20:48 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53613 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfKIQUr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 11:20:47 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u18so1483236wmc.3
+        for <devicetree@vger.kernel.org>; Sat, 09 Nov 2019 08:20:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=QxJTiFF2tFspkmtu1wQfetzhDZKVTexM39tXBbbNRGs=;
+        b=jAp8hBi+ormRFjudgmYDiSOMdMveumDKk8iOfwVa1a0eKHmKLPwJfvvfj+Jaqh6MXK
+         mG2saAwOrBs+yzS6Su8/Kh3ceJmMJNRYGZzWKIHnJGbqwLMeTxdPD/pTsQqZ/smIYxZa
+         Hwmd4oRNfGvXmdxoZNtE+mVe97U1cod2JiQz7gqBU3IqHM4KJ39huM5ppJ3m48M97ub4
+         zy9NGpj6R36mc4jbjPYTyoQAFnV0n0pDuFVc76MS/0BGlAEOWe0PCYGR+/pvMQWqmmyT
+         kPIdEmeaczhaDmnUK83Y3v53jNywzQO4ZNyDxNCUZDYPA5eodKreRbqd2eDRFhzHUDEl
+         w47A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QxJTiFF2tFspkmtu1wQfetzhDZKVTexM39tXBbbNRGs=;
+        b=cTJy3ODquwQ72me9MREaLMJ15pg613K5hV0uSzCkD3XGYP016XO+60DQPo0N0mDRN2
+         gWv9rBf+FVKaLCh2AErI0v1EZZZM1aehZv2IrI7uT8naaRohAI+6cW4x7DwJbEp3mNbi
+         XPmeujCJ1Sp1TuoT9g9Ua5KPbFhrFy4ove9wkKHji1wti6C50lWPwnaFSsiu+rd7VS7k
+         6MA48yTX+3c0gWbuG++YbtVCJmSVSFNa85Z3D0YvX4qqojCQHe0Wp2CGIXLTLFF0kHew
+         UHCK6aX0CkrUGkAWoLNqqd9pZqe8F1VdJHHx6pKmU0N6e2F9IFScYHycow5rtS7pouFy
+         isyw==
+X-Gm-Message-State: APjAAAVs6ULD3BohH84uQMwWyjHKsA28IS/cZXVXVbEpQJLlHpsxD7Q4
+        HiR0PSyXOHgV9PapHdnyZfUFBw==
+X-Google-Smtp-Source: APXvYqzfpSw1QICUjqw55lc5O3xioumYYFSINgP6PwukID8b6dRepSRuAyhR68WqcEXvuvmDdCS1+A==
+X-Received: by 2002:a1c:28d4:: with SMTP id o203mr13557036wmo.147.1573316445172;
+        Sat, 09 Nov 2019 08:20:45 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id v8sm14534975wra.79.2019.11.09.08.20.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 09 Nov 2019 08:20:44 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, jernej.skrabec@siol.net
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v4 0/2] ARM64: dts: allwinner: Add devicetree for pineH64 modelB
+Date:   Sat,  9 Nov 2019 16:20:31 +0000
+Message-Id: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi!
+Hello
 
-Dne sobota, 09. november 2019 ob 12:34:36 CET je Andre Heider napisal(a):
-> Orange Pi 3 has an on-board IR receiver, enable it.
-> 
-> Signed-off-by: Andre Heider <a.heider@gmail.com>
+Pineh64 have two existing model (A and B) with some hardware difference and
+so need two different DT file.
+But the current situation has only one file for both.
+This serie fix this situation by being more clear on which DT file is
+needed for both model.
 
-Acked-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Regards
 
-Thanks!
+Change since v3:
+- state the current file is model A and add a new modelB file.
 
-Best regards,
-Jernej
+Change since v2:
+- Added the HDMI connector node to model A
 
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts index
-> eb379cd402ac..d3e30a67587c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> @@ -263,6 +263,10 @@
->  	};
->  };
-> 
-> +&r_ir {
-> +	status = "okay";
-> +};
-> +
->  &uart0 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&uart0_ph_pins>;
+Changes since v1:
+- Added the first patch for stating which model support the
+  sun50i-h6-pine-h64.dts
 
+Corentin Labbe (2):
+  ARM64: dts: sun50i-h6-pine-h64: state that the DT supports the modelA
+  ARM64: dts: allwinner: add pineh64 model B
 
+ .../devicetree/bindings/arm/sunxi.yaml        |  9 ++++++--
+ arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+ .../allwinner/sun50i-h6-pine-h64-modelB.dts   | 21 +++++++++++++++++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 19 +++++++++++++----
+ 4 files changed, 44 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
 
+-- 
+2.23.0
 
