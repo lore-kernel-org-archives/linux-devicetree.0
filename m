@@ -1,100 +1,98 @@
-Return-Path: <SRS0=K2IH=ZA=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=1yYv=ZB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FC6C17440
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 23:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB85EC17441
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 00:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7132215EA
-	for <linux-devicetree@archiver.kernel.org>; Fri,  8 Nov 2019 23:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573256780;
-	bh=DVj4e+5dUvj9CfxICEqKu/slf5ah4O7Xbig8CEBOmbA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZIQul2XjyYZKxvqAb5LkZjXU7iYNobvK9J1dhwGhrOBHfT8H/r/hwUgcSa3EiFHrR
-	 /Zn+juaXlmvoA3es1RGTt9OXorrIYLcW/jn5TV+YGSORZh7LhaSi021dxXf4ELCIGC
-	 po6Rv+SYKhB3BiaFiwPQT2e1VqM8BnEN4igkcTnw=
+	by mail.kernel.org (Postfix) with ESMTP id 939AE2084D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 00:44:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Spfis8EP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfKHXqU (ORCPT
+        id S1725943AbfKIAo3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 8 Nov 2019 18:46:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44414 "EHLO mail.kernel.org"
+        Fri, 8 Nov 2019 19:44:29 -0500
+Received: from onstation.org ([52.200.56.107]:35628 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbfKHXqT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 8 Nov 2019 18:46:19 -0500
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726394AbfKIAnM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 8 Nov 2019 19:43:12 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3CB52178F;
-        Fri,  8 Nov 2019 23:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573256778;
-        bh=DVj4e+5dUvj9CfxICEqKu/slf5ah4O7Xbig8CEBOmbA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2Q08bsrwaIq1CxO+JYAxaR0HUa1jeyfp5ofNTHcm+BRf6M0SaPGm9MLqCgX8L/zg7
-         k6LruowSA87rOvg93jts7y6yRTyYov/GR2hmgCxVhvcGodHBjXjbxcd1poMHZnG5Ip
-         zvpJxMCBbqxeaym7O2RcZ7uxqJ0l9Bp+/oIEp4Ys=
-Received: by mail-qv1-f47.google.com with SMTP id cg2so2903043qvb.10;
-        Fri, 08 Nov 2019 15:46:18 -0800 (PST)
-X-Gm-Message-State: APjAAAXMrZQKQ2Jm+6+cMQuAI+93YTu/7a6xD+tlVD3wRqtVQs5LZhFX
-        dbrFUEYSfhBHj1DMydR12ANqjrp/6nocAlZPgA==
-X-Google-Smtp-Source: APXvYqxK4HOtNnah0NRINiwTwCR12VgWOScEENJQK+B+kNIZk+sXgNhwk2CFPqmGQZ4pNC4OirtSwuoSGI2+NgYHZ+Q=
-X-Received: by 2002:ad4:43e9:: with SMTP id f9mr12596446qvu.66.1573256777935;
- Fri, 08 Nov 2019 15:46:17 -0800 (PST)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 27F203E89E;
+        Sat,  9 Nov 2019 00:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1573260191;
+        bh=HP0JoQqY6fFFwnhroRKWW+tbc4y6o7uevtlIKKk2lck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Spfis8EPQrT1jmuBWxRN1bYPqN7qI+dZCD2uI6o13I6ZCqKhwoEAAqyIjjXfWx5nd
+         WTjfSug/z6k8vEUEb2DynRbA7PSIj3pO2Hhm8GSq9rh9D/LZq2bifJ0+1a6M5ZL3um
+         7jlr3PXT16W6oEzlgUptYVjkEjpVYEQF9Bjmenwc=
+Date:   Fri, 8 Nov 2019 19:43:10 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     georgi.djakov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/4] ARM: qcom_defconfig: add msm8974 interconnect
+ support
+Message-ID: <20191109004310.GA4494@onstation.org>
+References: <20191024103140.10077-1-masneyb@onstation.org>
+ <20191024103140.10077-2-masneyb@onstation.org>
 MIME-Version: 1.0
-References: <20191106065017.22144-1-rnayak@codeaurora.org> <20191106065017.22144-9-rnayak@codeaurora.org>
- <20191106165632.GA15103@bogus> <3302bde7-2299-476e-e3cc-35c84a459d63@codeaurora.org>
-In-Reply-To: <3302bde7-2299-476e-e3cc-35c84a459d63@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 8 Nov 2019 17:46:06 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+iO8mFZDPCGBA+yhuwdSxKq6AJk2cHZK4QDB7VA3gWUw@mail.gmail.com>
-Message-ID: <CAL_Jsq+iO8mFZDPCGBA+yhuwdSxKq6AJk2cHZK4QDB7VA3gWUw@mail.gmail.com>
-Subject: Re: [PATCH v4 08/14] dt-bindings: qcom,pdc: Add compatible for sc7180
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024103140.10077-2-masneyb@onstation.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 11:46 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
->
->
-> On 11/6/2019 10:26 PM, Rob Herring wrote:
-> > On Wed,  6 Nov 2019 12:20:11 +0530, Rajendra Nayak wrote:
-> >> Add the compatible string for sc7180 SoC from Qualcomm.
-> >>
-> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> >> Cc: Lina Iyer <ilina@codeaurora.org>
-> >> Cc: Marc Zyngier <maz@kernel.org>
-> >> ---
-> >>   .../devicetree/bindings/interrupt-controller/qcom,pdc.txt      | 3 ++-
-> >>   1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >
-> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > there's no need to repost patches *only* to add the tags. The upstream
-> > maintainer will do that for acks received on the version they apply.
-> >
-> > If a tag was not added on purpose, please state why and what changed.
->
-> Sorry I missed mentioning the delta and the reason for not including your Acked-by.
-> The previous patch was proposing using just a SoC specific compatible, and this
-> one adds a SoC independent one along with the SoC specific one as discussed here [1]
+On Thu, Oct 24, 2019 at 06:31:37AM -0400, Brian Masney wrote:
+> Add interconnect support for msm8974-based SoCs in order to support the
+> GPU on this platform.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Changes since v1:
+> - Set CONFIG_INTERCONNECT=y since its now a bool instead of a tristate
+> 
+>  arch/arm/configs/qcom_defconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
+> index 9792dd0aae0c..cbe4e1d86f9a 100644
+> --- a/arch/arm/configs/qcom_defconfig
+> +++ b/arch/arm/configs/qcom_defconfig
+> @@ -252,6 +252,9 @@ CONFIG_PHY_QCOM_IPQ806X_SATA=y
+>  CONFIG_PHY_QCOM_USB_HS=y
+>  CONFIG_PHY_QCOM_USB_HSIC=y
+>  CONFIG_QCOM_QFPROM=y
+> +CONFIG_INTERCONNECT=y
+> +CONFIG_INTERCONNECT_QCOM=y
+> +CONFIG_INTERCONNECT_QCOM_MSM8974=m
+>  CONFIG_EXT2_FS=y
+>  CONFIG_EXT2_FS_XATTR=y
+>  CONFIG_EXT3_FS=y
 
-Okay.
+Georgi: Since Greg wants to allow compiling the interconnect support as
+a module [1], should I change CONFIG_INTERCONNECT to be a module? Or
+leave this as is? The GPU works fine with interconnect as a module on my
+phone. I know it's more for the cpufreq case.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[1] https://lore.kernel.org/lkml/20191107142111.GB109902@kroah.com/
+
+Andy/Bjorn: This series didn't get picked up for this upcoming merge
+window. If it's too late for this window (which is fine), then I'll
+hold off on resubmitting this until rc4 since I'll most likely have
+more device tree changes by then.
+
+Brian
