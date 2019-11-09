@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ACCC17443
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 16:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A00C43331
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 16:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51A521882
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 16:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F3821882
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 16:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iIpMQceQ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Wwy+QwH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfKIQUt (ORCPT
+        id S1726381AbfKIQUu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 11:20:49 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34353 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbfKIQUs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 11:20:48 -0500
-Received: by mail-wr1-f65.google.com with SMTP id e6so10323210wrw.1
-        for <devicetree@vger.kernel.org>; Sat, 09 Nov 2019 08:20:46 -0800 (PST)
+        Sat, 9 Nov 2019 11:20:50 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40922 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfKIQUu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 11:20:50 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f3so9169682wmc.5
+        for <devicetree@vger.kernel.org>; Sat, 09 Nov 2019 08:20:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FUTvuHG7RmVULQblIGKFdlRxrJihRtMr5+M5nviapzc=;
-        b=iIpMQceQDp83AaTgM0Ijo2lb+sgszk5y/ZtmzGISrJ/5wBosxJJB5rNer3vOVnN/bC
-         zaFXVrmVEbZbn38WdZkI7J2m0N6jQzbO8pqj92Ynxo5ocBZBR/iy5jCCGRcA8tB5sm8q
-         94kRqjeRhf5m0BGxpmdcRaLD+N7NwxrgaqtxrV+acv0lPjSm11C8WkHPIJbLjm91MDS7
-         tQKL2zgjCMPG2ggsbiw6GzvrtYsqxcN8CbkzNPu343f7UGMQW7fpurfXva12j/Ljyr+l
-         eM8PeJr0HmKZpGm6+vxhEYVc5sHO3asYefwYnrYWq1+FUeUHJdWfk8q0+x7R+w6LHkMC
-         ofDA==
+        bh=rOI6QUOBK9QSogmnbQtU7q55r9yQbW3Ua9QOoR9QkrY=;
+        b=Wwy+QwH+P9UqoP8oujilPKtig1715dkzgWKvceZrPvhHTJlIXIZccGusWFTVJ03w0K
+         qpCLCDsPwYahI6hQnmMk0PmpnS4cSuliDSh0zimgWFA9MYqqgOJRbSNoFpyVBu8JbXgA
+         2pUgUVP0tV2C3Il/VGI4Fw631Rp5dYEJqWy7eDdEZhKPt0sZcygq3ZUlxd5UqU6PSW+W
+         Gnu95MAF3BmQ2IFG7eQy5OSrRpQAY/8A3Dzskm308+G4XB3al5xNPmHo/sND2rnzEmWY
+         0Qz+OaBc0octysH9Hq+Z5V4Q4spiNyk63WGC7W8zfrIrDcj12WcVLN7tH6gVB8RlXl+Q
+         TA+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FUTvuHG7RmVULQblIGKFdlRxrJihRtMr5+M5nviapzc=;
-        b=R0wZCyMQhwLO38DUD86NPF1+llptY/o1iCeM0oUKZGWpr5sovOOPOZNnlEkDX/uj4m
-         5awzfR4DFDz5C2affJPFe+PSNNky0FO7pR4ako69+wrpir/uhuSof0PnY0OtoOwcHMQ0
-         6njIwYKPYCDv1zJVqcPSzCYmJxbpyTGlovTbOTP5CxMxBG8HiKDJRKbKkhQHXyln9+gW
-         hDrCDzMXoAsho5w3x1o3+8UXUzPD7n5kFtrktmOX8AcfQOzv0lqnNRVIsIeZ3n08Uuls
-         2y78CBeVfl3Oyq8MZelupaeFEhvV1TUWUDDfWvx8cRe818zvsr+Y3awqiz/lYLKX2RWa
-         yYiA==
-X-Gm-Message-State: APjAAAWwSPoi2Z3bqMjHi2GSj9QE/LyuBcKw7m3l6dBf/37M8o0gevum
-        uCWjoXAKM/PWqBFNvTJh98zTlg==
-X-Google-Smtp-Source: APXvYqx7kZ0kg2+3jDFLqaaAswuDyDwE5cPxU4i/4bbMzb/uVjFv9kYBH76BzgIx2RYKSAGbyw5xKw==
-X-Received: by 2002:adf:f489:: with SMTP id l9mr10294183wro.337.1573316446135;
-        Sat, 09 Nov 2019 08:20:46 -0800 (PST)
+        bh=rOI6QUOBK9QSogmnbQtU7q55r9yQbW3Ua9QOoR9QkrY=;
+        b=l+nDGOHrBciK42kDTVbC3lQZuSjj/E71v3ZbGpfTPCGcaiY9OsLJwKB0hFyI3ouUMn
+         DK/4gvvIfYIX3aWgRwPZiifE4tr/69Jj+9pMR5vAQ90M8lB22ntOUqfk0rLAcjtnz7iw
+         cOeFJz7TK8GR6LoSYWYBijaMUNmBov5bFi5MjcIV8fm/jwAAtmPrb/3H62uoVBtuBcvh
+         kwmjmyqY5m+QoiQJrDkoXTr4Ugrlz4J3rJ7setXFKTxfbT7Ap7L3LLfR5G844+wtjMGU
+         fD1gmhlFqEGdJjLTA9LarjkEmkKRtIOFAGRqo+6xuTjRv3YTawFgH6fhJJe5RfJYnB1E
+         VamA==
+X-Gm-Message-State: APjAAAXkvfAg3sQUR+8TssulVkoobxhhlsgJ8WaxIdr2x0PDZj2S5KvW
+        oxyaVKd0rSnW8VEmTIlwpV8m4g==
+X-Google-Smtp-Source: APXvYqw4Bxj4tYYWUbk4jo5BvOUd32pF74MDX477Ax1+OvNU4Gn2ClWcfzN9u9Pt+5aq5JWKGp3OpQ==
+X-Received: by 2002:a7b:c747:: with SMTP id w7mr14087795wmk.62.1573316447064;
+        Sat, 09 Nov 2019 08:20:47 -0800 (PST)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id v8sm14534975wra.79.2019.11.09.08.20.45
+        by smtp.googlemail.com with ESMTPSA id v8sm14534975wra.79.2019.11.09.08.20.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 09 Nov 2019 08:20:45 -0800 (PST)
+        Sat, 09 Nov 2019 08:20:46 -0800 (PST)
 From:   Corentin Labbe <clabbe@baylibre.com>
 To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
         wens@csie.org, jernej.skrabec@siol.net
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v4 1/2] ARM64: dts: sun50i-h6-pine-h64: state that the DT supports the modelA
-Date:   Sat,  9 Nov 2019 16:20:32 +0000
-Message-Id: <1573316433-40669-2-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH v4 2/2] ARM64: dts: allwinner: add pineh64 model B
+Date:   Sat,  9 Nov 2019 16:20:33 +0000
+Message-Id: <1573316433-40669-3-git-send-email-clabbe@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
 References: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
@@ -71,99 +71,73 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The current sun50i-h6-pine-h64 DT does not specify which model (A or B)
-it supports.
-When this file was created, only modelA was existing, but now both model
-exists and with the time, this DT drifted to support the model B since it is
-the most common one.
-Furtheremore, some part of the model A does not work with it like ethernet and
-HDMI connector (as confirmed by Jernej on IRC).
+This patch adds the model B of the PineH64.
+The model B is smaller than the pine64 model A and has no PCIE slot.
 
-So it is time to settle the issue, and the easiest way was to state that
-this DT is for model B.
-Easiest since only a small name changes is required.
-Doing the opposite (stating this file is for model A) will add changes (for
-ethernet and HDMI) and so, will break too many setup.
-
-But as asked by the maintainer this patch state this file is for model A.
-In the process this patch adds the missing compoments to made it work on
-model A.
+The only devicetree difference with the pineH64 model A, is the PHY
+regulator and the HDMI connector node.
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- .../devicetree/bindings/arm/sunxi.yaml        |  4 ++--
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 19 +++++++++++++++----
- 2 files changed, 17 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/arm/sunxi.yaml        |  5 +++++
+ arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+ .../allwinner/sun50i-h6-pine-h64-modelB.dts   | 21 +++++++++++++++++++
+ 3 files changed, 27 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
 
 diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index 8a1e38a1d7ab..b8ec616c2538 100644
+index b8ec616c2538..227217bf28df 100644
 --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
 +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -599,9 +599,9 @@ properties:
-           - const: pine64,pine64-plus
-           - const: allwinner,sun50i-a64
- 
--      - description: Pine64 PineH64
-+      - description: Pine64 PineH64 model A
-         items:
--          - const: pine64,pine-h64
-+          - const: pine64,pine-h64-modelA
+@@ -604,6 +604,11 @@ properties:
+           - const: pine64,pine-h64-modelA
            - const: allwinner,sun50i-h6
  
-       - description: Pine64 LTS
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 74899ede00fb..1d9afde4d3d7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -10,8 +10,8 @@
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
--	model = "Pine H64";
--	compatible = "pine64,pine-h64", "allwinner,sun50i-h6";
-+	model = "Pine H64 model A";
-+	compatible = "pine64,pine-h64-modelA", "allwinner,sun50i-h6";
- 
- 	aliases {
- 		ethernet0 = &emac;
-@@ -22,9 +22,10 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	connector {
-+	hdmi_connector: connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-+		ddc-en-gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
- 
- 		port {
- 			hdmi_con_in: endpoint {
-@@ -52,6 +53,16 @@
- 		};
- 	};
- 
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		gpio = <&pio 2 16 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
++      - description: Pine64 PineH64 model B
++        items:
++          - const: pine64,pine-h64-modelB
++          - const: allwinner,sun50i-h6
 +
- 	reg_usb_vbus: vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb-vbus";
-@@ -68,7 +79,7 @@
- 	pinctrl-0 = <&ext_rgmii_pins>;
- 	phy-mode = "rgmii";
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-supply = <&reg_aldo2>;
-+	phy-supply = <&reg_gmac_3v3>;
- 	allwinner,rx-delay-ps = <200>;
- 	allwinner,tx-delay-ps = <200>;
- 	status = "okay";
+       - description: Pine64 LTS
+         items:
+           - const: pine64,pine64-lts
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index d2418021768b..bda89b9ccb4a 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -26,4 +26,5 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelB.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-tanix-tx6.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
+new file mode 100644
+index 000000000000..063a85223faa
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (C) 2019 Corentin LABBE <clabbe@baylibre.com>
++ */
++
++#include "sun50i-h6-pine-h64.dts"
++
++/ {
++	model = "Pine H64 model B";
++	compatible = "pine64,pine-h64-modelB", "allwinner,sun50i-h6";
++
++	/delete-node/ reg_gmac_3v3;
++};
++
++&hdmi_connector {
++	/delete-property/ ddc-en-gpios;
++};
++
++&emac {
++	phy-supply = <&reg_aldo2>;
++};
 -- 
 2.23.0
 
