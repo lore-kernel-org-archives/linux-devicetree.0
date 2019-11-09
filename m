@@ -2,110 +2,105 @@ Return-Path: <SRS0=1yYv=ZB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E08C43331
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 20:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966D5C43331
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 21:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742D721882
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 20:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDD021924
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 21:06:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="b63V1dqu";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="sNxawXyk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lYQBPpkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfKIUCD (ORCPT
+        id S1726485AbfKIVGF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 15:02:03 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:32798 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbfKIUCD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 15:02:03 -0500
-X-Greylist: delayed 531 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 Nov 2019 15:02:02 EST
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 479SVZ3zVPzKmQS;
-        Sat,  9 Nov 2019 20:53:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received; s=mail20150812; t=1573329177; bh=M7oLHM6GTq
-        fgSDX0vgvOtgGwC8zzgFftT7dUZlMbO0k=; b=b63V1dqu9dyA86AtCs8CL1cx/F
-        qZeFbJ5BWE92Icg54qxGj9JreMgnPVQt6NljKpXNdXcQxF7xceqdnAtdfKQhDEez
-        7LoAcGcZo1ODymxkIc+KuvS0orUzWPoRWRDl53XXUoz9jwTTiFKCKd40FUYos8eC
-        JOV82+SBQqC9nAcbpz4IwwTSGKfh+OjNCvYifJfqcKnP4rj/Rplquf+PwTc6zBfM
-        s2QaLmw3MfZlyjtVxLbJlCraEIXHV7Wla5IKddVleCDRp5TU9vdqgf36TUXLjYah
-        vuMVwjzinSlJwh17z2XyJgS5sbyi8ITIRwqvKU7YyEr8rU4v3X41RlFYMlVw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1573329188;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0TaijmMVk5bwn35HLiLpfyHZS0CXVgZsMgJ8IFKWEvM=;
-        b=sNxawXykxIzAXTxNRSPAQvGs/YRwYpamJMw8YN7F+Er9Oz4Qa3DAvCG7JGyFRsZ7hgPVe7
-        tzf6bj+qWncE9cNyZqFucBPVAeV038pP0sPmrrJuytebWo2pueFiWvAzy7schsorucLt2R
-        FFk4zbSxB3DOcGwyboU2muHX35NoCI/UNFDMgi2P4GFY9MrHLaNlEOiyyRZUpre+op+MBS
-        MyzXblFzGxdBWoUO84O+By8+8n5LptJn0LjTCp4AHWUCNt/DujsLSQ1TBrXIWI03K+1FLZ
-        gUnNjLvELLtePLoyfCZH2x1JvD0d3qS6kRNLsZj4iDm2dozG6bWDVaSg3D2tfA==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id asZD_HPxi0tO; Sat,  9 Nov 2019 20:52:57 +0100 (CET)
-From:   Alexander Stein <alexander.stein@mailbox.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, shawnguo@kernel.org,
+        Sat, 9 Nov 2019 16:06:05 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:58498 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726470AbfKIVGF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 16:06:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AeGy6oWAVhpsj0BuOFBbXLEEpIX0zbaOX8ktv7sw73c=; b=lYQBPpkdLtKmSRGPLw1rP6Sksg
+        5cbWGNaNDZmJvgYtA1Bu3BaWCIDw5+TcbSLT/PtHyDpdwR0UwQB3Qq9itkCuBTffpi4ZXU7qGEbsB
+        Gjb8s+Mps3XmVAbR9KR4IuqePkrcPpDIDNG/PnJJLfFTYw8Vj3qY5wZuv6erEbfcpD0g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iTXvZ-0003tj-MJ; Sat, 09 Nov 2019 22:05:49 +0100
+Date:   Sat, 9 Nov 2019 22:05:49 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexander Stein <alexander.stein@mailbox.org>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, shawnguo@kernel.org,
         mark.rutland@arm.com, devicetree@vger.kernel.org,
         leoyang.li@nxp.com, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org
 Subject: Re: [PATCH] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
-Date:   Sat, 09 Nov 2019 20:52:54 +0100
-Message-ID: <393335751.FoSYQk3TTC@kongar>
-In-Reply-To: <CA+h21hoqkE2D03BHrFeU+STbK8pStRRFu+x7+9j2nwFf+EHJNg@mail.gmail.com>
-References: <20191109105642.30700-1-olteanv@gmail.com> <20191109150953.GJ22978@lunn.ch> <CA+h21hoqkE2D03BHrFeU+STbK8pStRRFu+x7+9j2nwFf+EHJNg@mail.gmail.com>
+Message-ID: <20191109210549.GB12999@lunn.ch>
+References: <20191109105642.30700-1-olteanv@gmail.com>
+ <20191109150953.GJ22978@lunn.ch>
+ <CA+h21hoqkE2D03BHrFeU+STbK8pStRRFu+x7+9j2nwFf+EHJNg@mail.gmail.com>
+ <393335751.FoSYQk3TTC@kongar>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <393335751.FoSYQk3TTC@kongar>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
- On Saturday, November 9, 2019, 4:21:51 PM CET Vladimir Oltean wrote:
-> On 09/11/2019, Andrew Lunn <andrew@lunn.ch> wrote:
-> > On Sat, Nov 09, 2019 at 12:56:42PM +0200, Vladimir Oltean wrote:
-> >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
-> >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
-> >>
-> >> The interrupts are active low, but the GICv2 controller does not support
-> >> active-low and falling-edge interrupts, so the only mode it can be
-> >> configured in is rising-edge.
-> >
-> > Hi Vladimir
-> >
-> > So how does this work? The rising edge would occur after the interrupt
-> > handler has completed? What triggers the interrupt handler?
-> >
-> > 	Andrew
-> >
+On Sat, Nov 09, 2019 at 08:52:54PM +0100, Alexander Stein wrote:
+>  On Saturday, November 9, 2019, 4:21:51 PM CET Vladimir Oltean wrote:
+> > On 09/11/2019, Andrew Lunn <andrew@lunn.ch> wrote:
+> > > On Sat, Nov 09, 2019 at 12:56:42PM +0200, Vladimir Oltean wrote:
+> > >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
+> > >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+> > >>
+> > >> The interrupts are active low, but the GICv2 controller does not support
+> > >> active-low and falling-edge interrupts, so the only mode it can be
+> > >> configured in is rising-edge.
+> > >
+> > > Hi Vladimir
+> > >
+> > > So how does this work? The rising edge would occur after the interrupt
+> > > handler has completed? What triggers the interrupt handler?
+> > >
+> > > 	Andrew
+> > >
+> > 
+> > Hi Andrew,
+> > 
+> > I hope I am not terribly confused about this. I thought I am telling
+> > the interrupt controller to raise an IRQ as a result of the
+> > low-to-high transition of the electrical signal. Experimentation sure
+> > seems to agree with me. So the IRQ is generated immediately _after_
+> > the PHY has left the line in open drain and it got pulled up to Vdd.
 > 
-> Hi Andrew,
-> 
-> I hope I am not terribly confused about this. I thought I am telling
-> the interrupt controller to raise an IRQ as a result of the
-> low-to-high transition of the electrical signal. Experimentation sure
-> seems to agree with me. So the IRQ is generated immediately _after_
-> the PHY has left the line in open drain and it got pulled up to Vdd.
 
-It is correct GIC only supports raising edge and active-high. The IRQ[0:5] on ls1021a are a bit special though.
-They not directly connected to GIC, but there is an optional inverter, enabled by default. See RM for register SCFG_INTPCR.
-If left to default, those pins get actually active-high internally.
-There was a patch 2 years ago to add support for this inverter: https://lore.kernel.org/patchwork/patch/860993/
+> It is correct GIC only supports raising edge and active-high. The
+> IRQ[0:5] on ls1021a are a bit special though.  They not directly
+> connected to GIC, but there is an optional inverter, enabled by
+> default.
 
-Best regards,
-Alexander
+Ah, O.K. So configuring for a rising edge is actually giving a falling
+edge. Which is why it works.
 
+Actually supporting this correctly is going a cause some pain. I
+wonder how many DT files currently say rising/active high, when in
+fact falling/active low is actually being used? And when the IRQ
+controller really does support active low and falling, things brake?
 
+Vladimir, since this is a shared interrupt, you really should use
+active low here. Maybe the first step is to get control of the
+inverter, and define a DT binding which is not going to break
+backwards compatibility. And then wire up this interrupt.
+
+	  Andrew
