@@ -8,108 +8,91 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67B9C43331
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 10:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3319AC43331
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 11:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973DC21924
-	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 10:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF063222BE
+	for <linux-devicetree@archiver.kernel.org>; Sat,  9 Nov 2019 11:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfmDrMNF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpeGzP57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbfKIK5A (ORCPT
+        id S1726289AbfKILel (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 05:57:00 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34062 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfKIK47 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 05:56:59 -0500
-Received: by mail-wm1-f68.google.com with SMTP id v3so9172406wmh.1;
-        Sat, 09 Nov 2019 02:56:58 -0800 (PST)
+        Sat, 9 Nov 2019 06:34:41 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43979 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfKILel (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 06:34:41 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n1so9759339wra.10
+        for <devicetree@vger.kernel.org>; Sat, 09 Nov 2019 03:34:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JHLfdo8EDYpxKc5h1UVzYd5rkwgO5xInaju1os9b+ho=;
-        b=SfmDrMNFhZrsAWXRX9Nk5Koc/lkJ6XYxu32hCyrsCin2aAcMyn0oie0m+oobQbQ74W
-         9YhqazEroPzLtEjVmTQD7BcMEaaaXl795pYJp9bme3oBttWkPqXjrm9SE43wmJDyFu11
-         o1VT3TOucgjsyqvcDOwOVZWq3C5Wu21rNAmN4vCC/fYG8MbRGMhMZYs4EZKa2OWO2o2q
-         F7jhzABV386Zk9F4v4LFklNGpqqE7GUs/55ny5MeUh8ABfp85taeVVfAdskUG8+53NZ0
-         RtGWo1z1VPJB5JoCJ4N25e3toiXE0LjsNte7cSPp4tX5oTFuFFGiUfGXsboDvYYDGuBo
-         ITKg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0U2Hfl11NqYYCRdPoKWLjnogI538taxuOyQTz7nQ32Q=;
+        b=YpeGzP57HZS0B/szmrSnq2N1OK7R9hLTkIAINAiLjyxUZD6vB4nYs6qZcrVKvWYSru
+         lqIN6Fi4vGUGvKULrHMbKdyvPoUs0KeJnt2rDuUYLtR9cW+IXLCr8wwEjvRzeAzvE9UF
+         HoLGmIDBvWKRNGmM77gMUovveyp+yvuTqXcisfO7xCSXdUHNyNZqdE3fCOvAhTirXRUS
+         vhifDt/QELsDqNsuZz939uO+VOQ5BeiB+i7fV9XE6zYy97qNDfETAIKRZi/ldjEMooWa
+         aY+Zevqq/qoPx9JzBF3/b3CjJ5BS+wLt6v3O/+Ksa4SOK9K8g+KuzDxJFwp0F62FPR2X
+         XaqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JHLfdo8EDYpxKc5h1UVzYd5rkwgO5xInaju1os9b+ho=;
-        b=nMRco2rPBf1vDw5xYAKKDAW3snMBpXJFJzeTSE43EjALWI1qF5fLqcjf5b0gwbar4U
-         CwqkoLpIb+cbygheZLVVwvopCq8xLTl2MzIbJz/GgHJVZ0bzZtN1LecIxLmO2cXfiNKY
-         vxqxeAsUiiWbiZcTPPwu8pjTnWCi+mf1Z/YXfPAZ/fhT5lxl7mttk0KMk+cz2MUA5qeB
-         Z2ucJgkUPQD4bbJfmwaJLBcEzEwkMJAazYtA4NAwtRFz8k+qP66aXqDoYNmJqxWKFkhz
-         CEEC7OPBe0FZN2YJIPjAVHPYYd+TtxP9hHv0S55fVM4MnU3LB1grEt/xmjeA3rs+bX1V
-         nzjQ==
-X-Gm-Message-State: APjAAAWEaOsfZlZn7TcXjYQK9tmqCvdyOQLLlQVdjuNHXSru2x0Ahsaa
-        nRglxZWfvRfwtdej2bOYUWQ=
-X-Google-Smtp-Source: APXvYqxhXAZg/XDWVA2jUZjEBESbC0l9FJaojQQtz3TAEVdRDHSDneX5AN2Bqc3wy8oUC8OTUHaU8A==
-X-Received: by 2002:a1c:6146:: with SMTP id v67mr12605556wmb.102.1573297017263;
-        Sat, 09 Nov 2019 02:56:57 -0800 (PST)
-Received: from localhost.localdomain ([86.121.29.241])
-        by smtp.gmail.com with ESMTPSA id l10sm14846296wrg.90.2019.11.09.02.56.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0U2Hfl11NqYYCRdPoKWLjnogI538taxuOyQTz7nQ32Q=;
+        b=Pk4t0ls3I7nzYzsh2clbwcjsUY5JbiMow3YYtJdtOVpLweWLVvBOGSV7daR0BKIf5n
+         eqnFgKMAE+rKDBiKqFoaxTmQGAM1oi9qmu6zgJC8GOYghtWDdJtc+QDyAp5VUYU6PRlJ
+         ChS22sOrYUYO2oxf08uOM88BkEh265W6o/aUewHYND6UEGxunufRoGkE9oc+v9hCqMmG
+         mj2akGM4hcGCYYfA273ReCfP9l5c/+a//Am/q+VZ1GvSOTdyxyEedj+neooOI3/cO8Ra
+         CyW3n4xbuDvZDAhmFfMITfa8aStTqKNgfkCM2j91RtMZt5gPUjRI0Djsnt44O5ZSJ+LR
+         cABA==
+X-Gm-Message-State: APjAAAUL/nbFH2ii+ZqX55tGDiS4MKSHZzMOJlIYDi3EBtoSOUWuNSOg
+        n46au7nzY9nnd8NB7hr7ECFqAAA5
+X-Google-Smtp-Source: APXvYqyUAT7GapiKbn1vROHyc9EbmUXEZOwyowIJ5U3tqgNJU9lP2tj97o64e33k/C9h+VhfqFiwGQ==
+X-Received: by 2002:adf:fd85:: with SMTP id d5mr12919249wrr.101.1573299279019;
+        Sat, 09 Nov 2019 03:34:39 -0800 (PST)
+Received: from mamamia.internal (a89-183-63-51.net-htp.de. [89.183.63.51])
+        by smtp.gmail.com with ESMTPSA id w132sm13964296wma.6.2019.11.09.03.34.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Nov 2019 02:56:56 -0800 (PST)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     shawnguo@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
-Date:   Sat,  9 Nov 2019 12:56:42 +0200
-Message-Id: <20191109105642.30700-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 09 Nov 2019 03:34:37 -0800 (PST)
+From:   Andre Heider <a.heider@gmail.com>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        jernej.skrabec@siol.net
+Subject: [PATCH] arm64: dts: allwinner: orange-pi-3: Enable IR receiver
+Date:   Sat,  9 Nov 2019 12:34:36 +0100
+Message-Id: <20191109113436.17979-1-a.heider@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
-have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+Orange Pi 3 has an on-board IR receiver, enable it.
 
-The interrupts are active low, but the GICv2 controller does not support
-active-low and falling-edge interrupts, so the only mode it can be
-configured in is rising-edge.
-
-The interrupt number was obtained by subtracting 32 from the listed
-interrupt ID from LS1021ARM.pdf Table 5-1. Interrupt assignments.
-
-Switching to interrupts offloads the PHY library from the task of
-polling the MDIO status and AN registers (1, 4, 5) every second.
-
-Unfortunately, the BCM5464R quad PHY connected to the switch does not
-appear to have an interrupt line routed to the SoC.
-
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: Andre Heider <a.heider@gmail.com>
 ---
- arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-index 5b7689094b70..4532b2bd3fd1 100644
---- a/arch/arm/boot/dts/ls1021a-tsn.dts
-+++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-@@ -203,11 +203,15 @@
- 	/* AR8031 */
- 	sgmii_phy1: ethernet-phy@1 {
- 		reg = <0x1>;
-+		/* SGMII1_PHY_INT_B: connected to IRQ2, active low */
-+		interrupts = <GIC_SPI 165 IRQ_TYPE_EDGE_RISING>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index eb379cd402ac..d3e30a67587c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -263,6 +263,10 @@
  	};
+ };
  
- 	/* AR8031 */
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg = <0x2>;
-+		/* SGMII2_PHY_INT_B: connected to IRQ2, active low */
-+		interrupts = <GIC_SPI 165 IRQ_TYPE_EDGE_RISING>;
- 	};
- 
- 	/* BCM5464 quad PHY */
++&r_ir {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_ph_pins>;
 -- 
-2.17.1
+2.24.0
 
