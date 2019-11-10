@@ -2,140 +2,81 @@ Return-Path: <SRS0=/VR8=ZC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98409C43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7DDC43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 09:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C7821783
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355833;
-	bh=RHlaMWsk/Gruwmgw+Oi5SSkGWnNFBDQD7HA7XGA8KwY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gvk8ojq8AN6KB27lMUHlKXF91QQDLUAvYubbZMWYp7gLC8XEwU3hvD305NmgDxJYB
-	 uKvr4n1KRuqo8NWUqcx+Zq3dnbusCDkh+D6DigNANNEuQYN55ODT5WuQgr/dn1Gk7h
-	 Yc5Ym6bsGZxJbdlCnEeErBMVg5xEaryeOYTvk4pQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8138D20854
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 09:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="Z1oJxFTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfKJDRJ (ORCPT
+        id S1726681AbfKJJ3y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:17:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbfKJCkZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:25 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CAA221655;
-        Sun, 10 Nov 2019 02:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353624;
-        bh=RHlaMWsk/Gruwmgw+Oi5SSkGWnNFBDQD7HA7XGA8KwY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xQ2hDwrdwVo4j6ZS8AuvA5cPnANK5tZ+9IFp3sIS3wCfs4dg5f4a9nPU7Yi4CnFk0
-         HTYkxPnDizXnhuWbyzvJkPC+xdOEJI/7XF753aQ28kx/LXkxd7EXDiJ2n2B9ivfLc7
-         CJXCsLx7F2teC8GTQuAWFoDm0zdApg6jpK7+L5Xs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 009/191] ARM: dts: xilinx: Fix I2C and SPI bus warnings
-Date:   Sat,  9 Nov 2019 21:37:11 -0500
-Message-Id: <20191110024013.29782-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
-References: <20191110024013.29782-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Sun, 10 Nov 2019 04:29:54 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25851 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbfKJJ3y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 Nov 2019 04:29:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1573378178; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=gHV3k9hZcXvSfznkfz/qV1dyxDoQqfCXleCenSeNucbDY4rBWrb0R54D+3+a4PVSsMUKsGC3TFZ3efccYB4ao8LYwIKdVi2Ipik9R38Ivs+7T2WBBu3/886iyZDqtITuqnxvNVXj9Li9hhCHqXvfxA2v3BBoB63UKFmq9G9lSwg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1573378178; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=RwiJDZMBHlfZojS1baXbRX4kFLS7JIIBhzbGeIpNw3o=; 
+        b=FBfDDAQwV14qZARH1+kXZ46SBJpWKvRJpplrpAixanW9adggOpoNcxBywA3oCbjpDn1g1/FVLYTHREraAxZF/bBNeWR94PuvLf6faBdaIgrknnj763DTqSe5wm9MPNrO1bPeYwl53Q+xzhQvjqKD4JHT8SkRCJ6reEzbMpbHa78=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=FA0Fso/iUEpmhuQqzFFQGcgPrEGA8RZq4BBdlAnK/+gF/1kIdcn+xO3kEVgd8pXV2RrzcgboOUeC
+    gzMyveoIY0IwkBEFZWOA1LxxVgV2jPEAFlSSF+iAAmJ6XUg+yAWR  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573378178;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; l=383;
+        bh=RwiJDZMBHlfZojS1baXbRX4kFLS7JIIBhzbGeIpNw3o=;
+        b=Z1oJxFTx4puNX/mBC1fKo55Lzk5vMhjTnb42XqsM4+UivXFIkK1J8NyyqTz7fBO4
+        dWN407e5bGzFcACI6YkMNoc3giCiiD08zXZHBIBeFPpRNmWpd+Tp6QKiZSKn2v93ITY
+        hDXuED1cSPyYytDKX7eJLnAKsJ0HWjNvIe5rMYVE=
+Received: from localhost.localdomain (171.221.113.200 [171.221.113.200]) by mx.zohomail.com
+        with SMTPS id 157337817689296.20366141280374; Sun, 10 Nov 2019 01:29:36 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, mturquette@baylibre.com,
+        paul.burton@mips.com, sboyd@kernel.org, robh+dt@kernel.org,
+        syq@debian.org, mark.rutland@arm.com, paul@crapouillou.net
+Subject: clk: X1000: Add support for the X1000 v3
+Date:   Sun, 10 Nov 2019 17:28:20 +0800
+Message-Id: <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+v1:
+1.Add the clock bindings for X1000 from Ingenic.
+2.Add support for the clocks provided by the CGU in the
+  Ingenic X1000 SoC.
 
-[ Upstream commit f5054ceed420b1f38d37920a4c65446fcc5d6b90 ]
+v1->v2:
+use BIT() macro instead left shift, add a call of
+"ingenic_cgu_register_syscore_ops()", replace "CLK_OF_DECLARE"
+with a "CLK_OF_DECLARE_DRIVER".
 
-dtc has new checks for I2C and SPI buses. Fix the warnings in node names
-and unit-addresses.
+v2->v3:
+1.Modify the wrong register in "X1000_CLK_MAC".
+2.Add the clock of I2C0~I2C2.
 
-arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@52: I2C bus unit address format error, expected "34"
-arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@53: I2C bus unit address format error, expected "35"
-arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@54: I2C bus unit address format error, expected "36"
-arch/arm/boot/dts/zynq-zc770-xm013.dtb: Warning (spi_bus_reg): /amba/spi@e0006000/eeprom@0: SPI bus unit address format error, expected "2"
-arch/arm/boot/dts/zynq-zc770-xm010.dtb: Warning (spi_bus_reg): /amba/spi@e0007000/flash@0: SPI bus unit address format error, expected "1"
-
-Cc: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/zynq-zc702.dts       | 12 ++++++------
- arch/arm/boot/dts/zynq-zc770-xm010.dts |  2 +-
- arch/arm/boot/dts/zynq-zc770-xm013.dts |  2 +-
- 3 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index cc5a3dc2b4a08..27cd6cb52f1ba 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -174,17 +174,17 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <7>;
--			hwmon@52 {
-+			hwmon@34 {
- 				compatible = "ti,ucd9248";
--				reg = <52>;
-+				reg = <0x34>;
- 			};
--			hwmon@53 {
-+			hwmon@35 {
- 				compatible = "ti,ucd9248";
--				reg = <53>;
-+				reg = <0x35>;
- 			};
--			hwmon@54 {
-+			hwmon@36 {
- 				compatible = "ti,ucd9248";
--				reg = <54>;
-+				reg = <0x36>;
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/zynq-zc770-xm010.dts b/arch/arm/boot/dts/zynq-zc770-xm010.dts
-index 0e1bfdd3421ff..0dd352289a45e 100644
---- a/arch/arm/boot/dts/zynq-zc770-xm010.dts
-+++ b/arch/arm/boot/dts/zynq-zc770-xm010.dts
-@@ -68,7 +68,7 @@
- 	status = "okay";
- 	num-cs = <4>;
- 	is-decoded-cs = <0>;
--	flash@0 {
-+	flash@1 {
- 		compatible = "sst25wf080", "jedec,spi-nor";
- 		reg = <1>;
- 		spi-max-frequency = <1000000>;
-diff --git a/arch/arm/boot/dts/zynq-zc770-xm013.dts b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-index 651913f1afa2a..4ae2c85df3a00 100644
---- a/arch/arm/boot/dts/zynq-zc770-xm013.dts
-+++ b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-@@ -62,7 +62,7 @@
- 	status = "okay";
- 	num-cs = <4>;
- 	is-decoded-cs = <0>;
--	eeprom: eeprom@0 {
-+	eeprom: eeprom@2 {
- 		at25,byte-len = <8192>;
- 		at25,addr-mode = <2>;
- 		at25,page-size = <32>;
--- 
-2.20.1
 
