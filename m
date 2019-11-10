@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F83CC17443
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB25C17443
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0F6208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCEF5208C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355408;
-	bh=wOI/QU4y8qLszeihRbu28akQEhXLJhHGcVOEfMMH57o=;
+	s=default; t=1573355410;
+	bh=BuT6bfjFp5cxw/27srU4vhqsluei9tEzvXuetTk1On4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KviwmWh5CccQ0Uvqkhw69gYJPZ1J1fevDyFkIeW8djPnNVyr7vLXesi7yTmNbPfXH
-	 i9LFzaWaQz9DFUM0xA+sYkVYvhQa3/jba2PhcMKfHVagfG15p1UueH32Yha741Bo9t
-	 fiHvD+fsDkjzjDuXpS91Fc7+Hs56rsHK0O+qEcRA=
+	b=f9SjhsuJ9rqXOetsn5YRobdbpUKN0MT8kTTVIdXWVk+lqzyefrOy7GISo5EbeH3xF
+	 1QbptFk6p44uzISa1XsGYrYbU+etGQEy/40untxbwg+KTiZrVUn1wisYx335dh8P2P
+	 nmbh7wJkI/EHzXT5fKYkqZLVdz7OMieha1jmu2OI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfKJCoQ (ORCPT
+        id S1728508AbfKJCoP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:44:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43328 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbfKJCoN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:13 -0500
+        id S1728504AbfKJCoO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2326F21655;
-        Sun, 10 Nov 2019 02:44:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 522CD222BE;
+        Sun, 10 Nov 2019 02:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353853;
-        bh=wOI/QU4y8qLszeihRbu28akQEhXLJhHGcVOEfMMH57o=;
+        s=default; t=1573353854;
+        bh=BuT6bfjFp5cxw/27srU4vhqsluei9tEzvXuetTk1On4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fLXqx1SqkC+mZKRDTpOyWXggLTmJ2GFEOy9ksbe/mJPqx0F6M0DAxRm/QzwGkLkEb
-         WguJFMWAyztco2x/w/wU32+EuCe0Y5OvdSj81on/e40CQ3cfcLsULfE9v/364PYiuy
-         jl8HElC4qdInaenxG7QCK98/NZO8Gu0JUCDflBkw=
+        b=AG2i7VyCt8UdU9hpzvvOtBB3PJVVlGKb6/zyKRzqMqxVdiRmmdA56usNV6HQvzwCH
+         bp9NABRQowZiHfcUHHxWYEFdxXWcXWzdgvC0j2bCpZnAv+fw/XFE0hSjCgmygVTI1M
+         leqaHfbrhuAAqlWTQThfYAF2WMcSxhXTPKggKHPg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Stefan Agner <stefan@agner.ch>,
         Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 138/191] ARM: dts: tegra20: restore address order
-Date:   Sat,  9 Nov 2019 21:39:20 -0500
-Message-Id: <20191110024013.29782-138-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 139/191] ARM: tegra: apalis_t30: fix mmc1 cmd pull-up
+Date:   Sat,  9 Nov 2019 21:39:21 -0500
+Message-Id: <20191110024013.29782-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -63,64 +62,40 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit 8188391c127ea34d66f37eda6755d0acb51dc600 ]
+[ Upstream commit 1c997fe4becdc6fcbc06e23982ceb65621e6572a ]
 
-Commit 6c468f109884 ("ARM: dts: tegra: add Tegra20 NAND flash
-controller node") introduced the nand-controller node. However, it got
-added at the wrong spot not honoring the address order. Fix this.
+Fix MMC1 cmd pin pull-up causing issues on carrier boards without
+external pull-up.
 
 Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra20.dtsi | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/tegra30-apalis.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 15b73bd377f04..80854f7de765c 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -419,19 +419,6 @@
- 		status = "disabled";
- 	};
+diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
+index 2f807d40c1b79..e749e047db7ab 100644
+--- a/arch/arm/boot/dts/tegra30-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+@@ -171,14 +171,14 @@
  
--	gmi@70009000 {
--		compatible = "nvidia,tegra20-gmi";
--		reg = <0x70009000 0x1000>;
--		#address-cells = <2>;
--		#size-cells = <1>;
--		ranges = <0 0 0xd0000000 0xfffffff>;
--		clocks = <&tegra_car TEGRA20_CLK_NOR>;
--		clock-names = "gmi";
--		resets = <&tegra_car 42>;
--		reset-names = "gmi";
--		status = "disabled";
--	};
--
- 	nand-controller@70008000 {
- 		compatible = "nvidia,tegra20-nand";
- 		reg = <0x70008000 0x100>;
-@@ -447,6 +434,19 @@
- 		status = "disabled";
- 	};
- 
-+	gmi@70009000 {
-+		compatible = "nvidia,tegra20-gmi";
-+		reg = <0x70009000 0x1000>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0xd0000000 0xfffffff>;
-+		clocks = <&tegra_car TEGRA20_CLK_NOR>;
-+		clock-names = "gmi";
-+		resets = <&tegra_car 42>;
-+		reset-names = "gmi";
-+		status = "disabled";
-+	};
-+
- 	pwm: pwm@7000a000 {
- 		compatible = "nvidia,tegra20-pwm";
- 		reg = <0x7000a000 0x100>;
+ 			/* Apalis MMC1 */
+ 			sdmmc3_clk_pa6 {
+-				nvidia,pins = "sdmmc3_clk_pa6",
+-					      "sdmmc3_cmd_pa7";
++				nvidia,pins = "sdmmc3_clk_pa6";
+ 				nvidia,function = "sdmmc3";
+ 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+ 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
+ 			};
+ 			sdmmc3_dat0_pb7 {
+-				nvidia,pins = "sdmmc3_dat0_pb7",
++				nvidia,pins = "sdmmc3_cmd_pa7",
++					      "sdmmc3_dat0_pb7",
+ 					      "sdmmc3_dat1_pb6",
+ 					      "sdmmc3_dat2_pb5",
+ 					      "sdmmc3_dat3_pb4",
 -- 
 2.20.1
 
