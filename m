@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DA1C17446
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A7EC43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6C6222C5
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AFA208C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355410;
-	bh=UjqVqgdhztbhUdrL+ufrQI7PcTgq8W31OFAvib2seIo=;
+	s=default; t=1573355415;
+	bh=m+Inve5hgRyZpw7gj6KahVQEpcPLzayG8F7xJuq27rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tQ8U8DXsA1iS2It4w+Dv2LEaDhUTxV7T/Xse7CX7CGQqtuzLKbEigab4n+vLh097C
-	 fo6ttUmXG+brMhrIOVsWoOP3oPXBIqkXqOaTqitFGuKN08GqzIV+iJZgCWmkCqaQuJ
-	 WtE3kRQ0kaLQr3NtRDhFNx+i+Mckc64XJu6yxeYE=
+	b=RBDXO1e+D/tJmeiiJMPrVyCnJnPQYhEUGNnNOXN/eo39APMldVekjBmFEaUNE2oXp
+	 hC6PTxtdiCS0pclcX8RuP9sPFqCfW7HgDo+348F8P5Jd095IGENWHzTtiHz5bU0yrn
+	 YXFNPECtfBcdhEQsFv4hBxKtWyw1Gt7fT1vMQVXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfKJDKJ (ORCPT
+        id S1728497AbfKJCoN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:10:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43416 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727440AbfKJCoP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:15 -0500
+        id S1728488AbfKJCoM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7844221848;
-        Sun, 10 Nov 2019 02:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B6D21D7E;
+        Sun, 10 Nov 2019 02:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353855;
-        bh=UjqVqgdhztbhUdrL+ufrQI7PcTgq8W31OFAvib2seIo=;
+        s=default; t=1573353851;
+        bh=m+Inve5hgRyZpw7gj6KahVQEpcPLzayG8F7xJuq27rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G28Xl2AV5e8IcUYGHvfgOMVTiuu+WUvvARYikBfTNH61saPNfx6f4fwcW9CYM7ABf
-         MK6Bar4JyVa0MqNXKizeV0HZSd+Z9WfStE1hC39UA43qS1cUUF2lFMxktR9bIzd2cY
-         fCB265F1EVeNAN/+2B8V2krxR8uod3tDrl/BxGQo=
+        b=nFre0IZe3Rd3jzKJ/9jVotB3E+D15l3i8QqYJnfjOIOs9wJbV2rCDyum1QFL32w8D
+         qpfGQLFl4zc83IA2d+m186FlyDUTbONYP5MKGh1eqTjm9aOkruZnAxvJkxX2hsrCzn
+         A6eax5FvZNXMDiVooUQ4joqzRyPH6lBd0sZ0FZXs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
         Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 140/191] ARM: tegra: apalis_t30: fix mcp2515 can controller interrupt polarity
-Date:   Sat,  9 Nov 2019 21:39:22 -0500
-Message-Id: <20191110024013.29782-140-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 137/191] ARM: dts: tegra30: fix xcvr-setup-use-fuses
+Date:   Sat,  9 Nov 2019 21:39:19 -0500
+Message-Id: <20191110024013.29782-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -62,40 +62,48 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit b38f6aa4b60a1fcc41f5c469981f8f62d6070ee3 ]
+[ Upstream commit 564706f65cda3de52b09e51feb423a43940fe661 ]
 
-Fix the MCP2515 SPI CAN controller interrupt polarity which according
-to its datasheet defaults to low-active aka falling edge.
+There was a dot instead of a comma. Fix this.
 
 Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra30-apalis.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/tegra30.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index e749e047db7ab..f810bbf8212bd 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -659,7 +659,7 @@
- 			reg = <1>;
- 			clocks = <&clk16m>;
- 			interrupt-parent = <&gpio>;
--			interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_EDGE_FALLING>;
- 			spi-max-frequency = <10000000>;
- 		};
- 	};
-@@ -674,7 +674,7 @@
- 			reg = <0>;
- 			clocks = <&clk16m>;
- 			interrupt-parent = <&gpio>;
--			interrupts = <TEGRA_GPIO(W, 2) IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <TEGRA_GPIO(W, 2) IRQ_TYPE_EDGE_FALLING>;
- 			spi-max-frequency = <10000000>;
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index a6781f6533105..5a04ddefb71f6 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -896,7 +896,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <1>;
+ 		nvidia,xcvr-lsrslew = <1>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -933,7 +933,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -969,7 +969,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
 -- 
 2.20.1
 
