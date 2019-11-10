@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A7EC43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44973C17444
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AFA208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B42E208C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355415;
-	bh=m+Inve5hgRyZpw7gj6KahVQEpcPLzayG8F7xJuq27rc=;
+	s=default; t=1573355419;
+	bh=ruwTrmd0clXQGGZZmo8V50xrv053nKh84sC0o73hv7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RBDXO1e+D/tJmeiiJMPrVyCnJnPQYhEUGNnNOXN/eo39APMldVekjBmFEaUNE2oXp
-	 hC6PTxtdiCS0pclcX8RuP9sPFqCfW7HgDo+348F8P5Jd095IGENWHzTtiHz5bU0yrn
-	 YXFNPECtfBcdhEQsFv4hBxKtWyw1Gt7fT1vMQVXo=
+	b=W8aN/ecyw0bdsOOEPs1d1qw8lC+4B2ll0Eett1tkDo62NCqDnAokuSYdLfU5ZUQGa
+	 DNuf8bRhxe6Xcsd1RwT0hACMqpHo6L7GemEZfosVSKqJk/vBc4G2IdWWKz5rG88GVy
+	 OjxIKrBCe0s2cLBMNNUBd8gxTAm4wujAoTDxjyuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfKJCoN (ORCPT
+        id S1726960AbfKJCoG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:44:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43190 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:44:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728488AbfKJCoM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:12 -0500
+        id S1726857AbfKJCoE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3B6D21D7E;
-        Sun, 10 Nov 2019 02:44:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB6BB21D7F;
+        Sun, 10 Nov 2019 02:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353851;
-        bh=m+Inve5hgRyZpw7gj6KahVQEpcPLzayG8F7xJuq27rc=;
+        s=default; t=1573353843;
+        bh=ruwTrmd0clXQGGZZmo8V50xrv053nKh84sC0o73hv7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nFre0IZe3Rd3jzKJ/9jVotB3E+D15l3i8QqYJnfjOIOs9wJbV2rCDyum1QFL32w8D
-         qpfGQLFl4zc83IA2d+m186FlyDUTbONYP5MKGh1eqTjm9aOkruZnAxvJkxX2hsrCzn
-         A6eax5FvZNXMDiVooUQ4joqzRyPH6lBd0sZ0FZXs=
+        b=SEP4YpOM+Vi3Y5Ex1H/s9wUwibRaB5HNWe/SOsede1vh4eS5Myj8DX9rX6Fo3/xDz
+         w9hjjLfL4V7zoyoLzfZdCL3Pq7/JkX6mwKxXbpalpHAq8OR3X/4C2+wbPliDYBJTkc
+         Gwb0AZbCGhCuPgmVpt+nxPSjEiKCslsD2tw/BXqE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 137/191] ARM: dts: tegra30: fix xcvr-setup-use-fuses
-Date:   Sat,  9 Nov 2019 21:39:19 -0500
-Message-Id: <20191110024013.29782-137-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 131/191] arm64: dts: fsl: Fix I2C and SPI bus warnings
+Date:   Sat,  9 Nov 2019 21:39:13 -0500
+Message-Id: <20191110024013.29782-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,50 +59,137 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 564706f65cda3de52b09e51feb423a43940fe661 ]
+[ Upstream commit b739c177e1aeab532f355493439a1901b85be38c ]
 
-There was a dot instead of a comma. Fix this.
+dtc has new checks for I2C and SPI buses. Fix the SPI bus node names
+and warnings in unit-addresses.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: Warning (i2c_bus_reg): /soc/i2c@2180000/eeprom@57: I2C bus unit address format error, expected "53"
+arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: Warning (i2c_bus_reg): /soc/i2c@2180000/eeprom@56: I2C bus unit address format error, expected "52"
+
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Li Yang <leoyang.li@nxp.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Acked-by: Li Yang <leoyang.li@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra30.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi    | 2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 6 +++---
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 4 ++--
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi    | 4 ++--
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi    | 4 ++--
+ 5 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index a6781f6533105..5a04ddefb71f6 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -896,7 +896,7 @@
- 		nvidia,elastic-limit = <16>;
- 		nvidia,term-range-adj = <6>;
- 		nvidia,xcvr-setup = <51>;
--		nvidia.xcvr-setup-use-fuses;
-+		nvidia,xcvr-setup-use-fuses;
- 		nvidia,xcvr-lsfslew = <1>;
- 		nvidia,xcvr-lsrslew = <1>;
- 		nvidia,xcvr-hsslew = <32>;
-@@ -933,7 +933,7 @@
- 		nvidia,elastic-limit = <16>;
- 		nvidia,term-range-adj = <6>;
- 		nvidia,xcvr-setup = <51>;
--		nvidia.xcvr-setup-use-fuses;
-+		nvidia,xcvr-setup-use-fuses;
- 		nvidia,xcvr-lsfslew = <2>;
- 		nvidia,xcvr-lsrslew = <2>;
- 		nvidia,xcvr-hsslew = <32>;
-@@ -969,7 +969,7 @@
- 		nvidia,elastic-limit = <16>;
- 		nvidia,term-range-adj = <6>;
- 		nvidia,xcvr-setup = <51>;
--		nvidia.xcvr-setup-use-fuses;
-+		nvidia,xcvr-setup-use-fuses;
- 		nvidia,xcvr-lsfslew = <2>;
- 		nvidia,xcvr-lsrslew = <2>;
- 		nvidia,xcvr-hsslew = <32>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 68ac78c4564dc..5da732f82fa0c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -337,7 +337,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		dspi: dspi@2100000 {
++		dspi: spi@2100000 {
+ 			compatible = "fsl,ls1012a-dspi", "fsl,ls1021a-v1.0-dspi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 7881e3d81a9ab..b9c0f2de8f12c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -284,7 +284,7 @@
+ 			interrupts = <0 43 0x4>;
+ 		};
+ 
+-		qspi: quadspi@1550000 {
++		qspi: spi@1550000 {
+ 			compatible = "fsl,ls1043a-qspi", "fsl,ls1021a-qspi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -382,7 +382,7 @@
+ 			ranges = <0x0 0x5 0x00000000 0x8000000>;
+ 		};
+ 
+-		dspi0: dspi@2100000 {
++		dspi0: spi@2100000 {
+ 			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -395,7 +395,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		dspi1: dspi@2110000 {
++		dspi1: spi@2110000 {
+ 			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+index 440e111651d53..a59b48203688a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+@@ -57,12 +57,12 @@
+ 		reg = <0x4c>;
+ 	};
+ 
+-	eeprom@56 {
++	eeprom@52 {
+ 		compatible = "atmel,24c512";
+ 		reg = <0x52>;
+ 	};
+ 
+-	eeprom@57 {
++	eeprom@53 {
+ 		compatible = "atmel,24c512";
+ 		reg = <0x53>;
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index ef83786b8b905..de6af453a6e16 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -202,7 +202,7 @@
+ 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-		qspi: quadspi@1550000 {
++		qspi: spi@1550000 {
+ 			compatible = "fsl,ls1021a-qspi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -361,7 +361,7 @@
+ 			#thermal-sensor-cells = <1>;
+ 		};
+ 
+-		dspi: dspi@2100000 {
++		dspi: spi@2100000 {
+ 			compatible = "fsl,ls1021a-v1.0-dspi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 8cb78dd996728..ebe0cd4bf2b7e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -469,7 +469,7 @@
+ 			mmu-masters = <&fsl_mc 0x300 0>;
+ 		};
+ 
+-		dspi: dspi@2100000 {
++		dspi: spi@2100000 {
+ 			status = "disabled";
+ 			compatible = "fsl,ls2080a-dspi", "fsl,ls2085a-dspi";
+ 			#address-cells = <1>;
+@@ -595,7 +595,7 @@
+ 				  3 0 0x5 0x20000000 0x00010000>;
+ 		};
+ 
+-		qspi: quadspi@20c0000 {
++		qspi: spi@20c0000 {
+ 			status = "disabled";
+ 			compatible = "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
+ 			#address-cells = <1>;
 -- 
 2.20.1
 
