@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9DEC43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E70C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1364022583
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF064227C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354168;
-	bh=FOVcOpNfuIOcgBF8jxuJLGTmJrkqwb7DmspDQpK4ivA=;
+	s=default; t=1573354214;
+	bh=sbePzzQan0qJ7i3IEwqAf5vzUm2j7iCFP8XVjEA5+2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J+84SXGf7T+znS6NabE+kgK4aCG65FrSsS4lfkzOXbafEtHp5LxDJl3SdsBKx8NA0
-	 H295+T5L+INYkraqYh9HArM4ueFwWVdfCQ4OOCXmMRSBfKBls25SbJSAQosrinL5x3
-	 qXdYLa73lE48XJM46DQWdd0EPgSx9Cwd5TAKDckk=
+	b=zca7lbC3e3qdK9U+sRP3eCr1BNhm5kHc4bWEq7RH9xhLN2rHEilJuoqPfLcpR1qDm
+	 yV+yJW7kGo17FOXhMNBOquQM3mxql2wyEAoF64Ojqlg4ozUc1LFh0Onv0fsFm7KYsh
+	 I5bR7PfKDZKGWL3fppx3n2LScuVt3dkERIEgEUdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbfKJCt0 (ORCPT
+        id S1729649AbfKJCuO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:49:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58646 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727896AbfKJCt0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:26 -0500
+        id S1729643AbfKJCuN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A3B22593;
-        Sun, 10 Nov 2019 02:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AF0322595;
+        Sun, 10 Nov 2019 02:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354165;
-        bh=FOVcOpNfuIOcgBF8jxuJLGTmJrkqwb7DmspDQpK4ivA=;
+        s=default; t=1573354212;
+        bh=sbePzzQan0qJ7i3IEwqAf5vzUm2j7iCFP8XVjEA5+2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXtGofMs0vi9hMm11wnqPiy5NMZua+JHaKBpJP+jAn8JJIYUCsRomVtORGVuj1aIo
-         AkW4cP28ohgJpghsY1br87RgZYtaxLVMVrQkyn83kP5nHOqk7PBm+92EQrRMVIA9nL
-         imiY+HEXh9fv06nTGLZp+7z2/z4euif5TUYQgzJM=
+        b=reoCoXokIIYpo76CkV6KvJdpcYhfGF0mCnEnOVaiUpmdenJ8FxZgjRS6ck6/SHA3D
+         mooNRP2NEV2yXds8xWrzUODbSL3O6/6rYW3lDhOFErG6QX3vSk9D9vbjgz0J9SlgnA
+         Rl5Z8sPZMxGvC0LBpm6DQo8BABR4mR+Oyzt843WE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Rob Herring <robh@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 22/66] ARM: dts: ste: Fix SPI controller node names
-Date:   Sat,  9 Nov 2019 21:48:01 -0500
-Message-Id: <20191110024846.32598-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 51/66] ARM: dts: realview: Fix SPI controller node names
+Date:   Sat,  9 Nov 2019 21:48:30 -0500
+Message-Id: <20191110024846.32598-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -61,82 +61,88 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 2f967f9e9fa076affb711da1a8389b5d33814fc6 ]
+[ Upstream commit 016add12977bcc30f77d7e48fc9a3a024cb46645 ]
 
 SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
 name enables dtc SPI bus checks.
 
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ste-dbx5x0.dtsi     | 4 ++--
- arch/arm/boot/dts/ste-hrefprev60.dtsi | 2 +-
- arch/arm/boot/dts/ste-snowball.dts    | 2 +-
- arch/arm/boot/dts/ste-u300.dts        | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/arm-realview-eb.dtsi    | 2 +-
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pb11mp.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pbx.dtsi   | 2 +-
+ arch/arm/boot/dts/versatile-ab.dts        | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index 45869c3234358..5f1769209526a 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -864,7 +864,7 @@
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
+diff --git a/arch/arm/boot/dts/arm-realview-eb.dtsi b/arch/arm/boot/dts/arm-realview-eb.dtsi
+index e2e9599596e25..05379b6c1c13b 100644
+--- a/arch/arm/boot/dts/arm-realview-eb.dtsi
++++ b/arch/arm/boot/dts/arm-realview-eb.dtsi
+@@ -334,7 +334,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
  		};
  
--		ssp@80002000 {
-+		spi@80002000 {
+-		ssp: ssp@1000d000 {
++		ssp: spi@1000d000 {
  			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80002000 0x1000>;
- 			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-@@ -878,7 +878,7 @@
- 			power-domains = <&pm_domains DOMAIN_VAPE>;
+ 			reg = <0x1000d000 0x1000>;
+ 			clocks = <&sspclk>, <&pclk>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index c789564f28033..c1fd5615ddfe3 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -343,7 +343,7 @@
+ 			clock-names = "apb_pclk";
  		};
  
--		ssp@80003000 {
-+		spi@80003000 {
+-		pb1176_ssp: ssp@1010b000 {
++		pb1176_ssp: spi@1010b000 {
  			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x80003000 0x1000>;
- 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-index ece222d51717c..cf8d03bc42c15 100644
---- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
-+++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-@@ -57,7 +57,7 @@
- 			};
+ 			reg = <0x1010b000 0x1000>;
+ 			interrupt-parent = <&intc_dc1176>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+index 3944765ac4b06..e306f1cceb4ec 100644
+--- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
++++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+@@ -480,7 +480,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
  		};
  
--		ssp@80002000 {
-+		spi@80002000 {
- 			/*
- 			 * On the first generation boards, this SSP/SPI port was connected
- 			 * to the AB8500.
-diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index 386eee6de2320..272d36c3d223b 100644
---- a/arch/arm/boot/dts/ste-snowball.dts
-+++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -386,7 +386,7 @@
- 			pinctrl-1 = <&i2c3_sleep_mode>;
- 		};
- 
--		ssp@80002000 {
-+		spi@80002000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&ssp0_snowball_mode>;
- 		};
-diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
-index 2f5107ffeef04..ea6768b96a9df 100644
---- a/arch/arm/boot/dts/ste-u300.dts
-+++ b/arch/arm/boot/dts/ste-u300.dts
-@@ -441,7 +441,7 @@
- 			dma-names = "rx";
- 		};
- 
--		spi: ssp@c0006000 {
-+		spi: spi@c0006000 {
+-		ssp@1000d000 {
++		spi@1000d000 {
  			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0xc0006000 0x1000>;
- 			interrupt-parent = <&vica>;
+ 			reg = <0x1000d000 0x1000>;
+ 			interrupt-parent = <&intc_pb11mp>;
+diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+index aeb49c4bd773f..2bf3958b2e6b9 100644
+--- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
++++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+@@ -318,7 +318,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
+ 
+-		ssp: ssp@1000d000 {
++		ssp: spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			clocks = <&sspclk>, <&pclk>;
+diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+index 409e069b3a845..00d7d28e86f0b 100644
+--- a/arch/arm/boot/dts/versatile-ab.dts
++++ b/arch/arm/boot/dts/versatile-ab.dts
+@@ -303,7 +303,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
+ 
+-		ssp@101f4000 {
++		spi@101f4000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x101f4000 0x1000>;
+ 			interrupts = <11>;
 -- 
 2.20.1
 
