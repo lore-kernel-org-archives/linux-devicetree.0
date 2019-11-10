@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D9FC43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22527C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060BE21019
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD68D21019
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354799;
-	bh=AVsTff8XYCIJMMJe5wlggyX8gJLBRn9KGyjOJ6ZA1Ag=;
+	s=default; t=1573354801;
+	bh=aMaEl/Y4i82mrDr4/b3sW0Sxvu7MJqdXskOmPynBcZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SoFQ6A5kmeRAhVoe1dyqvRXlUNN1CHh+dFHgrqHZdHwiaP4Q/RiIfPFZ7ieASEonM
-	 kcZFCKvpgz9xt8FBAVhsBj0320hczSSXSCehC9+U8M91epq1v6NCcw9+M+kvC6dzcd
-	 vOyXhGdF/yHIdJi+XRHaUF2yLgRUvjDGlCKPveho=
+	b=LiIXCO3Owze9rl8B8W76iKKMCk4s1yMB1KDfGz5wGLoM/6mqD4XiM1JlhNVD5jFeo
+	 tyEn9jtkETXmHppGsUHEB9ouhonV+QuTG9/aSOX/nckDPph7JbkPP67teJfm/fYKUA
+	 7Zhz6MQgPUflYdtJdcXP/LuyMls8Up9uAB9R4rys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfKJC7h (ORCPT
+        id S1728285AbfKJDAA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:59:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47202 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:00:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729356AbfKJC4r (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1729269AbfKJC4r (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sat, 9 Nov 2019 21:56:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7A8E222C6;
-        Sun, 10 Nov 2019 02:47:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1459D22488;
+        Sun, 10 Nov 2019 02:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354071;
-        bh=AVsTff8XYCIJMMJe5wlggyX8gJLBRn9KGyjOJ6ZA1Ag=;
+        s=default; t=1573354072;
+        bh=aMaEl/Y4i82mrDr4/b3sW0Sxvu7MJqdXskOmPynBcZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wq47mZndz/A59aCp+uLJnHdsWjoe9kIQh77oGzwLFrmznZoZUyKmlZfeBT6Yg99zn
-         qA7g1JRpB8rbCjDKPwU998FnCKpcP/xrdIfwAAhFZR1WudAO4yGia/0V1InkwtHLrR
-         EcOVcymZdX1xeZWcW7TB/b9g7lQQFb2AmlynS+TA=
+        b=K2n78BeKF9pJzwP+O/Wt2VfE2tDz6F1X0OrNKHCDFiFJzlk1zxi0/GfOUIJzZZaXG
+         cbAIxjWfali0LXn6LFLsZEW+wGBhjaSmWZ6jWLehaqxuzMsIsgmK67IgLSH5K6DJ1J
+         HreiBGSpZFboIP0e9v+F+LUIfWOmmcn8+enG+gFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+Cc:     Marc Dietrich <marvin24@gmx.de>,
+        Nicolas Chauvet <kwizart@gmail.com>,
         Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 074/109] ARM: tegra: apalis_t30: fix mmc1 cmd pull-up
-Date:   Sat,  9 Nov 2019 21:45:06 -0500
-Message-Id: <20191110024541.31567-74-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 075/109] ARM: dts: paz00: fix wakeup gpio keycode
+Date:   Sat,  9 Nov 2019 21:45:07 -0500
+Message-Id: <20191110024541.31567-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,42 +61,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Marc Dietrich <marvin24@gmx.de>
 
-[ Upstream commit 1c997fe4becdc6fcbc06e23982ceb65621e6572a ]
+[ Upstream commit ebea2a43fdafdbce918bd7e200b709d6c33b9f3b ]
 
-Fix MMC1 cmd pin pull-up causing issues on carrier boards without
-external pull-up.
+The power key is controlled solely by the EC, which only tiggeres this
+gpio after wakeup.
+Fixes immediately return to suspend after wake from LP1.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Marc Dietrich <marvin24@gmx.de>
+Tested-by: Nicolas Chauvet <kwizart@gmail.com>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra30-apalis.dtsi | 6 +++---
+ arch/arm/boot/dts/tegra20-paz00.dts | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index faa8cd2914e8b..b9368d40bc6fb 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -166,14 +166,14 @@
+diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
+index 30436969adc0e..1b8db91277b1c 100644
+--- a/arch/arm/boot/dts/tegra20-paz00.dts
++++ b/arch/arm/boot/dts/tegra20-paz00.dts
+@@ -524,10 +524,10 @@
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
  
- 			/* Apalis MMC1 */
- 			sdmmc3_clk_pa6 {
--				nvidia,pins = "sdmmc3_clk_pa6",
--					      "sdmmc3_cmd_pa7";
-+				nvidia,pins = "sdmmc3_clk_pa6";
- 				nvidia,function = "sdmmc3";
- 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 			};
- 			sdmmc3_dat0_pb7 {
--				nvidia,pins = "sdmmc3_dat0_pb7",
-+				nvidia,pins = "sdmmc3_cmd_pa7",
-+					      "sdmmc3_dat0_pb7",
- 					      "sdmmc3_dat1_pb6",
- 					      "sdmmc3_dat2_pb5",
- 					      "sdmmc3_dat3_pb4",
+-		power {
+-			label = "Power";
++		wakeup {
++			label = "Wakeup";
+ 			gpios = <&gpio TEGRA_GPIO(J, 7) GPIO_ACTIVE_LOW>;
+-			linux,code = <KEY_POWER>;
++			linux,code = <KEY_WAKEUP>;
+ 			wakeup-source;
+ 		};
+ 	};
 -- 
 2.20.1
 
