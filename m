@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10C6C17443
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECB4C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADEFD208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397C621850
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354941;
-	bh=ikEzlp6skgbt7ucgJUk6QMGS3qo27ru8EhTypd6fYVY=;
+	s=default; t=1573355002;
+	bh=5DLZxx+XkJtsu61XyqZjuPUSFXnrVTk7JiK1SjKEoNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0+2LfBdOckc1xokcaya4ksyy2ttcEmJ4PRR/QC+7TagQmVTHoQY0Qq7SM9MbvbKq
-	 D/HRnyxy5tfaqR5cuVKc6PUOplTf8x6x7foVZ1cXtEJk2yTO/aUVLsq497KHc9iFTE
-	 pK/Xy5e514oWkVp7LebJ2CRs2uhjyen132FTOvaA=
+	b=N1eqzKHJKZiS5VjlAWDEeohGirrEGgKnxdV8UfJy+3odx+L2O8pp2qNnrvIFqNQJU
+	 xWu0KC+9Fl9EQbKuMxOlRheyNv0hu2xo9a5H2k/P7DMN5imdjEvV9gweFyn7kIxaSI
+	 vtHTJVuXJT38tPqSIPBbIo3PDmy6voXlb44blfVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfKJCtX (ORCPT
+        id S1728463AbfKJCst (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:49:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58392 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:48:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727162AbfKJCtW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:49:22 -0500
+        id S1727385AbfKJCrV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:47:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D53B22583;
-        Sun, 10 Nov 2019 02:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47B7821D7E;
+        Sun, 10 Nov 2019 02:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354161;
-        bh=ikEzlp6skgbt7ucgJUk6QMGS3qo27ru8EhTypd6fYVY=;
+        s=default; t=1573354040;
+        bh=5DLZxx+XkJtsu61XyqZjuPUSFXnrVTk7JiK1SjKEoNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EWKofGFqq42s/otkwJyzehSIYgqPdl4FQx4gjvr2fDthFLn0UzzbOTCVpIbuc9RbF
-         MsgI+RRdZy5bhn1W27i23BzXa8XRAPilPCkBcID/PXnlJvBv7bntdhSygM8h89R8o3
-         9r0sZrNDhJbyNrpUE0gtp0wyQUrK39+K+j1LIQF8=
+        b=QEcro/+jEpVRvMGeSbMO5+fC5CsxfW6YLIBJK142in2IKg1GkOnAzwAzChOvpnAtO
+         5Pl4bSlHybrlna6s8KFERQ8l22BjIU4NOUxEfH40qHyO1RXsx+PmNH/rF8n0G4OWyC
+         SihJh0jNFQo7mPgzGJprPaF6Q0DoWLNZ0ilBvkL0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 18/66] ARM: dts: am335x-evm: fix number of cpsw
-Date:   Sat,  9 Nov 2019 21:47:57 -0500
-Message-Id: <20191110024846.32598-18-sashal@kernel.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Sasha Levin <sashal@kernel.org>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 053/109] ARM: dts: rockchip: explicitly set vcc_sd0 pin to gpio on rk3188-radxarock
+Date:   Sat,  9 Nov 2019 21:44:45 -0500
+Message-Id: <20191110024541.31567-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
-References: <20191110024846.32598-1-sashal@kernel.org>
+In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
+References: <20191110024541.31567-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,57 +58,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Heiko Stuebner <heiko@sntech.de>
 
-[ Upstream commit dcbf6b18d81bcdc51390ca1b258c17e2e13b7d0c ]
+[ Upstream commit a2df0984e73fd9e1dad5fc3f1c307ec3de395e30 ]
 
-am335x-evm has only one CPSW external port physically wired, but DT defines
-2 ext. ports. As result, PHY connection failure reported for the second
-ext. port.
+It is good practice to make the setting of gpio-pinctrls explicitly in the
+devicetree, and in this case even necessary.
+Rockchip boards start with iomux settings set to gpio for most pins and
+while the linux pinctrl driver also implicitly sets the gpio function if
+a pin is requested as gpio that is not necessarily true for other drivers.
 
-Update DT to reflect am335x-evm board HW configuration, and, while here,
-switch to use phy-handle instead of phy_id.
+The issue in question stems from uboot, where the sdmmc_pwr pin is set
+to function 1 (sdmmc-power) by the bootrom when reading the 1st-stage
+loader. The regulator controlled by the pin is active-low though, so
+when the dwmmc hw-block sets its enabled bit, it actually disables the
+regulator. By changing the pin back to gpio we fix that behaviour.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/rk3188-radxarock.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index e82432c79f85f..3f3ad09c7cd5f 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -701,6 +701,7 @@
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
- 	status = "okay";
-+	slaves = <1>;
- };
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index 53d6fc2fdbce8..541a798d3d202 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -130,6 +130,8 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpio3 RK_PA1 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sdmmc_pwr>;
+ 		startup-delay-us = <100000>;
+ 		vin-supply = <&vcc_io>;
+ 	};
+@@ -348,6 +350,12 @@
+ 		};
+ 	};
  
- &davinci_mdio {
-@@ -708,15 +709,14 @@
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
- 	status = "okay";
--};
- 
--&cpsw_emac0 {
--	phy_id = <&davinci_mdio>, <0>;
--	phy-mode = "rgmii-txid";
-+	ethphy0: ethernet-phy@0 {
-+		reg = <0>;
++	sd0 {
++		sdmmc_pwr: sdmmc-pwr {
++			rockchip,pins = <RK_GPIO3 1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
 +	};
- };
- 
--&cpsw_emac1 {
--	phy_id = <&davinci_mdio>, <1>;
-+&cpsw_emac0 {
-+	phy-handle = <&ethphy0>;
- 	phy-mode = "rgmii-txid";
- };
- 
++
+ 	usb {
+ 		host_vbus_drv: host-vbus-drv {
+ 			rockchip,pins = <0 3 RK_FUNC_GPIO &pcfg_pull_none>;
 -- 
 2.20.1
 
