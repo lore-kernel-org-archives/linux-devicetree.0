@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CEDC43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325ACC43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEDE222C2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAD621848
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573353919;
-	bh=jIFlpl/wQMGI9GNYRcwXiD1YCvrHp52FADOVP/p53Gc=;
+	s=default; t=1573354009;
+	bh=q4tBSuVCw5ZqWJJuSnB2wXUj3FJfplMx+MeJUnBneKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VY9dULQE5jxc9wwu8GiDXXBUlAWNnCs5UcdCug10gDTJS2n2RZ7WDJpDVTYGUfa+1
-	 Xaw2LtccrEgnFuZdKcW/qzpJAWZUS7cAiIGlofXvjFYPFN6/cj7pPZ0Ndpw5RJThTH
-	 MQJkc+W+Zk5d1TnYWXWgGx1Giqaaip7n8/APSwE0=
+	b=mAV1gfw81nbzy2PXaWXgxRj1o2MaGKLSZ8Xdf9aKpwAzca4OZPICYe5Xf/7oXT5W+
+	 BpcY86aafJa7SDkZeisywGvvdSlp0n6Qq1O9x0CIE3u1ea19zrqjpDylzfyiMsXETt
+	 34ByE/IWcwKfaJa6lPEyguw2zsnMbQfbU8ORAqkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfKJCpS (ORCPT
+        id S1729164AbfKJCqq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:45:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46308 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:46:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbfKJCpR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:45:17 -0500
+        id S1729151AbfKJCqq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:46:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD3021848;
-        Sun, 10 Nov 2019 02:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2387A21D82;
+        Sun, 10 Nov 2019 02:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353916;
-        bh=jIFlpl/wQMGI9GNYRcwXiD1YCvrHp52FADOVP/p53Gc=;
+        s=default; t=1573354003;
+        bh=q4tBSuVCw5ZqWJJuSnB2wXUj3FJfplMx+MeJUnBneKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Sdd0Q9RBFFJ+ZB/2YF0wEo2t3U7YWTRaq7LFgkOhgzvH8LO0qsExsZcmkDJza/jj
-         ZqCqt97qvHlExFcQxdaPm0qmuR4l/9GYMgBkCSGEdNZbGBzBIuDXBFTegaTICDejoj
-         bUZCcuxnjlBGn/X7EIv9RIxHkqNCa0ZH1qkdoLRA=
+        b=XQuOCCFPr2yXxeHy+Xz3xxRKyUbnJ6mORUCMBXYUBkPx8oTOHj4x94xnAeO4YFW2g
+         wJyo+SSinVTyaP2y+e9yl+cVxE4KzH3ewTB/feuJhk4p2t/OQJq/y1LVzzpgDIs/W4
+         yG2lIT2/m6hoyqcfgtqXYniNYvXQORaXoRbbExRk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 179/191] ARM: dts: lpc32xx: Fix SPI controller node names
-Date:   Sat,  9 Nov 2019 21:40:01 -0500
-Message-Id: <20191110024013.29782-179-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 030/109] ARM: dts: am335x-evm: fix number of cpsw
+Date:   Sat,  9 Nov 2019 21:44:22 -0500
+Message-Id: <20191110024541.31567-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
-References: <20191110024013.29782-1-sashal@kernel.org>
+In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
+References: <20191110024541.31567-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,44 +60,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit 11236ef582b8d66290bb3b3710e03ca1d85d8ad8 ]
+[ Upstream commit dcbf6b18d81bcdc51390ca1b258c17e2e13b7d0c ]
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+am335x-evm has only one CPSW external port physically wired, but DT defines
+2 ext. ports. As result, PHY connection failure reported for the second
+ext. port.
 
-Cc: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Update DT to reflect am335x-evm board HW configuration, and, while here,
+switch to use phy-handle instead of phy_id.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 4981741377f3a..ed0d6fb20122a 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -179,7 +179,7 @@
- 			 * ssp0 and spi1 are shared pins;
- 			 * enable one in your board dts, as needed.
- 			 */
--			ssp0: ssp@20084000 {
-+			ssp0: spi@20084000 {
- 				compatible = "arm,pl022", "arm,primecell";
- 				reg = <0x20084000 0x1000>;
- 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-@@ -199,7 +199,7 @@
- 			 * ssp1 and spi2 are shared pins;
- 			 * enable one in your board dts, as needed.
- 			 */
--			ssp1: ssp@2008c000 {
-+			ssp1: spi@2008c000 {
- 				compatible = "arm,pl022", "arm,primecell";
- 				reg = <0x2008c000 0x1000>;
- 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 478434ebff92d..27ff3e689e96e 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -724,6 +724,7 @@
+ 	pinctrl-0 = <&cpsw_default>;
+ 	pinctrl-1 = <&cpsw_sleep>;
+ 	status = "okay";
++	slaves = <1>;
+ };
+ 
+ &davinci_mdio {
+@@ -731,15 +732,14 @@
+ 	pinctrl-0 = <&davinci_mdio_default>;
+ 	pinctrl-1 = <&davinci_mdio_sleep>;
+ 	status = "okay";
+-};
+ 
+-&cpsw_emac0 {
+-	phy_id = <&davinci_mdio>, <0>;
+-	phy-mode = "rgmii-txid";
++	ethphy0: ethernet-phy@0 {
++		reg = <0>;
++	};
+ };
+ 
+-&cpsw_emac1 {
+-	phy_id = <&davinci_mdio>, <1>;
++&cpsw_emac0 {
++	phy-handle = <&ethphy0>;
+ 	phy-mode = "rgmii-txid";
+ };
+ 
 -- 
 2.20.1
 
