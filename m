@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B37C17447
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98722C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BBA217D9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CE320854
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355674;
-	bh=VHqwNr/2MI7GULDENmCysXqgEJ5Gz68MXJ5DolXPSlw=;
+	s=default; t=1573355769;
+	bh=HJKuEjihpRVj7ywHu4OgY4KZpDHLxi5jwLvtGXQc/Vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a16v3nL4zG4qIDxNqlmxsq1RGyoZOCk/qYlPrGf3BJ5GZ/LFJTafwe0Ief/kiWgAn
-	 WM/kOt/QooFCduIngimL69CpA7qF1x2CabKZVxQ5wjGLwltpgyq1xOMpliUbbRdc1/
-	 SS8LG9hxW5bGnX66JK+r4gZlyfV1urC1zLQI6Of8=
+	b=XcEiPnS8qHyWahutgJnrYHMK36IGGE60O6OfIj60XWzY4Yu+aDmf195Gfg0Ij27UA
+	 87R7RetjIcVqAdvDR7iM7B8gGNyEGVKQEBWPSpdm7GEMT2fpbEAqfrGZspHttfnWyy
+	 p4KBkzSaCKJjcDxPaFBkPUXKy6geZHYuCD2EMu7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbfKJCm1 (ORCPT
+        id S1727238AbfKJClH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:42:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38262 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:41:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbfKJCm0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:42:26 -0500
+        id S1727223AbfKJClG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:41:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D491521848;
-        Sun, 10 Nov 2019 02:42:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35165215EA;
+        Sun, 10 Nov 2019 02:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353745;
-        bh=VHqwNr/2MI7GULDENmCysXqgEJ5Gz68MXJ5DolXPSlw=;
+        s=default; t=1573353665;
+        bh=HJKuEjihpRVj7ywHu4OgY4KZpDHLxi5jwLvtGXQc/Vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2fR0Fa6Qn35UHDPNgsGlxTO8MQOmDjmWsL+rAMFheTF9L8+x80h+Avg775wz//RtG
-         Uo8urarWzT8az3ggU2kDVCHg9nv6HmZ9LQqJ7he5Ts0QTz7m8trwZs5r9Rv2+jdcFb
-         0j13pdIAoWhObWZ2j9185ItwYhSOU1eW+jahLG1E=
+        b=HPq1D2byhuaeHGanpu8k3tW43mw4ojjDy3Fk/oVykLfqcd94rPnB6DARMck6S0qoI
+         BhRko8QC9sqoO2XyGo3vx5/bZgJZLqRj94jfj0LWoL0w6YfRkfOhg0wm6VOqOU8g4m
+         Ic8lIXmO+a+lpmKyG6Uz787DFb0MGuP2jHrwY2K4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 062/191] ARM: dts: am335x-evm: fix number of cpsw
-Date:   Sat,  9 Nov 2019 21:38:04 -0500
-Message-Id: <20191110024013.29782-62-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 035/191] of/unittest: Fix I2C bus unit-address error
+Date:   Sat,  9 Nov 2019 21:37:37 -0500
+Message-Id: <20191110024013.29782-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,57 +59,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit dcbf6b18d81bcdc51390ca1b258c17e2e13b7d0c ]
+[ Upstream commit 62287dce5d0ee207b6a09a0a1abd06b61cee1094 ]
 
-am335x-evm has only one CPSW external port physically wired, but DT defines
-2 ext. ports. As result, PHY connection failure reported for the second
-ext. port.
+dtc has new checks for I2C buses. Fix the warnings in unit-addresses in
+the unittests.
 
-Update DT to reflect am335x-evm board HW configuration, and, while here,
-switch to use phy-handle instead of phy_id.
+drivers/of/unittest-data/testcases.dtb: Warning (i2c_bus_reg): /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest14/i2c@0/test-mux-dev: I2C bus unit address format error, expected "20"
+drivers/of/unittest-data/overlay_15.dtb: Warning (i2c_bus_reg): /fragment@0/__overlay__/test-unittest15/i2c@0/test-mux-dev: I2C bus unit address format error, expected "20"
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/of/unittest-data/overlay_15.dts     | 4 ++--
+ drivers/of/unittest-data/tests-overlay.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 20bbb899b3b76..cc59e42c91342 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -731,6 +731,7 @@
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
- 	status = "okay";
-+	slaves = <1>;
- };
+diff --git a/drivers/of/unittest-data/overlay_15.dts b/drivers/of/unittest-data/overlay_15.dts
+index b98f2514df4b3..5728490474f6b 100644
+--- a/drivers/of/unittest-data/overlay_15.dts
++++ b/drivers/of/unittest-data/overlay_15.dts
+@@ -20,8 +20,8 @@
+ 			#size-cells = <0>;
+ 			reg = <0>;
  
- &davinci_mdio {
-@@ -738,15 +739,14 @@
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
- 	status = "okay";
--};
+-			test-mux-dev {
+-				reg = <32>;
++			test-mux-dev@20 {
++				reg = <0x20>;
+ 				compatible = "unittest-i2c-dev";
+ 				status = "okay";
+ 			};
+diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
+index 25cf397b8f6b6..4ea024d908ee2 100644
+--- a/drivers/of/unittest-data/tests-overlay.dtsi
++++ b/drivers/of/unittest-data/tests-overlay.dtsi
+@@ -103,8 +103,8 @@
+ 							#size-cells = <0>;
+ 							reg = <0>;
  
--&cpsw_emac0 {
--	phy_id = <&davinci_mdio>, <0>;
--	phy-mode = "rgmii-txid";
-+	ethphy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
- };
- 
--&cpsw_emac1 {
--	phy_id = <&davinci_mdio>, <1>;
-+&cpsw_emac0 {
-+	phy-handle = <&ethphy0>;
- 	phy-mode = "rgmii-txid";
- };
- 
+-							test-mux-dev {
+-								reg = <32>;
++							test-mux-dev@20 {
++								reg = <0x20>;
+ 								compatible = "unittest-i2c-dev";
+ 								status = "okay";
+ 							};
 -- 
 2.20.1
 
