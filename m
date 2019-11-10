@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3999FC43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DAAC43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02218208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC06821848
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355422;
-	bh=8zJoHrLNn5sbwSXWJeAMxdvWZEyDAJiM8C5G+GLVnno=;
+	s=default; t=1573355431;
+	bh=CGJbKln3Rkg2sxB7qY0MAuLx3+hEzsvt48vMiraYkKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fbOzBywxWaWRhiXZKo13V+zLJSoA2tfCOHtN0IB2dRfoSDRdAk9RyHrrn4LhzIiX5
-	 3iP9bIONzZWMhztnnOqLvufNH2lHxM7jZSl8FA06nU1o18B03IKZL6YIWa8rDORA5g
-	 xmkX45FPjVSIWKhxMB3G9qOzFuLZIkQ90s98edjc=
+	b=mKwbBCjPIYByxrXe3rwdPZsOibHU4tzsj176c5eAtkPRL+UUVJ+zWnPmwyHRO6FGb
+	 JKSKLoX4bjpuiEy+mBXUR1nvmoaJ5dbeZGC2yyFlrDNXAqRWotvZXFVSirfSfs/jdt
+	 H1V1U8hFMBn3kSaLtmLcMTfVNrxsGrmr14PTyGR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfKJDKT (ORCPT
+        id S1726900AbfKJDK1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:10:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43046 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:10:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfKJCoF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:05 -0500
+        id S1727290AbfKJCoC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 080E2222CB;
-        Sun, 10 Nov 2019 02:44:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B02521655;
+        Sun, 10 Nov 2019 02:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353844;
-        bh=8zJoHrLNn5sbwSXWJeAMxdvWZEyDAJiM8C5G+GLVnno=;
+        s=default; t=1573353842;
+        bh=CGJbKln3Rkg2sxB7qY0MAuLx3+hEzsvt48vMiraYkKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=niPk+tr1KnHx10X88ZCaGGz0CCImSxhLNkFBQ5d6GYogPMse063+Jzuau96ifCZ6/
-         d79ZacreCpNr5JxbeLRwXkDoK6VL3wM+tSyz2OUk18qKkdlIr08CDWeakkqH3Pay2K
-         huXJCXvDZaTRE82l0AGkM03mOXV1+/e20to3JKfQ=
+        b=NkkOtPuh3D9aHujc6Y70hHLwYQm9ujsLtTRrTR44dj0Bq5Iyo3wgIlDxh/aLFGTMH
+         Lx2Rcj4WKJRq0Qhs+BhAkphEyIzNkbcgVurYq8Rwbg9Ov8BHXKMtMGS9NXt2mCHEAM
+         ZRvN74fPrmZIxTqSvLcJNODB7F34LMgJJtjcbEEU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 132/191] ARM: dts: imx51-zii-rdu1: Fix the rtc compatible string
-Date:   Sat,  9 Nov 2019 21:39:14 -0500
-Message-Id: <20191110024013.29782-132-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 130/191] ARM: dts: meson8b: odroidc1: enable the SAR ADC
+Date:   Sat,  9 Nov 2019 21:39:12 -0500
+Message-Id: <20191110024013.29782-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -61,37 +60,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 1c5f335f61ffb838fc3cc1cec9464067663eb8c8 ]
+[ Upstream commit fd6643142a0c5ab4d423ed7173a0be414d509214 ]
 
-According to Documentation/devicetree/bindings/rtc/rtc-ds1307.txt the
-original compatible "maxim,ds1341" is not a valid entry.
+Odroid-C1 exposes ADC channels 0 and 1 on the GPIO headers. NOTE: Due
+to the SoC design these are limited to 1.8V (instead of 3.3V like all
+other pins).
+Enable the SAR ADC to enable voltage measurements on these pins.
 
-Switch to the documented "dallas,ds1341" compatible.
-
-Reported-by: Chris Healy <cphealy@gmail.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: Chris Healy <cphealy@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index 6e80254c4562a..3fb66ddfe93a5 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -514,7 +514,7 @@
- 	};
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index 8fdeeffecbdbc..8a09071d712a5 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -153,6 +153,11 @@
+ 	pinctrl-names = "default";
+ };
  
- 	ds1341: rtc@68 {
--		compatible = "maxim,ds1341";
-+		compatible = "dallas,ds1341";
- 		reg = <0x68>;
- 	};
++&saradc {
++	status = "okay";
++	vref-supply = <&vcc_1v8>;
++};
++
+ &sdio {
+ 	status = "okay";
  
 -- 
 2.20.1
