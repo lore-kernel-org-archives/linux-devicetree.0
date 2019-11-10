@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409F0C17443
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 590D7C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1530422573
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2121921019
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354513;
-	bh=fDe/LvzwDE9ROI0LUyhW0TYuI0y2n6u5PqL3kgo9f/U=;
+	s=default; t=1573354560;
+	bh=4ElWsVrVIaG8mM1b7IaApAMRwb0A/8ZhKWfzOuGRZXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w8iAtN0hWGmGTKuFzefL4fBM0ziZjB+tF/0SrAVqrbxJ0XWRJELRe7RnbebU83JAi
-	 hpr3oKXxUC5KZTqbtC5cvCUPJxL/L+ShjRQsdofoXguthlt84y4+MSyF2DDWKNojTT
-	 ZxQ9+S6GPGWx0AkxEP752WjN76yqJ3FGA2i1/Evc=
+	b=JHLFDI3J87krgTeh47aKaQvXUU45pndcOKwGqpBrgU0PBUWK2my4Lo8FHAKr4v4zk
+	 QqTLknklhR85c5xUvqNig4OQi1gFq/dwIlP9yqfEr0zfkqfjrsRL060xu3skUEO2fr
+	 EJYmwaxLznVctLkrErvrt8aYOvbSwFPDIORAUVgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfKJCzE (ORCPT
+        id S1728737AbfKJCz7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:55:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33812 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:55:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729714AbfKJCuZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:25 -0500
+        id S1728157AbfKJCuG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 489A722790;
-        Sun, 10 Nov 2019 02:50:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C2D8229EF;
+        Sun, 10 Nov 2019 02:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354225;
-        bh=fDe/LvzwDE9ROI0LUyhW0TYuI0y2n6u5PqL3kgo9f/U=;
+        s=default; t=1573354206;
+        bh=4ElWsVrVIaG8mM1b7IaApAMRwb0A/8ZhKWfzOuGRZXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=STc5iAb/5k3t21MZJ25Ix59F40K/aKMkeNEKuHvqbFroePPFRPmDaNS4erXHEMazE
-         NwjTvP9bJsXgHAN3xHbzKm3UIzDcugshmtbX2SudU6LOpglkcAyOef312CBwsMI4nI
-         LHazaxnSUllU0a3AMBEuwOVxlEy3ek/998NikRqk=
+        b=uvMfMUzJIhNqiVzjJT1jcnf5ttBNUfXjdSIMkFrgWzXxtYy3hCnMq02Fovzrc6tyo
+         mFgc317cFaD60+T5Wdjlf+ettskC5o5/0nwXuGWuoAFyzIdRwEJSNZzqCUt/4G4Wyx
+         OyObaBFgEwfnOtgscLqik9HcagV0Gh1i25MA7K5s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Chanho Min <chanho.min@lge.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 62/66] arm64: dts: lg: Fix SPI controller node names
-Date:   Sat,  9 Nov 2019 21:48:41 -0500
-Message-Id: <20191110024846.32598-62-sashal@kernel.org>
+Cc:     Marc Dietrich <marvin24@gmx.de>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 48/66] ARM: dts: paz00: fix wakeup gpio keycode
+Date:   Sat,  9 Nov 2019 21:48:27 -0500
+Message-Id: <20191110024846.32598-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -59,64 +61,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Marc Dietrich <marvin24@gmx.de>
 
-[ Upstream commit 09bae3b64cb580c95329bd8d16f08f0a5cb81ec9 ]
+[ Upstream commit ebea2a43fdafdbce918bd7e200b709d6c33b9f3b ]
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+The power key is controlled solely by the EC, which only tiggeres this
+gpio after wakeup.
+Fixes immediately return to suspend after wake from LP1.
 
-Cc: Chanho Min <chanho.min@lge.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Marc Dietrich <marvin24@gmx.de>
+Tested-by: Nicolas Chauvet <kwizart@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/lg/lg1312.dtsi | 4 ++--
- arch/arm64/boot/dts/lg/lg1313.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/tegra20-paz00.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
-index fbafa24cd5335..5e0c5dc973e33 100644
---- a/arch/arm64/boot/dts/lg/lg1312.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
-@@ -167,14 +167,14 @@
- 			clock-names = "apb_pclk";
- 			status="disabled";
+diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
+index b4bfa5586c233..23d4c837b87a6 100644
+--- a/arch/arm/boot/dts/tegra20-paz00.dts
++++ b/arch/arm/boot/dts/tegra20-paz00.dts
+@@ -521,10 +521,10 @@
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 
+-		power {
+-			label = "Power";
++		wakeup {
++			label = "Wakeup";
+ 			gpios = <&gpio TEGRA_GPIO(J, 7) GPIO_ACTIVE_LOW>;
+-			linux,code = <KEY_POWER>;
++			linux,code = <KEY_WAKEUP>;
+ 			wakeup-source;
  		};
--		spi0: ssp@fe800000 {
-+		spi0: spi@fe800000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe800000 0x1000>;
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_bus>;
- 			clock-names = "apb_pclk";
- 		};
--		spi1: ssp@fe900000 {
-+		spi1: spi@fe900000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe900000 0x1000>;
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
-index e703e1149c757..f3b1ba6f74220 100644
---- a/arch/arm64/boot/dts/lg/lg1313.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
-@@ -167,14 +167,14 @@
- 			clock-names = "apb_pclk";
- 			status="disabled";
- 		};
--		spi0: ssp@fe800000 {
-+		spi0: spi@fe800000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe800000 0x1000>;
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_bus>;
- 			clock-names = "apb_pclk";
- 		};
--		spi1: ssp@fe900000 {
-+		spi1: spi@fe900000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x0 0xfe900000 0x1000>;
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
 -- 
 2.20.1
 
