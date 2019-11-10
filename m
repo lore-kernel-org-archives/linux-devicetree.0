@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56584C43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D31BC17443
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205A9208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483A4208C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355037;
-	bh=S8BLw9qnAgSSUKEXrYw9zZJE/vcu51H7519p3nX+zS8=;
+	s=default; t=1573355058;
+	bh=J5MJjxD5jAeVkjz/fx+zVxhI7b1OTA8vjQiUHrSwREs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OKArux2ESLsUV0u1fZTlLCOefvVDn1tnYmnbXSVqFgjez7YPGlq5vu1h9l7d/Td4j
-	 6d2cUMlyka5WVJ2m9Yk6EdkgdJ974XT8XwLX3JatBdNvcWEoAjcpf979wo3MZC+cuX
-	 8vi3IEbnyMdKNvNO3UM8L5/GtxO7mQTxcpidw4L0=
+	b=wumqJoCXG9xfM9ZJvicJgSpIzOTrxe3Ilv7wz/1ikbSM6utfJTYr8tKwJvu/Y3JlF
+	 Xc1j/LEyQieVQQ4AUVTADuiBABFDMJmuhkwRiagHkluc2sH4KRrgQjzgvZV7TBfOIW
+	 X/avNfaELo8uVktOQTNHGJkOp2cYSJw4K3Z2XOGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfKJDD4 (ORCPT
+        id S1729202AbfKJCq5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:03:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:46:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729233AbfKJCrC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:47:02 -0500
+        id S1729201AbfKJCq5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:46:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C7E5215EA;
-        Sun, 10 Nov 2019 02:47:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEE5E21850;
+        Sun, 10 Nov 2019 02:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354020;
-        bh=S8BLw9qnAgSSUKEXrYw9zZJE/vcu51H7519p3nX+zS8=;
+        s=default; t=1573354016;
+        bh=J5MJjxD5jAeVkjz/fx+zVxhI7b1OTA8vjQiUHrSwREs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L6Iis/LvVf8ZEh+MmlvJO675XLpIX84xRG9Ca6+uAqEF9bg0bHSmxvsFFH3AnZB4Q
-         7xKQckAIon93WpaGIQQwsY2T7flzRmsAfncf65cSOozgAkushw7Syjt2xrcKmeHtB0
-         yYIxWWqH/IDglnLo7p1Au2Ui/aGe0t0YR6bp1vFY=
+        b=BBgG9UGsRu7h95TVaP2Dq5NcXd6gXbuOCA8ovjeM9dQhM39iH/2RNLZZ7WQKCV1Ot
+         C5USzKibgvw8lE7Bu6TBkm+6K5PlUvLnpnWZaAHhxmpQpjOUg6IuVBPGelIpbxPVFl
+         tfbZXTQ/tHeP06XfF9fWnKg6/xCbiBaZoV8xL3EI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 043/109] net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider
-Date:   Sat,  9 Nov 2019 21:44:35 -0500
-Message-Id: <20191110024541.31567-43-sashal@kernel.org>
+Cc:     Baruch Siach <baruch@tkos.co.il>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 040/109] ARM: dts: clearfog: fix sdhci supply property name
+Date:   Sat,  9 Nov 2019 21:44:32 -0500
+Message-Id: <20191110024541.31567-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
 References: <20191110024541.31567-1-sashal@kernel.org>
@@ -60,178 +59,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Baruch Siach <baruch@tkos.co.il>
 
-[ Upstream commit b78ac6ecd1b6b46f8767cbafa95a7b0b51b87ad8 ]
+[ Upstream commit e807f0298144c06740022a2f900d86b7f115595e ]
 
-Allow the configuration of the MDIO clock divider when the Device Tree
-contains 'clock-frequency' property (similar to I2C and SPI buses).
-Because the hardware may have lost its state during suspend/resume,
-re-apply the MDIO clock divider upon resumption.
+The vmmc phandle, like all power supply property names, must have the
+'-supply' suffix.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../bindings/net/brcm,unimac-mdio.txt         |  3 +
- drivers/net/phy/mdio-bcm-unimac.c             | 83 ++++++++++++++++++-
- 2 files changed, 84 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/armada-388-clearfog.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-index 4648948f7c3b8..e15589f477876 100644
---- a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-@@ -19,6 +19,9 @@ Optional properties:
- - interrupt-names: must be "mdio_done_error" when there is a share interrupt fed
-   to this hardware block, or must be "mdio_done" for the first interrupt and
-   "mdio_error" for the second when there are separate interrupts
-+- clocks: A reference to the clock supplying the MDIO bus controller
-+- clock-frequency: the MDIO bus clock that must be output by the MDIO bus
-+  hardware, if absent, the default hardware values are used
+diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot/dts/armada-388-clearfog.dtsi
+index 68acfc9687069..8a3bbb7d6cc10 100644
+--- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
++++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
+@@ -89,7 +89,7 @@
+ 					     &clearfog_sdhci_cd_pins>;
+ 				pinctrl-names = "default";
+ 				status = "okay";
+-				vmmc = <&reg_3p3v>;
++				vmmc-supply = <&reg_3p3v>;
+ 				wp-inverted;
+ 			};
  
- Child nodes of this MDIO bus controller node are standard Ethernet PHY device
- nodes as described in Documentation/devicetree/bindings/net/phy.txt
-diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
-index 08e0647b85e23..f9d98a6e67bc4 100644
---- a/drivers/net/phy/mdio-bcm-unimac.c
-+++ b/drivers/net/phy/mdio-bcm-unimac.c
-@@ -16,6 +16,7 @@
- #include <linux/module.h>
- #include <linux/io.h>
- #include <linux/delay.h>
-+#include <linux/clk.h>
- 
- #include <linux/of.h>
- #include <linux/of_platform.h>
-@@ -45,6 +46,8 @@ struct unimac_mdio_priv {
- 	void __iomem		*base;
- 	int (*wait_func)	(void *wait_func_data);
- 	void			*wait_func_data;
-+	struct clk		*clk;
-+	u32			clk_freq;
- };
- 
- static inline u32 unimac_mdio_readl(struct unimac_mdio_priv *priv, u32 offset)
-@@ -189,6 +192,35 @@ static int unimac_mdio_reset(struct mii_bus *bus)
- 	return 0;
- }
- 
-+static void unimac_mdio_clk_set(struct unimac_mdio_priv *priv)
-+{
-+	unsigned long rate;
-+	u32 reg, div;
-+
-+	/* Keep the hardware default values */
-+	if (!priv->clk_freq)
-+		return;
-+
-+	if (!priv->clk)
-+		rate = 250000000;
-+	else
-+		rate = clk_get_rate(priv->clk);
-+
-+	div = (rate / (2 * priv->clk_freq)) - 1;
-+	if (div & ~MDIO_CLK_DIV_MASK) {
-+		pr_warn("Incorrect MDIO clock frequency, ignoring\n");
-+		return;
-+	}
-+
-+	/* The MDIO clock is the reference clock (typicaly 250Mhz) divided by
-+	 * 2 x (MDIO_CLK_DIV + 1)
-+	 */
-+	reg = unimac_mdio_readl(priv, MDIO_CFG);
-+	reg &= ~(MDIO_CLK_DIV_MASK << MDIO_CLK_DIV_SHIFT);
-+	reg |= div << MDIO_CLK_DIV_SHIFT;
-+	unimac_mdio_writel(priv, reg, MDIO_CFG);
-+}
-+
- static int unimac_mdio_probe(struct platform_device *pdev)
- {
- 	struct unimac_mdio_pdata *pdata = pdev->dev.platform_data;
-@@ -215,9 +247,26 @@ static int unimac_mdio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (PTR_ERR(priv->clk) == -EPROBE_DEFER)
-+		return PTR_ERR(priv->clk);
-+	else
-+		priv->clk = NULL;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	if (of_property_read_u32(np, "clock-frequency", &priv->clk_freq))
-+		priv->clk_freq = 0;
-+
-+	unimac_mdio_clk_set(priv);
-+
- 	priv->mii_bus = mdiobus_alloc();
--	if (!priv->mii_bus)
--		return -ENOMEM;
-+	if (!priv->mii_bus) {
-+		ret = -ENOMEM;
-+		goto out_clk_disable;
-+	}
- 
- 	bus = priv->mii_bus;
- 	bus->priv = priv;
-@@ -251,6 +300,8 @@ static int unimac_mdio_probe(struct platform_device *pdev)
- 
- out_mdio_free:
- 	mdiobus_free(bus);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk);
- 	return ret;
- }
- 
-@@ -260,10 +311,37 @@ static int unimac_mdio_remove(struct platform_device *pdev)
- 
- 	mdiobus_unregister(priv->mii_bus);
- 	mdiobus_free(priv->mii_bus);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int unimac_mdio_suspend(struct device *d)
-+{
-+	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
-+
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int unimac_mdio_resume(struct device *d)
-+{
-+	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	unimac_mdio_clk_set(priv);
- 
- 	return 0;
- }
- 
-+static SIMPLE_DEV_PM_OPS(unimac_mdio_pm_ops,
-+			 unimac_mdio_suspend, unimac_mdio_resume);
-+
- static const struct of_device_id unimac_mdio_ids[] = {
- 	{ .compatible = "brcm,genet-mdio-v5", },
- 	{ .compatible = "brcm,genet-mdio-v4", },
-@@ -279,6 +357,7 @@ static struct platform_driver unimac_mdio_driver = {
- 	.driver = {
- 		.name = UNIMAC_MDIO_DRV_NAME,
- 		.of_match_table = unimac_mdio_ids,
-+		.pm = &unimac_mdio_pm_ops,
- 	},
- 	.probe	= unimac_mdio_probe,
- 	.remove	= unimac_mdio_remove,
 -- 
 2.20.1
 
