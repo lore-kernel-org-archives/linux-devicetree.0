@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A20C17443
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494D4C17443
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BB321848
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5DB21924
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355569;
-	bh=ByuvaCReSwTbqx+/Op8hRookNfLer/LSlYjAuurYbG8=;
+	s=default; t=1573355593;
+	bh=X1BSDj7yVpDkdHnzecGboQR5aPjvRN2RmNz7kfu0+NE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qZy5n3rYFyF6NhYN4yLD/5TR4f7+VF+7azSarE2nZuGrkVm1Epz5SkY4iSYRuwxM5
-	 kDbMSAarhTjDoeOauiNrSFTC9T8D9FvP1aZD1t2nYd/Xl7rr2rgdQyC97S1QxWHYSK
-	 43z1xQ6LEBu1PShcV4vVxgzklB1xdqn9Ld4AX6sc=
+	b=aKzCtYDhCi891IwW21xyiTvTdcm2fBxVJMtuUfTch2Q8KgtmAzl9MgA1obuebQBRT
+	 qsoUR0Y/5CigMUudDFP+nRydJ1UsvPJEprivnhT4qiMDAjo50iE10moeNXhxw4ymAS
+	 ISWiTFXG7Sd8llEIQHQbgLQY36A3qJCC9cfb0CEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfKJDMs (ORCPT
+        id S1726756AbfKJDNG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 22:12:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 22:13:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbfKJCnK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:43:10 -0500
+        id S1728057AbfKJCmy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9CC421D7F;
-        Sun, 10 Nov 2019 02:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E059F21848;
+        Sun, 10 Nov 2019 02:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353789;
-        bh=ByuvaCReSwTbqx+/Op8hRookNfLer/LSlYjAuurYbG8=;
+        s=default; t=1573353773;
+        bh=X1BSDj7yVpDkdHnzecGboQR5aPjvRN2RmNz7kfu0+NE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1SDzlpRSQRNmiANasaQXKkpjWOcpSnlufs//xqMoWLeTBLLheWmR5hM9xVsGDdvBZ
-         D6IPH0KSw8Fs/74RiXSuDKlqrkx4pXv+OubuSxe0nKr08rtEEu7GDNoKow2+5LSPwG
-         Cd0+3Jd2D25x7xjtqC0r4mrqO9kzlcNjVKmIJR58=
+        b=ozOcBeCBYSnlxKg0DFFakfwm9rtQGE/ZE+bqF1xGEcEBsooqXKM4RwY2tbgCcrYw4
+         lfCeec8RD0bDsmx9lmfBx4KKv9V9IZOv+6B6cDvRmCrM9QW/k+aGmNHmLoe7EEpYJL
+         N4s0uJFU203ty6hzM2eAQiRnYJSs86M8ADLc+wLQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 090/191] arm64: dts: rockchip: Fix microSD in rk3399 sapphire board
-Date:   Sat,  9 Nov 2019 21:38:32 -0500
-Message-Id: <20191110024013.29782-90-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 083/191] net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider
+Date:   Sat,  9 Nov 2019 21:38:25 -0500
+Message-Id: <20191110024013.29782-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,94 +60,178 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vicente Bergas <vicencb@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 88a20edf76091ee7f1bb459b89d714d53f0f8940 ]
+[ Upstream commit b78ac6ecd1b6b46f8767cbafa95a7b0b51b87ad8 ]
 
-The microSD card slot in the Sapphire board is not working because of
-several issues:
- 1.- The vmmc power supply is missing in the DTS. It is capable of 3.0V
- and has a GPIO-based enable control.
- 2.- The vqmmc power supply can provide up to 3.3V, but it is capped in
- the DTS to just 3.0V because of the vmmc capability. This results in a
- conflict from the mmc driver requesting an unsupportable voltage range
- from 3.3V to 3.0V (min > max) as reported in dmesg. So, extend the
- range up to 3.3V. The hw should be able to stand this 0.3V tolerance.
- See mmc_regulator_set_vqmmc in drivers/mmc/core/core.c.
- 3.- The card detect signal is non-working. There is a known conflict
- with jtag, but the workaround in drivers/soc/rockchip/grf.c does not
- work. Adding the broken-cd attribute to the DTS fixes the issue.
+Allow the configuration of the MDIO clock divider when the Device Tree
+contains 'clock-frequency' property (similar to I2C and SPI buses).
+Because the hardware may have lost its state during suspend/resume,
+re-apply the MDIO clock divider upon resumption.
 
-Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/rockchip/rk3399-sapphire.dtsi    | 24 ++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ .../bindings/net/brcm,unimac-mdio.txt         |  3 +
+ drivers/net/phy/mdio-bcm-unimac.c             | 83 ++++++++++++++++++-
+ 2 files changed, 84 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-index 36b60791c156d..780e5e298d8bd 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-@@ -93,6 +93,19 @@
- 		vin-supply = <&vcc_1v8>;
- 	};
+diff --git a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
+index 4648948f7c3b8..e15589f477876 100644
+--- a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
++++ b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
+@@ -19,6 +19,9 @@ Optional properties:
+ - interrupt-names: must be "mdio_done_error" when there is a share interrupt fed
+   to this hardware block, or must be "mdio_done" for the first interrupt and
+   "mdio_error" for the second when there are separate interrupts
++- clocks: A reference to the clock supplying the MDIO bus controller
++- clock-frequency: the MDIO bus clock that must be output by the MDIO bus
++  hardware, if absent, the default hardware values are used
  
-+	vcc3v0_sd: vcc3v0-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdmmc0_pwr_h>;
-+		regulator-always-on;
-+		regulator-max-microvolt = <3000000>;
-+		regulator-min-microvolt = <3000000>;
-+		regulator-name = "vcc3v0_sd";
-+		vin-supply = <&vcc3v3_sys>;
-+	};
-+
- 	vcc3v3_sys: vcc3v3-sys {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3_sys";
-@@ -310,7 +323,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
- 					regulator-suspend-microvolt = <3000000>;
-@@ -469,6 +482,13 @@
- 		};
- 	};
+ Child nodes of this MDIO bus controller node are standard Ethernet PHY device
+ nodes as described in Documentation/devicetree/bindings/net/phy.txt
+diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
+index 8d370667fa1b3..80b9583eaa952 100644
+--- a/drivers/net/phy/mdio-bcm-unimac.c
++++ b/drivers/net/phy/mdio-bcm-unimac.c
+@@ -16,6 +16,7 @@
+ #include <linux/module.h>
+ #include <linux/io.h>
+ #include <linux/delay.h>
++#include <linux/clk.h>
  
-+	sd {
-+		sdmmc0_pwr_h: sdmmc0-pwr-h {
-+			rockchip,pins =
-+				<RK_GPIO0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	usb2 {
- 		vcc5v0_host_en: vcc5v0-host-en {
- 			rockchip,pins =
-@@ -499,6 +519,7 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+@@ -45,6 +46,8 @@ struct unimac_mdio_priv {
+ 	void __iomem		*base;
+ 	int (*wait_func)	(void *wait_func_data);
+ 	void			*wait_func_data;
++	struct clk		*clk;
++	u32			clk_freq;
  };
  
- &sdmmc {
-+	broken-cd;
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
-@@ -507,6 +528,7 @@
- 	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-+	vmmc-supply = <&vcc3v0_sd>;
- 	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
+ static inline u32 unimac_mdio_readl(struct unimac_mdio_priv *priv, u32 offset)
+@@ -189,6 +192,35 @@ static int unimac_mdio_reset(struct mii_bus *bus)
+ 	return 0;
+ }
+ 
++static void unimac_mdio_clk_set(struct unimac_mdio_priv *priv)
++{
++	unsigned long rate;
++	u32 reg, div;
++
++	/* Keep the hardware default values */
++	if (!priv->clk_freq)
++		return;
++
++	if (!priv->clk)
++		rate = 250000000;
++	else
++		rate = clk_get_rate(priv->clk);
++
++	div = (rate / (2 * priv->clk_freq)) - 1;
++	if (div & ~MDIO_CLK_DIV_MASK) {
++		pr_warn("Incorrect MDIO clock frequency, ignoring\n");
++		return;
++	}
++
++	/* The MDIO clock is the reference clock (typicaly 250Mhz) divided by
++	 * 2 x (MDIO_CLK_DIV + 1)
++	 */
++	reg = unimac_mdio_readl(priv, MDIO_CFG);
++	reg &= ~(MDIO_CLK_DIV_MASK << MDIO_CLK_DIV_SHIFT);
++	reg |= div << MDIO_CLK_DIV_SHIFT;
++	unimac_mdio_writel(priv, reg, MDIO_CFG);
++}
++
+ static int unimac_mdio_probe(struct platform_device *pdev)
+ {
+ 	struct unimac_mdio_pdata *pdata = pdev->dev.platform_data;
+@@ -217,9 +249,26 @@ static int unimac_mdio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
++	priv->clk = devm_clk_get(&pdev->dev, NULL);
++	if (PTR_ERR(priv->clk) == -EPROBE_DEFER)
++		return PTR_ERR(priv->clk);
++	else
++		priv->clk = NULL;
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++
++	if (of_property_read_u32(np, "clock-frequency", &priv->clk_freq))
++		priv->clk_freq = 0;
++
++	unimac_mdio_clk_set(priv);
++
+ 	priv->mii_bus = mdiobus_alloc();
+-	if (!priv->mii_bus)
+-		return -ENOMEM;
++	if (!priv->mii_bus) {
++		ret = -ENOMEM;
++		goto out_clk_disable;
++	}
+ 
+ 	bus = priv->mii_bus;
+ 	bus->priv = priv;
+@@ -253,6 +302,8 @@ static int unimac_mdio_probe(struct platform_device *pdev)
+ 
+ out_mdio_free:
+ 	mdiobus_free(bus);
++out_clk_disable:
++	clk_disable_unprepare(priv->clk);
+ 	return ret;
+ }
+ 
+@@ -262,10 +313,37 @@ static int unimac_mdio_remove(struct platform_device *pdev)
+ 
+ 	mdiobus_unregister(priv->mii_bus);
+ 	mdiobus_free(priv->mii_bus);
++	clk_disable_unprepare(priv->clk);
++
++	return 0;
++}
++
++static int unimac_mdio_suspend(struct device *d)
++{
++	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
++
++	clk_disable_unprepare(priv->clk);
++
++	return 0;
++}
++
++static int unimac_mdio_resume(struct device *d)
++{
++	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
++	int ret;
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++
++	unimac_mdio_clk_set(priv);
+ 
+ 	return 0;
+ }
+ 
++static SIMPLE_DEV_PM_OPS(unimac_mdio_pm_ops,
++			 unimac_mdio_suspend, unimac_mdio_resume);
++
+ static const struct of_device_id unimac_mdio_ids[] = {
+ 	{ .compatible = "brcm,genet-mdio-v5", },
+ 	{ .compatible = "brcm,genet-mdio-v4", },
+@@ -281,6 +359,7 @@ static struct platform_driver unimac_mdio_driver = {
+ 	.driver = {
+ 		.name = UNIMAC_MDIO_DRV_NAME,
+ 		.of_match_table = unimac_mdio_ids,
++		.pm = &unimac_mdio_pm_ops,
+ 	},
+ 	.probe	= unimac_mdio_probe,
+ 	.remove	= unimac_mdio_remove,
 -- 
 2.20.1
 
