@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A81C17443
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FC6C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F61822595
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C548A21019
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354428;
-	bh=wFarCmC1vgEJ83u0SNHI/6bTj2VuSACrgAQl9SOjl9w=;
+	s=default; t=1573354498;
+	bh=qFMPdXUEH6vwVV5eu/FaLP6bhy2xtehholYH6iinTzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2FToYR2fVLRpoGPg5E/uCaN34+5dnXN/U+3X7mDl14uLY9f7a2y2wh1s+eE604hY
-	 qk5jqQYm3h/1EdwYeJpj4N6tLQ5c27Yx3LA3ZDUx1sKSv+RD0+Lhzw7oPB70K2ERLE
-	 MVm/2iFMd67+2k2JUUSJU/qnW+oZN+0OHQwi/BY4=
+	b=Q7CQquLMA6otalXGuLM07b+arCOLcWYRVQHaK5Ri7cFJO/cQHBmTISRG/RlaKBqmN
+	 g3EvxS0zkZsZCFzrqFizyeiqP2qmuC3y3HpbFa+0qjIUgnE+CmpXz9Fi8dMneQ1YtB
+	 n12gmu28i7iyM6Z68j0tTJEud/28qi38W7/cuXo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfKJCvH (ORCPT
+        id S1729722AbfKJCu1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:51:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35400 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:50:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729889AbfKJCvH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:51:07 -0500
+        id S1729708AbfKJCuY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C980122790;
-        Sun, 10 Nov 2019 02:51:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9A2822794;
+        Sun, 10 Nov 2019 02:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354266;
-        bh=wFarCmC1vgEJ83u0SNHI/6bTj2VuSACrgAQl9SOjl9w=;
+        s=default; t=1573354223;
+        bh=qFMPdXUEH6vwVV5eu/FaLP6bhy2xtehholYH6iinTzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sa2mIf8Ya/7kPaHCxl47bThOIu0HR94tA4m4pZyoRoEsUPlvgImOBJCusFzu6nHDd
-         FwX2zx8NhQpn5UtAYdas48T2FsZrl/7WGN3n3J7xcfPQTVVZUnN+CpF7618Y7erTmJ
-         +ps3vq74JLL23pD9ZKBHu//maSvTuwgeexbk/dQI=
+        b=wKSp+CNMFkbsc3+BA4qWnNOfLlWA2oEcDTAruq17bJu98XrutNhymkGJ4nvsrHOf6
+         HxnkD+ZsaZmsUsXT5AIFtu6oDOzBR7eXsyj3BboHJbC4n0KHC/LNqdi6UuVcJ/xk2h
+         n1lRLQ2mamyYmLtwSkoAa1Lemx7MjvdX0YgEWbG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+Cc:     Rob Herring <robh@kernel.org>,
+        Brijesh Singh <brijeshkumar.singh@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 15/40] ARM: dts: am335x-evm: fix number of cpsw
-Date:   Sat,  9 Nov 2019 21:50:07 -0500
-Message-Id: <20191110025032.827-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 61/66] arm64: dts: amd: Fix SPI bus warnings
+Date:   Sat,  9 Nov 2019 21:48:40 -0500
+Message-Id: <20191110024846.32598-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110025032.827-1-sashal@kernel.org>
-References: <20191110025032.827-1-sashal@kernel.org>
+In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
+References: <20191110024846.32598-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,57 +62,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit dcbf6b18d81bcdc51390ca1b258c17e2e13b7d0c ]
+[ Upstream commit e9f0878c4b2004ac19581274c1ae4c61ae3ca70e ]
 
-am335x-evm has only one CPSW external port physically wired, but DT defines
-2 ext. ports. As result, PHY connection failure reported for the second
-ext. port.
+dtc has new checks for SPI buses. Fix the warnings in node names.
 
-Update DT to reflect am335x-evm board HW configuration, and, while here,
-switch to use phy-handle instead of phy_id.
+arch/arm64/boot/dts/amd/amd-overdrive.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
+arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
+arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index d9d00ab863a21..2b8614e406f03 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -697,6 +697,7 @@
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
- 	status = "okay";
-+	slaves = <1>;
- };
+diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+index bd3adeac374f4..2973a14523eaf 100644
+--- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
++++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+@@ -106,7 +106,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
- &davinci_mdio {
-@@ -704,15 +705,14 @@
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
- 	status = "okay";
--};
+-		spi0: ssp@e1020000 {
++		spi0: spi@e1020000 {
+ 			status = "disabled";
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0 0xe1020000 0 0x1000>;
+@@ -116,7 +116,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
  
--&cpsw_emac0 {
--	phy_id = <&davinci_mdio>, <0>;
--	phy-mode = "rgmii-txid";
-+	ethphy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
- };
- 
--&cpsw_emac1 {
--	phy_id = <&davinci_mdio>, <1>;
-+&cpsw_emac0 {
-+	phy-handle = <&ethphy0>;
- 	phy-mode = "rgmii-txid";
- };
- 
+-		spi1: ssp@e1030000 {
++		spi1: spi@e1030000 {
+ 			status = "disabled";
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0 0xe1030000 0 0x1000>;
 -- 
 2.20.1
 
