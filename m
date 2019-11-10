@@ -4,92 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040FBC43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 14:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C539C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 15:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C381A20818
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 14:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D0EE2077C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 15:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573397608;
-	bh=/iU5aWjqTkORuN4+DNIlfl6ksnB2MbsPSLVgGE6Ogs8=;
+	s=default; t=1573399089;
+	bh=QhkMVi70RlDBV8du51eOWe/KLFUBv5UlOvtmbdNbNnE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1Uy9U2zahV80hnzrCVJbPMaX5tM5sDpbIhKWCs4h6uyS2d/9HDyNVHgwwwxmNAQXG
-	 BarpfePgGAEOzDj0eTm4SfXG8r0xcquNQt6O1tmGyoXCV9aJDndIJ/oxswOqwXT44x
-	 gHuN3a6kx9RESJk9WZqXtcwko/kKnBI7Mu2C/0OQ=
+	b=aJN6n1fLZRehV0bYMsu9fyz1U1atZEKn6FGtB0QNQxIhxdaB7kqcfzelGcczdoPVF
+	 i4nRYS+iaCUeICO1hwEpWZRuefCnMSDUF0SZxsyploSz/lc07Q6TnHemmcuzZFE1DS
+	 cnS3cBNEMflzAgLxLU+b6NOMlxgptYSMSxdwB3Pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfKJOx2 (ORCPT
+        id S1726723AbfKJPSF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 Nov 2019 09:53:28 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:58757 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726402AbfKJOx2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 Nov 2019 09:53:28 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iToaY-0002r6-32; Sun, 10 Nov 2019 15:53:14 +0100
-Date:   Sun, 10 Nov 2019 14:53:12 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        andrew@aj.id.au, joel@jms.id.au, jason@lakedaemon.net,
-        tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 02/12] irqchip: Add Aspeed SCU interrupt controller
-Message-ID: <20191110145312.3805b25b@why>
-In-Reply-To: <1573244313-9190-3-git-send-email-eajames@linux.ibm.com>
-References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
-        <1573244313-9190-3-git-send-email-eajames@linux.ibm.com>
-Organization: Approximate
+        Sun, 10 Nov 2019 10:18:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726653AbfKJPSF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 Nov 2019 10:18:05 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4701206DF;
+        Sun, 10 Nov 2019 15:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573399084;
+        bh=QhkMVi70RlDBV8du51eOWe/KLFUBv5UlOvtmbdNbNnE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ywynIBG5PxyYLH3e07zSzve4SyEuRTawwPAhane4BOpKw1q1k7aq4BDjvBR9ry0AW
+         G43NwlJ2RTCGXcC8Pbv2a+HoghuSsJadFsThFCghXCXIxzZFRQhyUgp6zsVe30NltQ
+         izLzPUnwCDdUQYPEk1R1F9IPpEvZVHw/ZBNspbM4=
+Date:   Sun, 10 Nov 2019 15:17:58 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: iio: adc: Migrate MCP3911 documentation
+ to yaml
+Message-ID: <20191110151758.7c3a1693@archlinux>
+In-Reply-To: <20191107010259.GA7930@bogus>
+References: <20191106111210.6825-1-marcus.folkesson@gmail.com>
+        <20191107010259.GA7930@bogus>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: eajames@linux.ibm.com, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au, jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  8 Nov 2019 14:18:23 -0600
-Eddie James <eajames@linux.ibm.com> wrote:
+On Wed, 6 Nov 2019 19:02:59 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Hi Eddie,
-
-> The Aspeed SOCs provide some interrupts through the System Control
-> Unit registers. Add an interrupt controller that provides these
-> interrupts to the system.
+> On Wed,  6 Nov 2019 12:12:10 +0100, Marcus Folkesson wrote:
+> > Rewrite bindings to use json-schema vocabulary.
+> > 
+> > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> > ---
+> > 
+> > Notes:
+> >     v2:
+> >     	- Remove descriptor for reg and spi-max-frequency (Rob)
+> >     	- Write better description for clocks and vref-supply (Rob)
+> >     	- Remove max-items for vref-supply
+> > 
+> >  .../devicetree/bindings/iio/adc/mcp3911.txt   | 30 --------
+> >  .../bindings/iio/adc/microchip,mcp3911.yaml   | 71 +++++++++++++++++++
+> >  MAINTAINERS                                   |  2 +-
+> >  3 files changed, 72 insertions(+), 31 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+> >   
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  MAINTAINERS                         |   1 +
->  drivers/irqchip/Makefile            |   2 +-
->  drivers/irqchip/irq-aspeed-scu-ic.c | 233 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 235 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/irqchip/irq-aspeed-scu-ic.c
-
-[...]
-
-> +static int aspeed_scu_ic_map(struct irq_domain *domain, unsigned int irq,
-> +			     irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &aspeed_scu_ic_chip, handle_simple_irq);
-
-handle_simple_irq is usually wrong, and works badly with threaded
-interrupts. I suggest you'd change it to handle_level_irq, which
-probably matches the behaviour of the controller.
-
-Otherwise, this looks good.
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to poke at it.
 
 Thanks,
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Jonathan
+
+
