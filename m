@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D841C17443
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9733DC43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7422D21655
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBFF21655
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 03:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573355776;
-	bh=AKjBnir9TlDMJlToyX9ECF1OlXxD7fOPgHiw+Fyj1nw=;
+	s=default; t=1573355822;
+	bh=9GpZghVh8JavbMok4A6OLs2mufrG9hzrrwqhY1b+89Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7fH1GqycBIH4AEVLmYCEYIE2/eJCt1fPwUpgX8JzZp3SuON9k4S5DbRpXoE75cB0
-	 RFCMo+GlJr5aLvz/0ZlP6DO/NUZsjmU1Y4OF69mmiyecM+1xphMa/LNJeHPzP4WYQH
-	 fQ4r1wFIJr2gXSl3vUQkerwOkYcf24zrVkub4QZk=
+	b=vJ1Gyt73nOIuOeqHU41QqaMlueUxU0S58hMeOmL49w55FSxNvWgxQgaO0b/xBgMcz
+	 XhKJm5MsO0g/ZtQ6VrEH3FGnj2i7RUFmr8AyEZgBbhWytzoUtSB73XkOadZrGEll6g
+	 ecQBQubfR24c86VCtI5HnVD+6G4AL5NEcKFV7fjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKJClD (ORCPT
+        id S1726939AbfKJCkd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:41:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34814 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:40:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727180AbfKJClC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:41:02 -0500
+        id S1726916AbfKJCkc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61F6D21019;
-        Sun, 10 Nov 2019 02:41:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05DAA214E0;
+        Sun, 10 Nov 2019 02:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353661;
-        bh=AKjBnir9TlDMJlToyX9ECF1OlXxD7fOPgHiw+Fyj1nw=;
+        s=default; t=1573353630;
+        bh=9GpZghVh8JavbMok4A6OLs2mufrG9hzrrwqhY1b+89Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kgzPsqpC5W8cWF972kwc2iaZYdgWZo+NwgNnn3f1cg5miBA+ulEDDAYcY42Dy5Mj1
-         p6wN2Uq8p0m6+LAZiJY7oMxf/rf11iHl6XgZP/4Ao0cxseb04vXSLfNY2PBK3WiDcJ
-         s6IUi0zn6tqOzABHJ1OnysWiVto+PqluUsuBV0pY=
+        b=Zx7/2swJVFCdwfZ34xExtipXIYEcVOvpeAM1iwv7IP865eOCnx72vuAvUoc8zCmrn
+         MQBjWxPiE+lytFDKlsAUGWvVuHI5jy9VobQG1tblfsxjtkDVdhsCw6kTTDMbAGmIMp
+         6r87AGzQVHVMZ7eYHjzrZwu0EGqWdhuFDRYIeSF4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 033/191] ARM: dts: atmel: Fix I2C and SPI bus warnings
-Date:   Sat,  9 Nov 2019 21:37:35 -0500
-Message-Id: <20191110024013.29782-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 014/191] arm64: dts: ti: k3-am65: Change #address-cells and #size-cells of interconnect to 2
+Date:   Sat,  9 Nov 2019 21:37:16 -0500
+Message-Id: <20191110024013.29782-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -60,118 +60,130 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit c890ecdbe93d482512a911b299bfb009780a29c2 ]
+[ Upstream commit 3bc1572068e3896b60d86f9c0fb56d1cef28201c ]
 
-dtc has new checks for I2C and SPI buses. Fix the warnings in node names
-and unit-addresses.
+AM65 has two PCIe controllers and each PCIe controller has '2' address
+spaces one within the 4GB address space of the SoC and the other above
+the 4GB address space of the SoC (cbass_main) in addition to the
+register space. The size of the address space above the 4GB SoC address
+space is 4GB. These address ranges will be used by CPU/DMA to access
+the PCIe address space. In order to represent the address space above
+the 4GB SoC address space and to represent the size of this address
+space as 4GB, change address-cells and size-cells of interconnect to 2.
 
-arch/arm/boot/dts/at91-dvk_som60.dtb: Warning (i2c_bus_reg): /ahb/apb/i2c@f0018000/eeprom@87: I2C bus unit address format error, expected "57"
-arch/arm/boot/dts/at91-dvk_som60.dtb: Warning (i2c_bus_reg): /ahb/apb/i2c@f0018000/ft5426@56: I2C bus unit address format error, expected "38"
-arch/arm/boot/dts/at91-vinco.dtb: Warning (i2c_bus_reg): /ahb/apb/i2c@f8024000/rtc@64: I2C bus unit address format error, expected "32"
-arch/arm/boot/dts/at91sam9260ek.dtb: Warning (spi_bus_reg): /ahb/apb/spi@fffc8000/mtd_dataflash@0: SPI bus unit address format error, expected "1"
-arch/arm/boot/dts/at91sam9g20ek_2mmc.dtb: Warning (spi_bus_reg): /ahb/apb/spi@fffc8000/mtd_dataflash@0: SPI bus unit address format error, expected "1"
-arch/arm/boot/dts/at91sam9g20ek.dtb: Warning (spi_bus_reg): /ahb/apb/spi@fffc8000/mtd_dataflash@0: SPI bus unit address format error, expected "1"
-arch/arm/boot/dts/at91sam9261ek.dtb: Warning (spi_bus_reg): /ahb/apb/spi@fffc8000/tsc2046@0: SPI bus unit address format error, expected "2"
+Since OSPI has similar need in MCU Domain Memory Map, change
+address-cells and size-cells of cbass_mcu interconnect also to 2.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: ea47eed33a3fe3d919 ("arm64: dts: ti: Add Support for AM654 SoC")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Vignesh R <vigneshr@ti.com>
+Acked-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91-dvk_su60_somc.dtsi     | 4 ++--
- arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi | 4 ++--
- arch/arm/boot/dts/at91-vinco.dts              | 2 +-
- arch/arm/boot/dts/at91sam9260ek.dts           | 2 +-
- arch/arm/boot/dts/at91sam9261ek.dts           | 2 +-
- arch/arm/boot/dts/at91sam9g20ek_common.dtsi   | 2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 10 +++---
+ arch/arm64/boot/dts/ti/k3-am65.dtsi      | 44 ++++++++++++------------
+ 2 files changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91-dvk_su60_somc.dtsi b/arch/arm/boot/dts/at91-dvk_su60_somc.dtsi
-index bb86f17ed5ed1..21876da7c4425 100644
---- a/arch/arm/boot/dts/at91-dvk_su60_somc.dtsi
-+++ b/arch/arm/boot/dts/at91-dvk_su60_somc.dtsi
-@@ -70,9 +70,9 @@
- &i2c1 {
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 2409344df4fa2..faace3805c014 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -8,13 +8,13 @@
+ &cbass_main {
+ 	gic500: interrupt-controller@1800000 {
+ 		compatible = "arm,gic-v3";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
++		#address-cells = <2>;
++		#size-cells = <2>;
+ 		ranges;
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+-		reg = <0x01800000 0x10000>,	/* GICD */
+-		      <0x01880000 0x90000>;	/* GICR */
++		reg = <0x00 0x01800000 0x00 0x10000>,	/* GICD */
++		      <0x00 0x01880000 0x00 0x90000>;	/* GICR */
+ 		/*
+ 		 * vcpumntirq:
+ 		 * virtual CPU interface maintenance interrupt
+@@ -23,7 +23,7 @@
  
--	eeprom@87 {
-+	eeprom@57 {
- 		compatible = "giantec,gt24c32a", "atmel,24c32";
--		reg = <87>;
-+		reg = <0x57>;
- 		pagesize = <32>;
+ 		gic_its: gic-its@18200000 {
+ 			compatible = "arm,gic-v3-its";
+-			reg = <0x01820000 0x10000>;
++			reg = <0x00 0x01820000 0x00 0x10000>;
+ 			msi-controller;
+ 			#msi-cells = <1>;
+ 		};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+index cede1fa0983c9..ded364d208351 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+@@ -46,38 +46,38 @@
+ 
+ 	cbass_main: interconnect@100000 {
+ 		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0x00100000 0x00 0x00100000 0x00020000>, /* ctrl mmr */
+-			 <0x00600000 0x00 0x00600000 0x00001100>, /* GPIO */
+-			 <0x00900000 0x00 0x00900000 0x00012000>, /* serdes */
+-			 <0x01000000 0x00 0x01000000 0x0af02400>, /* Most peripherals */
+-			 <0x30800000 0x00 0x30800000 0x0bc00000>, /* MAIN NAVSS */
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
++			 <0x00 0x00600000 0x00 0x00600000 0x00 0x00001100>, /* GPIO */
++			 <0x00 0x00900000 0x00 0x00900000 0x00 0x00012000>, /* serdes */
++			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0af02400>, /* Most peripherals */
++			 <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>, /* MAIN NAVSS */
+ 			 /* MCUSS Range */
+-			 <0x28380000 0x00 0x28380000 0x03880000>,
+-			 <0x40200000 0x00 0x40200000 0x00900100>,
+-			 <0x42040000 0x00 0x42040000 0x03ac2400>,
+-			 <0x45100000 0x00 0x45100000 0x00c24000>,
+-			 <0x46000000 0x00 0x46000000 0x00200000>,
+-			 <0x47000000 0x00 0x47000000 0x00068400>;
++			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
++			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
++			 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>,
++			 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>,
++			 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>,
++			 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>;
+ 
+ 		cbass_mcu: interconnect@28380000 {
+ 			compatible = "simple-bus";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges = <0x28380000 0x28380000 0x03880000>, /* MCU NAVSS*/
+-				 <0x40200000 0x40200000 0x00900100>, /* First peripheral window */
+-				 <0x42040000 0x42040000 0x03ac2400>, /* WKUP */
+-				 <0x45100000 0x45100000 0x00c24000>, /* MMRs, remaining NAVSS */
+-				 <0x46000000 0x46000000 0x00200000>, /* CPSW */
+-				 <0x47000000 0x47000000 0x00068400>; /* OSPI space 1 */
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>, /* MCU NAVSS*/
++				 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>, /* First peripheral window */
++				 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>, /* WKUP */
++				 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>, /* MMRs, remaining NAVSS */
++				 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>, /* CPSW */
++				 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>; /* OSPI space 1 */
+ 
+ 			cbass_wakeup: interconnect@42040000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				/* WKUP  Basic peripherals */
+-				ranges = <0x42040000 0x42040000 0x03ac2400>;
++				ranges = <0x42040000 0x00 0x42040000 0x03ac2400>;
+ 			};
+ 		};
  	};
- };
-diff --git a/arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi b/arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi
-index 4b9176dc5d029..df0f0cc575c18 100644
---- a/arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi
-+++ b/arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi
-@@ -59,9 +59,9 @@
- &i2c1 {
- 	status = "okay";
- 
--	ft5426@56 {
-+	ft5426@38 {
- 		compatible = "focaltech,ft5426", "edt,edt-ft5406";
--		reg = <56>;
-+		reg = <0x38>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_lcd_ctp_int>;
- 
-diff --git a/arch/arm/boot/dts/at91-vinco.dts b/arch/arm/boot/dts/at91-vinco.dts
-index 1be9889a2b3a1..430277291e025 100644
---- a/arch/arm/boot/dts/at91-vinco.dts
-+++ b/arch/arm/boot/dts/at91-vinco.dts
-@@ -128,7 +128,7 @@
- 			i2c2: i2c@f8024000 {
- 				status = "okay";
- 
--				rtc1: rtc@64 {
-+				rtc1: rtc@32 {
- 					compatible = "epson,rx8900";
- 					reg = <0x32>;
- 				};
-diff --git a/arch/arm/boot/dts/at91sam9260ek.dts b/arch/arm/boot/dts/at91sam9260ek.dts
-index d2b865f602932..07d1b571e6017 100644
---- a/arch/arm/boot/dts/at91sam9260ek.dts
-+++ b/arch/arm/boot/dts/at91sam9260ek.dts
-@@ -127,7 +127,7 @@
- 
- 			spi0: spi@fffc8000 {
- 				cs-gpios = <0>, <&pioC 11 0>, <0>, <0>;
--				mtd_dataflash@0 {
-+				mtd_dataflash@1 {
- 					compatible = "atmel,at45", "atmel,dataflash";
- 					spi-max-frequency = <50000000>;
- 					reg = <1>;
-diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-index a29fc04940762..a57f2d435dcae 100644
---- a/arch/arm/boot/dts/at91sam9261ek.dts
-+++ b/arch/arm/boot/dts/at91sam9261ek.dts
-@@ -160,7 +160,7 @@
- 					spi-max-frequency = <15000000>;
- 				};
- 
--				tsc2046@0 {
-+				tsc2046@2 {
- 					reg = <2>;
- 					compatible = "ti,ads7843";
- 					interrupts-extended = <&pioC 2 IRQ_TYPE_EDGE_BOTH>;
-diff --git a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-index 71df3adfc7ca1..ec1f17ab6753b 100644
---- a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-@@ -109,7 +109,7 @@
- 
- 			spi0: spi@fffc8000 {
- 				cs-gpios = <0>, <&pioC 11 0>, <0>, <0>;
--				mtd_dataflash@0 {
-+				mtd_dataflash@1 {
- 					compatible = "atmel,at45", "atmel,dataflash";
- 					spi-max-frequency = <50000000>;
- 					reg = <1>;
 -- 
 2.20.1
 
