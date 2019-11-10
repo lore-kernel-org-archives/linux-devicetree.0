@@ -2,126 +2,152 @@ Return-Path: <SRS0=/VR8=ZC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9EDC17445
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 00:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBE6C17440
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E677B208C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 00:30:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hiJmGSln"
+	by mail.kernel.org (Postfix) with ESMTP id E4FBA21848
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573353854;
+	bh=yRG4lXGZHqVRRehlry61nL/wufOOr98J8YvVsQqt1zw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pwH+rDzUJ00um3RGHM1+K5glCQ1yF5nAPWphHcrbHYVDVuo9nG2WCjFTfwhNJIOFt
+	 x6bCWJUNjcqfzPqFrgHfGuUfdL1PwdKg4RrzBfdklfJoDq0QJbCsI5IpLP/i2SCB7G
+	 0UEowYgyRBdYheAPKJ+UO8ygU8YGNN+Y7vlS7Kjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfKJAai (ORCPT
+        id S1728492AbfKJCoM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 19:30:38 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36108 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfKJAai (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 9 Nov 2019 19:30:38 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k13so6617216pgh.3
-        for <devicetree@vger.kernel.org>; Sat, 09 Nov 2019 16:30:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=FxRt4BUNwVB8zpfl5d2aejL9uK6mBbXTP9pbXJEAVIA=;
-        b=hiJmGSlnDpaF08YRgBaxyr5f68zjU/4xnmI2rZb2yHXrJ1OZXYRrhl8+qkrr+c1C+l
-         EbOMxgoRmtBsn2DjinkASy5uaaEf4N42L3g9V6T33JIv8OsXTEb0pvk7bbZQUMjbclEW
-         XxXWO9yFY8Cc0Rkr0nqGX0uMnF5CBJyvOav2c0wtaH1l3MVAV2yngr/8YpOjwN2GYOoX
-         qtHMUzLYJ1DUO2kBPcErJTGREA+ykx7mVZZbuwcK2g0qOlPdimrE2jtAmteGys5e0mhe
-         Ux5OkTsaK+1mLq1wmj6ricPdwe4/SfZS7Jdbbbaz2RnCccIxpR4iKPOc3NBU9/wiPycj
-         M0lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=FxRt4BUNwVB8zpfl5d2aejL9uK6mBbXTP9pbXJEAVIA=;
-        b=qjZj2IdLupMbk8RBAL2iZ2vx7F/yMySThz0WRjK1m3YTbLLnqx/wIm5y/7nOogtB90
-         KgsOdKWaoeY0XrUf29TXBCeufh4oqK0YLREWFT6LaZX1cbp+SvjbLMzaJ2TTNcQW6ft+
-         406FEaj+vn4GTHJEEt8aiHe3AZ2R+ukEE01AnW+aikNQksSicMVD8bzd37pwwdKtbmDd
-         rTG9mR9v4mJDge+TR0i10c1a+D1yUguS11kypIgPeNeSpWBc2D0eczPTJDrwXd3WeXcf
-         3okjyfK3NDK1ptZ/6hLSHH22IwDsJ3IKvGTqY5p34kv5uKBUGC+dO4UG7rlQwj+Fs7rP
-         jbbw==
-X-Gm-Message-State: APjAAAUWjL/mynovtJpevjvZfAyFrzSbWA3yZhw9TasCfpfYcidz4UEd
-        NoCX2WcWpyey//0Yte1lChzbpQ==
-X-Google-Smtp-Source: APXvYqwts4OUgpJJOzYRq313xaamUKaByPW6r3ZrRxsi3tbQNzWseZBolyT2WkJLe0WrONs9SgepGA==
-X-Received: by 2002:a63:6b82:: with SMTP id g124mr20819408pgc.178.1573345837340;
-        Sat, 09 Nov 2019 16:30:37 -0800 (PST)
-Received: from localhost ([2601:602:9200:a1a5:7c60:912:1380:6df8])
-        by smtp.gmail.com with ESMTPSA id f19sm4460187pfk.109.2019.11.09.16.30.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 09 Nov 2019 16:30:36 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH v4 2/4] firmware: meson_sm: Add secure power domain support
-In-Reply-To: <1572868028-73076-3-git-send-email-jianxin.pan@amlogic.com>
-References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com> <1572868028-73076-3-git-send-email-jianxin.pan@amlogic.com>
-Date:   Sat, 09 Nov 2019 21:11:09 +0100
-Message-ID: <7hk188stcy.fsf@baylibre.com>
+        Sat, 9 Nov 2019 21:44:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727406AbfKJCoL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:11 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6C4D21655;
+        Sun, 10 Nov 2019 02:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573353850;
+        bh=yRG4lXGZHqVRRehlry61nL/wufOOr98J8YvVsQqt1zw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wQhaZeVCv4n8CGDmaX+10s2hPPFum1suUK7hFX/vWppsOnQrP9k1ln948CsoguSk2
+         aSM4Pijv8nxuM0yVg2WgGAx6l7a2IU9SX6hZLKYJVLHcbgUNBdaorQqbxZYUYTQ7SQ
+         61iTXOC+vg5H/D5tfDgaEVl5CoSYN/MT5lg4k0kc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 136/191] arm64: tegra: I2C on Tegra194 is not compatible with Tegra114
+Date:   Sat,  9 Nov 2019 21:39:18 -0500
+Message-Id: <20191110024013.29782-136-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
+References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Jianxin Pan <jianxin.pan@amlogic.com> writes:
+From: Thierry Reding <treding@nvidia.com>
 
-> The Amlogic Meson A1/C1 Secure Monitor implements calls to control power
-> domain.
->
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  drivers/firmware/meson/meson_sm.c       | 2 ++
->  include/linux/firmware/meson/meson_sm.h | 2 ++
->  2 files changed, 4 insertions(+)
->
-> diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
-> index 1d5b4d7..7ec09f5 100644
-> --- a/drivers/firmware/meson/meson_sm.c
-> +++ b/drivers/firmware/meson/meson_sm.c
-> @@ -44,6 +44,8 @@ static const struct meson_sm_chip gxbb_chip = {
->  		CMD(SM_EFUSE_WRITE,	0x82000031),
->  		CMD(SM_EFUSE_USER_MAX,	0x82000033),
->  		CMD(SM_GET_CHIP_ID,	0x82000044),
-> +		CMD(SM_PWRC_SET,	0x82000093),
-> +		CMD(SM_PWRC_GET,	0x82000095),
->  		{ /* sentinel */ },
->  	},
->  };
-> diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
-> index 6669e2a..4ed3989 100644
-> --- a/include/linux/firmware/meson/meson_sm.h
-> +++ b/include/linux/firmware/meson/meson_sm.h
-> @@ -12,6 +12,8 @@ enum {
->  	SM_EFUSE_WRITE,
->  	SM_EFUSE_USER_MAX,
->  	SM_GET_CHIP_ID,
-> +	SM_PWRC_SET,
-> +	SM_PWRC_GET,
+[ Upstream commit d9fd22447ba59a9b53a202fade977e82bfba8d8d ]
 
-These new IDs are unique to the A1/C1 family.  Maybe we should add a
-prefix to better indicate that.  Maybe:
+Tegra194 contains a version of the I2C controller that is no longer
+compatible with the version found in Tegra114.
 
-       SM_A1_PWRC_SET,
-       SM_A1_PWRC_GET,
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Thoughts?
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index a4dfcd19b9e88..9fc14bb9a0aff 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -118,7 +118,7 @@
+ 		};
+ 
+ 		gen1_i2c: i2c@3160000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x03160000 0x10000>;
+ 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -143,7 +143,7 @@
+ 		};
+ 
+ 		cam_i2c: i2c@3180000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x03180000 0x10000>;
+ 			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -157,7 +157,7 @@
+ 
+ 		/* shares pads with dpaux1 */
+ 		dp_aux_ch1_i2c: i2c@3190000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x03190000 0x10000>;
+ 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -171,7 +171,7 @@
+ 
+ 		/* shares pads with dpaux0 */
+ 		dp_aux_ch0_i2c: i2c@31b0000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x031b0000 0x10000>;
+ 			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -184,7 +184,7 @@
+ 		};
+ 
+ 		gen7_i2c: i2c@31c0000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x031c0000 0x10000>;
+ 			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -197,7 +197,7 @@
+ 		};
+ 
+ 		gen9_i2c: i2c@31e0000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x031e0000 0x10000>;
+ 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -264,7 +264,7 @@
+ 		};
+ 
+ 		gen2_i2c: i2c@c240000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x0c240000 0x10000>;
+ 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -277,7 +277,7 @@
+ 		};
+ 
+ 		gen8_i2c: i2c@c250000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x0c250000 0x10000>;
+ 			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+-- 
+2.20.1
 
-Kevin
