@@ -5,64 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CC0C43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 20:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C714C17443
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 20:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5AA206C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 20:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B652080F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 20:40:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0Qji0b0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lh1EVpJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfKJUSo (ORCPT
+        id S1726896AbfKJUkI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 Nov 2019 15:18:44 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39288 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbfKJUSn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 Nov 2019 15:18:43 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t26so11189581wmi.4;
-        Sun, 10 Nov 2019 12:18:41 -0800 (PST)
+        Sun, 10 Nov 2019 15:40:08 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50304 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfKJUkI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 10 Nov 2019 15:40:08 -0500
+Received: by mail-wm1-f65.google.com with SMTP id l17so10425274wmh.0;
+        Sun, 10 Nov 2019 12:40:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nCBsmwqdT3AvPL78TXyccFIFOh8t+1Pa2nkMeu4O5qI=;
-        b=G0Qji0b0N/VKYe8A+J0i3I8XN5VJ+yrxPZxXDqskMqI1kws9QhJBhX6wnQmr5gBrKM
-         mvIo6Q47+xTk64paK4yZenPZS64Vtxefv3GaE62iQ2pVLjfiT/2iJL/iOZDePqT6/E1S
-         DIWAdwH05AmFQ8XuZeC2tsXt+XJ7HZnL7sPCE+SlG5x+JySxE/QbhhWVGvR4ZDomJj3b
-         ffkJ6vGmTAumoJ/cg6WMTLIf4G5Qbim9lQT8UuBCnJ4sOkCJOk6nGsh26LkkKjYkBCkg
-         5ie0EbL/MuGqiJTJ5/U4Lgh9C8K61v02aV9IRCHt7QoXooEgCwFH9+HVwUSZFFSWDXSz
-         bJuA==
+        bh=XMGjzy2jF9shV8Yzd4U9oGsfbDGpjYHmAOfvcyTPLCo=;
+        b=lh1EVpJRe1SuK4iFM2jNT3ZtAVZVYZ0QxRLSOPoeHdagsOZrNdPvCR9aJUVF3DNmP4
+         mkv2ykZwziySq+exrqhyYhxKdxPgExP16qSap1qerEoxVOR26WjGwdM4lB49aFwPD1sR
+         PjVIgEJKAVhil0ASu1CBRWBiGemTtGkF38ISUTS5077Zn5btGsU24tq0NAiUjPjptOAt
+         4HNhPAWDzixS6X/qiHuZ0tqX32KBMkQ3D5rHYXW5lzSwqKHC62YwgHo7RS6RxdrLLRBS
+         fYfiqF4aYFtou4577vMCmZw0C2LRuZHZ2XCn8j/iAzL8NCSHZwsSJQmpRMLtwPm6XSs0
+         ffSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=nCBsmwqdT3AvPL78TXyccFIFOh8t+1Pa2nkMeu4O5qI=;
-        b=FUvk4dOVgOowiZsRC5r0Ut86rz2npToo1g6XwTx64TL8wxBnvyXS/gvbIq60ULDar1
-         wWadt585GAKIiyU4dHuR/oFAXhPTkD3+aAFJZhLxI7+N6MnYsaAwWh17SWJJNw2jCo2Q
-         EVTx+THXeO9DMPAG1UsQ3kkxiAjgc7mgY+21DmfnDi7OtIQKMTWRfMvLBzvf1wYYfcwC
-         y1a+cQGa2NlsotdalbitYIv9Eh8cGEtDwzuy74O9IVlRFAgNjEMbLAQyJDs+sBdbtEbE
-         2q7Hg5HJCB1F+yJLbeVTo/5HXBZo8NykkEYblBuQhlIPiUsfZedWoX09RnL+wPNQPoK5
-         HdPw==
-X-Gm-Message-State: APjAAAUhlnnkDTgIxcacY2SnbqtBMvjFbsIxPSgf2Ekcz23o2onSy6hr
-        lKsWsYSbeQjpIskA5etZ9ds=
-X-Google-Smtp-Source: APXvYqxpNBe51NsHPQE8Ab0o4C4xhws5Z9NH/wLWqTZuZIRBKBwOPMWcr+CQLTdRqQz/rxCk4On9zg==
-X-Received: by 2002:a05:600c:2312:: with SMTP id 18mr62245wmo.51.1573417120401;
-        Sun, 10 Nov 2019 12:18:40 -0800 (PST)
+        bh=XMGjzy2jF9shV8Yzd4U9oGsfbDGpjYHmAOfvcyTPLCo=;
+        b=GEuMFiexebfhbeCkoOqqivxCbivCbViwE6LKUTMB4Ym4Bjj8mooKFCmL3jRpdQNpv3
+         a8al8Qf8FbWTCAAwDtsl7c8OWIdbPvxpjC4sYBCUED8Y5F8ydjXCf3gXwdFrvcI9vnWU
+         4RAsJT4obrQcq7snv7mAYU+HEmELe+SnLft5iaagwCBhop/3a2WLVXqV/P9AzL04gt36
+         OYLw3mHDt6oJYC0oajVA8bh5XHYrStXXRBD8/SCftvojN6uMYkJs2rB0bSe7VddYORaV
+         mS6Bbpl4eFFcHdKdtIr0WODTj8WLd+GYZHXnEVWLoQ+hdLqF7vo8vXjHWL3I6y9bhboZ
+         Tcjg==
+X-Gm-Message-State: APjAAAVEQKt73q3WY3fkkDGu4PzyBSrSTVVUHnYD4aiDD8q5o3zSBBPP
+        tmk9+9Ywksj9NVRiIpwRf8M=
+X-Google-Smtp-Source: APXvYqw0s8mnjDQpwIMBVZOnKPrZx1Meodk4QGORIt8NlSefy9oFaHDi5v7mWebwPJsLIIvCZ1ioJQ==
+X-Received: by 2002:a1c:5459:: with SMTP id p25mr16624077wmi.109.1573418404390;
+        Sun, 10 Nov 2019 12:40:04 -0800 (PST)
 Received: from ziggy.stardust ([95.169.226.39])
-        by smtp.gmail.com with ESMTPSA id t1sm18182533wrn.81.2019.11.10.12.18.39
+        by smtp.gmail.com with ESMTPSA id b66sm16440605wmh.39.2019.11.10.12.40.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 12:18:39 -0800 (PST)
-Subject: Re: [PATCH v1 1/1] soc: mediatek: add SMC fid table for SIP interface
-To:     Eason Yen <eason.yen@mediatek.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-References: <1572247749-4276-1-git-send-email-eason.yen@mediatek.com>
- <1572247749-4276-2-git-send-email-eason.yen@mediatek.com>
+        Sun, 10 Nov 2019 12:40:03 -0800 (PST)
+Subject: Re: [PATCH v7 7/7] arm: dts: mt6323: add keys, power-controller, rtc
+ and codec
+To:     Frank Wunderlich <frank-w@public-files.de>,
+        linux-mediatek@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tianping Fang <tianping.fang@mediatek.com>
+References: <20190910070446.639-1-frank-w@public-files.de>
+ <20190910070446.639-8-frank-w@public-files.de>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -137,12 +149,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  Y1aFdU79pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlI
  FZ6fsEKIAN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+
  r2JwH1CJjrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <44bddcd1-457d-bde6-791f-def248f787b3@gmail.com>
-Date:   Sun, 10 Nov 2019 21:18:38 +0100
+Message-ID: <4ae8d72c-3c28-0bec-bf6f-4bb26dcda578@gmail.com>
+Date:   Sun, 10 Nov 2019 21:40:01 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <1572247749-4276-2-git-send-email-eason.yen@mediatek.com>
+In-Reply-To: <20190910070446.639-8-frank-w@public-files.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -153,59 +165,62 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 28/10/2019 08:29, Eason Yen wrote:
-> 1. Add a header file to provide SIP interface to ATF
-> 2. Add AUDIO SMC fid
+On 10/09/2019 09:04, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
 > 
-> Change-Id: I218e9f571cea079268a5414725a81e9b35702e33
+> support poweroff and power-related keys on bpi-r2
+> 
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 
-Please delete Change-Id entry.
-Apart from that, I don't really get the reason for this patch. Which driver is
-supposed to use this header file?
+Applied thanks!
 
-Please provide more background information.
-
-Regards,
-Matthias
-
-> Signed-off-by: Eason Yen <eason.yen@mediatek.com>
 > ---
->  include/linux/soc/mediatek/mtk_sip_svc.h |   28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+> changes since v6: none
+> changes since v5: none
+> changes since v4: none
+> changes since v3: none
+> changes since v2: none (=v2 part 7)
+> ---
+>  arch/arm/boot/dts/mt6323.dtsi | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> diff --git a/include/linux/soc/mediatek/mtk_sip_svc.h b/include/linux/soc/mediatek/mtk_sip_svc.h
-> new file mode 100644
-> index 0000000..00ee0f4
-> --- /dev/null
-> +++ b/include/linux/soc/mediatek/mtk_sip_svc.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + */
+> diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
+> index ba397407c1dd..7fda40ab5fe8 100644
+> --- a/arch/arm/boot/dts/mt6323.dtsi
+> +++ b/arch/arm/boot/dts/mt6323.dtsi
+> @@ -238,5 +238,32 @@
+>  				regulator-enable-ramp-delay = <216>;
+>  			};
+>  		};
 > +
-> +#ifndef __MTK_SIP_SVC_H__
-> +#define __MTK_SIP_SVC_H__
+> +		mt6323keys: mt6323keys {
+> +			compatible = "mediatek,mt6323-keys";
+> +			mediatek,long-press-mode = <1>;
+> +			power-off-time-sec = <0>;
 > +
-> +#include <linux/kernel.h>
+> +			power {
+> +				linux,keycodes = <116>;
+> +				wakeup-source;
+> +			};
 > +
-> +/* Error Code */
-> +#define SIP_SVC_E_SUCCESS               0
-> +#define SIP_SVC_E_NOT_SUPPORTED         -1
-> +#define SIP_SVC_E_INVALID_PARAMS        -2
-> +#define SIP_SVC_E_INVALID_Range         -3
-> +#define SIP_SVC_E_PERMISSION_DENY       -4
+> +			home {
+> +				linux,keycodes = <114>;
+> +			};
+> +		};
 > +
-> +#ifdef CONFIG_ARM64
-> +#define MTK_SIP_SMC_AARCH_BIT			0x40000000
-> +#else
-> +#define MTK_SIP_SMC_AARCH_BIT			0x00000000
-> +#endif
+> +		codec: mt6397codec {
+> +			compatible = "mediatek,mt6397-codec";
+> +		};
 > +
-> +/* AUDIO related SMC call */
-> +#define MTK_SIP_AUDIO_CONTROL \
-> +	(0x82000517 | MTK_SIP_SMC_AARCH_BIT)
-> +#endif
-> +/* __MTK_SIP_SVC_H__ */
+> +		power-controller {
+> +			compatible = "mediatek,mt6323-pwrc";
+> +		};
+> +
+> +		rtc {
+> +			compatible = "mediatek,mt6323-rtc";
+> +		};
+>  	};
+>  };
 > 
