@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FC6C43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD3FC17443
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C548A21019
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA5B22573
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 02:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573354498;
-	bh=qFMPdXUEH6vwVV5eu/FaLP6bhy2xtehholYH6iinTzU=;
+	s=default; t=1573354505;
+	bh=Lyf/DK6TaNWV1nE4CudSgEBwr8TZnPiV8v9hGYLVzXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q7CQquLMA6otalXGuLM07b+arCOLcWYRVQHaK5Ri7cFJO/cQHBmTISRG/RlaKBqmN
-	 g3EvxS0zkZsZCFzrqFizyeiqP2qmuC3y3HpbFa+0qjIUgnE+CmpXz9Fi8dMneQ1YtB
-	 n12gmu28i7iyM6Z68j0tTJEud/28qi38W7/cuXo4=
+	b=WfvF7oBXJo04loK0HdeOom+lttIAJb9Tie665PiaC44RiqpDvlhcuJcPC362KFnmA
+	 FaSXTn6BDJuW9RW2Os7w8tMnyb5IptiPsnhUonxSDmoNwzd6XxT7i2V/Vl1L1sAkmQ
+	 whwAz5duhoMsEfMXeFrFBvk75NBXTK7d7rxmHmOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfKJCu1 (ORCPT
+        id S1728988AbfKJCzE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 9 Nov 2019 21:50:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33738 "EHLO mail.kernel.org"
+        Sat, 9 Nov 2019 21:55:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729708AbfKJCuY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:24 -0500
+        id S1729717AbfKJCu0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:50:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9A2822794;
-        Sun, 10 Nov 2019 02:50:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67BE522A85;
+        Sun, 10 Nov 2019 02:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354223;
-        bh=qFMPdXUEH6vwVV5eu/FaLP6bhy2xtehholYH6iinTzU=;
+        s=default; t=1573354226;
+        bh=Lyf/DK6TaNWV1nE4CudSgEBwr8TZnPiV8v9hGYLVzXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKSp+CNMFkbsc3+BA4qWnNOfLlWA2oEcDTAruq17bJu98XrutNhymkGJ4nvsrHOf6
-         HxnkD+ZsaZmsUsXT5AIFtu6oDOzBR7eXsyj3BboHJbC4n0KHC/LNqdi6UuVcJ/xk2h
-         n1lRLQ2mamyYmLtwSkoAa1Lemx7MjvdX0YgEWbG0=
+        b=1toz7ORF3C7ztc3M8T41ZcO40piQ/YVVvCk+KfaUDycUXF1jch6bREyLJeFC8iUUa
+         nMKf5BXpyqeB4jeGfCFaGWjnE9+xBnNcXalx3RbeW464gR2D/hPkNicHpiagDiES+6
+         5iEhEoFFtqjVz5cWTz6oEuGKlUIgUz1TrkcCvJzo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Brijesh Singh <brijeshkumar.singh@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
+Cc:     Rob Herring <robh@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 61/66] arm64: dts: amd: Fix SPI bus warnings
-Date:   Sat,  9 Nov 2019 21:48:40 -0500
-Message-Id: <20191110024846.32598-61-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 63/66] ARM: dts: lpc32xx: Fix SPI controller node names
+Date:   Sat,  9 Nov 2019 21:48:42 -0500
+Message-Id: <20191110024846.32598-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024846.32598-1-sashal@kernel.org>
 References: <20191110024846.32598-1-sashal@kernel.org>
@@ -64,46 +62,42 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit e9f0878c4b2004ac19581274c1ae4c61ae3ca70e ]
+[ Upstream commit 11236ef582b8d66290bb3b3710e03ca1d85d8ad8 ]
 
-dtc has new checks for SPI buses. Fix the warnings in node names.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-arch/arm64/boot/dts/amd/amd-overdrive.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-
-Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
+ arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index bd3adeac374f4..2973a14523eaf 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -106,7 +106,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
- 
--		spi0: ssp@e1020000 {
-+		spi0: spi@e1020000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0 0xe1020000 0 0x1000>;
-@@ -116,7 +116,7 @@
- 			clock-names = "apb_pclk";
- 		};
- 
--		spi1: ssp@e1030000 {
-+		spi1: spi@e1030000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0 0xe1030000 0 0x1000>;
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index 0d20aadc78bb1..5fa3111731cb0 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -179,7 +179,7 @@
+ 			 * ssp0 and spi1 are shared pins;
+ 			 * enable one in your board dts, as needed.
+ 			 */
+-			ssp0: ssp@20084000 {
++			ssp0: spi@20084000 {
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x20084000 0x1000>;
+ 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+@@ -199,7 +199,7 @@
+ 			 * ssp1 and spi2 are shared pins;
+ 			 * enable one in your board dts, as needed.
+ 			 */
+-			ssp1: ssp@2008c000 {
++			ssp1: spi@2008c000 {
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x2008c000 0x1000>;
+ 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.20.1
 
