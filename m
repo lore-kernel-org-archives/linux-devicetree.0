@@ -2,106 +2,94 @@ Return-Path: <SRS0=/VR8=ZC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB8FC17442
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 12:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040FBC43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 14:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A48121D7F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 12:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5tCu1Q/"
+	by mail.kernel.org (Postfix) with ESMTP id C381A20818
+	for <linux-devicetree@archiver.kernel.org>; Sun, 10 Nov 2019 14:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573397608;
+	bh=/iU5aWjqTkORuN4+DNIlfl6ksnB2MbsPSLVgGE6Ogs8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1Uy9U2zahV80hnzrCVJbPMaX5tM5sDpbIhKWCs4h6uyS2d/9HDyNVHgwwwxmNAQXG
+	 BarpfePgGAEOzDj0eTm4SfXG8r0xcquNQt6O1tmGyoXCV9aJDndIJ/oxswOqwXT44x
+	 gHuN3a6kx9RESJk9WZqXtcwko/kKnBI7Mu2C/0OQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfKJMoE (ORCPT
+        id S1726436AbfKJOx2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 Nov 2019 07:44:04 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45594 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfKJMoE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 Nov 2019 07:44:04 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n21so10831819ljg.12;
-        Sun, 10 Nov 2019 04:44:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=y83C4uV1+CMS9qXxIDGEDkXZDlFcKiUT+tBB2iKcZ/8=;
-        b=S5tCu1Q/bUWUzoqui0dPCRpuzi6ZO6mnhyySQUfJ8Wq0Sw21KjmuAhUeqMLtXFQIgp
-         /CuDTn6oX6LgJcIkQQW5NO0JEqDaHfh8mS2lOf/KCLK8EERkNsE44C3on2wsOQ6pOjYl
-         H1P/W6x5qGi+QAJOrQOiqlj/I9dcvNEwyBzIkvDXGk66zCb0DfYWInfROuSUe+q3W1+o
-         0Q6umV52sYXfDemaam8ueHnzdPNcWnEbzjGUDisxUgqNSmQ86L8i1l5CrRSN926q04c/
-         CAzAkuvfZm0OCMYchvxZJG7l7F2PDMbngOIXDx+prmkP2nYs6q7J7LhtafWXJgC2yANx
-         RzPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=y83C4uV1+CMS9qXxIDGEDkXZDlFcKiUT+tBB2iKcZ/8=;
-        b=hxDvxlEfA9bIwJ640waOgPV46swpFjoWfDd9IE/5EDLWrnO0yFZt7Cug0+B1l0E4Hb
-         MQgtDhZw3bD5NkjLEYaB/So8yw3mf81nd9971qWnR3LDAr43qJUmyg62xAqAlft2Rn7M
-         kn+D+CQHocqIP3ZUr2yqchYUKQwlWhxxkHxbg5tpRTlnW9q4wQyVXyfQpsxseoEKMUvu
-         ok0901P0rLV6bcO4x1568TEkyDKwUc5nVDUlIMb4eoNVGplhKU7Ya2c6MmEpKWNy7iLQ
-         Posr/8gNEJGxanDivckszyA4ZMon72eVSvce+K9/zCQHRUCv++6IncKFKJ0vhbHnL3PE
-         nyUA==
-X-Gm-Message-State: APjAAAWhdLdnf9lSlztgxxYlbSkEYJlLvbzIJ3orrWe0JGFzhSC7CiML
-        THOOxPSvC35hxR/G42M7n6U=
-X-Google-Smtp-Source: APXvYqxUIUlp45THMZfcuhEJlbzNkjAeA1+yMttaZdWaX6nYzo2jbjepxuvD6mbt0FR9mIQCgtKtxA==
-X-Received: by 2002:a2e:98d4:: with SMTP id s20mr13111304ljj.128.1573389841582;
-        Sun, 10 Nov 2019 04:44:01 -0800 (PST)
-Received: from localhost.localdomain (h-98-128-228-153.NA.cust.bahnhof.se. [98.128.228.153])
-        by smtp.gmail.com with ESMTPSA id r7sm5377486ljc.74.2019.11.10.04.43.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Nov 2019 04:44:00 -0800 (PST)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     megous@megous.com
-Cc:     arnd@arndb.de, devicetree@vger.kernel.org,
-        gregkh@linuxfoundation.org, icenowy@aosc.io, kishon@ti.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, mark.rutland@arm.com,
-        mripard@kernel.org, paul.kocialkowski@bootlin.com,
-        robh+dt@kernel.org, tglx@linutronix.de, wens@csie.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH v2] phy: allwinner: Fix GENMASK misuse
-Date:   Sun, 10 Nov 2019 13:43:55 +0100
-Message-Id: <20191110124355.1569-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191020134229.1216351-3-megous@megous.com>
-References: <20191020134229.1216351-3-megous@megous.com>
+        Sun, 10 Nov 2019 09:53:28 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:58757 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726402AbfKJOx2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 Nov 2019 09:53:28 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iToaY-0002r6-32; Sun, 10 Nov 2019 15:53:14 +0100
+Date:   Sun, 10 Nov 2019 14:53:12 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        andrew@aj.id.au, joel@jms.id.au, jason@lakedaemon.net,
+        tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 02/12] irqchip: Add Aspeed SCU interrupt controller
+Message-ID: <20191110145312.3805b25b@why>
+In-Reply-To: <1573244313-9190-3-git-send-email-eajames@linux.ibm.com>
+References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
+        <1573244313-9190-3-git-send-email-eajames@linux.ibm.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: eajames@linux.ibm.com, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au, jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Arguments are supposed to be ordered high then low.
+On Fri,  8 Nov 2019 14:18:23 -0600
+Eddie James <eajames@linux.ibm.com> wrote:
 
-Fixes: a228890f9458 ("phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC")
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Tested-by: Ondrej Jirman <megous@megous.com>
----
-v1->v2: Add fixes tax. Add Ondrejs Tested-by. No functional change.
+Hi Eddie,
 
- drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> The Aspeed SOCs provide some interrupts through the System Control
+> Unit registers. Add an interrupt controller that provides these
+> interrupts to the system.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  MAINTAINERS                         |   1 +
+>  drivers/irqchip/Makefile            |   2 +-
+>  drivers/irqchip/irq-aspeed-scu-ic.c | 233 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 235 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/irqchip/irq-aspeed-scu-ic.c
 
-diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
-index 1169f3e83a6f..b1c04f71a31d 100644
---- a/drivers/phy/allwinner/phy-sun50i-usb3.c
-+++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
-@@ -49,7 +49,7 @@
- #define SUNXI_LOS_BIAS(n)		((n) << 3)
- #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
- #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
--#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
-+#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
- 
- struct sun50i_usb3_phy {
- 	struct phy *phy;
+[...]
+
+> +static int aspeed_scu_ic_map(struct irq_domain *domain, unsigned int irq,
+> +			     irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &aspeed_scu_ic_chip, handle_simple_irq);
+
+handle_simple_irq is usually wrong, and works badly with threaded
+interrupts. I suggest you'd change it to handle_level_irq, which
+probably matches the behaviour of the controller.
+
+Otherwise, this looks good.
+
+Thanks,
+
+	M.
 -- 
-2.24.0
-
+Jazz is not dead. It just smells funny...
