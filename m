@@ -2,320 +2,270 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29281C17441
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 21:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4F3C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 22:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41CA21925
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 21:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABEC2053B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 22:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfKKV6s (ORCPT
+        id S1726983AbfKKWZT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 16:58:48 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47437 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfKKV6s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 16:58:48 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUHQN-0005Bo-40; Mon, 11 Nov 2019 22:40:39 +0100
-Received: from ukl by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iUHQL-0004md-5c; Mon, 11 Nov 2019 22:40:37 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>
-Cc:     kernel@pengutronix.de, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 3/3] iio: adc: new driver to support Linear technology's ltc2496
-Date:   Mon, 11 Nov 2019 22:40:25 +0100
-Message-Id: <20191111214025.18310-3-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191111214025.18310-1-u.kleine-koenig@pengutronix.de>
-References: <20191111214025.18310-1-u.kleine-koenig@pengutronix.de>
+        Mon, 11 Nov 2019 17:25:19 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34756 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbfKKWZT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 17:25:19 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id DF82A3C04C0;
+        Mon, 11 Nov 2019 23:25:14 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 92To2pyJWXZ8; Mon, 11 Nov 2019 23:25:06 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 4FEB73C009C;
+        Mon, 11 Nov 2019 23:25:06 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 11 Nov
+ 2019 23:25:06 +0100
+Date:   Mon, 11 Nov 2019 23:25:02 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add
+ 'fixed-emmc-driver-type-hs{200,400}'
+Message-ID: <20191111222502.GA717@vmlxhi-102.adit-jv.com>
+References: <20191105055015.23656-1-erosca@de.adit-jv.com>
+ <CACRpkdbO6df3OKn4wnz9LMjf4i94jQPs9n_Cdzv7boWMZDCovA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbO6df3OKn4wnz9LMjf4i94jQPs9n_Cdzv7boWMZDCovA@mail.gmail.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This chip is similar to the LTC2497 ADC, it just uses SPI instead of I2C
-and so has a slightly different protocol. The channel definitions are
-shared between the two drivers.
+Hi Linus,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/iio/adc/Kconfig   |  10 ++
- drivers/iio/adc/Makefile  |   1 +
- drivers/iio/adc/ltc2496.c | 208 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 219 insertions(+)
- create mode 100644 drivers/iio/adc/ltc2496.c
+On Wed, Nov 06, 2019 at 12:07:38PM +0100, Linus Walleij wrote:
+> Hi Eugeniu,
+> 
+> thanks for your patch!
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index f0af3a42f53c..deb86f6039b3 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -492,6 +492,16 @@ config LTC2485
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ltc2485.
- 
-+config LTC2496
-+	tristate "Linear Technology LTC2496 ADC driver"
-+	depends on SPI
-+	help
-+	  Say yes here to build support for Linear Technology LTC2496
-+	  16-Bit 8-/16-Channel Delta Sigma ADC.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called ltc2496.
-+
- config LTC2497
- 	tristate "Linear Technology LTC2497 ADC driver"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 660242c2cca7..afe2b6db4a5e 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -47,6 +47,7 @@ obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
- obj-$(CONFIG_LPC32XX_ADC) += lpc32xx_adc.o
- obj-$(CONFIG_LTC2471) += ltc2471.o
- obj-$(CONFIG_LTC2485) += ltc2485.o
-+obj-$(CONFIG_LTC2496) += ltc2496.o ltc249x.o
- obj-$(CONFIG_LTC2497) += ltc2497.o ltc249x.o
- obj-$(CONFIG_MAX1027) += max1027.o
- obj-$(CONFIG_MAX11100) += max11100.o
-diff --git a/drivers/iio/adc/ltc2496.c b/drivers/iio/adc/ltc2496.c
-new file mode 100644
-index 000000000000..0b0a7aa8987f
---- /dev/null
-+++ b/drivers/iio/adc/ltc2496.c
-@@ -0,0 +1,208 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ltc2496.c - Driver for Analog Devices/Linear Technology LTC2496 ADC
-+ *
-+ * Based on ltc2497.c which has
-+ * Copyright (C) 2017 Analog Devices Inc.
-+ *
-+ * Licensed under the GPL-2.
-+ *
-+ * Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/2496fc.pdf
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/spi/spi.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/driver.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include "ltc249x.h"
-+
-+struct ltc2496_st {
-+	struct spi_device *spi;
-+	struct regulator *ref;
-+	ktime_t	time_prev;
-+	u8 addr_prev;
-+};
-+
-+static int ltc2496_wait_conv(struct ltc2496_st *st)
-+{
-+	s64 time_elapsed;
-+
-+	time_elapsed = ktime_ms_delta(ktime_get(), st->time_prev);
-+
-+	if (time_elapsed < LTC249X_CONVERSION_TIME_MS) {
-+		/* delay if conversion time not passed
-+		 * since last read or write
-+		 */
-+		if (msleep_interruptible(
-+		    LTC249X_CONVERSION_TIME_MS - time_elapsed))
-+			return -ERESTARTSYS;
-+
-+		return 0;
-+	}
-+
-+	if (time_elapsed - LTC249X_CONVERSION_TIME_MS <= 0) {
-+		/* We're in automatic mode -
-+		 * so the last reading is still not outdated
-+		 */
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
-+static int ltc2496_read(struct ltc2496_st *st, u8 address, int *val)
-+{
-+	struct spi_device *spi = st->spi;
-+	int ret;
-+	unsigned char txbuf[3] = { LTC249X_ENABLE | address, };
-+	unsigned char rxbuf[3];
-+	struct spi_transfer t = {
-+		.tx_buf = txbuf,
-+		.rx_buf = rxbuf,
-+		.len = sizeof(txbuf),
-+	};
-+
-+	ret = ltc2496_wait_conv(st);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret || st->addr_prev != address) {
-+		ret = spi_sync_transfer(spi, &t, 1);
-+		if (ret < 0)
-+			return ret;
-+		st->addr_prev = address;
-+		if (msleep_interruptible(LTC249X_CONVERSION_TIME_MS))
-+			return -ERESTARTSYS;
-+	}
-+
-+	ret = spi_sync_transfer(spi, &t, 1);
-+	if (ret < 0)  {
-+		dev_err(&spi->dev, "spi_sync_transfer failed\n");
-+		return ret;
-+	}
-+	st->time_prev = ktime_get();
-+
-+	/* convert and shift the result,
-+	 * and finally convert from offset binary to signed integer
-+	 */
-+	*val = ((rxbuf[0] & 0x3f) << 12 | rxbuf[1] << 4 | rxbuf[2] >> 4)
-+		- (1 << 17);
-+
-+	return ret;
-+}
-+
-+static int ltc2496_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct ltc2496_st *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&indio_dev->mlock);
-+		ret = ltc2496_read(st, chan->address, val);
-+		mutex_unlock(&indio_dev->mlock);
-+		if (ret < 0)
-+			return ret;
-+
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = regulator_get_voltage(st->ref);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = ret / 1000;
-+		*val2 = 17;
-+
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info ltc2496_info = {
-+	.read_raw = ltc2496_read_raw,
-+};
-+
-+static int ltc2496_probe(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev;
-+	struct ltc2496_st *st;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	st = iio_priv(indio_dev);
-+	spi_set_drvdata(spi, indio_dev);
-+	st->spi = spi;
-+
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->name = "ltc2496";
-+	indio_dev->info = &ltc2496_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = ltc249x_channel;
-+	indio_dev->num_channels = ltc249x_num_channels;
-+
-+	st->ref = devm_regulator_get(&spi->dev, "vref");
-+	if (IS_ERR(st->ref))
-+		return PTR_ERR(st->ref);
-+
-+	ret = regulator_enable(st->ref);
-+	if (ret < 0)
-+		return ret;
-+
-+	st->addr_prev = 0;
-+	st->time_prev = ktime_get();
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0)
-+		goto err_regulator_disable;
-+
-+	return 0;
-+
-+err_regulator_disable:
-+	regulator_disable(st->ref);
-+
-+	return ret;
-+}
-+
-+static int ltc2496_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct ltc2496_st *st = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	regulator_disable(st->ref);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ltc2496_of_match[] = {
-+	{ .compatible = "lltc,ltc2496", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ltc2496_of_match);
-+
-+static struct spi_driver ltc2496_driver = {
-+	.driver = {
-+		.name = "ltc2496",
-+		.of_match_table = of_match_ptr(ltc2496_of_match),
-+	},
-+	.probe = ltc2496_probe,
-+	.remove = ltc2496_remove,
-+};
-+module_spi_driver(ltc2496_driver);
-+
-+MODULE_AUTHOR("Uwe Kleine-König <u.kleine-könig@pengutronix.de>");
-+MODULE_DESCRIPTION("Linear Technology LTC2496 ADC driver");
-+MODULE_LICENSE("GPL v2");
+Thanks for your comments.
+
+> 
+> On Tue, Nov 5, 2019 at 6:50 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> 
+> > A certain eMMC manufacturer provided below requirement:
+> >  ---snip---
+> >  Use "drive strength" value of 4 or 1 for HS400 or 0 for HS200.
+> >  ---snip---
+> >
+> > The existing "fixed-emmc-driver-type" property [1] is the closest one
+> > to implement the above, but it falls short due to being unable to define
+> > two values to differentiate between HS200 and HS400 (both modes may be
+> > supported by the same non-removable MMC device).
+> >
+> > To allow users to set a preferred HS200/HS400 "drive strength", provide
+> > two more bindings inspired from [1]:
+> >  - fixed-emmc-driver-type-hs200
+> >  - fixed-emmc-driver-type-hs400
+> 
+> I am sorry that I do not quite understand but as pin control maintainer I
+> am of course triggered by the talk about selecting "drive strength".
+> 
+> In my book this means that the pad driver on the chip, driving the
+> line low/high with push-pull (totempole output, usually) is connecting
+> more driver stages, usually just shunting in more totempoles.
+> (Ref https://en.wikipedia.org/wiki/Push%E2%80%93pull_output)
+> 
+> If say one totempole gives 2mA drive strength then 4 totempoles
+> gives 8mA drive strength.
+> 
+> Are we on the same page here that this is what physically happens?
+
+This matches my view with below amendments:
+ - Your passage seems to describe a single-duplex communication (one end
+   is always a sender and the other one is always a receiver). Since the
+   CMD and DAT[0-7] eMMC lines are bidirectional (carrying half-duplex
+   data transfers), this is what seems to justify the
+   "drive(r) strength/type" feature/setting to be present on both host
+   controller and eMMC device ends (which does happen in real life).
+ - I am unsure whether to endorse the "totempole output" as being the
+   usual foundation for how "drive strength" is really implemented in
+   the modern CMOS ICs, based on the following:
+   - All eMMC Jedec specs mention "push-pull" for CMD/DAT[0-7]
+   - All eMMC device datasheets I could find reference "push pull"
+     and none mentions "totem pole" for CMD/DAT[0-7]
+   - The "totem pole" topology seems to originate from and be much more
+     popular in the TTL/BJT world, where it tries to harness the
+     symmetry of two NPN transistors, replacing the PNP-NPN pair used
+     in the bipolar "push-pull" configuration [1-2].
+   - Jedec calls totem-pole "a bipolar output" (i.e. TTL/BJT) [3]
+   - Jedec claims [3] that "vanilla" tottempole doesn't support
+     tristate/hi-Z outputs, making it impossible to connect several such
+     circuits in parallel, while we assume the latter to be a hard
+     prerequisite for sourcing programmable amounts of current.
+   - Some users say that "CMOS outputs are generally push-pull" [4]
+   - TI states [5] that the "MOSFET equivalent of the bipolar totempole
+     driver [..] is rarely implemented"
+
+Abstracting from the above, I agree that a programmable "drive strength"
+is likely achieved by connecting several tristate-capable output
+circuits in a "wired OR", as exemplified for Raspberry Pi in [6].
+
+> 
+> Usually selection of drive strength is done with the pin control
+> framework, so this would need to be backed by code (not in this
+> patch set) that select pin control states that reconfigure the
+> SoC pad drivers to use the requested strength.
+
+That's true. In the same context of overcoming HS400 issues, our SoC
+vendor suggested adjusting the "drive-strength" binding, added in:
+ - 7db9af4b6e41be ("pinctrl: add function to parse generic pinconfig
+   properties from a dt node")
+ - 3caa7d8c3f03ad ("pinctrl: sh-pfc: Add drive strength support")
+
+> Alternatively, the (e)MMC block would implement this control
+> directly, but I doubt it.
+
+There _is_ a "drive strength" specific to eMMC device and the
+justification for it to exist has been made above.
+
+According to JESD84-B50.1 spec, the host controller is able to find
+the "drive strength" values supported by a particular eMMC device by
+reading the DRIVER_STRENGTH field of the Extended CSD. The host then
+may (if needed), make use of this value to set the "Driver Strength"
+parameter in the HS_TIMING field of the Extended CSD register.
+
+Essentially, current series gives the host controller a chance to limit
+the drive strength value written to HS_TIMING, if eMMC vendor decides
+that some of the values advertised in DRIVER_STRENGTH are forbidden
+or should be avoided in a specific bus speed mode (HS200/HS400).
+
+> Please clarify which hardware is eventually going to provide the
+> drive strength alteration, because I just don't see it in the patch
+> set. Is the assumption that the (e)MMC hardware will do this
+> autonomously or something? That may be a pecularity to the hardware
+> you're using in that case.
+
+Hopefully clarified above.
+
+> I find the fixed-emmc-driver-type-* assignment a but puzzling
+> to be honest, isnt' the driver device tree already specifying
+> what the hardware can do with all of these:
+> 
+> mmc-ddr-1_2v
+> mmc-ddr-1_8v
+> mmc-ddr-3_3v
+
+JFTR, for these (<HS200) bus speed modes, the eMMC Jedec spec doesn't
+talk about changing eMMC's driver strength. That's probably because
+there are no signal integrity issues to be fixed in these low-speed
+modes.
+
+> mmc-hs200-1_2v
+> mmc-hs200-1_8v
+> mmc-hs400-1_2v
+> mmc-hs400-1_8v
+> mmc-hs400-enhanced-strobe
+
+Below is a quote from JESD84-B50.1 (10.5.4.1 Driver Types Definition):
+ -> NOTE: Drive strength definitions are same for 1.8 V signaling level
+ -> and for 1.2 V signaling level.
+
+I read the above as:
+ -> "the driver strength is independent/agnostic on signaling level"
+
+> If the host is already specifying mmc-hs200-* or
+> mmc-hs400-* then certainly it should be implied that the
+> host supports hs200 and hs400 and there is no need for
+> the fixed-emmc-driver-type-hs* properties.
+
+Not sure I see the linkage between the cause and effect here.
+The host cannot infer anything about the supported drive strength values
+on eMMC side purely based on the mmc-hs200-*/mmc-hs400-* DT properties.
+
+> 
+> The code detects when to use each mode and that is when
+> you can insert the code to switch drive strengths, whether using
+> the pin control framework or something else.
+
+As explained above, this series allows to customize the eMMC-specific
+drive strength. The eMMC vendor did not ask to make the SoC-side
+drive strength dependent on bus speed mode and that was not needed in
+the testing performed by the customer.
+
+> 
+> So to me it seems these DT properties are just introduced to
+> hammer down a certain usecase instead of letting the code with the
+> help of DT speed capabilities flags determine what speed is to be used
+> and select the appropriate drive strength.
+
+Does this mean that the "fixed-emmc-driver-type" binding which
+pre-exists my series falls under the same sentence? Or is this only
+when customizing Wolfram's binding to HS200/HS400 bus speed mode?
+
+Note that there is no other objective in this series but to allow Linux
+to run on hardware which doesn't strictly follow its specification [7].
+If you have any alternative ideas of how to follow the eMMC vendor's
+recommendation quoted in the description of this patch, I will happily
+review those.
+
+> 
+> Yours,
+> Linus Walleij
+
+[1] https://electronics.stackexchange.com/q/358151/235971
+[2] https://electronics.stackexchange.com/a/17819/235971
+   ---snip----
+   Due to the difference in N and P carrier mobilities, NPN and PNP
+   transistors are never truly symmetric, and there were advantages to
+   using NPN. [..] In CMOS logic, the N and P channel drivers are
+   symmetric and the driver designs are truly complementary.
+   ---snip----
+[3] https://www.jedec.org/standards-documents/dictionary/terms/totem-pole-output
+   ---snip----
+   The term "totem-pole output", as commonly used, does not include
+   three-state outputs.
+   ---snip----
+[4] http://piclist.com/techref/postbot.asp?by=thread&id=%5BEE%5D+Push-pull+vs+totem+pole&w=body&tgt=post
+   ---snip----
+   CMOS outputs are generally push-pull. They have a P-channel FET
+   above and an N-channel fet below. Both are in digital model
+   (on/off). 'Totem-pole' will never apply to a CMOS output.
+   ---snip----
+[5] http://www.ti.com/lit/ml/slua618a/slua618a.pdf
+   ("Fundamentals of MOSFET and IGBT Gate Driver Circuits")
+   ---snip----
+   The MOSFET equivalent of the bipolar totempole driver is pictured in
+   Figure 11. [..] Unfortunately, this circuit has several drawbacks
+   compared to the bipolar version that explain that it is very rarely
+   implemented discretely.
+   ---snip----
+[6] https://www.raspberrypi.org/documentation/hardware/raspberrypi/gpio/gpio_pads_control.md
+[7] linux (v5.4-rc7) git grep -i quirk | wc -l
+   12047
+
 -- 
-2.24.0.rc1
-
+Best Regards,
+Eugeniu
