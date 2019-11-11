@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D08C17445
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD145C17447
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6CC9222C1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8260E21D7F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nSdpEnb4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hnq85HW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfKKNxk (ORCPT
+        id S1727123AbfKKNw6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:53:40 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54318 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfKKNxN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 08:53:13 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABDr39e059799;
-        Mon, 11 Nov 2019 07:53:03 -0600
+        Mon, 11 Nov 2019 08:52:58 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56638 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfKKNw4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 08:52:56 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xABDqb9T090509;
+        Mon, 11 Nov 2019 07:52:37 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573480383;
-        bh=6vbxv0kVIQl7q+0r5nfZvB02faIMt5uGsQqFEmSO9pA=;
+        s=ti-com-17Q1; t=1573480357;
+        bh=1ejU+vd2T9/FB/A9l3rJiiNfVEy7pyhWG9mzxXGvrc8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nSdpEnb48ongdQ5C96E3czhNsMSsjmYFMbxpHzF1y20E4YroIOr+Z9Bmg+E1vtla0
-         53JJX3lcpmzLD1ayMvEGpyTuP1RTSEKCyPGMtnT0d/p4mUsLnOUs8djMEGMGaDv5w5
-         CPt8UsAzs2v299KsHZmHe9r/4Za8tOYMKyfyAGgQ=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABDr2aH111897
+        b=hnq85HW3l4Dpf5ZtpTMz7HnD2F0nuQyoB5bD+lMZRcIrRCCR4W2ViUWkt18ZVViW6
+         FdGjIxcvoZnUU0a0WLWE3SdzFIhsYsN/3WYBtyLqjx8DiOfgGIBpidnQrKRhZdE6+i
+         LAvIULA3O4cz77jyq899/u7nrqFHplIctwC1ycvw=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xABDqbg6001492
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 07:53:03 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 11 Nov 2019 07:52:37 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 07:52:45 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 07:52:19 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 07:52:45 -0600
+ Frontend Transport; Mon, 11 Nov 2019 07:52:20 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABDqE8x097668;
-        Mon, 11 Nov 2019 07:52:59 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xABDqE8q097668;
+        Mon, 11 Nov 2019 07:52:33 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -55,364 +55,78 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-Subject: [PATCH v5 12/15] dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks 1
-Date:   Mon, 11 Nov 2019 15:53:27 +0200
-Message-ID: <20191111135330.8235-13-peter.ujfalusi@ti.com>
+Subject: [PATCH v5 05/15] dmaengine: Add support for reporting DMA cached data amount
+Date:   Mon, 11 Nov 2019 15:53:20 +0200
+Message-ID: <20191111135330.8235-6-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191111135330.8235-1-peter.ujfalusi@ti.com>
 References: <20191111135330.8235-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Split patch for review containing:
-device_config, device_issue_pending, device_tx_status, device_pause,
-device_resume, device_terminate_all and device_synchronize callback
-implementation and the custom udma_vchan_complete.
+A DMA hardware can have big cache or FIFO and the amount of data sitting in
+the DMA fabric can be an interest for the clients.
 
-DMA driver for
-Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
-
-The UDMA-P is intended to perform similar (but significantly upgraded) functions
-as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-supports the transmission and reception of various packet types. The UDMA-P is
-architected to facilitate the segmentation and reassembly of SoC DMA data
-structure compliant packets to/from smaller data blocks that are natively
-compatible with the specific requirements of each connected peripheral. Multiple
-Tx and Rx channels are provided within the DMA which allow multiple segmentation
-or reassembly operations to be ongoing. The DMA controller maintains state
-information for each of the channels which allows packet segmentation and
-reassembly operations to be time division multiplexed between channels in order
-to share the underlying DMA hardware. An external DMA scheduler is used to
-control the ordering and rate at which this multiplexing occurs for Transmit
-operations. The ordering and rate of Receive operations is indirectly controlled
-by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
-
-The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-Third-Party channels on a channel by channel basis.
-
-The initial driver supports:
-- MEM_TO_MEM (TR mode)
-- DEV_TO_MEM (Packet / TR mode)
-- MEM_TO_DEV (Packet / TR mode)
-- Cyclic (Packet / TR mode)
-- Metadata for descriptors
+For example in audio we want to know the delay in the data flow and in case
+the DMA have significantly large FIFO/cache, it can affect the latenc/delay
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
 ---
- drivers/dma/ti/k3-udma.c | 293 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 293 insertions(+)
+ drivers/dma/dmaengine.h   | 8 ++++++++
+ include/linux/dmaengine.h | 2 ++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 11cef765ef8e..4b113c4eb3d9 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -1780,6 +1780,299 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
- 	return ret;
+diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
+index 501c0b063f85..b0b97475707a 100644
+--- a/drivers/dma/dmaengine.h
++++ b/drivers/dma/dmaengine.h
+@@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
+ 		state->last = complete;
+ 		state->used = used;
+ 		state->residue = 0;
++		state->in_flight_bytes = 0;
+ 	}
+ 	return dma_async_is_complete(cookie, complete, used);
+ }
+@@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
+ 		state->residue = residue;
  }
  
-+static int udma_slave_config(struct dma_chan *chan,
-+			     struct dma_slave_config *cfg)
++static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
++					   u32 in_flight_bytes)
 +{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+
-+	memcpy(&uc->cfg, cfg, sizeof(uc->cfg));
-+
-+	return 0;
++	if (state)
++		state->in_flight_bytes = in_flight_bytes;
 +}
 +
-+static void udma_issue_pending(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&uc->vc.lock, flags);
-+
-+	/* If we have something pending and no active descriptor, then */
-+	if (vchan_issue_pending(&uc->vc) && !uc->desc) {
-+		/*
-+		 * start a descriptor if the channel is NOT [marked as
-+		 * terminating _and_ it is still running (teardown has not
-+		 * completed yet)].
-+		 */
-+		if (!(uc->state == UDMA_CHAN_IS_TERMINATING &&
-+		      udma_is_chan_running(uc)))
-+			udma_start(uc);
-+	}
-+
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
-+}
-+
-+static enum dma_status udma_tx_status(struct dma_chan *chan,
-+				      dma_cookie_t cookie,
-+				      struct dma_tx_state *txstate)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	enum dma_status ret;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&uc->vc.lock, flags);
-+
-+	ret = dma_cookie_status(chan, cookie, txstate);
-+
-+	if (!udma_is_chan_running(uc))
-+		ret = DMA_COMPLETE;
-+
-+	if (ret == DMA_COMPLETE || !txstate)
-+		goto out;
-+
-+	if (uc->desc && uc->desc->vd.tx.cookie == cookie) {
-+		u32 peer_bcnt = 0;
-+		u32 bcnt = 0;
-+		u32 residue = uc->desc->residue;
-+		u32 delay = 0;
-+
-+		if (uc->desc->dir == DMA_MEM_TO_DEV) {
-+			bcnt = udma_tchanrt_read(uc->tchan,
-+						 UDMA_TCHAN_RT_SBCNT_REG);
-+
-+			if (uc->ep_type != PSIL_EP_NATIVE) {
-+				peer_bcnt = udma_tchanrt_read(uc->tchan,
-+						UDMA_TCHAN_RT_PEER_BCNT_REG);
-+
-+				if (bcnt > peer_bcnt)
-+					delay = bcnt - peer_bcnt;
-+			}
-+		} else if (uc->desc->dir == DMA_DEV_TO_MEM) {
-+			bcnt = udma_rchanrt_read(uc->rchan,
-+						 UDMA_RCHAN_RT_BCNT_REG);
-+
-+			if (uc->ep_type != PSIL_EP_NATIVE) {
-+				peer_bcnt = udma_rchanrt_read(uc->rchan,
-+						UDMA_RCHAN_RT_PEER_BCNT_REG);
-+
-+				if (peer_bcnt > bcnt)
-+					delay = peer_bcnt - bcnt;
-+			}
-+		} else {
-+			bcnt = udma_tchanrt_read(uc->tchan,
-+						 UDMA_TCHAN_RT_BCNT_REG);
-+		}
-+
-+		bcnt -= uc->bcnt;
-+		if (bcnt && !(bcnt % uc->desc->residue))
-+			residue = 0;
-+		else
-+			residue -= bcnt % uc->desc->residue;
-+
-+		if (!residue && (uc->dir == DMA_DEV_TO_MEM || !delay)) {
-+			ret = DMA_COMPLETE;
-+			delay = 0;
-+		}
-+
-+		dma_set_residue(txstate, residue);
-+		dma_set_in_flight_bytes(txstate, delay);
-+
-+	} else {
-+		ret = DMA_COMPLETE;
-+	}
-+
-+out:
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
-+	return ret;
-+}
-+
-+static int udma_pause(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+
-+	if (!uc->desc)
-+		return -EINVAL;
-+
-+	/* pause the channel */
-+	switch (uc->desc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		udma_rchanrt_update_bits(uc->rchan,
-+					 UDMA_RCHAN_RT_PEER_RT_EN_REG,
-+					 UDMA_PEER_RT_EN_PAUSE,
-+					 UDMA_PEER_RT_EN_PAUSE);
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		udma_tchanrt_update_bits(uc->tchan,
-+					 UDMA_TCHAN_RT_PEER_RT_EN_REG,
-+					 UDMA_PEER_RT_EN_PAUSE,
-+					 UDMA_PEER_RT_EN_PAUSE);
-+		break;
-+	case DMA_MEM_TO_MEM:
-+		udma_tchanrt_update_bits(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+					 UDMA_CHAN_RT_CTL_PAUSE,
-+					 UDMA_CHAN_RT_CTL_PAUSE);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int udma_resume(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+
-+	if (!uc->desc)
-+		return -EINVAL;
-+
-+	/* resume the channel */
-+	switch (uc->desc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		udma_rchanrt_update_bits(uc->rchan,
-+					 UDMA_RCHAN_RT_PEER_RT_EN_REG,
-+					 UDMA_PEER_RT_EN_PAUSE, 0);
-+
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		udma_tchanrt_update_bits(uc->tchan,
-+					 UDMA_TCHAN_RT_PEER_RT_EN_REG,
-+					 UDMA_PEER_RT_EN_PAUSE, 0);
-+		break;
-+	case DMA_MEM_TO_MEM:
-+		udma_tchanrt_update_bits(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+					 UDMA_CHAN_RT_CTL_PAUSE, 0);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int udma_terminate_all(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	unsigned long flags;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irqsave(&uc->vc.lock, flags);
-+
-+	if (udma_is_chan_running(uc))
-+		udma_stop(uc);
-+
-+	if (uc->desc) {
-+		uc->terminated_desc = uc->desc;
-+		uc->desc = NULL;
-+		uc->terminated_desc->terminated = true;
-+	}
-+
-+	uc->paused = false;
-+
-+	vchan_get_all_descriptors(&uc->vc, &head);
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
-+	vchan_dma_desc_free_list(&uc->vc, &head);
-+
-+	return 0;
-+}
-+
-+static void udma_synchronize(struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	unsigned long timeout = msecs_to_jiffies(1000);
-+
-+	vchan_synchronize(&uc->vc);
-+
-+	if (uc->state == UDMA_CHAN_IS_TERMINATING) {
-+		timeout = wait_for_completion_timeout(&uc->teardown_completed,
-+						      timeout);
-+		if (!timeout) {
-+			dev_warn(uc->ud->dev, "chan%d teardown timeout!\n",
-+				 uc->id);
-+			udma_dump_chan_stdata(uc);
-+			udma_reset_chan(uc, true);
-+		}
-+	}
-+
-+	udma_reset_chan(uc, false);
-+	if (udma_is_chan_running(uc))
-+		dev_warn(uc->ud->dev, "chan%d refused to stop!\n", uc->id);
-+
-+	udma_reset_rings(uc);
-+}
-+
-+static void udma_desc_pre_callback(struct virt_dma_chan *vc,
-+				   struct virt_dma_desc *vd,
-+				   struct dmaengine_result *result)
-+{
-+	struct udma_chan *uc = to_udma_chan(&vc->chan);
-+	struct udma_desc *d;
-+
-+	if (!vd)
-+		return;
-+
-+	d = to_udma_desc(&vd->tx);
-+
-+	if (d->metadata_size)
-+		udma_fetch_epib(uc, d);
-+
-+	/* Provide residue information for the client */
-+	if (result) {
-+		void *desc_vaddr = udma_curr_cppi5_desc_vaddr(d, d->desc_idx);
-+
-+		if (cppi5_desc_get_type(desc_vaddr) ==
-+		    CPPI5_INFO0_DESC_TYPE_VAL_HOST) {
-+			result->residue = cppi5_hdesc_get_pktlen(desc_vaddr);
-+			if (result->residue == d->residue)
-+				result->result = DMA_TRANS_NOERROR;
-+			else
-+				result->result = DMA_TRANS_ABORTED;
-+		} else {
-+			result->residue = d->residue;
-+			result->result = DMA_TRANS_NOERROR;
-+		}
-+	}
-+}
-+
-+/*
-+ * This tasklet handles the completion of a DMA descriptor by
-+ * calling its callback and freeing it.
-+ */
-+static void udma_vchan_complete(unsigned long arg)
-+{
-+	struct virt_dma_chan *vc = (struct virt_dma_chan *)arg;
-+	struct virt_dma_desc *vd, *_vd;
-+	struct dmaengine_desc_callback cb;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irq(&vc->lock);
-+	list_splice_tail_init(&vc->desc_completed, &head);
-+	vd = vc->cyclic;
-+	if (vd) {
-+		vc->cyclic = NULL;
-+		dmaengine_desc_get_callback(&vd->tx, &cb);
-+	} else {
-+		memset(&cb, 0, sizeof(cb));
-+	}
-+	spin_unlock_irq(&vc->lock);
-+
-+	udma_desc_pre_callback(vc, vd, NULL);
-+	dmaengine_desc_callback_invoke(&cb, NULL);
-+
-+	list_for_each_entry_safe(vd, _vd, &head, node) {
-+		struct dmaengine_result result;
-+
-+		dmaengine_desc_get_callback(&vd->tx, &cb);
-+
-+		list_del(&vd->node);
-+
-+		udma_desc_pre_callback(vc, vd, &result);
-+		dmaengine_desc_callback_invoke(&cb, &result);
-+
-+		vchan_vdesc_fini(vd);
-+	}
-+}
-+
- static void udma_free_chan_resources(struct dma_chan *chan)
- {
- 	struct udma_chan *uc = to_udma_chan(chan);
+ struct dmaengine_desc_callback {
+ 	dma_async_tx_callback callback;
+ 	dma_async_tx_callback_result callback_result;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 0e8b426bbde9..c4c5219030a6 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
+  * @residue: the remaining number of bytes left to transmit
+  *	on the selected transfer for states DMA_IN_PROGRESS and
+  *	DMA_PAUSED if this is implemented in the driver, else 0
++ * @in_flight_bytes: amount of data in bytes cached by the DMA.
+  */
+ struct dma_tx_state {
+ 	dma_cookie_t last;
+ 	dma_cookie_t used;
+ 	u32 residue;
++	u32 in_flight_bytes;
+ };
+ 
+ /**
 -- 
 Peter
 
