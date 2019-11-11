@@ -2,429 +2,104 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E26C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDA8C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B5120674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7115720674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:21:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z0EvthUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKKJUY (ORCPT
+        id S1726927AbfKKJVI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:20:24 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:42328 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfKKJUY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 04:20:24 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0377020011D;
-        Mon, 11 Nov 2019 10:20:20 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B39412005C3;
-        Mon, 11 Nov 2019 10:20:13 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 61028402B7;
-        Mon, 11 Nov 2019 17:20:06 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
+        Mon, 11 Nov 2019 04:21:08 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44302 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfKKJVH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 04:21:07 -0500
+Received: by mail-wr1-f65.google.com with SMTP id f2so13698503wrs.11
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 01:21:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7RU6yOrYbiYAtxRWuwt9fOb/9lrG5c5lBPALy2kT70c=;
+        b=Z0EvthUFScBMeRxMopFucQK2FgEVtsxiKKG1vXP/zP+bdEmqI0f4LwOFLVKjWkwJkp
+         pQ7hcTx7T8d4SkRbGFPLwiAnFhzCkeACnhMS223qEcbW60+9B2YHN7BQ8ZPnZ3/I9t69
+         inSWcwSotzEzJs5HjXJ3rZ9/UILqNh/xSF1KD1kWbPfOdWLXYgdCA1tAmfrbHXyXHS87
+         PD2HJ1nFC3Jh0ZQCtDvT04QZ/yUR8avsywhE9g1/L1VKBWW+UwbRwGaKqryjq765E8RO
+         Q031N+gzb1VuuhzME3cXV6fvRKcALc+pvu8wnviGgH75MTYf8t/1aDFgsjm80iTV+LW9
+         /Qcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7RU6yOrYbiYAtxRWuwt9fOb/9lrG5c5lBPALy2kT70c=;
+        b=iWLCMOmUAlLgJ4W6TiqtBtx05+44VcAv0poObtqYjdPc3aS/5XZ/Uh0TMeomwzAzw5
+         BjWK2u2yREnBZXgyozLalOdww/lJpx64nuzTeQnXZh0CU2ZCUDOnsfDe1Zafz/57pL/L
+         8hyEo8L+cCdDyiaIHmZWx5kNOnI2ZdkLwFu3tNmgxK7eKf4ueOhLdaAIaTjRLVOUQuNw
+         O1PrIvCJ+3SG5VM7ueOsHpbyrABuoR2M182PIiTP+0axMXcS2SRUob6Fkeqieova6lQI
+         TvQvPG03jC3A8baOEWenmYDXrL1d+5L4R5SVnAq4G8Zzyel7FX3+6VqteDV5OaIQcL4P
+         QHYw==
+X-Gm-Message-State: APjAAAXc5r7ljyl/JQ8Dhg84RtX7BtkSLZbTQoSUj68+cZT3Y3iERGwI
+        XlyymorkLa7JFtBuFJANmWqb2g==
+X-Google-Smtp-Source: APXvYqztxlDFod/h0lSkGcnEZR3WMMtBryzjzlBSv5fmAd4Pn8ODaGZIKngLB14g9AD2Z58DliP3BA==
+X-Received: by 2002:a05:6000:104:: with SMTP id o4mr13184672wrx.309.1573464065520;
+        Mon, 11 Nov 2019 01:21:05 -0800 (PST)
+Received: from dell ([95.147.198.88])
+        by smtp.gmail.com with ESMTPSA id w11sm7253876wra.83.2019.11.11.01.21.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 01:21:04 -0800 (PST)
+Date:   Mon, 11 Nov 2019 09:20:57 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH V3 2/2] ASoC: fsl_asrc: Add support for imx8qm
-Date:   Mon, 11 Nov 2019 17:18:23 +0800
-Message-Id: <3c3e59ae7adde852f133a5d7c2cbb2730362fc53.1573462647.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <b1c922b3496020f611ecd6ea27d262369646d830.1573462647.git.shengjiu.wang@nxp.com>
-References: <b1c922b3496020f611ecd6ea27d262369646d830.1573462647.git.shengjiu.wang@nxp.com>
-In-Reply-To: <b1c922b3496020f611ecd6ea27d262369646d830.1573462647.git.shengjiu.wang@nxp.com>
-References: <b1c922b3496020f611ecd6ea27d262369646d830.1573462647.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Subject: Re: [PATCH RESEND 2] dt-bindings: max77693: fix missing curly brace
+Message-ID: <20191111092057.GN18902@dell>
+References: <20191023093437.GA30570@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191023093437.GA30570@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two asrc module in imx8qm, each module has different
-clock configuration, and the DMA type is EDMA.
+On Wed, 23 Oct 2019, Matti Vaittinen wrote:
 
-So in this patch, we define the new clocks, refine the clock map,
-and include struct fsl_asrc_soc_data for different soc usage.
+> Add missing curly brace to charger node example.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+> 
+> Resending once more.  Sorry again guys. This time I added also the DT folks
+> and used correct email for Bartlomiej.
+> 
+>  Documentation/devicetree/bindings/mfd/max77693.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-The EDMA channel is fixed with each dma request, one dma request
-corresponding to one dma channel. So we need to request dma
-channel with dma request of asrc module.
+Applied, thanks.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-changes in v2
-- use !use_edma to wrap code in fsl_asrc_dma
-- add Acked-by: Nicolin Chen
-
-changes in v3
-- remove the acked-by for commit is updated
-- read "fsl,asrc-clk-map" property, and update table
-  clk_map_imx8qm.
-
- sound/soc/fsl/fsl_asrc.c     | 112 ++++++++++++++++++++++++++++-------
- sound/soc/fsl/fsl_asrc.h     |  64 +++++++++++++++++++-
- sound/soc/fsl/fsl_asrc_dma.c |  42 +++++++++----
- 3 files changed, 183 insertions(+), 35 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index a3cfceea7d2f..03de33de8633 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -41,26 +41,62 @@ static struct snd_pcm_hw_constraint_list fsl_asrc_rate_constraints = {
-  * The following tables map the relationship between asrc_inclk/asrc_outclk in
-  * fsl_asrc.h and the registers of ASRCSR
-  */
--static unsigned char input_clk_map_imx35[] = {
-+static unsigned char input_clk_map_imx35[ASRC_CLK_MAP_LEN] = {
- 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
- };
- 
--static unsigned char output_clk_map_imx35[] = {
-+static unsigned char output_clk_map_imx35[ASRC_CLK_MAP_LEN] = {
- 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
- };
- 
- /* i.MX53 uses the same map for input and output */
--static unsigned char input_clk_map_imx53[] = {
-+static unsigned char input_clk_map_imx53[ASRC_CLK_MAP_LEN] = {
- /*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
- 	0x0, 0x1, 0x2, 0x7, 0x4, 0x5, 0x6, 0x3, 0x8, 0x9, 0xa, 0xb, 0xc, 0xf, 0xe, 0xd,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
--static unsigned char output_clk_map_imx53[] = {
-+static unsigned char output_clk_map_imx53[ASRC_CLK_MAP_LEN] = {
- /*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf */
- 	0x8, 0x9, 0xa, 0x7, 0xc, 0x5, 0x6, 0xb, 0x0, 0x1, 0x2, 0x3, 0x4, 0xf, 0xe, 0xd,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
-+	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
--static unsigned char *clk_map[2];
-+/**
-+ * i.MX8QM/i.MX8QXP uses the same map for input and output.
-+ * clk_map_imx8qm[0] is for i.MX8QM asrc0
-+ * clk_map_imx8qm[1] is for i.MX8QM asrc1
-+ * clk_map_imx8qm[2] is for i.MX8QXP asrc0
-+ * clk_map_imx8qm[3] is for i.MX8QXP asrc1
-+ */
-+static unsigned char clk_map_imx8qm[4][ASRC_CLK_MAP_LEN] = {
-+	{
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	},
-+	{
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0x7, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0xb, 0xc, 0xf, 0xf, 0xd, 0xe, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	0x4, 0x5, 0x6, 0xf, 0x8, 0x9, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	},
-+	{
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0xf, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xf, 0xf,
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	},
-+	{
-+	0xf, 0xf, 0xf, 0xf, 0xf, 0x7, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0x0,
-+	0x0, 0x1, 0x2, 0x3, 0x7, 0x8, 0xf, 0xf, 0x9, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	0xf, 0xf, 0x6, 0xf, 0xf, 0xf, 0xa, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf, 0xf,
-+	},
-+};
- 
- /**
-  * Select the pre-processing and post-processing options
-@@ -353,8 +389,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	}
- 
- 	/* Validate input and output clock sources */
--	clk_index[IN] = clk_map[IN][config->inclk];
--	clk_index[OUT] = clk_map[OUT][config->outclk];
-+	clk_index[IN] = asrc_priv->clk_map[IN][config->inclk];
-+	clk_index[OUT] = asrc_priv->clk_map[OUT][config->outclk];
- 
- 	/* We only have output clock for ideal ratio mode */
- 	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
-@@ -398,13 +434,13 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	/* Set the channel number */
- 	channels = config->channel_num;
- 
--	if (asrc_priv->channel_bits < 4)
-+	if (asrc_priv->soc->channel_bits < 4)
- 		channels /= 2;
- 
- 	/* Update channels for current pair */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRCNCR,
--			   ASRCNCR_ANCi_MASK(index, asrc_priv->channel_bits),
--			   ASRCNCR_ANCi(index, channels, asrc_priv->channel_bits));
-+			   ASRCNCR_ANCi_MASK(index, asrc_priv->soc->channel_bits),
-+			   ASRCNCR_ANCi(index, channels, asrc_priv->soc->channel_bits));
- 
- 	/* Default setting: Automatic selection for processing mode */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRCTR,
-@@ -531,7 +567,7 @@ static int fsl_asrc_dai_startup(struct snd_pcm_substream *substream,
- 	struct fsl_asrc *asrc_priv = snd_soc_dai_get_drvdata(dai);
- 
- 	/* Odd channel number is not valid for older ASRC (channel_bits==3) */
--	if (asrc_priv->channel_bits == 3)
-+	if (asrc_priv->soc->channel_bits == 3)
- 		snd_pcm_hw_constraint_step(substream->runtime, 0,
- 					   SNDRV_PCM_HW_PARAM_CHANNELS, 2);
- 
-@@ -905,6 +941,7 @@ static int fsl_asrc_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *regs;
- 	int irq, ret, i;
-+	u32 map_idx;
- 	char tmp[16];
- 
- 	asrc_priv = devm_kzalloc(&pdev->dev, sizeof(*asrc_priv), GFP_KERNEL);
-@@ -964,14 +1001,33 @@ static int fsl_asrc_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	asrc_priv->soc = of_device_get_match_data(&pdev->dev);
-+	if (!asrc_priv->soc) {
-+		dev_err(&pdev->dev, "failed to get soc data\n");
-+		return -ENODEV;
-+	}
-+
- 	if (of_device_is_compatible(np, "fsl,imx35-asrc")) {
--		asrc_priv->channel_bits = 3;
--		clk_map[IN] = input_clk_map_imx35;
--		clk_map[OUT] = output_clk_map_imx35;
--	} else {
--		asrc_priv->channel_bits = 4;
--		clk_map[IN] = input_clk_map_imx53;
--		clk_map[OUT] = output_clk_map_imx53;
-+		asrc_priv->clk_map[IN] = input_clk_map_imx35;
-+		asrc_priv->clk_map[OUT] = output_clk_map_imx35;
-+	} else if (of_device_is_compatible(np, "fsl,imx53-asrc")) {
-+		asrc_priv->clk_map[IN] = input_clk_map_imx53;
-+		asrc_priv->clk_map[OUT] = output_clk_map_imx53;
-+	} else if (of_device_is_compatible(np, "fsl,imx8qm-asrc")) {
-+		ret = of_property_read_u32(np, "fsl,asrc-clk-map",
-+					   &map_idx);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to get clk map index\n");
-+			return ret;
-+		}
-+
-+		if (map_idx > 3) {
-+			dev_err(&pdev->dev, "unsupported clk map index\n");
-+			return -EINVAL;
-+		}
-+
-+		asrc_priv->clk_map[IN] = clk_map_imx8qm[map_idx];
-+		asrc_priv->clk_map[OUT] = clk_map_imx8qm[map_idx];
- 	}
- 
- 	ret = fsl_asrc_init(asrc_priv);
-@@ -1113,9 +1169,25 @@ static const struct dev_pm_ops fsl_asrc_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(fsl_asrc_suspend, fsl_asrc_resume)
- };
- 
-+static const struct fsl_asrc_soc_data fsl_asrc_imx35_data = {
-+	.use_edma = false,
-+	.channel_bits = 3,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx53_data = {
-+	.use_edma = false,
-+	.channel_bits = 4,
-+};
-+
-+static const struct fsl_asrc_soc_data fsl_asrc_imx8qm_data = {
-+	.use_edma = true,
-+	.channel_bits = 4,
-+};
-+
- static const struct of_device_id fsl_asrc_ids[] = {
--	{ .compatible = "fsl,imx35-asrc", },
--	{ .compatible = "fsl,imx53-asrc", },
-+	{ .compatible = "fsl,imx35-asrc", .data = &fsl_asrc_imx35_data },
-+	{ .compatible = "fsl,imx53-asrc", .data = &fsl_asrc_imx53_data },
-+	{ .compatible = "fsl,imx8qm-asrc", .data = &fsl_asrc_imx8qm_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_asrc_ids);
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index 2b57e8c53728..8a821132d9d0 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -308,6 +308,29 @@ enum asrc_inclk {
- 	INCLK_SSI3_TX = 0x0b,
- 	INCLK_SPDIF_TX = 0x0c,
- 	INCLK_ASRCK1_CLK = 0x0f,
-+
-+	/* clocks for imx8 */
-+	INCLK_AUD_PLL_DIV_CLK0 = 0x10,
-+	INCLK_AUD_PLL_DIV_CLK1 = 0x11,
-+	INCLK_AUD_CLK0         = 0x12,
-+	INCLK_AUD_CLK1         = 0x13,
-+	INCLK_ESAI0_RX_CLK     = 0x14,
-+	INCLK_ESAI0_TX_CLK     = 0x15,
-+	INCLK_SPDIF0_RX        = 0x16,
-+	INCLK_SPDIF1_RX        = 0x17,
-+	INCLK_SAI0_RX_BCLK     = 0x18,
-+	INCLK_SAI0_TX_BCLK     = 0x19,
-+	INCLK_SAI1_RX_BCLK     = 0x1a,
-+	INCLK_SAI1_TX_BCLK     = 0x1b,
-+	INCLK_SAI2_RX_BCLK     = 0x1c,
-+	INCLK_SAI3_RX_BCLK     = 0x1d,
-+	INCLK_ASRC0_MUX_CLK    = 0x1e,
-+
-+	INCLK_ESAI1_RX_CLK     = 0x20,
-+	INCLK_ESAI1_TX_CLK     = 0x21,
-+	INCLK_SAI6_TX_BCLK     = 0x22,
-+	INCLK_HDMI_RX_SAI0_RX_BCLK     = 0x24,
-+	INCLK_HDMI_TX_SAI0_TX_BCLK     = 0x25,
- };
- 
- enum asrc_outclk {
-@@ -325,9 +348,33 @@ enum asrc_outclk {
- 	OUTCLK_SSI3_RX = 0x0b,
- 	OUTCLK_SPDIF_RX = 0x0c,
- 	OUTCLK_ASRCK1_CLK = 0x0f,
-+
-+	/* clocks for imx8 */
-+	OUTCLK_AUD_PLL_DIV_CLK0 = 0x10,
-+	OUTCLK_AUD_PLL_DIV_CLK1 = 0x11,
-+	OUTCLK_AUD_CLK0         = 0x12,
-+	OUTCLK_AUD_CLK1         = 0x13,
-+	OUTCLK_ESAI0_RX_CLK     = 0x14,
-+	OUTCLK_ESAI0_TX_CLK     = 0x15,
-+	OUTCLK_SPDIF0_RX        = 0x16,
-+	OUTCLK_SPDIF1_RX        = 0x17,
-+	OUTCLK_SAI0_RX_BCLK     = 0x18,
-+	OUTCLK_SAI0_TX_BCLK     = 0x19,
-+	OUTCLK_SAI1_RX_BCLK     = 0x1a,
-+	OUTCLK_SAI1_TX_BCLK     = 0x1b,
-+	OUTCLK_SAI2_RX_BCLK     = 0x1c,
-+	OUTCLK_SAI3_RX_BCLK     = 0x1d,
-+	OUTCLK_ASRCO_MUX_CLK    = 0x1e,
-+
-+	OUTCLK_ESAI1_RX_CLK     = 0x20,
-+	OUTCLK_ESAI1_TX_CLK     = 0x21,
-+	OUTCLK_SAI6_TX_BCLK     = 0x22,
-+	OUTCLK_HDMI_RX_SAI0_RX_BCLK     = 0x24,
-+	OUTCLK_HDMI_TX_SAI0_TX_BCLK     = 0x25,
- };
- 
- #define ASRC_CLK_MAX_NUM	16
-+#define ASRC_CLK_MAP_LEN	0x30
- 
- enum asrc_word_width {
- 	ASRC_WIDTH_24_BIT = 0,
-@@ -387,6 +434,17 @@ struct dma_block {
- 	unsigned int length;
- };
- 
-+/**
-+ * fsl_asrc_soc_data: soc specific data
-+ *
-+ * @use_edma: using edma as dma device or not
-+ * @channel_bits: width of ASRCNCR register for each pair
-+ */
-+struct fsl_asrc_soc_data {
-+	bool use_edma;
-+	unsigned int channel_bits;
-+};
-+
- /**
-  * fsl_asrc_pair: ASRC Pair private data
-  *
-@@ -431,8 +489,9 @@ struct fsl_asrc_pair {
-  * @asrck_clk: clock sources to driver ASRC internal logic
-  * @lock: spin lock for resource protection
-  * @pair: pair pointers
-- * @channel_bits: width of ASRCNCR register for each pair
-+ * @soc: soc specific data
-  * @channel_avail: non-occupied channel numbers
-+ * @clk_map: clock map for input/output clock
-  * @asrc_rate: default sample rate for ASoC Back-Ends
-  * @asrc_width: default sample width for ASoC Back-Ends
-  * @regcache_cfg: store register value of REG_ASRCFG
-@@ -450,8 +509,9 @@ struct fsl_asrc {
- 	spinlock_t lock;
- 
- 	struct fsl_asrc_pair *pair[ASRC_PAIR_MAX_NUM];
--	unsigned int channel_bits;
-+	const struct fsl_asrc_soc_data *soc;
- 	unsigned int channel_avail;
-+	unsigned char *clk_map[2];
- 
- 	int asrc_rate;
- 	int asrc_width;
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index d6146de9acd2..f871fdb9d1c6 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -197,21 +197,37 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 	dma_cap_set(DMA_SLAVE, mask);
- 	dma_cap_set(DMA_CYCLIC, mask);
- 
--	/* Get DMA request of Back-End */
--	tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
--	tmp_data = tmp_chan->private;
--	pair->dma_data.dma_request = tmp_data->dma_request;
--	dma_release_channel(tmp_chan);
-+	/*
-+	 * For EDMA DEV_TO_DEV channel, we don't need to configure
-+	 * dma_request and dma_request2, we can get dma channel through
-+	 * dma_request_slave_channel directly.
-+	 * Compare with SDMA channel, EDMA channel is bound with dma
-+	 * request event of each peripheral, and it is fixed. Not like SDMA,
-+	 * the channel is allocated dynamically. So when DMA is EDMA, we
-+	 * can only get EDMA channel through dma-names of Front-End device.
-+	 */
-+	if (!asrc_priv->soc->use_edma) {
-+		/* Get DMA request of Back-End */
-+		tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
-+		tmp_data = tmp_chan->private;
-+		pair->dma_data.dma_request = tmp_data->dma_request;
-+		dma_release_channel(tmp_chan);
- 
--	/* Get DMA request of Front-End */
--	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
--	tmp_data = tmp_chan->private;
--	pair->dma_data.dma_request2 = tmp_data->dma_request;
--	pair->dma_data.peripheral_type = tmp_data->peripheral_type;
--	pair->dma_data.priority = tmp_data->priority;
--	dma_release_channel(tmp_chan);
-+		/* Get DMA request of Front-End */
-+		tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
-+		tmp_data = tmp_chan->private;
-+		pair->dma_data.dma_request2 = tmp_data->dma_request;
-+		pair->dma_data.peripheral_type = tmp_data->peripheral_type;
-+		pair->dma_data.priority = tmp_data->priority;
-+		dma_release_channel(tmp_chan);
-+
-+		pair->dma_chan[dir] =
-+			dma_request_channel(mask, filter, &pair->dma_data);
-+	} else {
-+		pair->dma_chan[dir] =
-+			fsl_asrc_get_dma_channel(pair, dir);
-+	}
- 
--	pair->dma_chan[dir] = dma_request_channel(mask, filter, &pair->dma_data);
- 	if (!pair->dma_chan[dir]) {
- 		dev_err(dev, "failed to request DMA channel for Back-End\n");
- 		return -EINVAL;
 -- 
-2.21.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
