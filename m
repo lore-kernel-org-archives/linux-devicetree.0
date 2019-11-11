@@ -2,61 +2,59 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0
+X-Spam-Status: No, score=-0.4 required=3.0
 	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63374C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4919C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3697C214E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771A821655
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573469218;
-	bh=i/HZzZjddIiajbLWZkUzXT9kC0bb4HAtE+u7N7Gry8E=;
+	s=default; t=1573469536;
+	bh=8ZjP3IKXMpKDrsw+7Gt+dzi/Jr36DIQal2nXCXKhNdA=;
 	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=LNkng45RImo19BxdpbRnvOlfocgipnNGSm0W4PL6gEDKOgva5Px5StyE4hInwP0p3
-	 SoL6H9XSc75VdageBKJkuae0z1JjH8sDc7T0L44J2Cp2ID0qvlCFf87WUiDp0HYJGF
-	 gjijPtijAEDXaDAQUhnD4+ZT6AgNN5IixDNrJySo=
+	b=MfnYNqhX93aRsbbtbCm2cSWyzw4Wqd8qd1eMr5Hx7sBvtkYqw4jdFDovrsCF/GHih
+	 5QtY0BqIFisjI8gr7twMuNUWon4gqi7diO3NZUm0mj4g52aNVvhcAQ2WZ+6qJKAzUk
+	 t6sfpTFx3Tjw26OWqvI7vZG19q2eYGWiQw9SaSHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfKKKqy (ORCPT
+        id S1726845AbfKKKwP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:46:54 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:52051 "EHLO
+        Mon, 11 Nov 2019 05:52:15 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:41504 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726829AbfKKKqy (ORCPT
+        by vger.kernel.org with ESMTP id S1726832AbfKKKwP (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:46:54 -0500
+        Mon, 11 Nov 2019 05:52:15 -0500
 Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iU7Df-0008K6-Aj; Mon, 11 Nov 2019 11:46:51 +0100
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 06/13] drivers: irqchip: qcom-pdc: Move to an SoC  independent compatible
+        id 1iU7Io-0008PX-1f; Mon, 11 Nov 2019 11:52:10 +0100
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 0/5] irqchip/irq-bcm7038-l1 updates
 X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 11 Nov 2019 11:56:12 +0109
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 Nov 2019 12:01:30 +0109
 From:   Marc Zyngier <maz@kernel.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, <agross@kernel.org>,
-        <robh+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mka@chromium.org>, <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>
-In-Reply-To: <20191111071030.GB3797@yoga>
-References: <20191108092824.9773-1-rnayak@codeaurora.org>
- <20191108092824.9773-7-rnayak@codeaurora.org>
- <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
- <9c2b33f2-02bb-e516-4cb5-b466757cd67a@codeaurora.org>
- <20191111071030.GB3797@yoga>
-Message-ID: <d622482d92059533f03b65af26c69b9b@www.loen.fr>
+Cc:     <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20191024201415.23454-1-f.fainelli@gmail.com>
+References: <20191024201415.23454-1-f.fainelli@gmail.com>
+Message-ID: <12f7194ba09174ad8ebd55f15ce05353@www.loen.fr>
 X-Sender: maz@kernel.org
 User-Agent: Roundcube Webmail/0.7.2
 X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: bjorn.andersson@linaro.org, rnayak@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mka@chromium.org, swboyd@chromium.org, ilina@codeaurora.org
+X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
@@ -64,56 +62,16 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-11 08:19, Bjorn Andersson wrote:
-> On Fri 08 Nov 01:55 PST 2019, Rajendra Nayak wrote:
+On 2019-10-24 21:23, Florian Fainelli wrote:
+> Hi Marc, Jason, Thomas,
 >
->>
->> On 11/8/2019 3:10 PM, Marc Zyngier wrote:
->> > On 2019-11-08 10:37, Rajendra Nayak wrote:
->> > > Remove the sdm845 SoC specific compatible to make the driver
->> > > easily reusable across other SoC's with the same IP block.
->> > > This will reduce further churn adding any SoC specific
->> > > compatibles unless really needed.
->> > >
->> > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> > > Reviewed-by: Lina Iyer <ilina@codeaurora.org>
->> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->> > > Cc: Marc Zyngier <maz@kernel.org>
->> > > ---
->> > >  drivers/irqchip/qcom-pdc.c | 2 +-
->> > >  1 file changed, 1 insertion(+), 1 deletion(-)
->> > >
->> > > diff --git a/drivers/irqchip/qcom-pdc.c 
->> b/drivers/irqchip/qcom-pdc.c
->> > > index faa7d61b9d6c..c175333bb646 100644
->> > > --- a/drivers/irqchip/qcom-pdc.c
->> > > +++ b/drivers/irqchip/qcom-pdc.c
->> > > @@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node
->> > > *node, struct device_node *parent)
->> > >      return ret;
->> > >  }
->> > >
->> > > -IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
->> > > +IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
->> >
->> > Acked-by: Marc Zyngier <marc.zyngier@arm.com>
->> >
->> > How do you want me get this (and the DT change) merged? I can 
->> either take
->> > these two patches in the irqchip tree, or you arrange them to be 
->> taken
->> > by the platform maintainers. Your call.
->>
->> I think it makes sense for you to take these two via your tree (The 
->> driver
->> and binding doc updates) and the DT node addition for pdc to go via 
->> Andy/Bjorn.
->> Andy/Bjorn, does that sound fine?
->>
->
-> Yes, that sounds good.
+> This patch series contains some updates from our internal tree to
+> support power management and allow configuring specific instances of 
+> the
+> brcm,bcm7038-l1-intc to leave some interrupts untouched and how the
+> firmware might have configured them.
 
-Applied to irqchip/next
+Applied to irqchip-next.
 
          M.
 -- 
