@@ -2,240 +2,195 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96069C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC1FC17441
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 12:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7AF2184C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C822190F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 12:13:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="k7SIFq9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfKKL61 (ORCPT
+        id S1726829AbfKKMNf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:58:27 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35863 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKKL61 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 06:58:27 -0500
-X-Originating-IP: 2.224.242.101
-Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 4D2171BF204;
-        Mon, 11 Nov 2019 11:58:23 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: media: renesas,ceu: Convert to yaml
-Date:   Mon, 11 Nov 2019 13:00:17 +0100
-Message-Id: <20191111120017.83161-1-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 11 Nov 2019 07:13:35 -0500
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:60994 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKKMNe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 07:13:34 -0500
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: rPe7UUR+w4PxbCsqf1V5kPkaW0OF2vSpu67v5j5AiwXoDYUxpsg06Gw2eJ5lD4CeWoEby2q+l+
+ t7P0Ed9717AAdvW/6aDoQA6HikRSZ3dQq4Pj+C3JvTpY4mLKuaknEWM6STlOxSECJEZLQgmWIn
+ bzHXM05aUg+V2Y+IbW8D5CyKaHlYZq7CY5e6m1ziP19MBTXHv8u6O9CDR9o8MOYWx4PLDKH+aS
+ kEyoS1YWFkkIyIUfqW4H3qwY0t12dQkl+4MYNoE/fKZbCfbAS7uP1V84ZmAdPzH3U7P09554o/
+ RTk=
+X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
+   d="scan'208";a="54869699"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Nov 2019 05:13:32 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 11 Nov 2019 05:13:32 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Mon, 11 Nov 2019 05:13:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cLnj05HhKgb7gAxqtGOCe4s5Ki4YJkDxNoMhxyMOs15PD3pvDdzh5R9rkD8sSeDh4zLuljy2ULpkS1vK7t1AIyE1OgBubNwnO7pzc/zjV3vWq53mQCcQuG6ovEn8kcG6wvI6QNacFWhOMp1NEHeWiCOsXCnjBA7iuk+3Db38f19gLLF7RR6G/3jbBdgomkT4qetNfX75e8JPTAcbEgdO4h5EvtLct6i4iNdtWVVv4NaYq+MzPC6VJAmIrn/54ZhOSbePg4WrVahseZ7KrZYpIsrmNrSt/GoTnGjWBhT2bgPk0aDY1IGc+sQiWcWmbBUmBsH88Ow28WaHIsY7aJndQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7kHc9yLhMquk7WXejTeQY3rYWwu451qsyDb0SMPSyI=;
+ b=lvC1gJL3U25o/N6QY0IdG2cY0OiAFZ0BILBfTTx8ebBAazcczVE9GyfqxKoVbYjc7cu/58JzXSAvLMskb0XG+NmcZSVHLZJd+S2+zytngXftoIH7Sx4G1jtdloXo71Xf7SjtjosmjS5NZtCVnsiGKrmyPCNK+aU7DiW8kt58q8C+QNv68FpdmogH1aQEWT14N7TYhOQtD32GT3K+A0G6vIFRye8iSk/m60xlvAQ6rJlmGLr9dIfvS55jIqB4lQ8Vj0tgnwJgd5mv1owELqEDgiwHuE94P5LDKI0OKg1fO6dN00HuXJTIg3QBHT9WNIsN34bBoYRl2sMGoaPLdFQfGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7kHc9yLhMquk7WXejTeQY3rYWwu451qsyDb0SMPSyI=;
+ b=k7SIFq9MaiSKVeEfxrvXuNIuotsirVTF+FQQ7ue4uVhHhvXYA4FZMHRI81QI3fi1cq2iGtplM2XBxEDmWWd5vNp8SLQrH8M9fZ7rSICMl7+JAPdfIdasuA5xoEh1WXZ6AREewsm4hPEKW7ib3WDLUhwVlwkki0OdSeiaq5Jom/M=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB0073.namprd11.prod.outlook.com (10.164.155.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Mon, 11 Nov 2019 12:13:31 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::d594:bcd0:98a9:d2c8]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::d594:bcd0:98a9:d2c8%4]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
+ 12:13:30 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        <wim@linux-watchdog.org>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux-watchdog@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Eugen.Hristev@microchip.com>
+Subject: [PATCH v3 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
+Thread-Topic: [PATCH v3 1/3] watchdog: sama5d4_wdt: cleanup the bit
+ definitions
+Thread-Index: AQHVmIlu6IftJNh+5UamBWHFg3A6Og==
+Date:   Mon, 11 Nov 2019 12:13:30 +0000
+Message-ID: <1573474383-21915-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR05CA0060.eurprd05.prod.outlook.com
+ (2603:10a6:208:be::37) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-mailer: git-send-email 2.7.4
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 95d048f9-c44e-4c7c-b14b-08d766a090d2
+x-ms-traffictypediagnostic: DM5PR11MB0073:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB0073978D0EF06C1252EE0A0CE8740@DM5PR11MB0073.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0218A015FA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(346002)(136003)(199004)(189003)(14454004)(6506007)(386003)(110136005)(102836004)(66476007)(66556008)(64756008)(66446008)(478600001)(3846002)(99286004)(36756003)(6116002)(6436002)(66946007)(305945005)(66066001)(7736002)(5660300002)(25786009)(6486002)(86362001)(52116002)(316002)(71200400001)(71190400001)(2201001)(6512007)(256004)(2906002)(81166006)(81156014)(4326008)(186003)(50226002)(8936002)(8676002)(107886003)(476003)(2616005)(486006)(26005)(2501003)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB0073;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AwViMZYugrgdEEXUwovFDnH/SSh2VW8I6T6lGA7AhXEmxBKAdUryzy6mIwvfd4JSTiJLKmVabSe44sm64q4Pb011SDN9eu3aYTYwaENtqyhP4XudvKJSATP9vfm2rY1JoiSeuggK3JZfSldxALgMx5u9M2v7lw6K6W+5Fcsffp6Lcswop8DClug9W05ygZQV8U7a22UGcK5BEegNvVAHiBGdD/tGEFUzviq4pfqGEdxufku8XO/YG5b4KpEAv0MLDcL+skmOogDUN/JbBYkb3IiZ9pT7nj78ACcaqMTms+ZkUQJ/m0A+0RgF8buzF4XR4VCEP3qi86OcLtHcIednusy4tpmNGuwLIj+Jw+eKMWKcd18XqJctP+ssp+HCrBk0XNxw5ij8/js+IBcikt2+wTsbduZnhTe+PWPZVAWF3/gIlIlPxmd+V4q4V3gMgvVF
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95d048f9-c44e-4c7c-b14b-08d766a090d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 12:13:30.8991
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8rL4msIFCL4OwM0EHWT7DqmtzkEUHzU4Q1eplfW+gyWzX6xWiyJCmA2LNh2rnez0r9kWX+OOLq57IVprPBUxedMGFO1+uhm4JlDXrjYo2oU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0073
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Renesas CEU bindings description to json-schema and remove
-the existing textual bindings document.
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cleanup the macro definitions to use BIT and align with two spaces.
+
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 ---
- .../devicetree/bindings/media/renesas,ceu.txt | 86 -------------------
- .../bindings/media/renesas,ceu.yaml           | 72 ++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 73 insertions(+), 87 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
- create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
+Changes in v3:
+- new patch as requested from review on ML
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-deleted file mode 100644
-index 3e2a2652eb19..000000000000
---- a/Documentation/devicetree/bindings/media/renesas,ceu.txt
-+++ /dev/null
-@@ -1,86 +0,0 @@
--Renesas Capture Engine Unit (CEU)
------------------------------------------------
--
--The Capture Engine Unit is the image capture interface found in the Renesas
--SH Mobile, R-Mobile and RZ SoCs.
--
--The interface supports a single parallel input with data bus width of 8 or 16
--bits.
--
--Required properties:
--- compatible: Shall be one of the following values:
--	"renesas,r7s72100-ceu" for CEU units found in RZ/A1H and RZ/A1M SoCs
--	"renesas,r8a7740-ceu" for CEU units found in R-Mobile A1 R8A7740 SoCs
--- reg: Registers address base and size.
--- interrupts: The interrupt specifier.
--
--The CEU supports a single parallel input and should contain a single 'port'
--subnode with a single 'endpoint'. Connection to input devices are modeled
--according to the video interfaces OF bindings specified in:
--[1] Documentation/devicetree/bindings/media/video-interfaces.txt
--
--Optional endpoint properties applicable to parallel input bus described in
--the above mentioned "video-interfaces.txt" file are supported.
--
--- hsync-active: See [1] for description. If property is not present,
--  default is active high.
--- vsync-active: See [1] for description. If property is not present,
--  default is active high.
--- bus-width: See [1] for description. Accepted values are '8' and '16'.
--  If property is not present, default is '8'.
--- field-even-active: See [1] for description. If property is not present,
--  an even field is identified by a logic 0 (active-low signal).
--
--Example:
--
--The example describes the connection between the Capture Engine Unit and an
--OV7670 image sensor connected to i2c1 interface.
--
--ceu: ceu@e8210000 {
--	reg = <0xe8210000 0x209c>;
--	compatible = "renesas,r7s72100-ceu";
--	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
--
--	pinctrl-names = "default";
--	pinctrl-0 = <&vio_pins>;
--
--	status = "okay";
--
--	port {
--		ceu_in: endpoint {
--			remote-endpoint = <&ov7670_out>;
--
--			hsync-active = <1>;
--			vsync-active = <0>;
--		};
--	};
--};
--
--i2c1: i2c@fcfee400 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_pins>;
--
--	status = "okay";
--
--	clock-frequency = <100000>;
--
--	ov7670: camera@21 {
--		compatible = "ovti,ov7670";
--		reg = <0x21>;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&vio_pins>;
--
--		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
--		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
--
--		port {
--			ov7670_out: endpoint {
--				remote-endpoint = <&ceu_in>;
--
--				hsync-active = <1>;
--				vsync-active = <0>;
--			};
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.yaml b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
-new file mode 100644
-index 000000000000..3c4a4ff975ae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/renesas,ceu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas Capture Engine Unit (CEU) Bindings
-+
-+maintainers:
-+  - Jacopo Mondi <jacopo+renesas@jmondi.org>
-+  - linux-renesas-soc@vger.kernel.org
-+
-+description: |+
-+  The Capture Engine Unit is the image capture interface found in the Renesas SH
-+  Mobile, R-Mobile and RZ SoCs. The interface supports a single parallel input
-+  with data bus width of 8 or 16 bits.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - renesas,r7a72100-ceu
-+      - renesas,r8a7740-ceu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+       endpoint:
-+         type: object
-+
-+         # Properties described in
-+         # Documentation/devicetree/bindings/media/video-interfaces.txt
-+         properties:
-+           hsync-active: true
-+           vsync-active: true
-+           field-even-active: false
-+           bus-width:
-+             enum: [8, 16]
-+
-+    required:
-+      - endpoint
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - port
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    ceu: ceu@e8210000 {
-+        reg = <0xe8210000 0x209c>;
-+        compatible = "renesas,r7s72100-ceu";
-+        interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        port {
-+            ceu_in: endpoint {
-+                remote-endpoint = <&ov7670_out>;
-+                hsync-active = <1>;
-+                vsync-active = <0>;
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 37a977cbac6f..feab894f7584 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10133,7 +10133,7 @@ L:	linux-media@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- S:	Supported
--F:	Documentation/devicetree/bindings/media/renesas,ceu.txt
-+F:	Documentation/devicetree/bindings/media/renesas,ceu.yaml
- F:	drivers/media/platform/renesas-ceu.c
- F:	include/media/drv-intf/renesas-ceu.h
+ drivers/watchdog/at91sam9_wdt.h | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
---
-2.23.0
+diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wd=
+t.h
+index 390941c..2ca5fc5 100644
+--- a/drivers/watchdog/at91sam9_wdt.h
++++ b/drivers/watchdog/at91sam9_wdt.h
+@@ -14,23 +14,23 @@
+ #define AT91_WDT_H
+=20
+ #define AT91_WDT_CR		0x00			/* Watchdog Control Register */
+-#define		AT91_WDT_WDRSTT		(1    << 0)		/* Restart */
+-#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
++#define  AT91_WDT_WDRSTT	BIT(0)			/* Restart */
++#define  AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
+=20
+ #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
+-#define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+-#define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+-#define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
+-#define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
+-#define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
+-#define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
+-#define		AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
+-#define			AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+-#define		AT91_WDT_WDDBGHLT	(1     << 28)		/* Debug Halt */
+-#define		AT91_WDT_WDIDLEHLT	(1     << 29)		/* Idle Halt */
++#define  AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
++#define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
++#define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
++#define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
++#define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
++#define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
++#define  AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
++#define  AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
++#define  AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
++#define  AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
+=20
+-#define AT91_WDT_SR		0x08			/* Watchdog Status Register */
+-#define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
+-#define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
++#define AT91_WDT_SR		0x08		/* Watchdog Status Register */
++#define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
++#define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
+=20
+ #endif
+--=20
+2.7.4
 
