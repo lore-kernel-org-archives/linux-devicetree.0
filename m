@@ -2,85 +2,98 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F92C17443
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 02:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB5FC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC762067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 02:30:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GX52fptd"
+	by mail.kernel.org (Postfix) with ESMTP id C7878207FA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfKKCap (ORCPT
+        id S1726764AbfKKDEu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 Nov 2019 21:30:45 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:40626 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726742AbfKKCao (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 Nov 2019 21:30:44 -0500
-X-UUID: 0a285333107b476f8449e6e533de2766-20191111
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=acEmGwvUjZOpmJa59Ln0aY1tOabs5B1U4izgcr2S2/4=;
-        b=GX52fptdC2by0mjmY64HLCuYWezz68+Ao7X2IYxAN41Fdu4EsrpdIMwC4U/ka53tsnGNEGJJ/jaBDrG+7nugDg3QanMDtHoWvu9ABOsuBOmkacTOrIx+OK+c2IRTGFARoxEoExHpGdmKEpYCz3dAhwPLa9DyxNz7v9vkbN64L6Y=;
-X-UUID: 0a285333107b476f8449e6e533de2766-20191111
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <eason.yen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 212577947; Mon, 11 Nov 2019 10:30:39 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 11 Nov 2019 10:30:38 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 11 Nov 2019 10:30:36 +0800
-From:   Eason Yen <eason.yen@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, Eason Yen <eason.yen@mediatek.com>
-Subject: [PATCH v2 1/1] soc: mediatek: add SMC fid table for SIP interface
-Date:   Mon, 11 Nov 2019 10:30:02 +0800
-Message-ID: <1573439402-16249-2-git-send-email-eason.yen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1573439402-16249-1-git-send-email-eason.yen@mediatek.com>
-References: <1573439402-16249-1-git-send-email-eason.yen@mediatek.com>
+        Sun, 10 Nov 2019 22:04:50 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54276 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726742AbfKKDEt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 Nov 2019 22:04:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 224DDAE55;
+        Mon, 11 Nov 2019 03:04:48 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        James Tai <james.tai@realtek.com>
+Subject: [PATCH 0/7] arm64: dts: Initial RTD1395 and BPi-M4 support
+Date:   Mon, 11 Nov 2019 04:04:27 +0100
+Message-Id: <20191111030434.29977-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-MS4gQWRkIGEgaGVhZGVyIGZpbGUgdG8gcHJvdmlkZSBTSVAgaW50ZXJmYWNlIHRvIEFURg0KZm9y
-IGNsaWVudHMsIHBsZWFzZSBkZWZpbmUgTVRLX1NJUF9YWFggIHdpdGggc3BlY2lmaWMgSUQNCg0K
-Mi4gQWRkIEFVRElPIFNNQyBmaWQNCm10ayBzaXAgY2FsbCBleGFtcGxlOg0KYXJtX3NtY2NjX3Nt
-YyhNVEtfU0lQX0FVRElPX0NPTlRST0wsDQogICAgICAgICAgICAgIE1US19BVURJT19TTUNfT1Bf
-RFJBTV9SRVFVRVNULA0KICAgICAgICAgICAgICAwLCAwLCAwLCAwLCAwLCAwLCAmcmVzKQ0KDQpT
-aWduZWQtb2ZmLWJ5OiBFYXNvbiBZZW4gPGVhc29uLnllbkBtZWRpYXRlay5jb20+DQotLS0NCiBp
-bmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGtfc2lwX3N2Yy5oIHwgICAyOCArKysrKysrKysr
-KysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKykNCiBj
-cmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrX3NpcF9zdmMu
-aA0KDQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrX3NpcF9zdmMu
-aCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210a19zaXBfc3ZjLmgNCm5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi4wMGVlMGY0DQotLS0gL2Rldi9udWxsDQorKysgYi9p
-bmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGtfc2lwX3N2Yy5oDQpAQCAtMCwwICsxLDI4IEBA
-DQorLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8NCisvKg0KKyAqIENvcHly
-aWdodCAoYykgMjAxOSBNZWRpYVRlayBJbmMuDQorICovDQorDQorI2lmbmRlZiBfX01US19TSVBf
-U1ZDX0hfXw0KKyNkZWZpbmUgX19NVEtfU0lQX1NWQ19IX18NCisNCisjaW5jbHVkZSA8bGludXgv
-a2VybmVsLmg+DQorDQorLyogRXJyb3IgQ29kZSAqLw0KKyNkZWZpbmUgU0lQX1NWQ19FX1NVQ0NF
-U1MgICAgICAgICAgICAgICAwDQorI2RlZmluZSBTSVBfU1ZDX0VfTk9UX1NVUFBPUlRFRCAgICAg
-ICAgIC0xDQorI2RlZmluZSBTSVBfU1ZDX0VfSU5WQUxJRF9QQVJBTVMgICAgICAgIC0yDQorI2Rl
-ZmluZSBTSVBfU1ZDX0VfSU5WQUxJRF9SYW5nZSAgICAgICAgIC0zDQorI2RlZmluZSBTSVBfU1ZD
-X0VfUEVSTUlTU0lPTl9ERU5ZICAgICAgIC00DQorDQorI2lmZGVmIENPTkZJR19BUk02NA0KKyNk
-ZWZpbmUgTVRLX1NJUF9TTUNfQUFSQ0hfQklUCQkJMHg0MDAwMDAwMA0KKyNlbHNlDQorI2RlZmlu
-ZSBNVEtfU0lQX1NNQ19BQVJDSF9CSVQJCQkweDAwMDAwMDAwDQorI2VuZGlmDQorDQorLyogQVVE
-SU8gcmVsYXRlZCBTTUMgY2FsbCAqLw0KKyNkZWZpbmUgTVRLX1NJUF9BVURJT19DT05UUk9MIFwN
-CisJKDB4ODIwMDA1MTcgfCBNVEtfU0lQX1NNQ19BQVJDSF9CSVQpDQorI2VuZGlmDQorLyogX19N
-VEtfU0lQX1NWQ19IX18gKi8NCi0tIA0KMS43LjkuNQ0K
+Hello,
+
+This patch series adds initial Device Trees for Realtek RTD1395 SoC and
+Banana Pi BPI-M4 SBC.
+
+It is based on my RTD1195 series and James' pending RTD1619 DT bindings patch.
+
+It starts with some refactorings to align the various SoCs and to demonstrate
+to James what I meant with the r-bus node and GIC mask in RTD1619 DT v1 review.
+
+RTD1395 family seems pretty similar to RTD1295 family, but allows for more RAM
+and therefore uses #address-cells of 2 vs. 1, and it uses a different reserved
+memory region for RPC. RTD1295 resets appear sufficiently compatible for now.
+
+More details at:
+https://en.opensuse.org/HCL:BananaPi_M4
+
+Latest experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: James Tai <james.tai@realtek.com>
+
+Andreas Färber (7):
+  arm64: dts: realtek: rtd129x: Fix GIC CPU masks for RTD1293
+  arm64: dts: realtek: rtd129x: Use reserved-memory for RPC regions
+  arm64: dts: realtek: rtd129x: Introduce r-bus
+  ARM: dts: rtd1195: Fix GIC CPU mask
+  ARM: dts: rtd1195: Introduce r-bus
+  dt-bindings: arm: realtek: Add RTD1395 and Banana Pi BPI-M4
+  arm64: dts: realtek: Add RTD1395 and BPi-M4
+
+ Documentation/devicetree/bindings/arm/realtek.yaml |   6 +
+ arch/arm/boot/dts/rtd1195.dtsi                     |  60 ++++----
+ arch/arm64/boot/dts/realtek/Makefile               |   2 +
+ arch/arm64/boot/dts/realtek/rtd1293.dtsi           |  12 +-
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi           |  21 +--
+ arch/arm64/boot/dts/realtek/rtd1296.dtsi           |   8 +-
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi           | 159 ++++++++++++---------
+ arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts     |  30 ++++
+ arch/arm64/boot/dts/realtek/rtd1395.dtsi           |  65 +++++++++
+ arch/arm64/boot/dts/realtek/rtd139x.dtsi           | 141 ++++++++++++++++++
+ 10 files changed, 387 insertions(+), 117 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1395.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd139x.dtsi
+
+-- 
+2.16.4
 
