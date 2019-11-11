@@ -2,142 +2,95 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC2DC17445
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD15EC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52A42190F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AD1214E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Kti4Xqbd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CCIKVj49"
+	dkim=pass (1024-bit key) header.d=golovin.in header.i=@golovin.in header.b="0AgvEJRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfKKShs (ORCPT
+        id S1729609AbfKKSnW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:37:48 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:49524 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbfKKShp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 13:37:45 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E7F7D60F40; Mon, 11 Nov 2019 18:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573497463;
-        bh=XUkpMv4++eaCLngkRhw1OHredjSZzbrBaEaI/2OxE7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kti4XqbdrQfRjqyR/k/Xny8Sb0xtKtDh1D3IZqqkBWb5xWvg+wQqdIJqZHwXihIhc
-         PP/E99tj4XKhLGPKvShQANy20h4r2YeA4de5RLgEzbdHe1GbxE6mAjUHe/A+LCs8td
-         mU/GHTayXswE5ngA9/blI9wj0zEDC+iSQbDuMgAY=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7B643602EE;
-        Mon, 11 Nov 2019 18:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573497460;
-        bh=XUkpMv4++eaCLngkRhw1OHredjSZzbrBaEaI/2OxE7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CCIKVj49JlSCWHldgpmCB4IXhwNUaHHiNm5k6jIRWgDZVugsSUC8R1s7h2Mz1ZCsf
-         5lnoABiZDh9Qs36KSbNKgzk5Nte+p3XnHPr5lDmSPuekBBSB+t7v0kAfyUTaFl+OjP
-         EWvdgpv61XulzSMrBvfQ+X5+gMoYvPKOCMmok6p4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7B643602EE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Mon, 11 Nov 2019 11:37:38 -0700
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add
- SPI config register
-Message-ID: <20191111183738.GJ16900@codeaurora.org>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
- <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
- <5d92829e.1c69fb81.d860a.9096@mx.google.com>
- <5da6b849.1c69fb81.a9b04.1b9f@mx.google.com>
- <20191105205832.GE16900@codeaurora.org>
- <5dc219a0.1c69fb81.f5014.42d2@mx.google.com>
+        Mon, 11 Nov 2019 13:43:22 -0500
+Received: from forward106p.mail.yandex.net ([77.88.28.109]:55623 "EHLO
+        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728301AbfKKSnV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 13:43:21 -0500
+X-Greylist: delayed 351 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 13:43:19 EST
+Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
+        by forward106p.mail.yandex.net (Yandex) with ESMTP id B98701C806FA;
+        Mon, 11 Nov 2019 21:37:26 +0300 (MSK)
+Received: from mxback8q.mail.yandex.net (mxback8q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:b38f:32ec])
+        by forward100q.mail.yandex.net (Yandex) with ESMTP id B41CC7080002;
+        Mon, 11 Nov 2019 21:37:26 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback8q.mail.yandex.net (mxback/Yandex) with ESMTP id Fm9TxESHgv-bPd8t6v3;
+        Mon, 11 Nov 2019 21:37:25 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=golovin.in; s=mail; t=1573497445;
+        bh=Kr8Q2CYrVzqyFN3+KQChl/ZmdG+3/pTsRbqPDvZ9Fks=;
+        h=Message-Id:Date:Cc:Subject:To:From;
+        b=0AgvEJRsURO6sGtecisNH6I2lDJ54V2JAceWcUvHyXAnXtKKbeLunJnwPU6TWGnii
+         Bn9j0Ykvy8GTF7jCTOnbtINI/X+br9PLuzJg60pEkOMQevn5g2R3JkHsiGZxWY//07
+         f0SY09SjPC/o6lMy23G899p+Zw3q5mZA2qLZAqdQ=
+Authentication-Results: mxback8q.mail.yandex.net; dkim=pass header.i=@golovin.in
+Received: by vla1-b2d94eaf2344.qloud-c.yandex.net with HTTP;
+        Mon, 11 Nov 2019 21:37:25 +0300
+From:   Dmitry Golovin <dima@golovin.in>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Ethan Sommer <e5ten.arch@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2] kbuild: support byacc as alternative YACC to bison
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5dc219a0.1c69fb81.f5014.42d2@mx.google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Mon, 11 Nov 2019 20:37:25 +0200
+Message-Id: <17102241573497445@vla1-b2d94eaf2344.qloud-c.yandex.net>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 05 2019 at 17:53 -0700, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-11-05 12:58:32)
->> On Tue, Oct 15 2019 at 00:27 -0600, Stephen Boyd wrote:
->> >
->> >I had another idea the other day. Maybe a better approach would be to
->> >make the mailbox or SCM code an interrupt controller with the
->> >appropriate functions to poke the bits necessary to make the interrupts
->> >work. Then we can make it a chip in the hierarchy between the GIC and
->> >PDC and make the interrupts call through from PDC to GIC. The locking
->> >could be handled in each respective driver if necessary, and otherwise
->> >we don't have to use a regmap or remap the same registers (except we may
->> >need to describe if the parent is the mailbox node or the scm fimware
->> >node).
->> >
->> Wouldn't that be a stretch to image the SCM register write  or a random
->> register write as an interrupt controller? But I agree that it solves
->> the issue of determining whether we want to use SCM or regmap.
->
->As far as I can tell it's similar to PDC which is basically a gate on
->the line from a dedicated chip pad or a GPIO pad that lets the interrupt
->flow through to the GIC or not. Isn't this yet another hardware block on
->those paths that control the edge type or something?
->
->>
->> But, we would still need to add syscon to the mailbox and then regmap
->> the registers for the interrupt contoller.
->
->I'm saying that we can make the mailbox driver an interrupt controller
->driver too. Or if that doesn't work, we can map the region twice in each
->driver with ioremap and cross fingers that they don't touch the same
->register at the same time. It sounds like that is the case. We won't be
->able to fancily reserve the register region and map it in one function
->call, but maybe that can be fixed by limiting the size or offset that is
->reserved for each driver manually based on the same register property
->that's described in DT. Basically, one node in DT
->
-> mailbox@f00 {
->   reg = <0xf00 0x1000>;
-> };
->
->And then each driver will ioremap() the whole register region that's
->parsed from DT but each driver will mark sub-regions as reserved for the
->respective driver. That way we don't have to worry about using a regmap
->here and we'll still know what drivers are using what regions of IO in
->/proc/iomem.
+> Hmm, this is unfortunate since there is no common way to
+> specify the header path directly.
+> 
+> I am not sure how much effort we should invent
+> to support non-GNU implementation
+> since we already rely on various GNU tools.
+> 
+> If we decide to support byacc,
+> we must carry the restriction
+> that bans GNU-extension.
 
-Marc: What do you think of Stephen's idea? Summarizing my understanding
-below -
+In fact Linux now can be built without using GNU
+binutils and using LLVM tools instead. It's just
+one architecture and a specific config now, but
+eventually the others will be built too. You can
+follow the progress here:
+https://github.com/ClangBuiltLinux/continuous-integration/issues/73
 
-We need to set an addition register for GPIOs that are routed to PDC and
-the register may need to be written using a SCM call (SDM845) or written
-from Linux (SDM855). The idea proposed here is -
-Create multiple irqchips, one for each type of register access and then
-put them in hierarchy based on the target.
+I believe that compatibility with different
+alternative tools is a good thing as long as it
+doesn't add unwanted complexity. And as this patch
+is just changing command-line flags to their
+portable variants and explicitly adds a couple of
+definitions that are presumed by GNU bison, I
+can't see a problem with it.
 
-SDM845:
-TLMM  --> PDC  --> PDC-SCM-IF  --> GIC
-
-SDM855:
-TLMM  --> PDC  --> PDC-LNX-IF  --> GIC
-
-The hierarchy would be explicit from the DT. So we would not have to
-worry about figuring out using a property in DT or resource name. (May
-be we can use a compatible instead?). The use of reserved_resource(),
-suggested by Stephen, would help avoid other drivers writing to this
-register which is part of a generic dump area for one-off registers.
-
---Lina
+Regards,
+Dmitry
