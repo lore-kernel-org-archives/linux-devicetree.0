@@ -2,203 +2,262 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C042C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE424C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D752196E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573478964;
-	bh=TkunX7Jf1GoHnpYRuK6jDzrt+9kUA5S3vMZAPNZ4oJM=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=CMg/uHN4/Pv5OiDBRHOivTudKK8YldfJRcY4vQM45vvi33z8FFM7tUFagVNVojW/G
-	 dOqMSRFASJuzESECgGHWYKlfCYcTPDvPL/m+WvngJ+F6QrvHVg0Dk0zxvJUY+bXCgy
-	 RHQccCivIIsco+Ii+he9OWn1s+DVgsDKn5sPyxsg=
+	by mail.kernel.org (Postfix) with ESMTP id 99687222D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SgFVWIHo";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dpbdM4EK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfKKN3X (ORCPT
+        id S1727083AbfKKNfG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:29:23 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:52259 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726982AbfKKN3X (ORCPT
+        Mon, 11 Nov 2019 08:35:06 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:52891 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726879AbfKKNfF (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:29:23 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iU9km-0001uY-H2; Mon, 11 Nov 2019 14:29:12 +0100
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH 4/4] PCI: brcmstb: add MSI capability
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 11 Nov 2019 08:35:05 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C2CA35870;
+        Mon, 11 Nov 2019 08:35:04 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 11 Nov 2019 08:35:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=Zlhvqxx2p0HUpT7xA2m1adLF4x
+        vde1djMpIP8JqoGAM=; b=SgFVWIHo+46nyBGlApbRAW4bbl8/kepA7lWSt305Lb
+        OZ6W7V/B73YwOKjJwa5xHxy65kicMqp6OD8jwbZcy1sFycgwvjAiECdxQpHtJD31
+        iHGUwo3nzdmbh4IokMZ2tf2M07Yy6CEB/Sij5OujRPzcLLX2OkEcdlElL3latj8h
+        GjINyshPsm2Yesm7a53qGYeSoTG/2evww86X8Ms90MpS7G5Z4bCdaWDJfQjbCFz6
+        CrGpSa0KTC0hYXV1cO86Np0NJ2/JnNIg13ABm5FIbBnqYIECEsJbhoAHmbN28Y4y
+        wGZtWdFgcY8VbRQ2BXt2wVfmfYRFtANksd3NcvENbwmA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Zlhvqxx2p0HUpT7xA
+        2m1adLF4xvde1djMpIP8JqoGAM=; b=dpbdM4EK45ekX8nrN0NCVGzrThtsxgVse
+        4EHPFxexYzpoOiw0y3jeuoz/aonL5CTpx8PnigzudJ0ritdfSK1hbjFxDOthuo8c
+        0+jnVSW8I6bA51gf3k72aOvjoqwvi8oQPNZGfs++WZ4LbRaPaVCsurW2Nk5Mra/m
+        KLRu/aJeeYFcdaTFchDwmP2tx0TAjXkSPw9mSW1+TVQH1fJG2pq6TNoyjTndzZBh
+        9dnFTkhj/K7SX/i0e6/U5jbzJK6PvADmJ/oOFVxF2SE/r/ILytn4imeMmcTbPDtZ
+        Rzad4waQ9WzhjZeQTukgUu4wCoheAdYPdbYO2nUT3Bn5tQnl8yxBQ==
+X-ME-Sender: <xms:h2PJXc5nd38CG7DY6KU1-CFWD6Hengay8VIqUwGmnHrEgHRqVI5y5Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddvjedgheehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    govehorghsthgrlhdqhfeguddvqddtvdculdduhedtmdenucfjughrpefhvffufffkofgg
+    gfestdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigih
+    hmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdho
+    rhhgnecukfhppeeltddrkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hmrgigihhmvgestggvrhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:h2PJXQiG93aHI9v7Jh2uuECz5Y5p71HVI8zR0KNjrYULpfPj1Rk_zQ>
+    <xmx:h2PJXa_vSOOqcrNejU57Jszf3oai5N_otB7IXF8Xw0xQQGrCGQ2npg>
+    <xmx:h2PJXSc7P7Q8L2JfPpQ5L-LwG0DR6L1H6IPNgNE7LnyaGCJBsV1zuA>
+    <xmx:iGPJXSjg2t18WyqfvS4eaHV6oU0IRkkNg6nUZX4ddQZT1U_FY2f0Wg>
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1F69C80061;
+        Mon, 11 Nov 2019 08:35:03 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, lee.jones@linaro.org
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH v2] dt-bindings: Add syscon YAML description
+Date:   Mon, 11 Nov 2019 14:35:00 +0100
+Message-Id: <20191111133500.135306-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 Nov 2019 14:38:33 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, <mbrugger@suse.com>,
-        <phil@raspberrypi.org>, <linux-kernel@vger.kernel.org>,
-        <wahrenst@gmx.net>, <james.quinlan@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-In-Reply-To: <86aeec16bc04d17372db5e33ffec0d5621973116.camel@suse.de>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
- <20191106214527.18736-5-nsaenzjulienne@suse.de>
- <f1154b65d422e2e37e3b320e662d4268@www.loen.fr>
- <86aeec16bc04d17372db5e33ffec0d5621973116.camel@suse.de>
-Message-ID: <e12adb8d4f3be328318c8b911f4ba611@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: nsaenzjulienne@suse.de, andrew.murray@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, f.fainelli@gmail.com, mbrugger@suse.com, phil@raspberrypi.org, linux-kernel@vger.kernel.org, wahrenst@gmx.net, james.quinlan@broadcom.com, bhelgaas@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nicolas,
+The syscon binding is a pretty loose one, with everyone having a bunch of
+vendor specific compatibles.
 
-On 2019-11-11 12:31, Nicolas Saenz Julienne wrote:
-> Hi Marc,
-> thanks for the review!
->
-> On Thu, 2019-11-07 at 16:49 +0109, Marc Zyngier wrote:
->> On 2019-11-06 22:54, Nicolas Saenz Julienne wrote:
->> > From: Jim Quinlan <james.quinlan@broadcom.com>
->> >
->> > This commit adds MSI to the Broadcom STB PCIe host controller. It
->> > does
->> > not add MSIX since that functionality is not in the HW.  The MSI
->> > controller is physically located within the PCIe block, however,
->> > there
->> > is no reason why the MSI controller could not be moved elsewhere 
->> in
->> > the future.
->> >
->> > Since the internal Brcmstb MSI controller is intertwined with the
->> > PCIe
->> > controller, it is not its own platform device but rather part of 
->> the
->> > PCIe platform device.
->> >
->> > This is based on Jim's original submission[1] with some slight
->> > changes
->> > regarding how pcie->msi_target_addr is decided.
->> >
->> > [1] https://patchwork.kernel.org/patch/10605955/
->> >
->> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->> > ---
->> >  drivers/pci/controller/Kconfig        |   2 +-
->> >  drivers/pci/controller/pcie-brcmstb.c | 333
->> > +++++++++++++++++++++++++-
->> >  2 files changed, 332 insertions(+), 3 deletions(-)
+In order to start the effort to describe them using YAML, let's create a
+binding that tolerates additional, not listed, compatibles.
 
-[...]
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
->> > +static struct msi_domain_info brcm_msi_domain_info = {
->> > +	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
->> > +		   MSI_FLAG_PCI_MSIX),
->>
->> Is there a particular reason for not supporting MultiMSI? I won't 
->> miss
->> it, but it might be worth documenting the restriction if the HW 
->> cannot
->> support it (though I can't immediately see why).
->
-> There is no actual restriction. As Jim tells me, there never was the 
-> need for
-> it. If it's fine with you, we'll leave that as an enhancement for the 
-> future,
-> specially since the RPi's XHCI device only uses one MSI interrupt.
+---
 
-Sure, that's fine. But as soon as someone takes this SoC and sticks it 
-on
-a different board (RPi CM4 anyone?), this will become a requirement (I 
-thought
-MultiMSI dead 4 years ago, and have been proved wrong many times 
-since).
+Changes from v1:
+  - Move syscon binding from misc to mfd
+  - Add a select statement
+---
+ .../devicetree/bindings/mfd/syscon.txt        | 32 -------
+ .../devicetree/bindings/mfd/syscon.yaml       | 84 +++++++++++++++++++
+ .../bindings/misc/allwinner,syscon.txt        | 20 -----
+ 3 files changed, 84 insertions(+), 52 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/syscon.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/syscon.yaml
+ delete mode 100644 Documentation/devicetree/bindings/misc/allwinner,syscon.txt
 
->
->> > +	.chip	= &brcm_msi_irq_chip,
->> > +};
->> > +
->> > +static void brcm_pcie_msi_isr(struct irq_desc *desc)
->> > +{
->> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
->> > +	struct brcm_msi *msi;
->> > +	unsigned long status, virq;
->> > +	u32 mask, bit, hwirq;
->> > +	struct device *dev;
->> > +
->> > +	chained_irq_enter(chip, desc);
->> > +	msi = irq_desc_get_handler_data(desc);
->> > +	mask = msi->intr_legacy_mask;
->> > +	dev = msi->dev;
->> > +
->> > +	while ((status = bcm_readl(msi->intr_base + STATUS) & mask)) {
->>
->> Is this loop really worth it? If, as I imagine, this register is at 
->> the
->> end of a wet piece of string, this additional read (likely to return
->> zero)
->> will have a measurable latency impact...
->
-> I think this one was cargo-culted, TBH this pattern is all over the 
-> place.
-> Though, now that you point it out, I can't really provide a 
-> justification for
-> it. Maybe Jim can contradict me here, but It's working fine without 
-> it.
-
-I know this pattern is ultra common (hey, the GIC uses it), but I'm
-somehow doubtful of its benefit. On GICv3, not reading the status
-register again has given us a performance boost for most workloads.
-
-[...]
-
->> > +	/*
->> > +	 * Make sure we are not masking MSIs.  Note that MSIs can be
->> > masked,
->> > +	 * but that occurs on the PCIe EP device
->>
->> That's not a guarantee, specially with plain MultiMSI. I'm actually
->> minded to move the masking to be purely local on the MSI controllers
->> I maintain.
->
-> Sorry, I'm a little lost here. The way I understand it after reset, 
-> even with
-> multiMSI, on the EP side all vectors are umasked. So it would make
-> sense to do
-> the same on the controller.
->
-> The way I see it, we want to avoid using this register anyway, as
-> with multiMSI
-> we'd only get function wide masking, which I guess is not all that 
-> useful.
-
-Yeah, I wasn't 100% clear. Unless you have MSI-X, there is no guarantee
-to have a mask bit per MSI. Multi-MSI definitely has only this problem.
-
-My advice would be to let the PCI layer deal with enabling/disabling
-interrupts at the endpoint level, and let this driver manage the
-masking at its own level, using the MASK registers.
-
-Thanks,
-
-         M.
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+deleted file mode 100644
+index 25d9e9c2fd53..000000000000
+--- a/Documentation/devicetree/bindings/mfd/syscon.txt
++++ /dev/null
+@@ -1,32 +0,0 @@
+-* System Controller Registers R/W driver
+-
+-System controller node represents a register region containing a set
+-of miscellaneous registers. The registers are not cohesive enough to
+-represent as any specific type of device. The typical use-case is for
+-some other node's driver, or platform-specific code, to acquire a
+-reference to the syscon node (e.g. by phandle, node path, or search
+-using a specific compatible value), interrogate the node (or associated
+-OS driver) to determine the location of the registers, and access the
+-registers directly.
+-
+-Required properties:
+-- compatible: Should contain "syscon".
+-- reg: the register region can be accessed from syscon
+-
+-Optional property:
+-- reg-io-width: the size (in bytes) of the IO accesses that should be
+-  performed on the device.
+-- hwlocks: reference to a phandle of a hardware spinlock provider node.
+-
+-Examples:
+-gpr: iomuxc-gpr@20e0000 {
+-	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+-	reg = <0x020e0000 0x38>;
+-	hwlocks = <&hwlock1 1>;
+-};
+-
+-hwlock1: hwspinlock@40500000 {
+-	...
+-	reg = <0x40500000 0x1000>;
+-	#hwlock-cells = <1>;
+-};
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+new file mode 100644
+index 000000000000..39375e4313d2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/syscon.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: System Controller Registers R/W Device Tree Bindings
++
++description: |
++  System controller node represents a register region containing a set
++  of miscellaneous registers. The registers are not cohesive enough to
++  represent as any specific type of device. The typical use-case is
++  for some other node's driver, or platform-specific code, to acquire
++  a reference to the syscon node (e.g. by phandle, node path, or
++  search using a specific compatible value), interrogate the node (or
++  associated OS driver) to determine the location of the registers,
++  and access the registers directly.
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - syscon
++
++  required:
++    - compatible
++
++properties:
++  compatible:
++    anyOf:
++      - items:
++        - enum:
++          - allwinner,sun8i-a83t-system-controller
++          - allwinner,sun8i-h3-system-controller
++          - allwinner,sun8i-v3s-system-controller
++          - allwinner,sun50i-a64-system-controller
++
++        - const: syscon
++
++      - contains:
++          const: syscon
++        additionalItems: true
++
++  reg:
++    maxItems: 1
++
++  reg-io-width:
++    description: |
++      The size (in bytes) of the IO accesses that should be performed
++      on the device.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [ 1, 2, 4, 8 ]
++
++  hwlocks:
++    maxItems: 1
++    description:
++      Reference to a phandle of a hardware spinlock provider node.
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    syscon: syscon@1c00000 {
++        compatible = "allwinner,sun8i-h3-system-controller", "syscon";
++        reg = <0x01c00000 0x1000>;
++    };
++
++  - |
++    gpr: iomuxc-gpr@20e0000 {
++        compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
++        reg = <0x020e0000 0x38>;
++        hwlocks = <&hwlock1 1>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/misc/allwinner,syscon.txt b/Documentation/devicetree/bindings/misc/allwinner,syscon.txt
+deleted file mode 100644
+index 31494a24fe69..000000000000
+--- a/Documentation/devicetree/bindings/misc/allwinner,syscon.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-* Allwinner sun8i system controller
+-
+-This file describes the bindings for the system controller present in
+-Allwinner SoC H3, A83T and A64.
+-The principal function of this syscon is to control EMAC PHY choice and
+-config.
+-
+-Required properties for the system controller:
+-- reg: address and length of the register for the device.
+-- compatible: should be "syscon" and one of the following string:
+-		"allwinner,sun8i-h3-system-controller"
+-		"allwinner,sun8i-v3s-system-controller"
+-		"allwinner,sun50i-a64-system-controller"
+-		"allwinner,sun8i-a83t-system-controller"
+-
+-Example:
+-syscon: syscon@1c00000 {
+-	compatible = "allwinner,sun8i-h3-system-controller", "syscon";
+-	reg = <0x01c00000 0x1000>;
+-};
 -- 
-Jazz is not dead. It just smells funny...
+2.23.0
+
