@@ -2,245 +2,129 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D3EC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 07:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A881DC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 07:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A38D222C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 07:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C192067B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 07:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YMByG+QA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kGsZwUBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfKKHBb (ORCPT
+        id S1726652AbfKKHKf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:01:31 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38230 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfKKHBb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 02:01:31 -0500
-Received: by mail-ed1-f66.google.com with SMTP id s10so11090551edi.5
-        for <devicetree@vger.kernel.org>; Sun, 10 Nov 2019 23:01:30 -0800 (PST)
+        Mon, 11 Nov 2019 02:10:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42316 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfKKHKe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 02:10:34 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q17so8862293pgt.9
+        for <devicetree@vger.kernel.org>; Sun, 10 Nov 2019 23:10:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=F3TxF+AJbjTFe9CSJ0NILNUnMGyyn7tR/jfpwQuTY6o=;
-        b=YMByG+QA9BSSONXzijgH3lT/HJSfJ63osPgOWzCWCYvhB/KtuJhyoZum3mgB+NjmrG
-         rJWRy9UXVTVCcWOm/sEn21bSpo0SlcT++UxUxkrfFLaNJgvrQEbXDbDcFcFKygsgPy+6
-         Vcou70IW3wEv489ErEOzEfURMA/ZBjdNOisUM=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=sX4vkHAEzc9p5ZJu3ak6NA+j+4cKDtaOpldCbF2kYAg=;
+        b=kGsZwUBiNG9RFgC6y5TV3EGCwNc/pKv3YDg5qJobpQk4w3uGjpp0MJviMvJkseN/Eu
+         14iFDz6QX9Nu9eZsWkh0JZxiaMQaJJjph6Bs+yVCv18yfpkacIz2j8OMe2QI+c3f/piC
+         v2sfSdRNaKBOmSJv6rsKU0Zl0gay6nsJoL/B3B2zDGEQVkWsLZb76V6pUvdGQW0euXIA
+         QMZG+rqBHq25rgkZhLMpJM1XajVKYD9ymwxORktWNpnYwqWddeMAcKDeYfrty8rF2Ut0
+         tcC7ojQJo7ZVXElTjQ/fKC1n+VrqqYK3W7k7Ey7JFkhIGK6UjoWyCulBcG5xk3lqGVXN
+         173Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=F3TxF+AJbjTFe9CSJ0NILNUnMGyyn7tR/jfpwQuTY6o=;
-        b=IH1kPdFpmTAlbp+HMj3p0HyEWJuHSORVeGOXOCmGtmy3H2Uoef7MtpUh0ZnpLripkm
-         yYTl3M/4AFBadJdttPYZdxHkn2SikErldduXnsYDranWAF2Bnf7Z3jXglT5qAH+pHdaP
-         qz9cyZoU7n7GST2CrH4O6jqO5zUprU8YINVm/EonHXCGPfjNgHSbTA2bd8SDn0Ha6Oxq
-         E4MwlO914mSsN35cPM3XwxEZyemaaOMV4u+J8R+imq+dLH67HF1HwJSHjVmmqmf+UegJ
-         oojlrtLw9Im9hyIN2cEcjDHjk41jK0kYivYV07ENxxVI0DxvlqfzghZeecR/YlnJg+DN
-         6Qyg==
-X-Gm-Message-State: APjAAAWZ8YfiaIeWm0DuEC4T9MPtvm3tQYR2J/Wrj4l8ay94RTtawXMu
-        LmooozSk5oIFRFN4OSNQmURRy9as7hWOXw==
-X-Google-Smtp-Source: APXvYqyqyWSzw1CX396Apj7oDe/r8fnl8AJVZEj6PkAT+cr5Pxsa9dSNmRSNHWFGwFZD7U+OdUHDoA==
-X-Received: by 2002:a17:906:1da1:: with SMTP id u1mr21621222ejh.275.1573455689575;
-        Sun, 10 Nov 2019 23:01:29 -0800 (PST)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id 51sm457678edz.24.2019.11.10.23.01.27
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Nov 2019 23:01:28 -0800 (PST)
-Received: by mail-wr1-f54.google.com with SMTP id i10so13335768wrs.7
-        for <devicetree@vger.kernel.org>; Sun, 10 Nov 2019 23:01:27 -0800 (PST)
-X-Received: by 2002:a05:6000:1206:: with SMTP id e6mr5641649wrx.113.1573455687257;
- Sun, 10 Nov 2019 23:01:27 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=sX4vkHAEzc9p5ZJu3ak6NA+j+4cKDtaOpldCbF2kYAg=;
+        b=NtIVIARGKJgtMsQfbN5pusIcJlM0cxyLg2l+hnbaCYD9CxjprUb3Gp/4Y8QYXh5vY/
+         TOCJCSlLmm1DZN2yihcRPHVJllCZJiTHwguM7TIwjLJT7Qk7tklcVvd1SgK0OkzOvm51
+         XhpA7d+b6I8d9z67Hl8KGZdEbBr9++IoCzEkQE+ZOxHDxqTlBinies6Zux68mI6E9681
+         zNfh585+XpYHM5hO4d5wQwNfwarfN3gRRKY/IcNZfOcWmExcUbbt/J+44uwzAZyEQaFR
+         Qk9+JI0ktQ/Sy+JV8H+zM6AYBV4pXVVFZ/UGlZYGpUtze8OVCNtZNVHOGDBcEwIpVL6t
+         5p5A==
+X-Gm-Message-State: APjAAAX6IyKxeKqL633aIDM7PEYlJkjNtfHN2t7oxG0WzkWGlCceHO8v
+        u3+yJMKF/2sNE+c7Hkyijb3qyg==
+X-Google-Smtp-Source: APXvYqwEgk3cfRBuAZo9P2F9C3HD7clznEJMa6lEDybUeoKqhApb54tnR1gOUHvpPcnVzwfYEepzcg==
+X-Received: by 2002:a17:90b:30d7:: with SMTP id hi23mr5371917pjb.10.1573456234078;
+        Sun, 10 Nov 2019 23:10:34 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id w26sm19676792pfj.123.2019.11.10.23.10.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Nov 2019 23:10:33 -0800 (PST)
+Date:   Sun, 10 Nov 2019 23:10:30 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Marc Zyngier <maz@kernel.org>, agross@kernel.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, swboyd@chromium.org,
+        Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v5 06/13] drivers: irqchip: qcom-pdc: Move to an SoC
+ independent compatible
+Message-ID: <20191111071030.GB3797@yoga>
+References: <20191108092824.9773-1-rnayak@codeaurora.org>
+ <20191108092824.9773-7-rnayak@codeaurora.org>
+ <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
+ <9c2b33f2-02bb-e516-4cb5-b466757cd67a@codeaurora.org>
 MIME-Version: 1.0
-References: <20191017084033.28299-1-xia.jiang@mediatek.com>
- <20191017084033.28299-6-xia.jiang@mediatek.com> <20191023103945.GA41089@chromium.org>
- <1571906317.6254.64.camel@mhfsdcap03> <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
- <1572229558.27439.6.camel@mhfsdcap03>
-In-Reply-To: <1572229558.27439.6.camel@mhfsdcap03>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 11 Nov 2019 16:01:13 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5DWZXru=a6JvTD8M1aJw8c48MK-vLPXvOmt-O4gVoPGVQ@mail.gmail.com>
-Message-ID: <CAAFQd5DWZXru=a6JvTD8M1aJw8c48MK-vLPXvOmt-O4gVoPGVQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9c2b33f2-02bb-e516-4cb5-b466757cd67a@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xia,
+On Fri 08 Nov 01:55 PST 2019, Rajendra Nayak wrote:
 
-On Mon, Oct 28, 2019 at 11:26 AM Xia Jiang <xia.jiang@mediatek.com> wrote:
->
-> On Thu, 2019-10-24 at 18:23 +0900, Tomasz Figa wrote:
-> > On Thu, Oct 24, 2019 at 5:38 PM Xia Jiang <xia.jiang@mediatek.com> wrot=
-e:
-> > >
-> > > On Wed, 2019-10-23 at 19:39 +0900, Tomasz Figa wrote:
-> > > > Hi Xia,
-> > > >
-> > > > On Thu, Oct 17, 2019 at 04:40:38PM +0800, Xia Jiang wrote:
-> > > > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because tha=
-t jpeg
-> > > > > decode and encode have great similarities with function operation=
-.
-> > > > >
-> > > > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> > > > > ---
-> > > > > v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for enc=
-oder,
-> > > > >     one for decoder.
-> > > > >     split mtk_jpeg_set_default_params() to two functions, one for
-> > > > >     encoder, one for decoder.
-> > > > >     add cropping support for encoder in g/s_selection ioctls.
-> > > > >     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP=
-1.
-> > > > >     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 655=
-35 by
-> > > > >     specification.
-> > > > >     move width shifting operation behind aligning operation in
-> > > > >     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
-> > > > >     fix user abuseing data_offset issue for DMABUF in
-> > > > >     mtk_jpeg_set_enc_src().
-> > > > >     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_H=
-EIGHT
-> > > > >                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH=
- from
-> > > > >                         'int' type to 'unsigned int' type.
-> > > > >                         fix msleadingly indented of 'else'.
-> > > > >
-> > > > > v3: delete Change-Id.
-> > > > >     only test once handler->error after the last v4l2_ctrl_new_st=
-d().
-> > > > >     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new p=
-atch.
-> > > > >
-> > > > > v2: fix compliance test fail, check created buffer size in driver=
-.
-> > > > > ---
-> > > > >  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
-> > > > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 ++++++++++++=
-+++---
-> > > > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
-> > > > >  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
-> > > > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
-> > > > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
-> > > > >  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
-> > > > >  7 files changed, 1004 insertions(+), 146 deletions(-)
-> > > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_=
-hw.c
-> > > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_=
-hw.h
-> > > > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_=
-reg.h
-> > > > >
-> > > >
-> > > > First of all, thanks for the patch!
-> > > >
-> > > > Please check my comments below.
-> > > >
-> > > > My general feeling about this code is that the encoder hardware blo=
-ck is
-> > > > completely orthogonal from the decoder block and there is very litt=
-le code
-> > > > reuse from the original decoder driver.
-> > > >
-> > > > Moreover, a lot of existing code now needs if (decoder) { ... } els=
-e {... }
-> > > > segments, which complicates the code.
-> > > >
-> > > > Would it perhaps make sense to instead create a separate mtk-jpeg-e=
-nc
-> > > > driver?
-> > > >
-> > > Dear Tomasz,
-> > >
-> > > Thanks for your comments.
-> > >
-> > > My reasons about the architecture of jpeg enc driver are as follows:
-> > >
-> > > The first internal design and realization of jpeg enc driver was a
-> > > separate driver, but found that mtk_jpeg_core.c and mtk_jpeg_enc_core=
-.c
-> > > have lots of reuse.Because that  the core.c mainly contains realizati=
-on
-> > > of v4L2 ioctl functions and some logic which are high similarity betw=
-een
-> > > encoder and decoder.
-> > >
-> > > The jpeg encoder and decoder are two independent hardwares exactly, s=
-o
-> > > the code about hardware specification(register setting) are
-> > > separated(mtk_jpeg_enc_hw.c and mtk_jpeg_dec_hw.c).
-> > >
-> > > As for 17 existing code segments contain if(decoder){} else {}, they =
-are
-> > > not complicated IMHO.The complicated(multilayer nested) functions are
-> > > separated in V4 version as Hans recommendation.
-> > >
-> > > By the way,the upstreamed module s5p-jpeg
-> > > (https://elixir.bootlin.com/linux/latest/source/drivers/media/platfor=
-m/s5p-jpeg/jpeg-core.c#L1998) also use encoder and decoder mode in the comm=
-on core.c, but their encoder and decoder are the same hardware.Maybe our jp=
-eg enc and dec are designed into one hardware in the future.In that case th=
-e current architecture is more compatible.
-> > >
-> > > So I prefer the current design.
-> > >
-> >
-> > Would you be able to give some numbers to show the code reuse to
-> > justify using the same driver? From my observation, a new driver would
-> > result in a significantly cleaner code. If there is a further hardware
-> > architecture change, that would likely require another driver, because
-> > it wouldn't be compatible with existing programming model anyway.
-> >
-> > Regardless of that, if we end up with reusing the same driver, I'd
-> > like you to fix the issues existing in the current base before adding
-> > the encoder functionality.
-> Dear Tomasz,
-> I've counted about 1000 lines of code that can be reused.The reused code
-> is 75 percent of the original code.
->
-> If you agree to reuse the same driver,I will fix the issues existing in
-> the current driver.
+> 
+> On 11/8/2019 3:10 PM, Marc Zyngier wrote:
+> > On 2019-11-08 10:37, Rajendra Nayak wrote:
+> > > Remove the sdm845 SoC specific compatible to make the driver
+> > > easily reusable across other SoC's with the same IP block.
+> > > This will reduce further churn adding any SoC specific
+> > > compatibles unless really needed.
+> > > 
+> > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > > Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > > Cc: Marc Zyngier <maz@kernel.org>
+> > > ---
+> > >  drivers/irqchip/qcom-pdc.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> > > index faa7d61b9d6c..c175333bb646 100644
+> > > --- a/drivers/irqchip/qcom-pdc.c
+> > > +++ b/drivers/irqchip/qcom-pdc.c
+> > > @@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node
+> > > *node, struct device_node *parent)
+> > >      return ret;
+> > >  }
+> > > 
+> > > -IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
+> > > +IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
+> > 
+> > Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+> > 
+> > How do you want me get this (and the DT change) merged? I can either take
+> > these two patches in the irqchip tree, or you arrange them to be taken
+> > by the platform maintainers. Your call.
+> 
+> I think it makes sense for you to take these two via your tree (The driver
+> and binding doc updates) and the DT node addition for pdc to go via Andy/Bjorn.
+> Andy/Bjorn, does that sound fine?
+> 
 
-Sorry, I was out of the office.
+Yes, that sounds good.
 
-Okay, let's reuse the driver. I guess the hardware programming part
-itself is smaller than the V4L2 boiler plate needed for it and that's
-where the 1000 lines of code comes from.
-
-The first step I'd suggest then would be running the latest
-v4l2-compliance, from the master branch of v4l2-utils [1] and making
-sure there are no issues.
-
-Then check if any comments I posted to the new code added by your
-patch apply to the existing code as well and fixing those issues in a
-prerequisite patches, at the beginning of the series.
-
-[1] https://git.linuxtv.org/v4l-utils.git/
-
-Best regards,
-Tomasz
+Regards,
+Bjorn
