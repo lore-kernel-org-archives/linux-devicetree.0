@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE15DC17444
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE4C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E9520674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E81820674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QVjHDp3d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w56mXCzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKKJZX (ORCPT
+        id S1727102AbfKKJZc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:25:23 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40373 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKKJZW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 04:25:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id i10so13757657wrs.7
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 01:25:21 -0800 (PST)
+        Mon, 11 Nov 2019 04:25:32 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37997 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbfKKJZb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 04:25:31 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z19so12408631wmk.3
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 01:25:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=wdf4vDYPrWUkIFw2I/tLGdO131jSnYkYMuWnygUSqLk=;
-        b=QVjHDp3d+469LsP2NblXGvyg7PmbjNJAA/Lj8/YUSMVqsYksNAe3Pk26vNoh86CaIW
-         Zs10nrrYxvXwqD3E1LIAWDrVEwn3zTuwrRvzYMAWSUhTqo88AO3X1KjkytzHetpoHW9K
-         UQr8ifsnScI5cEo+wBnLoG7JmoRrxAU0YM1EM4w7hfEi6zKmqCZbF0PeYWKnljsGNGZ0
-         k1M76IWhNU8FWi9JJNgOk06CotySwJoWYkOTjQBhyc5JsXUbecxnXUZ1JDeSBC56TWMq
-         3Sf6dhzdePDLzCE/i70ky3motAWkcan/qqAHfSLJwvAqS7dTUQh043flEES3TdcmO5tC
-         uLSA==
+        bh=EAGdmecmIYQMbogASNQhQtQecAe8bZ2za4Rdh2+08ME=;
+        b=w56mXCzCV0zuIKf5UgKd73iw22KzOjcm/ewjieo905GNM8iSDbjgrHD9m2hsv4+N/p
+         w3Mrdp0iqj4WQ1ftEYaBeJpjglqxWWNcz+udxPTk7EkuKxVsG1VrLYriVu2Qy/zPxpYf
+         zdpT9yI5Ck0J21noqDhFuBPAhKcW2CzERSW7Yghx7OUbF/hN1Ns78XszQtXvGzy6T39t
+         mC6KK5ZBZpkR3k8WPvTegUKeDltIcVUzVyd7IJnqcBRvH74F3hh3QEv9b+DmzXEqnXQr
+         6RzPTXp4Pp6QzLoHKgzOsZotTPAXj+8X6qaPo+b4Mg473QAe284G+Ntxo8Xhv2Kh6x86
+         Bfww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=wdf4vDYPrWUkIFw2I/tLGdO131jSnYkYMuWnygUSqLk=;
-        b=q+i1VwAq9JCC/zD9aeNpfGK5G69SjH5L28H2cNCf1Y4Q3mPxdmf+qL9oV4zkfkk253
-         wg3HCFuq4rgT4OKObSbhl8uinimVhub884fiAQf/1d8JHBZ/sGy0xLn4saluaLiF5IYh
-         tmHpItkvB/TiTMdzhcJsi9e5W4nDC37xveC7J1UmAsUvaSDV0gTNNpZsi6ZNQsxyn4G1
-         Omqr8LJ3zk0UC+RgGXWtro9iOwFNSSXv8STP7CRZJy/kR/rqHAjBnwC84J7Y8YalWEiB
-         4pq4kpB9Tbr91iOsrcW8hBQhVPuwUwOAg82JgeXItuu2GlZ3eJZ6xxwERFodFEAtALpL
-         aKnw==
-X-Gm-Message-State: APjAAAVeH94GMW6k+I87/fHErScaNIWIVhvBO5LZ4Q+nn+mY4BL+mj5w
-        HbaEjr6CeHr41GfRl+KikILDTA==
-X-Google-Smtp-Source: APXvYqwqrFBkB4DNwsCnkk+NnHy2fa3C1N/2ZofRGerNFLj9+QnWiuNncAs3CNYES0zU4rIEPpmpbQ==
-X-Received: by 2002:a5d:42d1:: with SMTP id t17mr7864805wrr.56.1573464320281;
-        Mon, 11 Nov 2019 01:25:20 -0800 (PST)
+        bh=EAGdmecmIYQMbogASNQhQtQecAe8bZ2za4Rdh2+08ME=;
+        b=q8MSrfqICHBWyIf9BFcVUAZwjVY+BZuh0cmgOtUOwH+kSSCSbdPSiklxhyUuJGtW5s
+         75iwjEa3zIo475kigJ2Zh6oYErN38ys4NdnZD1VMu5McnTVPe6ITAwtqDVGDGW1w4LDq
+         03iym0+am7sNZiK8qHO/DnEMgPcr8ISUMmrmPs8+rey7gumnSAYqAttRgLmbYytgqJwJ
+         ubUFeBEBr6lga4AoCdzvMsXLPQ/3+f066/BQxGT+IPdbstUhPCAi9rBZoH9NOySvf07B
+         ybg49NjuzLBB91BreieuCBVIrTrhfF5oKTY9douwfM4Xsly2d8n1t4lf4zvDeQqZ7UK7
+         UuLQ==
+X-Gm-Message-State: APjAAAVKrlRdRjUMCt6Y2XeEKdxsUuteXSDBZVKSaNWKQ+/TACveSZ6t
+        Asx5h1Wh43pIoZqiPLH2yrfvQQ==
+X-Google-Smtp-Source: APXvYqxsuEZoMa82YymohR63zheNj31pQiSiawLEKigrwQP7JSqSDgwgZGuFELRxkBAXjKVnTla1UA==
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr20598305wml.41.1573464329856;
+        Mon, 11 Nov 2019 01:25:29 -0800 (PST)
 Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id v128sm25894991wmb.14.2019.11.11.01.25.19
+        by smtp.gmail.com with ESMTPSA id c144sm17688300wmd.1.2019.11.11.01.25.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 01:25:19 -0800 (PST)
-Date:   Mon, 11 Nov 2019 09:25:11 +0000
+        Mon, 11 Nov 2019 01:25:29 -0800 (PST)
+Date:   Mon, 11 Nov 2019 09:25:21 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Kiran Gunda <kgunda@codeaurora.org>
 Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
@@ -67,15 +67,16 @@ Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH V10 4/8] backlight: qcom-wled: Rename PM8941* to WLED3
-Message-ID: <20191111092511.GR18902@dell>
+Subject: Re: [PATCH V10 5/8] backlight: qcom-wled: Restructure the driver for
+ WLED3.
+Message-ID: <20191111092521.GS18902@dell>
 References: <1572589624-6095-1-git-send-email-kgunda@codeaurora.org>
- <1572589624-6095-5-git-send-email-kgunda@codeaurora.org>
+ <1572589624-6095-6-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1572589624-6095-5-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <1572589624-6095-6-git-send-email-kgunda@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -84,19 +85,14 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Fri, 01 Nov 2019, Kiran Gunda wrote:
 
-> Rename the PM8941* references as WLED3 to make the driver
-> generic and have WLED support for other PMICs. Also rename
-> "i_boost_limit" and "i_limit" variables to "boost_i_limit"
-> and "string_i_limit" respectively to resemble the corresponding
-> register names.
+> Restructure the driver to add the support for new WLED
+> peripherals.
 > 
 > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
->  drivers/video/backlight/qcom-wled.c | 248 ++++++++++++++++++------------------
->  1 file changed, 125 insertions(+), 123 deletions(-)
+>  drivers/video/backlight/qcom-wled.c | 373 ++++++++++++++++++++++--------------
+>  1 file changed, 234 insertions(+), 139 deletions(-)
 
 Applied, thanks.
 
