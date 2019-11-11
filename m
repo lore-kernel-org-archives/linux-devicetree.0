@@ -2,102 +2,119 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67976C17445
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63374C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9FB21783
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3697C214E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573469218;
+	bh=i/HZzZjddIiajbLWZkUzXT9kC0bb4HAtE+u7N7Gry8E=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=LNkng45RImo19BxdpbRnvOlfocgipnNGSm0W4PL6gEDKOgva5Px5StyE4hInwP0p3
+	 SoL6H9XSc75VdageBKJkuae0z1JjH8sDc7T0L44J2Cp2ID0qvlCFf87WUiDp0HYJGF
+	 gjijPtijAEDXaDAQUhnD4+ZT6AgNN5IixDNrJySo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfKKKpp (ORCPT
+        id S1726893AbfKKKqy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:45:45 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:34933 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfKKKpp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 05:45:45 -0500
-Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 11 Nov
- 2019 18:46:03 +0800
-Subject: Re: [PATCH v4 2/4] firmware: meson_sm: Add secure power domain
- support
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com>
- <1572868028-73076-3-git-send-email-jianxin.pan@amlogic.com>
- <7hk188stcy.fsf@baylibre.com>
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-Message-ID: <420073b1-0a3f-1bfd-4422-34f8cd7e0d2d@amlogic.com>
-Date:   Mon, 11 Nov 2019 18:46:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 05:46:54 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:52051 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726829AbfKKKqy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:46:54 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iU7Df-0008K6-Aj; Mon, 11 Nov 2019 11:46:51 +0100
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 06/13] drivers: irqchip: qcom-pdc: Move to an SoC  independent compatible
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-In-Reply-To: <7hk188stcy.fsf@baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.29.227]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 11 Nov 2019 11:56:12 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, <agross@kernel.org>,
+        <robh+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mka@chromium.org>, <swboyd@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>
+In-Reply-To: <20191111071030.GB3797@yoga>
+References: <20191108092824.9773-1-rnayak@codeaurora.org>
+ <20191108092824.9773-7-rnayak@codeaurora.org>
+ <0d5090fc9def3b9fa03a733d4adc2ae0@www.loen.fr>
+ <9c2b33f2-02bb-e516-4cb5-b466757cd67a@codeaurora.org>
+ <20191111071030.GB3797@yoga>
+Message-ID: <d622482d92059533f03b65af26c69b9b@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: bjorn.andersson@linaro.org, rnayak@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mka@chromium.org, swboyd@chromium.org, ilina@codeaurora.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kevin,
-
-Please see my comments below:
-
-On 2019/11/10 4:11, Kevin Hilman wrote:
-> Jianxin Pan <jianxin.pan@amlogic.com> writes:
-> 
->> The Amlogic Meson A1/C1 Secure Monitor implements calls to control power
->> domain.
+On 2019-11-11 08:19, Bjorn Andersson wrote:
+> On Fri 08 Nov 01:55 PST 2019, Rajendra Nayak wrote:
+>
 >>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->> ---
->>  drivers/firmware/meson/meson_sm.c       | 2 ++
->>  include/linux/firmware/meson/meson_sm.h | 2 ++
->>  2 files changed, 4 insertions(+)
+>> On 11/8/2019 3:10 PM, Marc Zyngier wrote:
+>> > On 2019-11-08 10:37, Rajendra Nayak wrote:
+>> > > Remove the sdm845 SoC specific compatible to make the driver
+>> > > easily reusable across other SoC's with the same IP block.
+>> > > This will reduce further churn adding any SoC specific
+>> > > compatibles unless really needed.
+>> > >
+>> > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> > > Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+>> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>> > > Cc: Marc Zyngier <maz@kernel.org>
+>> > > ---
+>> > >  drivers/irqchip/qcom-pdc.c | 2 +-
+>> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> > >
+>> > > diff --git a/drivers/irqchip/qcom-pdc.c 
+>> b/drivers/irqchip/qcom-pdc.c
+>> > > index faa7d61b9d6c..c175333bb646 100644
+>> > > --- a/drivers/irqchip/qcom-pdc.c
+>> > > +++ b/drivers/irqchip/qcom-pdc.c
+>> > > @@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node
+>> > > *node, struct device_node *parent)
+>> > >      return ret;
+>> > >  }
+>> > >
+>> > > -IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
+>> > > +IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
+>> >
+>> > Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+>> >
+>> > How do you want me get this (and the DT change) merged? I can 
+>> either take
+>> > these two patches in the irqchip tree, or you arrange them to be 
+>> taken
+>> > by the platform maintainers. Your call.
 >>
-[...]
->> diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
->> index 6669e2a..4ed3989 100644
->> --- a/include/linux/firmware/meson/meson_sm.h
->> +++ b/include/linux/firmware/meson/meson_sm.h
->> @@ -12,6 +12,8 @@ enum {
->>  	SM_EFUSE_WRITE,
->>  	SM_EFUSE_USER_MAX,
->>  	SM_GET_CHIP_ID,
->> +	SM_PWRC_SET,
->> +	SM_PWRC_GET,
-> 
-> These new IDs are unique to the A1/C1 family.  Maybe we should add a
-> prefix to better indicate that.  Maybe:
-> 
->        SM_A1_PWRC_SET,
->        SM_A1_PWRC_GET,
-> 
-> Thoughts?
-> 
-I consulted with the internal VLSI team, and it's likely that the latter new SOC will follow A1/C1.
-And then it may become common function in the future.
-> Kevin
-> 
-> .
-> 
+>> I think it makes sense for you to take these two via your tree (The 
+>> driver
+>> and binding doc updates) and the DT node addition for pdc to go via 
+>> Andy/Bjorn.
+>> Andy/Bjorn, does that sound fine?
+>>
+>
+> Yes, that sounds good.
 
+Applied to irqchip/next
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
