@@ -2,37 +2,39 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB5FC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D646C17442
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7878207FA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D725207FA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfKKDEu (ORCPT
+        id S1726830AbfKKDEw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 Nov 2019 22:04:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54276 "EHLO mx1.suse.de"
+        Sun, 10 Nov 2019 22:04:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54314 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726742AbfKKDEt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 Nov 2019 22:04:49 -0500
+        id S1726742AbfKKDEw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 Nov 2019 22:04:52 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 224DDAE55;
-        Mon, 11 Nov 2019 03:04:48 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id B4830B150;
+        Mon, 11 Nov 2019 03:04:49 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        James Tai <james.tai@realtek.com>
-Subject: [PATCH 0/7] arm64: dts: Initial RTD1395 and BPi-M4 support
-Date:   Mon, 11 Nov 2019 04:04:27 +0100
-Message-Id: <20191111030434.29977-1-afaerber@suse.de>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH 3/7] arm64: dts: realtek: rtd129x: Introduce r-bus
+Date:   Mon, 11 Nov 2019 04:04:30 +0100
+Message-Id: <20191111030434.29977-4-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191111030434.29977-1-afaerber@suse.de>
+References: <20191111030434.29977-1-afaerber@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -41,59 +43,160 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Model Realtek's register bus in DT.
 
-This patch series adds initial Device Trees for Realtek RTD1395 SoC and
-Banana Pi BPI-M4 SBC.
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi | 136 ++++++++++++++++---------------
+ 1 file changed, 72 insertions(+), 64 deletions(-)
 
-It is based on my RTD1195 series and James' pending RTD1619 DT bindings patch.
-
-It starts with some refactorings to align the various SoCs and to demonstrate
-to James what I meant with the r-bus node and GIC mask in RTD1619 DT v1 review.
-
-RTD1395 family seems pretty similar to RTD1295 family, but allows for more RAM
-and therefore uses #address-cells of 2 vs. 1, and it uses a different reserved
-memory region for RPC. RTD1295 resets appear sufficiently compatible for now.
-
-More details at:
-https://en.opensuse.org/HCL:BananaPi_M4
-
-Latest experimental patches at:
-https://github.com/afaerber/linux/commits/rtd1295-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: James Tai <james.tai@realtek.com>
-
-Andreas Färber (7):
-  arm64: dts: realtek: rtd129x: Fix GIC CPU masks for RTD1293
-  arm64: dts: realtek: rtd129x: Use reserved-memory for RPC regions
-  arm64: dts: realtek: rtd129x: Introduce r-bus
-  ARM: dts: rtd1195: Fix GIC CPU mask
-  ARM: dts: rtd1195: Introduce r-bus
-  dt-bindings: arm: realtek: Add RTD1395 and Banana Pi BPI-M4
-  arm64: dts: realtek: Add RTD1395 and BPi-M4
-
- Documentation/devicetree/bindings/arm/realtek.yaml |   6 +
- arch/arm/boot/dts/rtd1195.dtsi                     |  60 ++++----
- arch/arm64/boot/dts/realtek/Makefile               |   2 +
- arch/arm64/boot/dts/realtek/rtd1293.dtsi           |  12 +-
- arch/arm64/boot/dts/realtek/rtd1295.dtsi           |  21 +--
- arch/arm64/boot/dts/realtek/rtd1296.dtsi           |   8 +-
- arch/arm64/boot/dts/realtek/rtd129x.dtsi           | 159 ++++++++++++---------
- arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts     |  30 ++++
- arch/arm64/boot/dts/realtek/rtd1395.dtsi           |  65 +++++++++
- arch/arm64/boot/dts/realtek/rtd139x.dtsi           | 141 ++++++++++++++++++
- 10 files changed, 387 insertions(+), 117 deletions(-)
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1395.dtsi
- create mode 100644 arch/arm64/boot/dts/realtek/rtd139x.dtsi
-
+diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+index 8d80cca945bc..c4533a2555aa 100644
+--- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+@@ -55,70 +55,78 @@
+ 		/* Exclude up to 2 GiB of RAM */
+ 		ranges = <0x80000000 0x80000000 0x80000000>;
+ 
+-		reset1: reset-controller@98000000 {
+-			compatible = "snps,dw-low-reset";
+-			reg = <0x98000000 0x4>;
+-			#reset-cells = <1>;
+-		};
+-
+-		reset2: reset-controller@98000004 {
+-			compatible = "snps,dw-low-reset";
+-			reg = <0x98000004 0x4>;
+-			#reset-cells = <1>;
+-		};
+-
+-		reset3: reset-controller@98000008 {
+-			compatible = "snps,dw-low-reset";
+-			reg = <0x98000008 0x4>;
+-			#reset-cells = <1>;
+-		};
+-
+-		reset4: reset-controller@98000050 {
+-			compatible = "snps,dw-low-reset";
+-			reg = <0x98000050 0x4>;
+-			#reset-cells = <1>;
+-		};
+-
+-		iso_reset: reset-controller@98007088 {
+-			compatible = "snps,dw-low-reset";
+-			reg = <0x98007088 0x4>;
+-			#reset-cells = <1>;
+-		};
+-
+-		wdt: watchdog@98007680 {
+-			compatible = "realtek,rtd1295-watchdog";
+-			reg = <0x98007680 0x100>;
+-			clocks = <&osc27M>;
+-		};
+-
+-		uart0: serial@98007800 {
+-			compatible = "snps,dw-apb-uart";
+-			reg = <0x98007800 0x400>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			clock-frequency = <27000000>;
+-			resets = <&iso_reset RTD1295_ISO_RSTN_UR0>;
+-			status = "disabled";
+-		};
+-
+-		uart1: serial@9801b200 {
+-			compatible = "snps,dw-apb-uart";
+-			reg = <0x9801b200 0x100>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			clock-frequency = <432000000>;
+-			resets = <&reset2 RTD1295_RSTN_UR1>;
+-			status = "disabled";
+-		};
+-
+-		uart2: serial@9801b400 {
+-			compatible = "snps,dw-apb-uart";
+-			reg = <0x9801b400 0x100>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			clock-frequency = <432000000>;
+-			resets = <&reset2 RTD1295_RSTN_UR2>;
+-			status = "disabled";
++		rbus: r-bus@98000000 {
++			compatible = "simple-bus";
++			reg = <0x98000000 0x100000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x98000000 0x100000>;
++
++			reset1: reset-controller@0 {
++				compatible = "snps,dw-low-reset";
++				reg = <0x0 0x4>;
++				#reset-cells = <1>;
++			};
++
++			reset2: reset-controller@4 {
++				compatible = "snps,dw-low-reset";
++				reg = <0x4 0x4>;
++				#reset-cells = <1>;
++			};
++
++			reset3: reset-controller@8 {
++				compatible = "snps,dw-low-reset";
++				reg = <0x8 0x4>;
++				#reset-cells = <1>;
++			};
++
++			reset4: reset-controller@50 {
++				compatible = "snps,dw-low-reset";
++				reg = <0x50 0x4>;
++				#reset-cells = <1>;
++			};
++
++			iso_reset: reset-controller@7088 {
++				compatible = "snps,dw-low-reset";
++				reg = <0x7088 0x4>;
++				#reset-cells = <1>;
++			};
++
++			wdt: watchdog@7680 {
++				compatible = "realtek,rtd1295-watchdog";
++				reg = <0x7680 0x100>;
++				clocks = <&osc27M>;
++			};
++
++			uart0: serial@7800 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x7800 0x400>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++				clock-frequency = <27000000>;
++				resets = <&iso_reset RTD1295_ISO_RSTN_UR0>;
++				status = "disabled";
++			};
++
++			uart1: serial@1b200 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x1b200 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++				clock-frequency = <432000000>;
++				resets = <&reset2 RTD1295_RSTN_UR1>;
++				status = "disabled";
++			};
++
++			uart2: serial@1b400 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x1b400 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++				clock-frequency = <432000000>;
++				resets = <&reset2 RTD1295_RSTN_UR2>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		gic: interrupt-controller@ff011000 {
 -- 
 2.16.4
 
