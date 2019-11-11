@@ -2,96 +2,83 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7125C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBD6C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0F82067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="msIK6Hjb";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="msIK6Hjb"
+	by mail.kernel.org (Postfix) with ESMTP id AF0BE206A3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfKKGPY (ORCPT
+        id S1726765AbfKKGYm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 01:15:24 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:46948 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfKKGPX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 01:15:23 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DA72B60A0B; Mon, 11 Nov 2019 06:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573452922;
-        bh=BLOQ+eCIjJN4buelWfgp8BiWzMoO2U42JmFRdn7Sa84=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=msIK6Hjb9gtJcWpFPvjysAhT4tjstVf72U2uJlG4K7fD6tyt8uBSbCXawWGFm2ZX4
-         wGccKh5GrVZmpGLvkgaSbrz0CYNj0ONGNG5aebMdRI8bD62eou2sULvXCsMcY7vCCx
-         BvxdHfvjwCOWljfm/YF4XYSEwFKh35mTc9FBg4Q0=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 38B5F6092D;
-        Mon, 11 Nov 2019 06:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573452922;
-        bh=BLOQ+eCIjJN4buelWfgp8BiWzMoO2U42JmFRdn7Sa84=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=msIK6Hjb9gtJcWpFPvjysAhT4tjstVf72U2uJlG4K7fD6tyt8uBSbCXawWGFm2ZX4
-         wGccKh5GrVZmpGLvkgaSbrz0CYNj0ONGNG5aebMdRI8bD62eou2sULvXCsMcY7vCCx
-         BvxdHfvjwCOWljfm/YF4XYSEwFKh35mTc9FBg4Q0=
+        Mon, 11 Nov 2019 01:24:42 -0500
+Received: from mga09.intel.com ([134.134.136.24]:39697 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726205AbfKKGYm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 01:24:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 22:24:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
+   d="scan'208";a="207035519"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 10 Nov 2019 22:24:40 -0800
+Received: from [10.226.39.46] (ekotax-mobl.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id 8462B5801E3;
+        Sun, 10 Nov 2019 22:24:33 -0800 (PST)
+Subject: Re: [PATCH v5 3/3] PCI: artpec6: Configure FTS with dwc helper
+ function
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1572950559.git.eswara.kota@linux.intel.com>
+ <90a64d72a32dbc75c03a58a1813f50e547170ff4.1572950559.git.eswara.kota@linux.intel.com>
+ <DM6PR12MB4010413DC722963F00461666DA790@DM6PR12MB4010.namprd12.prod.outlook.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <2ff60b67-c18f-2bcc-f10c-38b9fdec29fe@linux.intel.com>
+Date:   Mon, 11 Nov 2019 14:24:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <DM6PR12MB4010413DC722963F00461666DA790@DM6PR12MB4010.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 Nov 2019 11:45:22 +0530
-From:   kgunda@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        lee.jones@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and
- pm6150l
-In-Reply-To: <5dc2f71e.1c69fb81.8912a.f2c0@mx.google.com>
-References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
- <5dc1cb4c.1c69fb81.af253.0b8a@mx.google.com>
- <c4cee81775c6d82024ca05250290f603@codeaurora.org>
- <5dc2f71e.1c69fb81.8912a.f2c0@mx.google.com>
-Message-ID: <1d3436e220ea17ca9d99000922fcb809@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-06 22:08, Stephen Boyd wrote:
-> Quoting kgunda@codeaurora.org (2019-11-05 22:43:59)
->> On 2019-11-06 00:49, Stephen Boyd wrote:
->> > Quoting Kiran Gunda (2019-11-04 21:21:49)
->> >> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
->> >> found on SC7180 based platforms.
->> >>
->> >> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> >> ---
->> >>  - Changes from V1:
->> >>    Sorted the macros and compatibles.
->> >
->> > I don't see anything sorted though.
->> >
->> Sorry .. I might have misunderstood your comment. Let me know if my
->> understanding is correct.
->> 
->> >>>> And compatible here.
->> >>> And on macro name here.
->> 
->> This means you want to sort all the existing compatible and macros in
->> alpha numeric order ?
-> 
-> Sorry I also got confused on what the driver is doing. I replied on the
-> original patch with what is preferred.
-Ok.. I just replied to that.
+
+On 11/6/2019 5:43 PM, Gustavo Pimentel wrote:
+> On Wed, Nov 6, 2019 at 3:44:3, Dilip Kota <eswara.kota@linux.intel.com>
+> wrote:
+>
+>> Utilize DesugnWare helper functions to configure Fast Training
+>> Sequence. Drop the respective code in the driver.
+> Please fix
+> s/DesugnWare/DesignWare
+Typo error. I will correct it in the next patch version.
+
+Thanks for reviewing it.
+Regards,
+Dilip
+
+
