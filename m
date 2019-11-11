@@ -2,180 +2,102 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D57EC17441
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872E4C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77782190F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="bxHpIPb5"
+	by mail.kernel.org (Postfix) with ESMTP id 5A3B3214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfKKLgk (ORCPT
+        id S1726823AbfKKLre (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:36:40 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54641 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfKKLgk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 06:36:40 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z26so12921588wmi.4
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 03:36:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y0dulQXEpY4JTRjYNrgxL7H4Oc+cEpHXSad2UPEfcck=;
-        b=bxHpIPb5phD5/xnyo/ChAZAMq+BdxeaAyc6U/zw8Sl83T8N5fzUKeN95dyN4AbByx4
-         QNGTpquHrJxqPQO2cqiIHQ2xGmU5avPs8s2QfezmZ++a5NpQMU35u+5KyGmNEzAruCOs
-         H2FSzP5CLlAOpkaoFUQyAkVvhvJ76TBZvk65gF/5pA3xvKn5rUe59p6lzZZ+Qzq18wql
-         eSqtJfMIohZsY/OldoyBBzP9r4hsvs2yeIzz/2iytuuiUh1dPmeDMmiDSN3UHRakIwsV
-         nFzL/cLdwv5l1flpZ5DcbGZtbEYmTbPj2AyiFTBM4xfjtF6Bk+H5L/uClwVVlRggjvb4
-         1Z7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y0dulQXEpY4JTRjYNrgxL7H4Oc+cEpHXSad2UPEfcck=;
-        b=oZO+HwoFz7Hb8t9DEo5HCgDczwK9ZBdRZNW0EyBPY8DxuK/oOgV+o2KBmr66Oq51fm
-         fkyLh8v1G70foKHZMdhb6T3RLO1wD0slO+7PoLQZJb37AUhNh3ZzTXwIK8WGapmrGm8+
-         WJs5mFcz2tXBZF6MzpOcI24PuRGx7UlsBOhu2OZkiG4ahq/IQEaCQ25BHxDqTE5J7mgl
-         TochZvh2TFsojUzsNdJDuDx76WGKghDg2nisIFVKWs84FRO1Ss3m8vnlzIUeVvUXn5oi
-         uRXdKKT5NkbN3ksInIn8Yoe9Fa/mayUSekKcL4J9eG9wQI2SbHfn9W+ck/tTOekQ/bsO
-         6TPw==
-X-Gm-Message-State: APjAAAU+AqcBsKCDgDhGpX8UwJ+6wIhVf7mzfgKcHGMxqNHo3waYadvp
-        EGPVk86iIqN88LSUAQkKB68mMFnqTrGjIfLcisGFsw==
-X-Google-Smtp-Source: APXvYqzukrpx06aOA3LqbJs8I7XR+FwIaaQYKy+Gm7Tz2e7dz1DLqlFOVFvJ8DYuDBp3HPhpvJ+qTAC1ypDwtFmt5ow=
-X-Received: by 2002:a1c:4c10:: with SMTP id z16mr18470654wmf.24.1573472196560;
- Mon, 11 Nov 2019 03:36:36 -0800 (PST)
+        Mon, 11 Nov 2019 06:47:34 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38457 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfKKLrd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 06:47:33 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iU8AI-0000vA-On; Mon, 11 Nov 2019 12:47:26 +0100
+Received: from mgr by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iU8AH-0006hF-DX; Mon, 11 Nov 2019 12:47:25 +0100
+From:   Michael Grzeschik <m.grzeschik@pengutronix.de>
+To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        kernel@pengutronix.de, festevam@gmail.com
+Cc:     linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: imx25: fix usbhost1 node
+Date:   Mon, 11 Nov 2019 12:46:56 +0100
+Message-Id: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-References: <20191107212408.11857-1-hch@lst.de>
-In-Reply-To: <20191107212408.11857-1-hch@lst.de>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 11 Nov 2019 17:06:24 +0530
-Message-ID: <CAAhSdy3SGAkOFMhx320KJdPDh6c=qcKqCZ=qrXNKBGtejpZwSA@mail.gmail.com>
-Subject: Re: QEMU RISC-V virt machine poweroff driver
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        devicetree@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 2:54 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Hi all,
->
-> this patch add a driver for the test device in the Qemu RISC-V
-> virt machine which allows properly shutting down the VM.
-> It also is added to the riscv defconfig given that qemu-virt
-> is the most popular riscv platform.
+The usb port represented by &usbhost1 uses an USB phy internal to the
+SoC. We add the phy_type to the base dtsi so the board dts only have to
+overwrite it if they use a different configuration. While at it we also
+pin the usbhost port to host mode.
 
-We really don't need this driver. Instead, we can simply re-use
-following drivers:
-mfd/syscon
-power/reset/syscon-reboot
-power/reset/syscon-poweroff
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts | 2 --
+ arch/arm/boot/dts/imx25-pdk.dts                        | 2 --
+ arch/arm/boot/dts/imx25.dtsi                           | 2 ++
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-Just enable following to your defconfig:
-CONFIG_POWER_RESET=y
-CONFIG_POWER_RESET_SYSCON=y
-CONFIG_POWER_RESET_SYSCON_POWEROFF=y
-CONFIG_SYSCON_REBOOT_MODE=y
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+index 0fde90df2b546..3f38c2e60a745 100644
+--- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+@@ -165,8 +165,6 @@
+ };
+ 
+ &usbhost1 {
+-	phy_type = "serial";
+-	dr_mode = "host";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx25-pdk.dts b/arch/arm/boot/dts/imx25-pdk.dts
+index 05cccd12624cb..fb66884d8a2fa 100644
+--- a/arch/arm/boot/dts/imx25-pdk.dts
++++ b/arch/arm/boot/dts/imx25-pdk.dts
+@@ -304,8 +304,6 @@
+ };
+ 
+ &usbhost1 {
+-	phy_type = "serial";
+-	dr_mode = "host";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+index 9a097ef014af5..7c7795b40ee0c 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -570,6 +570,8 @@
+ 				clock-names = "ipg", "ahb", "per";
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				fsl,usbphy = <&usbphy1>;
++				phy_type = "serial";
++				dr_mode = "host";
+ 				status = "disabled";
+ 			};
+ 
+-- 
+2.24.0.rc1
 
-
-Once above drivers are enabled in your defconfig, make sure
-test device DT nodes are described in the following way for virt machine:
-
-testdev: test@100000 {
-    compatible = "syscon";
-    reg = <0x100000 0x1000>;
-};
-
-reboot {
-    compatible = "syscon-reboot";
-    regmap = <&testdev>;
-    offset = <0x0>;
-    value = <0x7777>;
-};
-
-poweroff {
-    compatible = "syscon-poweroff";
-    regmap = <&testdev>;
-    offset = <0x0>;
-    value = <0x5555>;
-};
-
-
-Here's the QEMU changes I used for above DT nodes:
-
-diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
-index d7c5d630eb..7f8206c726 100644
---- a/hw/riscv/virt.c
-+++ b/hw/riscv/virt.c
-@@ -186,7 +186,7 @@ static void create_fdt(RISCVVirtState *s, const
-struct MemmapEntry *memmap,
-     int cpu;
-     uint32_t *cells;
-     char *nodename;
--    uint32_t plic_phandle, phandle = 1;
-+    uint32_t plic_phandle, test_phandle, phandle = 1;
-     int i;
-     hwaddr flashsize = virt_memmap[VIRT_FLASH].size / 2;
-     hwaddr flashbase = virt_memmap[VIRT_FLASH].base;
-@@ -357,13 +357,32 @@ static void create_fdt(RISCVVirtState *s, const
-struct MemmapEntry *memmap,
-     create_pcie_irq_map(fdt, nodename, plic_phandle);
-     g_free(nodename);
-
-+    test_phandle = phandle++;
-     nodename = g_strdup_printf("/test@%lx",
-         (long)memmap[VIRT_TEST].base);
-     qemu_fdt_add_subnode(fdt, nodename);
--    qemu_fdt_setprop_string(fdt, nodename, "compatible", "sifive,test0");
-+    qemu_fdt_setprop_string(fdt, nodename, "compatible", "syscon");
-     qemu_fdt_setprop_cells(fdt, nodename, "reg",
-         0x0, memmap[VIRT_TEST].base,
-         0x0, memmap[VIRT_TEST].size);
-+    qemu_fdt_setprop_cell(fdt, nodename, "phandle", test_phandle);
-+    test_phandle = qemu_fdt_get_phandle(fdt, nodename);
-+    g_free(nodename);
-+
-+    nodename = g_strdup_printf("/reboot");
-+    qemu_fdt_add_subnode(fdt, nodename);
-+    qemu_fdt_setprop_string(fdt, nodename, "compatible", "syscon-reboot");
-+    qemu_fdt_setprop_cell(fdt, nodename, "regmap", test_phandle);
-+    qemu_fdt_setprop_cell(fdt, nodename, "offset", 0x0);
-+    qemu_fdt_setprop_cell(fdt, nodename, "value", FINISHER_RESET);
-+    g_free(nodename);
-+
-+    nodename = g_strdup_printf("/poweroff");
-+    qemu_fdt_add_subnode(fdt, nodename);
-+    qemu_fdt_setprop_string(fdt, nodename, "compatible", "syscon-poweroff");
-+    qemu_fdt_setprop_cell(fdt, nodename, "regmap", test_phandle);
-+    qemu_fdt_setprop_cell(fdt, nodename, "offset", 0x0);
-+    qemu_fdt_setprop_cell(fdt, nodename, "value", FINISHER_PASS);
-     g_free(nodename);
-
-     nodename = g_strdup_printf("/uart@%lx",
-
-
-Regards,
-Anup
-
-
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
