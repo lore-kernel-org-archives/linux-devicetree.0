@@ -2,135 +2,127 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9ADC17446
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 15:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5F7C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 15:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EFC214E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 15:35:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olV39VV2"
+	by mail.kernel.org (Postfix) with ESMTP id B920A2084F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 15:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKKPfo (ORCPT
+        id S1726877AbfKKPic (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:35:44 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36364 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfKKPfo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 10:35:44 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r10so15142950wrx.3;
-        Mon, 11 Nov 2019 07:35:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rD8E1HPF+kOqPGWZ3GSIUtW8sHwcCfuIMp81Lz9qagk=;
-        b=olV39VV2bMicVYtgEJMOEP/I/sVYYRwQT2FNCGB1ptoPCUallX/tABIsl3iUdZvpYs
-         eo/QGZPWAvkq/L9wgbTJDg7biGY0HXEG14HcW+5UA71IU1smWMNepR6dMMwWoPfH/UzZ
-         xOBETnYiFv/Os1mE9BNgvFVafWye2Y5X8iccT2W+kLeeQBZ869cmiLcAt3cf+96URuM1
-         iDjKSk0XkP1RJC8fkhkKhwRk5F8opKWauO9tYb+4zqi68vRfCMV5kz7e8BF2VS3GUZ3q
-         1oW+v7ijQ+6L0dyQkKhM1LgSNZa4c+PJDY5DGsShaLCVcGhASWcsqzn5TLqN+GXfnQew
-         H0ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rD8E1HPF+kOqPGWZ3GSIUtW8sHwcCfuIMp81Lz9qagk=;
-        b=jNvDW+NufJOeNQLuwvahwKJ6WaMAULmyAfm89FmNU10xXJgjdw4v6RwRQ4Wxxw+sUd
-         DBn6srB57TwConNftabF4ClRBEyhggdGwuwnm2cm4+/Y4OfuSzWI3PRVqimc/kuJS8Lm
-         kikUTZgEkQWE5SSz9ttCYTjhkD8K87okaKFJZneYVM0iHrakQzd7w2Owvh44q+Ju8OH0
-         ftn5WQXysQTZ/TW8TWkubrXfQRRnSwyxT53/T0kwuQ5BMbbIUEJ1JiGLOmjUSr4Ledpg
-         N4l5ubvcHOILzCWG3fsRadYTzCIzXEir3JUGkXhuLcWTpUYYNq86dR/cPLJC4wQ63pZx
-         y4jg==
-X-Gm-Message-State: APjAAAWedOd8/v66iKd8ik7+HbjvwTTRdEL10+u57b/n0Ns9f1K86PUv
-        9qVhTJy7rg76x393mSrDTdQ=
-X-Google-Smtp-Source: APXvYqzlisNq1rGjkud0bmNturkoWzuTDKeymsCfDn0F5kl3m+JUf4GWYBbqVaM75zrttJ2gk/2gzg==
-X-Received: by 2002:adf:fd91:: with SMTP id d17mr21001670wrr.214.1573486541905;
-        Mon, 11 Nov 2019 07:35:41 -0800 (PST)
-Received: from NewMoon.iit.local ([90.147.180.254])
-        by smtp.gmail.com with ESMTPSA id w81sm23965657wmg.5.2019.11.11.07.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 07:35:41 -0800 (PST)
-From:   Andrea Merello <andrea.merello@gmail.com>
-To:     jic23@kernel.org
-Cc:     Andrea Merello <andrea.merello@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        Patrick Havelange <patrick.havelange@essensium.com>,
-        Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>,
-        Matt Weber <matthew.weber@rockwellcollins.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Daniel Gomez <dagmcr@gmail.com>, linux-iio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [v2 9/9] dt-bindings: iio: maxim_thermocouple: document new 'compatible' strings
-Date:   Mon, 11 Nov 2019 16:35:17 +0100
-Message-Id: <20191111153517.13862-10-andrea.merello@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191111153517.13862-1-andrea.merello@gmail.com>
-References: <20190923121714.13672-1-andrea.merello@gmail.com>
- <20191111153517.13862-1-andrea.merello@gmail.com>
+        Mon, 11 Nov 2019 10:38:32 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:57464 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726832AbfKKPic (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:38:32 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iUBls-00041I-3p; Mon, 11 Nov 2019 16:38:28 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xABFcQon014343
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 11 Nov 2019 16:38:26 +0100
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Subject: [PATCH] arm64: dts: rockchip: Add node for gpu on rk3399-roc-pc
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <c2b88509-129d-46d4-9e23-15d0482951be@fivetechno.de>
+Date:   Mon, 11 Nov 2019 16:38:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573486710;6f824438;
+X-HE-SMSGID: 1iUBls-00041I-3p
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now the maxim_thermocouple has new, more specific, 'compatible' strings for
-better distinguish the various supported chips.
+rk3399-roc-pc has a Mali gpu, enable it for use with panfrost and mesa >19.2.
 
-This patch updates the DT bindings documentation accordingly
-
-Cc: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Patrick Havelange <patrick.havelange@essensium.com>
-Cc: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-Cc: Matt Weber <matthew.weber@rockwellcollins.com>
-Cc: Matt Ranostay <matt.ranostay@konsulko.com>
-Cc: Chuhong Yuan <hslester96@gmail.com>
-Cc: Daniel Gomez <dagmcr@gmail.com>
-Cc: linux-iio@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
 ---
- .../bindings/iio/temperature/maxim_thermocouple.txt        | 7 +++++--
+Based on v5.5-armsoc/dts64/75aa5678
+If applied with other patches in between, the second hunk
+offsets and may patch vdd_cpu_b instead of vdd_gpu.
+---
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 7 +++++--
  1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/maxim_thermocouple.txt b/Documentation/devicetree/bindings/iio/temperature/maxim_thermocouple.txt
-index 28bc5c4d965b..bb85cd0e039c 100644
---- a/Documentation/devicetree/bindings/iio/temperature/maxim_thermocouple.txt
-+++ b/Documentation/devicetree/bindings/iio/temperature/maxim_thermocouple.txt
-@@ -5,7 +5,10 @@ Maxim thermocouple support
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+index 7e07dae33d0f..287f97488f65 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+@@ -238,6 +238,11 @@
+ 	status = "okay";
+ };
  
- Required properties:
++&gpu {
++	mali-supply = <&vdd_gpu>;
++	status = "okay";
++};
++
+ &hdmi {
+ 	ddc-i2c-bus = <&i2c3>;
+ 	pinctrl-names = "default";
+@@ -465,8 +470,6 @@
+ 		regulator-min-microvolt = <712500>;
+ 		regulator-max-microvolt = <1500000>;
+ 		regulator-ramp-delay = <1000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+ 		vin-supply = <&vcc3v3_sys>;
  
--	- compatible: must be "maxim,max31855" or "maxim,max6675"
-+	- compatible: must be "maxim,max6675" or one of the following:
-+	   "maxim,max31855k", "maxim,max31855j", "maxim,max31855n",
-+	   "maxim,max31855s", "maxim,max31855t", "maxim,max31855e",
-+	   "maxim,max31855r"; the generic "max,max31855" is deprecated.
- 	- reg: SPI chip select number for the device
- 	- spi-max-frequency: must be 4300000
- 	- spi-cpha: must be defined for max6675 to enable SPI mode 1
-@@ -15,7 +18,7 @@ Required properties:
- Example:
- 
- 	max31855@0 {
--		compatible = "maxim,max31855";
-+		compatible = "maxim,max31855k";
- 		reg = <0>;
- 		spi-max-frequency = <4300000>;
- 	};
+ 		regulator-state-mem {
 -- 
-2.17.1
-
+2.20.1
