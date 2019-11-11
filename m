@@ -2,128 +2,124 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92205C17443
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 04:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40623C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 04:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F1320818
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 04:25:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Lb/StXWi";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Lb/StXWi"
+	by mail.kernel.org (Postfix) with ESMTP id 1680820856
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 04:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573447206;
+	bh=IbqTizAofEr4fAlNvQZJC9e5XYpXENQc/RRIOCFORfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hL4LgoL83wpjT4RuL8QsNet+bUOZooB91B3OwaiHsbWwrx7MgX9Y8EJKNUy+NeeNn
+	 o1drgOz6yJ/vYEzTfN19UCVH5CS8QLe61iocnzvhluGBSkzydnUOdOyACdvXviupVb
+	 NeOOVZK4eF3Al5UQov+Zpiw9/17gJAMVaNECT2HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfKKEZU (ORCPT
+        id S1726819AbfKKEkD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 Nov 2019 23:25:20 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:36264 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfKKEZU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 10 Nov 2019 23:25:20 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EACA960B72; Mon, 11 Nov 2019 04:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573446318;
-        bh=RcK9pHRRt96unH/MIVK4xHvAlRqDPAqVKYYnTuF0V+Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lb/StXWiya9IlBVHPCMkqlBIpHpBnc+sGFseeR3b7q7Fq+hDZEJiF8rSKCjyBfZ/h
-         TrviiH5t6XBfKhHI8ui8ddlsDdXewWja6DeQqSOQnHY9DR28C9w8Ffg1Hz3NpsPJQC
-         UEoV3b0eFrDorzyQv/qDidF8Xevxyf/E/B5aONYU=
-Received: from govinds-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Sun, 10 Nov 2019 23:40:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbfKKEkD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 Nov 2019 23:40:03 -0500
+Received: from localhost (unknown [106.201.42.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: govinds@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F33B66092C;
-        Mon, 11 Nov 2019 04:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573446318;
-        bh=RcK9pHRRt96unH/MIVK4xHvAlRqDPAqVKYYnTuF0V+Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lb/StXWiya9IlBVHPCMkqlBIpHpBnc+sGFseeR3b7q7Fq+hDZEJiF8rSKCjyBfZ/h
-         TrviiH5t6XBfKhHI8ui8ddlsDdXewWja6DeQqSOQnHY9DR28C9w8Ffg1Hz3NpsPJQC
-         UEoV3b0eFrDorzyQv/qDidF8Xevxyf/E/B5aONYU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F33B66092C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=govinds@codeaurora.org
-From:   Govind Singh <govinds@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
-        Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v2 2/2] ath10k: Don't call SCM interface for statically mapped msa region
-Date:   Mon, 11 Nov 2019 09:55:08 +0530
-Message-Id: <20191111042508.12628-3-govinds@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191111042508.12628-1-govinds@codeaurora.org>
-References: <20191111042508.12628-1-govinds@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B0F20856;
+        Mon, 11 Nov 2019 04:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573447202;
+        bh=IbqTizAofEr4fAlNvQZJC9e5XYpXENQc/RRIOCFORfQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pMA4xX1cvwbWOJT0hA/nZrCBydq0lxFRgimzmpVnyya2HCzceOyfJkrKVI8G/SZS1
+         98tvL1CrGZrU4BECstDOm7rjbgm7pHuDnrSM4/IncQsFOABV/RhsR9m3RcCNUoojCx
+         RG3iHH00fUKscPWTdoARJf3TIlsMeDNz1/Yk8GbU=
+Date:   Mon, 11 Nov 2019 10:09:57 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com
+Subject: Re: [PATCH v4 05/15] dmaengine: Add support for reporting DMA cached
+ data amount
+Message-ID: <20191111043957.GL952516@vkoul-mobl>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-6-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101084135.14811-6-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For some targets ex: QCS404, SCM permissions for MSA region is
-statically configured in TrustZone fw. Add SCM call disable option
-for such targets to avoid duplicate permissions.
+On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> A DMA hardware can have big cache or FIFO and the amount of data sitting in
+> the DMA fabric can be an interest for the clients.
+> 
+> For example in audio we want to know the delay in the data flow and in case
+> the DMA have significantly large FIFO/cache, it can affect the latenc/delay
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Reviewed-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  drivers/dma/dmaengine.h   | 8 ++++++++
+>  include/linux/dmaengine.h | 2 ++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
+> index 501c0b063f85..b0b97475707a 100644
+> --- a/drivers/dma/dmaengine.h
+> +++ b/drivers/dma/dmaengine.h
+> @@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
+>  		state->last = complete;
+>  		state->used = used;
+>  		state->residue = 0;
+> +		state->in_flight_bytes = 0;
+>  	}
+>  	return dma_async_is_complete(cookie, complete, used);
+>  }
+> @@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
+>  		state->residue = residue;
+>  }
+>  
+> +static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
+> +					   u32 in_flight_bytes)
+> +{
+> +	if (state)
+> +		state->in_flight_bytes = in_flight_bytes;
+> +}
+> +
+>  struct dmaengine_desc_callback {
+>  	dma_async_tx_callback callback;
+>  	dma_async_tx_callback_result callback_result;
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 0e8b426bbde9..c4c5219030a6 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
+>   * @residue: the remaining number of bytes left to transmit
+>   *	on the selected transfer for states DMA_IN_PROGRESS and
+>   *	DMA_PAUSED if this is implemented in the driver, else 0
+> + * @in_flight_bytes: amount of data in bytes cached by the DMA.
+>   */
+>  struct dma_tx_state {
+>  	dma_cookie_t last;
+>  	dma_cookie_t used;
+>  	u32 residue;
+> +	u32 in_flight_bytes;
 
-Testing: Tested on WCN3990 HW
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+Should we add this here or use the dmaengine_result()
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/qmi.c | 9 +++++++++
- drivers/net/wireless/ath/ath10k/qmi.h | 1 +
- 2 files changed, 10 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-index 637f83ef65f8..40ffc444ab7b 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -84,6 +84,9 @@ static int ath10k_qmi_setup_msa_permissions(struct ath10k_qmi *qmi)
- 	int ret;
- 	int i;
- 
-+	if (qmi->msa_fixed_perm)
-+		return 0;
-+
- 	for (i = 0; i < qmi->nr_mem_region; i++) {
- 		ret = ath10k_qmi_map_msa_permission(qmi, &qmi->mem_region[i]);
- 		if (ret)
-@@ -102,6 +105,9 @@ static void ath10k_qmi_remove_msa_permission(struct ath10k_qmi *qmi)
- {
- 	int i;
- 
-+	if (qmi->msa_fixed_perm)
-+		return;
-+
- 	for (i = 0; i < qmi->nr_mem_region; i++)
- 		ath10k_qmi_unmap_msa_permission(qmi, &qmi->mem_region[i]);
- }
-@@ -1018,6 +1024,9 @@ static int ath10k_qmi_setup_msa_resources(struct ath10k_qmi *qmi, u32 msa_size)
- 		qmi->msa_mem_size = msa_size;
- 	}
- 
-+	if (of_property_read_bool(dev->of_node, "qcom,msa_fixed_perm"))
-+		qmi->msa_fixed_perm = true;
-+
- 	ath10k_dbg(ar, ATH10K_DBG_QMI, "msa pa: %pad , msa va: 0x%p\n",
- 		   &qmi->msa_pa,
- 		   qmi->msa_va);
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.h b/drivers/net/wireless/ath/ath10k/qmi.h
-index 40aafb875ed0..dc257375f161 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.h
-+++ b/drivers/net/wireless/ath/ath10k/qmi.h
-@@ -104,6 +104,7 @@ struct ath10k_qmi {
- 	bool fw_ready;
- 	char fw_build_timestamp[MAX_TIMESTAMP_LEN + 1];
- 	struct ath10k_qmi_cal_data cal_data[MAX_NUM_CAL_V01];
-+	bool msa_fixed_perm;
- };
- 
- int ath10k_qmi_wlan_enable(struct ath10k *ar,
 -- 
-2.22.0
-
+~Vinod
