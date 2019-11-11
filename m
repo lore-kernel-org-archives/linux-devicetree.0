@@ -2,148 +2,287 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AEDC17443
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 07:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CFFC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE4E2075C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 07:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b18hgvTx"
+	by mail.kernel.org (Postfix) with ESMTP id 584792075C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfKKH7v (ORCPT
+        id S1726791AbfKKIId (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 02:59:51 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55172 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfKKH7v (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 02:59:51 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB7xf7o026902;
-        Mon, 11 Nov 2019 01:59:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573459181;
-        bh=Lz8MXx9Ipzrc2GJ3x5jttN6h2LWeeejmmWOpGkLe3GA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=b18hgvTxSvyb/8sGeN9WquAaxtxGP5I1R2C/nuG64urQaoOt5TlTLK3H8ykY6eK2u
-         dElAXU8CtAF83saXafzu0I93nyQP6UJtFDdXr/e2amfMp6YhIXrjKS8v+YcQ09Pgih
-         pGuPs8g+ea+bfUxIFx75PIqPteOepDlV0BahpAWY=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB7xf0J074396
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 01:59:41 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 01:59:39 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 01:59:22 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB7xZZH105987;
-        Mon, 11 Nov 2019 01:59:36 -0600
-Subject: Re: [PATCH v4 05/15] dmaengine: Add support for reporting DMA cached
- data amount
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-6-peter.ujfalusi@ti.com>
- <20191111043957.GL952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <796d2a17-0807-c0f3-fda8-434357edeccf@ti.com>
-Date:   Mon, 11 Nov 2019 10:00:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Mon, 11 Nov 2019 03:08:33 -0500
+Received: from mga18.intel.com ([134.134.136.126]:15070 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbfKKIIc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 03:08:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 00:08:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
+   d="scan'208";a="206666258"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 11 Nov 2019 00:08:30 -0800
+Received: from [10.226.39.46] (ekotax-mobl.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id CC57C580261;
+        Mon, 11 Nov 2019 00:08:22 -0800 (PST)
+Subject: Re: [PATCH v5 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1572950559.git.eswara.kota@linux.intel.com>
+ <ac63d9856323555736c5b361612df3ee49b0f998.1572950559.git.eswara.kota@linux.intel.com>
+ <20191106122452.GA32742@smile.fi.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <eee3e6ee-fd55-9c88-a628-34f883b19988@linux.intel.com>
+Date:   Mon, 11 Nov 2019 16:08:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191111043957.GL952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20191106122452.GA32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+On 11/6/2019 8:24 PM, Andy Shevchenko wrote:
+> On Wed, Nov 06, 2019 at 11:44:02AM +0800, Dilip Kota wrote:
+>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>> PCIe controller is based of Synopsys DesignWare PCIe core.
+>>
+>> Intel PCIe driver requires Upconfigure support, fast training
+>> sequence and link speed configuration. So adding the respective
+>> helper functions in the PCIe DesignWare framework.
+>> It also programs hardware autonomous speed during speed
+>> configuration so defining it in pci_regs.h.
+> My comments below, though I may miss the discussion and comment on the settled
+> things.
+>
+>> +config PCIE_INTEL_GW
+>> +        bool "Intel Gateway PCIe host controller support"
+>> +	depends on OF && (X86 || COMPILE_TEST)
+>> +	select PCIE_DW_HOST
+>> +	help
+>> +          Say 'Y' here to enable PCIe Host controller support on Intel
+>> +	  Gateway SoCs.
+>> +	  The PCIe controller uses the DesignWare core plus Intel-specific
+>> +	  hardware wrappers.
+> Above has indentation issues.
 
-On 11/11/2019 6.39, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
->> A DMA hardware can have big cache or FIFO and the amount of data sitting in
->> the DMA fabric can be an interest for the clients.
->>
->> For example in audio we want to know the delay in the data flow and in case
->> the DMA have significantly large FIFO/cache, it can affect the latenc/delay
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> Reviewed-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>  drivers/dma/dmaengine.h   | 8 ++++++++
->>  include/linux/dmaengine.h | 2 ++
->>  2 files changed, 10 insertions(+)
->>
->> diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
->> index 501c0b063f85..b0b97475707a 100644
->> --- a/drivers/dma/dmaengine.h
->> +++ b/drivers/dma/dmaengine.h
->> @@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
->>  		state->last = complete;
->>  		state->used = used;
->>  		state->residue = 0;
->> +		state->in_flight_bytes = 0;
->>  	}
->>  	return dma_async_is_complete(cookie, complete, used);
->>  }
->> @@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
->>  		state->residue = residue;
->>  }
->>  
->> +static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
->> +					   u32 in_flight_bytes)
+Typo error, i will fix it.
+Thanks for pointing.
+
+>
+>> +void dw_pcie_upconfig_setup(struct dw_pcie *pci)
 >> +{
->> +	if (state)
->> +		state->in_flight_bytes = in_flight_bytes;
->> +}
+>> +	u32 val;
 >> +
->>  struct dmaengine_desc_callback {
->>  	dma_async_tx_callback callback;
->>  	dma_async_tx_callback_result callback_result;
->> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
->> index 0e8b426bbde9..c4c5219030a6 100644
->> --- a/include/linux/dmaengine.h
->> +++ b/include/linux/dmaengine.h
->> @@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
->>   * @residue: the remaining number of bytes left to transmit
->>   *	on the selected transfer for states DMA_IN_PROGRESS and
->>   *	DMA_PAUSED if this is implemented in the driver, else 0
->> + * @in_flight_bytes: amount of data in bytes cached by the DMA.
->>   */
->>  struct dma_tx_state {
->>  	dma_cookie_t last;
->>  	dma_cookie_t used;
->>  	u32 residue;
->> +	u32 in_flight_bytes;
-> 
-> Should we add this here or use the dmaengine_result()
+>> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
+>> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL,
+>> +			   val | PORT_MLTI_UPCFG_SUPPORT);
+> Why not to use similar pattern as below?
+>
+> 	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
+> 	val |= PORT_MLTI_UPCFG_SUPPORT;
+> 	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
+Ok, i will update it.
+>> +}
+>> +void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+>> +{
+>> +	u32 reg, val;
+>> +	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> +
+>> +	reg = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCTL2);
+>> +	reg &= ~PCI_EXP_LNKCTL2_TLS;
+>> +
+>> +	switch (pcie_link_speed[link_gen]) {
+>> +	case PCIE_SPEED_2_5GT:
+>> +		reg |= PCI_EXP_LNKCTL2_TLS_2_5GT;
+>> +	break;
+> Is this a style or indentation issue?
+While writing this switch case, i observed couple of drivers doing like 
+this(I dont remember the driver names).
+I checked now other PCIe controller drivers, break is inline to 'reg |=' 
+line.
+I will update it.
+>
+>> +	case PCIE_SPEED_5_0GT:
+>> +		reg |= PCI_EXP_LNKCTL2_TLS_5_0GT;
+>> +	break;
+> Ditto.
+>
+>> +	case PCIE_SPEED_8_0GT:
+>> +		reg |= PCI_EXP_LNKCTL2_TLS_8_0GT;
+>> +	break;
+> Ditto.
+>
+>> +	case PCIE_SPEED_16_0GT:
+>> +		reg |= PCI_EXP_LNKCTL2_TLS_16_0GT;
+>> +	break;
+> Ditto.
+>
+>> +	default:
+>> +	/* Use hardware capability */
+> Ditto.
+I will correct it.
+>
+>> +		val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+>> +		val = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+>> +		reg &= ~PCI_EXP_LNKCTL2_HASD;
+>> +		reg |= FIELD_PREP(PCI_EXP_LNKCTL2_TLS, val);
+>> +	break;
+> Ditto.
+>
+>> +	}
+>> +
+>> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCTL2, reg);
+>> +}
+>> +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>> +	val &= ~PORT_LOGIC_N_FTS;
+>> +	val |= n_fts;
+> What if somebody supplies bits outside of the mask? I guess you need to apply
+> proper masks to both values.
+Agree, i will update it.
+>
+>> +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+>> +}
+>> +#define PORT_LOGIC_N_FTS		GENMASK(7, 0)
+> Shouldn't you use _MASK suffix here?
+Agree, i will update it to PORT_LOGIC_N_FTS_MASK .
+>
+>> +#define BUS_IATU_OFFS			SZ_256M
+> Perhaps less cryptic name?
+I will update it to BUS_IATU_OFFSET
+>
+>> +#define RST_INTRVL_DFT_MS		100
+> Less cryptic name would be
+>
+> 	RESET_INTERVAL_MS
+Agree, I will update it.
+>
+>
+>> +static void pcie_update_bits(void __iomem *base, u32 mask, u32 val, u32 ofs)
+>> +{
+>> +	u32 old, new;
+>> +
+>> +	old = readl(base + ofs);
+>> +	new = old & ~mask;
+>> +	new |= val & mask;
+> Standard pattern
+>
+> 	new = (old & ~mask) | (val & mask);
+>
+> And actually you may re-use 'val' variable and get rid of 'new' one.
 
-Ideally at the time dmaengine_result is used (at tx completion callback)
-there should be nothing in flight ;)
+Agree, will reuse the val:
+val = (old & ~mask) | (val & mask);
 
-The reason why it is added to dma_tx_state is that clients can check at
-any time while the DMA is running the number of cached bytes.
-Audio needs this for cyclic and UART also needs to know it.
+>
+>> +
+>> +	if (new != old)
+>> +		writel(new, base + ofs);
+>> +}
+>> +static int intel_pcie_get_resources(struct platform_device *pdev)
+>> +{
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+>> +
+> No need to have this blank line.
+Agree, will remove it.
+>
+>> +	pci->dbi_base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(pci->dbi_base))
+>> +		return PTR_ERR(pci->dbi_base);
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+>> +
+> Ditto.
+Agree, will remove it.
+>
+>> +	lpp->app_base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(lpp->app_base))
+>> +		return PTR_ERR(lpp->app_base);
+>> +	return 0;
+>> +}
+>> +	/* Read PMC status and wait for falling into L2 link state */
+>> +	ret = readl_poll_timeout(lpp->app_base + PCIE_APP_PMC, value,
+>> +				 (value & PCIE_APP_PMC_IN_L2), 20,
+> Too many parentheses.
+Agree, will remove it.
+>
+>> +				 jiffies_to_usecs(5 * HZ));
+>> +	if (!lpp->pcie_cap_ofst) {
+>> +		lpp->pcie_cap_ofst = dw_pcie_find_capability(&lpp->pci,
+>> +							     PCI_CAP_ID_EXP);
+>> +	}
+> Wouldn't be slightly better to have something like
+>
+> 	ret = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
+> 	if (ret >= 0 && !lpp->pcie_cap_ofst)
+> 		lpp->pcie_cap_ofst = ret;
+>
+> ?
+>
+> (It can be expanded to print error / warning messages if needed)
+This function gets called during initialization and system resume. I 
+have kept the if check to do dw_pcie_find_capability() only once.(not to 
+do for system resume)
+For error check, i will update this to
+if (!lpp->pcie_cap_ofst) {    /*pcie_cap_ofst will be 0 for the very 
+first time as kzalloc() is used for memory allocation for lpp structure*/
+      ret = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
+      if (!ret) { /* Function returns 0 in error case */
+          ret = -ENXIO;
+          dev_err();
+          goto app_init_err;
+       }
+       lpp->pcie_cap_ofst = ret;
+}
+>
+>> +	return ret;
+>> +}
+>> +	platform_set_drvdata(pdev, lpp);
+> I think it makes sense to setup at the end of the function (before dev_info()
+> call).
+I have done it immediately after the memory allocation.
+Ok, i will move it before dev_info().
+>
+>> +	data = device_get_match_data(dev);
+> Perhaps
+> 	if (!data)
+> 		return -ENODEV; // -EINVAL?
 
-- Péter
+Sure i will add it and ENODEV looks appropriate.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>
+>> +	/*
+>> +	 * Intel PCIe doesn't configure IO region, so set viewport
+>> +	 * to not to perform IO region access.
+>> +	 */
+>> +	pci->num_viewport = data->num_viewport;
+> Missed blank line?
+I will add it.
+
+Thanks a lot for reviewing and giving the inputs. I will update the new 
+patch version according to your inputs and submit for review.
+
+Regards,
+Dilip
+
+>
+>> +	dev_info(dev, "Intel PCIe Root Complex Port init done\n");
