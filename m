@@ -2,83 +2,95 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBD6C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72304C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0BE206A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435ED21783
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Lt82WdY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfKKGYm (ORCPT
+        id S1725812AbfKKGvl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 01:24:42 -0500
-Received: from mga09.intel.com ([134.134.136.24]:39697 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbfKKGYm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 01:24:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 22:24:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
-   d="scan'208";a="207035519"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 10 Nov 2019 22:24:40 -0800
-Received: from [10.226.39.46] (ekotax-mobl.gar.corp.intel.com [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 8462B5801E3;
-        Sun, 10 Nov 2019 22:24:33 -0800 (PST)
-Subject: Re: [PATCH v5 3/3] PCI: artpec6: Configure FTS with dwc helper
- function
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <90a64d72a32dbc75c03a58a1813f50e547170ff4.1572950559.git.eswara.kota@linux.intel.com>
- <DM6PR12MB4010413DC722963F00461666DA790@DM6PR12MB4010.namprd12.prod.outlook.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <2ff60b67-c18f-2bcc-f10c-38b9fdec29fe@linux.intel.com>
-Date:   Mon, 11 Nov 2019 14:24:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 01:51:41 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:14087 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726768AbfKKGvl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 01:51:41 -0500
+X-UUID: fbb8478e55e84bd8bc395048e53ab68d-20191111
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=YVTLncncE/8QbF39XxCJ9mXM/sirh7PaGKSXHI0dujI=;
+        b=Lt82WdY2Tp9g/Hd0hy746SyGafzz22p+HiBVI135IIjdwIbt+M0ZBBP180qudfOD9NNvfmNKSMBnYqltKVGGvM2bLtGE5FnljW361qAV6u+TVQJ9fsS8aoopFCghb7GUK7TPYTmjIeG3VGS02biBpcHJvukNhIBujgabDnIA2nE=;
+X-UUID: fbb8478e55e84bd8bc395048e53ab68d-20191111
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <mark-mc.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1137527795; Mon, 11 Nov 2019 14:51:31 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 11 Nov 2019 14:51:28 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 11 Nov 2019 14:51:28 +0800
+From:   MarkLee <Mark-MC.Lee@mediatek.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Sean Wang <sean.wang@mediatek.com>,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rene van Dorst <opensource@vdorst.com>,
+        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        MarkLee <Mark-MC.Lee@mediatek.com>
+Subject: [PATCH net,v2 3/3] net: ethernet: mediatek: Enable GDM GDMA_DROP_ALL mode
+Date:   Mon, 11 Nov 2019 14:51:29 +0800
+Message-ID: <20191111065129.30078-4-Mark-MC.Lee@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20191111065129.30078-1-Mark-MC.Lee@mediatek.com>
+References: <20191111065129.30078-1-Mark-MC.Lee@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <DM6PR12MB4010413DC722963F00461666DA790@DM6PR12MB4010.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 11/6/2019 5:43 PM, Gustavo Pimentel wrote:
-> On Wed, Nov 6, 2019 at 3:44:3, Dilip Kota <eswara.kota@linux.intel.com>
-> wrote:
->
->> Utilize DesugnWare helper functions to configure Fast Training
->> Sequence. Drop the respective code in the driver.
-> Please fix
-> s/DesugnWare/DesignWare
-Typo error. I will correct it in the next patch version.
-
-Thanks for reviewing it.
-Regards,
-Dilip
-
+RW5hYmxlIEdETSBHRE1BX0RST1BfQUxMIG1vZGUgdG8gZHJvcCBhbGwgcGFja2V0IGR1cmluZyB0
+aGUgDQpzdG9wIG9wZXJhdGlvbi4gVGhpcyBpcyByZWNvbW1lbmRlZCBieSB0aGUgbXQ3NjJ4IEhX
+IGRlc2lnbiANCnRvIGRyb3AgYWxsIHBhY2tldCBmcm9tIEdNQUMgYmVmb3JlIHN0b3BwaW5nIFBE
+TUEuDQoNClNpZ25lZC1vZmYtYnk6IE1hcmtMZWUgPE1hcmstTUMuTGVlQG1lZGlhdGVrLmNvbT4N
+Ci0tDQp2MS0+djI6DQoqIG5vIGNoYW5nZQ0KDQotLS0NCiBkcml2ZXJzL25ldC9ldGhlcm5ldC9t
+ZWRpYXRlay9tdGtfZXRoX3NvYy5jIHwgMiArKw0KIGRyaXZlcnMvbmV0L2V0aGVybmV0L21lZGlh
+dGVrL210a19ldGhfc29jLmggfCAxICsNCiAyIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygr
+KQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVkaWF0ZWsvbXRrX2V0aF9z
+b2MuYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lZGlhdGVrL210a19ldGhfc29jLmMNCmluZGV4
+IGIxNDdhYjBlNDRjZS4uNWZlMWFiMGMxNmNjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvZXRo
+ZXJuZXQvbWVkaWF0ZWsvbXRrX2V0aF9zb2MuYw0KKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQv
+bWVkaWF0ZWsvbXRrX2V0aF9zb2MuYw0KQEAgLTIyNzksNiArMjI3OSw4IEBAIHN0YXRpYyBpbnQg
+bXRrX3N0b3Aoc3RydWN0IG5ldF9kZXZpY2UgKmRldikNCiAJaWYgKCFyZWZjb3VudF9kZWNfYW5k
+X3Rlc3QoJmV0aC0+ZG1hX3JlZmNudCkpDQogCQlyZXR1cm4gMDsNCiANCisJbXRrX2dkbV9jb25m
+aWcoZXRoLCBNVEtfR0RNQV9EUk9QX0FMTCk7DQorDQogCW10a190eF9pcnFfZGlzYWJsZShldGgs
+IE1US19UWF9ET05FX0lOVCk7DQogCW10a19yeF9pcnFfZGlzYWJsZShldGgsIE1US19SWF9ET05F
+X0lOVCk7DQogCW5hcGlfZGlzYWJsZSgmZXRoLT50eF9uYXBpKTsNCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL25ldC9ldGhlcm5ldC9tZWRpYXRlay9tdGtfZXRoX3NvYy5oIGIvZHJpdmVycy9uZXQvZXRo
+ZXJuZXQvbWVkaWF0ZWsvbXRrX2V0aF9zb2MuaA0KaW5kZXggYjE2ZDhkOWIxOTZhLi44NTgzMGZl
+MTRhMWIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWRpYXRlay9tdGtfZXRo
+X3NvYy5oDQorKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWRpYXRlay9tdGtfZXRoX3NvYy5o
+DQpAQCAtODUsNiArODUsNyBAQA0KICNkZWZpbmUgTVRLX0dETUFfVENTX0VOCQlCSVQoMjEpDQog
+I2RlZmluZSBNVEtfR0RNQV9VQ1NfRU4JCUJJVCgyMCkNCiAjZGVmaW5lIE1US19HRE1BX1RPX1BE
+TUEJMHgwDQorI2RlZmluZSBNVEtfR0RNQV9EUk9QX0FMTCAgICAgICAweDc3NzcNCiANCiAvKiBV
+bmljYXN0IEZpbHRlciBNQUMgQWRkcmVzcyBSZWdpc3RlciAtIExvdyAqLw0KICNkZWZpbmUgTVRL
+X0dETUFfTUFDX0FEUkwoeCkJKDB4NTA4ICsgKHggKiAweDEwMDApKQ0KLS0gDQoyLjE3LjENCg==
 
