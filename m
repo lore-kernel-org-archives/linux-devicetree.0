@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D646C17442
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B64C17442
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D725207FA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE12E207FA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 03:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfKKDEw (ORCPT
+        id S1726985AbfKKDEy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 Nov 2019 22:04:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54314 "EHLO mx1.suse.de"
+        Sun, 10 Nov 2019 22:04:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54330 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726742AbfKKDEw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 Nov 2019 22:04:52 -0500
+        id S1726927AbfKKDEy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 Nov 2019 22:04:54 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B4830B150;
-        Mon, 11 Nov 2019 03:04:49 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id CB503B18D;
+        Mon, 11 Nov 2019 03:04:51 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 3/7] arm64: dts: realtek: rtd129x: Introduce r-bus
-Date:   Mon, 11 Nov 2019 04:04:30 +0100
-Message-Id: <20191111030434.29977-4-afaerber@suse.de>
+Subject: [PATCH 7/7] arm64: dts: realtek: Add RTD1395 and BPi-M4
+Date:   Mon, 11 Nov 2019 04:04:34 +0100
+Message-Id: <20191111030434.29977-8-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191111030434.29977-1-afaerber@suse.de>
 References: <20191111030434.29977-1-afaerber@suse.de>
@@ -43,85 +43,199 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Model Realtek's register bus in DT.
+Add Device Trees for Realtek RTD1395 SoC and Banana Pi BPi-M4 SBC.
+
+For now reuse RTD1295 reset constants.
 
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/arm64/boot/dts/realtek/rtd129x.dtsi | 136 ++++++++++++++++---------------
- 1 file changed, 72 insertions(+), 64 deletions(-)
+ arch/arm64/boot/dts/realtek/Makefile           |   2 +
+ arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts |  30 ++++++
+ arch/arm64/boot/dts/realtek/rtd1395.dtsi       |  65 ++++++++++++
+ arch/arm64/boot/dts/realtek/rtd139x.dtsi       | 141 +++++++++++++++++++++++++
+ 4 files changed, 238 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1395.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd139x.dtsi
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-index 8d80cca945bc..c4533a2555aa 100644
---- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-@@ -55,70 +55,78 @@
- 		/* Exclude up to 2 GiB of RAM */
- 		ranges = <0x80000000 0x80000000 0x80000000>;
+diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
+index 555638ada721..edc85ee8c4bf 100644
+--- a/arch/arm64/boot/dts/realtek/Makefile
++++ b/arch/arm64/boot/dts/realtek/Makefile
+@@ -7,3 +7,5 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-probox2-ava.dtb
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
  
--		reset1: reset-controller@98000000 {
--			compatible = "snps,dw-low-reset";
--			reg = <0x98000000 0x4>;
--			#reset-cells = <1>;
--		};
--
--		reset2: reset-controller@98000004 {
--			compatible = "snps,dw-low-reset";
--			reg = <0x98000004 0x4>;
--			#reset-cells = <1>;
--		};
--
--		reset3: reset-controller@98000008 {
--			compatible = "snps,dw-low-reset";
--			reg = <0x98000008 0x4>;
--			#reset-cells = <1>;
--		};
--
--		reset4: reset-controller@98000050 {
--			compatible = "snps,dw-low-reset";
--			reg = <0x98000050 0x4>;
--			#reset-cells = <1>;
--		};
--
--		iso_reset: reset-controller@98007088 {
--			compatible = "snps,dw-low-reset";
--			reg = <0x98007088 0x4>;
--			#reset-cells = <1>;
--		};
--
--		wdt: watchdog@98007680 {
--			compatible = "realtek,rtd1295-watchdog";
--			reg = <0x98007680 0x100>;
--			clocks = <&osc27M>;
--		};
--
--		uart0: serial@98007800 {
--			compatible = "snps,dw-apb-uart";
--			reg = <0x98007800 0x400>;
--			reg-shift = <2>;
--			reg-io-width = <4>;
--			clock-frequency = <27000000>;
--			resets = <&iso_reset RTD1295_ISO_RSTN_UR0>;
--			status = "disabled";
--		};
--
--		uart1: serial@9801b200 {
--			compatible = "snps,dw-apb-uart";
--			reg = <0x9801b200 0x100>;
--			reg-shift = <2>;
--			reg-io-width = <4>;
--			clock-frequency = <432000000>;
--			resets = <&reset2 RTD1295_RSTN_UR1>;
--			status = "disabled";
--		};
--
--		uart2: serial@9801b400 {
--			compatible = "snps,dw-apb-uart";
--			reg = <0x9801b400 0x100>;
--			reg-shift = <2>;
--			reg-io-width = <4>;
--			clock-frequency = <432000000>;
--			resets = <&reset2 RTD1295_RSTN_UR2>;
--			status = "disabled";
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
++
++dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-bpi-m4.dtb
+diff --git a/arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts b/arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts
+new file mode 100644
+index 000000000000..2163353fb132
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd1395-bpi-m4.dts
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++/*
++ * Copyright (c) 2019 Andreas Färber
++ */
++
++/dts-v1/;
++
++#include "rtd1395.dtsi"
++
++/ {
++	compatible = "bananapi,bpi-m4", "realtek,rtd1395";
++	model = "Banana Pi BPI-M4";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>; /* 1 GiB or 2 GiB */
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/realtek/rtd1395.dtsi b/arch/arm64/boot/dts/realtek/rtd1395.dtsi
+new file mode 100644
+index 000000000000..05c9216a87ee
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd1395.dtsi
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++/*
++ * Realtek RTD1395 SoC
++ *
++ * Copyright (c) 2019 Andreas Färber
++ */
++
++#include "rtd139x.dtsi"
++
++/ {
++	compatible = "realtek,rtd1395";
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x0>;
++			next-level-cache = <&l2>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x1>;
++			next-level-cache = <&l2>;
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x2>;
++			next-level-cache = <&l2>;
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x3>;
++			next-level-cache = <&l2>;
++		};
++
++		l2: l2-cache {
++			compatible = "cache";
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++};
++
++&arm_pmu {
++	interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++};
+diff --git a/arch/arm64/boot/dts/realtek/rtd139x.dtsi b/arch/arm64/boot/dts/realtek/rtd139x.dtsi
+new file mode 100644
+index 000000000000..3f5f308a4a10
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd139x.dtsi
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++/*
++ * Realtek RTD1395 SoC family
++ *
++ * Copyright (c) 2019 Andreas Färber
++ */
++
++/memreserve/	0x0000000000000000 0x0000000000030000;
++/memreserve/	0x0000000000030000 0x00000000000d0000;
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/realtek,rtd1295.h>
++
++/ {
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x0 0x98000000>;
++
++		rpc_comm: rpc@2f000 {
++			reg = <0x2f000 0x1000>;
++		};
++
++		rpc_ringbuf: rpc@1ffe000 {
++			reg = <0x1ffe000 0x4000>;
++		};
++
++		tee: tee@10100000 {
++			reg = <0x10100000 0xf00000>;
++			no-map;
++		};
++	};
++
++	arm_pmu: arm-pmu {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	osc27M: osc {
++		compatible = "fixed-clock";
++		clock-frequency = <27000000>;
++		#clock-cells = <0>;
++		clock-output-names = "osc27M";
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x98000000 0x0 0x98000000 0x68000000>;
++
 +		rbus: r-bus@98000000 {
 +			compatible = "simple-bus";
 +			reg = <0x98000000 0x100000>;
@@ -194,9 +308,20 @@ index 8d80cca945bc..c4533a2555aa 100644
 +				resets = <&reset2 RTD1295_RSTN_UR2>;
 +				status = "disabled";
 +			};
- 		};
- 
- 		gic: interrupt-controller@ff011000 {
++		};
++
++		gic: interrupt-controller@ff011000 {
++			compatible = "arm,gic-400";
++			reg = <0xff011000 0x1000>,
++			      <0xff012000 0x2000>,
++			      <0xff014000 0x2000>,
++			      <0xff016000 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++	};
++};
 -- 
 2.16.4
 
