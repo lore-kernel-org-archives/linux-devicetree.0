@@ -2,109 +2,87 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F753C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5072BC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034572075C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N3NT49MX"
+	by mail.kernel.org (Postfix) with ESMTP id 21BD220818
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfKKIIr (ORCPT
+        id S1726808AbfKKIJV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:08:47 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50880 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKKIIr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 03:08:47 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l17so11427296wmh.0
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 00:08:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=L3adQNG+/hxoajCHfb6EoDmmTT7W+dDlfD3Fz0vzm7c=;
-        b=N3NT49MXSpaS4htlbCzGibfT5QOaRtUcTgMKFzsLb2Tib2Z6P9pcJqi397Dvn6YP4f
-         J+o7N6J+oOSicQ+PBFkRuQlvWxbhKxNPdKyV08Wrh8gPB/yrMy8pLZ6Zxad2mgfKt63n
-         ogkHsJYocck6VVBrNoLp7nV7TGB3VwImhpkJ4yDk3pjf4leGqqq+mmXBLhm2ywUtUnFW
-         22SVUJo16tKawT9xiVAwgdyCyXpa4298o0Yl5d8s6Y5u/DyxseRGd+9l4usDR906Zwe1
-         XK3PaxW8sBaHnnRfKtnUFKIhjqn5WKUYcvtX1R3BsAIIg1PYlogSzsBtp4F5W+0j6bGR
-         1CHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=L3adQNG+/hxoajCHfb6EoDmmTT7W+dDlfD3Fz0vzm7c=;
-        b=UFhq1uyZWqoC9cY867cICt3zMx+m1Tzg1zBJWdrJLx3VPo6073iw4og5Hln3RBEdQ3
-         nnnyournF6L2XtwxDIPPMUzdr3CcwL6qbEQxvlpe0Frxwy1RIVt77c7KiQm+J/zGN5v4
-         dERj2JnyxtfJJArNDnXt0HzNXYHvMBfZkdB+Ev0yhpPrdkvbG1v3jDjE/TvyrBKKSDpz
-         lIerN8/yLkyJ2JIKbqCQUn+zpMdRbuhmkW4NfQFF26MzDnHqxFJwxUFKF2Xa4KjYxmFx
-         P0DVToKCZQgtwhM0ZpeG/TmPbeWvgtpKR54Ka3NryBfj9pWDBJ6udbLPsMECwepJCDoP
-         u1Qg==
-X-Gm-Message-State: APjAAAXHIO4GqYGfhmU82ribnI2SW6lDWIQOtol5PX05lJxW3oniPAHr
-        3yUXrNicoG2HWn3BnnDWigDGlbfRpI4=
-X-Google-Smtp-Source: APXvYqyYb8rJgu+xJm4zJb5VdIdq1kwZM5m0E2HUWvADn6q+tzrpOCxz+FxIkPKzGQcKis8F4cU9BA==
-X-Received: by 2002:a1c:814b:: with SMTP id c72mr20247255wmd.167.1573459725396;
-        Mon, 11 Nov 2019 00:08:45 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id k125sm19217715wmf.2.2019.11.11.00.08.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 00:08:44 -0800 (PST)
-Date:   Mon, 11 Nov 2019 08:08:37 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 5/6] dt-bindings: mfd: max77650: convert the binding
- document to yaml
-Message-ID: <20191111080837.GF18902@dell>
-References: <20191021124428.2541-1-brgl@bgdev.pl>
- <20191021124428.2541-6-brgl@bgdev.pl>
+        Mon, 11 Nov 2019 03:09:21 -0500
+Received: from mga12.intel.com ([192.55.52.136]:4047 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbfKKIJV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 03:09:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 00:09:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
+   d="scan'208";a="197593704"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 11 Nov 2019 00:09:20 -0800
+Received: from [10.226.39.46] (ekotax-mobl.gar.corp.intel.com [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id 354D25803A5;
+        Mon, 11 Nov 2019 00:09:16 -0800 (PST)
+Subject: Re: [PATCH v5 3/3] PCI: artpec6: Configure FTS with dwc helper
+ function
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1572950559.git.eswara.kota@linux.intel.com>
+ <90a64d72a32dbc75c03a58a1813f50e547170ff4.1572950559.git.eswara.kota@linux.intel.com>
+ <SL2P216MB010527F9E1C142F0A347ED63AA780@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <e9355886-d667-4b3e-89ae-98de60093273@linux.intel.com>
+Date:   Mon, 11 Nov 2019 16:09:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191021124428.2541-6-brgl@bgdev.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <SL2P216MB010527F9E1C142F0A347ED63AA780@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 21 Oct 2019, Bartosz Golaszewski wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Convert the binding document for MAX77650 core MFD module to YAML.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
->  .../devicetree/bindings/mfd/max77650.yaml     | 149 ++++++++++++++++++
->  2 files changed, 149 insertions(+), 46 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
+On 11/8/2019 5:03 AM, Jingoo Han wrote:
+> On 11/5/19, 10:44 PM, Dilip Kota wrote:
+>> Utilize DesugnWare helper functions to configure Fast Training
+> Nitpicking: Fix typo (DesugnWare --> DesignWare)
+>
+> If possible, how about the following?
+> Utilize DesignWare --> Use DesignWare
+Sure, i will correct it and update to 'Use DesignWare'
 
-Applied, thanks.
+Thanks for reviewing the patch,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+Regards,
+Dilip
+
+>
+> Best regards,
+> Jingoo Han
+>
