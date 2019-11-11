@@ -2,62 +2,62 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A83BC17447
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9498C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B3221783
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F4221783
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LaQUYxSA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gds7b1wi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfKKK6K (ORCPT
+        id S1726843AbfKKLAG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:58:10 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45339 "EHLO
+        Mon, 11 Nov 2019 06:00:06 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39286 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfKKK6K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 05:58:10 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z10so8788191wrs.12
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 02:58:07 -0800 (PST)
+        with ESMTP id S1726768AbfKKLAF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 06:00:05 -0500
+Received: by mail-wr1-f65.google.com with SMTP id l7so2523515wrp.6
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 03:00:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=ff/OMC2uAau2mAhoofAs4UHMiQyAXj1c9pkY1OLPdoo=;
-        b=LaQUYxSAfzZQj1a+zLxcy0Bq4BPZXruN2Hxaf+yfK5bqy4gcUXMQvhDQfCa6Yd+azj
-         Bn4Hzk7Zw65+tT5QtfUkt19a6HtUsl+smEI8Fy3Pu2pqZuBi7NxHilp8UY47PBKdSWPA
-         JTDvBQ1FSdHz19EGtx/6oPc7RTZx+Ln4H5fBqaytmDr1gyqhNy5hIVtntxwl3tZeh0U4
-         vkexstcL+mlHtM67IvlNwNCB+EHkRhwFXQCSBgnYqTVD1ZYwUw8ycjp9YF8fyuesQB14
-         Nz2ybFFtUfVysQqiF4iqzR51IFPGbbbim9u5hnyAE4j4sCLWOpbXS5l8mmFWTPcwIZJ2
-         K4Jg==
+        bh=TYoTnmxtieLkll/Leqoa1DJhCx8L4akQBrFiPa7ShkQ=;
+        b=gds7b1wir0aQ7njohNYUaOjiRjXjdxQt2R2dXFLUyaIaBiii6c/tJCNwHkHV0fZM6t
+         ni5mB5W0ZdShI/TVclwG5A2ovUP/c1HggiQgPUe+NuHK43DANgc4//J4wJyIxk8NNVY9
+         NT7V15COgO6pKoiIFGeu5NQp2rA/K31k9AW5X8frG/X3U8a0+8DJV+t+0SSab8wmX4hh
+         vh7Gvx7UqindMzLD2bNHQ3AQf9mxb9rKmcA9prgFSY892MLE/hsVDXvqPBxn2ncc7SaB
+         iafgnCndvQIi4kFryeXd3NErkTWaSA6uX69HDF4nDu4DWrLma+Cu1zkk4J/p6ZvUT57w
+         RMCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=ff/OMC2uAau2mAhoofAs4UHMiQyAXj1c9pkY1OLPdoo=;
-        b=EfkBWLj5NreLyL1IZhoUaWvLO3MrRaHAzWumAVo3a724pmdb4cub58HCI/u5MW4uRP
-         muy1qumqzZz97+mKtn3rcMQRqOC5N7RrSBR1cPfxjXqLJuggBnSLtnplazvdtIKO9Brd
-         rTRXJd/VFwc4ZaPy4/LLhauTEY7Shj8iocshjtkztPXqqPjj9uNjnvyDKCIuc7gq6dwZ
-         j5eIPUuUMgDFr3quoXkE2knhWSAbs9ezH/8gLZGET9sKf/L7mX1L3m4fSY2o5yUJtha0
-         HO3KEVFpvsFL6M7CUU9Mg7ChkwzA2ZQcghrhCcDGLNhjpts2v8zBqWpJBbZcxBGGxNMB
-         /yeg==
-X-Gm-Message-State: APjAAAU2aYAN/2RJWmhzoZUby2qnstHnl3XoLkOLbjjLAGcUjl3nqc6r
-        MiMStdREDwwYZRzZPRv9eMbWAg==
-X-Google-Smtp-Source: APXvYqx8xObmE5fwQgmIoKQH3kqqcFm/LXo1giQF34YvA+BOHYlXNSI8WpZX656F+0hWaH4gE1NXpA==
-X-Received: by 2002:adf:f084:: with SMTP id n4mr20238286wro.369.1573469887033;
-        Mon, 11 Nov 2019 02:58:07 -0800 (PST)
+        bh=TYoTnmxtieLkll/Leqoa1DJhCx8L4akQBrFiPa7ShkQ=;
+        b=tH+aLfZK+ckWTw90GECn3pFq5QO5Uqwh6n53pCtwWJ47chANFwJjHe/pBFU0bqjmZI
+         c+hJpyI48LRUR6sb1gzqSi9H5/6/TjqwuJrCPEcLGVeqMYkzfRUrMYvlP567V5moc4Ge
+         4h3+/aSLhTaBE4adiZ7GBNm5W+DYtue23FtKWqs5D1OW7FqcCRfpLIQVmqj39Qp4pLd1
+         FbbrY/92zv/j1c2lxNWL9Jdsg69B0bR4iLe3VRcI8QEnGWabsZgnCQDWZhIzCR5DH8k8
+         7Y4Smlxz33/QjJt5xkl6R6DKMncQJq5KFVWszp+2a4Hopr6KKTj0XvLm7YJXXM08gYIE
+         ohsg==
+X-Gm-Message-State: APjAAAWA4juyR1YwUT0L6tjpxPfFDd2BhREBvOAV58beN4uzyLj/Moga
+        811P7Wk7kNOz05xuCBX7IKABug==
+X-Google-Smtp-Source: APXvYqw1xrTXnJrhBxh8P/A8uStccEhy7+/qu3o4uWIkYoYjhVhXXQjMB6DXFsKksquWgg9sZYWfdQ==
+X-Received: by 2002:a05:6000:12c4:: with SMTP id l4mr9236312wrx.110.1573470003617;
+        Mon, 11 Nov 2019 03:00:03 -0800 (PST)
 Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id x205sm23261337wmb.5.2019.11.11.02.58.05
+        by smtp.gmail.com with ESMTPSA id t5sm14215954wro.76.2019.11.11.03.00.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 02:58:06 -0800 (PST)
-Date:   Mon, 11 Nov 2019 10:57:58 +0000
+        Mon, 11 Nov 2019 03:00:03 -0800 (PST)
+Date:   Mon, 11 Nov 2019 10:59:55 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Cc:     mazziesaccount@gmail.com,
@@ -76,16 +76,15 @@ Cc:     mazziesaccount@gmail.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [RFC PATCH v3 01/15] mfd: bd71828: Support ROHM BD71828 PMIC -
- core
-Message-ID: <20191111105758.GF3218@dell>
+Subject: Re: [RFC PATCH v3 05/15] mfd: input: bd71828: Add power-key support
+Message-ID: <20191111105955.GG3218@dell>
 References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <9ce6f5810847422f4def629d30bae7b43dd4c6c6.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9ce6f5810847422f4def629d30bae7b43dd4c6c6.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <d7be7969b9fed57e7790811ff90b9a2b4b6478bb.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -94,133 +93,89 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Fri, 01 Nov 2019, Matti Vaittinen wrote:
 
-> BD71828GW is a single-chip power management IC for battery-powered portable
-> devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
-> single-cell linear charger. Also included is a Coulomb counter, a real-time
-> clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768 kHz
-> clock gate.
-> 
-> Add MFD core driver providing interrupt controller facilities and i2c
-> access to sub device drivers.
+> Use gpio_keys to send power input-event to user-space when power
+> button (short) press is detected.
 > 
 > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > ---
 > 
-> No changes compared to v2
+> Changes from v2 - No changes
 > 
->  drivers/mfd/Kconfig              |  15 ++
->  drivers/mfd/Makefile             |   2 +-
->  drivers/mfd/rohm-bd71828.c       | 322 +++++++++++++++++++++++
->  include/linux/mfd/rohm-bd71828.h | 425 +++++++++++++++++++++++++++++++
->  include/linux/mfd/rohm-generic.h |   1 +
->  5 files changed, 764 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/mfd/rohm-bd71828.c
->  create mode 100644 include/linux/mfd/rohm-bd71828.h
-
-/me wonders why this is still an RFC after 3 revisions?
-
-[...]
-
-> +static struct mfd_cell bd71828_mfd_cells[] = {
-> +	{ .name = "bd71828-pmic", },
-> +	{ .name = "bd71828-gpio", },
-> +	{ .name = "bd71828-led", },
-> +	/*
-> +	 * We use BD71837 driver to drive the clock block. Only differences to
-> +	 * BD70528 clock gate are the register address and mask.
-> +	 */
-> +	{ .name = "bd718xx-clk", },
-> +	{
-> +		.name = "bd71827-power",
-
-Why isn't this on one line, like the others above?
-
-> +	}, {
-> +		.name = "bd70528-rtc",
-> +		.resources = rtc_irqs,
-> +		.num_resources = ARRAY_SIZE(rtc_irqs),
-> +	},
+>  drivers/mfd/rohm-bd71828.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
+> index b7de79e1fcdb..f77ba1ec3e99 100644
+> --- a/drivers/mfd/rohm-bd71828.c
+> +++ b/drivers/mfd/rohm-bd71828.c
+> @@ -4,7 +4,9 @@
+>  //
+>  // ROHM BD71828 PMIC driver
+>  
+> +#include <linux/gpio_keys.h>
+>  #include <linux/i2c.h>
+> +#include <linux/input.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/ioport.h>
+>  #include <linux/irq.h>
+> @@ -15,6 +17,18 @@
+>  #include <linux/regmap.h>
+>  #include <linux/types.h>
+>  
+> +static struct gpio_keys_button button = {
+> +	.code = KEY_POWER,
+> +	.gpio = -1,
+> +	.type = EV_KEY,
 > +};
-
-[...]
-
-> +unsigned int bit0_offsets[] = {11};		/* RTC IRQ register */
-> +unsigned int bit1_offsets[] = {10};		/* TEMP IRQ register */
-> +unsigned int bit2_offsets[] = {6, 7, 8, 9};	/* BAT MON IRQ registers */
-> +unsigned int bit3_offsets[] = {5};		/* BAT IRQ register */
-> +unsigned int bit4_offsets[] = {4};		/* CHG IRQ register */
-> +unsigned int bit5_offsets[] = {3};		/* VSYS IRQ register */
-> +unsigned int bit6_offsets[] = {1, 2};		/* DCIN IRQ registers */
-
-Something actually wrong with the tabbing here, or is this a
-Git/patch/mailer anomaly?
-
-[...]
-
-> +static int bd71828_i2c_probe(struct i2c_client *i2c,
-> +			     const struct i2c_device_id *id)
-> +{
-> +	struct rohm_regmap_dev *chip;
-> +	struct regmap_irq_chip_data *irq_data;
-> +	int ret;
 > +
-> +	if (!i2c->irq) {
-> +		dev_err(&i2c->dev, "No IRQ configured\n");
-> +		return -EINVAL;
-> +	}
+> +static struct gpio_keys_platform_data bd71828_powerkey_data = {
+> +	.buttons = &button,
+> +	.nbuttons = 1,
+> +	.name = "bd71828-pwrkey",
+> +};
 > +
-> +	chip = devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return -ENOMEM;
+>  static const struct resource rtc_irqs[] = {
+>  	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
+>  	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
+> @@ -36,6 +50,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
+>  		.name = "bd70528-rtc",
+>  		.resources = rtc_irqs,
+>  		.num_resources = ARRAY_SIZE(rtc_irqs),
+> +	}, {
+> +		.name = "gpio-keys",
+> +		.platform_data = &bd71828_powerkey_data,
+> +		.pdata_size = sizeof(bd71828_powerkey_data),
+>  	},
+>  };
+>  
+> @@ -288,9 +306,19 @@ static int bd71828_i2c_probe(struct i2c_client *i2c,
+>  		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
+>  		return ret;
+>  	}
 > +
-> +	dev_set_drvdata(&i2c->dev, chip);
+
+This should be fixed in the last patch.
+
+>  	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
+>  		bd71828_irq_chip.num_irqs);
+>  
+> +	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
 > +
-> +	chip->chip_type = ROHM_CHIP_TYPE_BD71828;
-> +	chip->regmap = devm_regmap_init_i2c(i2c, &bd71828_regmap);
-> +	if (IS_ERR(chip->regmap)) {
-> +		dev_err(&i2c->dev, "Failed to initialize Regmap\n");
-> +		return PTR_ERR(chip->regmap);
-> +	}
-> +
-> +	ret = devm_regmap_add_irq_chip(&i2c->dev, chip->regmap,
-> +				       i2c->irq, IRQF_ONESHOT, 0,
-> +				       &bd71828_irq_chip, &irq_data);
-> +	if (ret) {
-> +		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
+
+Remove this empty line.
+
+> +	if (ret < 0) {
+> +		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
 > +		return ret;
 > +	}
-
-Nit: '\n' here.
-
-> +	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
-> +		bd71828_irq_chip.num_irqs);
 > +
-> +	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
-> +				   bd71828_mfd_cells,
-> +				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
-> +				   regmap_irq_get_domain(irq_data));
-> +	if (ret)
-> +		dev_err(&i2c->dev, "Failed to create subdevices\n");
+> +	button.irq = ret;
 > +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id bd71828_of_match[] = {
-> +	{ .compatible = "rohm,bd71828", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, bd71828_of_match);
-> +
-> +static struct i2c_driver bd71828_drv = {
-> +	.driver = {
-> +		.name = "rohm-bd71828",
-> +		.of_match_table = bd71828_of_match,
-> +	},
-> +	.probe = &bd71828_i2c_probe,
 
-If 'id' isn't used, perhaps you should be using probe2?
+Once fixed, please apply my:
 
-[...]
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
 Lee Jones [李琼斯]
