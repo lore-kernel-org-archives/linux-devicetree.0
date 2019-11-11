@@ -2,111 +2,88 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B218C17441
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12A4C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0465C204EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631A421925
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:21:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="eTbtsuOY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jcc2cAsk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKKTLg (ORCPT
+        id S1727049AbfKKTVg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:11:36 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33941 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfKKTLg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 14:11:36 -0500
-Received: by mail-io1-f65.google.com with SMTP id q83so15818557iod.1
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 11:11:34 -0800 (PST)
+        Mon, 11 Nov 2019 14:21:36 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38392 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbfKKTVf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 14:21:35 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 15so10046797pgh.5
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 11:21:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2HgDUfvYTFbpP69aWKc0kGJILBYPdrw3d304UudQR6Y=;
-        b=eTbtsuOY1bdhKdbXYiPZJ/aG2Qace47DkAJbL4Op2wp42tGwtELx5aJ26CvJ9Jb3qT
-         vlhJLgZkDCviw9bLoBdRKzAEYECphGMJH3AnxorVg1SBo/rDG5z1xL1PRUcddapYELJc
-         JlDIgnKwPtZybDPnZO/Vil39jXyaJ3tn4cWD3olZQTk/Xys15Qnjc5WHDiyzLrr1dhpI
-         gUDI74hAWak5E6pqdOxyvLhSsu+bf3+IfPyWmb5suN58S2X3MoWTIFC9SW4Y0R3aIW+5
-         ErM2InmMnwLQIG+6QpsYESxWHX25EqnFNz7/WEo+Dks7zTq3u5LsV9tqWiolA629rCzm
-         iHFw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=zZILD+44OX1q5dyQzdM2BbgJv0kkr/NqvYdzqJF0VWU=;
+        b=jcc2cAskjWBgTeYwsSv3lvsFyjpx3z/2/dQVMzCjv1lmIFKWhkHxwaMJrmIvvzX4Zr
+         OF/rQM08+qFfbfpDc8ai8eZ0IFQ4+o3hIYKkDKyXMOLL24DVR1C15WLDsCUXefgV4oKA
+         pMO1W8OkboYcq+mtU/Rj1PxtqnJR3JahYQwmQeCGRHFcMGdwDyYM2RtjQwMqyZJKryNL
+         Ax08rcC/xS5IEgOE60HRwPIja/rZ2eeyJTh3DI9MAGLckAXXO4Tr5GPKw9R3kv6Kq3ye
+         lYqLrULR/t+MCbEALuBHLQJacFwZUVEGlAqbpTSFu5C3nv2uCt0XwGTOVxA099KQGn/h
+         IfUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2HgDUfvYTFbpP69aWKc0kGJILBYPdrw3d304UudQR6Y=;
-        b=JPg0Dxqehji5iGPpoWJ11pGZguG3JMqH3/jBAd6VYFBQxFD/4rr9a26m8+pnpNF2p2
-         7+ScrxO7MLjPNuxGGcqlyaFXPl2KG0VDbPW4dvuWEfjgIQUW7dRCx6A98dGVa1NaAEbR
-         PWAgVOaiObD0mX0+gjCAo9YKUamWykTaka+ELGT18l5JFQkFWl5NEz7dosfCM5LNcv/F
-         hocFf8VDG+nGmacGuvJ72sLoYAEEjP36jkf1X2C8eTC/bw+WgCy4seI9jR67mlhuxXuT
-         IsoxCe5r6Dfv1cyRQROp7HEDei9qDnNTCKd3SMbcwBKvBwtCBbofLEQH+IrJnDjMBzS8
-         D3fA==
-X-Gm-Message-State: APjAAAUA3cFKZxAL/3l+CaXPWlxyTyG7epKUbSsVWN1WvVWRYTxu7gxG
-        DZBoYkXhsuLYY2BhLP6jtwWp58tHYnXtWZgZgzXE8w==
-X-Google-Smtp-Source: APXvYqy1znbPoGeXemeR0vFArovOl/+lq8cNdMivbT38ZF3jpW8pGC7IQIdwYmdC0F0dJSIodB17Xximee0fFWz8NMY=
-X-Received: by 2002:a02:c54b:: with SMTP id g11mr2199988jaj.136.1573499493869;
- Mon, 11 Nov 2019 11:11:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20191021124428.2541-1-brgl@bgdev.pl> <20191021124428.2541-6-brgl@bgdev.pl>
- <20191111080837.GF18902@dell>
-In-Reply-To: <20191111080837.GF18902@dell>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 11 Nov 2019 20:11:23 +0100
-Message-ID: <CAMRc=Me_b5c_e+qZ1s=TgTh7k_bQqrqthC8VTb7ak8+3AOEugg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] dt-bindings: mfd: max77650: convert the binding
- document to yaml
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zZILD+44OX1q5dyQzdM2BbgJv0kkr/NqvYdzqJF0VWU=;
+        b=qH4hCU4VUDovCBdKtvaDOKoz2pttoGbq9bEuWJut3Cf+3c/UmGCz3ocPC2jn/9LUgG
+         reKRQLQxze2moMng9SXMF2FyVs5phORvqFlwDAp+jp08K8pI+tfNYwfFpSSsV6FlqDYQ
+         gGIlf7/eqVNbfQI3Bk8ydMrYGLFixeN0yp6BKPiUEDnuqcvOXGgYWwFK3GP+P12QHiwL
+         jA7ry669j8vwrnT2iP/ELjsoqUfMAVfNofA49bVOoOZWXHW7AyWOYat+uNRRDHqY/gs4
+         MgaPitFRw+AXmha6LKsxcbuNI2VhvR7Q8Bef1vveFM94kgsPwUFzJdYclPV/V9PCxuAT
+         T/+w==
+X-Gm-Message-State: APjAAAWB6bugvqO89Y8FGnfe0Aht8/wqj/Lxw66VO/mr8uQ/QQ59CcUq
+        JKgJqIRoZwcfifqAOd43TUpt7Q==
+X-Google-Smtp-Source: APXvYqzvHgUVjW/Rd7K/W+r2O5+4vx7SxfEQkH5rCRHJfWJtzF7eQkUWs7LcfgNd2hnpOUHjHrobqg==
+X-Received: by 2002:a17:90a:2623:: with SMTP id l32mr861971pje.70.1573500094683;
+        Mon, 11 Nov 2019 11:21:34 -0800 (PST)
+Received: from localhost ([49.248.192.129])
+        by smtp.gmail.com with ESMTPSA id v24sm4331651pfn.53.2019.11.11.11.21.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Nov 2019 11:21:33 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH 0/3] thermal: tsens: Handle critical interrupts
+Date:   Tue, 12 Nov 2019 00:51:26 +0530
+Message-Id: <cover.1573499020.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 11 lis 2019 o 09:08 Lee Jones <lee.jones@linaro.org> napisa=C5=82(a):
->
-> On Mon, 21 Oct 2019, Bartosz Golaszewski wrote:
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Convert the binding document for MAX77650 core MFD module to YAML.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
-> >  .../devicetree/bindings/mfd/max77650.yaml     | 149 ++++++++++++++++++
-> >  2 files changed, 149 insertions(+), 46 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
->
-> Applied, thanks.
->
+TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog support
+in case the FSM is frozen. Enable support in the driver.
 
-Hi Lee,
+Amit Kucheria (3):
+  drivers: thermal: tsens: Add critical interrupt support
+  drivers: thermal: tsens: Add watchdog support
+  arm64: dts: sdm845: thermal: Add critical interrupt support
 
-FYI this series is already in next through Rob's DT tree.
+ arch/arm64/boot/dts/qcom/sdm845.dtsi |  10 +-
+ drivers/thermal/qcom/tsens-common.c  | 170 +++++++++++++++++++++++++--
+ drivers/thermal/qcom/tsens-v2.c      |  18 ++-
+ drivers/thermal/qcom/tsens.c         |  21 ++++
+ drivers/thermal/qcom/tsens.h         |  85 ++++++++++++++
+ 5 files changed, 289 insertions(+), 15 deletions(-)
 
-Bart
+-- 
+2.17.1
 
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
