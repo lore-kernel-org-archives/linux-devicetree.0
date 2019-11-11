@@ -2,113 +2,180 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC71AC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D57EC17441
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8227E2067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77782190F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rt0hKZf8"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="bxHpIPb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfKKL27 (ORCPT
+        id S1726829AbfKKLgk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:28:59 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46710 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKKL27 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 06:28:59 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b3so14172099wrs.13
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 03:28:56 -0800 (PST)
+        Mon, 11 Nov 2019 06:36:40 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54641 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfKKLgk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 06:36:40 -0500
+Received: by mail-wm1-f66.google.com with SMTP id z26so12921588wmi.4
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 03:36:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VCIU/ruaYoPrO6tp9vJ9FadSx4Mgkcrp/rqcgWyosK4=;
-        b=rt0hKZf8KBrscbpSv+fqIleKs28btBwXk5Dvhzd7aPfW6psShTE5FTBv1mwp08YNYb
-         H2EP6L7Ke9t/OMWMjHoWD6oMoigiNhUXGrlLtM2n7322seTdWsDcige5HkKumIyNsU5P
-         yaNTiNmVXGLnBzGQ/k6vo2L2dZpu//WA+wKkXwmzku0FQnpZeH9+ETc62vZr9AHrt66y
-         L71y5gKugg1Ke73hs3iEryZY78WMuTUaVME8ncaUff5J7L3DwK3z06AYUgnrVgGghSqW
-         EFp+dAIecAK/rVPgpzHoz5sTHSD7CAe/Dti1JlRuUMpR0WyiWGwtIHi2sVOp/uHPZqSD
-         dOgQ==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y0dulQXEpY4JTRjYNrgxL7H4Oc+cEpHXSad2UPEfcck=;
+        b=bxHpIPb5phD5/xnyo/ChAZAMq+BdxeaAyc6U/zw8Sl83T8N5fzUKeN95dyN4AbByx4
+         QNGTpquHrJxqPQO2cqiIHQ2xGmU5avPs8s2QfezmZ++a5NpQMU35u+5KyGmNEzAruCOs
+         H2FSzP5CLlAOpkaoFUQyAkVvhvJ76TBZvk65gF/5pA3xvKn5rUe59p6lzZZ+Qzq18wql
+         eSqtJfMIohZsY/OldoyBBzP9r4hsvs2yeIzz/2iytuuiUh1dPmeDMmiDSN3UHRakIwsV
+         nFzL/cLdwv5l1flpZ5DcbGZtbEYmTbPj2AyiFTBM4xfjtF6Bk+H5L/uClwVVlRggjvb4
+         1Z7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VCIU/ruaYoPrO6tp9vJ9FadSx4Mgkcrp/rqcgWyosK4=;
-        b=gvHZChXqnC83ovb6i/MUIQb0eROmHovsi6uleONq1ebI/i+xb/bF3XdcjgDjV2x2NT
-         1kmiJfk40d1d9XVZHcuOYg6gcmx3W0Ct8llVxHOF7w0OmsNg9nbhWiCekMzDc4mtS5LY
-         7lXkHTUE1h8dDHsUw+Svg9oOJ+IYmrqoLNOr17PIXSoR/IEOm12KvgFCYxyPLWnmsYRO
-         /swppyH4+OH6f5Qeadhud6up+OHEaO0qeGiWF8GnJMSWWiTv7+yEsbPek0pg4UhTLgdI
-         QX+PfeMY3H76FjgAitx4znZpPGznLIVo3Jz+CeqwWy1KI8fDHCPARPaSMNEFZaSrZq0M
-         xXbg==
-X-Gm-Message-State: APjAAAUQuCdvHDXsiWcSfyV935XL0GDobozSeGNdkQDv+O1WrcLao/wd
-        6XHyG/1HtIktnrOG0oy4v78knw==
-X-Google-Smtp-Source: APXvYqyMJgtgV0bLvBkQaySmSbtMQNWN+rcf6xUT/gS+40mNdpwznf/9DJgGBm2Sw5a5ebr8gKkBww==
-X-Received: by 2002:a05:6000:343:: with SMTP id e3mr21544323wre.20.1573471735373;
-        Mon, 11 Nov 2019 03:28:55 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id m3sm17705312wrb.67.2019.11.11.03.28.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 03:28:54 -0800 (PST)
-Date:   Mon, 11 Nov 2019 11:28:42 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     swboyd@chromium.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org
-Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and
- pm6150l
-Message-ID: <20191111112842.GK3218@dell>
-References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y0dulQXEpY4JTRjYNrgxL7H4Oc+cEpHXSad2UPEfcck=;
+        b=oZO+HwoFz7Hb8t9DEo5HCgDczwK9ZBdRZNW0EyBPY8DxuK/oOgV+o2KBmr66Oq51fm
+         fkyLh8v1G70foKHZMdhb6T3RLO1wD0slO+7PoLQZJb37AUhNh3ZzTXwIK8WGapmrGm8+
+         WJs5mFcz2tXBZF6MzpOcI24PuRGx7UlsBOhu2OZkiG4ahq/IQEaCQ25BHxDqTE5J7mgl
+         TochZvh2TFsojUzsNdJDuDx76WGKghDg2nisIFVKWs84FRO1Ss3m8vnlzIUeVvUXn5oi
+         uRXdKKT5NkbN3ksInIn8Yoe9Fa/mayUSekKcL4J9eG9wQI2SbHfn9W+ck/tTOekQ/bsO
+         6TPw==
+X-Gm-Message-State: APjAAAU+AqcBsKCDgDhGpX8UwJ+6wIhVf7mzfgKcHGMxqNHo3waYadvp
+        EGPVk86iIqN88LSUAQkKB68mMFnqTrGjIfLcisGFsw==
+X-Google-Smtp-Source: APXvYqzukrpx06aOA3LqbJs8I7XR+FwIaaQYKy+Gm7Tz2e7dz1DLqlFOVFvJ8DYuDBp3HPhpvJ+qTAC1ypDwtFmt5ow=
+X-Received: by 2002:a1c:4c10:: with SMTP id z16mr18470654wmf.24.1573472196560;
+ Mon, 11 Nov 2019 03:36:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191107212408.11857-1-hch@lst.de>
+In-Reply-To: <20191107212408.11857-1-hch@lst.de>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 11 Nov 2019 17:06:24 +0530
+Message-ID: <CAAhSdy3SGAkOFMhx320KJdPDh6c=qcKqCZ=qrXNKBGtejpZwSA@mail.gmail.com>
+Subject: Re: QEMU RISC-V virt machine poweroff driver
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        devicetree@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 05 Nov 2019, Kiran Gunda wrote:
+On Fri, Nov 8, 2019 at 2:54 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Hi all,
+>
+> this patch add a driver for the test device in the Qemu RISC-V
+> virt machine which allows properly shutting down the VM.
+> It also is added to the riscv defconfig given that qemu-virt
+> is the most popular riscv platform.
 
-> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
-> found on SC7180 based platforms.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> ---
->  - Changes from V1:
->    Sorted the macros and compatibles.
-> 
->  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
->  drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> index 1437062..b5fc64e 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> @@ -32,6 +32,8 @@ Required properties:
->                     "qcom,pm8998",
->                     "qcom,pmi8998",
->                     "qcom,pm8005",
-> +		   "qcom,pm6150",
-> +		   "qcom,pm6150l",
+We really don't need this driver. Instead, we can simply re-use
+following drivers:
+mfd/syscon
+power/reset/syscon-reboot
+power/reset/syscon-poweroff
 
-Tabbing looks off.
+Just enable following to your defconfig:
+CONFIG_POWER_RESET=y
+CONFIG_POWER_RESET_SYSCON=y
+CONFIG_POWER_RESET_SYSCON_POWEROFF=y
+CONFIG_SYSCON_REBOOT_MODE=y
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+Once above drivers are enabled in your defconfig, make sure
+test device DT nodes are described in the following way for virt machine:
+
+testdev: test@100000 {
+    compatible = "syscon";
+    reg = <0x100000 0x1000>;
+};
+
+reboot {
+    compatible = "syscon-reboot";
+    regmap = <&testdev>;
+    offset = <0x0>;
+    value = <0x7777>;
+};
+
+poweroff {
+    compatible = "syscon-poweroff";
+    regmap = <&testdev>;
+    offset = <0x0>;
+    value = <0x5555>;
+};
+
+
+Here's the QEMU changes I used for above DT nodes:
+
+diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
+index d7c5d630eb..7f8206c726 100644
+--- a/hw/riscv/virt.c
++++ b/hw/riscv/virt.c
+@@ -186,7 +186,7 @@ static void create_fdt(RISCVVirtState *s, const
+struct MemmapEntry *memmap,
+     int cpu;
+     uint32_t *cells;
+     char *nodename;
+-    uint32_t plic_phandle, phandle = 1;
++    uint32_t plic_phandle, test_phandle, phandle = 1;
+     int i;
+     hwaddr flashsize = virt_memmap[VIRT_FLASH].size / 2;
+     hwaddr flashbase = virt_memmap[VIRT_FLASH].base;
+@@ -357,13 +357,32 @@ static void create_fdt(RISCVVirtState *s, const
+struct MemmapEntry *memmap,
+     create_pcie_irq_map(fdt, nodename, plic_phandle);
+     g_free(nodename);
+
++    test_phandle = phandle++;
+     nodename = g_strdup_printf("/test@%lx",
+         (long)memmap[VIRT_TEST].base);
+     qemu_fdt_add_subnode(fdt, nodename);
+-    qemu_fdt_setprop_string(fdt, nodename, "compatible", "sifive,test0");
++    qemu_fdt_setprop_string(fdt, nodename, "compatible", "syscon");
+     qemu_fdt_setprop_cells(fdt, nodename, "reg",
+         0x0, memmap[VIRT_TEST].base,
+         0x0, memmap[VIRT_TEST].size);
++    qemu_fdt_setprop_cell(fdt, nodename, "phandle", test_phandle);
++    test_phandle = qemu_fdt_get_phandle(fdt, nodename);
++    g_free(nodename);
++
++    nodename = g_strdup_printf("/reboot");
++    qemu_fdt_add_subnode(fdt, nodename);
++    qemu_fdt_setprop_string(fdt, nodename, "compatible", "syscon-reboot");
++    qemu_fdt_setprop_cell(fdt, nodename, "regmap", test_phandle);
++    qemu_fdt_setprop_cell(fdt, nodename, "offset", 0x0);
++    qemu_fdt_setprop_cell(fdt, nodename, "value", FINISHER_RESET);
++    g_free(nodename);
++
++    nodename = g_strdup_printf("/poweroff");
++    qemu_fdt_add_subnode(fdt, nodename);
++    qemu_fdt_setprop_string(fdt, nodename, "compatible", "syscon-poweroff");
++    qemu_fdt_setprop_cell(fdt, nodename, "regmap", test_phandle);
++    qemu_fdt_setprop_cell(fdt, nodename, "offset", 0x0);
++    qemu_fdt_setprop_cell(fdt, nodename, "value", FINISHER_PASS);
+     g_free(nodename);
+
+     nodename = g_strdup_printf("/uart@%lx",
+
+
+Regards,
+Anup
+
+
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
