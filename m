@@ -2,232 +2,142 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF58C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 17:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC2DC17445
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D35021655
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 17:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573494792;
-	bh=xJFmVH/uXjYcNb75TTvwpLpBB4PDjlo1ZUoxbrejYcc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vtxWl22m/MoWqN0kXGobLuUFCa8uBcXEkxjZzkgdctTTBmyONQtqnUeMEhNaYMN3h
-	 wP2oaM3enSpFLaAbzH4hv7AqPJBsKNgHn6Y/Tk6gUWh2WYYfrVKe7ADNBAaZWNoB88
-	 TnD9tNda+ZbqKdjVh6b85UQ+IVa+LxMslVAd6xlU=
+	by mail.kernel.org (Postfix) with ESMTP id E52A42190F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 18:37:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Kti4Xqbd";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CCIKVj49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKKRxI (ORCPT
+        id S1728901AbfKKShs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 12:53:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbfKKRxI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:53:08 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        Mon, 11 Nov 2019 13:37:48 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:49524 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728893AbfKKShp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 13:37:45 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E7F7D60F40; Mon, 11 Nov 2019 18:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573497463;
+        bh=XUkpMv4++eaCLngkRhw1OHredjSZzbrBaEaI/2OxE7Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kti4XqbdrQfRjqyR/k/Xny8Sb0xtKtDh1D3IZqqkBWb5xWvg+wQqdIJqZHwXihIhc
+         PP/E99tj4XKhLGPKvShQANy20h4r2YeA4de5RLgEzbdHe1GbxE6mAjUHe/A+LCs8td
+         mU/GHTayXswE5ngA9/blI9wj0zEDC+iSQbDuMgAY=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC83221655;
-        Mon, 11 Nov 2019 17:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573494787;
-        bh=xJFmVH/uXjYcNb75TTvwpLpBB4PDjlo1ZUoxbrejYcc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=H3wLrPCq1S2mcidD9ntD27yBxkc4CM792jL8Pwa/Vz0JLBKojxI9knN51xjHE9VfU
-         rqiDQJUzeiQQAp68aT/prDdrrZWHCuzJI4OYzPfd32lk1lxN0DVxw9Z+SxL9PBQ27W
-         l/xWBrhq78wNJwnjyw3I1XVxeud9TDwCmLkf7gh8=
-Received: by mail-qk1-f174.google.com with SMTP id e187so11945046qkf.4;
-        Mon, 11 Nov 2019 09:53:06 -0800 (PST)
-X-Gm-Message-State: APjAAAXp0GdMFGw2nPGB5Lbc+5QDsIzzK5inQFQ8QjW9mKICM+E68+Gq
-        mo6P09oxZfBVHGOsR9Nk5gPu98a42hvhkQtc9Q==
-X-Google-Smtp-Source: APXvYqyhgd+jsdRArXJvw6D32tKzSqjKQBZgbZChIL2jqDzeI+Y/s8akvQi/iCLrKxtM7fPi1z1aspYSSA8LyO3+ub0=
-X-Received: by 2002:a05:620a:226:: with SMTP id u6mr1800151qkm.393.1573494786072;
- Mon, 11 Nov 2019 09:53:06 -0800 (PST)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7B643602EE;
+        Mon, 11 Nov 2019 18:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573497460;
+        bh=XUkpMv4++eaCLngkRhw1OHredjSZzbrBaEaI/2OxE7Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CCIKVj49JlSCWHldgpmCB4IXhwNUaHHiNm5k6jIRWgDZVugsSUC8R1s7h2Mz1ZCsf
+         5lnoABiZDh9Qs36KSbNKgzk5Nte+p3XnHPr5lDmSPuekBBSB+t7v0kAfyUTaFl+OjP
+         EWvdgpv61XulzSMrBvfQ+X5+gMoYvPKOCMmok6p4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7B643602EE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Mon, 11 Nov 2019 11:37:38 -0700
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add
+ SPI config register
+Message-ID: <20191111183738.GJ16900@codeaurora.org>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+ <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+ <5d92829e.1c69fb81.d860a.9096@mx.google.com>
+ <5da6b849.1c69fb81.a9b04.1b9f@mx.google.com>
+ <20191105205832.GE16900@codeaurora.org>
+ <5dc219a0.1c69fb81.f5014.42d2@mx.google.com>
 MIME-Version: 1.0
-References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
- <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
- <1572264988-17455-2-git-send-email-anvesh.s@samsung.com> <20191105215332.GA19296@bogus>
- <20191106095340.GO9723@e119886-lin.cambridge.arm.com> <001601d595e4$17d8e470$478aad50$@samsung.com>
-In-Reply-To: <001601d595e4$17d8e470$478aad50$@samsung.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 11 Nov 2019 11:52:54 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+tnpDvndosvvAhZN6NXsx6hfo7AVJz5amD5_wBTKz_uA@mail.gmail.com>
-Message-ID: <CAL_Jsq+tnpDvndosvvAhZN6NXsx6hfo7AVJz5amD5_wBTKz_uA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
- ZRX-DC PHY property
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Anvesh Salveru <anvesh.s@samsung.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <5dc219a0.1c69fb81.f5014.42d2@mx.google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 9:25 PM Pankaj Dubey <pankaj.dubey@samsung.com> wrote:
+On Tue, Nov 05 2019 at 17:53 -0700, Stephen Boyd wrote:
+>Quoting Lina Iyer (2019-11-05 12:58:32)
+>> On Tue, Oct 15 2019 at 00:27 -0600, Stephen Boyd wrote:
+>> >
+>> >I had another idea the other day. Maybe a better approach would be to
+>> >make the mailbox or SCM code an interrupt controller with the
+>> >appropriate functions to poke the bits necessary to make the interrupts
+>> >work. Then we can make it a chip in the hierarchy between the GIC and
+>> >PDC and make the interrupts call through from PDC to GIC. The locking
+>> >could be handled in each respective driver if necessary, and otherwise
+>> >we don't have to use a regmap or remap the same registers (except we may
+>> >need to describe if the parent is the mailbox node or the scm fimware
+>> >node).
+>> >
+>> Wouldn't that be a stretch to image the SCM register write  or a random
+>> register write as an interrupt controller? But I agree that it solves
+>> the issue of determining whether we want to use SCM or regmap.
 >
+>As far as I can tell it's similar to PDC which is basically a gate on
+>the line from a dedicated chip pad or a GPIO pad that lets the interrupt
+>flow through to the GIC or not. Isn't this yet another hardware block on
+>those paths that control the edge type or something?
 >
+>>
+>> But, we would still need to add syscon to the mailbox and then regmap
+>> the registers for the interrupt contoller.
 >
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: Wednesday, November 6, 2019 3:24 PM
-> > To: Rob Herring <robh@kernel.org>
-> > Cc: Anvesh Salveru <anvesh.s@samsung.com>; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > bhelgaas@google.com; gustavo.pimentel@synopsys.com;
-> > jingoohan1@gmail.com; pankaj.dubey@samsung.com; Mark Rutland
-> > <mark.rutland@arm.com>
-> > Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
-> ZRX-
-> > DC PHY property
-> >
-> > On Tue, Nov 05, 2019 at 03:53:32PM -0600, Rob Herring wrote:
-> > > On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
-> > > > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to
-> > > > ZRX-DC specification, then after every 100ms link should transition
-> > > > to recovery state during the low power states which increases power
-> > consumption.
-> > > >
-> > > > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
-> > > > property in DesignWare controller DT node.
-> > > >
-> > > > CC: Rob Herring <robh+dt@kernel.org>
-> > > > CC: Mark Rutland <mark.rutland@arm.com>
-> > > > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-> > > > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > > ---
-> > > > Change in v2: None
-> > > >
-> > > >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > > b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > > index 78494c4050f7..9507ac38ac89 100644
-> > > > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> > > > @@ -38,6 +38,8 @@ Optional properties:
-> > > >     for data corruption. CDM registers include standard PCIe
-> configuration
-> > > >     space registers, Port Logic registers, DMA and iATU (internal
-> Address
-> > > >     Translation Unit) registers.
-> > > > +- snps,phy-zrxdc-compliant: This property is needed if phy complies
-> > > > +with the
-> > > > +  ZRX-DC specification.
-> > >
-> > > If this is a property of the phy, then it belongs in the phy node or
-> > > should just be implied by the phy's compatible.
-> >
-> Yes, from HW point of view this is a property of the PHY. As PHY is the one
-> which is ZRXDC compliant or non-compliant.  But as the DW controller
-> programming needs to be altered for handling such phys, so we added it as a
-> DT binding of DW controller driver.
+>I'm saying that we can make the mailbox driver an interrupt controller
+>driver too. Or if that doesn't work, we can map the region twice in each
+>driver with ioremap and cross fingers that they don't touch the same
+>register at the same time. It sounds like that is the case. We won't be
+>able to fancily reserve the register region and map it in one function
+>call, but maybe that can be fixed by limiting the size or offset that is
+>reserved for each driver manually based on the same register property
+>that's described in DT. Basically, one node in DT
+>
+> mailbox@f00 {
+>   reg = <0xf00 0x1000>;
+> };
+>
+>And then each driver will ioremap() the whole register region that's
+>parsed from DT but each driver will mark sub-regions as reserved for the
+>respective driver. That way we don't have to worry about using a regmap
+>here and we'll still know what drivers are using what regions of IO in
+>/proc/iomem.
 
-Bindings are for h/w blocks not drivers.
+Marc: What do you think of Stephen's idea? Summarizing my understanding
+below -
 
-> We can't use PHY's compatible in case we want this to be in common code
-> (pcie-designware.c), as PHY compatible for each of the platform would be
-> different and PCIe DWC core file is not aware of this compatible. Of-course
-> this can be handled in platform specific driver, but then in that case each
-> of these drivers will add similar code to handle this.
->
-> > As suggested in the previous revision of this series [1], this is
-> absolutely a
-> > property of the phy.
->
-> Agreed, but as I tried to explain in series [1], this we are adding in
-> controller driver, as controller driver needs to program it's register based
-> on PHY HW property.
->
-> >
-> > > IOW, you should be able
-> > > to support this or not without changing DTs.
-> > >
-> > > Is this spec Synopys specific? (About the only thing Google turns up
-> > > are your patches.) If not, then probably shouldn't have a 'snps' prefix.
-> >
-> > This was also unfamiliar to me, however my current understanding is that
-> Zrx-dc
-> > describes the 'Receiver DC single ended impedance' limits, this is
-> specified in the
-> > PCI specification (table 'Common Receiver Parameters'), with a different
-> limit
-> > for each speed.
-> >
-> > I believe the purpose of this series is to to satisfy the following
-> implementation
-> > note in the spec "Ports that meet the Zrx-dc specification for 2.5 GT/s
-> while in
-> > the L1.Idle state are therefore not required to implement the 100 ms
-> timeout
-> > and transition to Recovery should avoid implementing it, since it will
-> reduce the
-> > power savings expected from the
-> > L1 state".
-> >
->
-> > In other words, if it is known that the phy is compliant then an
-> unnecessary
-> > transition to a higher energy state can be avoided. Though it's the PCI
-> controller
-> > (in this case) that must action this and must find out about the phy it is
-> > connected to.
-> >
->
-> Thanks, this is exactly the purpose of the patch. Currently this is being
-> handled in respective platform's driver, this patch intends to move this in
-> common code, where any platform driver using DesignWare controller can use
-> it without repeating same piece of code.
+We need to set an addition register for GPIOs that are routed to PDC and
+the register may need to be written using a SCM call (SDM845) or written
+from Linux (SDM855). The idea proposed here is -
+Create multiple irqchips, one for each type of register access and then
+put them in hierarchy based on the target.
 
-Driver structure is not an argument for DT binding design.
+SDM845:
+TLMM  --> PDC  --> PDC-SCM-IF  --> GIC
 
-> > So in my view 'phy-zrxdc-compliant' should be a property of a phy (without
-> snps
-> > prefix), and if a controller wants to determine if it is compliant then
-> there must
-> > be a phandle to the phy so the controller can find out.
->
->
-> Removing snps prefix, I am OK with it. But for moving this property to PHY
-> node, we need to find solution, how PCIe controller driver will access this
-> property of PHY device.
->
-> Platform driver which are using DesignWare controller driver has a phandle
-> to PHY, but question is here how does DesignWare controller driver will
-> infer this information from PHY driver. Some approaches which I can think of
-> are:
-> 1) If PHY framework has some generic API to check if a particular property
-> exists in PHY node then it will be useful in such cases. Currently I don't
-> see any such API exists. Though I am not sure if it is OK to add such API in
-> PHY framework for such cases? Adding Kishon to comment on this.
+SDM855:
+TLMM  --> PDC  --> PDC-LNX-IF  --> GIC
 
-It's always okay to change/extend kernel APIs. We don't work-around
-kernel APIs in drivers nor in DT. (Maybe not agreement in how though)
+The hierarchy would be explicit from the DT. So we would not have to
+worry about figuring out using a property in DT or resource name. (May
+be we can use a compatible instead?). The use of reserved_resource(),
+suggested by Stephen, would help avoid other drivers writing to this
+register which is part of a generic dump area for one-off registers.
 
-IMO, this is what should happen. This solution makes enabling this
-feature or not detached from DT. It could be a DT property, determined
-by compatible of the phy, or just always enabled for a phy driver.
-This is not the first time this issue has come up with the phy api
-needing something like this (USB PHYs in particular).
-
-> 2) Currently phandle to PHY is being stored as part of private data
-> structure of platform specific controller driver, and DesignWare core driver
-> can't access the phandle. So we need to move or keep copy of phandle pointer
-> to DesignWare core driver structure instead of keeping it in platform
-> specific private structure.
-
-Or just parse it again...
-
-Rob
+--Lina
