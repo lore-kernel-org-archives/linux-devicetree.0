@@ -2,209 +2,266 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73BDC17441
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 05:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85C2C17441
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60EC2084F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 05:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC05214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 06:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573452409;
+	bh=n7hFj+kxBxxMNL94Ev69ntv74KtMsyl8SF9Nu7bBmIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bpCCmE7ierJ3iFRriK3IXoaM/jI+p+46Rsi2J3xrqVMpF9fjYPS3Wa3tnX/AoHMU4
+	 HKHZZs0mefjczx1qCRmCP5Sm4KopMe+pXP0MvsWxOhvIrGHZYpZwemw6aZOopwVFa/
+	 Jo8crI3v3S44/lxX+QF7//3GByV0oODmNKUBrJh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfKKF7u (ORCPT
+        id S1726780AbfKKGGt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 00:59:50 -0500
-Received: from mga01.intel.com ([192.55.52.88]:12455 "EHLO mga01.intel.com"
+        Mon, 11 Nov 2019 01:06:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbfKKF7u (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 00:59:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Nov 2019 21:59:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
-   d="scan'208";a="287086311"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 10 Nov 2019 21:59:49 -0800
-Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
-        by linux.intel.com (Postfix) with ESMTP id 0E53F580261;
-        Sun, 10 Nov 2019 21:59:43 -0800 (PST)
-Subject: Re: [PATCH v5 1/2] pinctrl: Add pinmux & GPIO controller driver for a
- new SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
-References: <cover.1573196057.git.rahul.tanwar@linux.intel.com>
- <890db37db56e7e49e83b9fa03903bf3482c624c7.1573196057.git.rahul.tanwar@linux.intel.com>
- <20191108114058.GE32742@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <b6283998-fc3f-678d-1647-384f2c7749ca@linux.intel.com>
-Date:   Mon, 11 Nov 2019 13:59:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726652AbfKKGGs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 01:06:48 -0500
+Received: from localhost (unknown [106.201.42.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 518FC20679;
+        Mon, 11 Nov 2019 06:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573452407;
+        bh=n7hFj+kxBxxMNL94Ev69ntv74KtMsyl8SF9Nu7bBmIo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cHOCQJ/ShdE+LvSNASxQapSPa8F0gwqk5Z+9n7gbKft8XLD+jkxj09f6AnBQZjnud
+         16TGe7U0pV1VVogYwYn3lEfSUy/cTuFgOe/DpYIQvAhgHs0gBFFtJV/hPob6h2xscY
+         wW7nDjRXL20mQXs0JEPbmgi0cwW2+iDyvEb3ngDM=
+Date:   Mon, 11 Nov 2019 11:36:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com
+Subject: Re: [PATCH v4 11/15] dmaengine: ti: New driver for K3 UDMA -
+ split#3: alloc/free chan_resources
+Message-ID: <20191111060625.GP952516@vkoul-mobl>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-12-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191108114058.GE32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101084135.14811-12-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> Split patch for review containing: channel rsource allocation and free
 
-Hi Andy,
+s/rsource/resource
 
-On 8/11/2019 7:40 PM, Andy Shevchenko wrote:
-> On Fri, Nov 08, 2019 at 05:42:22PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
->> controls pin multiplexing & configuration including GPIO functions selection &
->> GPIO attributes configuration.
->>
->> This IP is not based on & does not have anything in common with Chassis
->> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
->> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
->> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
->>
->> Add a new GPIO & pin control framework based driver for this IP.
->> +static void eqbr_gpio_enable_irq(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
->> +	unsigned int offset = irqd_to_hwirq(d);
->> +	unsigned long flags;
->> +
->> +	gc->direction_input(gc, offset);
-> Does this any IO?
-> If so, between above and below a window of possible race.
-> Ditto for all other functions that do something similar.
 
-gpio-mmio lib uses its own spin lock when it does IO in gc->direction_input()
-And that would set pin direction as input (hw ensures that the pin is not
-driven high when set direction) while below will enable interrupton that
-pin. I do not see any possible race condition in that..
+> +static int udma_tisci_tx_channel_config(struct udma_chan *uc)
+> +{
+> +	struct udma_dev *ud = uc->ud;
+> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
+> +	struct udma_tchan *tchan = uc->tchan;
+> +	int tc_ring = k3_ringacc_get_ring_id(tchan->tc_ring);
+> +	struct ti_sci_msg_rm_udmap_tx_ch_cfg req_tx = { 0 };
+> +	u32 mode, fetch_size;
+> +	int ret = 0;
+> +
+> +	if (uc->pkt_mode) {
+> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
+> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib, uc->psd_size,
+> +						   0);
+> +	} else {
+> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
+> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
+> +	}
+> +
+> +	req_tx.valid_params =
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID;
 
->> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
->> +	writel(BIT(offset), gctrl->membase + GPIO_IRNRNSET);
->> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
->> +}
->> +		ret = bgpio_init(&gctrl->chip, dev, gctrl->bank->nr_pins / 8,
->> +				 gctrl->membase + GPIO_IN,
->> +				 gctrl->membase + GPIO_OUTSET,
->> +				 gctrl->membase + GPIO_OUTCLR,
->> +				 gctrl->membase + GPIO_DIR,
->> +				 NULL,
->> +				 0);
-> One line?
+bunch of these are repeat, you can define a COMMON_VALID_PARAMS and use
+that + specific ones..
 
-Sure, missed it.
+> +
+> +	req_tx.nav_id = tisci_rm->tisci_dev_id;
+> +	req_tx.index = tchan->id;
+> +	req_tx.tx_pause_on_err = 0;
+> +	req_tx.tx_filt_einfo = 0;
+> +	req_tx.tx_filt_pswords = 0;
 
->> +static int get_drv_cur(void __iomem *mem, unsigned int offset)
->> +{
->> +	unsigned int idx = offset / DRV_CUR_PINS; /* 0-15, 16-31 per register*/
->> +	unsigned int val;
->> +
->> +	val = readl(mem + REG_DRCC(idx));
->> +	offset %= DRV_CUR_PINS;
-> From style point of view is better to have
-> 	... foo = offset / X;
-> 	... bar = offset % X;
->
-> directly in definition block. Moreover, for example, on x86 it might be
-> converted by compiler to single idiv call in assembly that returns in
-> (eax, edx) both values at once.
+i think initialization to 0 is superfluous
 
-Ok, i will change it like that but will have to introduce one more variable.
+> +	req_tx.tx_chan_type = mode;
+> +	req_tx.tx_supr_tdpkt = uc->notdpkt;
+> +	req_tx.tx_fetch_size = fetch_size >> 2;
+> +	req_tx.txcq_qnum = tc_ring;
+> +	if (uc->ep_type == PSIL_EP_PDMA_XY) {
+> +		/* wait for peer to complete the teardown for PDMAs */
+> +		req_tx.valid_params |=
+> +				TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID;
+> +		req_tx.tx_tdtype = 1;
+> +	}
+> +
+> +	ret = tisci_ops->tx_ch_cfg(tisci_rm->tisci, &req_tx);
+> +	if (ret)
+> +		dev_err(ud->dev, "tchan%d cfg failed %d\n", tchan->id, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int udma_tisci_rx_channel_config(struct udma_chan *uc)
+> +{
+> +	struct udma_dev *ud = uc->ud;
+> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
+> +	struct udma_rchan *rchan = uc->rchan;
+> +	int fd_ring = k3_ringacc_get_ring_id(rchan->fd_ring);
+> +	int rx_ring = k3_ringacc_get_ring_id(rchan->r_ring);
+> +	struct ti_sci_msg_rm_udmap_rx_ch_cfg req_rx = { 0 };
+> +	struct ti_sci_msg_rm_udmap_flow_cfg flow_req = { 0 };
+> +	u32 mode, fetch_size;
+> +	int ret = 0;
+> +
+> +	if (uc->pkt_mode) {
+> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
+> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib,
+> +							uc->psd_size, 0);
+> +	} else {
+> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
+> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
+> +	}
+> +
+> +	req_rx.valid_params =
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID;
+> +
+> +	req_rx.nav_id = tisci_rm->tisci_dev_id;
+> +	req_rx.index = rchan->id;
+> +	req_rx.rx_fetch_size =  fetch_size >> 2;
+> +	req_rx.rxcq_qnum = rx_ring;
+> +	req_rx.rx_pause_on_err = 0;
+> +	req_rx.rx_chan_type = mode;
+> +	req_rx.rx_ignore_short = 0;
+> +	req_rx.rx_ignore_long = 0;
+> +	req_rx.flowid_start = 0;
+> +	req_rx.flowid_cnt = 0;
+> +
+> +	ret = tisci_ops->rx_ch_cfg(tisci_rm->tisci, &req_rx);
+> +	if (ret) {
+> +		dev_err(ud->dev, "rchan%d cfg failed %d\n", rchan->id, ret);
+> +		return ret;
+> +	}
+> +
+> +	flow_req.valid_params =
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_EINFO_PRESENT_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_PSINFO_PRESENT_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_ERROR_HANDLING_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DESC_TYPE_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_HI_SEL_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_LO_SEL_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_HI_SEL_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_LO_SEL_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ0_SZ0_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ1_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ2_QNUM_VALID |
+> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ3_QNUM_VALID;
+> +
+> +	flow_req.nav_id = tisci_rm->tisci_dev_id;
+> +	flow_req.flow_index = rchan->id;
+> +
+> +	if (uc->needs_epib)
+> +		flow_req.rx_einfo_present = 1;
+> +	else
+> +		flow_req.rx_einfo_present = 0;
+> +	if (uc->psd_size)
+> +		flow_req.rx_psinfo_present = 1;
+> +	else
+> +		flow_req.rx_psinfo_present = 0;
+> +	flow_req.rx_error_handling = 1;
+> +	flow_req.rx_desc_type = 0;
+> +	flow_req.rx_dest_qnum = rx_ring;
+> +	flow_req.rx_src_tag_hi_sel = 2;
+> +	flow_req.rx_src_tag_lo_sel = 4;
+> +	flow_req.rx_dest_tag_hi_sel = 5;
+> +	flow_req.rx_dest_tag_lo_sel = 4;
 
->> +	val = PARSE_DRV_CURRENT(val, offset);
->> +
->> +	return val;
->> +}
->> +	if (!(bank->aval_pinmap & BIT(offset))) {
->> +		dev_err(pctl->dev,
->> +			"PIN: %u is not valid, pinbase: %u, bitmap: %u\n",
->> +			pin, bank->pin_base, bank->aval_pinmap);
->> +		return -ENODEV;
->> +	}
-> Looks like aval_pinmap is NIH of valid_mask bitmap in GPIO library.
-> Can you check if it suits your purposes?
+can we get rid of magic numbers here and elsewhere, or at least comment
+on what these mean..
 
-I did check about it earlier & now as well. It doesn't suit our purpose.
-aval_pinmapin the driver indicates whether pad control of this pad is
-available or not. It's for all pins irrespective of if it is used as a
-gpio or not. Whereas, valid_mask bitmap of GPIO library is just to
-indicate if that gpio line is valid or not. valid_mask would have been
-useful if this driver was purely a GPIO driver.
+> +static int udma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct udma_chan *uc = to_udma_chan(chan);
+> +	struct udma_dev *ud = to_udma_dev(chan->device);
+> +	const struct udma_match_data *match_data = ud->match_data;
+> +	struct k3_ring *irq_ring;
+> +	u32 irq_udma_idx;
+> +	int ret;
+> +
+> +	if (uc->pkt_mode || uc->dir == DMA_MEM_TO_MEM) {
+> +		uc->use_dma_pool = true;
+> +		/* in case of MEM_TO_MEM we have maximum of two TRs */
+> +		if (uc->dir == DMA_MEM_TO_MEM) {
+> +			uc->hdesc_size = cppi5_trdesc_calc_size(
+> +					sizeof(struct cppi5_tr_type15_t), 2);
+> +			uc->pkt_mode = false;
+> +		}
+> +	}
+> +
+> +	if (uc->use_dma_pool) {
+> +		uc->hdesc_pool = dma_pool_create(uc->name, ud->ddev.dev,
+> +						 uc->hdesc_size, ud->desc_align,
+> +						 0);
+> +		if (!uc->hdesc_pool) {
+> +			dev_err(ud->ddev.dev,
+> +				"Descriptor pool allocation failed\n");
+> +			uc->use_dma_pool = false;
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Make sure that the completion is in a known state:
+> +	 * No teardown, the channel is idle
+> +	 */
+> +	reinit_completion(&uc->teardown_completed);
+> +	complete_all(&uc->teardown_completed);
 
->> +static bool is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
->> +			 unsigned int nr_funcs, unsigned int *idx)
->> +{
->> +	int i;
->> +
->> +	if (!funcs || !nr_funcs)
->> +		return false;
-> nr_funcs check is a dup of the one in for loop.
+should we not complete first and then do reinit to bring a clean state?
 
-Sure, noted.
+> +	uc->state = UDMA_CHAN_IS_IDLE;
+> +
+> +	switch (uc->dir) {
+> +	case DMA_MEM_TO_MEM:
 
->> +	for (i = 0; i < nr_funcs; i++) {
->> +		if (funcs[i].name && (strcmp(funcs[i].name, name) == 0) ) {
-> An extra space, but you may use !strcmp() and make it shorter without redundant
-> parentheses.
+can you explain why a allocation should be channel dependent, shouldn't
+these things be done in prep_ calls?
 
-Well noted, thanks.
-
->> +			*idx = i;
->> +			return true;
->> +		}
->> +	}
->> +
->> +	return false;
->> +}
->> +		switch (op) {
->> +			case OP_COUNT_NR_FUNCS:
-> case goes usually on the same column as switch.
-
-Sure, will change, didn't know about it. Thanks.
-
->> +				if (!is_func_exist(funcs, fn_name,
->> +						   *nr_funcs, &fid))
->> +					*nr_funcs = *nr_funcs + 1;
->> +				break;
->> +
->> +			case OP_ADD_FUNCS:
->> +				if (!is_func_exist(funcs, fn_name,
->> +						   *nr_funcs, &fid))
->> +					funcs[i].name = fn_name;
->> +				break;
->> +
->> +			case OP_COUNT_NR_FUNC_GRPS:
->> +				if (is_func_exist(funcs, fn_name,
->> +						  *nr_funcs, &fid))
->> +					funcs[fid].nr_groups++;
->> +				break;
->> +
->> +			case OP_ADD_FUNC_GRPS:
->> +				if (is_func_exist(funcs, fn_name,
->> +						  *nr_funcs, &fid)) {
->> +					for(j=0;
-> Other style issueS.
-
-Will fix in v6, thanks.
-
->> +		}
->> +	for (i = 0; i < nr_funcs; i++) {
->> +		if (funcs[i].nr_groups) {
-> 	if (!foo)
-> 		continue;
-> ?
-
-Sure, will change. Thanks.
-
-Regards,
-Rahul
-
+I looked ahead and checked the prep_ calls and we can use any direction
+so this somehow doesn't make sense!
+-- 
+~Vinod
