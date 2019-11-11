@@ -2,37 +2,38 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E223C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EADC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D0020818
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5C320674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kY3FqCT7"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UO4QAIV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfKKTvt (ORCPT
+        id S1727390AbfKKTvf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:51:49 -0500
-Received: from mout.gmx.net ([212.227.15.18]:49399 "EHLO mout.gmx.net"
+        Mon, 11 Nov 2019 14:51:35 -0500
+Received: from mout.gmx.net ([212.227.15.19]:57699 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfKKTvf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1727089AbfKKTvf (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 11 Nov 2019 14:51:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1573501790;
-        bh=xi27iTDjcDpnSMVKDfT12Ab/Na1O4J3NDmJZO0y75tU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=kY3FqCT7Gl0cbyXCF81zKfL++TQWx6NhtCRrEtvb0KAAqRydkfgoy8ckrn5z0izza
-         yQbK+9M243Lku6pp40OPjWrQqSDgToSg2PWMBAJBvcq8vLMktyZI1PTEoyekRgHmLt
-         fzPAZ+YViqlT3lTDSHshHj1M3UfyY2eGuEsSiu9c=
+        s=badeba3b8450; t=1573501792;
+        bh=bICAAjpNAEuBSsYFkawJc3wNJyV0/DEeTRhpBN4urFs=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=UO4QAIV8lH819LcEEu58MxoPYk87X82RVJjLK6NhxkolwitqQRbTzGlXVKQoDSx4A
+         p+kgdMDS0zY91xMOioSRYyXLOKtjVv9au/wab0OHP2xudnoUUDPB2VVtcprFFUacc7
+         96QxGGqFCCudzSHxSERqJ+e7Fd5V5P4OvrA0Znak=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([37.4.249.112]) by mail.gmx.com
  (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1N9MpS-1hrdfu19O8-015ING; Mon, 11 Nov 2019 20:49:50 +0100
+ 1MOzOw-1iG04a2dS8-00PJjG; Mon, 11 Nov 2019 20:49:52 +0100
 From:   Stefan Wahren <wahrenst@gmx.net>
 To:     Matthias Brugger <matthias.bgg@kernel.org>,
         Matthias Brugger <mbrugger@suse.com>,
@@ -45,90 +46,150 @@ Cc:     Eric Anholt <eric@anholt.net>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V5 net-next 0/7] ARM: Enable GENET support for RPi 4
-Date:   Mon, 11 Nov 2019 20:49:19 +0100
-Message-Id: <1573501766-21154-1-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH V5 net-next 5/7] net: bcmgenet: Refactor register access in bcmgenet_mii_config
+Date:   Mon, 11 Nov 2019 20:49:24 +0100
+Message-Id: <1573501766-21154-6-git-send-email-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:sjjegBo9YJ4+FLoHPimLpHajqn+WYg1I1Rp8rwOjLXsa7L/nY7q
- oTpQIHadPsrmBmEnpRdl1CUiPy85n2bqRaBFQFGo1wc93JCv5PbLe6OJ0Rd/nf7HR0/nRiV
- BqB1PmNXYZ7zKSaz15G5R86QIlR2bNB+5uJ+uZpQ8TE+m9RkKbWDG/k9xDl3SVeVcYwQwL2
- AiE9AhJIUZpNSgaDeEf5A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5rnjUq1GL6Q=:h2srEYoWauvk3KmY7i1/z5
- D16sVhzBFyhW6kZvltK/ah5N6QJGmqoQ5IcPqRfIIrJY6tJWNes75FYgyUqJ19Vyj6SIm/aNq
- MBcEVKxPiGsIJoCoXCde60zAspD++Qctu/Tv+nP9cXSjAVu34PCUH08B8bpTp92denTakOMqU
- jIo4OEkTH86xrR04RvRabLNLclmN2rm+ATRMRe/feNdrGgehFET7jkcryliTkuRXKmtkad4Cf
- xkQAQ/mhSApq2rAWoJO6Gvt4cqQrBv/qvuNDc0+h85kywi29RqDQLe1/e1A7T148BbPagDok0
- xhX9NlqrU2Gk2YA4wv8A68xvhOFEJBmgJrqi5WeoHKs6JNphC3st1yWBYAs8y4aYzEypgABhm
- 9yvYdsqbu38BOts0vwDVX93H4bCgdtXLoYMTSrzVO4lEG1oRwJeKN8esGEDwONSkRgq6weikJ
- Y4V+b+WGSRrB4DJboswb2mvJ3l86pg/5+dSfz/SR5eqOx1juruKXvhCqYXR0nhtUlGPe4vvSt
- gcNHQawN2O+LS8N4i/Vef+E9zyf8gX2XRioxmQdlVkBXKCd9aJzqAuhPSEnSxYSG2wfFrrge/
- BcPjLtuOLE8RgxK7uq+Rr/Lunc7XBW9cx6S62VlEHARWW1/vnrBju5Hx9RzSCxPMyzr25YwTA
- gG1z+cVjpLr54/4aGMD3DCV878cnHjQwuXX30Gl/6zOWWfHX+gnraIcg+emaUmyHq9xUkQbpl
- knHMTJ7feFMRsx2iN99S1q+lkkXx8O7nOvlya79ME0PdjBiS+LFs4O6qHMhQ0u3xmEMNbjNMK
- JOUVJ26xqf3t80kX77SRa2aohmtzj7N0UwA/MGw7iWPV73u/8dkRQFiHpoOw8La/Q7fkMxEAj
- whJ43wwDoKFxAmCruu73mFM3bDDgFsGawpnsYTqDU4viuxhHa9n6JehtupsVS0gM0HDx98sWY
- qE+Um9GWD8R2Cae/izH8s6PNYPM/yw2gj7SaIVF+Vm2mI7j4OHuH7m7y9di6DfeULH8+Jdn/Z
- tOe4UUIu3ve6zKL+cv6oD1mljxyz3PBn2dCel0F6TRUSeHt3ekCEOWa+UFZduWgpV4zXqhcxS
- vxJ0c3yd9/wo5IrtdsSYV+2Cum3t1uf08kOQaQvS1TN9fFryVr7HMbf6clKVy6Xx9jvRgkEAT
- gjPJstZJ6WOU3MahlQ91hU4iGLIFKsb0XzHHo5ijJbA8PGYDuOS2pu7x2f8aoqsGUjXHsm+qP
- 22FT4TYAzDyVMEfDh5tX90dvpFC3cTm9UTFVHww==
+In-Reply-To: <1573501766-21154-1-git-send-email-wahrenst@gmx.net>
+References: <1573501766-21154-1-git-send-email-wahrenst@gmx.net>
+X-Provags-ID: V03:K1:67YahmV2UkJIhpHobumqC9+/MmwXxDEYxBSTwbAoxBBAioCr3qM
+ x8P7GK2b0x11RhkhkXnUCTYXYQgqYSCL0ZTxyIsKplgJgvJydv6Sdk7dLd0vS8YOgUZApHB
+ kx8TxDsq9eQdNCrDjQ9N0zquYurAi8kxkxRzsvmDgKcH2/XFLc/ZA5B9mirNh1G0pRYUhl3
+ ydAHEBhDR4HMC6kkGgyJg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W7YAxsxgv4Y=:3Op2RchXtPvRo9E/XH58Cu
+ L5jrJwgCEOXkNHOkQ2oPGcnNMCuaof/dLnnVvwo5u38KFDPyjb5rum2ofGp+pf98zzQINv1e/
+ 0bdZHifTM1pwMZu0v5nkZs+aOgdOkcrIZ0Ova/AG8A54LceioWC7y+xs5n+irXZJVrATkdi4w
+ 85TElykn7yUlX8gPYYPwtj6cutfD+wXAObSK53XjHc6Y6GlvZMWwWFWqtozzuqojDQUFnQqhG
+ q5FI4rvfeAmeDeXgVaOQllhS6RvFLMv1M55VvlUKBEieOqx9sh8v3iZdmz40kM5hC+80Ongca
+ /7zyyHrXnGRS6ym5faTXSckifoubxMM3yTOm6eK/4x/CNHLqVJnhgJaoCJofPeBSMgjH9+hpb
+ Rk/k2mp0BXiRSwabn88AczMLWLkQca3Gmgq9kEwiEJ65vZwAOUzAw0nDqTzqtxwvn4Z+HH2Bk
+ nQnttcRVnwHTLbISdTn5XZgiEglii4RWGWxLMwGNjf3N7WNvqGsJ7qAUpjpovKm7J8Ek8Mi6/
+ NCUCem+7cni7MrhPq60hvdnUstlINdl9n+RhATeCAt304imSdzd4WxiaV7+YudsaeWSJ6P3G3
+ niGXsIpjsEdiQAdf72LV5uGxlv74Vawgz9hC6dQBgB8NtNUKCKKk3z3IMeEKBEZ6dHXciDjgJ
+ Ofvu2I4B4Iz2W8DdfsN18cCSA3pZShP1hNZzWDz7Vt43RCbeeTlatVLuuPU6CkN/EcsElhueg
+ DU8mfSxmf5gTM5xzu2TRA0RaScO1bcoLP2qJytgEj96OQ3rz0R4S7cJx8vzx74qMJEGm5OuIJ
+ rourPKi8zMqEnYQcQUB1uOvmLAlUymTWvlQ1001y1eaEjT3t7NVLLmYq/DkXjvEsGrNNoBuF4
+ TQEueCesSjJm8Mh2zcGB0JfawtgmpdT+kE9zx3+sWAf10kDQdg9MaASrOTzmhNd7/OLOZ8PsE
+ XX5KS9UnUkjCfFCf7ihIldPRHuBA0y1PtXe4P1+HAqTqkuFvXzbIglJiYVaxoLXpGjSACEe93
+ JXGBwXELqXz0lxMxr9LAbcV1V4z0hfHdTPasGT77ebrPm4pEqysCYzn6L+yVy+83bQx0I/Kef
+ GEY/phLJEKaleERFeg56JVVFTFfDg83AyS+M/z4ZZP+xD/kICJJw8+qhQvGh35E5Ltz8qtOT0
+ AhC9UhV3LMFyQa1ETWPiY/X576nG/HK81/9pYI1AXeYetYyvlW/8CUpiD5MI1vUWLzZmzB8it
+ V7UtmSyCtr00cQTLrdkATzvdZw+x0AL+6YVaEgg==
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Raspberry Pi 4 uses the broadcom genet chip in version five.
-This chip has a dma controller integrated. Up to now the maximal
-burst size was hard-coded to 0x10. But it turns out that Raspberry Pi 4
-does only work with the smaller maximal burst size of 0x8.
+The register access in bcmgenet_mii_config() is a little bit opaque and
+not easy to extend. In preparation for the missing RGMII PHY modes
+move all the phy name assignments into the switch statement and the
+register access to the end of the function. This make the code easier
+to read and extend.
 
-Additionally the patch series has some IRQ retrieval improvements and
-adds support for a missing PHY mode.
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 42 +++++++++++++----------=
+-----
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-This series based on Matthias Brugger's V1 series [1].
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/et=
+hernet/broadcom/genet/bcmmii.c
+index 6f291ee..021ce9e 100644
+=2D-- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -213,11 +213,10 @@ int bcmgenet_mii_config(struct net_device *dev, bool=
+ init)
+ 		udelay(2);
+ 	}
 
-[1] - https://patchwork.kernel.org/cover/11186193/
+-	priv->ext_phy =3D !priv->internal_phy &&
+-			(priv->phy_interface !=3D PHY_INTERFACE_MODE_MOCA);
+-
+ 	switch (priv->phy_interface) {
+ 	case PHY_INTERFACE_MODE_INTERNAL:
++		phy_name =3D "internal PHY";
++		/* fall through */
+ 	case PHY_INTERFACE_MODE_MOCA:
+ 		/* Irrespective of the actually configured PHY speed (100 or
+ 		 * 1000) GENETv4 only has an internal GPHY so we will just end
+@@ -229,11 +228,7 @@ int bcmgenet_mii_config(struct net_device *dev, bool =
+init)
+ 		else
+ 			port_ctrl =3D PORT_MODE_INT_EPHY;
 
-Changes in V5:
-- address Doug's comment
+-		bcmgenet_sys_writel(priv, port_ctrl, SYS_PORT_CTRL);
+-
+-		if (priv->internal_phy) {
+-			phy_name =3D "internal PHY";
+-		} else if (priv->phy_interface =3D=3D PHY_INTERFACE_MODE_MOCA) {
++		if (!phy_name) {
+ 			phy_name =3D "MoCA";
+ 			bcmgenet_moca_phy_setup(priv);
+ 		}
+@@ -242,11 +237,7 @@ int bcmgenet_mii_config(struct net_device *dev, bool =
+init)
+ 	case PHY_INTERFACE_MODE_MII:
+ 		phy_name =3D "external MII";
+ 		phy_set_max_speed(phydev, SPEED_100);
+-		bcmgenet_sys_writel(priv,
+-				    PORT_MODE_EXT_EPHY, SYS_PORT_CTRL);
+-		/* Restore the MII PHY after isolation */
+-		if (bmcr >=3D 0)
+-			phy_write(phydev, MII_BMCR, bmcr);
++		port_ctrl =3D PORT_MODE_EXT_EPHY;
+ 		break;
 
-Changes in V4:
-- rebased on current net-next
-- remove RGMII_ID support
-- remove fixes tag from patch 1
-- add Florian's suggestions to patch 5
+ 	case PHY_INTERFACE_MODE_REVMII:
+@@ -261,31 +252,38 @@ int bcmgenet_mii_config(struct net_device *dev, bool=
+ init)
+ 			port_ctrl =3D PORT_MODE_EXT_RVMII_50;
+ 		else
+ 			port_ctrl =3D PORT_MODE_EXT_RVMII_25;
+-		bcmgenet_sys_writel(priv, port_ctrl, SYS_PORT_CTRL);
+ 		break;
 
-Changes in V3:
-- introduce SoC-specific compatibles for GENET (incl. dt-binding)
-- use platform_get_irq_optional for optional IRQ
-- remove Fixes tag from IRQ error handling change
-- move most of MDIO stuff to bcm2711.dtsi
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 		/* RGMII_NO_ID: TXC transitions at the same time as TXD
+ 		 *		(requires PCB or receiver-side delay)
+-		 * RGMII:	Add 2ns delay on TXC (90 degree shift)
+ 		 *
+ 		 * ID is implicitly disabled for 100Mbps (RG)MII operation.
+ 		 */
++		phy_name =3D "external RGMII (no delay)";
+ 		id_mode_dis =3D BIT(16);
+-		/* fall through */
++		port_ctrl =3D PORT_MODE_EXT_GPHY;
++		break;
++
+ 	case PHY_INTERFACE_MODE_RGMII_TXID:
+-		if (id_mode_dis)
+-			phy_name =3D "external RGMII (no delay)";
+-		else
+-			phy_name =3D "external RGMII (TX delay)";
+-		bcmgenet_sys_writel(priv,
+-				    PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
++		/* RGMII_TXID:	Add 2ns delay on TXC (90 degree shift) */
++		phy_name =3D "external RGMII (TX delay)";
++		port_ctrl =3D PORT_MODE_EXT_GPHY;
+ 		break;
+ 	default:
+ 		dev_err(kdev, "unknown phy mode: %d\n", priv->phy_interface);
+ 		return -EINVAL;
+ 	}
 
-Changes in V2:
-- add 2 fixes for IRQ retrieval
-- add support for missing PHY modes
-- declare PHY mode RGMII RXID based on the default settings
-- add alias to allow firmware append the MAC address
-
-Stefan Wahren (7):
-  net: bcmgenet: Avoid touching non-existent interrupt
-  net: bcmgenet: Fix error handling on IRQ retrieval
-  dt-bindings: net: bcmgenet: Add BCM2711 support
-  net: bcmgenet: Add BCM2711 support
-  net: bcmgenet: Refactor register access in bcmgenet_mii_config
-  net: bcmgenet: Add RGMII_RXID support
-  ARM: dts: bcm2711-rpi-4: Enable GENET support
-
- .../devicetree/bindings/net/brcm,bcmgenet.txt      |  2 +-
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts              | 17 +++++
- arch/arm/boot/dts/bcm2711.dtsi                     | 26 ++++++++
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 74 +++++++++++++++++=
-+----
- drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  1 +
- drivers/net/ethernet/broadcom/genet/bcmmii.c       | 47 +++++++-------
- 6 files changed, 130 insertions(+), 37 deletions(-)
-
++	bcmgenet_sys_writel(priv, port_ctrl, SYS_PORT_CTRL);
++
++	/* Restore the MII PHY after isolation */
++	if (bmcr >=3D 0)
++		phy_write(phydev, MII_BMCR, bmcr);
++
++	priv->ext_phy =3D !priv->internal_phy &&
++			(priv->phy_interface !=3D PHY_INTERFACE_MODE_MOCA);
++
+ 	/* This is an external PHY (xMII), so we need to enable the RGMII
+ 	 * block for the interface to work
+ 	 */
 =2D-
 2.7.4
 
