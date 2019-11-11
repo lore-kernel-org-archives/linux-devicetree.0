@@ -4,125 +4,319 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5F7C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 15:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA63C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 15:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B920A2084F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 15:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18DE2190F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 15:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfKKPic (ORCPT
+        id S1726877AbfKKPu3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 10:38:32 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:57464 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726832AbfKKPic (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 10:38:32 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iUBls-00041I-3p; Mon, 11 Nov 2019 16:38:28 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xABFcQon014343
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 11 Nov 2019 16:38:26 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Subject: [PATCH] arm64: dts: rockchip: Add node for gpu on rk3399-roc-pc
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <c2b88509-129d-46d4-9e23-15d0482951be@fivetechno.de>
-Date:   Mon, 11 Nov 2019 16:38:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 11 Nov 2019 10:50:29 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5764 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726857AbfKKPu2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 10:50:28 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 188F9D5E84235F34FF5F;
+        Mon, 11 Nov 2019 23:50:26 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 11 Nov 2019
+ 23:50:17 +0800
+Date:   Mon, 11 Nov 2019 15:50:07 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <joro@8bytes.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
+        <sudeep.holla@arm.com>, <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <will@kernel.org>, <robin.murphy@arm.com>,
+        <zhangfei.gao@linaro.org>, <eric.auger@redhat.com>
+Subject: Re: [PATCH v2 6/8] iommu/arm-smmu-v3: Add second level of context
+ descriptor table
+Message-ID: <20191111155007.00002021@huawei.com>
+In-Reply-To: <20191108152508.4039168-7-jean-philippe@linaro.org>
+References: <20191108152508.4039168-1-jean-philippe@linaro.org>
+        <20191108152508.4039168-7-jean-philippe@linaro.org>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573486710;6f824438;
-X-HE-SMSGID: 1iUBls-00041I-3p
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-rk3399-roc-pc has a Mali gpu, enable it for use with panfrost and mesa >19.2.
+On Fri, 8 Nov 2019 16:25:06 +0100
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
-Based on v5.5-armsoc/dts64/75aa5678
-If applied with other patches in between, the second hunk
-offsets and may patch vdd_cpu_b instead of vdd_gpu.
----
- arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+> The SMMU can support up to 20 bits of SSID. Add a second level of page
+> tables to accommodate this. Devices that support more than 1024 SSIDs now
+> have a table of 1024 L1 entries (8kB), pointing to tables of 1024 context
+> descriptors (64kB), allocated on demand.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Hi Jean-Philippe,
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index 7e07dae33d0f..287f97488f65 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -238,6 +238,11 @@
- 	status = "okay";
- };
- 
-+&gpu {
-+	mali-supply = <&vdd_gpu>;
-+	status = "okay";
-+};
-+
- &hdmi {
- 	ddc-i2c-bus = <&i2c3>;
- 	pinctrl-names = "default";
-@@ -465,8 +470,6 @@
- 		regulator-min-microvolt = <712500>;
- 		regulator-max-microvolt = <1500000>;
- 		regulator-ramp-delay = <1000>;
--		regulator-always-on;
--		regulator-boot-on;
- 		vin-supply = <&vcc3v3_sys>;
- 
- 		regulator-state-mem {
--- 
-2.20.1
+There seems to be a disconnect in here between clearing by hand
+device managed entities, which normally implies we'll reallocate
+them later, and clearing pointers that are used in the control
+flow of allocation.  I'm looking at this a bit in isolation so
+I'm not quite sure on how they are used.
+
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 137 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 126 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index df7d45503c65..82eac89ee187 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -224,6 +224,7 @@
+>  
+>  #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
+>  #define STRTAB_STE_0_S1FMT_LINEAR	0
+> +#define STRTAB_STE_0_S1FMT_64K_L2	2
+>  #define STRTAB_STE_0_S1CTXPTR_MASK	GENMASK_ULL(51, 6)
+>  #define STRTAB_STE_0_S1CDMAX		GENMASK_ULL(63, 59)
+>  
+> @@ -263,7 +264,20 @@
+>  
+>  #define STRTAB_STE_3_S2TTB_MASK		GENMASK_ULL(51, 4)
+>  
+> -/* Context descriptor (stage-1 only) */
+> +/*
+> + * Context descriptors.
+> + *
+> + * Linear: when less than 1024 SSIDs are supported
+> + * 2lvl: at most 1024 L1 entries,
+> + *       1024 lazy entries per table.
+> + */
+> +#define CTXDESC_SPLIT			10
+> +#define CTXDESC_L2_ENTRIES		(1 << CTXDESC_SPLIT)
+> +
+> +#define CTXDESC_L1_DESC_DWORDS		1
+> +#define CTXDESC_L1_DESC_VALID		1
+> +#define CTXDESC_L1_DESC_L2PTR_MASK	GENMASK_ULL(51, 12)
+> +
+>  #define CTXDESC_CD_DWORDS		8
+>  #define CTXDESC_CD_0_TCR_T0SZ		GENMASK_ULL(5, 0)
+>  #define ARM64_TCR_T0SZ			GENMASK_ULL(5, 0)
+> @@ -577,7 +591,10 @@ struct arm_smmu_cd_table {
+>  struct arm_smmu_s1_cfg {
+>  	u8				s1fmt;
+>  	u8				s1cdmax;
+> -	struct arm_smmu_cd_table	table;
+> +	struct arm_smmu_cd_table	*tables;
+> +	size_t				num_tables;
+> +	__le64				*l1ptr;
+> +	dma_addr_t			l1ptr_dma;
+>  	struct arm_smmu_ctx_desc	cd;
+>  };
+>  
+> @@ -1521,12 +1538,51 @@ static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
+>  {
+>  	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+>  
+> +	if (!table->ptr)
+> +		return;
+>  	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
+>  }
+>  
+> -static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_s1_cfg *cfg, u32 ssid)
+> +static void arm_smmu_write_cd_l1_desc(__le64 *dst,
+> +				      struct arm_smmu_cd_table *table)
+>  {
+> -	return cfg->table.ptr + ssid * CTXDESC_CD_DWORDS;
+> +	u64 val = (table->ptr_dma & CTXDESC_L1_DESC_L2PTR_MASK) |
+> +		  CTXDESC_L1_DESC_VALID;
+> +
+> +	WRITE_ONCE(*dst, cpu_to_le64(val));
+> +}
+> +
+> +static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
+> +				   u32 ssid)
+> +{
+> +	__le64 *l1ptr;
+> +	unsigned int idx;
+> +	struct arm_smmu_cd_table *table;
+> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> +	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+> +
+> +	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR) {
+> +		table = &cfg->tables[0];
+> +		idx = ssid;
+> +	} else {
+> +		idx = ssid >> CTXDESC_SPLIT;
+> +		if (idx >= cfg->num_tables)
+> +			return NULL;
+> +
+> +		table = &cfg->tables[idx];
+> +		if (!table->ptr) {
+> +			if (arm_smmu_alloc_cd_leaf_table(smmu, table,
+> +							 CTXDESC_L2_ENTRIES))
+> +				return NULL;
+> +
+> +			l1ptr = cfg->l1ptr + idx * CTXDESC_L1_DESC_DWORDS;
+> +			arm_smmu_write_cd_l1_desc(l1ptr, table);
+> +			/* An invalid L1CD can be cached */
+> +			arm_smmu_sync_cd(smmu_domain, ssid, false);
+> +		}
+> +		idx = ssid & (CTXDESC_L2_ENTRIES - 1);
+> +	}
+> +	return table->ptr + idx * CTXDESC_CD_DWORDS;
+>  }
+>  
+>  static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
+> @@ -1552,7 +1608,7 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>  	u64 val;
+>  	bool cd_live;
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> -	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
+> +	__le64 *cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
+>  
+>  	/*
+>  	 * This function handles the following cases:
+> @@ -1612,20 +1668,76 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>  
+>  static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
+>  {
+> +	int ret;
+> +	size_t size = 0;
+> +	size_t max_contexts;
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>  	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+>  
+> -	cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
+> -	return arm_smmu_alloc_cd_leaf_table(smmu, &cfg->table,
+> -					    1 << cfg->s1cdmax);
+> +	max_contexts = 1 << cfg->s1cdmax;
+> +
+> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB) ||
+> +	    max_contexts <= CTXDESC_L2_ENTRIES) {
+> +		cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
+> +		cfg->num_tables = 1;
+> +	} else {
+> +		cfg->s1fmt = STRTAB_STE_0_S1FMT_64K_L2;
+> +		cfg->num_tables = DIV_ROUND_UP(max_contexts,
+> +					       CTXDESC_L2_ENTRIES);
+> +
+> +		size = cfg->num_tables * (CTXDESC_L1_DESC_DWORDS << 3);
+> +		cfg->l1ptr = dmam_alloc_coherent(smmu->dev, size,
+> +						 &cfg->l1ptr_dma,
+> +						 GFP_KERNEL | __GFP_ZERO);
+
+As before.  Fairly sure __GFP_ZERO doesn't give you anything extra.
+
+> +		if (!cfg->l1ptr) {
+> +			dev_warn(smmu->dev, "failed to allocate L1 context table\n");
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	cfg->tables = devm_kzalloc(smmu->dev, sizeof(struct arm_smmu_cd_table) *
+> +				   cfg->num_tables, GFP_KERNEL);
+> +	if (!cfg->tables) {
+> +		ret = -ENOMEM;
+> +		goto err_free_l1;
+> +	}
+> +
+> +	/* With two levels, leaf tables are allocated lazily */
+This comment is a kind of odd one.  It is actually talking about what
+'doesn't' happen here I think..
+
+Perhaps /*
+         * Only allocate a leaf table for linear case.
+         * With two levels, the leaf tables are allocated lazily.
+	 */
+> +	if (!cfg->l1ptr) {
+> +		ret = arm_smmu_alloc_cd_leaf_table(smmu, &cfg->tables[0],
+> +						   max_contexts);
+> +		if (ret)
+> +			goto err_free_tables;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_free_tables:
+> +	devm_kfree(smmu->dev, cfg->tables);
+> +err_free_l1:
+> +	if (cfg->l1ptr)
+> +		dmam_free_coherent(smmu->dev, size, cfg->l1ptr, cfg->l1ptr_dma);
+
+This cleanup only occurs if we have had an error.
+Is there potential for this to rerun at some point later?  If so we should
+be careful to also reset relevant pointers - e.g. cfg->l1ptr = NULL as
+they are used to control the flow above.
+
+If there is no chance of a rerun why bother cleaning them up at all?  Something
+has gone horribly wrong so let the eventual smmu cleanup deal with them.
+
+> +	return ret;
+>  }
+>  
+>  static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
+>  {
+> +	int i;
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>  	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+> +	size_t num_leaf_entries = 1 << cfg->s1cdmax;
+> +	struct arm_smmu_cd_table *table = cfg->tables;
+>  
+> -	arm_smmu_free_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
+> +	if (cfg->l1ptr) {
+> +		size_t size = cfg->num_tables * (CTXDESC_L1_DESC_DWORDS << 3);
+> +
+> +		dmam_free_coherent(smmu->dev, size, cfg->l1ptr, cfg->l1ptr_dma);
+
+		As above, if we can call this in a fashion that makes sense
+		other than in eventual smmu tear down, then we need to be
+		careful to reset the pointers.   If not, then why are we clearing
+		managed resourced by hand anyway?
+
+> +		num_leaf_entries = CTXDESC_L2_ENTRIES;
+> +	}
+> +
+> +	for (i = 0; i < cfg->num_tables; i++, table++)
+> +		arm_smmu_free_cd_leaf_table(smmu, table, num_leaf_entries);
+> +	devm_kfree(smmu->dev, cfg->tables);
+>  }
+>  
+>  /* Stream table manipulation functions */
+> @@ -1745,6 +1857,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+>  	}
+>  
+>  	if (s1_cfg) {
+> +		dma_addr_t ptr_dma = s1_cfg->l1ptr ? s1_cfg->l1ptr_dma :
+> +				     s1_cfg->tables[0].ptr_dma;
+> +
+>  		BUG_ON(ste_live);
+>  		dst[1] = cpu_to_le64(
+>  			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
+> @@ -1757,7 +1872,7 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+>  		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
+>  			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
+>  
+> -		val |= (s1_cfg->table.ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
+> +		val |= (ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
+>  			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS) |
+>  			FIELD_PREP(STRTAB_STE_0_S1CDMAX, s1_cfg->s1cdmax) |
+>  			FIELD_PREP(STRTAB_STE_0_S1FMT, s1_cfg->s1fmt);
+> @@ -2273,7 +2388,7 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+>  	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+>  		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+>  
+> -		if (cfg->table.ptr) {
+> +		if (cfg->tables) {
+>  			arm_smmu_free_cd_tables(smmu_domain);
+>  			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
+>  		}
+
+
