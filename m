@@ -2,175 +2,348 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA77BC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 16:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C12C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 17:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D7C214E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 16:40:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aA+O+Yx/"
+	by mail.kernel.org (Postfix) with ESMTP id 7B5B920679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 17:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfKKQk0 (ORCPT
+        id S1726970AbfKKRCh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 11:40:26 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33197 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfKKQkZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 11:40:25 -0500
-Received: by mail-ed1-f67.google.com with SMTP id a24so8751633edt.0;
-        Mon, 11 Nov 2019 08:40:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YqBIjSX9iDBWRIFU2+z8TXVFC+rFlw2hQ7VKD8Z/ue8=;
-        b=aA+O+Yx/rzAXIWBfmd8wFAIOe8iGNf5OQMC5HGy/v+LZYfDbHGwC201BVuxlI2QHXa
-         kIom7CkFj3mY/35L1XLq7zUv45OZ/bCEmi+ikNc2KB1l2wcEkN0Ym/674dN9G2Om/7aT
-         Wdo8gpEpEp4FKuJkW6mdiVsqpDvBEQPQoUM+fcmQtvYlixq//4WxLXJYL4Vv6Yp1Ta02
-         tqJX0gJqO+b3ATX678X2Uie1IKty3WHOzU/KI4RbqYpYBb/RatcKbvtWHk2m4U3fIUjE
-         Giuk1KWH5GzVP2wKAYdynjUTiQgZ9QabuLOzsREmieNW34FjmqnmtaYIvO8fydIwSsOG
-         h3fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=YqBIjSX9iDBWRIFU2+z8TXVFC+rFlw2hQ7VKD8Z/ue8=;
-        b=d9OPBGVFWXoK5BjCJ5gvQV8/dnFgocW3yiZR++JMwxtob49Dlbfs+ZP0sF4LqF7XjN
-         gQrq43blfedEwyZzNDPOgiyfMEZiC4/8iJdGTsucdLc5poTYSGk5LNcCapQsYbRleG5m
-         G0NzKnTE7zAm8phhmHFlv5WOroa+mpCbZd8efPf8VYxxEUHAZpAW4AGZXfdx07x0Mepv
-         B2M0RXcJUY/lwF45IoqOrs0tGcGzoAklc/uhJ0YXIvp41VJz6tB0w4X+Ylmr8nBCcqP2
-         CBpPEi8W6M+x+7FVI9IUfIyU1GUfjQq8GzWt4nMB1vOJhqAGOYX8vGX+j6Gpvox/Swub
-         s1ug==
-X-Gm-Message-State: APjAAAVTeTngdHbX5uCCuTonCPnz+ipErqgYwdrrLQ/nlkG8eeEzMDSl
-        U8nzuxrfJ3KvtoH1pzoIjWSb2dqf
-X-Google-Smtp-Source: APXvYqzHY58qvb4XP/RSZQPSq/BQt3FP+8WEE0nggLYS+wifIsfX8CSdINkgk/QcHMBeEE5klzZAbQ==
-X-Received: by 2002:a50:9555:: with SMTP id v21mr27838445eda.90.1573490422887;
-        Mon, 11 Nov 2019 08:40:22 -0800 (PST)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id j19sm150565ejs.88.2019.11.11.08.40.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Nov 2019 08:40:22 -0800 (PST)
-Subject: Re: [PATCH 3/4] PCI: brcmstb: add Broadcom STB PCIe host controller
- driver
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, wahrenst@gmx.net,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
- <20191106214527.18736-4-nsaenzjulienne@suse.de>
- <7d1d2257-f36b-c55f-17a8-1c5579d8f707@arm.com>
- <94213d9b5fa2b4916bcada49ff938e394f0c859e.camel@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
- 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
- WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
- pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
- hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
- OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
- Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
- oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
- 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
- BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
- +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
- FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
- 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
- vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
- WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
- HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
- HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
- Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
- kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
- aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
- y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
- X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
- HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
- YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
- PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
- UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
- iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
- WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
- UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
- sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
- KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
- t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
- AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
- RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
- e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
- UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
- 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
- V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
- xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
- dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
- pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
- caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
- 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <47a9aa83-c385-821e-170a-061afd2bdc9a@gmail.com>
-Date:   Mon, 11 Nov 2019 08:40:17 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 12:02:37 -0500
+Received: from mga03.intel.com ([134.134.136.65]:41920 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726857AbfKKRCg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:02:36 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 09:02:35 -0800
+X-IronPort-AV: E=Sophos;i="5.68,293,1569308400"; 
+   d="scan'208";a="228975863"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 09:02:32 -0800
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 2446D209DB; Mon, 11 Nov 2019 19:02:30 +0200 (EET)
+Date:   Mon, 11 Nov 2019 19:02:30 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Niklas Soderlund <niklas.soderlund@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] media: bindings: video-interfaces: Update the example
+Message-ID: <20191111170230.GQ18424@paasikivi.fi.intel.com>
+References: <20191111140055.88054-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-In-Reply-To: <94213d9b5fa2b4916bcada49ff938e394f0c859e.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111140055.88054-1-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/11/19 7:29 AM, Nicolas Saenz Julienne wrote:
-> Hi Jeremy,
-> thanks for the review.
+Hi Jacopo,
+
+On Mon, Nov 11, 2019 at 03:00:55PM +0100, Jacopo Mondi wrote:
+> The example provided by the video-interface.txt file uses compatible
+> values for drivers which are have been removed a long time ago. To avoid
+> generating confusion, replace the existing example with a new one using
+> upstream maintained and more modern devices.
 > 
-> On Mon, 2019-11-11 at 01:10 -0600, Jeremy Linton wrote:
-
-[snip]
-
->>> +static const int pcie_offset_bcm2711[] = {
->>> +	[RGR1_SW_INIT_1] = 0x9210,
->>> +	[EXT_CFG_INDEX]  = 0x9000,
->>> +	[EXT_CFG_DATA]   = 0x8000,
->>> +};
->>
->> Given that there is currently only a single set of register offsets, 
->> this seems like it could be simpler.
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
 > 
-> You're right, there is no need for it as of this series. But since we know
-> we'll be supporting other SoCs in the near future I figured it was harmless to
-> leave this as a dt dependent config.
+> Re-proposing the example update, taking into account Niklas' comments about
+> removing most of the commits there.
+> 
+> Laurent suggested to move the example to json-schema, but being this file mostly
+> used as reference for the common video properties description, I'm not sure
+> bindings in yaml format make sense here.
 
-I would rather leave it as is right now because while possibly
-inefficient, adding a later series whose purpose is to add register
-indirection would just clutter the review process IMHO, the way it is
-right now does not hurt.
+I think the proposal makes sense as such, but this patch is just updating
+the example. The two seem unrelated.
 
-(please trim your replies to remove what you are not responding to).
+> 
+> 
+> ---
+>  .../bindings/media/video-interfaces.txt       | 210 ++++++++++--------
+>  1 file changed, 116 insertions(+), 94 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index f884ada0bffc..955bd6f52cda 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -153,123 +153,145 @@ Optional endpoint properties
+>  Example
+>  -------
+> 
+> -The example snippet below describes two data pipelines.  ov772x and imx074 are
+> -camera sensors with a parallel and serial (MIPI CSI-2) video bus respectively.
+> -Both sensors are on the I2C control bus corresponding to the i2c0 controller
+> -node.  ov772x sensor is linked directly to the ceu0 video host interface.
+> -imx074 is linked to ceu0 through the MIPI CSI-2 receiver (csi2). ceu0 has a
+> -(single) DMA engine writing captured data to memory.  ceu0 node has a single
+> -'port' node which may indicate that at any time only one of the following data
+> -pipelines can be active: ov772x -> ceu0 or imx074 -> csi2 -> ceu0.
+> -
+> -	ceu0: ceu@fe910000 {
+> -		compatible = "renesas,sh-mobile-ceu";
+> -		reg = <0xfe910000 0xa0>;
+> -		interrupts = <0x880>;
+> -
+> -		mclk: master_clock {
+> -			compatible = "renesas,ceu-clock";
+> -			#clock-cells = <1>;
+> -			clock-frequency = <50000000>;	/* Max clock frequency */
+> -			clock-output-names = "mclk";
+> -		};
+> +The example snippet below describes two data pipelines connected to a video
+> +DMA engine (VIN4) which has a direct parallel video bus connection to an HDMI
+> +video decoder at port@0 and a data path to a CSI-2 receiver connected to an
+> +image sensor (imx074) at port@1.
+> 
+> -		port {
+> +The parallel HDMI video decoder links directly to the VIN input port 0, and the
+> +bus configuration at both ends is specified in each endpoint.
+> +
+> +The imx074 sensor connects to the CSI-2 receiver and the MIPI CSI-2 serial bus
+> +configuration is specified in the respective endpoints as well. The CSI-2
+> +receiver is then linked to the DMA engine through a direct data path which does
+> +not require any endpoint configuration.
+> +
+> +i2c0: i2c@e6500000 {
+> +
+> +	hdmi-decoder@4c {
+> +		compatible = "adi,adv7612";
+> +		reg = <0x4c>;
+> +
+> +		ports {
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> 
+> -			/* Parallel bus endpoint */
+> -			ceu0_1: endpoint@1 {
+> -				reg = <1>;		/* Local endpoint # */
+> -				remote = <&ov772x_1_1>;	/* Remote phandle */
+> -				bus-width = <8>;	/* Used data lines */
+> -				data-shift = <2>;	/* Lines 9:2 are used */
+> -
+> -				/* If hsync-active/vsync-active are missing,
+> -				   embedded BT.656 sync is used */
+> -				hsync-active = <0>;	/* Active low */
+> -				vsync-active = <0>;	/* Active low */
+> -				data-active = <1>;	/* Active high */
+> -				pclk-sample = <1>;	/* Rising */
+> -			};
+> -
+> -			/* MIPI CSI-2 bus endpoint */
+> -			ceu0_0: endpoint@0 {
+> +			port@0 {
+>  				reg = <0>;
+> -				remote = <&csi2_2>;
+> +				adv7612_in: endpoint {
+> +					remote-endpoint = <&hdmi_con_in>;
+> +				};
+>  			};
+> -		};
+> -	};
+> 
+> -	i2c0: i2c@fff20000 {
+> -		...
+> -		ov772x_1: camera@21 {
+> -			compatible = "ovti,ov772x";
+> -			reg = <0x21>;
+> -			vddio-supply = <&regulator1>;
+> -			vddcore-supply = <&regulator2>;
+> -
+> -			clock-frequency = <20000000>;
+> -			clocks = <&mclk 0>;
+> -			clock-names = "xclk";
+> -
+> -			port {
+> -				/* With 1 endpoint per port no need for addresses. */
+> -				ov772x_1_1: endpoint {
+> +			port@2 {
+> +				reg = <2>;
+> +				adv7612_out: endpoint {
+> +					bus-type = 5;
+>  					bus-width = <8>;
+> -					remote-endpoint = <&ceu0_1>;
+> -					hsync-active = <1>;
+> -					vsync-active = <0>; /* Who came up with an
+> -							       inverter here ?... */
+> -					data-active = <1>;
+> -					pclk-sample = <1>;
+> +					pclk-sample = <0>;
+> +					hsync-active = <0>;
+> +					vsync-active = <1>;
+> +					remote-endpoint = <&vin4_digital_in>;
+>  				};
+>  			};
+>  		};
+> +	};
+> 
+> -		imx074: camera@1a {
+> -			compatible = "sony,imx074";
+> -			reg = <0x1a>;
+> -			vddio-supply = <&regulator1>;
+> -			vddcore-supply = <&regulator2>;
+> -
+> -			clock-frequency = <30000000>;	/* Shared clock with ov772x_1 */
+> -			clocks = <&mclk 0>;
+> -			clock-names = "sysclk";		/* Assuming this is the
+> -							   name in the datasheet */
+> -			port {
+> -				imx074_1: endpoint {
+> -					clock-lanes = <0>;
+> -					data-lanes = <1 2>;
+> -					remote-endpoint = <&csi2_1>;
+> -				};
+> +	imx074: camera@1a {
+
+Could you use a different sensor? There are no bindings for imx074 and the
+SoC camera driver for it is about to be removed.
+
+> +		compatible = "sony,imx074";
+> +		reg = <0x1a>;
+> +
+> +		rotation = <180>;
+> +
+> +		port {
+> +			imx074_1: endpoint {
+> +				bus-type = 4;
+> +				data-lanes = <1 2>;
+> +				remote-endpoint = <&csi20_in>;
+>  			};
+>  		};
+>  	};
+> +};
+> +
+> +csi20: csi2@fea80000 {
+> +	compatible = "renesas,r8a7795-csi2";
+> +	reg = <0 0xfea80000 0 0x10000>;
+> +	interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&cpg CPG_MOD 714>;
+> +	power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +	resets = <&cpg 714>;
+> 
+> -	csi2: csi2@ffc90000 {
+> -		compatible = "renesas,sh-mobile-csi2";
+> -		reg = <0xffc90000 0x1000>;
+> -		interrupts = <0x17a0>;
+> +	ports {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> 
+> -		port@1 {
+> -			compatible = "renesas,csi2c";	/* One of CSI2I and CSI2C. */
+> -			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S,
+> -							   PHY_M has port address 0,
+> -							   is unused. */
+> -			csi2_1: endpoint {
+> -				clock-lanes = <0>;
+> -				data-lanes = <2 1>;
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			csi20_in: endpoint {
+> +				bus-type = 4;
+
+bus-type isn't defined for renesas,r8a7795-csi2. Do you need it here?
+
+> +				data-lanes = <1 2>;
+>  				remote-endpoint = <&imx074_1>;
+>  			};
+>  		};
+> -		port@2 {
+> -			reg = <2>;			/* port 2: link to the CEU */
+> 
+> -			csi2_2: endpoint {
+> -				remote-endpoint = <&ceu0_0>;
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			csi20vin4: endpoint {
+> +				remote-endpoint = <&vin4csi20>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +vin4: video@e6ef4000 {
+> +	compatible = "renesas,vin-r8a7795";
+> +	reg = <0 0xe6ef4000 0 0x1000>;
+> +	interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&cpg CPG_MOD 807>;
+> +	power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +	resets = <&cpg 807>;
+> +	renesas,id = <4>;
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* Parallel input port: HDMI decoder */
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			vin4_digital_in: endpoint {
+> +				bus-type = 5;
+
+Does this device support other kinds of busses on this interface? If not,
+you can move it to the driver (the bindings don't document this either).
+
+> +				bus-width = <8>;
+> +				data-shift = <2>;
+> +				data-active = <1>;
+> +				pclk-sample = <0>;
+> +				hsync-active = <0>;
+> +				vsync-active = <0>;
+
+None of these seem to be documented for renesas,vin-r8a7795 . I guess they
+should be.
+
+> +				remote-endpoint = <&adv7612_out>;
+> +			};
+> +		};
+> +
+> +
+> +		/* Data path to the MIPI CSI-2 receiver. */
+> +		port@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			reg =<1>;
+> +
+> +			vin4csi20: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&csi20vin4>;
+> +			};
+> +
+> +			/* Not connected in this example. */
+> +			vin4csi41: endpoint@3 {
+> +				reg = <3>;
+> +				remote-endpoint = <&csi41vin4>;
+>  			};
+>  		};
+>  	};
+> +};
+
 -- 
-Florian
+Kind regards,
+
+Sakari Ailus
