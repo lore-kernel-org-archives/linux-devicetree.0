@@ -2,165 +2,110 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188DFC17446
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D15CC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED576206BB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5453C214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573467836;
+	bh=9F/+5Wf+Tql8TBr4gc8aV+VqUAzRuBlL5iswcV1jIVQ=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=o6cgOpzOMLaZdvYwTp4V9jJT0Tfnn+RUmVbNpyVQFM2N29v0uRyhaakWotLKoVCAC
+	 1L5BJYSzVMTrEdFzJ15gShwYlxcVOHjeIChjP5qmj6BmtQtWlkbXD2fOAnSbDAFvEo
+	 N5qfCfjOGz6JRo1duBiQpZxTeat347eEG82dc1KE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfKKKLo (ORCPT
+        id S1726845AbfKKKX4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:11:44 -0500
-Received: from mga02.intel.com ([134.134.136.20]:32506 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfKKKLn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:11:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 02:11:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
-   d="scan'208";a="354734522"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 11 Nov 2019 02:11:40 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Mon, 11 Nov 2019 18:11:30 +0800
-Message-Id: <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+        Mon, 11 Nov 2019 05:23:56 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:51923 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726768AbfKKKXz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:23:55 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iU6rO-0007yi-Or; Mon, 11 Nov 2019 11:23:50 +0100
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v7 0/2] Add support for Layerscape external interrupt  lines
+X-PHP-Originating-Script: 0:main.inc
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 Nov 2019 11:33:11 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Kurt Kanzenbach <kurt@linutronix.de>
+In-Reply-To: <20191107122115.6244-1-linux@rasmusvillemoes.dk>
+References: <20191107122115.6244-1-linux@rasmusvillemoes.dk>
+Message-ID: <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: linux@rasmusvillemoes.dk, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kurt@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+On 2019-11-07 13:30, Rasmus Villemoes wrote:
+> In v7, I've tried to change from a custom binding to use
+> interrupt-map, modelled on the recent addition of the
+> renesas,rza1-irqc (commits a644ccb819bc and 5e27a314a11f). It's
+> possible that the interrupt-map parsing code can be factored to a
+> common helper, but it's a bit hard to generalize from two examples to
+> know what a good interface would look like.
+>
+> The interrupt-map-mask is a bit arbitrary. 0xff would likely work 
+> just
+> as well (but I think the ls2088a has 32 external lines, so it has to
+> be a least 0x1f).
+>
+> Also, this drops the fsl,bit-reverse property and instead reads the
+> SCFGREVCR register to determine if bit-reversing is needed.
+>
+> The dt/bindings patch now comes first in accordance with
+> Documentation/devicetree/bindings/submitting-patches.txt.
+>
+> Earlier versions can be found here:
+>
+> v6: 
+> https://lore.kernel.org/lkml/20190923101513.32719-1-kurt@linutronix.de/
+> v5:
+> 
+> https://lore.kernel.org/lkml/20180223210901.23480-1-rasmus.villemoes@prevas.dk/
+>
+> Rasmus Villemoes (2):
+>   dt/bindings: Add bindings for Layerscape external irqs
+>   irqchip: add support for Layerscape external interrupt lines
+>
+>  .../interrupt-controller/fsl,ls-extirq.txt    |  49 +++++
+>  drivers/irqchip/Kconfig                       |   4 +
+>  drivers/irqchip/Makefile                      |   1 +
+>  drivers/irqchip/irq-ls-extirq.c               | 197 
+> ++++++++++++++++++
+>  4 files changed, 251 insertions(+)
+>  create mode 100644
+> 
+> Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+>  create mode 100644 drivers/irqchip/irq-ls-extirq.c
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 98 ++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+Applied to irqchip-next.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..d54a3bda1f4f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+
-+      bias-pull-up:
-+        type: boolean
-+      bias-pull-down:
-+        type: boolean
-+      drive-strength:
-+        type: boolean
-+      slew-rate:
-+        type: boolean
-+      drive-open-drain:
-+        type: boolean
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+          compatible = "intel,lgm-pinctrl";
-+          reg = <0xe2880000 0x100000>;
-+
-+          # Client device subnode
-+          uart0-pins: uart0 {
-+                pins = <64>, /* UART_RX0 */
-+                       <65>; /* UART_TX0 */
-+                function = "CONSOLE_UART0";
-+                pinmux = <1>,
-+                         <1>;
-+                groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
+Thanks,
+
+         M.
 -- 
-2.11.0
-
+Jazz is not dead. It just smells funny...
