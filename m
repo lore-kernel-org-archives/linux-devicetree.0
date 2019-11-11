@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3F5C43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA02C17441
 	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B2D20818
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A656F20818
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:51:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="i/dlo/DU"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="A/KBgjd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfKKTvg (ORCPT
+        id S1727089AbfKKTvt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 14:51:36 -0500
-Received: from mout.gmx.net ([212.227.15.18]:48039 "EHLO mout.gmx.net"
+        Mon, 11 Nov 2019 14:51:49 -0500
+Received: from mout.gmx.net ([212.227.15.18]:55455 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbfKKTvf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1727108AbfKKTvf (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 11 Nov 2019 14:51:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1573501791;
-        bh=jyAikbVVRrPYgn/XSwbrVXcnTYEvKUjvXNC1/tigGeU=;
+        s=badeba3b8450; t=1573501790;
+        bh=taWXA58DvTrq62BOOg57Z2EuKGOOTGhqKhyK1g3A/ds=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=i/dlo/DUcvwxzGVktgQW99DJ2Vq+tJF6Cd2QGH1Ud0ws5cwuYr67vyCqFtqYfqVxt
-         G7v/oy115FdmaJLyecIxDw/4nJYObyvHjJIHf/pcIIeVoAssAvTs+FoiWGecOkeF7x
-         aAPAjHGANJEie+Zp2bt9+i077vRr/Yg+mIMHu0R4=
+        b=A/KBgjd1cp+GvJFSlgecj+stsDiZqZb0fqtukpXswiuTZyjGziEGdvACPHvUrkJoz
+         NgzQnfxBmq5XUIk+E4K8HlbPyH2Jgv7vqwD7IldAzeDDyEEze8w0Wnv1OrH4tQxs1v
+         qsOX3XBOHXTSa+H3hmVW9Vwc4SSlYqt/t35+DQSs=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([37.4.249.112]) by mail.gmx.com
  (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MzhnH-1hhUek2jXl-00vdsF; Mon, 11 Nov 2019 20:49:51 +0100
+ 1MzyuS-1hjQCG32zW-00x0eO; Mon, 11 Nov 2019 20:49:50 +0100
 From:   Stefan Wahren <wahrenst@gmx.net>
 To:     Matthias Brugger <matthias.bgg@kernel.org>,
         Matthias Brugger <mbrugger@suse.com>,
@@ -46,67 +46,70 @@ Cc:     Eric Anholt <eric@anholt.net>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V5 net-next 3/7] dt-bindings: net: bcmgenet: Add BCM2711 support
-Date:   Mon, 11 Nov 2019 20:49:22 +0100
-Message-Id: <1573501766-21154-4-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH V5 net-next 1/7] net: bcmgenet: Avoid touching non-existent interrupt
+Date:   Mon, 11 Nov 2019 20:49:20 +0100
+Message-Id: <1573501766-21154-2-git-send-email-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573501766-21154-1-git-send-email-wahrenst@gmx.net>
 References: <1573501766-21154-1-git-send-email-wahrenst@gmx.net>
-X-Provags-ID: V03:K1:xBehJ0MPIR6kysFz74j6TneXJCtJsc8Ik14GvPjliUkZNbYE5eu
- se1t/umwYp46w7t9aSD9NTCBzsAd+4QG+tnUKdP/UpGT2RlHrzfj/Qrw8n5oxS7+gnscMdD
- UaWtdt7hCIvHSx0kxpSfA4vbH4trDFbPW5UkYhgL4C+y+CCboLoRLOiTS738Ct+MVogLK1A
- +EqmHZOIHj02BhcZn7IbQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aHNgqRhvbKQ=:1eqhjT4X88JxB5c8xm91rE
- txFPAcx26aPKZK74X8qLWqydluXMDviQ3StJ8WTgy5My/CKLihzvLfqrXbv0r2r8nJlGiWjkW
- 5FCu5zSO3U9ebdi2KVwKr2OqvOYYm/u6rGrdgLXZXTRsQrDfKFN69El5r3veHh9xC5j2AqeGA
- tcqMzeiyXJ3UcZbJX4Er8tL27pg0LnaGAShqw7pjlw4XB5Yl5oK3hHUMdgPfhTpSPt6hNoBsD
- Jn1LmfbvgU+zNt2E2NQ3YJCXo57Oqaj+AnTw3aNiYxP+jiOI/JbsnZoDKvPfZzWQC+3cEavlB
- mNZ/hPFOF4CiSiD8B/YBZ09ND6TR6KinPVdCBD+KhYf5TaP8Ax3Le6CHHeLZUA1vgkHeQKZCm
- /VG9N226znsUQvyhpapIbp1vm5jG0u/Kytb58P/r32O493PG1du2XLGwiDfB1fsAG/CtTScN5
- cNjlIPzxHhspJXcu3IKLIB3cKDCaBegkqd5v+FAYL277Lb3UDdoGxdNNGbuMUQ121jW7NAP3x
- cHDsjOPNoMsgzlLKT9+S42goB0+qdZE1QZYlH+DL4M0HNypq5AaJ5Tw/Tl9CAh89lsl3YHXUH
- 77bglIDa2QILjK4ep8iFeMRdGXa7C33KHNW5okQwKjx7pmngq8HeRloqT1V3Vo98QbDfDSi+O
- F3hM6/tw/AWlCVQpIpWczpaDeX2yGfiqCZUSzXfM9GrHyWH9Yz4PnfyukM3WUH3oQw8MwSt5Z
- 4y2uLh+kH5laXhIScerz5eFJ8xK3jwb/JmAcw0hOlTQhkWFRnL9va3xF5LA1xRncatWzhtP5L
- GJZC/qAl/DsUsjkrXczdxIZmSPLj5qMSe5KPxEiO1G92bgSK5h9kzxQJAp7BYSRctAqieQdoI
- QQf8ltYr1Jt6wy0E79ZWP5m6VHBdKjO+siK5JSYipra1qv8RfOiqTIwUjXTm7gHnfQ0ETllPx
- PiOyO1DUT2zuWqwb6/D+pX5S1yL1FZHlERbUWouXsVpfJHXW+CS600AQ6MG9WiitIceCgi8Pl
- 3WSe+IHTM2T9wULMTlLx2Y4uinmFoRIwqOuv8FIZ+YmNJK8hJcT39d4BfZa8Ad+TrO4eYG8H+
- pDzL19DHyT+eVQ9+dF6bMbLHyuWFp9GjX8J+yNa6OkAGNS8Vv/NPE8jDkTk+rLIFskgtKdzQW
- LyxAOZnuncaEDN4IZ4AHE9sFoB9Byzfq4TE6Shp7Xf5J/GGBcrYF2LKyvAnyE9Ll++Lm9Gfnq
- EJB1YuRp6X6H8ZKW36yDN0PL2BqM+5/uTii9UuA==
+X-Provags-ID: V03:K1:Vn23tgDCDcdTg1xYnHdkw2UX8yHSxhCJJqMtechmWWjMUjg8tzL
+ 3k8eiqfqsYa5eQWFLLN+tG95x64undUG+VcacSddSHVC3s3CzzS6zDGsiGo0X5ES+4RbCrR
+ eA6/vgROl4A1iv6FA2i+19mzwq6jDYzuKFarmMLE+66SFW8rUw8vZYOhxf0Jewphbi3auVw
+ eIngeFYtyoi61dFpWrfAw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ko8Y9vRapm4=:P7iuRZplRHa5+9NnbcC6V1
+ YCWl7UfqaEjTqF3M5JbtOQXI0i09hwW0hvv+qurfCyWCnEgRjs2NXM/INqLLpnwFXRceY9kIx
+ Yk8y9FDwP+JMu0thxOgw/3XD5fDBaEAnMx4oWhXapAuGCAn1IsoXSCCNqgQWxMMVW0IHebN10
+ JMwKCOKuDI1TL+jwGrUcftw32hKLGSUxmY4PKb19H1Mm9MAmARKLdqNIbBkfJgJS1xsSyvmsO
+ 5xh36By4G5uaZJXaKYQCe6N1nr07UDlelIR++/hjg+/aloHNzzRtvx8gwC/7gQuBEL6l9l3pg
+ 5ZEod4QYvsr2ps29/JkClzCHPe1Mp70lqKNBOxCPyhmtPBXv/IXstvAC2pbaLlXLajHVzsYpP
+ S81TPOrKnSleosii2nPYJ3+YaLcscDUgPogZS/1zZom8nzd1n3GwFQ/cMwhaCqHvO81il63E2
+ KZaEEXjuNmE45QLWLTLCMc7WGsGjU0mHdQASc8EH14/KI29ogOacVXeNhSPeEYAfDJKiYwn55
+ /YtnHstMoyG9uDRU8D1fa0nsHVAWDYJtpLTOhiB4/43PVyhS6ieO2LVGy2yUXi41AZtz/J+pc
+ qEqYbTCZ1Vg3p3IuOa7on6cYMA3YedinV3wBNGF2pLJ2Ni267K1jDTkJP9LB+J7imgypl/u9w
+ 9AlCFAjZ+jpUBVEsCMGYYNy8Au7GMRqtKMDrR09WgonrpJMOQ+AlYiSGgHoRFN3bmo77A65SI
+ jpl8y3h19tphwzU7Nh4l+vAVaBdaChUIp8YIZbemzmPFo5cFBrStOhAyAFnXn22kbOKyML/oj
+ AoBprc7NdD56xQ5nW5/46xMEXHicVhl4ONtPVqNRXnRzxbEiNH4Y4W275jTBk5Bwba2kadKyg
+ tan0zmPi9FR0F0bLZ/I8az5xSR715DAq0Q4SPuCo3esxolaXq063uIRiTNqhRnVebMYzL2zCg
+ TYXPqs7dSOcFri8Of6OCjov6Mb7+MaoOvDDBwEaW7mTlfF3gjmxtCBmIgAqRuTNuAWOj48ByV
+ k9xWct2Nm1vXTIGDYtFRgZRwKV8eRAfFSmbGb2/CooKnbDkBkodSL9rJuJyVCuCReGe7ysNU/
+ GKfqstmzyD6Z1StZs7CCa/wlljw/Z7roneIkh6nxr6hNqhfUpGkyCNe0ljUuB3i2NGLtgj+Dm
+ rVZFbVJHcXDvrKFWhd6LFAb2wtZS4xrQhFy52skfokmnXIQjfqKi+i4TA2vVgXYQ+7cw0SbUl
+ 2Q4nDCSXo5zy6aZVVKtWk5uUM7qTnMvQcsJCuww==
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BCM2711 has some modifications to the GENET v5. So add this SoC
-specific compatible.
+As platform_get_irq() now prints an error when the interrupt does not
+exist, we are getting a confusing error message in case the optional
+WOL IRQ is not defined:
 
-Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
+  bcmgenet fd58000.ethernet: IRQ index 2 not found
+
+Fix this by using the platform_get_irq_optional().
+
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 =2D--
- Documentation/devicetree/bindings/net/brcm,bcmgenet.txt | 2 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,bcmgenet.txt b/Doc=
-umentation/devicetree/bindings/net/brcm,bcmgenet.txt
-index 3956af1..33a0d67 100644
-=2D-- a/Documentation/devicetree/bindings/net/brcm,bcmgenet.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,bcmgenet.txt
-@@ -2,7 +2,7 @@
-
- Required properties:
- - compatible: should contain one of "brcm,genet-v1", "brcm,genet-v2",
--  "brcm,genet-v3", "brcm,genet-v4", "brcm,genet-v5".
-+  "brcm,genet-v3", "brcm,genet-v4", "brcm,genet-v5", "brcm,bcm2711-genet-=
-v5".
- - reg: address and length of the register set for the device
- - interrupts and/or interrupts-extended: must be two cells, the first cel=
-l
-   is the general purpose interrupt line, while the second cell is the
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/=
+ethernet/broadcom/genet/bcmgenet.c
+index 3504f77..575f162 100644
+=2D-- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3459,7 +3459,7 @@ static int bcmgenet_probe(struct platform_device *pd=
+ev)
+ 	priv =3D netdev_priv(dev);
+ 	priv->irq0 =3D platform_get_irq(pdev, 0);
+ 	priv->irq1 =3D platform_get_irq(pdev, 1);
+-	priv->wol_irq =3D platform_get_irq(pdev, 2);
++	priv->wol_irq =3D platform_get_irq_optional(pdev, 2);
+ 	if (!priv->irq0 || !priv->irq1) {
+ 		dev_err(&pdev->dev, "can't find IRQs\n");
+ 		err =3D -EINVAL;
 =2D-
 2.7.4
 
