@@ -2,95 +2,111 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD15EC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B218C17441
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AD1214E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 18:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0465C204EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 19:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=golovin.in header.i=@golovin.in header.b="0AgvEJRs"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="eTbtsuOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbfKKSnW (ORCPT
+        id S1726957AbfKKTLg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 13:43:22 -0500
-Received: from forward106p.mail.yandex.net ([77.88.28.109]:55623 "EHLO
-        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728301AbfKKSnV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 13:43:21 -0500
-X-Greylist: delayed 351 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Nov 2019 13:43:19 EST
-Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
-        by forward106p.mail.yandex.net (Yandex) with ESMTP id B98701C806FA;
-        Mon, 11 Nov 2019 21:37:26 +0300 (MSK)
-Received: from mxback8q.mail.yandex.net (mxback8q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:b38f:32ec])
-        by forward100q.mail.yandex.net (Yandex) with ESMTP id B41CC7080002;
-        Mon, 11 Nov 2019 21:37:26 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback8q.mail.yandex.net (mxback/Yandex) with ESMTP id Fm9TxESHgv-bPd8t6v3;
-        Mon, 11 Nov 2019 21:37:25 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=golovin.in; s=mail; t=1573497445;
-        bh=Kr8Q2CYrVzqyFN3+KQChl/ZmdG+3/pTsRbqPDvZ9Fks=;
-        h=Message-Id:Date:Cc:Subject:To:From;
-        b=0AgvEJRsURO6sGtecisNH6I2lDJ54V2JAceWcUvHyXAnXtKKbeLunJnwPU6TWGnii
-         Bn9j0Ykvy8GTF7jCTOnbtINI/X+br9PLuzJg60pEkOMQevn5g2R3JkHsiGZxWY//07
-         f0SY09SjPC/o6lMy23G899p+Zw3q5mZA2qLZAqdQ=
-Authentication-Results: mxback8q.mail.yandex.net; dkim=pass header.i=@golovin.in
-Received: by vla1-b2d94eaf2344.qloud-c.yandex.net with HTTP;
-        Mon, 11 Nov 2019 21:37:25 +0300
-From:   Dmitry Golovin <dima@golovin.in>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Ethan Sommer <e5ten.arch@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2] kbuild: support byacc as alternative YACC to bison
+        Mon, 11 Nov 2019 14:11:36 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33941 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727140AbfKKTLg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 14:11:36 -0500
+Received: by mail-io1-f65.google.com with SMTP id q83so15818557iod.1
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 11:11:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2HgDUfvYTFbpP69aWKc0kGJILBYPdrw3d304UudQR6Y=;
+        b=eTbtsuOY1bdhKdbXYiPZJ/aG2Qace47DkAJbL4Op2wp42tGwtELx5aJ26CvJ9Jb3qT
+         vlhJLgZkDCviw9bLoBdRKzAEYECphGMJH3AnxorVg1SBo/rDG5z1xL1PRUcddapYELJc
+         JlDIgnKwPtZybDPnZO/Vil39jXyaJ3tn4cWD3olZQTk/Xys15Qnjc5WHDiyzLrr1dhpI
+         gUDI74hAWak5E6pqdOxyvLhSsu+bf3+IfPyWmb5suN58S2X3MoWTIFC9SW4Y0R3aIW+5
+         ErM2InmMnwLQIG+6QpsYESxWHX25EqnFNz7/WEo+Dks7zTq3u5LsV9tqWiolA629rCzm
+         iHFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2HgDUfvYTFbpP69aWKc0kGJILBYPdrw3d304UudQR6Y=;
+        b=JPg0Dxqehji5iGPpoWJ11pGZguG3JMqH3/jBAd6VYFBQxFD/4rr9a26m8+pnpNF2p2
+         7+ScrxO7MLjPNuxGGcqlyaFXPl2KG0VDbPW4dvuWEfjgIQUW7dRCx6A98dGVa1NaAEbR
+         PWAgVOaiObD0mX0+gjCAo9YKUamWykTaka+ELGT18l5JFQkFWl5NEz7dosfCM5LNcv/F
+         hocFf8VDG+nGmacGuvJ72sLoYAEEjP36jkf1X2C8eTC/bw+WgCy4seI9jR67mlhuxXuT
+         IsoxCe5r6Dfv1cyRQROp7HEDei9qDnNTCKd3SMbcwBKvBwtCBbofLEQH+IrJnDjMBzS8
+         D3fA==
+X-Gm-Message-State: APjAAAUA3cFKZxAL/3l+CaXPWlxyTyG7epKUbSsVWN1WvVWRYTxu7gxG
+        DZBoYkXhsuLYY2BhLP6jtwWp58tHYnXtWZgZgzXE8w==
+X-Google-Smtp-Source: APXvYqy1znbPoGeXemeR0vFArovOl/+lq8cNdMivbT38ZF3jpW8pGC7IQIdwYmdC0F0dJSIodB17Xximee0fFWz8NMY=
+X-Received: by 2002:a02:c54b:: with SMTP id g11mr2199988jaj.136.1573499493869;
+ Mon, 11 Nov 2019 11:11:33 -0800 (PST)
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Mon, 11 Nov 2019 20:37:25 +0200
-Message-Id: <17102241573497445@vla1-b2d94eaf2344.qloud-c.yandex.net>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+References: <20191021124428.2541-1-brgl@bgdev.pl> <20191021124428.2541-6-brgl@bgdev.pl>
+ <20191111080837.GF18902@dell>
+In-Reply-To: <20191111080837.GF18902@dell>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 11 Nov 2019 20:11:23 +0100
+Message-ID: <CAMRc=Me_b5c_e+qZ1s=TgTh7k_bQqrqthC8VTb7ak8+3AOEugg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] dt-bindings: mfd: max77650: convert the binding
+ document to yaml
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Hmm, this is unfortunate since there is no common way to
-> specify the header path directly.
-> 
-> I am not sure how much effort we should invent
-> to support non-GNU implementation
-> since we already rely on various GNU tools.
-> 
-> If we decide to support byacc,
-> we must carry the restriction
-> that bans GNU-extension.
+pon., 11 lis 2019 o 09:08 Lee Jones <lee.jones@linaro.org> napisa=C5=82(a):
+>
+> On Mon, 21 Oct 2019, Bartosz Golaszewski wrote:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Convert the binding document for MAX77650 core MFD module to YAML.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
+> >  .../devicetree/bindings/mfd/max77650.yaml     | 149 ++++++++++++++++++
+> >  2 files changed, 149 insertions(+), 46 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
+>
+> Applied, thanks.
+>
 
-In fact Linux now can be built without using GNU
-binutils and using LLVM tools instead. It's just
-one architecture and a specific config now, but
-eventually the others will be built too. You can
-follow the progress here:
-https://github.com/ClangBuiltLinux/continuous-integration/issues/73
+Hi Lee,
 
-I believe that compatibility with different
-alternative tools is a good thing as long as it
-doesn't add unwanted complexity. And as this patch
-is just changing command-line flags to their
-portable variants and explicitly adds a couple of
-definitions that are presumed by GNU bison, I
-can't see a problem with it.
+FYI this series is already in next through Rob's DT tree.
 
-Regards,
-Dmitry
+Bart
+
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
