@@ -2,316 +2,131 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539C2C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E5FC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 14:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C86206A3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 13:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85FE321783
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 14:05:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwVw/MSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfKKN7O (ORCPT
+        id S1726889AbfKKOFk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 08:59:14 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:52119 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfKKN7O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 08:59:14 -0500
-X-Originating-IP: 2.224.242.101
-Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 8059840005;
-        Mon, 11 Nov 2019 13:59:08 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Niklas Soderlund <niklas.soderlund@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2] media: bindings: video-interfaces: Update the example
-Date:   Mon, 11 Nov 2019 15:00:55 +0100
-Message-Id: <20191111140055.88054-1-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 11 Nov 2019 09:05:40 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36729 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfKKOFj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 09:05:39 -0500
+Received: by mail-ot1-f67.google.com with SMTP id f10so11330945oto.3;
+        Mon, 11 Nov 2019 06:05:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hkWWZbsPhAe/B+lg1NTrPkrZfdIPdtnDPLZ91eTI/hg=;
+        b=lwVw/MSbrrSR96HQiTRGjp4qyBLP9BUVvOJ7zUjQCJ+Bl51zdrH0ZeOYPfQadmnrQv
+         LC5pnKVzGGUcbXy6983YIevobRGuUKI8LfdKq87vJVZ+tQLGuXqUNjr6WV+SKGRZeNG5
+         SAUmQffDJJdfo3GY1YHH0dmHFc7/IFMLCI++HYj0MOvgYZwynSc8XJ58ylbJ0pq+J+3d
+         tw4DkYPn71ln2qqUxDBP/pCGu2ZTb0zVjMcLZjiGi/NSbiSK3er1e+4bLrJoUjs79t5Q
+         XRTuWN3LbqzYx5ByPRiLLGnmUAIv/qwtEknadUJmdAlv4XPahOJY0XdT9crvnySe5hmr
+         KWJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hkWWZbsPhAe/B+lg1NTrPkrZfdIPdtnDPLZ91eTI/hg=;
+        b=GzagR0fdtY7WlsJVA/cI5mq1yR091sWgCAuwT46BZc+sJciyhR7bkizfC9t4KBbSL2
+         tbg3bynXyFZL2h3cmgzFn+Ic8nKjsnUnyx0qjRYSbqw1s8CDp2sPl20g9HeCn+TGo4hV
+         82hqInCTSqYpBLcNI4y0pgh7pLOcJjyvoCrDgfUzCxDUHk96vbnLvhgz5rWJDY5PP7MN
+         Qi8nexvejVWjDWjGP2PsSlp9DatjKfi72qC0yrZk5+0/TAbFhdJDoYzoeEVUYa4lvH73
+         8DwH24aOTxSNEaaFNEO/9FUM/WH4+UHc49l6I0nMw0pUaXLmR9aaXdapd6hUJZ6+9Cpq
+         kFJA==
+X-Gm-Message-State: APjAAAWa8wyjkSCrVs3wrKB2C3k1dWiSuSiCdTMaU5NW/ZFbkbCB9vd8
+        y+EGNSTO/gJQZH6992rH6NQpa3E/pwmKlbq2LT8=
+X-Google-Smtp-Source: APXvYqwKDHSLwIppJngXejpzqHPV4YxZhwzU8jDUQEbttYpesGP+AXtsC0jFnvcDk5ZDCNQNKmxcyJVC4p07NzbkNRQ=
+X-Received: by 2002:a05:6830:3:: with SMTP id c3mr8817650otp.15.1573481138383;
+ Mon, 11 Nov 2019 06:05:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191014141718.22603-1-narmstrong@baylibre.com>
+ <20191014141718.22603-2-narmstrong@baylibre.com> <20191023201141.GA21235@bogus>
+ <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com> <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com>
+In-Reply-To: <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com>
+From:   Tim <elatllat@gmail.com>
+Date:   Mon, 11 Nov 2019 09:05:27 -0500
+Message-ID: <CA+3zgmtJqN-3Q-kjMhh58B+T7z_1TA-C6be7+UP6nuQb7eq=8A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
+ disabling SS instances in park mode
+To:     Jun Li <lijun.kernel@gmail.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Felipe Balbi <balbi@kernel.org>, khilman@baylibre.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dongjin Kim <tobetter@gmail.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The example provided by the video-interface.txt file uses compatible
-values for drivers which are have been removed a long time ago. To avoid
-generating confusion, replace the existing example with a new one using
-upstream maintained and more modern devices.
+Speculation;
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
+Maybe the kernel maintainers prefer to optimistically permit future
+products to easily remove workarounds via quirk flags.
+Even if data from testing were shown, and it did not impact
+performance, code reduction and clarity are desirable.
 
-Re-proposing the example update, taking into account Niklas' comments about
-removing most of the commits there.
-
-Laurent suggested to move the example to json-schema, but being this file mostly
-used as reference for the common video properties description, I'm not sure
-bindings in yaml format make sense here.
-
-
----
- .../bindings/media/video-interfaces.txt       | 210 ++++++++++--------
- 1 file changed, 116 insertions(+), 94 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index f884ada0bffc..955bd6f52cda 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -153,123 +153,145 @@ Optional endpoint properties
- Example
- -------
-
--The example snippet below describes two data pipelines.  ov772x and imx074 are
--camera sensors with a parallel and serial (MIPI CSI-2) video bus respectively.
--Both sensors are on the I2C control bus corresponding to the i2c0 controller
--node.  ov772x sensor is linked directly to the ceu0 video host interface.
--imx074 is linked to ceu0 through the MIPI CSI-2 receiver (csi2). ceu0 has a
--(single) DMA engine writing captured data to memory.  ceu0 node has a single
--'port' node which may indicate that at any time only one of the following data
--pipelines can be active: ov772x -> ceu0 or imx074 -> csi2 -> ceu0.
--
--	ceu0: ceu@fe910000 {
--		compatible = "renesas,sh-mobile-ceu";
--		reg = <0xfe910000 0xa0>;
--		interrupts = <0x880>;
--
--		mclk: master_clock {
--			compatible = "renesas,ceu-clock";
--			#clock-cells = <1>;
--			clock-frequency = <50000000>;	/* Max clock frequency */
--			clock-output-names = "mclk";
--		};
-+The example snippet below describes two data pipelines connected to a video
-+DMA engine (VIN4) which has a direct parallel video bus connection to an HDMI
-+video decoder at port@0 and a data path to a CSI-2 receiver connected to an
-+image sensor (imx074) at port@1.
-
--		port {
-+The parallel HDMI video decoder links directly to the VIN input port 0, and the
-+bus configuration at both ends is specified in each endpoint.
-+
-+The imx074 sensor connects to the CSI-2 receiver and the MIPI CSI-2 serial bus
-+configuration is specified in the respective endpoints as well. The CSI-2
-+receiver is then linked to the DMA engine through a direct data path which does
-+not require any endpoint configuration.
-+
-+i2c0: i2c@e6500000 {
-+
-+	hdmi-decoder@4c {
-+		compatible = "adi,adv7612";
-+		reg = <0x4c>;
-+
-+		ports {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-
--			/* Parallel bus endpoint */
--			ceu0_1: endpoint@1 {
--				reg = <1>;		/* Local endpoint # */
--				remote = <&ov772x_1_1>;	/* Remote phandle */
--				bus-width = <8>;	/* Used data lines */
--				data-shift = <2>;	/* Lines 9:2 are used */
--
--				/* If hsync-active/vsync-active are missing,
--				   embedded BT.656 sync is used */
--				hsync-active = <0>;	/* Active low */
--				vsync-active = <0>;	/* Active low */
--				data-active = <1>;	/* Active high */
--				pclk-sample = <1>;	/* Rising */
--			};
--
--			/* MIPI CSI-2 bus endpoint */
--			ceu0_0: endpoint@0 {
-+			port@0 {
- 				reg = <0>;
--				remote = <&csi2_2>;
-+				adv7612_in: endpoint {
-+					remote-endpoint = <&hdmi_con_in>;
-+				};
- 			};
--		};
--	};
-
--	i2c0: i2c@fff20000 {
--		...
--		ov772x_1: camera@21 {
--			compatible = "ovti,ov772x";
--			reg = <0x21>;
--			vddio-supply = <&regulator1>;
--			vddcore-supply = <&regulator2>;
--
--			clock-frequency = <20000000>;
--			clocks = <&mclk 0>;
--			clock-names = "xclk";
--
--			port {
--				/* With 1 endpoint per port no need for addresses. */
--				ov772x_1_1: endpoint {
-+			port@2 {
-+				reg = <2>;
-+				adv7612_out: endpoint {
-+					bus-type = 5;
- 					bus-width = <8>;
--					remote-endpoint = <&ceu0_1>;
--					hsync-active = <1>;
--					vsync-active = <0>; /* Who came up with an
--							       inverter here ?... */
--					data-active = <1>;
--					pclk-sample = <1>;
-+					pclk-sample = <0>;
-+					hsync-active = <0>;
-+					vsync-active = <1>;
-+					remote-endpoint = <&vin4_digital_in>;
- 				};
- 			};
- 		};
-+	};
-
--		imx074: camera@1a {
--			compatible = "sony,imx074";
--			reg = <0x1a>;
--			vddio-supply = <&regulator1>;
--			vddcore-supply = <&regulator2>;
--
--			clock-frequency = <30000000>;	/* Shared clock with ov772x_1 */
--			clocks = <&mclk 0>;
--			clock-names = "sysclk";		/* Assuming this is the
--							   name in the datasheet */
--			port {
--				imx074_1: endpoint {
--					clock-lanes = <0>;
--					data-lanes = <1 2>;
--					remote-endpoint = <&csi2_1>;
--				};
-+	imx074: camera@1a {
-+		compatible = "sony,imx074";
-+		reg = <0x1a>;
-+
-+		rotation = <180>;
-+
-+		port {
-+			imx074_1: endpoint {
-+				bus-type = 4;
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&csi20_in>;
- 			};
- 		};
- 	};
-+};
-+
-+csi20: csi2@fea80000 {
-+	compatible = "renesas,r8a7795-csi2";
-+	reg = <0 0xfea80000 0 0x10000>;
-+	interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&cpg CPG_MOD 714>;
-+	power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+	resets = <&cpg 714>;
-
--	csi2: csi2@ffc90000 {
--		compatible = "renesas,sh-mobile-csi2";
--		reg = <0xffc90000 0x1000>;
--		interrupts = <0x17a0>;
-+	ports {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-
--		port@1 {
--			compatible = "renesas,csi2c";	/* One of CSI2I and CSI2C. */
--			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S,
--							   PHY_M has port address 0,
--							   is unused. */
--			csi2_1: endpoint {
--				clock-lanes = <0>;
--				data-lanes = <2 1>;
-+		port@0 {
-+			reg = <0>;
-+
-+			csi20_in: endpoint {
-+				bus-type = 4;
-+				data-lanes = <1 2>;
- 				remote-endpoint = <&imx074_1>;
- 			};
- 		};
--		port@2 {
--			reg = <2>;			/* port 2: link to the CEU */
-
--			csi2_2: endpoint {
--				remote-endpoint = <&ceu0_0>;
-+		port@1 {
-+			reg = <1>;
-+
-+			csi20vin4: endpoint {
-+				remote-endpoint = <&vin4csi20>;
-+			};
-+		};
-+	};
-+};
-+
-+vin4: video@e6ef4000 {
-+	compatible = "renesas,vin-r8a7795";
-+	reg = <0 0xe6ef4000 0 0x1000>;
-+	interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&cpg CPG_MOD 807>;
-+	power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+	resets = <&cpg 807>;
-+	renesas,id = <4>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* Parallel input port: HDMI decoder */
-+		port@0 {
-+			reg = <0>;
-+
-+			vin4_digital_in: endpoint {
-+				bus-type = 5;
-+				bus-width = <8>;
-+				data-shift = <2>;
-+				data-active = <1>;
-+				pclk-sample = <0>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				remote-endpoint = <&adv7612_out>;
-+			};
-+		};
-+
-+
-+		/* Data path to the MIPI CSI-2 receiver. */
-+		port@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			reg =<1>;
-+
-+			vin4csi20: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&csi20vin4>;
-+			};
-+
-+			/* Not connected in this example. */
-+			vin4csi41: endpoint@3 {
-+				reg = <3>;
-+				remote-endpoint = <&csi41vin4>;
- 			};
- 		};
- 	};
-+};
---
-2.23.0
-
+On Sun, Nov 10, 2019 at 8:58 PM Jun Li <lijun.kernel@gmail.com> wrote:
+>
+> Hi Neil
+>
+> As I got the information from Synopsys, this bug exists on current IP ver=
+sions,
+> and per my tests with external USB3 hub + 2 Super speed udisks on data
+> read by dd, I can reproduce this issue with different kernel versions, al=
+so I
+> didn't see obvious performance drop by dd tests after disable park mode f=
+or
+> super speed, so should we just disable it by default so no need a quirk?
+>
+> Li Jun
+>
+> Tim <elatllat@gmail.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8811=E6=97=A5=E5=
+=91=A8=E4=B8=80 =E4=B8=8A=E5=8D=888:42=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > Thanks for working on this Neil,
+> > Is there something that needs doing for this patch to make it into 5.3 =
+or 5.4?
+> > As previously mentioned the patch set fixes the issue on affected hardw=
+are;
+> >     https://patchwork.kernel.org/patch/11164515/
+> >
+> >
+> >
+> > On Wed, Oct 23, 2019 at 4:11 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Mon, Oct 14, 2019 at 04:17:16PM +0200, Neil Armstrong wrote:
+> > > > This patch updates the documentation with the information related
+> > > > to the quirks that needs to be added for disabling all SuperSpeed X=
+HCi
+> > > > instances in park mode.
+> > > >
+> > > > CC: Dongjin Kim <tobetter@gmail.com>
+> > > > Cc: Jianxin Pan <jianxin.pan@amlogic.com>
+> > > > Reported-by: Tim <elatllat@gmail.com>
+> > > > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > >
+> > > Sigh, what's one more to the never ending list of quirks...
+> > >
+> > > Acked-by: Rob Herring <robh@kernel.org>
