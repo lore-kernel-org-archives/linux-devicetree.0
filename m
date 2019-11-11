@@ -2,115 +2,113 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4602EC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFACC17441
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4D22184C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rEWMCqgg"
+	by mail.kernel.org (Postfix) with ESMTP id DF98C21783
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfKKKJn (ORCPT
+        id S1726823AbfKKKLg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:09:43 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46200 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfKKKJn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 05:09:43 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b3so13884296wrs.13
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 02:09:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=q1gcdAuprbatyWKkiOOKDI/wj2JLtRiEXlBcqAh4zX4=;
-        b=rEWMCqggEUDE7cVXtoWuQexxvnbKSDQV6c6U/fkxvFGJm7L4aF1SeWXpAjgAZ7x+Yk
-         WfKOWLDkFrYWNFG0RPV/2Osii2ceVDIJ526aWPkKLacohkDqw/yQEtPLwVWB4PmoZR+n
-         mkVXScsTN6ntyA0myz0WBHaA9xbC/1qVDON0Psf+bj6BcBd6FzL1vLu7qH/fs2ubu56G
-         9sj5EMGDTlfyOUH/z0yBZfVsBS3cLqRIquMy3Ej/bIXSQ6sa26zmWMw58TxwXIBdGt+R
-         40ibglcoJK/qarkFYtWh69f3ScLmDdycMHyCDKZF6pCw9vAhBJ1NSPUQFh6X7CoQt3Oy
-         4XvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=q1gcdAuprbatyWKkiOOKDI/wj2JLtRiEXlBcqAh4zX4=;
-        b=IaVnrUEaEJaWTzJ2R0/ObP55fytYdiDIKTXttZfDZYX1EZ5eBZuja34r3TQuZzdEz3
-         Z6u6NZd3aC4al0XfUjBEyrhJhMTyWe1nOw8jKtsI5PgymHH+7jDApaw6cQ7Ja4CUysl6
-         cYt9RWVeDVx1nM7hayrLsk2TIxGvrM0dVnS80pYUfx7etXNSjvJXppLx4SjO9ou9W6nh
-         drsVtRuBxt+12BOsMapavIQtT2onxLtNF/TuXqlnFmT1+k6QH4uUDIPHUM2yUmkTaF1L
-         3wwaNmaHmtF5QhsR8JgFUrYozxJfeKo6G1xt4z2sR2EddcLJTmhI4YGyI5ojnAbybp6A
-         Lsjg==
-X-Gm-Message-State: APjAAAUnpuwRFwinPJX4dX79uA/jJHKGHQMH7P+N+RwEN1zT+r+wcpnr
-        X6mJsDupGTpylY4mUKlL3c/k9g==
-X-Google-Smtp-Source: APXvYqzED02dA+VSYRlFFbMfPRcHWDXKauK0WK6Gg2MePenGPqevIQ+u8VGs6q8usm8QJOEUhROmDg==
-X-Received: by 2002:a5d:4584:: with SMTP id p4mr20886825wrq.345.1573466981232;
-        Mon, 11 Nov 2019 02:09:41 -0800 (PST)
-Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id 11sm19310682wmb.34.2019.11.11.02.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 02:09:40 -0800 (PST)
-Date:   Mon, 11 Nov 2019 10:09:33 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/5] devicetree: mfd: max14577: Add reference to
- max14040_battery.txt descriptions
-Message-ID: <20191111100933.GE3218@dell>
-References: <20191105095905.GA31721@pi3>
- <20191107031710.5672-1-matheus@castello.eng.br>
- <20191107031710.5672-4-matheus@castello.eng.br>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191107031710.5672-4-matheus@castello.eng.br>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 11 Nov 2019 05:11:36 -0500
+Received: from mga01.intel.com ([192.55.52.88]:35383 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbfKKKLg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 05:11:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 02:11:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,292,1569308400"; 
+   d="scan'208";a="213737171"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Nov 2019 02:11:32 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v6 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Mon, 11 Nov 2019 18:11:28 +0800
+Message-Id: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 07 Nov 2019, Matheus Castello wrote:
+Hi,
 
-> max77836 MFD has a fuel gauge that has a low SOC alert feature that is
-> described in Documentation/devicetree/bindings/power/supply/max17040_battery.txt.
-> Adding the reference to de documentation here.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  Documentation/devicetree/bindings/mfd/max14577.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-> index fc6f0f4e8beb..04d790b1513c 100644
-> --- a/Documentation/devicetree/bindings/mfd/max14577.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-> @@ -5,6 +5,8 @@ Battery Charger and SFOUT LDO output for powering USB devices. It is
->  interfaced to host controller using I2C.
-> 
->  MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-> +For the description of Fuel Gauge low SOC alert interrupt see:
-> +Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-I would prefer the use of relative paths in documentation.
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 
-Once fixed, please apply my:
+v6:
+- Fix code quality/style/readability related review concerns.
+- Remove enum usage from pinmux property in dt bindings.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+v5:
+- Fix code style/readability related review concerns.
+- Change data type of groups property to uint32-array in dt bindings.
+
+v4:
+- Correct data types for some pin config properties in dt bindings.
+- Improve pattern regex as per review feedback in dt bindings.
+- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
+  do reg updates in eqbr_pinconf_set() routine itself.
+- Add locking in few ops where it was missing.
+- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
+  in variable namings so as not to confuse with GPIO descriptors.
+- Address code quality/convention/style related review concerns.
+
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        |  98 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 953 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 144 ++++
+ 5 files changed, 1214 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.11.0
+
