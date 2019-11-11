@@ -2,307 +2,138 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B32C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECFAC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC11B2075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TfHXEZam"
+	by mail.kernel.org (Postfix) with ESMTP id 2FD5A2084F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfKKJjy (ORCPT
+        id S1726819AbfKKJvR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:39:54 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44438 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKJjy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 04:39:54 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB9deam107948;
-        Mon, 11 Nov 2019 03:39:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573465180;
-        bh=BEXZAIpRzxqNeefh/J9C5EiDlt0B/TXLhAEH6e8HpHk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TfHXEZamg58rdWlK5BysZV02AQQQj4UU7QrHapkWnMxQ72oxEdzvHcEsimBil1wd6
-         lIv6CticHJZrV5CnF2Wvc1LS51J6EAP0NNB2ojI1Ni1R8wx7dk5/zdc+zQD6o+kLjX
-         Xs7IUjaUFXCKeqpsS6D3oBG9JK6xefyD/07vDVUc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB9ddRZ118324
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 03:39:40 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 03:39:21 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 03:39:21 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB9dZnY090658;
-        Mon, 11 Nov 2019 03:39:36 -0600
-Subject: Re: [PATCH v4 11/15] dmaengine: ti: New driver for K3 UDMA - split#3:
- alloc/free chan_resources
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-12-peter.ujfalusi@ti.com>
- <20191111060625.GP952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <33c88201-3311-0438-ead5-63ea14a0b153@ti.com>
-Date:   Mon, 11 Nov 2019 11:40:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 04:51:17 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:38048 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726768AbfKKJvQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 04:51:16 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iU6Lj-0004sK-2G; Mon, 11 Nov 2019 10:51:07 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAB9p4Uv000587
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 11 Nov 2019 10:51:05 +0100
+Subject: arm64: dts: rockchip: Disable HS400 for mmc on rk3399-roc-pc
+To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        shawn.lin@rock-chips.com
+Cc:     devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        linux-kernel@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-rockchip@lists.infradead.org,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Randy Li <ayaka@soulik.info>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
+ <20190301153348.29870-2-christoph.muellner@theobroma-systems.com>
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ xsDNBFs02GcBDADRBOYE75/gs54okjHfQ1LK8FfNH5yMq1/3MxhqP7gsCol5ZGbdNhJ7lnxX
+ jIEIlYfd6EgJMJV6E69uHe4JF9RO0BDdIy79ruoxnYaurxB40qPtb+YyTy3YjeNF3NBRE+4E
+ ffvY5AQvt3aIUP83u7xbNzMfV4JuxaopB+yiQkGo0eIAYqdy+L+5sHkxj/MptMAfDKvM8rvT
+ 4LaeqiGG4b8xsQRQNqbfIq1VbNEx/sPXFv6XDYMehYcbppMW6Zpowd46aZ5/CqP6neQYiCu2
+ rT1pf/s3hIJ6hdauk3V5U8GH/vupCNKA2M2inrnsRDVsYfrGHC59JAB545/Vt8VNJT5BAPKP
+ ka4lgIofVmErILAhLtxu3iSH6gnHWTroccM/j0kHOmrMrAmCcLrenLMmB6a/m7Xve5J7F96z
+ LAWW6niQyN757MpgVQWsDkY2c5tQeTIHRlsZ5AXxOFzA44IuDNIS7pa603AJWC+ZVqujr80o
+ rChE99LDPe1zZUd2Une43jEAEQEAAc0iTWFya3VzIFJlaWNobCA8cmVpY2hsQHQtb25saW5l
+ LmRlPsLA8AQTAQoAGgQLCQgHAhUKAhYBAhkBBYJbNNhnAp4BApsDAAoJEDol3g5rGv2ygaMM
+ AMuGjrnzf6BOeXQvadxcZTVas9HJv7Y0TRgShl4ItT6u63+mvOSrns/w6iNpwZxzhlP9OIrb
+ v2gorWDvW8VUXaCpA81EEz7LTrq+PYFEfIdtGgKXCOqn0Om8AHx5EmEuPF+dvUjESVoG85hL
+ Q6r6PJUh8xhYGMUYMer/ka2jAu2hT1sLpmPijXnw9TvC2K9W3paouf4u5ZtG32fegvUeoQ1R
+ t30k0bYRNqX8xboD1mMKgc4IWLsH6I0MROwTF7JvarkC9rU/M6OL6dwnNuauLvGVs/aXLrn2
+ UYxas9erPOwr+M45f8OR7O8xxvKoP5WSU6qWB/EExfm/ZBUkDKq8nDgItEpm+UUxpS9EpyvC
+ TIQ3qkqHGn1cf2+XRUjaCGsRG6fyY7XM4v5ariuMrg8RV7ec2jxIs3546pXx4GFP6rBcZZoW
+ f6y2A6h47rWGHAhbZ6cnJp/PMDIQrnVkzQHYBkTuhTp1bzUGhCfKLhz2M/UAIo+4VNUicJ56
+ PgDT5NYvvc7AzQRbNNhnAQwAmbmYfkV7PA3zrsveqraUIrz5TeNdI3GPO/kBWPFXe/ECaCoX
+ IVfacTV8miHvxqU92Vr/7Zw7lland+UgHa7MGlJfNHoqXIVL8ZWAj+mGf4jMo02S+XtUvdL7
+ LtALQwXlT7GD0e9Efyk/AV9vL8aiseT/SmW6+sAhs9Q7XPvZWE/ME1M/WRlDsi32g04mkvOz
+ G/bGN9De+LoSgn/220udTgLpq2aJEYGgvgZRVDKeOGSeP9cAKYQPjsW0okFfVyezZubNHLwd
+ yjVFxGB2XIH/XIVo13E2SFvWHrdjmCcZek37k4uftdYG90iBXS3Dtp0u87yiOIoL2PXM8qLU
+ 2+FhXphjce6Ef33nKQpelWLXxlrXUr1lOmNTAHfVIsKmGsRBqRBmphLMJOfyD6enYR0B/f+s
+ LVDtKFrMzhkjqvanwlcQkbpN6DvD409QRaUwxQiUaCcplUqHnJvKdjO7zCI4u6T6hjvciBrg
+ EBB+uN15uGg+LODRZ4Ue0KaWoiH6n1IxABEBAAHCwN8EGAEKAAkFgls02GcCmwwACgkQOiXe
+ Dmsa/bKWFgwAw3hc1BGC65BhhcYyikqRNI6jnHQVC29ax1RTijC2PJZ5At+uASYAy97A2WjC
+ L3UdLU/B6yhcEt3U6gwQgQbfrbPObjeZi8XSQzP2qZI8urjnIPUG7WYDK8grFqpjvAWPBhpS
+ B5CeMaICi9ppZnqkE3/d/NMXHCU/qbARpATJGODk64GnJEnlSWDbWfTgEUd+lnUQVKAZfy5Z
+ 5oYabpGpG5tDM49LxuC4ZpTkKiX+eT1YxsKH9fCSFnETR54ZVCS7NQDOTtpHDA2Qz2ie3sNC
+ H7YyH580i9znwePyhCFQQeX+jo2r2GQ0v+kOQrL9wwluW6xNWBakhLanQFrHypn7azpOCaIr
+ pWfxOm9CPEk4zGjQmE7sW1HfIdYC39OeEEnoPdnNGxn7sf6Fuv+fahAs8ls33JBdtEAPLiR8
+ Dm43HZwTBXPwasFHnGkF10N7aXf3r8WYpctbZYlcT5EV9m9i4jfWoGzHS5V4DXmv6OBmdLYk
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <367bf78a-f079-f0b4-68fe-52c86823c174@fivetechno.de>
+Date:   Mon, 11 Nov 2019 10:51:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191111060625.GP952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190301153348.29870-2-christoph.muellner@theobroma-systems.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573465875;71ea6dc5;
+X-HE-SMSGID: 1iU6Lj-0004sK-2G
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Working with rootfs on two 128GB mmcs on rk3399-roc-pc.
 
+One (mmc name 128G72, one screw hole) works fine in HS400 mode.
+Other (mmc name DJNB4R, firefly on pcb, two screw holes) gets lots of
+mmc1: "running CQE recovery", even hangs with damaged fs,
+when running under heavy load, e.g. compiling kernel.
+Both run fine with HS200.
 
-On 11/11/2019 8.06, Vinod Koul wrote:
-> On 01-11-19, 10:41, Peter Ujfalusi wrote:
->> Split patch for review containing: channel rsource allocation and free
-> 
-> s/rsource/resource
+Disabling CQ with patch mmc: core: Add MMC Command Queue Support kernel parameter [0] did not help.
+[0] https://gitlab.com/ayufan-repos/rock64/linux-mainline-kernel/commit/54e264154b87dfe32a8359b2726e2d5611adbaf3
 
-I'll try to remember to fix up this temporally commit message, at the
-end these split patches are going to be squashed into one commit when
-things are ready to be applied.
+Therefore I propose to disable HS400 mode on roc-pc for now.
 
->> +static int udma_tisci_tx_channel_config(struct udma_chan *uc)
->> +{
->> +	struct udma_dev *ud = uc->ud;
->> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
->> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
->> +	struct udma_tchan *tchan = uc->tchan;
->> +	int tc_ring = k3_ringacc_get_ring_id(tchan->tc_ring);
->> +	struct ti_sci_msg_rm_udmap_tx_ch_cfg req_tx = { 0 };
->> +	u32 mode, fetch_size;
->> +	int ret = 0;
->> +
->> +	if (uc->pkt_mode) {
->> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
->> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib, uc->psd_size,
->> +						   0);
->> +	} else {
->> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
->> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
->> +	}
->> +
->> +	req_tx.valid_params =
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID;
-> 
-> bunch of these are repeat, you can define a COMMON_VALID_PARAMS and use
-> that + specific ones..
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-OK, I'll try to sanitize these a bit.
-
->> +
->> +	req_tx.nav_id = tisci_rm->tisci_dev_id;
->> +	req_tx.index = tchan->id;
->> +	req_tx.tx_pause_on_err = 0;
->> +	req_tx.tx_filt_einfo = 0;
->> +	req_tx.tx_filt_pswords = 0;
-> 
-> i think initialization to 0 is superfluous
-
-Indeed, I'll remove these.
-
->> +	req_tx.tx_chan_type = mode;
->> +	req_tx.tx_supr_tdpkt = uc->notdpkt;
->> +	req_tx.tx_fetch_size = fetch_size >> 2;
->> +	req_tx.txcq_qnum = tc_ring;
->> +	if (uc->ep_type == PSIL_EP_PDMA_XY) {
->> +		/* wait for peer to complete the teardown for PDMAs */
->> +		req_tx.valid_params |=
->> +				TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID;
->> +		req_tx.tx_tdtype = 1;
->> +	}
->> +
->> +	ret = tisci_ops->tx_ch_cfg(tisci_rm->tisci, &req_tx);
->> +	if (ret)
->> +		dev_err(ud->dev, "tchan%d cfg failed %d\n", tchan->id, ret);
->> +
->> +	return ret;
->> +}
->> +
->> +static int udma_tisci_rx_channel_config(struct udma_chan *uc)
->> +{
->> +	struct udma_dev *ud = uc->ud;
->> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
->> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
->> +	struct udma_rchan *rchan = uc->rchan;
->> +	int fd_ring = k3_ringacc_get_ring_id(rchan->fd_ring);
->> +	int rx_ring = k3_ringacc_get_ring_id(rchan->r_ring);
->> +	struct ti_sci_msg_rm_udmap_rx_ch_cfg req_rx = { 0 };
->> +	struct ti_sci_msg_rm_udmap_flow_cfg flow_req = { 0 };
->> +	u32 mode, fetch_size;
->> +	int ret = 0;
->> +
->> +	if (uc->pkt_mode) {
->> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
->> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib,
->> +							uc->psd_size, 0);
->> +	} else {
->> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
->> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
->> +	}
->> +
->> +	req_rx.valid_params =
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID;
->> +
->> +	req_rx.nav_id = tisci_rm->tisci_dev_id;
->> +	req_rx.index = rchan->id;
->> +	req_rx.rx_fetch_size =  fetch_size >> 2;
->> +	req_rx.rxcq_qnum = rx_ring;
->> +	req_rx.rx_pause_on_err = 0;
->> +	req_rx.rx_chan_type = mode;
->> +	req_rx.rx_ignore_short = 0;
->> +	req_rx.rx_ignore_long = 0;
->> +	req_rx.flowid_start = 0;
->> +	req_rx.flowid_cnt = 0;
->> +
->> +	ret = tisci_ops->rx_ch_cfg(tisci_rm->tisci, &req_rx);
->> +	if (ret) {
->> +		dev_err(ud->dev, "rchan%d cfg failed %d\n", rchan->id, ret);
->> +		return ret;
->> +	}
->> +
->> +	flow_req.valid_params =
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_EINFO_PRESENT_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_PSINFO_PRESENT_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_ERROR_HANDLING_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DESC_TYPE_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_HI_SEL_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_LO_SEL_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_HI_SEL_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_LO_SEL_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ0_SZ0_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ1_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ2_QNUM_VALID |
->> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ3_QNUM_VALID;
->> +
->> +	flow_req.nav_id = tisci_rm->tisci_dev_id;
->> +	flow_req.flow_index = rchan->id;
->> +
->> +	if (uc->needs_epib)
->> +		flow_req.rx_einfo_present = 1;
->> +	else
->> +		flow_req.rx_einfo_present = 0;
->> +	if (uc->psd_size)
->> +		flow_req.rx_psinfo_present = 1;
->> +	else
->> +		flow_req.rx_psinfo_present = 0;
->> +	flow_req.rx_error_handling = 1;
->> +	flow_req.rx_desc_type = 0;
->> +	flow_req.rx_dest_qnum = rx_ring;
->> +	flow_req.rx_src_tag_hi_sel = 2;
->> +	flow_req.rx_src_tag_lo_sel = 4;
->> +	flow_req.rx_dest_tag_hi_sel = 5;
->> +	flow_req.rx_dest_tag_lo_sel = 4;
-> 
-> can we get rid of magic numbers here and elsewhere, or at least comment
-> on what these mean..
-
-True, I'll clean it up.
-
->> +static int udma_alloc_chan_resources(struct dma_chan *chan)
->> +{
->> +	struct udma_chan *uc = to_udma_chan(chan);
->> +	struct udma_dev *ud = to_udma_dev(chan->device);
->> +	const struct udma_match_data *match_data = ud->match_data;
->> +	struct k3_ring *irq_ring;
->> +	u32 irq_udma_idx;
->> +	int ret;
->> +
->> +	if (uc->pkt_mode || uc->dir == DMA_MEM_TO_MEM) {
->> +		uc->use_dma_pool = true;
->> +		/* in case of MEM_TO_MEM we have maximum of two TRs */
->> +		if (uc->dir == DMA_MEM_TO_MEM) {
->> +			uc->hdesc_size = cppi5_trdesc_calc_size(
->> +					sizeof(struct cppi5_tr_type15_t), 2);
->> +			uc->pkt_mode = false;
->> +		}
->> +	}
->> +
->> +	if (uc->use_dma_pool) {
->> +		uc->hdesc_pool = dma_pool_create(uc->name, ud->ddev.dev,
->> +						 uc->hdesc_size, ud->desc_align,
->> +						 0);
->> +		if (!uc->hdesc_pool) {
->> +			dev_err(ud->ddev.dev,
->> +				"Descriptor pool allocation failed\n");
->> +			uc->use_dma_pool = false;
->> +			return -ENOMEM;
->> +		}
->> +	}
->> +
->> +	/*
->> +	 * Make sure that the completion is in a known state:
->> +	 * No teardown, the channel is idle
->> +	 */
->> +	reinit_completion(&uc->teardown_completed);
->> +	complete_all(&uc->teardown_completed);
-> 
-> should we not complete first and then do reinit to bring a clean state?
-
-The reason why it is like this is that the udma_synchronize() is
-checking the completion and if the client requested the channel and
-calls terminate_all_sync() without any transfer then no one will mark
-the completion completed.
-
->> +	uc->state = UDMA_CHAN_IS_IDLE;
->> +
->> +	switch (uc->dir) {
->> +	case DMA_MEM_TO_MEM:
-> 
-> can you explain why a allocation should be channel dependent, shouldn't
-> these things be done in prep_ calls?
-
-A channel can not change direction, it is either MEM_TO_DEV, DEV_TO_MEM
-or MEM_TO_MEM and it is set when the channel is requested.
-
-> I looked ahead and checked the prep_ calls and we can use any direction
-> so this somehow doesn't make sense!
-
-I'm checking in the prep callbacks if the requested direction is
-matching with the channel direction.
-
-I just can not change the channel direction runtime.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+index 29a50a083c42..33df95e384b4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+@@ -660,8 +660,6 @@
+ 
+ &sdhci {
+ 	bus-width = <8>;
+-	mmc-hs400-1_8v;
+-	mmc-hs400-enhanced-strobe;
+ 	non-removable;
+ 	status = "okay";
+ };
+-- 
+2.20.1
