@@ -2,127 +2,160 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DD4C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0FFC17441
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B74C20856
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219ED20656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 08:32:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ouWb1i1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfKKIKc (ORCPT
+        id S1726915AbfKKIcM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 03:10:32 -0500
-Received: from mga01.intel.com ([192.55.52.88]:24265 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726768AbfKKIKc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 03:10:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Nov 2019 00:10:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,291,1569308400"; 
-   d="scan'208";a="354710033"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 11 Nov 2019 00:10:31 -0800
-Received: from [10.226.39.46] (ekotax-mobl.gar.corp.intel.com [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 31F0A5803A5;
-        Mon, 11 Nov 2019 00:10:24 -0800 (PST)
-Subject: Re: [PATCH v5 3/3] PCI: artpec6: Configure FTS with dwc helper
- function
-To:     Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>
-Cc:     "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <90a64d72a32dbc75c03a58a1813f50e547170ff4.1572950559.git.eswara.kota@linux.intel.com>
- <SL2P216MB010527F9E1C142F0A347ED63AA780@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
- <20191108104338.GG43905@e119886-lin.cambridge.arm.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <913f3aa2-708e-ceee-217a-5a0a1b1dfca4@linux.intel.com>
-Date:   Mon, 11 Nov 2019 16:10:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Mon, 11 Nov 2019 03:32:12 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60434 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKIcM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 03:32:12 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB8W0vn038121;
+        Mon, 11 Nov 2019 02:32:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573461121;
+        bh=g5x94847hYbqbl6t0oMnSzfcp96v+AbsaJu0rr/L1DM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ouWb1i1Vkbcel87sd/4VG/dtoaWeTvVpUlhz7pvAjcp5wjMWPKV5hE+idcWjDSOQm
+         bwYla2Xiga8gydxWAyB3T4aJh/brdqu1v91zXMY4MtZEZPmQS+n92P646Klikz5jOw
+         V8jhnlV5tJstUqjqEj7ikSg15W1RB8p7UiYURNok=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB8W0Dc076860
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 Nov 2019 02:32:00 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
+ Nov 2019 02:31:43 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 11 Nov 2019 02:31:43 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB8VuS4099304;
+        Mon, 11 Nov 2019 02:31:57 -0600
+Subject: Re: [PATCH v4 09/15] dmaengine: ti: New driver for K3 UDMA - split#1:
+ defines, structs, io func
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-10-peter.ujfalusi@ti.com>
+ <20191111052828.GN952516@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <00777586-a3ac-2404-5226-e8c887936a32@ti.com>
+Date:   Mon, 11 Nov 2019 10:33:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191108104338.GG43905@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191111052828.GN952516@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 11/8/2019 6:43 PM, Andrew Murray wrote:
-> On Thu, Nov 07, 2019 at 09:03:46PM +0000, Jingoo Han wrote:
->> On 11/5/19, 10:44 PM, Dilip Kota wrote:
->>> Utilize DesugnWare helper functions to configure Fast Training
->> Nitpicking: Fix typo (DesugnWare --> DesignWare)
->>
->> If possible, how about the following?
->> Utilize DesignWare --> Use DesignWare
->>
->> Best regards,
->> Jingoo Han
->>
->>> Sequence. Drop the respective code in the driver.
->>>
->>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> With the changes suggested in this thread, you can add:
->
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Sure.
 
-Thanks a lot for reviewing patch and giving inputs,
+On 11/11/2019 7.28, Vinod Koul wrote:
+> On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> 
+>> +struct udma_chan {
+>> +	struct virt_dma_chan vc;
+>> +	struct dma_slave_config	cfg;
+>> +	struct udma_dev *ud;
+>> +	struct udma_desc *desc;
+>> +	struct udma_desc *terminated_desc;
+> 
+> descriptor and not a list?
 
-Regards,
-Dilip
+Yes, not a list. I have only one transfer (if any) submitted to
+hardware. This is mostly due to the packet mode RX operation: no
+prelinked support in UDMAP so I need to have as many descriptors queued
+up as the number of sg elements.
 
->
->>> ---
->>>   drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
->>>   1 file changed, 1 insertion(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
->>> index d00252bd8fae..02d93b8c7942 100644
->>> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
->>> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
->>> @@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
->>>   #define ACK_N_FTS_MASK			GENMASK(15, 8)
->>>   #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
->>>   
->>> -#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
->>> -#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
->>> -
->>>   /* ARTPEC-6 specific registers */
->>>   #define PCIECFG				0x18
->>>   #define  PCIECFG_DBG_OEN		BIT(24)
->>> @@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
->>>   	 * Set the Number of Fast Training Sequences that the core
->>>   	 * advertises as its N_FTS during Gen2 or Gen3 link training.
->>>   	 */
->>> -	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
->>> -	val &= ~FAST_TRAINING_SEQ_MASK;
->>> -	val |= FAST_TRAINING_SEQ(180);
->>> -	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
->>> +	dw_pcie_link_set_n_fts(pci, 180);
->>>   }
->>>
->>>   static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
->>> -- 
->>> 2.11.0
+I need to keep the terminated descriptor around to be able to free it up
+_after_ UDMAP returned it to avoid it modifying released memory.
+
+>> +	struct udma_static_tr static_tr;
+>> +	char *name;
+>> +
+>> +	struct udma_tchan *tchan;
+>> +	struct udma_rchan *rchan;
+>> +	struct udma_rflow *rflow;
+>> +
+>> +	bool psil_paired;
+>> +
+>> +	int irq_num_ring;
+>> +	int irq_num_udma;
+>> +
+>> +	bool cyclic;
+>> +	bool paused;
+>> +
+>> +	enum udma_chan_state state;
+>> +	struct completion teardown_completed;
+>> +
+>> +	u32 bcnt; /* number of bytes completed since the start of the channel */
+>> +	u32 in_ring_cnt; /* number of descriptors in flight */
+>> +
+>> +	bool pkt_mode; /* TR or packet */
+>> +	bool needs_epib; /* EPIB is needed for the communication or not */
+>> +	u32 psd_size; /* size of Protocol Specific Data */
+>> +	u32 metadata_size; /* (needs_epib ? 16:0) + psd_size */
+>> +	u32 hdesc_size; /* Size of a packet descriptor in packet mode */
+>> +	bool notdpkt; /* Suppress sending TDC packet */
+>> +	int remote_thread_id;
+>> +	u32 src_thread;
+>> +	u32 dst_thread;
+>> +	enum psil_endpoint_type ep_type;
+>> +	bool enable_acc32;
+>> +	bool enable_burst;
+>> +	enum udma_tp_level channel_tpl; /* Channel Throughput Level */
+>> +
+>> +	/* dmapool for packet mode descriptors */
+>> +	bool use_dma_pool;
+>> +	struct dma_pool *hdesc_pool;
+>> +
+>> +	u32 id;
+>> +	enum dma_transfer_direction dir;
+> 
+> why does channel have this, it already exists in descriptor
+
+The channel can not change role, it is set when it was requested. In the
+prep callbacks I do check if the direction matches with the channel's
+direction.
+
+>> +static irqreturn_t udma_udma_irq_handler(int irq, void *data)
+>> +{
+>> +	struct udma_chan *uc = data;
+>> +
+>> +	udma_tr_event_callback(uc);
+> 
+> any reason why we want to call a fn and not code here..?
+
+No particular reason, I'll move them.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
