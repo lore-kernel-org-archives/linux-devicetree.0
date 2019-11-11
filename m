@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489B0C17441
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EABDC17443
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF152084F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BAC20674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 09:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dfb6+7G1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZPZiQyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfKKJZq (ORCPT
+        id S1727168AbfKKJZx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 04:25:46 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37890 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfKKJZq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 04:25:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so6855826wro.5
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 01:25:45 -0800 (PST)
+        Mon, 11 Nov 2019 04:25:53 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34823 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfKKJZx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 04:25:53 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 8so12436732wmo.0
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 01:25:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=QGA/xqmQWev+0NFe4O1TN1YKQ6mW88MJOuhnNp+1ZuI=;
-        b=Dfb6+7G14s79tYoH7BzweIeHFTtFG/h2mFENKgZ0C0904ffsK6FkL59yC85qrY1nR5
-         q+uIXQu2za9et+lvd+dfO/dSzilQY7Iit+HH4PRs+fPNg5lruFzEJ1m2cjQHE1gvtLV3
-         HigANxoBR/CSRpKK2yMZfdhcM2YUBY11kovpoubO7X5Cu5uVVkGWuWzlQjiii04p+91T
-         NbfSb1MFU8zaLi1WFs5y9QM4YIoT7bbAPhzLzmez+UNK1vAbSgIgILevTFRAggx9goFM
-         qwon6dX5/ysVYJmJZUP0943hXU4mNrBYplzITJSJRO2e/RvC+5X8WVXsidjpxUXLFR2t
-         adbw==
+        bh=OhCha09COfgKPtZLiOdmeCfAFANdSRBnfQoI436vAFc=;
+        b=kZPZiQyy9gd/WCmfdT0wc6TN4JLHAvMXmaxLilUQegA2YhfTRSZrmqW7TKLSuPyMDn
+         +x8tdXkQ7PW4Br2k0sinujFdrQ7SCrG+PpDq/RZ542MrG9L57mfRQnYkxFm0lbRJ30VI
+         uFRc/EUwu7WA2upRC0lelKTE0WBo2EFku5QrFMhqrmseZP5tpMzx71G7sBUu/Tuep6fL
+         XLjOFAKVzoLmN+LRE6grlpQ68CMD7HFDTvnFkdZsoY2GQE1KHAzDacRGr3QY2x1ALXNm
+         tJH6MLLOlVJgyyU+bOjZ4u35qcxklOqbZnAyB4jRfJdcQJVleJPk6/IahsD0Mt7FdA23
+         u+9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=QGA/xqmQWev+0NFe4O1TN1YKQ6mW88MJOuhnNp+1ZuI=;
-        b=BxNwVxe87rbaE8dAQa5Ltjwvg05k0dPP5MCRxsSG0ro9EiTjVIB+hvWUMDcGcYADLv
-         5GkCphYdY03dBdOtlXaGROL+lCkJmfraMGKHeBK6CfoiM1cx1eEth4ojsPxRWCtpAAoe
-         BYp3TbhfosVV9t/6PoY3aX9mHUC/1zKjSplyLxoZTFkxLjJQtxahZbfvqQUbyDVhni17
-         Qc+xnLMiwS320rk2EZmzeB6/nlNvXCqlAj0+K6rqlBbdzsxA4LFOmtsDr76oBk4/hajl
-         IL4Dx5nqQ2xMg3Sl4avqZB4GiTD9nO84soHUO0jbW3O0afNxMRBLp7Ec5VSV0iyqI1Lx
-         gr6Q==
-X-Gm-Message-State: APjAAAVHtlNVU9g/JIUwox6sewtpx/x2UkRKKXKId9H8Oe9mZxFjigPf
-        agxOnHasUi2LJ58EHs93UyVnFA==
-X-Google-Smtp-Source: APXvYqx6jDtFgEhErFSeyKkbV8ZV9CUx1Pyx244vdqrZIIvJ1ES7y4XaSdZ6WWpMzxcI9s4XD6bHhA==
-X-Received: by 2002:adf:ef0e:: with SMTP id e14mr4205640wro.204.1573464344370;
-        Mon, 11 Nov 2019 01:25:44 -0800 (PST)
+        bh=OhCha09COfgKPtZLiOdmeCfAFANdSRBnfQoI436vAFc=;
+        b=negbKPHSF2VWfHIYRR6f9jGhdF+KDS38NH3zyHh0twLX+OsU2eZLF1J4gKEvqj2+AT
+         tBsMFMDcogrM3IxzQ+cUOqNCrswrfsLDgen4i5iHf9A1psG1Ct1gtNmF1xfxiPBEdAEh
+         a9Kw/GvNyNk3lCgkLCRooSf69QWKfCzyD2SfvBAC1GEkgnWnGmsKBvEu1qRPdXjXjlP0
+         FPeeZp3swB0C6Jvbxhj5U5Q6jcUAao/aKkUk0CMyiz9ZAVlgJMi5mcheXjLuG6N8iiIi
+         9EDYLXXXR2SmDIrj4Pcc7lpZUP7XSXtMwayoEvd6KLEortpUU99QhksVQsSf1QDYq+7G
+         StmQ==
+X-Gm-Message-State: APjAAAUIb83kd794rt6NfRt6bHk1CBy2My8pJXGaArZ2Jz/024u0nwVn
+        9HzIzeEDbuH5qbrtXUmeoMOfig==
+X-Google-Smtp-Source: APXvYqx9qAByoszcpaFD12J1nUjhRfEepvndPETih1nX2g0RiujoIcYX0NEsOgXnWOvGeTz1TgEM2w==
+X-Received: by 2002:a1c:6146:: with SMTP id v67mr19985324wmb.102.1573464351581;
+        Mon, 11 Nov 2019 01:25:51 -0800 (PST)
 Received: from dell ([95.147.198.88])
-        by smtp.gmail.com with ESMTPSA id x6sm13916940wrw.34.2019.11.11.01.25.43
+        by smtp.gmail.com with ESMTPSA id a5sm15368078wrv.56.2019.11.11.01.25.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 01:25:43 -0800 (PST)
-Date:   Mon, 11 Nov 2019 09:25:36 +0000
+        Mon, 11 Nov 2019 01:25:51 -0800 (PST)
+Date:   Mon, 11 Nov 2019 09:25:43 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Kiran Gunda <kgunda@codeaurora.org>
 Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
@@ -67,16 +67,16 @@ Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH V10 7/8] backlight: qcom-wled: add support for short
- circuit handling.
-Message-ID: <20191111092536.GU18902@dell>
+Subject: Re: [PATCH V10 8/8] backlight: qcom-wled: Add auto string detection
+ logic
+Message-ID: <20191111092543.GV18902@dell>
 References: <1572589624-6095-1-git-send-email-kgunda@codeaurora.org>
- <1572589624-6095-8-git-send-email-kgunda@codeaurora.org>
+ <1572589624-6095-9-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1572589624-6095-8-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <1572589624-6095-9-git-send-email-kgunda@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -85,17 +85,23 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Fri, 01 Nov 2019, Kiran Gunda wrote:
 
-> Handle the short circuit interrupt and check if the short circuit
-> interrupt is valid. Re-enable the module to check if it goes
-> away. Disable the module altogether if the short circuit event
-> persists.
+> The auto string detection algorithm checks if the current WLED
+> sink configuration is valid. It tries enabling every sink and
+> checks if the OVP fault is observed. Based on this information
+> it detects and enables the valid sink configuration.
+> Auto calibration will be triggered when the OVP fault interrupts
+> are seen frequently thereby it tries to fix the sink configuration.
+> 
+> The auto-detection also kicks in when the connected LED string
+> of the display-backlight malfunctions (because of damage) and
+> requires the damaged string to be turned off to prevent the
+> complete panel and/or board from being damaged.
 > 
 > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
->  drivers/video/backlight/qcom-wled.c | 144 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 140 insertions(+), 4 deletions(-)
+>  drivers/video/backlight/qcom-wled.c | 400 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 394 insertions(+), 6 deletions(-)
 
 Applied, thanks.
 
