@@ -2,195 +2,240 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34058C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96069C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1386221655
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7AF2184C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 11:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfKKLxE (ORCPT
+        id S1726811AbfKKL61 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 06:53:04 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:14190 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfKKLxE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 06:53:04 -0500
-Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 11 Nov
- 2019 19:53:21 +0800
-Subject: Re: [PATCH v4 3/4] soc: amlogic: Add support for Secure power domains
- controller
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com>
- <1572868028-73076-4-git-send-email-jianxin.pan@amlogic.com>
- <7hmud4stfo.fsf@baylibre.com>
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-Message-ID: <57b9c706-c341-c7cf-698a-66335b34442b@amlogic.com>
-Date:   Mon, 11 Nov 2019 19:53:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 Nov 2019 06:58:27 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35863 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKKL61 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 06:58:27 -0500
+X-Originating-IP: 2.224.242.101
+Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 4D2171BF204;
+        Mon, 11 Nov 2019 11:58:23 +0000 (UTC)
+From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
+To:     robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: media: renesas,ceu: Convert to yaml
+Date:   Mon, 11 Nov 2019 13:00:17 +0100
+Message-Id: <20191111120017.83161-1-jacopo+renesas@jmondi.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <7hmud4stfo.fsf@baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.29.227]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kevin,
+Convert the Renesas CEU bindings description to json-schema and remove
+the existing textual bindings document.
 
-Thanks for the review, please see the comments below:
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ .../devicetree/bindings/media/renesas,ceu.txt | 86 -------------------
+ .../bindings/media/renesas,ceu.yaml           | 72 ++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 73 insertions(+), 87 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
 
-2019/11/10 4:09, Kevin Hilman wrote:
-> Hi Jianxin,
-> 
-> Jianxin Pan <jianxin.pan@amlogic.com> writes:
-> 
->> Add support for the Amlogic Secure Power controller. In A1/C1 series, power
->> control registers are in secure domain, and should be accessed by smc.
->>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> 
-> This driver is looking pretty good.  A few more minor comments below.
-> 
-> [...]
-> 
->> +static bool pwrc_secure_is_off(struct meson_secure_pwrc_domain *pwrc_domain)
->> +{
->> +	int sts = 1;
-> 
-> What does 'sts' mean?  status?  or something else?  Please use a more
-> descriptive name.
-> 
->> +	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_GET, &sts,
->> +			  pwrc_domain->index, 0, 0, 0, 0) < 0)
->> +		pr_err("failed to get power domain status\n");
-> 
-> Does any bit in this register mean the power domain is off?  I think it
-> would be better (and more future proof) if you checked the specific bit
-> (or mask)
-> 
-sts=1 means, the domain is powered off. I can rename it to is_off in the next version.
-now, only bit[0] is used in BL31, so I can use sts directly instead of !!sts.
->> +	return !!sts;
-> 
-> and then:
-> 
->     return sts & bitmask;
->     
->> +}
->> +
->> +static int meson_secure_pwrc_off(struct generic_pm_domain *domain)
->> +{
->> +	int sts = 0;
-> 
-> Like above, what does sts mean?
-> 
->> +	struct meson_secure_pwrc_domain *pwrc_domain =
->> +		container_of(domain, struct meson_secure_pwrc_domain, base);
->> +
->> +	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_SET, NULL,
->> +			  pwrc_domain->index, PWRC_OFF, 0, 0, 0) < 0) {
->> +		pr_err("failed to set power domain off\n");
->> +		sts = -EINVAL;
->> +	}
->> +
->> +	return sts;
-> 
-> It looks to me like sts is only used as a return code, so maybe call it
-> ret for clarity?  or rename it to something more descriptive.
-> 
-sts here indicates if smc call is failed (such as due to inlvaid command id). I can rename it to ret in the next version.
->> +}
->> +
->> +static int meson_secure_pwrc_on(struct generic_pm_domain *domain)
->> +{
->> +	int sts = 0;
->> +	struct meson_secure_pwrc_domain *pwrc_domain =
->> +		container_of(domain, struct meson_secure_pwrc_domain, base);
->> +
->> +	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_SET, NULL,
->> +			  pwrc_domain->index, PWRC_ON, 0, 0, 0) < 0) {
->> +		pr_err("failed to set power domain on\n");
->> +		sts = -EINVAL;
->> +	}
->> +
->> +	return sts;
-> 
-> same comment as above.
-> 
-OK, I will fix it.
->> +}
->> +
->> +#define SEC_PD(__name, __flag)			\
->> +[PWRC_##__name##_ID] =				\
->> +{						\
->> +	.name = #__name,			\
->> +	.index = PWRC_##__name##_ID,		\
->> +	.is_off = pwrc_secure_is_off,	\
->> +	.flags = __flag,			\
->> +}
->> +
->> +static struct meson_secure_pwrc_domain_desc a1_pwrc_domains[] = {
->> +	SEC_PD(DSPA,	0),
->> +	SEC_PD(DSPB,	0),
->> +	/* UART should keep working in ATF after suspend and before resume */
->> +	SEC_PD(UART,	GENPD_FLAG_ALWAYS_ON),
->> +	/* DMC is for DDR PHY ana/dig and DMC, and should be always on */
->> +	SEC_PD(DMC,	GENPD_FLAG_ALWAYS_ON),
->> +	SEC_PD(I2C,	0),
->> +	SEC_PD(PSRAM,	0),
->> +	SEC_PD(ACODEC,	0),
->> +	SEC_PD(AUDIO,	0),
->> +	SEC_PD(OTP,	0),
->> +	SEC_PD(DMA,	0),
->> +	SEC_PD(SD_EMMC,	0),
->> +	SEC_PD(RAMA,	0),
->> +	/* SRAMB is used as AFT runtime memory, and should be always on */
-> 
-> AFT?  I assume you mean ATF?
-> 
-Yes, I will fix it, thank  you.
->> +	SEC_PD(RAMB,	GENPD_FLAG_ALWAYS_ON),
->> +	SEC_PD(IR,	0),
->> +	SEC_PD(SPICC,	0),
->> +	SEC_PD(SPIFC,	0),
->> +	SEC_PD(USB,	0),
->> +	/* NIC is for NIC400, and should be always on */
-> 
-> Why?
-> 
-NIC domain is for ARM CoreLink NIC-400 Network Interconnect, and should be always on since bootloader.
->> +	SEC_PD(NIC,	GENPD_FLAG_ALWAYS_ON),
->> +	SEC_PD(PDMIN,	0),
->> +	SEC_PD(RSA,	0),
->> +};
-> 
-> [...]
-> 
-> Kevin
-> 
-> .
-> 
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+deleted file mode 100644
+index 3e2a2652eb19..000000000000
+--- a/Documentation/devicetree/bindings/media/renesas,ceu.txt
++++ /dev/null
+@@ -1,86 +0,0 @@
+-Renesas Capture Engine Unit (CEU)
+-----------------------------------------------
+-
+-The Capture Engine Unit is the image capture interface found in the Renesas
+-SH Mobile, R-Mobile and RZ SoCs.
+-
+-The interface supports a single parallel input with data bus width of 8 or 16
+-bits.
+-
+-Required properties:
+-- compatible: Shall be one of the following values:
+-	"renesas,r7s72100-ceu" for CEU units found in RZ/A1H and RZ/A1M SoCs
+-	"renesas,r8a7740-ceu" for CEU units found in R-Mobile A1 R8A7740 SoCs
+-- reg: Registers address base and size.
+-- interrupts: The interrupt specifier.
+-
+-The CEU supports a single parallel input and should contain a single 'port'
+-subnode with a single 'endpoint'. Connection to input devices are modeled
+-according to the video interfaces OF bindings specified in:
+-[1] Documentation/devicetree/bindings/media/video-interfaces.txt
+-
+-Optional endpoint properties applicable to parallel input bus described in
+-the above mentioned "video-interfaces.txt" file are supported.
+-
+-- hsync-active: See [1] for description. If property is not present,
+-  default is active high.
+-- vsync-active: See [1] for description. If property is not present,
+-  default is active high.
+-- bus-width: See [1] for description. Accepted values are '8' and '16'.
+-  If property is not present, default is '8'.
+-- field-even-active: See [1] for description. If property is not present,
+-  an even field is identified by a logic 0 (active-low signal).
+-
+-Example:
+-
+-The example describes the connection between the Capture Engine Unit and an
+-OV7670 image sensor connected to i2c1 interface.
+-
+-ceu: ceu@e8210000 {
+-	reg = <0xe8210000 0x209c>;
+-	compatible = "renesas,r7s72100-ceu";
+-	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&vio_pins>;
+-
+-	status = "okay";
+-
+-	port {
+-		ceu_in: endpoint {
+-			remote-endpoint = <&ov7670_out>;
+-
+-			hsync-active = <1>;
+-			vsync-active = <0>;
+-		};
+-	};
+-};
+-
+-i2c1: i2c@fcfee400 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins>;
+-
+-	status = "okay";
+-
+-	clock-frequency = <100000>;
+-
+-	ov7670: camera@21 {
+-		compatible = "ovti,ov7670";
+-		reg = <0x21>;
+-
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&vio_pins>;
+-
+-		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+-		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+-
+-		port {
+-			ov7670_out: endpoint {
+-				remote-endpoint = <&ceu_in>;
+-
+-				hsync-active = <1>;
+-				vsync-active = <0>;
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.yaml b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
+new file mode 100644
+index 000000000000..3c4a4ff975ae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/renesas,ceu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas Capture Engine Unit (CEU) Bindings
++
++maintainers:
++  - Jacopo Mondi <jacopo+renesas@jmondi.org>
++  - linux-renesas-soc@vger.kernel.org
++
++description: |+
++  The Capture Engine Unit is the image capture interface found in the Renesas SH
++  Mobile, R-Mobile and RZ SoCs. The interface supports a single parallel input
++  with data bus width of 8 or 16 bits.
++
++properties:
++  compatible:
++    enum:
++      - renesas,r7a72100-ceu
++      - renesas,r8a7740-ceu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  port:
++    type: object
++    additionalProperties: false
++
++    properties:
++       endpoint:
++         type: object
++
++         # Properties described in
++         # Documentation/devicetree/bindings/media/video-interfaces.txt
++         properties:
++           hsync-active: true
++           vsync-active: true
++           field-even-active: false
++           bus-width:
++             enum: [8, 16]
++
++    required:
++      - endpoint
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - port
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    ceu: ceu@e8210000 {
++        reg = <0xe8210000 0x209c>;
++        compatible = "renesas,r7s72100-ceu";
++        interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
++
++        port {
++            ceu_in: endpoint {
++                remote-endpoint = <&ov7670_out>;
++                hsync-active = <1>;
++                vsync-active = <0>;
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 37a977cbac6f..feab894f7584 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10133,7 +10133,7 @@ L:	linux-media@vger.kernel.org
+ L:	linux-renesas-soc@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Supported
+-F:	Documentation/devicetree/bindings/media/renesas,ceu.txt
++F:	Documentation/devicetree/bindings/media/renesas,ceu.yaml
+ F:	drivers/media/platform/renesas-ceu.c
+ F:	include/media/drv-intf/renesas-ceu.h
+
+--
+2.23.0
 
