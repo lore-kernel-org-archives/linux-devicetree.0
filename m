@@ -2,77 +2,228 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4919C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A83BC17447
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771A821655
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:52:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573469536;
-	bh=8ZjP3IKXMpKDrsw+7Gt+dzi/Jr36DIQal2nXCXKhNdA=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=MfnYNqhX93aRsbbtbCm2cSWyzw4Wqd8qd1eMr5Hx7sBvtkYqw4jdFDovrsCF/GHih
-	 5QtY0BqIFisjI8gr7twMuNUWon4gqi7diO3NZUm0mj4g52aNVvhcAQ2WZ+6qJKAzUk
-	 t6sfpTFx3Tjw26OWqvI7vZG19q2eYGWiQw9SaSHQ=
+	by mail.kernel.org (Postfix) with ESMTP id 10B3221783
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 10:58:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LaQUYxSA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfKKKwP (ORCPT
+        id S1726853AbfKKK6K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 05:52:15 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:41504 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726832AbfKKKwP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 05:52:15 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iU7Io-0008PX-1f; Mon, 11 Nov 2019 11:52:10 +0100
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 0/5] irqchip/irq-bcm7038-l1 updates
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 Nov 2019 12:01:30 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Mon, 11 Nov 2019 05:58:10 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45339 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfKKK6K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 05:58:10 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z10so8788191wrs.12
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 02:58:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ff/OMC2uAau2mAhoofAs4UHMiQyAXj1c9pkY1OLPdoo=;
+        b=LaQUYxSAfzZQj1a+zLxcy0Bq4BPZXruN2Hxaf+yfK5bqy4gcUXMQvhDQfCa6Yd+azj
+         Bn4Hzk7Zw65+tT5QtfUkt19a6HtUsl+smEI8Fy3Pu2pqZuBi7NxHilp8UY47PBKdSWPA
+         JTDvBQ1FSdHz19EGtx/6oPc7RTZx+Ln4H5fBqaytmDr1gyqhNy5hIVtntxwl3tZeh0U4
+         vkexstcL+mlHtM67IvlNwNCB+EHkRhwFXQCSBgnYqTVD1ZYwUw8ycjp9YF8fyuesQB14
+         Nz2ybFFtUfVysQqiF4iqzR51IFPGbbbim9u5hnyAE4j4sCLWOpbXS5l8mmFWTPcwIZJ2
+         K4Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ff/OMC2uAau2mAhoofAs4UHMiQyAXj1c9pkY1OLPdoo=;
+        b=EfkBWLj5NreLyL1IZhoUaWvLO3MrRaHAzWumAVo3a724pmdb4cub58HCI/u5MW4uRP
+         muy1qumqzZz97+mKtn3rcMQRqOC5N7RrSBR1cPfxjXqLJuggBnSLtnplazvdtIKO9Brd
+         rTRXJd/VFwc4ZaPy4/LLhauTEY7Shj8iocshjtkztPXqqPjj9uNjnvyDKCIuc7gq6dwZ
+         j5eIPUuUMgDFr3quoXkE2knhWSAbs9ezH/8gLZGET9sKf/L7mX1L3m4fSY2o5yUJtha0
+         HO3KEVFpvsFL6M7CUU9Mg7ChkwzA2ZQcghrhCcDGLNhjpts2v8zBqWpJBbZcxBGGxNMB
+         /yeg==
+X-Gm-Message-State: APjAAAU2aYAN/2RJWmhzoZUby2qnstHnl3XoLkOLbjjLAGcUjl3nqc6r
+        MiMStdREDwwYZRzZPRv9eMbWAg==
+X-Google-Smtp-Source: APXvYqx8xObmE5fwQgmIoKQH3kqqcFm/LXo1giQF34YvA+BOHYlXNSI8WpZX656F+0hWaH4gE1NXpA==
+X-Received: by 2002:adf:f084:: with SMTP id n4mr20238286wro.369.1573469887033;
+        Mon, 11 Nov 2019 02:58:07 -0800 (PST)
+Received: from dell ([95.147.198.88])
+        by smtp.gmail.com with ESMTPSA id x205sm23261337wmb.5.2019.11.11.02.58.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 02:58:06 -0800 (PST)
+Date:   Mon, 11 Nov 2019 10:57:58 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <20191024201415.23454-1-f.fainelli@gmail.com>
-References: <20191024201415.23454-1-f.fainelli@gmail.com>
-Message-ID: <12f7194ba09174ad8ebd55f15ce05353@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [RFC PATCH v3 01/15] mfd: bd71828: Support ROHM BD71828 PMIC -
+ core
+Message-ID: <20191111105758.GF3218@dell>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <9ce6f5810847422f4def629d30bae7b43dd4c6c6.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9ce6f5810847422f4def629d30bae7b43dd4c6c6.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-10-24 21:23, Florian Fainelli wrote:
-> Hi Marc, Jason, Thomas,
->
-> This patch series contains some updates from our internal tree to
-> support power management and allow configuring specific instances of 
-> the
-> brcm,bcm7038-l1-intc to leave some interrupts untouched and how the
-> firmware might have configured them.
+On Fri, 01 Nov 2019, Matti Vaittinen wrote:
 
-Applied to irqchip-next.
+> BD71828GW is a single-chip power management IC for battery-powered portable
+> devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
+> single-cell linear charger. Also included is a Coulomb counter, a real-time
+> clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768 kHz
+> clock gate.
+> 
+> Add MFD core driver providing interrupt controller facilities and i2c
+> access to sub device drivers.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> No changes compared to v2
+> 
+>  drivers/mfd/Kconfig              |  15 ++
+>  drivers/mfd/Makefile             |   2 +-
+>  drivers/mfd/rohm-bd71828.c       | 322 +++++++++++++++++++++++
+>  include/linux/mfd/rohm-bd71828.h | 425 +++++++++++++++++++++++++++++++
+>  include/linux/mfd/rohm-generic.h |   1 +
+>  5 files changed, 764 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mfd/rohm-bd71828.c
+>  create mode 100644 include/linux/mfd/rohm-bd71828.h
 
-         M.
+/me wonders why this is still an RFC after 3 revisions?
+
+[...]
+
+> +static struct mfd_cell bd71828_mfd_cells[] = {
+> +	{ .name = "bd71828-pmic", },
+> +	{ .name = "bd71828-gpio", },
+> +	{ .name = "bd71828-led", },
+> +	/*
+> +	 * We use BD71837 driver to drive the clock block. Only differences to
+> +	 * BD70528 clock gate are the register address and mask.
+> +	 */
+> +	{ .name = "bd718xx-clk", },
+> +	{
+> +		.name = "bd71827-power",
+
+Why isn't this on one line, like the others above?
+
+> +	}, {
+> +		.name = "bd70528-rtc",
+> +		.resources = rtc_irqs,
+> +		.num_resources = ARRAY_SIZE(rtc_irqs),
+> +	},
+> +};
+
+[...]
+
+> +unsigned int bit0_offsets[] = {11};		/* RTC IRQ register */
+> +unsigned int bit1_offsets[] = {10};		/* TEMP IRQ register */
+> +unsigned int bit2_offsets[] = {6, 7, 8, 9};	/* BAT MON IRQ registers */
+> +unsigned int bit3_offsets[] = {5};		/* BAT IRQ register */
+> +unsigned int bit4_offsets[] = {4};		/* CHG IRQ register */
+> +unsigned int bit5_offsets[] = {3};		/* VSYS IRQ register */
+> +unsigned int bit6_offsets[] = {1, 2};		/* DCIN IRQ registers */
+
+Something actually wrong with the tabbing here, or is this a
+Git/patch/mailer anomaly?
+
+[...]
+
+> +static int bd71828_i2c_probe(struct i2c_client *i2c,
+> +			     const struct i2c_device_id *id)
+> +{
+> +	struct rohm_regmap_dev *chip;
+> +	struct regmap_irq_chip_data *irq_data;
+> +	int ret;
+> +
+> +	if (!i2c->irq) {
+> +		dev_err(&i2c->dev, "No IRQ configured\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	chip = devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL);
+> +	if (!chip)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&i2c->dev, chip);
+> +
+> +	chip->chip_type = ROHM_CHIP_TYPE_BD71828;
+> +	chip->regmap = devm_regmap_init_i2c(i2c, &bd71828_regmap);
+> +	if (IS_ERR(chip->regmap)) {
+> +		dev_err(&i2c->dev, "Failed to initialize Regmap\n");
+> +		return PTR_ERR(chip->regmap);
+> +	}
+> +
+> +	ret = devm_regmap_add_irq_chip(&i2c->dev, chip->regmap,
+> +				       i2c->irq, IRQF_ONESHOT, 0,
+> +				       &bd71828_irq_chip, &irq_data);
+> +	if (ret) {
+> +		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
+> +		return ret;
+> +	}
+
+Nit: '\n' here.
+
+> +	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
+> +		bd71828_irq_chip.num_irqs);
+> +
+> +	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+> +				   bd71828_mfd_cells,
+> +				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
+> +				   regmap_irq_get_domain(irq_data));
+> +	if (ret)
+> +		dev_err(&i2c->dev, "Failed to create subdevices\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id bd71828_of_match[] = {
+> +	{ .compatible = "rohm,bd71828", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, bd71828_of_match);
+> +
+> +static struct i2c_driver bd71828_drv = {
+> +	.driver = {
+> +		.name = "rohm-bd71828",
+> +		.of_match_table = bd71828_of_match,
+> +	},
+> +	.probe = &bd71828_i2c_probe,
+
+If 'id' isn't used, perhaps you should be using probe2?
+
+[...]
+
 -- 
-Jazz is not dead. It just smells funny...
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
