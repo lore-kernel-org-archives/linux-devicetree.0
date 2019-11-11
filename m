@@ -2,44 +2,43 @@ Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40623C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 04:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEE0C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 04:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1680820856
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 04:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2EF2084F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 04:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573447206;
-	bh=IbqTizAofEr4fAlNvQZJC9e5XYpXENQc/RRIOCFORfQ=;
+	s=default; t=1573447646;
+	bh=IP70vFTbjgfIhIAFcbrEA9JEDy+eeHt6RS3u5EPlgbk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hL4LgoL83wpjT4RuL8QsNet+bUOZooB91B3OwaiHsbWwrx7MgX9Y8EJKNUy+NeeNn
-	 o1drgOz6yJ/vYEzTfN19UCVH5CS8QLe61iocnzvhluGBSkzydnUOdOyACdvXviupVb
-	 NeOOVZK4eF3Al5UQov+Zpiw9/17gJAMVaNECT2HQ=
+	b=Tp5dR9iGvQ7Cb4frC9233xdPYcEanH9I4HQ41tgTYN7PTm/aVmEbzvEHxeLDdPEfC
+	 Vo2+0sKuVpOYEZdRL4xClBFSCu6QJ0d4rD419tGrmcWPBLNaWXYiyyNKIT9jPFl/Mr
+	 y52o3qlH8Q3S35Dq+i1kEZsX560GsYdpvr+v2S7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfKKEkD (ORCPT
+        id S1726765AbfKKErW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 10 Nov 2019 23:40:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60956 "EHLO mail.kernel.org"
+        Sun, 10 Nov 2019 23:47:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbfKKEkD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 10 Nov 2019 23:40:03 -0500
+        id S1726764AbfKKErW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 10 Nov 2019 23:47:22 -0500
 Received: from localhost (unknown [106.201.42.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88B0F20856;
-        Mon, 11 Nov 2019 04:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58AA32084F;
+        Mon, 11 Nov 2019 04:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573447202;
-        bh=IbqTizAofEr4fAlNvQZJC9e5XYpXENQc/RRIOCFORfQ=;
+        s=default; t=1573447641;
+        bh=IP70vFTbjgfIhIAFcbrEA9JEDy+eeHt6RS3u5EPlgbk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pMA4xX1cvwbWOJT0hA/nZrCBydq0lxFRgimzmpVnyya2HCzceOyfJkrKVI8G/SZS1
-         98tvL1CrGZrU4BECstDOm7rjbgm7pHuDnrSM4/IncQsFOABV/RhsR9m3RcCNUoojCx
-         RG3iHH00fUKscPWTdoARJf3TIlsMeDNz1/Yk8GbU=
-Date:   Mon, 11 Nov 2019 10:09:57 +0530
+        b=UF5RhSmvO9U730zE98iGXTV3w9TzQlTw4fyfIsIbdmSrgvouKSNdj5oXPc1G8tmMM
+         lCNYbcymyff2/P7kCAXR8hoNHDMBf//iMQl8NWAhoy3NVFHJrANZDSJnKCxHndZhxw
+         A030trLz3NnavZzYGFk5pdA2C3UQbizREcwrgr4I=
+Date:   Mon, 11 Nov 2019 10:17:16 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
@@ -48,15 +47,15 @@ Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
         linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
         lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
         j-keerthy@ti.com
-Subject: Re: [PATCH v4 05/15] dmaengine: Add support for reporting DMA cached
- data amount
-Message-ID: <20191111043957.GL952516@vkoul-mobl>
+Subject: Re: [PATCH v4 07/15] dmaengine: ti: k3 PSI-L remote endpoint
+ configuration
+Message-ID: <20191111044716.GM952516@vkoul-mobl>
 References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-6-peter.ujfalusi@ti.com>
+ <20191101084135.14811-8-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191101084135.14811-6-peter.ujfalusi@ti.com>
+In-Reply-To: <20191101084135.14811-8-peter.ujfalusi@ti.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -64,62 +63,59 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 01-11-19, 10:41, Peter Ujfalusi wrote:
-> A DMA hardware can have big cache or FIFO and the amount of data sitting in
-> the DMA fabric can be an interest for the clients.
-> 
-> For example in audio we want to know the delay in the data flow and in case
-> the DMA have significantly large FIFO/cache, it can affect the latenc/delay
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Reviewed-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  drivers/dma/dmaengine.h   | 8 ++++++++
->  include/linux/dmaengine.h | 2 ++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-> index 501c0b063f85..b0b97475707a 100644
-> --- a/drivers/dma/dmaengine.h
-> +++ b/drivers/dma/dmaengine.h
-> @@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
->  		state->last = complete;
->  		state->used = used;
->  		state->residue = 0;
-> +		state->in_flight_bytes = 0;
->  	}
->  	return dma_async_is_complete(cookie, complete, used);
->  }
-> @@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
->  		state->residue = residue;
->  }
->  
-> +static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
-> +					   u32 in_flight_bytes)
-> +{
-> +	if (state)
-> +		state->in_flight_bytes = in_flight_bytes;
-> +}
+
+> --- /dev/null
+> +++ b/drivers/dma/ti/k3-psil.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+...
+
+> +extern struct psil_ep_map am654_ep_map;
+> +extern struct psil_ep_map j721e_ep_map;
 > +
->  struct dmaengine_desc_callback {
->  	dma_async_tx_callback callback;
->  	dma_async_tx_callback_result callback_result;
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 0e8b426bbde9..c4c5219030a6 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
->   * @residue: the remaining number of bytes left to transmit
->   *	on the selected transfer for states DMA_IN_PROGRESS and
->   *	DMA_PAUSED if this is implemented in the driver, else 0
-> + * @in_flight_bytes: amount of data in bytes cached by the DMA.
->   */
->  struct dma_tx_state {
->  	dma_cookie_t last;
->  	dma_cookie_t used;
->  	u32 residue;
-> +	u32 in_flight_bytes;
+> +static DEFINE_MUTEX(ep_map_mutex);
+> +static struct psil_ep_map *soc_ep_map;
+> +
+> +struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
+> +{
+> +	int i;
+> +
+> +	mutex_lock(&ep_map_mutex);
+> +	if (!soc_ep_map) {
+> +		if (of_machine_is_compatible("ti,am654")) {
+> +			soc_ep_map = &am654_ep_map;
+> +		} else if (of_machine_is_compatible("ti,j721e")) {
+> +			soc_ep_map = &j721e_ep_map;
+> +		} else {
+> +			pr_err("PSIL: No compatible machine found for map\n");
+> +			return ERR_PTR(-ENOTSUPP);
+> +		}
+> +		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
+> +	}
+> +	mutex_unlock(&ep_map_mutex);
+> +
+> +	if (thread_id & K3_PSIL_DST_THREAD_ID_OFFSET && soc_ep_map->dst) {
+> +		/* check in destination thread map */
+> +		for (i = 0; i < soc_ep_map->dst_count; i++) {
+> +			if (soc_ep_map->dst[i].thread_id == thread_id)
+> +				return &soc_ep_map->dst[i].ep_config;
+> +		}
+> +	}
+> +
+> +	thread_id &= ~K3_PSIL_DST_THREAD_ID_OFFSET;
+> +	if (soc_ep_map->src) {
+> +		for (i = 0; i < soc_ep_map->src_count; i++) {
+> +			if (soc_ep_map->src[i].thread_id == thread_id)
+> +				return &soc_ep_map->src[i].ep_config;
+> +		}
+> +	}
+> +
+> +	return ERR_PTR(-ENOENT);
+> +}
+> +EXPORT_SYMBOL(psil_get_ep_config);
 
-Should we add this here or use the dmaengine_result()
-
+This doesn't match the license of this module, we need it to be
+EXPORT_SYMBOL_GPL
 -- 
 ~Vinod
