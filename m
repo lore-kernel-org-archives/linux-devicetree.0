@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0B5C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 05:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AF8C17441
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 05:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E03420656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 05:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3BC0214DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 05:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573450116;
-	bh=4yaDpNQuxUENXy3kqRG8Msg475RHYza2D5Myb1olFzw=;
+	s=default; t=1573450390;
+	bh=DwdNdotJjKRBotkgqG0AIy+E8ZCiOTVy/UNvW4JpNsI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hKWzTauVtSu/hCAhqoTh5hFLLU0As1QMZQeUSH39VMh9DhXadHC4Gj3lwOWo2EmcO
-	 fGdWaZEDuxGLlvTOLmKXG6BmnTFaXhOegj9ZzlHEfguKD27fVOKcnqrOlpVkoiaQdE
-	 eXPGW85ntmBZ4Mz6jNcSsrzzH8nKdU1DIsh9sF+s=
+	b=lcu4343IKfDaZDsrZyK+Fw2n0wx2kw0wRkjbdoayxsiX7hBs61AsK1i5+BK3u+M3D
+	 5ZETAe8+hQhw1975HaAKqQPqaGwiUirs869n29NEVGCfJwCNy4k6e1JN+9KhAvGLUs
+	 BnM+xB96hfnGab7KlRHCsAXbEfQDdK6IHPp6SKvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfKKF2f (ORCPT
+        id S1726205AbfKKFdK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 00:28:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40028 "EHLO mail.kernel.org"
+        Mon, 11 Nov 2019 00:33:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbfKKF2f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 00:28:35 -0500
+        id S1726164AbfKKFdK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 00:33:10 -0500
 Received: from localhost (unknown [106.201.42.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FEFE20656;
-        Mon, 11 Nov 2019 05:28:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BEA32084F;
+        Mon, 11 Nov 2019 05:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573450114;
-        bh=4yaDpNQuxUENXy3kqRG8Msg475RHYza2D5Myb1olFzw=;
+        s=default; t=1573450389;
+        bh=DwdNdotJjKRBotkgqG0AIy+E8ZCiOTVy/UNvW4JpNsI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ekDLb5RvoW/V2AB1uG3TZ5tiCoHfyYQx2wS41vt4ZM7sqJncKYBmdH+svDUZOAZJ6
-         /vYdChQb2GsXpa6hL9MT52Obq/g7tTTZAWgrxtJIdXuS+r3bFTDY8uxp4MNboPZGHS
-         0iZVlpF/Q+jGJC5Ds85Ksx82RhG3TJ8pBNYJP/ik=
-Date:   Mon, 11 Nov 2019 10:58:28 +0530
+        b=ABZSn1q21qj5r9squHwS0oGuOYuynXB490X8qzW1Pxzbm1pafmfecgT+HR33T4pA6
+         jOmzmzgPP5MDBO/ttPB0N4R17asILBNmijo1DxkuuMbnHDaJ7PJEmqJFjwkGCUabxX
+         Fp4C98Qcdj/94tnt+JN/0mgZux3id9o8wQryUzmI=
+Date:   Mon, 11 Nov 2019 11:03:01 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
@@ -47,15 +47,15 @@ Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
         linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
         lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
         j-keerthy@ti.com
-Subject: Re: [PATCH v4 09/15] dmaengine: ti: New driver for K3 UDMA -
- split#1: defines, structs, io func
-Message-ID: <20191111052828.GN952516@vkoul-mobl>
+Subject: Re: [PATCH v4 10/15] dmaengine: ti: New driver for K3 UDMA -
+ split#2: probe/remove, xlate and filter_fn
+Message-ID: <20191111053301.GO952516@vkoul-mobl>
 References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-10-peter.ujfalusi@ti.com>
+ <20191101084135.14811-11-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191101084135.14811-10-peter.ujfalusi@ti.com>
+In-Reply-To: <20191101084135.14811-11-peter.ujfalusi@ti.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -64,65 +64,39 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On 01-11-19, 10:41, Peter Ujfalusi wrote:
 
-> +struct udma_chan {
-> +	struct virt_dma_chan vc;
-> +	struct dma_slave_config	cfg;
-> +	struct udma_dev *ud;
-> +	struct udma_desc *desc;
-> +	struct udma_desc *terminated_desc;
-
-descriptor and not a list?
-
-> +	struct udma_static_tr static_tr;
-> +	char *name;
-> +
-> +	struct udma_tchan *tchan;
-> +	struct udma_rchan *rchan;
-> +	struct udma_rflow *rflow;
-> +
-> +	bool psil_paired;
-> +
-> +	int irq_num_ring;
-> +	int irq_num_udma;
-> +
-> +	bool cyclic;
-> +	bool paused;
-> +
-> +	enum udma_chan_state state;
-> +	struct completion teardown_completed;
-> +
-> +	u32 bcnt; /* number of bytes completed since the start of the channel */
-> +	u32 in_ring_cnt; /* number of descriptors in flight */
-> +
-> +	bool pkt_mode; /* TR or packet */
-> +	bool needs_epib; /* EPIB is needed for the communication or not */
-> +	u32 psd_size; /* size of Protocol Specific Data */
-> +	u32 metadata_size; /* (needs_epib ? 16:0) + psd_size */
-> +	u32 hdesc_size; /* Size of a packet descriptor in packet mode */
-> +	bool notdpkt; /* Suppress sending TDC packet */
-> +	int remote_thread_id;
-> +	u32 src_thread;
-> +	u32 dst_thread;
-> +	enum psil_endpoint_type ep_type;
-> +	bool enable_acc32;
-> +	bool enable_burst;
-> +	enum udma_tp_level channel_tpl; /* Channel Throughput Level */
-> +
-> +	/* dmapool for packet mode descriptors */
-> +	bool use_dma_pool;
-> +	struct dma_pool *hdesc_pool;
-> +
-> +	u32 id;
-> +	enum dma_transfer_direction dir;
-
-why does channel have this, it already exists in descriptor
-
-> +static irqreturn_t udma_udma_irq_handler(int irq, void *data)
+> +static bool udma_dma_filter_fn(struct dma_chan *chan, void *param)
 > +{
-> +	struct udma_chan *uc = data;
+> +	struct psil_endpoint_config *ep_config;
+> +	struct udma_chan *uc;
+> +	struct udma_dev *ud;
+> +	u32 *args;
 > +
-> +	udma_tr_event_callback(uc);
+> +	if (chan->device->dev->driver != &udma_driver.driver)
+> +		return false;
+> +
+> +	uc = to_udma_chan(chan);
+> +	ud = uc->ud;
+> +	args = param;
+> +	uc->remote_thread_id = args[0];
+> +
+> +	if (uc->remote_thread_id & K3_PSIL_DST_THREAD_ID_OFFSET)
+> +		uc->dir = DMA_MEM_TO_DEV;
+> +	else
+> +		uc->dir = DMA_DEV_TO_MEM;
 
-any reason why we want to call a fn and not code here..?
+Can you explain this a bit?
+
+> +static int udma_remove(struct platform_device *pdev)
+> +{
+> +	struct udma_dev *ud = platform_get_drvdata(pdev);
+> +
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +	dma_async_device_unregister(&ud->ddev);
+> +
+> +	/* Make sure that we did proper cleanup */
+> +	cancel_work_sync(&ud->purge_work);
+> +	udma_purge_desc_work(&ud->purge_work);
+
+kill the vchan tasklets at it too please
 -- 
 ~Vinod
