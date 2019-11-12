@@ -2,143 +2,95 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BF5C17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BCCC17441
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDFB206A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lih8wHUS"
+	by mail.kernel.org (Postfix) with ESMTP id 76E802084F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:58:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573563491;
+	bh=Qhg2NO1y91R7W4vj11CUpvEBmOMhp2/Sn7/22DstGSk=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=wu0TIJoTyLClmqnOkVh82exhj6pcfF6PBPQIwU08h2I3uW3HBDXIKoFdjIcNsgiGY
+	 6bXfKI0FeHqTwkd+NV2KwMGrlwlQHDiOM6n+sgz/xroIgq7CQ1uL6gcYbBhu1T0cG+
+	 3/ntHQID5wZuwU5WpJkjiyn+CIcogKrKzPFiGKP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbfKLMxM (ORCPT
+        id S1727159AbfKLM6K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:53:12 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41091 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfKLMxM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 07:53:12 -0500
-Received: by mail-wr1-f68.google.com with SMTP id p4so18378083wrm.8
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 04:53:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6PdLF3CON3lp+JHyPTH8iGB32KYNSuh1vXTDxtTcv+s=;
-        b=lih8wHUSa7JBlyBDdzv3ehKrIStkykUffs0LjwQlGIX1DCqltL0ZDvNUwSrS9mHScW
-         z/Kh91aAul5A5bSP7D70WhHFwNHwYfNUEJ3U7Y+WxI49gKH2fvkMyyOVToU6H/XUDxz+
-         EakToBLTINmWE0ISpPUfi4qlc6iBtBBKVP5Saa5fLObEBjBDJKn7wbE46mBp0Ov3wXiu
-         rhncLWw+b5KjNyRsv3bptwjPhvDE5fOZogP33ulTOyds9WERqwneFyNuYzOK6TqJlDgE
-         DlXDWD7IZAFffIkzSYYUchBVxuz2XCAVz8G5KFELxH2O+5HdnkcVhkLALU0G3r7Bc9/P
-         ZjaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6PdLF3CON3lp+JHyPTH8iGB32KYNSuh1vXTDxtTcv+s=;
-        b=NOrMx/US8GaD5zbcEMIoCbOYDy4XH8teGd3oovLtvSOLI1SXKGFEcc/QXM29bh1rdr
-         DRWjHddzazhiTV4bXWWkXV5ygFJedGeF94OO8MWRCqb1dIsYuaLjxXdJe4mnqkaPWN1v
-         pxezdMuc5yDgH6aSonXJF2X4RdYA1Q/XBd//BpvHHf582Ey1XDeVN6Abg2qFfY4wbBTe
-         PME1rAugO33c+fzja2JwzRhq9lEMuN4RIvzfP81PYXIdqgFu+1AUw5NqBPNlWUHuyANT
-         Q+1GhhCKaLN9MUryuZl+Q0y9yP2Pt7lqLAqykfIot7j8oSo+Tn/DXhA0VSg1TjVuJUBs
-         4Wkg==
-X-Gm-Message-State: APjAAAUxgrPI/0rhy/pXxrEHDrQRMivCfV0OSK4BmlRtu+hlpSJIpCOB
-        5+5twu3Cb1l4Wbuu2bNxpT8qiA==
-X-Google-Smtp-Source: APXvYqwyh6aG2sQ7lJc1UUG8l6HtLNK7oWi0ME1YR2Fm3vqBO9eHCcpDkoRXlWg6DiqsP1+DywQS8w==
-X-Received: by 2002:adf:e701:: with SMTP id c1mr17609377wrm.166.1573563188372;
-        Tue, 12 Nov 2019 04:53:08 -0800 (PST)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id b8sm17748271wrt.39.2019.11.12.04.53.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 04:53:07 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:53:05 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        jernej.skrabec@siol.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 2/2] ARM64: dts: allwinner: add pineh64 model B
-Message-ID: <20191112125305.GD18647@Red>
-References: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
- <1573316433-40669-3-git-send-email-clabbe@baylibre.com>
- <20191112120455.GY4345@gilmour.lan>
+        Tue, 12 Nov 2019 07:58:10 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:38479 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726912AbfKLM6K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 07:58:10 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iUVk8-0007QY-JF; Tue, 12 Nov 2019 13:58:00 +0100
+To:     Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112120455.GY4345@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 Nov 2019 14:07:21 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        <aou@eecs.berkeley.edu>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <bmeng.cn@gmail.com>,
+        <atish.patra@wdc.com>, Sagar Kadam <sagar.kadam@sifive.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+In-Reply-To: <1573560684-48104-4-git-send-email-yash.shah@sifive.com>
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-4-git-send-email-yash.shah@sifive.com>
+Message-ID: <d82620dd33bdd6bb4d34e49600a506d1@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 01:04:55PM +0100, Maxime Ripard wrote:
-> On Sat, Nov 09, 2019 at 04:20:33PM +0000, Corentin Labbe wrote:
-> > This patch adds the model B of the PineH64.
-> > The model B is smaller than the pine64 model A and has no PCIE slot.
-> >
-> > The only devicetree difference with the pineH64 model A, is the PHY
-> > regulator and the HDMI connector node.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> > ---
-> >  .../devicetree/bindings/arm/sunxi.yaml        |  5 +++++
-> >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
-> >  .../allwinner/sun50i-h6-pine-h64-modelB.dts   | 21 +++++++++++++++++++
-> >  3 files changed, 27 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > index b8ec616c2538..227217bf28df 100644
-> > --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > @@ -604,6 +604,11 @@ properties:
-> >            - const: pine64,pine-h64-modelA
-> >            - const: allwinner,sun50i-h6
-> >
-> > +      - description: Pine64 PineH64 model B
-> > +        items:
-> > +          - const: pine64,pine-h64-modelB
-> > +          - const: allwinner,sun50i-h6
-> > +
-> >        - description: Pine64 LTS
-> >          items:
-> >            - const: pine64,pine64-lts
-> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> > index d2418021768b..bda89b9ccb4a 100644
-> > --- a/arch/arm64/boot/dts/allwinner/Makefile
-> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> > @@ -26,4 +26,5 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
-> > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelB.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-tanix-tx6.dtb
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
-> > new file mode 100644
-> > index 000000000000..063a85223faa
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelB.dts
-> > @@ -0,0 +1,21 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> > +/*
-> > + * Copyright (C) 2019 Corentin LABBE <clabbe@baylibre.com>
-> > + */
-> > +
-> > +#include "sun50i-h6-pine-h64.dts"
-> > +
-> > +/ {
-> > +	model = "Pine H64 model B";
-> > +	compatible = "pine64,pine-h64-modelB", "allwinner,sun50i-h6";
-> 
-> compatibles are usually lowercase, what about pine64,pine-h64-model-b?
-> 
+On 2019-11-12 13:21, Yash Shah wrote:
+> Adds the GPIO driver for SiFive RISC-V SoCs.
+>
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Various fixes and code cleanup]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 
-Perfect, I will use it.
+[...]
 
-Regards
+> +static int sifive_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+> +					     unsigned int child,
+> +					     unsigned int child_type,
+> +					     unsigned int *parent,
+> +					     unsigned int *parent_type)
+> +{
+> +	/* All these interrupts are level high in the CPU */
+> +	*parent_type = IRQ_TYPE_LEVEL_HIGH;
+
+It is bizare that you enforce LEVEL_HIGH here, while setting it to NONE
+in the PLIC driver. These things should be consistent.
+
+> +	*parent = child + 7;
+
+Irk, magic numbers...
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
