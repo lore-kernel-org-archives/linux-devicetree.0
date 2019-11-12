@@ -2,108 +2,108 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A18C17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 07:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7544AC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 07:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB51F206A3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 07:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8842084F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 07:38:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QcMaLS2g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJt5I+jw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbfKLHY3 (ORCPT
+        id S1725775AbfKLHip (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 02:24:29 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60552 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfKLHY3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 02:24:29 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAC7OLls037267;
-        Tue, 12 Nov 2019 01:24:21 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573543461;
-        bh=9ZjEggkK3tYtTfvVyv4LxqBOLJcpeT8JiS+RxzIUC7I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QcMaLS2gpVQKfVjYt3+Pr40c87QkE10hjw6CtAoXzDYohl5rT3zKu1DCZbHNbB9u6
-         NUQDbUctWfRnd/2xcL2F/P5CAILp10Zh94rxHybOYz51g802mD9lsVjXqjBbsuRyiC
-         B6H8Vzvg10kZWBVNETmTPG5mFxxCmhz8szpl1zD4=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAC7OLOM028549
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 01:24:21 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 01:24:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 01:24:03 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAC7OHG7089194;
-        Tue, 12 Nov 2019 01:24:17 -0600
-Subject: Re: [PATCH v4 15/15] dmaengine: ti: k3-udma: Add glue layer for non
- DMAengine users
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-16-peter.ujfalusi@ti.com>
- <20191111061258.GS952516@vkoul-mobl>
- <6d4d2fcc-502b-4b41-cd71-8942741f4ad8@ti.com>
- <20191112053714.GX952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <b6b38b97-216f-c297-a414-e3c1f5703a68@ti.com>
-Date:   Tue, 12 Nov 2019 09:25:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 02:38:45 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39593 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfKLHip (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 02:38:45 -0500
+Received: by mail-ot1-f65.google.com with SMTP id z9so358278otq.6
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 23:38:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=LYwXn2wDJ/t906ceQ84HTpG6OQ0aMpCTjyUpk+qqT9Q=;
+        b=dJt5I+jwVZhkK0y/I3bKHdNpPlveRMW+JVFfpsUVkwgx4iQhuImWgMlsTyUe3+rx1Z
+         OHyAwBDF5GqFxY6Ym40g3r7xnT+JDSIgbLhZvzyzLjcJXuFR5/lBBU90Wkd/COqqg/Aa
+         VInUbxcH4q+N7ZoaLlMr1KTPpJvfgQRU04d2xWrSxsxo2SbRuieKJigYo/4dEacll9qX
+         E47i1THS/DgWCjThyaOcnhfIIr0F1u1lgVWGW8U02Fgq2hSSYhWaRW6AqxUQKVPtoFaF
+         yL5098idTxHUoF6kaU9aQKG42M1vUYcXpafAE+Vol9P5JtpNdX61AsjfnCKGScnrHDAq
+         JTTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=LYwXn2wDJ/t906ceQ84HTpG6OQ0aMpCTjyUpk+qqT9Q=;
+        b=aUEmgO+1JMO8N9nG7O/7nAepf3R9Nz0fn4eWgEYsQsAmv0g8Uz0uxAv3UN+/4CGDqo
+         BEqaokqlvTR6vtaxylbeYsBZ1fGEHkqemOSqJ7/Bsszu5DkQRrPYFNP5mLKeshATFPjO
+         AnqjyJZUGM76o6buZ3WAQZud66j/ki8zz+gvJIoFT86aKQYZyTxbt6hNITALOHW4jGE8
+         M7OxW4ozFERQrYWEUyhtrlDDBUtKuk7cT2dJugE3AbXPHS2APaHVLZ++1HOC9M8mAaey
+         pNuJJqCJ/4t8R2Zny0tyuwgF/moWx7UuuprA0levDhbfKbmz0g0ijWKWUgjkDGMAx5dm
+         3uyw==
+X-Gm-Message-State: APjAAAU+6+1gYjkaKNxpLDjMaSMwJWWtKvejQqE581EJlaEcvL/mGqPv
+        e+Be4yvAGaiUSsU+MCe9CkRLpD3F2lRTUqPXa4VuyA==
+X-Google-Smtp-Source: APXvYqxai8BzwvjzK/jdGkp5vdi4N2wR8OwpCZJs9mV8OHZisCAlPNHUhLhlNHiUNV9XfQBpv5mV5UCQKMNuviqIztQ=
+X-Received: by 2002:a9d:4b86:: with SMTP id k6mr23252891otf.353.1573544324493;
+ Mon, 11 Nov 2019 23:38:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191112053714.GX952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191112011521.3155504-1-anarsoul@gmail.com>
+In-Reply-To: <20191112011521.3155504-1-anarsoul@gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Mon, 11 Nov 2019 23:38:18 -0800
+Message-ID: <CA+E=qVc+yzVj7dyp9jpeuif5K3dVMEDSiCTG-zSuzLt0intMsw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: rockpro64: fix ES8316 i2c address
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Akash Gajjar <Akash_Gajjar@mentor.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Nov 11, 2019 at 5:15 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> According to Rockpro64 schematics [1] CE pin of ES8316 is wired
+> to ground, so codec address should be 0x10.
+>
+> [1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
 
+Please don't merge it yet, it appears that on Katsuhiro's board codec
+is at address 0x11.
 
-On 12/11/2019 7.37, Vinod Koul wrote:
-> On 11-11-19, 12:31, Peter Ujfalusi wrote:
->>
->>
->> On 11/11/2019 8.12, Vinod Koul wrote:
->>> On 01-11-19, 10:41, Peter Ujfalusi wrote:
->>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>
->>>> Certain users can not use right now the DMAengine API due to missing
->>>> features in the core. Prime example is Networking.
->>>>
->>>> These users can use the glue layer interface to avoid misuse of DMAengine
->>>> API and when the core gains the needed features they can be converted to
->>>> use generic API.
->>>
->>> Can you add some notes on what all features does this layer implement..
->>
->> In the commit message or in the code?
-> 
-> commit here so that we know what to expect.
-
-Can you check the v5 commit message if it is sufficient? If not, I can
-make it more verbose for v6.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Fixes: 6860769ea771 ("arm64: dts: rockchip: add analog audio nodes on rk3399-rockpro64")
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> index 7f4b2eba31d4..18bbe548839b 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> @@ -477,9 +477,9 @@
+>         i2c-scl-falling-time-ns = <15>;
+>         status = "okay";
+>
+> -       es8316: codec@11 {
+> +       es8316: codec@10 {
+>                 compatible = "everest,es8316";
+> -               reg = <0x11>;
+> +               reg = <0x10>;
+>                 clocks = <&cru SCLK_I2S_8CH_OUT>;
+>                 clock-names = "mclk";
+>                 #sound-dai-cells = <0>;
+> --
+> 2.23.0
+>
