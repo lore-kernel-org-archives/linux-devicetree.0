@@ -2,77 +2,78 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36074C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC01C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D1A2084F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oVIDt4Yt"
+	by mail.kernel.org (Postfix) with ESMTP id F31E32084F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfKLKCd (ORCPT
+        id S1725954AbfKLKDG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:02:33 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35534 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfKLKCd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 05:02:33 -0500
-Received: by mail-wm1-f65.google.com with SMTP id 8so2268064wmo.0
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 02:02:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=ZV0/xI1cDNWDAAg48JcA6ok2jrNXH3VpcMDZqiMr7I0=;
-        b=oVIDt4YtXTKXNM9krSx7RMkK8r+fjJ35bJ8lpRBRuYXC410u/er0oxn8R73DvegE97
-         eSSvdbU5bMDRSD5zu58Reg5Iyi2uOh4GMZ/gzsx/atLCDjtSfi/4+xaaplQ4iX9h+Fzi
-         5sHfscuNeDiG+pZUgrx05j3rugfj23QMzhNgcwY+FjyxqoXzye3c9AAiUsZXxBFU3yXS
-         9YT57qpqCIcdrMNP1on1kK481clziXxRXujGjtt5YdJroPVhO+746HlezpHoatBeNFIQ
-         7LKqJ+bOxki1Ow8W5F+unwBVD9Wmi9Rh1g2sey4IWFR1W7LUlWof8eKD2YIjSGJShXlZ
-         WFpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ZV0/xI1cDNWDAAg48JcA6ok2jrNXH3VpcMDZqiMr7I0=;
-        b=m58uwd0eyJjbMR4C94VuRhQZOXCQPWNcRyr8/znq8q92lvDft9K6V2lBCXLyC4PEEA
-         YOmWn2SkGJ3ZwAEIBYTtX5n2CBg8Pv1GxSLD5opF4jJZ9HXzGYwL7IPawOc0J8976rYP
-         wVpuT5JtPgvXu/HGTwFRz10/kZk0SQ2W/UR0xMwKUQjsuaRAgy0T8hQVceWbjAU7FXVx
-         Uds2hqtmA0aafPiKs8A5o1we6vaMfgrzCTMmKmOBxyXVfVfur4HhniJL27yMqqnGkjZ6
-         atnI+qVgFNNFPCKt7Z0j22DYsHeC6PAOU09IlVWXi+qJJ2SyHgVRgP/IVS8qm4DQs82G
-         BbDw==
-X-Gm-Message-State: APjAAAXbx3X9+i29gSpauo6FPkCNfyGDnFldnYnt0RYgPmG6VHBQall9
-        72w0B/O6+YSr5J9WGko7rs0Dzw==
-X-Google-Smtp-Source: APXvYqzLCvkm7qvFyXa0u7U5lfFZDS5G4zvBKLQqPGTW83KJwLuQTVwDbiqILJp0uaQwb4ST+KcByA==
-X-Received: by 2002:a1c:4e1a:: with SMTP id g26mr3232608wmh.138.1573552951206;
-        Tue, 12 Nov 2019 02:02:31 -0800 (PST)
-Received: from [10.57.1.46] ([45.135.186.94])
-        by smtp.gmail.com with ESMTPSA id w81sm4138966wmg.5.2019.11.12.02.02.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 02:02:30 -0800 (PST)
-Subject: Re: [PATCH v2 0/8] iommu: Add PASID support to Arm SMMUv3
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, zhangfei.gao@linaro.org,
-        eric.auger@redhat.com, jonathan.cameron@huawei.com
-References: <20191108152508.4039168-1-jean-philippe@linaro.org>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <8a23f064-129a-02c3-4e14-63db45d7f851@linaro.org>
-Date:   Tue, 12 Nov 2019 18:02:08 +0800
+        Tue, 12 Nov 2019 05:03:06 -0500
+Received: from regular1.263xmail.com ([211.150.70.195]:33194 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfKLKDG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 05:03:06 -0500
+Received: from localhost (unknown [192.168.167.235])
+        by regular1.263xmail.com (Postfix) with ESMTP id 070C5BCF;
+        Tue, 12 Nov 2019 18:02:55 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [192.168.60.65] (unknown [103.29.142.67])
+        by smtp.263.net (postfix) whith ESMTP id P3849T140143446607616S1573552957842936_;
+        Tue, 12 Nov 2019 18:02:54 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <3042783e90e705440e20c31947d337db>
+X-RL-SENDER: kever.yang@rock-chips.com
+X-SENDER: yk@rock-chips.com
+X-LOGIN-NAME: kever.yang@rock-chips.com
+X-FST-TO: akash@openedev.com
+X-SENDER-IP: 103.29.142.67
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
+To:     Markus Reichl <m.reichl@fivetechno.de>, Soeren Moch <smoch@web.de>,
+        heiko@sntech.de
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
+        linux-kernel@vger.kernel.org, Alexis Ballier <aballier@gentoo.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Andy Yan <andyshrk@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Nick Xie <nick@khadas.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Akash Gajjar <akash@openedev.com>
+References: <20191111005158.25070-1-kever.yang@rock-chips.com>
+ <20191111005158.25070-3-kever.yang@rock-chips.com>
+ <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
+ <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
+ <acbab893-9e9a-cfe1-67bf-a9e2b2e50114@fivetechno.de>
+From:   Kever Yang <kever.yang@rock-chips.com>
+Message-ID: <17e14b30-02ee-2379-8891-088677924479@rock-chips.com>
+Date:   Tue, 12 Nov 2019 18:02:37 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191108152508.4039168-1-jean-philippe@linaro.org>
+In-Reply-To: <acbab893-9e9a-cfe1-67bf-a9e2b2e50114@fivetechno.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
@@ -81,44 +82,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Markus,
 
 
-On 2019/11/8 下午11:25, Jean-Philippe Brucker wrote:
-> This is version 2 of the series I sent a while ago [1], adding PASID
-> support to the Arm SMMUv3 driver.
+On 2019/11/12 下午4:16, Markus Reichl wrote:
+> Hi Kever,
 >
-> Changes since v1:
-> * Dropped the patch adding auxiliary domain support. It's an easy way to
->    test PASID, by populating PASID contexts using iommu_map/unmap(), but
->    I don't know if it will ever have real users.
+> have a rk3399-roc-pc running mainline U-Boot and kernel and vdd_log is
+> showing 1118 mV.
+
+The rk3399-roc-pc have the same vdd_log circuit in schematic, so it 
+should like the patch 1/3 of
+
+this patch set.
+
+I don't understand who is setting this value, maybe the default value 
+without pwm regulator enabled?
+
+> Is this a danger for the board?
+> How to fix it?
+
+The best way is to set correct min/max microvolt of the 
+regulator(measure with PWM output low and high),
+
+(note that if  no driver touch the regulator, the PWM is default input, 
+not output;)
+
+and set a init-microvolt for U-Boot driver, and I think no kernel driver 
+touch this regulator now.
+
+
+Thanks,
+
+- Kever
+
+> Btw. vin-supply for this pwm-regulator is ignored and I could not find it
+> in bindings doc.
 >
->    Since v1 I changed my testing gear, and am using the zip accelerator
->    [2] instead of a software model. It only uses SVA and testing
->    auxiliary domains would require additional changes that would never go
->    upstream. SVA requires another 20 patches (including I/O page faults)
->    that I will send later, but at least I know that this will get used.
->
-> * ioasid patch has been carried by Jacob and should be merged for v5.5 [3]
->
-> * Split patch "Add support for Substream IDs" into patches 4 and 5.
->
-> * Added IORT support (patch 3) and addressed other comments.
->
-> [1] https://lore.kernel.org/linux-iommu/20190610184714.6786-1-jean-philippe.brucker@arm.com/
-> [2] https://lore.kernel.org/linux-iommu/1572331216-9503-1-git-send-email-zhangfei.gao@linaro.org/
-> [3] https://lore.kernel.org/linux-iommu/1570045363-24856-1-git-send-email-jacob.jun.pan@linux.intel.com/
->
-> Jean-Philippe Brucker (8):
->    dt-bindings: document PASID property for IOMMU masters
->    iommu/arm-smmu-v3: Support platform SSID
->    ACPI/IORT: Support PASID for platform devices
->    iommu/arm-smmu-v3: Prepare for SSID support
->    iommu/arm-smmu-v3: Add support for Substream IDs
->    iommu/arm-smmu-v3: Add second level of context descriptor table
->    iommu/arm-smmu-v3: Improve add_device() error handling
->    iommu/arm-smmu-v3: Add support for PCI PASID
-Thanks Jean for the patch
-The series tested well on Hisilicon platform KunPeng920
-Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Gruß,
 
 
