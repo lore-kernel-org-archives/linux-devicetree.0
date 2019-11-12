@@ -2,156 +2,111 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4F8C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CFFC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C6D21A49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA08206BB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573560144;
-	bh=Yg2XoR2AQ2Dyq+/wLccnV918OcIcs8U+HHKtW2NtsuE=;
+	s=default; t=1573560194;
+	bh=77I7MHDzmQAkX/S13feaW551u7mwsKOgyo1gUezW2E4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sZuEnIhC3tvxP9ai+q8JjLLQoAsgFpHWDS6DBQQR5X3EzBk77Q8Mm0n+tmfDusrK4
-	 /7A5it0ZQ8XJiqbNMN3EhwcFjIuGLequ/RoGWeT8nO9MeY8Ffkha/1vLNuWjKaclSt
-	 CzGXkGu621nbqp/YWDFuf6lVW9qv3XANBdPXwrLY=
+	b=hNRZjbiRaeNYGWaLUn478VrDTxR3hUwI1YW6pFKnxiG50EFyUGE7Ih+/1JLnILY6Y
+	 Gp351pTvJOjms7ck0KIzobLiw5La3Hc/j2zB7c19MUQNTP7LnT24+m2EM1NAeySQ98
+	 zFDSNcVNkzk9y2n6YIaLzpTbR4nnebtZODJ95QaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfKLMCX (ORCPT
+        id S1725954AbfKLMDL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:02:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbfKLMCX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:02:23 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A7D2084E;
-        Tue, 12 Nov 2019 12:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573560142;
-        bh=Yg2XoR2AQ2Dyq+/wLccnV918OcIcs8U+HHKtW2NtsuE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y1lXsl/2SYZExjnI3bCn60A/vEVh5Q8AgmPiN3D5HpkHicJZiNZ8DZaBhEwR7XOT2
-         uNJU6DYWLgJRPqIECNi7BDx2OScrnaUp9adyY7rtxal0CxODze+7iHK0AYidXGjE1A
-         IuIxihpjR+DCaJM5NDBypIR5ePrLbjfUim4mT6Sg=
-Date:   Tue, 12 Nov 2019 13:02:19 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        jernej.skrabec@siol.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 1/2] ARM64: dts: sun50i-h6-pine-h64: state that the DT
- supports the modelA
-Message-ID: <20191112120219.GX4345@gilmour.lan>
-References: <1573316433-40669-1-git-send-email-clabbe@baylibre.com>
- <1573316433-40669-2-git-send-email-clabbe@baylibre.com>
+        Tue, 12 Nov 2019 07:03:11 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49370 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfKLMDL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 07:03:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zS7SJkCQ2rdagNsuqJLgPUeeYlkcUDxC+YCP79gVVcs=; b=Vm6tHbcRwmv0hiGTfkXpgbLW2
+        uX+VpT9VP7e91k9JhGcOSvlfk/wVbJZ6XBa1L4t3JYyWL+Kftf82r0gMOIVxxUMbei9/FpcOpKaPM
+        bpiascTWFPsi0jEkuVHNzHC/i4K7RF8DRn1PCe28Ty+L9Tz+Q0vVlCEXadSktGy/KYABY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iUUt2-0007nq-39; Tue, 12 Nov 2019 12:03:08 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 18A45274299F; Tue, 12 Nov 2019 12:03:07 +0000 (GMT)
+Date:   Tue, 12 Nov 2019 12:03:07 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+Message-ID: <20191112120307.GB5195@sirena.co.uk>
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="MhP8cYafZlTESjGT"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
 Content-Disposition: inline
-In-Reply-To: <1573316433-40669-2-git-send-email-clabbe@baylibre.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191112055412.192675-2-dmitry.torokhov@gmail.com>
+X-Cookie: As famous as the unknown soldier.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---MhP8cYafZlTESjGT
+--NDin8bjvE/0mNLFQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi,
+On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
 
-On Sat, Nov 09, 2019 at 04:20:32PM +0000, Corentin Labbe wrote:
-> The current sun50i-h6-pine-h64 DT does not specify which model (A or B)
-> it supports.
-> When this file was created, only modelA was existing, but now both model
-> exists and with the time, this DT drifted to support the model B since it is
-> the most common one.
-> Furtheremore, some part of the model A does not work with it like ethernet and
-> HDMI connector (as confirmed by Jernej on IRC).
->
-> So it is time to settle the issue, and the easiest way was to state that
-> this DT is for model B.
-> Easiest since only a small name changes is required.
-> Doing the opposite (stating this file is for model A) will add changes (for
-> ethernet and HDMI) and so, will break too many setup.
->
-> But as asked by the maintainer this patch state this file is for model A.
-> In the process this patch adds the missing compoments to made it work on
-> model A.
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->  .../devicetree/bindings/arm/sunxi.yaml        |  4 ++--
->  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 19 +++++++++++++++----
->  2 files changed, 17 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> index 8a1e38a1d7ab..b8ec616c2538 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> @@ -599,9 +599,9 @@ properties:
->            - const: pine64,pine64-plus
->            - const: allwinner,sun50i-a64
->
-> -      - description: Pine64 PineH64
-> +      - description: Pine64 PineH64 model A
->          items:
-> -          - const: pine64,pine-h64
-> +          - const: pine64,pine-h64-modelA
+> +      interrupts:
+> +        items:
+> +          - description: main interrupt (attention) line.
+> +          - description: dedicated wakeup interrupt.
+> +        minItems: 1 # The wakeup interrupt is optional.
+> +        description:
+> +          Specifies interrupt lines a device is connected to. Typically a
+> +          device is wired to a single interrupt line that is used as
+> +          "attention" signal and also to wake up system when device is
+> +          set up as wakeup source. However on some systems a dedicated
+> +          wakeup line might be used.
 
-You can change the description to make it more obvious if you want to,
-but changing the compatible is a no-go.
+> +      interrupt-names:
+> +        items:
+> +          - const: irq
+> +          - const: wakeup
+> +        minItems: 1
 
->            - const: allwinner,sun50i-h6
->
->        - description: Pine64 LTS
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> index 74899ede00fb..1d9afde4d3d7 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> @@ -10,8 +10,8 @@
->  #include <dt-bindings/gpio/gpio.h>
->
->  / {
-> -	model = "Pine H64";
-> -	compatible = "pine64,pine-h64", "allwinner,sun50i-h6";
-> +	model = "Pine H64 model A";
-> +	compatible = "pine64,pine-h64-modelA", "allwinner,sun50i-h6";
+How will this interact with a SPI device that defines interrupts at the
+device level, possibly more than one of them?  Especially if the device
+has its own idea what the interrupts should be called.
 
-Same thing here, changing the model is fine, the compatible isn't
-
->  	aliases {
->  		ethernet0 = &emac;
-> @@ -22,9 +22,10 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->
-> -	connector {
-> +	hdmi_connector: connector {
-
-Why do you need to add the label?
-
-Thanks!
-Maxime
-
---MhP8cYafZlTESjGT
+--NDin8bjvE/0mNLFQ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcqfSwAKCRDj7w1vZxhR
-xbtVAQCjK/Nue5ofSHTF+N2UYD2oQHh9eCSQaNnpwH0L9zEvIgEAn9sTMRVhOQZp
-PbvVGTIVHfDgrpeI3lrH/v6mZmKcbAI=
-=1SAq
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3Kn3oACgkQJNaLcl1U
+h9BxwQf9ECv4xZZXn5i2YxaBGMMCIQQ7dBHBaf+RX9PyyxRVwrhqaJb0Bn/Q2jfX
+SUx5ocQAvXxWnQfWzcG/i6CsMSbwO5sRJhofRLcU2picVhHROMiYrjNcuXJD77SE
+/te7BqRLAXWPCjR3Hi1KGnDLFa347byoeW2WV3txN7SWSKssa43NooJ2E/ahyeKY
+nRiz2uivJ6utzuXNjwK6PdQtX+KboYNp3AgwbTBL0kDhLtwNPLoPUb76im4lYqvt
+UVj3XRXlLxL1sVpy7Z6IUKezWxiCOUMl3winPd7gxZNgvyCz6dKnIFqtDc//cikO
+GWsgGR1j7SZ92kVg0pEvgUNrr8X/iA==
+=kE98
 -----END PGP SIGNATURE-----
 
---MhP8cYafZlTESjGT--
+--NDin8bjvE/0mNLFQ--
