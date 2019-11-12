@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA62AC17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF986C17441
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E80C222BD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5077222C1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K0g4JdTK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wQ4II01/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfKLOZS (ORCPT
+        id S1727678AbfKLOZ3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:25:18 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40514 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727684AbfKLOZL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:25:11 -0500
+        Tue, 12 Nov 2019 09:25:29 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38684 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727646AbfKLOZI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:25:08 -0500
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEP4F1044472;
-        Tue, 12 Nov 2019 08:25:04 -0600
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEP2Iq098129;
+        Tue, 12 Nov 2019 08:25:02 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573568704;
-        bh=5YwKxLUT1Ge9lm3+PQt2DCNmDKOmd3ZEoeOT6dyfUE0=;
+        s=ti-com-17Q1; t=1573568702;
+        bh=eJC9pkU6OOpCuYyC6VSXxendpXfUX3Fg0DEgqQA1b0M=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=K0g4JdTKb20pG9sRcAtsF2EAxa3NVM/TFGm0l2E7ZRXfqVLgZWxbBQtTaQApopYAH
-         REo3+YKInK6L0kdtyNWePo6wwTonOT36LuXnFbmwNbPraZf1tYZAylyZnRJMoGSDRF
-         TDM7dCKopdMao2TceIWMgNUOqxTuYaOLUCMRdvCg=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEP4vR116704
+        b=wQ4II01/NbsGlSeMz7K2F2mHLoqMoxNKkriUlVPGaqcogpOHfrxINnFQ7BXhUN7Qg
+         TgbBNO+JJNQDExcN0Hh73pRl6+Wa5a+7y9GGpk/AwwL0yksjjChUBBu2SC/mhvpSKs
+         A6a1R9MrhyOKI8jJWzD/cKRb9vbonR60otx4xXqo=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEP2Ek116118
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:25:04 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 Nov 2019 08:25:02 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:24:46 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:24:44 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:24:46 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:24:44 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEOrBn036029;
-        Tue, 12 Nov 2019 08:25:03 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEOrBl036029;
+        Tue, 12 Nov 2019 08:25:01 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
 CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 08/10] arm: dts: dra76-evm: Add CAL and OV5640 nodes
-Date:   Tue, 12 Nov 2019 08:27:51 -0600
-Message-ID: <20191112142753.22976-9-bparrot@ti.com>
+Subject: [Patch v3 06/10] arm: dts: dra72-evm-common: Add entries for the CSI2 cameras
+Date:   Tue, 12 Nov 2019 08:27:49 -0600
+Message-ID: <20191112142753.22976-7-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112142753.22976-1-bparrot@ti.com>
 References: <20191112142753.22976-1-bparrot@ti.com>
@@ -72,16 +72,16 @@ Add the CAL port nodes with the necessary linkage to the ov5640 nodes.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- arch/arm/boot/dts/dra76-evm.dts | 39 +++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm/boot/dts/dra72-evm-common.dtsi | 35 +++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
-index 1fb6f13fb5e2..a0a4bf0e1e30 100644
---- a/arch/arm/boot/dts/dra76-evm.dts
-+++ b/arch/arm/boot/dts/dra76-evm.dts
-@@ -116,6 +116,12 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
+diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
+index 8641a3d7d8ad..608c7676c293 100644
+--- a/arch/arm/boot/dts/dra72-evm-common.dtsi
++++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
+@@ -187,6 +187,12 @@
+ 		gpio = <&gpio5 8 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
  	};
 +
 +	clk_ov5640_fixed: clock {
@@ -91,14 +91,11 @@ index 1fb6f13fb5e2..a0a4bf0e1e30 100644
 +	};
  };
  
- &i2c1 {
-@@ -317,6 +323,27 @@
+ &dra7_pmx_core {
+@@ -269,6 +275,23 @@
+ 			line-name = "vin6_sel_s0";
+ 		};
  	};
- };
- 
-+&i2c5 {
-+	status = "okay";
-+	clock-frequency = <400000>;
 +
 +	ov5640@3c {
 +		compatible = "ovti,ov5640";
@@ -115,14 +112,13 @@ index 1fb6f13fb5e2..a0a4bf0e1e30 100644
 +			};
 +		};
 +	};
-+};
 +
- &cpu0 {
- 	vdd-supply = <&buck10_reg>;
  };
-@@ -447,3 +474,15 @@
- 		max-bitrate = <5000000>;
- 	};
+ 
+ &uart1 {
+@@ -580,3 +603,15 @@
+ &pcie1_rc {
+ 	status = "okay";
  };
 +
 +&cal {
