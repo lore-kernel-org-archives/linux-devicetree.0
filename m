@@ -6,65 +6,87 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF395C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C63FC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AC520674
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF2521925
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKLJKf (ORCPT
+        id S1726986AbfKLJSQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:10:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:32887 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfKLJKf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 04:10:35 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iUSC1-0006o6-9f; Tue, 12 Nov 2019 10:10:33 +0100
-Date:   Tue, 12 Nov 2019 10:10:32 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] of: allocate / free phandle cache outside of the
- devtree_lock
-Message-ID: <20191112091032.aa23wd24j4b324kw@linutronix.de>
-References: <20191111172142.ozczh7j2gmzi7o5k@linutronix.de>
- <CAL_JsqLecYPGGP8grE7sUgD1ZBYeVhuqX_sOT_9Rw1LM1yhSmw@mail.gmail.com>
+        Tue, 12 Nov 2019 04:18:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43154 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725954AbfKLJSQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:18:16 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A4A7AAE65;
+        Tue, 12 Nov 2019 09:18:14 +0000 (UTC)
+Message-ID: <31e7037674b388919b28c6b13d4b4f71b011d9ee.camel@suse.de>
+Subject: Re: [PATCH 2/4] ARM: dts: bcm2711: Enable PCIe controller
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
+        mbrugger@suse.com, f.fainelli@gmail.com, phil@raspberrypi.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 12 Nov 2019 10:18:12 +0100
+In-Reply-To: <20191107103705.GX9723@e119886-lin.cambridge.arm.com>
+References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
+         <20191106214527.18736-3-nsaenzjulienne@suse.de>
+         <20191107103705.GX9723@e119886-lin.cambridge.arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-GShpbkW8CowbTJFvOKc+"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLecYPGGP8grE7sUgD1ZBYeVhuqX_sOT_9Rw1LM1yhSmw@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-11 21:35:35 [-0600], Rob Herring wrote:
-> >    28d0e36bf9686 ("OF: Fixup resursive locking code paths")
-> >    d6d3c4e656513 ("OF: convert devtree lock from rw_lock to raw spinlock")
-> 
-> So to summarize, we changed mainline to fix RT which then broke RT. :)
 
-correct, but we were good until v4.17-rc1 :)
+--=-GShpbkW8CowbTJFvOKc+
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > I've been looking into making devtree_lock a spinlock_t which would
-> > avoid this patch. I haven't seen an issue during boot on arm64 even
-> > with hotplug.
-> 
-> Did you look into using RCU reader locks any more?
+Hi Andrew,
 
-A little bit. The writers, which modify the node, would need to replace
-the whole node. So this is where things got a little complicated.
-Frank wasn't a big fan of it back then and he still wasn't a few weeks
-back.
-If you two agree to prefer RCU over this patch then I would look more
-into adding RCU into the lookup path. The argument was that this isn't
-time critical. I'm just trying to avoid to replace the locking for
-nothing.
-So, should I come up with a RCU patch?
+On Thu, 2019-11-07 at 10:37 +0000, Andrew Murray wrote:
+> > +			ranges =3D <0x02000000 0x0 0xf8000000 0x6 0x00000000
+> > +				  0x0 0x04000000>;
+>=20
+> Is legacy I/O supported by this controller?
+>=20
 
-> Rob
+No, it isn't.
 
-Sebastian
+Regards,
+Nicolas
+
+
+--=-GShpbkW8CowbTJFvOKc+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3KeNQACgkQlfZmHno8
+x/5iUgf+LjXdBQ4FjWn71+T/EcTk9J/bddIQmKOu98J3Tg6Gshv3uodKu0oH8FcW
+Ebw2xoianZ+9h3R6JO4DRyXyzM8z5jSbUbzS9RtfIkjaTc1rp+/EUo4WOIos/va1
+5PtnNBT2Ked9JKSaYAfA1RUYxTyvUqRe0gmCB6tK8LDIIrtjvHw+NJt2UxatosZf
+hbdEzFV23h7dSAEtibilo0Tsu/tQG2QcrcJb2EClIwaFprttPViyFqXcLt4NdmfU
+7nYY4CJtzBsx8aLVHYXKcJ3UuhodbmFo9Z4BDA881tKDlHKRq7fA0qinkDV5LYjy
+vqUlWp8b1ko68z8uvqshd2KfjjLumA==
+=DWxZ
+-----END PGP SIGNATURE-----
+
+--=-GShpbkW8CowbTJFvOKc+--
+
