@@ -2,147 +2,104 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435F7C17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB715C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3BA214E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzPkNF7v"
+	by mail.kernel.org (Postfix) with ESMTP id 9F9D2214E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:58:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573556311;
+	bh=0tn0SSq34Svy8n1BIxdttpUNZiZ/1cS4utciXJL4s+E=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=2QnNJ3RZ9lbYzijeMrntw2SFuYaB3CIAxyFI9IaFr716z7kOtv0zcxH/YnLrXHp37
+	 SAlwsqBNbBR2Qh04uivasntg68zjyUIWKyb+M23IIJBdu8PXCg+Wzk/+PA39HqqgOL
+	 bEzei4ARJXsDcv5B2iwJt/H/4rRbElzWn2VgbqM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfKLKvZ (ORCPT
+        id S1725887AbfKLK6b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:51:25 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37860 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfKLKvZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 05:51:25 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t1so17981593wrv.4;
-        Tue, 12 Nov 2019 02:51:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=w3da61b7JGSuBbFW6srTkqcNOALgI1mXsG7keOhSKoE=;
-        b=KzPkNF7vLNMPI7wGcpmPKJalQ5TUNvUedqERtpafvcrKVrmh7EjsuZemhpR6OHxdK5
-         u+ArAuoXHhBSuufU9nkJuJ46YCS1bDkxm3keA82EHAEoh9AgMpRjs568uZIm2eC4BptZ
-         PQtU0v2i27TfrbZWwyi6452Y3EQ6NttTFiQx3bFAEilOtbTyU+M3sT4bFiC7cQ36nzFZ
-         yT+xMLkYUqyhXKRvK35qar3+ecDY3LKvVhsXaPlJ+1Lfi4/KgBuAXt/jFfXa/9rZyVYy
-         /ZhNEJF0Mbyo+jQYcJFezSWS0YWnz68ZAPoQ8yOJnscfDRwbM1bx9TtIxDSLl48as4eS
-         ndpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=w3da61b7JGSuBbFW6srTkqcNOALgI1mXsG7keOhSKoE=;
-        b=tWy8V8lKdxomWfFdW9FcsOQC/6rozMBMzwvTuQoTv1uH0CLCDUeUk5zu5Wh+FOANsb
-         S+Dr61hZ280FnFdxSjlwF8eJ0lnyNTV7RxrMLHRlUMyaDemlsheIZHc7jNPm8UoV8wvk
-         SHcYN2jKYis5iPsHkSUw97hRSD3rQ8VZIBWSj0ySX3yzo9q7L7AywfXHb8Uh7EJbGrpC
-         KgsRsPEmpACV9b3qA5l+WGYnz5CZWKa6ysr2+JK3iMHmz7s/NypdEXNWKbAd8YSanWJ9
-         L4pyZUJW0kNYw3FeoC8Y7Qmm82u8D+TFmo9yE9lo7HcSoMobSrT2VvEjTJRv7VYrsQL2
-         ekRA==
-X-Gm-Message-State: APjAAAWo7zTiu+kQMuB8c8zrpCsCRzdYu6ALh2jtWpHKpuJnl0I3RItt
-        NnHAc6r9Hgj0kbUt8Dx/DUcdJ2ND52bya85B1Ul8V34evjE=
-X-Google-Smtp-Source: APXvYqyi2uw32VMwilcptszDlBFN/85aP+rGSUIN70dz2Tdhs5NchrnBpWKZXr2pFLmq3r7c6O2KfeR3bxkToj+cktw=
-X-Received: by 2002:adf:c449:: with SMTP id a9mr3868494wrg.240.1573555883099;
- Tue, 12 Nov 2019 02:51:23 -0800 (PST)
+        Tue, 12 Nov 2019 05:58:31 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:55582 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725834AbfKLK6b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 05:58:31 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iUTsQ-0005QJ-GI; Tue, 12 Nov 2019 11:58:26 +0100
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v7 0/2] Add support for Layerscape external interrupt  lines
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <20191014141718.22603-1-narmstrong@baylibre.com>
- <20191014141718.22603-2-narmstrong@baylibre.com> <20191023201141.GA21235@bogus>
- <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com>
- <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com> <c32007f5-88b9-45c5-b542-b1dc4dbc76ea@baylibre.com>
-In-Reply-To: <c32007f5-88b9-45c5-b542-b1dc4dbc76ea@baylibre.com>
-From:   Jun Li <lijun.kernel@gmail.com>
-Date:   Tue, 12 Nov 2019 18:51:10 +0800
-Message-ID: <CAKgpwJVHF6Ytdt9kq5SwiixFDLym_UPG51aXag1nVVay0pzofQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
- disabling SS instances in park mode
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     Tim <elatllat@gmail.com>, Felipe Balbi <balbi@kernel.org>,
-        khilman@baylibre.com, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 12 Nov 2019 12:07:47 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Vladimir Oltean <olteanv@gmail.com>
+In-Reply-To: <184b684a-7712-a280-fdc2-83d7abd3cbd4@rasmusvillemoes.dk>
+References: <20191107122115.6244-1-linux@rasmusvillemoes.dk>
+ <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
+ <184b684a-7712-a280-fdc2-83d7abd3cbd4@rasmusvillemoes.dk>
+Message-ID: <8e1877ab5a1fecace3b2383789bdf404@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: linux@rasmusvillemoes.dk, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kurt@linutronix.de, olteanv@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This bug exists on all current versions per information I got from Synopsys=
-.
-+ Thinh Nguyen <thinhn@synopsys.com>.
+On 2019-11-12 11:27, Rasmus Villemoes wrote:
+> On 11/11/2019 11.24, Marc Zyngier wrote:
+>> On 2019-11-07 13:30, Rasmus Villemoes wrote:
+>
+>>> Rasmus Villemoes (2):
+>>>   dt/bindings: Add bindings for Layerscape external irqs
+>>>   irqchip: add support for Layerscape external interrupt lines
+>>>
+>>>  .../interrupt-controller/fsl,ls-extirq.txt    |  49 +++++
+>>>  drivers/irqchip/Kconfig                       |   4 +
+>>>  drivers/irqchip/Makefile                      |   1 +
+>>>  drivers/irqchip/irq-ls-extirq.c               | 197 
+>>> ++++++++++++++++++
+>>>  4 files changed, 251 insertions(+)
+>>>  create mode 100644
+>>>
+>>> 
+>>> Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+>>>  create mode 100644 drivers/irqchip/irq-ls-extirq.c
+>>
+>> Applied to irqchip-next.
+>
+> Thanks! Can I assume that branch doesn't get rebased so 87cd38dfd9e6 
+> is
+> a stable SHA1? I want to send a patch adding the node to 
+> ls1021a.dtsi,
+> and I hope not to have to wait another release cycle.
 
-Li Jun
+I usually try to avoid rebasing it, unless something really bad shows 
+up.
 
-Neil Armstrong <narmstrong@baylibre.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=881=
-2=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=885:00=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> Hi Li,
->
-> On 11/11/2019 02:58, Jun Li wrote:
-> > Hi Neil
-> >
-> > As I got the information from Synopsys, this bug exists on current IP v=
-ersions,
-> > and per my tests with external USB3 hub + 2 Super speed udisks on data
-> > read by dd, I can reproduce this issue with different kernel versions, =
-also I
-> > didn't see obvious performance drop by dd tests after disable park mode=
- for
-> > super speed, so should we just disable it by default so no need a quirk=
-?
->
-> I don't have any opinion on this, I think the USB & DWC3 maintainers shou=
-ld decide
-> how to handle this.
->
-> Did Synopsys specified a range of affected IP version ?
->
-> Neil
->
-> >
-> > Li Jun
-> >
-> > Tim <elatllat@gmail.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8811=E6=97=A5=
-=E5=91=A8=E4=B8=80 =E4=B8=8A=E5=8D=888:42=E5=86=99=E9=81=93=EF=BC=9A
-> >>
-> >> Thanks for working on this Neil,
-> >> Is there something that needs doing for this patch to make it into 5.3=
- or 5.4?
-> >> As previously mentioned the patch set fixes the issue on affected hard=
-ware;
-> >>     https://patchwork.kernel.org/patch/11164515/
-> >>
-> >>
-> >>
-> >> On Wed, Oct 23, 2019 at 4:11 PM Rob Herring <robh@kernel.org> wrote:
-> >>>
-> >>> On Mon, Oct 14, 2019 at 04:17:16PM +0200, Neil Armstrong wrote:
-> >>>> This patch updates the documentation with the information related
-> >>>> to the quirks that needs to be added for disabling all SuperSpeed XH=
-Ci
-> >>>> instances in park mode.
-> >>>>
-> >>>> CC: Dongjin Kim <tobetter@gmail.com>
-> >>>> Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-> >>>> Reported-by: Tim <elatllat@gmail.com>
-> >>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >>>> ---
-> >>>>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
-> >>>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> Sigh, what's one more to the never ending list of quirks...
-> >>>
-> >>> Acked-by: Rob Herring <robh@kernel.org>
->
+Now, just adding a node to a DT shouldn't break anything, right? You
+should be able to do that change and get things working magically once
+this code hits mainline.
+
+Or am I missing something?
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
