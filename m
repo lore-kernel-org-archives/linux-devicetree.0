@@ -2,123 +2,96 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C626C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB0DC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2073A21783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0135421925
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:56:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW4XPSBu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AkjoSmay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725298AbfKLFyR (ORCPT
+        id S1725795AbfKLF4c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 00:54:17 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34584 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfKLFyR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 00:54:17 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z188so5180324pgb.1;
-        Mon, 11 Nov 2019 21:54:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RNUXeUQ2he9yGQNHJeu0ueH2/ESMsrmnicZwkmOdB+k=;
-        b=GW4XPSBudhcmTSVwBxMyFjzIWM2FsIKdPr6SSTaRlyet8RhDmQiIVYqEJpEFWFcLm7
-         XX5WTaJ9h4fgkVFaWc38tpXJKJTFDlDqWgcXTDt+lalFs/CX4prBGpF0+c3DWxJRIi/e
-         DKYd5yYKRsEglGBgERR5fyQMcvQdV6isFOzPcFT688PfOvQFMgLwtcFYzvcCHA4gBnR6
-         aq+jmerRh6Ss3zjJ0l4iYW7F1lR+mydnIt6+K4t14CyaQVPqNuoxEhCGyvhPfhUPt92s
-         Hl3GoX+x8TM6wjZZYzTjqCWDpa7t8Su77y/1r7GtT+DZSwEfxB791o+eBGcorwK7p9sK
-         vppA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RNUXeUQ2he9yGQNHJeu0ueH2/ESMsrmnicZwkmOdB+k=;
-        b=QUovztiR3T4qa0PD1/kLNzY8E5kKnK1gShS5FAQ8ZhitOmvZV+AKn5xdLeOHCCbcp0
-         siZDzdvdipfgj17gOFyBPnXPKNyE9qp7JACWSDmwAVjGpR9fVTbDqM2mxAnIzgfQR6Nv
-         yYsiNWU81hvm5SXUvyujIQwJ7DpBSkUerw43hrMNIcg0RoYkU7tr0hGptBo92nI49Yp7
-         urNMDWwzZU/sT2uiH7hnizz8qKpeDVPDp3/X1TDq+gWVsokoYT96rSJa+/bfTZWjyTg6
-         CyxkT8kgi4lixn0bdgPCWjiFAQBOD8osz6JATZ9ssotJdgs3IkVfAWwWzg8BgVivMtF/
-         P4Pg==
-X-Gm-Message-State: APjAAAWVIZSIxxqXGvLIb02yUgcznA6ef4JVzuXV2ruTSWORBnvRDHBS
-        PaJigaGHWamOaO3qT7Vr3lk=
-X-Google-Smtp-Source: APXvYqzU0C+BWuw3Ec2o2cnt5pc8T768D2XbYVOUzZfj0x1BLbP3fOUEtaqf2ctwzdSnAJv40qXrvw==
-X-Received: by 2002:a63:ff65:: with SMTP id s37mr32689085pgk.331.1573538056221;
-        Mon, 11 Nov 2019 21:54:16 -0800 (PST)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id d139sm23160178pfd.162.2019.11.11.21.54.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 21:54:15 -0800 (PST)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source and interrupts
-Date:   Mon, 11 Nov 2019 21:54:10 -0800
-Message-Id: <20191112055412.192675-2-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
-References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 12 Nov 2019 00:56:32 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37262 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725899AbfKLF4b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 00:56:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573538190;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t4H1BAGawGahyIzPrHbrHyHMfWVwsFAeBKzU7Z42zAo=;
+        b=AkjoSmayGVAAMhbnFjP0BTCOzo4XoUQg3jiWRBBBJ8WIEPNEH7CJJUDnq0H0KBNWVLSNT+
+        H6TCpgbAtyB9COvbWfu7X479/aC2lKTw2/x1HPTZ4b0M5dUVOsdFW8OWGYH4AgLr9Lr2pH
+        xMaC4I1fKEFSR3CRqy+KQWMx+kuuVeo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-OfrAog8PPI22IT-AmCI-Nw-1; Tue, 12 Nov 2019 00:56:27 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3645800C61;
+        Tue, 12 Nov 2019 05:56:24 +0000 (UTC)
+Received: from localhost (ovpn-112-54.rdu2.redhat.com [10.10.112.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D2D860852;
+        Tue, 12 Nov 2019 05:56:18 +0000 (UTC)
+Date:   Mon, 11 Nov 2019 21:56:17 -0800 (PST)
+Message-Id: <20191111.215617.1625420574702786179.davem@redhat.com>
+To:     Mark-MC.Lee@mediatek.com
+Cc:     sean.wang@mediatek.com, john@phrozen.org, matthias.bgg@gmail.com,
+        andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com,
+        opensource@vdorst.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jakub.kicinski@netronome.com
+Subject: Re: [PATCH net,v2 1/3] net: ethernet: mediatek: Integrate GDM/PSE
+ setup operations
+From:   David Miller <davem@redhat.com>
+In-Reply-To: <20191111065129.30078-2-Mark-MC.Lee@mediatek.com>
+References: <20191111065129.30078-1-Mark-MC.Lee@mediatek.com>
+        <20191111065129.30078-2-Mark-MC.Lee@mediatek.com>
+Mime-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: OfrAog8PPI22IT-AmCI-Nw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This change adds bindings for wakeup-source and
-interrupts/interrupt-names properties that can be used to configure
-device as wakeup source on the system.
+From: MarkLee <Mark-MC.Lee@mediatek.com>
+Date: Mon, 11 Nov 2019 14:51:27 +0800
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> +static void mtk_gdm_config(struct mtk_eth *eth, u32 config)
+> +{
+> +=09int i;
+> +
+> +=09for (i =3D 0; i < MTK_MAC_COUNT; i++) {
+> +=09=09u32 val =3D mtk_r32(eth, MTK_GDMA_FWD_CFG(i));
+> +
+> +=09=09/* default setup the forward port to send frame to PDMA */
+> +=09=09val &=3D ~0xffff;
+> +
+> +=09=09/* Enable RX checksum */
+> +=09=09val |=3D MTK_GDMA_ICS_EN | MTK_GDMA_TCS_EN | MTK_GDMA_UCS_EN;
+> +
+> +=09=09val |=3D config;
+> +
+> +=09=09mtk_w32(eth, val, MTK_GDMA_FWD_CFG(i));
+> +=09}
+> +=09/*Reset and enable PSE*/
 
----
+Please put spaces before and after the comment sentence, like:
 
- .../bindings/spi/spi-controller.yaml          | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-index 732339275848c..4e31a4bf6851c 100644
---- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-@@ -78,6 +78,29 @@ patternProperties:
-         description:
-           Chip select used by the device.
- 
-+      interrupts:
-+        items:
-+          - description: main interrupt (attention) line.
-+          - description: dedicated wakeup interrupt.
-+        minItems: 1 # The wakeup interrupt is optional.
-+        description:
-+          Specifies interrupt lines a device is connected to. Typically a
-+          device is wired to a single interrupt line that is used as
-+          "attention" signal and also to wake up system when device is
-+          set up as wakeup source. However on some systems a dedicated
-+          wakeup line might be used.
-+
-+      interrupt-names:
-+        items:
-+          - const: irq
-+          - const: wakeup
-+        minItems: 1
-+
-+      wakeup-source:
-+        description:
-+          Device is capable of waking up the system.
-+        type: boolean
-+
-       spi-3wire:
-         $ref: /schemas/types.yaml#/definitions/flag
-         description:
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+=09/* Reset and enable PSE */
 
