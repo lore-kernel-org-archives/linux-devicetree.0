@@ -1,329 +1,108 @@
-Return-Path: <SRS0=QTuQ=ZD=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0D7C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 22:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961E2C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 00:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52972184C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 11 Nov 2019 22:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681BF2184C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 00:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CRm5G9GO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLPKNrMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfKKW3B (ORCPT
+        id S1727064AbfKLAFi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 17:29:01 -0500
-Received: from mail-eopbgr10067.outbound.protection.outlook.com ([40.107.1.67]:61038
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726991AbfKKW3B (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 17:29:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XYMQ1F8XLHf+MlN5x3kf/U5NxDLcWxg62fFspuGK8yKUn+efyD38nKTbcEsv3I/a5+3vwBT2M0PHSK9lEbke2PX4m8putaeJ4kXJUjY+Obi/NOOZdqgGxVhTf66MME7LGjyq3GMwuu67rtbeDJ5Byd6gR4nHoF+xYUb2aRuOQJ1pazk/TNyaXvH1+wu4zPeqtkkr8ymTbgJ3lyEYkGGyYc3goM1lag/puK1kuXmfEATHjzrIuFB1x6d53irJq81wkvuyLRpcBYzRyDwDT998SVnQ7GOmEs5eCvs14IgUfYssAhtp4VwZEMZQdoR8uZ/1l5li2u78FDph7QdXog9MfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZxKffuqR37xnFlK5JbWKXmgjjah1Kb8kLY6Gr8m3IXw=;
- b=ONxsCJHT+JZzWgq9BURoY6Ol0LrP7LVnFyvqDoS+deGDRVeCENEgn3uvYwKS97Bbji6vYIkRWAI3G9/Ra4gw27LwLkMkbjmCmzKURCwednVXfVyobn5oqcW3QbwL2tclqmu8VOO7qcjXwu0Np3Gvg3Hty/AzTw5FotoLTb2NpykrmG3skKIzhKba2JXvOXE05nXr3ty4H+LksP04mXhxjNPHQOlOVZJBgW5dwrkWOfvfKsdIgy7ESpqHqcRxDPckUuuoXwo5rSXrvtLiS4qe2GnhJTXKnT/mGaIxYaLrNLy3g3wpADg4dztwVfLWFlKEX2cDdzji15cYc/Ikbh3rGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZxKffuqR37xnFlK5JbWKXmgjjah1Kb8kLY6Gr8m3IXw=;
- b=CRm5G9GOw9+8VZL0gdKqv5fvf8cE35c+44EgGjAxT65rSajw9MHGX4xb4dFke6nMqq24YZMpXSW7RfjJNJ8obCCRYvHyyDvz7Y1BCj7x1fU45cCEp7fcTWMN+7ubVMrdei0cCIymO2hEPrHkiRS5e6+VBHCypvyMPUtax+xa0rY=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB6207.eurprd04.prod.outlook.com (20.179.28.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.22; Mon, 11 Nov 2019 22:28:53 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2430.027; Mon, 11 Nov 2019
- 22:28:53 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Rob Herring <robh@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-CC:     Chanwoo Choi <cw00.choi@samsung.com>,
-        =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Mon, 11 Nov 2019 19:05:38 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46795 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfKLAFi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 19:05:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 193so11900816pfc.13;
+        Mon, 11 Nov 2019 16:05:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6KOnCMXCOiPQLfi45fFcE0+C3er2wheoIsrf8843ny0=;
+        b=OLPKNrMFGFF7U1922nn0E++/tjzkZ0mNS2hYpYmYINmWigGDYrRdqdSag3Fy1NIbuM
+         hm/XRybSWrx/kxgDrRUknQ51q8xz8P8pQu8rYB/MS+N6zl/EhWPv51Qn7qEUe6/r5/UT
+         2tQLKCDJwLDs2yluQKt57CrtXP18B0e48SxH7DUXVVxDN/epgr1NTiP6HQ7PhVcZ7pid
+         uc0F3STd5z+Y9PWakN7Xwl3yLygrzHOpJGA38O35pkkafjEJDG+tmKcIlJXyJNqqAdEM
+         vAROblpNXiwZdlxIptgSmh3FWkZv6zhonPvL9gT9Ddrbtwxw+Dbwdnv2FCXPoXRn8W3h
+         VcrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6KOnCMXCOiPQLfi45fFcE0+C3er2wheoIsrf8843ny0=;
+        b=tU2g5acqJ40/SmSJhlI0WNqGcsj427KmirYbg7rcmu+qkSb6M9qlsMcxSBIUfx+6/F
+         +cyfGKcX6GC634X5ABVTx4q/sBKB1oLQkTYciiPTxsyoVC72ZFWgJ8Rn1KyaNhKZPIf9
+         AicET84hpt67du0btODCrMao182qQDb8JrlPQifJ+O1l2KqYJYiBO1M3M0CkY7blalRy
+         XPB99V8vsSN6rdTf+nVJUfQ0vgrtUDwg1+vkiwLD8fi7RqZrUH0zskZaf7lspZpng1jI
+         xYRV/yDkFxvoCdGWUXCERZddz2njxhZy3IA3RoJI+pVI/i+ZqrwNI5Y2AMiENPVId7ID
+         63bw==
+X-Gm-Message-State: APjAAAX+SH3849r5ChCd1bCg27spWB4ryJvrdE6z3NhPsvqV+DdKcprQ
+        wy5WKHn9CCXd81xqkQwZ5/8=
+X-Google-Smtp-Source: APXvYqzXZdmbvuUorKINeW0zhCwHHDdLsKqKa7cZjwYSCyOGWKC/69DcZIZRO7sBDnAEay9pLOkCIg==
+X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr2349371pjv.89.1573517137516;
+        Mon, 11 Nov 2019 16:05:37 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id f13sm20131016pfa.57.2019.11.11.16.05.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 16:05:36 -0800 (PST)
+Date:   Mon, 11 Nov 2019 16:05:34 -0800
+From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH RFC v5 01/10] dt-bindings: devfreq: Add bindings for
- generic imx buses
-Thread-Topic: [PATCH RFC v5 01/10] dt-bindings: devfreq: Add bindings for
- generic imx buses
-Thread-Index: AQHVkD3as9Sa7H/jhkWE+GL1DYQYRg==
-Date:   Mon, 11 Nov 2019 22:28:53 +0000
-Message-ID: <VI1PR04MB7023FE9E511FDB48DE619F30EE740@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1572562150.git.leonard.crestez@nxp.com>
- <0e4118456f8eb67e1ba8a7c23127fc3def58547b.1572562150.git.leonard.crestez@nxp.com>
- <20191104224946.GB17515@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b95cfc0b-5ecb-493f-fc2d-08d766f688c4
-x-ms-traffictypediagnostic: VI1PR04MB6207:|VI1PR04MB6207:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB6207786022DA94E3DCA2DD3CEE740@VI1PR04MB6207.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0218A015FA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(136003)(39860400002)(189003)(199004)(26005)(186003)(54906003)(52536014)(71190400001)(71200400001)(110136005)(6116002)(3846002)(316002)(66066001)(6506007)(486006)(102836004)(76176011)(53546011)(476003)(446003)(7696005)(66446008)(64756008)(66556008)(66476007)(99286004)(5660300002)(229853002)(478600001)(8936002)(45080400002)(6436002)(4326008)(305945005)(74316002)(14444005)(25786009)(256004)(7416002)(7736002)(76116006)(9686003)(86362001)(8676002)(55016002)(44832011)(2906002)(6306002)(91956017)(966005)(14454004)(66946007)(81166006)(81156014)(6246003)(33656002)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6207;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BdzjInwLpUDPCMsTHvpf6mjF1ZnSldqo5GR0jvsndbZ7X/ow0p2EZkkHABlEnO5BPj4P5E9AnURwuOs4KyZXiV3RcnrEVIuNfBjcFc3/t3VYA6CNOATb6NoTdy8haqb8yfsnQ5+bwvXZvIpYviR9MU5++q9j438Ce5qIuttJKbYuelXi2HLzYAjHlrP2/d+IuuBHz6lPwlrDyHYlvr7oj6zVcJVBq5BfJj3fhbcjl8Jt1TebSpGoezkm+SMo7ULpv+23EAL3fXFOjh+BT4CxM8rN6yS+oPt/BLYXLdxFySbLAiR9nQ2wjcb8KexhEpaTmfFp1gOaxxxag6HC0AO3vAXSxBNZe1JE5iwrYg0ovKzRPSLCVjsKC79Xj8QakX081KAznzuKrk7L0mpUv22V2HNHsXUgi0c2xiDR79qi6VpaG4MdvZNyjHOcI60mkcj4
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>
+Subject: Re: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic
+ node names in example
+Message-ID: <20191112000534.GA192119@dtor-ws>
+References: <20191026090403.3057-1-marcel@ziswiler.com>
+ <20191026090403.3057-3-marcel@ziswiler.com>
+ <20191030140455.GA4544@bogus>
+ <20191030231205.GI57214@dtor-ws>
+ <c200444ba450d7884cd26e12163b68db6db63725.camel@toradex.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b95cfc0b-5ecb-493f-fc2d-08d766f688c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2019 22:28:53.6473
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MUsAcgSuNOoIMm045yNWr45uFeDv+LKwSMvVbp1Wnh4I+nEqwXmH/zzrtnu2w5r+yKyTrTDeLsCoD4Ih0yPfYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6207
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c200444ba450d7884cd26e12163b68db6db63725.camel@toradex.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05.11.2019 00:49, Rob Herring wrote:=0A=
-> On Fri, Nov 01, 2019 at 12:52:00AM +0200, Leonard Crestez wrote:=0A=
->> Add initial dt bindings for the interconnects inside i.MX chips.=0A=
->> Multiple external IPs are involved but SOC integration means the=0A=
->> software controllable interfaces are very similar.=0A=
->>=0A=
->> Single node also acts as interconnect provider if #interconnect-cells is=
-=0A=
->> present.=0A=
->>=0A=
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>=0A=
->> ---=0A=
->>   .../devicetree/bindings/devfreq/imx.yaml      | 83 +++++++++++++++++++=
-=0A=
-> =0A=
-> bindings/interconnect/=0A=
-=0A=
-Make sense. The only other two files in devicetree/bindings/devfreq are:=0A=
-  * rk3399_dmc: a memory controller=0A=
-  * exynos-bus: arguably an interconnect=0A=
-=0A=
->>   1 file changed, 83 insertions(+)=0A=
->>   create mode 100644 Documentation/devicetree/bindings/devfreq/imx.yaml=
-=0A=
->>=0A=
->> diff --git a/Documentation/devicetree/bindings/devfreq/imx.yaml b/Docume=
-ntation/devicetree/bindings/devfreq/imx.yaml=0A=
->> new file mode 100644=0A=
->> index 000000000000..bfc825407764=0A=
->> --- /dev/null=0A=
->> +++ b/Documentation/devicetree/bindings/devfreq/imx.yaml=0A=
->> @@ -0,0 +1,83 @@=0A=
->> +# SPDX-License-Identifier: GPL-2.0=0A=
->> +%YAML 1.2=0A=
->> +---=0A=
->> +$id: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2=
-Fdevicetree.org%2Fschemas%2Fdevfreq%2Fimx.yaml%23&amp;data=3D02%7C01%7Cleon=
-ard.crestez%40nxp.com%7C95911400e0834b06269c08d761794cd2%7C686ea1d3bc2b4c6f=
-a92cd99c5c301635%7C0%7C1%7C637085045930647253&amp;sdata=3D88iAXoKObu%2FXBqZ=
-u6hNwnOUIffB8GxVLdGeBWiCjClI%3D&amp;reserved=3D0=0A=
->> +$schema: https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%=
-2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Cleon=
-ard.crestez%40nxp.com%7C95911400e0834b06269c08d761794cd2%7C686ea1d3bc2b4c6f=
-a92cd99c5c301635%7C0%7C1%7C637085045930647253&amp;sdata=3D0phpsG05ZsYc5SnI3=
-FXZODJpJSEB2tzA5v02r7N%2BY2I%3D&amp;reserved=3D0=0A=
->> +=0A=
->> +title: Generic i.MX bus frequency device=0A=
-> =0A=
-> i.MX8 specific?=0A=
-=0A=
-Not really, but it's initially targeted at imx8m.=0A=
-=0A=
->> +maintainers:=0A=
->> +  - Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> +=0A=
->> +description: |=0A=
->> +  The i.MX SoC family has multiple buses for which clock frequency (and=
-=0A=
->> +  sometimes voltage) can be adjusted.=0A=
->> +=0A=
->> +  Some of those buses expose register areas mentioned in the memory map=
-s as GPV=0A=
->> +  ("Global Programmers View") but not all. Access to this area might be=
- denied=0A=
->> +  for normal (non-secure) world.=0A=
->> +=0A=
->> +  The buses are based on externally licensed IPs such as ARM NIC-301 an=
-d=0A=
->> +  Arteris FlexNOC but DT bindings are specific to the integration of th=
-ese bus=0A=
->> +  interconnect IPs into imx SOCs.=0A=
->> +=0A=
->> +properties:=0A=
->> +  compatible:=0A=
->> +    oneOf:=0A=
->> +      - items:=0A=
->> +        - enum:=0A=
->> +          - fsl,imx8mn-nic=0A=
->> +          - fsl,imx8mm-nic=0A=
->> +          - fsl,imx8mq-nic=0A=
->> +        - const: fsl,imx8m-nic=0A=
->> +      - items:=0A=
->> +        - enum:=0A=
->> +          - fsl,imx8mn-noc=0A=
->> +          - fsl,imx8mm-noc=0A=
->> +          - fsl,imx8mq-noc=0A=
->> +        - const: fsl,imx8m-noc=0A=
->> +=0A=
->> +  reg:=0A=
->> +    maxItems: 1=0A=
->> +=0A=
->> +  clocks:=0A=
->> +    maxItems: 1=0A=
->> +=0A=
->> +  operating-points-v2: true=0A=
->> +=0A=
->> +  devfreq:=0A=
->> +    description: |=0A=
->> +      Phandle to another devfreq device to match OPPs with by using the=
-=0A=
->> +      passive governor.=0A=
->> +    $ref: "/schemas/types.yaml#/definitions/phandle"=0A=
->> +=0A=
->> +  '#interconnect-cells':=0A=
->> +    description: |=0A=
->> +      If specified then also act as an interconnect provider. Should on=
-ly be=0A=
->> +      set once per soc on main noc.=0A=
->> +    const: 1=0A=
->> +=0A=
->> +  interconnect-node-id:=0A=
-> =0A=
-> Looks like common property, but it's not...=0A=
-> =0A=
-> Generally, we don't do indexes or instance ids. So it needs a better=0A=
-> explanation or drop this. The driver side looks like an odd marriage=0A=
-> between interconnect and devfreq drivers that needs better integration,=
-=0A=
-> but I'm not all that familar with either.=0A=
-=0A=
-Current interconnect drivers all operate by sending messages via a =0A=
-mailbox to a system controller which handles bandwidth requests. They =0A=
-only perform request aggregation. On imx8m frequency scaling is also =0A=
-implemented in the kernel so the NOC becomes almost like a MFD.=0A=
-=0A=
-The interconnect-node-id is used to find other scalable nodes for the =0A=
-same interconnect provider. I can replace this with a "scalable-nodes" =0A=
-array like this:=0A=
-=0A=
-	noc: interconnect@32700000 {=0A=
-		compatible =3D "fsl,imx8mq-noc", "fsl,imx8m-noc";=0A=
-		reg =3D <0x32700000 0x100000>;=0A=
-		clocks =3D <&clk IMX8MQ_CLK_NOC>;=0A=
-		#interconnect-cells =3D <1>;=0A=
-		fsl,scalable-node-ids =3D <IMX8MQ_ICN_NOC>,=0A=
-					<IMX8MQ_ICS_DRAM>;=0A=
-		fsl,scalable-nodes =3D <&noc>,=0A=
-				     <&ddrc>;=0A=
-		operating-points-v2 =3D <&noc_opp_table>;=0A=
-=0A=
-		noc_opp_table: opp-table {=0A=
-			compatible =3D "operating-points-v2";=0A=
-=0A=
-			opp-133M {=0A=
-				opp-hz =3D /bits/ 64 <133333333>;=0A=
-			};=0A=
-			opp-400M {=0A=
-				opp-hz =3D /bits/ 64 <400000000>;=0A=
-			};=0A=
-			opp-800M {=0A=
-				opp-hz =3D /bits/ 64 <800000000>;=0A=
-			};=0A=
-		};=0A=
-	};=0A=
-=0A=
-	ddrc: dram-controller@3d400000 {=0A=
-		compatible =3D "fsl,imx8mq-ddrc", "fsl,imx8m-ddrc";=0A=
-		reg =3D <0x3d400000 0x400000>;=0A=
-		clock-names =3D "core", "pll", "alt", "apb";=0A=
-		clocks =3D <&clk IMX8MQ_CLK_DRAM_CORE>,=0A=
-			 <&clk IMX8MQ_DRAM_PLL_OUT>,=0A=
-			 <&clk IMX8MQ_CLK_DRAM_ALT>,=0A=
-			 <&clk IMX8MQ_CLK_DRAM_APB>;=0A=
-		devfreq-events =3D <&ddr_pmu>;=0A=
-	};=0A=
-=0A=
-It's a bit strange that the noc references itself but in advanced =0A=
-multiple NOC can be be present and there needs to be a way to map from =0A=
-the interconnect graph (node ids) to devicetree nodes.=0A=
-=0A=
->> +    description: |=0A=
->> +      i.MX chips have multiple scalable buses based on the same IP, thi=
-s is=0A=
->> +      used to distinguish between. Uses same identifier namespace as co=
-nsumer=0A=
-> =0A=
-> It's not names, so number space? Just guessing because there's no type=0A=
-> nor example.=0A=
-=0A=
-Maybe "numeric namespace"?=0A=
-=0A=
->> +      "interconnects" property, for example one of the values in=0A=
->> +      "include/dt-bindings/interconnect/imx8mm.h"=0A=
->> +=0A=
->> +    const: 1=0A=
->> +=0A=
->> +required:=0A=
->> +  - compatible=0A=
->> +  - clocks=0A=
->> +=0A=
->> +additionalProperties: false=0A=
->> +=0A=
->> +examples:=0A=
->> +  - |=0A=
->> +    #include <dt-bindings/clock/imx8mm-clock.h>=0A=
->> +    noc: noc@32700000 {=0A=
->> +            compatible =3D "fsl,imx8mm-noc", "fsl,imx8m-noc";=0A=
->> +            reg =3D <0x32700000 0x100000>;=0A=
->> +            clocks =3D <&clk IMX8MM_CLK_NOC>;=0A=
->> +            operating-points-v2 =3D <&noc_opp_table>;=0A=
->> +    };=0A=
->> -- =0A=
->> 2.17.1=0A=
+On Wed, Nov 06, 2019 at 08:58:25AM +0000, Marcel Ziswiler wrote:
+> On Wed, 2019-10-30 at 16:12 -0700, Dmitry Torokhov wrote:
+> > On Wed, Oct 30, 2019 at 09:04:55AM -0500, Rob Herring wrote:
+> > > On Sat, Oct 26, 2019 at 11:04:01AM +0200, Marcel Ziswiler wrote:
+> > > > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > > 
+> > > There's a typo in the subject.
+> > 
+> > I fixed it up file applying, thank you for noticing.
+> 
+> Where exactly did you apply this? As I still can't find it applied
+> anywhere. Thanks!
+
+Umm, to my internal queue *blush*
+
+Now applied to 'next' branch and pushed out.
+
+Thanks.
+
+-- 
+Dmitry
