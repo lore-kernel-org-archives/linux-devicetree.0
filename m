@@ -2,128 +2,171 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7272C1744A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 00:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C457CC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 00:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C019222C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 00:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LsEHNxuN"
+	by mail.kernel.org (Postfix) with ESMTP id 99FA821D7F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 00:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573519460;
+	bh=9sS35dLM1rvvJ4R++M6VovpfEgrfV5/99jZT1HQ5mJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mgGGoz4JrFWc2XZcpAREJ/T0p3kSgcPbpL4JstoVefEWNvvfHK1m6QP6VsCCTq0HT
+	 IgxTdABBSrpgubFTMYBs0Z9m8yc2y6hH/FGTq9ZG5fF4SOrxIoiKLxX99eIZFDFK6Z
+	 61hCq946klvaZmh59VcvFmj0Un6qBDYt730ajmvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfKLAUI (ORCPT
+        id S1726928AbfKLAoU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 19:20:08 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42454 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbfKLAUI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 19:20:08 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s5so11951143pfh.9
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 16:20:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=i3QVtv45Axk545voSCTdnsYQERVAGrIgwCeqw/o3MX4=;
-        b=LsEHNxuNOsi4smeIUmloCDxQwN5wRT573S/dAcRBGQmdn1PyWUEE9OCntdlNebllY0
-         tqwl/eRcJss7RnMsihQjohvTPAUWT6tFej9W29LueU8pO2WEFNtm6j4GfDXuGHLZstU8
-         wgYDR0ZZNkcghB2cgaOOxCjkKmEDYo8vR2E8Y=
+        Mon, 11 Nov 2019 19:44:20 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37822 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfKLAoU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 19:44:20 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d5so12881048otp.4;
+        Mon, 11 Nov 2019 16:44:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=i3QVtv45Axk545voSCTdnsYQERVAGrIgwCeqw/o3MX4=;
-        b=nJcujoyFc2HUZqv6jaGyKi7O3J5LHZUQU63J7aJcMKGeOGBgZnd2ejfGqYCIDW3Xxt
-         BjcfmAgaUEKpdUIqhl/GeOto1rvaV7zNjjJni7JewbNntww3g4mXCfkSQxJMCmKPhq83
-         qMq7YlLFuwY7duzPLG/XOj+S1yKY3uoQrL8VRWrBiRY6z3aeIFuV5vwvUIabWNgsniMa
-         IqXzNqlWXROwD3zrNDblgtHG4Eklk42G70cYlti/SVZaF6BAzyST28E9+K0KQ00csSZW
-         kNHvziLfsYTZb6SVeiqN40cTJMO1Y3k197F5Ozb5IxwkAGd8XqKj92xf9KgZiG9fpT+q
-         uceQ==
-X-Gm-Message-State: APjAAAXo4wS2S0wh8GDnewUw2aHrlhQyyaFESza/zjqTnLroW+S1ZKj+
-        9Orud5bVcQePmKqb2s9T6m4Lcw==
-X-Google-Smtp-Source: APXvYqxzTENXdlmig2BxhIs7QT2d4w+X0eoLnSbb7/QBWfE3yeHGYTXXdZ2kzCALg0JoqA1Yj05w6Q==
-X-Received: by 2002:aa7:9e52:: with SMTP id z18mr32297912pfq.149.1573518007037;
-        Mon, 11 Nov 2019 16:20:07 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id h23sm8430898pgg.58.2019.11.11.16.20.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Vfe9Fg7BmbDCLOpxmVpT7Cu0nR/H6JXWKbwODF2l2L0=;
+        b=BYEE/fEHgsIMq9l0w5p1hlAN4RqHln1gWWvwmaHdF+uLtl5xbdvsEWdkG+vWhmOHfu
+         J5TYND7sJf3NDGNUGNsOAlqBUTHkUWgeKyvGdHFzoJCPcUPLjF+cX9H8KzUwX6EYDAPA
+         BuPBReEYP2yNrWt9qJ2btXKDRk1ebeUn+6gG1bA4FY7JhbQVan33StqdxC9tOvfYUqj3
+         +vFn4QkO92Ck7YzVspT3xe/qSfSjVTzhd59/n/8Q7CcV3BaYJkcJ5K3/o/TTafaxwR8j
+         vZwpx8Ns8avewJ/IBzClWPDrhPE7L5y4ijqXhnxUJFj7evgz0+uixVfeSvy8KkqH2Rnp
+         knzA==
+X-Gm-Message-State: APjAAAVSDp2LVjPF5F9geZrxoTXqHKPvrHmxdq9enPVeexQwzVIM5/pt
+        4j///2DdLwq37Pz9Be/lsA==
+X-Google-Smtp-Source: APXvYqzF36pipFPrfQSDb0XrigmalI4FTBoRhRDY4hsis2SzkDYu16sSKQh1L3XO/f36b7A7IKthgw==
+X-Received: by 2002:a9d:365:: with SMTP id 92mr1083256otv.9.1573519458955;
+        Mon, 11 Nov 2019 16:44:18 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 100sm5621630otl.48.2019.11.11.16.44.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 16:20:06 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v3 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
-Date:   Mon, 11 Nov 2019 16:19:49 -0800
-Message-Id: <20191112001949.136377-5-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191112001949.136377-1-abhishekpandit@chromium.org>
-References: <20191112001949.136377-1-abhishekpandit@chromium.org>
+        Mon, 11 Nov 2019 16:44:18 -0800 (PST)
+Date:   Mon, 11 Nov 2019 18:44:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
+ MSM8998 gcc
+Message-ID: <20191112004417.GA16664@bogus>
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for pcm parameters.
+On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
+> The global clock controller on MSM8998 can consume a number of external
+> clocks.  Document them.
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> index e73a56f..2f3512b 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> @@ -40,20 +40,38 @@ properties:
+>         - qcom,gcc-sm8150
+>  
+>    clocks:
+> -    minItems: 1
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+1 or 2 clocks are no longer allowed?
 
----
+> -    maxItems: 3
+> -    items:
+> -      - description: Board XO source
+> -      - description: Board active XO source
+> -      - description: Sleep clock source
+> +    oneOf:
+> +      #qcom,gcc-sm8150
+> +      #qcom,gcc-sc7180
 
-Changes in v3:
-- Change disallow baudrate setting to return -EBUSY if called before
-  ready. bcm_proto is no longer modified and is back to being const.
-- Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
-- Changed brcm,sco-routing to brcm,bt-sco-routing
+Typically, this would be an if/then schema, but I'm okay with leaving it 
+like this. Depends whether you want to check the clocks match the 
+compatible.
 
-Changes in v2:
-- Use match data to disallow baudrate setting
-- Parse pcm parameters by name instead of as a byte string
-- Fix prefix for dt-bindings commit
+> +      - items:
+> +        - description: Board XO source
+> +        - description: Board active XO source
+> +        - description: Sleep clock source
+> +      #qcom,gcc-msm8998
+> +      - items:
+> +        - description: Board XO source
+> +        - description: USB 3.0 phy pipe clock
+> +        - description: UFS phy rx symbol clock for pipe 0
+> +        - description: UFS phy rx symbol clock for pipe 1
+> +        - description: UFS phy tx symbol clock
+> +        - description: PCIE phy pipe clock
+>  
+>    clock-names:
+> -    minItems: 1
+> -    maxItems: 3
+> -    items:
+> -      - const: bi_tcxo
+> -      - const: bi_tcxo_ao
+> -      - const: sleep_clk
+> +    oneOf:
+> +      #qcom,gcc-sm8150
+> +      #qcom,gcc-sc7180
+> +      - items:
+> +        - const: bi_tcxo
+> +        - const: bi_tcxo_ao
+> +        - const: sleep_clk
+> +      #qcom,gcc-msm8998
+> +      - items:
+> +        - const: xo
+> +        - const: usb3_pipe
+> +        - const: ufs_rx_symbol0
+> +        - const: ufs_rx_symbol1
+> +        - const: ufs_tx_symbol0
+> +        - const: pcie0_pipe
+>  
+>    '#clock-cells':
+>      const: 1
+> @@ -118,6 +136,7 @@ else:
+>        compatible:
+>          contains:
+>            enum:
+> +            - qcom,gcc-msm8998
+>              - qcom,gcc-sm8150
+>              - qcom,gcc-sc7180
+>    then:
+> @@ -179,8 +198,8 @@ examples:
+>      clock-controller@100000 {
+>        compatible = "qcom,gcc-sc7180";
+>        reg = <0x100000 0x1f0000>;
+> -      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
+> -      clock-names = "bi_tcxo", "bi_tcxo_ao";
+> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
+> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
 
- .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+The patch subject says 8998, but this is changing sc7180. 
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index c749dc297624..42fb2fa8143d 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -29,6 +29,11 @@ Optional properties:
-    - "lpo": external low power 32.768 kHz clock
-  - vbat-supply: phandle to regulator supply for VBAT
-  - vddio-supply: phandle to regulator supply for VDDIO
-+ - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
-+ - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
-+ - brcm,pcm-frame-type: 0-1 (short, long)
-+ - brcm,pcm-sync-mode: 0-1 (slave, master)
-+ - brcm,pcm-clock-mode: 0-1 (slave, master)
- 
- 
- Example:
-@@ -40,5 +45,11 @@ Example:
-        bluetooth {
-                compatible = "brcm,bcm43438-bt";
-                max-speed = <921600>;
-+
-+               brcm,bt-sco-routing = [01];
-+               brcm,pcm-interface-rate = [02];
-+               brcm,pcm-frame-type = [00];
-+               brcm,pcm-sync-mode = [01];
-+               brcm,pcm-clock-mode = [01];
-        };
- };
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
-
+>        #clock-cells = <1>;
+>        #reset-cells = <1>;
+>        #power-domain-cells = <1>;
+> -- 
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
