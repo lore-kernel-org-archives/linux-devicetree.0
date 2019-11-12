@@ -2,104 +2,232 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB715C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821CCC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9D2214E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 10:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573556311;
-	bh=0tn0SSq34Svy8n1BIxdttpUNZiZ/1cS4utciXJL4s+E=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=2QnNJ3RZ9lbYzijeMrntw2SFuYaB3CIAxyFI9IaFr716z7kOtv0zcxH/YnLrXHp37
-	 SAlwsqBNbBR2Qh04uivasntg68zjyUIWKyb+M23IIJBdu8PXCg+Wzk/+PA39HqqgOL
-	 bEzei4ARJXsDcv5B2iwJt/H/4rRbElzWn2VgbqM0=
+	by mail.kernel.org (Postfix) with ESMTP id 4D11B214E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:04:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K8pqxR84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbfKLK6b (ORCPT
+        id S1726977AbfKLLE2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 05:58:31 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:55582 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725834AbfKLK6b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 05:58:31 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iUTsQ-0005QJ-GI; Tue, 12 Nov 2019 11:58:26 +0100
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v7 0/2] Add support for Layerscape external interrupt  lines
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 12 Nov 2019 06:04:28 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45119 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfKLLE1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 06:04:27 -0500
+Received: by mail-pg1-f196.google.com with SMTP id w11so11585537pga.12
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 03:04:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uFhjUJFs5no4yiSlxY1BbjA9nXYA5kYuXUrDXqqyYHs=;
+        b=K8pqxR84jS9pwV24nmhOTvuCjxZjWeopPAXLjsU9s0DgZ27WLwSdic0hrUXkLpfPFK
+         nDx3fovBqn9s6Q8iMI4Xc5DnT4XL08sn5MySWYQPNvcV5a0xQfssVe8EnA0kXZ1W+3Qr
+         M7MwKlnaQYKVBY9FPsVZA2MmdoBrtU4Ac4wms=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uFhjUJFs5no4yiSlxY1BbjA9nXYA5kYuXUrDXqqyYHs=;
+        b=MnWK/hWWo5dIS/Z6jhi/qRNuSKL3AUti2qa6gZDV5fd/CuCG/HXCCHYfYMpjgpPzIQ
+         SMoEXCzzMCh19gWp9Q64GmMN+W6zfOONpDw5RhpEvfqSkFscAdXqcODlhsP5Ca/cC5ze
+         jeOEKNZqUuRZNyB+Si7nXzFnn31x556o4euEwNCrhfc4pFNOiHk+5Z542JmftsrIrWeI
+         h0CMFE4SiTlcJNTyJQERiPIKmB0QcYXr+b7USQuwlpq8yOS27OWofIBvKG2wFPFjOC/X
+         Mp2a2YIBvN2bv0HtufSDomN0Al6MSSDfrQzeoqbm16RvgA5H8r8VOo8hEiWTioaUjhvM
+         CErg==
+X-Gm-Message-State: APjAAAWO8KYp3W5XrmtvTXhIuZusvumYrHIAxPCdpWZPSvMjPtb6+7Ws
+        RvPMjSaWQCvQS/oOH7tmMxuo+g==
+X-Google-Smtp-Source: APXvYqyTQedqUkzhJsI4mPQBlLlsEJbFBlBQ4HI5KnQSbc/jCorqCINBQJyavGatvvs1sABtGK8maQ==
+X-Received: by 2002:a17:90a:1446:: with SMTP id j64mr5766266pja.142.1573556663436;
+        Tue, 12 Nov 2019 03:04:23 -0800 (PST)
+Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
+        by smtp.googlemail.com with ESMTPSA id 6sm21528389pfy.43.2019.11.12.03.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 03:04:22 -0800 (PST)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), linux-kernel@vger.kernel.org (open list),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support),
+        linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR
+        (REMOTEPROC) SUBSYSTEM)
+Subject: [PATCH v21 0/4] Add support for mt8183 SCP.
+Date:   Tue, 12 Nov 2019 19:03:23 +0800
+Message-Id: <20191112110330.179649-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
-Date:   Tue, 12 Nov 2019 12:07:47 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Kurt Kanzenbach <kurt@linutronix.de>,
-        Vladimir Oltean <olteanv@gmail.com>
-In-Reply-To: <184b684a-7712-a280-fdc2-83d7abd3cbd4@rasmusvillemoes.dk>
-References: <20191107122115.6244-1-linux@rasmusvillemoes.dk>
- <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
- <184b684a-7712-a280-fdc2-83d7abd3cbd4@rasmusvillemoes.dk>
-Message-ID: <8e1877ab5a1fecace3b2383789bdf404@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: linux@rasmusvillemoes.dk, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kurt@linutronix.de, olteanv@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-12 11:27, Rasmus Villemoes wrote:
-> On 11/11/2019 11.24, Marc Zyngier wrote:
->> On 2019-11-07 13:30, Rasmus Villemoes wrote:
->
->>> Rasmus Villemoes (2):
->>>   dt/bindings: Add bindings for Layerscape external irqs
->>>   irqchip: add support for Layerscape external interrupt lines
->>>
->>>  .../interrupt-controller/fsl,ls-extirq.txt    |  49 +++++
->>>  drivers/irqchip/Kconfig                       |   4 +
->>>  drivers/irqchip/Makefile                      |   1 +
->>>  drivers/irqchip/irq-ls-extirq.c               | 197 
->>> ++++++++++++++++++
->>>  4 files changed, 251 insertions(+)
->>>  create mode 100644
->>>
->>> 
->>> Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
->>>  create mode 100644 drivers/irqchip/irq-ls-extirq.c
->>
->> Applied to irqchip-next.
->
-> Thanks! Can I assume that branch doesn't get rebased so 87cd38dfd9e6 
-> is
-> a stable SHA1? I want to send a patch adding the node to 
-> ls1021a.dtsi,
-> and I hope not to have to wait another release cycle.
+Add support for controlling and communicating with mt8183's system
+control processor (SCP), using the remoteproc & rpmsg framework.
+And also add a cros_ec driver for CrOS EC host command over rpmsg.
 
-I usually try to avoid rebasing it, unless something really bad shows 
-up.
+The overall structure of the series is:
+* remoteproc/mtk_scp.c: Control the start / stop of SCP (Patch 2).
+* remoteproc/mtk_scp_ipi.c: Communicates to SCP using inter-processor
+  interrupt (IPI) and shared memory (Patch 2).
+* rpmsg/mtk_rpmsg.c: Wrapper to wrap the IPI communication into a rpmsg
+  device. Supports name service for SCP firmware to
+  announce channels (Patch 3).
+* add scp dts node to mt8183 platform (Patch 4).
 
-Now, just adding a node to a DT shouldn't break anything, right? You
-should be able to do that change and get things working magically once
-this code hits mainline.
+Changes from v20:
+ - Change all public API usage of (struct platform_device *) to (struct
+   mtk_scp *).
+ - Rename some variables and functions to be more specific.
+ - Move docs to implementation, and improve docs.
+ - Address review comments.
 
-Or am I missing something?
+Changes from v19:
+ - Fix an incorrect include in mtk_rpmsg.h (linux/device.h ->
+   linux/platform_device.h)
 
-         M.
+Changes from v18:
+ - Change the way shared memory is handled, and drop patch 3.
+
+Changes from v17:
+ - Fix mixture use of __iomem found by sparse.
+ - Change the ipi handler to take a u32 instead of enum scp_ipi_id.
+ - Mark mtk_rpmsg_{prepare,unprepare,stop} as static.
+
+Changes from v16:
+ - Change the desc_lock mutex to be a per-id lock.
+ - Put the execution of handler inside the per-id lock, to prevent race
+   between scp_ipi_unregister and handler being run.
+ - Move the initialization of mutex to before scp_ipi_register.
+
+Changes from v15:
+ - Fix a bug on incorrect usage of wait_event_timeout return value.
+
+Changes from v14:
+ - Fix a typo on variable in DEBUG section.
+
+Changes from v13:
+ - Move include/linux/platform_data/mtk_scp.h to
+   include/linux/remoteproc/mtk_scp.h.
+ - Rename scp_get_reserve_* to scp_get_reserved_*.
+ - Add lock for access of scp->ipi_desc.
+ - Lock the whole ipi_send function.
+ - Move more setting of cache size from SCP firmware to kernel driver,
+   to prevent problem while loading firmware onto DRAM.
+ - Minor fixes addressing comment.
+
+Changes from v12:
+ - Initialize cache before firmware load, to avoid problem while loading
+   large firmware.
+ - Disable watchdog before stopping SCP, to avoid extra warning message.
+ - Fix new warnings by checkpatch.
+
+Changes from v11:
+ - Fixed a bug that mtk_rpmsg_endpoint is not properly cleaned up if
+   rproc_boot fails.
+ - Add missing documentation in comment.
+
+Changes from v10:
+ - Drop applied cros_ec_rpmsg patches.
+ - Add clock reset before loading SCP firmware.
+ - Fix some type mismatch warnings when printing debug messages.
+
+Changes from v9:
+ - Remove reserve-memory-vpu_share node.
+ - Remove change to cros_ec_commands.h (That is already in
+   https://lore.kernel.org/lkml/20190518063949.GY4319@dell/T/)
+
+Changes from v8:
+ - Rebased onto https://patchwork.kernel.org/cover/10962385/.
+ - Drop merged cros_ec_rpmsg patch, and add scp dts node patch.
+ - Add more reserved memory region.
+
+Changes from v7:
+ - Rebase onto https://lore.kernel.org/patchwork/patch/1059196/.
+ - Fix clock enable/disable timing for SCP driver.
+ - Add more SCP IPI ID.
+
+Changes from v6:
+ - Decouple mtk_rpmsg from mtk_scp.
+ - Change data of EC response to be aligned to 4 bytes.
+
+Changes from v5:
+ - Add device tree binding document for cros_ec_rpmsg.
+ - Better document in comments for cros_ec_rpmsg.
+ - Remove dependency on CONFIG_ in binding tree document.
+
+Changes from v4:
+ - Merge patch 6 (Load ELF firmware) into patch 2, so the driver loads
+   ELF firmware by default, and no longer accept plain binary.
+ - rpmsg_device listed in device tree (as a child of the SCP node) would
+   have it's device tree node mapped to the rpmsg_device, so the rpmsg
+   driver can use the properties on device tree.
+
+Changes from v3:
+ - Make writing to SCP SRAM aligned.
+ - Add a new patch (Patch 6) to load ELF instead of bin firmware.
+ - Add host event support for EC driver.
+ - Fix some bugs found in testing (missing spin_lock_init,
+   rproc_subdev_unprepare to rproc_subdev_stop).
+ - Fix some coding style issue found by checkpatch.pl.
+
+Changes from v2:
+ - Fold patch 3 into patch 2 in v2.
+ - Move IPI id around to support cross-testing for old and new firmware.
+ - Finish more TODO items.
+
+Changes from v1:
+ - Extract functions and rename variables in mtk_scp.c.
+ - Do cleanup properly in mtk_rpmsg.c, which also removes the problem of
+   short-lived work items.
+ - Code format fix based on feedback for cros_ec_rpmsg.c.
+ - Extract feature detection for SCP into separate patch (Patch 6).
+
+Eddie Huang (1):
+  arm64: dts: mt8183: add scp node
+
+Erin Lo (2):
+  dt-bindings: Add a binding for Mediatek SCP
+  remoteproc/mediatek: add SCP support for mt8183
+
+Pi-Hsun Shih (1):
+  rpmsg: add rpmsg support for mt8183 SCP.
+
+ .../bindings/remoteproc/mtk,scp.txt           |  36 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |  11 +
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  12 +
+ drivers/remoteproc/Kconfig                    |  10 +
+ drivers/remoteproc/Makefile                   |   1 +
+ drivers/remoteproc/mtk_common.h               |  94 +++
+ drivers/remoteproc/mtk_scp.c                  | 663 ++++++++++++++++++
+ drivers/remoteproc/mtk_scp_ipi.c              | 219 ++++++
+ drivers/rpmsg/Kconfig                         |   9 +
+ drivers/rpmsg/Makefile                        |   1 +
+ drivers/rpmsg/mtk_rpmsg.c                     | 414 +++++++++++
+ include/linux/remoteproc/mtk_scp.h            |  66 ++
+ include/linux/rpmsg/mtk_rpmsg.h               |  38 +
+ 13 files changed, 1574 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+ create mode 100644 drivers/remoteproc/mtk_common.h
+ create mode 100644 drivers/remoteproc/mtk_scp.c
+ create mode 100644 drivers/remoteproc/mtk_scp_ipi.c
+ create mode 100644 drivers/rpmsg/mtk_rpmsg.c
+ create mode 100644 include/linux/remoteproc/mtk_scp.h
+ create mode 100644 include/linux/rpmsg/mtk_rpmsg.h
+
+
+base-commit: fc6d6db1df2cb11bbecc542d67885742e75b4b07
 -- 
-Jazz is not dead. It just smells funny...
+2.24.0.rc1.363.gb1bccd3e3d-goog
+
