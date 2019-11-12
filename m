@@ -2,147 +2,105 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E504C17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8565C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463D021925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92782084F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfKLPj4 (ORCPT
+        id S1726980AbfKLPpf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:39:56 -0500
-Received: from muru.com ([72.249.23.125]:41856 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfKLPj4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:39:56 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 58E0B80F3;
-        Tue, 12 Nov 2019 15:40:31 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 07:39:51 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [Patch v2 1/3] ARM: dts: am43xx: add support for clkout1 clock
-Message-ID: <20191112153951.GJ5610@atomide.com>
-References: <20191112142929.23058-1-bparrot@ti.com>
- <20191112142929.23058-2-bparrot@ti.com>
+        Tue, 12 Nov 2019 10:45:35 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:37289 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfKLPpf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 10:45:35 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xACFj30l012226, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xACFj30l012226
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 12 Nov 2019 23:45:03 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Tue, 12 Nov 2019 23:45:03 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 12 Nov 2019 23:45:02 +0800
+Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
+ ([fe80::3d7d:f7db:e1fb:307b%12]) with mapi id 15.01.1779.005; Tue, 12 Nov
+ 2019 23:45:02 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?iso-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "'DTML'" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+Subject: [PATCH v3 0/2] arm64: dts: Initial RTD1619 SoC and Realtek Mjolnir EVB support
+Thread-Topic: [PATCH v3 0/2] arm64: dts: Initial RTD1619 SoC and Realtek
+ Mjolnir EVB support
+Thread-Index: AdWZPXXTjSlMF45pSpOBNdAR/51KoA==
+Date:   Tue, 12 Nov 2019 15:45:02 +0000
+Message-ID: <540b62715e77486485365081e992af76@realtek.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.37.182.66]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112142929.23058-2-bparrot@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Benoit Parrot <bparrot@ti.com> [191112 14:30]:
-> From: Tero Kristo <t-kristo@ti.com>
-> 
-> clkout1 clock node and its generation tree was missing. Add this based
-> on the data on TRM and PRCM functional spec.
-> 
-> commit 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes") effectively
-> reverted this commit 8010f13a40d3 ("ARM: dts: am43xx: add support for
-> clkout1 clock") which is needed for the ov2659 camera sensor clock
-> definition hence it is being re-applied here.
-> 
-> Note that because of the current dts node name dependency for mapping to
-> clock domain, we must still use "clkout1-*ck" naming instead of generic
-> "clock@" naming for the node. And because of this, it's probably best to
-> apply the dts node addition together along with the other clock changes.
-> 
-> Fixes: 664ae1ab2536 ("ARM: dts: am43xx: add clkctrl nodes")
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Tested-by: Benoit Parrot <bparrot@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+Hi,
 
-Hmm I don't think I did any work on this, the above should be:
+This series adds initial Device Trees for Realtek RTD1619 SoC and
+Realtek Mjolnir EVB.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+v2 -> v3:
+* Adjust the address-cells and address-size property of root node
+* Adjust ranges property of r-bus node
+* Adjust uart node addressing
+* Add comments for uart node
+* Revert soc node
 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> index 091356f2a8c1..c726cd8dbdf1 100644
-> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> @@ -704,6 +704,60 @@
->  		ti,bit-shift = <8>;
->  		reg = <0x2a48>;
->  	};
-> +
-> +	clkout1_osc_div_ck: clkout1-osc-div-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,divider-clock";
-> +		clocks = <&sys_clkin_ck>;
-> +		ti,bit-shift = <20>;
-> +		ti,max-div = <4>;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_src2_mux_ck: clkout1-src2-mux-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,mux-clock";
-> +		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
-> +			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
-> +			 <&dpll_mpu_m2_ck>;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_src2_pre_div_ck: clkout1-src2-pre-div-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,divider-clock";
-> +		clocks = <&clkout1_src2_mux_ck>;
-> +		ti,bit-shift = <4>;
-> +		ti,max-div = <8>;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_src2_post_div_ck: clkout1-src2-post-div-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,divider-clock";
-> +		clocks = <&clkout1_src2_pre_div_ck>;
-> +		ti,bit-shift = <8>;
-> +		ti,max-div = <32>;
-> +		ti,index-power-of-two;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_mux_ck: clkout1-mux-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,mux-clock";
-> +		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
-> +			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
-> +		ti,bit-shift = <16>;
-> +		reg = <0x4100>;
-> +	};
-> +
-> +	clkout1_ck: clkout1-ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&clkout1_mux_ck>;
-> +		ti,bit-shift = <23>;
-> +		reg = <0x4100>;
-> +	};
->  };
->  
->  &prcm {
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+v1 -> v2:
+* Define compatible strings for Realtek RTD1619 SoC and Realtek Mjolnir
+* Add uart1 and uart2 device node into rtd16xx.dtsi
+* move cpus node and the interrupt-affinity into rtd16xx.dtsi
+* Specify the r-bus ranges
+
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Andreas Färber <afaerber@suse.de>
+
+James Tai (2):
+  dt-bindings: arm: realtek: Document RTD1619 and Realtek Mjolnir EVB
+  arm64: dts: realtek: Add RTD1619 SoC and Realtek Mjolnir EVB
+
+ .../devicetree/bindings/arm/realtek.yaml      |   6 +
+ arch/arm64/boot/dts/realtek/Makefile          |   2 +
+ .../boot/dts/realtek/rtd1619-mjolnir.dts      |  40 +++++
+ arch/arm64/boot/dts/realtek/rtd1619.dtsi      |  12 ++
+ arch/arm64/boot/dts/realtek/rtd16xx.dtsi      | 163 ++++++++++++++++++
+ 5 files changed, 223 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1619.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+
+-- 
+2.24.0
+
