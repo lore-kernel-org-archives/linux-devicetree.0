@@ -2,98 +2,69 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32047C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF395C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0557B21A49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:03:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TLMp9JmQ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e/QkaBjR"
+	by mail.kernel.org (Postfix) with ESMTP id C1AC520674
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKLJDT (ORCPT
+        id S1726952AbfKLJKf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:03:19 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:50738 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfKLJDT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 04:03:19 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9453A60D93; Tue, 12 Nov 2019 09:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573549398;
-        bh=LHrXLLcNflZB2+NvOcUkU7ZFzJgbXbolPPApRHfDjVg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TLMp9JmQjQAvPoSUwrfRnjN2pIv2GmlbxzFbSN7Y+O65rz7PfHaofd4oD012w1bAh
-         WXBDQyFZvdYx+J+Zl1sc3HPFYAClkjY48lGg3RdW4fN4B3pbU1+XcaH4+vfPTYXsjy
-         Pq1l6CThVSYlBM/gbYcHT1r8pMqwqIWIUIvImdPU=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 2E62B601B4;
-        Tue, 12 Nov 2019 09:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573549396;
-        bh=LHrXLLcNflZB2+NvOcUkU7ZFzJgbXbolPPApRHfDjVg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e/QkaBjRxOp4UK+rzyhGuw5XcZ68Git7gpVqeQP6Q8qx4xZpyzsSBpoHCy9VUackf
-         jvXosEZBErKg5KmWUPByAgC9LW7+R3NkSq9bKCEKUDlSOIZx4IcQHyi6PPTvUIhr+T
-         DLlD9gouGAwhiN5p9InA+Hrn2J5M8llQAVR+frHo=
+        Tue, 12 Nov 2019 04:10:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:32887 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfKLJKf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 04:10:35 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iUSC1-0006o6-9f; Tue, 12 Nov 2019 10:10:33 +0100
+Date:   Tue, 12 Nov 2019 10:10:32 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] of: allocate / free phandle cache outside of the
+ devtree_lock
+Message-ID: <20191112091032.aa23wd24j4b324kw@linutronix.de>
+References: <20191111172142.ozczh7j2gmzi7o5k@linutronix.de>
+ <CAL_JsqLecYPGGP8grE7sUgD1ZBYeVhuqX_sOT_9Rw1LM1yhSmw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 12 Nov 2019 14:33:14 +0530
-From:   kgunda@codeaurora.org
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     swboyd@chromium.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and
- pm6150l
-In-Reply-To: <20191111112842.GK3218@dell>
-References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
- <20191111112842.GK3218@dell>
-Message-ID: <8a6ae98c18ba7bc2effa535dfa0f647c@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLecYPGGP8grE7sUgD1ZBYeVhuqX_sOT_9Rw1LM1yhSmw@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-11 16:58, Lee Jones wrote:
-> On Tue, 05 Nov 2019, Kiran Gunda wrote:
+On 2019-11-11 21:35:35 [-0600], Rob Herring wrote:
+> >    28d0e36bf9686 ("OF: Fixup resursive locking code paths")
+> >    d6d3c4e656513 ("OF: convert devtree lock from rw_lock to raw spinlock")
 > 
->> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
->> found on SC7180 based platforms.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> ---
->>  - Changes from V1:
->>    Sorted the macros and compatibles.
->> 
->>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
->>  drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
->>  2 files changed, 6 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt 
->> b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> index 1437062..b5fc64e 100644
->> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> @@ -32,6 +32,8 @@ Required properties:
->>                     "qcom,pm8998",
->>                     "qcom,pmi8998",
->>                     "qcom,pm8005",
->> +		   "qcom,pm6150",
->> +		   "qcom,pm6150l",
+> So to summarize, we changed mainline to fix RT which then broke RT. :)
+
+correct, but we were good until v4.17-rc1 :)
+
+> > I've been looking into making devtree_lock a spinlock_t which would
+> > avoid this patch. I haven't seen an issue during boot on arm64 even
+> > with hotplug.
 > 
-> Tabbing looks off.
-yes. Placed a tab mistakenly. Going to address in next post.
+> Did you look into using RCU reader locks any more?
+
+A little bit. The writers, which modify the node, would need to replace
+the whole node. So this is where things got a little complicated.
+Frank wasn't a big fan of it back then and he still wasn't a few weeks
+back.
+If you two agree to prefer RCU over this patch then I would look more
+into adding RCU into the lookup path. The argument was that this isn't
+time critical. I'm just trying to avoid to replace the locking for
+nothing.
+So, should I come up with a RCU patch?
+
+> Rob
+
+Sebastian
