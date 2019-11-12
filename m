@@ -2,209 +2,163 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E73AC17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00351C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28613214E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB80820659
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HbwnJAn1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Yz+J/1Vy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vWoXjYFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfKLQZt (ORCPT
+        id S1727171AbfKLRRm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:25:49 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:36096 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfKLQZt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 11:25:49 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EB4E660909; Tue, 12 Nov 2019 16:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573575947;
-        bh=DXkWV66VkppVyJ+i/rYBmYzA5hXfIYYXNPGMHx1zrQc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HbwnJAn1ILUq/icq4thw2EebaC0DSTP96B2LFVOovATYTih09MkDUkTMc998SutWt
-         kkH/4TcQLpAtxo0btcpPmhTZUs6kOX2Zf/qivSXVnkbB0m1nDlOUEmyBqMTW8YSY6j
-         UWsvqRb0faQMvklkTYtl0a3/IOh251BPNFoGlgQ0=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DDB0A6053B;
-        Tue, 12 Nov 2019 16:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573575944;
-        bh=DXkWV66VkppVyJ+i/rYBmYzA5hXfIYYXNPGMHx1zrQc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Yz+J/1VyCQQpVfU0+a3O5kA5mGybn8BMb+BYrndOIVQ6h8vy9iy089MlUHCu1yKtH
-         I6d1dbaD43ebM3Qu7Y2D7kSwEyMCdUWUrQRMySQYqZMSMDXGF1PeqUZSG+hTLXbbZw
-         RGkxPMxv9zRgAxMlB7rPv6qrIGahfSt/sYt6couA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDB0A6053B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-To:     Rob Herring <robh@kernel.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
- <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
- <20191112004417.GA16664@bogus>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
-Date:   Tue, 12 Nov 2019 09:25:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 12:17:42 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37815 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfKLRRl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 12:17:41 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p24so13834728pfn.4
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 09:17:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GAxdQVxMEKhKhuZoX/VBOrcEuUfwMEWl5fY0HVG6jDE=;
+        b=vWoXjYFmjOttZKwONjxJ81J/VCuN2XQRhnCSkqlhdQq9oK5QFka4Kd5xp3DT3VV3oY
+         zYlVuUuTw6pNdbRM0U88rhr9+IvK8p7V3byHtvvE2T222Ja6mvVJ1M3uPdl0vDtIMEJR
+         VuiojmGjxZGBlcczfLdrEsLa9LNOLsBJ8PcjE04J1euiQzsaVxJUrFmR1vGuJ1bLEFPV
+         5cf1Z7HXzlfFMFXqM6cJ049jXvSmW6Ze1gIk+LZ/9T80z3mMw9EGqPDudOtNhZrpx8Pf
+         CIE4bl5kz22UTrI9bVe5BSve8TehRyoQGGzTsDlNJkWMlMzjGPgqClFTZFgMOMRJhXR/
+         6hkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GAxdQVxMEKhKhuZoX/VBOrcEuUfwMEWl5fY0HVG6jDE=;
+        b=ZyCa2BTL2eR/RSBuyUJhlG9Zdm9LyJCH3qEOKC0g0MTKc3Q7DmF3KStlUjhq1zk9zI
+         t4W2KRhKUWjT7hLx9PIETf08hX1QPQQPo/9fy2sGoq/M1airzZ7vVsCDFuxhqfsGUGFh
+         fVKKFF4geom1K8YheaYTbJQSgkHwWyf1QXj9V8ssUE6agKzeZ5c3gj8bUgVNhcpIoUwz
+         ws5TDupo2BT1Rs+h4S7Z/uEsxXSVu/PfqY7RGnZUVv8N9NB6xLB/kUnFryA8LiLNZdKh
+         RguFiSBI7fB5lpCDzpODG+iqhJ7K7Tfst3mCvunwVH1dpnxm7dIK5YB2EfBicxR/hci5
+         YmIw==
+X-Gm-Message-State: APjAAAVE3NbGxgOARNs5nUhw5DDjnnrbKyu3AHW8Loz11B20V+je92HS
+        3HJXqLnrL4zHkgy4tkvrCJVu
+X-Google-Smtp-Source: APXvYqwtTdqQJZNRF2wCGHv2Dne2JxqgG/WDm44w3rTdj757M0nHUk5Wv2dL7mF3wT7UkK72qdkqSg==
+X-Received: by 2002:a17:90a:b394:: with SMTP id e20mr2437267pjr.130.1573579058856;
+        Tue, 12 Nov 2019 09:17:38 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:6488:b1d2:4134:76b9:cbea:403])
+        by smtp.gmail.com with ESMTPSA id p16sm20720040pfn.171.2019.11.12.09.17.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Nov 2019 09:17:37 -0800 (PST)
+Date:   Tue, 12 Nov 2019 22:47:29 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Kever Yang <kever.yang@rock-chips.com>
+Cc:     heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        Akash Gajjar <akash@openedev.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        daniel.lezcano@linaro.org
+Subject: Re: [PATCH 2/3] arm64: dts: rk3399-rock960: add vdd_log
+Message-ID: <20191112171726.GA18622@Mani-XPS-13-9360>
+References: <20191111005158.25070-1-kever.yang@rock-chips.com>
+ <20191111005158.25070-2-kever.yang@rock-chips.com>
+ <20191111052232.GA2842@Mani-XPS-13-9360>
+ <3d129826-7705-819e-e68b-cc9080eb6c95@rock-chips.com>
 MIME-Version: 1.0
-In-Reply-To: <20191112004417.GA16664@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3d129826-7705-819e-e68b-cc9080eb6c95@rock-chips.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/11/2019 5:44 PM, Rob Herring wrote:
-> On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
->> The global clock controller on MSM8998 can consume a number of external
->> clocks.  Document them.
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
->>   1 file changed, 33 insertions(+), 14 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> index e73a56f..2f3512b 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> @@ -40,20 +40,38 @@ properties:
->>          - qcom,gcc-sm8150
->>   
->>     clocks:
->> -    minItems: 1
+On Tue, Nov 12, 2019 at 04:10:17PM +0800, Kever Yang wrote:
 > 
-> 1 or 2 clocks are no longer allowed?
-
-Correct.
-
-The primary reason is that Stephen indicated in previous discussions 
-that if the hardware exists, it should be indicated in DT, regardless if 
-the driver uses it.  In the 7180 and 8150 case, the hardware exists, so 
-these should not be optional.
-
-The secondary reason is I found that the schema was broken anyways.  In 
-the way it was written, if you implemented sleep, you could not skip 
-xo_ao, however there is a dts that did exactly that.
-
-The third reason was that I couldn't find a way to write valid yaml to 
-preserve the original meaning.  when you have an "items" as a subnode of 
-"oneOf", you no longer have control over the minItems/maxItems, so all 3 
-became required anyways.  I find it disappointing that the "version" of 
-Yaml used for DT bindings is not documented, so after several hours of 
-trial and error, I just gave up since I found this to work (failed cases 
-just gave me an error with no indication of what was wrong, not even a 
-line number).
-
+> On 2019/11/11 下午1:22, Manivannan Sadhasivam wrote:
+> > Hi Kever,
+> > 
+> > On Mon, Nov 11, 2019 at 08:51:57AM +0800, Kever Yang wrote:
+> > > Add vdd_log node according to rock960 schematic V13.
+> > > 
+> > > Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> > > ---
+> > > 
+> > >   arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 12 ++++++++++++
+> > >   1 file changed, 12 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > > index c7d48d41e184..73afee257115 100644
+> > > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> > > @@ -76,6 +76,18 @@
+> > >   		regulator-always-on;
+> > >   		vin-supply = <&vcc5v0_sys>;
+> > >   	};
+> > > +
+> > > +	vdd_log: vdd-log {
+> > > +		compatible = "pwm-regulator";
+> > > +		pwms = <&pwm2 0 25000 1>;
+> > > +		regulator-name = "vdd_log";
+> > > +		regulator-always-on;
+> > > +		regulator-boot-on;
+> > > +		regulator-min-microvolt = <800000>;
+> > > +		regulator-max-microvolt = <1400000>;
+> > > +		regulator-init-microvolt = <950000>;
+> > The default value seems to be 0.9v as per both Rock960 and Ficus schematics.
 > 
->> -    maxItems: 3
->> -    items:
->> -      - description: Board XO source
->> -      - description: Board active XO source
->> -      - description: Sleep clock source
->> +    oneOf:
->> +      #qcom,gcc-sm8150
->> +      #qcom,gcc-sc7180
 > 
-> Typically, this would be an if/then schema, but I'm okay with leaving it
-> like this. Depends whether you want to check the clocks match the
-> compatible.
-
-Is there an example somewhere?  The only thing I found was 
-example-schema.yaml which seemed to suggest this way.
-
+> The default value is 0.9V when pwm-regulator is not enabled, and this
+> 'init-microvolt' suppose to set the
 > 
->> +      - items:
->> +        - description: Board XO source
->> +        - description: Board active XO source
->> +        - description: Sleep clock source
->> +      #qcom,gcc-msm8998
->> +      - items:
->> +        - description: Board XO source
->> +        - description: USB 3.0 phy pipe clock
->> +        - description: UFS phy rx symbol clock for pipe 0
->> +        - description: UFS phy rx symbol clock for pipe 1
->> +        - description: UFS phy tx symbol clock
->> +        - description: PCIE phy pipe clock
->>   
->>     clock-names:
->> -    minItems: 1
->> -    maxItems: 3
->> -    items:
->> -      - const: bi_tcxo
->> -      - const: bi_tcxo_ao
->> -      - const: sleep_clk
->> +    oneOf:
->> +      #qcom,gcc-sm8150
->> +      #qcom,gcc-sc7180
->> +      - items:
->> +        - const: bi_tcxo
->> +        - const: bi_tcxo_ao
->> +        - const: sleep_clk
->> +      #qcom,gcc-msm8998
->> +      - items:
->> +        - const: xo
->> +        - const: usb3_pipe
->> +        - const: ufs_rx_symbol0
->> +        - const: ufs_rx_symbol1
->> +        - const: ufs_tx_symbol0
->> +        - const: pcie0_pipe
->>   
->>     '#clock-cells':
->>       const: 1
->> @@ -118,6 +136,7 @@ else:
->>         compatible:
->>           contains:
->>             enum:
->> +            - qcom,gcc-msm8998
->>               - qcom,gcc-sm8150
->>               - qcom,gcc-sc7180
->>     then:
->> @@ -179,8 +198,8 @@ examples:
->>       clock-controller@100000 {
->>         compatible = "qcom,gcc-sc7180";
->>         reg = <0x100000 0x1f0000>;
->> -      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
->> -      clock-names = "bi_tcxo", "bi_tcxo_ao";
->> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
->> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+> init value when pwm-regulator is enabled. I set this to 950mV because Peter
+> report that he experience
 > 
-> The patch subject says 8998, but this is changing sc7180.
-
-I'm fixing up the example so that it no longer fails checks.  See the 
-above comment.
-
+> the system hang during Fedora boot  up, and update the vdd_log to 950mV can
+> fix the issue due to
 > 
->>         #clock-cells = <1>;
->>         #reset-cells = <1>;
->>         #power-domain-cells = <1>;
->> -- 
->> Qualcomm Technologies, Inc. is a member of the
->> Code Aurora Forum, a Linux Foundation Collaborative Project.
->>
+> engineer measure on another rk3399 board puma-Q7.
+> 
 
+okay. Previously we had post-boot hang issue on Rock960 Model A boards when the
+performance governor was set as default. So the vdd_log node was removed from
+the devicetree. Have you tested that case also?
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Here is the commit:
+13682e524167 ("arm64: dts: rockchip: remove vdd_log from rock960 to fix a stability issues")
+
+thanks,
+Mani
+> 
+> Thanks,
+> 
+> - Kever
+> 
+> > 
+> > Other than that,
+> > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > +		vin-supply = <&vcc_sys>;
+> > > +	};
+> > >   };
+> > >   &cpu_l0 {
+> > > -- 
+> > > 2.17.1
+> > > 
+> 
+> 
