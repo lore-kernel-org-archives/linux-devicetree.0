@@ -2,231 +2,100 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C0FC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F594C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3732067B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4662C2196E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573587585;
-	bh=1MKU32qu4bZ+rzKBmsoBVEFYZR5/JFL//34VWl5Vc7c=;
+	s=default; t=1573587752;
+	bh=Ufx9abnjCFiZMkVc20QJGrLEI8zqDpsCCQpJg7qZuQ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fhu7xklFqMLnbDAtHmJOnbqlIcKS/EAl1ny4EkpZopD2xsVtRctFbMhFtDcIT81F7
-	 C9kJj6z+cn5ZlIIsolTZClXl/vP4ysyEz44kHBo975YrGEtOroZ96Dp0JSCxvZRpQ+
-	 gc5PGDix9543pEb8X3oI55nki5Y7ESXZgI4sHqP4=
+	b=EyuEm+E162wfEGAASHeIPapJDJSu1RMAEO3naL/CasQlKOAbVeWpNs39jcEwYRNL/
+	 xTAWL4CpYEl63cqKpYXJfSr/tzfZ6PYZj1lXVAXxq98U3v+P9rB8yVPdfiklEe/NSb
+	 xVNeZO118Im4MqvlKcluv8+M9uGULlrQU00aNUBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKLTjp (ORCPT
+        id S1727083AbfKLTm2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:39:45 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43352 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfKLTjo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:39:44 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l20so15917093oie.10;
-        Tue, 12 Nov 2019 11:39:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2OeV1TEjg5DUl+fuWBn8Jfdeie+nCeDPsRLgvJFEBFg=;
-        b=GGhtCMHG4Nnq0mcudZ2vskjnPB/INf9fYZG7qn+y5YjOF39UD5h3LVHwf9oVmq7t0t
-         q+c8ZbVGw1vdyA/mxsbwD3gnN0xe6jryI6sCZmgmvQ3BoNByls09WG1J1ZIhWMO+GgZ0
-         4NCiUJBpF4NlGty+GY0KniDlbDVEJ5N99M7BvNIeNZDOxaHfwR1XIv0M81Hy+rB9I6+d
-         DuKMeRy7gQDn6JVxZuEg2b0lF3dsZsfCtVE3S3iQfe4AggY/i0Zn4YLSxQAwxYT1hdoe
-         UF32KEX0MQ0rCoymdJmAtIvmVswpLSPgYWNgR5h7A/BwyqBsNMd7x2TzvU/OF8VpRGw5
-         s96g==
-X-Gm-Message-State: APjAAAXEBHP5JI79uZRIFdoaTKkarxmp3/cad7VR3pbyCYIW8QbJctoS
-        mT9WlsvRSMX1P/6GIQQHyA==
-X-Google-Smtp-Source: APXvYqxnOqQm37cKu+NMagKIQidyM/CvP2y92s3RL4Lfv0Gxm8Qyd0vtW8Jg61doTgsADBWXFsSO3Q==
-X-Received: by 2002:aca:7285:: with SMTP id p127mr589107oic.120.1573587583113;
-        Tue, 12 Nov 2019 11:39:43 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l32sm6543738otl.74.2019.11.12.11.39.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:39:42 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:39:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
-        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
-Message-ID: <20191112193942.GA27334@bogus>
-References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
- <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
+        Tue, 12 Nov 2019 14:42:28 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59338 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKLTm2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:42:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ufx9abnjCFiZMkVc20QJGrLEI8zqDpsCCQpJg7qZuQ8=; b=eHvg7pxsDGBwmo1U4d5XHq7xW
+        rKM3wfPDvmwmlE1ODBu+LBSTLAnsPJv5MdFu7SlsbQnoAC0HHZgIBzzL045C54yvF4jeO/nkVZtHf
+        fR64RtElxiBkXUuEXpbUCNjFRr05A80wccLu+AYjJ7NbHK6SRnwRY9baflXj/JxVYv5EA=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iUc3U-0000Hz-So; Tue, 12 Nov 2019 19:42:24 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id E3B79274299F; Tue, 12 Nov 2019 19:42:23 +0000 (GMT)
+Date:   Tue, 12 Nov 2019 19:42:23 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+Message-ID: <20191112194223.GM5195@sirena.co.uk>
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com>
+ <20191112120307.GB5195@sirena.co.uk>
+ <20191112190328.GA199853@dtor-ws>
+ <20191112191547.GK5195@sirena.co.uk>
+ <20191112193653.GB13374@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pFpMklMRdxwSC3Yi"
 Content-Disposition: inline
-In-Reply-To: <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
+In-Reply-To: <20191112193653.GB13374@dtor-ws>
+X-Cookie: As famous as the unknown soldier.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 10:56:09AM -0300, Marcelo Schmitt wrote:
-> Add a devicetree schema for AD7292 monitor and control system.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> ---
-> Changelog V3 -> V4:
-> - updated SPDX identifier to GPL-2.0-only
-> - changed maxitems constraint on channel property
-> 
->  .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
->  MAINTAINERS                                   |   7 ++
->  2 files changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> new file mode 100644
-> index 000000000000..b68be3aaf587
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> @@ -0,0 +1,104 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
 
-Sigh, I gave you the exact line to use:
+--pFpMklMRdxwSC3Yi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+On Tue, Nov 12, 2019 at 11:36:53AM -0800, Dmitry Torokhov wrote:
 
-I've said to dual license with (GPL-2.0-only OR BSD-2-Clause) and people 
-think I mean to pick one. So now I just give the whole line. I don't 
-know how to be clearer.
+> As far as scheme goes - I hope that Rob could confirm that we can
+> override number of interrupts and names in consumers of the binding, as
+> needed.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7292 10-Bit Monitor and Control System
-> +
-> +maintainers:
-> +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> +
-> +description: |
-> +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-> +  Temperature Sensor, and GPIOs
-> +
-> +  Specifications about the part can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7292
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vref-supply:
-> +    description: |
-> +      The regulator supply for ADC and DAC reference voltage.
-> +
-> +  spi-cpha: true
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - spi-cpha
-> +
-> +patternProperties:
-> +  "^channel@[0-7]$":
-> +    type: object
-> +    description: |
-> +      Represents the external channels which are connected to the ADC.
-> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          The channel number. It can have up to 8 channels numbered from 0 to 7.
-> +        items:
-> +          maximum: 7
+Yes, I think that's the main worry here - if there's issue with the
+framework bit we should be able to sort that.
 
-Not what I said either. A slight but important difference in that you 
-are missing a '-' to make 'items' a list rather than a schema/dict.
+--pFpMklMRdxwSC3Yi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Update dt-schema. This should give a warning now.
+-----BEGIN PGP SIGNATURE-----
 
-> +
-> +      diff-channels:
-> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> +        maxItems: 1
-> +
-> +    required:
-> +      - reg
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      ad7292: adc@0 {
-> +        compatible = "adi,ad7292";
-> +        reg = <0>;
-> +        spi-max-frequency = <25000000>;
-> +        vref-supply = <&adc_vref>;
-> +        spi-cpha;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        channel@0 {
-> +          reg = <0>;
-> +          diff-channels = <0 1>;
-> +        };
-> +        channel@2 {
-> +          reg = <2>;
-> +        };
-> +        channel@3 {
-> +          reg = <3>;
-> +        };
-> +        channel@4 {
-> +          reg = <4>;
-> +        };
-> +        channel@5 {
-> +          reg = <5>;
-> +        };
-> +        channel@6 {
-> +          reg = <6>;
-> +        };
-> +        channel@7 {
-> +          reg = <7>;
-> +        };
-> +      };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 32bf5f8116d0..5d00e871c4c6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -813,6 +813,13 @@ S:	Supported
->  F:	drivers/iio/adc/ad7124.c
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
->  
-> +ANALOG DEVICES INC AD7292 DRIVER
-> +M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> +L:	linux-iio@vger.kernel.org
-> +W:	http://ez.analog.com/community/linux-device-drivers
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> +
->  ANALOG DEVICES INC AD7606 DRIVER
->  M:	Stefan Popa <stefan.popa@analog.com>
->  L:	linux-iio@vger.kernel.org
-> -- 
-> 2.23.0
-> 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3LCx8ACgkQJNaLcl1U
+h9CsMQf9EiGfHZdWSXq6DKiXomGkOIZ+BC27XAQ9dHxneP99B19i4vn584IKaeok
+EcBi6YqjpD1oIf2KBBixy/vaTlJuA07QV5NoORICvMR75gWy4XvWYt0UCZxGs1vY
+BNduo6rLmePAoRKjoBVT4e3H07cLkDxkZ6V4r0jZJIwleLZOsi5mDXlS8Rwd0C0k
+p8YLQBgmFFqiVqiJae/WgxzWuYCU0PgX93YXIGlLZgyDav2SQ62nyYcK5iMEwU4q
+15Y6cdvRZd4iRiMZJOaAW6cLdj607FKp7fj4Hh/uZKs7FzNnskcL0b+YpxNaRDIr
+g1kjE11Jqb1i/tG8C42S5ylH7HdDiQ==
+=MTTr
+-----END PGP SIGNATURE-----
+
+--pFpMklMRdxwSC3Yi--
