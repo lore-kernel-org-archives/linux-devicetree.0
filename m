@@ -2,119 +2,140 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC20CC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 13:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55797C17440
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 13:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C147321925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 13:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B11021783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 13:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwcU2/mI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsC3PmoM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKLNob (ORCPT
+        id S1726008AbfKLNrG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:44:31 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37982 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfKLNob (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 08:44:31 -0500
-Received: by mail-ed1-f65.google.com with SMTP id s10so14950078edi.5;
-        Tue, 12 Nov 2019 05:44:28 -0800 (PST)
+        Tue, 12 Nov 2019 08:47:06 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40362 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfKLNrG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 08:47:06 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 15so11875953pgt.7;
+        Tue, 12 Nov 2019 05:47:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gXwOc0pJ6hqLtPP5MF3njwCDDhwJ+LtuEm52q4JdFG0=;
-        b=YwcU2/mITcV4eLtuCPb7UvqNbE8wHLtLX/4m397nu8Ryp88ewpHBgxlJ1IB8gkm/4D
-         +y1zXkERVtNiYvtmcqA/ADrdJsNZd299zT6m+hZ3c/uSjcWwqOydkDXZKTG0ubCfpAxP
-         ySLfu1WWcUYFbJPmqrkVi56XkRw4sjEL/6hfDwSuUa1tY2xYk/7LkTNhAS5WxFJjIegZ
-         N5ZCaAi5dXg1YsV7viSgFpNHCw/3qlIqSCH24n3MVoSz1ppEHhSdBibhjzSvZk41K6yb
-         IHqYq40KcXiUX0IV4GA5YpfvxyUkaFbr9NL0u3slJap8qUMWvzk8Ipabi9HMPk5T21US
-         jCFA==
+        h=sender:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nbTKl7Y1bBMki5n9d7cr5r/s5MMepoc3ySY5hIEeh8E=;
+        b=JsC3PmoMFimkZKGX3RAKlUpul6TsVS7JJG0wdvhG8MU7QtwRwvRI4w05oTUkQ9EH5+
+         RT6AthZzJaskMmP4SOUbxmGJR38QaZ7K247F4eqboKdfNJ4uqqtQCm+hJyVH6sfIOA4K
+         2QZrGuQD0rmKVEKon/Jurfo+D8n7/vlL0a1Fpn8Y/QtYP9RgowKc+Ig1sK1mq/CeFCPR
+         eULUgJQyJih0WOe4tOzQAKV9MUUKFanZWVrso6VinWpMKNOdvpdpco3wvahP6giekQAR
+         eQk6p1UyhetpVpcSOZOqSTR0RLyVkgvLGCIC7vRZIid9m6xtV3nbMQe+OuU6DJb4GGA0
+         2i4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gXwOc0pJ6hqLtPP5MF3njwCDDhwJ+LtuEm52q4JdFG0=;
-        b=umyKzyBIOxXePAvciST6v1NdEl06JacCjgtO2OUk4pV3gkSu0h5J35+OGzJwGgeOGj
-         b+w5i7oBe1N5sMIqh4jEQefO5HpApFgh+gKKclGxP1aNo09d/cQ90ZeSIVIOFf/VTVnb
-         EaX0S/iT43fDn0CY4m9m7oQVEBz3NWvjAAxaZbDIFU+PGSZy/lZXt9ePEfOooiDD7YLw
-         m7XF5j8xG6Tirx0aMZkTWVWPjy0lxMRac+8t12zh7UPaTyXKucljHyuYG5QNbw2chiUg
-         /ESk8sXjw30vQdHwIcno0e38a2ANewXrdcaGma7ab4W/4dxgayGmVa5NeCBUMNmdSyzx
-         rxbQ==
-X-Gm-Message-State: APjAAAXa+1cQN2ZaLnllm0JeG2tH/D5XE9TzB+iQUzJlidrej5PHlzFF
-        +DooMgCRK25Nd0QIWKzGM17l2SjipVSgc9zJaiA=
-X-Google-Smtp-Source: APXvYqwEfukonUP8KqyQ+bKuKOQ1O/aGrq59NYnVrf1rT78e31Bw/atAL5285NQic4/J5nTNN05SD0UaFdCbcBRbuL4=
-X-Received: by 2002:a50:b63b:: with SMTP id b56mr33037948ede.165.1573566267462;
- Tue, 12 Nov 2019 05:44:27 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nbTKl7Y1bBMki5n9d7cr5r/s5MMepoc3ySY5hIEeh8E=;
+        b=hT21ZdPPwswwxnV3BJnmL95grniz31WwtgBOKyEsWwuDFQxChEVJy2z8jXqb1kOndJ
+         i9Ur7E3tWtbQpJfeBM3y3Bhp6YeeaMmoyVnDtjHzD/DRg6KWVpydZwPMW6q7Pgr+SXPM
+         bGRaVwI5zhgkMtsa9k67+2K+EtCEnCPUdT1G64OCn+w3suIYX10PT9YLDTm1hwiYZs4C
+         ttlBGBBIh7CTGs3opZf/oiY6XW9OIEd54efHhuyxTAj0qQXNdZT2jG7+/AZT44n1o9xm
+         mjcpfeMcx9RhnzGbwf9GZIoPoRk+C0klfTiPmmXZMnKKlj5y17LOl8sfAqAx6Wd2mF5c
+         A8GQ==
+X-Gm-Message-State: APjAAAXa1DgRPwWdhwHlR7AaDON/+UEId4OYw1W3tt3GoWuQE0DacGRk
+        wIKoKbfoytMf1M6mNM2hCXOlIUMX
+X-Google-Smtp-Source: APXvYqwbSI8pGLvGNXDQd4tRH7lluE7SbRFxEHFU+95NxxspJ5IdxgGPzQF6M74rrnLG4YgCPPvShw==
+X-Received: by 2002:a62:140d:: with SMTP id 13mr35021203pfu.79.1573566425094;
+        Tue, 12 Nov 2019 05:47:05 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z10sm10156870pgg.39.2019.11.12.05.47.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 05:47:04 -0800 (PST)
+Subject: Re: [PATCH v3 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
+To:     Eugen.Hristev@microchip.com, robh+dt@kernel.org,
+        wim@linux-watchdog.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1573474383-21915-1-git-send-email-eugen.hristev@microchip.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <e34df163-60f5-35c6-05c6-845d70143fd9@roeck-us.net>
+Date:   Tue, 12 Nov 2019 05:47:03 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191112132010.18274-1-linux@rasmusvillemoes.dk> <20191112132010.18274-3-linux@rasmusvillemoes.dk>
-In-Reply-To: <20191112132010.18274-3-linux@rasmusvillemoes.dk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 12 Nov 2019 15:44:16 +0200
-Message-ID: <CA+h21hqw16o0TqOV1WWYYcOs3YWJe=xq_K0=miU+BFTA31OTmQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1573474383-21915-1-git-send-email-eugen.hristev@microchip.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 15:20, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
->
-> From: Vladimir Oltean <olteanv@gmail.com>
->
-> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
-> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
->
-> Switching to interrupts offloads the PHY library from the task of
-> polling the MDIO status and AN registers (1, 4, 5) every second.
->
-> Unfortunately, the BCM5464R quad PHY connected to the switch does not
-> appear to have an interrupt line routed to the SoC.
->
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+On 11/11/19 4:13 AM, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Cleanup the macro definitions to use BIT and align with two spaces.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 > ---
->  arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-> index 5b7689094b70..135d36461af4 100644
-> --- a/arch/arm/boot/dts/ls1021a-tsn.dts
-> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-> @@ -203,11 +203,15 @@
->         /* AR8031 */
->         sgmii_phy1: ethernet-phy@1 {
->                 reg = <0x1>;
-> +               /* SGMII1_PHY_INT_B: connected to IRQ2, active low */
-> +               interrupts-extended = <&extirq 2 IRQ_TYPE_EDGE_FALLING>;
->         };
->
->         /* AR8031 */
->         sgmii_phy2: ethernet-phy@2 {
->                 reg = <0x2>;
-> +               /* SGMII2_PHY_INT_B: connected to IRQ2, active low */
-> +               interrupts-extended = <&extirq 2 IRQ_TYPE_EDGE_FALLING>;
->         };
->
->         /* BCM5464 quad PHY */
-> --
-> 2.23.0
->
+> Changes in v3:
+> - new patch as requested from review on ML
+> 
+>   drivers/watchdog/at91sam9_wdt.h | 30 +++++++++++++++---------------
+>   1 file changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
+> index 390941c..2ca5fc5 100644
+> --- a/drivers/watchdog/at91sam9_wdt.h
+> +++ b/drivers/watchdog/at91sam9_wdt.h
+> @@ -14,23 +14,23 @@
+>   #define AT91_WDT_H
+>   
+>   #define AT91_WDT_CR		0x00			/* Watchdog Control Register */
+> -#define		AT91_WDT_WDRSTT		(1    << 0)		/* Restart */
+> -#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
+> +#define  AT91_WDT_WDRSTT	BIT(0)			/* Restart */
 
-+netdev and Andrew for this patch, since the interrupt polarity caught
-his attention in v1.
+Using BIT() requires including linux/bits.h.
+
+> +#define  AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
+>   
+>   #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
+> -#define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+> -#define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+> -#define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
+> -#define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
+> -#define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
+> -#define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
+> -#define		AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
+> -#define			AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+> -#define		AT91_WDT_WDDBGHLT	(1     << 28)		/* Debug Halt */
+> -#define		AT91_WDT_WDIDLEHLT	(1     << 29)		/* Idle Halt */
+> +#define  AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+> +#define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+> +#define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
+> +#define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
+> +#define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
+> +#define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
+> +#define  AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
+> +#define  AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+> +#define  AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
+> +#define  AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
+>   
+> -#define AT91_WDT_SR		0x08			/* Watchdog Status Register */
+> -#define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
+> -#define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
+> +#define AT91_WDT_SR		0x08		/* Watchdog Status Register */
+> +#define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
+> +#define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
+>   
+>   #endif
+> 
+
