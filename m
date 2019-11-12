@@ -2,274 +2,231 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7CFC17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C0FC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3532421783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CyRC84Ij";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gtdGaCkr"
+	by mail.kernel.org (Postfix) with ESMTP id 6D3732067B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:39:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573587585;
+	bh=1MKU32qu4bZ+rzKBmsoBVEFYZR5/JFL//34VWl5Vc7c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Fhu7xklFqMLnbDAtHmJOnbqlIcKS/EAl1ny4EkpZopD2xsVtRctFbMhFtDcIT81F7
+	 C9kJj6z+cn5ZlIIsolTZClXl/vP4ysyEz44kHBo975YrGEtOroZ96Dp0JSCxvZRpQ+
+	 gc5PGDix9543pEb8X3oI55nki5Y7ESXZgI4sHqP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKLTij (ORCPT
+        id S1726970AbfKLTjp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:38:39 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:35342 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfKLTij (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:38:39 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B084C60909; Tue, 12 Nov 2019 19:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573587517;
-        bh=+uE/TWS5WT8aFrtGdahchP4ieE7STcp0632ThIZt/sE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=CyRC84Ij6CI+3h2p1gWV8AWKBK5uwzuQ19mREjgw/kSoft6QxxwzIORDzf3hnPfHw
-         9oJphT/qTLZzhetCVolZin5Z7RbAIcvk5uRKXnXpOGqOAujcXDVcGtTO3+k/Eta5Io
-         gUqTT0DDoAnE3fbr3zx36IYlc/hMiBzCPBJ3r+6s=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C694608FF;
-        Tue, 12 Nov 2019 19:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573587516;
-        bh=+uE/TWS5WT8aFrtGdahchP4ieE7STcp0632ThIZt/sE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gtdGaCkrsVeb0/yAIchbtq3UqXqlLoWhomAjyhn0SLtPIX9KZMK9vxAXS8hvsIpVg
-         PgKOqqR7r10cwf8//V4VsFn5ii5WLOsJ727PhQ5w14MpWjqyrUC/YbBB2dpx75q7jx
-         RW6cibJs2v9IVf6PeDoYWX6OdDWktD4dBtfdyTdY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0C694608FF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-To:     Rob Herring <robh@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
- <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
- <20191112004417.GA16664@bogus>
- <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
- <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <fb73ec1e-e5b9-239b-737b-a687f65283d3@codeaurora.org>
-Date:   Tue, 12 Nov 2019 12:38:34 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 14:39:45 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43352 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfKLTjo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:39:44 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l20so15917093oie.10;
+        Tue, 12 Nov 2019 11:39:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2OeV1TEjg5DUl+fuWBn8Jfdeie+nCeDPsRLgvJFEBFg=;
+        b=GGhtCMHG4Nnq0mcudZ2vskjnPB/INf9fYZG7qn+y5YjOF39UD5h3LVHwf9oVmq7t0t
+         q+c8ZbVGw1vdyA/mxsbwD3gnN0xe6jryI6sCZmgmvQ3BoNByls09WG1J1ZIhWMO+GgZ0
+         4NCiUJBpF4NlGty+GY0KniDlbDVEJ5N99M7BvNIeNZDOxaHfwR1XIv0M81Hy+rB9I6+d
+         DuKMeRy7gQDn6JVxZuEg2b0lF3dsZsfCtVE3S3iQfe4AggY/i0Zn4YLSxQAwxYT1hdoe
+         UF32KEX0MQ0rCoymdJmAtIvmVswpLSPgYWNgR5h7A/BwyqBsNMd7x2TzvU/OF8VpRGw5
+         s96g==
+X-Gm-Message-State: APjAAAXEBHP5JI79uZRIFdoaTKkarxmp3/cad7VR3pbyCYIW8QbJctoS
+        mT9WlsvRSMX1P/6GIQQHyA==
+X-Google-Smtp-Source: APXvYqxnOqQm37cKu+NMagKIQidyM/CvP2y92s3RL4Lfv0Gxm8Qyd0vtW8Jg61doTgsADBWXFsSO3Q==
+X-Received: by 2002:aca:7285:: with SMTP id p127mr589107oic.120.1573587583113;
+        Tue, 12 Nov 2019 11:39:43 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l32sm6543738otl.74.2019.11.12.11.39.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 11:39:42 -0800 (PST)
+Date:   Tue, 12 Nov 2019 13:39:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
+        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
+Message-ID: <20191112193942.GA27334@bogus>
+References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
+ <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/12/2019 11:37 AM, Rob Herring wrote:
-> On Tue, Nov 12, 2019 at 10:25 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->>
->> On 11/11/2019 5:44 PM, Rob Herring wrote:
->>> On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
->>>> The global clock controller on MSM8998 can consume a number of external
->>>> clocks.  Document them.
->>>>
->>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->>>> ---
->>>>    .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
->>>>    1 file changed, 33 insertions(+), 14 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->>>> index e73a56f..2f3512b 100644
->>>> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->>>> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->>>> @@ -40,20 +40,38 @@ properties:
->>>>           - qcom,gcc-sm8150
->>>>
->>>>      clocks:
->>>> -    minItems: 1
->>>
->>> 1 or 2 clocks are no longer allowed?
->>
->> Correct.
->>
->> The primary reason is that Stephen indicated in previous discussions
->> that if the hardware exists, it should be indicated in DT, regardless if
->> the driver uses it.  In the 7180 and 8150 case, the hardware exists, so
->> these should not be optional.
+On Fri, Nov 08, 2019 at 10:56:09AM -0300, Marcelo Schmitt wrote:
+> Add a devicetree schema for AD7292 monitor and control system.
 > 
-> Agreed. The commit message should mention this though.
-
-Fair enough, will do.
-
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> ---
+> Changelog V3 -> V4:
+> - updated SPDX identifier to GPL-2.0-only
+> - changed maxitems constraint on channel property
 > 
->>
->> The secondary reason is I found that the schema was broken anyways.  In
->> the way it was written, if you implemented sleep, you could not skip
->> xo_ao, however there is a dts that did exactly that.
+>  .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 ++
+>  2 files changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
 > 
-> If a dts can be updated in a compatible way, we should do that rather
-> than carry inconsistencies into the schema.
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> new file mode 100644
+> index 000000000000..b68be3aaf587
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+
+Sigh, I gave you the exact line to use:
+
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+
+I've said to dual license with (GPL-2.0-only OR BSD-2-Clause) and people 
+think I mean to pick one. So now I just give the whole line. I don't 
+know how to be clearer.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7292 10-Bit Monitor and Control System
+> +
+> +maintainers:
+> +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> +
+> +description: |
+> +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
+> +  Temperature Sensor, and GPIOs
+> +
+> +  Specifications about the part can be found at:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7292
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vref-supply:
+> +    description: |
+> +      The regulator supply for ADC and DAC reference voltage.
+> +
+> +  spi-cpha: true
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-cpha
+> +
+> +patternProperties:
+> +  "^channel@[0-7]$":
+> +    type: object
+> +    description: |
+> +      Represents the external channels which are connected to the ADC.
+> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          The channel number. It can have up to 8 channels numbered from 0 to 7.
+> +        items:
+> +          maximum: 7
+
+Not what I said either. A slight but important difference in that you 
+are missing a '-' to make 'items' a list rather than a schema/dict.
+
+Update dt-schema. This should give a warning now.
+
+> +
+> +      diff-channels:
+> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      ad7292: adc@0 {
+> +        compatible = "adi,ad7292";
+> +        reg = <0>;
+> +        spi-max-frequency = <25000000>;
+> +        vref-supply = <&adc_vref>;
+> +        spi-cpha;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        channel@0 {
+> +          reg = <0>;
+> +          diff-channels = <0 1>;
+> +        };
+> +        channel@2 {
+> +          reg = <2>;
+> +        };
+> +        channel@3 {
+> +          reg = <3>;
+> +        };
+> +        channel@4 {
+> +          reg = <4>;
+> +        };
+> +        channel@5 {
+> +          reg = <5>;
+> +        };
+> +        channel@6 {
+> +          reg = <6>;
+> +        };
+> +        channel@7 {
+> +          reg = <7>;
+> +        };
+> +      };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32bf5f8116d0..5d00e871c4c6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -813,6 +813,13 @@ S:	Supported
+>  F:	drivers/iio/adc/ad7124.c
+>  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+>  
+> +ANALOG DEVICES INC AD7292 DRIVER
+> +M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> +L:	linux-iio@vger.kernel.org
+> +W:	http://ez.analog.com/community/linux-device-drivers
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> +
+>  ANALOG DEVICES INC AD7606 DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
+>  L:	linux-iio@vger.kernel.org
+> -- 
+> 2.23.0
 > 
->> The third reason was that I couldn't find a way to write valid yaml to
->> preserve the original meaning.  when you have an "items" as a subnode of
->> "oneOf", you no longer have control over the minItems/maxItems, so all 3
->> became required anyways.
-> 
-> That would be a bug. You're saying something like this doesn't work?:
-> 
-> oneOf:
->    - minItems: 1
->      maxItems: 3
->      items:
->        - const: a
->        - const: b
->        - const: c
-
-Yes.  That specifically won't work.  "items" would need to have the dash 
-preceding it, otherwise it won't compile if you have more than one.  But 
-ignoring that, yes, when it compiled, and I saw the output from the 
-check failing (after adding verbose mode), min and max for the items 
-list would be 3, and the check would fail.
-
-> 
->>   I find it disappointing that the "version" of
->> Yaml used for DT bindings is not documented,
-> 
-> Not sure which part you mean? json-schema is the vocabulary which has
-> a spec. The meta-schema then constrains what the json-schema structure
-> should look like. That's still evolving a bit as I try to improve it
-> based on mistakes people make. Then there's the intermediate .dt.yaml
-> format used internally. That's supposed to stay internal and may go
-> away when/if we integrate the validation into dtc.
-
-So, this is probably off-topic, but hopefully you'll find this useful.
-
-I'm probably in the minority, but I really haven't used json-schema nor 
-yaml before.  I have experience with other "schema" languages, so I 
-figured I could pick what I need from the documentation.
-
-The only documentation I see is writing-schema.md and example-schema.yaml
-
-To me, writing-schema.md is insufficient.  Its better than nothing, so 
-I'm still glad it exists, but I don't have any confidence I can really 
-write a binding yaml from scratch based on it.  It does a good thing by 
-telling you what are important properties of a binding, so based on that 
-you can kind of start to understand how existing bindings actually work. 
-  Its great in telling you how to run the validation checks (the Running 
-checks) section.  The dependencies section is awesome from my 
-perspective - most projects seem to assume you just know what their 
-dependencies are, and its painful to try to figure them out when you get 
-cryptic errors during make.
-
-Where it really fails is that I get no sense of the language.  As a 
-minimum a lexigraphic specification that would allow me to write a 
-compiler (I've done this before).  Then I would understand what are the 
-keywords, and where they are valid.  I wouldn't understand what they 
-mean, but at-least I can look at some implemented examples and 
-extrapolate from there.
-
-Have you by chance ever looked at the ACPI spec?  Maybe not the best 
-example, but its the one that comes to my mind first.  ACPI has ACPI 
-Source Language (ASL).  Its an interpreted hardware description language 
-that doesn't match yaml, but I think the ACPI spec does a reasonable job 
-of describing it.  You have a lexographic definition which seems to be 
-really helpful to ACPICA in implementing the intrepreter.  It lists all 
-of the valid operators, types, etc.  It provides detailed references of 
-each keyword - how they are used, what they do, etc.  Its not the 
-greatest at "how to write ASL 101" or "these are common problems that 
-people face, and how they can be solved", but atleast with what there 
-is, I could read every keyword that seems to be possibly related to what 
-I want to do, and hazard a guess if it would work for my problem.
-
-Perhaps that is outside the scope of the writing-schema.md document, 
-that is fair.  However, I argue that the document does not provide 
-sufficient references.  The document provides a reference to the 
-json-schema spec, but the spec is kinda useless (atleast I feel that it 
-is).  "minItems" is not defined anywhere in the spec.  What does it 
-mean?  How can I use it?  Specific to minItems/maxItems, I'll I've 
-gathered about it is from example-schema.yaml which indicates its a way 
-to identify mandatory and optional values for a property, but it doesn't 
-describe the fact that order matters, and you cannot mix/match things - 
-IE it looks like you need atleast min items, and at most max items, but 
-even if you have enough items to satisfy min, there cannot be gaps (you 
-can't pick items 1, 5, 10 from the list).  I only found that out from 
-running the validation checks with trial/error.
-
-There is no reference to the yaml spec, despite the document stating 
-that the bindings are written in yaml.
-
-However, having found the yaml spec, its really not much better than the 
-json-schema spec, and it doesn't line up because as the document states, 
-the bindings are not really written in yaml - its a subset of yaml where 
-a ton of the boilerplate "code" is skipped.
-
-What is boilerplate that is skipped?  IMO, if you are not strictly 
-adhering to yaml, then you need to clearly document your own derivative 
-language so that someone like me whom is being introduced to all of this 
-for the first time can start to figure out some of it.  It would be 
-helpful to look at other yaml examples, and understand what is 
-considered to be boilerplate so I can translate that to a DT binding.
-
-I understand, the majority of the above is complaints and demands which 
-is really not fair to you, since you are spending what I presume to be 
-your "non-dayjob" time to make the community better.  However, I don't 
-really know how to contribute to make the documentation better.  I don't 
-understand enough.  As far as this topic is concerned, I'm a dumb monkey 
-banging on a keyboard hoping to get close enough to Shakespeare to pass 
-mustard by accident, and maybe learn something along the way so that 
-next time, I might have an idea of how to do something of what I need.
-
-Hopefully you've made it this far - that ended up being a lot more text 
-that I thought it would be.  I really hope this is useful feedback to 
-you, but let me know if I am still not clear on something.  I will try 
-my best to clarify more.  If you feel like I can contribute somehow, 
-just let me know.
-
-> 
->> so after several hours of
->> trial and error, I just gave up since I found this to work (failed cases
->> just gave me an error with no indication of what was wrong, not even a
->> line number).
-> 
-> Schema failures or dts failures? It is possible to get line numbers
-> for either, but that makes validation much slower. In the latter case,
-> the line numbers aren't too useful either given they are for the
-> .dt.yaml file and not the .dts source file (dtc integration would
-> solve that). Adding '-n' to dt-doc-validate or dt-validate will turn
-> them on though.
-
-Schema compilation failures.  I don't recall the exact error message, 
-but it was something like "no valid schema found, continuing". 
-Essentially running "dt_binding_check".  I tried with -v but wasn't 
-getting much more in this case.  I didn't try -n.
-
-> 
-> Yes, error messages need work. I have some idea how to improve them,
-> but haven't had time to implement. Too many binding reviews... You can
-> get more detail with '-v' option. It's *way* more verbose, but not
-> necessarily more useful.
-> 
-> Rob
-> 
-
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
