@@ -2,152 +2,156 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5906C17449
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4091C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9372196E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB302196E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="KbzHN2v4"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="n8SC89Aj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfKLPgP (ORCPT
+        id S1726962AbfKLPhy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:36:15 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:63052 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727069AbfKLPgN (ORCPT
+        Tue, 12 Nov 2019 10:37:54 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:18904 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726923AbfKLPhx (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:36:13 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xACFNqpX025476;
-        Tue, 12 Nov 2019 10:35:47 -0500
-Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2058.outbound.protection.outlook.com [104.47.33.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2w7prk91v3-1
+        Tue, 12 Nov 2019 10:37:53 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xACFRtdl018129;
+        Tue, 12 Nov 2019 16:37:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=kaFjGOKCQM/FJHZr1FNHSIjQAeAuSTc0Kd4hNmaNfVo=;
+ b=n8SC89Aj8wVgWFJsfYhHOiepQeSYjmLEK89tFRAgoBYBq2LXLSMu+dphIY9qkNyO3HwR
+ TEbbeGtEfU+/qBQYbpi4VxFId5zQc8aVKiOR4GFAmLvLEK0yg39DISmoiTiukgsZkXbQ
+ XE+nQyzUmTmm2h8E8D6qK+CDxisKR623e8Ilh13z+WO6THp2CoBj5j6dom5jkynW/RDh
+ 440JJGOAEVN+GFSvyQZ/4cy4zPYZgVG2vnq3qlwwH2dkRXzpbJfoUSWSsUN7sbOO00GC
+ axxB9X8uP7ltkSsthF7eev0aMrHSn8W+DohV4ziL87Co4yEqpMnGSLm0OPTCS78Rrnr8 JQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w7psf2yec-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 10:35:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Grr9YqRtBnu7Vw/wUNBvvYhml49rtNfs4mz9gBlYcN9DjXRa8MCgDdcRL6s+9tUc/+ns8zbclRJjVz6VU9mwsI/5ieEl2TXdxYCVx12HYsYlZRVbk/lGBWRv0SfbSIaN1eHjQGhG6VZMVnNaoXrhIPP+E2oytI/OKKl70lcya3Sa3cNXBOmysCtAt5O4AfTc1pDrmlZh09TGHJKrvbVHcEdGrYDiC9r2yd/hgQMTg09qo8PT4BRxCD6PFja313/DilLHSLjghykg0khpwkSP4Mi8VC+0a2PbkSNpFdv2i+3P0f0p0cdpnE1STOR1ZFuqTvJ1k5ddSu5vCycm7yHWHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQAKrxZtjG+3o2Lsn9HApsW4np8WSar24UvdmiYG9rU=;
- b=nM8QeoMu01QWUOkN6//FZ6EadWGm5Ud3X7R5k9wcwrdRUsoBk/Oruvv/3UZZ9RYn5E/Umyx4KUvrRra4fT4SCwJ2pDR8di3Rz9osPPq1XyGmKL2rXxHWfMIJWLq/g0Jgd55aJEWT7ZJTxRf+ze3f+esaEcnrV//adayTtN5qSm/RBl9nVq77bVWNv3uG1IpytqCggoHHC0xrsz5Og88czm8wF5bJj59wPtBUHDQ8+y2x7zc7BNofK+J+0f8EFTeE/JEGMrHbpHqMV0RUYuEiI5Ph5kXl+Vv78rH0iEhaYiW14Bob8421hVZ47Ixw3rN2UP15fKh/ruI0jU+VKAiqlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQAKrxZtjG+3o2Lsn9HApsW4np8WSar24UvdmiYG9rU=;
- b=KbzHN2v44wL7kWCHF3NvcQ2ob1eRPKg0f4WppoAn4sb9y4LwOkHfuB0w92bd8oNYwVtDtn/ndobtBmu6BbajMWHBsN+xyDMcf8Jp3Uvh8trB+dP1/lQ4Y60rtcSZfn/ZVpd+03tMTjKQbewAky1p/SBNfl4YDiXu+DJvK+9vi+M=
-Received: from CY1PR03CA0040.namprd03.prod.outlook.com (2603:10b6:600::50) by
- BN6PR03MB3170.namprd03.prod.outlook.com (2603:10b6:405:41::39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Tue, 12 Nov 2019 15:35:45 +0000
-Received: from CY1NAM02FT050.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::200) by CY1PR03CA0040.outlook.office365.com
- (2603:10b6:600::50) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22 via Frontend
- Transport; Tue, 12 Nov 2019 15:35:45 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT050.mail.protection.outlook.com (10.152.75.65) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2430.20
- via Frontend Transport; Tue, 12 Nov 2019 15:35:45 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xACFZajO012488
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 12 Nov 2019 07:35:36 -0800
-Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.231) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 12 Nov 2019 10:35:43 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <gregkh@linuxfoundation.org>,
-        <linux-iio@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <paulmck@linux.ibm.com>, <mchehab+samsung@kernel.org>,
-        <linus.walleij@linaro.org>, <nicolas.ferre@microchip.com>,
-        <biabeniamin@outlook.com>, Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH 3/3] MAINTAINERS: add entry for ADM1177 driver
-Date:   Tue, 12 Nov 2019 17:35:52 +0200
-Message-ID: <20191112153552.27431-3-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191112153552.27431-1-beniamin.bia@analog.com>
-References: <20191112153552.27431-1-beniamin.bia@analog.com>
+        Tue, 12 Nov 2019 16:37:20 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F1EDF10003A;
+        Tue, 12 Nov 2019 16:37:17 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B65FD2FF5E8;
+        Tue, 12 Nov 2019 16:37:17 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 12 Nov
+ 2019 16:37:17 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Tue, 12 Nov 2019 16:37:17 +0100
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>
+CC:     "hjc@rock-chips.com" <hjc@rock-chips.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "christoph.muellner@theobroma-systems.com" 
+        <christoph.muellner@theobroma-systems.com>
+Subject: Re: [PATCH v2 1/5] drm/bridge/synopsys: dsi: move phy_ops callbacks
+ around panel enablement
+Thread-Topic: [PATCH v2 1/5] drm/bridge/synopsys: dsi: move phy_ops callbacks
+ around panel enablement
+Thread-Index: AQHVlcfsJMoaERwdz0+0Ar27W0nWUqeHocsA
+Date:   Tue, 12 Nov 2019 15:37:17 +0000
+Message-ID: <49f6386b-30c8-a181-5785-2ecdf5f95d2a@st.com>
+References: <20191108000253.8560-1-heiko.stuebner@theobroma-systems.com>
+ <20191108000253.8560-2-heiko.stuebner@theobroma-systems.com>
+In-Reply-To: <20191108000253.8560-2-heiko.stuebner@theobroma-systems.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9B4E026D2A0B2A4BAC8B6BBE5F14BEA6@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(39860400002)(396003)(346002)(136003)(189003)(199004)(107886003)(7416002)(4326008)(70586007)(50466002)(76176011)(50226002)(1076003)(44832011)(36756003)(8936002)(186003)(246002)(478600001)(8676002)(5660300002)(48376002)(4744005)(70206006)(51416003)(336012)(26005)(7696005)(54906003)(476003)(426003)(966005)(6306002)(2906002)(446003)(126002)(2616005)(7636002)(2351001)(356004)(6666004)(16586007)(316002)(486006)(86362001)(6916009)(11346002)(305945005)(47776003)(106002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR03MB3170;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f42b5e02-6b57-43db-a244-08d76785fc02
-X-MS-TrafficTypeDiagnostic: BN6PR03MB3170:
-X-MS-Exchange-PUrlCount: 1
-X-Microsoft-Antispam-PRVS: <BN6PR03MB3170C33B6A0B02441148C2B8F0770@BN6PR03MB3170.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-Forefront-PRVS: 021975AE46
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oNRNutGp1eNy7N5ZlWhQlZzO1+YKevrkg3ig3BxC+2T+MGTdvCkb9v8UmnUPBRi0eF6lc+27TNfRIgRFsfYwt/WY3OqxD+2Hew01gd+Ek6N/ssdFaPE+wV2rCSlPtKAlVT572VueEZt9rvtsfW5meyrMRkhP53Vu7/jdtZ2oxlmz09hb+myyJpcycpurj1SHcRVEu1ZljKD4uS6R1AsWq13afaODn8CftXZRH26x5AxRT1eqjdggcrOgQWkqeTPqpOEVLdXWdVk6DdfXRB7Yc2NpvQOskCkzFh6v6zZTOTYXAZ2myG2zd+XGbFz9LIsIG35ffaxywN3Pr/trPzcG4JLqgqxsYW55yYRDetf8hL6i0Tw2G/LYW/xVTgop5pm61MgoaoenwiC4xOM/XJJBgKz+uFsSuS2OhLrwYeoJcfXvt/iLaqbjUwCFVB5coQw8/rvZBYeB+HEQJmVXfVYo4NI0o6o/4bmyT3gqEYT4R2U=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2019 15:35:45.1025
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f42b5e02-6b57-43db-a244-08d76785fc02
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB3170
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-11-12_05:2019-11-11,2019-11-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
- impostorscore=0 mlxscore=0 suspectscore=1 malwarescore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911120134
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Beniamin Bia and Michael Hennerich as a maintainer for ADM1177 ADC.
-
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0fca3b055985..41a34d7a802c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -962,6 +962,15 @@ W:	http://ez.analog.com/community/linux-device-drivers
- F:	drivers/iio/imu/adis16460.c
- F:	Documentation/devicetree/bindings/iio/imu/adi,adis16460.yaml
- 
-+ANALOG DEVICES INC ADM1177 DRIVER
-+M:	Beniamin Bia <beniamin.bia@analog.com>
-+M:	Michael Hennerich <Michael.Hennerich@analog.com>
-+L:	linux-iio@vger.kernel.org
-+W:	http://ez.analog.com/community/linux-device-drivers
-+S:	Supported
-+F:	drivers/iio/adc/adm1177.c
-+F:	Documentation/devicetree/bindings/iio/adc/adi,adm1177.yaml
-+
- ANALOG DEVICES INC ADP5061 DRIVER
- M:	Stefan Popa <stefan.popa@analog.com>
- L:	linux-pm@vger.kernel.org
--- 
-2.17.1
-
+SGkgSGVpa28sDQoNCk9uIDExLzgvMTkgMTowMiBBTSwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6DQo+
+IElmIGltcGxlbWVudGF0aW9uLXNwZWNpZmljIHBoeV9vcHMgbmVlZCB0byBiZSBkZWZpbmVkIHRo
+ZXkgcHJvYmFibHkNCj4gc2hvdWxkIGJlIGVuYWJsZWQgYmVmb3JlIHRyeWluZyB0byB0YWxrIHRv
+IHRoZSBwYW5lbCBhbmQgZGlzYWJsZWQgb25seQ0KPiBhZnRlciB0aGUgcGFuZWwgd2FzIGRpc2Fi
+bGVkLg0KPiANCj4gUmlnaHQgbm93IHRoZXkgYXJlIGVuYWJsZWQgbGFzdCBhbmQgZGlzYWJsZWQg
+Zmlyc3QsIHNvIG1pZ2h0IG1ha2UgaXQNCj4gaW1wb3NzaWJsZSB0byB0YWxrIHRvIHNvbWUgcGFu
+ZWxzIC0gZXhhbXBsZSBmb3IgdGhpcyBiZWluZyB0aGUgcHgzMA0KPiB3aXRoIGFuIGV4dGVybmFs
+IElubm9zaWxpY29uIGRwaHkgdGhhdCBuZWVkcyB0aGUgcGh5IHRvIGJlIGVuYWJsZWQNCj4gdG8g
+dHJhbnNmZXIgY29tbWFuZHMgdG8gdGhlIHBhbmVsLg0KPiANCj4gU28gbW92ZSB0aGUgY2FsbHMg
+YXBwcm9wcmlhdGVseS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlr
+by5zdHVlYm5lckB0aGVvYnJvbWEtc3lzdGVtcy5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyB8IDEzICsrKysrKy0tLS0tLS0NCj4g
+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiANCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2ku
+YyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYw0KPiBpbmRl
+eCA2NzU0NDJiZmMxYmQuLjQ5ZjU2MDBhMWRlYSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYw0KPiBAQCAtNzk3LDkgKzc5Nyw2IEBAIHN0
+YXRpYyB2b2lkIGR3X21pcGlfZHNpX2JyaWRnZV9wb3N0X2Rpc2FibGUoc3RydWN0IGRybV9icmlk
+Z2UgKmJyaWRnZSkNCj4gICAJc3RydWN0IGR3X21pcGlfZHNpICpkc2kgPSBicmlkZ2VfdG9fZHNp
+KGJyaWRnZSk7DQo+ICAgCWNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV9waHlfb3BzICpwaHlfb3Bz
+ID0gZHNpLT5wbGF0X2RhdGEtPnBoeV9vcHM7DQo+ICAgDQo+IC0JaWYgKHBoeV9vcHMtPnBvd2Vy
+X29mZikNCj4gLQkJcGh5X29wcy0+cG93ZXJfb2ZmKGRzaS0+cGxhdF9kYXRhLT5wcml2X2RhdGEp
+Ow0KPiAtDQo+ICAgCS8qDQo+ICAgCSAqIFN3aXRjaCB0byBjb21tYW5kIG1vZGUgYmVmb3JlIHBh
+bmVsLWJyaWRnZSBwb3N0X2Rpc2FibGUgJg0KPiAgIAkgKiBwYW5lbCB1bnByZXBhcmUuDQo+IEBA
+IC04MTYsNiArODEzLDkgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfYnJpZGdlX3Bvc3RfZGlz
+YWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQ0KPiAgIAkgKi8NCj4gICAJZHNpLT5wYW5l
+bF9icmlkZ2UtPmZ1bmNzLT5wb3N0X2Rpc2FibGUoZHNpLT5wYW5lbF9icmlkZ2UpOw0KPiAgIA0K
+PiArCWlmIChwaHlfb3BzLT5wb3dlcl9vZmYpDQo+ICsJCXBoeV9vcHMtPnBvd2VyX29mZihkc2kt
+PnBsYXRfZGF0YS0+cHJpdl9kYXRhKTsNCj4gKw0KPiAgIAlpZiAoZHNpLT5zbGF2ZSkgew0KPiAg
+IAkJZHdfbWlwaV9kc2lfZGlzYWJsZShkc2ktPnNsYXZlKTsNCj4gICAJCWNsa19kaXNhYmxlX3Vu
+cHJlcGFyZShkc2ktPnNsYXZlLT5wY2xrKTsNCj4gQEAgLTg4Miw2ICs4ODIsOSBAQCBzdGF0aWMg
+dm9pZCBkd19taXBpX2RzaV9tb2RlX3NldChzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSwNCj4gICAN
+Cj4gICAJLyogU3dpdGNoIHRvIGNtZCBtb2RlIGZvciBwYW5lbC1icmlkZ2UgcHJlX2VuYWJsZSAm
+IHBhbmVsIHByZXBhcmUgKi8NCj4gICAJZHdfbWlwaV9kc2lfc2V0X21vZGUoZHNpLCAwKTsNCj4g
+Kw0KPiArCWlmIChwaHlfb3BzLT5wb3dlcl9vbikNCj4gKwkJcGh5X29wcy0+cG93ZXJfb24oZHNp
+LT5wbGF0X2RhdGEtPnByaXZfZGF0YSk7DQo+ICAgfQ0KPiAgIA0KPiAgIHN0YXRpYyB2b2lkIGR3
+X21pcGlfZHNpX2JyaWRnZV9tb2RlX3NldChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLA0KPiBA
+QCAtODk4LDE1ICs5MDEsMTEgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfYnJpZGdlX21vZGVf
+c2V0KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsDQo+ICAgc3RhdGljIHZvaWQgZHdfbWlwaV9k
+c2lfYnJpZGdlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQ0KPiAgIHsNCj4gICAJ
+c3RydWN0IGR3X21pcGlfZHNpICpkc2kgPSBicmlkZ2VfdG9fZHNpKGJyaWRnZSk7DQo+IC0JY29u
+c3Qgc3RydWN0IGR3X21pcGlfZHNpX3BoeV9vcHMgKnBoeV9vcHMgPSBkc2ktPnBsYXRfZGF0YS0+
+cGh5X29wczsNCj4gICANCj4gICAJLyogU3dpdGNoIHRvIHZpZGVvIG1vZGUgZm9yIHBhbmVsLWJy
+aWRnZSBlbmFibGUgJiBwYW5lbCBlbmFibGUgKi8NCj4gICAJZHdfbWlwaV9kc2lfc2V0X21vZGUo
+ZHNpLCBNSVBJX0RTSV9NT0RFX1ZJREVPKTsNCj4gICAJaWYgKGRzaS0+c2xhdmUpDQo+ICAgCQlk
+d19taXBpX2RzaV9zZXRfbW9kZShkc2ktPnNsYXZlLCBNSVBJX0RTSV9NT0RFX1ZJREVPKTsNCj4g
+LQ0KPiAtCWlmIChwaHlfb3BzLT5wb3dlcl9vbikNCj4gLQkJcGh5X29wcy0+cG93ZXJfb24oZHNp
+LT5wbGF0X2RhdGEtPnByaXZfZGF0YSk7DQo+ICAgfQ0KPiAgIA0KPiAgIHN0YXRpYyBlbnVtIGRy
+bV9tb2RlX3N0YXR1cw0KPiANCg0KVGVzdGVkLWJ5OiBZYW5uaWNrIEZlcnRyZSA8eWFubmljay5m
+ZXJ0cmVAc3QuY29tPg0KUmV2aWV3ZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3Ju
+dUBzdC5jb20+DQoNCk1hbnkgdGhhbmtzLA0KUGhpbGlwcGUgOi0p
