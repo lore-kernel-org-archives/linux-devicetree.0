@@ -2,408 +2,172 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178ACC17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F88BC17448
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE3121A49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E9321A49
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfKLRiS (ORCPT
+        id S1727170AbfKLR7p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:38:18 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46526 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726912AbfKLRiS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 12:38:18 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1766635EC70966144D6F;
-        Wed, 13 Nov 2019 01:38:14 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 13 Nov 2019
- 01:38:08 +0800
-Date:   Tue, 12 Nov 2019 17:37:57 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>,
-        <Michael.Hennerich@analog.com>, <pmeerw@pmeerw.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
-        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
-        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>
-Subject: Re: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
- Power Monitor driver
-Message-ID: <20191112173757.0000075b@huawei.com>
-In-Reply-To: <20191112153552.27431-1-beniamin.bia@analog.com>
-References: <20191112153552.27431-1-beniamin.bia@analog.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 12 Nov 2019 12:59:45 -0500
+Received: from verein.lst.de ([213.95.11.211]:57158 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726976AbfKLR7p (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 12:59:45 -0500
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id DB8AF68BE1; Tue, 12 Nov 2019 18:59:40 +0100 (CET)
+Date:   Tue, 12 Nov 2019 18:59:40 +0100
+From:   Torsten Duwe <duwe@lst.de>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/bridge: fix anx6345 compilation for v5.5
+Message-ID: <20191112175940.GA13539@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 17:35:50 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-> From: Michael Hennerich <michael.hennerich@analog.com>
-> 
-> ADM1177 is a Hot Swap Controller and Digital Power Monitor with
-> Soft Start Pin.
-> 
-> Datasheet:
-> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1177.pdf
-> 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+The anx6345 driver originally was copied from anx78xx.c, which has meanwhile
+seen a few changes. In particular, the removal of drm_dp_link helpers and the
+discontinuation to include drm_bridge.h from drm_crtc.h breaks compilation
+in linux-5.5. Apply equivalents of these changes to anx6345.c.
 
-Hi Beniamin,
+Signed-off-by: Torsten Duwe <duwe@suse.de>
 
-A couple immediate thoughts.
+---
 
-1. That cc list has some rather non obvious people on it.  Unless something
-   fairly surprising is going on, probably better to cut it back a bit.
+The commits in question are ff1e8fb68ea06 and ee68c743f8d07, but I guess the
+next rebase will change these. next-20191112 plus the anx6345-v5a series plus
+this patch compile cleanly on arm64.
 
-2. Why IIO?  Not entirely obvious to me.  From first glance this is definitely
-   doing hardware monitoring.  If there is a reason there should be a clear
-   statement here on why.
-
-+CC Guenter and Jean as hwmon maintainers.
-
-Whilst I'm here, a very quick review below.
-
-> ---
->  drivers/iio/adc/Kconfig   |  12 ++
->  drivers/iio/adc/Makefile  |   1 +
->  drivers/iio/adc/adm1177.c | 257 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 270 insertions(+)
->  create mode 100644 drivers/iio/adc/adm1177.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 9554890a3200..4db8c6dcb595 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -228,6 +228,18 @@ config ASPEED_ADC
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called aspeed_adc.
->  
-> +config ADM1177
-> +	tristate "Analog Devices ADM1177 Digital Power Monitor driver"
-> +	depends on I2C
-> +	help
-> +	  Say yes here to build support for Analog Devices:
-> +	  ADM1177 Hot Swap Controller and Digital Power Monitor
-> +	  with Soft Start Pin. Provides direct access
-> +	  via sysfs.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called adm1177.
-> +
->  config AT91_ADC
->  	tristate "Atmel AT91 ADC"
->  	depends on ARCH_AT91
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 5ecc481c2967..7899d6a158f3 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -24,6 +24,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
->  obj-$(CONFIG_AD7949) += ad7949.o
->  obj-$(CONFIG_AD799X) += ad799x.o
->  obj-$(CONFIG_ASPEED_ADC) += aspeed_adc.o
-> +obj-$(CONFIG_ADM1177) += adm1177.o
->  obj-$(CONFIG_AT91_ADC) += at91_adc.o
->  obj-$(CONFIG_AT91_SAMA5D2_ADC) += at91-sama5d2_adc.o
->  obj-$(CONFIG_AXP20X_ADC) += axp20x_adc.o
-> diff --git a/drivers/iio/adc/adm1177.c b/drivers/iio/adc/adm1177.c
-> new file mode 100644
-> index 000000000000..daec34566a65
-> --- /dev/null
-> +++ b/drivers/iio/adc/adm1177.c
-> @@ -0,0 +1,257 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * ADM1177 Hot Swap Controller and Digital Power Monitor with Soft Start Pin
-> + *
-> + * Copyright 2015-2019 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
-> +#include <linux/sysfs.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/events.h>
-> +
-> +/*  Command Byte Operations */
-> +#define ADM1177_CMD_V_CONT	BIT(0)
-> +#define ADM1177_CMD_V_ONCE	BIT(1)
-> +#define ADM1177_CMD_I_CONT	BIT(2)
-> +#define ADM1177_CMD_I_ONCE	BIT(3)
-> +#define ADM1177_CMD_VRANGE	BIT(4)
-> +#define ADM1177_CMD_STATUS_RD	BIT(6)
-> +
-> +/* Extended Register */
-> +#define ADM1177_REG_ALERT_EN	1
-> +#define ADM1177_REG_ALERT_TH	2
-> +#define ADM1177_REG_CONTROL	3
-> +
-> +/* ADM1177_REG_ALERT_EN */
-> +#define ADM1177_EN_ADC_OC1	BIT(0)
-> +#define ADM1177_EN_ADC_OC4	BIT(1)
-> +#define ADM1177_EN_HS_ALERT	BIT(2)
-> +#define ADM1177_EN_OFF_ALERT	BIT(3)
-> +#define ADM1177_CLEAR		BIT(4)
-> +
-> +/* ADM1177_REG_CONTROL */
-> +#define ADM1177_SWOFF		BIT(0)
-> +
-> +#define ADM1177_BITS		12
-> +
-> +/**
-> + * struct adm1177_state - driver instance specific data
-> + * @client		pointer to i2c client
-> + * @reg			regulator info for the the power supply of the device
-> + * @command		internal control register
-> + * @r_sense_uohm	current sense resistor value
-> + * @alert_threshold_ua	current limit for shutdown
-> + * @vrange_high		internal voltage divider
-> + */
-> +struct adm1177_state {
-> +	struct i2c_client	*client;
-> +	struct regulator	*reg;
-> +	u8			command;
-> +	u32			r_sense_uohm;
-> +	u32			alert_threshold_ua;
-> +	bool			vrange_high;
-> +};
-> +
-> +static int adm1177_read(struct adm1177_state *st, u8 num, u8 *data)
-> +{
-> +	struct i2c_client *client = st->client;
-> +	int ret = 0;
-> +
-> +	ret = i2c_master_recv(client, data, num);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "I2C read error\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int adm1177_write_cmd(struct adm1177_state *st, u8 cmd)
-> +{
-> +	st->command = cmd;
-> +	return i2c_smbus_write_byte(st->client, cmd);
-> +}
-> +
-> +static int adm1177_write_reg(struct adm1177_state *st, u8 reg, u8 val)
-> +{
-> +	return i2c_smbus_write_byte_data(st->client, reg, val);
-
-These wrappers don't really add anything.  I'd just make the i2c
-calls directly inline. They will be self explanatory.
-
-> +}
-> +
-> +static int adm1177_read_raw(struct iio_dev *indio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val,
-> +			   int *val2,
-> +			   long mask)
-> +{
-> +	struct adm1177_state *st = iio_priv(indio_dev);
-> +	u8 data[3];
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		adm1177_read(st, 3, data);
-> +		switch (chan->type) {
-> +		case IIO_VOLTAGE:
-> +			*val = (data[0] << 4) | (data[2] >> 4);
-> +			return IIO_VAL_INT;
-> +		case IIO_CURRENT:
-> +			*val = (data[1] << 4) | (data[2] & 0xF);
-> +			return IIO_VAL_INT;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->type) {
-> +		case IIO_VOLTAGE:
-> +			if (st->command & ADM1177_CMD_VRANGE)
-> +				*val = 6650;
-> +			else
-> +				*val = 26350;
-> +
-> +			*val2 = ADM1177_BITS;
-> +			return IIO_VAL_FRACTIONAL_LOG2;
-> +		case IIO_CURRENT:
-> +			*val = 105840 / st->r_sense_uohm;
-> +
-> +			*val2 = ADM1177_BITS;
-> +			return IIO_VAL_FRACTIONAL_LOG2;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_chan_spec adm1177_channels[] = {
-> +	{
-> +		.type = IIO_VOLTAGE,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				      BIT(IIO_CHAN_INFO_SCALE),
-> +		.indexed = 1,
-> +		.channel = 0,
-> +	},
-> +	{
-> +		.type = IIO_CURRENT,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				      BIT(IIO_CHAN_INFO_SCALE),
-> +		.indexed = 1,
-> +		.channel = 0,
-> +	},
-> +};
-> +
-> +static const struct iio_info adm1177_info = {
-> +	.read_raw = &adm1177_read_raw,
-> +};
-
-blank line here.
-
-> +static void adm1177_remove(void *data)
-> +{
-> +	struct adm1177_state *st = data;
-> +
-> +	if (st->reg)
-> +		regulator_disable(st->reg);
-
-Probe and remove should be mirror images of each other.
-As you have a mixture of managed and non managed calls that
-isn't the case here.
-
-devm_add_action_or_reset will sort this out for you if
-used to turn off the regulator at the right point on removal.
-
-> +}
-> +
-> +static int adm1177_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	int ret;
-> +	struct device_node *np;
-> +	struct adm1177_state *st;
-> +	struct iio_dev *indio_dev;
-> +
-> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	st->client = client;
-> +
-> +	np = client->dev.of_node;
-> +
-> +	st->reg = devm_regulator_get_optional(&client->dev, "vref");
-> +	if (IS_ERR(st->reg)) {
-> +		if (PTR_ERR(st->reg) == EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		st->reg = NULL;
-> +	} else {
-> +		ret = regulator_enable(st->reg);
-> +		if (ret)
-> +			return ret;
-> +		ret = devm_add_action_or_reset(&client->dev, adm1177_remove,
-> +					       st);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	of_property_read_u32(np, "adi,r-sense-micro-ohms", &st->r_sense_uohm);
-> +	of_property_read_u32(np, "adi,shutdown-threshold-microamp",
-> +			     &st->alert_threshold_ua);
-> +	st->vrange_high = of_property_read_bool(np,
-> +				"adi,vrange-high-enable");
-> +	if (st->alert_threshold_ua) {
-> +		unsigned int val;
-> +
-> +		val = (st->alert_threshold_ua * st->r_sense_uohm * 0xFF);
-> +		val /= 105840000U;
-> +		if (val > 0xFF) {
-> +			dev_err(&client->dev,
-> +				"Requested shutdown current %d uA above limit\n",
-> +				st->alert_threshold_ua);
-> +
-> +			val = 0xFF;
-> +		}
-> +		adm1177_write_reg(st, ADM1177_REG_ALERT_TH, val);
-> +	}
-> +
-> +	adm1177_write_cmd(st, ADM1177_CMD_V_CONT |
-> +			      ADM1177_CMD_I_CONT |
-> +			      (st->vrange_high ? 0 : ADM1177_CMD_VRANGE));
-> +
-> +	indio_dev->name = id->name;
-> +	indio_dev->channels = adm1177_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(adm1177_channels);
-> +
-> +	indio_dev->dev.parent = &client->dev;
-> +	indio_dev->info = &adm1177_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	return devm_iio_device_register(&client->dev, indio_dev);
-> +}
-> +
-> +static const struct i2c_device_id adm1177_ids[] = {
-> +	{ "adm1177", 0 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, adm1177_ids);
-> +
-> +static const struct of_device_id adm1177_dt_ids[] = {
-> +	{ .compatible = "adi,adm1177" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, adm1177_dt_ids);
-> +
-> +static struct i2c_driver adm1177_driver = {
-> +	.driver = {
-> +		.name = "adm1177",
-> +		.of_match_table = adm1177_dt_ids,
-> +	},
-> +	.probe = adm1177_probe,
-> +	.id_table = adm1177_ids,
-> +};
-> +module_i2c_driver(adm1177_driver);
-> +
-> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices ADM1177 ADC driver");
-> +MODULE_LICENSE("GPL v2");
-
-
+--- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+@@ -19,6 +19,7 @@
+ #include <linux/types.h>
+ 
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_bridge.h>
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_crtc_helper.h>
+ #include <drm/drm_dp_helper.h>
+@@ -49,7 +50,6 @@ struct anx6345 {
+ 	struct i2c_client *client;
+ 	struct edid *edid;
+ 	struct drm_connector connector;
+-	struct drm_dp_link link;
+ 	struct drm_panel *panel;
+ 	struct regulator *dvdd12;
+ 	struct regulator *dvdd25;
+@@ -96,7 +96,7 @@ static ssize_t anx6345_aux_transfer(stru
+ static int anx6345_dp_link_training(struct anx6345 *anx6345)
+ {
+ 	unsigned int value;
+-	u8 dp_bw;
++	u8 dp_bw, dpcd[2];
+ 	int err;
+ 
+ 	err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM],
+@@ -144,18 +143,34 @@ static int anx6345_dp_link_training(stru
+ 	if (err)
+ 		return err;
+ 
+-	/* Check link capabilities */
+-	err = drm_dp_link_probe(&anx6345->aux, &anx6345->link);
+-	if (err < 0) {
+-		DRM_ERROR("Failed to probe link capabilities: %d\n", err);
+-		return err;
+-	}
++	/*
++	 * Power up the sink (DP_SET_POWER register is only available on DPCD
++	 * v1.1 and later).
++	 */
++	if (anx6345->dpcd[DP_DPCD_REV] >= 0x11) {
++		err = drm_dp_dpcd_readb(&anx6345->aux, DP_SET_POWER, &dpcd[0]);
++		if (err < 0) {
++			DRM_ERROR("Failed to read DP_SET_POWER register: %d\n",
++				  err);
++			return err;
++		}
++
++		dpcd[0] &= ~DP_SET_POWER_MASK;
++		dpcd[0] |= DP_SET_POWER_D0;
++
++		err = drm_dp_dpcd_writeb(&anx6345->aux, DP_SET_POWER, dpcd[0]);
++		if (err < 0) {
++			DRM_ERROR("Failed to power up DisplayPort link: %d\n",
++				  err);
++			return err;
++		}
+ 
+-	/* Power up the sink */
+-	err = drm_dp_link_power_up(&anx6345->aux, &anx6345->link);
+-	if (err < 0) {
+-		DRM_ERROR("Failed to power up DisplayPort link: %d\n", err);
+-		return err;
++		/*
++		 * According to the DP 1.1 specification, a "Sink Device must
++		 * exit the power saving state within 1 ms" (Section 2.5.3.1,
++		 * Table 5-52, "Sink Control Field" (register 0x600).
++		 */
++		usleep_range(1000, 2000);
+ 	}
+ 
+ 	/* Possibly enable downspread on the sink */
+@@ -194,20 +209,28 @@ static int anx6345_dp_link_training(stru
+ 	if (err)
+ 		return err;
+ 
+-	value = drm_dp_link_rate_to_bw_code(anx6345->link.rate);
++	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
++	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
+ 	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
+-			   SP_DP_MAIN_LINK_BW_SET_REG, value);
++			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
+ 	if (err)
+ 		return err;
+ 
++	dpcd[1] = drm_dp_max_lane_count(anx6345->dpcd);
++
+ 	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
+-			   SP_DP_LANE_COUNT_SET_REG, anx6345->link.num_lanes);
++			   SP_DP_LANE_COUNT_SET_REG, dpcd[1]);
+ 	if (err)
+ 		return err;
+ 
+-	err = drm_dp_link_configure(&anx6345->aux, &anx6345->link);
++	if (drm_dp_enhanced_frame_cap(anx6345->dpcd))
++		dpcd[1] |= DP_LANE_COUNT_ENHANCED_FRAME_EN;
++
++	err = drm_dp_dpcd_write(&anx6345->aux, DP_LINK_BW_SET, dpcd,
++				sizeof(dpcd));
++
+ 	if (err < 0) {
+-		DRM_ERROR("Failed to configure DisplayPort link: %d\n", err);
++		DRM_ERROR("Failed to configure link: %d\n", err);
+ 		return err;
+ 	}
+ 
