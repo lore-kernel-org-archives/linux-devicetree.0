@@ -4,89 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AACC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313D2C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8865121925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065CB2196E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573586912;
-	bh=5p8XaoqnDn3/iL5vGAHtPWuIHUH5n/w1YYsHYGnDe/4=;
+	s=default; t=1573587097;
+	bh=tnIvAM21Lk7J03KNXw80scA/GnDd6p9OSB2RLSkk2UE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tMLQ+uEynbCFcsiEtXhWbwG0z8I5pT4RcIFy7PIp5UmqZxW/Qo6bBayUeo6giUAWz
-	 D0KG9iYgNDoQW3YDt/M6+vNM1pQIXLT0RCA+Xq+IGhB09IgoZ9SOEiLtd95YPy5ixD
-	 HtEhBuG76wH95jrnX2YoiW6UtdEWNHR/JN0cul9o=
+	b=lJSCxAY9Us1UiR6GhF/t+PrDrxv13EwoLJIbK1KDlmEeVT1tVRRhvFDDqyi7ORQIv
+	 Lavs36U9thVY+rwKZRCpAVP+c0BaNI0XyUu5y6vAVLbXHml+kFA2jpaXnAPMCqFmxG
+	 ZdAADMX012+zyTk3kHR33G8SplQHJO1UlKNGHox4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfKLT2c (ORCPT
+        id S1727001AbfKLTbg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:28:32 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35199 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfKLT2b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:28:31 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n16so15934636oig.2;
-        Tue, 12 Nov 2019 11:28:29 -0800 (PST)
+        Tue, 12 Nov 2019 14:31:36 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42960 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbfKLTbg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:31:36 -0500
+Received: by mail-oi1-f195.google.com with SMTP id i185so15911436oif.9;
+        Tue, 12 Nov 2019 11:31:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1f1t/vx7cjzieQA+2HB6mtVDWaZlhCcx6hNFD68YUMg=;
-        b=Yxs6MFSLpJl6axfGYa0cnwQgyr+jRb4IPt0DQjwcXVDGthrxCeW4CS+6WFzerlJzDW
-         D6Qr2t64lCRWBST54K7LaePANpRLrNua1S99RnB/mgzdwZZmYwYJymV46z1L7k7cnXij
-         VgB0ZOkAan+olyL1QjyA7eaeoMmKluvPgTapaVNExhRaopGUeJIB3Cq9KmQPIFJCMbae
-         NpK8czZhpt0MEM1x73xeqYiX3NHqzSbc1TzY/ZZKSqpgFrL9jRiFAOQRle+0eEKwML18
-         vSks4NoNkY+WRPQDyxLV6bENNrO++GcYgnvj1Gx9RrZi0sK3yVIt42TGhRpsZ+ymU1As
-         P1MQ==
-X-Gm-Message-State: APjAAAWJTnJD29pmLgD3+zwNqIPlQmyjrnjfS9V1GztRIKwhPah7eOYC
-        UsGPAo0JUdocqX/jH7P2HA==
-X-Google-Smtp-Source: APXvYqzGgQOQC2/469EBUJJsFsEKSD9Q14S9vX3Bn2KAqFS+UEKvvAoHAngSDKJXbrXmpNbXhc15CQ==
-X-Received: by 2002:a05:6808:8d3:: with SMTP id k19mr466822oij.171.1573586909412;
-        Tue, 12 Nov 2019 11:28:29 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fQ8tuKZ2UW9QCYz0BR497mmF0XiSrRa5eQinsz9A154=;
+        b=IG408rLuTfrfP9QSpyE/4Z+t4bIynyERrxUO6GyORDLhICovaCU2Vh95aDmPK+5CsH
+         rtZF68mpFRTc0akpceNEbh9eirrCcm/qLQCSodt5Tmtxvut4VQaWbwYmHrRZRLx2RwSu
+         hrOwcX7it+EJvbNyNXmxfzLGDtTrjRy6VDqvd0NX6bQ6Xar+5vOwQjHuRXfCdrQuevs4
+         UWGR+/AgMMqs6nKYuWLUho+OKK2ybzxCMxpBrutLk+Cjs/KyUpTFZRNCaptxHoX6lIlh
+         Z3EybUL3UlivHBSatjXMT8k98dEXr4geACeLflcpBq5jWFodoJL46Xr6KYyuAdd68WKo
+         KSBw==
+X-Gm-Message-State: APjAAAWeIOl4usA4owpQAnvAjbPvEwmV3D2qZdB4tMHvFvHCRzGPxQ26
+        iZd6ZDWn9+so85L44aqx9g==
+X-Google-Smtp-Source: APXvYqz6AhgOyVl+Xgvdhm4Trx/gVZNkFu8ggUGq6yRbip4wF4kcWnuuo46df/TkPFftZd8m7FNXKg==
+X-Received: by 2002:aca:5301:: with SMTP id h1mr522205oib.154.1573587095176;
+        Tue, 12 Nov 2019 11:31:35 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t2sm5366972otm.75.2019.11.12.11.28.28
+        by smtp.gmail.com with ESMTPSA id d5sm5903145oic.23.2019.11.12.11.31.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:28:28 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:28:28 -0600
+        Tue, 12 Nov 2019 11:31:34 -0800 (PST)
+Date:   Tue, 12 Nov 2019 13:31:33 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Stefan Wahren <wahrenst@gmx.net>
-Cc:     Matthias Brugger <matthias.bgg@kernel.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Eric Anholt <eric@anholt.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Doug Berger <opendmb@gmail.com>, netdev@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH V5 net-next 3/7] dt-bindings: net: bcmgenet: Add BCM2711
- support
-Message-ID: <20191112192828.GA21918@bogus>
-References: <1573501766-21154-1-git-send-email-wahrenst@gmx.net>
- <1573501766-21154-4-git-send-email-wahrenst@gmx.net>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: pwm: allwinner: Add H6 PWM
+ description
+Message-ID: <20191112193133.GA27088@bogus>
+References: <20191108084517.21617-1-peron.clem@gmail.com>
+ <20191108084517.21617-2-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1573501766-21154-4-git-send-email-wahrenst@gmx.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191108084517.21617-2-peron.clem@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2019 20:49:22 +0100, Stefan Wahren wrote:
+On Fri,  8 Nov 2019 09:45:11 +0100, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 > 
-> The BCM2711 has some modifications to the GENET v5. So add this SoC
-> specific compatible.
+> H6 PWM block is basically the same as A20 PWM, except that it also has
+> bus clock and reset line which needs to be handled accordingly.
 > 
-> Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Expand Allwinner PWM binding with H6 PWM specifics.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 > ---
->  Documentation/devicetree/bindings/net/brcm,bcmgenet.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
