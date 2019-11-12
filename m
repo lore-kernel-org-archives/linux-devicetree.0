@@ -2,169 +2,101 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CE7C17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EFBC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43F1206B6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5842084F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azxIbnR1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uFX4TY5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfKLOMQ (ORCPT
+        id S1727192AbfKLOYG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:12:16 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37814 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfKLOMQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:12:16 -0500
-Received: by mail-ed1-f68.google.com with SMTP id k14so15012153eds.4;
-        Tue, 12 Nov 2019 06:12:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KxSPlrqtEzHjDjmMoesMoA1oYmvT3buCd5ykJgz1zH4=;
-        b=azxIbnR14SLX1EEBSNv3knBGIxYmKTsERV55xjemZBeEqgKPTy37mAxU7sFe2Rj/tf
-         OY1Jisto9ME9u6C31XRuv2Sh6WwETVDHCBCGdGvfUpUafPdNZRrn7hg8Fcc6kJVqsL+N
-         LDHra+Z0UDv49RtAlISWxn5bNJ65EXgriDHyOUw/jwOjySmNy/jmAbtwONICQJBTaP6I
-         QF5kBz2CAuZ6yfB3/QV7SzKo9ofZBaV/TfsijKaGB0av6B+9x7LaikNc5YYLvTJKHzeK
-         XZd39b7WwXlmuRPFEF/Xj4h87odt64jwzcjSVZx+vuArqAIJ+o1WeDZS/hjln6zSd+zW
-         aGog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KxSPlrqtEzHjDjmMoesMoA1oYmvT3buCd5ykJgz1zH4=;
-        b=uikXJrOJcwFWX59IwiiCZ/vKU4fMAZzvaHquO2WpR58DYmsONxR1wCFpE16pPf3g/y
-         24Q2so7MUppoTvspnGfTBORnXsobAmVMfiLopY2OYRxJYpH0K2Ph8Ix94RwXiO+aNP3y
-         +OIRWA706xG4yPxgIum5pLHs8+vnbqUhBzQkYBzKvcQNTS0ncN5VVAVGfcOyUOljBr6T
-         LeaxkIW65RTI/Ic+vI6ZXf+aUV9IHL+6jf/ekCQ2ZgawrS1cMU34GGkSefes7WwI39t4
-         et4LE/xm00OdfZS0QrStoJgs20jtWIBVNjbZPxucvwJ63TjCjI9+6X4AEhblcRXmbeTe
-         5reQ==
-X-Gm-Message-State: APjAAAUtaA/Z73efshZ4MGuhkbl8s+ZNIV1Ij2oa0LPRhpOnE8/mvawk
-        nNlcV/668Rrs9d5wslDSUL2VS83L96edbj0jnUw=
-X-Google-Smtp-Source: APXvYqx6gy2SiezBYVxCNFX0y4S7P2z/l2MUZWIDu9IBINqX69LmFc046Aug3tBhXJobpzrUhTTqryc2NmW89CYErdw=
-X-Received: by 2002:a50:91c4:: with SMTP id h4mr33376125eda.36.1573567933749;
- Tue, 12 Nov 2019 06:12:13 -0800 (PST)
+        Tue, 12 Nov 2019 09:24:06 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49286 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKLOYG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:24:06 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACENwBE090204;
+        Tue, 12 Nov 2019 08:23:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573568638;
+        bh=ojO2YUC3C1xyhuLDq8oEMHciFwHn5qSw8Xn6s33sf+0=;
+        h=From:To:CC:Subject:Date;
+        b=uFX4TY5mK7CrxRKA3TmdYIUxGiKa1iWP9VgMlgM8M49rJq6xVrE5fJ04Oum2oWMlW
+         xX+oWAesIY+gC71a3MQ+yISI9Tbxmgu8vgzig7NhwIaeTlOori6nZhLFWeiLm52Bxv
+         vJxY3hMmsZabBycD1mpkolZ6fojawtDHFIxchmqg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACENw0h018536
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 08:23:58 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 08:23:40 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 12 Nov 2019 08:23:40 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACENwTh099408;
+        Tue, 12 Nov 2019 08:23:58 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 0/3] ARM: dts: dra7: add vpe nodes 
+Date:   Tue, 12 Nov 2019 08:26:54 -0600
+Message-ID: <20191112142657.22898-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
- <20191112132010.18274-3-linux@rasmusvillemoes.dk> <CA+h21hqw16o0TqOV1WWYYcOs3YWJe=xq_K0=miU+BFTA31OTmQ@mail.gmail.com>
- <6d4292fcb0cf290837306388bdfe9b0f@www.loen.fr> <CA+h21hpE-Nu_Sh1fRizUoEs082ev=9nzuumSXDrk-QTXdnEbzg@mail.gmail.com>
- <aee81d64979bb72b63a8889fb7193c3f@www.loen.fr>
-In-Reply-To: <aee81d64979bb72b63a8889fb7193c3f@www.loen.fr>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 12 Nov 2019 16:12:02 +0200
-Message-ID: <CA+h21hqxpy-n6HBkyGSKFEm_CujG5x3Y3Wj-frj0OSwbVWgCng@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 16:04, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2019-11-12 15:03, Vladimir Oltean wrote:
-> > On Tue, 12 Nov 2019 at 15:49, Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> On 2019-11-12 14:53, Vladimir Oltean wrote:
-> >> > On Tue, 12 Nov 2019 at 15:20, Rasmus Villemoes
-> >> > <linux@rasmusvillemoes.dk> wrote:
-> >> >>
-> >> >> From: Vladimir Oltean <olteanv@gmail.com>
-> >> >>
-> >> >> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and
-> >> >> eth1
-> >> >> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
-> >> >>
-> >> >> Switching to interrupts offloads the PHY library from the task of
-> >> >> polling the MDIO status and AN registers (1, 4, 5) every second.
-> >> >>
-> >> >> Unfortunately, the BCM5464R quad PHY connected to the switch does
-> >> >> not
-> >> >> appear to have an interrupt line routed to the SoC.
-> >> >>
-> >> >> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> >> >> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> >> >> ---
-> >> >>  arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
-> >> >>  1 file changed, 4 insertions(+)
-> >> >>
-> >> >> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts
-> >> >> b/arch/arm/boot/dts/ls1021a-tsn.dts
-> >> >> index 5b7689094b70..135d36461af4 100644
-> >> >> --- a/arch/arm/boot/dts/ls1021a-tsn.dts
-> >> >> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-> >> >> @@ -203,11 +203,15 @@
-> >> >>         /* AR8031 */
-> >> >>         sgmii_phy1: ethernet-phy@1 {
-> >> >>                 reg = <0x1>;
-> >> >> +               /* SGMII1_PHY_INT_B: connected to IRQ2, active
-> >> low
-> >> >> */
-> >> >> +               interrupts-extended = <&extirq 2
-> >> >> IRQ_TYPE_EDGE_FALLING>;
-> >> >>         };
-> >> >>
-> >> >>         /* AR8031 */
-> >> >>         sgmii_phy2: ethernet-phy@2 {
-> >> >>                 reg = <0x2>;
-> >> >> +               /* SGMII2_PHY_INT_B: connected to IRQ2, active
-> >> low
-> >> >> */
-> >> >> +               interrupts-extended = <&extirq 2
-> >> >> IRQ_TYPE_EDGE_FALLING>;
-> >> >>         };
-> >> >>
-> >> >>         /* BCM5464 quad PHY */
-> >> >> --
-> >> >> 2.23.0
-> >> >>
-> >> >
-> >> > +netdev and Andrew for this patch, since the interrupt polarity
-> >> > caught
-> >> > his attention in v1.
-> >>
-> >> Certainly, the comments and the interrupt specifier do not match.
-> >> Which one is true?
-> >>
-> >>          M.
-> >> --
-> >> Jazz is not dead. It just smells funny...
-> >
-> > The interrupt specifier certainly works. So that points to an issue
-> > with the description. What do you mean, exactly? Does "active low"
-> > mean "level-triggered"? How would you have described this?
->
-> Active Low definitely implies level triggered. And if that's how it
-> is described in the TRM, than the interrupt specifier is wrong, and
-> just *seem to work* because the level goes back to high between two
-> interrupts.
->
-> Also, shared *edge* interrupts do not work, full stop. So I'm pretty
-> convinced that what you have here is just wrong.
->
->          M.
-> --
-> Jazz is not dead. It just smells funny...
+This patch series adds the needed clkctrl and ty-sysc nodes for VPE module.
+We also document the VPE DT bindings.
 
-Ok, I've tested both interrupts with IRQ_TYPE_LEVEL_LOW and they still
-work. I'll let Rasmus re-send if there is no trouble with the dtsi
-patch. Sorry for the trouble and thanks for teaching me something new.
+Changes since v3:
+- Patches [1](dt-bindings) and [5](driver compatible) were merged in
+  linux-media
+- Added special clock naming notice to commit message as per Tony's
+  comment
 
-Cheers,
--Vladimir
+Changes since v2:
+- Fix binding spdx license
+- Added Rob's ack 
+
+Changes since v1:
+- Added a patch to update the compatible in the driver
+- Removed unnededed #cell #size properties
+- Updated the compatible in dtsi to match binding
+- Split off the clk code into its own patch
+- Added device specific prefix
+- Converted binding to dt schema
+
+Benoit Parrot (3):
+  clk: ti: dra7: add vpe clkctrl data
+  ARM: dts: dra7: add vpe clkctrl node
+  ARM: dts: dra7: Add ti-sysc node for VPE
+
+ arch/arm/boot/dts/dra7-l4.dtsi       | 28 +++++++++++++++++++++++++---
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 18 ++++++++++++++++--
+ drivers/clk/ti/clk-7xx.c             |  6 ++++++
+ include/dt-bindings/clock/dra7.h     | 10 ++++++++++
+ 4 files changed, 57 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
