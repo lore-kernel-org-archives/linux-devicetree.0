@@ -2,191 +2,115 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C3EC17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EDCC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D1C21872
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D616E21925
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573571529;
-	bh=/HvgOf6HUts6GzdiBO6BMigawvotGnY8dSKJSz1QFbg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=iolaIUa8D9fOTnbdMnSLfVykWulVv5Z9U6iD4b/LlnGJpZjvYduIIYhoLbo9Mgrjj
-	 y6RtLaqdLRVm2fay0H+C1oz49Oqe51eYCTCwOHu9fba6BjMz43a0/6DN6T/cPiVRyY
-	 2tAnSozAdXBGmDh5IOtoGfYQmZSRhmGd7wR2Cw6o=
+	s=default; t=1573571966;
+	bh=wHDZMbSdKhyJC2fgnNIgn0VK5Tg314l+sk7EP5PeKTg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qS5S+39B6k14NtehHiz/poPr+lGTQfs1JZQvUXw2R+n9GUKLCYvPtqASJPcZjy9ZQ
+	 lDzU3FK3jhT6r1zrxSIvvHZZcx9BX4WlEAQw5AVZ6KRwUofwXkzimx7H8BB4cBdAu6
+	 M5oehFH6rslxarHMZ//VQ6jgB7luow/4jNBZIRIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfKLPMJ (ORCPT
+        id S1727133AbfKLPTW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:12:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbfKLPMJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:12:09 -0500
-Received: from [192.168.1.25] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C6C421925;
-        Tue, 12 Nov 2019 15:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573571527;
-        bh=/HvgOf6HUts6GzdiBO6BMigawvotGnY8dSKJSz1QFbg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=0WH/CQdx6aky+N+0vGH/lHlVfC3FfA/nff0WbP+77M/FG1fU8be7amU1J4jC7Js4F
-         OPzufjx81BtuXZvTw5wy/KC6KneoA/Jy3r/zMaWztJDZ5B1Z2pxj0Ulj+x2OI94zre
-         n2gdFy/JjETxTmD+wR5BerrtTq/YHTYPy3UfFQ80=
-Subject: Re: [PATCH] arm64: dts: agilex: Add EDAC Device Tree
-To:     thor.thayer@linux.intel.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1573249825-21769-1-git-send-email-thor.thayer@linux.intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- mQINBFEnvWwBEAC44OQqJjuetSRuOpBMIk3HojL8dY1krl8T8GJjfgc/Gh97CfVbrqhV5yQ3
- Sk/MW9mxO9KNvQCbZtthfn62YHmroNwipjZ6wKOMfKdtJR4+8JW/ShIJYnrMfwN8Wki6O+5a
- yPNNCeENHleV0FLVXw3aACxOcjEzGJHYmg4UC+56rfoxPEhKF6aGBTV5aGKMtQy77ywuqt12
- c+hlRXHODmXdIeT2V4/u/AsFNAq6UFUEvHrVj+dMIyv2VhjRvkcESIGnG12ifPdU7v/+wom/
- smtfOAGojgTCqpwd0Ay2xFzgGnSCIFRHp0I/OJqhUcwAYEAdgHSBVwiyTQx2jP+eDu3Q0jI3
- K/x5qrhZ7lj8MmJPJWQOSYC4fYSse2oVO+2msoMTvMi3+Jy8k+QNH8LhB6agq7wTgF2jodwO
- yij5BRRIKttp4U62yUgfwbQtEUvatkaBQlG3qSerOzcdjSb4nhRPxasRqNbgkBfs7kqH02qU
- LOAXJf+y9Y1o6Nk9YCqb5EprDcKCqg2c8hUya8BYqo7y+0NkBU30mpzhaJXncbCMz3CQZYgV
- 1TR0qEzMv/QtoVuuPtWH9RCC83J5IYw1uFUG4RaoL7Z03fJhxGiXx3/r5Kr/hC9eMl2he6vH
- 8rrEpGGDm/mwZOEoG5D758WQHLGH4dTAATg0+ZzFHWBbSnNaSQARAQABtCFEaW5oIE5ndXll
- biA8ZGluZ3V5ZW5Aa2VybmVsLm9yZz6JAjgEEwECACIFAlbG5oQCGwMGCwkIBwMCBhUIAgkK
- CwQWAgMBAh4BAheAAAoJEBmUBAuBoyj0fIgQAICrZ2ceRWpkZv1UPM/6hBkWwOo3YkzSQwL+
- AH15hf9xx0D5mvzEtZ97ZoD0sAuB+aVIFwolet+nw49Q8HA3E/3j0DT7sIAqJpcPx3za+kKT
- twuQ4NkQTTi4q5WCpA5b6e2qzIynB50b3FA6bCjJinN06PxhdOixJGv1qDDmJ01fq2lA7/PL
- cny/1PIo6PVMWo9nf77L6iXVy8sK/d30pa1pjhMivfenIleIPYhWN1ZdRAkH39ReDxdqjQXN
- NHanNtsnoCPFsqeCLmuUwcG+XSTo/gEM6l2sdoMF4qSkD4DdrVf5rsOyN4KJAY9Uqytn4781
- n6l1NAQSRr0LPT5r6xdQ3YXIbwUfrBWh2nDPm0tihuHoH0CfyJMrFupSmjrKXF84F3cq0DzC
- yasTWUKyW/YURbWeGMpQH3ioDLvBn0H3AlVoSloaRzPudQ6mP4O8mY0DZQASGf6leM82V3t0
- Gw8MxY9tIiowY7Yl2bHqXCorPlcEYXjzBP32UOxIK7y7AQ1JQkcv6pZ0/6lX6hMshzi9Ydw0
- m8USfFRZb48gsp039gODbSMCQ2NfxBEyUPw1O9nertCMbIO/0bHKkP9aiHwg3BPwm3YL1UvM
- ngbze/8cyjg9pW3Eu1QAzMQHYkT1iiEjJ8fTssqDLjgJyp/I3YHYUuAf3i8SlcZTusIwSqnD
- uQINBFEnvWwBEADZqma4LI+vMqJYe15fxnX8ANw+ZuDeYHy17VXqQ7dA7n8E827ndnoXoBKB
- 0n7smz1C0I9StarHQPYTUciMLsaUpedEfpYgqLa7eRLFPvk/cVXxmY8Pk+aO8zHafr8yrFB1
- cYHO3Ld8d/DvF2DuC3iqzmgXzaRQhvQZvJ513nveCa2zTPPCj5w4f/Qkq8OgCz9fOrf/CseM
- xcP3Jssyf8qTZ4CTt1L6McRZPA/oFNTTgS/KA22PMMP9i8E6dF0Nsj0MN0R7261161PqfA9h
- 5c+BBzKZ6IHvmfwY+Fb0AgbqegOV8H/wQYCltPJHeA5y1kc/rqplw5I5d8Q6B29p0xxXSfaP
- UQ/qmXUkNQPNhsMnlL3wRoCol60IADiEyDJHVZRIl6U2K54LyYE1vkf14JM670FsUH608Hmk
- 30FG8bxax9i+8Muda9ok/KR4Z/QPQukmHIN9jVP1r1C/aAEvjQ2PK9aqrlXCKKenQzZ8qbeC
- rOTXSuJgWmWnPWzDrMxyEyy+e84bm+3/uPhZjjrNiaTzHHSRnF2ffJigu9fDKAwSof6SwbeH
- eZcIM4a9Dy+Ue0REaAqFacktlfELeu1LVzMRvpIfPua8izTUmACTgz2kltTaeSxAXZwIziwY
- prPU3cfnAjqxFHO2TwEpaQOMf8SH9BSAaCXArjfurOF+Pi3lKwARAQABiQIfBBgBAgAJBQJR
- J71sAhsMAAoJEBmUBAuBoyj0MnIQAI+bcNsfTNltf5AbMJptDgzISZJrYCXuzOgv4+d1CubD
- 83s0k6VJgsiCIEpvELQJsr58xB6l+o3yTBZRo/LViNLk0jF4CmCdXWjTyaQAIceEdlaeeTGH
- d5GqAud9rv9q1ERHTcvmoEX6pwv3m66ANK/dHdBV97vXacl+BjQ71aRiAiAFySbJXnqj+hZQ
- K8TCI/6TOtWJ9aicgiKpmh/sGmdeJCwZ90nxISvkxDXLEmJ1prvbGc74FGNVNTW4mmuNqj/p
- oNr0iHan8hjPNXwoyLNCtj3I5tBmiHZcOiHDUufHDyKQcsKsKI8kqW3pJlDSACeNpKkrjrib
- 3KLQHSEhTQCt3ZUDf5xNPnFHOnBjQuGkumlmhkgD5RVguki39AP2BQYp/mdk1NCRQxz5PR1B
- 2w0QaTgPY24chY9PICcMw+VeEgHZJAhuARKglxiYj9szirPd2kv4CFu2w6a5HNMdVT+i5Hov
- cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
- Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
- JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
-Message-ID: <86100301-7973-a841-61d1-029cf3808e47@kernel.org>
-Date:   Tue, 12 Nov 2019 09:12:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 10:19:22 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35285 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfKLPTW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 10:19:22 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q22so12078336pgk.2;
+        Tue, 12 Nov 2019 07:19:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BZANFq4xix4Xx203tkzaxuFkXxyuVqwVXr98xMHZnnc=;
+        b=YeSbv/o238TihuHuHsLnc7+bdmZy/QkzZyYaF031u7mpD8YNKqev8YWcQrJkAITcwU
+         3BVH3qOs7m0v1XmCSlfFJEMmvXcqPQ/ozYwOiRd3WrORKgOKBiKPR1WRHs6nEg/tT/N5
+         sHdex8rRaIaHt45wfzjAfxlJMTcLK9FO2UpECNI4J/epf1RCxgtiv0ZrhnbSRJzGfg1j
+         a8XUnFliDvDxcNV3k9M3ElszJRYH2qlhzNv1Qzj0VPBMsK5q6YEeSuu+i3anYhitG/dV
+         IDDxHdYdyy7bjk11+zSS894TYOnD55EAcCNEFOYSmjEMwD7WQPhOBUNobxBfBvu6rkuE
+         3JUA==
+X-Gm-Message-State: APjAAAV8fDTDhEvq4xpng9QJnpEQBk9WueqRMDmFiUDjemB5TrEx5d5j
+        zP4ZSOA1y9Xn2J6vO4yAlHs=
+X-Google-Smtp-Source: APXvYqwmlQNvZHi0kGC31dBquXDWMrtHIO5u9GdO7oPYqwAqhXo8lw8ouNas9FGnjW/2SPI9uWr2og==
+X-Received: by 2002:aa7:8a97:: with SMTP id a23mr37221666pfc.76.1573571960433;
+        Tue, 12 Nov 2019 07:19:20 -0800 (PST)
+Received: from kozik-lap ([118.189.143.39])
+        by smtp.googlemail.com with ESMTPSA id 21sm25298308pfa.170.2019.11.12.07.19.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Nov 2019 07:19:19 -0800 (PST)
+Date:   Tue, 12 Nov 2019 16:19:15 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marian Mihailescu <mihailescu2m@gmail.com>
+Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kgene@kernel.org
+Subject: Re: [PATCH v4 2/2] ARM: dts: exynos5420: add mali dt node and enable
+ mali on Odroid XU3/4
+Message-ID: <20191112151915.GA15786@kozik-lap>
+References: <20191106225527.9121-1-mihailescu2m@gmail.com>
+ <20191106225527.9121-2-mihailescu2m@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1573249825-21769-1-git-send-email-thor.thayer@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191106225527.9121-2-mihailescu2m@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 11/8/19 3:50 PM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
+On Thu, Nov 07, 2019 at 09:25:27AM +1030, Marian Mihailescu wrote:
+> Add device tree node for Mali GPU for Exynos 542x SoC.
+> GPU is disabled by default, and is enabled for each board after the
+> regulator is defined. Tested on Odroid-XU4.
 > 
-> Add the device tree nodes required to support the Intel
-> Agilex SoCFPGA EDAC framework.
+> Changes since v3:
+> - fixed compatible to match bindings
 > 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> Changes since v2:
+> - separate patch for bindings
+> - fixed bindings typo
+> 
+> Changes since v1:
+> - used generic node and label for GPU
+> - added bindings for compatible
+> - fixed irq indentation
+> - fixed interrupt-names to match bindings
+> - added cooling cells for future TMU connection
+> - used generic node and label for GPU opp table
+> - removed always-on from SoC GPU regulator
+> 
+> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
 > ---
->  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 59 +++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> index f9d1b26a3384..2b3468590f30 100644
-> --- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> @@ -534,6 +534,65 @@
->  			reg = <0xf8011100 0xc0>;
->  		};
->  
-> +		eccmgr {
-> +			compatible = "altr,socfpga-s10-ecc-manager",
-> +				     "altr,socfpga-a10-ecc-manager";
-> +			altr,sysmgr-syscon = <&sysmgr>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			interrupts = <0 15 4>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			ranges;
-> +
-> +			sdramedac {
-> +				compatible = "altr,sdram-edac-s10";
-> +				altr,sdr-syscon = <&sdr>;
-> +				interrupts = <16 4>;
-> +			};
-> +
-> +			ocram-ecc@ff8cc000 {
-> +				compatible = "altr,socfpga-s10-ocram-ecc",
-> +					     "altr,socfpga-a10-ocram-ecc";
-> +				reg = <0xff8cc000 0x100>;
-> +				altr,ecc-parent = <&ocram>;
-> +				interrupts = <1 4>;
-> +			};
-> +
-> +			usb0-ecc@ff8c4000 {
-> +				compatible = "altr,socfpga-s10-usb-ecc",
-> +					     "altr,socfpga-usb-ecc";
-> +				reg = <0xff8c4000 0x100>;
-> +				altr,ecc-parent = <&usb0>;
-> +				interrupts = <2 4>;
-> +			};
-> +
-> +			emac0-rx-ecc@ff8c0000 {
-> +				compatible = "altr,socfpga-s10-eth-mac-ecc",
-> +					     "altr,socfpga-eth-mac-ecc";
-> +				reg = <0xff8c0000 0x100>;
-> +				altr,ecc-parent = <&gmac0>;
-> +				interrupts = <4 4>;
-> +			};
-> +
-> +			emac0-tx-ecc@ff8c0400 {
-> +				compatible = "altr,socfpga-s10-eth-mac-ecc",
-> +					     "altr,socfpga-eth-mac-ecc";
-> +				reg = <0xff8c0400 0x100>;
-> +				altr,ecc-parent = <&gmac0>;
-> +				interrupts = <5 4>;
-> +			};
-> +
-> +			sdmmca-ecc@ff8c8c00 {
-> +				compatible = "altr,socfpga-s10-sdmmc-ecc",
-> +					     "altr,socfpga-sdmmc-ecc";
-> +				reg = <0xff8c8c00 0x100>;
-> +				altr,ecc-parent = <&mmc>;
-> +				interrupts = <14 4>,
-> +					     <15 4>;
-> +			};
-> +		};
-> +
->  		qspi: spi@ff8d2000 {
->  			compatible = "cdns,qspi-nor";
->  			#address-cells = <1>;
->
+>  arch/arm/boot/dts/exynos5420.dtsi             | 50 +++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  6 +++-
 
-Applied!
+Hi,
 
-Dinh
+Unfortunately this does not apply around exynos5422-odroid-core.dtsi.
+I think there were no changes to this file in current development cycle
+so I am surprised that there are conflicts.
+
+On what version were you basing your patch? Was it tested on latest
+kernel? The patches should be based usually on one of:
+1. current-rc1 (v5.4-rc1)
+2. latest-rc (v5.4-rc7)
+3. maintainer's tree (my next/dt or for-next)
+4. linux-next
+
+In all other cases the patch would need rebasing and re-testing.
+
+Best regards,
+Krzysztof
+
