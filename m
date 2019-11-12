@@ -2,127 +2,82 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8B9C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 08:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8974EC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 08:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D072084F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 08:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595E4206A3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 08:36:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LS0EIrDc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbfKLIRn (ORCPT
+        id S1725847AbfKLIgr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:17:43 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44363 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfKLIRn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 03:17:43 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z188so4868687lfa.11;
-        Tue, 12 Nov 2019 00:17:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=eL10nrIAWoedwqBLA4/hoY9p88x8qlk9u4/3BdzAMXQ=;
-        b=V0+Lbibv09k6PKhM2IBhO+mU5M6TVTELjO+BD/YrbZm5cOK8ya00ZfbMBqZ67Dx/ZD
-         dpiAl2e31HV2HDjOy37y1qus8dET++CHAFVJGGF9N3awFAz/em0Ka+CDpjq872Ey6gUj
-         bQ86CiD7Y1SXUM38N9RnfriAPg4ct28Xzw2RNojfUPF6sF1aBOMnnJTcnu+YM6lEeYqd
-         57d/jZ7mpEe1s+R0dAHkPIq8p9ELAUgSFJXv3tuvfrO9J5s3QwaEidNtuQ690vutziRw
-         Bc0ZU0UMaR+yYpLjN5PLujB56+y6wBQavbT7/fX1ugAof507v3EndQxvORFnBQduAYpj
-         PmNQ==
-X-Gm-Message-State: APjAAAUofyicWh1YlnsXukuV/HN4ipUkCqJLTeoO+iSI+EIqOXyBBxw3
-        6Nk1z4K6s4sf6tVfZi+s28M=
-X-Google-Smtp-Source: APXvYqy++dNA7rn1i/h/1y2eqNpsTch151++qveuGk99u1XQqZB1AoJ0pcKsASlT+VV8066WMMPZrA==
-X-Received: by 2002:ac2:4d10:: with SMTP id r16mr850227lfi.70.1573546659468;
-        Tue, 12 Nov 2019 00:17:39 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 28sm9104412lfy.38.2019.11.12.00.17.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 00:17:38 -0800 (PST)
-Date:   Tue, 12 Nov 2019 10:17:26 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] of: property: Fix documentation for out values
-Message-ID: <20191112081726.GA8291@localhost.localdomain>
+        Tue, 12 Nov 2019 03:36:47 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:17835 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725775AbfKLIgr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 03:36:47 -0500
+X-UUID: 429dcf9d88e949cf9cd77e1c58cc6801-20191112
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=wOiJ/ZV6AQNxGxk6gds5DgISbMKwGhSMX9TJ3owZE4M=;
+        b=LS0EIrDcpmfYjEICUNiS8CFBaBVQwHpDf/Aqak8j4SjoAGz50hyeFOsF1ZvX52aGP6Yo60eJexwrquPfP2xQeFHodxtGGn2VozpmrGtwZboVquJ4pIVIJH4CQr5tee5uJLcixUx1J6AAiUhqZy4+jSSRqsVRZe+4Lf0DdbgdAJQ=;
+X-UUID: 429dcf9d88e949cf9cd77e1c58cc6801-20191112
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1148378184; Tue, 12 Nov 2019 16:36:41 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 12 Nov 2019 16:36:38 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 12 Nov 2019 16:36:37 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v4 01/11] dt-bindings: phy-mtk-tphy: add two optional properties for u2phy
+Date:   Tue, 12 Nov 2019 16:36:26 +0800
+Message-ID: <1573547796-29566-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: C4F3494EE8EF55C3D6A970A8D060227C9FCF13636542444D1B1EFA63D29410A62000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Property fetching functions which return number of successfully fetched
-properties should not state that out-values are only modified if 0 is
-returned. Fix this.
+QWRkIHR3byBvcHRpb25hbCBwcm9wZXJ0aWVzLCBvbmUgZm9yIHR1bmluZyBKLUsgdm9sdGFnZSBi
+eSBJTlRSLA0KYW5vdGhlciBmb3IgZGlzY29ubmVjdCB0aHJlc2hvbGQsIGJvdGggb2YgdGhlbSBh
+cmUgcmVsYXRlZCB3aXRoDQpjb25uZWN0IGRldGVjdGlvbg0KDQpTaWduZWQtb2ZmLWJ5OiBDaHVu
+ZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQotLS0NCnY0OiBubyBjaGFuZ2Vz
+DQoNCnYzOiBjaGFuZ2UgY29tbWl0IGxvZw0KDQp2MjogY2hhbmdlIGRlc2NyaXB0aW9uDQotLS0N
+CiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1tdGstdHBoeS50eHQg
+fCAyICsrDQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0DQpp
+bmRleCBhNWY3YTRmMGRiYzEuLmNlNmFiZmJkZmJlMSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW10ay10cGh5LnR4dA0KKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0DQpAQCAtNTIs
+NiArNTIsOCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzIChQSFlfVFlQRV9VU0IyIHBvcnQgKGNoaWxk
+KSBub2RlKToNCiAtIG1lZGlhdGVrLGV5ZS12cnQJOiB1MzIsIHRoZSBzZWxlY3Rpb24gb2YgVlJU
+IHJlZmVyZW5jZSB2b2x0YWdlDQogLSBtZWRpYXRlayxleWUtdGVybQk6IHUzMiwgdGhlIHNlbGVj
+dGlvbiBvZiBIU19UWCBURVJNIHJlZmVyZW5jZSB2b2x0YWdlDQogLSBtZWRpYXRlayxiYzEyCTog
+Ym9vbCwgZW5hYmxlIEJDMTIgb2YgdTJwaHkgaWYgc3VwcG9ydCBpdA0KKy0gbWVkaWF0ZWssZGlz
+Y3RoCTogdTMyLCB0aGUgc2VsZWN0aW9uIG9mIGRpc2Nvbm5lY3QgdGhyZXNob2xkDQorLSBtZWRp
+YXRlayxpbnRyCTogdTMyLCB0aGUgc2VsZWN0aW9uIG9mIGludGVybmFsIFIgKHJlc2lzdGFuY2Up
+DQogDQogRXhhbXBsZToNCiANCi0tIA0KMi4yMy4wDQo=
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/of/property.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index d7fa75e31f22..4aae93cdc1ce 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -164,7 +164,8 @@ EXPORT_SYMBOL_GPL(of_property_read_u64_index);
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-- * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @out_values:	pointer to return value, modified only if return value is
-+ *		greater than 0.
-  * @sz_min:	minimum number of array elements to read
-  * @sz_max:	maximum number of array elements to read, if zero there is no
-  *		upper limit on the number of elements in the dts entry but only
-@@ -212,7 +213,8 @@ EXPORT_SYMBOL_GPL(of_property_read_variable_u8_array);
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-- * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @out_values:	pointer to return value, modified only if return value is
-+ *		greater than 0.
-  * @sz_min:	minimum number of array elements to read
-  * @sz_max:	maximum number of array elements to read, if zero there is no
-  *		upper limit on the number of elements in the dts entry but only
-@@ -260,7 +262,8 @@ EXPORT_SYMBOL_GPL(of_property_read_variable_u16_array);
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-- * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @out_values:	pointer to return value, modified only if return value is
-+ *		greater than 0.
-  * @sz_min:	minimum number of array elements to read
-  * @sz_max:	maximum number of array elements to read, if zero there is no
-  *		upper limit on the number of elements in the dts entry but only
-@@ -334,7 +337,8 @@ EXPORT_SYMBOL_GPL(of_property_read_u64);
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-- * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @out_values:	pointer to return value, modified only if return value is
-+ *		greater than 0.
-  * @sz_min:	minimum number of array elements to read
-  * @sz_max:	maximum number of array elements to read, if zero there is no
-  *		upper limit on the number of elements in the dts entry but only
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
