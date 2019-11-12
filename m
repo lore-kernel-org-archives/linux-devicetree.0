@@ -2,60 +2,59 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D712C17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8FBC17448
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673C120656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A2E222C5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wv6vD6/y"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rxpn55xz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfKLOvo (ORCPT
+        id S1727567AbfKLOvw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:51:44 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41736 "EHLO
+        Tue, 12 Nov 2019 09:51:52 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41710 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfKLOvI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:51:08 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEp5qn105891;
-        Tue, 12 Nov 2019 08:51:05 -0600
+        with ESMTP id S1727348AbfKLOvF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:51:05 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEolHT105772;
+        Tue, 12 Nov 2019 08:50:47 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573570265;
-        bh=eDCdfymwg3zUktc3xZyxe+n8OYjhvINPbAjTECSZBfc=;
+        s=ti-com-17Q1; t=1573570247;
+        bh=tLf8SXtD5MIh4RuLfkAo79HCpF/i9eG4PtrsPy5Sv/A=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wv6vD6/ypp26I4lUav6rpffwDUMYCJffXrGggbBdr6fJhnZpO9LoU0x1S410an/nQ
-         5UixoTFz2esaXhpUQ9pEpLQeVFLXF5Z5IDx180b10SNDC6qQifSrS/x/sBEbOxcmee
-         /+jDMsXCywFO4XAkf4/yXzAC0S52DkV0R+935VNY=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEp512024388
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:51:05 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:51:04 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+        b=Rxpn55xzSMr41A7LDNhtoeirfJ0nfSSqqVVXr8qEzDeNn0KeM0ix+nRTxgsI2OZP3
+         rBpKUDkypXQFFGXk08xfFUW7THKqN+A4/c/r8UU4k7Tsdfbf0ETBPfVtgpJ2p9fClv
+         4fWa8uWKC2NXwuHtYRuxx6OmS3AYOdoM1rCpah3Q=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEolWo070274;
+        Tue, 12 Nov 2019 08:50:47 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE110.ent.ti.com
  (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
+ Nov 2019 08:50:30 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
  Frontend Transport; Tue, 12 Nov 2019 08:50:47 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokf5068428;
-        Tue, 12 Nov 2019 08:51:04 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEokel068428;
+        Tue, 12 Nov 2019 08:50:47 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [RESEND Patch v3 19/20] media: ti-vpe: cal: fix enum_mbus_code/frame_size subdev arguments
-Date:   Tue, 12 Nov 2019 08:53:46 -0600
-Message-ID: <20191112145347.23519-20-bparrot@ti.com>
+Subject: [RESEND Patch v3 01/20] dt-bindings: media: cal: update binding to use syscon
+Date:   Tue, 12 Nov 2019 08:53:28 -0600
+Message-ID: <20191112145347.23519-2-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112145347.23519-1-bparrot@ti.com>
 References: <20191112145347.23519-1-bparrot@ti.com>
@@ -67,35 +66,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Make sure that both enum_mbus_code() and enum_framesize() properly
-populate the .which parameter member, otherwise -EINVAL is return
-causing the subdev asynchronous registration handshake to fail.
+Update Device Tree bindings for the CAL driver to use syscon to access
+the phy config register instead of trying to map it directly.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/cal.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/media/ti-cal.txt | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 92a54d59d433..be54806180a5 100644
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -1493,6 +1493,7 @@ static int cal_enum_framesizes(struct file *file, void *fh,
- 	fse.index = fsize->index;
- 	fse.pad = 0;
- 	fse.code = fmt->code;
-+	fse.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+index ae9b52f37576..93096d924786 100644
+--- a/Documentation/devicetree/bindings/media/ti-cal.txt
++++ b/Documentation/devicetree/bindings/media/ti-cal.txt
+@@ -10,9 +10,14 @@ Required properties:
+ - compatible: must be "ti,dra72-cal"
+ - reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
+ 	control address space
+-- reg-names: cal_top, cal_rx_core0, cal_rx_core1, and camerrx_control
++- reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
+ 	     registers
+ - interrupts: should contain IRQ line for the CAL;
++- ti,camerrx-control: phandle to the device control module and offset to
++		      the control_camerarx_core register.
++		      This node is meant to replace the "camerrx_control"
++		      reg entry above but "camerrx_control" is still
++		      handled for backward compatibility.
  
- 	ret = v4l2_subdev_call(ctx->sensor, pad, enum_frame_size, NULL, &fse);
- 	if (ret)
-@@ -1833,6 +1834,7 @@ static int cal_async_bound(struct v4l2_async_notifier *notifier,
+ CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
+ should contain a 'port' child node with child 'endpoint' node. Please
+@@ -25,13 +30,12 @@ Example:
+ 		ti,hwmods = "cal";
+ 		reg = <0x4845B000 0x400>,
+ 		      <0x4845B800 0x40>,
+-		      <0x4845B900 0x40>,
+-		      <0x4A002e94 0x4>;
++		      <0x4845B900 0x40>;
+ 		reg-names = "cal_top",
+ 			    "cal_rx_core0",
+-			    "cal_rx_core1",
+-			    "camerrx_control";
++			    "cal_rx_core1";
+ 		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		ti,camerrx-control = <&scm_conf 0xE94>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
- 		memset(&mbus_code, 0, sizeof(mbus_code));
- 		mbus_code.index = j;
-+		mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
- 		ret = v4l2_subdev_call(subdev, pad, enum_mbus_code,
- 				       NULL, &mbus_code);
- 		if (ret)
 -- 
 2.17.1
 
