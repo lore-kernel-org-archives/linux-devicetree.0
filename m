@@ -2,176 +2,98 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043D2C17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32047C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE69721783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0557B21A49
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 09:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YOUp0Sb0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TLMp9JmQ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e/QkaBjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725874AbfKLJAJ (ORCPT
+        id S1727142AbfKLJDT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 04:00:09 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:33722 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfKLJAJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 04:00:09 -0500
-Received: by mail-ua1-f65.google.com with SMTP id a13so2404012uaq.0
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 01:00:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1mTS09YV5sLbGRhR8eLBR8az5kI+VEtyXkMiASWLN98=;
-        b=YOUp0Sb06dRuaudxR7t7caTwSTstbvIIdATOS4cpPVNBtB8mbaIJyxZAurEvSsKwhu
-         j6KD9pvfJYz2QJr9Wg8Lkuyx0LEC4wAwEfKx/Oti0eD8qvVCV0JQ6KoTRYOGcEDL6Qp6
-         GECThp5a8BbccT0sBfHGbUfvnicncyqsspf6ISAwZ7HYOxZ1EzbF6I5mchGssao0Hv60
-         GEltbF2Jfx1T1ZMhrqJwIHFXhSEVlYR9nWi9gL/l/q+lY7n3nZGptVdTOUwpA9LDRqBs
-         zcn8s15pCOUOXG2SlncwUP0j8Ql61wdbe1m5siOyJ50PUmu+FxdXenD9CYpRSxaO3bI8
-         rV+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1mTS09YV5sLbGRhR8eLBR8az5kI+VEtyXkMiASWLN98=;
-        b=oSr/51IczJgdd1NUoTdhJUxQ7FhK7yEpT4LWSqD4S7Uqt0Lc8KYdTF2igTzu7bL3fY
-         9kjcD+ITPLKgoMgOjB3Vdgvm4tR7wQzHJqhPurbhM3qbeIQMwAmokerqkg+reajDPuhr
-         fKATcc5EIN5LNPCuJ/yzmhb+TRR/bjOBXNB1WzgDPnD6gUW7E39aD4Ji1Alfr+PyBYTw
-         mzChZlUcuNzXxa047q7kcpxdePSHrwUVi73uqNBsrfFZcfpXX+eVSYz6XLpI6QuMc40/
-         lXB2qKIZ5qutdxWrGeuwbsC/8VEyWreWHzmx6OXi6boDQkZKATLBMRe9AtEf1qmjPG10
-         YPoQ==
-X-Gm-Message-State: APjAAAUl8hFCsH3Pe5lHihSQBvgZvmkOX7Mu45nxr+ZVo+maCaI4Quc6
-        W2jw+PEv3nIs3XU3zjhu66b+dEoYkdTS79ljEkQRqg==
-X-Google-Smtp-Source: APXvYqxabd40sALVZ8OQ7ToAPJNZ/uS9Scd5B48SraEZjMFQA9vGEPI0Qj3t3JkXgO0wuY66RFrxxze3Ex9ZHJlQsok=
-X-Received: by 2002:ab0:24ce:: with SMTP id k14mr19253276uan.15.1573549208426;
- Tue, 12 Nov 2019 01:00:08 -0800 (PST)
+        Tue, 12 Nov 2019 04:03:19 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:50738 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfKLJDT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 04:03:19 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9453A60D93; Tue, 12 Nov 2019 09:03:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573549398;
+        bh=LHrXLLcNflZB2+NvOcUkU7ZFzJgbXbolPPApRHfDjVg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TLMp9JmQjQAvPoSUwrfRnjN2pIv2GmlbxzFbSN7Y+O65rz7PfHaofd4oD012w1bAh
+         WXBDQyFZvdYx+J+Zl1sc3HPFYAClkjY48lGg3RdW4fN4B3pbU1+XcaH4+vfPTYXsjy
+         Pq1l6CThVSYlBM/gbYcHT1r8pMqwqIWIUIvImdPU=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 2E62B601B4;
+        Tue, 12 Nov 2019 09:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573549396;
+        bh=LHrXLLcNflZB2+NvOcUkU7ZFzJgbXbolPPApRHfDjVg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=e/QkaBjRxOp4UK+rzyhGuw5XcZ68Git7gpVqeQP6Q8qx4xZpyzsSBpoHCy9VUackf
+         jvXosEZBErKg5KmWUPByAgC9LW7+R3NkSq9bKCEKUDlSOIZx4IcQHyi6PPTvUIhr+T
+         DLlD9gouGAwhiN5p9InA+Hrn2J5M8llQAVR+frHo=
 MIME-Version: 1.0
-References: <25466090-3b24-2695-10fb-88c59be3f149@fivetechno.de>
-In-Reply-To: <25466090-3b24-2695-10fb-88c59be3f149@fivetechno.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 12 Nov 2019 09:59:32 +0100
-Message-ID: <CAPDyKFqo76wi0-7LQqSXuH3YOUSdTTLySzsxEGkEvZayAPuj6g@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add SDR104 mode to SD-card I/F
- on rk3399-roc-pc
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 Nov 2019 14:33:14 +0530
+From:   kgunda@codeaurora.org
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     swboyd@chromium.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and
+ pm6150l
+In-Reply-To: <20191111112842.GK3218@dell>
+References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+ <20191111112842.GK3218@dell>
+Message-ID: <8a6ae98c18ba7bc2effa535dfa0f647c@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 at 09:45, Markus Reichl <m.reichl@fivetechno.de> wrote:
->
-> Add SDR104 capability and regulators to SD card node.
-> While at it, fix a typo in lcd pinctrl and remove two
-> undocumented bindings from pmic.
->
-> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-
-FWIW:
-
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
-
-> ---
-> v2: Remove always-on from vcc3v0_sd
-> ---
->  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 30 +++++++++++++++----
->  1 file changed, 24 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> index d1eb55c855b3..a31099f7620b 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> @@ -135,6 +135,19 @@
->                 vin-supply = <&vcc_1v8>;
->         };
->
-> +       vcc3v0_sd: vcc3v0-sd {
-> +               compatible = "regulator-fixed";
-> +               enable-active-high;
-> +               gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_HIGH>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&vcc3v0_sd_en>;
-> +               regulator-name = "vcc3v0_sd";
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <3000000>;
-> +               regulator-max-microvolt = <3000000>;
-> +               vin-supply = <&vcc3v3_sys>;
-> +       };
-> +
->         vcc3v3_sys: vcc3v3-sys {
->                 compatible = "regulator-fixed";
->                 regulator-name = "vcc3v3_sys";
-> @@ -293,8 +306,6 @@
->                 vcc10-supply = <&vcc3v3_sys>;
->                 vcc11-supply = <&vcc3v3_sys>;
->                 vcc12-supply = <&vcc3v3_sys>;
-> -               vcc13-supply = <&vcc3v3_sys>;
-> -               vcc14-supply = <&vcc3v3_sys>;
->                 vddio-supply = <&vcc_3v0>;
->
->                 regulators {
-> @@ -576,7 +587,7 @@
->
->         lcd-panel {
->                 lcd_panel_reset: lcd-panel-reset {
-> -                       rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
-> +                       rockchip,pins = <4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_up>;
->                 };
->         };
->
-> @@ -602,6 +613,10 @@
->                 vsel2_gpio: vsel2-gpio {
->                         rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
->                 };
-> +
-> +               pmic_int_l: pmic-int-l {
-> +                       rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-> +               };
->         };
->
->         sdio-pwrseq {
-> @@ -610,9 +625,9 @@
->                 };
->         };
->
-> -       pmic {
-> -               pmic_int_l: pmic-int-l {
-> -                       rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-> +       sdmmc {
-> +               vcc3v0_sd_en: vcc3v0-sd-en {
-> +                       rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
->                 };
->         };
->
-> @@ -667,6 +682,9 @@
->         cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
->         disable-wp;
->         max-frequency = <150000000>;
-> +       sd-uhs-sdr104;
-> +       vmmc-supply = <&vcc3v0_sd>;
-> +       vqmmc-supply = <&vcc_sdio>;
->         pinctrl-names = "default";
->         pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
->         status = "okay";
-> --
-> 2.20.1
->
+On 2019-11-11 16:58, Lee Jones wrote:
+> On Tue, 05 Nov 2019, Kiran Gunda wrote:
+> 
+>> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
+>> found on SC7180 based platforms.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> ---
+>>  - Changes from V1:
+>>    Sorted the macros and compatibles.
+>> 
+>>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
+>>  drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
+>>  2 files changed, 6 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt 
+>> b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+>> index 1437062..b5fc64e 100644
+>> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+>> @@ -32,6 +32,8 @@ Required properties:
+>>                     "qcom,pm8998",
+>>                     "qcom,pmi8998",
+>>                     "qcom,pm8005",
+>> +		   "qcom,pm6150",
+>> +		   "qcom,pm6150l",
+> 
+> Tabbing looks off.
+yes. Placed a tab mistakenly. Going to address in next post.
