@@ -2,98 +2,209 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498F8C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E73AC17440
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBBB206BB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28613214E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:25:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HbwnJAn1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Yz+J/1Vy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfKLQWf (ORCPT
+        id S1727002AbfKLQZt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 11:22:35 -0500
-Received: from muru.com ([72.249.23.125]:41876 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfKLQWf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 11:22:35 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id DA60480F3;
-        Tue, 12 Nov 2019 16:23:09 +0000 (UTC)
-Date:   Tue, 12 Nov 2019 08:22:30 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>, Sekhar Nori <nsekhar@ti.com>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 net-next 06/13] dt-bindings: net: ti: add new cpsw
- switch driver bindings
-Message-ID: <20191112162230.GK5610@atomide.com>
-References: <20191109151525.18651-1-grygorii.strashko@ti.com>
- <20191109151525.18651-7-grygorii.strashko@ti.com>
- <20191111172652.GV5610@atomide.com>
- <bac9a300-cbd5-d342-a96d-d90fdcf2e4c3@ti.com>
+        Tue, 12 Nov 2019 11:25:49 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:36096 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKLQZt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 11:25:49 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id EB4E660909; Tue, 12 Nov 2019 16:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573575947;
+        bh=DXkWV66VkppVyJ+i/rYBmYzA5hXfIYYXNPGMHx1zrQc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HbwnJAn1ILUq/icq4thw2EebaC0DSTP96B2LFVOovATYTih09MkDUkTMc998SutWt
+         kkH/4TcQLpAtxo0btcpPmhTZUs6kOX2Zf/qivSXVnkbB0m1nDlOUEmyBqMTW8YSY6j
+         UWsvqRb0faQMvklkTYtl0a3/IOh251BPNFoGlgQ0=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DDB0A6053B;
+        Tue, 12 Nov 2019 16:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573575944;
+        bh=DXkWV66VkppVyJ+i/rYBmYzA5hXfIYYXNPGMHx1zrQc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Yz+J/1VyCQQpVfU0+a3O5kA5mGybn8BMb+BYrndOIVQ6h8vy9iy089MlUHCu1yKtH
+         I6d1dbaD43ebM3Qu7Y2D7kSwEyMCdUWUrQRMySQYqZMSMDXGF1PeqUZSG+hTLXbbZw
+         RGkxPMxv9zRgAxMlB7rPv6qrIGahfSt/sYt6couA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDB0A6053B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
+ MSM8998 gcc
+To:     Rob Herring <robh@kernel.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
+ <20191112004417.GA16664@bogus>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
+Date:   Tue, 12 Nov 2019 09:25:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bac9a300-cbd5-d342-a96d-d90fdcf2e4c3@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191112004417.GA16664@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On 11/11/2019 5:44 PM, Rob Herring wrote:
+> On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
+>> The global clock controller on MSM8998 can consume a number of external
+>> clocks.  Document them.
+>>
+>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
+>>   1 file changed, 33 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>> index e73a56f..2f3512b 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>> @@ -40,20 +40,38 @@ properties:
+>>          - qcom,gcc-sm8150
+>>   
+>>     clocks:
+>> -    minItems: 1
+> 
+> 1 or 2 clocks are no longer allowed?
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [191112 09:54]:
-> No, sorry I do not agree. The MDIO is inseparable part of CPSW and it's enabled when CPSW is enabled
-> (on interconnect level), more over I want to get rid of platform device in MDIO for most of the cases
-> as it only introduces boot/probing complexity.
+Correct.
 
-Well the fact that mdio is enabled at the interconnect level is why
-I think the cpsw child modules are independent components :)
+The primary reason is that Stephen indicated in previous discussions 
+that if the hardware exists, it should be indicated in DT, regardless if 
+the driver uses it.  In the 7180 and 8150 case, the hardware exists, so 
+these should not be optional.
 
-So I did the following quick test on pocketbeagle with Linux next,
-it has no Ethernet wired up, and by default we have ethernet@0
-set to status = "disabled".
+The secondary reason is I found that the schema was broken anyways.  In 
+the way it was written, if you implemented sleep, you could not skip 
+xo_ao, however there is a dts that did exactly that.
 
-Manually enable the target module at 0x4a100000:
-# echo on > /sys/devices/platform/ocp/4a000000.interconnect/\
-4a000000.interconnect:segment@0/4a101200.target-module/power/control
+The third reason was that I couldn't find a way to write valid yaml to 
+preserve the original meaning.  when you have an "items" as a subnode of 
+"oneOf", you no longer have control over the minItems/maxItems, so all 3 
+became required anyways.  I find it disappointing that the "version" of 
+Yaml used for DT bindings is not documented, so after several hours of 
+trial and error, I just gave up since I found this to work (failed cases 
+just gave me an error with no indication of what was wrong, not even a 
+line number).
 
-Dump out mdio registers at offset 0x1000:
-# rwmem 0x4a101000+0x100
-0x4a101000 = 0x40070106
-0x4a101004 = 0x810000ff
-0x4a101008 = 0000000000
-0x4a10100c = 0000000000
-0x4a101010 = 0000000000
-0x4a101014 = 0000000000
-0x4a101018 = 0000000000
-...
+> 
+>> -    maxItems: 3
+>> -    items:
+>> -      - description: Board XO source
+>> -      - description: Board active XO source
+>> -      - description: Sleep clock source
+>> +    oneOf:
+>> +      #qcom,gcc-sm8150
+>> +      #qcom,gcc-sc7180
+> 
+> Typically, this would be an if/then schema, but I'm okay with leaving it
+> like this. Depends whether you want to check the clocks match the
+> compatible.
 
-So yup, it seems quite independent of the other child devices
-on the same interconnect target mdoule. I'm quessing it's the
-same story for other modules like cppi_dma and so on, this
-should be easy to check.
+Is there an example somewhere?  The only thing I found was 
+example-schema.yaml which seemed to suggest this way.
 
-Hmm and isn't the some version of mdio also used stuffed into
-davinci_emac and netcp too?
+> 
+>> +      - items:
+>> +        - description: Board XO source
+>> +        - description: Board active XO source
+>> +        - description: Sleep clock source
+>> +      #qcom,gcc-msm8998
+>> +      - items:
+>> +        - description: Board XO source
+>> +        - description: USB 3.0 phy pipe clock
+>> +        - description: UFS phy rx symbol clock for pipe 0
+>> +        - description: UFS phy rx symbol clock for pipe 1
+>> +        - description: UFS phy tx symbol clock
+>> +        - description: PCIE phy pipe clock
+>>   
+>>     clock-names:
+>> -    minItems: 1
+>> -    maxItems: 3
+>> -    items:
+>> -      - const: bi_tcxo
+>> -      - const: bi_tcxo_ao
+>> -      - const: sleep_clk
+>> +    oneOf:
+>> +      #qcom,gcc-sm8150
+>> +      #qcom,gcc-sc7180
+>> +      - items:
+>> +        - const: bi_tcxo
+>> +        - const: bi_tcxo_ao
+>> +        - const: sleep_clk
+>> +      #qcom,gcc-msm8998
+>> +      - items:
+>> +        - const: xo
+>> +        - const: usb3_pipe
+>> +        - const: ufs_rx_symbol0
+>> +        - const: ufs_rx_symbol1
+>> +        - const: ufs_tx_symbol0
+>> +        - const: pcie0_pipe
+>>   
+>>     '#clock-cells':
+>>       const: 1
+>> @@ -118,6 +136,7 @@ else:
+>>         compatible:
+>>           contains:
+>>             enum:
+>> +            - qcom,gcc-msm8998
+>>               - qcom,gcc-sm8150
+>>               - qcom,gcc-sc7180
+>>     then:
+>> @@ -179,8 +198,8 @@ examples:
+>>       clock-controller@100000 {
+>>         compatible = "qcom,gcc-sc7180";
+>>         reg = <0x100000 0x1f0000>;
+>> -      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
+>> -      clock-names = "bi_tcxo", "bi_tcxo_ao";
+>> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
+>> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+> 
+> The patch subject says 8998, but this is changing sc7180.
 
-Anyways, up to you. But my experience is that having separate
-driver modules is the way to go than trying to treat any TI
-"subsystem" as a single device. This is because the child modules
-tend to get updated and changed and moved around over time.
+I'm fixing up the example so that it no longer fails checks.  See the 
+above comment.
 
-Regards,
+> 
+>>         #clock-cells = <1>;
+>>         #reset-cells = <1>;
+>>         #power-domain-cells = <1>;
+>> -- 
+>> Qualcomm Technologies, Inc. is a member of the
+>> Code Aurora Forum, a Linux Foundation Collaborative Project.
+>>
 
-Tony
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
