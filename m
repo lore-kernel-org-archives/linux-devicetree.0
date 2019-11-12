@@ -2,115 +2,57 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EDCC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45F1C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D616E21925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573571966;
-	bh=wHDZMbSdKhyJC2fgnNIgn0VK5Tg314l+sk7EP5PeKTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qS5S+39B6k14NtehHiz/poPr+lGTQfs1JZQvUXw2R+n9GUKLCYvPtqASJPcZjy9ZQ
-	 lDzU3FK3jhT6r1zrxSIvvHZZcx9BX4WlEAQw5AVZ6KRwUofwXkzimx7H8BB4cBdAu6
-	 M5oehFH6rslxarHMZ//VQ6jgB7luow/4jNBZIRIM=
+	by mail.kernel.org (Postfix) with ESMTP id A321521D7F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKLPTW (ORCPT
+        id S1727133AbfKLP0L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:19:22 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35285 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727401AbfKLPTW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 10:19:22 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q22so12078336pgk.2;
-        Tue, 12 Nov 2019 07:19:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BZANFq4xix4Xx203tkzaxuFkXxyuVqwVXr98xMHZnnc=;
-        b=YeSbv/o238TihuHuHsLnc7+bdmZy/QkzZyYaF031u7mpD8YNKqev8YWcQrJkAITcwU
-         3BVH3qOs7m0v1XmCSlfFJEMmvXcqPQ/ozYwOiRd3WrORKgOKBiKPR1WRHs6nEg/tT/N5
-         sHdex8rRaIaHt45wfzjAfxlJMTcLK9FO2UpECNI4J/epf1RCxgtiv0ZrhnbSRJzGfg1j
-         a8XUnFliDvDxcNV3k9M3ElszJRYH2qlhzNv1Qzj0VPBMsK5q6YEeSuu+i3anYhitG/dV
-         IDDxHdYdyy7bjk11+zSS894TYOnD55EAcCNEFOYSmjEMwD7WQPhOBUNobxBfBvu6rkuE
-         3JUA==
-X-Gm-Message-State: APjAAAV8fDTDhEvq4xpng9QJnpEQBk9WueqRMDmFiUDjemB5TrEx5d5j
-        zP4ZSOA1y9Xn2J6vO4yAlHs=
-X-Google-Smtp-Source: APXvYqwmlQNvZHi0kGC31dBquXDWMrtHIO5u9GdO7oPYqwAqhXo8lw8ouNas9FGnjW/2SPI9uWr2og==
-X-Received: by 2002:aa7:8a97:: with SMTP id a23mr37221666pfc.76.1573571960433;
-        Tue, 12 Nov 2019 07:19:20 -0800 (PST)
-Received: from kozik-lap ([118.189.143.39])
-        by smtp.googlemail.com with ESMTPSA id 21sm25298308pfa.170.2019.11.12.07.19.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 07:19:19 -0800 (PST)
-Date:   Tue, 12 Nov 2019 16:19:15 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marian Mihailescu <mihailescu2m@gmail.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kgene@kernel.org
-Subject: Re: [PATCH v4 2/2] ARM: dts: exynos5420: add mali dt node and enable
- mali on Odroid XU3/4
-Message-ID: <20191112151915.GA15786@kozik-lap>
-References: <20191106225527.9121-1-mihailescu2m@gmail.com>
- <20191106225527.9121-2-mihailescu2m@gmail.com>
+        Tue, 12 Nov 2019 10:26:11 -0500
+Received: from muru.com ([72.249.23.125]:41786 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbfKLP0L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:26:11 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9EF4080F3;
+        Tue, 12 Nov 2019 15:26:46 +0000 (UTC)
+Date:   Tue, 12 Nov 2019 07:26:07 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch v4 2/3] ARM: dts: dra7: add vpe clkctrl node
+Message-ID: <20191112152607.GC5610@atomide.com>
+References: <20191112142657.22898-1-bparrot@ti.com>
+ <20191112142657.22898-3-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106225527.9121-2-mihailescu2m@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191112142657.22898-3-bparrot@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 09:25:27AM +1030, Marian Mihailescu wrote:
-> Add device tree node for Mali GPU for Exynos 542x SoC.
-> GPU is disabled by default, and is enabled for each board after the
-> regulator is defined. Tested on Odroid-XU4.
+* Benoit Parrot <bparrot@ti.com> [191112 14:24]:
+> Add clkctrl nodes for VPE module.
 > 
-> Changes since v3:
-> - fixed compatible to match bindings
-> 
-> Changes since v2:
-> - separate patch for bindings
-> - fixed bindings typo
-> 
-> Changes since v1:
-> - used generic node and label for GPU
-> - added bindings for compatible
-> - fixed irq indentation
-> - fixed interrupt-names to match bindings
-> - added cooling cells for future TMU connection
-> - used generic node and label for GPU opp table
-> - removed always-on from SoC GPU regulator
-> 
-> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi             | 50 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  6 +++-
+> Note that because of the current dts node name dependency for mapping to
+> clock domain, we must still use "vpe-clkctrl@" naming instead of generic
+> "clock@" naming for the node. And because of this, it's probably best to
+> apply the dts node addition together along with the other clock changes.
 
-Hi,
+Thanks looks good to me now. Yeah it's probably best to queue this one
+along with the clock driver changes. I can then collect the dts related
+driver dts change on top of a branch from Tero. So please feel free to
+add this:
 
-Unfortunately this does not apply around exynos5422-odroid-core.dtsi.
-I think there were no changes to this file in current development cycle
-so I am surprised that there are conflicts.
-
-On what version were you basing your patch? Was it tested on latest
-kernel? The patches should be based usually on one of:
-1. current-rc1 (v5.4-rc1)
-2. latest-rc (v5.4-rc7)
-3. maintainer's tree (my next/dt or for-next)
-4. linux-next
-
-In all other cases the patch would need rebasing and re-testing.
-
-Best regards,
-Krzysztof
-
+Acked-by: Tony Lindgren <tony@atomide.com>
