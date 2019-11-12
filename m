@@ -2,122 +2,115 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCB1C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9785EC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5A521925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CA12067B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573573730;
-	bh=nZhsRm0k3VVog8JuQCgVzGbPj01+PKzaMhAx1jxUhjc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dEZ3mCwpi52xEi9Dht8L7lwToVnMDwxby9lda2HcIywlNHC0h3hhE0jVRAQje0U+o
-	 PgCjsHTlbdjnl3ijOjVb9XVcaWBeDjXZfSv+odbWMJgryjgdFx3pN5h3Sc92GRs0wd
-	 g+fPVlNCelRleOdOmDyeP6JgtnaCvD+QD4Ce4bec=
+	s=default; t=1573574169;
+	bh=8F20L3QJFTsavDdGfHLvf78nXRQXyUPKzvqP5z0wscM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G++EYI6HEIv0j29dA4bdNqTG0vgM81Au6mAmvdoXz/YB9pek2/ZB2G6SuiC0gU0nh
+	 ACi1UQQDNo0cRWn+HY1wuV+J2AcxdKotq+wULd5ELTbQjODZhNr9okZydMOBU1k203
+	 F8V4/LbdM/dwocDLUv3K562Ki6F4RmXJdjJ5vQ/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfKLPsu (ORCPT
+        id S1726896AbfKLP4I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:48:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49276 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 10:56:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfKLPsu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:48:50 -0500
-Received: from [192.168.1.25] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        id S1726659AbfKLP4I (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:56:08 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BD22214E0;
-        Tue, 12 Nov 2019 15:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40B05214E0
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 15:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573573728;
-        bh=nZhsRm0k3VVog8JuQCgVzGbPj01+PKzaMhAx1jxUhjc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Apej9Fv2AXp7xE2PDzwhxr86/86ICkC1jjgiX63dlsXcfyleEf+9Afntyy51PzVbo
-         VU8H//tx8/kDEAy6booh4Re4TYjNUY/aanyWz6ASlOsv77o54+062nxlG4YdDX5rxN
-         cqLxd2bjbn3PMi8qhUoAJ4N0BCtcbDOT4GmkrufQ=
-Subject: Re: [PATCH 0/2] Enable System Manager on Agilex
-To:     thor.thayer@linux.intel.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     richard.gong@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1573252854-25801-1-git-send-email-thor.thayer@linux.intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- mQINBFEnvWwBEAC44OQqJjuetSRuOpBMIk3HojL8dY1krl8T8GJjfgc/Gh97CfVbrqhV5yQ3
- Sk/MW9mxO9KNvQCbZtthfn62YHmroNwipjZ6wKOMfKdtJR4+8JW/ShIJYnrMfwN8Wki6O+5a
- yPNNCeENHleV0FLVXw3aACxOcjEzGJHYmg4UC+56rfoxPEhKF6aGBTV5aGKMtQy77ywuqt12
- c+hlRXHODmXdIeT2V4/u/AsFNAq6UFUEvHrVj+dMIyv2VhjRvkcESIGnG12ifPdU7v/+wom/
- smtfOAGojgTCqpwd0Ay2xFzgGnSCIFRHp0I/OJqhUcwAYEAdgHSBVwiyTQx2jP+eDu3Q0jI3
- K/x5qrhZ7lj8MmJPJWQOSYC4fYSse2oVO+2msoMTvMi3+Jy8k+QNH8LhB6agq7wTgF2jodwO
- yij5BRRIKttp4U62yUgfwbQtEUvatkaBQlG3qSerOzcdjSb4nhRPxasRqNbgkBfs7kqH02qU
- LOAXJf+y9Y1o6Nk9YCqb5EprDcKCqg2c8hUya8BYqo7y+0NkBU30mpzhaJXncbCMz3CQZYgV
- 1TR0qEzMv/QtoVuuPtWH9RCC83J5IYw1uFUG4RaoL7Z03fJhxGiXx3/r5Kr/hC9eMl2he6vH
- 8rrEpGGDm/mwZOEoG5D758WQHLGH4dTAATg0+ZzFHWBbSnNaSQARAQABtCFEaW5oIE5ndXll
- biA8ZGluZ3V5ZW5Aa2VybmVsLm9yZz6JAjgEEwECACIFAlbG5oQCGwMGCwkIBwMCBhUIAgkK
- CwQWAgMBAh4BAheAAAoJEBmUBAuBoyj0fIgQAICrZ2ceRWpkZv1UPM/6hBkWwOo3YkzSQwL+
- AH15hf9xx0D5mvzEtZ97ZoD0sAuB+aVIFwolet+nw49Q8HA3E/3j0DT7sIAqJpcPx3za+kKT
- twuQ4NkQTTi4q5WCpA5b6e2qzIynB50b3FA6bCjJinN06PxhdOixJGv1qDDmJ01fq2lA7/PL
- cny/1PIo6PVMWo9nf77L6iXVy8sK/d30pa1pjhMivfenIleIPYhWN1ZdRAkH39ReDxdqjQXN
- NHanNtsnoCPFsqeCLmuUwcG+XSTo/gEM6l2sdoMF4qSkD4DdrVf5rsOyN4KJAY9Uqytn4781
- n6l1NAQSRr0LPT5r6xdQ3YXIbwUfrBWh2nDPm0tihuHoH0CfyJMrFupSmjrKXF84F3cq0DzC
- yasTWUKyW/YURbWeGMpQH3ioDLvBn0H3AlVoSloaRzPudQ6mP4O8mY0DZQASGf6leM82V3t0
- Gw8MxY9tIiowY7Yl2bHqXCorPlcEYXjzBP32UOxIK7y7AQ1JQkcv6pZ0/6lX6hMshzi9Ydw0
- m8USfFRZb48gsp039gODbSMCQ2NfxBEyUPw1O9nertCMbIO/0bHKkP9aiHwg3BPwm3YL1UvM
- ngbze/8cyjg9pW3Eu1QAzMQHYkT1iiEjJ8fTssqDLjgJyp/I3YHYUuAf3i8SlcZTusIwSqnD
- uQINBFEnvWwBEADZqma4LI+vMqJYe15fxnX8ANw+ZuDeYHy17VXqQ7dA7n8E827ndnoXoBKB
- 0n7smz1C0I9StarHQPYTUciMLsaUpedEfpYgqLa7eRLFPvk/cVXxmY8Pk+aO8zHafr8yrFB1
- cYHO3Ld8d/DvF2DuC3iqzmgXzaRQhvQZvJ513nveCa2zTPPCj5w4f/Qkq8OgCz9fOrf/CseM
- xcP3Jssyf8qTZ4CTt1L6McRZPA/oFNTTgS/KA22PMMP9i8E6dF0Nsj0MN0R7261161PqfA9h
- 5c+BBzKZ6IHvmfwY+Fb0AgbqegOV8H/wQYCltPJHeA5y1kc/rqplw5I5d8Q6B29p0xxXSfaP
- UQ/qmXUkNQPNhsMnlL3wRoCol60IADiEyDJHVZRIl6U2K54LyYE1vkf14JM670FsUH608Hmk
- 30FG8bxax9i+8Muda9ok/KR4Z/QPQukmHIN9jVP1r1C/aAEvjQ2PK9aqrlXCKKenQzZ8qbeC
- rOTXSuJgWmWnPWzDrMxyEyy+e84bm+3/uPhZjjrNiaTzHHSRnF2ffJigu9fDKAwSof6SwbeH
- eZcIM4a9Dy+Ue0REaAqFacktlfELeu1LVzMRvpIfPua8izTUmACTgz2kltTaeSxAXZwIziwY
- prPU3cfnAjqxFHO2TwEpaQOMf8SH9BSAaCXArjfurOF+Pi3lKwARAQABiQIfBBgBAgAJBQJR
- J71sAhsMAAoJEBmUBAuBoyj0MnIQAI+bcNsfTNltf5AbMJptDgzISZJrYCXuzOgv4+d1CubD
- 83s0k6VJgsiCIEpvELQJsr58xB6l+o3yTBZRo/LViNLk0jF4CmCdXWjTyaQAIceEdlaeeTGH
- d5GqAud9rv9q1ERHTcvmoEX6pwv3m66ANK/dHdBV97vXacl+BjQ71aRiAiAFySbJXnqj+hZQ
- K8TCI/6TOtWJ9aicgiKpmh/sGmdeJCwZ90nxISvkxDXLEmJ1prvbGc74FGNVNTW4mmuNqj/p
- oNr0iHan8hjPNXwoyLNCtj3I5tBmiHZcOiHDUufHDyKQcsKsKI8kqW3pJlDSACeNpKkrjrib
- 3KLQHSEhTQCt3ZUDf5xNPnFHOnBjQuGkumlmhkgD5RVguki39AP2BQYp/mdk1NCRQxz5PR1B
- 2w0QaTgPY24chY9PICcMw+VeEgHZJAhuARKglxiYj9szirPd2kv4CFu2w6a5HNMdVT+i5Hov
- cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
- Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
- JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
-Message-ID: <9c1cddbf-8b5a-319c-3577-22fb2c092450@kernel.org>
-Date:   Tue, 12 Nov 2019 09:48:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        s=default; t=1573574167;
+        bh=8F20L3QJFTsavDdGfHLvf78nXRQXyUPKzvqP5z0wscM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ir7JfamXGWDwLcVwZaOeQl+axECHrhKvs3+rqFimfuBJmPmA/EMvy7fIzy28YVq8o
+         yA8E8jQxqqqE5VSvoXI8NhteN7yWgTkPpq2nLu98wHhVoFk8WA6FQdAvWQH0gIeVgh
+         nMjH3AqVzN5vd+9KCYaYillS42qoaBy3XKQGjbNI=
+Received: by mail-qk1-f170.google.com with SMTP id q70so14831759qke.12
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 07:56:07 -0800 (PST)
+X-Gm-Message-State: APjAAAX89BiF0zAiwgaiazGgE5oVhTrd9H/Z+lZMOWjujYAkS/WzGzxC
+        E+ZJXBUm4Sju6xKoPpv1NCJB+IpA51Gd67ClHg==
+X-Google-Smtp-Source: APXvYqzGPcXQTYDIwyrSGjxgXO8rgauszeUH/CJr2fC6c0UiXAiS67QLfaU4dKl5UZQ3hQyytHW1whhELOX88nJCzps=
+X-Received: by 2002:a05:620a:226:: with SMTP id u6mr6231925qkm.393.1573574166389;
+ Tue, 12 Nov 2019 07:56:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1573252854-25801-1-git-send-email-thor.thayer@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191111172142.ozczh7j2gmzi7o5k@linutronix.de>
+ <CAL_JsqLecYPGGP8grE7sUgD1ZBYeVhuqX_sOT_9Rw1LM1yhSmw@mail.gmail.com> <20191112091032.aa23wd24j4b324kw@linutronix.de>
+In-Reply-To: <20191112091032.aa23wd24j4b324kw@linutronix.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 12 Nov 2019 09:55:55 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Rfguea+KO0kLKom=8t_oCnesT8cb833Y0fhsbu_a1Cg@mail.gmail.com>
+Message-ID: <CAL_Jsq+Rfguea+KO0kLKom=8t_oCnesT8cb833Y0fhsbu_a1Cg@mail.gmail.com>
+Subject: Re: [PATCH] of: allocate / free phandle cache outside of the devtree_lock
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Nov 12, 2019 at 3:10 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2019-11-11 21:35:35 [-0600], Rob Herring wrote:
+> > >    28d0e36bf9686 ("OF: Fixup resursive locking code paths")
+> > >    d6d3c4e656513 ("OF: convert devtree lock from rw_lock to raw spinlock")
+> >
+> > So to summarize, we changed mainline to fix RT which then broke RT. :)
+>
+> correct, but we were good until v4.17-rc1 :)
+>
+> > > I've been looking into making devtree_lock a spinlock_t which would
+> > > avoid this patch. I haven't seen an issue during boot on arm64 even
+> > > with hotplug.
+> >
+> > Did you look into using RCU reader locks any more?
+>
+> A little bit. The writers, which modify the node, would need to replace
+> the whole node. So this is where things got a little complicated.
 
+Why is that exactly? That's pretty much how node and property updates
+work anyways though maybe not strictly enforced. The other updates are
+atomic flags and ref counts which I assume are fine. The spinlock
+protects traversing the tree of nodes and list of properties.
+Traversing and updates would need to follow similar semantics as
+rculist, right? BTW, there's been some thoughts to move node and
+property lists to list_head. We may want to do that rather than trying
+to roll our own RCU code.
 
-On 11/8/19 4:40 PM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> This patchset enables the ARM64 System Manager driver
-> for Agilex.
-> 
-> Thor Thayer (2):
->   arm64: dts: agilex: Add SysMgr compatible
->   arm64: dts: agilex: Add SysMgr to Ethernet nodes
-> 
->  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+> Frank wasn't a big fan of it back then and he still wasn't a few weeks
+> back.
 
-Applied!
+I guess you spoke at ELCE. RCU seems like the right locking to me as
+we're almost entirely reads and I haven't seen another proposal.
 
-Dinh
+> If you two agree to prefer RCU over this patch then I would look more
+> into adding RCU into the lookup path. The argument was that this isn't
+> time critical. I'm just trying to avoid to replace the locking for
+> nothing.
+> So, should I come up with a RCU patch?
+
+Lets see what Frank says first.
+
+While this patch is a bit of a band-aid, I don't think it complicates
+the situation at all to prevent coming up with a better solution. The
+other option is get rid of the memory allocation altogether. My
+preference for the cache was a simpler solution that was truly a cache
+(i.e. a fixed size that could miss). The performance wasn't quite as
+good though.
+
+Rob
