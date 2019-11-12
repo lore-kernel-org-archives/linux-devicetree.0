@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70C4C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 13:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E08C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 13:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBD620818
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 13:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3F021783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 13:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gM8MrR8f"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="cIRUpNYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfKLNUS (ORCPT
+        id S1727226AbfKLNUV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 08:20:18 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43188 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfKLNUR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 08:20:17 -0500
-Received: by mail-lf1-f66.google.com with SMTP id q5so6793574lfo.10
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 05:20:16 -0800 (PST)
+        Tue, 12 Nov 2019 08:20:21 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38756 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfKLNUU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 08:20:20 -0500
+Received: by mail-lf1-f68.google.com with SMTP id q28so12843237lfa.5
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 05:20:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=U/A2f9kHIFOCYbqEWyI5d4hToF+Uq4/YnGy8bo4uWSk=;
-        b=gM8MrR8fpyn4D3f/S9EA8B8+euhGtgB+lGz82qjsDCTe1bJ1kiHnsQYFbiW/5akGyH
-         0mp2q9cT8A/OkZQgMiiVMsZSMYP7lzx+i0+PscS5YENMZjpxjMRfriZdcUEGItBE4t1y
-         tuIfz4VW5ZZL40S/NoLsb+KAqWW86ZFGdIV1s=
+        bh=cKIBvY0x1yD+bD+aWV0JUrzlsZTikuF2aQL24o02BNY=;
+        b=cIRUpNYVEGfnB4/ePtiAKp638xTywK5olGdZniL8LqHCeTTnZP6CM6JV2Ms3GrXRRk
+         AqCiiJuz0X+oxu5/+deCblXULlE5Tkm2SG7JtZFx1fYH/5HPrn5ZW9YDBVfBzofobcwy
+         k6zuthunUE9C/THVN4JviAwdYW2x0a0efbMF8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U/A2f9kHIFOCYbqEWyI5d4hToF+Uq4/YnGy8bo4uWSk=;
-        b=fX/drt6ZlLHpcPiPVeNzwBsDzyv0p6W5pYg7MrtNgGjvB9a1siySNX/ZFzhvWrmwZC
-         aA0B+Wee5P32ytF0+faMnb6f/mMcT86P9BXSYxpn+ByYIMKLzoVgw9ZFxbxn0nvYoVh8
-         66sgl4YnV7RFMaxycfM/fz76aLE1BLXjGXIAQlh+v+IQPnyJM9wvbzQiJFpvAhxFAsTX
-         hgQbz9WPK+Lf5o7VruG8MgOYIc7xs98/NIig464mT+C0TkWalRuGTwP5NhoHMzZ+vlwt
-         XX4A+pS5OelZfGZ/eNK1LAa74vSfj8zw0QyD+SzAU7MpRaQNspZR0pvOQea2h9Tu6aI7
-         9RIQ==
-X-Gm-Message-State: APjAAAXiiwpk+FyKkTmZkPXQzJnUVuFlNpF6utCAG0eKohSN4VqNJW57
-        f307MVVzlJs0lgxH4Tem1nyz4w==
-X-Google-Smtp-Source: APXvYqz/sFZqp2pxbjkEJ36q/AU0dl23QXcsNzmg6b9X5nHorefiUNSVmG7PoCczzVrEgRSF7p9rHw==
-X-Received: by 2002:a19:c514:: with SMTP id w20mr19905250lfe.143.1573564815900;
-        Tue, 12 Nov 2019 05:20:15 -0800 (PST)
+        bh=cKIBvY0x1yD+bD+aWV0JUrzlsZTikuF2aQL24o02BNY=;
+        b=P3blN22YkQPcKfHWLTHkNkcfGBdLhedfP2fNDlafA38wBYjjTFloT88CEmlPL3gAor
+         OyUWeVpYubP3Ab5MgTnmPhyvjC2hoCdK6XN+VDyB8urR8BKZ4w4jnhyLgOs4TtPzVXcQ
+         LJzox/xQJYFr2jcPy1qcaBfBN8Rp3ZrkJcOTJYCrmFZqCZE0j1fHMPymaWDjTuYFfVdq
+         wFqZ8soxO4hlYsWLqVgJGEp/lxpCtWg0Ya1+tiqUDcr6hl4wOykFmzp87o/bfn6BoMeT
+         XYwT91EEAH+vXyAG9/f8wmhpE5chCEUFniEscfDUQwluP1HQI0D+81QpOWwj++DLfbs/
+         7DeQ==
+X-Gm-Message-State: APjAAAVk/2krDfd1iQmkUaPpt7sPEHGFLxeTDE06tMH6S/VoYNcYjpxO
+        tH59nzMDmkFwRVMdKXh4c4mi4g==
+X-Google-Smtp-Source: APXvYqx9C+B7+dzh+DExhVDk9zF6QbqRPQQJ9ESPQGY6lCuTE2m4r60+gVHrE26XPfc47YPvGhzkIQ==
+X-Received: by 2002:ac2:5deb:: with SMTP id z11mr6866390lfq.35.1573564817247;
+        Tue, 12 Nov 2019 05:20:17 -0800 (PST)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id f20sm869050lfc.75.2019.11.12.05.20.14
+        by smtp.gmail.com with ESMTPSA id f20sm869050lfc.75.2019.11.12.05.20.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 05:20:15 -0800 (PST)
+        Tue, 12 Nov 2019 05:20:16 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -60,9 +60,9 @@ Cc:     Vladimir Oltean <olteanv@gmail.com>, Marc Zyngier <maz@kernel.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ARM: dts: ls1021a: add node describing external interrupt lines
-Date:   Tue, 12 Nov 2019 14:20:09 +0100
-Message-Id: <20191112132010.18274-2-linux@rasmusvillemoes.dk>
+Subject: [PATCH 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the SGMII PHYs
+Date:   Tue, 12 Nov 2019 14:20:10 +0100
+Message-Id: <20191112132010.18274-3-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
 References: <20191112132010.18274-1-linux@rasmusvillemoes.dk>
@@ -73,44 +73,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds a node describing the six external interrupt lines IRQ0-IRQ5
-with configurable polarity.
+From: Vladimir Oltean <olteanv@gmail.com>
 
+On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
+have interrupt lines connected to the shared IRQ2_B LS1021A pin.
+
+Switching to interrupts offloads the PHY library from the task of
+polling the MDIO status and AN registers (1, 4, 5) every second.
+
+Unfortunately, the BCM5464R quad PHY connected to the switch does not
+appear to have an interrupt line routed to the SoC.
+
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm/boot/dts/ls1021a-tsn.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 2f6977ada447..0855b1fe98e0 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -216,6 +216,25 @@
- 			compatible = "fsl,ls1021a-scfg", "syscon";
- 			reg = <0x0 0x1570000 0x0 0x10000>;
- 			big-endian;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x1570000 0x10000>;
-+
-+			extirq: interrupt-controller@1ac {
-+				compatible = "fsl,ls1021a-extirq";
-+				#interrupt-cells = <2>;
-+				#address-cells = <0>;
-+				interrupt-controller;
-+				reg = <0x1ac 4>;
-+				interrupt-map =
-+					<0 0 &gic GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
-+					<1 0 &gic GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
-+					<2 0 &gic GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
-+					<3 0 &gic GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
-+					<4 0 &gic GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
-+					<5 0 &gic GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-map-mask = <0xffffffff 0x0>;
-+			};
- 		};
+diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+index 5b7689094b70..135d36461af4 100644
+--- a/arch/arm/boot/dts/ls1021a-tsn.dts
++++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+@@ -203,11 +203,15 @@
+ 	/* AR8031 */
+ 	sgmii_phy1: ethernet-phy@1 {
+ 		reg = <0x1>;
++		/* SGMII1_PHY_INT_B: connected to IRQ2, active low */
++		interrupts-extended = <&extirq 2 IRQ_TYPE_EDGE_FALLING>;
+ 	};
  
- 		crypto: crypto@1700000 {
+ 	/* AR8031 */
+ 	sgmii_phy2: ethernet-phy@2 {
+ 		reg = <0x2>;
++		/* SGMII2_PHY_INT_B: connected to IRQ2, active low */
++		interrupts-extended = <&extirq 2 IRQ_TYPE_EDGE_FALLING>;
+ 	};
+ 
+ 	/* BCM5464 quad PHY */
 -- 
 2.23.0
 
