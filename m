@@ -2,105 +2,103 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3590FC17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D20AC17441
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AA02067B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E790320679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 16:07:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UEP+wHey";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ki3rrQA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfKLP7k (ORCPT
+        id S1726982AbfKLQHT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:59:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56904 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfKLP7k (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:59:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E801CB3BC;
-        Tue, 12 Nov 2019 15:59:37 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     andrew.murray@arm.com, maz@kernel.org, linux-kernel@vger.kernel.org
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH v2 0/6] Raspberry Pi 4 PCIe support
-Date:   Tue, 12 Nov 2019 16:59:19 +0100
-Message-Id: <20191112155926.16476-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.24.0
+        Tue, 12 Nov 2019 11:07:19 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:52512 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbfKLQHT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 11:07:19 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9198060D5A; Tue, 12 Nov 2019 16:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573574838;
+        bh=LtdKcCfVo09bqodGRKYu7E6Q5R2Ji4qgLnYieGU7L6A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UEP+wHeyrWuVdLonKfdbdzmWmJ9yCEDkzMYyakEYGPVh5hRNkUn3l0CDilTj2Pj19
+         wjt07eyuavu6cbXlaC0aEv5pqIm9u5OtOCmrNkqvfEzfdV7Ud+kb93pKFNzXtuunQI
+         m5mAgKl/Ubt9TmPZons5Iq1fDehmae40iDVjVUSk=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E653C601A3;
+        Tue, 12 Nov 2019 16:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573574837;
+        bh=LtdKcCfVo09bqodGRKYu7E6Q5R2Ji4qgLnYieGU7L6A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Ki3rrQA/x0Par42iQQdjt9YYMo8co5xQwgIJ4DTs8HEVdYt7TnRUCc1QKP2PE9yI2
+         YjpK6y1ONdpJTu3k1mYW3bMLiBe5BNYskHsgT2PCcWN6oXUFCfHc1+HQ89wWyljFoB
+         p5oGDbyx/JChLIRrkMJepWfTkppEoXaWeyC7UR48=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E653C601A3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v8 3/4] dt-bindings: clock: Add support for the MSM8998
+ mmcc
+To:     Rob Herring <robh@kernel.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255068-10400-1-git-send-email-jhugo@codeaurora.org>
+ <20191112005527.GA7038@bogus>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <b759445d-211e-b002-f193-a0dfcaaca449@codeaurora.org>
+Date:   Tue, 12 Nov 2019 09:07:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191112005527.GA7038@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series aims at providing support for Raspberry Pi 4's PCIe
-controller, which is also shared with the Broadcom STB family of
-devices.
+On 11/11/2019 5:55 PM, Rob Herring wrote:
+> On Fri,  8 Nov 2019 16:17:48 -0700, Jeffrey Hugo wrote:
+>> Document the multimedia clock controller found on MSM8998.
+>>
+>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/clock/qcom,mmcc.yaml       |  36 ++++
+>>   include/dt-bindings/clock/qcom,mmcc-msm8998.h      | 210 +++++++++++++++++++++
+>>   2 files changed, 246 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+>>
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
+> 
 
-There was a previous attempt to upstream this some years ago[1] but was
-blocked as most STB PCIe integrations have a sparse DMA mapping[2] which
-is something currently not supported by the kernel.  Luckily this is not
-the case for the Raspberry Pi 4.
-
-Note that the driver code is to be based on top of Rob Herring's series
-simplifying inbound and outbound range parsing.
-
-[1] https://patchwork.kernel.org/cover/10605933/
-[2] https://patchwork.kernel.org/patch/10605957/
-
----
-
-Changes since v1:
-  - add generic rounddown/roundup_pow_two64() patch
-  - Add MAINTAINERS patch
-  - Fix Kconfig
-  - Cleanup probe, use up to date APIs, exit on MSI failure
-  - Get rid of linux,pci-domain and other unused constructs
-  - Use edge triggered setup for MSI
-  - Cleanup MSI implementation
-  - Fix multiple cosmetic issues
-  - Remove supend/resume code
-
-Jim Quinlan (3):
-  dt-bindings: PCI: Add bindings for brcmstb's PCIe device
-  PCI: brcmstb: add Broadcom STB PCIe host controller driver
-  PCI: brcmstb: add MSI capability
-
-Nicolas Saenz Julienne (3):
-  linux/log2.h: Add roundup/rounddown_pow_two64() family of functions
-  ARM: dts: bcm2711: Enable PCIe controller
-  MAINTAINERS: Add brcmstb PCIe controller
-
- .../bindings/pci/brcm,stb-pcie.yaml           |  110 ++
- MAINTAINERS                                   |    4 +
- arch/arm/boot/dts/bcm2711.dtsi                |   46 +
- drivers/net/ethernet/mellanox/mlx4/en_clock.c |    3 +-
- drivers/pci/controller/Kconfig                |    9 +
- drivers/pci/controller/Makefile               |    1 +
- drivers/pci/controller/pcie-brcmstb.c         | 1179 +++++++++++++++++
- drivers/pci/controller/pcie-cadence-ep.c      |    7 +-
- drivers/pci/controller/pcie-cadence.c         |    7 +-
- drivers/pci/controller/pcie-rockchip-ep.c     |    9 +-
- include/linux/log2.h                          |   52 +
- kernel/dma/direct.c                           |    3 +-
- 12 files changed, 1412 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
- create mode 100644 drivers/pci/controller/pcie-brcmstb.c
+Ya know, normally you are right about this, as I did something stupid, 
+but in this case I did mention in the cover letter that tags were 
+dropped because the bindings were re-written in yaml (ie no one had 
+reviewed the new code).
 
 -- 
-2.24.0
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
