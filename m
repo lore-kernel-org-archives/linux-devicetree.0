@@ -2,164 +2,100 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7893CC17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7B0C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7D82084F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573562580;
-	bh=Z/dfxL38W3PelRcWB7GKsOnqWCP/PRkfZriRZxzpvAA=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=OCt7bq1yE5sfP+l/COEB8Hp7XwO7s0ceKmOPklv5OLjEY1J+9o8P9hViVyCBdaQfx
-	 2GI/V9Bj35vV5KvDEuR517yonMuWX1t2DJTIYaxNrVrY7o/fr5bU5GeVGDrwJ3FUpl
-	 QISsxrRXUkIct5ninaMuhYIJBV+8TNFDn4DnIzUA=
+	by mail.kernel.org (Postfix) with ESMTP id 51D322084F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 12:48:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="QWldi17X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfKLMm7 (ORCPT
+        id S1726970AbfKLMsn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 07:42:59 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:48179 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726188AbfKLMm7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 07:42:59 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iUVVR-0007EZ-3z; Tue, 12 Nov 2019 13:42:49 +0100
-To:     Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH 1/4] irqchip: sifive: Support hierarchy irq domain
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 12 Nov 2019 07:48:43 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44449 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbfKLMsm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 07:48:42 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47C6xM6z4Rz9sPJ;
+        Tue, 12 Nov 2019 23:48:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1573562920;
+        bh=yGPX0ihRsGHoBSHw3nM8YEYTqEx8IEUHP7uLcPtPQD0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=QWldi17X64RcjmSvWnT6aPC+hWjq25kDxm7dwPNBxX4z+GBonz9DE9HXXTi8CMMbR
+         VtZfk+dOMHWXlhcMyFsd8FlXMBK2u3KfqbufLY+vYO3hfouTGXhQ79ew06k1QxP6WX
+         IsjwnuwLnCX3y0wS75aIicIcDnSGaUPv6FYLzzY7KAkl4kGnOix8kgjXgJpbCXGtqf
+         EPlj0djpApJ8K7kvxH0ASlJBpJlHX5iQgSXFwkib3YEnavcCLqW5A0ubbcDaoaOj3D
+         emI6LRjcoKeorCISgDPmt4KecfdMTwW3vhSmT/Un1TeVP0m32xgbZEegBAgfa71p3H
+         jrv+/09Ut48QA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Andrew Murray <andrew.murray@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v1 5/7] powerpc: dts: fsl: Use IRQ flags for legacy PCI IRQ interrupts
+In-Reply-To: <20191104163834.8932-6-andrew.murray@arm.com>
+References: <20191104163834.8932-1-andrew.murray@arm.com> <20191104163834.8932-6-andrew.murray@arm.com>
+Date:   Tue, 12 Nov 2019 23:48:39 +1100
+Message-ID: <87y2wl1crc.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 12 Nov 2019 13:52:09 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        <aou@eecs.berkeley.edu>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <bmeng.cn@gmail.com>,
-        <atish.patra@wdc.com>, Sagar Kadam <sagar.kadam@sifive.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-In-Reply-To: <1573560684-48104-2-git-send-email-yash.shah@sifive.com>
-References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
- <1573560684-48104-2-git-send-email-yash.shah@sifive.com>
-Message-ID: <ad0a3b419a3f5c3475d5fafcc2a037fb@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-12 13:21, Yash Shah wrote:
-> Add support for hierarchy irq domains. This is needed as 
-> pre-requisite for
-> gpio-sifive driver.
+Andrew Murray <andrew.murray@arm.com> writes:
+
+> Replace magic numbers used to describe legacy PCI IRQ interrupts
+> with #define.
 >
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 > ---
->  drivers/irqchip/Kconfig           |  1 +
->  drivers/irqchip/irq-sifive-plic.c | 41
-> +++++++++++++++++++++++++++++++++++----
->  2 files changed, 38 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index ccbb897..a398552 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -488,6 +488,7 @@ endmenu
->  config SIFIVE_PLIC
->  	bool "SiFive Platform-Level Interrupt Controller"
->  	depends on RISCV
-> +	select IRQ_DOMAIN_HIERARCHY
->  	help
->  	   This enables support for the PLIC chip found in SiFive (and
->  	   potentially other) RISC-V systems.  The PLIC controls devices
-> diff --git a/drivers/irqchip/irq-sifive-plic.c
-> b/drivers/irqchip/irq-sifive-plic.c
-> index 7d0a12f..2fa1c84 100644
-> --- a/drivers/irqchip/irq-sifive-plic.c
-> +++ b/drivers/irqchip/irq-sifive-plic.c
-> @@ -154,15 +154,48 @@ static struct irq_chip plic_chip = {
->  static int plic_irqdomain_map(struct irq_domain *d, unsigned int 
-> irq,
->  			      irq_hw_number_t hwirq)
->  {
-> -	irq_set_chip_and_handler(irq, &plic_chip, handle_fasteoi_irq);
-> -	irq_set_chip_data(irq, NULL);
-> +	irq_domain_set_info(d, irq, hwirq, &plic_chip, d->host_data,
-> +			    handle_fasteoi_irq, NULL, NULL);
->  	irq_set_noprobe(irq);
->  	return 0;
->  }
->
-> +static int plic_irq_domain_translate(struct irq_domain *d,
-> +				     struct irq_fwspec *fwspec,
-> +				     unsigned long *hwirq, unsigned int *type)
-> +{
-> +	if (WARN_ON(fwspec->param_count < 1))
-> +		return -EINVAL;
-> +	*hwirq = fwspec->param[0];
-> +	*type = IRQ_TYPE_NONE;
-> +	return 0;
-> +}
+>  arch/powerpc/boot/dts/fsl/b4420qds.dts        |   4 +-
+>  arch/powerpc/boot/dts/fsl/b4420si-post.dtsi   |   2 +-
+>  arch/powerpc/boot/dts/fsl/b4860qds.dts        |   4 +-
+>  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi   |   2 +-
+>  arch/powerpc/boot/dts/fsl/b4qds.dtsi          |   2 +-
+>  arch/powerpc/boot/dts/fsl/b4si-post.dtsi      |  12 +-
+>  arch/powerpc/boot/dts/fsl/bsc9132qds.dts      |   2 +-
+>  arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi |  12 +-
+>  arch/powerpc/boot/dts/fsl/c293pcie.dts        |   2 +-
+>  arch/powerpc/boot/dts/fsl/c293si-post.dtsi    |  12 +-
+>  arch/powerpc/boot/dts/fsl/gef_sbc310.dts      |  12 +-
+>  arch/powerpc/boot/dts/fsl/mpc8536ds.dts       |  12 +-
+>  arch/powerpc/boot/dts/fsl/mpc8536ds_36b.dts   |  12 +-
+>  arch/powerpc/boot/dts/fsl/mpc8540ads.dts      | 100 ++++++------
+>  arch/powerpc/boot/dts/fsl/mpc8544ds.dts       |  22 +--
+>  arch/powerpc/boot/dts/fsl/mpc8544ds.dtsi      |  22 +--
+>  arch/powerpc/boot/dts/fsl/mpc8548cds_32b.dts  |  14 +-
+>  arch/powerpc/boot/dts/fsl/mpc8548cds_36b.dts  |  14 +-
+>  arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi |  12 +-
+>  arch/powerpc/boot/dts/fsl/mpc8560ads.dts      | 100 ++++++------
+>  arch/powerpc/boot/dts/fsl/mpc8568mds.dts      |  22 +--
+>  arch/powerpc/boot/dts/fsl/mpc8568si-post.dtsi |  12 +-
+>  arch/powerpc/boot/dts/fsl/mpc8569mds.dts      |   2 +-
+>  arch/powerpc/boot/dts/fsl/mpc8569si-post.dtsi |  12 +-
+>  arch/powerpc/boot/dts/fsl/mpc8641_hpcn.dts    | 150 +++++++++---------
+>  .../powerpc/boot/dts/fsl/mpc8641_hpcn_36b.dts | 150 +++++++++---------
+>  arch/powerpc/boot/dts/fsl/p2020ds.dts         |   2 +-
+>  arch/powerpc/boot/dts/fsl/p2020ds.dtsi        |  46 +++---
+>  arch/powerpc/boot/dts/fsl/ppa8548.dts         |   2 +-
+>  arch/powerpc/boot/dts/fsl/sbc8641d.dts        |   4 +-
+>  30 files changed, 408 insertions(+), 368 deletions(-)
 
-This is actually what should be called irq_domain_translate_onecell().
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Consider implementing that instead, and using it in this driver. I'm
-pretty sure other drivers could use it (I spotted irq-nvic.c).
-
-> +
-> +static int plic_irq_domain_alloc(struct irq_domain *domain, unsigned
-> int virq,
-> +				 unsigned int nr_irqs, void *arg)
-> +{
-> +	int i, ret;
-> +	irq_hw_number_t hwirq;
-> +	unsigned int type = IRQ_TYPE_NONE;
-> +	struct irq_fwspec *fwspec = arg;
-> +
-> +	ret = plic_irq_domain_translate(domain, fwspec, &hwirq, &type);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < nr_irqs; i++) {
-> +		ret = plic_irqdomain_map(domain, virq + i, hwirq + i);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static const struct irq_domain_ops plic_irqdomain_ops = {
-> -	.map		= plic_irqdomain_map,
-> -	.xlate		= irq_domain_xlate_onecell,
-> +	.translate	= plic_irq_domain_translate,
-> +	.alloc		= plic_irq_domain_alloc,
-> +	.free		= irq_domain_free_irqs_top,
->  };
->
->  static struct irq_domain *plic_irqdomain;
-
-Otherwise, looks OK.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+cheers
