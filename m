@@ -2,104 +2,172 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5304C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8F4C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A803C21783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="YQjFpZVe"
+	by mail.kernel.org (Postfix) with ESMTP id 6C58E2067B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573559532;
+	bh=Daq6b517sCzfRAVgoXbNS8cPSbwp9imKYLb42aYLl0s=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=itZci9LO+OA3mZboYLeTkyxLleWZwzu+sxVWvjND9hVwxWgThODYYKODKyD8hMhSX
+	 Eu0Nq/wQ7Pa9iXjhHUSFC74W7eeYtSCN0BlcQdp4zYIofRsQFrzNxENSrh6HcNEfRg
+	 2kaJPIZ3r1DaktEyNQzUg66hv/3R0mAEeVUorVhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfKLLos (ORCPT
+        id S1726962AbfKLLwM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:44:48 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45930 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfKLLor (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 06:44:47 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n21so17420655ljg.12
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 03:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AGTZ4z4pclCTP3TaM1mEYITa39uvJa7zWe2VFGpsFtQ=;
-        b=YQjFpZVeaTEeO+20aG1CP57qzaQF/K4s2mQxLVMo5aM1+z9UfnwfSbr7sBrXNeUdSb
-         pNj4MTofPx+/HhftTnVorbdrJyVPud+NQIUoL22TugPPO+/VITy8aOcQJDyHzDHybi94
-         wduFdCh0K/RrDq1CbsTyyRTTX8ODY/dacP36k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AGTZ4z4pclCTP3TaM1mEYITa39uvJa7zWe2VFGpsFtQ=;
-        b=a04xx/ZvDofKhKRlNOxVDOWSjTX0Ib/9+93Xt3uxlJFXYtz9uCWgpcrM/7zUsdTJQ9
-         SW5GCaSdA7PeXDd7zgH6hv51yrYpT9a3f18lBTWsI8LdDU5zucuPNofZhLH4QoT+WZJv
-         z2A4rPbTS+QQIkmju/+kHsnhL53yAovmu+dRZYaFITcEuUUwp+p1eY/jhbP+AbExMrb+
-         Fz+YCZAQhozVu8falwN++UIhJCn/aKEwO4kb0N1Hg+nefaUEVU236aOTKMCG5cngP5OJ
-         7o1Sc9xeD5oO1gw/WXxup35B3M4bqcYrC0CN7zrAU8bJI4/7fAXiEf2iLrO7ksYilPAh
-         UyiQ==
-X-Gm-Message-State: APjAAAXVbYay94Ivz3o9SC2OeBqmK9PKViUVcWPBJgX7Wshg6T51tHnM
-        GiZRffBeTPs0P9EuZjLfwQJO5Q==
-X-Google-Smtp-Source: APXvYqy+lw2SLMQFCUkQpJRfNsuioc2JKvqERf+YtVC3KryQWbQkhR/tX0NqbPKizKDXtkq4OOdBtQ==
-X-Received: by 2002:a2e:8e28:: with SMTP id r8mr19360726ljk.21.1573559084029;
-        Tue, 12 Nov 2019 03:44:44 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id a22sm8189817ljn.58.2019.11.12.03.44.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 03:44:43 -0800 (PST)
-Subject: Re: [PATCH v7 0/2] Add support for Layerscape external interrupt
- lines
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Kurt Kanzenbach <kurt@linutronix.de>,
-        Vladimir Oltean <olteanv@gmail.com>
-References: <20191107122115.6244-1-linux@rasmusvillemoes.dk>
- <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
- <184b684a-7712-a280-fdc2-83d7abd3cbd4@rasmusvillemoes.dk>
- <8e1877ab5a1fecace3b2383789bdf404@www.loen.fr>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <02f7a8ad-be85-b43a-be36-988d96ced056@rasmusvillemoes.dk>
-Date:   Tue, 12 Nov 2019 12:44:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 06:52:12 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:56730 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726497AbfKLLwL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 06:52:11 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iUUiO-0006dl-1k; Tue, 12 Nov 2019 12:52:08 +0100
+To:     Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add  SPI config register
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-In-Reply-To: <8e1877ab5a1fecace3b2383789bdf404@www.loen.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 Nov 2019 13:01:28 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, <evgreen@chromium.org>,
+        <linus.walleij@linaro.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <bjorn.andersson@linaro.org>,
+        <mkshah@codeaurora.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+In-Reply-To: <20191111183738.GJ16900@codeaurora.org>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+ <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+ <5d92829e.1c69fb81.d860a.9096@mx.google.com>
+ <5da6b849.1c69fb81.a9b04.1b9f@mx.google.com>
+ <20191105205832.GE16900@codeaurora.org>
+ <5dc219a0.1c69fb81.f5014.42d2@mx.google.com>
+ <20191111183738.GJ16900@codeaurora.org>
+Message-ID: <1fa974e73d2b4871d84501cffc4ef8d3@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: ilina@codeaurora.org, swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/11/2019 11.58, Marc Zyngier wrote:
-> On 2019-11-12 11:27, Rasmus Villemoes wrote:
->> On 11/11/2019 11.24, Marc Zyngier wrote:
-
->>> Applied to irqchip-next.
+On 2019-11-11 19:46, Lina Iyer wrote:
+> On Tue, Nov 05 2019 at 17:53 -0700, Stephen Boyd wrote:
+>>Quoting Lina Iyer (2019-11-05 12:58:32)
+>>> On Tue, Oct 15 2019 at 00:27 -0600, Stephen Boyd wrote:
+>>> >
+>>> >I had another idea the other day. Maybe a better approach would be 
+>>> to
+>>> >make the mailbox or SCM code an interrupt controller with the
+>>> >appropriate functions to poke the bits necessary to make the 
+>>> interrupts
+>>> >work. Then we can make it a chip in the hierarchy between the GIC 
+>>> and
+>>> >PDC and make the interrupts call through from PDC to GIC. The 
+>>> locking
+>>> >could be handled in each respective driver if necessary, and 
+>>> otherwise
+>>> >we don't have to use a regmap or remap the same registers (except 
+>>> we may
+>>> >need to describe if the parent is the mailbox node or the scm 
+>>> fimware
+>>> >node).
+>>> >
+>>> Wouldn't that be a stretch to image the SCM register write  or a 
+>>> random
+>>> register write as an interrupt controller? But I agree that it 
+>>> solves
+>>> the issue of determining whether we want to use SCM or regmap.
 >>
->> Thanks! Can I assume that branch doesn't get rebased so 87cd38dfd9e6 is
->> a stable SHA1? I want to send a patch adding the node to ls1021a.dtsi,
->> and I hope not to have to wait another release cycle.
-> 
-> I usually try to avoid rebasing it, unless something really bad shows up.
-> 
-> Now, just adding a node to a DT shouldn't break anything, right? You
-> should be able to do that change and get things working magically once
-> this code hits mainline.
+>>As far as I can tell it's similar to PDC which is basically a gate on
+>>the line from a dedicated chip pad or a GPIO pad that lets the 
+>> interrupt
+>>flow through to the GIC or not. Isn't this yet another hardware block 
+>> on
+>>those paths that control the edge type or something?
+>>
+>>>
+>>> But, we would still need to add syscon to the mailbox and then 
+>>> regmap
+>>> the registers for the interrupt contoller.
+>>
+>>I'm saying that we can make the mailbox driver an interrupt 
+>> controller
+>>driver too. Or if that doesn't work, we can map the region twice in 
+>> each
+>>driver with ioremap and cross fingers that they don't touch the same
+>>register at the same time. It sounds like that is the case. We won't 
+>> be
+>>able to fancily reserve the register region and map it in one 
+>> function
+>>call, but maybe that can be fixed by limiting the size or offset that 
+>> is
+>>reserved for each driver manually based on the same register property
+>>that's described in DT. Basically, one node in DT
+>>
+>> mailbox@f00 {
+>>   reg = <0xf00 0x1000>;
+>> };
+>>
+>>And then each driver will ioremap() the whole register region that's
+>>parsed from DT but each driver will mark sub-regions as reserved for 
+>> the
+>>respective driver. That way we don't have to worry about using a 
+>> regmap
+>>here and we'll still know what drivers are using what regions of IO 
+>> in
+>>/proc/iomem.
+>
+> Marc: What do you think of Stephen's idea? Summarizing my 
+> understanding
+> below -
+>
+> We need to set an addition register for GPIOs that are routed to PDC 
+> and
+> the register may need to be written using a SCM call (SDM845) or 
+> written
+> from Linux (SDM855). The idea proposed here is -
+> Create multiple irqchips, one for each type of register access and 
+> then
+> put them in hierarchy based on the target.
+>
+> SDM845:
+> TLMM  --> PDC  --> PDC-SCM-IF  --> GIC
+>
+> SDM855:
+> TLMM  --> PDC  --> PDC-LNX-IF  --> GIC
+>
+> The hierarchy would be explicit from the DT. So we would not have to
+> worry about figuring out using a property in DT or resource name. 
+> (May
+> be we can use a compatible instead?). The use of reserved_resource(),
+> suggested by Stephen, would help avoid other drivers writing to this
+> register which is part of a generic dump area for one-off registers.
 
-Well, yes, but I wanted to refer to the binding documentation in the
-form of a reference to that SHA1. But I suppose I can just do that in
-the cover letter or below ---.
+That seems sensible: the two SoCs use different implementations of
+their GPIO configurations (at least apparently, I'm pretty sure it
+is the same HW underneath), and it makes sense to abstract that
+as separate entities.
+
+As for the DT binding, use whatever makes sense for you (compatible
+seems a reasonable choice).
 
 Thanks,
-Rasmus
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
