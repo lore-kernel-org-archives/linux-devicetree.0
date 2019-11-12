@@ -2,94 +2,121 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52011C17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 23:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84038C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 23:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5F1222C5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 23:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EA221A49
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 23:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B2Tn4fYY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNa+J2mY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKLXLZ (ORCPT
+        id S1727202AbfKLXRs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 18:11:25 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44094 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfKLXLZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 18:11:25 -0500
-Received: by mail-lj1-f194.google.com with SMTP id g3so304638ljl.11
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 15:11:24 -0800 (PST)
+        Tue, 12 Nov 2019 18:17:48 -0500
+Received: from mail-lj1-f171.google.com ([209.85.208.171]:44921 "EHLO
+        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfKLXRr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 18:17:47 -0500
+Received: by mail-lj1-f171.google.com with SMTP id g3so318076ljl.11;
+        Tue, 12 Nov 2019 15:17:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Tvqr7Enmi/ocfgyYnlGqiPzgim6aB1Y8HMuhsyaz+1w=;
-        b=B2Tn4fYYTM5wjuJbkUXQ/aZsUJCZagjIoofBHyG9XGuS6huwxn+NT/c21aOLx3Ns1A
-         fbf8EXVwP1/r8dh7qggQQEsV8nmGPxeNeP2Ln7RxFSCV+foMB7IlY9pnMabajCGj+LYD
-         rM8BOrOC4rcPFI+scgGEMMpRzf4b1Y+MOz4CZMl8LCs7Oru7L9CD5eYBDoc9xZheHpdT
-         6gkXvVSv0JFwwthrGvV+e56ZMTendxbU4fxtH6Y+3i6+ECSzrSItfRNURo8JYNSUPrTU
-         Uo1dUwtjIh1BeMGbBbdk+k95ztODpSUKnU/sGOaHywltcGXpq5FmKqi7jsj3+Tm/HePc
-         Xllg==
+        bh=LIflrWKP50iYK8//oCk2tWTFXozYzLmXIwfV667z38A=;
+        b=PNa+J2mYKXMZqAUoDMzX0KUDv3Kyt6nEFoZ2A6dqCsdWHd/+om99vZDSq83XQqCC4M
+         LCxzwZWEcdAUqRXZRH2bBQqCt6GLWa5ZGSXmMZRXE8EUs2KPKN5eLRopGkRZG+JzyFav
+         dA7WFBfoY1eG6BK8ALXm0CZJxc5IWF3NPTr3FtI8AWd2Xt9sxVIIaOsPiPz6VbYrzeyM
+         W6HryYPqgBk4lzubEIp6ESQ8Ph8C1zPvO+qYynxEjLMTW5hPB+WqUfFkxSS8bEbkJns2
+         0Y76W3k2caHIlNVNoNkFVMbAvLWG4e3X3n3FWZ0Xs0kyW/HcS5461tqBTaUJFvlFp1rt
+         fpCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Tvqr7Enmi/ocfgyYnlGqiPzgim6aB1Y8HMuhsyaz+1w=;
-        b=DbZkAONYrsUMN7X3lUtDIy6YDtosM4GiDnY72ga7KYfILpXCaZNn3+OZ8v2cAVVZ8U
-         d53Uvex99ydhTmjTZzGSjmJjHEqNikaQlqNr24BJXnxc0wY2zsNFY2iikUGZikMTeE6F
-         racgN7z4N3zE9zp5dNvWZStrIfemOkYMNcZsCpcQswkHqoMdZSS0Oho7hEWuvhIPvcoi
-         qzu1UyGps8NP29NqGcNzRFYQw6eww56AxYFLGYXOnqF9gkUkPezaVnPFe34vf/KfJ9HA
-         Ih1wM9acU6WqiVTf9FHsDyVJ8DEaZSYx769xb7ZUr54s77SAOmudDBsKKH62NPznJgw+
-         minw==
-X-Gm-Message-State: APjAAAUJIcWomfy8KTs3kwIwhs4Uat0ceywD/cu4mx3jD/r7nzN5QDmm
-        wfvNmNg/ZF93RWMq5v6yyy0PtIomC+RO7AO3Td8EKg==
-X-Google-Smtp-Source: APXvYqw7QDA1w5xtLQcUrrOL5Jz7y1c4OMfpHVZeNsT9aMfYuRsXUGzKt70JLZYhPoRVIzWv0w75TLlzz7akYxQc8hc=
-X-Received: by 2002:a2e:90b:: with SMTP id 11mr152843ljj.233.1573600283271;
- Tue, 12 Nov 2019 15:11:23 -0800 (PST)
+        bh=LIflrWKP50iYK8//oCk2tWTFXozYzLmXIwfV667z38A=;
+        b=WldObkJ0ubfOovwg4WKait/hCFmFpTD+Vuc23J25G2DgdeQLq/QfXgE8VbIi6WNzhW
+         Ni+q+u8ATTixbrmWWS318q3FcqPHB9GWnN/5YRGsZVg9oYBwv/qEqa+ae54eFVIZftL0
+         HJ0zCtFP2MKfU/e+kVbie/fGnz+gBKbrC8uOZm2khrhsY9VX9RctEw+nj51lT8qqkfP1
+         6FFg1WjtV/5R/urhQcnGY/tDpkTJOpQx0rPHkbIQV9QYFAIRjBVqW+JXFMstGDBgoUaL
+         Ub8Gq2gvbvmAynyHFsVTgVya2s9AdvefWpWOwkpDuUhWzsY+XO6fwXr18p6FtlAgilhn
+         r7aQ==
+X-Gm-Message-State: APjAAAVogiePfjEHvqNmib3wsIsIiVODEY6t7909gizWVjkFlrgh78lQ
+        F15w3XL2q4thH5ae846ls7BGZ6Elo8vUCMshT9s=
+X-Google-Smtp-Source: APXvYqyiLn4l/vK/xsmhu6N/3INF3zPy1lwX0qjKsVVRCGKK0WOh5xXLyk9+epm/72hEtkvaBpn8VeB1nb70JN092o4=
+X-Received: by 2002:a05:651c:d3:: with SMTP id 19mr197085ljr.202.1573600665005;
+ Tue, 12 Nov 2019 15:17:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20191105055015.23656-1-erosca@de.adit-jv.com> <20191105062223.GB1048@kunai>
- <20191105083213.GA24603@vmlxhi-102.adit-jv.com> <20191107003907.GA22634@bogus>
- <20191112211950.GB3402@kunai>
-In-Reply-To: <20191112211950.GB3402@kunai>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 13 Nov 2019 00:11:11 +0100
-Message-ID: <CACRpkdYyYAaW8AYqpC3E7eBx25-3yJqitSE=0yVfxCDtM-CwqA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add 'fixed-emmc-driver-type-hs{200,400}'
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Rob Herring <robh@kernel.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Pavel Machek <pavel@ucw.cz>,
+References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com> <1573586526-15007-3-git-send-email-oliver.graute@gmail.com>
+In-Reply-To: <1573586526-15007-3-git-send-email-oliver.graute@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 12 Nov 2019 20:17:33 -0300
+Message-ID: <CAOMZO5DX_-zSHJjDigK2c=dVLEMxvfd_dFCu=0fbyjht1gsr=A@mail.gmail.com>
+Subject: Re: [PATCHv7 2/3] ARM: dts: Add support for i.MX6 UltraLite DART
+ Variscite Customboard
+To:     Oliver Graute <oliver.graute@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:19 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+Hi Oliver,
 
-> What I have seen so far: setting drive strength alone is more on the
-> rare side. Setting specific values for default and HS200/400 seems even
-> more rare to me. With this patchset, it is the first time I hear about
-> it.
+On Tue, Nov 12, 2019 at 4:22 PM Oliver Graute <oliver.graute@gmail.com> wrote:
 
-Like I wrote to Eugeniu this sounds like some kind of errata
-for the eMMC ext CSD and should likely be a card quirk rather
-than some generic device tree properties.
+> +&lcdif {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_lcdif>;
+> +       display = <&display0>;
+> +       status = "okay";
+> +
+> +       display0: display0 {
+> +               bits-per-pixel = <16>;
+> +               bus-width = <24>;
+> +
+> +               display-timings {
+> +                       native-mode = <&timing0>;
+> +                       timing0: timing0 {
+> +                               clock-frequency =<35000000>;
+> +                               hactive = <800>;
+> +                               vactive = <480>;
+> +                               hfront-porch = <40>;
+> +                               hback-porch = <40>;
+> +                               hsync-len = <48>;
+> +                               vback-porch = <29>;
+> +                               vfront-porch = <13>;
+> +                               vsync-len = <3>;
+> +                               hsync-active = <0>;
+> +                               vsync-active = <0>;
+> +                               de-active = <1>;
+> +                               pixelclk-active = <0>;
+> +                       };
+> +               };
+> +       };
+> +};
 
-I might be wrong, we'll hash it out.
+You are using the deprecated bindings.
 
-Yours,
-Linus Walleij
+Please switch to the DRM bindings as stated at
+Documentation/devicetree/bindings/display/mxsfb.txt
+
+You should also add your panel to the simple panel driver.
