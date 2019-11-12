@@ -2,137 +2,101 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02299C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BB2C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D26452196E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F6C2184C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:38:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmruY7yE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfKLB0H (ORCPT
+        id S1726932AbfKLBi5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:26:07 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7012 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726924AbfKLB0H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Nov 2019 20:26:07 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAC1HKno023981;
-        Mon, 11 Nov 2019 20:25:50 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7jpagevg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Nov 2019 20:25:50 -0500
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xAC1JJbc027854;
-        Mon, 11 Nov 2019 20:25:49 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7jpagevb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Nov 2019 20:25:49 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAC1LAHd026975;
-        Tue, 12 Nov 2019 01:25:53 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01wdc.us.ibm.com with ESMTP id 2w5n36afqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 01:25:52 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAC1PkUs50725354
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 01:25:46 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1AF6AC05B;
-        Tue, 12 Nov 2019 01:25:46 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF725AC059;
-        Tue, 12 Nov 2019 01:25:41 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 01:25:41 +0000 (GMT)
-Subject: Re: [PATCH v1 3/5] char: tpm: rewrite "tpm_tis_req_canceled()"
-To:     amirmizi6@gmail.comg, Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
-        amir.mizinski@nuvoton.com
-References: <20191110162137.230913-1-amirmizi6@gmail.com>
- <20191110162137.230913-4-amirmizi6@gmail.com>
- <20191110180010.xyvv4gf6jiqyrac3@cantor>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <3214005f-740b-46a8-7c0b-db96b63cd6f3@linux.ibm.com>
-Date:   Mon, 11 Nov 2019 20:25:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 11 Nov 2019 20:38:57 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41305 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfKLBi4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 20:38:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id p4so16683636wrm.8;
+        Mon, 11 Nov 2019 17:38:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YiULEZkokgNmMrqFci3Nlwk7YUL2pDKG1OagmCeHKvI=;
+        b=dmruY7yE/dvccXk/rZHi6iA417hakL/D4k0+WlWyVHS3lG66vQGEGdLZfyfXFH3Fo/
+         xzgu3YOr1Eo7FEUm84GaDxtxo/quydotTWFBtlb/Q0ePub1uYuvz91GMaWay5v1DcjqT
+         a7hssXl5vvxYG6AylwOzUpw6F4UO+YdlAOV4ulUZIe4pCYjv9mqtzd1sV9fgmR/MQuw3
+         pS/Pkk90WHUkObOaL/7CqwjB+Ew9SOKfVxaORz0WqWjXCnIpMUAt9dg5at21AP8yUh8T
+         qzMpEnJdWFT6g2iJprBWI3xQckE5Fyj2fQlqSXKa+W8YJ7L9kcbvdG9y1Z5MCRx6OHgk
+         n/kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YiULEZkokgNmMrqFci3Nlwk7YUL2pDKG1OagmCeHKvI=;
+        b=Jq00SQJ+Q1upx/qAkAPEPJc1zcOH9dYLXZrT86kK/Fk40dNYNT1XR642RHYafXqPTU
+         BRf9n40XGc3XJ5yEqUb0LQh3F0XZ5NB1uSGdoyjQoNtrmo+/UHhmYRR6GyWFzkwnZoD+
+         io6MznA80nd+G27nRHy9HVmk3vXYafKOtmF76u4yBBOimge11eLDSWIim6kWxgyRMJ9N
+         qSvnKlE4bLWqFTVOfTMvCoMOSfbl65FR9nmRKOE4F04SD+AmhQ6lsfi1/mI6fh11NB8D
+         tZWF39hIRSlVcmkm6ZyCF4RDR73R4JDUAS17Byh9WHyY37/x8egllxPlnA1eGMtm0CTd
+         kQuw==
+X-Gm-Message-State: APjAAAX78coPjXm9I7ILn4jucVojNEqXmobEfZ7oH3dousn+BObbfNu2
+        q9fcSeDKCVGxLL+clTTrb/jsCHTY4sY/dVH1vUjIazdU
+X-Google-Smtp-Source: APXvYqxXYyG7hCRjp8kmObfGVJp0w42islnFxgov672V5SeQh1/RJn08uQQh3TQcyy85z1RrDTE69+WTJFPVDtId0sQ=
+X-Received: by 2002:adf:f547:: with SMTP id j7mr24219844wrp.69.1573522734750;
+ Mon, 11 Nov 2019 17:38:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191110180010.xyvv4gf6jiqyrac3@cantor>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-11_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120009
+References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
+ <20191111090230.3402-5-chunyan.zhang@unisoc.com> <20191112005600.GA9055@bogus>
+In-Reply-To: <20191112005600.GA9055@bogus>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Tue, 12 Nov 2019 09:38:18 +0800
+Message-ID: <CAAfSe-uohXXHyQ7txhPmLCpyQODDHAuxjuUVbGcwYySN6G9tNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] dt-bindings: serial: Add a new compatible string
+ for SC9863A
+To:     Rob Herring <robh@kernel.org>
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/10/19 1:00 PM, Jerry Snitselaar wrote:
-> On Sun Nov 10 19, amirmizi6@gmail.com wrote:
->> From: Amir Mizinski <amirmizi6@gmail.com>
->>
->> using this function while read/write data resulted in aborted operation.
->> after investigating according to TCG TPM Profile (PTP) Specifications,
->> i found cancel should happen only if TPM_STS.commandReady bit is lit
->> and couldn't find a case when the current condition is valid.
->> also only cmdReady bit need to be compared instead of the full lower 
->> status register byte.
->>
->> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
->> ---
->> drivers/char/tpm/tpm_tis_core.c | 12 +-----------
->> 1 file changed, 1 insertion(+), 11 deletions(-)
->>
->> diff --git a/drivers/char/tpm/tpm_tis_core.c 
->> b/drivers/char/tpm/tpm_tis_core.c
->> index ce7f8a1..9016f06 100644
->> --- a/drivers/char/tpm/tpm_tis_core.c
->> +++ b/drivers/char/tpm/tpm_tis_core.c
->> @@ -627,17 +627,7 @@ static int probe_itpm(struct tpm_chip *chip)
->>
->> static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
->> {
->> -    struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
->> -
->> -    switch (priv->manufacturer_id) {
->> -    case TPM_VID_WINBOND:
->> -        return ((status == TPM_STS_VALID) ||
->> -            (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
->> -    case TPM_VID_STM:
->> -        return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
+On Tue, 12 Nov 2019 at 08:56, Rob Herring <robh@kernel.org> wrote:
 >
-> Stefan were these cases you found that were deviating from the spec? 
-> Wondering
-> if dropping these will cause issues for these devices.
+> On Mon, 11 Nov 2019 17:02:29 +0800, Chunyan Zhang wrote:
+> >
+> > SC9863A use the same serial device which SC9836 uses.
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > ---
+> >  Documentation/devicetree/bindings/serial/sprd-uart.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+>
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
 
+Yes, I know.
 
-I believe these devices needed special handling of the status register 
-as they didn't behave as the 'other' devices, so I would expect issues.
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>
+> If a tag was not added on purpose, please state why and what changed.
 
-    Stefan
+The reason was that I switched to yaml rather than txt in last version
+which recieved your Acked-by.
+Not sure for this kind of case I can still add your Acked-by.
 
+Thanks,
+Chunyan
