@@ -4,85 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD93C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FB9C17441
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDB721925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620BA222BD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573586654;
-	bh=lCBLqSCZJ9Qnh6mFZGwZHdFE0nPr5nV36p24i7/EleA=;
+	s=default; t=1573586868;
+	bh=YVPgo+KKFI4eokRGU8vZ1y3LWu0L+SRe0gVOAhPaZPg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qs2VcOc1OG9jI/efMkliigAxbVPkwqeZ8ZE3k+5SmmlVFtFoDJzcI0oPAgWuwvaFR
-	 S4GnZRmp4IuGuwJaGQ1Tll+dgKOa7otApm31HOn3kpnYVYK6hU7Z0yjF8cZO/jYXAh
-	 NozAkDNvvYx6/pXFLN8HoB0i6XfZBKqW95oTAMKY=
+	b=P6JTspgNVg9YLqEuerUGV8LM78eghnBy+izUhO7O+kzXwS3y4hKi/4lnqkN7BYo7a
+	 vonClHEesDYHXsUQveYDjnNA/JTybl7qzK2NFfRDvwaxpZ9dQfrKRKJb1P0YIz/P/i
+	 VwUpaEIRSDTtW9fs/kYYfAiKtU9/Jq/rvP18iXSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKLTYN (ORCPT
+        id S1727020AbfKLT1s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:24:13 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41684 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfKLTYN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:24:13 -0500
-Received: by mail-oi1-f193.google.com with SMTP id e9so15900041oif.8;
-        Tue, 12 Nov 2019 11:24:11 -0800 (PST)
+        Tue, 12 Nov 2019 14:27:48 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43298 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfKLT1r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:27:47 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l20so15879966oie.10;
+        Tue, 12 Nov 2019 11:27:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nHKniHr/jrTqcqTvuwayO8CQswwkt5HhgPD/t+rz310=;
-        b=XRYilXlNchyrIEUhle0rrCnAgaXTy1vxxMyhwRwL7bRSIXZmB/+1etjudpVyL/hyyu
-         MwOkTk0sZNHqx7Yvy3N9NT3N2We0D5ua6F4eb4YVgw9f8beH9l/eASx0NLLDPzOTZPUX
-         6R5gLO5pboDuwe32ZX6bVdRlzY6yihKdHOW5TNhFgBphg7jiXhOnRGQnJkvw8PG+rAnO
-         2dyTS5gSHuFqTG67dDQi5qzyziN8yfH11L8ttotPRzAMjcckAFrSXJWmnf9TqmdKfXnL
-         KPGiTGZ/IBeYNXVbFqPQv8o0PIkSU03IGIjlYmG3JIeUZ0T0/cwby6fHe44Wf3jcKU7I
-         Bt6g==
-X-Gm-Message-State: APjAAAX7uzX+Ms5XNE1/PJ1ChdfWI/5XzBiWUF76M9blMsf8kizThECa
-        qDUsglTgz14qJoSq5JZHEw==
-X-Google-Smtp-Source: APXvYqzDhHELSIA3q/SvAE8lTdDKpxmRN4Mt7JzpZClIV/GtCVHuBkOChbDHzxBeESPjODDu6vhzdQ==
-X-Received: by 2002:a54:4898:: with SMTP id r24mr475150oic.143.1573586651439;
-        Tue, 12 Nov 2019 11:24:11 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Y4VJU4JPIoN8kP/oz54y8Wq1pxD+B52sbN7PsTOLQlY=;
+        b=exflkZjI2ZBILdpW4axODjadTtAsEC9yplHk6gpcDHwN8UEaZBqUW2Eu/aXFA/841Q
+         8pZYg5asWPMioRYW5Ec7Bl4NfsD6QJfKZrPPF4wA1+N4gXijWdZBNmGXYGYDbfV5nTDD
+         P3OUjNQNMLXAblEKTEOeigw3c3CATQbvdwPGX0eeabfmPD0efEWAKm5P7wvtLMx18qQ8
+         YV4uOduCTDCLp6MnYDMx6vO4BhgVNJc0d0t097r+oeWrdOVlKm9zvecq9hyr5p2xuqOE
+         CYAebG2375JT+GsDZoCZKBDHeMCcRo40jVvj8xR/+Soa5tMutXzusGyGuwA/dfdSd16v
+         K8mA==
+X-Gm-Message-State: APjAAAVQGrLQ8+llY1mrZtTn7ZuaE4oW3O8u6ne3LpLBN0cfCyBuBJaC
+        MLM692buAVlkCe45jbXkvsP0k38=
+X-Google-Smtp-Source: APXvYqz4Jkfw6OOk4L5JFnxQar5zpZUQ12T/aVbn6qghLtQRbJWl1rIMeQ2geyDRfOhX2lw8P+1LcA==
+X-Received: by 2002:aca:5006:: with SMTP id e6mr501570oib.127.1573586866587;
+        Tue, 12 Nov 2019 11:27:46 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c15sm6729095otk.12.2019.11.12.11.24.10
+        by smtp.gmail.com with ESMTPSA id 202sm6330662oii.39.2019.11.12.11.27.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:24:11 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:24:10 -0600
+        Tue, 12 Nov 2019 11:27:46 -0800 (PST)
+Date:   Tue, 12 Nov 2019 13:27:45 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        tfiga@google.com, pavel@ucw.cz, Jacopo Mondi <jacopo@jmondi.org>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 03/11] dt-bindings: video-interface: Expand rotation
- description
-Message-ID: <20191112192410.GA14553@bogus>
-References: <20191108155944.1040883-1-jacopo@jmondi.org>
- <20191108155944.1040883-4-jacopo@jmondi.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com,
+        ssantosh@kernel.org, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com,
+        tony@atomide.com, j-keerthy@ti.com
+Subject: Re: [PATCH v5 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
+Message-ID: <20191112192745.GA20639@bogus>
+References: <20191111135330.8235-1-peter.ujfalusi@ti.com>
+ <20191111135330.8235-9-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191108155944.1040883-4-jacopo@jmondi.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191111135330.8235-9-peter.ujfalusi@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  8 Nov 2019 16:59:36 +0100, Jacopo Mondi wrote:
-> Expand the 'rotation' property description to define the direction and
-> orientation of the axis around which the device mounting rotation is
-> expressed.
+On Mon, 11 Nov 2019 15:53:23 +0200, Peter Ujfalusi wrote:
+> New binding document for
+> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
 > 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> UDMA-P is introduced as part of the K3 architecture and can be found in
+> AM654 and j721e.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  .../devicetree/bindings/media/video-interfaces.txt        | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   | 192 ++++++++++++++++++
+>  1 file changed, 192 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
