@@ -2,140 +2,104 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62041C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5304C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421F021783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A803C21783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:44:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="YQjFpZVe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfKLLmU (ORCPT
+        id S1726718AbfKLLos (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:42:20 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:44722 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725865AbfKLLmU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:42:20 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iUUYm-0005pH-4o; Tue, 12 Nov 2019 12:42:12 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xACBgA3Z020834
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 12 Nov 2019 12:42:10 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Subject: [PATCH] arm64: dts: rockchip: Fix vdd_log on rk3399-roc-pc
-To:     Soeren Moch <smoch@web.de>, Kever Yang <kever.yang@rock-chips.com>,
-        heiko@sntech.de
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
-        Alexis Ballier <aballier@gentoo.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Andy Yan <andyshrk@gmail.com>, linux-kernel@vger.kernel.org,
-        Vicente Bergas <vicencb@gmail.com>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        linux-rockchip@lists.infradead.org,
+        Tue, 12 Nov 2019 06:44:48 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45930 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfKLLor (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 06:44:47 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n21so17420655ljg.12
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 03:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AGTZ4z4pclCTP3TaM1mEYITa39uvJa7zWe2VFGpsFtQ=;
+        b=YQjFpZVeaTEeO+20aG1CP57qzaQF/K4s2mQxLVMo5aM1+z9UfnwfSbr7sBrXNeUdSb
+         pNj4MTofPx+/HhftTnVorbdrJyVPud+NQIUoL22TugPPO+/VITy8aOcQJDyHzDHybi94
+         wduFdCh0K/RrDq1CbsTyyRTTX8ODY/dacP36k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AGTZ4z4pclCTP3TaM1mEYITa39uvJa7zWe2VFGpsFtQ=;
+        b=a04xx/ZvDofKhKRlNOxVDOWSjTX0Ib/9+93Xt3uxlJFXYtz9uCWgpcrM/7zUsdTJQ9
+         SW5GCaSdA7PeXDd7zgH6hv51yrYpT9a3f18lBTWsI8LdDU5zucuPNofZhLH4QoT+WZJv
+         z2A4rPbTS+QQIkmju/+kHsnhL53yAovmu+dRZYaFITcEuUUwp+p1eY/jhbP+AbExMrb+
+         Fz+YCZAQhozVu8falwN++UIhJCn/aKEwO4kb0N1Hg+nefaUEVU236aOTKMCG5cngP5OJ
+         7o1Sc9xeD5oO1gw/WXxup35B3M4bqcYrC0CN7zrAU8bJI4/7fAXiEf2iLrO7ksYilPAh
+         UyiQ==
+X-Gm-Message-State: APjAAAXVbYay94Ivz3o9SC2OeBqmK9PKViUVcWPBJgX7Wshg6T51tHnM
+        GiZRffBeTPs0P9EuZjLfwQJO5Q==
+X-Google-Smtp-Source: APXvYqy+lw2SLMQFCUkQpJRfNsuioc2JKvqERf+YtVC3KryQWbQkhR/tX0NqbPKizKDXtkq4OOdBtQ==
+X-Received: by 2002:a2e:8e28:: with SMTP id r8mr19360726ljk.21.1573559084029;
+        Tue, 12 Nov 2019 03:44:44 -0800 (PST)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id a22sm8189817ljn.58.2019.11.12.03.44.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 03:44:43 -0800 (PST)
+Subject: Re: [PATCH v7 0/2] Add support for Layerscape external interrupt
+ lines
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Nick Xie <nick@khadas.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Akash Gajjar <akash@openedev.com>
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <20191111005158.25070-3-kever.yang@rock-chips.com>
- <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
- <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
- <acbab893-9e9a-cfe1-67bf-a9e2b2e50114@fivetechno.de>
- <17e14b30-02ee-2379-8891-088677924479@rock-chips.com>
- <fd9ee2bc-9dfb-1aa2-f00f-add9b3069876@web.de>
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <d786ef47-eda8-3994-2ef2-fc4a584bcdcc@fivetechno.de>
-Date:   Tue, 12 Nov 2019 12:42:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Vladimir Oltean <olteanv@gmail.com>
+References: <20191107122115.6244-1-linux@rasmusvillemoes.dk>
+ <ea802f081d1f1d4c5359707ff4553004@www.loen.fr>
+ <184b684a-7712-a280-fdc2-83d7abd3cbd4@rasmusvillemoes.dk>
+ <8e1877ab5a1fecace3b2383789bdf404@www.loen.fr>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <02f7a8ad-be85-b43a-be36-988d96ced056@rasmusvillemoes.dk>
+Date:   Tue, 12 Nov 2019 12:44:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <fd9ee2bc-9dfb-1aa2-f00f-add9b3069876@web.de>
+In-Reply-To: <8e1877ab5a1fecace3b2383789bdf404@www.loen.fr>
 Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573558939;3444d808;
-X-HE-SMSGID: 1iUUYm-0005pH-4o
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On rk3399 vdd_log shall not exceed 1.0 V. On rk3399-roc-pc
-vdd_log is presently 1118 mV. Fix by setting the min voltage
-of the respective pwm-regulator down to 450 mV.
-This results in a vdd_log of 953 mV.
-Specify the supply to silence warning.
+On 12/11/2019 11.58, Marc Zyngier wrote:
+> On 2019-11-12 11:27, Rasmus Villemoes wrote:
+>> On 11/11/2019 11.24, Marc Zyngier wrote:
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
- arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>>> Applied to irqchip-next.
+>>
+>> Thanks! Can I assume that branch doesn't get rebased so 87cd38dfd9e6 is
+>> a stable SHA1? I want to send a patch adding the node to ls1021a.dtsi,
+>> and I hope not to have to wait another release cycle.
+> 
+> I usually try to avoid rebasing it, unless something really bad shows up.
+> 
+> Now, just adding a node to a DT shouldn't break anything, right? You
+> should be able to do that change and get things working magically once
+> this code hits mainline.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index a31099f7620b..4dac88ef7e72 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -211,9 +211,9 @@
- 		regulator-name = "vdd_log";
- 		regulator-always-on;
- 		regulator-boot-on;
--		regulator-min-microvolt = <800000>;
-+		regulator-min-microvolt = <450000>;
- 		regulator-max-microvolt = <1400000>;
--		vin-supply = <&vcc3v3_sys>;
-+		pwm-supply = <&vcc3v3_sys>;
- 	};
- };
- 
--- 
-2.20.1
+Well, yes, but I wanted to refer to the binding documentation in the
+form of a reference to that SHA1. But I suppose I can just do that in
+the cover letter or below ---.
 
+Thanks,
+Rasmus
