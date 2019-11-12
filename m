@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEF9C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526FBC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D7420818
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267FD20818
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bnj+YUiW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TBIXURzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfKLOcd (ORCPT
+        id S1727698AbfKLOcF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:32:33 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37766 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbfKLOcJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:32:09 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEW2Oa014821;
-        Tue, 12 Nov 2019 08:32:02 -0600
+        Tue, 12 Nov 2019 09:32:05 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50230 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfKLOcE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:32:04 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEVtvo092592;
+        Tue, 12 Nov 2019 08:31:55 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573569122;
-        bh=+VoXDu3sr4epkCMOKVDIILQ6oh1e3KSk77l7x4EYUY0=;
+        s=ti-com-17Q1; t=1573569115;
+        bh=5q4Ba0jsg2rMOeuTdNLUdhoNWg94JZlddVCnrc1IWtY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Bnj+YUiWozJsNtMtitRci7CezhV9/WlxXrcaCYCanvKZ5gZFPDMuqIIPe8zeRcey2
-         YXKgeoDqDJNH9HdF5cpXE4+98Nwe0JhCAZz7Nw5SKridBW6gdyvbq9vTDcNOyt/Gv7
-         Ut2MSWxoeGkVk1rWTdE7vBKSzexUgGBaFcWWM/Pg=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEW2HP031661
+        b=TBIXURzm5gVAQcPU582rpWzRaJY/VJN9JTEqTmFSfFVyLWIWSjD3p54XTkkYsN762
+         K/nDAgfjAaJg+XFre+mAtNeJd1rtmQt44Pt+46QpN7gu2aPhyqwrZbaDJg3BU+S9E0
+         pm77F+v/kcPHuNUlHPcrpm2vVeCW53gynwDd5LG0=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACEVtnb024423
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Nov 2019 08:32:02 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 Nov 2019 08:31:55 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:31:44 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 08:31:38 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:31:44 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:31:55 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEVjUN050451;
-        Tue, 12 Nov 2019 08:31:59 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEVjUL050451;
+        Tue, 12 Nov 2019 08:31:52 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <t-kristo@ti.com>, <nm@ti.com>
 CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/9] arm64: dts: ti: k3-am654-main: Add McASP nodes
-Date:   Tue, 12 Nov 2019 16:32:56 +0200
-Message-ID: <20191112143301.3168-5-peter.ujfalusi@ti.com>
+Subject: [PATCH 2/9] arm64: dts: ti: k3-am65-main: Move secure proxy under cbass_main_navss
+Date:   Tue, 12 Nov 2019 16:32:54 +0200
+Message-ID: <20191112143301.3168-3-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191112143301.3168-1-peter.ujfalusi@ti.com>
 References: <20191112143301.3168-1-peter.ujfalusi@ti.com>
@@ -67,80 +67,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the nodes for McASP 0-2 and keep them disabled because several
-required properties are not present as they are board specific.
+Secure proxy (NAVSS0_SEC_PROXY0) is part of the Navigator Subsystem.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 57 ++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index be841fc44b76..6dd28202a221 100644
+index e40f7acbec42..a125d66dd552 100644
 --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
 +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -663,4 +663,61 @@ pcie1_ep: pcie-ep@5600000 {
- 		dma-coherent;
- 		interrupts = <GIC_SPI 355 IRQ_TYPE_EDGE_RISING>;
+@@ -51,17 +51,6 @@ gic_its: gic-its@1820000 {
+ 		};
  	};
+ 
+-	secure_proxy_main: mailbox@32c00000 {
+-		compatible = "ti,am654-secure-proxy";
+-		#mbox-cells = <1>;
+-		reg-names = "target_data", "rt", "scfg";
+-		reg = <0x00 0x32c00000 0x00 0x100000>,
+-		      <0x00 0x32400000 0x00 0x100000>,
+-		      <0x00 0x32800000 0x00 0x100000>;
+-		interrupt-names = "rx_011";
+-		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-	};
+-
+ 	serdes0: serdes@900000 {
+ 		compatible = "ti,phy-am654-serdes";
+ 		reg = <0x0 0x900000 0x0 0x2000>;
+@@ -414,6 +403,17 @@ inta_main_udmass: interrupt-controller@33d00000 {
+ 			ti,sci-rm-range-global-event = <0x1>;
+ 		};
+ 
++		secure_proxy_main: mailbox@32c00000 {
++			compatible = "ti,am654-secure-proxy";
++			#mbox-cells = <1>;
++			reg-names = "target_data", "rt", "scfg";
++			reg = <0x00 0x32c00000 0x00 0x100000>,
++			      <0x00 0x32400000 0x00 0x100000>,
++			      <0x00 0x32800000 0x00 0x100000>;
++			interrupt-names = "rx_011";
++			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++		};
 +
-+	mcasp0: mcasp@02B00000 {
-+		compatible = "ti,am33xx-mcasp-audio";
-+		reg = <0x0 0x02B00000 0x0 0x2000>,
-+			<0x0 0x02B08000 0x0 0x1000>;
-+		reg-names = "mpu","dat";
-+		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "tx", "rx";
-+
-+		dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
-+		dma-names = "tx", "rx";
-+
-+		clocks = <&k3_clks 104 0>;
-+		clock-names = "fck";
-+		power-domains = <&k3_pds 104 TI_SCI_PD_EXCLUSIVE>;
-+
-+		status = "disabled";
-+	};
-+
-+	mcasp1: mcasp@02B10000 {
-+		compatible = "ti,am33xx-mcasp-audio";
-+		reg = <0x0 0x02B10000 0x0 0x2000>,
-+			<0x0 0x02B18000 0x0 0x1000>;
-+		reg-names = "mpu","dat";
-+		interrupts = <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "tx", "rx";
-+
-+		dmas = <&main_udmap 0xc401>, <&main_udmap 0x4401>;
-+		dma-names = "tx", "rx";
-+
-+		clocks = <&k3_clks 105 0>;
-+		clock-names = "fck";
-+		power-domains = <&k3_pds 105 TI_SCI_PD_EXCLUSIVE>;
-+
-+		status = "disabled";
-+	};
-+
-+	mcasp2: mcasp@02B20000 {
-+		compatible = "ti,am33xx-mcasp-audio";
-+		reg = <0x0 0x02B20000 0x0 0x2000>,
-+			<0x0 0x02B28000 0x0 0x1000>;
-+		reg-names = "mpu","dat";
-+		interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "tx", "rx";
-+
-+		dmas = <&main_udmap 0xc402>, <&main_udmap 0x4402>;
-+		dma-names = "tx", "rx";
-+
-+		clocks = <&k3_clks 106 0>;
-+		clock-names = "fck";
-+		power-domains = <&k3_pds 106 TI_SCI_PD_EXCLUSIVE>;
-+
-+		status = "disabled";
-+	};
- };
+ 		hwspinlock: spinlock@30e00000 {
+ 			compatible = "ti,am654-hwspinlock";
+ 			reg = <0x00 0x30e00000 0x00 0x1000>;
 -- 
 Peter
 
