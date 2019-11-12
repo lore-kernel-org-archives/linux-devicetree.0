@@ -2,213 +2,159 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10035C17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D31C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 18:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6DCF206BA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 18:22:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="HaUYgNK5"
+	by mail.kernel.org (Postfix) with ESMTP id 4D89521783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 18:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573583839;
+	bh=ClsBijm+tV2ywGmWiMMRKvlFiYq/cLBsl5lNg89WwmM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KmYwdKjbxfIzVxxGr57+PiSLkRqLcrVes59wxcGZ3ZtqJH7u76XppiCspTgcqVwpt
+	 o37rmVx5vhUbiwQRqarOyRRy1TRsC7/KA2oUhd1DPszJj+PUL6+O2wlr/9rmtuIxDM
+	 jmD2TzOglixMg3Vi2PV7AUgCIP1OIWgPdv9TOapg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKLSWR (ORCPT
+        id S1726970AbfKLShS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 13:22:17 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38558 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfKLSWR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 13:22:17 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a14so15705301oid.5
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 10:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1zuYDebMJ/okDBHwgQg9Ko+/yuHAItkCB5r+xtn/gVU=;
-        b=HaUYgNK5z9hM0u3S5tvMsLOyHp+WxD02EoIo6ZwYeUW263957WAxFCCsBoFlM9UhzK
-         +buTc7LtUro3bpc0TqG0u6Z6VeA/LlU1zEzpQukJQXqBNlaxMssvSwsGZW1czxmeFtIY
-         S0A/fo2QfFxG79cDQoAviXaOQt8kwPVegBvWo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1zuYDebMJ/okDBHwgQg9Ko+/yuHAItkCB5r+xtn/gVU=;
-        b=BN93VznzG0BzU200Y2Vq9KOYBTKVLO5fJDRJQeK6iGBJk14+fCJypHWhQGgfGeV+Oj
-         6/ZCJ5TLscKsre0bpZk6l9NO0sbIvpoc8u3nU1RbpAWey8cYHz3I5SM4IN3cLBQqa4gB
-         i/AERvrTklsIErC3KktqQuoI7+2Hh+ESqQ5eYTGRvcAO38PxUmACiql2tPTiVd0QOlV3
-         nmdBORpKvAYbqafpjJGZ8rS+QRpGm/+WHuFxsBWS/uIWkY7Xo0t9mOQdaBHFGbkBx3t1
-         nf0vzALHkuZASlCJw0cry48wqG2KkHpTPDMnOyGNOEtgq1hQHa0f9CrRANObZT7q4V6c
-         JaoQ==
-X-Gm-Message-State: APjAAAVkQK11qPFHvXP1C9pFKkFwvWIB30pnShLzt5rkUQVjZUb9xh19
-        azkTRB8p75pkcvrABrbJtxsP7d/VzeZDIie9/7kSkw==
-X-Google-Smtp-Source: APXvYqxWyFwnVlRZzJ+e7TO6RyGTp8L2UIQfJV/REpyHFM3+xax+tNjNNAtMmM4kjxFbc20wLGXUy8mwcfSl9sfs8Gs=
-X-Received: by 2002:aca:ead7:: with SMTP id i206mr292992oih.128.1573582935361;
- Tue, 12 Nov 2019 10:22:15 -0800 (PST)
+        Tue, 12 Nov 2019 13:37:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726952AbfKLShS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 13:37:18 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7B721D7F;
+        Tue, 12 Nov 2019 18:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573583837;
+        bh=ClsBijm+tV2ywGmWiMMRKvlFiYq/cLBsl5lNg89WwmM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vruLFu7ENpBlykbdo/Y+H4Y3SP/8xiOwkSOXipue5AFlMZwYISAABQGOsHRNX+597
+         +BUbMZ7NOeZabQG+6KyrNEOUdKZ7Wu2bXUIFXcHZn326+LfItqW7K6t+9Vi1JBZKfo
+         1p9mW8cdtnPZCRvc3FliDt5E/x7ikMvQHP0WuySQ=
+Received: by mail-qk1-f182.google.com with SMTP id e187so15389481qkf.4;
+        Tue, 12 Nov 2019 10:37:17 -0800 (PST)
+X-Gm-Message-State: APjAAAVSB2Uq+isYQHCsx8iS6wzu0kY0j1YD8fnye0BEWD6M6FctY/qi
+        LVOVpcIN81pWn1lpTUNmZLo1nTcB5TKu8/NWzA==
+X-Google-Smtp-Source: APXvYqy4jjbxFKDPV7vSCOnen2eNnt02ZnVZpXB+MPur6jIpEK2TUR0oOqnkMSo4LuntV0L3+UCZlhm9vRywGKUM/gM=
+X-Received: by 2002:ae9:dd83:: with SMTP id r125mr8603172qkf.223.1573583836697;
+ Tue, 12 Nov 2019 10:37:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20191112175940.GA13539@lst.de>
-In-Reply-To: <20191112175940.GA13539@lst.de>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 12 Nov 2019 19:22:01 +0100
-Message-ID: <CAKMK7uGN4=b-aaymXhs8MaS6GeShy8KMuTYv2O2L0uZBatQJtA@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: fix anx6345 compilation for v5.5
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255036-10302-1-git-send-email-jhugo@codeaurora.org> <20191112004417.GA16664@bogus>
+ <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
+In-Reply-To: <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 12 Nov 2019 12:37:04 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
+Message-ID: <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
+ MSM8998 gcc
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 6:59 PM Torsten Duwe <duwe@lst.de> wrote:
+On Tue, Nov 12, 2019 at 10:25 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
 >
+> On 11/11/2019 5:44 PM, Rob Herring wrote:
+> > On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
+> >> The global clock controller on MSM8998 can consume a number of external
+> >> clocks.  Document them.
+> >>
+> >> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> >> ---
+> >>   .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
+> >>   1 file changed, 33 insertions(+), 14 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> >> index e73a56f..2f3512b 100644
+> >> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> >> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> >> @@ -40,20 +40,38 @@ properties:
+> >>          - qcom,gcc-sm8150
+> >>
+> >>     clocks:
+> >> -    minItems: 1
+> >
+> > 1 or 2 clocks are no longer allowed?
 >
-> The anx6345 driver originally was copied from anx78xx.c, which has meanwhile
-> seen a few changes. In particular, the removal of drm_dp_link helpers and the
-> discontinuation to include drm_bridge.h from drm_crtc.h breaks compilation
-> in linux-5.5. Apply equivalents of these changes to anx6345.c.
+> Correct.
 >
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> The primary reason is that Stephen indicated in previous discussions
+> that if the hardware exists, it should be indicated in DT, regardless if
+> the driver uses it.  In the 7180 and 8150 case, the hardware exists, so
+> these should not be optional.
 
-Wait ... Maxime pushed this and it never compiled? What's going on here?
--Daniel
+Agreed. The commit message should mention this though.
 
 >
-> ---
->
-> The commits in question are ff1e8fb68ea06 and ee68c743f8d07, but I guess the
-> next rebase will change these. next-20191112 plus the anx6345-v5a series plus
-> this patch compile cleanly on arm64.
->
-> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> @@ -19,6 +19,7 @@
->  #include <linux/types.h>
->
->  #include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_bridge.h>
->  #include <drm/drm_crtc.h>
->  #include <drm/drm_crtc_helper.h>
->  #include <drm/drm_dp_helper.h>
-> @@ -49,7 +50,6 @@ struct anx6345 {
->         struct i2c_client *client;
->         struct edid *edid;
->         struct drm_connector connector;
-> -       struct drm_dp_link link;
->         struct drm_panel *panel;
->         struct regulator *dvdd12;
->         struct regulator *dvdd25;
-> @@ -96,7 +96,7 @@ static ssize_t anx6345_aux_transfer(stru
->  static int anx6345_dp_link_training(struct anx6345 *anx6345)
->  {
->         unsigned int value;
-> -       u8 dp_bw;
-> +       u8 dp_bw, dpcd[2];
->         int err;
->
->         err = anx6345_clear_bits(anx6345->map[I2C_IDX_TXCOM],
-> @@ -144,18 +143,34 @@ static int anx6345_dp_link_training(stru
->         if (err)
->                 return err;
->
-> -       /* Check link capabilities */
-> -       err = drm_dp_link_probe(&anx6345->aux, &anx6345->link);
-> -       if (err < 0) {
-> -               DRM_ERROR("Failed to probe link capabilities: %d\n", err);
-> -               return err;
-> -       }
-> +       /*
-> +        * Power up the sink (DP_SET_POWER register is only available on DPCD
-> +        * v1.1 and later).
-> +        */
-> +       if (anx6345->dpcd[DP_DPCD_REV] >= 0x11) {
-> +               err = drm_dp_dpcd_readb(&anx6345->aux, DP_SET_POWER, &dpcd[0]);
-> +               if (err < 0) {
-> +                       DRM_ERROR("Failed to read DP_SET_POWER register: %d\n",
-> +                                 err);
-> +                       return err;
-> +               }
-> +
-> +               dpcd[0] &= ~DP_SET_POWER_MASK;
-> +               dpcd[0] |= DP_SET_POWER_D0;
-> +
-> +               err = drm_dp_dpcd_writeb(&anx6345->aux, DP_SET_POWER, dpcd[0]);
-> +               if (err < 0) {
-> +                       DRM_ERROR("Failed to power up DisplayPort link: %d\n",
-> +                                 err);
-> +                       return err;
-> +               }
->
-> -       /* Power up the sink */
-> -       err = drm_dp_link_power_up(&anx6345->aux, &anx6345->link);
-> -       if (err < 0) {
-> -               DRM_ERROR("Failed to power up DisplayPort link: %d\n", err);
-> -               return err;
-> +               /*
-> +                * According to the DP 1.1 specification, a "Sink Device must
-> +                * exit the power saving state within 1 ms" (Section 2.5.3.1,
-> +                * Table 5-52, "Sink Control Field" (register 0x600).
-> +                */
-> +               usleep_range(1000, 2000);
->         }
->
->         /* Possibly enable downspread on the sink */
-> @@ -194,20 +209,28 @@ static int anx6345_dp_link_training(stru
->         if (err)
->                 return err;
->
-> -       value = drm_dp_link_rate_to_bw_code(anx6345->link.rate);
-> +       dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
-> +       dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
->         err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> -                          SP_DP_MAIN_LINK_BW_SET_REG, value);
-> +                          SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
->         if (err)
->                 return err;
->
-> +       dpcd[1] = drm_dp_max_lane_count(anx6345->dpcd);
-> +
->         err = regmap_write(anx6345->map[I2C_IDX_DPTX],
-> -                          SP_DP_LANE_COUNT_SET_REG, anx6345->link.num_lanes);
-> +                          SP_DP_LANE_COUNT_SET_REG, dpcd[1]);
->         if (err)
->                 return err;
->
-> -       err = drm_dp_link_configure(&anx6345->aux, &anx6345->link);
-> +       if (drm_dp_enhanced_frame_cap(anx6345->dpcd))
-> +               dpcd[1] |= DP_LANE_COUNT_ENHANCED_FRAME_EN;
-> +
-> +       err = drm_dp_dpcd_write(&anx6345->aux, DP_LINK_BW_SET, dpcd,
-> +                               sizeof(dpcd));
-> +
->         if (err < 0) {
-> -               DRM_ERROR("Failed to configure DisplayPort link: %d\n", err);
-> +               DRM_ERROR("Failed to configure link: %d\n", err);
->                 return err;
->         }
->
+> The secondary reason is I found that the schema was broken anyways.  In
+> the way it was written, if you implemented sleep, you could not skip
+> xo_ao, however there is a dts that did exactly that.
 
+If a dts can be updated in a compatible way, we should do that rather
+than carry inconsistencies into the schema.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> The third reason was that I couldn't find a way to write valid yaml to
+> preserve the original meaning.  when you have an "items" as a subnode of
+> "oneOf", you no longer have control over the minItems/maxItems, so all 3
+> became required anyways.
+
+That would be a bug. You're saying something like this doesn't work?:
+
+oneOf:
+  - minItems: 1
+    maxItems: 3
+    items:
+      - const: a
+      - const: b
+      - const: c
+
+>  I find it disappointing that the "version" of
+> Yaml used for DT bindings is not documented,
+
+Not sure which part you mean? json-schema is the vocabulary which has
+a spec. The meta-schema then constrains what the json-schema structure
+should look like. That's still evolving a bit as I try to improve it
+based on mistakes people make. Then there's the intermediate .dt.yaml
+format used internally. That's supposed to stay internal and may go
+away when/if we integrate the validation into dtc.
+
+> so after several hours of
+> trial and error, I just gave up since I found this to work (failed cases
+> just gave me an error with no indication of what was wrong, not even a
+> line number).
+
+Schema failures or dts failures? It is possible to get line numbers
+for either, but that makes validation much slower. In the latter case,
+the line numbers aren't too useful either given they are for the
+.dt.yaml file and not the .dts source file (dtc integration would
+solve that). Adding '-n' to dt-doc-validate or dt-validate will turn
+them on though.
+
+Yes, error messages need work. I have some idea how to improve them,
+but haven't had time to implement. Too many binding reviews... You can
+get more detail with '-v' option. It's *way* more verbose, but not
+necessarily more useful.
+
+Rob
