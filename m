@@ -2,124 +2,189 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C92DC17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6A3C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E898D2245C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5148121925
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCbC4L4b"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="j4QoyoAz";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="PQkRx3mX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfKLTnz (ORCPT
+        id S1726952AbfKLUDL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:43:55 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41743 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfKLTnz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:43:55 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p26so14064153pfq.8
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 11:43:54 -0800 (PST)
+        Tue, 12 Nov 2019 15:03:11 -0500
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:38388 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726008AbfKLUDL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 15:03:11 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1B479C03A5;
+        Tue, 12 Nov 2019 20:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1573588991; bh=zK9Q6HFL83ySXBTsD3GpXA1NE5l0MqCWkh5WT8iAP6o=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=j4QoyoAzcjou+RlQYLUWwG7FHnPxwOVsapAxKsDMTOUNepFAfLL0R2BTXxnHO+DlW
+         KYylu4CCMextZ7Rg4+HjOrrxmCKUT2yGeO9BD3+HeFe4bGY2+gJM9ZliUg9YbMORuQ
+         bWDyUiiPBJQ8Z8oYTWIMBxTSzpe5wvkky4WUD+G9vBS+e9amcxNUpFwiXs8atVQ+ma
+         oi3340goUwwvg/ubj6xO7vXdRU9L+PsFV0cy2a9NXBLwPYuMIcE63BNXjMKeNdlDH5
+         KD0zJwqbyK7tjammo896IpntsbhlYEUqOXuDudDFIzPTKJ4Duhzpg76C7jrH9fnjXj
+         devDLAnta2yTQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 2A7DFA0066;
+        Tue, 12 Nov 2019 20:03:08 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 12 Nov 2019 12:03:08 -0800
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 12 Nov 2019 12:03:08 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VEDGAgpM2xau8uNlQ0YGKWYwYmCFjVPSy5LMem3C3w38YuxFdhMijsghL1nvwOHYW+8LpgrdzR2U61eV2aPVB5SZnBpnz5XGoc47EDjZOUK9UpnFTI7mzTgdkRVsaxRvUHirgvT/h8qeDaTAbRTOlkyMkbeBFaIUAZNvA5EzqaXMd5DduOzUj3yR2lcE6fopco0sCKIlijShs/8vcbdnRqkU4RpmGt7p7yD8xCFSyNE+sffv2M9eIS9h+pxgQC3q33dTv3dyE8YrNHwcKrqSlXuwSC/YUyoH3i8n7YCxq0PGVLJOaq83e6C28ZOOGXe2RJt9/jKW5amwV4IQrOilkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zK9Q6HFL83ySXBTsD3GpXA1NE5l0MqCWkh5WT8iAP6o=;
+ b=l58tYD4pGG0/3NqztBRAsJJR8xuZyXtPA94BXFD7p9e78Z15gnUQoxOqUz+dR0xHLEJ/Fv4u4r1gm7lMXbFHd/e+7VppmDsxO087RiTFwg2vDn1HANZk4P5+Wi4SC9cKZxly4pVp33jnpGxpOW8KgNDl4TFa9MSm2bWFL3r5crkGg9FMfqbWSvz8AOgltiT/7YqWp5TvVI8YTrSpNR251H1bRunPLMn2BXQGRS11tULfR265icuPkkSXatUPw0ytlRTQvB5wdHEHOcavn8+KGBlBeVwEGxbmd7FWlkf/4cxnNaPi9AjoCo4O2xOwHYfyglPCSBE8nOitQnlFXUZjgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HPem8TIIszZ7FemqTmbnyMN0h8Slh11f2S1uwgjMiNs=;
-        b=vCbC4L4b7VLJUVxMLdfu7tTiF+7v9bVwa2ILlKu9Fn4M2fXbwAWOJQgS8FoCOPusVZ
-         xVC8bQFTXjujcVkJ9se5vr3widjEEvQwNYG8F2b2EBg5AIUw5+fOPgQG++A4VYLRozqo
-         I0TRQVo5VgAsRL9UbLXgDoqWci22cl/Fm+fUjNAZ9g9Y6OdwiN6UPJc9iIpL2aV2P87j
-         T0tnEhvI9d35ls+XXBtg5NXJFPTbZJwuODyzDhudMtEvx88qzrv6yg3uZzXtJSK5iX6w
-         cPzhimTCv0pRwbAC7M+ErI0dUXGxv2qaOkloyNOT2SnYtiU/o5XmDPQkyfepeLZrvV/G
-         ESpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HPem8TIIszZ7FemqTmbnyMN0h8Slh11f2S1uwgjMiNs=;
-        b=TtORAw663m0gReRQltKtz+7w+vhWJAfO2XWqifWbxRlciG7H9OQHvPs3AhMk2mHHYX
-         91B0b5frDdwDbgC2HZjwJDcdCeGrNw85wMUxyYoYdgFBpRo8JtjVHEvcEyQrc8wcyxix
-         +zZq43VbDwAj1C++DMTwd+2NFHAsRWNO4kgZsfCzmFX9cg8FNHvniaOgbJ1+85jbWwLn
-         v/o4QhVsD5YcAqxLHfkVRELfonn2CG7TPSQLnwBkf75cGyAQiZFu13o3mhywC/H9kDGI
-         /J20Sfg3V2HTM6Yrj/0nx+JxR78hre6MvaZv4JI66T9zKN017jFssR6LYIYuDSit7Zmf
-         THAw==
-X-Gm-Message-State: APjAAAWMo8x/w9/JwsjxCDPfGwbYjhAZtsVT9NRD//ttxC7l3+PD+6Cg
-        HT0DnyZyXg1UNlioxU7cqYRgRA==
-X-Google-Smtp-Source: APXvYqwvp01l6+NWe5Q3aOH506LuFAZx7SlH82bO5pfIp1D3hOIxDJgrjOioGwThFhLK0fe655HllA==
-X-Received: by 2002:aa7:96bd:: with SMTP id g29mr39160759pfk.28.1573587834096;
-        Tue, 12 Nov 2019 11:43:54 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z18sm19047098pgv.90.2019.11.12.11.43.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:43:53 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:43:51 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        edubezval@gmail.com, swboyd@chromium.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: sdm845: thermal: Add critical interrupt
- support
-Message-ID: <20191112194351.GD3140946@builder>
-References: <cover.1573499020.git.amit.kucheria@linaro.org>
- <c536e9cdb448bbad3441f6580fa57f1f921fb580.1573499020.git.amit.kucheria@linaro.org>
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zK9Q6HFL83ySXBTsD3GpXA1NE5l0MqCWkh5WT8iAP6o=;
+ b=PQkRx3mXba1VUu07emqgr31+j0ZKEmj2GJRPsYM3cKEe+5om8eiEVCziBI/xlNg0+FjPzfAu2R8YBILlYVqbIuj6RfhpG/ftGZk9jdNCHNaZniEyZ8SSC/IN0QcYEf82KOWCWs8XK6KfR4Q8EG43USeyNA4uymdFHIPKTOmZW20=
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com (10.172.78.22) by
+ CY4PR1201MB0039.namprd12.prod.outlook.com (10.172.79.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Tue, 12 Nov 2019 20:03:06 +0000
+Received: from CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::cdbe:cf8c:dfb7:68d3]) by CY4PR1201MB0037.namprd12.prod.outlook.com
+ ([fe80::cdbe:cf8c:dfb7:68d3%4]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 20:03:06 +0000
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     Jun Li <lijun.kernel@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+CC:     Tim <elatllat@gmail.com>, Felipe Balbi <balbi@kernel.org>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dongjin Kim <tobetter@gmail.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
+ disabling SS instances in park mode
+Thread-Topic: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
+ disabling SS instances in park mode
+Thread-Index: AQHVgpo3wnUWK/PjlkCI40UJSqKuHadotvaAgByUcgCAABZzgIACCBMAgAAfDQCAAJo0gA==
+Date:   Tue, 12 Nov 2019 20:03:05 +0000
+Message-ID: <45212db9-e366-2669-5c0a-3c5bd06287f6@synopsys.com>
+References: <20191014141718.22603-1-narmstrong@baylibre.com>
+ <20191014141718.22603-2-narmstrong@baylibre.com>
+ <20191023201141.GA21235@bogus>
+ <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com>
+ <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com>
+ <c32007f5-88b9-45c5-b542-b1dc4dbc76ea@baylibre.com>
+ <CAKgpwJVHF6Ytdt9kq5SwiixFDLym_UPG51aXag1nVVay0pzofQ@mail.gmail.com>
+In-Reply-To: <CAKgpwJVHF6Ytdt9kq5SwiixFDLym_UPG51aXag1nVVay0pzofQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thinhn@synopsys.com; 
+x-originating-ip: [149.117.75.13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: afcbffa1-8383-4206-e196-08d767ab5517
+x-ms-traffictypediagnostic: CY4PR1201MB0039:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB00399323EE8E606B071EB37EAA770@CY4PR1201MB0039.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(39860400002)(376002)(366004)(189003)(199004)(66946007)(66476007)(6246003)(8936002)(2906002)(81156014)(229853002)(6486002)(15650500001)(316002)(81166006)(99286004)(66446008)(64756008)(76116006)(91956017)(6116002)(6436002)(110136005)(54906003)(3846002)(66556008)(8676002)(5660300002)(66066001)(966005)(31686004)(6636002)(478600001)(14454004)(53546011)(4326008)(76176011)(71190400001)(6512007)(71200400001)(14444005)(256004)(25786009)(86362001)(11346002)(446003)(6306002)(36756003)(31696002)(476003)(486006)(186003)(7736002)(102836004)(26005)(2616005)(6506007)(305945005)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0039;H:CY4PR1201MB0037.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /TQJ/nyKj5OX+K3ZJ6mXNqadk/4w9oA7I8cpmOwTur95j0QJ8OLYouKnq1vL1drXFxW24fj7Hvn38qG5GSnOozhck8R+3hn4qpvu8yCOvElv75A2f3tUJhN3NO14xwMAO1qNm5iqbyOk+qSCbv619D5KNGunvlk0D5rGqM+VhCVaJQPjujyVwJn+DeMV8qNgFdSjUqUDc54fMfhay3z1bBhy2cYcW//ZMk3QyKx4odYuImngHY6EzNG/wXC6Eube/NO1qtHny4HCyBX8HFKNFIwgW3ehvEm0ZvuyPOfOnuaOj4LECJ1LcKox4HYItOerGDkSQdYWXLM7h2W5PXQDhq1OUm6Cf889qPgz9LANPc0RPerToQUZBl6zMzEl0SCP2bZynqMbTZ6zZfgVV+PDcQFeXAlFdsFG+UumM1UcgbfO9AOX3As17NyJ3XKTNewfGovG0rDMAxzXBtteyU0zZiE1mZnutRafF6iGlp+FR+I=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0AB26A2159416647A439552D6B4ADD6C@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c536e9cdb448bbad3441f6580fa57f1f921fb580.1573499020.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-MS-Exchange-CrossTenant-Network-Message-Id: afcbffa1-8383-4206-e196-08d767ab5517
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 20:03:05.8772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gxiSWHRY+gh67gUL0CtW5EG7OCWOunjzU+ArqSgQVzJfgG83qmrwD2dafGRxmUhMNDOZeoLNtOlWrjXtBJ25tQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0039
+X-OriginatorOrg: synopsys.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 11 Nov 11:21 PST 2019, Amit Kucheria wrote:
-
-> Register critical interrupts for each of the two tsens controllers
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Message-Id: <3686bd40c99692feb955e936b608b080e2cb1826.1568624011.git.amit.kucheria@linaro.org>
-
-Picked up for v5.6.
-
-Regards,
-Bjorn
-
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 0990d5761860..3b643b04ab5a 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2950,8 +2950,9 @@
->  			reg = <0 0x0c263000 0 0x1ff>, /* TM */
->  			      <0 0x0c222000 0 0x1ff>; /* SROT */
->  			#qcom,sensors = <13>;
-> -			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupt-names = "uplow";
-> +			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "uplow", "critical";
->  			#thermal-sensor-cells = <1>;
->  		};
->  
-> @@ -2960,8 +2961,9 @@
->  			reg = <0 0x0c265000 0 0x1ff>, /* TM */
->  			      <0 0x0c223000 0 0x1ff>; /* SROT */
->  			#qcom,sensors = <8>;
-> -			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupt-names = "uplow";
-> +			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "uplow", "critical";
->  			#thermal-sensor-cells = <1>;
->  		};
->  
-> -- 
-> 2.17.1
-> 
+SGksDQoNCkp1biBMaSB3cm90ZToNCj4gVGhpcyBidWcgZXhpc3RzIG9uIGFsbCBjdXJyZW50IHZl
+cnNpb25zIHBlciBpbmZvcm1hdGlvbiBJIGdvdCBmcm9tIFN5bm9wc3lzLg0KPiArIFRoaW5oIE5n
+dXllbiA8dGhpbmhuQHN5bm9wc3lzLmNvbT4uDQo+DQo+IExpIEp1bg0KDQpUaGUgR1VDVEwxLlBB
+UktNT0RFX0RJU0FCTEVfU1MgaXMgb25seSBhdmFpbGFibGUgaW4gZHdjX3VzYjMgY29udHJvbGxl
+ciANCnJ1bm5pbmcgaW4gaG9zdCBtb2RlLiBUaGlzIHNob3VsZCBub3QgYmUgc2V0IGZvciBvdGhl
+ciBJUHMuDQoNClRoaXMgY2FuIGJlIGRpc2FibGVkIGJ5IGRlZmF1bHQgYmFzZWQgb24gSVAsIGJ1
+dCBJIHJlY29tbWVuZCB0byBoYXZlIGEgDQpwcm9wZXJ0eSB0byBlbmFibGUgdGhpcyBmZWF0dXJl
+IGZvciBkZXZpY2VzIHRoYXQgbmVlZCB0aGlzLg0KDQoNCj4NCj4gTmVpbCBBcm1zdHJvbmcgPG5h
+cm1zdHJvbmdAYmF5bGlicmUuY29tPiDkuo4yMDE55bm0MTHmnIgxMuaXpeWRqOS6jCDkuIvljYg1
+OjAw5YaZ6YGT77yaDQo+PiBIaSBMaSwNCj4+DQo+PiBPbiAxMS8xMS8yMDE5IDAyOjU4LCBKdW4g
+TGkgd3JvdGU6DQo+Pj4gSGkgTmVpbA0KPj4+DQo+Pj4gQXMgSSBnb3QgdGhlIGluZm9ybWF0aW9u
+IGZyb20gU3lub3BzeXMsIHRoaXMgYnVnIGV4aXN0cyBvbiBjdXJyZW50IElQIHZlcnNpb25zLA0K
+Pj4+IGFuZCBwZXIgbXkgdGVzdHMgd2l0aCBleHRlcm5hbCBVU0IzIGh1YiArIDIgU3VwZXIgc3Bl
+ZWQgdWRpc2tzIG9uIGRhdGENCj4+PiByZWFkIGJ5IGRkLCBJIGNhbiByZXByb2R1Y2UgdGhpcyBp
+c3N1ZSB3aXRoIGRpZmZlcmVudCBrZXJuZWwgdmVyc2lvbnMsIGFsc28gSQ0KPj4+IGRpZG4ndCBz
+ZWUgb2J2aW91cyBwZXJmb3JtYW5jZSBkcm9wIGJ5IGRkIHRlc3RzIGFmdGVyIGRpc2FibGUgcGFy
+ayBtb2RlIGZvcg0KPj4+IHN1cGVyIHNwZWVkLCBzbyBzaG91bGQgd2UganVzdCBkaXNhYmxlIGl0
+IGJ5IGRlZmF1bHQgc28gbm8gbmVlZCBhIHF1aXJrPw0KPj4gSSBkb24ndCBoYXZlIGFueSBvcGlu
+aW9uIG9uIHRoaXMsIEkgdGhpbmsgdGhlIFVTQiAmIERXQzMgbWFpbnRhaW5lcnMgc2hvdWxkIGRl
+Y2lkZQ0KPj4gaG93IHRvIGhhbmRsZSB0aGlzLg0KPj4NCj4+IERpZCBTeW5vcHN5cyBzcGVjaWZp
+ZWQgYSByYW5nZSBvZiBhZmZlY3RlZCBJUCB2ZXJzaW9uID8NCj4+DQo+PiBOZWlsDQo+Pg0KPj4+
+IExpIEp1bg0KPj4+DQo+Pj4gVGltIDxlbGF0bGxhdEBnbWFpbC5jb20+IOS6jjIwMTnlubQxMeac
+iDEx5pel5ZGo5LiAIOS4iuWNiDg6NDLlhpnpgZPvvJoNCj4+Pj4gVGhhbmtzIGZvciB3b3JraW5n
+IG9uIHRoaXMgTmVpbCwNCj4+Pj4gSXMgdGhlcmUgc29tZXRoaW5nIHRoYXQgbmVlZHMgZG9pbmcg
+Zm9yIHRoaXMgcGF0Y2ggdG8gbWFrZSBpdCBpbnRvIDUuMyBvciA1LjQ/DQo+Pj4+IEFzIHByZXZp
+b3VzbHkgbWVudGlvbmVkIHRoZSBwYXRjaCBzZXQgZml4ZXMgdGhlIGlzc3VlIG9uIGFmZmVjdGVk
+IGhhcmR3YXJlOw0KPj4+PiAgICAgIGh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92
+Mi91cmw/dT1odHRwcy0zQV9fcGF0Y2h3b3JrLmtlcm5lbC5vcmdfcGF0Y2hfMTExNjQ1MTVfJmQ9
+RHdJRmFRJmM9RFBMNl9YXzZKa1hGeDdBWFdxQjB0ZyZyPXU5RllveEt0eWhqckdGY3lpeEZZcVRq
+dzFaWDBWc0cyZDhGQ216a1RZLXcmbT1CQ2ZSSE05ZTg2MDM5U3UwLVF2S195VWpObllybmxfQmN2
+eFR0Vml5cFQ4JnM9YVY1dTd1eE5YNm9UTEIzXy1xTnV6ck52eWlxeF9yUEM2UDlUTXFHLUxORSZl
+PQ0KPj4+Pg0KPj4+Pg0KPj4+Pg0KPj4+PiBPbiBXZWQsIE9jdCAyMywgMjAxOSBhdCA0OjExIFBN
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOg0KPj4+Pj4gT24gTW9uLCBPY3Qg
+MTQsIDIwMTkgYXQgMDQ6MTc6MTZQTSArMDIwMCwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+Pj4+
+Pj4gVGhpcyBwYXRjaCB1cGRhdGVzIHRoZSBkb2N1bWVudGF0aW9uIHdpdGggdGhlIGluZm9ybWF0
+aW9uIHJlbGF0ZWQNCj4+Pj4+PiB0byB0aGUgcXVpcmtzIHRoYXQgbmVlZHMgdG8gYmUgYWRkZWQg
+Zm9yIGRpc2FibGluZyBhbGwgU3VwZXJTcGVlZCBYSENpDQo+Pj4+Pj4gaW5zdGFuY2VzIGluIHBh
+cmsgbW9kZS4NCj4+Pj4+Pg0KPj4+Pj4+IENDOiBEb25namluIEtpbSA8dG9iZXR0ZXJAZ21haWwu
+Y29tPg0KPj4+Pj4+IENjOiBKaWFueGluIFBhbiA8amlhbnhpbi5wYW5AYW1sb2dpYy5jb20+DQo+
+Pj4+Pj4gUmVwb3J0ZWQtYnk6IFRpbSA8ZWxhdGxsYXRAZ21haWwuY29tPg0KPj4+Pj4+IFNpZ25l
+ZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4NCj4+Pj4+
+PiAtLS0NCj4+Pj4+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdj
+My50eHQgfCAyICsrDQo+Pj4+Pj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+
+Pj4+PiBTaWdoLCB3aGF0J3Mgb25lIG1vcmUgdG8gdGhlIG5ldmVyIGVuZGluZyBsaXN0IG9mIHF1
+aXJrcy4uLg0KPj4+Pj4NCj4+Pj4+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPg0KDQpCUiwNClRoaW5oDQo=
