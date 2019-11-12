@@ -2,62 +2,88 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D12CC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26483C17452
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E51B2067B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D8021783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKLUMI (ORCPT
+        id S1726973AbfKLUXA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:12:08 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:48918 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLUMI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 15:12:08 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 27653154D23BD;
-        Tue, 12 Nov 2019 12:12:07 -0800 (PST)
-Date:   Mon, 11 Nov 2019 14:38:30 -0800 (PST)
-Message-Id: <20191111.143830.839461521636004353.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     f.fainelli@gmail.com, netdev@vger.kernel.org,
-        ilias.apalodimas@linaro.org, andrew@lunn.ch,
-        ivan.khoronzhuk@linaro.org, jiri@resnulli.us, nsekhar@ti.com,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        m-karicheri2@ti.com, ivecera@redhat.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 net-next 02/13] net: ethernet: ti: cpsw: allow
- untagged traffic on host port
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191109151525.18651-3-grygorii.strashko@ti.com>
-References: <20191109151525.18651-1-grygorii.strashko@ti.com>
-        <20191109151525.18651-3-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 12:12:07 -0800 (PST)
+        Tue, 12 Nov 2019 15:23:00 -0500
+Received: from mga12.intel.com ([192.55.52.136]:23533 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbfKLUXA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 15:23:00 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 12:22:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,297,1569308400"; 
+   d="scan'208";a="194443228"
+Received: from joshbuck-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.20.68])
+  by orsmga007.jf.intel.com with ESMTP; 12 Nov 2019 12:22:49 -0800
+Date:   Tue, 12 Nov 2019 22:22:47 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
+        amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v1 2/5] char: tpm: Add check_data handle to
+ tpm_tis_phy_ops in order to check data integrity
+Message-ID: <20191112202247.GA12877@linux.intel.com>
+References: <20191110162137.230913-1-amirmizi6@gmail.com>
+ <20191110162137.230913-3-amirmizi6@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191110162137.230913-3-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Sat, 9 Nov 2019 17:15:14 +0200
+On Sun, Nov 10, 2019 at 06:21:34PM +0200, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> The current principles:
+> - When sending command:
+> 1. Host writes TPM_STS.commandReady
+> 2. Host writes command
+> 3. Host checks TPM received data correctly
+> 4. if not go to step 1
 
-> +	ale->p0_untag_vid_mask =
-> +		devm_kmalloc_array(params->dev, BITS_TO_LONGS(VLAN_N_VID),
-> +				   sizeof(unsigned long),
-> +				   GFP_KERNEL);
-> +
+You are probably talking about steps, right?
 
-devm_kmalloc_array() can fail and you must check the return value and
-cleanup with -ENOMEM if necessary.
+Please check the grammar and punctation e.g. "The current steps are
+roughly done when sending a command".
+
+> - When receiving data:
+> 1. Host check TPM_STS.dataAvail is set
+> 2. Host get data
+> 3. Host check received data are correct.
+> 4. if not Host write TPM_STS.responseRetry and go to step 1.
+> 
+> this commit is based on previous work by Christophe Richard
+
+Sentences in English start with a capital letter and end with a full
+stop.
+
+This is completely lacking the description what the commit does.
+
+/Jarkko
