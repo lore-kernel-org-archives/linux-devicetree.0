@@ -2,214 +2,118 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB921C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AC2C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944B921783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6750A20818
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573586078;
-	bh=oUFhFq6Qn6zil2UKbQi1fIesgVLVV+8iXjgE4EHhD6Y=;
+	s=default; t=1573586155;
+	bh=WT7YXewJpdw+RsIQLMYdInCZdlbPQvy+A6ngLZw25Bs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LMmVTwnbRYgAFJwyhXWbSJkJNtmPlKP95erD6HxjxiiTJ5DpoDVLMxatyk+o5k/e7
-	 neSm93HVT0zI/qFhjG3x3CUePywOWQqjGgT7yNUokH5NIbBrdQSRsiRJpSVoeKnvCb
-	 0xzrsd8dA7lIHHsZKh0pnfe8j9G7FIMUR2Hc0vYU=
+	b=cC/6wAVIsKrhSTEYaO0F0cWTCSPdabusXh5eWFuCJqoCOfbsKWpFB8hAQyKRjiCY2
+	 LKXyogNj7X8MWpldr/+RwrQBLsjrTy3IHGqgerdNOhrlYWAG1CLmTwYqIffvi4LcRB
+	 y85Vcg04MLsFb6ep0xi+Yh4EEi91ZF74jKGYHy2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfKLTOf (ORCPT
+        id S1726985AbfKLTPv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:14:35 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:47095 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbfKLTOe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:14:34 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n14so15825197oie.13;
-        Tue, 12 Nov 2019 11:14:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4jNoA6cFjcLd8Z53yLVk6YcAHFrtV5MHTUw6k4vZhTQ=;
-        b=eR89vEMmT330rIDoOjp6whfp51Oj9kJQvJ7AZ6gZYKthgVsIWOdNjr6D32P+cy0J3g
-         aeqv4SZAZMEK1tq1K8iySvdoVTNWpfVWZcdP32XH1NSAjYUGBExCx2fM7x7TeVPGCcZi
-         GSzmcZicjFrDNEeN9SmLU0kaC7fLVu1yYEfxNp1S6XZYr8wPRZdKSlJ1G6KXaa0CjboY
-         kRVEB/Il2v7W/LAikpqPXEWh6R+c0BFOPDuToItWGW7jyobMbX9Q4SL62uibsZeioc/2
-         ADzamYCVY7XdAKKxFegdj6jMu954B7F5xOlwSgD2S0vrjYim5Ql3NcYcNZ61Thhe/1xt
-         u98w==
-X-Gm-Message-State: APjAAAXsxIzxDGyYt24koCDRzjbjEmzpT8H6pQ6AAMzKQGctNDciMCcl
-        T5zKh4funy+hPoOq8YNcgQ==
-X-Google-Smtp-Source: APXvYqyeiJf3elWT7EA3Mlwgnz6eRcQxdmuB70piwmSdAN5oGOPQdDeOw9o9KO+zCYpAbW4/PUCsqA==
-X-Received: by 2002:aca:6706:: with SMTP id z6mr428142oix.89.1573586073728;
-        Tue, 12 Nov 2019 11:14:33 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q3sm6190895oti.49.2019.11.12.11.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:14:33 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:14:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Message-ID: <20191112191432.GA19579@bogus>
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+        Tue, 12 Nov 2019 14:15:51 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42854 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfKLTPv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:15:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=X+Ml7G/CJ8hCucj1xuBcAsRonG+1DjY0KmhJXnb3RmU=; b=f7JrrVlyQx67xyqEEk23zdniu
+        Za7K6+OZZD4BF8kjx18VBXPYS1UPb6Cw1p15meSpfbeXrEVOpeqqgdr4XtmESFTCIAsNSCRArj7vN
+        yB4DqnHJV45OgAr/DxirdrMvY0TDvlsewUFBXny4sf4dQ8xr30ucswp2vsOHy4jR83/lw=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iUbdk-0000BZ-N9; Tue, 12 Nov 2019 19:15:48 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id E6219274299F; Tue, 12 Nov 2019 19:15:47 +0000 (GMT)
+Date:   Tue, 12 Nov 2019 19:15:47 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+Message-ID: <20191112191547.GK5195@sirena.co.uk>
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com>
+ <20191112120307.GB5195@sirena.co.uk>
+ <20191112190328.GA199853@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OX2aLCKeO1apYW07"
 Content-Disposition: inline
-In-Reply-To: <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <20191112190328.GA199853@dtor-ws>
+X-Cookie: As famous as the unknown soldier.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 06:11:30PM +0800, Rahul Tanwar wrote:
-> Add dt bindings document for pinmux & GPIO controller driver of
-> Intel Lightning Mountain SoC.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 98 ++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..d54a3bda1f4f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> @@ -0,0 +1,98 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
 
-For new bindings:
+--OX2aLCKeO1apYW07
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+On Tue, Nov 12, 2019 at 11:03:28AM -0800, Dmitry Torokhov wrote:
+> On Tue, Nov 12, 2019 at 12:03:07PM +0000, Mark Brown wrote:
+> > On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-> +
-> +maintainers:
-> +  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> +
-> +description: |
-> +  Pinmux & GPIO controller controls pin multiplexing & configuration including
-> +  GPIO function selection & GPIO attributes configuration.
-> +
-> +  Please refer to [1] for details of the common pinctrl bindings used by the
-> +  client devices.
-> +
-> +  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +# Client device subnode's properties
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    properties:
-> +      function:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description:
-> +          A string containing the name of the function to mux to the group.
+> > > +      interrupts:
+> > > +        items:
+> > > +          - description: main interrupt (attention) line.
+> > > +          - description: dedicated wakeup interrupt.
+> > > +        minItems: 1 # The wakeup interrupt is optional.
 
-Possible strings should be listed out here.
+> > > +      interrupt-names:
+> > > +        items:
+> > > +          - const: irq
+> > > +          - const: wakeup
+> > > +        minItems: 1
 
-> +
-> +      groups:
-> +        $ref: /schemas/types.yaml#/definitions/string-array
-> +        description:
-> +          An array of strings identifying the list of groups.
+> > How will this interact with a SPI device that defines interrupts at the
+> > device level, possibly more than one of them?  Especially if the device
+> > has its own idea what the interrupts should be called.
 
-Possible strings should be listed out here.
+> My understanding that individual drivers should be able to override
+> whatever the default behavior core has configured, and the device can
+> establish their own mapping. We have this in I2C and I believe this
+> works well.
 
-> +
-> +      pins:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          List of pins to select with this function.
-> +
-> +      pinmux:
-> +        description: The applicable mux group.
-> +        allOf:
-> +          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-> +
-> +      bias-pull-up:
-> +        type: boolean
-> +      bias-pull-down:
-> +        type: boolean
-> +      drive-strength:
-> +        type: boolean
+> Is the concern about the device tree scheme or SPI core handling?
 
-Not a boolean. Need to define possible values.
+Both really.
 
-> +      slew-rate:
-> +        type: boolean
+--OX2aLCKeO1apYW07
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Not a boolean. Need to define possible values.
+-----BEGIN PGP SIGNATURE-----
 
-> +      drive-open-drain:
-> +        type: boolean
-> +      output-enable:
-> +        type: boolean
-> +
-> +    required:
-> +      - function
-> +      - groups
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3LBOMACgkQJNaLcl1U
+h9CnHwf9Htk5j6XICHic0T7w226CHXw6GyCY2GGe/lT9tLxvwZ3EzGstAu+8+G48
+OG6Pn1Q23bQOevOGt8/oQ+f00yv+RXIipY4bgKIByUBUYSgP5ZWN7VzRVoa/ve4B
+HoDoae5kWda/AEC5TRzKadcKcXbO3X/pM+QijqtzDOWLRavWvJ77pjPPZy+4Rzfq
+Cii5vzHLiI9Xtn1COJfBPQPZHAPgwy13gN68XkQKt81F6NcuDI/i6ZbdvwWIOqPu
+d2AW56WXVQ6o7aPCOP0yWqjILrGXVaJkwB5aM1Br4ukvKJQPiR4JxP4bPETrV4Aj
+sBDrQVqj+Kx7vGo2uXDA6cVVy9ELXA==
+=pW4A
+-----END PGP SIGNATURE-----
 
-For the -pins nodes too:
-
-       additionalProperties: false
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Pinmux controller node
-> +  - |
-> +    pinctrl: pinctrl@e2880000 {
-> +          compatible = "intel,lgm-pinctrl";
-> +          reg = <0xe2880000 0x100000>;
-> +
-> +          # Client device subnode
-> +          uart0-pins: uart0 {
-
-This fails 'make dt_binding_check'. Please fix and run that.
-
-> +                pins = <64>, /* UART_RX0 */
-> +                       <65>; /* UART_TX0 */
-> +                function = "CONSOLE_UART0";
-> +                pinmux = <1>,
-> +                         <1>;
-> +                groups = "CONSOLE_UART0";
-> +          };
-> +    };
-> +
-> +...
-> -- 
-> 2.11.0
-> 
+--OX2aLCKeO1apYW07--
