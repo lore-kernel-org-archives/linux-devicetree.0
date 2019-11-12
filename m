@@ -7,321 +7,328 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF2DC17441
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABD0C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85AF222C6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DEC21872
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=distech-controls.com header.i=@distech-controls.com header.b="RO+ORDMQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T3+x6Hj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfKLPDJ (ORCPT
+        id S1726982AbfKLPIC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:03:09 -0500
-Received: from mx0a-002ab301.pphosted.com ([148.163.150.161]:49146 "EHLO
-        mx0a-002ab301.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726981AbfKLPDJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:03:09 -0500
-Received: from pps.filterd (m0118790.ppops.net [127.0.0.1])
-        by mx0a-002ab301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xACEjSKI019901;
-        Tue, 12 Nov 2019 10:01:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=distech-controls.com; h=from : to :
- cc : subject : date : message-id : references : in-reply-to : content-type
- : content-transfer-encoding : mime-version; s=pps-02182019;
- bh=MpmYh0mghqTbnm0vF83qL1K1KYBDcXpHQwM0k+CBEAY=;
- b=RO+ORDMQYTn2sUQJZauD3n1iB38ok3VyCGyvfmdn6n7kJT4YEdqkTAWnL5/EsVnxWjLo
- +SZ4+Rbek0jgpKQ+60exKKs5jZzC3LmElGi0k5FeDf57CwagaxErQg7A2oyO+ns01H93
- UygFr9DrrmFMs0NhPRZJdN79HWKZXx+NVHPAgD5iZFuyu/sacpgjGByA+ZLvz16a7sNK
- lYfvPeFXRsi2jOUPXL00G9rNwISevgyG3s7yHvFKVyeUm3pOm6DisIs73l1lIWDc+PgA
- 49YHlPJ7hOMnLfx4UtJ0ddKhHTAuMMHFgwc/yY51DZUCSrEgLxlxkGfuitqnR6uemFK9 uA== 
-Received: from nam05-co1-obe.outbound.protection.outlook.com (mail-co1nam05lp2050.outbound.protection.outlook.com [104.47.48.50])
-        by mx0a-002ab301.pphosted.com with ESMTP id 2w7cv49052-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Nov 2019 10:01:14 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G6LdZDFVy3Ttbr6OYWX88Cn8dqoGLsxdqvmyeod5G5k/lJt5ZcC4J0Et7MYFo1M3RxMm1RCpyY+lCcVaxtE/bhF9WFbPI8iVxpsCXpRthE2uMbsSPvx+Yi2ldzATgHZel6hONXR38lfetzXyzWaAbhld9efn5zf8Itpvl68sQE8g2QzDomAMX1hkz5SbSpcvzC27mOYh7Z8UF417ZWeW5vKHAv7ayu4OKxPqTg1gOtrsuQhy/hwQw3NJOZOQFn+0T0wZuDPHxSJlrrVCR0F1IUyV6/Jn/QhjyUJmCCfvQguoIjW+r0ixSgeW9jWJ1pKZAm21z+l/c6cXoj1EOu8sAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MpmYh0mghqTbnm0vF83qL1K1KYBDcXpHQwM0k+CBEAY=;
- b=ak+zwrWRmVvYGhUUV4p11ItwKkt4SGir1+ywM41BZ6BP3UOEzwgVqb7stTsFgm4LakuQZEYp9fzzkczV7HMtM7pXBFsgv3UCcVe0TpAH4ZGEZ1e6OphrTFeCQpWmd188Pjuge5lwgS2nPWP3hKWgKRr4FD+3xlj5a5EJBGNxycRheKMTNBYOt4ZFNicsQsS3ilYtK+ItI3kcrTiPjSkyVDY7TvGje8QIOFe0i3DwIar9oEqq6lOPtxWIIKTaS64QsoMNSSpz3cq5UajZpwTNyiwHB8D75ZPczM8o5VQ32aMEYCgq1Spm/Uk/nbpQkyAZa20s3BFJJdGL4x/vPeBMuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=distech-controls.com; dmarc=pass action=none
- header.from=distech-controls.com; dkim=pass header.d=distech-controls.com;
- arc=none
-Received: from BL0PR01MB4835.prod.exchangelabs.com (20.177.147.211) by
- BL0PR01MB4083.prod.exchangelabs.com (10.167.179.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Tue, 12 Nov 2019 15:01:11 +0000
-Received: from BL0PR01MB4835.prod.exchangelabs.com
- ([fe80::b00e:eb7:d585:5086]) by BL0PR01MB4835.prod.exchangelabs.com
- ([fe80::b00e:eb7:d585:5086%6]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
- 15:01:11 +0000
-From:   "Tremblay, Eric" <etremblay@distech-controls.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: RE: [PATCH v7 1/2] dt-bindings: hwmon: Add TMP512/513
-Thread-Topic: [PATCH v7 1/2] dt-bindings: hwmon: Add TMP512/513
-Thread-Index: AQHVmM+QVZuvH6alYkaCtrsGmFXw6KeGuHGAgADoaYA=
-Date:   Tue, 12 Nov 2019 15:01:11 +0000
-Message-ID: <BL0PR01MB4835CDB5E9693A06F10012EF95770@BL0PR01MB4835.prod.exchangelabs.com>
-References: <20191111203445.27130-1-etremblay@distech-controls.com>
- <20191111203445.27130-2-etremblay@distech-controls.com>
- <20191112010345.GA19664@bogus>
-In-Reply-To: <20191112010345.GA19664@bogus>
-Accept-Language: en-CA, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mib-plugin: true
-x-originating-ip: [207.253.3.19]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5aa6a1c0-cfa5-44ef-a296-08d7678127d7
-x-ms-traffictypediagnostic: BL0PR01MB4083:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <BL0PR01MB408350B45BD85641135F991095770@BL0PR01MB4083.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1388;
-x-forefront-prvs: 021975AE46
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(39860400002)(366004)(376002)(346002)(199004)(189003)(4326008)(6436002)(54906003)(9686003)(186003)(6916009)(53546011)(6246003)(102836004)(6506007)(478600001)(99286004)(446003)(7736002)(966005)(229853002)(26005)(11346002)(476003)(486006)(305945005)(74316002)(316002)(76176011)(55016002)(25786009)(86362001)(6306002)(14454004)(66946007)(256004)(33656002)(52536014)(7696005)(8936002)(76116006)(2906002)(66556008)(6116002)(5660300002)(14444005)(66066001)(3846002)(71190400001)(71200400001)(8676002)(81166006)(81156014)(66446008)(64756008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR01MB4083;H:BL0PR01MB4835.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:3;
-received-spf: None (protection.outlook.com: distech-controls.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 07nLd2y2+9CPi6wi5AO7PYkrc+UI2/P1qorBRZDZ+XxxQ/Wpo7y1SfJCuw80J/Fo63ONoJlnGg/nBK/+ZhJrX/xol0cfpfv+OYXgSA54PL4wjmw4IOl+vzAUFtrjbcBPEkN/7OnzEWio2w0akEZLeLgP10GAYVbenqd0CR27Ai7Rp7b1LQ5mGJl/CmMmzN6BCMoxXdR+tOx3KOIruWDfmD8eJBMdwA30nRwA+uxi8l7a8FEhqpwNsoIRp5f9QSRwykTQHwo9pEV5fxOBOz9HwvEYjH4mpWZqYXnceZ5N44ty4avIKtv9Oz+7UQiFfxPWxKrscg0rt75U5UJ/GFu4yzSDqaHiBZdJcymwcb9NdJKtfKolSNKYQfJFY9I+hD5J+iraTEzD+2Hf70Zwr986RXKV6JpNKEShcIUVMN1tnwxxYdRPH8col4eHRRSndQmE1ZeNYqRg9HezIix4Brpf6KK4zy7NLJO4SJ79BlgpPXk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 Nov 2019 10:08:02 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40987 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfKLPIC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 10:08:02 -0500
+Received: by mail-ed1-f65.google.com with SMTP id a21so15172138edj.8
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 07:07:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=kOStVigV/ao9Pr/GeN1G2ZcF7mW8l2LQik/N+UCJ45s=;
+        b=T3+x6Hj/TiGsag6Iwv5Naomkx/gSIg7a2tErPavcNyw8w4Q5tLV+fq49S+xc+FaE0n
+         4uXnEuW8PthxCFusicrrkE6jp05NoEArp2URtaSknD/cfVJKjp3Mr/Klk8fiRUIGk3LU
+         j9hFSSmF0w9KVX8FZKq6LDVe9uwtuY1cAO2Wcbh+k/SOVhyDtJOxHAUuKGNouw8OeUfb
+         W1poc0OuS/f+Tf0P6ohQ906PWFkq4VOvYBHRUORQ+uvV+f7ZP8zLTVkz6N2UZnnLt1C3
+         oTAsLhC/NVp4moymSF2IDlRLumiUbNDCMgbE9+Bq6CfRh1ktD2LfUYJHlUAYuJnQ6Y0L
+         S0xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kOStVigV/ao9Pr/GeN1G2ZcF7mW8l2LQik/N+UCJ45s=;
+        b=G7xhKOqv6W5UEcISPbGEG8ZN1frS8P6wl6Rk9SX08OfrobsoQ09COV+u5Ic+UO484/
+         JUItspyZTemz9mnRWPVbpAG/p1pKE75/ku+ACFBdjDoLMR4Wi+/ZoV5kKuP1U60QeYjc
+         dQttLvSIe6UkHQehPVYiwiYT3qGQ45DxcRCyy8kW9neoQKY7ZSP2JQcqT2+OP/eiLtde
+         eOrKPG03yk0CHzj7J4p2ROIgDdKLq7fZSbW6cYASbbhAJbxclDPcksTmuxdR6pyI/Iu8
+         KL2SbYFr4x7MkZYuD/l0IQ41d/XFcBJq2do0X6HzWE+YIi0v+F8H3tTH4J4r6UDmTlqf
+         76NA==
+X-Gm-Message-State: APjAAAWeMgsLW2lHgZjI3wHig3mvOsht5ihIJsoUrWUmnm1NCtk7jOGw
+        gIphTrWY6Ni+6Ux9ttYvKi8okQ==
+X-Google-Smtp-Source: APXvYqwSF5A1cDuRpzgijULpsjox+9qAbmclvLnSWDqTQfrWe2QPOPZMe370t3Q9fr9XVpl+78OzcA==
+X-Received: by 2002:a17:906:e88:: with SMTP id p8mr28420476ejf.15.1573571278249;
+        Tue, 12 Nov 2019 07:07:58 -0800 (PST)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id e13sm703823edm.29.2019.11.12.07.07.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 07:07:57 -0800 (PST)
+Subject: Re: [PATCH RFC v5 05/10] interconnect: Add imx core driver
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <cover.1572562150.git.leonard.crestez@nxp.com>
+ <3f8b65aa7a7eabaedeee27d5bcf8220982ac3597.1572562150.git.leonard.crestez@nxp.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Message-ID: <4fa190b5-b040-b093-9313-e9ccbc9b1da5@linaro.org>
+Date:   Tue, 12 Nov 2019 17:07:55 +0200
 MIME-Version: 1.0
-X-OriginatorOrg: distech-controls.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5aa6a1c0-cfa5-44ef-a296-08d7678127d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 15:01:11.1860
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: caadbe96-024e-4f67-82ec-fb28ff53d16d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FRJAabqyUd8WeUYgkx4HAeqLEwy5Vt35AYSTTmPv/moWKYPwSxJg4qOmKbBd/CCFgSef4JW2qza2ht+SFRBiNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR01MB4083
-X-Proofpoint-Processed: True
-X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam score=0 malwarescore=0
- mlxlogscore=999 priorityscore=1501 mlxscore=0 adultscore=0 phishscore=0
- impostorscore=0 clxscore=1011 lowpriorityscore=0 bulkscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911120132
+In-Reply-To: <3f8b65aa7a7eabaedeee27d5bcf8220982ac3597.1572562150.git.leonard.crestez@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> From: Rob Herring <robh@kernel.org>
-> Sent: Monday, November 11, 2019 8:04 PM
-> To: Tremblay, Eric <etremblay@distech-controls.com>
-> Cc: linux@roeck-us.net; linux-hwmon@vger.kernel.org; devicetree@vger.kern=
-el.org; linux-doc@vger.kernel.org;
-> jdelvare@suse.com; mark.rutland@arm.com; corbet@lwn.net
-> Subject: Re: [PATCH v7 1/2] dt-bindings: hwmon: Add TMP512/513
->=20
-> On Mon, Nov 11, 2019 at 03:34:44PM -0500, etremblay@distech-controls.com =
-wrote:
-> > From: Eric Tremblay <etremblay@distech-controls.com>
-> >
-> > Document the TMP513/512 device devicetree bindings
-> >
-> > Signed-off-by: Eric Tremblay <etremblay@distech-controls.com>
-> > ---
-> >  .../devicetree/bindings/hwmon/ti,tmp513.yaml  | 89
-> > +++++++++++++++++++
-> >  1 file changed, 89 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> > b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> > new file mode 100644
-> > index 000000000000..de4ed3645e0f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> > @@ -0,0 +1,89 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
-> > +---
-> > +
-> > +$id:
-> > +https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__devicetree.org_s=
-c
-> > +hemas_hwmon_ti-2Ctmp513.yaml-23&d=3DDwIBAg&c=3DtvvHx3uC0XdtgG-ImPDjfM0=
-Qna
-> > +kIsmmGcwejQDVxD-g&r=3Dy34zLl9_AvBy5NSrvskG6SFbiKoCzI99WW2xhKlsVV4&m=3D=
-sqT
-> > +mLsfhqAI5ubkZyE2FvNS0zZ42lJ4Xsiyf12MKPbI&s=3Dcqxgi-ff4mlqg1dH-w0rmoWT9=
-T
-> > +G9UEzI4jP4boAzSTQ&e=3D
-> > +$schema:
-> > +https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__devicetree.org_m=
-e
-> > +ta-2Dschemas_core.yaml-23&d=3DDwIBAg&c=3DtvvHx3uC0XdtgG-ImPDjfM0QnakIs=
-mmG
-> > +cwejQDVxD-g&r=3Dy34zLl9_AvBy5NSrvskG6SFbiKoCzI99WW2xhKlsVV4&m=3DsqTmLs=
-fhq
-> > +AI5ubkZyE2FvNS0zZ42lJ4Xsiyf12MKPbI&s=3DMFdE05g19en41dOAGudb8oQzrSKdBS_=
-5
-> > +uhKXoz3xbfM&e=3D
-> > +
-> > +title: TMP513/512 system monitor sensor
-> > +
-> > +maintainers:
-> > +  - Eric Tremblay <etremblay@distech-controls.com>
-> > +
-> > +description: |
-> > +  This driver implements support for Texas Instruments TMP512, and TMP=
-513.
-> > +  The TMP512 (dual-channel) and TMP513 (triple-channel) are system
-> > +monitors
-> > +  that include remote sensors, a local temperature sensor, and a
-> > +high-side
-> > +  current shunt monitor. These system monitors have the capability of
-> > +measuring
-> > +  remote temperatures, on-chip temperatures, and system
-> > +voltage/power/current
-> > +  consumption.
-> > +
-> > +  Datasheets:
-> > +
-> > + https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__www.ti.com_lit_=
-g
-> > + pn_tmp513&d=3DDwIBAg&c=3DtvvHx3uC0XdtgG-ImPDjfM0QnakIsmmGcwejQDVxD-g&=
-r=3Dy
-> > + 34zLl9_AvBy5NSrvskG6SFbiKoCzI99WW2xhKlsVV4&m=3DsqTmLsfhqAI5ubkZyE2FvN=
-S
-> > + 0zZ42lJ4Xsiyf12MKPbI&s=3DaRuMhzI-UQfQORXhmK3OaA7UZ_6segIbgQ4k5SoKF0E&=
-e
-> > + =3D
-> > + https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__www.ti.com_lit_=
-g
-> > + pn_tmp512&d=3DDwIBAg&c=3DtvvHx3uC0XdtgG-ImPDjfM0QnakIsmmGcwejQDVxD-g&=
-r=3Dy
-> > + 34zLl9_AvBy5NSrvskG6SFbiKoCzI99WW2xhKlsVV4&m=3DsqTmLsfhqAI5ubkZyE2FvN=
-S
-> > + 0zZ42lJ4Xsiyf12MKPbI&s=3DmMNKG3dkkscHl5e73jC-ESFBdu05NhcCuJ-Pfpwls7E&=
-e
-> > + =3D
-> > +
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - ti,tmp512
-> > +      - ti,tmp513
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  shunt-resistor-micro-ohms:
-> > +    description: |
-> > +      If 0, the calibration process will be skiped and the current and=
- power
-> > +      measurement engine will not work. Temperature and voltage measur=
-ement
-> > +      will continue to work. The shunt value also need to respect:
-> > +      rshunt <=3D pga-gain * 40 * 1000 * 1000.
-> > +      If not, it's not possible to compute a valid calibration value.
-> > +    default: 1000
-> > +
-> > +  ti,pga-gain:
-> > +    description: |
-> > +      The gain value for the PGA function. This is 8, 4, 2 or 1.
-> > +      The PGA gain affect the shunt voltage range.
-> > +      The range will be equal to: pga-gain * 40mV
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +    enum: [1, 2, 4, 8]
-> > +    default: 8
-> > +
-> > +  ti,bus-range-microvolt:
-> > +    description: |
-> > +      This is the operating range of the bus voltage in microvolt
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +    enum: [16000000, 32000000]
-> > +    default: 32000000
-> > +
-> > +  ti,nfactor:
-> > +    description: |
-> > +      Array of three(TMP513) or two(TMP512) n-Factor value for each re=
-mote
-> > +      temperature channel.
-> > +      See datasheet Table 11 for n-Factor range list and value interpr=
-etation.
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> > +      - minItems: 2
-> > +        maxItems: 3
-> > +        items:
-> > +          default: 0
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c {
->=20
-> 'make dt_binding_check' fails. You need #address-cells and #size-cells in=
- here:
->=20
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:20.17-30: W=
-arning (reg_format): /example-
-> 0/i2c/tmp513@5c:reg: property has invalid length (4 bytes) (#address-cell=
-s =3D=3D 2, #size-cells =3D=3D 1)
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dt.yaml: Warnin=
-g (pci_device_bus_num): Failed prerequisite
-> 'reg_format'
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:17.5-26.11:=
- Warning (i2c_bus_bridge): /example-0/i2c: incorrect
-> #address-cells for I2C bus
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:17.5-26.11:=
- Warning (i2c_bus_bridge): /example-0/i2c: incorrect
-> #size-cells for I2C bus
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dt.yaml: Warnin=
-g (i2c_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dt.yaml: Warnin=
-g (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dt.yaml: Warnin=
-g (spi_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:18.23-25.15=
-:
-> Warning (avoid_default_addr_size): /example-0/i2c/tmp513@5c: Relying on d=
-efault #address-cells value
-> Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:18.23-25.15=
-: Warning (avoid_default_addr_size): /example-
-> 0/i2c/tmp513@5c: Relying on default #size-cells value
+Hi Leonard,
 
-Sorry I was confused a little by the documentation. I did not saw that I co=
-uld run `make dt_binding_check' on a single file.
+Thanks for the patch!
 
-I ran it on my tree and it gives me a warning on another file. I wrongly as=
-sume that it ran all over the tree.
+On 1.11.19 г. 0:52 ч., Leonard Crestez wrote:
+> This adds support for i.MX SoC family to interconnect framework.
+> 
+> Platform drivers can describe the interconnect graph and several
+> adjustment knobs where icc node bandwidth is converted to a
+> DEV_PM_QOS_MIN_FREQUENCY request.
+> 
+> The adjustable nodes are found based on an "interconnect-node-id"
+> property by scanning the entire device tree.
 
-I`ll fix those issue.
+Are the adjustable nodes SoC specific? Can we have them here in the driver
+instead of scanning the entire device tree?
 
-Thanks
->=20
-> > +        tmp513@5c {
-> > +            compatible =3D "ti,tmp513";
-> > +            reg =3D <0x5C>;
-> > +            shunt-resistor-micro-ohms =3D <330000>;
-> > +            ti,bus-range-microvolt =3D <32000000>;
-> > +            ti,pga-gain =3D <8>;
-> > +            ti,nfactor =3D [01 F3 00];
-> > +        };
-> > +    };
-> > --
-> > 2.17.1
-> >
+> The interconnect provider doesn't need an virtual OF node, instead those
+> same adjustable nodes are registered as proxies which xlate to the
+> platform-level provider.
+> 
+> The platform device for the interconnect needs to be registered from a
+> SOC driver (similar to cpufreq).
+> 
+> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+>  drivers/interconnect/Kconfig      |   1 +
+>  drivers/interconnect/Makefile     |   1 +
+>  drivers/interconnect/imx/Kconfig  |   5 +
+>  drivers/interconnect/imx/Makefile |   1 +
+>  drivers/interconnect/imx/imx.c    | 273 ++++++++++++++++++++++++++++++
+>  drivers/interconnect/imx/imx.h    |  60 +++++++
+>  6 files changed, 341 insertions(+)
+>  create mode 100644 drivers/interconnect/imx/Kconfig
+>  create mode 100644 drivers/interconnect/imx/Makefile
+>  create mode 100644 drivers/interconnect/imx/imx.c
+>  create mode 100644 drivers/interconnect/imx/imx.h
+> 
+> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
+> index b6ea8f0a6122..f57e77b8731c 100644
+> --- a/drivers/interconnect/Kconfig
+> +++ b/drivers/interconnect/Kconfig
+> @@ -10,7 +10,8 @@ menuconfig INTERCONNECT
+>  	  If unsure, say no.
+>  
+>  if INTERCONNECT
+>  
+>  source "drivers/interconnect/qcom/Kconfig"
+> +source "drivers/interconnect/imx/Kconfig"
+>  
+>  endif
+> diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+> index 28f2ab0824d5..20a13b7eb37f 100644
+> --- a/drivers/interconnect/Makefile
+> +++ b/drivers/interconnect/Makefile
+> @@ -2,5 +2,6 @@
+>  
+>  icc-core-objs				:= core.o
+>  
+>  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM)		+= qcom/
+> +obj-$(CONFIG_INTERCONNECT_IMX)		+= imx/
+> diff --git a/drivers/interconnect/imx/Kconfig b/drivers/interconnect/imx/Kconfig
+> new file mode 100644
+> index 000000000000..7d81d3c83a61
+> --- /dev/null
+> +++ b/drivers/interconnect/imx/Kconfig
+> @@ -0,0 +1,5 @@
+> +config INTERCONNECT_IMX
+> +	bool "i.MX interconnect drivers"
+> +	depends on ARCH_MXC || COMPILE_TEST
+> +	help
+> +	  Generic interconnect driver for i.MX SOCs
+> diff --git a/drivers/interconnect/imx/Makefile b/drivers/interconnect/imx/Makefile
+> new file mode 100644
+> index 000000000000..bb92fd9fe4a5
+> --- /dev/null
+> +++ b/drivers/interconnect/imx/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_INTERCONNECT_IMX) += imx.o
+> diff --git a/drivers/interconnect/imx/imx.c b/drivers/interconnect/imx/imx.c
+> new file mode 100644
+> index 000000000000..7d248e01dcf0
+> --- /dev/null
+> +++ b/drivers/interconnect/imx/imx.c
+> @@ -0,0 +1,273 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Interconnect framework driver for i.MX SoC
+> + *
+> + * Copyright (c) 2019, BayLibre
+> + * Copyright (c) 2019, NXP
+> + * Author: Alexandre Bailon <abailon@baylibre.com>
+> + * Author: Leonard Crestez <leonard.crestez@nxp.com>
+> + */
+> +
+> +#include <linux/devfreq.h>
+> +#include <linux/device.h>
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_qos.h>
+> +
+> +#include "imx.h"
+> +
+> +/* private icc_provider data */
+> +struct imx_icc_provider {
+> +	struct device *dev;
+
+What device is this? There is already a *dev in struct icc_provider.
+Please add kernel-doc.
+
+> +};
+> +
+> +/* private icc_node data */
+> +struct imx_icc_node {
+> +	const struct imx_icc_node_desc *desc;
+> +	struct devfreq *devfreq;
+> +	struct dev_pm_qos_request qos_req;
+> +};
+> +
+> +static int imx_icc_aggregate(struct icc_node *node, u32 tag,
+> +			     u32 avg_bw, u32 peak_bw,
+> +			     u32 *agg_avg, u32 *agg_peak)
+> +{
+> +	*agg_avg += avg_bw;
+> +	*agg_peak = max(*agg_peak, peak_bw);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct icc_node *imx_icc_xlate(struct of_phandle_args *spec, void *data)
+> +{
+> +	struct imx_icc_provider *desc = data;
+> +	struct icc_provider *provider = dev_get_drvdata(desc->dev);
+> +	unsigned int id = spec->args[0];
+> +	struct icc_node *node;
+> +
+> +	list_for_each_entry(node, &provider->nodes, node_list)
+> +		if (node->id == id)
+> +			return node;
+> +
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +
+> +static int imx_icc_node_set(struct icc_node *node)
+> +{
+> +	struct device *dev = node->provider->dev;
+> +	struct imx_icc_node *node_data = node->data;
+> +	u64 freq;
+> +
+> +	if (!node_data->devfreq)
+> +		return 0;
+> +
+> +	freq = (node->avg_bw + node->peak_bw) * node_data->desc->adj->bw_mul;
+
+Why the sum of average and peak bandwidth?
+
+> +	do_div(freq, node_data->desc->adj->bw_div);
+> +	dev_dbg(dev, "node %s device %s avg_bw %ukBps peak_bw %ukBps min_freq %llukHz\n",
+> +			node->name, dev_name(node_data->devfreq->dev.parent),
+> +			node->avg_bw, node->peak_bw, freq);
+> +
+> +	if (freq > S32_MAX) {
+> +		dev_err(dev, "%s can't request more than S32_MAX freq\n",
+> +				node->name);
+> +		return -ERANGE;
+> +	}
+> +
+> +	dev_pm_qos_update_request(&node_data->qos_req, freq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_icc_set(struct icc_node *src, struct icc_node *dst)
+> +{
+> +	return imx_icc_node_set(dst);
+> +}
+> +
+> +static int imx_icc_node_init_devfreq(struct device *dev,
+> +				     struct icc_node *node)
+> +{
+> +	struct imx_icc_node *node_data = node->data;
+> +	struct device_node *dn;
+> +	u32 node_id;
+> +	int ret;
+> +
+> +	/* Find nodes based on interconnect-node-id property */
+> +	for_each_node_with_property(dn, "interconnect-node-id") {
+> +		ret = of_property_read_u32(dn, "interconnect-node-id",
+> +					   &node_id);
+> +		if (ret != 0)
+> +			continue;
+> +
+> +		if (node_id == node->id) {
+> +			of_node_get(dn);
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (!dn)
+> +		return 0;
+> +
+> +	dev_info(dev, "node %s[%d] has device node %pOF\n",
+> +			node->name, node->id, dn);
+> +	node_data->devfreq = devfreq_get_devfreq_by_node(dn);
+
+Ah, so you need to get the devfreq nodes? So looking at the next
+patches it seems that noc and ddrc are the only adjustable nodes?
+
+Maybe we should model them both as interconnect providers, as they
+seem to be dealing with the bandwidth/frequency requirements and
+changing the clock rates.
+
+Thanks,
+Georgi
+
+> +	if (IS_ERR(node_data->devfreq)) {
+> +		of_node_put(dn);
+> +		ret = PTR_ERR(node_data->devfreq);
+> +		dev_err(dev, "failed to fetch devfreq for %s: %d\n",
+> +				node->name, ret);
+> +		return ret;
+> +	}
+> +
+> +	of_node_put(dn);
+> +
+> +	return dev_pm_qos_add_request(node_data->devfreq->dev.parent,
+> +				      &node_data->qos_req,
+> +				      DEV_PM_QOS_MIN_FREQUENCY, 0);
+> +}
+> +
