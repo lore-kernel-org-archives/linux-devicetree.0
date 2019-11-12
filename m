@@ -2,104 +2,113 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD34C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06506C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 21:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05F521872
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91D920679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 21:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gjNesBSf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neEOr/Xh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfKLUwu (ORCPT
+        id S1727329AbfKLVL4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:52:50 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33885 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLUwu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 15:52:50 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l202so16169352oig.1;
-        Tue, 12 Nov 2019 12:52:49 -0800 (PST)
+        Tue, 12 Nov 2019 16:11:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35155 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfKLVL4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 16:11:56 -0500
+Received: by mail-wr1-f65.google.com with SMTP id s5so9045808wrw.2;
+        Tue, 12 Nov 2019 13:11:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V2BRORY0hBHLizKfzIfi2QGRpqicf8QMY3QuvWoI+ds=;
-        b=gjNesBSfjAvc4kesedeMADClQCu4hYTWbOTzUGLfZvlLFHPbuM4uJjGELh0sbQgDWN
-         8lrWkP3Yvl8mvcsN4mKb4KCZ3qe4W6A0A7z9ixxdQE383EV8AEXqsi6eCrI5JEytcBvH
-         vHA+l6bcOI//BOa+LE7IUWgnSHG9QZwKwI/3YrPNpoUOah6UEQSffUi+8IzTzuDDYU92
-         LkFRFw9yqI50wotbSj3BbpSdI2AI/irw9T4DcvU56MUdwu0JW0gIfdH+y+PHsEDXvZx9
-         J0EYZEmpPKTRcSTm0s1R3uKbwhfWEINfK24+MPxL/QAyKUNs+iDoATkUt1gjVy3EDP13
-         iQsg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TH0pQYUJAlU7IsOFtdmL7+pSDQHhMRdnIPSaufyDmy8=;
+        b=neEOr/XhAjqS2x9v3RgYw6pa2yydP1Q9JSSiLlWFJIxTYLEOLa7mLOTKIl4yhff0jk
+         RTpE4J1jRRQ+eHTi6JZsc24l2Ta2bLpMVWmIbTq3dhhi+L7FoDbZm/sOJ3i4rAsyRdDX
+         V94VvherLU5TtlZ1ae6EgELdAjwKNl5FCOxABoxwuU98Wt1cEx/ikbcVoxxXx80UPkBg
+         hslzLRk+Jc7IbTilicRxneNTDKgQeX2X4A/bUwXN/cpEXqn26xebQHebyNr+1DqzjnFX
+         maUbHtdjsdndpPIDgJqQv9CZZcC/X9Z18TeuE29qzO5/xQ2mQpd1qbEQkK6X2pAIPFtg
+         q8BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V2BRORY0hBHLizKfzIfi2QGRpqicf8QMY3QuvWoI+ds=;
-        b=VdynA9QOd+eUviW+Zx4R4FPQjefDRyNaC9dnGJDi3o9J8JF0GvCMI9ZNYKHmOHF0oV
-         3iwyqT+mTn3SXPIPysVfmwyTAKcOw691rQIc2h1ELFtdtnr1yV5dNMk0xyZ2SQiAQCXL
-         euentSTjy18m7KwxtkQ9Hw5AbSRzkZCz7QEsz8sznqQ7RRAEcy9PCDMUckWeLBelD+ya
-         MRSRW5XmPaIdH8hoShdNQ/GVZfaN5twLHBG8qf/KZgH+RHnXohRpPC2kcZbUxVeeGIXI
-         0TVarFWBQkHzQULGiN7zXdUBp7UDUK1PsqaFUTe6/BhMTsWrTKGqrmSbZJOpR9wneWhp
-         g6CQ==
-X-Gm-Message-State: APjAAAXrpdqAAHub/XMXnZlUbfzNe96ql3UtK0eWNa/50lrjkwBiCw/+
-        y1puLZ/77Ra47VdFIMiQm0OFH5RvXqhGg+CLR2o=
-X-Google-Smtp-Source: APXvYqxRmF9qWBGxWM/Cn8ef+fuoL+vr7DkcDUoMRHpMSQl4VaTZvY3t+hLVbva6IXpLe8AdpMoa1ZtmkoCdXt1j/qw=
-X-Received: by 2002:a05:6808:20f:: with SMTP id l15mr852673oie.39.1573591968888;
- Tue, 12 Nov 2019 12:52:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TH0pQYUJAlU7IsOFtdmL7+pSDQHhMRdnIPSaufyDmy8=;
+        b=BYWXgYFHSCB2KS/We1XIjUMXYBb8yWoHnHjK3o+H5plo8aZpc4lsP65webZimGnV4b
+         50nXQnnzpAvCVY2miJz9kdHSwvWCDvIOg9Qll3r111E+F1aUGT7s36EqXVbWMSrKlPNa
+         x2OTIKfkd/TDNW/NqhUO78UgPDdz+MJmmbLjCec1jBOsCvzP/Y6H3uCnJjsYVQNQXBxL
+         l6f73chXLrGdPf2c4blPpAK4K54lMjtKWIjUo/Ha0U7Aw+0Pbrwsn389HosmCEcjUNYB
+         IpiRrzPfrSuqgp3xmdrFTsWO+nEpgpK8zl+F+3onDpjCvuGtWYSVW/rVFaB5V+sj95R0
+         H+2w==
+X-Gm-Message-State: APjAAAXdzRR8K9PUGXg3fC1NdELAL/IUhO8F+jn4T/b2Kdn6/5xjbMgC
+        6l/BurnnReOThfUo1EkNz7xxs4hy4wc=
+X-Google-Smtp-Source: APXvYqwPC9fJ42i5AXA+/+UZDEXTSIrJcX9xrFP4nukTIBnH0H3uUwx3Qpgyd/akL0iH1VkPpPpGGw==
+X-Received: by 2002:a5d:660b:: with SMTP id n11mr28661241wru.146.1573593112312;
+        Tue, 12 Nov 2019 13:11:52 -0800 (PST)
+Received: from localhost (ip1f113d5e.dynamic.kabel-deutschland.de. [31.17.61.94])
+        by smtp.gmail.com with ESMTPSA id r15sm224436wrc.5.2019.11.12.13.11.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 13:11:50 -0800 (PST)
+Date:   Tue, 12 Nov 2019 22:11:48 +0100
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/3] dt-bindings: arm64: fsl: Add Variscite i.MX6UL
+ compatibles
+Message-ID: <20191112211148.GF20321@ripley>
+References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
+ <1573586526-15007-4-git-send-email-oliver.graute@gmail.com>
+ <CAOMZO5Dwt6yJ45gE91opUf3nNx24AG00Lk1KPLJ_7Z4F0os7zA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191027162328.1177402-1-martin.blumenstingl@googlemail.com>
- <20191027162328.1177402-3-martin.blumenstingl@googlemail.com>
- <20191108221652.32FA2206C3@mail.kernel.org> <1jd0dxf1uz.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jd0dxf1uz.fsf@starbuckisacylon.baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 12 Nov 2019 21:52:38 +0100
-Message-ID: <CAFBinCBnUs0JdHT3TS+1++NMHtgbMvoT7RYRCnB0eNgs4L-2CA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] clk: meson: add a driver for the Meson8/8b/8m2 DDR
- clock controller
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5Dwt6yJ45gE91opUf3nNx24AG00Lk1KPLJ_7Z4F0os7zA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jerome,
-
-On Tue, Nov 12, 2019 at 6:20 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
->
-> >> +static const struct of_device_id meson8_ddr_clkc_match_table[] = {
-> >> +       { .compatible = "amlogic,meson8-ddr-clkc" },
-> >> +       { .compatible = "amlogic,meson8b-ddr-clkc" },
-> >> +       { /* sentinel */ },
+On 12/11/19, Fabio Estevam wrote:
+> Hi Oliver
+> 
+> On Tue, Nov 12, 2019 at 4:22 PM Oliver Graute <oliver.graute@gmail.com> wrote:
 > >
-> > Super nitpick, drop the comma above so that nothing can follow this.
->
-> I don't think it is worth reposting the series Martin.
-> If it is ok with you, I'll just apply it with Stephen comments
-I am more than happy with this.
-just to confirm, you would address all three comments from Stephen:
-- including clk-provider.h
-- use devm_platform_ioremap_resource
-- trailing comma after the sentinel
+> > Add the compatibles for Variscite i.MX6UL compatibles
+> 
+> You missed your Signed-off-by tag.
+> 
+> Also, you should remove arm64 from the Subject line as this is a 32-bit SoC :-)
 
-> In the future, I would prefer if you could separate the series for clock
-> (intended for Neil and myself) and the DT one (intended for Kevin)
-sorry, we discussed this previously but I completely forgot about it
-when I re-sent this series
-I'll be more careful next time
+thx, you are right I messed thinks up. Because I also working with
+another 64-bit SoC in parallel.  
 
+I'll fix it soon
 
+Best regards,
 
-Martin
+Oliver
