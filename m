@@ -2,150 +2,124 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F73EC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 04:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA730C17441
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CADA21783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 04:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C316921A49
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573536888;
+	bh=Jb7dYixP6yIjsrokC6NTgrZ/74+6EVtRM48rK5FZNvY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q4j8ziApInIK7wXsvSZ8dLSPREBRkBWwrPRWUjs6I1efjWUi2S0o+24nhH2fyOGEc
+	 3tufiSjMCoizaXqdXc2ODdCNz+THKrS7BUk9buvOvzzx56K9qkXXAEV2hFZoYRwzYw
+	 PCXrAnQhqBmS+jqBrOV0C0T/0+b84EL12xo4AMtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKLE3V (ORCPT
+        id S1725783AbfKLFes (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 23:29:21 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:12690 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfKLE3V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 23:29:21 -0500
-Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 12 Nov 2019
- 12:29:39 +0800
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v5 1/4] dt-bindings: power: add Amlogic secure power domains bindings
-Date:   Tue, 12 Nov 2019 12:28:47 +0800
-Message-ID: <1573532930-39505-2-git-send-email-jianxin.pan@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573532930-39505-1-git-send-email-jianxin.pan@amlogic.com>
-References: <1573532930-39505-1-git-send-email-jianxin.pan@amlogic.com>
+        Tue, 12 Nov 2019 00:34:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfKLFes (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 00:34:48 -0500
+Received: from localhost (unknown [122.167.70.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D8D2084F;
+        Tue, 12 Nov 2019 05:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573536887;
+        bh=Jb7dYixP6yIjsrokC6NTgrZ/74+6EVtRM48rK5FZNvY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=swnFRxTopGg49WadsvYOwM4ZljN75NOKNOp1Z9e5BW0FyYQHYvejgIuS/T6ZaeS+f
+         gxIT4lF0hqOk50dDZyDJJSafiZ3bZ8R9mleb8cOsMrZAepP86BKYPsfg0wzquvM826
+         YuIVlpKmlK7CHZSlLwZbDQfxBtffsMv1FmSgU/Ak=
+Date:   Tue, 12 Nov 2019 11:04:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com
+Subject: Re: [PATCH v4 10/15] dmaengine: ti: New driver for K3 UDMA -
+ split#2: probe/remove, xlate and filter_fn
+Message-ID: <20191112053440.GV952516@vkoul-mobl>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-11-peter.ujfalusi@ti.com>
+ <20191111053301.GO952516@vkoul-mobl>
+ <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [116.236.93.172]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the bindings for the Amlogic Secure power domains, controlling the
-secure power domains.
+On 11-11-19, 11:16, Peter Ujfalusi wrote:
+> 
+> 
+> On 11/11/2019 7.33, Vinod Koul wrote:
+> > On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> > 
+> >> +static bool udma_dma_filter_fn(struct dma_chan *chan, void *param)
+> >> +{
+> >> +	struct psil_endpoint_config *ep_config;
+> >> +	struct udma_chan *uc;
+> >> +	struct udma_dev *ud;
+> >> +	u32 *args;
+> >> +
+> >> +	if (chan->device->dev->driver != &udma_driver.driver)
+> >> +		return false;
+> >> +
+> >> +	uc = to_udma_chan(chan);
+> >> +	ud = uc->ud;
+> >> +	args = param;
+> >> +	uc->remote_thread_id = args[0];
+> >> +
+> >> +	if (uc->remote_thread_id & K3_PSIL_DST_THREAD_ID_OFFSET)
+> >> +		uc->dir = DMA_MEM_TO_DEV;
+> >> +	else
+> >> +		uc->dir = DMA_DEV_TO_MEM;
+> > 
+> > Can you explain this a bit?
+> 
+> The UDMAP in K3 works between two PSI-L endpoint. The source and
+> destination needs to be paired to allow data flow.
+> Source thread IDs are in range of 0x0000 - 0x7fff, while destination
+> thread IDs are 0x8000 - 0xffff.
+> 
+> If the remote thread ID have the bit 31 set (0x8000) then the transfer
+> is MEM_TO_DEV and I need to pick one unused tchan for it. If the remote
+> is the source then it can be handled by rchan.
+> 
+> dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
+> dma-names = "tx", "rx";
+> 
+> 0xc400 is a destination thread ID, so it is MEM_TO_DEV
+> 0x4400 is a source thread ID, so it is DEV_TO_MEM
+> 
+> Even in MEM_TO_MEM case I need to pair two UDMAP channels:
+> UDMAP source threads are starting at offset 0x1000, UDMAP destination
+> threads are 0x9000+
 
-The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-power domain registers are in secure world.
+Okay so a channel is set for a direction until teardown. Also this and
+other patch comments are quite useful, can we add them here?
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 37 ++++++++++++++++++++++
- include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++++
- 2 files changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
- create mode 100644 include/dt-bindings/power/meson-a1-power.h
+> Changing direction runtime is hardly possible as it would involve
+> tearing down the channel, removing interrupts, destroying rings,
+> removing the PSI-L pairing and redoing everything.
 
-diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-new file mode 100644
-index 00000000..2ed269f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+# Copyright (c) 2019 Amlogic, Inc
-+# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson Secure Power Domains
-+
-+maintainers:
-+  - Jianxin Pan <jianxin.pan@amlogic.com>
-+
-+description: |+
-+  Meson Secure Power Domains used in A1/C1 SoCs.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson-a1-pwrc
-+
-+  "#power-domain-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - "#power-domain-cells"
-+
-+examples:
-+  - |
-+    pwrc: power-controller {
-+          compatible = "amlogic,meson-a1-pwrc";
-+          #power-domain-cells = <1>;
-+          secure-monitor = <&sm>;
-+    };
-+
-+
-diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
-new file mode 100644
-index 00000000..6cf50bf
---- /dev/null
-+++ b/include/dt-bindings/power/meson-a1-power.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc.
-+ * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MESON_A1_POWER_H
-+#define _DT_BINDINGS_MESON_A1_POWER_H
-+
-+#define PWRC_DSPA_ID	8
-+#define PWRC_DSPB_ID	9
-+#define PWRC_UART_ID	10
-+#define PWRC_DMC_ID	11
-+#define PWRC_I2C_ID	12
-+#define PWRC_PSRAM_ID	13
-+#define PWRC_ACODEC_ID	14
-+#define PWRC_AUDIO_ID	15
-+#define PWRC_OTP_ID	16
-+#define PWRC_DMA_ID	17
-+#define PWRC_SD_EMMC_ID	18
-+#define PWRC_RAMA_ID	19
-+#define PWRC_RAMB_ID	20
-+#define PWRC_IR_ID	21
-+#define PWRC_SPICC_ID	22
-+#define PWRC_SPIFC_ID	23
-+#define PWRC_USB_ID	24
-+#define PWRC_NIC_ID	25
-+#define PWRC_PDMIN_ID	26
-+#define PWRC_RSA_ID	27
-+#define PWRC_MAX_ID	28
-+
-+#endif
+okay I would expect the prep_ to check for direction and reject the call
+if direction is different.
+
 -- 
-2.7.4
-
+~Vinod
