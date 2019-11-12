@@ -2,115 +2,195 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9785EC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FE1C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CA12067B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573574169;
-	bh=8F20L3QJFTsavDdGfHLvf78nXRQXyUPKzvqP5z0wscM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G++EYI6HEIv0j29dA4bdNqTG0vgM81Au6mAmvdoXz/YB9pek2/ZB2G6SuiC0gU0nh
-	 ACi1UQQDNo0cRWn+HY1wuV+J2AcxdKotq+wULd5ELTbQjODZhNr9okZydMOBU1k203
-	 F8V4/LbdM/dwocDLUv3K562Ki6F4RmXJdjJ5vQ/M=
+	by mail.kernel.org (Postfix) with ESMTP id 1812F2067B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 15:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfKLP4I (ORCPT
+        id S1727020AbfKLP7o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 10:56:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfKLP4I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 10:56:08 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40B05214E0
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 15:56:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573574167;
-        bh=8F20L3QJFTsavDdGfHLvf78nXRQXyUPKzvqP5z0wscM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ir7JfamXGWDwLcVwZaOeQl+axECHrhKvs3+rqFimfuBJmPmA/EMvy7fIzy28YVq8o
-         yA8E8jQxqqqE5VSvoXI8NhteN7yWgTkPpq2nLu98wHhVoFk8WA6FQdAvWQH0gIeVgh
-         nMjH3AqVzN5vd+9KCYaYillS42qoaBy3XKQGjbNI=
-Received: by mail-qk1-f170.google.com with SMTP id q70so14831759qke.12
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 07:56:07 -0800 (PST)
-X-Gm-Message-State: APjAAAX89BiF0zAiwgaiazGgE5oVhTrd9H/Z+lZMOWjujYAkS/WzGzxC
-        E+ZJXBUm4Sju6xKoPpv1NCJB+IpA51Gd67ClHg==
-X-Google-Smtp-Source: APXvYqzGPcXQTYDIwyrSGjxgXO8rgauszeUH/CJr2fC6c0UiXAiS67QLfaU4dKl5UZQ3hQyytHW1whhELOX88nJCzps=
-X-Received: by 2002:a05:620a:226:: with SMTP id u6mr6231925qkm.393.1573574166389;
- Tue, 12 Nov 2019 07:56:06 -0800 (PST)
+        Tue, 12 Nov 2019 10:59:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56988 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726991AbfKLP7n (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 10:59:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E3AEFB3B4;
+        Tue, 12 Nov 2019 15:59:40 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 2/6] dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+Date:   Tue, 12 Nov 2019 16:59:21 +0100
+Message-Id: <20191112155926.16476-3-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-References: <20191111172142.ozczh7j2gmzi7o5k@linutronix.de>
- <CAL_JsqLecYPGGP8grE7sUgD1ZBYeVhuqX_sOT_9Rw1LM1yhSmw@mail.gmail.com> <20191112091032.aa23wd24j4b324kw@linutronix.de>
-In-Reply-To: <20191112091032.aa23wd24j4b324kw@linutronix.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 12 Nov 2019 09:55:55 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Rfguea+KO0kLKom=8t_oCnesT8cb833Y0fhsbu_a1Cg@mail.gmail.com>
-Message-ID: <CAL_Jsq+Rfguea+KO0kLKom=8t_oCnesT8cb833Y0fhsbu_a1Cg@mail.gmail.com>
-Subject: Re: [PATCH] of: allocate / free phandle cache outside of the devtree_lock
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 3:10 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2019-11-11 21:35:35 [-0600], Rob Herring wrote:
-> > >    28d0e36bf9686 ("OF: Fixup resursive locking code paths")
-> > >    d6d3c4e656513 ("OF: convert devtree lock from rw_lock to raw spinlock")
-> >
-> > So to summarize, we changed mainline to fix RT which then broke RT. :)
->
-> correct, but we were good until v4.17-rc1 :)
->
-> > > I've been looking into making devtree_lock a spinlock_t which would
-> > > avoid this patch. I haven't seen an issue during boot on arm64 even
-> > > with hotplug.
-> >
-> > Did you look into using RCU reader locks any more?
->
-> A little bit. The writers, which modify the node, would need to replace
-> the whole node. So this is where things got a little complicated.
+From: Jim Quinlan <james.quinlan@broadcom.com>
 
-Why is that exactly? That's pretty much how node and property updates
-work anyways though maybe not strictly enforced. The other updates are
-atomic flags and ref counts which I assume are fine. The spinlock
-protects traversing the tree of nodes and list of properties.
-Traversing and updates would need to follow similar semantics as
-rculist, right? BTW, there's been some thoughts to move node and
-property lists to list_head. We may want to do that rather than trying
-to roll our own RCU code.
+The DT bindings description of the brcmstb PCIe device is described.
+This node can only be used for now on the Raspberry Pi 4.
 
-> Frank wasn't a big fan of it back then and he still wasn't a few weeks
-> back.
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-I guess you spoke at ELCE. RCU seems like the right locking to me as
-we're almost entirely reads and I haven't seen another proposal.
+---
 
-> If you two agree to prefer RCU over this patch then I would look more
-> into adding RCU into the lookup path. The argument was that this isn't
-> time critical. I'm just trying to avoid to replace the locking for
-> nothing.
-> So, should I come up with a RCU patch?
+Changes since v1:
+  - Fix commit Subject
+  - Remove linux,pci-domain
 
-Lets see what Frank says first.
+This was based on Jim's original submission[1], converted to yaml and
+adapted to the RPi4 case.
 
-While this patch is a bit of a band-aid, I don't think it complicates
-the situation at all to prevent coming up with a better solution. The
-other option is get rid of the memory allocation altogether. My
-preference for the cache was a simpler solution that was truly a cache
-(i.e. a fixed size that could miss). The performance wasn't quite as
-good though.
+[1] https://patchwork.kernel.org/patch/10605937/
 
-Rob
+ .../bindings/pci/brcm,stb-pcie.yaml           | 110 ++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+new file mode 100644
+index 000000000000..4cbb18821300
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -0,0 +1,110 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Brcmstb PCIe Host Controller Device Tree Bindings
++
++maintainers:
++  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++
++properties:
++  compatible:
++    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: PCIe host controller
++      - description: builtin MSI controller
++
++  interrupt-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: pcie
++      - const: msi
++
++  "#address-cells":
++    const: 3
++
++  "#size-cells":
++    const: 2
++
++  "#interrupt-cells":
++    const: 1
++
++  interrupt-map-mask: true
++
++  interrupt-map: true
++
++  ranges: true
++
++  dma-ranges: true
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: sw_pcie
++
++  msi-controller:
++    description: Identifies the node as an MSI controller.
++    type: boolean
++
++  msi-parent:
++    description: MSI controller the device is capable of using.
++    $ref: /schemas/types.yaml#/definitions/phandle
++
++  brcm,enable-ssc:
++    description: Indicates usage of spread-spectrum clocking.
++    type: boolean
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++  - "#interrupt-cells"
++  - interrupt-map-mask
++  - interrupt-map
++  - ranges
++  - dma-ranges
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    scb {
++            #address-cells = <2>;
++            #size-cells = <1>;
++            pcie0: pcie@7d500000 {
++                    compatible = "brcm,bcm2711-pcie";
++                    reg = <0x0 0x7d500000 0x9310>;
++                    #address-cells = <3>;
++                    #size-cells = <2>;
++                    #interrupt-cells = <1>;
++                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
++                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++                    interrupt-names = "pcie", "msi";
++                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
++                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
++                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
++                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
++                    msi-parent = <&pcie0>;
++                    msi-controller;
++                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
++                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    brcm,enable-ssc;
++            };
++    };
+-- 
+2.24.0
+
