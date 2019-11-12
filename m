@@ -5,55 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31636C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDA0C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AA5222C9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D933C222CA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DOn/BMSk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gOlGysVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfKLO3y (ORCPT
+        id S1727686AbfKLO3L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:29:54 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37436 "EHLO
+        Tue, 12 Nov 2019 09:29:11 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37394 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbfKLO3x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:29:53 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACETaKK014234;
-        Tue, 12 Nov 2019 08:29:36 -0600
+        with ESMTP id S1727672AbfKLO3K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:29:10 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACET9Pw014161;
+        Tue, 12 Nov 2019 08:29:09 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573568976;
-        bh=eDCdfymwg3zUktc3xZyxe+n8OYjhvINPbAjTECSZBfc=;
+        s=ti-com-17Q1; t=1573568949;
+        bh=QgFpZ+kRZHDE44isx2juDB3e+H0cMB3HMjv/yTCtf9s=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=DOn/BMSkAuMvSaIQzIrD8qt8TZpD7sClDbfC6GLuucVz7SEhWLTWVmNv+hPt/6inW
-         fzaUkX3VNRxxb/+tC1dUte4m4K1jCF3f0mI7SSPAEJjjPyBOEtgMSXnwE6sM3wfwyf
-         mdMTNYXxydNHiHOp6oq0X8CFlQM/4kXgD5jv2XbA=
+        b=gOlGysVypYsncQAr2jTsjz0jOkEjAIm/xBwr4AtCIj5rhX886DsYajn6ViB95DFdz
+         GpzgUCdNXumYRgyurrMiGd5h2GFXag6u8IzVbhXrNd6acXpK8V2C1MgZ2OT2100UhQ
+         0Ik3UCjTKCXrzcxklhhreyEhP+4Y90XWafDRGWaY=
 Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACETaPC038555;
-        Tue, 12 Nov 2019 08:29:36 -0600
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xACET9Es123473
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Nov 2019 08:29:09 -0600
 Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
  (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:29:36 -0600
+ Nov 2019 08:29:09 -0600
 Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
  (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:29:36 -0600
+ Frontend Transport; Tue, 12 Nov 2019 08:29:09 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriV044422;
-        Tue, 12 Nov 2019 08:29:36 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACESriQ044422;
+        Tue, 12 Nov 2019 08:29:09 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 19/20] media: ti-vpe: cal: fix enum_mbus_code/frame_size subdev arguments
-Date:   Tue, 12 Nov 2019 08:31:51 -0600
-Message-ID: <20191112143152.23176-20-bparrot@ti.com>
+Subject: [Patch v3 14/20] dt-bindings: media: cal: update binding to add AM654 support
+Date:   Tue, 12 Nov 2019 08:31:46 -0600
+Message-ID: <20191112143152.23176-15-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191112143152.23176-1-bparrot@ti.com>
 References: <20191112143152.23176-1-bparrot@ti.com>
@@ -65,35 +66,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Make sure that both enum_mbus_code() and enum_framesize() properly
-populate the .which parameter member, otherwise -EINVAL is return
-causing the subdev asynchronous registration handshake to fail.
+Update Device Tree bindings for the CAL driver to add AM654 support.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/media/platform/ti-vpe/cal.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/media/ti-cal.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 92a54d59d433..be54806180a5 100644
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -1493,6 +1493,7 @@ static int cal_enum_framesizes(struct file *file, void *fh,
- 	fse.index = fsize->index;
- 	fse.pad = 0;
- 	fse.code = fmt->code;
-+	fse.which = V4L2_SUBDEV_FORMAT_ACTIVE;
- 
- 	ret = v4l2_subdev_call(ctx->sensor, pad, enum_frame_size, NULL, &fse);
- 	if (ret)
-@@ -1833,6 +1834,7 @@ static int cal_async_bound(struct v4l2_async_notifier *notifier,
- 
- 		memset(&mbus_code, 0, sizeof(mbus_code));
- 		mbus_code.index = j;
-+		mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
- 		ret = v4l2_subdev_call(subdev, pad, enum_mbus_code,
- 				       NULL, &mbus_code);
- 		if (ret)
+diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+index eca28a779370..2deb256e7032 100644
+--- a/Documentation/devicetree/bindings/media/ti-cal.txt
++++ b/Documentation/devicetree/bindings/media/ti-cal.txt
+@@ -11,6 +11,7 @@ Required properties:
+  Should be "ti,dra72-cal", for DRA72 controllers
+  Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
+  Should be "ti,dra76-cal", for DRA76 controllers
++ Should be "ti,am654-cal", for AM654 controllers
+ - reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
+ 	control address space
+ - reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
 -- 
 2.17.1
 
