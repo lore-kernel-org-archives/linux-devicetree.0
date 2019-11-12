@@ -2,163 +2,108 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00351C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEFEC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB80820659
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D3320659
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 17:20:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vWoXjYFm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ofkdojRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKLRRm (ORCPT
+        id S1727178AbfKLRU0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 12:17:42 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37815 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLRRl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 12:17:41 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p24so13834728pfn.4
-        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 09:17:39 -0800 (PST)
+        Tue, 12 Nov 2019 12:20:26 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54195 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfKLRUZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 12:20:25 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u18so4110851wmc.3
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 09:20:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=GAxdQVxMEKhKhuZoX/VBOrcEuUfwMEWl5fY0HVG6jDE=;
-        b=vWoXjYFmjOttZKwONjxJ81J/VCuN2XQRhnCSkqlhdQq9oK5QFka4Kd5xp3DT3VV3oY
-         zYlVuUuTw6pNdbRM0U88rhr9+IvK8p7V3byHtvvE2T222Ja6mvVJ1M3uPdl0vDtIMEJR
-         VuiojmGjxZGBlcczfLdrEsLa9LNOLsBJ8PcjE04J1euiQzsaVxJUrFmR1vGuJ1bLEFPV
-         5cf1Z7HXzlfFMFXqM6cJ049jXvSmW6Ze1gIk+LZ/9T80z3mMw9EGqPDudOtNhZrpx8Pf
-         CIE4bl5kz22UTrI9bVe5BSve8TehRyoQGGzTsDlNJkWMlMzjGPgqClFTZFgMOMRJhXR/
-         6hkg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=F9Mi7+/IyXkSUZB/fTNJuaXmyudI2hLv+NhDB5xxcQw=;
+        b=ofkdojRwVgmhNvnCD+2JDgQT0KlK5MBV3Sul2Zn31ERD+BYM+PAXwVySBsJDATt2EO
+         1sRudy8e9QEsOEj8Zlf/XsDUe52amWr1KBn9SfYRcTP735H727LCNtvI9NrDP1Da2IeA
+         uPdil0WXQHUV90rkK8vK/gt6ConlUrBnhH6mr+6e1TTPpsuRSF1ajrAauWUxfKaqAtm8
+         xfuOvOpPedqwNWe/JB+uevGYyrgwUHXwtjLyNRsLhTwQTSOBmJBZv0Ku5aLfEXe52zNd
+         4MYaQ5XfMpNe2tslllZ6kxVJ0iLsHkF6RQMOXlaEWGJvw4ySss2DR6bs87yAoXhkhvkW
+         dyeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=GAxdQVxMEKhKhuZoX/VBOrcEuUfwMEWl5fY0HVG6jDE=;
-        b=ZyCa2BTL2eR/RSBuyUJhlG9Zdm9LyJCH3qEOKC0g0MTKc3Q7DmF3KStlUjhq1zk9zI
-         t4W2KRhKUWjT7hLx9PIETf08hX1QPQQPo/9fy2sGoq/M1airzZ7vVsCDFuxhqfsGUGFh
-         fVKKFF4geom1K8YheaYTbJQSgkHwWyf1QXj9V8ssUE6agKzeZ5c3gj8bUgVNhcpIoUwz
-         ws5TDupo2BT1Rs+h4S7Z/uEsxXSVu/PfqY7RGnZUVv8N9NB6xLB/kUnFryA8LiLNZdKh
-         RguFiSBI7fB5lpCDzpODG+iqhJ7K7Tfst3mCvunwVH1dpnxm7dIK5YB2EfBicxR/hci5
-         YmIw==
-X-Gm-Message-State: APjAAAVE3NbGxgOARNs5nUhw5DDjnnrbKyu3AHW8Loz11B20V+je92HS
-        3HJXqLnrL4zHkgy4tkvrCJVu
-X-Google-Smtp-Source: APXvYqwtTdqQJZNRF2wCGHv2Dne2JxqgG/WDm44w3rTdj757M0nHUk5Wv2dL7mF3wT7UkK72qdkqSg==
-X-Received: by 2002:a17:90a:b394:: with SMTP id e20mr2437267pjr.130.1573579058856;
-        Tue, 12 Nov 2019 09:17:38 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2409:4072:6488:b1d2:4134:76b9:cbea:403])
-        by smtp.gmail.com with ESMTPSA id p16sm20720040pfn.171.2019.11.12.09.17.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Nov 2019 09:17:37 -0800 (PST)
-Date:   Tue, 12 Nov 2019 22:47:29 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Kever Yang <kever.yang@rock-chips.com>
-Cc:     heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        Akash Gajjar <akash@openedev.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        daniel.lezcano@linaro.org
-Subject: Re: [PATCH 2/3] arm64: dts: rk3399-rock960: add vdd_log
-Message-ID: <20191112171726.GA18622@Mani-XPS-13-9360>
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <20191111005158.25070-2-kever.yang@rock-chips.com>
- <20191111052232.GA2842@Mani-XPS-13-9360>
- <3d129826-7705-819e-e68b-cc9080eb6c95@rock-chips.com>
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=F9Mi7+/IyXkSUZB/fTNJuaXmyudI2hLv+NhDB5xxcQw=;
+        b=Nj5BmL6Ap5x5LvXULGAwaPKLU0EImR4IGFhQ68V2x73xB1h2ofUcg33eA4MFFuS670
+         css3eTYnPEQhguM2ktPHC3t1gYkLtYDeedzAyUOM4tbF9qFD9eOxeM++ePoVWjuZLY4X
+         Zciwzfe6QWMJKU3IYlgYFFFPj7/fTNyOtQlCQU9/fgSBlu9hUQMuJE4c0TyY+wutRJmY
+         +pL+3v0EuzyTjLqObvtvDBIkBfz9X0Erxwx8IwZNixowKs3FHMGmYzTSHiBUW56oUpFD
+         xA+kXrJLYW2hrlnOeOtF1G0BgG/gWH+DIG4y7z3+x+qgOzVCMhiu8/kkWKPQHXnuliYl
+         w4Cg==
+X-Gm-Message-State: APjAAAWZzN+17gbVlqWDi83VxfZo1xg0aq/8W8r4fukP6C+A7XLhwX/x
+        7Nal867XFmrb5OMNXc94EvszokfS8FU=
+X-Google-Smtp-Source: APXvYqzR2tT3ef66DmAq2qnSk2dUDm/RUEfrwxO4e9F/cIoV/ljD0W55pomXTkbTaTNVd0DASTw0oA==
+X-Received: by 2002:a7b:c392:: with SMTP id s18mr4515631wmj.61.1573579221902;
+        Tue, 12 Nov 2019 09:20:21 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id d18sm18576621wrm.85.2019.11.12.09.20.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 09:20:21 -0800 (PST)
+References: <20191027162328.1177402-1-martin.blumenstingl@googlemail.com> <20191027162328.1177402-3-martin.blumenstingl@googlemail.com> <20191108221652.32FA2206C3@mail.kernel.org>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        narmstrong@baylibre.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
+In-reply-to: <20191108221652.32FA2206C3@mail.kernel.org>
+Date:   Tue, 12 Nov 2019 18:20:20 +0100
+Message-ID: <1jd0dxf1uz.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3d129826-7705-819e-e68b-cc9080eb6c95@rock-chips.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:10:17PM +0800, Kever Yang wrote:
-> 
-> On 2019/11/11 下午1:22, Manivannan Sadhasivam wrote:
-> > Hi Kever,
-> > 
-> > On Mon, Nov 11, 2019 at 08:51:57AM +0800, Kever Yang wrote:
-> > > Add vdd_log node according to rock960 schematic V13.
-> > > 
-> > > Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> > > ---
-> > > 
-> > >   arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 12 ++++++++++++
-> > >   1 file changed, 12 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > index c7d48d41e184..73afee257115 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > > @@ -76,6 +76,18 @@
-> > >   		regulator-always-on;
-> > >   		vin-supply = <&vcc5v0_sys>;
-> > >   	};
-> > > +
-> > > +	vdd_log: vdd-log {
-> > > +		compatible = "pwm-regulator";
-> > > +		pwms = <&pwm2 0 25000 1>;
-> > > +		regulator-name = "vdd_log";
-> > > +		regulator-always-on;
-> > > +		regulator-boot-on;
-> > > +		regulator-min-microvolt = <800000>;
-> > > +		regulator-max-microvolt = <1400000>;
-> > > +		regulator-init-microvolt = <950000>;
-> > The default value seems to be 0.9v as per both Rock960 and Ficus schematics.
-> 
-> 
-> The default value is 0.9V when pwm-regulator is not enabled, and this
-> 'init-microvolt' suppose to set the
-> 
-> init value when pwm-regulator is enabled. I set this to 950mV because Peter
-> report that he experience
-> 
-> the system hang during Fedora boot  up, and update the vdd_log to 950mV can
-> fix the issue due to
-> 
-> engineer measure on another rk3399 board puma-Q7.
-> 
 
-okay. Previously we had post-boot hang issue on Rock960 Model A boards when the
-performance governor was set as default. So the vdd_log node was removed from
-the devicetree. Have you tested that case also?
+>> +static const struct of_device_id meson8_ddr_clkc_match_table[] = {
+>> +       { .compatible = "amlogic,meson8-ddr-clkc" },
+>> +       { .compatible = "amlogic,meson8b-ddr-clkc" },
+>> +       { /* sentinel */ },
+>
+> Super nitpick, drop the comma above so that nothing can follow this.
 
-Here is the commit:
-13682e524167 ("arm64: dts: rockchip: remove vdd_log from rock960 to fix a stability issues")
+I don't think it is worth reposting the series Martin.
+If it is ok with you, I'll just apply it with Stephen comments
 
-thanks,
-Mani
-> 
-> Thanks,
-> 
-> - Kever
-> 
-> > 
-> > Other than that,
-> > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > +		vin-supply = <&vcc_sys>;
-> > > +	};
-> > >   };
-> > >   &cpu_l0 {
-> > > -- 
-> > > 2.17.1
-> > > 
-> 
-> 
+In the future, I would prefer if you could separate the series for clock
+(intended for Neil and myself) and the DT one (intended for Kevin)
+
+Thx
+
+>
+>> +};
+>> +
+>> +static struct platform_driver meson8_ddr_clkc_driver = {
+>> +       .probe          = meson8_ddr_clkc_probe,
+>> +       .driver         = {
+>> +               .name   = "meson8-ddr-clkc",
+>> +               .of_match_table = meson8_ddr_clkc_match_table,
+>> +       },
+>> +};
+>> +
+>> +builtin_platform_driver(meson8_ddr_clkc_driver);
+>> -- 
+>> 2.23.0
+>> 
+
