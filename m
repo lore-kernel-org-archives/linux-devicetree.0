@@ -2,150 +2,140 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD358C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62041C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940FD22469
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421F021783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbfKLLYU (ORCPT
+        id S1726008AbfKLLmU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:24:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:60540 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfKLLYT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:24:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 088E831B;
-        Tue, 12 Nov 2019 03:24:19 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A44EA3F6C4;
-        Tue, 12 Nov 2019 03:24:17 -0800 (PST)
-Date:   Tue, 12 Nov 2019 11:24:14 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V10 2/2] mailbox: introduce ARM SMC based mailbox
-Message-ID: <20191112112414.10f3f88e@donnerap.cambridge.arm.com>
-In-Reply-To: <2c8fa412-33c2-57c7-20b7-37b3b70ce524@gmail.com>
-References: <1569824287-4263-1-git-send-email-peng.fan@nxp.com>
- <1569824287-4263-3-git-send-email-peng.fan@nxp.com>
- <2c8fa412-33c2-57c7-20b7-37b3b70ce524@gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Tue, 12 Nov 2019 06:42:20 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:44722 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725865AbfKLLmU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 06:42:20 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iUUYm-0005pH-4o; Tue, 12 Nov 2019 12:42:12 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xACBgA3Z020834
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Tue, 12 Nov 2019 12:42:10 +0100
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Subject: [PATCH] arm64: dts: rockchip: Fix vdd_log on rk3399-roc-pc
+To:     Soeren Moch <smoch@web.de>, Kever Yang <kever.yang@rock-chips.com>,
+        heiko@sntech.de
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
+        Alexis Ballier <aballier@gentoo.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Andy Yan <andyshrk@gmail.com>, linux-kernel@vger.kernel.org,
+        Vicente Bergas <vicencb@gmail.com>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        Nick Xie <nick@khadas.com>,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Akash Gajjar <akash@openedev.com>
+References: <20191111005158.25070-1-kever.yang@rock-chips.com>
+ <20191111005158.25070-3-kever.yang@rock-chips.com>
+ <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
+ <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
+ <acbab893-9e9a-cfe1-67bf-a9e2b2e50114@fivetechno.de>
+ <17e14b30-02ee-2379-8891-088677924479@rock-chips.com>
+ <fd9ee2bc-9dfb-1aa2-f00f-add9b3069876@web.de>
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ xsDNBFs02GcBDADRBOYE75/gs54okjHfQ1LK8FfNH5yMq1/3MxhqP7gsCol5ZGbdNhJ7lnxX
+ jIEIlYfd6EgJMJV6E69uHe4JF9RO0BDdIy79ruoxnYaurxB40qPtb+YyTy3YjeNF3NBRE+4E
+ ffvY5AQvt3aIUP83u7xbNzMfV4JuxaopB+yiQkGo0eIAYqdy+L+5sHkxj/MptMAfDKvM8rvT
+ 4LaeqiGG4b8xsQRQNqbfIq1VbNEx/sPXFv6XDYMehYcbppMW6Zpowd46aZ5/CqP6neQYiCu2
+ rT1pf/s3hIJ6hdauk3V5U8GH/vupCNKA2M2inrnsRDVsYfrGHC59JAB545/Vt8VNJT5BAPKP
+ ka4lgIofVmErILAhLtxu3iSH6gnHWTroccM/j0kHOmrMrAmCcLrenLMmB6a/m7Xve5J7F96z
+ LAWW6niQyN757MpgVQWsDkY2c5tQeTIHRlsZ5AXxOFzA44IuDNIS7pa603AJWC+ZVqujr80o
+ rChE99LDPe1zZUd2Une43jEAEQEAAc0iTWFya3VzIFJlaWNobCA8cmVpY2hsQHQtb25saW5l
+ LmRlPsLA8AQTAQoAGgQLCQgHAhUKAhYBAhkBBYJbNNhnAp4BApsDAAoJEDol3g5rGv2ygaMM
+ AMuGjrnzf6BOeXQvadxcZTVas9HJv7Y0TRgShl4ItT6u63+mvOSrns/w6iNpwZxzhlP9OIrb
+ v2gorWDvW8VUXaCpA81EEz7LTrq+PYFEfIdtGgKXCOqn0Om8AHx5EmEuPF+dvUjESVoG85hL
+ Q6r6PJUh8xhYGMUYMer/ka2jAu2hT1sLpmPijXnw9TvC2K9W3paouf4u5ZtG32fegvUeoQ1R
+ t30k0bYRNqX8xboD1mMKgc4IWLsH6I0MROwTF7JvarkC9rU/M6OL6dwnNuauLvGVs/aXLrn2
+ UYxas9erPOwr+M45f8OR7O8xxvKoP5WSU6qWB/EExfm/ZBUkDKq8nDgItEpm+UUxpS9EpyvC
+ TIQ3qkqHGn1cf2+XRUjaCGsRG6fyY7XM4v5ariuMrg8RV7ec2jxIs3546pXx4GFP6rBcZZoW
+ f6y2A6h47rWGHAhbZ6cnJp/PMDIQrnVkzQHYBkTuhTp1bzUGhCfKLhz2M/UAIo+4VNUicJ56
+ PgDT5NYvvc7AzQRbNNhnAQwAmbmYfkV7PA3zrsveqraUIrz5TeNdI3GPO/kBWPFXe/ECaCoX
+ IVfacTV8miHvxqU92Vr/7Zw7lland+UgHa7MGlJfNHoqXIVL8ZWAj+mGf4jMo02S+XtUvdL7
+ LtALQwXlT7GD0e9Efyk/AV9vL8aiseT/SmW6+sAhs9Q7XPvZWE/ME1M/WRlDsi32g04mkvOz
+ G/bGN9De+LoSgn/220udTgLpq2aJEYGgvgZRVDKeOGSeP9cAKYQPjsW0okFfVyezZubNHLwd
+ yjVFxGB2XIH/XIVo13E2SFvWHrdjmCcZek37k4uftdYG90iBXS3Dtp0u87yiOIoL2PXM8qLU
+ 2+FhXphjce6Ef33nKQpelWLXxlrXUr1lOmNTAHfVIsKmGsRBqRBmphLMJOfyD6enYR0B/f+s
+ LVDtKFrMzhkjqvanwlcQkbpN6DvD409QRaUwxQiUaCcplUqHnJvKdjO7zCI4u6T6hjvciBrg
+ EBB+uN15uGg+LODRZ4Ue0KaWoiH6n1IxABEBAAHCwN8EGAEKAAkFgls02GcCmwwACgkQOiXe
+ Dmsa/bKWFgwAw3hc1BGC65BhhcYyikqRNI6jnHQVC29ax1RTijC2PJZ5At+uASYAy97A2WjC
+ L3UdLU/B6yhcEt3U6gwQgQbfrbPObjeZi8XSQzP2qZI8urjnIPUG7WYDK8grFqpjvAWPBhpS
+ B5CeMaICi9ppZnqkE3/d/NMXHCU/qbARpATJGODk64GnJEnlSWDbWfTgEUd+lnUQVKAZfy5Z
+ 5oYabpGpG5tDM49LxuC4ZpTkKiX+eT1YxsKH9fCSFnETR54ZVCS7NQDOTtpHDA2Qz2ie3sNC
+ H7YyH580i9znwePyhCFQQeX+jo2r2GQ0v+kOQrL9wwluW6xNWBakhLanQFrHypn7azpOCaIr
+ pWfxOm9CPEk4zGjQmE7sW1HfIdYC39OeEEnoPdnNGxn7sf6Fuv+fahAs8ls33JBdtEAPLiR8
+ Dm43HZwTBXPwasFHnGkF10N7aXf3r8WYpctbZYlcT5EV9m9i4jfWoGzHS5V4DXmv6OBmdLYk
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <d786ef47-eda8-3994-2ef2-fc4a584bcdcc@fivetechno.de>
+Date:   Tue, 12 Nov 2019 12:42:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <fd9ee2bc-9dfb-1aa2-f00f-add9b3069876@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573558939;3444d808;
+X-HE-SMSGID: 1iUUYm-0005pH-4o
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 8 Nov 2019 09:32:43 -0800
-Florian Fainelli <f.fainelli@gmail.com> wrote:
+On rk3399 vdd_log shall not exceed 1.0 V. On rk3399-roc-pc
+vdd_log is presently 1118 mV. Fix by setting the min voltage
+of the respective pwm-regulator down to 450 mV.
+This results in a vdd_log of 953 mV.
+Specify the supply to silence warning.
 
-Hi Florian,
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> On 9/29/19 11:20 PM, Peng Fan wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> > 
-> > This mailbox driver implements a mailbox which signals transmitted data
-> > via an ARM smc (secure monitor call) instruction. The mailbox receiver
-> > is implemented in firmware and can synchronously return data when it
-> > returns execution to the non-secure world again.
-> > An asynchronous receive path is not implemented.
-> > This allows the usage of a mailbox to trigger firmware actions on SoCs
-> > which either don't have a separate management processor or on which such
-> > a core is not available. A user of this mailbox could be the SCP
-> > interface.  
-> 
-> Sorry for not spotting this, or rather asking this earlier, but I do
-> have one question below.
-> 
-> [snip]
-> 
-> > +static int arm_smc_send_data(struct mbox_chan *link, void *data)
-> > +{
-> > +	struct arm_smc_chan_data *chan_data = link->con_priv;
-> > +	struct arm_smccc_mbox_cmd *cmd = data;
-> > +	unsigned long ret;
-> > +
-> > +	if (ARM_SMCCC_IS_64(chan_data->function_id)) {
-> > +		ret = chan_data->invoke_smc_mbox_fn(chan_data->function_id,
-> > +						    cmd->args_smccc64[0],
-> > +						    cmd->args_smccc64[1],
-> > +						    cmd->args_smccc64[2],
-> > +						    cmd->args_smccc64[3],
-> > +						    cmd->args_smccc64[4],
-> > +						    cmd->args_smccc64[5]);
-> > +	} else {
-> > +		ret = chan_data->invoke_smc_mbox_fn(chan_data->function_id,
-> > +						    cmd->args_smccc32[0],
-> > +						    cmd->args_smccc32[1],
-> > +						    cmd->args_smccc32[2],
-> > +						    cmd->args_smccc32[3],
-> > +						    cmd->args_smccc32[4],
-> > +						    cmd->args_smccc32[5]);
-> > +	}  
-> 
-> Why did not we use unsigned long for the args_smccc[] array to be bit
-> width independent, this is what the PSCI infrastructure does and it
-> looks a lot nicer IMHO. More question below.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+index a31099f7620b..4dac88ef7e72 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+@@ -211,9 +211,9 @@
+ 		regulator-name = "vdd_log";
+ 		regulator-always-on;
+ 		regulator-boot-on;
+-		regulator-min-microvolt = <800000>;
++		regulator-min-microvolt = <450000>;
+ 		regulator-max-microvolt = <1400000>;
+-		vin-supply = <&vcc3v3_sys>;
++		pwm-supply = <&vcc3v3_sys>;
+ 	};
+ };
+ 
+-- 
+2.20.1
 
-Huh, interestingly I think this comes from the combination of the two problems you point out, which evolved separately:
-Earlier we had no exported interface between the transport driver and the mailbox client, just a void pointer. So using "long" in the structure would not work, because it would behave differently between arm32 and arm64 kernels. But the firmware interface would always be fixed to one of the two calling conventions, regardless of the kernel "bitness", as advertised by the upper bits of the function ID.
-So we introduced explicit types that are used depending on the firmware-advertised calling convention. The idea was that any packed data any client would provide would always end up in consecutive registers in the firmware.
-Now we explicitly advertise the expected message structure in the new header file, so we could go back to unsigned long here, indeed. A 32-bit kernel could never use the 64-bit calling convention, so long would fit. In a 64-bit kernel the compiler would either downgrade the long argument to the 32-bit arguments the firmware expects, or keep it long.
-So it might be worth a short to go back to long.
-
-> 
-> [snip]
-> 
-> > +
-> > +#ifndef _LINUX_ARM_SMCCC_MBOX_H_
-> > +#define _LINUX_ARM_SMCCC_MBOX_H_
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * struct arm_smccc_mbox_cmd - ARM SMCCC message structure
-> > + * @args_smccc32/64:	actual usage of registers is up to the protocol
-> > + *			(within the SMCCC limits)
-> > + */
-> > +struct arm_smccc_mbox_cmd {
-> > +	union {
-> > +		u32 args_smccc32[6];
-> > +		u64 args_smccc64[6];
-> > +	};
-> > +};  
-> 
-> Why is this being moved to a separate header file and not within the
-> driver's main file? It is not like we offer the ability for a driver to
-> embed this ARM SMC mailbox driver as a library, and customize the values
-> of the SMC arguments (maybe we should do that, as a later patch) except
-> for the function_id.
-
-I wouldn't call it a "library", but indeed we expose the transport protocol to the mailbox client. It seems that the mailbox framework is not really clear here, it just states that (at least in many cases) the mailbox client knows about the transport protocol, even though the separation between the two suggests otherwise. This probably stems back from the days, where mailboxes were directly used by their users, without providing any kind of abstraction.
-So going with this, the SMC mailbox transport driver enforces a specific transport protocol for the payload, namely the six SMCCC defined registers. So we make this available, so any mailbox client knows what to expect. At the end of the day on the other end there will be some firmware probably expecting specific data in specific registers - or no data at all, as in the simple doorbell case we intend to use for SCPI/SCMI.
-
-> If you have a "public" header, there is usually a
-> service or some configuration that your driver would offer, which is not
-> the case here.
-
-If you want to use the mailbox just as a doorbell (as in our case), it doesn't matter, so we can as well expose the underlying transport protocol.
-
-Cheers,
-Andre.
