@@ -2,393 +2,218 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C226C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EC3C17440
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F80C20674
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A422222C1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 14:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wMgKZZjb"
+	dkim=pass (2048-bit key) header.d=distech-controls.com header.i=@distech-controls.com header.b="AXG4c7It"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfKLOfO (ORCPT
+        id S1726965AbfKLOmG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 09:35:14 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39946 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfKLOfO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 09:35:14 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xACEZB9b101477;
-        Tue, 12 Nov 2019 08:35:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573569311;
-        bh=x9hWpDcDogZT5+pZJ4sFKROQGd5yq+xxcXDXvuL4G0U=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=wMgKZZjbWS1mo7YhpKgA6rzT5yPuU+L0a0/2n0xx5Yre4Zbab+uPhygmoy9Z8E7XM
-         dE5TKtUskNicGMGFRJuepTDzULIHhpm8HzcpmnqlglAjbPZWU4IbjsFu6+R3BOj12b
-         WIBFCZugVZlpVcH37FgRS661URmUQCpDFKPwh/Bw=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xACEZBkm047314;
-        Tue, 12 Nov 2019 08:35:11 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 12
- Nov 2019 08:34:53 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 12 Nov 2019 08:35:11 -0600
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id xACEZBgh120737;
-        Tue, 12 Nov 2019 08:35:11 -0600
-Date:   Tue, 12 Nov 2019 08:38:13 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v3 20/20] dt-bindings: media: cal: convert binding to yaml
-Message-ID: <20191112143813.tfshtp3zqq6xhw4f@ti.com>
-References: <20191112143152.23176-1-bparrot@ti.com>
- <20191112143152.23176-21-bparrot@ti.com>
+        Tue, 12 Nov 2019 09:42:06 -0500
+Received: from mx0b-002ab301.pphosted.com ([148.163.154.99]:22982 "EHLO
+        mx0b-002ab301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726008AbfKLOmG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 09:42:06 -0500
+Received: from pps.filterd (m0118795.ppops.net [127.0.0.1])
+        by mx0b-002ab301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xACEeH3i004090;
+        Tue, 12 Nov 2019 09:40:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=distech-controls.com; h=from : to :
+ cc : subject : date : message-id : references : in-reply-to : content-type
+ : content-transfer-encoding : mime-version; s=pps-02182019;
+ bh=uziLPGfjTx3tN879vkz1CF+ppOdiOY3Qeotll8vOAtM=;
+ b=AXG4c7ItbfDzoIfS3me7/VJQ4DThEWfb7sfOaV0YAelP5HNI7yHzfxZG7J1zHS4dkkVX
+ tjhRI4+rsvACZr9TLBoohd6DTkptWNuWy+SLYKnAFFi1ehf2sIbA6URf7tOL5pfnx9Jw
+ AQzjQXO2BiMpKtZCEwei6PVxbjX/mlpnienHVImp61D3bEFy0d+Qq6iONRGJjijoK5yK
+ 50J5yxhocQdnNhOW+GKa0Rr9dv6RxGE1jApZyKr0lmyVLxVqvlskUc/uh6MwuOLcmJRj
+ fHT4OoNN1VY1WWQgyz6IlJdC3E6IPQPuLozshF0ip+DwXoByOvyufonPrQYTM6x2zM1g Mg== 
+Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2059.outbound.protection.outlook.com [104.47.44.59])
+        by mx0b-002ab301.pphosted.com with ESMTP id 2w5r90ub1t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 09:40:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kNGBmCg7FzwlTfKrMWAVFMwOZUJf1EnHvCub5NnNQO2ZKwa0qv1HMSu4pO8rpE3RFmqLDPRtdCWPk0/pungOcEY2KMpBpBH8VQ1UVM5W4ntgg8HL1q/YjCrRqJQAMx9V8hXUaDMxh7w8he+dUsWFBMk05mcfYdpNdg2RE5gpobQ1Zph193oUxksu8vGMIoXaTXqh/5Ut4xulxOV9Ort95dPF7SKj+L5m2WiL2epQE7m2iFrloe2lrJIksV04N5jBr1cTDmb1jHV7zUqaEP/Dvihx4NqnU/sHM6oqwIczwGy7BlZj8oDoGwT5aaPBPv5TwfGrmhgRK1nhsceGTUAjAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uziLPGfjTx3tN879vkz1CF+ppOdiOY3Qeotll8vOAtM=;
+ b=ArKFJFO18CCmABBZu9H/RGn7noVOLrbaX+NrVqtW7JBa/x0Ifk8cTrRI/rbcHW9pzmMyO66gC+1PG7LQl6muWCTN4zWyJp5vVOoAn9EioKphtxYY/L/tk8mkTeFjzCxZ8Wy7fWN8pdzzFl+xCj7cK6Zm68Faa64C1LsKqW+vWf49N05X9kTqV1TODlKeuUBMiPMvUt3SrOGXhzAjqQzZ1YUDwSTga0hjkdZoVyxDN9Yo5n+fsiR5XS53FbQAgG8oRfd5VAETdAUVkEI8tk0Slk70UBdVizBT8rHzgIz91Ao70pDBiGRdpCP4+Wqeo13pOOvChOG5/q89o8UkOsvGJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=distech-controls.com; dmarc=pass action=none
+ header.from=distech-controls.com; dkim=pass header.d=distech-controls.com;
+ arc=none
+Received: from BL0PR01MB4835.prod.exchangelabs.com (20.177.147.211) by
+ BL0PR01MB4385.prod.exchangelabs.com (20.177.240.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Tue, 12 Nov 2019 14:40:15 +0000
+Received: from BL0PR01MB4835.prod.exchangelabs.com
+ ([fe80::b00e:eb7:d585:5086]) by BL0PR01MB4835.prod.exchangelabs.com
+ ([fe80::b00e:eb7:d585:5086%6]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 14:40:15 +0000
+From:   "Tremblay, Eric" <etremblay@distech-controls.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+CC:     "jdelvare@suse.com" <jdelvare@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>
+Subject: RE: [PATCH v7 1/2] dt-bindings: hwmon: Add TMP512/513
+Thread-Topic: [PATCH v7 1/2] dt-bindings: hwmon: Add TMP512/513
+Thread-Index: AQHVmM+QVZuvH6alYkaCtrsGmFXw6KeGxAMAgADXgpA=
+Date:   Tue, 12 Nov 2019 14:40:15 +0000
+Message-ID: <BL0PR01MB4835021C7014DA17D2BAA43B95770@BL0PR01MB4835.prod.exchangelabs.com>
+References: <20191111203445.27130-1-etremblay@distech-controls.com>
+ <20191111203445.27130-2-etremblay@distech-controls.com>
+ <88a90ad1-cb97-b425-5fea-6580e9d8657b@roeck-us.net>
+In-Reply-To: <88a90ad1-cb97-b425-5fea-6580e9d8657b@roeck-us.net>
+Accept-Language: en-CA, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mib-plugin: true
+x-originating-ip: [207.253.3.19]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 32f6da98-ca71-47b7-56a3-08d7677e3b36
+x-ms-traffictypediagnostic: BL0PR01MB4385:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <BL0PR01MB4385C5363DACF15AF148888995770@BL0PR01MB4385.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:849;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(346002)(136003)(189003)(199004)(9686003)(478600001)(110136005)(74316002)(186003)(305945005)(54906003)(2201001)(8936002)(6306002)(26005)(6436002)(99286004)(5660300002)(76176011)(7696005)(25786009)(14454004)(476003)(53546011)(52536014)(4326008)(6506007)(7736002)(316002)(446003)(229853002)(102836004)(86362001)(966005)(11346002)(33656002)(2501003)(8676002)(71190400001)(71200400001)(6246003)(66446008)(486006)(6116002)(55016002)(66066001)(3846002)(256004)(2906002)(66946007)(76116006)(64756008)(66556008)(66476007)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR01MB4385;H:BL0PR01MB4835.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: distech-controls.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QxYtXlB9VyIhVgpvzlNj5L+a/PvL4ls0WfzmKTJ3xk2HZSAi5ez/A9QQNIGeViALjgEbnWNYtGz6VcO/nfgHtpbPQdxrVOMB5bv4+LY/yEdRGn6qwvS+22BUfvUgVuUU5kbh/MEg7wcEnOfGINg9/JMTj0iVXxeItmUoSfNeRrGtvUKb64WMtitFOFimvvxdR+8B+tFHsrq9upUalxL1vg5W7bfBW8NpUDZlvVp3h7GiWyJ56AZHhpaSdWfNERhffH2m2hwrrbHKZgK+Q7P0mf3V9GzpwjTir0+94Dun61PoMGXkJsXc3NzDzPcNc/hNi1uGRbFh6Zrx/+U6gV8efFHdtgoIL+acvx3YBPYpljwSG78ASm6IctfL2b47opSeKXYLhzbgbOf1hukkHITkYlQ9T3h+OlhTnMMFoXsUiNva67JOVQMXHED4WX1ocw25K3D1CENmwWNKYPseIW7o1pAFf2lzebkCTbY78PZYZ0Y=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191112143152.23176-21-bparrot@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: distech-controls.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32f6da98-ca71-47b7-56a3-08d7677e3b36
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 14:40:15.1302
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: caadbe96-024e-4f67-82ec-fb28ff53d16d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: utg/ejUrQNwOMN3OB8G8k9VanNPT2z0H2itPhQBawQ9JA3a7H3xBU6oECQuNjWsGsytCLDjkxD9pqELYD1ZSug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR01MB4385
+X-Proofpoint-Processed: True
+X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam score=0 adultscore=0
+ spamscore=0 priorityscore=1501 phishscore=0 malwarescore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=999 suspectscore=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911120131
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+ Rob
-
-Benoit Parrot <bparrot@ti.com> wrote on Tue [2019-Nov-12 08:31:52 -0600]:
-> Convert ti-cal.txt to ti,cal.yaml.
-> Add ti,cal.yaml to the MAINTAINERS file.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  .../devicetree/bindings/media/ti,cal.yaml     | 202 ++++++++++++++++++
->  .../devicetree/bindings/media/ti-cal.txt      |  81 -------
->  MAINTAINERS                                   |   1 +
->  3 files changed, 203 insertions(+), 81 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
->  delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/ti,cal.yaml b/Documentation/devicetree/bindings/media/ti,cal.yaml
-> new file mode 100644
-> index 000000000000..1ea784179536
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti,cal.yaml
-> @@ -0,0 +1,202 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/ti,cal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL) Device Tree Bindings
-> +
-> +maintainers:
-> +  - Benoit Parrot <bparrot@ti.com>
-> +
-> +description: |-
-> +  The Camera Adaptation Layer (CAL) is a key component for image capture
-> +  applications. The capture module provides the system interface and the
-> +  processing capability to connect CSI2 image-sensor modules to the
-> +  DRA72x device.
-> +
-> +  CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
-> +  should contain a 'port' child node with child 'endpoint' node. Please
-> +  refer to the bindings defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      # for DRA72 controllers
-> +      - ti,dra72-cal
-> +      # for DRA72 controllers pre ES2.0
-> +      - ti,dra72-pre-es2-cal
-> +      # for DRA76 controllers
-> +      - ti,dra76-cal
-> +      # for AM654 controllers
-> +      - ti,am654-cal
-> +
-> +  reg:
-> +    minItems: 2
-> +    items:
-> +      - description: The CAL main register region
-> +      - description: The RX Core0 (DPHY0) register region
-> +      - description: The RX Core1 (DPHY1) register region
-> +
-> +  reg-names:
-> +    minItems: 2
-> +    items:
-> +      - const: cal_top
-> +      - const: cal_rx_core0
-> +      - const: cal_rx_core1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  ti,camerrx-control:
-> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      phandle to the device control module and offset to the
-> +      control_camerarx_core register
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: fck
-> +
-> +  power-domains:
-> +    description:
-> +      List of phandle and PM domain specifier as documented in
-> +      Documentation/devicetree/bindings/power/power_domain.txt
-> +    maxItems: 1
-> +
-> +  # See ./video-interfaces.txt for details
-> +  ports:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +            description: CSI2 Port #0
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              clock-lanes:
-> +                maxItems: 1
-> +
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +      port@1:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +            description: CSI2 Port #1
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              clock-lanes:
-> +                maxItems: 1
-> +
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +    required:
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +      - port@0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - ti,camerrx-control
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    cal: cal@4845b000 {
-> +        compatible = "ti,dra72-cal";
-> +        reg = <0x4845B000 0x400>,
-> +              <0x4845B800 0x40>,
-> +              <0x4845B900 0x40>;
-> +        reg-names = "cal_top",
-> +                    "cal_rx_core0",
-> +                    "cal_rx_core1";
-> +        interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +        ti,camerrx-control = <&scm_conf 0xE94>;
-> +
-> +        ports {
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +
-> +              csi2_0: port@0 {
-> +                    reg = <0>;
-> +                    csi2_phy0: endpoint {
-> +                           remote-endpoint = <&csi2_cam0>;
-> +                           clock-lanes = <0>;
-> +                           data-lanes = <1 2>;
-> +                    };
-> +              };
-> +        };
-> +    };
-> +
-> +    i2c5: i2c@4807c000 {
-> +        clock-frequency = <400000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        camera-sensor@3c {
-> +               compatible = "ovti,ov5640";
-> +               reg = <0x3c>;
-> +
-> +               clocks = <&clk_ov5640_fixed>;
-> +               clock-names = "xclk";
-> +
-> +               port {
-> +                    csi2_cam0: endpoint {
-> +                            remote-endpoint = <&csi2_phy0>;
-> +                            clock-lanes = <0>;
-> +                            data-lanes = <1 2>;
-> +                    };
-> +               };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-> deleted file mode 100644
-> index 2deb256e7032..000000000000
-> --- a/Documentation/devicetree/bindings/media/ti-cal.txt
-> +++ /dev/null
-> @@ -1,81 +0,0 @@
-> -Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL)
-> -------------------------------------------------------
-> -
-> -The Camera Adaptation Layer (CAL) is a key component for image capture
-> -applications. The capture module provides the system interface and the
-> -processing capability to connect CSI2 image-sensor modules to the
-> -DRA72x device.
-> -
-> -Required properties:
-> -- compatible:
-> - Should be "ti,dra72-cal", for DRA72 controllers
-> - Should be "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
-> - Should be "ti,dra76-cal", for DRA76 controllers
-> - Should be "ti,am654-cal", for AM654 controllers
-> -- reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
-> -	control address space
-> -- reg-names: cal_top, cal_rx_core0, cal_rx_core1 and camerrx_control
-> -	     registers
-> -- interrupts: should contain IRQ line for the CAL;
-> -- ti,camerrx-control: phandle to the device control module and offset to
-> -		      the control_camerarx_core register.
-> -		      This node is meant to replace the "camerrx_control"
-> -		      reg entry above but "camerrx_control" is still
-> -		      handled for backward compatibility.
-> -
-> -CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
-> -should contain a 'port' child node with child 'endpoint' node. Please
-> -refer to the bindings defined in
-> -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> -
-> -Example:
-> -	cal: cal@4845b000 {
-> -		compatible = "ti,dra72-cal";
-> -		reg = <0x4845B000 0x400>,
-> -		      <0x4845B800 0x40>,
-> -		      <0x4845B900 0x40>;
-> -		reg-names = "cal_top",
-> -			    "cal_rx_core0",
-> -			    "cal_rx_core1";
-> -		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> -		ti,camerrx-control = <&scm_conf 0xE94>;
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		ports {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			csi2_0: port@0 {
-> -				reg = <0>;
-> -				csi2_phy0: endpoint {
-> -					remote-endpoint = <&csi2_cam0>;
-> -					clock-lanes = <0>;
-> -					data-lanes = <1 2>;
-> -				};
-> -			};
-> -			csi2_1: port@1 {
-> -				reg = <1>;
-> -			};
-> -		};
-> -	};
-> -
-> -	i2c5: i2c@4807c000 {
-> -		clock-frequency = <400000>;
-> -
-> -		camera-sensor@3c {
-> -			compatible = "ovti,ov5640";
-> -			reg = <0x3c>;
-> -
-> -			clocks = <&clk_fixed>;
-> -			clock-names = "xclk";
-> -
-> -			port {
-> -				csi2_cam0: endpoint {
-> -					remote-endpoint = <&csi2_phy0>;
-> -					clock-lanes = <0>;
-> -					data-lanes = <1 2>;
-> -				};
-> -			};
-> -		};
-> -	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 37a977cbac6f..909961cff0fd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16324,6 +16324,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
->  S:	Maintained
->  F:	drivers/media/platform/ti-vpe/
->  F:	Documentation/devicetree/bindings/media/ti,vpe.yaml
-> +	Documentation/devicetree/bindings/media/ti,cal.yaml
->  
->  TI WILINK WIRELESS DRIVERS
->  L:	linux-wireless@vger.kernel.org
-> -- 
-> 2.17.1
-> 
+PiBGcm9tOiBHdWVudGVyIFJvZWNrIDxncm9lY2s3QGdtYWlsLmNvbT4gT24gQmVoYWxmIE9mIEd1
+ZW50ZXIgUm9lY2sNCj4gU2VudDogTW9uZGF5LCBOb3ZlbWJlciAxMSwgMjAxOSA4OjQ1IFBNDQo+
+IFRvOiBUcmVtYmxheSwgRXJpYyA8ZXRyZW1ibGF5QGRpc3RlY2gtY29udHJvbHMuY29tPjsgbGlu
+dXgtaHdtb25Admdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgtDQo+IGRvY0B2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGpkZWx2YXJlQHN1c2UuY29tOyByb2Jo
+K2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBjb3JiZXRAbHduLm5ldA0KPiBT
+dWJqZWN0OiBSZTogW1BBVENIIHY3IDEvMl0gZHQtYmluZGluZ3M6IGh3bW9uOiBBZGQgVE1QNTEy
+LzUxMw0KPiANCj4gT24gMTEvMTEvMTkgMTI6MzQgUE0sIGV0cmVtYmxheUBkaXN0ZWNoLWNvbnRy
+b2xzLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBFcmljIFRyZW1ibGF5IDxldHJlbWJsYXlAZGlzdGVj
+aC1jb250cm9scy5jb20+DQo+ID4NCj4gPiBEb2N1bWVudCB0aGUgVE1QNTEzLzUxMiBkZXZpY2Ug
+ZGV2aWNldHJlZSBiaW5kaW5ncw0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRXJpYyBUcmVtYmxh
+eSA8ZXRyZW1ibGF5QGRpc3RlY2gtY29udHJvbHMuY29tPg0KPiA+IC0tLQ0KPiA+ICAgLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaHdtb24vdGksdG1wNTEzLnlhbWwgIHwgODkgKysrKysrKysrKysr
+KysrKysrKw0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDg5IGluc2VydGlvbnMoKykNCj4gPiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9o
+d21vbi90aSx0bXA1MTMueWFtbA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9od21vbi90aSx0bXA1MTMueWFtbA0KPiA+IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2h3bW9uL3RpLHRtcDUxMy55YW1sDQo+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmRlNGVkMzY0NWUwZg0KPiA+
+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvaHdtb24vdGksdG1wNTEzLnlhbWwNCj4gPiBAQCAtMCwwICsxLDg5IEBADQo+ID4gKyMgU1BE
+WC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkgJVlBTUwgMS4y
+DQo+ID4gKy0tLQ0KPiA+ICsNCj4gPiArJGlkOg0KPiA+ICtodHRwczovL3VybGRlZmVuc2UucHJv
+b2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fZGV2aWNldHJlZS5vcmdfc2MNCj4gPiAraGVt
+YXNfaHdtb25fdGktMkN0bXA1MTMueWFtbC0yMyZkPUR3SUNhUSZjPXR2dkh4M3VDMFhkdGdHLUlt
+UERqZk0wUW5hDQo+ID4gK2tJc21tR2N3ZWpRRFZ4RC1nJnI9eTM0ekxsOV9BdkJ5NU5TcnZza0c2
+U0ZiaUtvQ3pJOTlXVzJ4aEtsc1ZWNCZtPWQzMw0KPiA+ICt3QktpZzdCWjBrc3MwT09VbW1OYmw1
+SFdzV25NQkR0ZkZ2NS1yc1hvJnM9S2VPbWZRZXFVRWkxV2tKQ2djam5XVElJc1MNCj4gPiAra3pZ
+MmhpUmFqSVZWa3EtbGMmZT0NCj4gPiArJHNjaGVtYToNCj4gPiAraHR0cHM6Ly91cmxkZWZlbnNl
+LnByb29mcG9pbnQuY29tL3YyL3VybD91PWh0dHAtM0FfX2RldmljZXRyZWUub3JnX21lDQo+ID4g
+K3RhLTJEc2NoZW1hc19jb3JlLnlhbWwtMjMmZD1Ed0lDYVEmYz10dnZIeDN1QzBYZHRnRy1JbVBE
+amZNMFFuYWtJc21tRw0KPiA+ICtjd2VqUURWeEQtZyZyPXkzNHpMbDlfQXZCeTVOU3J2c2tHNlNG
+YmlLb0N6STk5V1cyeGhLbHNWVjQmbT1kMzN3QktpZzcNCj4gPiArQlowa3NzME9PVW1tTmJsNUhX
+c1duTUJEdGZGdjUtcnNYbyZzPU5lbDZPY0RmeXY4eFdYM2hHWWJFTEtmRW85WExFd0w3DQo+ID4g
+K2xWcnpMS0hjQjZFJmU9DQo+ID4gKw0KPiA+ICt0aXRsZTogVE1QNTEzLzUxMiBzeXN0ZW0gbW9u
+aXRvciBzZW5zb3INCj4gPiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gRXJpYyBUcmVt
+YmxheSA8ZXRyZW1ibGF5QGRpc3RlY2gtY29udHJvbHMuY29tPg0KPiA+ICsNCj4gPiArZGVzY3Jp
+cHRpb246IHwNCj4gPiArICBUaGlzIGRyaXZlciBpbXBsZW1lbnRzIHN1cHBvcnQgZm9yIFRleGFz
+IEluc3RydW1lbnRzIFRNUDUxMiwgYW5kIFRNUDUxMy4NCj4gDQo+IEkgdGhpbmsgdGhpcyBuZWVk
+cyBzb21lIHJld29yZGluZy4gVGhpcyBpcyBub3QgYSBkcml2ZXIgZGVzY3JpcHRpb24sIGJ1dCBh
+IHN5c3RlbSBkZXNjcmlwdGlvbi4NCg0KT2ssIEkgd2lsbCBvbmx5IGtlZXAgdGhlIGNoaXAgZGVz
+Y3JpcHRpb24uDQo+IA0KPiA+ICsgIFRoZSBUTVA1MTIgKGR1YWwtY2hhbm5lbCkgYW5kIFRNUDUx
+MyAodHJpcGxlLWNoYW5uZWwpIGFyZSBzeXN0ZW0NCj4gPiArIG1vbml0b3JzICB0aGF0IGluY2x1
+ZGUgcmVtb3RlIHNlbnNvcnMsIGEgbG9jYWwgdGVtcGVyYXR1cmUgc2Vuc29yLA0KPiA+ICsgYW5k
+IGEgaGlnaC1zaWRlICBjdXJyZW50IHNodW50IG1vbml0b3IuIFRoZXNlIHN5c3RlbSBtb25pdG9y
+cyBoYXZlDQo+ID4gKyB0aGUgY2FwYWJpbGl0eSBvZiBtZWFzdXJpbmcgIHJlbW90ZSB0ZW1wZXJh
+dHVyZXMsIG9uLWNoaXANCj4gPiArIHRlbXBlcmF0dXJlcywgYW5kIHN5c3RlbSB2b2x0YWdlL3Bv
+d2VyL2N1cnJlbnQgIGNvbnN1bXB0aW9uLg0KPiA+ICsNCj4gPiArICBEYXRhc2hlZXRzOg0KPiA+
+ICsNCj4gPiArIGh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92Mi91cmw/dT1odHRw
+LTNBX193d3cudGkuY29tX2xpdF9nDQo+ID4gKyBwbl90bXA1MTMmZD1Ed0lDYVEmYz10dnZIeDN1
+QzBYZHRnRy1JbVBEamZNMFFuYWtJc21tR2N3ZWpRRFZ4RC1nJnI9eQ0KPiA+ICsgMzR6TGw5X0F2
+Qnk1TlNydnNrRzZTRmJpS29Dekk5OVdXMnhoS2xzVlY0Jm09ZDMzd0JLaWc3Qlowa3NzME9PVW1t
+TmINCj4gPiArIGw1SFdzV25NQkR0ZkZ2NS1yc1hvJnM9N1FrRHI4bjBKWFBWbUNHUmY2amhRUEs5
+aDRFQ1JGTWZaSnJxdHRWeFdHOCZlDQo+ID4gKyA9DQo+ID4gKyBodHRwczovL3VybGRlZmVuc2Uu
+cHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fd3d3LnRpLmNvbV9saXRfZw0KPiA+ICsg
+cG5fdG1wNTEyJmQ9RHdJQ2FRJmM9dHZ2SHgzdUMwWGR0Z0ctSW1QRGpmTTBRbmFrSXNtbUdjd2Vq
+UURWeEQtZyZyPXkNCj4gPiArIDM0ekxsOV9BdkJ5NU5TcnZza0c2U0ZiaUtvQ3pJOTlXVzJ4aEts
+c1ZWNCZtPWQzM3dCS2lnN0JaMGtzczBPT1VtbU5iDQo+ID4gKyBsNUhXc1duTUJEdGZGdjUtcnNY
+byZzPTJjNDd6OWhkZFIzdnhXQXl0UnhLMDhTTzkzOVRzaTEyZVBIMXVHS19vSUkmZQ0KPiA+ICsg
+PQ0KPiA+ICsNCj4gPiArDQo+ID4gK3Byb3BlcnRpZXM6DQo+ID4gKyAgY29tcGF0aWJsZToNCj4g
+PiArICAgIGVudW06DQo+ID4gKyAgICAgIC0gdGksdG1wNTEyDQo+ID4gKyAgICAgIC0gdGksdG1w
+NTEzDQo+ID4gKw0KPiA+ICsgIHJlZzoNCj4gPiArICAgIG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+
+ICsgIHNodW50LXJlc2lzdG9yLW1pY3JvLW9obXM6DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0K
+PiA+ICsgICAgICBJZiAwLCB0aGUgY2FsaWJyYXRpb24gcHJvY2VzcyB3aWxsIGJlIHNraXBlZCBh
+bmQgdGhlIGN1cnJlbnQgYW5kIHBvd2VyDQo+ID4gKyAgICAgIG1lYXN1cmVtZW50IGVuZ2luZSB3
+aWxsIG5vdCB3b3JrLiBUZW1wZXJhdHVyZSBhbmQgdm9sdGFnZSBtZWFzdXJlbWVudA0KPiA+ICsg
+ICAgICB3aWxsIGNvbnRpbnVlIHRvIHdvcmsuIFRoZSBzaHVudCB2YWx1ZSBhbHNvIG5lZWQgdG8g
+cmVzcGVjdDoNCj4gPiArICAgICAgcnNodW50IDw9IHBnYS1nYWluICogNDAgKiAxMDAwICogMTAw
+MC4NCj4gPiArICAgICAgSWYgbm90LCBpdCdzIG5vdCBwb3NzaWJsZSB0byBjb21wdXRlIGEgdmFs
+aWQgY2FsaWJyYXRpb24gdmFsdWUuDQo+ID4gKyAgICBkZWZhdWx0OiAxMDAwDQo+ID4gKw0KPiA+
+ICsgIHRpLHBnYS1nYWluOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgVGhl
+IGdhaW4gdmFsdWUgZm9yIHRoZSBQR0EgZnVuY3Rpb24uIFRoaXMgaXMgOCwgNCwgMiBvciAxLg0K
+PiA+ICsgICAgICBUaGUgUEdBIGdhaW4gYWZmZWN0IHRoZSBzaHVudCB2b2x0YWdlIHJhbmdlLg0K
+PiA+ICsgICAgICBUaGUgcmFuZ2Ugd2lsbCBiZSBlcXVhbCB0bzogcGdhLWdhaW4gKiA0MG1WDQo+
+ID4gKyAgICBhbGxPZjoNCj4gPiArICAgICAgLSAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9k
+ZWZpbml0aW9ucy91aW50MzINCj4gPiArICAgIGVudW06IFsxLCAyLCA0LCA4XQ0KPiA+ICsgICAg
+ZGVmYXVsdDogOA0KPiA+ICsNCj4gPiArICB0aSxidXMtcmFuZ2UtbWljcm92b2x0Og0KPiA+ICsg
+ICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgVGhpcyBpcyB0aGUgb3BlcmF0aW5nIHJhbmdl
+IG9mIHRoZSBidXMgdm9sdGFnZSBpbiBtaWNyb3ZvbHQNCj4gPiArICAgIGFsbE9mOg0KPiA+ICsg
+ICAgICAtICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KPiA+
+ICsgICAgZW51bTogWzE2MDAwMDAwLCAzMjAwMDAwMF0NCj4gPiArICAgIGRlZmF1bHQ6IDMyMDAw
+MDAwDQo+ID4gKw0KPiA+ICsgIHRpLG5mYWN0b3I6DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0K
+PiA+ICsgICAgICBBcnJheSBvZiB0aHJlZShUTVA1MTMpIG9yIHR3byhUTVA1MTIpIG4tRmFjdG9y
+IHZhbHVlIGZvciBlYWNoIHJlbW90ZQ0KPiA+ICsgICAgICB0ZW1wZXJhdHVyZSBjaGFubmVsLg0K
+PiA+ICsgICAgICBTZWUgZGF0YXNoZWV0IFRhYmxlIDExIGZvciBuLUZhY3RvciByYW5nZSBsaXN0
+IGFuZCB2YWx1ZSBpbnRlcnByZXRhdGlvbi4NCj4gPiArICAgIGFsbE9mOg0KPiA+ICsgICAgICAt
+ICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWludDgtYXJyYXkNCj4gPiAr
+ICAgICAgLSBtaW5JdGVtczogMg0KPiA+ICsgICAgICAgIG1heEl0ZW1zOiAzDQo+ID4gKyAgICAg
+ICAgaXRlbXM6DQo+ID4gKyAgICAgICAgICBkZWZhdWx0OiAwDQo+ID4gKw0KPiA+ICtyZXF1aXJl
+ZDoNCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtIHJlZw0KPiA+ICsNCj4gPiArZXhhbXBs
+ZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICBpMmMgew0KPiA+ICsgICAgICAgIHRtcDUxM0A1YyB7
+DQo+ID4gKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidGksdG1wNTEzIjsNCj4gPiArICAgICAg
+ICAgICAgcmVnID0gPDB4NUM+Ow0KPiA+ICsgICAgICAgICAgICBzaHVudC1yZXNpc3Rvci1taWNy
+by1vaG1zID0gPDMzMDAwMD47DQo+ID4gKyAgICAgICAgICAgIHRpLGJ1cy1yYW5nZS1taWNyb3Zv
+bHQgPSA8MzIwMDAwMDA+Ow0KPiA+ICsgICAgICAgICAgICB0aSxwZ2EtZ2FpbiA9IDw4PjsNCj4g
+PiArICAgICAgICAgICAgdGksbmZhY3RvciA9IFswMSBGMyAwMF07DQo+ID4gKyAgICAgICAgfTsN
+Cj4gPiArICAgIH07DQo+ID4NCg0K
