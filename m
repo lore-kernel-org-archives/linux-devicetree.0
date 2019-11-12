@@ -2,620 +2,384 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE4BC17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 21:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F98C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 22:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5353F21A49
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 21:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C7421783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 22:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mcQ2Dv2j";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZTPsYiV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfKLVvS (ORCPT
+        id S1726960AbfKLWDd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 16:51:18 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:43226 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbfKLVvR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 16:51:17 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 921041A02D7;
-        Tue, 12 Nov 2019 22:51:13 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 799161A0014;
-        Tue, 12 Nov 2019 22:51:13 +0100 (CET)
-Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6AA48205E9;
-        Tue, 12 Nov 2019 22:51:12 +0100 (CET)
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Shawn Guo <shawnguo@kernel.org>,
+        Tue, 12 Nov 2019 17:03:33 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:56968 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfKLWDd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 17:03:33 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 60BB160A08; Tue, 12 Nov 2019 22:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573596212;
+        bh=HgE6dE8D3kQ7mjaevEzutll6wPhfKbAN1M2heEEGzjg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mcQ2Dv2jOWfsM+TT/AB74ZMN8Id5BqifK4eLwOFB5H+PCYsnGwojFUxnM1yHxuZ9h
+         i3RtKrQJ6WewTIWbS7LxUOpqhyr+/z/vZ0xJCxRqGmmtQH7Hqi3HusINa46wzvqG5a
+         Zujbp1wKZ85UktSNc74v7sE4411NxMrh6/oF4eHY=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F206760736;
+        Tue, 12 Nov 2019 22:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573596209;
+        bh=HgE6dE8D3kQ7mjaevEzutll6wPhfKbAN1M2heEEGzjg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZTPsYiV2+kZ8rohdBhvDvLBRE6rQBQLaOJy//iwe9Ovbksc+cksF5rdC6clNpK/uO
+         2xinBUd+jzG3GCIvBK04A5GWSgYuGot8N/6oXzVwpMuesASKzqeX7C2RwkmKWuKm2c
+         VnfEzDiL6FDY/w3EnXz9jFm9F+3mbz5/J4EbD7ug=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F206760736
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v8 1/4] dt-bindings: clock: Document external clocks for
+ MSM8998 gcc
+To:     Rob Herring <robh@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 4/5] PM / devfreq: Add dynamic scaling for imx8m ddr controller
-Date:   Tue, 12 Nov 2019 23:50:54 +0200
-Message-Id: <d33acdcc043ce12713a9279636e32d039da5ee54.1573595319.git.leonard.crestez@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1573595318.git.leonard.crestez@nxp.com>
-References: <cover.1573595318.git.leonard.crestez@nxp.com>
-In-Reply-To: <cover.1573595318.git.leonard.crestez@nxp.com>
-References: <cover.1573595318.git.leonard.crestez@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+References: <1573254987-10241-1-git-send-email-jhugo@codeaurora.org>
+ <1573255036-10302-1-git-send-email-jhugo@codeaurora.org>
+ <20191112004417.GA16664@bogus>
+ <3e4b1342-7965-2d80-e28d-0cb728037abd@codeaurora.org>
+ <CAL_JsqJ3R0Y-KPKaknVT=+RTAskGhqmarb=i9ZDyX5-LzoFOjg@mail.gmail.com>
+ <fb73ec1e-e5b9-239b-737b-a687f65283d3@codeaurora.org>
+ <CAL_JsqK3uMatLbOeGH=Nm9zMz85FrEN85rPKQBu48x8rEN4C4Q@mail.gmail.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <4ed37ec1-a3b3-28cb-c36e-196a9ef38400@codeaurora.org>
+Date:   Tue, 12 Nov 2019 15:03:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqK3uMatLbOeGH=Nm9zMz85FrEN85rPKQBu48x8rEN4C4Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add driver for dynamic scaling the DDR Controller on imx8m chips. Actual
-frequency switching is implemented inside TF-A, this driver wraps the
-SMC calls and synchronizes the clk tree.
+On 11/12/2019 2:18 PM, Rob Herring wrote:
+> On Tue, Nov 12, 2019 at 1:38 PM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>>
+>> On 11/12/2019 11:37 AM, Rob Herring wrote:
+>>> On Tue, Nov 12, 2019 at 10:25 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>>>>
+>>>> On 11/11/2019 5:44 PM, Rob Herring wrote:
+>>>>> On Fri, Nov 08, 2019 at 04:17:16PM -0700, Jeffrey Hugo wrote:
+>>>>>> The global clock controller on MSM8998 can consume a number of external
+>>>>>> clocks.  Document them.
+>>>>>>
+>>>>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>>>>>> ---
+>>>>>>     .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 +++++++++++++++-------
+>>>>>>     1 file changed, 33 insertions(+), 14 deletions(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>>>>>> index e73a56f..2f3512b 100644
+>>>>>> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>>>>>> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>>>>>> @@ -40,20 +40,38 @@ properties:
+>>>>>>            - qcom,gcc-sm8150
+>>>>>>
+>>>>>>       clocks:
+>>>>>> -    minItems: 1
+>>>>>
+>>>>> 1 or 2 clocks are no longer allowed?
+>>>>
+>>>> Correct.
+>>>>
+>>>> The primary reason is that Stephen indicated in previous discussions
+>>>> that if the hardware exists, it should be indicated in DT, regardless if
+>>>> the driver uses it.  In the 7180 and 8150 case, the hardware exists, so
+>>>> these should not be optional.
+>>>
+>>> Agreed. The commit message should mention this though.
+>>
+>> Fair enough, will do.
+>>
+>>>
+>>>>
+>>>> The secondary reason is I found that the schema was broken anyways.  In
+>>>> the way it was written, if you implemented sleep, you could not skip
+>>>> xo_ao, however there is a dts that did exactly that.
+>>>
+>>> If a dts can be updated in a compatible way, we should do that rather
+>>> than carry inconsistencies into the schema.
+>>>
+>>>> The third reason was that I couldn't find a way to write valid yaml to
+>>>> preserve the original meaning.  when you have an "items" as a subnode of
+>>>> "oneOf", you no longer have control over the minItems/maxItems, so all 3
+>>>> became required anyways.
+>>>
+>>> That would be a bug. You're saying something like this doesn't work?:
+>>>
+>>> oneOf:
+>>>     - minItems: 1
+>>>       maxItems: 3
+>>>       items:
+>>>         - const: a
+>>>         - const: b
+>>>         - const: c
+>>
+>> Yes.  That specifically won't work.  "items" would need to have the dash
+>> preceding it, otherwise it won't compile if you have more than one.  But
+>> ignoring that, yes, when it compiled, and I saw the output from the
+>> check failing (after adding verbose mode), min and max for the items
+>> list would be 3, and the check would fail.
+> 
+> A '-' before items would make oneOf have 2 separate schemas. That
+> would pass with any values for 1-3 items except it would fail for 3
+> items with [a, b, c] because 2 oneOf clauses pass.
 
-The DRAM clocks on imx8m have the following structure (abridged):
+What I was trying to do was something like:
 
- +----------+       |\            +------+
- | dram_pll |-------|M| dram_core |      |
- +----------+       |U|---------->| D    |
-                 /--|X|           |  D   |
-   dram_alt_root |  |/            |   R  |
-                 |                |    C |
-            +---------+           |      |
-            |FIX DIV/4|           |      |
-            +---------+           |      |
-  composite:     |                |      |
- +----------+    |                |      |
- | dram_alt |----/                |      |
- +----------+                     |      |
- | dram_apb |-------------------->|      |
- +----------+                     +------+
+oneOf:
+     -minItems: 1
+     -maxItems: 3
+     -items:
+       -const: a
+       -const: b
+       -const: c
+     -items:
+       -const: x
+       -const: y
+       -const: z
 
-The dram_pll is used for higher rates and dram_alt is used for lower
-rates. The dram_alt and dram_apb clocks are "imx composite" and their
-parent can also be modified.
+Where you have to have either [x, y, z] xor a set from [a, b, c].  One 
+of the two items lists, where min/max is applied to the first one.  "-" 
+on both of the items is needed since you can't seem to have the same tag 
+more than one at the same scope level.
 
-This driver will prepare/enable the new parents ahead of switching (so
-that the expected roots are enabled) and afterwards it will call
-clk_set_parent to ensure the parents in clock framework are up-to-date.
+Probably this was a flawed idea from the start.
 
-The driver relies on dram_pll dram_alt and dram_apb being marked with
-CLK_GET_RATE_NOCACHE for rate updates.
+> 
+>>>>    I find it disappointing that the "version" of
+>>>> Yaml used for DT bindings is not documented,
+>>>
+>>> Not sure which part you mean? json-schema is the vocabulary which has
+>>> a spec. The meta-schema then constrains what the json-schema structure
+>>> should look like. That's still evolving a bit as I try to improve it
+>>> based on mistakes people make. Then there's the intermediate .dt.yaml
+>>> format used internally. That's supposed to stay internal and may go
+>>> away when/if we integrate the validation into dtc.
+>>
+>> So, this is probably off-topic, but hopefully you'll find this useful.
+> 
+> I'm interested in knowing the pain points.
+> 
+>> I'm probably in the minority, but I really haven't used json-schema nor
+>> yaml before.  I have experience with other "schema" languages, so I
+>> figured I could pick what I need from the documentation.
+> 
+> Well, json-schema was new to me before this. There's definitely some
+> things I really don't love about it, but it's better than trying to
+> define our own language. It's generally been able to handle some of
+> the more complex cases.
+> 
+>> The only documentation I see is writing-schema.md and example-schema.yaml
+>>
+>> To me, writing-schema.md is insufficient.  Its better than nothing, so
+>> I'm still glad it exists, but I don't have any confidence I can really
+>> write a binding yaml from scratch based on it.  It does a good thing by
+>> telling you what are important properties of a binding, so based on that
+>> you can kind of start to understand how existing bindings actually work.
+>>    Its great in telling you how to run the validation checks (the Running
+>> checks) section.  The dependencies section is awesome from my
+>> perspective - most projects seem to assume you just know what their
+>> dependencies are, and its painful to try to figure them out when you get
+>> cryptic errors during make.
+>>
+>> Where it really fails is that I get no sense of the language.  As a
+>> minimum a lexigraphic specification that would allow me to write a
+>> compiler (I've done this before).  Then I would understand what are the
+>> keywords, and where they are valid.  I wouldn't understand what they
+>> mean, but at-least I can look at some implemented examples and
+>> extrapolate from there.
+>>
+>> Have you by chance ever looked at the ACPI spec?  Maybe not the best
+>> example, but its the one that comes to my mind first.  ACPI has ACPI
+>> Source Language (ASL).  Its an interpreted hardware description language
+>> that doesn't match yaml, but I think the ACPI spec does a reasonable job
+>> of describing it.  You have a lexographic definition which seems to be
+>> really helpful to ACPICA in implementing the intrepreter.  It lists all
+>> of the valid operators, types, etc.  It provides detailed references of
+>> each keyword - how they are used, what they do, etc.  Its not the
+>> greatest at "how to write ASL 101" or "these are common problems that
+>> people face, and how they can be solved", but atleast with what there
+>> is, I could read every keyword that seems to be possibly related to what
+>> I want to do, and hazard a guess if it would work for my problem.
+> 
+> I have not read the ACPI spec.
+> 
+>> Perhaps that is outside the scope of the writing-schema.md document,
+>> that is fair.  However, I argue that the document does not provide
+>> sufficient references.  The document provides a reference to the
+>> json-schema spec, but the spec is kinda useless (atleast I feel that it
+>> is).  "minItems" is not defined anywhere in the spec.  What does it
+>> mean?  How can I use it?  Specific to minItems/maxItems, I'll I've
+>> gathered about it is from example-schema.yaml which indicates its a way
+>> to identify mandatory and optional values for a property, but it doesn't
+>> describe the fact that order matters, and you cannot mix/match things -
+>> IE it looks like you need atleast min items, and at most max items, but
+>> even if you have enough items to satisfy min, there cannot be gaps (you
+>> can't pick items 1, 5, 10 from the list).  I only found that out from
+>> running the validation checks with trial/error.
+> 
+> I think you looked at the 'Core' spec rather than the 'Validation' spec:
+> http://json-schema.org/draft/2019-09/json-schema-validation.html
+> 
+> Though that has moved on to a newer version and we're still on draft7
+> which is here:
+> https://tools.ietf.org/html/draft-handrews-json-schema-validation-01
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
----
- drivers/devfreq/Kconfig      |   9 +
- drivers/devfreq/Makefile     |   1 +
- drivers/devfreq/imx8m-ddrc.c | 460 +++++++++++++++++++++++++++++++++++
- 3 files changed, 470 insertions(+)
- create mode 100644 drivers/devfreq/imx8m-ddrc.c
+Yes, that looks completely different than what I read.  Thanks for the 
+direct link.  I'm going to go read it.
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 066e6c4efaa2..923a6132e741 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -89,10 +89,19 @@ config ARM_EXYNOS_BUS_DEVFREQ
- 	  Each memory bus group could contain many memoby bus block. It reads
- 	  PPMU counters of memory controllers by using DEVFREQ-event device
- 	  and adjusts the operating frequencies and voltages with OPP support.
- 	  This does not yet operate with optimal voltages.
- 
-+config ARM_IMX8M_DDRC_DEVFREQ
-+	tristate "i.MX8M DDRC DEVFREQ Driver"
-+	depends on ARCH_MXC || COMPILE_TEST
-+	select DEVFREQ_GOV_SIMPLE_ONDEMAND
-+	select DEVFREQ_GOV_USERSPACE
-+	help
-+	  This adds the DEVFREQ driver for the i.MX8M DDR Controller. It allows
-+	  adjusting DRAM frequency.
-+
- config ARM_TEGRA_DEVFREQ
- 	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
- 	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || \
- 		ARCH_TEGRA_132_SOC || ARCH_TEGRA_124_SOC || \
- 		ARCH_TEGRA_210_SOC || \
-diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-index 338ae8440db6..3eb4d5e6635c 100644
---- a/drivers/devfreq/Makefile
-+++ b/drivers/devfreq/Makefile
-@@ -7,10 +7,11 @@ obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
- obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
- obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
- 
- # DEVFREQ Drivers
- obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
-+obj-$(CONFIG_ARM_IMX8M_DDRC_DEVFREQ)	+= imx8m-ddrc.o
- obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
- obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
- obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+= tegra20-devfreq.o
- 
- # DEVFREQ Event Drivers
-diff --git a/drivers/devfreq/imx8m-ddrc.c b/drivers/devfreq/imx8m-ddrc.c
-new file mode 100644
-index 000000000000..62abb9b79d8a
---- /dev/null
-+++ b/drivers/devfreq/imx8m-ddrc.c
-@@ -0,0 +1,460 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/devfreq.h>
-+#include <linux/pm_opp.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/arm-smccc.h>
-+
-+#define IMX_SIP_DDR_DVFS			0xc2000004
-+
-+/* Values starting from 0 switch to specific frequency */
-+#define IMX_SIP_DDR_FREQ_SET_HIGH		0x00
-+
-+/* Deprecated after moving IRQ handling to ATF */
-+#define IMX_SIP_DDR_DVFS_WAIT_CHANGE		0x0F
-+
-+/* Query available frequencies. */
-+#define IMX_SIP_DDR_DVFS_GET_FREQ_COUNT		0x10
-+#define IMX_SIP_DDR_DVFS_GET_FREQ_INFO		0x11
-+
-+/*
-+ * This should be in a 1:1 mapping with devicetree OPPs but
-+ * firmware provides additional info.
-+ */
-+struct imx8m_ddrc_freq {
-+	unsigned long rate;
-+	unsigned long smcarg;
-+	int dram_core_parent_index;
-+	int dram_alt_parent_index;
-+	int dram_apb_parent_index;
-+};
-+
-+/* Hardware limitation */
-+#define IMX8M_DDRC_MAX_FREQ_COUNT 4
-+
-+/*
-+ * i.MX8M DRAM Controller clocks have the following structure (abridged):
-+ *
-+ * +----------+       |\            +------+
-+ * | dram_pll |-------|M| dram_core |      |
-+ * +----------+       |U|---------->| D    |
-+ *                 /--|X|           |  D   |
-+ *   dram_alt_root |  |/            |   R  |
-+ *                 |                |    C |
-+ *            +---------+           |      |
-+ *            |FIX DIV/4|           |      |
-+ *            +---------+           |      |
-+ *  composite:     |                |      |
-+ * +----------+    |                |      |
-+ * | dram_alt |----/                |      |
-+ * +----------+                     |      |
-+ * | dram_apb |-------------------->|      |
-+ * +----------+                     +------+
-+ *
-+ * The dram_pll is used for higher rates and dram_alt is used for lower rates.
-+ *
-+ * Frequency switching is implemented in TF-A (via SMC call) and can change the
-+ * configuration of the clocks, including mux parents. The dram_alt and
-+ * dram_apb clocks are "imx composite" and their parent can change too.
-+ *
-+ * We need to prepare/enable the new mux parents head of switching and update
-+ * their information afterwards.
-+ */
-+struct imx8m_ddrc {
-+	struct devfreq_dev_profile profile;
-+	struct devfreq *devfreq;
-+
-+	/* For frequency switching: */
-+	struct clk *dram_core;
-+	struct clk *dram_pll;
-+	struct clk *dram_alt;
-+	struct clk *dram_apb;
-+
-+	int freq_count;
-+	struct imx8m_ddrc_freq freq_table[IMX8M_DDRC_MAX_FREQ_COUNT];
-+};
-+
-+static struct imx8m_ddrc_freq *imx8m_ddrc_find_freq(struct imx8m_ddrc *priv,
-+						    unsigned long rate)
-+{
-+	struct imx8m_ddrc_freq *freq;
-+	int i;
-+
-+	/*
-+	 * Firmware reports values in MT/s, so we round-down from Hz
-+	 * Rounding is extra generous to ensure a match.
-+	 */
-+	rate = DIV_ROUND_CLOSEST(rate, 250000);
-+	for (i = 0; i < priv->freq_count; ++i) {
-+		freq = &priv->freq_table[i];
-+		if (freq->rate == rate ||
-+				freq->rate + 1 == rate ||
-+				freq->rate - 1 == rate)
-+			return freq;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void imx8m_ddrc_smc_set_freq(int target_freq)
-+{
-+	struct arm_smccc_res res;
-+	u32 online_cpus = 0;
-+	int cpu;
-+
-+	local_irq_disable();
-+
-+	for_each_online_cpu(cpu)
-+		online_cpus |= (1 << (cpu * 8));
-+
-+	/* change the ddr freqency */
-+	arm_smccc_smc(IMX_SIP_DDR_DVFS, target_freq, online_cpus,
-+			0, 0, 0, 0, 0, &res);
-+
-+	local_irq_enable();
-+}
-+
-+struct clk *clk_get_parent_by_index(struct clk *clk, int index)
-+{
-+	struct clk_hw *hw;
-+
-+	hw = clk_hw_get_parent_by_index(__clk_get_hw(clk), index);
-+
-+	return hw ? hw->clk : NULL;
-+}
-+
-+static int imx8m_ddrc_set_freq(struct device *dev, struct imx8m_ddrc_freq *freq)
-+{
-+	struct imx8m_ddrc *priv = dev_get_drvdata(dev);
-+	struct clk *new_dram_core_parent;
-+	struct clk *new_dram_alt_parent;
-+	struct clk *new_dram_apb_parent;
-+	int ret;
-+
-+	/*
-+	 * Fetch new parents
-+	 *
-+	 * new_dram_alt_parent and new_dram_apb_parent are optional but
-+	 * new_dram_core_parent is not.
-+	 */
-+	new_dram_core_parent = clk_get_parent_by_index(
-+			priv->dram_core, freq->dram_core_parent_index - 1);
-+	if (!new_dram_core_parent) {
-+		dev_err(dev, "failed to fetch new dram_core parent\n");
-+		return -EINVAL;
-+	}
-+	if (freq->dram_alt_parent_index) {
-+		new_dram_alt_parent = clk_get_parent_by_index(
-+				priv->dram_alt,
-+				freq->dram_alt_parent_index - 1);
-+		if (!new_dram_alt_parent) {
-+			dev_err(dev, "failed to fetch new dram_alt parent\n");
-+			return -EINVAL;
-+		}
-+	} else
-+		new_dram_alt_parent = NULL;
-+
-+	if (freq->dram_alt_parent_index) {
-+		new_dram_apb_parent = clk_get_parent_by_index(
-+				priv->dram_apb, freq->dram_apb_parent_index - 1);
-+		if (!new_dram_alt_parent) {
-+			dev_err(dev, "failed to fetch new dram_apb parent\n");
-+			return -EINVAL;
-+		}
-+	} else
-+		new_dram_apb_parent = NULL;
-+
-+	/* increase reference counts and ensure clks are ON before switch */
-+	ret = clk_prepare_enable(new_dram_core_parent);
-+	if (ret) {
-+		dev_err(dev, "failed enable new dram_core parent: %d\n", ret);
-+		goto out;
-+	}
-+	ret = clk_prepare_enable(new_dram_alt_parent);
-+	if (ret) {
-+		dev_err(dev, "failed enable new dram_alt parent: %d\n", ret);
-+		goto out_disable_core_parent;
-+	}
-+	ret = clk_prepare_enable(new_dram_apb_parent);
-+	if (ret) {
-+		dev_err(dev, "failed enable new dram_apb parent: %d\n", ret);
-+		goto out_disable_alt_parent;
-+	}
-+
-+	imx8m_ddrc_smc_set_freq(freq->smcarg);
-+
-+	/* update parents in clk tree after switch. */
-+	ret = clk_set_parent(priv->dram_core, new_dram_core_parent);
-+	if (ret)
-+		dev_warn(dev, "failed set dram_core parent: %d\n", ret);
-+	if (new_dram_alt_parent) {
-+		ret = clk_set_parent(priv->dram_alt, new_dram_alt_parent);
-+		if (ret)
-+			dev_warn(dev, "failed set dram_alt parent: %d\n", ret);
-+	}
-+	if (new_dram_apb_parent) {
-+		ret = clk_set_parent(priv->dram_apb, new_dram_apb_parent);
-+		if (ret)
-+			dev_warn(dev, "failed set dram_apb parent: %d\n", ret);
-+	}
-+
-+	/*
-+	 * Explicitly refresh dram PLL rate.
-+	 *
-+	 * Even if it's marked with CLK_GET_RATE_NOCACHE the rate will not be
-+	 * automatically refreshed when clk_get_rate is called on children.
-+	 */
-+	clk_get_rate(priv->dram_pll);
-+
-+	/*
-+	 * clk_set_parent transfer the reference count from old parent.
-+	 * now we drop extra reference counts used during the switch
-+	 */
-+	clk_disable_unprepare(new_dram_apb_parent);
-+out_disable_alt_parent:
-+	clk_disable_unprepare(new_dram_alt_parent);
-+out_disable_core_parent:
-+	clk_disable_unprepare(new_dram_core_parent);
-+out:
-+	return ret;
-+}
-+
-+static int imx8m_ddrc_target(struct device *dev, unsigned long *freq, u32 flags)
-+{
-+	struct imx8m_ddrc *priv = dev_get_drvdata(dev);
-+	struct imx8m_ddrc_freq *freq_info;
-+	struct dev_pm_opp *new_opp;
-+	unsigned long old_freq, new_freq;
-+	int ret;
-+
-+	new_opp = devfreq_recommended_opp(dev, freq, flags);
-+	if (IS_ERR(new_opp)) {
-+		ret = PTR_ERR(new_opp);
-+		dev_err(dev, "failed to get recommended opp: %d\n", ret);
-+		return ret;
-+	}
-+	dev_pm_opp_put(new_opp);
-+
-+	old_freq = clk_get_rate(priv->dram_core);
-+	if (*freq == old_freq)
-+		return 0;
-+
-+	freq_info = imx8m_ddrc_find_freq(priv, *freq);
-+	if (!freq_info)
-+		return -EINVAL;
-+
-+	/*
-+	 * Read back the clk rate to verify switch was correct and so that
-+	 * we can report it on all error paths.
-+	 */
-+	ret = imx8m_ddrc_set_freq(dev, freq_info);
-+
-+	new_freq = clk_get_rate(priv->dram_core);
-+	if (ret)
-+		dev_err(dev, "ddrc failed freq switch to %lu from %lu: error %d. now at %lu\n",
-+			old_freq, *freq, ret, new_freq);
-+	else if (*freq != new_freq)
-+		dev_err(dev, "ddrc failed freq update to %lu from %lu, now at %lu\n",
-+			old_freq, *freq, new_freq);
-+	else
-+		dev_dbg(dev, "ddrc freq set to %lu (was %lu)\n",
-+			*freq, old_freq);
-+
-+	return ret;
-+}
-+
-+static int imx8m_ddrc_get_cur_freq(struct device *dev, unsigned long *freq)
-+{
-+	struct imx8m_ddrc *priv = dev_get_drvdata(dev);
-+
-+	*freq = clk_get_rate(priv->dram_core);
-+
-+	return 0;
-+}
-+
-+static int imx8m_ddrc_get_dev_status(struct device *dev,
-+				     struct devfreq_dev_status *stat)
-+{
-+	struct imx8m_ddrc *priv = dev_get_drvdata(dev);
-+
-+	stat->busy_time = 0;
-+	stat->total_time = 0;
-+	stat->current_frequency = clk_get_rate(priv->dram_core);
-+
-+	return 0;
-+}
-+
-+static int imx8m_ddrc_init_freq_info(struct device *dev)
-+{
-+	struct imx8m_ddrc *priv = dev_get_drvdata(dev);
-+	struct arm_smccc_res res;
-+	int index;
-+
-+	/* An error here means DDR DVFS API not supported by firmware */
-+	arm_smccc_smc(IMX_SIP_DDR_DVFS, IMX_SIP_DDR_DVFS_GET_FREQ_COUNT,
-+			0, 0, 0, 0, 0, 0, &res);
-+	priv->freq_count = res.a0;
-+	if (priv->freq_count <= 0 ||
-+			priv->freq_count > IMX8M_DDRC_MAX_FREQ_COUNT)
-+		return -ENODEV;
-+
-+	for (index = 0; index < priv->freq_count; ++index) {
-+		struct imx8m_ddrc_freq *freq = &priv->freq_table[index];
-+
-+		arm_smccc_smc(IMX_SIP_DDR_DVFS, IMX_SIP_DDR_DVFS_GET_FREQ_INFO,
-+			      index, 0, 0, 0, 0, 0, &res);
-+		/* Result should be strictly positive */
-+		if ((long)res.a0 <= 0)
-+			return -ENODEV;
-+
-+		freq->rate = res.a0;
-+		freq->smcarg = index;
-+		freq->dram_core_parent_index = res.a1;
-+		freq->dram_alt_parent_index = res.a2;
-+		freq->dram_apb_parent_index = res.a3;
-+
-+		/* dram_core has 2 options: dram_pll or dram_alt_root */
-+		if (freq->dram_core_parent_index != 1 &&
-+				freq->dram_core_parent_index != 2)
-+			return -ENODEV;
-+		/* dram_apb and dram_alt have exactly 8 possible parents */
-+		if (freq->dram_alt_parent_index > 8 ||
-+				freq->dram_apb_parent_index > 8)
-+			return -ENODEV;
-+		/* dram_core from alt requires explicit dram_alt parent */
-+		if (freq->dram_core_parent_index == 2 &&
-+				freq->dram_alt_parent_index == 0)
-+			return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int imx8m_ddrc_check_opps(struct device *dev)
-+{
-+	struct imx8m_ddrc *priv = dev_get_drvdata(dev);
-+	struct imx8m_ddrc_freq *freq_info;
-+	struct dev_pm_opp *opp;
-+	unsigned long freq;
-+
-+	/* Enumerate DT OPPs and disable those not supported by firmware */
-+	freq = ULONG_MAX;
-+	while (true) {
-+		opp = dev_pm_opp_find_freq_floor(dev, &freq);
-+		if (opp == ERR_PTR(-ERANGE))
-+			break;
-+		if (IS_ERR(opp)) {
-+			dev_err(dev, "Failed enumerating OPPs: %ld\n",
-+				PTR_ERR(opp));
-+			return PTR_ERR(opp);
-+		}
-+		dev_pm_opp_put(opp);
-+
-+		freq_info = imx8m_ddrc_find_freq(priv, freq);
-+		if (!freq_info) {
-+			dev_info(dev, "Disable unsupported OPP %luHz %luMT/s\n",
-+					freq, DIV_ROUND_CLOSEST(freq, 250000));
-+			dev_pm_opp_disable(dev, freq);
-+		}
-+
-+		freq--;
-+	}
-+
-+	return 0;
-+}
-+
-+static void imx8m_ddrc_exit(struct device *dev)
-+{
-+	dev_pm_opp_of_remove_table(dev);
-+}
-+
-+static int imx8m_ddrc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct imx8m_ddrc *priv;
-+	const char *gov = DEVFREQ_GOV_USERSPACE;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	ret = imx8m_ddrc_init_freq_info(dev);
-+	if (ret) {
-+		dev_err(dev, "failed to init firmware freq info: %d\n", ret);
-+		return ret;
-+	}
-+
-+	priv->dram_core = devm_clk_get(dev, "core");
-+	priv->dram_pll = devm_clk_get(dev, "pll");
-+	priv->dram_alt = devm_clk_get(dev, "alt");
-+	priv->dram_apb = devm_clk_get(dev, "apb");
-+	if (IS_ERR(priv->dram_core) ||
-+		IS_ERR(priv->dram_pll) ||
-+		IS_ERR(priv->dram_alt) ||
-+		IS_ERR(priv->dram_apb)) {
-+		ret = PTR_ERR(priv->devfreq);
-+		dev_err(dev, "failed to fetch clocks: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get OPP table\n");
-+		return ret;
-+	}
-+
-+	ret = imx8m_ddrc_check_opps(dev);
-+	if (ret < 0)
-+		goto err;
-+
-+	priv->profile.polling_ms = 1000;
-+	priv->profile.target = imx8m_ddrc_target;
-+	priv->profile.get_dev_status = imx8m_ddrc_get_dev_status;
-+	priv->profile.exit = imx8m_ddrc_exit;
-+	priv->profile.get_cur_freq = imx8m_ddrc_get_cur_freq;
-+	priv->profile.initial_freq = clk_get_rate(priv->dram_core);
-+
-+	priv->devfreq = devm_devfreq_add_device(dev, &priv->profile,
-+						gov, NULL);
-+	if (IS_ERR(priv->devfreq)) {
-+		ret = PTR_ERR(priv->devfreq);
-+		dev_err(dev, "failed to add devfreq device: %d\n", ret);
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	dev_pm_opp_of_remove_table(dev);
-+	return ret;
-+}
-+
-+static const struct of_device_id imx8m_ddrc_of_match[] = {
-+	{ .compatible = "fsl,imx8m-ddrc", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, imx8m_ddrc_of_match);
-+
-+static struct platform_driver imx8m_ddrc_platdrv = {
-+	.probe		= imx8m_ddrc_probe,
-+	.driver = {
-+		.name	= "imx8m-ddrc-devfreq",
-+		.of_match_table = of_match_ptr(imx8m_ddrc_of_match),
-+	},
-+};
-+module_platform_driver(imx8m_ddrc_platdrv);
-+
-+MODULE_DESCRIPTION("i.MX8M DDR Controller frequency driver");
-+MODULE_AUTHOR("Leonard Crestez <leonard.crestez@nxp.com>");
-+MODULE_LICENSE("GPL v2");
+> 
+> I guess a direct link to this with 'Details on json-schema keywords is
+> here' would be helpful.
+
+Yes please.  Or atleast a "Hey, there are actually two specs, 'core' and 
+'validation'. The 'validation' one is the relevant one.  Hopefully that 
+clarifies any confusion"
+
+> 
+> minItems/maxItems is the one area we deviate from json-schema
+> defaults. That's what the 'Property Schema' section calls out.
+> 
+> Order matters for DT too, so that aspect matches up well with
+> json-schema. That's been a common issue in dts files, so schema
+> starting to enforce that will be good for new bindings, but somewhat
+> painful for existing ones.
+
+You are right, order does matter in DT.  I think I've gotten used to 
+just having -names, and assuming if a, b, c, and d are all listed as 
+optional, that means you could have a and c.  However that kind of 
+breaks the index mapping, so if you have c, you really need a and b as 
+well.  I was attempting to apply that concept to schema, and it wasn't 
+working.  I suspect that concept shouldn't be valid normally.
+
+> 
+>> There is no reference to the yaml spec, despite the document stating
+>> that the bindings are written in yaml.
+>>
+>> However, having found the yaml spec, its really not much better than the
+>> json-schema spec, and it doesn't line up because as the document states,
+>> the bindings are not really written in yaml - its a subset of yaml where
+>> a ton of the boilerplate "code" is skipped.
+> 
+> Yeah, there's a lot to YAML that no one uses and I too find the spec
+> pretty useless (hence why no reference). Like most other uses I've
+> encountered, we're using a JSON compatible subset which is just lists
+> and dicts of key/value pairs. The main thing folks need to know and
+> trip up on are: indentation is important (including no tabs) and pay
+> attention to '-' or lack of.
+> 
+>> What is boilerplate that is skipped?  IMO, if you are not strictly
+>> adhering to yaml, then you need to clearly document your own derivative
+>> language so that someone like me whom is being introduced to all of this
+>> for the first time can start to figure out some of it.  It would be
+>> helpful to look at other yaml examples, and understand what is
+>> considered to be boilerplate so I can translate that to a DT binding.
+> 
+> We're not skipping any boilerplate. We're not using advanced features
+> like tags or anchors. You can use any YAML parser including online
+> ones to read the files.
+
+Ok, so I feel like I've misunderstood this except from writing-schema.md:
+
+"The Devicetree schemas don't exactly match the YAML encoded DT data 
+produced by dtc. They are simplified to make them more compact and avoid 
+a bunch of boilerplate."
+
+I thought this meant the bindings were simplified to be more readable, 
+by skipping boilerplate text.  What does it actually mean?
+
+> 
+>> I understand, the majority of the above is complaints and demands which
+>> is really not fair to you, since you are spending what I presume to be
+>> your "non-dayjob" time to make the community better.
+> 
+> It's my day job or part of it, just not enough hours in the day...
+> 
+>> However, I don't
+>> really know how to contribute to make the documentation better.  I don't
+>> understand enough.  As far as this topic is concerned, I'm a dumb monkey
+>> banging on a keyboard hoping to get close enough to Shakespeare to pass
+>> mustard by accident, and maybe learn something along the way so that
+>> next time, I might have an idea of how to do something of what I need.
+> 
+> The challenge is providing enough information to write bindings
+> without being json-schema experts. My hope is really to build up
+> enough examples and make the meta-schema good enough to keep folks
+> within the lines. Maybe that's a flawed approach, but even getting
+> folks to follow writing-schema.rst and run 'make dt_binding_check' has
+> been a challenge.
+> 
+>> Hopefully you've made it this far - that ended up being a lot more text
+>> that I thought it would be.  I really hope this is useful feedback to
+>> you, but let me know if I am still not clear on something.  I will try
+>> my best to clarify more.  If you feel like I can contribute somehow,
+>> just let me know.
+>>
+>>>
+>>>> so after several hours of
+>>>> trial and error, I just gave up since I found this to work (failed cases
+>>>> just gave me an error with no indication of what was wrong, not even a
+>>>> line number).
+>>>
+>>> Schema failures or dts failures? It is possible to get line numbers
+>>> for either, but that makes validation much slower. In the latter case,
+>>> the line numbers aren't too useful either given they are for the
+>>> .dt.yaml file and not the .dts source file (dtc integration would
+>>> solve that). Adding '-n' to dt-doc-validate or dt-validate will turn
+>>> them on though.
+>>
+>> Schema compilation failures.  I don't recall the exact error message,
+>> but it was something like "no valid schema found, continuing".
+>> Essentially running "dt_binding_check".  I tried with -v but wasn't
+>> getting much more in this case.  I didn't try -n.
+> 
+> That's before we even validate the schema, so something has gone wrong
+> pretty early. You may get farther with 'make -k'. I'll have to look
+> into it. The schemas are actually built twice. They are all built into
+> processed-schema.yaml. That's supposed to skip any with errors and is
+> what's used to validate dts files. If that's failing for some reason,
+> then it's going to be pretty vague. The dt_binding_check rule also
+> fully validates each binding schema and builds and validates the
+> examples. It should print more detailed errors (though still sometimes
+> vague).
+> 
+> Rob
+> 
+
+
 -- 
-2.17.1
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
