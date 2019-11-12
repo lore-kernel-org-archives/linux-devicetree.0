@@ -2,191 +2,147 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4284DC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C86AC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F3D21925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B765206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:48:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/g5clmT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbDnTVrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfKLBpO (ORCPT
+        id S1726908AbfKLBsi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:45:14 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37356 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbfKLBpO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 20:45:14 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p24so12137525pfn.4;
-        Mon, 11 Nov 2019 17:45:13 -0800 (PST)
+        Mon, 11 Nov 2019 20:48:38 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46769 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfKLBsh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 20:48:37 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b3so16669678wrs.13;
+        Mon, 11 Nov 2019 17:48:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8Q1IDX7UPknLrgHeuiVp588K5CPt9mOKefQMmHNob6c=;
-        b=f/g5clmTm2nQOrMTH2tmY9S1+p5/LZtmXAUbV+GHeJ1uzv0mnQWt2QgyoEzuaQVmzG
-         P19G19nl2PRSrN5qYV4X0uHqzyOq80NQzcD1gdXeFxrrwtrboThRgd9mPLkcmDTQIpjl
-         wYecEx2YSkEmdQfzvhpLX1VRrd2gPTBx8AMb7sHt+nttlLIuQbSFPKHfakITQzpiWAd4
-         lotf1wr/WkO3HvWs8a/6h0oUef6A+mu2/AxRMqWnHLQdo7LuTqCTSatC5DPi6F+T05v7
-         +HPP0cpiqW9Z9/WfPNqzVrQSzgNvo3lkf8uYCkf9eUT5pR5sYEXI5+TxEHQvWNIkJPk6
-         y/qQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/bjIqi6hO/adh9b46mmU09qR2JgvrPKcPXsn9PKpydQ=;
+        b=HbDnTVrRBD0jVKHLLydC03N06oTzh50Z5atOgRLw2IGC+WSPbw+CBtnAhZ9mE6wenq
+         YZlYtu47iMNQxdTRXULdKWL6bgV6ccf7NJPqCMhENEYrsbFeApa63dcWoooL2277eHhG
+         ULwctVuQtS33qqUFutyjmnVJ64CqDpvbk4bVYxkVA0Pbaa0IhzN7mR3chlCBkhlJxNFt
+         hkqoMZeAmwadBaR1u6Onx0G5lGSUj8Cu8gXOn5UXAaGUNzUVVpoxOh3D3qq32OKnZW5u
+         bZ16EvG8hQ0eKh9Da6QFH21godYwbZpHmRMYJpXAfszDFFhiIGnyIT1DmujUS6AxKbix
+         pRzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8Q1IDX7UPknLrgHeuiVp588K5CPt9mOKefQMmHNob6c=;
-        b=faLxhJjCIiWQHH0BKGVKH0Xwz35QGBWXDE8T/RkwSoWFrWCfhH0NNTEiI0hFT65pfK
-         A2yVs/FTTdi3Ac2pERPeTYjcv8VrcHWhajHh5k8Ln78E3JkP/VVHEu2/dZB5PsDZ+B04
-         yc+frWEo9A4/Vce6TdEUhOtZElqING8c4JzYFe0pFWWrg7m9HuSMyC0YPSVzPSsNs8yl
-         DxCw6cr422O7vpQP7NTn4MfNlX5pCw3yIQF2Ka669U56FkR3Krnum4FtfTftpZD/hfWs
-         77vOQfslc0sEMULuSCX0iR+cardJOUoLjnMR2WX/PMzT0iAoItOUtLdwiEhgXDyijfH5
-         rsXQ==
-X-Gm-Message-State: APjAAAWa0jqZWpE+SOO3oSsvfK7RSPHGFQgaDsUe/cUMGyMUy7U/9U+8
-        ivj8L356N/T32TXjfqkZ0VqaaQrt
-X-Google-Smtp-Source: APXvYqzV37GF5zgt0qySWjES7juIpRjJDZeOaNODrEG1t9ezZA3ZPrkK9ULxwAD6oCDzTY1HEXYPWg==
-X-Received: by 2002:a62:2bc1:: with SMTP id r184mr5960751pfr.88.1573523113263;
-        Mon, 11 Nov 2019 17:45:13 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s202sm17007903pfs.24.2019.11.11.17.45.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Nov 2019 17:45:12 -0800 (PST)
-Subject: Re: [PATCH v7 1/2] dt-bindings: hwmon: Add TMP512/513
-To:     etremblay@distech-controls.com, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        corbet@lwn.net
-References: <20191111203445.27130-1-etremblay@distech-controls.com>
- <20191111203445.27130-2-etremblay@distech-controls.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <88a90ad1-cb97-b425-5fea-6580e9d8657b@roeck-us.net>
-Date:   Mon, 11 Nov 2019 17:45:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/bjIqi6hO/adh9b46mmU09qR2JgvrPKcPXsn9PKpydQ=;
+        b=H8DvR7dLqduD4P4wecSmJ9kZZ1NJxKRf7CiJLl9/4HJN5kQi4ImeW75XTecKz41bDy
+         s4sKoznxxzgRE8rQrykvW+5C9EFtrDOTRv9yueRuTv8mgrdwxds9LC01Bln1NVxZS43U
+         mYZxboZsa/ioq1itEmBTiNHWdT2EhEjoAbkbmWlHeHZe9h7oMChIOZcAtg8QwShTQ++5
+         ulrGdqRn8vuX/HMrVLU4/Mp1ZhQlBnJcwvUGRBb9yuh1EUuQHC16+1FcMq9welQOHXgt
+         w/IuUl18oTPFWWCP1ZHTZJ4A8XpcJAWI93lBW+U8BLgvygMdyf+89lHjruiwbXKKe4Xa
+         wUzw==
+X-Gm-Message-State: APjAAAXfm0VCsH6/3raD3h/+2GKFIZ9JFAVo9inon8634reybNL73opB
+        q8HZ2T4CNk/GBE0aRYN2cBKXnQrFrPVbYGy5eoI=
+X-Google-Smtp-Source: APXvYqxuxcgymK9jAB/5KQHDa1nDO97DkTPn+jtJT1mWCOODP321UsjLE7Cfn2IHOUjA0/iissWb1hTqLp0z9NvLe7Q=
+X-Received: by 2002:adf:8088:: with SMTP id 8mr22613309wrl.230.1573523315058;
+ Mon, 11 Nov 2019 17:48:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191111203445.27130-2-etremblay@distech-controls.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191014141718.22603-1-narmstrong@baylibre.com>
+ <20191014141718.22603-2-narmstrong@baylibre.com> <20191023201141.GA21235@bogus>
+ <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com>
+ <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com> <CA+3zgmtJqN-3Q-kjMhh58B+T7z_1TA-C6be7+UP6nuQb7eq=8A@mail.gmail.com>
+In-Reply-To: <CA+3zgmtJqN-3Q-kjMhh58B+T7z_1TA-C6be7+UP6nuQb7eq=8A@mail.gmail.com>
+From:   Jun Li <lijun.kernel@gmail.com>
+Date:   Tue, 12 Nov 2019 09:48:22 +0800
+Message-ID: <CAKgpwJWj9nqF-j2e+hNZZUtqGY92-2o1cUNWWh0ugePrwjbtsA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
+ disabling SS instances in park mode
+To:     Tim <elatllat@gmail.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Felipe Balbi <balbi@kernel.org>, khilman@baylibre.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dongjin Kim <tobetter@gmail.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/11/19 12:34 PM, etremblay@distech-controls.com wrote:
-> From: Eric Tremblay <etremblay@distech-controls.com>
-> 
-> Document the TMP513/512 device devicetree bindings
-> 
-> Signed-off-by: Eric Tremblay <etremblay@distech-controls.com>
-> ---
->   .../devicetree/bindings/hwmon/ti,tmp513.yaml  | 89 +++++++++++++++++++
->   1 file changed, 89 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> new file mode 100644
-> index 000000000000..de4ed3645e0f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> @@ -0,0 +1,89 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +
-> +$id: http://devicetree.org/schemas/hwmon/ti,tmp513.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TMP513/512 system monitor sensor
-> +
-> +maintainers:
-> +  - Eric Tremblay <etremblay@distech-controls.com>
-> +
-> +description: |
-> +  This driver implements support for Texas Instruments TMP512, and TMP513.
+by a quirk, those platforms without this quirk can't benefit this fix.
 
-I think this needs some rewording. This is not a driver description, but
-a system description.
+if later this bug is fixed by some reversion of dwc3 IP, we can easily
+remove the workaround by a IP version check:
+if (dwc->revision < DWC3_REVISION_PARK_MODE_FIXED)
+{
+          disable park mode for ss;
+}
 
-> +  The TMP512 (dual-channel) and TMP513 (triple-channel) are system monitors
-> +  that include remote sensors, a local temperature sensor, and a high-side
-> +  current shunt monitor. These system monitors have the capability of measuring
-> +  remote temperatures, on-chip temperatures, and system voltage/power/current
-> +  consumption.
-> +
-> +  Datasheets:
-> +  http://www.ti.com/lit/gpn/tmp513
-> +  http://www.ti.com/lit/gpn/tmp512
-> +
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tmp512
-> +      - ti,tmp513
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  shunt-resistor-micro-ohms:
-> +    description: |
-> +      If 0, the calibration process will be skiped and the current and power
-> +      measurement engine will not work. Temperature and voltage measurement
-> +      will continue to work. The shunt value also need to respect:
-> +      rshunt <= pga-gain * 40 * 1000 * 1000.
-> +      If not, it's not possible to compute a valid calibration value.
-> +    default: 1000
-> +
-> +  ti,pga-gain:
-> +    description: |
-> +      The gain value for the PGA function. This is 8, 4, 2 or 1.
-> +      The PGA gain affect the shunt voltage range.
-> +      The range will be equal to: pga-gain * 40mV
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [1, 2, 4, 8]
-> +    default: 8
-> +
-> +  ti,bus-range-microvolt:
-> +    description: |
-> +      This is the operating range of the bus voltage in microvolt
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [16000000, 32000000]
-> +    default: 32000000
-> +
-> +  ti,nfactor:
-> +    description: |
-> +      Array of three(TMP513) or two(TMP512) n-Factor value for each remote
-> +      temperature channel.
-> +      See datasheet Table 11 for n-Factor range list and value interpretation.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> +      - minItems: 2
-> +        maxItems: 3
-> +        items:
-> +          default: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        tmp513@5c {
-> +            compatible = "ti,tmp513";
-> +            reg = <0x5C>;
-> +            shunt-resistor-micro-ohms = <330000>;
-> +            ti,bus-range-microvolt = <32000000>;
-> +            ti,pga-gain = <8>;
-> +            ti,nfactor = [01 F3 00];
-> +        };
-> +    };
-> 
+Li Jun
 
+Tim <elatllat@gmail.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8811=E6=97=A5=E5=91=
+=A8=E4=B8=80 =E4=B8=8B=E5=8D=8810:05=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Speculation;
+>
+> Maybe the kernel maintainers prefer to optimistically permit future
+> products to easily remove workarounds via quirk flags.
+> Even if data from testing were shown, and it did not impact
+> performance, code reduction and clarity are desirable.
+>
+> On Sun, Nov 10, 2019 at 8:58 PM Jun Li <lijun.kernel@gmail.com> wrote:
+> >
+> > Hi Neil
+> >
+> > As I got the information from Synopsys, this bug exists on current IP v=
+ersions,
+> > and per my tests with external USB3 hub + 2 Super speed udisks on data
+> > read by dd, I can reproduce this issue with different kernel versions, =
+also I
+> > didn't see obvious performance drop by dd tests after disable park mode=
+ for
+> > super speed, so should we just disable it by default so no need a quirk=
+?
+> >
+> > Li Jun
+> >
+> > Tim <elatllat@gmail.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8811=E6=97=A5=
+=E5=91=A8=E4=B8=80 =E4=B8=8A=E5=8D=888:42=E5=86=99=E9=81=93=EF=BC=9A
+> > >
+> > > Thanks for working on this Neil,
+> > > Is there something that needs doing for this patch to make it into 5.=
+3 or 5.4?
+> > > As previously mentioned the patch set fixes the issue on affected har=
+dware;
+> > >     https://patchwork.kernel.org/patch/11164515/
+> > >
+> > >
+> > >
+> > > On Wed, Oct 23, 2019 at 4:11 PM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Mon, Oct 14, 2019 at 04:17:16PM +0200, Neil Armstrong wrote:
+> > > > > This patch updates the documentation with the information related
+> > > > > to the quirks that needs to be added for disabling all SuperSpeed=
+ XHCi
+> > > > > instances in park mode.
+> > > > >
+> > > > > CC: Dongjin Kim <tobetter@gmail.com>
+> > > > > Cc: Jianxin Pan <jianxin.pan@amlogic.com>
+> > > > > Reported-by: Tim <elatllat@gmail.com>
+> > > > > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+> > > > >  1 file changed, 2 insertions(+)
+> > > >
+> > > > Sigh, what's one more to the never ending list of quirks...
+> > > >
+> > > > Acked-by: Rob Herring <robh@kernel.org>
