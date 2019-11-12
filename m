@@ -2,48 +2,62 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8F3C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 08:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761E8C17441
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D29E20679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 08:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BFF21783
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 08:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725853AbfKLIqz (ORCPT
+        id S1727001AbfKLIwA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 03:46:55 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:37500 "EHLO
+        Tue, 12 Nov 2019 03:52:00 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:45672 "EHLO
         wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725835AbfKLIqz (ORCPT
+        by vger.kernel.org with ESMTP id S1725781AbfKLIwA (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 03:46:55 -0500
+        Tue, 12 Nov 2019 03:52:00 -0500
 Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
         by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iURp7-00020s-1K; Tue, 12 Nov 2019 09:46:53 +0100
+        id 1iURtx-0005Zc-HE; Tue, 12 Nov 2019 09:51:53 +0100
 X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
         linuxbbg.five-lan.de
 Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
         (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAC8kpAN012974
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAC8pqVS013015
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 12 Nov 2019 09:46:52 +0100
-Subject: Re: arm64: dts: rockchip: Add SDR104 mode to SD-card I/F on
- rk3399-roc-pc
-To:     Ulf Hansson <ulf.hansson@linaro.org>
+        Tue, 12 Nov 2019 09:51:52 +0100
+Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
+To:     =?UTF-8?Q?S=c3=b6ren_Moch?= <smoch@web.de>,
+        Kever Yang <kever.yang@rock-chips.com>, heiko@sntech.de
 Cc:     Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
+        linux-kernel@vger.kernel.org, Alexis Ballier <aballier@gentoo.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Andy Yan <andyshrk@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        linux-rockchip@lists.infradead.org,
         Rob Herring <robh+dt@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <f03c978c-86de-b8bb-22c2-177d7fafed94@fivetechno.de>
- <CAPDyKFqn06LZZMXLD2o-M6A0R6KU97PFUTN=NgYnMtf=ESULTA@mail.gmail.com>
+        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
+        Peter Robinson <pbrobinson@gmail.com>,
+        Nick Xie <nick@khadas.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Akash Gajjar <akash@openedev.com>
+References: <20191111005158.25070-1-kever.yang@rock-chips.com>
+ <20191111005158.25070-3-kever.yang@rock-chips.com>
+ <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
+ <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
+ <acbab893-9e9a-cfe1-67bf-a9e2b2e50114@fivetechno.de>
+ <88ad7dc9-5299-791b-e285-7775ddf885ba@web.de>
 From:   Markus Reichl <m.reichl@fivetechno.de>
 Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
  xsDNBFs02GcBDADRBOYE75/gs54okjHfQ1LK8FfNH5yMq1/3MxhqP7gsCol5ZGbdNhJ7lnxX
@@ -79,79 +93,45 @@ Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
  Dm43HZwTBXPwasFHnGkF10N7aXf3r8WYpctbZYlcT5EV9m9i4jfWoGzHS5V4DXmv6OBmdLYk
  eD/Xv4SsK2JTO4nkQYw8
 Organization: five technologies GmbH
-Message-ID: <3ebbea5b-0bda-3528-344d-d717889e6fec@fivetechno.de>
-Date:   Tue, 12 Nov 2019 09:46:51 +0100
+Message-ID: <c5519934-2715-d5cd-a236-0fec9a41dc67@fivetechno.de>
+Date:   Tue, 12 Nov 2019 09:51:52 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqn06LZZMXLD2o-M6A0R6KU97PFUTN=NgYnMtf=ESULTA@mail.gmail.com>
+In-Reply-To: <88ad7dc9-5299-791b-e285-7775ddf885ba@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: de-DE
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573548414;68438760;
-X-HE-SMSGID: 1iURp7-00020s-1K
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573548719;bc2c7baf;
+X-HE-SMSGID: 1iURtx-0005Zc-HE
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ulf,
+Thanks Sören,
 
-Am 11.11.19 um 18:27 schrieb Ulf Hansson:
-> On Mon, 11 Nov 2019 at 15:13, Markus Reichl <m.reichl@fivetechno.de> wrote:
+Am 12.11.19 um 09:44 schrieb Sören Moch:
+> On 12.11.19 09:16, Markus Reichl wrote:
+>> Hi Kever,
 >>
->> Add SDR104 capability and regulators to SD card node.
->> While at it, fix a typo in lcd pinctrl and remove two
->> undocumented bindings from pmic.
->>
->> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
->> ---
->>  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 31 +++++++++++++++----
->>  1 file changed, 25 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->> index 33df95e384b4..e86a6db54499 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->> @@ -135,6 +135,20 @@
->>                 vin-supply = <&vcc_1v8>;
->>         };
->>
->> +       vcc3v0_sd: vcc3v0-sd {
->> +               compatible = "regulator-fixed";
->> +               enable-active-high;
->> +               gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_HIGH>;
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&vcc3v0_sd_en>;
->> +               regulator-name = "vcc3v0_sd";
->> +               regulator-always-on;
-> 
-> This looks odd. A GPIO regulator being always on?
+>> have a rk3399-roc-pc running mainline U-Boot and kernel and vdd_log is
+>> showing 1118 mV.
+>> Is this a danger for the board?
+> I think yes. What I read vdd_log on rk3399 must not exceed 1.0V.
+>> How to fix it?
+> You probably need to do something like [1].
 
-Works fine without always-on. Have sent v2. Thanks.
+will measure and come up with a patch.
 
 > 
->> +               regulator-boot-on;
->> +               regulator-min-microvolt = <3000000>;
->> +               regulator-max-microvolt = <3000000>;
->> +               vin-supply = <&vcc3v3_sys>;
->> +       };
+> [1] https://patchwork.kernel.org/patch/11173465/
 > 
-> Assumes this powers an SDIO embedded card. Often those have a specific
-> power sequence, just wanted to make sure the above are really
-> sufficient? No delays or external clock needed?
-> 
-> [...]
-> 
-> Kind regards
-> Uffe
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
-
-Gruß,
+> Gruß,
+> Sören
+>> Btw. vin-supply for this pwm-regulator is ignored and I could not find it
+>> in bindings doc.
+>>
+> Gruß,
 -- 
 Markus Reichl
