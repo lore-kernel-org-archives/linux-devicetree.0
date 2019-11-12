@@ -2,107 +2,137 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDD3C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02299C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35E521925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:15:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIa0Stzb"
+	by mail.kernel.org (Postfix) with ESMTP id D26452196E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfKLBPg (ORCPT
+        id S1726923AbfKLB0H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:15:36 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42051 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfKLBPg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 20:15:36 -0500
-Received: by mail-pg1-f196.google.com with SMTP id q17so10659300pgt.9
-        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 17:15:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y0h6XVwl64mWKPaIlsuME5eexdqTqwMUk4rev+uicW8=;
-        b=DIa0StzbygIcBQM8xDeiOm8dKfa9ZC9PuPgSq4N6FekM8VrgEql0H5wkhJ3/fLY8uf
-         1khNPply9fgNBLox3VSuKYxvd+maHjFJVX88omsiRZHegswpACZNjWtRkFbbH/J890rs
-         TphfLeEg8J88ryc0ejBnbte2tmKgOZfCdUxo8tRz40C9f8vstjWHaqwxUK9J+H94lk76
-         G7Mjzlr3SDGoyk1xXBOhwADLQm6qxEzG0ROxP4chRBbta029Yz3wsguYe/tZTWNCuC4N
-         ts24wOalmcKCj6Z1hhf2VD3dfb7+erXjiVpD2IoGoVXKl7sVmyGD6cGvNvvi0mI5lNrt
-         QQZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y0h6XVwl64mWKPaIlsuME5eexdqTqwMUk4rev+uicW8=;
-        b=WqZ5k1m2dyWjitYmpPzk012VzuJZPB+mDyEG7bLzi4fWSl2qhzMPE9DA06Vk1VCxHz
-         UMndwK9KXPMQl5VD3NAudO5Oc1xjEvHMXp0eQbbgKdi5d4EiFJ1DZr35OOKiJ2+LWZan
-         rV4McXtwpgHS1caN6uAgcE03AszVzh2WVGFmLVidNveA2bmfRDdqVTPZNzqGvRqKBCS3
-         LOoWj0lROrNmDi4cJiUHi8bnsfCsTCho4MQRrbkPAshTknZvkmczZGkfCIxM4Z0V1eRP
-         a/yGI7z4+igDfX5YU93kHg82qbFA0IQ/PQ4RDGRcjWVOlSxgEateyfjq0lKpAY3RmWUY
-         rZzQ==
-X-Gm-Message-State: APjAAAUh6vdnSOmug2S6YXna+y75MVrzcj4Vgb3MsLlnG3n7rB0SEylA
-        Z/EZQJGHYjX84NdD2EiyP0Y=
-X-Google-Smtp-Source: APXvYqzU5S1gkc0MTNIlYM9b5FV6IzPPNByDYevydaoncYPERx3H9nV/gWamultUWTFXeH1jdZ7ErQ==
-X-Received: by 2002:a63:f744:: with SMTP id f4mr10039839pgk.229.1573521335023;
-        Mon, 11 Nov 2019 17:15:35 -0800 (PST)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id 186sm23361341pfb.99.2019.11.11.17.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 17:15:34 -0800 (PST)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Akash Gajjar <Akash_Gajjar@mentor.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH] arm64: dts: rockchip: rockpro64: fix ES8316 i2c address
-Date:   Mon, 11 Nov 2019 17:15:21 -0800
-Message-Id: <20191112011521.3155504-1-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 11 Nov 2019 20:26:07 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7012 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726924AbfKLB0H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 11 Nov 2019 20:26:07 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAC1HKno023981;
+        Mon, 11 Nov 2019 20:25:50 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7jpagevg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 20:25:50 -0500
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xAC1JJbc027854;
+        Mon, 11 Nov 2019 20:25:49 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7jpagevb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Nov 2019 20:25:49 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAC1LAHd026975;
+        Tue, 12 Nov 2019 01:25:53 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 2w5n36afqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 01:25:52 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAC1PkUs50725354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Nov 2019 01:25:46 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1AF6AC05B;
+        Tue, 12 Nov 2019 01:25:46 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF725AC059;
+        Tue, 12 Nov 2019 01:25:41 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Nov 2019 01:25:41 +0000 (GMT)
+Subject: Re: [PATCH v1 3/5] char: tpm: rewrite "tpm_tis_req_canceled()"
+To:     amirmizi6@gmail.comg, Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
+        amir.mizinski@nuvoton.com
+References: <20191110162137.230913-1-amirmizi6@gmail.com>
+ <20191110162137.230913-4-amirmizi6@gmail.com>
+ <20191110180010.xyvv4gf6jiqyrac3@cantor>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <3214005f-740b-46a8-7c0b-db96b63cd6f3@linux.ibm.com>
+Date:   Mon, 11 Nov 2019 20:25:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191110180010.xyvv4gf6jiqyrac3@cantor>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-11_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911120009
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to Rockpro64 schematics [1] CE pin of ES8316 is wired
-to ground, so codec address should be 0x10.
+On 11/10/19 1:00 PM, Jerry Snitselaar wrote:
+> On Sun Nov 10 19, amirmizi6@gmail.com wrote:
+>> From: Amir Mizinski <amirmizi6@gmail.com>
+>>
+>> using this function while read/write data resulted in aborted operation.
+>> after investigating according to TCG TPM Profile (PTP) Specifications,
+>> i found cancel should happen only if TPM_STS.commandReady bit is lit
+>> and couldn't find a case when the current condition is valid.
+>> also only cmdReady bit need to be compared instead of the full lower 
+>> status register byte.
+>>
+>> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+>> ---
+>> drivers/char/tpm/tpm_tis_core.c | 12 +-----------
+>> 1 file changed, 1 insertion(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/char/tpm/tpm_tis_core.c 
+>> b/drivers/char/tpm/tpm_tis_core.c
+>> index ce7f8a1..9016f06 100644
+>> --- a/drivers/char/tpm/tpm_tis_core.c
+>> +++ b/drivers/char/tpm/tpm_tis_core.c
+>> @@ -627,17 +627,7 @@ static int probe_itpm(struct tpm_chip *chip)
+>>
+>> static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
+>> {
+>> -    struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>> -
+>> -    switch (priv->manufacturer_id) {
+>> -    case TPM_VID_WINBOND:
+>> -        return ((status == TPM_STS_VALID) ||
+>> -            (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
+>> -    case TPM_VID_STM:
+>> -        return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
+>
+> Stefan were these cases you found that were deviating from the spec? 
+> Wondering
+> if dropping these will cause issues for these devices.
 
-[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
 
-Fixes: 6860769ea771 ("arm64: dts: rockchip: add analog audio nodes on rk3399-rockpro64")
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I believe these devices needed special handling of the status register 
+as they didn't behave as the 'other' devices, so I would expect issues.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index 7f4b2eba31d4..18bbe548839b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -477,9 +477,9 @@
- 	i2c-scl-falling-time-ns = <15>;
- 	status = "okay";
- 
--	es8316: codec@11 {
-+	es8316: codec@10 {
- 		compatible = "everest,es8316";
--		reg = <0x11>;
-+		reg = <0x10>;
- 		clocks = <&cru SCLK_I2S_8CH_OUT>;
- 		clock-names = "mclk";
- 		#sound-dai-cells = <0>;
--- 
-2.23.0
+    Stefan
 
