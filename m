@@ -2,235 +2,140 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEE2C17440
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B654C17441
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD20B21925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B3820818
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:57:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="K50V4wn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbfKLLwr (ORCPT
+        id S1726932AbfKLL5c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:52:47 -0500
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:54241 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfKLLwr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 06:52:47 -0500
-IronPort-SDR: ABSiVYxHaraSYYOyqDxHLWNwJH2rSbKw1lK8/oBGspbGVL7JiDORiQXcXdpKo6mpDopfvoNxrF
- 7kOLsrIUbNp3C+H15H7g6q+H6YGJz6B1Q0gaoZx9zriWUGWjupIqAdG0MonjwY8vr7ebnDtxCW
- S7j7nMUCHyVC1KJrNI3K64q3jCkh2mreEZux4MdRC4lRQy7g4FmStGgOAPRJ4XxRV5AI+5jvO2
- yzPhoUi5qGyMl3wsyXEha98fzIJWPpar+40stG+BMLN8xKOnblpTzNn28VI+opcJIntOmS0S2U
- uiE=
-X-IronPort-AV: E=Sophos;i="5.68,296,1569312000"; 
-   d="scan'208";a="43124387"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 12 Nov 2019 03:52:45 -0800
-IronPort-SDR: 2jBl8R2uXVezf101zPumrSER0INNLg/dYSQP/7Xf7cBpFfywVxILkaST/C3/ydb8lFCZRbEZAz
- bn9Z8OuJEmPVZ9u/ZHOkpZHUC/79xmgbzY+9c/kWtaHCiX0L1QaGS18+IRNX91TqpIE1Fskbqp
- oO237xCu+Gxx2yGmMonMF46D7opo48r1fU1Xc6Jv3Ol/VXF0GS2V4mRbSNFgqCEQFZNJa1Ep1G
- 23LxlAeUyTTkY3pBzRYpnB2SHICY2y2mmXCyd5wgGpNy4dj9ozSnZScbweZ4YWYn0MRpfKdg6d
- i9w=
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Stephen Warren <swarren@nvidia.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Enrico Weigelt <info@metux.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <20190925165133.GA4164@vmlxhi-102.adit-jv.com>
- <CAMuHMdVt3yDiJzkbUGMdkKKd4+CJ0btWuO-J=YZL+pAo99_WXg@mail.gmail.com>
- <20191005130740.GA22620@x230>
- <CAMuHMdViwrqg48t2Pc2JtZKLGzLPy0cVfzcnqctGo9oaDpC9Wg@mail.gmail.com>
- <89ddaab4-fb5f-8df2-c691-87cc0b1503d0@mentor.com>
-Message-ID: <57b13084-5b49-6e9d-4f94-e85987d96f6b@mentor.com>
-Date:   Tue, 12 Nov 2019 17:22:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <89ddaab4-fb5f-8df2-c691-87cc0b1503d0@mentor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Tue, 12 Nov 2019 06:57:32 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:6998 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725947AbfKLL5c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 06:57:32 -0500
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xACBqrj3028336;
+        Tue, 12 Nov 2019 06:56:54 -0500
+Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2053.outbound.protection.outlook.com [104.47.40.53])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2w7pr6gkea-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Nov 2019 06:56:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fLTEZA4A65tofanCU63Ox3tEsswDCyLd9nRJ42a72OoSJEc3wJXhbekvWzd3DTq0k7vXZ1kS8TVpY+EnawVcSZ3WiWS+vdco83aG6RubgDeEA+sKzjhwU3u08FvwbhDixYMq5mW0QGVgdSi7lrZECYz6uTMyhgVpllbhctPVZG/mn1UnR4yfX9RSZDxVs1yAlcR5aXmlJPhp8iUgnZB4ONYS0yM87KynZT2DN3QAYFqXIpzgzpQMflxXQ5cCwCHLuAFV0awaBBqMp2ZgW/nNFpCkgIcTSQZFOG0mjyhA9gD/lkDykSs0LaYa128r8GVV9KtA77lmdE3tdfzIegveSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ByZkVSi4IstnbMIQ0yZAYwgblfvEeedlnENDiCoHH/A=;
+ b=GYCZ5talcxje/ls9z254rYdc77LN132YMLZXwt1TBfmIVRHTb0BNcnh6iLi+YdYxpdIvEk//plvFEyhP2I1K5ZJ5vzNPn4PmL0jbSX0V7z+tz4qXXf88KobdQglatlaWJy4sKFcHJDeMQ6t+SaSwy/82pTR7ZcAsrXl72iiE91QSq/Q5RCNgezNrLAnT0b2muWgRoVz62E98v6O+TaPFdoDREa/gQrIHr18/jZpruBEgBe25wToP4bQSGwulXkseT04M4JC2YyOCfxTgNDPKZ9zt30VUtkYzM7Ae9U7OWOJa4DCO0U4soTAPoGy6RE5JzgBwKkBG1USPq/WpiEe+hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ByZkVSi4IstnbMIQ0yZAYwgblfvEeedlnENDiCoHH/A=;
+ b=K50V4wn/hXn/vmR6fj322XB2y5ZPr7CcYNQGtk2cuJW2yUsAF14+4J6Ofhs8+A08vvWGwjG6jOa3zckIwoPe/RwhH6bGmIVWN9xPIULXaeMCldmCqeAHTvaj9huoW7fLNXSjo7At2f5trm2fkDelb+NFLlQbMdzIB9ozn4IcLUw=
+Received: from MN2PR03MB5200.namprd03.prod.outlook.com (10.186.146.8) by
+ MN2PR03MB5056.namprd03.prod.outlook.com (10.255.232.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.22; Tue, 12 Nov 2019 11:56:52 +0000
+Received: from MN2PR03MB5200.namprd03.prod.outlook.com
+ ([fe80::5aa:4121:999c:c8f0]) by MN2PR03MB5200.namprd03.prod.outlook.com
+ ([fe80::5aa:4121:999c:c8f0%3]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 11:56:52 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH 1/3] iio: adc: ltc2496: provide device tree binding
+ document
+Thread-Topic: [PATCH 1/3] iio: adc: ltc2496: provide device tree binding
+ document
+Thread-Index: AQHVmNs1F8/40KLd8kC0t9/fsa+nz6eHG4MAgAABhICAAFIKgA==
+Date:   Tue, 12 Nov 2019 11:56:52 +0000
+Message-ID: <1e1a148095d2ea6c49c62e5fb2e5e741faa9d5f4.camel@analog.com>
+References: <20191111214025.18310-1-u.kleine-koenig@pengutronix.de>
+         <b6ed43afbfb0128301f11198eb83a8f72b7661e9.camel@analog.com>
+         <20191112070405.zinuqnfb3wqbehvw@pengutronix.de>
+In-Reply-To: <20191112070405.zinuqnfb3wqbehvw@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-05.mgc.mentorg.com (139.181.222.5) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 60f25fb0-6ea2-43e8-6e38-08d76767687c
+x-ms-traffictypediagnostic: MN2PR03MB5056:
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR03MB5056B2DB6878248327B16B3BF9770@MN2PR03MB5056.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(346002)(136003)(189003)(199004)(36756003)(66446008)(8676002)(54906003)(8936002)(316002)(2351001)(305945005)(229853002)(7736002)(6916009)(118296001)(81156014)(6486002)(256004)(81166006)(6436002)(5640700003)(25786009)(4744005)(5660300002)(64756008)(66556008)(4001150100001)(2616005)(102836004)(6506007)(476003)(486006)(6246003)(76176011)(11346002)(446003)(66476007)(186003)(71190400001)(6512007)(26005)(2906002)(14454004)(478600001)(76116006)(66946007)(3846002)(91956017)(2501003)(86362001)(66066001)(7416002)(71200400001)(99286004)(6116002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB5056;H:MN2PR03MB5200.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JcMh/RzcUQ+lzo2Tsaj55YgDs2Tht5OIThGBuhb8B0GPfJgFLSavhmrpwj3IrIazq9KnQ3kyO/6qgYIH5YnhvMPp+mXHD84NS6ZsC05q2NsnGO3PQ5b0x4jjkPWRxvTntrsaqCAd4Mf0ohfsSAUaYApyBI9CmqOASZcJqwsIu4F2H8J/sr30cGbbLqdzrPYmVQIAvgCyz8PQ6++jnmhESIKUZo0IXNESe/o1nazhQp8ymVkRBlgRSEe+kVWrI+XsHH9Fn/9z5rjJk3MQ9DyCgEWCKZ3/d/cjvO0uC7fSJcP+GIsdqEBY5DTBz4kTX++ntybn+rIB/hhMyk7QdztLyeouJSFZdAVl0L0lexK4oXZB8L6FOlypUuoa4rBubp+vCm2VaRMsXvrQW1oncdUjE2SeWwruE1+Nz1FQAJ0KynyyLZJkADdjlKDXltQ2g02k
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AD8621DC3BBC374FBBE865EB3CAF82F4@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60f25fb0-6ea2-43e8-6e38-08d76767687c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 11:56:52.7456
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UXpu8k8OIi2zCCguQT3YSH/0Y/uKeBD2cZPfsj2zW9E9x144QpI7EhpMd7aRyUeJpacfqh13LohdbeGNpnRifi8cWyPVnVeGZK7Eny5trkg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB5056
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-12_03:2019-11-11,2019-11-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=769 malwarescore=0 adultscore=0
+ impostorscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911120109
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
-
-
-On 11/10/19 10:05 AM, Harish Jenny K N wrote:
-> Hi Geert,
->
->
-> On 07/10/19 1:48 PM, Geert Uytterhoeven wrote:
->> Hi Eugeniu,
->>
->> On Sat, Oct 5, 2019 at 3:08 PM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
->>> On Fri, Sep 27, 2019 at 11:07:20AM +0200, Geert Uytterhoeven wrote:
->>>> My standard reply would be: describe the device connected to the GPIO(s)
->>>> in DT.  The GPIO line polarities are specified in the device's "gpios"
->>>> properties.
->>>> Next step would be to use the device from Linux.  For that to work, you
->>>> need a dedicated driver (for the complex case), or something generic
->>>> (for the simple case).
->>>> The latter is not unlike e.g. spidev.  Once you have a generic driver,
->>>> you can use "driver_override" in sysfs to bind the generic driver to
->>>> your device.  See e.g. commit 5039563e7c25eccd ("spi: Add
->>>> driver_override SPI device attribute").
->>> We have passed your suggestions along. Many thanks.
->>>
->>>> Currently we don't have a "generic" driver for GPIOs. We do have the
->>>> GPIO chardev interface, which exports a full gpio_chip.
->>>> It indeed looks like this "gpio-inverter" could be used as a generic
->>>> driver.  But it is limited to GPIOs that are inverted, which rules out
->>>> some use cases.
->>>>
->>>> So what about making it more generic, and dropping the "inverter" from
->>>> its name, and the "inverted" from the "inverted-gpios" property? After
->>>> all the inversion can be specified by the polarity of the GPIO cells in
->>>> the "gpios" property, and the GPIO core will take care of it[*]?
->>>> Which boils down to adding a simple DT interface to my gpio-aggregator
->>>> ("[PATCH/RFC v2 0/5] gpio: Add GPIO Aggregator Driver",
->>>>  https://lore.kernel.org/lkml/20190911143858.13024-1-geert+renesas@glider.be/).
->>>> And now I have realized[*], we probably no longer need the GPIO
->>>> Forwarder Helper, as there is no need to add inversion on top.
->>> After having a look at the gpio aggregator (and giving it a try on
->>> R-Car3 H3ULCB), here is how I interpret the above comment:
->>>
->>> If there is still a compelling reason for having gpio-inverter, then it
->>> probably makes sense to strip it from its "inverter" function (hence,
->>> transforming it into some kind of "repeater") on the basis that the
->>> inverting function is more of a collateral/secondary feature, rather
->>> than its primary one. Just like in the case of gpio aggregator, the
->>> primary function of gpio inverter is to accept a bunch of GPIO lines and
->>> to expose those via a dedicated gpiochip. I hope this is a proper
->>> summary of the first point in your comment. In any case, this is the
->>> understanding I get based on my experiments with both drivers.
->> Yes, the inverter is basically a "repeater" (or "aggregator", when it has
->> multiple GPIOs connected), hardcoded to invert.
->>
->>> What I also infer is that, assuming gpio-inverter will stay (potentially
->>> renamed and stripped of its non-essential inverting function), the gpio
->>> aggregator will need to keep its Forwarder Helper (supposed to act as a
->>> common foundation for both drivers).
->> What I meant is that if the inverter and aggregator would be combinoed
->> into a single driver, there would no longer be a need[*] for a separate
->> helper, and it could be incorporated into the single driver.
->>
->> [*] The individual helper functions may still be useful for some other
->>      driver, though.
->
-> Agree.
->
->
->>> The second point which I extract from your comment is that the "gpio
->>> aggregator" could alternatively acquire the role of "gpio-inverter"
->>> (hence superseding it) by adding a "simple DT interface". I actually
->>> tend to like this proposal, since (as said above) both drivers are
->>> essentially doing the same thing, i.e. they cluster a number of gpio
->>> lines and expose this cluster as a new gpiochip (keeping the
->>> reserved/used gpio lines on hold). That looks like a huge overlap in
->>> the functionalities of the two drivers.
->> Yes, both drivers are very similar.  The difference lies in how they
->> acquire the list of GPIO descriptors.
-> Yes. In fact my V2 version of the patch tried to implement the same role as repeater/forwarder albeit with a different naming/intention.
->
-> Linus Walleij mentioned that using GPIO_ACTIVE_LOW just to get free inversion inside GPIOLIB was not OK really and this is a hardware description problem and totally different from the implementation problem inside the driver.
->
-> Hence we changed the logic to inverter consumer driver doing inversion inside get and set functions.
->
->>> The only difference which I see is that "gpio-inverter" is getting its
->>> input from DT and generates the gpiochips at probe time, while
->>> "gpio aggregator" is getting its input from sysfs and generates the
->>> gpiochips at runtime, post-probe.
->> Exactly.
->>
->> For my virtualization use case, I need to create the list of GPIO
->> descriptors at run-time, hence the sysfs interface. This is
->> polarity-agnostic (i.e. the end user needs to care about polarity).
->>
->> For Harish use case, he needs to describe the list from DT, with
->> polarity inverted, which can be done by specifying the GPIO_ACTIVE_LOW
->> flag in the node's"gpios" property.
->>
->> For your use case, you want to describe the list in DT, with line-names,
->> and polarity specified.
->>
->>> So, assuming no objections from Harish and other reviewers, I would be
->>> very happy to review and test the DT-based gpio inversion functionality
->>> as part of gpio aggregator. Thanks!
->
-> I tested your aggregator driver with the below minor changes in gpio-aggregator (combined with some minor changes in GPIO forwarder) to get devicetree support.
->
->
-> 195,196d194
-> <     int index = 0;
-> <     int count;
-> 278,295d275
-> <     count = gpiod_count(dev, NULL);
-> <     if (count > 0) {
-> <         while (index < count) {
-> <             desc = devm_gpiod_get_index(dev, NULL, index, GPIOD_ASIS);
-> <
-> <             if (desc == ERR_PTR(-ENOENT))
-> <                 return -EPROBE_DEFER;
-> <
-> <             if (IS_ERR(desc))
-> <                 return PTR_ERR(desc);
-> <
-> <             error = add_gpio(dev, &descs, &n, desc);
-> <             if (error)
-> <                 return error;
-> <             index++;
-> <         }
-> <     }
-> <
-> 316,319d295
-> < static const struct of_device_id gpio_aggregator_match[] = {
-> <     { .compatible =    "gpio-aggregator", }, { },
-> < };
-> <
-> 326d301
-> <         .of_match_table = of_match_ptr(gpio_aggregator_match),
->
->
-> This does work and achieve our aim of inverter driver.
->
-> Hence no objection from my side to merge the drivers. Please let me know if I need to send you a patch on top of your aggregator patch.
->
-> Hoping to get some credits for my work of 5 months effort ! ;)
->
->
-> Best Regards,
->
-> Harish Jenny K N
-
-
-Is any attempt being made for the newer version of the aggregator/inverter driver ?
-
-
-Best Regards,
-
-Harish Jenny K N
-
->
+T24gVHVlLCAyMDE5LTExLTEyIGF0IDA4OjA0ICswMTAwLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90
+ZToNCj4gW0V4dGVybmFsXQ0KPiANCj4gSGVsbG8gQWxleGFuZHJ1LA0KPiANCj4gT24gVHVlLCBO
+b3YgMTIsIDIwMTkgYXQgMDY6NTc6NDlBTSArMDAwMCwgQXJkZWxlYW4sIEFsZXhhbmRydSB3cm90
+ZToNCj4gPiBPbiBNb24sIDIwMTktMTEtMTEgYXQgMjI6NDAgKzAxMDAsIFV3ZSBLbGVpbmUtS8O2
+bmlnIHdyb3RlOg0KPiA+ID4gVGhlIEFEQyBvbmx5IHJlcXVpcmVzIHRoZSBzdGFuZGFyZCBzdHVm
+ZiBmb3Igc3BpIGRldmljZXMgYW5kIGENCj4gPiA+IHJlZmVyZW5jZQ0KPiA+ID4gdm9sdGFnZS4N
+Cj4gPiANCj4gPiBEVCBiaW5kaW5ncyBtdXN0IGJlIGluIFlBTUwgZm9ybWF0Lg0KPiANCj4gWWVh
+aCwgSSBub3RpY2VkIHRoaXMgdHJlbmQuIEJ1dCBnaXZlbiB0aGF0IEkgb25seSBzYXcgLnR4dCBm
+aWxlcyBmb3INCj4gaWlvLCBJIHRob3VnaHQgSSdkIHN0aWNrIHRvIHRoYXQuDQo+IA0KPiA+IEJ1
+dCBpbiB0aGlzIGNhc2UsIHlvdSBjYW4gcHJvYmFibHkgZXh0ZW5kIHRoZSBleGlzdGluZw0KPiA+
+ICJEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FkYy9sdGMyNDk3LnR4dCIu
+DQo+IA0KPiBJIGNvbnNpZGVyZWQgdGhhdCBzaG9ydGx5LCBidXQgYXMgdGhlIGx0YzI0OTcgaXMg
+YW4gaTJjIGRldmljZSBhbmQgdGhlDQo+IGx0YzI0OTYgdXNlcyBzcGkgSSBjaG9zZSB0byBjcmVh
+dGUgYW5vdGhlciBzaW1wbGUgZG9jdW1lbnQgaW5zdGVhZCBvZg0KPiBjb21wbGljYXRpbmcgdGhl
+IGV4aXN0aW5nIG9uZSBieSBkZXNjcmliaW5nIHR3byBuZWFybHkgb3J0aG9nb25hbCBzZXRzDQo+
+IG9mIHByb3BlcnRpZXMuDQoNClRoZXJlIGFyZSBkdC1iaW5kaW5ncyB0aGF0IGNvdmVyIGJvdGgg
+U1BJICYgSTJDLg0KSSB0aGluayBBRFhMMzcyIGRvZXMgdGhhdCB0b28uDQoNCg0KPiANCj4gQmVz
+dCByZWdhcmRzDQo+IFV3ZQ0KPiANCg==
