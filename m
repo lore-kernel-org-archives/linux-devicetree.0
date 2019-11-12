@@ -2,177 +2,251 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C358C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AEAC17448
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6AE20679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1502246A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 11:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S6/8OSeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbfKLLGx (ORCPT
+        id S1727685AbfKLLSu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 06:06:53 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:45386 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725957AbfKLLGx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 06:06:53 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iUU0Q-0007lz-FV; Tue, 12 Nov 2019 12:06:42 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xACB6ahL019198
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 12 Nov 2019 12:06:37 +0100
-Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
-To:     Soeren Moch <smoch@web.de>, Kever Yang <kever.yang@rock-chips.com>,
-        heiko@sntech.de
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Alexis Ballier <aballier@gentoo.org>,
-        devicetree@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-rockchip@lists.infradead.org,
+        Tue, 12 Nov 2019 06:18:50 -0500
+Received: from mail-eopbgr20063.outbound.protection.outlook.com ([40.107.2.63]:42335
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727661AbfKLLSp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 06:18:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UHwNlqFbnCqp9/RyW5BZwMkuUVEbpnEpGN+eW6sn+3l3qWwrO6NRlbZOD63YTwVJo2TCc7u6yItPP4zBj28zCRK/DLF1IHiTNY8fQ/FkFhtCtTPGg1wVcN95ans+YkJg4L4ds6II5JziUUsNKab5oZa+j0R+kDA8O2J4idwj2nuUMldXyen4KBQQgcxKjqHviMoG8WMhV1vla7ftke+8VAKDPVGQw51Ez5RnDOpAgM5SNXFMgrVQzDziD1P3aAwiZDSm6o1uGxrRCoKHKimRvIQoOHPQozQjw+G7y3afBpBZ3EtAfQbdzKBlaD7ZxyFgwSXixIs5rGVxtBETK8xgcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WT6j0VAgO9guqVEcCYsSLa/Vn+AN7lcTN5uVzEmKe4U=;
+ b=Cl/MNZ0zkMP4auwyAkXAi7HpGF0LAML/ljeL4bUifT7fpoRR5ArOVhkZWA1mLQyDyOod7ps3p9DtJbm9fxM6pIV7+dZbeh1ZkTJe7ZS53YSGfPm2soCFyXf8XYclcpUVst1Pvk+nRLlEeKMV1T06DUr+T6Aw0iP6LYCeVpb9Ntukbb34sPF2y3fSGO5F5yQ6Gzqgi6ODm7+dub9LvyiuZpCfTVUYj6ik9HmOn1gyOUKN1ePprrwnJu0EmAP5YNsa1O4cHf348aCfSIGTQlf9KmcPe6T9RF736wfsupg7uSjBG+/4eNnpEQVPTU1u7mQYTweDHs4JEpP5NBwG3UFOXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WT6j0VAgO9guqVEcCYsSLa/Vn+AN7lcTN5uVzEmKe4U=;
+ b=S6/8OSeOnbAM0skUuxyLIl3iPwqQR/7FOOoH3rPqnTdzeG7u1aPb88TqwS+sIvlWVUmIjBPkOs5WSRDEiQfK9tVQqZwxtUvgPyNl0fjAMG7fFMnIFS9hXq8q+8yfT1L0CBOwGTUG5YYRqJT4oXNRvYHNTNRjUCsWwfK7qdNzKS4=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB4051.eurprd04.prod.outlook.com (52.134.125.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Tue, 12 Nov 2019 11:18:41 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde%7]) with mapi id 15.20.2430.027; Tue, 12 Nov 2019
+ 11:18:41 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+CC:     Stephen Boyd <sboyd@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Akash Gajjar <akash@openedev.com>, Nick Xie <nick@khadas.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, Andy Yan <andyshrk@gmail.com>
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <20191111005158.25070-3-kever.yang@rock-chips.com>
- <ef8830f3-10d1-7b71-0e18-232f2eaeef2d@web.de>
- <1eaef5d5-c923-da56-b9c4-48d517b3c969@rock-chips.com>
- <acbab893-9e9a-cfe1-67bf-a9e2b2e50114@fivetechno.de>
- <17e14b30-02ee-2379-8891-088677924479@rock-chips.com>
- <fd9ee2bc-9dfb-1aa2-f00f-add9b3069876@web.de>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <f2c34d85-4d71-d9ff-99ea-044e6354fc87@fivetechno.de>
-Date:   Tue, 12 Nov 2019 12:06:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 2/6] clk: imx: Mark dram pll on 8mm and 8mn with
+ CLK_GET_RATE_NOCACHE
+Thread-Topic: [PATCH v4 2/6] clk: imx: Mark dram pll on 8mm and 8mn with
+ CLK_GET_RATE_NOCACHE
+Thread-Index: AQHVloV7TZnkkId7Yky0Y9av5sUpE6eHaNKA
+Date:   Tue, 12 Nov 2019 11:18:41 +0000
+Message-ID: <20191112111839.jlshj6w567hzh6e7@fsr-ub1664-175>
+References: <cover.1573252696.git.leonard.crestez@nxp.com>
+ <e6230f49275e10e0cea625a8d806f3850ac2a29c.1573252696.git.leonard.crestez@nxp.com>
+In-Reply-To: <e6230f49275e10e0cea625a8d806f3850ac2a29c.1573252696.git.leonard.crestez@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR02CA0032.eurprd02.prod.outlook.com
+ (2603:10a6:208:3e::45) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2deb979e-6c56-4ff8-468a-08d76762125a
+x-ms-traffictypediagnostic: AM0PR04MB4051:|AM0PR04MB4051:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4051DEDDC2EBDBDAB132571FF6770@AM0PR04MB4051.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 021975AE46
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(366004)(199004)(189003)(66946007)(6436002)(9686003)(71200400001)(71190400001)(6512007)(1076003)(229853002)(14454004)(256004)(66476007)(64756008)(66446008)(6862004)(66066001)(4326008)(66556008)(6246003)(5660300002)(33716001)(6486002)(44832011)(6636002)(52116002)(7736002)(486006)(76176011)(476003)(446003)(25786009)(11346002)(54906003)(498600001)(86362001)(6116002)(3846002)(2906002)(7416002)(8936002)(6506007)(386003)(99286004)(53546011)(81166006)(81156014)(305945005)(26005)(186003)(8676002)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4051;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wTGoxY4cLG2SahgiiDBcg7IvS5VBTMsWd5XDpq92iZD/+/UDJettZS7V230Ktsw10UQ444S5NCLYb76W5PyElWBBkQ19agNtO1505YxCJ3q+1b0JtwAZjoa3ub+tzypaSD6+qP04iG7muDYIFmefnjLOznaB+hy2h4y6Jhthibk9+29FL++kmFSh7crW1PSKo7UCPDsCB5//AHPSGR76V3nKBN+lsZrkDyq/LUBbgcq7oLB5t5uf0AVwKu11puLEsrsX9B4syAzF49tjJooS0Yr/gxfdb3b1ji3v4PqL8Bw31SxjG5MvEhtLHcvPOLp3nZIG9vEgzdnVqvCZdcrUKoe3Arak4huXO9qzX3zcYKZj8nEemmhkmaoo0ww5tr2trToUD50S/NFow+Z2yCOQdgmLGJjXX5YZDOtv21VPDhQlft3/MLpy/b86ZtFSYghr
+Content-Type: text/plain; charset="iso-8859-2"
+Content-ID: <5C8B47F4FE43BA4E867456A48B2087B8@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <fd9ee2bc-9dfb-1aa2-f00f-add9b3069876@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1573556811;c921f886;
-X-HE-SMSGID: 1iUU0Q-0007lz-FV
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2deb979e-6c56-4ff8-468a-08d76762125a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2019 11:18:41.0295
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QquLOKwYWRWLxk4rwA1kzQp/NQSqJEp+wxBn12/TboXQhLRvG9T7gIyq17C3B5yJo1hMpFBGNtrhUTHtvugJBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4051
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dear Sore, Kever,
+On 19-11-09 00:39:52, Leonard Crestez wrote:
+> DRAM frequency switches are executed in firmware and can change the
+> configuration of the DRAM PLL outside linux. Mark these CLKs with
+> CLK_GET_RATE_NOCACHE so we always read back the PLL config registers and
+> recalculate rates.
+>=20
+> In current DRAM frequency tables on 8mm/8mn only the maximum frequency
+> uses the PLL so it's always configured in the same way. However reading
+> back the PLL configuration is the correct behavior and allows additional
+> setpoints in the future.
+>=20
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 
-Am 12.11.19 um 11:19 schrieb Soeren Moch:
-> 
-> 
-> On 12.11.19 11:02, Kever Yang wrote:
->> Markus,
->>
->>
->> On 2019/11/12 下午4:16, Markus Reichl wrote:
->>> Hi Kever,
->>>
->>> have a rk3399-roc-pc running mainline U-Boot and kernel and vdd_log is
->>> showing 1118 mV.
->>
->> The rk3399-roc-pc have the same vdd_log circuit in schematic, so it
->> should like the patch 1/3 of
->>
->> this patch set.
->>
->> I don't understand who is setting this value, maybe the default value
->> without pwm regulator enabled?
->>
->>> Is this a danger for the board?
->>> How to fix it?
->>
->> The best way is to set correct min/max microvolt of the
->> regulator(measure with PWM output low and high),
-> I didn't look into the schematic of this board, but if it is similar to
-> RockPro64, setting the pwm regulator to the max voltage of 1.7V will
-> probably kill the rk3399 immediately. So I recommend not to do this...
-> 
-It has to be set to 450mV - 1400mV to give 953mV.
-I will come out with a patch that fixes this.
+This one looks fine.
 
-> Regards,
-> Soeren
->>
->> (note that if  no driver touch the regulator, the PWM is default
->> input, not output;)
->> to
->> and set a init-microvolt for U-Boot driver, and I think no kernel
->> driver touch this regulator now.
->>
->>
->> Thanks,
->>
->> - Kever
->>
->>> Btw. vin-supply for this pwm-regulator is ignored and I could not
->>> find it
->>> in bindings doc.
->>>
->>> Gruß,
->>
->>
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-Gruß,
--- 
-Markus Reichl
+> ---
+>  drivers/clk/imx/clk-imx8mm.c  | 2 +-
+>  drivers/clk/imx/clk-imx8mn.c  | 2 +-
+>  drivers/clk/imx/clk-pll14xx.c | 7 +++++++
+>  drivers/clk/imx/clk.h         | 1 +
+>  4 files changed, 10 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
+> index c58f988191a5..d500bac3afa1 100644
+> --- a/drivers/clk/imx/clk-imx8mm.c
+> +++ b/drivers/clk/imx/clk-imx8mm.c
+> @@ -326,11 +326,11 @@ static int imx8mm_clocks_probe(struct platform_devi=
+ce *pdev)
+>  	clks[IMX8MM_SYS_PLL3_REF_SEL] =3D imx_clk_mux("sys_pll3_ref_sel", base =
++ 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> =20
+>  	clks[IMX8MM_AUDIO_PLL1] =3D imx_clk_pll14xx("audio_pll1", "audio_pll1_r=
+ef_sel", base, &imx_1443x_pll);
+>  	clks[IMX8MM_AUDIO_PLL2] =3D imx_clk_pll14xx("audio_pll2", "audio_pll2_r=
+ef_sel", base + 0x14, &imx_1443x_pll);
+>  	clks[IMX8MM_VIDEO_PLL1] =3D imx_clk_pll14xx("video_pll1", "video_pll1_r=
+ef_sel", base + 0x28, &imx_1443x_pll);
+> -	clks[IMX8MM_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel=
+", base + 0x50, &imx_1443x_pll);
+> +	clks[IMX8MM_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel=
+", base + 0x50, &imx_1443x_dram_pll);
+>  	clks[IMX8MM_GPU_PLL] =3D imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", =
+base + 0x64, &imx_1416x_pll);
+>  	clks[IMX8MM_VPU_PLL] =3D imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", =
+base + 0x74, &imx_1416x_pll);
+>  	clks[IMX8MM_ARM_PLL] =3D imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", =
+base + 0x84, &imx_1416x_pll);
+>  	clks[IMX8MM_SYS_PLL1] =3D imx_clk_fixed("sys_pll1", 800000000);
+>  	clks[IMX8MM_SYS_PLL2] =3D imx_clk_fixed("sys_pll2", 1000000000);
+> diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+> index ca78cb1249a7..9c605ca1b631 100644
+> --- a/drivers/clk/imx/clk-imx8mn.c
+> +++ b/drivers/clk/imx/clk-imx8mn.c
+> @@ -323,11 +323,11 @@ static int imx8mn_clocks_probe(struct platform_devi=
+ce *pdev)
+>  	clks[IMX8MN_SYS_PLL3_REF_SEL] =3D imx_clk_mux("sys_pll3_ref_sel", base =
++ 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> =20
+>  	clks[IMX8MN_AUDIO_PLL1] =3D imx_clk_pll14xx("audio_pll1", "audio_pll1_r=
+ef_sel", base, &imx_1443x_pll);
+>  	clks[IMX8MN_AUDIO_PLL2] =3D imx_clk_pll14xx("audio_pll2", "audio_pll2_r=
+ef_sel", base + 0x14, &imx_1443x_pll);
+>  	clks[IMX8MN_VIDEO_PLL1] =3D imx_clk_pll14xx("video_pll1", "video_pll1_r=
+ef_sel", base + 0x28, &imx_1443x_pll);
+> -	clks[IMX8MN_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel=
+", base + 0x50, &imx_1443x_pll);
+> +	clks[IMX8MN_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel=
+", base + 0x50, &imx_1443x_dram_pll);
+>  	clks[IMX8MN_GPU_PLL] =3D imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", =
+base + 0x64, &imx_1416x_pll);
+>  	clks[IMX8MN_VPU_PLL] =3D imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", =
+base + 0x74, &imx_1416x_pll);
+>  	clks[IMX8MN_ARM_PLL] =3D imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", =
+base + 0x84, &imx_1416x_pll);
+>  	clks[IMX8MN_SYS_PLL1] =3D imx_clk_fixed("sys_pll1", 800000000);
+>  	clks[IMX8MN_SYS_PLL2] =3D imx_clk_fixed("sys_pll2", 1000000000);
+> diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.=
+c
+> index 5c458199060a..a6d31a7262ef 100644
+> --- a/drivers/clk/imx/clk-pll14xx.c
+> +++ b/drivers/clk/imx/clk-pll14xx.c
+> @@ -65,10 +65,17 @@ struct imx_pll14xx_clk imx_1443x_pll =3D {
+>  	.type =3D PLL_1443X,
+>  	.rate_table =3D imx_pll1443x_tbl,
+>  	.rate_count =3D ARRAY_SIZE(imx_pll1443x_tbl),
+>  };
+> =20
+> +struct imx_pll14xx_clk imx_1443x_dram_pll =3D {
+> +	.type =3D PLL_1443X,
+> +	.rate_table =3D imx_pll1443x_tbl,
+> +	.rate_count =3D ARRAY_SIZE(imx_pll1443x_tbl),
+> +	.flags =3D CLK_GET_RATE_NOCACHE,
+> +};
+> +
+>  struct imx_pll14xx_clk imx_1416x_pll =3D {
+>  	.type =3D PLL_1416X,
+>  	.rate_table =3D imx_pll1416x_tbl,
+>  	.rate_count =3D ARRAY_SIZE(imx_pll1416x_tbl),
+>  };
+> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+> index bc5bb6ac8636..81122c9ab842 100644
+> --- a/drivers/clk/imx/clk.h
+> +++ b/drivers/clk/imx/clk.h
+> @@ -50,10 +50,11 @@ struct imx_pll14xx_clk {
+>  	int flags;
+>  };
+> =20
+>  extern struct imx_pll14xx_clk imx_1416x_pll;
+>  extern struct imx_pll14xx_clk imx_1443x_pll;
+> +extern struct imx_pll14xx_clk imx_1443x_dram_pll;
+> =20
+>  #define imx_clk_cpu(name, parent_name, div, mux, pll, step) \
+>  	imx_clk_hw_cpu(name, parent_name, div, mux, pll, step)->clk
+> =20
+>  #define clk_register_gate2(dev, name, parent_name, flags, reg, bit_idx, =
+\
+> --=20
+> 2.17.1
+>=20
