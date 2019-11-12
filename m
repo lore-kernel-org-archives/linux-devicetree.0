@@ -2,94 +2,142 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DCDC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F84C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C332521925
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25673214E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 20:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pm7Eryix"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lCM49Wal";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RldbeMtr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfKLU3Z (ORCPT
+        id S1726697AbfKLUnU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 15:29:25 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40062 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfKLU3Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 15:29:25 -0500
-Received: by mail-lf1-f68.google.com with SMTP id j26so6868962lfh.7;
-        Tue, 12 Nov 2019 12:29:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zIggQvsLjw5/GKJs2QizxH1e6sO5J4u5NXBkTQlNHx4=;
-        b=Pm7EryixgzSrwpEIlecvGLtcvGoL6KyiCIV4cvPb/ScMz+vfz+wY8dfG9mRNImLsGW
-         Xi37PUrOa/ApG44a8SFr9XPQYettDQOw69RRdsBp5sOdjY5qKwYQg89T3iEwULPVVzl3
-         AHMbSPok76A2afzdhxxmZC+4kJiVN6549bvzvojrBsz+DcYTwqcFULGMno41vxmCBoJz
-         c+m+yKjQxYt5NCDRbrxIGNiDpReG1EH73Q3z7RO8sSeAvvcByGenB+AGQvTNyQViNSLN
-         CUieQHax4hhjAPnncmyUCSnZ9UguOMRiGCT3/T65L24PWAVg6ygRNkWfrqaMn9hGKmAA
-         bDOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zIggQvsLjw5/GKJs2QizxH1e6sO5J4u5NXBkTQlNHx4=;
-        b=qIwrK4LFaUa8rp5NShCiYJvXjJbhQxkF+AJdKuTbYFPwuOvKhCcWvbUFQ8+t0n07lA
-         TAyV/oxqeaYvg9jhYUhUqfM3iri9pV/HkI5BCxEHEqqsoncQo24WMrrMDu8rnXTYQaPy
-         9VJb+fXeG5qDcdCUe7L8Msi7qsy3RQOk+S7NLh/jpMgq26/XY5t0pc+voqgZcT+/VPge
-         iBwfqGm1QvrkkIKX/4x7x5O99o1e2e8ckO20rt8S2fCJumgg7hcUhwSbxC2GYHz1bcET
-         E+midtBpww7co/qJef/oCCoW/I1nNN75HHfITfEFDzcuYeuRWQyEqo4KCMTxstNmqAmH
-         Z4Dw==
-X-Gm-Message-State: APjAAAUJT7oUa5FnBLeVrs8LTiLgSqiADxwHM7p6AcUYTFFQh2I7eLL8
-        BL4oVa5nXTRtzIOE7VO2RKuXkIqkKkDYnD+PUOE=
-X-Google-Smtp-Source: APXvYqzNLkwu0NxW/0pt4F6VhlKtlGUv/Q0HSQly3OQKZMNA6b8Jik4th1y4GDw72oNgE62F3BJ3p7HMbyUYq0GtrFM=
-X-Received: by 2002:ac2:484a:: with SMTP id 10mr3190310lfy.80.1573590562691;
- Tue, 12 Nov 2019 12:29:22 -0800 (PST)
-MIME-Version: 1.0
-References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com> <1573586526-15007-4-git-send-email-oliver.graute@gmail.com>
-In-Reply-To: <1573586526-15007-4-git-send-email-oliver.graute@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 12 Nov 2019 17:29:12 -0300
-Message-ID: <CAOMZO5Dwt6yJ45gE91opUf3nNx24AG00Lk1KPLJ_7Z4F0os7zA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: arm64: fsl: Add Variscite i.MX6UL compatibles
-To:     Oliver Graute <oliver.graute@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 12 Nov 2019 15:43:20 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:39742 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfKLUnU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 15:43:20 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 719CC6092C; Tue, 12 Nov 2019 20:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573591399;
+        bh=W8LCXX57vG9WGQ6bDmEyJFhHu8q8ivzYhV4CXru2Ff8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lCM49WalkgRykWmctjZITvt/ub+uXQLOrF8iZy+K8dCYQaoPcBLVC99xVnr/DMNkw
+         qoq8WTAb6ta+DJsK6Gdt6z6IJ6b252DwikfLMBrSdByeehXqPE8vVOslH2B4DToI8m
+         26zQ4scS9tp5PxIkQhUS2nGlMSx241FQRvJt5idY=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5284160134;
+        Tue, 12 Nov 2019 20:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573591398;
+        bh=W8LCXX57vG9WGQ6bDmEyJFhHu8q8ivzYhV4CXru2Ff8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RldbeMtrN4AsYsH9oOYJ3YkJAMTu2dtai1Cfa2CqvUFz0N1Q7QN+oivhf47hyDVLv
+         iYXHvw7MRcF96GN5qG246tl5QGt3YQiXxKNJk8SK4QLYfBkPfo4gIskgnI7V62yzmM
+         Dred48scDO5h4m/ZXF2hEhjQfils9jg07ppKpRBo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5284160134
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v9 0/4] MSM8998 Multimedia Clock Controller
+Date:   Tue, 12 Nov 2019 13:43:02 -0700
+Message-Id: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Oliver
+The multimedia clock controller (mmcc) is the main clock controller for
+the multimedia subsystem and is required to enable things like display and
+camera.
 
-On Tue, Nov 12, 2019 at 4:22 PM Oliver Graute <oliver.graute@gmail.com> wrote:
->
-> Add the compatibles for Variscite i.MX6UL compatibles
+v9:
+-expand the commit text for the DT changes a bit more to explain some of the
+extra changes
 
-You missed your Signed-off-by tag.
+v8:
+-drop dts changes from series per Stephen's request
+-fix the mislabeled mmcc example
+-drop Stephen as maintainer of the mmcc binding
 
-Also, you should remove arm64 from the Subject line as this is a 32-bit SoC :-)
+v7:
+-port to gcc.yaml.  Drop reviewed-by for DT changes as they got completely
+rewritten
+-drop "clk: qcom: smd: Add XO clock for MSM8998".  Will need to find another
+solution and this is not blocking right now
+-convert mmcc to yaml
+-drop errant clk.h include
+-use blank entries in the DT when no clock is available
+
+v6:
+-drop clk_get from mmcc clock provider
+
+v5:
+-handle the case where gcc uses rpmcc for xo, but the link is not specified in dt
+-have gcc select rpmcc
+
+v4:
+-fix makefile to use correct config item
+-pick up tags
+-fix ordering of clocks and clock-names in dt
+-drop MODULE_ALIAS
+-wait for xo in mmcc since that was found to be useful in some debug configs
+
+v3:
+-Rebase onto linux-next to get the final version of the clk parent rewrite
+series
+-Moved the bindings header to the bindings patch per Rob
+-Made xo manditory for GCC to work around the lack of clk orphan probe defer
+to avoid the uart console glitch
+
+v2:
+-Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+mechanisms introduced there.
+-Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+"incorrectly" during late init
+-Corrected the name of the XO clock to "xo"
+-Dropped the fake XO clock in GCC to prevent a namespace conflict
+-Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+-Cleaned up the weird newlines in the added DT node
+-Added DT header file to msm8998 DT for future clients
+
+Jeffrey Hugo (4):
+  dt-bindings: clock: Document external clocks for MSM8998 gcc
+  dt-bindings: clock: Convert qcom,mmcc to DT schema
+  dt-bindings: clock: Add support for the MSM8998 mmcc
+  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |   47 +-
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |   28 -
+ .../devicetree/bindings/clock/qcom,mmcc.yaml       |   95 +
+ drivers/clk/qcom/Kconfig                           |    9 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/mmcc-msm8998.c                    | 2913 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,mmcc-msm8998.h      |  210 ++
+ 7 files changed, 3261 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+ create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+
+-- 
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+
