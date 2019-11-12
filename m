@@ -2,194 +2,107 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DADC17447
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDD3C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFABE206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573520628;
-	bh=edrzzksttWPtC6CUzA3z0nNJvXMDTIAjmo8MpkSl3uE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lvE/HBI5ijs4s0cRMCz6R0RbkgGVQg3fa6biR/dPkSyc4T/M4KefrONtZQY/R0IZz
-	 xg60yOwx9LW53qZlRFdDKOQzlgfVpR1A4/R2extEIJDaMph+hjBLcRQTfQ0yXXtl39
-	 RTunJOMDKEiwcq5Fah2Cm4hrinI4mcyohNqlc+cU=
+	by mail.kernel.org (Postfix) with ESMTP id E35E521925
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 01:15:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIa0Stzb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfKLBDs (ORCPT
+        id S1726906AbfKLBPg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 11 Nov 2019 20:03:48 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44428 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfKLBDs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 20:03:48 -0500
-Received: by mail-ot1-f65.google.com with SMTP id c19so12848287otr.11;
-        Mon, 11 Nov 2019 17:03:47 -0800 (PST)
+        Mon, 11 Nov 2019 20:15:36 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42051 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbfKLBPg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 11 Nov 2019 20:15:36 -0500
+Received: by mail-pg1-f196.google.com with SMTP id q17so10659300pgt.9
+        for <devicetree@vger.kernel.org>; Mon, 11 Nov 2019 17:15:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y0h6XVwl64mWKPaIlsuME5eexdqTqwMUk4rev+uicW8=;
+        b=DIa0StzbygIcBQM8xDeiOm8dKfa9ZC9PuPgSq4N6FekM8VrgEql0H5wkhJ3/fLY8uf
+         1khNPply9fgNBLox3VSuKYxvd+maHjFJVX88omsiRZHegswpACZNjWtRkFbbH/J890rs
+         TphfLeEg8J88ryc0ejBnbte2tmKgOZfCdUxo8tRz40C9f8vstjWHaqwxUK9J+H94lk76
+         G7Mjzlr3SDGoyk1xXBOhwADLQm6qxEzG0ROxP4chRBbta029Yz3wsguYe/tZTWNCuC4N
+         ts24wOalmcKCj6Z1hhf2VD3dfb7+erXjiVpD2IoGoVXKl7sVmyGD6cGvNvvi0mI5lNrt
+         QQZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SKl5Xcupc7He4WT8w6+4E+JP5fs6vZK0i9WhfBICwi0=;
-        b=d3PqHGsFtDWb2St2GM5ijefG9xREPIdGtyXN05qLPsTSkaE12NJTFOzlJZ6FzhMSzQ
-         O3n6UrzYc6g/099EuGpQri2pPr/1EHtJJNS+HqsP/cVODQOlHDBoIpmLtBdUURQt65Fo
-         1hdAgjrxxPYiuSFaUDI1PgVLP2NfdvF2SO6T+JrTf54WfNqHG60K4cSr66PwLOfkpCDK
-         ypv9ocsv1PeTWbGF8yPwo3Bz4RAOcyZ5Y/CdRvh2z+e1IODlZ+ROyohUpqAPlU/ZurDh
-         IPhKSL+J68h1CwOkg5w7J55i0OsA4ZhumPgeT3VkzgIvE+JONEvRVYgXWMto461qWNtz
-         2Z+w==
-X-Gm-Message-State: APjAAAXtIYEDuvpD/mlnYwb5fZvixp9JZl0iyDx/bk5ilnQ+Vvlr8Zyh
-        /K4F9ipgYYQMcmzPYSUOVw==
-X-Google-Smtp-Source: APXvYqyfrZ9KqRIgcKWGt4To/iYyiB/1CqymxV0BGHHKvUeahi0knIHGpqDR3dybuwmTUYZWIbXJ8g==
-X-Received: by 2002:a9d:351:: with SMTP id 75mr14276197otv.142.1573520626610;
-        Mon, 11 Nov 2019 17:03:46 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y4sm5468071oie.42.2019.11.11.17.03.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y0h6XVwl64mWKPaIlsuME5eexdqTqwMUk4rev+uicW8=;
+        b=WqZ5k1m2dyWjitYmpPzk012VzuJZPB+mDyEG7bLzi4fWSl2qhzMPE9DA06Vk1VCxHz
+         UMndwK9KXPMQl5VD3NAudO5Oc1xjEvHMXp0eQbbgKdi5d4EiFJ1DZr35OOKiJ2+LWZan
+         rV4McXtwpgHS1caN6uAgcE03AszVzh2WVGFmLVidNveA2bmfRDdqVTPZNzqGvRqKBCS3
+         LOoWj0lROrNmDi4cJiUHi8bnsfCsTCho4MQRrbkPAshTknZvkmczZGkfCIxM4Z0V1eRP
+         a/yGI7z4+igDfX5YU93kHg82qbFA0IQ/PQ4RDGRcjWVOlSxgEateyfjq0lKpAY3RmWUY
+         rZzQ==
+X-Gm-Message-State: APjAAAUh6vdnSOmug2S6YXna+y75MVrzcj4Vgb3MsLlnG3n7rB0SEylA
+        Z/EZQJGHYjX84NdD2EiyP0Y=
+X-Google-Smtp-Source: APXvYqzU5S1gkc0MTNIlYM9b5FV6IzPPNByDYevydaoncYPERx3H9nV/gWamultUWTFXeH1jdZ7ErQ==
+X-Received: by 2002:a63:f744:: with SMTP id f4mr10039839pgk.229.1573521335023;
+        Mon, 11 Nov 2019 17:15:35 -0800 (PST)
+Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
+        by smtp.gmail.com with ESMTPSA id 186sm23361341pfb.99.2019.11.11.17.15.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 17:03:45 -0800 (PST)
-Date:   Mon, 11 Nov 2019 19:03:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     etremblay@distech-controls.com
-Cc:     linux@roeck-us.net, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        jdelvare@suse.com, mark.rutland@arm.com, corbet@lwn.net
-Subject: Re: [PATCH v7 1/2] dt-bindings: hwmon: Add TMP512/513
-Message-ID: <20191112010345.GA19664@bogus>
-References: <20191111203445.27130-1-etremblay@distech-controls.com>
- <20191111203445.27130-2-etremblay@distech-controls.com>
+        Mon, 11 Nov 2019 17:15:34 -0800 (PST)
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Akash Gajjar <Akash_Gajjar@mentor.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH] arm64: dts: rockchip: rockpro64: fix ES8316 i2c address
+Date:   Mon, 11 Nov 2019 17:15:21 -0800
+Message-Id: <20191112011521.3155504-1-anarsoul@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111203445.27130-2-etremblay@distech-controls.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 03:34:44PM -0500, etremblay@distech-controls.com wrote:
-> From: Eric Tremblay <etremblay@distech-controls.com>
-> 
-> Document the TMP513/512 device devicetree bindings
-> 
-> Signed-off-by: Eric Tremblay <etremblay@distech-controls.com>
-> ---
->  .../devicetree/bindings/hwmon/ti,tmp513.yaml  | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> new file mode 100644
-> index 000000000000..de4ed3645e0f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-> @@ -0,0 +1,89 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +
-> +$id: http://devicetree.org/schemas/hwmon/ti,tmp513.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TMP513/512 system monitor sensor
-> +
-> +maintainers:
-> +  - Eric Tremblay <etremblay@distech-controls.com>
-> +
-> +description: |
-> +  This driver implements support for Texas Instruments TMP512, and TMP513.
-> +  The TMP512 (dual-channel) and TMP513 (triple-channel) are system monitors
-> +  that include remote sensors, a local temperature sensor, and a high-side
-> +  current shunt monitor. These system monitors have the capability of measuring
-> +  remote temperatures, on-chip temperatures, and system voltage/power/current
-> +  consumption.
-> +
-> +  Datasheets:
-> +  http://www.ti.com/lit/gpn/tmp513
-> +  http://www.ti.com/lit/gpn/tmp512
-> +
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tmp512
-> +      - ti,tmp513
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  shunt-resistor-micro-ohms:
-> +    description: |
-> +      If 0, the calibration process will be skiped and the current and power
-> +      measurement engine will not work. Temperature and voltage measurement
-> +      will continue to work. The shunt value also need to respect:
-> +      rshunt <= pga-gain * 40 * 1000 * 1000.
-> +      If not, it's not possible to compute a valid calibration value.
-> +    default: 1000
-> +
-> +  ti,pga-gain:
-> +    description: |
-> +      The gain value for the PGA function. This is 8, 4, 2 or 1.
-> +      The PGA gain affect the shunt voltage range.
-> +      The range will be equal to: pga-gain * 40mV
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [1, 2, 4, 8]
-> +    default: 8
-> +
-> +  ti,bus-range-microvolt:
-> +    description: |
-> +      This is the operating range of the bus voltage in microvolt
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [16000000, 32000000]
-> +    default: 32000000
-> +
-> +  ti,nfactor:
-> +    description: |
-> +      Array of three(TMP513) or two(TMP512) n-Factor value for each remote
-> +      temperature channel.
-> +      See datasheet Table 11 for n-Factor range list and value interpretation.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> +      - minItems: 2
-> +        maxItems: 3
-> +        items:
-> +          default: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c {
+According to Rockpro64 schematics [1] CE pin of ES8316 is wired
+to ground, so codec address should be 0x10.
 
-'make dt_binding_check' fails. You need #address-cells and #size-cells 
-in here:
+[1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
 
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:20.17-30: Warning (reg_format): /example-0/i2c/tmp513@5c:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:17.5-26.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for I2C bus
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:17.5-26.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for I2C bus
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:18.23-25.15: 
-Warning (avoid_default_addr_size): /example-0/i2c/tmp513@5c: Relying on default #address-cells value
-Documentation/devicetree/bindings/hwmon/ti,tmp513.example.dts:18.23-25.15: Warning (avoid_default_addr_size): /example-0/i2c/tmp513@5c: Relying on default #size-cells value
+Fixes: 6860769ea771 ("arm64: dts: rockchip: add analog audio nodes on rk3399-rockpro64")
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +        tmp513@5c {
-> +            compatible = "ti,tmp513";
-> +            reg = <0x5C>;
-> +            shunt-resistor-micro-ohms = <330000>;
-> +            ti,bus-range-microvolt = <32000000>;
-> +            ti,pga-gain = <8>;
-> +            ti,nfactor = [01 F3 00];
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index 7f4b2eba31d4..18bbe548839b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -477,9 +477,9 @@
+ 	i2c-scl-falling-time-ns = <15>;
+ 	status = "okay";
+ 
+-	es8316: codec@11 {
++	es8316: codec@10 {
+ 		compatible = "everest,es8316";
+-		reg = <0x11>;
++		reg = <0x10>;
+ 		clocks = <&cru SCLK_I2S_8CH_OUT>;
+ 		clock-names = "mclk";
+ 		#sound-dai-cells = <0>;
+-- 
+2.23.0
+
