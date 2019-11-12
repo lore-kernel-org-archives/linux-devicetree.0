@@ -2,94 +2,124 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313D2C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9782FC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065CB2196E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573587097;
-	bh=tnIvAM21Lk7J03KNXw80scA/GnDd6p9OSB2RLSkk2UE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lJSCxAY9Us1UiR6GhF/t+PrDrxv13EwoLJIbK1KDlmEeVT1tVRRhvFDDqyi7ORQIv
-	 Lavs36U9thVY+rwKZRCpAVP+c0BaNI0XyUu5y6vAVLbXHml+kFA2jpaXnAPMCqFmxG
-	 ZdAADMX012+zyTk3kHR33G8SplQHJO1UlKNGHox4=
+	by mail.kernel.org (Postfix) with ESMTP id 6D10E20818
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 19:37:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuzbeNQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKLTbg (ORCPT
+        id S1727063AbfKLTg5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 14:31:36 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42960 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbfKLTbg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:31:36 -0500
-Received: by mail-oi1-f195.google.com with SMTP id i185so15911436oif.9;
-        Tue, 12 Nov 2019 11:31:35 -0800 (PST)
+        Tue, 12 Nov 2019 14:36:57 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47069 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfKLTg4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 14:36:56 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r18so12478031pgu.13;
+        Tue, 12 Nov 2019 11:36:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+1dTgLU8V2gPUJMDs5EGQtQwfTApnkprfC/+aKilzwY=;
+        b=CuzbeNQQG3AwYDek9KhARHCvyYAMmNx8O5hxsZ3M/H5ueuVzHucOFo9LAeZYMhgZuG
+         aJ43LJzjLFuGJ3ou5WMOwv4hwl4Jn69BIBhJUjPI0f33cKS6l5kAcE/wnrhKqdW2vy4s
+         dA5pRetFGcoNBxubMmfktqz2CNUBHLoak0k1w6+5a5eKXwctNzsfDjxzYHjpiYPlG1Wn
+         yIHSAA3iXNP8OyqAo4ZkfJymxFXnyEuyX5/V4YCCk+r3fJW25MG4KDIjgi3eIAACONwu
+         FnAAkRTk8Hv8Vc8hOaDwGYMsqtcGzIA1VUhcV/DPUZcrNNq2hJnyZx4Tw4GShayZ9iu9
+         A8PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=fQ8tuKZ2UW9QCYz0BR497mmF0XiSrRa5eQinsz9A154=;
-        b=IG408rLuTfrfP9QSpyE/4Z+t4bIynyERrxUO6GyORDLhICovaCU2Vh95aDmPK+5CsH
-         rtZF68mpFRTc0akpceNEbh9eirrCcm/qLQCSodt5Tmtxvut4VQaWbwYmHrRZRLx2RwSu
-         hrOwcX7it+EJvbNyNXmxfzLGDtTrjRy6VDqvd0NX6bQ6Xar+5vOwQjHuRXfCdrQuevs4
-         UWGR+/AgMMqs6nKYuWLUho+OKK2ybzxCMxpBrutLk+Cjs/KyUpTFZRNCaptxHoX6lIlh
-         Z3EybUL3UlivHBSatjXMT8k98dEXr4geACeLflcpBq5jWFodoJL46Xr6KYyuAdd68WKo
-         KSBw==
-X-Gm-Message-State: APjAAAWeIOl4usA4owpQAnvAjbPvEwmV3D2qZdB4tMHvFvHCRzGPxQ26
-        iZd6ZDWn9+so85L44aqx9g==
-X-Google-Smtp-Source: APXvYqz6AhgOyVl+Xgvdhm4Trx/gVZNkFu8ggUGq6yRbip4wF4kcWnuuo46df/TkPFftZd8m7FNXKg==
-X-Received: by 2002:aca:5301:: with SMTP id h1mr522205oib.154.1573587095176;
-        Tue, 12 Nov 2019 11:31:35 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d5sm5903145oic.23.2019.11.12.11.31.34
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+1dTgLU8V2gPUJMDs5EGQtQwfTApnkprfC/+aKilzwY=;
+        b=FPdUBu7ugipzSbE1S0DXFRdccgGT546PRAoINEME1WRClR8rHUtkeVr5/YazgcM4Uc
+         mEfsq0MqdejjQ4ixenFKysBDNoqAXx4QlN6/0364vmWCzhG+yy99nt1Tm5G8752APesr
+         Vz/RAfh21eMLsBEnh5XnTt6o/GMDtvCZt1mlETKiLXEkgUOwBRPwqYsjWGYA51Z3Mpr9
+         ccEtAsF9rPpdbf2+u9esMlX/xg7htpcnXj3d6skBnjeiT1/uE2/odNq+sNO3X1tYjJPq
+         FontIzYt6072+t/SgruDwKPcR2o3PYmia11/tO1NJjN/BaKOcdIwf7ary74G/4blBI3c
+         v2ew==
+X-Gm-Message-State: APjAAAUa2FHhMGzI2gctc5uMKH1vTybJhYD8AJN60iC5p/YYfKKNOxQ5
+        9kIoY34TPu++YBt53DScNjU=
+X-Google-Smtp-Source: APXvYqwzmAo4XyJWd+jODvfeIfuwtnC+T2Iok6kDQb4qyr14s922L+cDyn5b05cgADryqeUP3+KRRA==
+X-Received: by 2002:a63:6483:: with SMTP id y125mr37445468pgb.444.1573587415684;
+        Tue, 12 Nov 2019 11:36:55 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id g3sm19003956pfo.82.2019.11.12.11.36.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:31:34 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:31:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v4 1/7] dt-bindings: pwm: allwinner: Add H6 PWM
- description
-Message-ID: <20191112193133.GA27088@bogus>
-References: <20191108084517.21617-1-peron.clem@gmail.com>
- <20191108084517.21617-2-peron.clem@gmail.com>
+        Tue, 12 Nov 2019 11:36:55 -0800 (PST)
+Date:   Tue, 12 Nov 2019 11:36:53 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+Message-ID: <20191112193653.GB13374@dtor-ws>
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com>
+ <20191112120307.GB5195@sirena.co.uk>
+ <20191112190328.GA199853@dtor-ws>
+ <20191112191547.GK5195@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191108084517.21617-2-peron.clem@gmail.com>
+In-Reply-To: <20191112191547.GK5195@sirena.co.uk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  8 Nov 2019 09:45:11 +0100, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Tue, Nov 12, 2019 at 07:15:47PM +0000, Mark Brown wrote:
+> On Tue, Nov 12, 2019 at 11:03:28AM -0800, Dmitry Torokhov wrote:
+> > On Tue, Nov 12, 2019 at 12:03:07PM +0000, Mark Brown wrote:
+> > > On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
 > 
-> H6 PWM block is basically the same as A20 PWM, except that it also has
-> bus clock and reset line which needs to be handled accordingly.
+> > > > +      interrupts:
+> > > > +        items:
+> > > > +          - description: main interrupt (attention) line.
+> > > > +          - description: dedicated wakeup interrupt.
+> > > > +        minItems: 1 # The wakeup interrupt is optional.
 > 
-> Expand Allwinner PWM binding with H6 PWM specifics.
+> > > > +      interrupt-names:
+> > > > +        items:
+> > > > +          - const: irq
+> > > > +          - const: wakeup
+> > > > +        minItems: 1
 > 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
+> > > How will this interact with a SPI device that defines interrupts at the
+> > > device level, possibly more than one of them?  Especially if the device
+> > > has its own idea what the interrupts should be called.
 > 
+> > My understanding that individual drivers should be able to override
+> > whatever the default behavior core has configured, and the device can
+> > establish their own mapping. We have this in I2C and I believe this
+> > works well.
+> 
+> > Is the concern about the device tree scheme or SPI core handling?
+> 
+> Both really.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+So as I mentioned, the driver is not forced to use the interrupt
+supplied by the SPI core, and the worst thing is that the core
+configures the main IRQ as wakeirq and driver would need to call
+dev_pm_clear_wake_irq() before switching to correct one. I expect there
+will be just a few drivers needing that and many more would benefit from
+the default behavior and not needing to repeat the same boilerplate
+code.
+
+As far as scheme goes - I hope that Rob could confirm that we can
+override number of interrupts and names in consumers of the binding, as
+needed.
+
+-- 
+Dmitry
