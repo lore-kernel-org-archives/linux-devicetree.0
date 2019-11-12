@@ -2,88 +2,91 @@ Return-Path: <SRS0=p3dD=ZE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C78FC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEA5C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571672196E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573537039;
-	bh=DY28ZU9iJjrpae4knOfkZebu2FgGI1JEdHocfirJtGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t8t8hWySqO8gIRQCv77jsA5OPmsFok9djuwG9zle/eSFF46yW5gnlbZLL95K18pmR
-	 lAk1EAG7d3m3rCxYL5gDgswfoQae9Z4jmDL19K88ZknHrUBZ9HOyX4cuZwgxfOYOg3
-	 HAmjm7rC1Z9l2poaEUBlkKKR0go/PSR5Yua42cHk=
+	by mail.kernel.org (Postfix) with ESMTP id 7EA802196E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 12 Nov 2019 05:54:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0wRXvqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbfKLFhS (ORCPT
+        id S1725775AbfKLFyQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 00:37:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfKLFhS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 00:37:18 -0500
-Received: from localhost (unknown [122.167.70.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54CF02084F;
-        Tue, 12 Nov 2019 05:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573537038;
-        bh=DY28ZU9iJjrpae4knOfkZebu2FgGI1JEdHocfirJtGU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ne9ss+MVsI/j6Y/+Q5x3RMKfDe5np4vko2s3/+2sXfpBN/jAr0RvQO6Rl0Hs4lq17
-         2lnc6rDPlVkKSU6bH+s7oJKE4rM3Ley2L1M4JT76AOC5cA1fnUZ5roRpINGLiRcrVh
-         5Xkpl6VeEXsVQiRXSXd+XGAnKlWysyWckSPyS0KI=
-Date:   Tue, 12 Nov 2019 11:07:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com
-Subject: Re: [PATCH v4 15/15] dmaengine: ti: k3-udma: Add glue layer for non
- DMAengine users
-Message-ID: <20191112053714.GX952516@vkoul-mobl>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-16-peter.ujfalusi@ti.com>
- <20191111061258.GS952516@vkoul-mobl>
- <6d4d2fcc-502b-4b41-cd71-8942741f4ad8@ti.com>
+        Tue, 12 Nov 2019 00:54:16 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37268 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfKLFyQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 00:54:16 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z24so11114502pgu.4;
+        Mon, 11 Nov 2019 21:54:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pz2HkKIovaqqpPUupDoBtWK16lPk+o/FyQvbc6QLS5M=;
+        b=G0wRXvqOFdEV7bXg4ol9lkWT/y/vj0Xifu6AIvHVi1nknJRc82e9x1LkArp2SxQBtg
+         JqdFyXV9JdcTnOUV9Dem46mna+k9ExUpJsKO0ebhXRe/Y0nYkKgwJr0xyYf0FX9yoaSs
+         tlD2COgwRJ1DthwQY16mmCT8UrirA1LEePtUUZ3ZOfBeiuE7eXUH1ReY9OBHCXhkIpvg
+         izOA9PZVyMWiB3R5la3HTtxCUxBXQGJyDUYXYIXe/fTYiD4iyZN5shm3R5m9p0x8xJBT
+         Q6Nbsvnx4SKicAMz6MlgmP3+BVM0eoplSg+c90JBbq+v6DuKZNh3XttE+wQ0WdLHi8Je
+         RLRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pz2HkKIovaqqpPUupDoBtWK16lPk+o/FyQvbc6QLS5M=;
+        b=AekIi2vvPjZjUqRYAAAdiAlJMKYSKYaY4erXyBRziBZjxex8BAnNKsuUOtlz9CWaWe
+         eQbf1FS3oZTrpKU7Pb/nd56eut3b7gV4qLanim3tOog6awB2sZkEBOVhsMgGtKLZ/nJE
+         yNHiHruTwOXDv70qIrztv/PNoeGNricPzZCxrh5T+XKBDDDvHQ7OpSzMwV1Nqor+28N3
+         oayPhEK6FZXLs8TKq0ex2zlLciGKOaYSeafeGTcy3+xyYFkVHmrg2N5VXmccwRDPGNYG
+         wc724C4xW8rcNvDkk3N0cTnVDRQwmn6kOFK/F2V+crgQflm/xF6mxyhtIJ/tpAd9IuBl
+         BR6A==
+X-Gm-Message-State: APjAAAVtBhdqv9F7wG3NNLl2G9ZwXuXTNHqGyNYzhemFGoTu6zn7tHQO
+        CuwVdHCRmVdaPuR8yiaRPm0=
+X-Google-Smtp-Source: APXvYqwEOsiqa3kenFA+c8Tvhbta0wzdTNEwNzr33dcd1IrpfCj11Xj6mZ5UM98KVW07ldEn1JwkXA==
+X-Received: by 2002:a17:90a:ec02:: with SMTP id l2mr3999094pjy.31.1573538055416;
+        Mon, 11 Nov 2019 21:54:15 -0800 (PST)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id d139sm23160178pfd.162.2019.11.11.21.54.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 21:54:14 -0800 (PST)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 0/2] spi: add wakeup handling to SPI core
+Date:   Mon, 11 Nov 2019 21:54:09 -0800
+Message-Id: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d4d2fcc-502b-4b41-cd71-8942741f4ad8@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11-11-19, 12:31, Peter Ujfalusi wrote:
-> 
-> 
-> On 11/11/2019 8.12, Vinod Koul wrote:
-> > On 01-11-19, 10:41, Peter Ujfalusi wrote:
-> >> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> >>
-> >> Certain users can not use right now the DMAengine API due to missing
-> >> features in the core. Prime example is Networking.
-> >>
-> >> These users can use the glue layer interface to avoid misuse of DMAengine
-> >> API and when the core gains the needed features they can be converted to
-> >> use generic API.
-> > 
-> > Can you add some notes on what all features does this layer implement..
-> 
-> In the commit message or in the code?
+These patches add wakeup handling for SPI devices to SPI core, mirroring
+I2C subsystem. Users can mark devices as "wakeup-source" in device tree
+(or using static device properties) and SPI core will mark the primary
+interrupt line as wakeirq and mark the device as wakeup enabled.
 
-commit here so that we know what to expect.
+There is also an option to define a dedicated wake irq.
 
-Thanks
+
+Dmitry Torokhov (2):
+  spi: dt-bindings: spi-controller: add wakeup-source and interrupts
+  spi: wire up wakeup-source/wakeirq handling
+
+ .../bindings/spi/spi-controller.yaml          | 23 ++++++++++++++++
+ drivers/spi/spi.c                             | 27 ++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 1 deletion(-)
+
 -- 
-~Vinod
+2.24.0.rc1.363.gb1bccd3e3d-goog
+
