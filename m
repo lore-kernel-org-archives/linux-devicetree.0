@@ -2,96 +2,81 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A74C43141
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F8CC43141
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5BC206F3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:22:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hf1Z5gez"
+	by mail.kernel.org (Postfix) with ESMTP id E38EC206F2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573689597;
+	bh=an73RoCEpEY4XTHg9/CJPsUgM/+xPI7xEYL5UWkn8wY=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=1EG6efqaRVMsS8sEVOP3QzDg3G9ciz3rRFmOKQR86CSkeYdfrbJfQdIXUZ7t7TL+M
+	 ZXoaF6DMJ+qbdapYN1emvQXOgHIVCF8VEvsiVdKaT4zoKiDAUNnk8GGAVeQss4N8w4
+	 Bw5kQL0aP04M5R/T9bbTb6DGHxxzdY/Y+ukdq+G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfKMXWw (ORCPT
+        id S1726516AbfKMX74 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 18:22:52 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39297 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfKMXWu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 18:22:50 -0500
-Received: by mail-pl1-f193.google.com with SMTP id o9so1732014plk.6
-        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 15:22:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PnC2EnZ/9yWW959Hh/k8Fx1oMGg10XdljJMPZj6JnUY=;
-        b=Hf1Z5gez82r+oTd6ydC+ZjLQx1uQl/epkoQZOi2UWsUxtnC7vz6UbgVzXACvVguET8
-         B1r439ENlYw3ydKrZCF7LY3jQwp5xwpYB71unyWWJ4w630L+BZ/3X7WheMhfVi572N/4
-         yw7GZbzAXep8sNhNt2fNGHAOeRJ7vEDZ8dAXt4j4xlCbUDTJH52frakbBd+RZ4E67JmH
-         jv8zcL+wUIQP9wDH/Q323MQnDsjklM8emprm1gBjYMADfrolCEr7JYdlJPz1M8eK6mQJ
-         YEbodCDy9QsAUuo8eRXoU4oDr+I6FZgvOyW4RiKVW97hdxqx5ipxHC2B6U7SdpaR76XR
-         3sAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PnC2EnZ/9yWW959Hh/k8Fx1oMGg10XdljJMPZj6JnUY=;
-        b=aQILSuPUYgUF321CzWYKnHrWusJc7B/4S7zV2sihGPKnFjuYaSNF4MWyg9AKytzqaH
-         mr7rFYvcPYORjtT//mNdbtVVgnpdLNIw1mvtQhpCG8iR5mNbji/2DiJZwfzJJo4+/rMy
-         kVtHSheLd3JvfSD+Ar04oy3DgHWYguIKnu7/cBTeSVfyS9joDtw70NvdDhvyHOf1uJOX
-         EtSKdg5eJknpOh5z/E+lpGOxkJq5/quCXG98LKj7X2ECedcFBY/qJn0l2/W8OW2BRjzG
-         RiSA2V5+a4TKlcsBHnI1mqvErLePGvA0Qz9lgIKGeX0y3JcO6i13KYcJyRDK49v5fNj2
-         yIhw==
-X-Gm-Message-State: APjAAAXx9GlQXLcMkkl0jZ/++uVRm/X/rVK2h4Wz8aJNGEKNDoCl8zK3
-        3UHrm8ffBn3OvrweaFQw+dWPQQ==
-X-Google-Smtp-Source: APXvYqwkCHtk+kWBYG2xS1z0RatDyIgpKCCiE9mnyxr59SsymXOXeGmdTvY41JCjZ3co01GD2gLLCw==
-X-Received: by 2002:a17:902:d901:: with SMTP id c1mr6362694plz.93.1573687369645;
-        Wed, 13 Nov 2019 15:22:49 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 12sm4427369pfv.92.2019.11.13.15.22.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 15:22:48 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
-Date:   Wed, 13 Nov 2019 15:22:45 -0800
-Message-Id: <20191113232245.4039932-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Wed, 13 Nov 2019 18:59:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfKMX74 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 18:59:56 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 927B6206EE;
+        Wed, 13 Nov 2019 23:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573689595;
+        bh=an73RoCEpEY4XTHg9/CJPsUgM/+xPI7xEYL5UWkn8wY=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=KVXFppjrpKPUhInreh3eWJeoaCWQlOvCbQy4T6yc1iqduMXlETStW4X0/cV2yQ6Ee
+         E85DW0KX5Ho0siUwyw6r//HEMWtB/w9jwiUt8H+VmIf4gh7m4xVFMa00OVfZO/3E8N
+         /CoWBhTmYJO/HZPtata10Kjm/6/1s4TJVZeRiEFc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191112005544.GB7038@bogus>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com> <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com> <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com> <20191112005544.GB7038@bogus>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, paul.burton@mips.com, robh+dt@kernel.org,
+        syq@debian.org, mark.rutland@arm.com, paul@crapouillou.net
+To:     Rob Herring <robh@kernel.org>, Zhou Yanjie <zhouyanjie@zoho.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/2 v3] dt-bindings: clock: Add X1000 bindings.
+User-Agent: alot/0.8.1
+Date:   Wed, 13 Nov 2019 15:59:54 -0800
+Message-Id: <20191113235955.927B6206EE@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The WiFi firmware used on db845c implements the 8bit host-capability
-message, so enable the quirk for this.
+Quoting Rob Herring (2019-11-11 16:55:44)
+> On Sun, 10 Nov 2019 17:28:21 +0800, Zhou Yanjie wrote:
+> > Add the clock bindings for the X1000 Soc from Ingenic.
+> >=20
+> > Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> > ---
+> >  .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
+> >  include/dt-bindings/clock/x1000-cgu.h              | 44 ++++++++++++++=
+++++++++
+> >  2 files changed, 45 insertions(+)
+> >  create mode 100644 include/dt-bindings/clock/x1000-cgu.h
+> >=20
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>=20
+> If a tag was not added on purpose, please state why and what changed.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 12f5f14ada5c..7ec7b90ab83e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -625,6 +625,8 @@
- 	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
- 	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
- 	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+
-+	qcom,snoc-host-cap-8bit-quirk;
- };
- 
- /* PINCTRL - additions to nodes defined in sdm845.dtsi */
--- 
-2.23.0
+It looks like some extra defines were added. I carried forward your
+review tag.
 
