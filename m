@@ -2,121 +2,118 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5817FC43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 20:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41B1C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 20:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F837206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 20:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB3A206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 20:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nqpFgRu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfKMUe3 (ORCPT
+        id S1727021AbfKMUj4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 15:34:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:58006 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfKMUe3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 15:34:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ECF57A7;
-        Wed, 13 Nov 2019 12:34:28 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CFC03F52E;
-        Wed, 13 Nov 2019 12:34:23 -0800 (PST)
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
-Date:   Wed, 13 Nov 2019 20:34:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 15:39:56 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35656 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfKMUj4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 15:39:56 -0500
+Received: by mail-pg1-f196.google.com with SMTP id q22so2104578pgk.2
+        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 12:39:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yJ+OqtXGNDpquBLmUc2gxer4AoTafNPZvnhBD9jto6M=;
+        b=nqpFgRu72ExoW4cdQPUGtYALmsuvJeMgA5ThWflKhT4PB499qw9//2/H6iUop6HXjf
+         csgKyV0x7+XLSru42QPcBk0LzwmlLAGKWUYxQkcb8R5Qn5IqjwvdD0cH2ENUSFhnT68P
+         AFc098+LHsNlsG/u2bByRfTP6ZI15TD6xdRtKmJ1F0u/llR3YBEHKhec889mXKmDZW4+
+         0zdow5PDBGQy9a8WbcT2mMLaNLD8d3kNTcEvlx7ilQ24kjdDwmZdjDmIRjEGfov2827S
+         /21G3LnNDeoK7+J5bQEa3F9P9zYjx0BvyVUCEKJUwU9pCrMwB1dQKWMI2+14P0SG1qzH
+         gAOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yJ+OqtXGNDpquBLmUc2gxer4AoTafNPZvnhBD9jto6M=;
+        b=IAQ/dK+addPCjr1rfRflGeFTf3rocmvEhBvko1998Idej3BjQeJkBnZLa+rYq/vxwl
+         5X3x8VrrRdTBdQ4QDkn0zCTlgflR+dNCB9Z5ZwgwGNEZyYbeExtyjjmIZVxLHLEHtqpD
+         wRE2Wi+hbdTPknmUzYC+wEsvkpwYpCYx6N2HSRFjZtfYIvy0ZjE0ltT7RzZcVDqxqsQ5
+         DTSUxWrAsH6pIMIuoYHyfFnG/nXWnWhXnmG5lBuuOPbp9B+u8g39VXbrbBExmzyLRVAs
+         J7MZyvon84RAF30b4ghzGFuR2iC34vNTpvlqa9F73z8oD2CaqsyAkU5006rviCxxP33n
+         WGEw==
+X-Gm-Message-State: APjAAAXumAUdYENC2I+Vd+LnCXMagGNbAoJF3bdOq7A2ClvrYZrxMDC4
+        koxj7oO1XXz5nH4zShgs+jGlog==
+X-Google-Smtp-Source: APXvYqxFDGoFj2CIbZ35kJ359jzDsphPskdtvjydZyBSgTkA/d1hX5d0bjWWBiavC5E3In4RqimrKw==
+X-Received: by 2002:a17:90a:9a9:: with SMTP id 38mr7744497pjo.45.1573677594579;
+        Wed, 13 Nov 2019 12:39:54 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z7sm5007361pfr.165.2019.11.13.12.39.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 12:39:53 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: db845c: Move remoteproc firmware to sdm845
+Date:   Wed, 13 Nov 2019 12:39:51 -0800
+Message-Id: <20191113203951.3704428-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13/11/2019 4:13 pm, Nicolas Saenz Julienne wrote:
-> Using a mask to represent bus DMA constraints has a set of limitations.
-> The biggest one being it can only hold a power of two (minus one). The
-> DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> as a limit. This quirk is already used by some architectures although
-> still rare.
-> 
-> With the introduction of the Raspberry Pi 4 we've found a new contender
-> for the use of bus DMA limits, as its PCIe bus can only address the
-> lower 3GB of memory (of a total of 4GB). This is impossible to represent
-> with a mask. To make things worse the device-tree code rounds non power
-> of two bus DMA limits to the next power of two, which is unacceptable in
-> this case.
-> 
-> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
-> over the tree and treat it as such. Note that dev->bus_dma_limit is
-> meant to contain the higher accesible DMA address.
+The redistributable firmware should work on any engineering device, so
+lets push this to qcom/sdm845, rather than qcom/db845c. Also specify the
+path for the modem firmware.
 
-Neat, you win a "why didn't I do it that way in the first place?" :)
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Looking at it without all the history of previous attempts, this looks 
-entirely reasonable, and definitely a step in the right direction.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index d100f46791a6..c4f6c6695bbd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -197,7 +197,7 @@
+ &adsp_pas {
+ 	status = "okay";
+ 
+-	firmware-name = "qcom/db845c/adsp.mdt";
++	firmware-name = "qcom/sdm845/adsp.mdt";
+ };
+ 
+ &apps_rsc {
+@@ -343,7 +343,7 @@
+ 
+ &cdsp_pas {
+ 	status = "okay";
+-	firmware-name = "qcom/db845c/cdsp.mdt";
++	firmware-name = "qcom/sdm845/cdsp.mdt";
+ };
+ 
+ &gcc {
+@@ -352,6 +352,11 @@
+ 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+ };
+ 
++&mss_pil {
++	status = "okay";
++	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
++};
++
+ &pm8998_gpio {
+ 	vol_up_pin_a: vol-up-active {
+ 		pins = "gpio6";
+-- 
+2.23.0
 
-[...]
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 5a7551d060f2..f18827cf96df 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -1097,7 +1097,7 @@ void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size)
->   		 * Limit coherent and dma mask based on size
->   		 * retrieved from firmware.
->   		 */
-> -		dev->bus_dma_mask = mask;
-> +		dev->bus_dma_limit = mask;
-
-Although this preserves the existing behaviour, as in of_dma_configure() 
-we can do better here since we have the original address range to hand. 
-I think it's worth keeping the ACPI and OF paths in sync for minor 
-tweaks like this, rather than letting them diverge unnecessarily.
-
-Otherwise, the rest looks OK to me - in principle we could store it as 
-an exclusive limit such that we could then streamline the min_not_zero() 
-tests to just min(mask, limit - 1), but that's probably too clever for 
-its own good.
-
-Robin.
-
->   		dev->coherent_dma_mask = mask;
->   		*dev->dma_mask = mask;
->   	}
