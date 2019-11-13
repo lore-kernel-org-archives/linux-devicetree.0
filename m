@@ -2,444 +2,96 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20050C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A74C43141
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4A2206EC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5BC206F3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:22:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hf1Z5gez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfKMXUc (ORCPT
+        id S1726473AbfKMXWw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 18:20:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52534 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726393AbfKMXUc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 18:20:32 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5E88BB26C;
-        Wed, 13 Nov 2019 23:20:29 +0000 (UTC)
-Subject: Re: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1619 SoC and Realtek
- Mjolnir EVB
-To:     James Tai <james.tai@realtek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        'DTML' <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-References: <73fb8106ec1a4665b59a2d187a576b71@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <9cadb78c-99af-8948-e76f-c26f263693b3@suse.de>
-Date:   Thu, 14 Nov 2019 00:20:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 13 Nov 2019 18:22:52 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39297 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfKMXWu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 18:22:50 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so1732014plk.6
+        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 15:22:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PnC2EnZ/9yWW959Hh/k8Fx1oMGg10XdljJMPZj6JnUY=;
+        b=Hf1Z5gez82r+oTd6ydC+ZjLQx1uQl/epkoQZOi2UWsUxtnC7vz6UbgVzXACvVguET8
+         B1r439ENlYw3ydKrZCF7LY3jQwp5xwpYB71unyWWJ4w630L+BZ/3X7WheMhfVi572N/4
+         yw7GZbzAXep8sNhNt2fNGHAOeRJ7vEDZ8dAXt4j4xlCbUDTJH52frakbBd+RZ4E67JmH
+         jv8zcL+wUIQP9wDH/Q323MQnDsjklM8emprm1gBjYMADfrolCEr7JYdlJPz1M8eK6mQJ
+         YEbodCDy9QsAUuo8eRXoU4oDr+I6FZgvOyW4RiKVW97hdxqx5ipxHC2B6U7SdpaR76XR
+         3sAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PnC2EnZ/9yWW959Hh/k8Fx1oMGg10XdljJMPZj6JnUY=;
+        b=aQILSuPUYgUF321CzWYKnHrWusJc7B/4S7zV2sihGPKnFjuYaSNF4MWyg9AKytzqaH
+         mr7rFYvcPYORjtT//mNdbtVVgnpdLNIw1mvtQhpCG8iR5mNbji/2DiJZwfzJJo4+/rMy
+         kVtHSheLd3JvfSD+Ar04oy3DgHWYguIKnu7/cBTeSVfyS9joDtw70NvdDhvyHOf1uJOX
+         EtSKdg5eJknpOh5z/E+lpGOxkJq5/quCXG98LKj7X2ECedcFBY/qJn0l2/W8OW2BRjzG
+         RiSA2V5+a4TKlcsBHnI1mqvErLePGvA0Qz9lgIKGeX0y3JcO6i13KYcJyRDK49v5fNj2
+         yIhw==
+X-Gm-Message-State: APjAAAXx9GlQXLcMkkl0jZ/++uVRm/X/rVK2h4Wz8aJNGEKNDoCl8zK3
+        3UHrm8ffBn3OvrweaFQw+dWPQQ==
+X-Google-Smtp-Source: APXvYqwkCHtk+kWBYG2xS1z0RatDyIgpKCCiE9mnyxr59SsymXOXeGmdTvY41JCjZ3co01GD2gLLCw==
+X-Received: by 2002:a17:902:d901:: with SMTP id c1mr6362694plz.93.1573687369645;
+        Wed, 13 Nov 2019 15:22:49 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 12sm4427369pfv.92.2019.11.13.15.22.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 15:22:48 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
+Date:   Wed, 13 Nov 2019 15:22:45 -0800
+Message-Id: <20191113232245.4039932-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <73fb8106ec1a4665b59a2d187a576b71@realtek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
+The WiFi firmware used on db845c implements the 8bit host-capability
+message, so enable the quirk for this.
 
-Am 12.11.19 um 16:45 schrieb James Tai:
-> Add Device Trees for Realtek RTD1619 SoC family, RTD1619 SoC and
-> Realtek Mjolnir EVB.
-> 
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> ---
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Lacking the requested changelog.
-
->  arch/arm64/boot/dts/realtek/Makefile          |   2 +
->  .../boot/dts/realtek/rtd1619-mjolnir.dts      |  40 +++++
->  arch/arm64/boot/dts/realtek/rtd1619.dtsi      |  12 ++
->  arch/arm64/boot/dts/realtek/rtd16xx.dtsi      | 163 ++++++++++++++++++
->  4 files changed, 217 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619.dtsi
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-
-Somehow the last hunk (rtd16xx.dtsi) didn't apply with git-am or patch
--p1, not sure why. I have manually copied the file into place and fixed
-up some more nits below:
-
-> 
-> diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
-> index 555638ada721..fb5f05978ecc 100644
-> --- a/arch/arm64/boot/dts/realtek/Makefile
-> +++ b/arch/arm64/boot/dts/realtek/Makefile
-> @@ -7,3 +7,5 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-probox2-ava.dtb
->  dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
->  
->  dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
-> +
-> +dtb-$(CONFIG_ARCH_REALTEK) += rtd1619-mjolnir.dtb
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
-> new file mode 100644
-> index 000000000000..6ab791af3896
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "rtd1619.dtsi"
-> +
-> +/ {
-> +	compatible = "realtek,rtd1619", "realtek,mjolnir";
-
-Order not fixed from v2. This is a schema violation and logically wrong.
-
-> +	model= "Realtek Mjolnir EVB";
-
-Space missing before =. Missed that in v2.
-
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0; /* The UART0 is debug console */
-> +		serial1 = &uart1; /* The UART1 is on M.2 slot */
-> +		serial2 = &uart2; /* The UART2 is on GPIO connector */
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "disabled";
-> +};
-> +
-> +&uart2 {
-> +	status = "disabled";
-> +};
-
-The comments were intended to go above each node, not after the aliases.
-I've taken the liberty to annotate them further with their PCB label.
-
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1619.dtsi b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
-> new file mode 100644
-> index 000000000000..e52bf708b04e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Realtek RTD1619 SoC
-> + *
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +#include "rtd16xx.dtsi"
-> +
-> +/ {
-> +	compatible = "realtek,rtd1619";
-> +};
-> diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-> new file mode 100644
-> index 000000000000..d9b572a870f5
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-> @@ -0,0 +1,163 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Realtek RTD16xx SoC family
-> + *
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/{
-
-Space missing. Missed that in v2.
-
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu1: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x100>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l3>;
-> +		};
-> +
-> +		cpu2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x200>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l3>;
-> +		};
-> +
-> +		cpu3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x300>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l3>;
-> +		};
-> +
-> +		cpu4: cpu@400 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x400>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l3>;
-> +		};
-> +
-> +		cpu5: cpu@500 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x500>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l3>;
-> +		};
-> +
-> +		l2: l2-cache {
-> +			compatible = "cache";
-> +			next-level-cache = <&l3>;
-> +
-> +		};
-> +
-> +		l3: l3-cache {
-> +			compatible = "cache";
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	arm_pmu: pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	osc27M: osc {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <27000000>;
-> +		clock-output-names = "osc27M";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	soc@98000000 {
-
-If the node has a unit address, it also needs a reg property with that
-value. So let's drop the unit address.
-
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x98000000 0x98000000 0x68000000>;
-> +
-> +		rbus: r-bus@98000000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x98000000 0x200000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0x0 0x98000000 0x200000>;
-> +
-> +			uart0: serial0@7800 {
-> +				compatible = "snps,dw-apb-uart";
-> +				reg = <0x7800 0x400>;
-> +				reg-shift = <2>;
-> +				reg-io-width = <4>;
-> +				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-frequency = <27000000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart1: serial1@1b200 {
-> +				compatible = "snps,dw-apb-uart";
-> +				reg = <0x1b200 0x400>;
-> +				reg-shift = <2>;
-> +				reg-io-width = <4>;
-> +				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-frequency = <432000000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart2: serial2@1b400 {
-> +				compatible = "snps,dw-apb-uart";
-> +				reg = <0x1b400 0x400>;
-> +				reg-shift = <2>;
-> +				reg-io-width = <4>;
-> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-frequency = <432000000>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		gic: interrupt-controller@ff100000 {
-> +			compatible = "arm,gic-v3";
-> +			reg = <0xff100000 0x10000>,
-> +			      <0xff140000 0xc0000>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
-> +};
-> +
-> +&arm_pmu {
-> +	interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
-> +		<&cpu3>, <&cpu4>, <&cpu5>;
-> +};
-
-Now that they're in the same file, this can just go into the node.
-
-Queuing on my rtd1295-next branch (before RTD1395), with changes:
-
-diff --git a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
-b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
-index 6ab791af3896..44dd67e04335 100644
---- a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
-+++ b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
-@@ -8,8 +8,8 @@
- #include "rtd1619.dtsi"
-
- / {
--       compatible = "realtek,rtd1619", "realtek,mjolnir";
--       model= "Realtek Mjolnir EVB";
-+       compatible = "realtek,mjolnir", "realtek,rtd1619";
-+       model = "Realtek Mjolnir EVB";
-
-        memory@0 {
-                device_type = "memory";
-@@ -21,20 +21,23 @@
-        };
-
-        aliases {
--               serial0 = &uart0; /* The UART0 is debug console */
--               serial1 = &uart1; /* The UART1 is on M.2 slot */
--               serial2 = &uart2; /* The UART2 is on GPIO connector */
-+               serial0 = &uart0;
-+               serial1 = &uart1;
-+               serial2 = &uart2;
-        };
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index 12f5f14ada5c..7ec7b90ab83e 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -625,6 +625,8 @@
+ 	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
+ 	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
+ 	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
++
++	qcom,snoc-host-cap-8bit-quirk;
  };
-
-+/* debug console (J1) */
- &uart0 {
-        status = "okay";
- };
-
-+/* M.2 slot (CON4) */
- &uart1 {
-        status = "disabled";
- };
-
-+/* GPIO connector (T1) */
- &uart2 {
-        status = "disabled";
- };
-diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-b/arch/arm64/boot/dts/real
-tek/rtd16xx.dtsi
-index 4422fe9c5a68..f1e3c088a014 100644
---- a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-@@ -8,7 +8,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-
--/{
-+/ {
-        interrupt-parent = <&gic>;
-        #address-cells = <1>;
-        #size-cells = <1>;
-@@ -87,6 +87,8 @@
-        arm_pmu: pmu {
-                compatible = "arm,armv8-pmuv3";
-                interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-+               interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
-+                       <&cpu3>, <&cpu4>, <&cpu5>;
-        };
-
-        psci {
-@@ -101,7 +103,7 @@
-                #clock-cells = <0>;
-        };
-
--       soc@98000000 {
-+       soc {
-                compatible = "simple-bus";
-                #address-cells = <1>;
-                #size-cells = <1>;
-@@ -149,14 +151,9 @@
-                        compatible = "arm,gic-v3";
-                        reg = <0xff100000 0x10000>,
-                              <0xff140000 0xc0000>;
-+                       interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-                        interrupt-controller;
-                        #interrupt-cells = <3>;
--                       interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-                };
-        };
- };
--
--&arm_pmu {
--       interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
--               <&cpu3>, <&cpu4>, <&cpu5>;
--};
-
-Waiting on Rob for the underlying binding (and for v5.5-rc1 tag).
-
-Thanks,
-Andreas
-
+ 
+ /* PINCTRL - additions to nodes defined in sdm845.dtsi */
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.23.0
+
