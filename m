@@ -2,65 +2,66 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7022C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69820C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967052084F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235AF22490
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="lyDTlbL5"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="V9lK4JOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfKMQTk (ORCPT
+        id S1726543AbfKMQY4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 11:19:40 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.117]:35457 "EHLO
+        Wed, 13 Nov 2019 11:24:56 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:60515 "EHLO
         mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728240AbfKMQTj (ORCPT
+        by vger.kernel.org with ESMTP id S1728360AbfKMQY4 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:19:39 -0500
-Received: from [85.158.142.201] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-6.bemta.az-b.eu-central-1.aws.symcld.net id 33/5A-20077-61D2CCD5; Wed, 13 Nov 2019 16:19:34 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WTbUxTVxjHOffe3l4J3a4F5BkRP1w7mYMWcBB
-  uWDbMxocmE3XRxGUJmRe40iallLZIcQNhoxFhapU3ZUjRAWNI1vESmIKZK4zxIihEFBlDGHUW
-  lxFRMTI3WG8vuu3b73n+//Oc/zk5h8Ll82QwxVvMvFHP6RjSl9BEELHKDcqrSZFlNglbPusi2
-  d9uT5KsvXdEws6O72LvLP2I2Cc3ijC2de6mhK2/NYqx1su9UtbdHrTdV91c04zUF6t+karv2k
-  ql6tamo6R66mY3qW6rO6x+1Lppt/RDiVafnGHZL9Fc/vuO1DAQYnEdi89H16EY+VKIrsfh3pF
-  HErHoI2DB0YyLRRuCZ8eWSaEg6H4cHD3jRDFaR8npcgzsi9mCIKdnEfxc2SEVBJJmobR/xrsi
-  gD6FwWp3l3cwTpdgYBtu87r86Z3QvWjFihHlce0GZ0G80A6gt8H1BxVIYIJ+FS44FnGBZTQH0
-  +4VTNytEIGjvd8bYx2thuMPvvTORHQIPC644F2A00Ew6bJjAgNNQ133NVzkQJifW5GIfh4GPp
-  1AYj8chm+51piBmrO9axwCY/aSNU6Eu0+/8GYW/IMN28U2C3UlVkJsK2DFmSOiAX4q3Sw6tkC
-  Z4+FagI0wcWmIEE4CdD0J8xVLUhuKqPpPaJHDobbrISlyGDSc+x2v8t7Eehg44yJqEdGE2GSj
-  Nk1jTue0OmVUZKQyKuoNZbQyNlbFHVImq/gsZQqvNxs5j6jisk0qU056ii5VpefNrcjz6lIzi
-  cTvUOGTP1RO9AqFMYGyzs+GkuQvJWek5mg4k+YjY5aONznRRopiQFax9WqSfL2RT+MtB7Q6z9
-  t9LgPlxwTIMsM8ssxk4NJN2jRRGkRKyjZ/9jwuJ/QZej44SHZIMNGCSZOlfzHi+Q8YQyHB/jL
-  k4+Mj9zPwxnSt+f/6fRREIcZfNiZM8dPqzS92uu8JgXlCFPYMCiHM3L9ScD5WiT32mwvdbFnO
-  Dfhk2V7dfPrNr59ltRj+OqmYikyYjojZG/qee+FpXL76g/jMKwWdNXFf3f72T8vb7wYy9lFn6
-  DD5TuZizMyeIe2NPHrkYHi9M8Ti1meUXfp8SsE0tTUbImoP615e2nMlidKZUmMPwP7oOMlQoj
-  G1s2bHtpmOxhM7fm10dLnfH9f1qZdzKyZPZL02ftBd2dqHBXd0Msmhsztr40cbpqpdeSOyiNq
-  jA9c60qKHi5aOnNq36YeJsMGLLVu4ynP39nVGrSqOW1Po6ZMJKa64kgxYavlev0vRk1MuPb3Q
-  uFV+fu/HthjZdMJbswOrZdUbcvMYa1H2N+1dhp5ihjBpuKjXcaOJ+wej2KzRfAQAAA==
+        Wed, 13 Nov 2019 11:24:56 -0500
+Received: from [85.158.142.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id 74/00-16077-35E2CCD5; Wed, 13 Nov 2019 16:24:51 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WTfUwTZxzH+9xdrwej5lpAnpGWuM4mIFyhYuY
+  lg7lsYSlBMlEyliEZBz1pEyisLa9/bIIaJw5tQIw2K29DUAYxqUTkZSRDEHkZTMKLOl7lJQLD
+  qVAWJrL1esi2/z6/+35/3+d7l+cIVPon7kuwOWbWaGBSFbg7pgt2o6mjqv6EkHJrEF06M4fTm
+  ysPcHrh0WOcLu8cENIzI5/SU44uQK8Pf4vQ9tlRIX1t7AFCn/mpU0RPt1Qi9NNGnw89NPVl9U
+  DTbJ0QaeYtJSKNve4crhkfbcM1t6q/0Wz9Fq1ZtfsdIb4Q6g1J6TmJQl3Bi2ZhxvV3ckrvJJw
+  EVbJC4E4A8hoKb15aFvHDPQwOD54V8sMtAF8VbeDcgJH3UTi+YHPa3AgpeRmBU5XHeZ4BcGID
+  5RgnaVhyf9q14EUWI/DvtlZXFEpOIvCv54VCzuVJxsDhl+M4x17kUbjRtynkeT8c6sl3JWGkE
+  g5eKQAci0kGLpXdBFyQlDwNYHtzo2vBjdTA+h8uuioBUg7X8n90LaOkD3w8V45wDEkSVrcNoj
+  x7w8XZLSHvZ2FPwUPAPw+Cv4zNbbMCltk6t1kOh8rPb3M0vPJ8YMf/XeeNbaZh9fkzWCEgnLw
+  XbnXk8pgBV+/586iEI8MevFkGH7b0YdybQHJRCCef1YosINj6n9I8B8GK1pc4z4GwpnIZtbq+
+  hAT2XJ3DKgBWB+gkoz5FZ05j9KmUOiSEUqtDqQNUaIiKyaOSVGwmlcwazEbGKaqYbJPKlJuWn
+  KpVGVizHTjvoPYrzO8OKF5fUXWAtwlE4S1uOtWXIN2VlK7N1TEm3ZfGzFTW1AFkBKGA4ssB/Q
+  lSiZFNYXNO6FOdN/mNDAkPhZf4jyCnLDZlMGkmfQov9QKKsCzaqlApZkg3sL4+4mnORHImXaZ
+  hJ+LN/zAE5L6eYiAQCKQeGawxTW/+v74EfAig8BQfopwpHnqDeeekJWcJxFni9N1eroSZ+Vfy
+  PYlkjeTHxMGAixdWG7DsFj+1/eyLSOt6BLvwdHeNP9sR/Cj8rsyUlvWJoteCvtbuicmJrZUvf
+  DyAxwYero38PAsmvoq8UNI1OhPWHXj8ui0+oOm9uOqfHcf21yabHTBMtLXxbp99tjRiE/Qqg4
+  j4qNd27+Rwdfb31NohpChKRLe3iS1fSz76LM7vfdRbEN4oO+UofOI4aJs8MHNYKT8SoVzbbQ3
+  Trqxauj+4HfB7SvPS1JPNvEsT8/tGu5CGhhu/yltaJVEV8xW6RIHk3HRP/PJBEpQ+iy7aU1Uz
+  fXt1rDF04C339l3euuLZbkljXL/nFNDK/D07NpXhsXUnmgqK8hSYSceo96FGE/MPEkoVCIoEA
+  AA=
 X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-28.tower-246.messagelabs.com!1573661973!635596!1
-X-Originating-IP: [104.47.4.55]
+X-Msg-Ref: server-28.tower-239.messagelabs.com!1573662290!643595!1
+X-Originating-IP: [104.47.9.56]
 X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.44.22; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 19857 invoked from network); 13 Nov 2019 16:19:34 -0000
-Received: from mail-am5eur02lp2055.outbound.protection.outlook.com (HELO EUR02-AM5-obe.outbound.protection.outlook.com) (104.47.4.55)
-  by server-28.tower-246.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 13 Nov 2019 16:19:34 -0000
+Received: (qmail 9646 invoked from network); 13 Nov 2019 16:24:50 -0000
+Received: from mail-ve1eur03lp2056.outbound.protection.outlook.com (HELO EUR03-VE1-obe.outbound.protection.outlook.com) (104.47.9.56)
+  by server-28.tower-239.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 13 Nov 2019 16:24:50 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eg6WMFz62bQ517t/Pb41kOu70M1dB7/jZ7H5AWo0poR8jZwqgcSDTkGHZJ0z4917FypX4oefNstksGJkCZNwKheVNBss5ork98L69slsNWJffDsDr4bbLRfy/1N8lJyoIzIUGpS/HzX+l5RfizERCJFQzuvpUj5dKj345Xy1lCl9wJua6DSc0N/jyebVkfgy/2zAuxQDM1gHmZoVtLB8ThP00SdmjHFLj0LeXEa/CKs2iePN1DzCa9svf2hSN+a2PPXwa/aK8ZM1JZQ1ukFDNp+ibY3ebJfKnx5M+XL556c7xalysBGziuRF4W1buQKXScVA+iSJSYqsIevslnsF/g==
+ b=ek5gwPnItNmewk/St8k6BVoLWHsKHa1eIVVlDLtr8mYCi/4L4EszQdlpMatxwqz4fWAfkccABFvDE3FvWWWB5RkrqsHasPbea0pMB5XgIOKaG794dWwrdL5qVNUN5IbAJ+U0ucXqOOMkpYR/45aLZeDrCV8K9a6uhUw315YZ9FEg66I7L9QTYcEscEsGEeJwSGk//UaEuXWdBDdQ5HNaVIokMTTTd4OP87ykfJLoxIGT1/iw/TgK3Vv8YWY5a+kdsRk6gKsLa+wV6yo70XWGZsWr/KgamQJW8GcdHJ7aGreWKOpALm8LKK/wQ4B1pBh6XvWUGRAOW0GlxuW52wshow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p8AgjRyUUmrjwUmql3DO6GOk79TdSxFOcrTIPUq2QTM=;
- b=Flc/qNN9Feggh55H9OZKb7v+nLhkQQx0rN+LjbpAd1+KHSV1950M/r70yH2ostv6kUrD/PfEfWp1cQPILBF+e128ae9GNOxuArlLfLcOF9Bdf9sTJhRcB1BbHrrWytzktiDcpnHII6Aq09gfS+pGMgvCkMvDYxMk+gK+K90taGgVLCoeb5KVEZKQG2oACIaHjjkoixBaO1ofz1n0Knkvh8e/BQ+Os+s5zuZ4W/HcM8nj+jr3Qp79ur5MORF3rCVu2PFwujfzhXrlw2Uc1tNmJwdlDvegfV6AXSUGUoMwZhH6In1HCBgnKK6KHO/blrlPaC6pMVGp42TzUvlYfR/OHA==
+ bh=yuzLRpzxmbknwyzO3Rf5PCx17WnGp9C4IwnTGeglF0k=;
+ b=VSqhqMnXZgOO8E6hhu99+smC+4XeZWOScarl+XkyLVxTihJnd/5/iSKcwGzJpVx2xEtSEbLr2vXxYrsE2bo3SG7o/iHqkz7iKm9WqIlwHc9SyuFDqKp3T6tyNigC9aFKrL6bwBlUmSza7mwxv/5t3Gm9tJM7d0bBF6H4Xz5NSt565J2xVrMrk+ghezNSFqpZEG9BzAQ3unH/EwCwcNxrer6DkuglJp5l4I3L2fng4jiLG1P/rna3e8gVhJddKdoPY35YeGzDj/RZIAv3R4yRXTBxWyu7CRuwB4GqUGXqN7PWJIJooWYOEeBmM2UfDP/hiVVPwfoazLJzeVW+F/hSVA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
  dkim=pass header.d=diasemi.com; arc=none
@@ -68,16 +69,16 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=dialogsemiconductor.onmicrosoft.com;
  s=selector1-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p8AgjRyUUmrjwUmql3DO6GOk79TdSxFOcrTIPUq2QTM=;
- b=lyDTlbL52BvPpqnrH3jDwJEVRpJlJIPdfnTCIofC2lvkwJHL2Dm/UxAkOatnFKb4RhfNOsuXLubJm+CR8tbHmANS6R58HgktRd0V/RjbZtAtyKiQ6Kbkug9+4BatHuEzOTzL+7z60BtCdA66MWebii12uKinm6DRZO+DSG4EmN8=
+ bh=yuzLRpzxmbknwyzO3Rf5PCx17WnGp9C4IwnTGeglF0k=;
+ b=V9lK4JOER6wrP0Y8NZvYFChgON5SpgoONg4ih26nNQSoMVcHBs0n2pmNlLnMW3swGjClFPdOSSV73bdaHd1jA6gfJURMw9lpv5Wc5qKfzdq7pVpfRWNMojP/NcMqDY8nft1aoqF3KgD57eRaQCw8tdPfm3QVtQW7ROZ79WQRzck=
 Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1106.EURPRD10.PROD.OUTLOOK.COM (10.169.155.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Wed, 13 Nov 2019 16:19:31 +0000
+ AM5PR1001MB1202.EURPRD10.PROD.OUTLOOK.COM (10.169.149.148) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Wed, 13 Nov 2019 16:24:47 +0000
 Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2430.028; Wed, 13 Nov 2019
- 16:19:31 +0000
+ 16:24:47 +0000
 From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 To:     Christoph Fritz <chf.fritz@googlemail.com>,
         Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
@@ -91,16 +92,19 @@ CC:     Lee Jones <lee.jones@linaro.org>,
         Support Opensource <Support.Opensource@diasemi.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v2 1/4] regulator: da9062: refactor buck modes into header
-Thread-Topic: [PATCH v2 1/4] regulator: da9062: refactor buck modes into
- header
-Thread-Index: AQHVmigBY6xsAGskqU6yzgbK8/6f2qeJRqIA
-Date:   Wed, 13 Nov 2019 16:19:31 +0000
-Message-ID: <AM5PR1001MB0994BED6A92933518239B44980760@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        <linux-arm-kernel@lists.infradead.org>,
+        Christian Hemp <c.hemp@phytec.de>,
+        Stefan Riedmueller <s.riedmueller@phytec.de>
+Subject: RE: [PATCH v2 2/4] regulator: da9062: add of_map_mode support for
+ bucks
+Thread-Topic: [PATCH v2 2/4] regulator: da9062: add of_map_mode support for
+ bucks
+Thread-Index: AQHVmigCG2tyD8654UmXrN4EETRfIqeJR/fg
+Date:   Wed, 13 Nov 2019 16:24:47 +0000
+Message-ID: <AM5PR1001MB09947464276D08EEF3C0338880760@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 References: <1573652416-9848-1-git-send-email-chf.fritz@googlemail.com>
- <1573652416-9848-2-git-send-email-chf.fritz@googlemail.com>
-In-Reply-To: <1573652416-9848-2-git-send-email-chf.fritz@googlemail.com>
+ <1573652416-9848-3-git-send-email-chf.fritz@googlemail.com>
+In-Reply-To: <1573652416-9848-3-git-send-email-chf.fritz@googlemail.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -108,31 +112,31 @@ X-MS-TNEF-Correlator:
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [165.225.80.228]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 367de9e3-d776-4bce-4184-08d7685543e6
-x-ms-traffictypediagnostic: AM5PR1001MB1106:
+x-ms-office365-filtering-correlation-id: 72cd8480-5f93-4e3e-1256-08d76856002a
+x-ms-traffictypediagnostic: AM5PR1001MB1202:
 x-ms-exchange-sharedmailbox-routingagent-processed: True
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR1001MB1106278A810157B2C6E50FBFA7760@AM5PR1001MB1106.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <AM5PR1001MB1202D4469A900A6376B9ACA3A7760@AM5PR1001MB1202.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:765;
 x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(39860400002)(396003)(136003)(366004)(346002)(376002)(189003)(199004)(81166006)(186003)(7736002)(81156014)(446003)(86362001)(229853002)(11346002)(316002)(33656002)(110136005)(76116006)(5660300002)(54906003)(7416002)(74316002)(305945005)(55016002)(52536014)(55236004)(8936002)(6506007)(6116002)(3846002)(53546011)(76176011)(7696005)(8676002)(2906002)(9686003)(14444005)(256004)(66476007)(66946007)(66556008)(66446008)(64756008)(25786009)(26005)(478600001)(71200400001)(71190400001)(14454004)(66066001)(4326008)(102836004)(486006)(476003)(6246003)(99286004)(6436002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1106;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(136003)(396003)(39850400004)(199004)(189003)(66946007)(64756008)(66556008)(66476007)(476003)(14454004)(66446008)(74316002)(486006)(478600001)(25786009)(186003)(26005)(7696005)(11346002)(76176011)(7736002)(33656002)(52536014)(305945005)(5660300002)(53546011)(6506007)(55236004)(102836004)(446003)(6436002)(54906003)(256004)(6246003)(110136005)(316002)(4326008)(9686003)(6116002)(3846002)(8676002)(99286004)(76116006)(81156014)(81166006)(7416002)(2906002)(8936002)(86362001)(66066001)(55016002)(71200400001)(71190400001)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1202;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
 received-spf: None (protection.outlook.com: diasemi.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SAKAnS4hVGfDo2bSC04w28EPxBdI1O1PClRVcekKib2s7Gf8JJujy+drYHMIYOxYoNQkcTC4fym6rg+cIu5Bs3xvazC+a/mG1v5dLi0Oc0hnFe8tATK0np6oL/llyCXGSygIiBL2oLYYyDGzuEzueSPr4YIwcUciAwJ+SGzF+pDONpZjOQJmggdx74E6rursY4hAeSLIUD1WqSpbUUAlHg3Nui1xl3KCduCWdEHTUzWTgpkANU8xUeMDmUZG7mcCWJfFnM9WnZi+IdyjSANsKueXHkjtTVtv2BFS4KZNuahwSAiaH1cUs1J4j/v8UOGAkv/ONBoQdC5mQmLS5QddEU7eGDVMcbMSDWeaiQO+Qknfk50S+1EYZmR0ONqvd7qQcat2B3cdqzQzA+2kOOVTFRJtgNWe6pKShpCaetb5GosxVyPIZEyAm9jiEKrZqdGz
+x-microsoft-antispam-message-info: 1uWYqTA/1FWoihJryGm9V1eLr0SSw99RSd1iQeW8C4fcW4pRDuYBI0FxzNKhzAlsbweC3fDYxP+Lt/x1dDb8g5xOmr8/IrlzIbitxgZgzovouFUkxl5brOlGdio1WaSzoYdgPa1JrGVMvjtudGoeSGKeXgITu8/IPVvncw8hbYO2Lq7IKMrX4YEBwkB11vHL83dhGa++XMAnLOPkyXtwnlHOAX9aK2wyHiWiiFaw/Pw9wFME4cFluwAdE2vU88O1veSDn0zidGGyr2HXRVrQdBvf4C4rYR24D7UWyUkHhW6vI3VXf0TJxR/2V5XrLDkon6msa10oheIiYIiv1NuhcoRbWsrjP4TXUW5M+8eQZ0RJ10V3HdT1o11EnTMpyp+j9q1+kXUpOE2TzS5frNGHtKbAydRncSc85xvJNjnKCsQ9D0dakpB0dF06UobpZU/e
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 367de9e3-d776-4bce-4184-08d7685543e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 16:19:31.4997
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72cd8480-5f93-4e3e-1256-08d76856002a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 16:24:47.3288
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YHEcNzFclb0Z9u37d+U5gnaPClOMghzg0qkNOGeSsa7mQeASqpy/R08aVHoyMyKulO/va+zbK6pke/w7xc4W7VNgREsXPSvx6SLhK5x41R4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1106
+X-MS-Exchange-CrossTenant-userprincipalname: 98sJkVFVu+ae7a3kUk3Mg3xe9IJvNF4DfmHwYLrQR6WfwDK4JxyX/zBQulT9KW24NzP2u6jdmZa0qrIWOS5TYFIVMNPwbZVib1xM+cGbZ6M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1202
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -140,134 +144,110 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On 13 November 2019 13:40, Christoph Fritz wrote:
 
-> This patch refactors buck modes into a header file so that device trees
-> can make use of these mode constants.
->=20
-> The new header filename uses da9063 because DA9063 was the earlier chip
-> and its driver code will want updating at some point in a similar manner.
+> This patch adds of_map_mode support for bucks to set regulator modes
+> from within regulator framework.
 >=20
 > Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> Signed-off-by: Christian Hemp <c.hemp@phytec.de>
+> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
 
 Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 
 > ---
->  drivers/regulator/da9062-regulator.c               | 28 ++++++++--------=
-------
->  .../dt-bindings/regulator/dlg,da9063-regulator.h   | 16 +++++++++++++
->  2 files changed, 26 insertions(+), 18 deletions(-)
->  create mode 100644 include/dt-bindings/regulator/dlg,da9063-regulator.h
+>  drivers/regulator/da9062-regulator.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 >=20
 > diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9=
 062-
 > regulator.c
-> index 4b24518..601002e 100644
+> index 601002e..29f4a60 100644
 > --- a/drivers/regulator/da9062-regulator.c
 > +++ b/drivers/regulator/da9062-regulator.c
-> @@ -16,6 +16,7 @@
->  #include <linux/regulator/of_regulator.h>
->  #include <linux/mfd/da9062/core.h>
->  #include <linux/mfd/da9062/registers.h>
-> +#include <dt-bindings/regulator/dlg,da9063-regulator.h>
->=20
->  /* Regulator IDs */
->  enum {
-> @@ -75,14 +76,6 @@ struct da9062_regulators {
->  	struct da9062_regulator			regulator[0];
+> @@ -98,6 +98,20 @@ static const unsigned int da9062_buck_b_limits[] =3D {
+>  	2300000, 2400000, 2500000, 2600000, 2700000, 2800000, 2900000, 3000000
 >  };
 >=20
-> -/* BUCK modes */
-> -enum {
-> -	BUCK_MODE_MANUAL,	/* 0 */
-> -	BUCK_MODE_SLEEP,	/* 1 */
-> -	BUCK_MODE_SYNC,		/* 2 */
-> -	BUCK_MODE_AUTO		/* 3 */
-> -};
-> -
->  /* Regulator operations */
->=20
->  /* Current limits array (in uA)
-> @@ -112,13 +105,13 @@ static int da9062_buck_set_mode(struct regulator_de=
-v
-> *rdev, unsigned mode)
->=20
->  	switch (mode) {
->  	case REGULATOR_MODE_FAST:
-> -		val =3D BUCK_MODE_SYNC;
-> +		val =3D DA9063_BUCK_MODE_SYNC;
->  		break;
->  	case REGULATOR_MODE_NORMAL:
-> -		val =3D BUCK_MODE_AUTO;
-> +		val =3D DA9063_BUCK_MODE_AUTO;
->  		break;
->  	case REGULATOR_MODE_STANDBY:
-> -		val =3D BUCK_MODE_SLEEP;
-> +		val =3D DA9063_BUCK_MODE_SLEEP;
->  		break;
->  	default:
->  		return -EINVAL;
-> @@ -145,14 +138,13 @@ static unsigned da9062_buck_get_mode(struct
-> regulator_dev *rdev)
->=20
->  	switch (val) {
->  	default:
-> -	case BUCK_MODE_MANUAL:
->  		/* Sleep flag bit decides the mode */
->  		break;
-> -	case BUCK_MODE_SLEEP:
+> +static unsigned int da9062_map_buck_mode(unsigned int mode)
+> +{
+> +	switch (mode) {
 > +	case DA9063_BUCK_MODE_SLEEP:
->  		return REGULATOR_MODE_STANDBY;
-> -	case BUCK_MODE_SYNC:
+> +		return REGULATOR_MODE_STANDBY;
 > +	case DA9063_BUCK_MODE_SYNC:
->  		return REGULATOR_MODE_FAST;
-> -	case BUCK_MODE_AUTO:
+> +		return REGULATOR_MODE_FAST;
 > +	case DA9063_BUCK_MODE_AUTO:
->  		return REGULATOR_MODE_NORMAL;
->  	}
->=20
-> @@ -279,13 +271,13 @@ static int da9062_buck_set_suspend_mode(struct
-> regulator_dev *rdev,
->=20
->  	switch (mode) {
->  	case REGULATOR_MODE_FAST:
-> -		val =3D BUCK_MODE_SYNC;
-> +		val =3D DA9063_BUCK_MODE_SYNC;
->  		break;
->  	case REGULATOR_MODE_NORMAL:
-> -		val =3D BUCK_MODE_AUTO;
-> +		val =3D DA9063_BUCK_MODE_AUTO;
->  		break;
->  	case REGULATOR_MODE_STANDBY:
-> -		val =3D BUCK_MODE_SLEEP;
-> +		val =3D DA9063_BUCK_MODE_SLEEP;
->  		break;
->  	default:
->  		return -EINVAL;
-> diff --git a/include/dt-bindings/regulator/dlg,da9063-regulator.h b/inclu=
-de/dt-
-> bindings/regulator/dlg,da9063-regulator.h
-> new file mode 100644
-> index 00000000..1de710d
-> --- /dev/null
-> +++ b/include/dt-bindings/regulator/dlg,da9063-regulator.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+> +		return REGULATOR_MODE_NORMAL;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
 > +
-> +#ifndef _DT_BINDINGS_REGULATOR_DLG_DA9063_H
-> +#define _DT_BINDINGS_REGULATOR_DLG_DA9063_H
-> +
-> +/*
-> + * These buck mode constants may be used to specify values in device tre=
-e
-> + * properties (e.g. regulator-initial-mode).
-> + * A description of the following modes is in the manufacturers datashee=
-t.
-> + */
-> +
-> +#define DA9063_BUCK_MODE_SLEEP		1
-> +#define DA9063_BUCK_MODE_SYNC		2
-> +#define DA9063_BUCK_MODE_AUTO		3
-> +
-> +#endif
+>  static int da9062_buck_set_mode(struct regulator_dev *rdev, unsigned mod=
+e)
+>  {
+>  	struct da9062_regulator *regl =3D rdev_get_drvdata(rdev);
+> @@ -360,6 +374,7 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  		.desc.vsel_reg =3D DA9062AA_VBUCK1_A,
+>  		.desc.vsel_mask =3D DA9062AA_VBUCK1_A_MASK,
+>  		.desc.linear_min_sel =3D 0,
+> +		.desc.of_map_mode =3D da9062_map_buck_mode,
+>  		.sleep =3D REG_FIELD(DA9062AA_VBUCK1_A,
+>  			__builtin_ffs((int)DA9062AA_BUCK1_SL_A_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -396,6 +411,7 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  		.desc.vsel_reg =3D DA9062AA_VBUCK3_A,
+>  		.desc.vsel_mask =3D DA9062AA_VBUCK3_A_MASK,
+>  		.desc.linear_min_sel =3D 0,
+> +		.desc.of_map_mode =3D da9062_map_buck_mode,
+>  		.sleep =3D REG_FIELD(DA9062AA_VBUCK3_A,
+>  			__builtin_ffs((int)DA9062AA_BUCK3_SL_A_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -432,6 +448,7 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  		.desc.vsel_reg =3D DA9062AA_VBUCK4_A,
+>  		.desc.vsel_mask =3D DA9062AA_VBUCK4_A_MASK,
+>  		.desc.linear_min_sel =3D 0,
+> +		.desc.of_map_mode =3D da9062_map_buck_mode,
+>  		.sleep =3D REG_FIELD(DA9062AA_VBUCK4_A,
+>  			__builtin_ffs((int)DA9062AA_BUCK4_SL_A_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -604,6 +621,7 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  		.desc.vsel_reg =3D DA9062AA_VBUCK1_A,
+>  		.desc.vsel_mask =3D DA9062AA_VBUCK1_A_MASK,
+>  		.desc.linear_min_sel =3D 0,
+> +		.desc.of_map_mode =3D da9062_map_buck_mode,
+>  		.sleep =3D REG_FIELD(DA9062AA_VBUCK1_A,
+>  			__builtin_ffs((int)DA9062AA_BUCK1_SL_A_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -640,6 +658,7 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  		.desc.vsel_reg =3D DA9062AA_VBUCK2_A,
+>  		.desc.vsel_mask =3D DA9062AA_VBUCK2_A_MASK,
+>  		.desc.linear_min_sel =3D 0,
+> +		.desc.of_map_mode =3D da9062_map_buck_mode,
+>  		.sleep =3D REG_FIELD(DA9062AA_VBUCK2_A,
+>  			__builtin_ffs((int)DA9062AA_BUCK2_SL_A_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -676,6 +695,7 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  		.desc.vsel_reg =3D DA9062AA_VBUCK3_A,
+>  		.desc.vsel_mask =3D DA9062AA_VBUCK3_A_MASK,
+>  		.desc.linear_min_sel =3D 0,
+> +		.desc.of_map_mode =3D da9062_map_buck_mode,
+>  		.sleep =3D REG_FIELD(DA9062AA_VBUCK3_A,
+>  			__builtin_ffs((int)DA9062AA_BUCK3_SL_A_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -712,6 +732,7 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  		.desc.vsel_reg =3D DA9062AA_VBUCK4_A,
+>  		.desc.vsel_mask =3D DA9062AA_VBUCK4_A_MASK,
+>  		.desc.linear_min_sel =3D 0,
+> +		.desc.of_map_mode =3D da9062_map_buck_mode,
+>  		.sleep =3D REG_FIELD(DA9062AA_VBUCK4_A,
+>  			__builtin_ffs((int)DA9062AA_BUCK4_SL_A_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
 > --
 > 2.1.4
 
