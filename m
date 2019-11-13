@@ -2,122 +2,224 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086EAC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AFEC17442
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F1A222CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:24:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uAo9yOmM"
+	by mail.kernel.org (Postfix) with ESMTP id 38365222CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573651471;
+	bh=aeVLr6do7PDFJRzL6XUOHMKlXIO79iLGu4JBIG5lJb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RMNqIAiuBx7vMr7L1A/42q5ZLQiZgeTxswf75fJwk1hZ41ob1yPcmg3nF2uFuBq6d
+	 x+Q74wCyyfa7CXP+9RZ4HEP0Rg9a2Pvuq1S/UtPt/RqDy9H5jjWvLbEADNFMpSf0nh
+	 OmYWZwhAzCdKIt/OGNZsfzB9gWnXG6hT/1e4pHO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKMNYY (ORCPT
+        id S1727238AbfKMNYa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:24:24 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33635 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfKMNYY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 08:24:24 -0500
-Received: by mail-ed1-f65.google.com with SMTP id a24so1819673edt.0
-        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 05:24:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=JRP/6EKOcSy60KLVoWb7jM1Tf5lS/OPVbKzG0KgZCIY=;
-        b=uAo9yOmMnM/3SrNHSnXryuXkoyxb7GED2KW+gIH19apn94zis9+gv/nx8PglsR6vpz
-         qgtdeMAI+ooZ7/giFoQgpO9y5Lk6VE/AHCfSm/vZLHdwBv3H8neAZyQ9j9WyTEHri1Xa
-         lJieaXHz3a86aDe6YDxtgc/RLaADka6P+E/kyDkiaBWNprpijul2teXVwERnh1LlT7pu
-         roagxEM8zv0CKc08CIY7j5Cs6C7GbzXyRZRYcCm5++1/44kHTBy8c/SL2b6YN6AiyeVL
-         m6zBIp5Yl0jCmcqa1K9N2gaDZWAPTq1WfzDTgAhUMawRzqwg8IJ1qNETtKIncMHKfqrM
-         PGMw==
+        Wed, 13 Nov 2019 08:24:30 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35100 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbfKMNYa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 08:24:30 -0500
+Received: by mail-oi1-f196.google.com with SMTP id n16so1755350oig.2;
+        Wed, 13 Nov 2019 05:24:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JRP/6EKOcSy60KLVoWb7jM1Tf5lS/OPVbKzG0KgZCIY=;
-        b=tnuXT4OwTacgTn+/94fH4QgxWeAVDafBtwWukNGow5JlT5wSh6BAytTj9p+hSWYU+w
-         UoZHX6B+Q+uU/yEVkRle1szYRignggOGO4TyaF08TwoZRCDJuhdjawvtkITNaBdBcQeN
-         ZcA6SFO9pyJw6ljsijyxDJeR/BwSnk5v893G2lfKMCehvSHq2XZcgmaLVtF/Ew9nFu92
-         K7m0zQnvI8Dyc5SzkncHvpH9XWnFUd5K5KtBOytZSLeF9ebDYFOBfDDtakRt7BMdPzdH
-         cyzUJ6+YOFejn7OJNn0Kfvot6rHjdziLi++D3PwZ3V997mS3orTmv8zIjX4B5LxcqTos
-         Ydyw==
-X-Gm-Message-State: APjAAAVPWWanraCg2xDKhomlQvqVS9EuV0nQyLt4TslVJRNWozTUo8UT
-        jRmeOo/O8zV9Pc9j1TjIYp3CMw==
-X-Google-Smtp-Source: APXvYqxeIzEC0kKghBW/pPOmDCzIOyjj19Pwibt4u2DqsePBx8gRya4BnBeKHlC6mxU0yG1bCUmjRw==
-X-Received: by 2002:a17:906:c797:: with SMTP id cw23mr2705388ejb.19.1573651461073;
-        Wed, 13 Nov 2019 05:24:21 -0800 (PST)
-Received: from [192.168.27.135] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id r12sm245953edm.85.2019.11.13.05.24.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Nov 2019 05:24:20 -0800 (PST)
-Subject: Re: [PATCH v10 2/3] interconnect: qcom: Add MSM8916 interconnect
- provider driver
-To:     Dmitry Osipenko <digetx@gmail.com>, robh+dt@kernel.org,
-        linux-pm@vger.kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        vincent.guittot@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191030153904.8715-1-georgi.djakov@linaro.org>
- <20191030153904.8715-3-georgi.djakov@linaro.org>
- <88315b5a-1354-acf9-d57d-b301fb78cfa4@gmail.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Message-ID: <95eb0a55-d36b-b66e-ae64-18aa5baafff7@linaro.org>
-Date:   Wed, 13 Nov 2019 15:24:19 +0200
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UdUwgi/Z598oAywZUsvitg46KvJjV1+JNbxQsild5s0=;
+        b=r2k/xdbh+j9StNmrHhm7Ilxh9o78l/Y11Ohmdh7NKiHuv80z6arYdq24SGy7Za7y39
+         l3PEDEXPq9JNPKj+EBUITDTyTb6kMNuwsUp4hAgpZ+W/jQaeNfdgsdstWaSXLhel4xcc
+         3ig+bqjULRsTTapHU1JI386RX3OGa5sLKLP7nBwGefas/AEHauoXsJAgxW60KmwetRbx
+         Uqahd2PxPASpJCpoSaYcZQpwNQcS4hmO5ZXL3g33LX8s6Bc8pLGsuS8xLgp/tIH4bRLe
+         N8RBQShMXvjjP6l92aDF050cYVJmOZZm79zkWe/BVJ+5Yxn0uuvl77NxdfK80VaiQ+6N
+         x8Lg==
+X-Gm-Message-State: APjAAAWga00K8d8hD5ZSklt8KjNLLISbp6d1M1xiOmDTn8rjT7n86Hv5
+        jP32Z4ECRfj69p6jEB1VOw6yq6w=
+X-Google-Smtp-Source: APXvYqxNPNSYrdrd91ycPVbcewYxneN8b9VqGJ+eOzurTYTlJhzd3AsGAYLLO2DjkbtFH7NZKBYhmw==
+X-Received: by 2002:aca:3ac6:: with SMTP id h189mr3615919oia.177.1573651469483;
+        Wed, 13 Nov 2019 05:24:29 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 47sm702659otu.37.2019.11.13.05.24.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 05:24:28 -0800 (PST)
+Date:   Wed, 13 Nov 2019 07:24:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dmaengine@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt: bindings: dma: xilinx: dpdma: DT bindings for
+ Xilinx DPDMA
+Message-ID: <20191113132428.GA15957@bogus>
+References: <20191107021400.16474-1-laurent.pinchart@ideasonboard.com>
+ <20191107021400.16474-2-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <88315b5a-1354-acf9-d57d-b301fb78cfa4@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107021400.16474-2-laurent.pinchart@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On 13.11.19 г. 15:03 ч., Dmitry Osipenko wrote:
-> 30.10.2019 18:39, Georgi Djakov пишет:
->> Add driver for the Qualcomm interconnect buses found in MSM8916 based
->> platforms. The topology consists of three NoCs that are controlled by
->> a remote processor that collects the aggregated bandwidth for each
->> master-slave pairs.
->>
-[..]
->> +static int qnoc_remove(struct platform_device *pdev)
->> +{
->> +	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
->> +	struct icc_provider *provider = &qp->provider;
->> +	struct icc_node *n;
->> +
->> +	list_for_each_entry(n, &provider->nodes, node_list) {
->> +		icc_node_del(n);
->> +		icc_node_destroy(n->id);
->> +	}
+On Thu, Nov 07, 2019 at 04:13:57AM +0200, Laurent Pinchart wrote:
+> The ZynqMP includes the DisplayPort subsystem with its own DMA engine
+> called DPDMA. The DPDMA IP comes with 6 individual channels
+> (4 for display, 2 for audio). This documentation describes DT bindings
+> of DPDMA.
 > 
-> Hello Georgi,
+> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> Changes since v1:
 > 
-> While examining the interconnect API and current drivers' code, I
-> noticed that everybody are copying this chunk of code which should crash
-> kernel because removing node from a list during the traverse is allowed
-> only when list_for_each_entry_safe() is used.
-
-Nice catch. Thank you!
-
-> Seems the IMX driver (which is under review now on the ML) is the only
-> driver that does the removing procedure correctly.
+> - Convert the DT bindings to YAML
+> - Drop the DT child nodes
+> ---
+>  .../dma/xilinx/xlnx,zynqmp-dpdma.yaml         | 68 +++++++++++++++++++
+>  MAINTAINERS                                   |  8 +++
+>  include/dt-bindings/dma/xlnx-zynqmp-dpdma.h   | 16 +++++
+>  3 files changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+>  create mode 100644 include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
 > 
-> Maybe it won't hurt to factor out the removal of provider's nodes into a
-> common helper.
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+> new file mode 100644
+> index 000000000000..b677b2c4f302
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+For new bindings:
+
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/xlnx,zynqmp-dpdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx ZynqMP DisplayPort DMA Controller Device Tree Bindings
+> +
+> +description: |
+> +  These bindings describe the DMA engine included in the Xilinx ZynqMP
+> +  DisplayPort Subsystem. The DMA engine supports up to 6 DMA channels (3
+> +  channels for a video stream, 1 channel for a graphics stream, and 2 channels
+> +  for an audio stream).
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  "#dma-cells":
+> +    const: 1
+> +    description: |
+> +      The cell is the DMA channel ID (see dt-bindings/dma/xlnx-zynqmp-dpdma.h
+> +      for a list of channel IDs).
+> +
+> +  compatible:
+> +    const: xlnx,zynqmp-dpdma
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: The AXI clock
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: axi_clk
+> +
+> +required:
+> +  - "#dma-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    dma: dma-controller@fd4c0000 {
+> +      compatible = "xlnx,zynqmp-dpdma";
+> +      reg = <0x0 0xfd4c0000 0x0 0x1000>;
+> +      interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
+> +      interrupt-parent = <&gic>;
+> +      clocks = <&dpdma_clk>;
+> +      clock-names = "axi_clk";
+> +      #dma-cells = <1>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cba1095547fd..457b39bc2320 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17898,6 +17898,14 @@ F:	drivers/misc/Kconfig
+>  F:	drivers/misc/Makefile
+>  F:	include/uapi/misc/xilinx_sdfec.h
+>  
+> +XILINX ZYNQMP DPDMA DRIVER
+> +M:	Hyun Kwon <hyun.kwon@xilinx.com>
+> +M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +L:	dmaengine@vger.kernel.org
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+> +F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+> +
+>  XILLYBUS DRIVER
+>  M:	Eli Billauer <eli.billauer@gmail.com>
+>  L:	linux-kernel@vger.kernel.org
+> diff --git a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+> new file mode 100644
+> index 000000000000..3719cda5679d
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+> +/*
+> + * Copyright 2019 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
+> +#define __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
+> +
+> +#define ZYNQMP_DPDMA_VIDEO0		0
+> +#define ZYNQMP_DPDMA_VIDEO1		1
+> +#define ZYNQMP_DPDMA_VIDEO2		2
+> +#define ZYNQMP_DPDMA_GRAPHICS		3
+> +#define ZYNQMP_DPDMA_AUDIO0		4
+> +#define ZYNQMP_DPDMA_AUDIO1		5
+> +
+> +#endif /* __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__ */
+> -- 
+> Regards,
 > 
-
-Yes, this is a very good idea. Will do it.
-
-Thanks,
-Georgi
+> Laurent Pinchart
+> 
