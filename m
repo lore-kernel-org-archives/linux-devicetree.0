@@ -2,141 +2,110 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92E7C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 21:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDEFC43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 21:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC00206EF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 21:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573679149;
-	bh=JeLh2TwMb/pxP+eN3XGV0+es0lcAgWbtdoAmHtde6Xk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bD0reznD+x9WyRAjVUEBBi9Tb0HXio6JfBCzJmm1ZzQknM+5HepoqXTn5owW7IgOp
-	 d6X8D28YC04BkdeR/s6jYQ57RoKVGIqsV73g1JJ5x5FaCSQXWAynDi/PTcTLZnHlyc
-	 nz+Qcf3ksW00gmbpWKW6DPcwLukFUYuuS+BNiU1o=
+	by mail.kernel.org (Postfix) with ESMTP id 050FC206E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 21:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfKMVFs (ORCPT
+        id S1726957AbfKMVZH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 16:05:48 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38053 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfKMVFs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 16:05:48 -0500
-Received: by mail-ot1-f65.google.com with SMTP id z25so2925376oti.5;
-        Wed, 13 Nov 2019 13:05:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0gzX/jw1PyFuoIoNGiysmpPTO8xY9NIG/RxfHqGfh2Q=;
-        b=j0XRVMyAVnxduF7XvhsyuxvaV3RGztw+iGfM+MwQQEoFovlcqWR5+a7Xc7YsRgC1+2
-         JkIdY8cx8NZGYkDV4DCO+rgVJQEvPCHFBES3BNF2Ewcm1Xv516Ed0kglUpsuiv0c8IX4
-         EuFb7GYpnM+1HFQ2TCTOLwBjyybMAgEOQ3X3xV069KF+C2B3SvmGmqIcohSyMHhNTjlJ
-         /1xRMPbfU1f/9U8b3F2v/hRUxuz/UqqXyuivk6jQaegNBydQwMYhLdF19M1RIyHowj5+
-         8MJL3MR1/xvzWVwYgXX+BRAnNdtrL0oN5Mm0A5zSvxFm97ScuhL4RFN2elJzvrL7Cz4X
-         7djQ==
-X-Gm-Message-State: APjAAAUD+chJxI99Q4yQzBAxQBRHwI9peM1+ZrIouGsWxC1OAgReXtBr
-        Yp/ARYTyoGeHRa3FrKTSdK8+s38=
-X-Google-Smtp-Source: APXvYqz7oQg0O4T2/+HXv6UGO2bjicLBIrBkWlHRPhWGEMo3z4ZzVUMtEURw7fKgvYuJOMit9S4WJA==
-X-Received: by 2002:a05:6830:1f1a:: with SMTP id u26mr2689695otg.75.1573679146408;
-        Wed, 13 Nov 2019 13:05:46 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id t19sm1109988otr.5.2019.11.13.13.05.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 13:05:45 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] dt-bindings: Improve validation build error handling
-Date:   Wed, 13 Nov 2019 15:05:44 -0600
-Message-Id: <20191113210544.1894-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 13 Nov 2019 16:25:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:58590 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbfKMVZH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 16:25:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D87D7A7;
+        Wed, 13 Nov 2019 13:25:06 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F30ED3F52E;
+        Wed, 13 Nov 2019 13:25:00 -0800 (PST)
+Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-mips@vger.kernel.org, linux-ide@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+ <f74cd8a6-00bf-46c3-8e2e-d278e72d6e0e@arm.com>
+ <48da05e0-5acf-8ab3-a6c9-be4988a9450b@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <b8e4d303-f226-53d9-f383-73872e41002b@arm.com>
+Date:   Wed, 13 Nov 2019 21:24:52 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <48da05e0-5acf-8ab3-a6c9-be4988a9450b@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Schema errors can cause make to exit before useful information is
-printed. This leaves developers wondering what's wrong. It can be
-overcome passing '-k' to make, but that's not an obvious solution.
-There's 2 scenarios where this happens.
+On 2019-11-13 8:41 pm, Florian Fainelli wrote:
+> On 11/13/19 12:34 PM, Robin Murphy wrote:
+>> On 13/11/2019 4:13 pm, Nicolas Saenz Julienne wrote:
+>>> Using a mask to represent bus DMA constraints has a set of limitations.
+>>> The biggest one being it can only hold a power of two (minus one). The
+>>> DMA mapping code is already aware of this and treats dev->bus_dma_mask
+>>> as a limit. This quirk is already used by some architectures although
+>>> still rare.
+>>>
+>>> With the introduction of the Raspberry Pi 4 we've found a new contender
+>>> for the use of bus DMA limits, as its PCIe bus can only address the
+>>> lower 3GB of memory (of a total of 4GB). This is impossible to represent
+>>> with a mask. To make things worse the device-tree code rounds non power
+>>> of two bus DMA limits to the next power of two, which is unacceptable in
+>>> this case.
+>>>
+>>> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
+>>> over the tree and treat it as such. Note that dev->bus_dma_limit is
+>>> meant to contain the higher accesible DMA address.
+>>
+>> Neat, you win a "why didn't I do it that way in the first place?" :)
+>>
+>> Looking at it without all the history of previous attempts, this looks
+>> entirely reasonable, and definitely a step in the right direction.
+> 
+> And while you are changing those, would it make sense to not only rename
+> the structure member but introduce a getter and setter in order to ease
+> future work where this would no longer be a scalar?
 
-When using DT_SCHEMA_FILES to validate with a single schema, any error
-in the schema results in processed-schema.yaml being empty causing a
-make error. The result is the specific errors in the schema are never
-shown because processed-schema.yaml is the first target built. Simply
-making processed-schema.yaml last in extra-y ensures the full schema
-validation with detailed error messages happen first.
+I doubt it - once we get as a far as supporting multiple DMA ranges, 
+there will be a whole load of infrastructure churn anyway if only to 
+replace dma_pfn_offset, and I'm not sure a simple get/set paradigm would 
+even be viable, so it's probably better to save that until clearly 
+necessary.
 
-The 2nd problem is while schema errors are ignored for
-processed-schema.yaml, full validation of the schema still runs in
-parallel and any schema validation errors will still stop the build when
-running validation of dts files. The fix is to not add the schema
-examples to extra-y in this case. This means 'dtbs_check' is no longer a
-superset of 'dt_binding_check'. Update the documentation to make this
-clear.
-
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/Makefile  | 5 ++++-
- Documentation/devicetree/writing-schema.rst | 6 ++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 5138a2f6232a..646cb3525373 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -12,7 +12,6 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
- 	$(call if_changed,chk_binding)
- 
- DT_TMP_SCHEMA := processed-schema.yaml
--extra-y += $(DT_TMP_SCHEMA)
- 
- quiet_cmd_mk_schema = SCHEMA  $@
-       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
-@@ -26,8 +25,12 @@ DT_DOCS = $(shell \
- 
- DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
- 
-+ifeq ($(CHECK_DTBS),)
- extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
- extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-+endif
- 
- $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
- 	$(call if_changed,mk_schema)
-+
-+extra-y += $(DT_TMP_SCHEMA)
-diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-index 3fce61cfd649..efcd5d21dc2b 100644
---- a/Documentation/devicetree/writing-schema.rst
-+++ b/Documentation/devicetree/writing-schema.rst
-@@ -133,11 +133,13 @@ binding schema. All of the DT binding documents can be validated using the
- 
-     make dt_binding_check
- 
--In order to perform validation of DT source files, use the `dtbs_check` target::
-+In order to perform validation of DT source files, use the ``dtbs_check`` target::
- 
-     make dtbs_check
- 
--This will first run the `dt_binding_check` which generates the processed schema.
-+Note that ``dtbs_check`` will skip any binding schema files with errors. It is
-+necessary to use ``dt_binding_check`` to get all the validation errors in the
-+binding schema files.
- 
- It is also possible to run checks with a single schema file by setting the
- ``DT_SCHEMA_FILES`` variable to a specific schema file.
--- 
-2.20.1
-
+Robin.
