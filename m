@@ -2,60 +2,62 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E760C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E04C17442
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E10222D0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF03206BA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pXlv7oIm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MT7FUd3+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfKMMqb (ORCPT
+        id S1726979AbfKMMqf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:46:31 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54212 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfKMMqb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 07:46:31 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADCkLiL119767;
-        Wed, 13 Nov 2019 06:46:21 -0600
+        Wed, 13 Nov 2019 07:46:35 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36728 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfKMMqf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 07:46:35 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADCkQLH013616;
+        Wed, 13 Nov 2019 06:46:26 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573649181;
-        bh=pRF7p8v054t/HDVdz8KBBBRwhrT3OT3e+Ov7Dq3EyOQ=;
-        h=From:To:CC:Subject:Date;
-        b=pXlv7oImuE/C6oRnXLibrgZFjh1nXHEIkiEAQ6Pa48LXx2dMfrclCs1fsA3rd7wfH
-         lmM/k+fk0ZjymJCgHEStLTL/CS8+pfeuO8GaU4OvCZoWCbeVVFRlWwirJmt0cJj+RK
-         STVY1nwmY/c6JHRsmpSiP2YVmVs9UFoa3AEbwF0c=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADCkLed115017
+        s=ti-com-17Q1; t=1573649186;
+        bh=KcStxR+XaqqutrtFiRj7KO9BKQOGxi+kB1kiTLkhTJs=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=MT7FUd3+UFVzd4m9y37DYwp2DyEjjT/C3LjwIsTbh0KEWs9MHo6hzGBrOFtUBwIhg
+         R6OnecrLkcAtMoT5bvb35d5Iztd9sg7B5YtFKnRE6kvmTiBurqK8v65CaZX/18CY8w
+         bAOeNwoCEWldGyzca/00wQstFSfEbgfdfnSvrFHc=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADCkQvw081427
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 06:46:21 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 13 Nov 2019 06:46:26 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 06:46:03 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 06:46:08 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 06:46:03 -0600
+ Frontend Transport; Wed, 13 Nov 2019 06:46:25 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADCkIGE127078;
-        Wed, 13 Nov 2019 06:46:19 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADCkIGG127078;
+        Wed, 13 Nov 2019 06:46:23 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <broonie@kernel.org>, <lgirdwood@gmail.com>
 CC:     <alsa-devel@alsa-project.org>, <kuninori.morimoto.gx@renesas.com>,
         <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/2] ASoC: pcm3168a: Poor man's RST gpio handling
-Date:   Wed, 13 Nov 2019 14:47:32 +0200
-Message-ID: <20191113124734.27984-1-peter.ujfalusi@ti.com>
+Subject: [PATCH 2/2] ASoC: pcm3168a: Add support for optional RST gpio handling
+Date:   Wed, 13 Nov 2019 14:47:34 +0200
+Message-ID: <20191113124734.27984-3-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191113124734.27984-1-peter.ujfalusi@ti.com>
+References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -65,33 +67,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+In case the RST line is connected to a GPIO line it needs to be pulled high
+when the driver probes to be able to use the codec.
 
-when the codec RST input is connected to a GPIO it needs to be pulled high in
-order to take the pcm3168a out from reset and to make it respond to register
-accesses via i2c.
+Add support also for cases when more than one codec is is controlled by the
+same GPIO line by requesting the gpio with GPIOD_FLAGS_BIT_NONEXCLUSIVE.
 
-I have a board where one GPIO line is connected to two pcm3168a codec so runtime
-handling of the RST gpio is not possible (one codec would place the other codec
-to reset as well).
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-The only possible solution is to request the gpio with
-GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, ask it to be high initially and never touch
-it again.
-
-If the optinal GPIO is not described then issue the reset as the driver did.
-
-Regards,
-Peter
+--- asoc: pcm3168a rst
 ---
-Peter Ujfalusi (2):
-  bindings: sound: pcm3168a: Document optional RST gpio
-  ASoC: pcm3168a: Add support for optional RST gpio handling
+ sound/soc/codecs/pcm3168a.c | 38 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
- .../devicetree/bindings/sound/ti,pcm3168a.txt |  7 ++++
- sound/soc/codecs/pcm3168a.c                   | 38 +++++++++++++++++--
- 2 files changed, 41 insertions(+), 4 deletions(-)
-
+diff --git a/sound/soc/codecs/pcm3168a.c b/sound/soc/codecs/pcm3168a.c
+index 313500ab36df..f3475134b519 100644
+--- a/sound/soc/codecs/pcm3168a.c
++++ b/sound/soc/codecs/pcm3168a.c
+@@ -9,7 +9,9 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
+ 
+@@ -59,6 +61,7 @@ struct pcm3168a_priv {
+ 	struct regulator_bulk_data supplies[PCM3168A_NUM_SUPPLIES];
+ 	struct regmap *regmap;
+ 	struct clk *scki;
++	struct gpio_desc *gpio_rst;
+ 	unsigned long sysclk;
+ 
+ 	struct pcm3168a_io_params io_params[2];
+@@ -643,6 +646,7 @@ static bool pcm3168a_readable_register(struct device *dev, unsigned int reg)
+ static bool pcm3168a_volatile_register(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
++	case PCM3168A_RST_SMODE:
+ 	case PCM3168A_DAC_ZERO:
+ 	case PCM3168A_ADC_OV:
+ 		return true;
+@@ -702,6 +706,21 @@ int pcm3168a_probe(struct device *dev, struct regmap *regmap)
+ 
+ 	dev_set_drvdata(dev, pcm3168a);
+ 
++	/*
++	 * Request the RST gpio line as non exclusive as the same reset line
++	 * might be connected to multiple pcm3168a codec
++	 */
++	pcm3168a->gpio_rst = devm_gpiod_get_optional(dev, "rst",
++						GPIOD_OUT_HIGH |
++						GPIOD_FLAGS_BIT_NONEXCLUSIVE);
++	if (IS_ERR(pcm3168a->gpio_rst)) {
++		ret = PTR_ERR(pcm3168a->gpio_rst);
++		if (ret != -EPROBE_DEFER )
++			dev_err(dev, "failed to acquire RST gpio: %d\n", ret);
++
++		return ret;
++	}
++
+ 	pcm3168a->scki = devm_clk_get(dev, "scki");
+ 	if (IS_ERR(pcm3168a->scki)) {
+ 		ret = PTR_ERR(pcm3168a->scki);
+@@ -743,10 +762,18 @@ int pcm3168a_probe(struct device *dev, struct regmap *regmap)
+ 		goto err_regulator;
+ 	}
+ 
+-	ret = pcm3168a_reset(pcm3168a);
+-	if (ret) {
+-		dev_err(dev, "Failed to reset device: %d\n", ret);
+-		goto err_regulator;
++	if (pcm3168a->gpio_rst) {
++		/*
++		 * The device is taken out from reset via GPIO line, wait for
++		 * 3846 SCKI clock cycles for the internal reset de-assertion
++		 */
++		msleep(DIV_ROUND_UP(3846 * 1000, pcm3168a->sysclk));
++	} else {
++		ret = pcm3168a_reset(pcm3168a);
++		if (ret) {
++			dev_err(dev, "Failed to reset device: %d\n", ret);
++			goto err_regulator;
++		}
+ 	}
+ 
+ 	pm_runtime_set_active(dev);
+@@ -785,6 +812,9 @@ static void pcm3168a_disable(struct device *dev)
+ 
+ void pcm3168a_remove(struct device *dev)
+ {
++	struct pcm3168a_priv *pcm3168a = dev_get_drvdata(dev);
++
++	gpiod_set_value_cansleep(pcm3168a->gpio_rst, 0);
+ 	pm_runtime_disable(dev);
+ #ifndef CONFIG_PM
+ 	pcm3168a_disable(dev);
 -- 
 Peter
 
