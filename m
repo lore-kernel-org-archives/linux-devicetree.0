@@ -2,99 +2,98 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE6DC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4524BC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861BB21D7F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LjpMbbhy"
+	by mail.kernel.org (Postfix) with ESMTP id 1BBD721D7F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573611403;
+	bh=t0LGKsLAIPhyIH2YHKRCrKEsmfB6YyBV3i4SCbgDs0E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=isFgDkHymk5v6cZFiRUFlloGaW8AT7lX8Jt8K5RIrsnxGYnGc7ca8bmyE2/2HMbtc
+	 sUBn6QHCUK5181CmRNTJ/d3Pb99xXjkbekZlP65tqH9BpZ1Zi94J3D8DDC3GOZJyCi
+	 CSfpeWReDB7R8jCtRdLKNQL9Mbea7MYYH/kt3jE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbfKMCPG (ORCPT
+        id S1729493AbfKMCQh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:15:06 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:54550 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbfKMCO7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 21:14:59 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD2EG8f062341;
-        Wed, 13 Nov 2019 02:14:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=5+sd2HaueY26dn+rgJI+YCERp7oCIRvfIJ/MF+t4KsY=;
- b=LjpMbbhyF3ErFyyXfQctAaayPzt+DwBn8DGBpTj8ZGUvS6now9Eq89ZL3lbUqOMNYrJD
- p6xqnATUhdW86bUQV35HaAc8s+AaHV3HgDnxXk8rqcNTLh++dEDIRv/ULGmCSU5qQf7M
- mckgf/cIjGISRyf33iZrd5CyT+ixZlu/Y0mz0O1CkZ4g/cxmEgYCeAIHDEuPLj9uNDLJ
- XIssxhOMxV2K4BHGM+3Pbn5HCRMPWPLSKB4Tr7EW6T3xHw4kQUT9e/RY181x/nA/+Tg6
- v/8Y1WjN6JYrynqJs0jPHOLCn5fcpF6tKHWwWSnrlrGExYA+MgDHUdEAuu3IBRhHiNXU zg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w5mvtrypx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 02:14:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAD2EPIb176522;
-        Wed, 13 Nov 2019 02:14:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2w7khmesb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 02:14:42 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAD2EQcd029499;
-        Wed, 13 Nov 2019 02:14:27 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 Nov 2019 18:14:26 -0800
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Janek Kotas <jank@cadence.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH v3 0/2] scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191108164857.11466-1-vigneshr@ti.com>
-Date:   Tue, 12 Nov 2019 21:14:22 -0500
-In-Reply-To: <20191108164857.11466-1-vigneshr@ti.com> (Vignesh Raghavendra's
-        message of "Fri, 8 Nov 2019 22:18:55 +0530")
-Message-ID: <yq1o8xgr08x.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 12 Nov 2019 21:16:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727725AbfKMB41 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:27 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 362E52245C;
+        Wed, 13 Nov 2019 01:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573610187;
+        bh=t0LGKsLAIPhyIH2YHKRCrKEsmfB6YyBV3i4SCbgDs0E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JfeUayxg1T72Nxabgp03UhBlY2d6feFqhJfVay7ycnCQHKt45qeImd0Sp0sj8nFe6
+         ECVnT85OmyDHv+Tw6eGosEiU1G91zWMWo0FgDgZFmo+Pa6cEuJfP+KGqDuk1rX+35Z
+         mrPS01GryQvwcYLNBcYUdWvvUxtAPpNmOmsAdmA4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 003/115] ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
+Date:   Tue, 12 Nov 2019 20:54:30 -0500
+Message-Id: <20191113015622.11592-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
+References: <20191113015622.11592-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=783
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911130016
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9439 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=855 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911130016
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Vignesh R <vigneshr@ti.com>
 
-Vignesh,
+[ Upstream commit b830526f304764753fcb8b4a563a94080e982a6c ]
 
-> This series add DT bindings and driver for TI wrapper for Cadence UFS
-> IP that is present on TI's J721e SoC
+Add ti,syscon-unaligned-access property to PCIe RC nodes to set
+appropriate bits in CTRL_CORE_SMA_SW_7 register to enable workaround for
+errata i870.
 
-Applied to 5.5/scsi-queue, thanks!
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 0bf354024ef55..3af1aa7a3213d 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -314,6 +314,7 @@
+ 						<0 0 0 2 &pcie1_intc 2>,
+ 						<0 0 0 3 &pcie1_intc 3>,
+ 						<0 0 0 4 &pcie1_intc 4>;
++				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
+ 				status = "disabled";
+ 				pcie1_intc: interrupt-controller {
+ 					interrupt-controller;
+@@ -367,6 +368,7 @@
+ 						<0 0 0 2 &pcie2_intc 2>,
+ 						<0 0 0 3 &pcie2_intc 3>,
+ 						<0 0 0 4 &pcie2_intc 4>;
++				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
+ 				pcie2_intc: interrupt-controller {
+ 					interrupt-controller;
+ 					#address-cells = <0>;
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.20.1
+
