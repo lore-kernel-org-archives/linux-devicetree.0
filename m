@@ -2,179 +2,90 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FEEC47417
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B604AC47412
 	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B169230F1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B00323355
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:53:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="SkfBtUUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfKMPwW (ORCPT
+        id S1727952AbfKMPxB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:52:22 -0500
-Received: from relmlor2.renesas.com ([210.160.252.172]:28234 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727907AbfKMPwW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:52:22 -0500
-X-IronPort-AV: E=Sophos;i="5.68,300,1569250800"; 
-   d="scan'208";a="31380904"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 14 Nov 2019 00:52:21 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B9714400EE6B;
-        Thu, 14 Nov 2019 00:52:16 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 13 Nov 2019 10:53:01 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:59880 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726074AbfKMPxB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:53:01 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id E4A7042F13;
+        Wed, 13 Nov 2019 15:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1573660379; x=
+        1575474780; bh=qwaAo++Hxq/xhKzQ+e7L5c5MfPCUE4SJHj8Ci0KK/h0=; b=S
+        kfBtUUTMsrPxsM990AS3KYPEGN4OWIpmmBEpNt7cFQRl74PGvJPQVteXYIRaLuua
+        bkkrkpktHYa5V91c2x/Ou5z7xUis+6GUQI4UGxHvVGfJznmZKiNC7pA9x2d0GdVS
+        CunLu4VvpjqJ8Vw6xR8AEy1q1MY8UpkBkgQUKj1bNA=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 6Y2Uh-qbzRR3; Wed, 13 Nov 2019 18:52:59 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 0D11D411D9;
+        Wed, 13 Nov 2019 18:52:53 +0300 (MSK)
+Received: from localhost.dev.yadro.com (172.17.15.69) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Wed, 13 Nov 2019 18:52:53 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 08/13] dt-bindings: display: bridge: Repurpose lvds-encoder
-Date:   Wed, 13 Nov 2019 15:51:27 +0000
-Message-Id: <1573660292-10629-9-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <openbmc@lists.ozlabs.org>
+Subject: [PATCH 0/2] add inversion signal presence support
+Date:   Wed, 13 Nov 2019 18:52:35 +0300
+Message-ID: <20191113155237.30646-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.17.15.69]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In an effort to repurpose lvds-encoder.c to also serve the
-function of LVDS decoders, we ended up defining a new "generic"
-compatible string ("lvds-decoder"), therefore adapt the dt schema
-to allow for the new compatible string.
+Vesnin BMC uses microSD with card presence signal inversion in the
+schematics. Change the .get_cd callback to detect 'cd-inverted' option
+in dts. There is no WP switch, due to this 'disable-wp' also was added
+into vesnin dts for sdhci.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Ivan Mikhaylov (2):
+  aspeed: dts: add sd card for vesnin
+  mmc: sdhci-of-aspeed: add inversion signal presence
 
----
-v3->v4:
-* Improved title and description according to Laurent's comments
-* Reworked definition of the compatible property
-v2->v3:
-* Extracted conversion to lvds-codec as per Rob's comment
-v1->v2:
-* Converted to dt-schema as per Neil's comment
----
- .../{lvds-transmitter.yaml => lvds-codec.yaml}     | 54 +++++++++++++++++-----
- 1 file changed, 42 insertions(+), 12 deletions(-)
- rename Documentation/devicetree/bindings/display/bridge/{lvds-transmitter.yaml => lvds-codec.yaml} (61%)
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 13 ++++++++++++
+ drivers/mmc/host/sdhci-of-aspeed.c          | 23 +++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-similarity index 61%
-rename from Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml
-rename to Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-index 27de616..0ecc8a4 100644
---- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml
-+++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-@@ -1,17 +1,17 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/display/bridge/lvds-transmitter.yaml#
-+$id: http://devicetree.org/schemas/display/bridge/lvds-codec.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Parallel to LVDS Encoder
-+title: Transparent LVDS encoders and decoders
- 
- maintainers:
-   - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
- 
- description: |
--  This binding supports the parallel to LVDS encoders that don't require any
--  configuration.
-+  This binding supports transparent LVDS encoders and decoders that don't
-+  require any configuration.
- 
-   LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
-   incompatible data link layers have been used over time to transmit image data
-@@ -33,12 +33,14 @@ properties:
-     description: |
-       Must list the device specific compatible string first, followed by the
-       generic compatible string.
--    items:
--      - enum:
--        - ti,ds90c185       # For the TI DS90C185 FPD-Link Serializer
--        - ti,ds90c187       # For the TI DS90C187 FPD-Link Serializer
--        - ti,sn75lvds83     # For the TI SN75LVDS83 FlatLink transmitter
--      - const: lvds-encoder # Generic LVDS encoder compatible fallback
-+    oneOf:
-+      - items:
-+        - enum:
-+          - ti,ds90c185       # For the TI DS90C185 FPD-Link Serializer
-+          - ti,ds90c187       # For the TI DS90C187 FPD-Link Serializer
-+          - ti,sn75lvds83     # For the TI SN75LVDS83 FlatLink transmitter
-+        - const: lvds-encoder # Generic LVDS encoder compatible fallback
-+      - const: lvds-decoder   # Generic LVDS decoders compatible fallback
- 
-   ports:
-     type: object
-@@ -49,12 +51,14 @@ properties:
-       port@0:
-         type: object
-         description: |
--          Port 0 is for parallel input
-+          With LVDS encoders port 0 is for parallel input
-+          With LVDS decoders port 0 is for LVDS input
- 
-       port@1:
-         type: object
-         description: |
--          Port 1 is for LVDS output
-+          With LVDS encoders port 1 is for LVDS output
-+          With LVDS decoders port 1 is for parallel output
- 
-     required:
-       - port@0
-@@ -96,4 +100,30 @@ examples:
-       };
-     };
- 
-+  - |
-+    lvds-decoder {
-+      compatible = "lvds-decoder";
-+
-+      ports {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        port@0 {
-+          reg = <0>;
-+
-+          lvds_dec_in: endpoint {
-+            remote-endpoint = <&display_out_lvds>;
-+          };
-+        };
-+
-+        port@1 {
-+          reg = <1>;
-+
-+          lvds_dec_out: endpoint {
-+            remote-endpoint = <&rgb_panel_in>;
-+          };
-+        };
-+      };
-+    };
-+
- ...
 -- 
-2.7.4
+2.20.1
 
