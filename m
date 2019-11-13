@@ -2,76 +2,199 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E40C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 04:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB28C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 04:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6BA2222C9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 04:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B907222C9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 04:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573618086;
+	bh=1Xz1e3rpcu5Dl6WkiysgblTxtErL0d9tDfytLC7CXEo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O3yq/SyIEZ09mP6fNA7WogmSVCxaAiwZRdJzBsH9xTVbGm5jJB0+uDAFoh3FIbjgJ
+	 UBKJj5J03VDh6vRIJG9inof23G3zj2NmObz8lGI/1p6Bb38ZwwmJUdblp/TvatB/kM
+	 9NUdwAH5Jv6lBEXQ/PUgYOHv3aRDE0RrqUcCeKFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKMEGq (ORCPT
+        id S1727170AbfKMEIF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 23:06:46 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:54666 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfKMEGq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 23:06:46 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AF907155010EA;
-        Tue, 12 Nov 2019 20:06:44 -0800 (PST)
-Date:   Tue, 12 Nov 2019 20:06:44 -0800 (PST)
-Message-Id: <20191112.200644.1626534982196475617.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     wahrenst@gmx.net, matthias.bgg@kernel.org, mbrugger@suse.com,
-        robh+dt@kernel.org, eric@anholt.net, nsaenzjulienne@suse.de,
-        opendmb@gmail.com, netdev@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH V5 net-next 0/7] ARM: Enable GENET support for RPi 4
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <a7ac4b21-822a-3170-29b6-85cfd80796a0@gmail.com>
-References: <1573501766-21154-1-git-send-email-wahrenst@gmx.net>
-        <20191112.193557.2087258530355949302.davem@davemloft.net>
-        <a7ac4b21-822a-3170-29b6-85cfd80796a0@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 20:06:45 -0800 (PST)
+        Tue, 12 Nov 2019 23:08:05 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41580 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbfKMEIF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 23:08:05 -0500
+Received: by mail-oi1-f193.google.com with SMTP id e9so538902oif.8;
+        Tue, 12 Nov 2019 20:08:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SfWsvDTJzevdEjzMrngS03ZeASmUAsKr6Bk84qRvmhU=;
+        b=lWkOrY6Ei/bGZoT3h0ZLzCVDxsZMY7ea12wDZxWc2DgCXpC1TNb3PLCdqz3gn9mOVa
+         ZSWlnEGg7h822JuhyOSp2krq1BlFTwEh6SUTNMLxpC/+V6GrNbErqx8KkfaizqSI+dsO
+         CfDDyT/u6Yg0oaWtcNiBE5I/gjW75lZQDm9CuVBJiKuK1b1tZF9gXYV9+nGyWvy3Arjh
+         ADDGUPcQS0SqVsBWp8zKEL/nY8CBBr5BwOowVlgi30ECD48YjcuCZ+jOe1fVt7KqBqt1
+         7KgeEPrAmU632auPCVJ7nSgfevHf7OoHb/l6NVkRkLMRGPXWjWdy/1VGd1i/+n84vyEo
+         KUhA==
+X-Gm-Message-State: APjAAAU6t7KtjWEA11atbzBaKxRvkkYu8De04FJFqF4w7Da1+qr9KvBM
+        G4/1Xncuycb7zLtVzPqTRw==
+X-Google-Smtp-Source: APXvYqwRUjP0Ny/K1cwD676eUUZNEvW/sKvkoiqZmyITmDaRQZxyPexAR+dfGrVGINIfyHcGyj/tlQ==
+X-Received: by 2002:aca:5cd5:: with SMTP id q204mr900116oib.14.1573618083945;
+        Tue, 12 Nov 2019 20:08:03 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e193sm296871oib.53.2019.11.12.20.08.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 20:08:03 -0800 (PST)
+Date:   Tue, 12 Nov 2019 22:08:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree
+ bindings
+Message-ID: <20191113040802.GA8269@bogus>
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVZwgVnq2kwjNJQHfvUH0sk6M7Hz-AJR82jMOsCNfW9wQ@mail.gmail.com>
+ <CA+V-a8swtOUaxKnCdiTV5wvvxLEJ6XdODL=7bvQmFKY0zQTj2w@mail.gmail.com>
+ <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXkbWkQgswMNL7Dw7_jucH+MsuAW+-CjoGVYsm=tjShRw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Tue, 12 Nov 2019 19:56:36 -0800
+On Thu, Nov 07, 2019 at 09:08:35PM +0100, Geert Uytterhoeven wrote:
+> Hi Prabhakar,
+> 
+> On Thu, Nov 7, 2019 at 10:26 AM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> > On Thu, Nov 7, 2019 at 8:44 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Wed, Nov 6, 2019 at 8:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> > > >
+> > > > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Thanks for your patch!
+> > >
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> > > > @@ -0,0 +1,43 @@
+> > > > +* Renesas R-Car PCIe Endpoint Controller DT description
+> > > > +
+> > > > +Required properties:
+> > > > +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> > > > +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> > > > +                                    RZ/G2 compatible device.
+> > >
+> > > Unless I'm missing something, this is for the exact same hardware block as
+> > > Documentation/devicetree/bindings/pci/rcar-pci.txt?
+> > > So shouldn't you amend those bindings, instead of adding new compatible
+> > > values?
+> > > Please remember that DT describes hardware, not software policy.
+> > > So IMHO choosing between host and endpoint is purely a configuration
+> > > issue, and could be indicated by the presence or lack of some DT properties.
+> > > E.g. host mode requires both "bus-range" and "device_type" properties,
+> > > so their absence could indicate endpoint mode.
+> > >
+> > yes its the same hardware block as described in the rcar-pci.txt, I
+> > did think about amending it
+> > but  it might turn out to be bit messy,
+> >
+> > required properties host ======required properties Endpoint
+> > ====================||==================
+> > 1: reg                                || reg
+> > 2:bus-range                      || reg names
+> > 3: device_type                  || resets
+> > 4: ranges                          || clocks
+> > 5: dma-ranges                  || clock-names
+> > 6: interrupts                      ||
+> > 7: interrupt-cells               ||
+> > 8: interrupt-map-mask     ||
+> > 9: clocks                          ||
+> > 10: clock-names             ||
+> 
+> We have a similar situation with SPI, where a controller can operate in
+> master or slave mode, based on the absence or presence of the
+> "spi-slave" DT property.
+> 
+> > and if I go ahead with the same compatible string that would mean to
+> > add support for endpoint
+> > mode in the host driver itself. I did follow the examples of
+> 
+> You can still have two separate drivers, binding against the same
+> compatible value.  Just let the .probe() function return -ENODEV if it
+> discovers (by looking at DT properties) if the node is configured for
+> the other mode.
+> Which brings us to my next questions: is there any code that could be
+> shared between the drivers for the two modes?
+> 
+> > rockchip/cadence/designware where
+> > its the same hardware block but has two different binding files one
+> > for host mode and other for
+> > endpoint mode.
+> 
+> Having two separate DT binding documents sounds fine to me, if unifying
+> them makes things too complex.
+> However, I think they should use the same compatible value, because the
+> hardware block is the same, but just used in a different mode.
+> 
+> Rob/Mark: Any input from the DT maintainers?
 
+Separate files makes sense because different modes will want to 
+include different common schemas. We've generally been doing different 
+compatibles too which makes validating the node has the right set of 
+properties easier.
+ 
+> > > > +- reg: Five register ranges as listed in the reg-names property
+> > > > +- reg-names: Must include the following names
+> > > > +       - "apb-base"
+> > > > +       - "memory0"
+> > > > +       - "memory1"
+> > > > +       - "memory2"
+> > > > +       - "memory3"
+> > >
+> > > What is the purpose of the last 4 regions?
+> > > Can they be chosen by the driver, at runtime?
+> > >
+> > no the driver cannot choose them at runtime, as these are the only
+> > PCIE memory(0/1/2/3) ranges
+> > in the AXI address space where host memory can be mapped.
 > 
-> 
-> On 11/12/2019 7:35 PM, David Miller wrote:
->> From: Stefan Wahren <wahrenst@gmx.net>
->> Date: Mon, 11 Nov 2019 20:49:19 +0100
->> 
->>> Raspberry Pi 4 uses the broadcom genet chip in version five.
->>> This chip has a dma controller integrated. Up to now the maximal
->>> burst size was hard-coded to 0x10. But it turns out that Raspberry Pi 4
->>> does only work with the smaller maximal burst size of 0x8.
->>>
->>> Additionally the patch series has some IRQ retrieval improvements and
->>> adds support for a missing PHY mode.
->>>
->>> This series based on Matthias Brugger's V1 series [1].
->>>
->>> [1] - https://patchwork.kernel.org/cover/11186193/
->> 
->> What tree should this be applied to?  Patch #7 does not apply to net-next.
-> 
-> Do you mind taking 1-6 and I take patch 7 through the Broadcom ARM SoC tree?
+> Are they fixed by the PCIe hardware, i.e. could they be looked up by the
+> driver based on the compatible value?
 
-Sure, I'll do that right now, thanks!
+That would be strange for a memory range.
+
+Sounds like like 'ranges' though I'm not sure if 'ranges' for an EP 
+makes sense or what that should look like.
+
+Rob
