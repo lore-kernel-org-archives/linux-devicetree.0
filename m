@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACD3C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 17:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32461C43141
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 17:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A6F206EE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 17:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66139206EC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 17:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfKMRPQ (ORCPT
+        id S1728367AbfKMRPZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 12:15:16 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:51161 "EHLO
+        Wed, 13 Nov 2019 12:15:25 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:49593 "EHLO
         relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbfKMRPQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 12:15:16 -0500
+        with ESMTP id S1728294AbfKMRPU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 12:15:20 -0500
 X-Originating-IP: 91.224.148.103
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 06872E0011;
-        Wed, 13 Nov 2019 17:15:12 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id B183EE000A;
+        Wed, 13 Nov 2019 17:15:16 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
@@ -38,9 +38,9 @@ Cc:     <linux-mtd@lists.infradead.org>, Mark Brown <broonie@kernel.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Bernhard Frauendienst <kernel@nospam.obeliks.de>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 2/4] mtd: Add get_mtd_device_by_node() helper
-Date:   Wed, 13 Nov 2019 18:15:03 +0100
-Message-Id: <20191113171505.26128-3-miquel.raynal@bootlin.com>
+Subject: [PATCH v4 4/4] mtd: Add driver for concatenating devices
+Date:   Wed, 13 Nov 2019 18:15:05 +0100
+Message-Id: <20191113171505.26128-5-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113171505.26128-1-miquel.raynal@bootlin.com>
 References: <20191113171505.26128-1-miquel.raynal@bootlin.com>
@@ -53,82 +53,211 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
 
-Add an helper to retrieve a MTD device by its OF node. Since drivers can
-assign arbitrary names to MTD devices in the absence of a 'label' DT
-property, there is no other reliable way to retrieve a MTD device for a
-given OF node.
+Some MTD drivers like physmap variants have support for concatenating
+multiple MTD devices, but there is no generic way to define such a
+concatenated device from within the device tree.
+
+This is useful for boards where memory range has been extended with
+the use of multiple flash chips as memory banks of a single MTD
+device, with partitions spanning chip borders.
+
+Add a driver for creating virtual mtd-concat devices. They must have
+the "mtd-concat" compatible, and define a list of 'devices' to
+concatenate, ie:
+
+        flash {
+                compatible = "mtd-concat";
+                devices = <&flash0 &flash1>;
+
+                partitions {
+                        ...
+                };
+        };
 
 Signed-off-by: Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-[<miquel.raynal@bootlin.com>: light internals rework]
+[<miquel.raynal@bootlin.com>:
+Reword commit message a bit.
+Use the word 'virtual' instead of 'composite'.
+Do not probe the virtual device last: SPI is after MTD anyway.
+Change the driver's location.
+Update the driver logic and coding style.]
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/mtd/mtdcore.c   | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/mtd.h |  2 ++
- 2 files changed, 40 insertions(+)
+ drivers/mtd/Kconfig           |   8 +++
+ drivers/mtd/Makefile          |   1 +
+ drivers/mtd/mtd_virt_concat.c | 132 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 141 insertions(+)
+ create mode 100644 drivers/mtd/mtd_virt_concat.c
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 76b4264936ff..5a94a2c0a6de 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -985,6 +985,44 @@ struct mtd_info *get_mtd_device_nm(const char *name)
- }
- EXPORT_SYMBOL_GPL(get_mtd_device_nm);
+diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+index 79a8ff542883..3e1e55e7158f 100644
+--- a/drivers/mtd/Kconfig
++++ b/drivers/mtd/Kconfig
+@@ -276,6 +276,14 @@ config MTD_PARTITIONED_MASTER
+ 	  the parent of the partition device be the master device, rather than
+ 	  what lies behind the master.
  
-+/**
-+ *	get_mtd_device_by_node - obtain a validated handle for an MTD device
-+ *	by of_node
-+ *	@of_node: OF node of MTD device to open
++config MTD_VIRT_CONCAT
++	tristate "Virtual concatenated MTD devices"
++	help
++	  This driver allows creation of a virtual MTD device, which
++	  concatenates multiple physical MTD devices into a single one.
++	  This is useful to create partitions bigger than the underlying
++	  physical chips by allowing cross-chip boundaries.
++
+ source "drivers/mtd/chips/Kconfig"
+ 
+ source "drivers/mtd/maps/Kconfig"
+diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+index 58fc327a5276..c7ee13368a66 100644
+--- a/drivers/mtd/Makefile
++++ b/drivers/mtd/Makefile
+@@ -27,6 +27,7 @@ obj-$(CONFIG_SSFDC)		+= ssfdc.o
+ obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
+ obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
+ obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
++obj-$(CONFIG_MTD_VIRT_CONCAT)	+= mtd_virt_concat.o
+ 
+ nftl-objs		:= nftlcore.o nftlmount.o
+ inftl-objs		:= inftlcore.o inftlmount.o
+diff --git a/drivers/mtd/mtd_virt_concat.c b/drivers/mtd/mtd_virt_concat.c
+new file mode 100644
+index 000000000000..d184c58f7e09
+--- /dev/null
++++ b/drivers/mtd/mtd_virt_concat.c
+@@ -0,0 +1,132 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Virtual concat MTD device driver
 + *
-+ *	This function returns an MTD device structure in case of success,
-+ *	an error code otherwise.
++ * Copyright (C) 2018 Bernhard Frauendienst
++ * Author: Bernhard Frauendienst <kernel@nospam.obeliks.de>
 + */
-+struct mtd_info *get_mtd_device_by_node(const struct device_node *of_node)
++
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/mtd/concat.h>
++#include <linux/mtd/mtd.h>
++#include <linux/mtd/partitions.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/slab.h>
++
++/**
++ * struct mtd_virt_concat - platform device driver data.
++ * @vmtd: Virtual mtd_concat device
++ * @count: Number of physical underlaying devices in @devices
++ * @devices: Array of the physical devices used
++ */
++struct mtd_virt_concat {
++	struct mtd_info	*vmtd;
++	unsigned int count;
++	struct mtd_info	**devices;
++};
++
++static void mtd_virt_concat_put_devices(struct mtd_virt_concat *concat)
 +{
++	int i;
++
++	for (i = 0; i < concat->count; i++)
++		put_mtd_device(concat->devices[i]);
++}
++
++static int mtd_virt_concat_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
++	struct mtd_virt_concat *concat;
++	struct of_phandle_iterator it;
 +	struct mtd_info *mtd;
-+	bool found = false;
-+	int ret;
++	int ret, count;
 +
-+	mutex_lock(&mtd_table_mutex);
-+
-+	mtd_for_each_device(mtd) {
-+		if (of_node == mtd->dev.of_node) {
-+			found = true;
-+			break;
-+		}
++	count = of_count_phandle_with_args(node, "devices", NULL);
++	if (count < 2) {
++		dev_err(dev, "minimum 2 devices, given: %d\n", count);
++		return -EINVAL;
 +	}
 +
-+	if (found)
-+		ret = __get_mtd_device(mtd);
++	concat = devm_kzalloc(dev, sizeof(*concat), GFP_KERNEL);
++	if (!concat)
++		return -ENOMEM;
 +
-+	mutex_unlock(&mtd_table_mutex);
++	platform_set_drvdata(pdev, concat);
 +
-+	if (!found)
-+		return ERR_PTR(-ENODEV);
++	concat->devices = devm_kcalloc(dev, count, sizeof(*concat->devices),
++				       GFP_KERNEL);
++	if (!concat->devices)
++		return -ENOMEM;
 +
++	/* Aggregate the physical devices */
++	of_for_each_phandle(&it, ret, node, "devices", NULL, 0) {
++		mtd = get_mtd_device_by_node(it.node);
++		if (IS_ERR(mtd)) {
++			ret = -EPROBE_DEFER;
++			goto put_mtd_devices;
++		}
++
++		concat->devices[concat->count++] = mtd;
++	}
++
++	/* Create the virtual device */
++	concat->vmtd = mtd_concat_create(concat->devices, concat->count,
++					 dev_name(dev));
++	if (!concat->vmtd) {
++		ret = -ENXIO;
++		goto put_mtd_devices;
++	}
++
++	concat->vmtd->dev.parent = dev;
++	mtd_set_of_node(concat->vmtd, node);
++
++	/* Register the platform device */
++	ret = mtd_device_register(concat->vmtd, NULL, 0);
 +	if (ret)
-+		return ERR_PTR(ret);
++		goto destroy_concat;
 +
-+	return mtd;
++	return 0;
++
++destroy_concat:
++	mtd_concat_destroy(concat->vmtd);
++put_mtd_devices:
++	mtd_virt_concat_put_devices(concat);
++
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(get_mtd_device_by_node);
 +
- void put_mtd_device(struct mtd_info *mtd)
- {
- 	mutex_lock(&mtd_table_mutex);
-diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-index 677768b21a1d..0f25c476a1a3 100644
---- a/include/linux/mtd/mtd.h
-+++ b/include/linux/mtd/mtd.h
-@@ -573,6 +573,8 @@ extern struct mtd_info *get_mtd_device(struct mtd_info *mtd, int num);
- extern int __get_mtd_device(struct mtd_info *mtd);
- extern void __put_mtd_device(struct mtd_info *mtd);
- extern struct mtd_info *get_mtd_device_nm(const char *name);
-+extern struct mtd_info *get_mtd_device_by_node(
-+		const struct device_node *of_node);
- extern void put_mtd_device(struct mtd_info *mtd);
- 
- 
++static int mtd_virt_concat_remove(struct platform_device *pdev)
++{
++	struct mtd_virt_concat *concat = platform_get_drvdata(pdev);
++
++	mtd_device_unregister(concat->vmtd);
++	mtd_concat_destroy(concat->vmtd);
++	mtd_virt_concat_put_devices(concat);
++
++	return 0;
++}
++
++static const struct of_device_id mtd_virt_concat_of_match[] = {
++	{
++		.compatible = "mtd-concat",
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, mtd_virt_concat_of_match);
++
++static struct platform_driver mtd_virt_concat_driver = {
++	.probe = mtd_virt_concat_probe,
++	.remove = mtd_virt_concat_remove,
++	.driver	 = {
++		.name   = "mtd-virt-concat",
++		.of_match_table = mtd_virt_concat_of_match,
++	},
++};
++module_platform_driver(mtd_virt_concat_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Bernhard Frauendienst <kernel@nospam.obeliks.de>");
++MODULE_DESCRIPTION("Virtual concat MTD device driver");
 -- 
 2.20.1
 
