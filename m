@@ -2,108 +2,131 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CD1C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0531DC17442
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 12:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD51206BA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 12:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60EF22459
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 12:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ksFivVFH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Fu4JZWt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfKMMqd (ORCPT
+        id S1726439AbfKMMxF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 07:46:33 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36726 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbfKMMqd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 07:46:33 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xADCkOMl013610;
-        Wed, 13 Nov 2019 06:46:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573649184;
-        bh=8aQ8N44hvS+8dZKUfv1GLSveBB3IfB2708I6w+E/VzA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ksFivVFHjffDLgFQK0dN/YY0iep7idsI/DJK/M/3mk93CKCkhIgEQqNhoLzsn2gjK
-         Ps3l0mE/gdj4EamWZiPCU0Xuh0pqqyW9WuYgxsoWPWZ0ePUGOatN+mXBLGcwYVbF44
-         JJaGT1SdVkbAH/+HKxEVhflAyfKwSGxJdgZcETg4=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xADCkNK4115042
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Nov 2019 06:46:23 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 13
- Nov 2019 06:46:05 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 13 Nov 2019 06:46:06 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xADCkIGF127078;
-        Wed, 13 Nov 2019 06:46:21 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <broonie@kernel.org>, <lgirdwood@gmail.com>
-CC:     <alsa-devel@alsa-project.org>, <kuninori.morimoto.gx@renesas.com>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] bindings: sound: pcm3168a: Document optional RST gpio
-Date:   Wed, 13 Nov 2019 14:47:33 +0200
-Message-ID: <20191113124734.27984-2-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191113124734.27984-1-peter.ujfalusi@ti.com>
-References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
+        Wed, 13 Nov 2019 07:53:05 -0500
+Received: from mail-eopbgr30061.outbound.protection.outlook.com ([40.107.3.61]:30958
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbfKMMxF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 07:53:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l+2qpdBmlSIWNb0/sqxvJjPF3bWWp1jJ7/B+j+DWNyukC4eUoiNX0vJ3YSE5VvbvcaD1OVAIR9/0q8j88gRWWdZRQMJHk3QvxLpRSZmKUU1fWSXvdPYEf6ViCK6Znk6qyo6gS9SGWQEjqrsKuXrd34JKaKhiW12gzmFXra6F8u/wFNLbYHgv4JTtpHiIyTnjzLbE7PH4dTAXKxNUTa7fw47cAiqiK4YWNz79DinrEDnch/CImnEv+LLgpVYVmaW4MeE3oyHt+JXuHSQpd88bsWhvxgtsTAILWXxTeztCXUOcF9sSncue5ut9BSKjvTarOgjk1wcW7v2J45ylftyQzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v51jS1YbWoU2bWpd7iOpJZoCSZ9pXOl6bHwY/TGI6hU=;
+ b=MTuNnb/GP+waP3xYsmie/C9hLSfTgwxK2NtK0tdpVl9BfedvJggF30Iq6v/HHyCw7He/+g2sbU03KJirGCsWVaz2IVbYyKYOZSPUA/vgOnBYDZAkYNjQ6fHMdI6zLj6DIOUohCQFadW+yRCi7XINrK6vHPV8U6hubi9M8qo4TpWtmtyARlYWpt+jsKZch2kyZ7rBGC3Jb5ZgOBUXAD/iskXGddGpsSX1bF16gg5kJWU0D6oYRT77ezfmC+cRANCsVepXspTtUeCuad7qVgtxgKddnKFtmlU+9sWo+q1MSlaWag8z+qyJubrK5VE0Z+zPqU+8rub+OUZYjn6H5AAJJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v51jS1YbWoU2bWpd7iOpJZoCSZ9pXOl6bHwY/TGI6hU=;
+ b=Fu4JZWt6zTA12fV3XU01fhZcNPQxMvxwy6TamPjTPSUM9oVktuRQpwNikwMjsZDMuBASTOjmEGmhPJvUZVNihXmkzMG7BF8pN7S5QU4DBCb7jhcQ3xicU2p3GF5sAyWH8PweXYQTVGSSJiMrjmyPPv5+Un7qe0a2B43v4TiTG7I=
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
+ VI1PR0402MB3773.eurprd04.prod.outlook.com (52.134.14.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.25; Wed, 13 Nov 2019 12:52:53 +0000
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::8997:3705:3f41:1d1b]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::8997:3705:3f41:1d1b%7]) with mapi id 15.20.2430.028; Wed, 13 Nov 2019
+ 12:52:52 +0000
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     "ezequiel@collabora.com" <ezequiel@collabora.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+Thread-Topic: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+Thread-Index: AQHVlLXLzR/BR8Qmu0iHDS94ZPyJ2qeHv+UAgAFZNAA=
+Date:   Wed, 13 Nov 2019 12:52:52 +0000
+Message-ID: <1573649572.16477.40.camel@nxp.com>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+         <b84f3c8c3913de6d897ad91576afe0df913c7d98.camel@collabora.com>
+In-Reply-To: <b84f3c8c3913de6d897ad91576afe0df913c7d98.camel@collabora.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mirela.rabulea@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a20b57b0-8713-42d8-db24-08d7683865b0
+x-ms-traffictypediagnostic: VI1PR0402MB3773:|VI1PR0402MB3773:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3773FED84A1CB6D19F987BE38F760@VI1PR0402MB3773.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0220D4B98D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(76176011)(2201001)(64756008)(14454004)(66476007)(66446008)(66556008)(86362001)(5660300002)(102836004)(256004)(7416002)(478600001)(305945005)(36756003)(91956017)(2501003)(7736002)(4001150100001)(6506007)(76116006)(66946007)(486006)(316002)(66066001)(6116002)(81156014)(54906003)(6246003)(71190400001)(71200400001)(6486002)(229853002)(8936002)(25786009)(99286004)(6436002)(50226002)(11346002)(81166006)(26005)(3846002)(186003)(103116003)(4744005)(44832011)(476003)(4326008)(2616005)(2906002)(6512007)(446003)(110136005)(8676002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3773;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5HslXcSKew54QwzzIe58FOnCwubDVTXGzSer0CgQK7M+Qae01sRKG8cabtuiWqQWTu0dsWXzC9Chytn7kRNzy0LpiWU68ZGjh38YSRVSZnqh0W8ouuTMlNC12a8GAc9owZ83/dYAVEZ5aS7W/FkUuSGxslFN1zs9ByPfk2IN8HrjjOe35G2Gl3k7Jpog8LsOJ8owUPqCKy3PyCbpT5f3nqkX68I5xQTG4B6IndjC68/NhmRA0h9oKdKDouzbezipTNwrEUEyxhdlMpynADOXnckdSxOwBLDg2aXyU4V7A667D3p57Q5Pit8PearMVy2beWIZWbAoYwPQlMcwS8QZZYCNpFTWKQxNZGvO7wnYlEm7dPMXXmayII3RcC+ib495SzRbJHSUJoG9k6dyu2z7jTV8+hRQj7/WXtQZjw9JTab3Ug7sO0wphh2641oRYFh5
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5CB67F455DDFD44CA512C82CC196E5C5@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a20b57b0-8713-42d8-db24-08d7683865b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 12:52:52.8161
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OhR1pdayjNdO7KJ2VuPzkkGo2zkT9lJLURCjyHEj294q7+gz9ZpwhlbPguepaqvjStFPmDb+PN2Yr/O6DMynBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3773
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On boards where the RST line is not pulled up, but it is connected to a
-GPIO line this property must present in order to be able to enable the
-codec.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- Documentation/devicetree/bindings/sound/ti,pcm3168a.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-index 5d9cb84c661d..f30aebc7603a 100644
---- a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-+++ b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-@@ -25,6 +25,12 @@ Required properties:
- 
- For required properties on SPI/I2C, consult SPI/I2C device tree documentation
- 
-+Optional properties:
-+
-+  - rst-gpios : Optional RST gpio line for the codec
-+		RST = low: device power-down
-+		RST = high: device is enabled
-+
- Examples:
- 
- i2c0: i2c0@0 {
-@@ -34,6 +40,7 @@ i2c0: i2c0@0 {
- 	pcm3168a: audio-codec@44 {
- 		compatible = "ti,pcm3168a";
- 		reg = <0x44>;
-+		rst-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
- 		clocks = <&clk_core CLK_AUDIO>;
- 		clock-names = "scki";
- 		VDD1-supply = <&supply3v3>;
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+SGnCoEV6ZXF1aWVsLA0KDQpPbiBNYSwgMjAxOS0xMS0xMiBhdCAxMzoxNyAtMDMwMCwgRXplcXVp
+ZWwgR2FyY2lhIHdyb3RlOg0KPiBUaGlzIHBhdGNoIHNldCBhZGRzIHRoZSBWNEwyIGRyaXZlciBm
+b3IgaS5NWDhRWFAvUU0gSlBFRw0KPiA+IGVuY29kZXIvZGVjb2Rlcg0KPiA+IGFuZCBpdCdzIGRl
+cGVuZGVuY2llcy4NCj4gPiBUaGUgZHJpdmVyIHdhcyB0ZXN0ZWQgb24gaS5NWDhRWFAsIHVzaW5n
+IGEgdW5pdCB0ZXN0IGFwcGxpY2F0aW9uDQo+ID4gYW5kDQo+IFdoYXQncyB0aGUgcmVsYXRpb3No
+aXAgYmV0d2VlbiB0aGlzIGhhcmR3YXJlIGFuZCB0aGUgSlBFRyBoYXJkd2FyZQ0KPiBzdXBwb3J0
+IHRoYXQNCj4gaXMgYXZhaWxhYmxlIG9uIGkuTVggOE0/DQoNCklmIHlvdSBhcmUgcmVmZXJyaW5n
+IHRvIHRoZSBWUFUsIHRoZSByZWxhdGlvbiBpcyBub25lLCBpdCdzIGEgZGlmZmVyZW50DQpJUC4g
+VGhlIFZQVSBpcyBhbHNvIGNhcGFibGUgb2YgTUpQRUcgZGVjb2RpbmcsIGJ1dCBubyBlbmNvZGlu
+Zy4NCg0KVGhlIElQcyBmb3Igd2hpY2ggdGhpcyBkcml2ZXIgaXMgd3JpdHRlbiBhcmUgdGhlIEpQ
+RUdFTkMgYW5kIEpQRUdERUMsDQphbmQgaXQncyBwcmVzZW50IG9ubHkgb24gOFFNICYgOFFYUCAo
+d2hpY2ggYWxzbyBoYXZlIHRoZSBWUFUpLg0KDQpSZWdhcmRzLA0KTWlyZWxh
