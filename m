@@ -2,165 +2,99 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E414DC47428
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CD1C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A387C22EBD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8046A20643
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="CHKMbtWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbfKMPwr (ORCPT
+        id S1727753AbfKMQkA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:52:47 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:12714 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726074AbfKMPwr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:52:47 -0500
-X-IronPort-AV: E=Sophos;i="5.68,300,1569250800"; 
-   d="scan'208";a="31593969"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 14 Nov 2019 00:52:46 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B391E400EE6B;
-        Thu, 14 Nov 2019 00:52:41 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 13/13] [HACK] dt-bindings: display: bridge: lvds-codec: Absorb thine,thc63lvdm83d.txt
-Date:   Wed, 13 Nov 2019 15:51:32 +0000
-Message-Id: <1573660292-10629-14-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Wed, 13 Nov 2019 11:40:00 -0500
+Received: from vern.gendns.com ([98.142.107.122]:33890 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727578AbfKMQkA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 11:40:00 -0500
+X-Greylist: delayed 1780 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Nov 2019 11:39:59 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1barl4LpDu79nPCoSjjU5D0XU/aFzdp/OvRiRUJvuu4=; b=CHKMbtWjUEP5Z9HxUTK44zytaD
+        GeMuIzYEjve7YUvU0+Gj+e+pYUpxXtnhSxCapF5tTdiRZM0mmjGx39ZDbaKcjLqBUzlkNB0JtsOdq
+        w5XE2Nr1h41pxvtjDRUm34LDSzeyWLxCJomyoC9Cyuqq/Tj35cCoy0mEqDNyTsQuUsiTJTAw12YoG
+        SWPpnJ68Yudfjqe7WM2gPuItES8UZ/ljmzsIJKuZgRHZBT46CdFEvuJaomoqtSb2ELeckXaWOzyP/
+        kQgcfLvzPBuLLFKnIwtaLZGrw2jo6NPEw15alM4nXN8hUBgv3z9L1jzkbgbI41CTkLFvVGJvASRmT
+        s5XDUEAQ==;
+Received: from [2600:1700:4830:165f::fb2] (port=42824)
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1iUvDm-0004Fk-9d; Wed, 13 Nov 2019 11:10:18 -0500
+Subject: Re: [PATCH AUTOSEL 4.14 050/115] ARM: dts: da850-lego-ev3: slow down
+ A/DC as much as possible
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Sekhar Nori <nsekhar@ti.com>, devicetree@vger.kernel.org
+References: <20191113015622.11592-1-sashal@kernel.org>
+ <20191113015622.11592-50-sashal@kernel.org>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <a1b3b613-8b70-56a3-dee6-264bd5fa5049@lechnology.com>
+Date:   Wed, 13 Nov 2019 10:10:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191113015622.11592-50-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-At this point in time, compatible string "thine,thc63lvdm83d" is
-backed by the lvds-codec driver, and the documentation contained
-in thine,thc63lvdm83d.txt is basically the same as the one
-contained in lvds-codec.yaml (generic fallback compatible string
-aside), therefore absorb thine,thc63lvdm83d.txt.
+On 11/12/19 7:55 PM, Sasha Levin wrote:
+> From: David Lechner <david@lechnology.com>
+> 
+> [ Upstream commit aea4762fb46e048c059ff49565ee33da07c8aeb3 ]
+> 
+> Due to the electrical design of the A/DC circuits on LEGO MINDSTORMS EV3,
+> if we are reading analog values as fast as possible (i.e. using DMA to
+> service the SPI) the A/DC chip will read incorrect values - as much as
+> 0.1V off when the SPI is running at 10MHz. (This has to do with the
+> capacitor charge time when channels are muxed in the A/DC.)
+> 
+> This patch slows down the SPI as much as possible (if CPU is at 456MHz,
+> SPI runs at 1/2 of that, so 228MHz and has a max prescalar of 256, so
+> we could get ~891kHz, but we're just rounding it to 1MHz). We also use
+> the max allowable value for WDELAY to slow things down even more.
+> 
+> These changes reduce the error of the analog values to about 5mV, which
+> is tolerable.
+> 
+> Commits a3762b13a596 ("spi: spi-davinci: Add support for SPI_CS_WORD")
+> and e2540da86ef8 ("iio: adc: ti-ads7950: use SPI_CS_WORD to reduce
+> CPU usage") introduce changes that allow DMA transfers to be used, so
+> this slow down is needed now.
+> 
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
----
-Hi Laurent,
-
-what do you think about this patch?
-
-Thanks,
-Fab
-
-v3->v4:
-* New patch
----
- .../bindings/display/bridge/lvds-codec.yaml        |  5 +--
- .../bindings/display/bridge/thine,thc63lvdm83d.txt | 50 ----------------------
- 2 files changed, 2 insertions(+), 53 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-index 21f8c6e..420bfce 100644
---- a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-+++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-@@ -30,9 +30,6 @@ description: |
- 
- properties:
-   compatible:
--    description: |
--      Must list the device specific compatible string first, followed by the
--      generic compatible string.
-     oneOf:
-       - items:
-         - enum:
-@@ -44,6 +41,8 @@ properties:
-         - enum:
-           - ti,ds90cf384a     # For the DS90CF384A FPD-Link LVDS Receiver
-         - const: lvds-decoder # Generic LVDS decoders compatible fallback
-+      - enum:
-+        - thine,thc63lvdm83d  # For the THC63LVDM83D LVDS serializer
- 
-   ports:
-     type: object
-diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt
-deleted file mode 100644
-index fee3c88..0000000
---- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--THine Electronics THC63LVDM83D LVDS serializer
------------------------------------------------
--
--The THC63LVDM83D is an LVDS serializer designed to support pixel data
--transmission between a host and a flat panel.
--
--Required properties:
--
--- compatible: Should be "thine,thc63lvdm83d"
--
--Optional properties:
--
--- powerdown-gpios: Power down control GPIO (the /PWDN pin, active low).
--
--Required nodes:
--
--The THC63LVDM83D has two video ports. Their connections are modeled using the
--OFgraph bindings specified in Documentation/devicetree/bindings/graph.txt.
--
--- Video port 0 for CMOS/TTL input
--- Video port 1 for LVDS output
--
--
--Example
---------
--
--	lvds_enc: encoder@0 {
--		compatible = "thine,thc63lvdm83d";
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@0 {
--				reg = <0>;
--
--				lvds_enc_in: endpoint@0 {
--					remote-endpoint = <&rgb_out>;
--				};
--			};
--
--			port@1 {
--				reg = <1>;
--
--				lvds_enc_out: endpoint@0 {
--					remote-endpoint = <&panel_in>;
--				};
--			};
--		};
--	};
--- 
-2.7.4
-
+I doubt that the commits above would be backported, so it does not
+make sense to backport this patch.
