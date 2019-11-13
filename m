@@ -2,107 +2,251 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E713CC4742C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46A3C4742A
 	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A0B23372
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="HWXT7pWj"
+	by mail.kernel.org (Postfix) with ESMTP id AF1FD22D0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbfKMPxD (ORCPT
+        id S1727992AbfKMPvs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:53:03 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:59910 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727257AbfKMPxC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:53:02 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id E46E9411D9;
-        Wed, 13 Nov 2019 15:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1573660379; x=1575474780; bh=GLiHq3+6zZ2/iuahpZbFing2AcId/JGBvnZ
-        w1df2dRQ=; b=HWXT7pWjLE0hc3scN76DKxhqlD8EaqQEJE3vDvCj1KEfMrSRIas
-        sNDmO9bJCGuIg4Q5iKva6lflSFsfmq4orQwZ7yXbYXrXcpxbiJ+ktOTwMHLg69jB
-        cAvvAQIQ8v82L7O6E1H8oFs41Orn6eqZfUVy2ygBSt8VqIYN6hXVo5QE=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SXm_l-p363AT; Wed, 13 Nov 2019 18:52:59 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 0B1A1412D2;
-        Wed, 13 Nov 2019 18:52:59 +0300 (MSK)
-Received: from localhost.dev.yadro.com (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 13 Nov 2019 18:52:53 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
+        Wed, 13 Nov 2019 10:51:48 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:21771 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726276AbfKMPvs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 10:51:48 -0500
+X-IronPort-AV: E=Sophos;i="5.68,300,1569250800"; 
+   d="scan'208";a="31593899"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 14 Nov 2019 00:51:46 +0900
+Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id DD37D400E9F7;
+        Thu, 14 Nov 2019 00:51:41 +0900 (JST)
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <openbmc@lists.ozlabs.org>
-Subject: [PATCH 1/2] aspeed: dts: add sd card for vesnin
-Date:   Wed, 13 Nov 2019 18:52:36 +0300
-Message-ID: <20191113155237.30646-2-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113155237.30646-1-i.mikhaylov@yadro.com>
-References: <20191113155237.30646-1-i.mikhaylov@yadro.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+        Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v4 01/13] dt-bindings: display: bridge: Convert lvds-transmitter binding to json-schema
+Date:   Wed, 13 Nov 2019 15:51:20 +0000
+Message-Id: <1573660292-10629-2-git-send-email-fabrizio.castro@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Presence signal is inverted for vesnin boards, 'cd-inverted' added
-for invertion signal enablement. Vesnin BMC uses microSD, there is
-no WP switch, 'disable-wp' is used for this purpose.
+Convert the lvds-transmitter binding to DT schema format using
+json-schema.
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-index a27c88d23056..7ae3436e0d99 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-@@ -232,3 +232,16 @@
- &wdt2 {
- 	aspeed,alt-boot;
- };
+---
+v3->v4:
+* Fixed the description of property "compatible" according to Laurent's
+  comments
+v2->v3:
+* Extracted conversion to dt-schema as per Rob's comment
+v1->v2:
+* Converted to dt-schema as per Neil's comment
+---
+ .../bindings/display/bridge/lvds-transmitter.txt   | 66 ----------------
+ .../bindings/display/bridge/lvds-transmitter.yaml  | 91 ++++++++++++++++++++++
+ 2 files changed, 91 insertions(+), 66 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+deleted file mode 100644
+index 60091db..0000000
+--- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
++++ /dev/null
+@@ -1,66 +0,0 @@
+-Parallel to LVDS Encoder
+-------------------------
+-
+-This binding supports the parallel to LVDS encoders that don't require any
+-configuration.
+-
+-LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
+-incompatible data link layers have been used over time to transmit image data
+-to LVDS panels. This binding targets devices compatible with the following
+-specifications only.
+-
+-[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
+-1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
+-[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
+-Semiconductor
+-[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
+-Electronics Standards Association (VESA)
+-
+-Those devices have been marketed under the FPD-Link and FlatLink brand names
+-among others.
+-
+-
+-Required properties:
+-
+-- compatible: Must be "lvds-encoder"
+-
+-  Any encoder compatible with this generic binding, but with additional
+-  properties not listed here, must list a device specific compatible first
+-  followed by this generic compatible.
+-
+-Required nodes:
+-
+-This device has two video ports. Their connections are modeled using the OF
+-graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+-
+-- Video port 0 for parallel input
+-- Video port 1 for LVDS output
+-
+-
+-Example
+--------
+-
+-lvds-encoder {
+-	compatible = "lvds-encoder";
+-
+-	ports {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		port@0 {
+-			reg = <0>;
+-
+-			lvds_enc_in: endpoint {
+-				remote-endpoint = <&display_out_rgb>;
+-			};
+-		};
+-
+-		port@1 {
+-			reg = <1>;
+-
+-			lvds_enc_out: endpoint {
+-				remote-endpoint = <&lvds_panel_in>;
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml
+new file mode 100644
+index 0000000..b5dd0da
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/lvds-transmitter.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+&sdmmc {
-+	status = "okay";
-+};
++title: Parallel to LVDS Encoder
 +
-+&sdhci1 {
-+	status = "okay";
++maintainers:
++  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sd2_default>;
-+	cd-inverted;
-+	disable-wp;
-+};
++description: |
++  This binding supports the parallel to LVDS encoders that don't require any
++  configuration.
++
++  LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
++  incompatible data link layers have been used over time to transmit image data
++  to LVDS panels. This binding targets devices compatible with the following
++  specifications only.
++
++  [JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
++  1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
++  [LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
++  Semiconductor
++  [VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
++  Electronics Standards Association (VESA)
++
++  Those devices have been marketed under the FPD-Link and FlatLink brand names
++  among others.
++
++properties:
++  compatible:
++    description: |
++      Any encoder compatible with this generic binding, but with additional
++      properties not listed here, must define its own binding and list a device
++      specific compatible first followed by the generic compatible.
++    enum:
++      - lvds-encoder
++
++  ports:
++    type: object
++    description: |
++      This device has two video ports. Their connections are modeled using the
++      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt
++    properties:
++      port@0:
++        type: object
++        description: |
++          Port 0 is for parallel input
++
++      port@1:
++        type: object
++        description: |
++          Port 1 is for LVDS output
++
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - ports
++
++examples:
++  - |
++    lvds-encoder {
++      compatible = "lvds-encoder";
++
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        port@0 {
++          reg = <0>;
++
++          lvds_enc_in: endpoint {
++            remote-endpoint = <&display_out_rgb>;
++          };
++        };
++
++        port@1 {
++          reg = <1>;
++
++          lvds_enc_out: endpoint {
++            remote-endpoint = <&lvds_panel_in>;
++          };
++        };
++      };
++    };
++
++...
 -- 
-2.20.1
+2.7.4
 
