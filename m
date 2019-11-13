@@ -2,113 +2,108 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A736C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 14:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0B2C17449
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 14:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585B82245B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 14:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6016C222CA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 14:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfKMOBC (ORCPT
+        id S1726190AbfKMOIK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 09:01:02 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35330 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfKMOBC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 09:01:02 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 09863290CD8
-Message-ID: <58ed179388b6f9d6caddd91dc03e411ca714157d.camel@collabora.com>
-Subject: Re: [PATCH 4/5] media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org
-Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, s.hauer@pengutronix.de, aisheng.dong@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
-        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se,
-        dafna.hirschfeld@collabora.com
-Date:   Wed, 13 Nov 2019 11:00:35 -0300
-In-Reply-To: <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
-         <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 13 Nov 2019 09:08:10 -0500
+Received: from mga14.intel.com ([192.55.52.115]:17314 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727673AbfKMOIJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 09:08:09 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 06:08:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,300,1569308400"; 
+   d="scan'208";a="235277365"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Nov 2019 06:08:04 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iUtJU-000B65-EA; Wed, 13 Nov 2019 22:08:04 +0800
+Date:   Wed, 13 Nov 2019 22:07:09 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     kbuild-all@lists.01.org, Stephen Boyd <sboyd@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 4/5] PM / devfreq: Add dynamic scaling for imx8m ddr
+ controller
+Message-ID: <201911132114.SNGZxR4v%lkp@intel.com>
+References: <d33acdcc043ce12713a9279636e32d039da5ee54.1573595319.git.leonard.crestez@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d33acdcc043ce12713a9279636e32d039da5ee54.1573595319.git.leonard.crestez@nxp.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mirela,
+Hi Leonard,
 
-Thanks for the patch. It's nice to see support for i.MX8!
+Thank you for the patch! Perhaps something to improve:
 
-On Wed, 2019-11-06 at 17:20 +0200, Mirela Rabulea wrote:
-> V4L2 driver for the JPEG encoder/decoder from i.MX8QXP/i.MX8QM application
-> processors.
-> The multi-planar buffers API is used.
-> 
-> Baseline and extended sequential jpeg decoding is supported.
-> Progressive jpeg decoding is not supported by the IP.
-> Supports encode and decode of various formats:
->      YUV444, YUV422, YUV420, RGB, ARGB, Gray
-> YUV420 is the only multi-planar format supported.
-> Minimum resolution is 64 x 64, maximum 8192 x 8192.
-> The alignment requirements for the resolution depend on the format,
-> multiple of 16 resolutions should work for all formats.
-> 
-> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
-> ---
->  drivers/media/platform/Kconfig                |    2 +
->  drivers/media/platform/Makefile               |    1 +
->  drivers/media/platform/imx-jpeg/Kconfig       |   10 +
->  drivers/media/platform/imx-jpeg/Makefile      |    3 +
->  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c |  168 ++
->  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h |  140 ++
->  drivers/media/platform/imx-jpeg/mxc-jpeg.c    | 2266 +++++++++++++++++++++++++
->  drivers/media/platform/imx-jpeg/mxc-jpeg.h    |  187 ++
->  8 files changed, 2777 insertions(+)
->  create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
->  create mode 100644 drivers/media/platform/imx-jpeg/Makefile
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
-> 
-> [..]
+[auto build test WARNING on shawnguo/for-next]
+[also build test WARNING on next-20191113]
+[cannot apply to v5.4-rc7]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-> +};
-> +
-> +/*
-> + * default configuration stream, 64x64 yuv422
-> + * split by JPEG marker, so it's easier to modify & use
-> + */
-> +static const unsigned char jpeg_soi[] = {0xFF, 0xD8};
-> +static const unsigned char jpeg_app0[] = {0xFF, 0xE0,
+url:    https://github.com/0day-ci/linux/commits/Leonard-Crestez/PM-devfreq-Add-dynamic-scaling-for-imx8m-ddr-controller/20191113-173930
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git for-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-31-gfd3528a-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-I think it's time to re-consider creating some common code
-for drivers that deal with JPEG parsing. I don't know
-exactly how this should be done, but it's worth a try.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-Having been there, it might sound unfair to request you to
-take such action. However, someone has to do these kinds
-of cleanups and improvements, sooner or later, if we want
-to keep a clean codebase.
 
-Hope this makes sense.
+sparse warnings: (new ones prefixed by >>)
 
-Regards,
-Ezequiel
+>> drivers/devfreq/imx8m-ddrc.c:125:12: sparse: sparse: symbol 'clk_get_parent_by_index' was not declared. Should it be static?
 
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
