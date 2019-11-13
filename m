@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C61C17441
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1086EC17441
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC646222D3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 01:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D203520674
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610197;
-	bh=ZCHLhni9I5Hq8zgWjDgMU4vLfAwPEpoV4JgK5zdxmCk=;
+	s=default; t=1573610587;
+	bh=9bhG71SHdIPOPx2brFLAamLBJekEwZtJUF+//yLby2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhWahUfetzRBgtTYOV8xhruM2D6aAD9jF/Agr7fBLpVC+G7GQ1y2uDlORw+YVaRip
-	 sb0Fxaa29vdrJXiuNJFpCp/OHql+K+rv0xuuOBX7Mh1L4GlKM5h0PuI2sxPbAV5IGf
-	 vyPJUnx5B32uDAkJ6vkQ0MMcgBkC9DqQTndcv0EI=
+	b=Km5Rjnn+SokuZgVjURCgCjsypjj4ZUS50kpY9Xy7xiUWww3MjzjM9Lxt6txP4/Eda
+	 M+YrHLr/A7YQKGFaoQfNU4ki1+9iNW6r3667R/n++0/FAWpjE3vZ2KmoQnK4plQBYM
+	 1HE9NWu3rZG0VIEhfJNsA10gNkbCreP2GE+XYM1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbfKMB4e (ORCPT
+        id S1731093AbfKMCCw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:56:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48916 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:02:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbfKMB4d (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:33 -0500
+        id S1731090AbfKMCCw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:02:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87CDD2247A;
-        Wed, 13 Nov 2019 01:56:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D45F122466;
+        Wed, 13 Nov 2019 02:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610193;
-        bh=ZCHLhni9I5Hq8zgWjDgMU4vLfAwPEpoV4JgK5zdxmCk=;
+        s=default; t=1573610571;
+        bh=9bhG71SHdIPOPx2brFLAamLBJekEwZtJUF+//yLby2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CtpW8Xoe/cYF/I57Z3TV1MMDh038cSdm+TBOwqEs0gDGIutW6qQPim6I0w/vvIQeJ
-         DUxgotY5K/n8DKoFn8h+3avkylEaRPVwKolc/PehTXZec5vx5nYY3AgfNgQ2IrSzpT
-         3UP9F595211oHjWgsOpHNOZrRm9LbnWBzD0tPS60=
+        b=EMJPAowbvLi/PyT6EdrnYXVwYFrABe9vEoTGOZ18YfWPxUe1Yg1DbKdTzUjKkcI53
+         NFeeYbVZ62i1VBX7cpS8bmz1lMQ27ixxj3iHpNKCej5qlX6jmdh5b5GAjU3V92sY3I
+         uAOBIhiN5EdDy+KBPvWfs7TVWt5lJtDl9hYO9qo8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Rossak <embed3d@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
+Cc:     Roger Quadros <rogerq@ti.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 007/115] ARM: dts: sun8i: h3-h5: ir register size should be the whole memory block
-Date:   Tue, 12 Nov 2019 20:54:34 -0500
-Message-Id: <20191113015622.11592-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 48/48] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
+Date:   Tue, 12 Nov 2019 21:01:31 -0500
+Message-Id: <20191113020131.13356-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
-References: <20191113015622.11592-1-sashal@kernel.org>
+In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
+References: <20191113020131.13356-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,33 +61,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Philipp Rossak <embed3d@gmail.com>
+From: Roger Quadros <rogerq@ti.com>
 
-[ Upstream commit 6c700289a3e84d5d3f2a95cf27732a7f7fce105b ]
+[ Upstream commit a763ecc15d0e37c3a15ff6825183061209832685 ]
 
-The size of the register should be the size of the whole memory block,
-not just the registers, that are needed.
+OMAP5's Super-Speed USB port has a software mailbox register
+that needs to be fed with VBUS and ID events from an external
+VBUS/ID comparator.
 
-Signed-off-by: Philipp Rossak <embed3d@gmail.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Without this, Host role will not work correctly.
+
+Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 11240a8313c26..03f37081fc64e 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -594,7 +594,7 @@
- 			clock-names = "apb", "ir";
- 			resets = <&r_ccu RST_APB0_IR>;
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
--			reg = <0x01f02000 0x40>;
-+			reg = <0x01f02000 0x400>;
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
+index d2398d2a0c08c..4ea4cf6c5b471 100644
+--- a/arch/arm/boot/dts/omap5-board-common.dtsi
++++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+@@ -634,6 +634,7 @@
+ };
+ 
+ &dwc3 {
++	extcon = <&extcon_usb3>;
+ 	dr_mode = "otg";
+ };
  
 -- 
 2.20.1
