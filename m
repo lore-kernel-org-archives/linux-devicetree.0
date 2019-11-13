@@ -2,82 +2,102 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D97C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0F7C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D34C222BD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:34:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573652046;
-	bh=qWp/VDLyotLqCx2VnoMjWCVvBqQzVqbW5TGZfFbdaDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KZnIrAJogZXsTdZrYZtdwGEMAnrFNAAILokf9zPrIeGznItQBCinqqclM5ZocNl/P
-	 hxJHzQADSBo+K3fRPEKXXeB4ZvTCYzLMZRuBOODK2/L5Gxu9D+4APoCHMAzzPcTfz/
-	 WimhWTVzbjY6CWX5vzD7wWUWRUfw6sVs3yBj1LM0=
+	by mail.kernel.org (Postfix) with ESMTP id E53F02245B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:41:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hadli0Xo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfKMNeG (ORCPT
+        id S1727412AbfKMNlE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:34:06 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35165 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfKMNeF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 08:34:05 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n16so1781893oig.2;
-        Wed, 13 Nov 2019 05:34:05 -0800 (PST)
+        Wed, 13 Nov 2019 08:41:04 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36653 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbfKMNlE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 08:41:04 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c22so2058566wmd.1
+        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 05:41:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=g9xxtnX7rcqQy4gHg8hcN4Gj7X4KIMRju+j/MHBoV8A=;
+        b=hadli0Xo/McEOF/RELW9EA3FZsSOhl60Te50mTlkYDOo1DL4ofrH39xvKPYpWpDTlM
+         hB/ld2RA/dUwevAa2DSY1ddG32okY5PiZUZ32X9YGTKPg/OQB9SXyL64oAyk2BhQ1yBm
+         kV24X6LAVZCvgRN2TPfznZ41vebvCsbC/ReMy621H2hPCkFWaq7qfFS22BxlKObg2U49
+         a4qXeETGc6jHl6q5WkF4bpkSTQtV/h9U5apXI6Rxfeco+4cfOENhguBY1BJ/+XSQDlDb
+         jmgzbbdotXMtIPdwwpLCoUSgzt9ZlaqXAqzxKVBkCwR6gAaNB87EATeuofH3sf+CJhI2
+         yJJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VtkrGBXt5/pajENzRj9VBOc7DaKgloGMFkv/89/lG94=;
-        b=EolGQHsDR3Sv14Rr13vBoz6kTA12iBQb/0ewyAIXwncnDg+Rb9w/c58gFnuA7MI73N
-         +7auJe+3LXdlFwaHsnPlTptS3ta0VwCWpkeawKh0JkzcGux1hJZeJdiURntlcsVMAOSs
-         iFbULxpUAkBFvFXmIkSxk8gRzVLtwZtOr4J1gpXGZVjcJ3D3Y/ndRj7Ayo+Cw+GmFsaZ
-         Kn5cIFwtGgFZqjd4fZ70V+VmrsKqqAwMe0RhVjjFbukACoCCnsJ7npI2XnK9awk2bnS+
-         6s1CYs+z2g1cTbsVFc44RlVlwg3MUl2yPY8QUDAP7N68AX8NzzSGdLumBmSLp71ZBd7T
-         xa8A==
-X-Gm-Message-State: APjAAAVqr7xUPxT9gfaE8lQZ88AtplscHS/34Yade4SNBGY+INv32FKm
-        wyWLt/+Hzjv7k7InnJDDzdDULk4=
-X-Google-Smtp-Source: APXvYqyRd+C1kodajD214ZNnNAuzonzUUWf2Kj6mZvmsZY3dAHriEwj8KUccQYCClho2Pzu5E6HcnQ==
-X-Received: by 2002:aca:4c4a:: with SMTP id z71mr3511351oia.147.1573652045171;
-        Wed, 13 Nov 2019 05:34:05 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o14sm642232oie.24.2019.11.13.05.34.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2019 05:34:04 -0800 (PST)
-Date:   Wed, 13 Nov 2019 07:34:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc:     netdev@vger.kernel.org, Tristram.Ha@microchip.com,
-        UNGLinuxDriver@microchip.com, kernel@pengutronix.de,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 4/4] dt-bindings: net: dsa: document additional
- Microchip KSZ8863/8873 switch
-Message-ID: <20191113133404.GA4824@bogus>
-References: <20191107110030.25199-1-m.grzeschik@pengutronix.de>
- <20191107110030.25199-5-m.grzeschik@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107110030.25199-5-m.grzeschik@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=g9xxtnX7rcqQy4gHg8hcN4Gj7X4KIMRju+j/MHBoV8A=;
+        b=rtA8TVPr2wvsEc0Mjq6T/O5ZrGYjwTKeWHbbW0/0Be/KnEgh6Kj2MSG8ghv1qlavGB
+         7xKBEhz5sYGnfc85+2D1PMGwutqJY2xQ01vpOVg9SEupD9U/fWy2yAZHCL36RKUChvd3
+         TkKCEUV0JLZ5mUC1XS6jKxeGQ+BiEn/GmYHtyLBmKbbjwF4s9+t4ZjBdQHAGeeJcbWhh
+         BoyA+J9fkSZRAlGn8ROXmWqWdhahHSc7OIJXNr1I/5Nb1+S5slMdwaQGRQhbCkchEa47
+         gaEW+JMpLBQAmb67BTeDTI4eCohcmRwjHQU+jYwgIXsxg9U/lYmCvAmWjHdVF9ElCpvi
+         CF0A==
+X-Gm-Message-State: APjAAAUjWv1B3IuNPpLxxAH+wsMr5FuNguTF40V6yBvhMp+6HI5+tOBe
+        QC/Kr8fwYHyhoP5K/GZafWI=
+X-Google-Smtp-Source: APXvYqwHB+Hi2YgtPl6gmGovtL5SEbLpwPTj9L7TLx7IIjPGWokO8dIh6umYiPftip08O4ohNJe1WQ==
+X-Received: by 2002:a1c:23c1:: with SMTP id j184mr2757804wmj.83.1573652462581;
+        Wed, 13 Nov 2019 05:41:02 -0800 (PST)
+Received: from mars.home (HSI-KBW-109-192-080-035.hsi6.kabel-badenwuerttemberg.de. [109.192.80.35])
+        by smtp.googlemail.com with ESMTPSA id r15sm4195831wrc.5.2019.11.13.05.41.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 13 Nov 2019 05:41:01 -0800 (PST)
+From:   Christoph Fritz <chf.fritz@googlemail.com>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/4] regulator da9062: support setting buck modes
+Date:   Wed, 13 Nov 2019 14:40:12 +0100
+Message-Id: <1573652416-9848-1-git-send-email-chf.fritz@googlemail.com>
+X-Mailer: git-send-email 2.1.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu,  7 Nov 2019 12:00:30 +0100, Michael Grzeschik wrote:
-> It is a 3-Port 10/100 Ethernet Switch. One CPU-Port and two
-> Switch-Ports.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-> ---
->  Documentation/devicetree/bindings/net/dsa/ksz.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+This patchset adds of_map_mode support to regulator da9062, documents
+its bindings and makes use of it in dts phycore-imx6 so that buck modes
+get configured explicitly for this hardware.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Changes in v2:
+ - rename defines (and header filename) from 906X to 9063
+ - explain usage of name da9063 in changelog
+ - rename da906x_map_buck_mode() to da9062_map_buck_mode()
+ - rebase patchset on top of next-20191113
+ - adapt subject line of dt-bindings patch to reflect changes
+   in mfd sub-system
+
+Christoph Fritz (4):
+  regulator: da9062: refactor buck modes into header
+  regulator: da9062: add of_map_mode support for bucks
+  dt-bindings: mfd: da9062: describe buck modes
+  ARM: dts: phycore-imx6: set buck regulator modes explicitly
+
+ Documentation/devicetree/bindings/mfd/da9062.txt   |  4 ++
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi  |  5 +++
+ drivers/regulator/da9062-regulator.c               | 49 ++++++++++++++--------
+ .../dt-bindings/regulator/dlg,da9063-regulator.h   | 16 +++++++
+ 4 files changed, 56 insertions(+), 18 deletions(-)
+ create mode 100644 include/dt-bindings/regulator/dlg,da9063-regulator.h
+
+-- 
+2.1.4
+
