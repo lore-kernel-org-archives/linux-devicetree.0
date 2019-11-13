@@ -2,194 +2,107 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42438C17447
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AF9C17447
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E1B222D3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:02:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UJgGktfG";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BgDcsSh1"
+	by mail.kernel.org (Postfix) with ESMTP id EB94422469
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfKMPCl (ORCPT
+        id S1727452AbfKMPNs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:02:41 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:48544 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbfKMPCl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 10:02:41 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 297D760BF4; Wed, 13 Nov 2019 15:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573657359;
-        bh=PmuIPtzDsG95Mlbe4TmoFaii3H10pp3Kzpy+eC3cS6Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UJgGktfGNeIBaLx2B5ouDR6rjhH1Z8copT+1dAq/AOwgRAUHUf8xeh6IDWReJ3P5J
-         roP06JekYZhkh2LgDn5DG20cw3buccx0G9NSA5ynqJy2l9rtN/BuQUYn1kPNEHEj1j
-         U0wjyWSdDL4I171Pb44QvrOo3TvFw16tTq5QUN7w=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F2CE60AD9;
-        Wed, 13 Nov 2019 15:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573657354;
-        bh=PmuIPtzDsG95Mlbe4TmoFaii3H10pp3Kzpy+eC3cS6Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BgDcsSh15qyyt0yE5G6jvzXvt94FTYXH+2Z2OwJFq+bUrpSBFQAys2hx+ZWgKlcl+
-         WGQpzjH51+9a3OFRmVP8QbXo+UkK2oVSVkXq+XaMJTtvr7WbHO0IKayDBX4mxxYVe9
-         knce6RHLvvKUCCwUw5Y1mCDGBqSO5sOVCVXjemHw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F2CE60AD9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v9 1/4] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-To:     Taniya Das <tdas@codeaurora.org>, mturquette@baylibre.com,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1573591382-14225-1-git-send-email-jhugo@codeaurora.org>
- <1573591466-14296-1-git-send-email-jhugo@codeaurora.org>
- <63e2cdd2-919d-9ec2-9fe8-48bbe34f732c@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <4dcd5e10-817e-0a12-6922-5e3f8dcf09bf@codeaurora.org>
-Date:   Wed, 13 Nov 2019 08:02:32 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 10:13:48 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53251 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727772AbfKMPNr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 10:13:47 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iUuKv-0007F5-My; Wed, 13 Nov 2019 16:13:37 +0100
+Message-ID: <152f7b2bef85cec9ef107b58ba0bac153fde1379.camel@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH 4/5] media: imx-jpeg: Add V4L2 driver for
+ i.MX8 JPEG Encoder/Decoder
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>,
+        "ezequiel@collabora.com" <ezequiel@collabora.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Date:   Wed, 13 Nov 2019 16:13:36 +0100
+In-Reply-To: <1573657156.16477.47.camel@nxp.com>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+         <1573053633-21437-5-git-send-email-mirela.rabulea@nxp.com>
+         <58ed179388b6f9d6caddd91dc03e411ca714157d.camel@collabora.com>
+         <1573657156.16477.47.camel@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <63e2cdd2-919d-9ec2-9fe8-48bbe34f732c@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/13/2019 4:20 AM, Taniya Das wrote:
-> Hi Jeffrey,
-> 
-> On 11/13/2019 2:14 AM, Jeffrey Hugo wrote:
->> The global clock controller on MSM8998 can consume a number of external
->> clocks.  Document them.
->>
->> For 7180 and 8150, the hardware always exists, so no clocks are truly
->> optional.  Therefore, simplify the binding by removing the min/max
->> qualifiers to clocks.  Also, fixup an example so that dt_binding_check
->> passes.
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,gcc.yaml        | 47 
->> +++++++++++++++-------
->>   1 file changed, 33 insertions(+), 14 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml 
->> b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> index e73a56f..2f3512b 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> @@ -40,20 +40,38 @@ properties:
->>          - qcom,gcc-sm8150
->>     clocks:
->> -    minItems: 1
->> -    maxItems: 3
->> -    items:
->> -      - description: Board XO source
->> -      - description: Board active XO source
->> -      - description: Sleep clock source
->> +    oneOf:
->> +      #qcom,gcc-sm8150
->> +      #qcom,gcc-sc7180
->> +      - items:
->> +        - description: Board XO source
->> +        - description: Board active XO source
->> +        - description: Sleep clock source
->> +      #qcom,gcc-msm8998
->> +      - items:
->> +        - description: Board XO source
->> +        - description: USB 3.0 phy pipe clock
->> +        - description: UFS phy rx symbol clock for pipe 0
->> +        - description: UFS phy rx symbol clock for pipe 1
->> +        - description: UFS phy tx symbol clock
->> +        - description: PCIE phy pipe clock
-> 
-> Would it be possible to add an example for MSM8998?
+Hi Ezequiel, Mirela,
 
-It doesn't seem to be materially different that the existing examples, 
-but sure, that's something that can be done.
-
+On Wed, 2019-11-13 at 14:59 +0000, Mirela Rabulea wrote:
+> Hi Ezequiel,
+> On Mi, 2019-11-13 at 11:00 -0300, Ezequiel Garcia wrote:
+> > + * default configuration stream, 64x64 yuv422
+> > > + * split by JPEG marker, so it's easier to modify & use
+> > > + */
+> > > +static const unsigned char jpeg_soi[] = {0xFF, 0xD8};
+> > > +static const unsigned char jpeg_app0[] = {0xFF, 0xE0,
+> > I think it's time to re-consider creating some common code
+> > for drivers that deal with JPEG parsing. I don't know
+> > exactly how this should be done, but it's worth a try.
+> > 
+> > Having been there, it might sound unfair to request you to
+> > take such action. However, someone has to do these kinds
+> > of cleanups and improvements, sooner or later, if we want
+> > to keep a clean codebase.
+> > 
+> > Hope this makes sense.
 > 
->>     clock-names:
->> -    minItems: 1
->> -    maxItems: 3
->> -    items:
->> -      - const: bi_tcxo
->> -      - const: bi_tcxo_ao
->> -      - const: sleep_clk
->> +    oneOf:
->> +      #qcom,gcc-sm8150
->> +      #qcom,gcc-sc7180
->> +      - items:
->> +        - const: bi_tcxo
->> +        - const: bi_tcxo_ao
->> +        - const: sleep_clk
-> 
-> Not required for SC7180.
+> I agree, it makes sense, at least the jpeg parsing is somehow common
+> between these drivers. I'm willing to contribute to this, but I cannot
+> make a promise when, and this is something that requires collaboration
+> with other contributors who have the means to validate changes on all
+> the hardware affected.
 
-How are you determining this?
+I just faced the same issue for the coda-vpu driver [1]. I wonder if my
+approach would be usable as a base for i.MX8 JPEGDEC as well. Either
+way, I'd like to collaborate on this, but I can't test most of the
+drivers either.
 
-Per the earlier discussion with Stephen, if the hardware exists, it 
-should be represented in DT.  According to the documentation I see, the 
-sleep clock is routed to the GCC on SC7180.  The driver is not required 
-to make use of it.  Thus its required from the DT perspective.
+[1] https://patchwork.linuxtv.org/patch/60109/
 
-> 
->> +      #qcom,gcc-msm8998
->> +      - items:
->> +        - const: xo
->> +        - const: usb3_pipe
->> +        - const: ufs_rx_symbol0
->> +        - const: ufs_rx_symbol1
->> +        - const: ufs_tx_symbol0
->> +        - const: pcie0_pipe
->>     '#clock-cells':
->>       const: 1
->> @@ -118,6 +136,7 @@ else:
->>         compatible:
->>           contains:
->>             enum:
->> +            - qcom,gcc-msm8998
->>               - qcom,gcc-sm8150
->>               - qcom,gcc-sc7180
->>     then:
->> @@ -179,8 +198,8 @@ examples:
->>       clock-controller@100000 {
->>         compatible = "qcom,gcc-sc7180";
->>         reg = <0x100000 0x1f0000>;
->> -      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
->> -      clock-names = "bi_tcxo", "bi_tcxo_ao";
->> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
->> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
-> 
-> SC7180 does not require a sleep clock.
-> 
->>         #clock-cells = <1>;
->>         #reset-cells = <1>;
->>         #power-domain-cells = <1>;
->>
-> 
+regards
+Philipp
 
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
