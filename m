@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46A3C4742A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EEFC47430
 	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 16:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1FD22D0B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A7B2333D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 15:52:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfKMPvs (ORCPT
+        id S1728115AbfKMPwm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 10:51:48 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:21771 "EHLO
+        Wed, 13 Nov 2019 10:52:42 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:12714 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726276AbfKMPvs (ORCPT
+        by vger.kernel.org with ESMTP id S1726074AbfKMPwm (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 10:51:48 -0500
+        Wed, 13 Nov 2019 10:52:42 -0500
 X-IronPort-AV: E=Sophos;i="5.68,300,1569250800"; 
-   d="scan'208";a="31593899"
+   d="scan'208";a="31593960"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 14 Nov 2019 00:51:46 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 14 Nov 2019 00:52:41 +0900
 Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id DD37D400E9F7;
-        Thu, 14 Nov 2019 00:51:41 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B3A1D400EE6B;
+        Thu, 14 Nov 2019 00:52:36 +0900 (JST)
 From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 To:     Neil Armstrong <narmstrong@baylibre.com>,
         David Airlie <airlied@linux.ie>,
@@ -47,9 +47,9 @@ Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 01/13] dt-bindings: display: bridge: Convert lvds-transmitter binding to json-schema
-Date:   Wed, 13 Nov 2019 15:51:20 +0000
-Message-Id: <1573660292-10629-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v4 12/13] [HACK] drm/bridge: lvds-codec: Enforce device specific compatible strings
+Date:   Wed, 13 Nov 2019 15:51:31 +0000
+Message-Id: <1573660292-10629-13-git-send-email-fabrizio.castro@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -58,195 +58,139 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the lvds-transmitter binding to DT schema format using
-json-schema.
+The lvds-codec driver is a generic stub for transparent LVDS
+encoders and decoders.
+It's good practice to list a device specific compatible string
+before the generic fallback (if any) in the DT node for the relevant
+LVDS encoder/decoder, and it's also required by the dt-bindings.
+A notable exception to the generic fallback mechanism is the case
+of "thine,thc63lvdm83d", as documented in:
+Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt
+This patch enforces the adoption of a device specific compatible
+string (as fist string in the list), by using markers for the
+compatible string we match against and the index of the matching
+compatible string in the list.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
 ---
-v3->v4:
-* Fixed the description of property "compatible" according to Laurent's
-  comments
-v2->v3:
-* Extracted conversion to dt-schema as per Rob's comment
-v1->v2:
-* Converted to dt-schema as per Neil's comment
----
- .../bindings/display/bridge/lvds-transmitter.txt   | 66 ----------------
- .../bindings/display/bridge/lvds-transmitter.yaml  | 91 ++++++++++++++++++++++
- 2 files changed, 91 insertions(+), 66 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml
+Hi Laurent,
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-deleted file mode 100644
-index 60091db..0000000
---- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-+++ /dev/null
-@@ -1,66 +0,0 @@
--Parallel to LVDS Encoder
--------------------------
--
--This binding supports the parallel to LVDS encoders that don't require any
--configuration.
--
--LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
--incompatible data link layers have been used over time to transmit image data
--to LVDS panels. This binding targets devices compatible with the following
--specifications only.
--
--[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
--1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
--[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
--Semiconductor
--[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
--Electronics Standards Association (VESA)
--
--Those devices have been marketed under the FPD-Link and FlatLink brand names
--among others.
--
--
--Required properties:
--
--- compatible: Must be "lvds-encoder"
--
--  Any encoder compatible with this generic binding, but with additional
--  properties not listed here, must list a device specific compatible first
--  followed by this generic compatible.
--
--Required nodes:
--
--This device has two video ports. Their connections are modeled using the OF
--graph bindings specified in Documentation/devicetree/bindings/graph.txt.
--
--- Video port 0 for parallel input
--- Video port 1 for LVDS output
--
--
--Example
---------
--
--lvds-encoder {
--	compatible = "lvds-encoder";
--
--	ports {
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		port@0 {
--			reg = <0>;
--
--			lvds_enc_in: endpoint {
--				remote-endpoint = <&display_out_rgb>;
--			};
--		};
--
--		port@1 {
--			reg = <1>;
--
--			lvds_enc_out: endpoint {
--				remote-endpoint = <&lvds_panel_in>;
--			};
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml
-new file mode 100644
-index 0000000..b5dd0da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/lvds-transmitter.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+I don't think we need to do anything in the driver to address your
+comment, as we can "enforce" this with the bindings (please see the
+next patch, as it would help with the "enforcing" of the compatible
+string for the thine device).
+I am sending this patch only so that you can see what a possible
+solution in the driver could look like.
+
+v3->v4:
+* New patch addressing the below comment from Laurent:
+"I think the lvds-decoder driver should error out at probe time if only
+one compatible string is listed."
+---
+ drivers/gpu/drm/bridge/lvds-codec.c | 55 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 49 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
+index 784bbd3..145c25d 100644
+--- a/drivers/gpu/drm/bridge/lvds-codec.c
++++ b/drivers/gpu/drm/bridge/lvds-codec.c
+@@ -14,11 +14,16 @@
+ #include <drm/drm_bridge.h>
+ #include <drm/drm_panel.h>
+ 
++struct lvds_codec_data {
++	u32 connector_type;
++	bool device_specific;
++};
 +
-+title: Parallel to LVDS Encoder
+ struct lvds_codec {
+ 	struct drm_bridge bridge;
+ 	struct drm_bridge *panel_bridge;
+ 	struct gpio_desc *powerdown_gpio;
+-	u32 connector_type;
++	const struct lvds_codec_data *data;
+ };
+ 
+ static int lvds_codec_attach(struct drm_bridge *bridge)
+@@ -65,7 +70,30 @@ static int lvds_codec_probe(struct platform_device *pdev)
+ 	if (!lvds_codec)
+ 		return -ENOMEM;
+ 
+-	lvds_codec->connector_type = (u32)of_device_get_match_data(&pdev->dev);
++	lvds_codec->data = of_device_get_match_data(&pdev->dev);
++	if (!lvds_codec->data)
++		return -EINVAL;
 +
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++	/*
++	 * If we haven't matched a device specific compatible string, we need
++	 * to work out if the generic compatible string we matched against was
++	 * listed first in the compatible property.
++	 */
++	if (!lvds_codec->data->device_specific) {
++		const struct of_device_id *match;
++		int compatible_index;
 +
-+description: |
-+  This binding supports the parallel to LVDS encoders that don't require any
-+  configuration.
++		match = of_match_node(dev->driver->of_match_table,
++				      dev->of_node);
++		compatible_index = of_property_match_string(dev->of_node,
++							    "compatible",
++							    match->compatible);
++		if (compatible_index == 0) {
++			dev_err(dev, "Device specific compatible needed\n");
++			return -EINVAL;
++		}
++	}
 +
-+  LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
-+  incompatible data link layers have been used over time to transmit image data
-+  to LVDS panels. This binding targets devices compatible with the following
-+  specifications only.
+ 	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
+ 							     GPIOD_OUT_HIGH);
+ 	if (IS_ERR(lvds_codec->powerdown_gpio)) {
+@@ -92,7 +120,7 @@ static int lvds_codec_probe(struct platform_device *pdev)
+ 
+ 	lvds_codec->panel_bridge =
+ 		devm_drm_panel_bridge_add_typed(dev, panel,
+-						lvds_codec->connector_type);
++					lvds_codec->data->connector_type);
+ 	if (IS_ERR(lvds_codec->panel_bridge))
+ 		return PTR_ERR(lvds_codec->panel_bridge);
+ 
+@@ -119,18 +147,33 @@ static int lvds_codec_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct lvds_codec_data lvds_codec_decoder_data = {
++	.connector_type = DRM_MODE_CONNECTOR_DPI,
++	.device_specific = false,
++};
 +
-+  [JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
-+  1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
-+  [LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
-+  Semiconductor
-+  [VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
-+  Electronics Standards Association (VESA)
++static const struct lvds_codec_data lvds_codec_encoder_data = {
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
++	.device_specific = false,
++};
 +
-+  Those devices have been marketed under the FPD-Link and FlatLink brand names
-+  among others.
++static const struct lvds_codec_data lvds_codec_thc63lvdm83d_data = {
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
++	.device_specific = true,
++};
 +
-+properties:
-+  compatible:
-+    description: |
-+      Any encoder compatible with this generic binding, but with additional
-+      properties not listed here, must define its own binding and list a device
-+      specific compatible first followed by the generic compatible.
-+    enum:
-+      - lvds-encoder
-+
-+  ports:
-+    type: object
-+    description: |
-+      This device has two video ports. Their connections are modeled using the
-+      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt
-+    properties:
-+      port@0:
-+        type: object
-+        description: |
-+          Port 0 is for parallel input
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Port 1 is for LVDS output
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - ports
-+
-+examples:
-+  - |
-+    lvds-encoder {
-+      compatible = "lvds-encoder";
-+
-+      ports {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        port@0 {
-+          reg = <0>;
-+
-+          lvds_enc_in: endpoint {
-+            remote-endpoint = <&display_out_rgb>;
-+          };
-+        };
-+
-+        port@1 {
-+          reg = <1>;
-+
-+          lvds_enc_out: endpoint {
-+            remote-endpoint = <&lvds_panel_in>;
-+          };
-+        };
-+      };
-+    };
-+
-+...
+ static const struct of_device_id lvds_codec_match[] = {
+ 	{
+ 		.compatible = "lvds-decoder",
+-		.data = (void *)DRM_MODE_CONNECTOR_DPI,
++		.data = &lvds_codec_decoder_data,
+ 	},
+ 	{
+ 		.compatible = "lvds-encoder",
+-		.data = (void *)DRM_MODE_CONNECTOR_LVDS,
++		.data = &lvds_codec_encoder_data,
+ 	},
+ 	{
+ 		.compatible = "thine,thc63lvdm83d",
+-		.data = (void *)DRM_MODE_CONNECTOR_LVDS,
++		.data = &lvds_codec_thc63lvdm83d_data,
+ 	},
+ 	{},
+ };
 -- 
 2.7.4
 
