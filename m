@@ -2,179 +2,444 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7B2C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 22:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20050C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E902F2063A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 22:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/m02ana"
+	by mail.kernel.org (Postfix) with ESMTP id AD4A2206EC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 23:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfKMWhS (ORCPT
+        id S1726991AbfKMXUc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 17:37:18 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38820 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfKMWhS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 17:37:18 -0500
-Received: by mail-pf1-f194.google.com with SMTP id c13so2645254pfp.5;
-        Wed, 13 Nov 2019 14:37:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w7B875XZuR5oafFG8NOnl5OI5GsCZ+1ssBbHKFrJSNA=;
-        b=d/m02anasZDot/whtRvfnFm0gsNWyld10J7fYzOfI64BcxOfVfBgn7fcJJBYdjkIVk
-         zQlcyqV5L7dHO3dOAVKQ24V9iokEnJKRO5LPumfEVbvDwAMuKjaMARfOjx+jxu44Ur1r
-         rzQ0989x7JNwDpaPJhD5304VJkPwRWK8mSYcx54a2RGtFX3I8kzl9BQS6KSWAjfu6iXb
-         gBSx1T/MVs5PSphidTpet1T/qqxfLsO7UehqjenlSfqKQnDC9fjj/twChfMVS6uF57Ij
-         VE0KvK08LhGziEVTBFLiY5jbB9OrWrps6xcICiApRCv3HXvYRHpo9cWMpRpZL0zCqsOH
-         dOoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w7B875XZuR5oafFG8NOnl5OI5GsCZ+1ssBbHKFrJSNA=;
-        b=a4MPTWadBjK+vt0VZPoLj0Cj4RHJv9RmlaVh+kLQ23C4BGCfbgY+pNh0HH71e9hZs3
-         Si9ng3OFA+nytkZgzdXwESSZlii/DbXrr0Ll4urfJWMEatNwo28Jgpdx2nqmOOof3c1M
-         7CxJwIZDqPhOhoMCG57ME0Qa0c7hsE9Q/c0GGC/5NnfGgbiWehj0Y9R8/nkRkVGAaZpZ
-         zU6W98HtWskmCHwpy5w0H3IZ1VfBAuBpJSTv0HCgy2ZDzcwod++4Yp/Rz7AmjyXExGZ/
-         0M13bdvrnj5cdir1EQ/89UT+7inDeVnxGfhLwRip8Rvt38S9LWTE7Rzb9Z/Amz3VKboH
-         QsrQ==
-X-Gm-Message-State: APjAAAWBzJJmB+Ywguq+f+/+Nzng8MjPpfS7y0VkFvg3PV6kGV6smPXN
-        cxxyRqLdFFWneZlvXvrQZEM=
-X-Google-Smtp-Source: APXvYqxE14G1QBfNnL/Qz1wTaYvzj0nNNBvHZNCF1mojyUKZHlzFU3JyBmRdGrULYkBraC+sil870Q==
-X-Received: by 2002:a63:e407:: with SMTP id a7mr6238050pgi.92.1573684635287;
-        Wed, 13 Nov 2019 14:37:15 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 10sm3383259pgs.11.2019.11.13.14.37.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Nov 2019 14:37:14 -0800 (PST)
-Date:   Wed, 13 Nov 2019 14:37:12 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Bia, Beniamin" <Beniamin.Bia@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Wed, 13 Nov 2019 18:20:32 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52534 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726393AbfKMXUc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 18:20:32 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5E88BB26C;
+        Wed, 13 Nov 2019 23:20:29 +0000 (UTC)
+Subject: Re: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1619 SoC and Realtek
+ Mjolnir EVB
+To:     James Tai <james.tai@realtek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        'DTML' <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "biabeniamin@outlook.com" <biabeniamin@outlook.com>,
-        Jean Delvare <jdelvare@suse.com>
-Subject: Re: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
- Power Monitor driver
-Message-ID: <20191113223712.GA25398@roeck-us.net>
-References: <20191112153552.27431-1-beniamin.bia@analog.com>
- <20191112173757.0000075b@huawei.com>
- <20191112181734.GA30127@roeck-us.net>
- <BY5PR03MB4965158557D9AEA20A48F95F8E760@BY5PR03MB4965.namprd03.prod.outlook.com>
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+References: <73fb8106ec1a4665b59a2d187a576b71@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <9cadb78c-99af-8948-e76f-c26f263693b3@suse.de>
+Date:   Thu, 14 Nov 2019 00:20:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BY5PR03MB4965158557D9AEA20A48F95F8E760@BY5PR03MB4965.namprd03.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <73fb8106ec1a4665b59a2d187a576b71@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 08:10:50AM +0000, Hennerich, Michael wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> > Sent: Dienstag, 12. November 2019 20:18
-> > To: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > Cc: Bia, Beniamin <Beniamin.Bia@analog.com>; jic23@kernel.org;
-> > lars@metafoo.de; Hennerich, Michael <Michael.Hennerich@analog.com>;
-> > pmeerw@pmeerw.net; gregkh@linuxfoundation.org; linux-
-> > iio@vger.kernel.org; devel@driverdev.osuosl.org; linux-
-> > kernel@vger.kernel.org; mark.rutland@arm.com; robh+dt@kernel.org;
-> > devicetree@vger.kernel.org; paulmck@linux.ibm.com;
-> > mchehab+samsung@kernel.org; linus.walleij@linaro.org;
-> > nicolas.ferre@microchip.com; biabeniamin@outlook.com; Jean Delvare
-> > <jdelvare@suse.com>
-> > Subject: Re: [PATCH 1/3] iio: Add ADM1177 Hot Swap Controller and Digital
-> > Power Monitor driver
-> > 
-> > On Tue, Nov 12, 2019 at 05:37:57PM +0000, Jonathan Cameron wrote:
-> > > On Tue, 12 Nov 2019 17:35:50 +0200
-> > > Beniamin Bia <beniamin.bia@analog.com> wrote:
-> > >
-> > > > From: Michael Hennerich <michael.hennerich@analog.com>
-> > > >
-> > > > ADM1177 is a Hot Swap Controller and Digital Power Monitor with Soft
-> > > > Start Pin.
-> > > >
-> > > > Datasheet:
-> > > > Link:
-> > > > https://www.analog.com/media/en/technical-documentation/data-
-> > sheets/
-> > > > ADM1177.pdf
-> > > >
-> > > > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> > > > Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
-> > > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> > >
-> > > Hi Beniamin,
-> > >
-> > > A couple immediate thoughts.
-> > >
-> > > 1. That cc list has some rather non obvious people on it.  Unless something
-> > >    fairly surprising is going on, probably better to cut it back a bit.
-> > >
-> > > 2. Why IIO?  Not entirely obvious to me.  From first glance this is definitely
-> > >    doing hardware monitoring.  If there is a reason there should be a clear
-> > >    statement here on why.
-> > >
-> > 
-> > I don't see why this is implemented as iio driver. I think it should be
-> > implemented as hardware monitoring driver.
-> 
-> Totally agree that this driver could have been implemented as HWMON driver.
-> Well we use this device as USB supply monitor on our embedded portably kits, to detect low VBUS or excess current draw. 
-> 
-> ADALM-PLUTO and ADALM2000:
-> https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/adalm-pluto.html
-> 
-> https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/ADALM2000.html
-> 
-> The only connectivity to the host PC is via IIO/libiio USB Gadget FS and Ethernet backends.
-> 
-> We recommend people to read the IIO attributes whenever they report an issue.
-> Unless libiio supports directly HWMON or HWMON adds an IIO bridge we would prefer this driver being exposed as IIO device, since HWMON users still can use the IIO/HWMON bridge.
-> 
+Hi James,
 
-I do not think this is a valid argument.
+Am 12.11.19 um 16:45 schrieb James Tai:
+> Add Device Trees for Realtek RTD1619 SoC family, RTD1619 SoC and
+> Realtek Mjolnir EVB.
+> 
+> Signed-off-by: James Tai <james.tai@realtek.com>
+> ---
 
-- This is a hardware monitoring chip.
-- Implementing kernel support as IIO driver, keeping it out of tree for years,
-  establishing an iio based use case, and then pressuring kernel maintainers
-  to accept an iio driver seems inappropriate.
-- The argument of "we need libiio support for this chip" could effectively
-  be used to re-implement pretty much all hwmon drivers as iio drivers.
-- The iio->hwmon bridge would add complexity for the majority of potential
-  users of this chip. Focus should be on the majority, not on one use case.
-- Userspace may as well use libsensors and/or sensors to do the necessary
-  access - or implement it if neded. Or add a libsensors based backend to
-  libiio (or to iiod).
-- Last but not least, it would be more appropriate to implement a generic
-  hwmon->iio bridge for iio use cases for chips supported by hwmon drivers,
-  similar to the hwmon->thermal bridge.
+Lacking the requested changelog.
 
-Guenter
+>  arch/arm64/boot/dts/realtek/Makefile          |   2 +
+>  .../boot/dts/realtek/rtd1619-mjolnir.dts      |  40 +++++
+>  arch/arm64/boot/dts/realtek/rtd1619.dtsi      |  12 ++
+>  arch/arm64/boot/dts/realtek/rtd16xx.dtsi      | 163 ++++++++++++++++++
+>  4 files changed, 217 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619.dtsi
+>  create mode 100644 arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+
+Somehow the last hunk (rtd16xx.dtsi) didn't apply with git-am or patch
+-p1, not sure why. I have manually copied the file into place and fixed
+up some more nits below:
+
+> 
+> diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
+> index 555638ada721..fb5f05978ecc 100644
+> --- a/arch/arm64/boot/dts/realtek/Makefile
+> +++ b/arch/arm64/boot/dts/realtek/Makefile
+> @@ -7,3 +7,5 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-probox2-ava.dtb
+>  dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
+>  
+>  dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
+> +
+> +dtb-$(CONFIG_ARCH_REALTEK) += rtd1619-mjolnir.dtb
+> diff --git a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+> new file mode 100644
+> index 000000000000..6ab791af3896
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+> @@ -0,0 +1,40 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "rtd1619.dtsi"
+> +
+> +/ {
+> +	compatible = "realtek,rtd1619", "realtek,mjolnir";
+
+Order not fixed from v2. This is a schema violation and logically wrong.
+
+> +	model= "Realtek Mjolnir EVB";
+
+Space missing before =. Missed that in v2.
+
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x80000000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	aliases {
+> +		serial0 = &uart0; /* The UART0 is debug console */
+> +		serial1 = &uart1; /* The UART1 is on M.2 slot */
+> +		serial2 = &uart2; /* The UART2 is on GPIO connector */
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "disabled";
+> +};
+> +
+> +&uart2 {
+> +	status = "disabled";
+> +};
+
+The comments were intended to go above each node, not after the aliases.
+I've taken the liberty to annotate them further with their PCB label.
+
+> diff --git a/arch/arm64/boot/dts/realtek/rtd1619.dtsi b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
+> new file mode 100644
+> index 000000000000..e52bf708b04e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Realtek RTD1619 SoC
+> + *
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+> + */
+> +
+> +#include "rtd16xx.dtsi"
+> +
+> +/ {
+> +	compatible = "realtek,rtd1619";
+> +};
+> diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+> new file mode 100644
+> index 000000000000..d9b572a870f5
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+> @@ -0,0 +1,163 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Realtek RTD16xx SoC family
+> + *
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/{
+
+Space missing. Missed that in v2.
+
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l2>;
+> +		};
+> +
+> +		cpu1: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x100>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		cpu2: cpu@200 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x200>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		cpu3: cpu@300 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x300>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		cpu4: cpu@400 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x400>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		cpu5: cpu@500 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x500>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		l2: l2-cache {
+> +			compatible = "cache";
+> +			next-level-cache = <&l3>;
+> +
+> +		};
+> +
+> +		l3: l3-cache {
+> +			compatible = "cache";
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	arm_pmu: pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	osc27M: osc {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <27000000>;
+> +		clock-output-names = "osc27M";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	soc@98000000 {
+
+If the node has a unit address, it also needs a reg property with that
+value. So let's drop the unit address.
+
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x98000000 0x98000000 0x68000000>;
+> +
+> +		rbus: r-bus@98000000 {
+> +			compatible = "simple-bus";
+> +			reg = <0x98000000 0x200000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0x0 0x98000000 0x200000>;
+> +
+> +			uart0: serial0@7800 {
+> +				compatible = "snps,dw-apb-uart";
+> +				reg = <0x7800 0x400>;
+> +				reg-shift = <2>;
+> +				reg-io-width = <4>;
+> +				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+> +				clock-frequency = <27000000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			uart1: serial1@1b200 {
+> +				compatible = "snps,dw-apb-uart";
+> +				reg = <0x1b200 0x400>;
+> +				reg-shift = <2>;
+> +				reg-io-width = <4>;
+> +				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> +				clock-frequency = <432000000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			uart2: serial2@1b400 {
+> +				compatible = "snps,dw-apb-uart";
+> +				reg = <0x1b400 0x400>;
+> +				reg-shift = <2>;
+> +				reg-io-width = <4>;
+> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> +				clock-frequency = <432000000>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gic: interrupt-controller@ff100000 {
+> +			compatible = "arm,gic-v3";
+> +			reg = <0xff100000 0x10000>,
+> +			      <0xff140000 0xc0000>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +	};
+> +};
+> +
+> +&arm_pmu {
+> +	interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
+> +		<&cpu3>, <&cpu4>, <&cpu5>;
+> +};
+
+Now that they're in the same file, this can just go into the node.
+
+Queuing on my rtd1295-next branch (before RTD1395), with changes:
+
+diff --git a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+index 6ab791af3896..44dd67e04335 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+@@ -8,8 +8,8 @@
+ #include "rtd1619.dtsi"
+
+ / {
+-       compatible = "realtek,rtd1619", "realtek,mjolnir";
+-       model= "Realtek Mjolnir EVB";
++       compatible = "realtek,mjolnir", "realtek,rtd1619";
++       model = "Realtek Mjolnir EVB";
+
+        memory@0 {
+                device_type = "memory";
+@@ -21,20 +21,23 @@
+        };
+
+        aliases {
+-               serial0 = &uart0; /* The UART0 is debug console */
+-               serial1 = &uart1; /* The UART1 is on M.2 slot */
+-               serial2 = &uart2; /* The UART2 is on GPIO connector */
++               serial0 = &uart0;
++               serial1 = &uart1;
++               serial2 = &uart2;
+        };
+ };
+
++/* debug console (J1) */
+ &uart0 {
+        status = "okay";
+ };
+
++/* M.2 slot (CON4) */
+ &uart1 {
+        status = "disabled";
+ };
+
++/* GPIO connector (T1) */
+ &uart2 {
+        status = "disabled";
+ };
+diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+b/arch/arm64/boot/dts/real
+tek/rtd16xx.dtsi
+index 4422fe9c5a68..f1e3c088a014 100644
+--- a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+@@ -8,7 +8,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+
+-/{
++/ {
+        interrupt-parent = <&gic>;
+        #address-cells = <1>;
+        #size-cells = <1>;
+@@ -87,6 +87,8 @@
+        arm_pmu: pmu {
+                compatible = "arm,armv8-pmuv3";
+                interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
++               interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
++                       <&cpu3>, <&cpu4>, <&cpu5>;
+        };
+
+        psci {
+@@ -101,7 +103,7 @@
+                #clock-cells = <0>;
+        };
+
+-       soc@98000000 {
++       soc {
+                compatible = "simple-bus";
+                #address-cells = <1>;
+                #size-cells = <1>;
+@@ -149,14 +151,9 @@
+                        compatible = "arm,gic-v3";
+                        reg = <0xff100000 0x10000>,
+                              <0xff140000 0xc0000>;
++                       interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+                        interrupt-controller;
+                        #interrupt-cells = <3>;
+-                       interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+                };
+        };
+ };
+-
+-&arm_pmu {
+-       interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
+-               <&cpu3>, <&cpu4>, <&cpu5>;
+-};
+
+Waiting on Rob for the underlying binding (and for v5.5-rc1 tag).
+
+Thanks,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
