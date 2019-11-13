@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ADCC17441
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA622C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8246C2067B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9E22067B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573612100;
-	bh=IeNKQvy9juCc7xi7oxqa/oqAhGZngI0NECDQy/pOYzg=;
+	s=default; t=1573612118;
+	bh=91aPh7xe+OemNnEsFGvvLgDTsY/relcPOztRIhK4tIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oesDZ78QBmqzuZWAuVauFYr1mpgy8KLPkvw+a8VQNUsk0r5Z9931DixVBvTofYR8W
-	 mJ+R7O5I1p2Gula2w7ynTopI41PX2+yQVjbCv3RGz2CAyhVIYjFTl014CeDQAgUtek
-	 pwooc5AoZUfz4oB6c7cM3IT/44jhb6H2Ypj0bVGo=
+	b=FxnVMnkorB1nlY4VGffiCzWHu339IxnqdkLKo1UFE4qY84LlYnC3UfbkcMv0e/gAc
+	 YwVeGbzMR4z/55KAmv8BIPMZlDD9+r0j9N19L+TjtcDe31pOxJEZseOVWB8noBjlN8
+	 ABv41SGvGepseeusRSxpvVFa3A2n6LRk3RNsU8GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfKMBuj (ORCPT
+        id S1727343AbfKMBub (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 20:50:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37350 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 20:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfKMBug (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:50:36 -0500
+        id S1727336AbfKMBub (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:50:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8E4722466;
-        Wed, 13 Nov 2019 01:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6E5C2245A;
+        Wed, 13 Nov 2019 01:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573609836;
-        bh=IeNKQvy9juCc7xi7oxqa/oqAhGZngI0NECDQy/pOYzg=;
+        s=default; t=1573609830;
+        bh=91aPh7xe+OemNnEsFGvvLgDTsY/relcPOztRIhK4tIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=md8gjvMxJkusqgQa9IwF3QRATn36g4MEy7Lqg1kwuKK9nSI4hrAc/e+fl3fZnKwAq
-         M5VlI6021jFumqk08+hhICsXLDikiJFNWBBoj2/KwOebogHB3TSvjf+qQvb5eW3iJ2
-         9ZM6zN26CoDwr5gt2WZHac1ETBX9sy7UUF1LG9+o=
+        b=qVH9RHxcDZDlbPmawm/SFSTjTygkrzWhw033amhFEZQB42NjlnyyE6kbZjbMsuQDc
+         T+Nw4gwXV5A9+4FIH2EK4taoBQvO3eEQ+ul5i7jWfhOmzG+UO0uPDITw23xDMmGB/k
+         69OyAjm+jhhagAuqFiTkoMTiNcasMVHUTebdC+TM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 009/209] ARM: dts: sun8i: h3: bpi-m2-plus: Fix address for external RGMII Ethernet PHY
-Date:   Tue, 12 Nov 2019 20:47:05 -0500
-Message-Id: <20191113015025.9685-9-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 004/209] ARM: dts: omap5: enable OTG role for DWC3 controller
+Date:   Tue, 12 Nov 2019 20:47:00 -0500
+Message-Id: <20191113015025.9685-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 References: <20191113015025.9685-1-sashal@kernel.org>
@@ -59,36 +61,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit db9fd9d13e30fc67737ac9893a82e6b095e85a64 ]
+[ Upstream commit 656c1a65ab555ee5c7cd0d6aee8ab82ca3c1795f ]
 
-The external RTL8211E RGMII Ethernet PHY is configured via external
-resistors to use the address 0x1. The 0x0 address is a broadcast address
-for this family of PHYs, and should not be used explicitly.
+Since SMPS10 and OTG cable detection extcon are described here, and
+work to enable OTG power when an OTG cable is plugged in, we can
+define OTG mode in the controller (which is disabled by default in
+omap5.dtsi).
 
-Fixes: 8c7ba536e709 ("ARM: sun8i: bananapi-m2-plus: Enable dwmac-sun8i")
-Fixes: 4904337fe34f ("ARM: dts: sunxi: Restore EMAC changes (boards)")
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Tested on OMAP5EVM and Pyra.
+
+Suggested-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/omap5-board-common.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-index 30540dc8e0c5f..bdda0d99128e5 100644
---- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-@@ -140,7 +140,7 @@
- &external_mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
--		reg = <0>;
-+		reg = <1>;
- 	};
+diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
+index 8b8db9d8e9126..c2dc4199b4ec2 100644
+--- a/arch/arm/boot/dts/omap5-board-common.dtsi
++++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+@@ -703,6 +703,10 @@
+ 	vbus-supply = <&smps10_out1_reg>;
  };
  
++&dwc3 {
++	dr_mode = "otg";
++};
++
+ &mcspi1 {
+ 
+ };
 -- 
 2.20.1
 
