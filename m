@@ -2,96 +2,83 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F9EC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF67C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002C221783
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:28:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="rUqS5Mhs"
+	by mail.kernel.org (Postfix) with ESMTP id A5B32222BD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 13:32:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573651965;
+	bh=Ty0M7Ps8iF0SZd/LobrgINffCAWMAs1FCwhRkWW1jWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f+k9xhpe6EBJeZv7qZd+ctL+gBZHWcsJwIk1wZ84f24O1ez7UGIiCazGk/l+CMECp
+	 uWg7zheRUfK+5C1j6U7++wb1hS1RR2Y4/V00mILE8ljvg/8C1qylWO4NyexBsBC42y
+	 /bAMnDVmy9x5akkUIK8RUoSEMb5D4pRsNJOHx7UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfKMN2O (ORCPT
+        id S1727129AbfKMNcp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 08:28:14 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:53474 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfKMN2O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 08:28:14 -0500
-Received: by mail-wm1-f47.google.com with SMTP id u18so2005761wmc.3
-        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 05:28:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=essensium-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=N1nsfiQD+VApG26stZWWDxLm7wGBXZ3wkt9ZoXLGf50=;
-        b=rUqS5Mhsmm+pha/vr9hbkjQHwDxbECGu/HrbYVLMfdy56YgzoUVPIkSiqXJ9V2WDhQ
-         TxcJAUqTB8/YuLU8T0DoEdYuHmckwaYhlL49fUFhrcI9RVV00zByuO0aAQpvKAkrkfxE
-         IMNc+hYG565A9XfuvJSSMZ8aZs9L7xIC1GQgaDGvx8y2PK/BhfAXzVnuf7kRa56uXmkt
-         3NfW+r1kVJ2vbWTmwQTGjlh//MICCyRbVsH06tG1aZcR4VTFzudXE075qd6E8MWveDWJ
-         mAoVnqZ0EuV2iSqPG3AGThJ5hXXlbhB7AZDnAfGTW46BRNeM7TOH2JuhR7fXvIL0+7s9
-         G34w==
+        Wed, 13 Nov 2019 08:32:45 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43320 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbfKMNcp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 08:32:45 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l20so1738135oie.10
+        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 05:32:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=N1nsfiQD+VApG26stZWWDxLm7wGBXZ3wkt9ZoXLGf50=;
-        b=MyK8LM7jc2+ifx6YaBmuSv4Ndn0NN+HiScQtPg9KbQ3HSrhrCszYKmayhQXo+9u2AX
-         vJKqpjUrPSWPVWb4zm7KS2STP1KupHf/oxFK3Up3wwpzfhMqnalJ+QfI34PUpF3JbtW5
-         FXJ+bytxEF7tezPtVO68TN5fpHxt8AqKj8TpgU4wsSi0hX4sBzSDRPDSLciseWkQGBdZ
-         88RYOWn/nUK6qiEWAv1eUm7Dl/oBF9QBDFCUuN+KTRYzcxXtcLxMtHiRnbnaA58W1XgM
-         5WtWhhJXCswSpWxbQLWhQ6VUE6XxdNF2ea+FRAE1B0Y6MFNRucjQI+rZNZ6tnL1Rp6vT
-         p1BA==
-X-Gm-Message-State: APjAAAWUvhxmSpLX8udhTUIAgbDeKbFTZkvUZQgbTcd06QaOtTOXpAbt
-        sSH5RchpO4Wk3KpYWzpPPXtzB4mZDCI=
-X-Google-Smtp-Source: APXvYqyWYu5hlqP2+2590fa7y+C43fpSZE7tGcK7pfXNubEE2fPVDajpz2JhtN6MpPgPHadCOsBdSQ==
-X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr2692273wma.177.1573651690013;
-        Wed, 13 Nov 2019 05:28:10 -0800 (PST)
-Received: from [192.168.1.37] (230.120-247-81.adsl-dyn.isp.belgacom.be. [81.247.120.230])
-        by smtp.gmail.com with ESMTPSA id p25sm2192681wma.20.2019.11.13.05.28.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Nov 2019 05:28:09 -0800 (PST)
-From:   Couret Charles-Antoine <charles-antoine.couret@essensium.com>
-Subject: Questions about your advice for PCM9211 driver
-To:     robh@kernel.org, devicetree@vger.kernel.org
-Message-ID: <e9b558d5-2ff8-e3fb-deb3-f40d91299485@essensium.com>
-Date:   Wed, 13 Nov 2019 14:28:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lk9+rv9bDktt6DRVGNpmAxhVtKeiCwxhTxFd00GMb+I=;
+        b=bh60MAJvtIeyRri1x1HTd7msd0f5D14RBgFwIrdHWDv7epKSP6LQ+4zn0ltO76w5Nu
+         tHEeLMnOrCHODLBCSU+Xnw5Kw1Ur54X8EJwGqQbMDySee8MYtRGeNu401NXrdmy1SptZ
+         6HrnGQYaqUS+P5K0/2QMt+PTzEFPcKY+B2plSfoKUzUsiCUz+jku/dJVQHIL2IEDbn5y
+         PUMY1XUPcw262GFL//pTsMo7m6ze4OC5ew0CGSUEdNTV1q+ZGNF318d6ugdQBlXcZzI8
+         LpDu54/JvRKw9tuC0vaV1epD3e9fWXhYNIoavXMvUNSOxcis5T4GMQrzOvgWF0yi3b1D
+         wDCg==
+X-Gm-Message-State: APjAAAXujCR5HODabby0qQv9RjlWz1d9qQbaDfLoZqkVPvT3ZDl8Jz7L
+        KaysSgPsO9PUab5gD/XUmA==
+X-Google-Smtp-Source: APXvYqw2tbri9rKe6Dp1oo4+9uSk8fTtqbgkpkX6wRDrn3Q5ueaThTAGbFwKL6XvmVRkF0hYe+g8Dg==
+X-Received: by 2002:aca:1b06:: with SMTP id b6mr3189030oib.25.1573651962718;
+        Wed, 13 Nov 2019 05:32:42 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i195sm660281oib.55.2019.11.13.05.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 05:32:41 -0800 (PST)
+Date:   Wed, 13 Nov 2019 07:32:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Christoph Fritz <chf.fritz@googlemail.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/4] dt-bindings: regulator: describe da906x buck
+ regulator modes
+Message-ID: <20191113133235.GA1952@bogus>
+References: <1573121050-4728-1-git-send-email-chf.fritz@googlemail.com>
+ <1573121050-4728-4-git-send-email-chf.fritz@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573121050-4728-4-git-send-email-chf.fritz@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob (and everyone),
+On Thu,  7 Nov 2019 11:04:09 +0100, Christoph Fritz wrote:
+> This patch adds DT description of da906x buck regulator modes.
+> 
+> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-I'm working on upstreaming PCM9211 driver which was already submitted in 
-the past. But based on your advice I'm not totally sure how to improve 
-this driver. FYI the thread was 
-https://www.spinics.net/lists/alsa-devel/msg63273.html
-
-In fact I don't understand what is the best design for the pinmuxing 
-part. You mentioned there are common bindings to deal with it. But I 
-found only "pinctrl-single" which is used for one pin = one register. 
-That's not the case for this device. Do you have something else in mind?
-
-So from my understanding the only way is to develop a new pinctrl driver 
-and convert PCM9211 driver to a MFD to handle pinctrl + sound soc. From 
-my point of view it seems a bit overkill. Or something more generic must 
-be provided like generic pinctrl which can match PCM9211 needs and 
-eventually other devices.
-
-
-Thank you in advance and I hope you can clarify the situation for me.
-
-Regards,
-
-Charles-Antoine
-
+Acked-by: Rob Herring <robh@kernel.org>
