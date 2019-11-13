@@ -2,109 +2,72 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BB7C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BCEC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7794206BA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C532196E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfKMCjr (ORCPT
+        id S1727148AbfKMCmg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:39:47 -0500
-Received: from mga01.intel.com ([192.55.52.88]:43956 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfKMCjr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:39:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Nov 2019 18:39:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,298,1569308400"; 
-   d="scan'208";a="216241266"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 12 Nov 2019 18:39:46 -0800
-Received: from [10.226.39.46] (unknown [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 3CF1E580372;
-        Tue, 12 Nov 2019 18:39:43 -0800 (PST)
-Subject: Re: [PATCH v5 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1572950559.git.eswara.kota@linux.intel.com>
- <73655e49e80ac08826ad2d470e1387ba1b662d83.1572950559.git.eswara.kota@linux.intel.com>
- <20191112191727.GA31422@bogus>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <29a5797b-f65c-ba87-0a45-ff5815bf9fd3@linux.intel.com>
-Date:   Wed, 13 Nov 2019 10:39:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 21:42:36 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:44621 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbfKMCmg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 21:42:36 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAD2gJXc006446, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAD2gJXc006446
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Nov 2019 10:42:19 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Wed, 13 Nov 2019 10:42:19 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 13 Nov 2019 10:42:18 +0800
+Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
+ ([fe80::3d7d:f7db:e1fb:307b%12]) with mapi id 15.01.1779.005; Wed, 13 Nov
+ 2019 10:42:18 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 3/7] arm64: dts: realtek: rtd129x: Introduce r-bus
+Thread-Topic: [PATCH 3/7] arm64: dts: realtek: rtd129x: Introduce r-bus
+Thread-Index: AQHVmD0LJFqIXtM2kU2Y99tlfWut1aeIZHww
+Date:   Wed, 13 Nov 2019 02:42:18 +0000
+Message-ID: <f70d00d8b1f8446fb138b36c61d952f4@realtek.com>
+References: <20191111030434.29977-1-afaerber@suse.de>
+ <20191111030434.29977-4-afaerber@suse.de>
+In-Reply-To: <20191111030434.29977-4-afaerber@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.190.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191112191727.GA31422@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 11/13/2019 3:17 AM, Rob Herring wrote:
-> On Wed, Nov 06, 2019 at 11:44:01AM +0800, Dilip Kota wrote:
->> Add YAML schemas for PCIe RC controller on Intel Gateway SoCs
->> which is Synopsys DesignWare based PCIe core.
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
->> ---
->> Changes on v5:
->> 	Add Reviewed-by Andrew Murray.
->> 	Add possible values and default value for max-link-speed.
->> 	Remove $ref and add maximum and default for reset-assert-ms.
->> 	Set true flag for linux,pci-domain.
->> 	Define maxItems for ranges and clock.
->> 	Define maximum for num-lanes.
->> 	Update required list:
->> 	  Add #address-cells, #size-cells, #interrupt-cells.
->> 	  Remove num-lanes and linux,pci-domain.
->> 	Add required header files in example.
->> 	Remove status entry in example.
->>
->> changes on v4:
->> 	Add "snps,dw-pcie" compatible.
->> 	Rename phy-names property value to pcie.
->> 	And maximum and minimum values to num-lanes.
->> 	Add ref for reset-assert-ms entry and update the
->> 	 description for easy understanding.
->> 	Remove PCIe core interrupt entry.
->>
->> changes on v3:
->>          Add the appropriate License-Identifier
->>          Rename intel,rst-interval to 'reset-assert-us'
->>          Add additionalProperties: false
->>          Rename phy-names to 'pciephy'
->>          Remove the dtsi node split of SoC and board in the example
->>          Add #interrupt-cells = <1>; or else interrupt parsing will fail
->>          Name yaml file with compatible name
->>
->>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 +++++++++++++++++++++
->>   1 file changed, 138 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> I'm working on a common PCI schema which will shrink this, but in the
-> meantime:
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Sure, Thanks for reviewing the patch.
-
-Regards,
-Dilip
+SGkgQW5kcmVhcywNCg0KPiArCQlyYnVzOiByLWJ1c0A5ODAwMDAwMCB7DQo+ICsJCQljb21wYXRp
+YmxlID0gInNpbXBsZS1idXMiOw0KPiArCQkJcmVnID0gPDB4OTgwMDAwMDAgMHgxMDAwMDA+Ow0K
+PiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4g
+KwkJCXJhbmdlcyA9IDwweDAgMHg5ODAwMDAwMCAweDEwMDAwMD47DQo+ICsNCg0KVGhlIHItYnVz
+IHNpemUgb2YgUlREMTM5NSBpcyAweDIwMDAwMC4NCg0KUmVnYXJkcywNCkphbWVzDQoNCg0K
