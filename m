@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1086EC17441
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C83C17441
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D203520674
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4A7206B6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 02:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573610587;
-	bh=9bhG71SHdIPOPx2brFLAamLBJekEwZtJUF+//yLby2A=;
+	s=default; t=1573610741;
+	bh=AESQQnEFZRySyG4z2WeuZ1JNEofQeUiup8xIUg8MVIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Km5Rjnn+SokuZgVjURCgCjsypjj4ZUS50kpY9Xy7xiUWww3MjzjM9Lxt6txP4/Eda
-	 M+YrHLr/A7YQKGFaoQfNU4ki1+9iNW6r3667R/n++0/FAWpjE3vZ2KmoQnK4plQBYM
-	 1HE9NWu3rZG0VIEhfJNsA10gNkbCreP2GE+XYM1A=
+	b=bJJ8fo42OWt/CgQZh9qivR7EdSk5wfaeJlP5I5yL2MLaWuZmp3G+L5mk1PKUeXVI0
+	 bqnNwBmL5YHCXgXJk+DxgkBRWnNn7yEJcKgsQxHXt9GpbaOFXwaOmIHghfgmEhgih7
+	 D0dq///29iqah0JWjH2YQcKBq7jtHvRpOCTLzzK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731093AbfKMCCw (ORCPT
+        id S1730768AbfKMCBh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 21:02:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
+        Tue, 12 Nov 2019 21:01:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731090AbfKMCCw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:02:52 -0500
+        id S1730784AbfKMCBf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 21:01:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D45F122466;
-        Wed, 13 Nov 2019 02:02:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C79C82246D;
+        Wed, 13 Nov 2019 02:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610571;
-        bh=9bhG71SHdIPOPx2brFLAamLBJekEwZtJUF+//yLby2A=;
+        s=default; t=1573610494;
+        bh=AESQQnEFZRySyG4z2WeuZ1JNEofQeUiup8xIUg8MVIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMJPAowbvLi/PyT6EdrnYXVwYFrABe9vEoTGOZ18YfWPxUe1Yg1DbKdTzUjKkcI53
-         NFeeYbVZ62i1VBX7cpS8bmz1lMQ27ixxj3iHpNKCej5qlX6jmdh5b5GAjU3V92sY3I
-         uAOBIhiN5EdDy+KBPvWfs7TVWt5lJtDl9hYO9qo8=
+        b=udwFbX+o2Yj5OKkbSRlco7tJiGGYyP08VbDySlrUT2KDfVHWDGZNN7CZuMz/EoAG/
+         ADkAM+pSHoZGQv+bYoSu3Umoqi/Eal13iAdQVkMGHmB9pGkf33atZ40LhTz3QIPsIe
+         7SFjGB2VctsGcoH1v7d87Z46//lHv8aG5KTncxX0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roger Quadros <rogerq@ti.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Roger Quadros <rogerq@ti.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 48/48] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
-Date:   Tue, 12 Nov 2019 21:01:31 -0500
-Message-Id: <20191113020131.13356-48-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 02/48] ARM: dts: omap5: enable OTG role for DWC3 controller
+Date:   Tue, 12 Nov 2019 21:00:45 -0500
+Message-Id: <20191113020131.13356-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191113020131.13356-1-sashal@kernel.org>
 References: <20191113020131.13356-1-sashal@kernel.org>
@@ -61,37 +61,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit a763ecc15d0e37c3a15ff6825183061209832685 ]
+[ Upstream commit 656c1a65ab555ee5c7cd0d6aee8ab82ca3c1795f ]
 
-OMAP5's Super-Speed USB port has a software mailbox register
-that needs to be fed with VBUS and ID events from an external
-VBUS/ID comparator.
+Since SMPS10 and OTG cable detection extcon are described here, and
+work to enable OTG power when an OTG cable is plugged in, we can
+define OTG mode in the controller (which is disabled by default in
+omap5.dtsi).
 
-Without this, Host role will not work correctly.
+Tested on OMAP5EVM and Pyra.
 
-Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
+Suggested-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap5-board-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/omap5-board-common.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-index d2398d2a0c08c..4ea4cf6c5b471 100644
+index 41e80e7f20bea..d2398d2a0c08c 100644
 --- a/arch/arm/boot/dts/omap5-board-common.dtsi
 +++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -634,6 +634,7 @@
+@@ -633,6 +633,10 @@
+ 	vbus-supply = <&smps10_out1_reg>;
  };
  
- &dwc3 {
-+	extcon = <&extcon_usb3>;
- 	dr_mode = "otg";
- };
++&dwc3 {
++	dr_mode = "otg";
++};
++
+ &mcspi1 {
  
+ };
 -- 
 2.20.1
 
