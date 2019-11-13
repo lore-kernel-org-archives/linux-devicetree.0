@@ -2,148 +2,127 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDB9C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 00:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92FEC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 00:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281122196E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 00:32:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEmKDvRW"
+	by mail.kernel.org (Postfix) with ESMTP id 7EE7C222C6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 00:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573606100;
+	bh=lwz/MVaWpB1XvfrBrWvlGPXI5BnwXkCvlHE+WGQUQ0g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gzhq8QO810KgTpWipt816xll6lul8Ldhs1LL9UGUohpiskUi+w5KsHsOKavpsEYBw
+	 88XHf3Wg/smeZ/Kb8FYxeilvE+jbwLuQ56OyroG0X0LmcNqKcGqR7lQUBI4SEsKZfQ
+	 w+F0L74+nBzyTHMhukSeiN2mUgZP8nLGr1iUHkFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfKMAcU (ORCPT
+        id S1727148AbfKMAsU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:32:20 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:46100 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfKMAcU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 19:32:20 -0500
-Received: by mail-yb1-f194.google.com with SMTP id v15so246652ybp.13;
-        Tue, 12 Nov 2019 16:32:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/Q2W42moV2mcIIo6Rx/FBh+2Gk6dSmvg33UDVUt0qXw=;
-        b=nEmKDvRWPecToVawO6mXvgAJL5tz/QZVmKRi4mz3MXyoK7N7RaMwMYBigtP/+1fBNQ
-         BwZafln08/j94TFfzjZYP+zGfjT9tqTpq7FM5onTVExFpvbH0qMLMbQbbZ3c0+I+b1KU
-         mDpqIlbssgz4OC5XYBCcVc7jEbUEsTJ/0k37/Ugti31KC3LD61aGAmon8DMT5rpXZMul
-         8g0ekEdq5cjNDc5WoZVKPDtMUtNNsTlcd+EpCstQVCj7MlkEQ+qundQcozjkCb1k6ZZI
-         86rBHOnwO00VUB3m7W1j99R1+UI5GsHXnRh6w96KQSXl7NkVjl3tD6bcVym8T1K1NiNr
-         ypFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/Q2W42moV2mcIIo6Rx/FBh+2Gk6dSmvg33UDVUt0qXw=;
-        b=ZJPF2FRmRu0lMUvcfe1cOMvF1Zwb+N/uVrFp7hkrxQvzJ+XJMmPXjY/jRDTX8OhrQI
-         qoNbYm/mc1ihjk36fdWAsnKY5hIEHF9v4nq6wddhIVnqJAArZjP1h7MQzMhVaQ7w/7KS
-         iW4clJXrI2furbQugDr2ZONTp9TWE8NmGQ1o7Cj/MDnVBervmUatNFtsUcm6lRPnYDlw
-         lZh0oyRBf5d9yc7831nn9V6rUOCjsj4pWO7aUitff/fzCE9EGvpts0PvyRYGH2hM7lAK
-         vKtXUMiH38FfK4o66JLKPlIIaJdU5vN8+CVLeUTLlexIwIr+JT1J0TH+qLIt9ij4/M9q
-         QZHw==
-X-Gm-Message-State: APjAAAVHIVdO7cBbFaYloecjwi2odD7fPfvwCGOunJdRdj0TAuoHNdwR
-        vv4DM5Va4zULNdzmR4u5b6hTAntc
-X-Google-Smtp-Source: APXvYqwxua4n09IZ/ysgn43BSsa6gYsNIsKafVt5k3uoK1Onlwyk9RkBUd4tsIlnBMq92gvrXKlXag==
-X-Received: by 2002:a25:700a:: with SMTP id l10mr610620ybc.79.1573605139455;
-        Tue, 12 Nov 2019 16:32:19 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id 23sm153137ywf.91.2019.11.12.16.32.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Nov 2019 16:32:19 -0800 (PST)
-Subject: Re: [PATCH] of: property: Fix documentation for out values
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191112081726.GA8291@localhost.localdomain>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <b1e7e17e-bf58-70af-b3de-7e8138d578ad@gmail.com>
-Date:   Tue, 12 Nov 2019 18:32:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 Nov 2019 19:48:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfKMAsT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 12 Nov 2019 19:48:19 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4B6821A49
+        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 00:48:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573606099;
+        bh=lwz/MVaWpB1XvfrBrWvlGPXI5BnwXkCvlHE+WGQUQ0g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hFpXGdtKQG6N8VhjR04pKLPAEuVWePO+64z4T5JmDpAVGLw2O2fknWYvumlEJXYn/
+         Mgq/erle4NuHU5WH6h2eRed3KJJwbCDoUltf15jh/F1sHqvFLR7GFytevFjwmnmgAu
+         lEyZw8WFwG1nm3itaQeSODdPmPBwFIrigwiwwXS4=
+Received: by mail-qk1-f174.google.com with SMTP id z16so260020qkg.7
+        for <devicetree@vger.kernel.org>; Tue, 12 Nov 2019 16:48:18 -0800 (PST)
+X-Gm-Message-State: APjAAAWjekU2r+bSdqQOx70ue154NOwUSZ8BCnOv5ffyRxQRcXhSA09P
+        vhe1RE3TzfUVKSR5U5C9gz3m6o2QwQmC2LCxrA==
+X-Google-Smtp-Source: APXvYqyndn2EOssMhZQ8EVwQGtvwgLISRFKnIgtv/OcI++MlE0sKgYyheWHfdkpDNa/0AvS2+7rXmQQFjwybt+R0Yok=
+X-Received: by 2002:ae9:dd83:: with SMTP id r125mr261188qkf.223.1573606098038;
+ Tue, 12 Nov 2019 16:48:18 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191112081726.GA8291@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191111172142.ozczh7j2gmzi7o5k@linutronix.de>
+ <CAL_JsqLecYPGGP8grE7sUgD1ZBYeVhuqX_sOT_9Rw1LM1yhSmw@mail.gmail.com>
+ <20191112091032.aa23wd24j4b324kw@linutronix.de> <CAL_Jsq+Rfguea+KO0kLKom=8t_oCnesT8cb833Y0fhsbu_a1Cg@mail.gmail.com>
+ <c2c76ab9-9967-3cc3-fff2-5f791598c7e3@gmail.com>
+In-Reply-To: <c2c76ab9-9967-3cc3-fff2-5f791598c7e3@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 12 Nov 2019 18:48:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJODons-CL9epGj2QXSyiE17N_a6W-Cyzb=2KKaePT0QQ@mail.gmail.com>
+Message-ID: <CAL_JsqJODons-CL9epGj2QXSyiE17N_a6W-Cyzb=2KKaePT0QQ@mail.gmail.com>
+Subject: Re: [PATCH] of: allocate / free phandle cache outside of the devtree_lock
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matti,
+On Tue, Nov 12, 2019 at 5:46 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 11/12/19 9:55 AM, Rob Herring wrote:
+> > On Tue, Nov 12, 2019 at 3:10 AM Sebastian Andrzej Siewior
+> > <bigeasy@linutronix.de> wrote:
+> >>
+> >> On 2019-11-11 21:35:35 [-0600], Rob Herring wrote:
+> >>>>    28d0e36bf9686 ("OF: Fixup resursive locking code paths")
+> >>>>    d6d3c4e656513 ("OF: convert devtree lock from rw_lock to raw spinlock")
+> >>>
+> >>> So to summarize, we changed mainline to fix RT which then broke RT. :)
+> >>
+> >> correct, but we were good until v4.17-rc1 :)
+> >>
+> >>>> I've been looking into making devtree_lock a spinlock_t which would
+> >>>> avoid this patch. I haven't seen an issue during boot on arm64 even
+> >>>> with hotplug.
+> >>>
+> >>> Did you look into using RCU reader locks any more?
+> >>
+> >> A little bit. The writers, which modify the node, would need to replace
+> >> the whole node. So this is where things got a little complicated.
+> >
+> > Why is that exactly? That's pretty much how node and property updates
+> > work anyways though maybe not strictly enforced. The other updates are
+> > atomic flags and ref counts which I assume are fine. The spinlock
+> > protects traversing the tree of nodes and list of properties.
+> > Traversing and updates would need to follow similar semantics as
+> > rculist, right? BTW, there's been some thoughts to move node and
+> > property lists to list_head. We may want to do that rather than trying
+> > to roll our own RCU code.
+> >
+> >> Frank wasn't a big fan of it back then and he still wasn't a few weeks
+> >> back.
+> >
+> > I guess you spoke at ELCE. RCU seems like the right locking to me as
+> > we're almost entirely reads and I haven't seen another proposal.
+> >
+> >> If you two agree to prefer RCU over this patch then I would look more
+> >> into adding RCU into the lookup path. The argument was that this isn't
+> >> time critical. I'm just trying to avoid to replace the locking for
+> >> nothing.
+> >> So, should I come up with a RCU patch?
+> >
+> > Lets see what Frank says first.
+>
+> RCU is good for adding list entries, deleting list entries, and updating
+> the value(s) of a list element.
+>
+> RCU is not good for excluding readers of a data structure while multiple
+> entries are being added, deleted, and/or modified, such that the readers
+> only see the state of the data structure either (1) before any changes
+> or (2) after all changes occur.  Overlay application and removal require
+> multiple modifications, with readers seeing either the before state of
+> the after state.
 
-On 11/12/19 2:17 AM, Matti Vaittinen wrote:
-> Property fetching functions which return number of successfully fetched
-> properties should not state that out-values are only modified if 0 is
-> returned. Fix this.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  drivers/of/property.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index d7fa75e31f22..4aae93cdc1ce 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -164,7 +164,8 @@ EXPORT_SYMBOL_GPL(of_property_read_u64_index);
->   *
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> - * @out_values:	pointer to return value, modified only if return value is 0.
-> + * @out_values:	pointer to return value, modified only if return value is
-> + *		greater than 0.
->   * @sz_min:	minimum number of array elements to read
->   * @sz_max:	maximum number of array elements to read, if zero there is no
->   *		upper limit on the number of elements in the dts entry but only
-> @@ -212,7 +213,8 @@ EXPORT_SYMBOL_GPL(of_property_read_variable_u8_array);
->   *
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> - * @out_values:	pointer to return value, modified only if return value is 0.
-> + * @out_values:	pointer to return value, modified only if return value is
-> + *		greater than 0.
->   * @sz_min:	minimum number of array elements to read
->   * @sz_max:	maximum number of array elements to read, if zero there is no
->   *		upper limit on the number of elements in the dts entry but only
-> @@ -260,7 +262,8 @@ EXPORT_SYMBOL_GPL(of_property_read_variable_u16_array);
->   *
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> - * @out_values:	pointer to return value, modified only if return value is 0.
-> + * @out_values:	pointer to return value, modified only if return value is
-> + *		greater than 0.
->   * @sz_min:	minimum number of array elements to read
->   * @sz_max:	maximum number of array elements to read, if zero there is no
->   *		upper limit on the number of elements in the dts entry but only
-> @@ -334,7 +337,8 @@ EXPORT_SYMBOL_GPL(of_property_read_u64);
->   *
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> - * @out_values:	pointer to return value, modified only if return value is 0.
-> + * @out_values:	pointer to return value, modified only if return value is
-> + *		greater than 0.
->   * @sz_min:	minimum number of array elements to read
->   * @sz_max:	maximum number of array elements to read, if zero there is no
->   *		upper limit on the number of elements in the dts entry but only
-> 
+Do we ensure that currently? The of_mutex provides what you describe,
+but most or all the reader paths don't take the mutex. Even the
+changeset API takes the spinlock a single node or property at a time.
 
-Thanks for catching each of these cases of incorrect documentation.
-
-Instead of correcting each of the descriptions, please just remove the incorrect
-portion.  So for each case, remove ", modified only if return value is 0."
-
-The reference to return value of 0 is a left over from another set of functions
-which were modified to call the set of functions that you fix above.
-
-Thanks,
-
-Frank
+Rob
