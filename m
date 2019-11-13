@@ -2,112 +2,148 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432DFC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 00:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDB9C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 00:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F83206BB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 00:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281122196E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 00:32:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEmKDvRW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfKMAVI convert rfc822-to-8bit (ORCPT
+        id S1726969AbfKMAcU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 12 Nov 2019 19:21:08 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:44885 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKMAVI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 19:21:08 -0500
-Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id E342CCECF4;
-        Wed, 13 Nov 2019 01:30:11 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm
- config
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191112230944.48716-5-abhishekpandit@chromium.org>
-Date:   Wed, 13 Nov 2019 01:21:06 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <0642BE4E-D3C7-48B3-9893-11828EAFA7EF@holtmann.org>
-References: <20191112230944.48716-1-abhishekpandit@chromium.org>
- <20191112230944.48716-5-abhishekpandit@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Tue, 12 Nov 2019 19:32:20 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46100 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfKMAcU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 12 Nov 2019 19:32:20 -0500
+Received: by mail-yb1-f194.google.com with SMTP id v15so246652ybp.13;
+        Tue, 12 Nov 2019 16:32:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/Q2W42moV2mcIIo6Rx/FBh+2Gk6dSmvg33UDVUt0qXw=;
+        b=nEmKDvRWPecToVawO6mXvgAJL5tz/QZVmKRi4mz3MXyoK7N7RaMwMYBigtP/+1fBNQ
+         BwZafln08/j94TFfzjZYP+zGfjT9tqTpq7FM5onTVExFpvbH0qMLMbQbbZ3c0+I+b1KU
+         mDpqIlbssgz4OC5XYBCcVc7jEbUEsTJ/0k37/Ugti31KC3LD61aGAmon8DMT5rpXZMul
+         8g0ekEdq5cjNDc5WoZVKPDtMUtNNsTlcd+EpCstQVCj7MlkEQ+qundQcozjkCb1k6ZZI
+         86rBHOnwO00VUB3m7W1j99R1+UI5GsHXnRh6w96KQSXl7NkVjl3tD6bcVym8T1K1NiNr
+         ypFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/Q2W42moV2mcIIo6Rx/FBh+2Gk6dSmvg33UDVUt0qXw=;
+        b=ZJPF2FRmRu0lMUvcfe1cOMvF1Zwb+N/uVrFp7hkrxQvzJ+XJMmPXjY/jRDTX8OhrQI
+         qoNbYm/mc1ihjk36fdWAsnKY5hIEHF9v4nq6wddhIVnqJAArZjP1h7MQzMhVaQ7w/7KS
+         iW4clJXrI2furbQugDr2ZONTp9TWE8NmGQ1o7Cj/MDnVBervmUatNFtsUcm6lRPnYDlw
+         lZh0oyRBf5d9yc7831nn9V6rUOCjsj4pWO7aUitff/fzCE9EGvpts0PvyRYGH2hM7lAK
+         vKtXUMiH38FfK4o66JLKPlIIaJdU5vN8+CVLeUTLlexIwIr+JT1J0TH+qLIt9ij4/M9q
+         QZHw==
+X-Gm-Message-State: APjAAAVHIVdO7cBbFaYloecjwi2odD7fPfvwCGOunJdRdj0TAuoHNdwR
+        vv4DM5Va4zULNdzmR4u5b6hTAntc
+X-Google-Smtp-Source: APXvYqwxua4n09IZ/ysgn43BSsa6gYsNIsKafVt5k3uoK1Onlwyk9RkBUd4tsIlnBMq92gvrXKlXag==
+X-Received: by 2002:a25:700a:: with SMTP id l10mr610620ybc.79.1573605139455;
+        Tue, 12 Nov 2019 16:32:19 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id 23sm153137ywf.91.2019.11.12.16.32.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Nov 2019 16:32:19 -0800 (PST)
+Subject: Re: [PATCH] of: property: Fix documentation for out values
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        mazziesaccount@gmail.com
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191112081726.GA8291@localhost.localdomain>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <b1e7e17e-bf58-70af-b3de-7e8138d578ad@gmail.com>
+Date:   Tue, 12 Nov 2019 18:32:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191112081726.GA8291@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Abhishek,
+Hi Matti,
 
-> Add documentation for pcm parameters.
+On 11/12/19 2:17 AM, Matti Vaittinen wrote:
+> Property fetching functions which return number of successfully fetched
+> properties should not state that out-values are only modified if 0 is
+> returned. Fix this.
 > 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > ---
+>  drivers/of/property.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 > 
-> Changes in v4:
-> - Fix incorrect function name in hci_bcm
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index d7fa75e31f22..4aae93cdc1ce 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -164,7 +164,8 @@ EXPORT_SYMBOL_GPL(of_property_read_u64_index);
+>   *
+>   * @np:		device node from which the property value is to be read.
+>   * @propname:	name of the property to be searched.
+> - * @out_values:	pointer to return value, modified only if return value is 0.
+> + * @out_values:	pointer to return value, modified only if return value is
+> + *		greater than 0.
+>   * @sz_min:	minimum number of array elements to read
+>   * @sz_max:	maximum number of array elements to read, if zero there is no
+>   *		upper limit on the number of elements in the dts entry but only
+> @@ -212,7 +213,8 @@ EXPORT_SYMBOL_GPL(of_property_read_variable_u8_array);
+>   *
+>   * @np:		device node from which the property value is to be read.
+>   * @propname:	name of the property to be searched.
+> - * @out_values:	pointer to return value, modified only if return value is 0.
+> + * @out_values:	pointer to return value, modified only if return value is
+> + *		greater than 0.
+>   * @sz_min:	minimum number of array elements to read
+>   * @sz_max:	maximum number of array elements to read, if zero there is no
+>   *		upper limit on the number of elements in the dts entry but only
+> @@ -260,7 +262,8 @@ EXPORT_SYMBOL_GPL(of_property_read_variable_u16_array);
+>   *
+>   * @np:		device node from which the property value is to be read.
+>   * @propname:	name of the property to be searched.
+> - * @out_values:	pointer to return value, modified only if return value is 0.
+> + * @out_values:	pointer to return value, modified only if return value is
+> + *		greater than 0.
+>   * @sz_min:	minimum number of array elements to read
+>   * @sz_max:	maximum number of array elements to read, if zero there is no
+>   *		upper limit on the number of elements in the dts entry but only
+> @@ -334,7 +337,8 @@ EXPORT_SYMBOL_GPL(of_property_read_u64);
+>   *
+>   * @np:		device node from which the property value is to be read.
+>   * @propname:	name of the property to be searched.
+> - * @out_values:	pointer to return value, modified only if return value is 0.
+> + * @out_values:	pointer to return value, modified only if return value is
+> + *		greater than 0.
+>   * @sz_min:	minimum number of array elements to read
+>   * @sz_max:	maximum number of array elements to read, if zero there is no
+>   *		upper limit on the number of elements in the dts entry but only
 > 
-> Changes in v3:
-> - Change disallow baudrate setting to return -EBUSY if called before
->  ready. bcm_proto is no longer modified and is back to being const.
-> - Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
-> - Changed brcm,sco-routing to brcm,bt-sco-routing
-> 
-> Changes in v2:
-> - Use match data to disallow baudrate setting
-> - Parse pcm parameters by name instead of as a byte string
-> - Fix prefix for dt-bindings commit
-> 
-> .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
-> 1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> index c749dc297624..42fb2fa8143d 100644
-> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> @@ -29,6 +29,11 @@ Optional properties:
->    - "lpo": external low power 32.768 kHz clock
->  - vbat-supply: phandle to regulator supply for VBAT
->  - vddio-supply: phandle to regulator supply for VDDIO
-> + - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
-> + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
-> + - brcm,pcm-frame-type: 0-1 (short, long)
-> + - brcm,pcm-sync-mode: 0-1 (slave, master)
-> + - brcm,pcm-clock-mode: 0-1 (slave, master)
 
-I think that all of them need to start with brcm,bt- prefix since it is rather Bluetooth specific.
+Thanks for catching each of these cases of incorrect documentation.
 
-> 
-> 
-> Example:
-> @@ -40,5 +45,11 @@ Example:
->        bluetooth {
->                compatible = "brcm,bcm43438-bt";
->                max-speed = <921600>;
-> +
-> +               brcm,bt-sco-routing = [01];
-> +               brcm,pcm-interface-rate = [02];
-> +               brcm,pcm-frame-type = [00];
-> +               brcm,pcm-sync-mode = [01];
-> +               brcm,pcm-clock-mode = [01];
->        };
+Instead of correcting each of the descriptions, please just remove the incorrect
+portion.  So for each case, remove ", modified only if return value is 0."
 
-My personal taste would be to add a comment after each entry that gives the human readable setting.
+The reference to return value of 0 is a left over from another set of functions
+which were modified to call the set of functions that you fix above.
 
-Regards
+Thanks,
 
-Marcel
-
+Frank
