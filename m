@@ -2,255 +2,504 @@ Return-Path: <SRS0=HlsD=ZF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9AAC17447
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 07:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E70C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 07:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A02207FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 07:29:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="O4WJSbIT"
+	by mail.kernel.org (Postfix) with ESMTP id 6A8CD21A49
+	for <linux-devicetree@archiver.kernel.org>; Wed, 13 Nov 2019 07:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfKMH32 (ORCPT
+        id S1726066AbfKMHj5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 02:29:28 -0500
-Received: from mail-eopbgr70080.outbound.protection.outlook.com ([40.107.7.80]:61413
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725966AbfKMH31 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 02:29:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bu3CmO/aiZrW619NsAcjPRVzzM5x/aYmu8Zc/qjST/PjUHybBGGAxpn+NHrpFk44bD1dVh9WOIS/QY4mXc/VyFt4UzwY/v3xlUvAVvhKVenUcKKhqVg5gPlhbQENU/vSQ4WoImyyNLr9cbK5B1jSDs9uT6Wbl9E8LEYFurDW8o944L6H4SP753OFLf5IpCukmH1f/fQzKVYJXQm3npkjZzrl5gv4b4phhp78dTihx3QsXf0o9D+/bJz8dBBW1sVCjM84Rw6Il7ktJ1tCEV+LP3ngKf2Q7DoeznPj/nPomLgi42W/80j0pN431WWZ0AEt4fIUzzlewUgjOmyoCM8Gag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z9LdoxyajUVBdtWGcWtuZ2nCdtfZslONSipPx8DwjDs=;
- b=TmWOweXLIWgKnemJSg7HA6/4fESf6sF9wIJJatspGymKC9ZSGONGAY2Szh7r70p6PjKYtx4FyUyvKi26cI/iGRAQ1qaTsQxdNJJcR/FotPCqRZilUqdC/9AGfDNOUtaGDkY0lhNUwkMeVTF3xdZoYmF7Kl2VwXCpzEWQKBIdd0F9zDJbhyFRQaeGnemFtb+mp9FxywEMjc5B4vQjXZvUjyjKwjV4VdZAQpzOCjHvCmYVQBzRen0/V07LjqG1aSahmerAsv4U+//O7AGRcSdHe3yrHM6w5NfOjZXF9UV6jcg9OtQa2DvAx6KXnrNX9Dwp5K5Hjo1jm/3NeC3TGB9L7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z9LdoxyajUVBdtWGcWtuZ2nCdtfZslONSipPx8DwjDs=;
- b=O4WJSbIT/VBTakAdfVnh0m15HKi+uLS/tDLndhDLQ1UuP32TFMJ+ttm7OnnoMT7UlLBcagzzEzAl/Rs0acNXePW6u7dZOX0uHxsrE2WtLvrJQcnkLsoHxv+pDVg9XALJKjsQosQvXcgoFYUeXoJo8l4i+uPlasfvTYbA4JYUq2E=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB5260.eurprd04.prod.outlook.com (20.176.237.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.22; Wed, 13 Nov 2019 07:29:17 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::115f:1e4f:9ceb:2a2c]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::115f:1e4f:9ceb:2a2c%7]) with mapi id 15.20.2430.028; Wed, 13 Nov 2019
- 07:29:17 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Shawn Guo <shawnguo@kernel.org>,
+        Wed, 13 Nov 2019 02:39:57 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51871 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfKMHj5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 02:39:57 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iUnFm-0007Nc-30; Wed, 13 Nov 2019 08:39:50 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iUnFi-0007pn-Ee; Wed, 13 Nov 2019 08:39:46 +0100
+Date:   Wed, 13 Nov 2019 08:39:46 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Oliver Graute <oliver.graute@gmail.com>
+Cc:     shawnguo@kernel.org, narmstrong@baylibre.com,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v5 2/5] clk: imx: Mark dram pll on 8mm and 8mn with
- CLK_GET_RATE_NOCACHE
-Thread-Topic: [PATCH v5 2/5] clk: imx: Mark dram pll on 8mm and 8mn with
- CLK_GET_RATE_NOCACHE
-Thread-Index: AQHVmaNNQleGyf6L90SmwJ7UhRbhVKeItGPQ
-Date:   Wed, 13 Nov 2019 07:29:17 +0000
-Message-ID: <DB7PR04MB4490A934AC170E4BA1CD261788760@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <cover.1573595318.git.leonard.crestez@nxp.com>
- <65d08f34741f1ffa94a53bc128433e6c958091d2.1573595319.git.leonard.crestez@nxp.com>
-In-Reply-To: <65d08f34741f1ffa94a53bc128433e6c958091d2.1573595319.git.leonard.crestez@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f15df55d-4adb-4bd5-a5cb-08d7680b3157
-x-ms-traffictypediagnostic: DB7PR04MB5260:|DB7PR04MB5260:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5260C6D53F061F3001C4E05C88760@DB7PR04MB5260.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 0220D4B98D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(199004)(189003)(102836004)(55016002)(74316002)(86362001)(6116002)(7736002)(305945005)(3846002)(486006)(81156014)(81166006)(476003)(66476007)(8676002)(52536014)(7696005)(66946007)(7416002)(66446008)(66556008)(6506007)(44832011)(5660300002)(64756008)(76176011)(2906002)(6306002)(26005)(99286004)(9686003)(33656002)(6246003)(6436002)(478600001)(446003)(66066001)(4326008)(8936002)(966005)(14454004)(71190400001)(229853002)(256004)(76116006)(316002)(25786009)(54906003)(11346002)(110136005)(186003)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5260;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4S80MecITYh2PixKWZmbdqg7EvDmpcvLq6nN708O1gNss8XI1rM3Q/fGBRYBpWl/rDWi7I5B2LnjBpE1FRXXdxaeAIs/UojN/kQs58s3Ni2a4VzTbS+z2eRUvFyp2E/9KuYBAn4KqO9DvGbedVJptJcC2plkHPjLHGoZAw0Neo0XheKr+bPHeMhdwK5BNc2IC30Ze+eDeh03eZUy7q6ENeWxozjOyV0chKnAFyI1FKIwhvDfdgTNzb8Fzd37TVC7skq4pmlsayIcwlqDXbIDRMZkZFOuR8C8p9hWj8KYIBDQlxnAeQabfPb5y79xsvVeSg+hon/f6GfiWOFdH4ZgKIwUMCI25QnrZ/ieyPszzi5EjApBzjj/lDfpONUTWlL/UInbSOMZR+KhBuvIgTCLNypUcCRNKftVcEBnHfK42ERi04c0n2vICZ5VyBBgxQGe
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 1/3] ARM: dts: imx6ul: Add Variscite DART-6UL SoM
+ support
+Message-ID: <20191113073946.jmpjfsxx7fbg6emu@pengutronix.de>
+References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
+ <1573586526-15007-2-git-send-email-oliver.graute@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f15df55d-4adb-4bd5-a5cb-08d7680b3157
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Nov 2019 07:29:17.6512
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VBVzNuRc3894/rZAGMIFqTq115OQ//3WNT2QhPu+BQS+LqY6Vkl9S2hxgYRVR9i4/wx9wdEZ2g3iwjVjLwFXhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5260
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573586526-15007-2-git-send-email-oliver.graute@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:26:34 up 179 days, 13:44, 119 users,  load average: 0.04, 0.05,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Leonard,
+Hi Oliver,
 
-> Subject: [PATCH v5 2/5] clk: imx: Mark dram pll on 8mm and 8mn with
-> CLK_GET_RATE_NOCACHE
+thanks for the patch. I made my comments inline.
 
-This patch will conflict with https://patchwork.kernel.org/cover/11224933/
-And I just post a new patch https://patchwork.kernel.org/patch/11241231/
-=20
-Then no need add imx_1443x_dram_pll
-
-Regards,
-Peng.
-
->=20
-> DRAM frequency switches are executed in firmware and can change the
-> configuration of the DRAM PLL outside linux. Mark these CLKs with
-> CLK_GET_RATE_NOCACHE so we always read back the PLL config registers
-> and recalculate rates.
->=20
-> In current DRAM frequency tables on 8mm/8mn only the maximum frequency
-> uses the PLL so it's always configured in the same way. However reading b=
-ack
-> the PLL configuration is the correct behavior and allows additional setpo=
-ints in
-> the future.
->=20
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+On 19-11-12 20:22, Oliver Graute wrote:
+> This patch adds support for the i.MX6UL variant of the Variscite DART-6UL
+> SoM Carrier-Board
+> 
+> Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Marco Felsch <m.felsch@pengutronix.de>
 > ---
->  drivers/clk/imx/clk-imx8mm.c  | 2 +-
->  drivers/clk/imx/clk-imx8mn.c  | 2 +-
->  drivers/clk/imx/clk-pll14xx.c | 7 +++++++
->  drivers/clk/imx/clk.h         | 1 +
->  4 files changed, 10 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
-> index e2bc3c90d93c..9246e89bb5fd 100644
-> --- a/drivers/clk/imx/clk-imx8mm.c
-> +++ b/drivers/clk/imx/clk-imx8mm.c
-> @@ -326,11 +326,11 @@ static int imx8mm_clocks_probe(struct
-> platform_device *pdev)
->  	clks[IMX8MM_SYS_PLL3_REF_SEL] =3D imx_clk_mux("sys_pll3_ref_sel",
-> base + 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
->=20
->  	clks[IMX8MM_AUDIO_PLL1] =3D imx_clk_pll14xx("audio_pll1",
-> "audio_pll1_ref_sel", base, &imx_1443x_pll);
->  	clks[IMX8MM_AUDIO_PLL2] =3D imx_clk_pll14xx("audio_pll2",
-> "audio_pll2_ref_sel", base + 0x14, &imx_1443x_pll);
->  	clks[IMX8MM_VIDEO_PLL1] =3D imx_clk_pll14xx("video_pll1",
-> "video_pll1_ref_sel", base + 0x28, &imx_1443x_pll);
-> -	clks[IMX8MM_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll",
-> "dram_pll_ref_sel", base + 0x50, &imx_1443x_pll);
-> +	clks[IMX8MM_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll",
-> +"dram_pll_ref_sel", base + 0x50, &imx_1443x_dram_pll);
->  	clks[IMX8MM_GPU_PLL] =3D imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel",
-> base + 0x64, &imx_1416x_pll);
->  	clks[IMX8MM_VPU_PLL] =3D imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel",
-> base + 0x74, &imx_1416x_pll);
->  	clks[IMX8MM_ARM_PLL] =3D imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel",
-> base + 0x84, &imx_1416x_pll);
->  	clks[IMX8MM_SYS_PLL1] =3D imx_clk_fixed("sys_pll1", 800000000);
->  	clks[IMX8MM_SYS_PLL2] =3D imx_clk_fixed("sys_pll2", 1000000000); diff
-> --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c index
-> de905e278b80..4749beab9fc8 100644
-> --- a/drivers/clk/imx/clk-imx8mn.c
-> +++ b/drivers/clk/imx/clk-imx8mn.c
-> @@ -323,11 +323,11 @@ static int imx8mn_clocks_probe(struct
-> platform_device *pdev)
->  	clks[IMX8MN_SYS_PLL3_REF_SEL] =3D imx_clk_mux("sys_pll3_ref_sel",
-> base + 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
->=20
->  	clks[IMX8MN_AUDIO_PLL1] =3D imx_clk_pll14xx("audio_pll1",
-> "audio_pll1_ref_sel", base, &imx_1443x_pll);
->  	clks[IMX8MN_AUDIO_PLL2] =3D imx_clk_pll14xx("audio_pll2",
-> "audio_pll2_ref_sel", base + 0x14, &imx_1443x_pll);
->  	clks[IMX8MN_VIDEO_PLL1] =3D imx_clk_pll14xx("video_pll1",
-> "video_pll1_ref_sel", base + 0x28, &imx_1443x_pll);
-> -	clks[IMX8MN_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll",
-> "dram_pll_ref_sel", base + 0x50, &imx_1443x_pll);
-> +	clks[IMX8MN_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll",
-> +"dram_pll_ref_sel", base + 0x50, &imx_1443x_dram_pll);
->  	clks[IMX8MN_GPU_PLL] =3D imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel",
-> base + 0x64, &imx_1416x_pll);
->  	clks[IMX8MN_VPU_PLL] =3D imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel",
-> base + 0x74, &imx_1416x_pll);
->  	clks[IMX8MN_ARM_PLL] =3D imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel",
-> base + 0x84, &imx_1416x_pll);
->  	clks[IMX8MN_SYS_PLL1] =3D imx_clk_fixed("sys_pll1", 800000000);
->  	clks[IMX8MN_SYS_PLL2] =3D imx_clk_fixed("sys_pll2", 1000000000); diff
-> --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c ind=
-ex
-> 5c458199060a..a6d31a7262ef 100644
-> --- a/drivers/clk/imx/clk-pll14xx.c
-> +++ b/drivers/clk/imx/clk-pll14xx.c
-> @@ -65,10 +65,17 @@ struct imx_pll14xx_clk imx_1443x_pll =3D {
->  	.type =3D PLL_1443X,
->  	.rate_table =3D imx_pll1443x_tbl,
->  	.rate_count =3D ARRAY_SIZE(imx_pll1443x_tbl),  };
->=20
-> +struct imx_pll14xx_clk imx_1443x_dram_pll =3D {
-> +	.type =3D PLL_1443X,
-> +	.rate_table =3D imx_pll1443x_tbl,
-> +	.rate_count =3D ARRAY_SIZE(imx_pll1443x_tbl),
-> +	.flags =3D CLK_GET_RATE_NOCACHE,
+> Changelog:
+> 
+> v7:
+>  - removed cpu0 node
+>  - fixed phy problem
+> 
+> v6:
+>  - renamed touch regulator
+>  - renamed rmii clock
+>  - moved some muxing to baseboard
+>  - added pinctrl for gpio key
+>  - added bus-width to usdhc1
+>  - fixed missing subnode on partitions
+> 
+>  .../boot/dts/imx6ul-imx6ull-var-dart-common.dtsi   | 376 +++++++++++++++++++++
+>  1 file changed, 376 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi b/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+> new file mode 100644
+> index 00000000..b3cd928
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+> @@ -0,0 +1,367 @@
+> +// SPDX-License-Identifier: (GPL-2.0)
+> +/dts-v1/;
+> +
+> +#include "imx6ul.dtsi"
+> +/ {
+> +	chosen {
+> +		stdout-path = &uart1;
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x20000000>;
+> +	};
+> +
+> +	clk_rmii_ref: clock-rmii-ref {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <25000000>;
+> +		clock-output-names = "rmii-ref";
+> +	};
+> +
+> +	reg_touch_3v3: regulator-touch-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "touch_3v3_supply";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+
+Where is this regulator used?
+
+> +
+> +	reg_sd1_vmmc: regulator-sd1-vmmc {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VSD_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	reg_gpio_dvfs: regulator-gpio {
+> +		compatible = "regulator-gpio";
+> +		regulator-min-microvolt = <1300000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		regulator-name = "gpio_dvfs";
+> +		regulator-type = "voltage";
+> +		gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
+
+Please add a dedicated pinctrl for this regultor.
+
+> +		enable-active-high;
+> +		states = <1300000 0x1 1400000 0x0>;
+> +	};
+
+Can you alphabetical order the regultor-* nodes?
+
 > +};
 > +
->  struct imx_pll14xx_clk imx_1416x_pll =3D {
->  	.type =3D PLL_1416X,
->  	.rate_table =3D imx_pll1416x_tbl,
->  	.rate_count =3D ARRAY_SIZE(imx_pll1416x_tbl),  }; diff --git
-> a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h index
-> bc5bb6ac8636..81122c9ab842 100644
-> --- a/drivers/clk/imx/clk.h
-> +++ b/drivers/clk/imx/clk.h
-> @@ -50,10 +50,11 @@ struct imx_pll14xx_clk {
->  	int flags;
->  };
->=20
->  extern struct imx_pll14xx_clk imx_1416x_pll;  extern struct
-> imx_pll14xx_clk imx_1443x_pll;
-> +extern struct imx_pll14xx_clk imx_1443x_dram_pll;
->=20
->  #define imx_clk_cpu(name, parent_name, div, mux, pll, step) \
->  	imx_clk_hw_cpu(name, parent_name, div, mux, pll, step)->clk
->=20
->  #define clk_register_gate2(dev, name, parent_name, flags, reg, bit_idx, =
-\
-> --
-> 2.17.1
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	phy-mode = "rmii";
+> +	phy-handle = <&ethphy0>;
+> +	phy-reset-gpios=<&gpio5 10 1>;
 
+Where happens this mux?
+
+> +	phy-reset-duration=<100>;
+> +	phy-reset-on-resume;
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@1 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			micrel,rmii-reference-clock-select-25-mhz;
+> +			clocks = <&clk_rmii_ref>;
+> +			clock-names = "rmii-ref";
+> +			reg = <1>;
+> +		};
+> +
+> +		ethphy1: ethernet-phy@3 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			micrel,rmii-reference-clock-select-25-mhz;
+> +			clocks = <&clk_rmii_ref>;
+> +			clock-names = "rmii-ref";
+> +			reg = <3>;
+> +		};
+> +	};
+> +};
+> +
+> +&gpmi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_gpmi_nand>;
+> +	status = "okay";
+> +
+> +	nand@0 {
+
+I never saw this notation. Please check the
+Documentation/devicetree/bindings/mtd/partition.txt.
+
+> +		partition@0 {
+> +			label = "spl";
+> +			reg = <0x00000000 0x00200000>;
+> +		};
+> +
+> +		partition@200000 {
+> +			label = "uboot";
+> +			reg = <0x00200000 0x00200000>;
+> +		};
+> +
+> +		partition@400000 {
+> +			label = "uboot-env";
+> +			reg = <0x00400000 0x00200000>;
+> +		};
+> +
+> +		partition@600000 {
+> +			label = "kernel";
+> +			reg = <0x00600000 0x00800000>;
+> +		};
+> +
+> +		partition@e00000 {
+> +			label = "rootfs";
+> +			reg = <0x00e00000 0x3f200000>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +};
+
+Please sort it alphabetical.
+
+> +
+> +&sai2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_sai2>;
+> +	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>,
+> +			  <&clks IMX6UL_CLK_SAI2>;
+> +	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
+> +	assigned-clock-rates = <0>, <12288000>;
+> +	fsl,sai-mclk-direction-output;
+> +	status = "okay";
+> +};
+> +
+> +&snvs_poweroff {
+> +	status = "okay";
+> +};
+> +
+> +&snvs_rtc {
+> +	status = "disabled";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	uart-has-rtscts;
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+> +	bus-width = <4>;
+> +	no-1-8-v;
+
+HS200 mode only works with 1.8V or 1.2V. Can you verify the HS200 state?
+
+Regards,
+  Marco
+
+> +	keep-power-in-suspend;
+> +	vmmc-supply = <&reg_sd1_vmmc>;
+> +	non-removable;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_wdog>;
+> +	fsl,ext-reset-output;
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
+> +
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet2: enet2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
+> +			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan1: flexcan1grp{
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX	0x1b020
+> +			MX6UL_PAD_LCD_DATA08__FLEXCAN1_TX	0x1b020
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan2: flexcan2grp{
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
+> +			MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio_keys: gpio_keysgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio_leds: gpioledsgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_HSYNC__GPIO4_IO20		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpmi_nand: gpminandgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_CLE__RAWNAND_CLE		0xb0b1
+> +			MX6UL_PAD_NAND_ALE__RAWNAND_ALE		0xb0b1
+> +			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B	0xb0b1
+> +			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0xb000
+> +			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B	0xb0b1
+> +			MX6UL_PAD_NAND_CE1_B__RAWNAND_CE1_B	0xb0b1
+> +			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B	0xb0b1
+> +			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B	0xb0b1
+> +			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0xb0b1
+> +			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01	0xb0b1
+> +			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02	0xb0b1
+> +			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03	0xb0b1
+> +			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04	0xb0b1
+> +			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05	0xb0b1
+> +			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06	0xb0b1
+> +			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07	0xb0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_hog: hoggrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT    0x03029
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL	0x4001b8b0
+> +			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA	0x4001b8b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c2: i2c2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART5_TX_DATA__I2C2_SCL	0x4001b8b0
+> +			MX6UL_PAD_UART5_RX_DATA__I2C2_SDA	0x4001b8b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_lcdif: lcdif {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02	0x79
+> +			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03	0x79
+> +			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04	0x79
+> +			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05	0x79
+> +			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06	0x79
+> +			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07	0x79
+> +			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10	0x79
+> +			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11	0x79
+> +			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12	0x79
+> +			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13	0x79
+> +			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14	0x79
+> +			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15	0x79
+> +			MX6UL_PAD_LCD_DATA18__LCDIF_DATA18	0x79
+> +			MX6UL_PAD_LCD_DATA19__LCDIF_DATA19	0x79
+> +			MX6UL_PAD_LCD_DATA20__LCDIF_DATA20	0x79
+> +			MX6UL_PAD_LCD_DATA21__LCDIF_DATA21	0x79
+> +			MX6UL_PAD_LCD_DATA22__LCDIF_DATA22	0x79
+> +			MX6UL_PAD_LCD_DATA23__LCDIF_DATA23	0x79
+> +			MX6UL_PAD_LCD_CLK__LCDIF_CLK		0x79
+> +			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm1: pwm1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA00__PWM1_OUT		0x110b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_sai2: sai2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
+> +			MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
+> +			MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x11088
+> +			MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x11088
+> +			MX6UL_PAD_JTAG_TMS__SAI2_MCLK		0x17088
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
+> +			MX6UL_PAD_UART2_CTS_B__UART2_DCE_CTS	0x1b0b1
+> +			MX6UL_PAD_UART2_RTS_B__UART2_DCE_RTS	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart3: uart3grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1
+> +			MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1
+> +			MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
+> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
+> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
+> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_wdog: wdoggrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO08__WDOG1_WDOG_B	0x78b0
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
