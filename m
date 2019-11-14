@@ -2,569 +2,184 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D911C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B740C43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4302070E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573740909;
-	bh=I1+Gi0S9e56yh8LBrLJ+2YVwTOLcYcDA0otJRtEDge8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LCBLDLz2zZ0o8k6rNoeA3sNPyQqAXYLfymS7klWzk5SfYjG6eI45PgFUkByvK4wVP
-	 ZyKxt2/b3My4I/xq+3XUM+XOEsYHZ0e+b9JHT+RU6WfKq865htpx8ua0sPQYsHZd+a
-	 GMQDXTqH2b7qIvBBEzDBYi5vKnjnu7S0+zKqQJdA=
+	by mail.kernel.org (Postfix) with ESMTP id 3C86B20706
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ml/cOiBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKNOPI (ORCPT
+        id S1726767AbfKNOTI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:15:08 -0500
-Received: from mail-oi1-f180.google.com ([209.85.167.180]:36279 "EHLO
-        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfKNOPI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 09:15:08 -0500
-Received: by mail-oi1-f180.google.com with SMTP id j7so5380485oib.3;
-        Thu, 14 Nov 2019 06:15:07 -0800 (PST)
+        Thu, 14 Nov 2019 09:19:08 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41905 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfKNOTH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 09:19:07 -0500
+Received: by mail-vs1-f68.google.com with SMTP id 190so3941732vss.8
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 06:19:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mF9QJkIN8Qk+EGkxO+jVoBbFR7FMIpRA3CjmA8m3d7Y=;
+        b=Ml/cOiBysl9RO47an1PTBHLBV9w/7hUJ5RTzC9SA1Mtzt+/DhPojZxalupt6UqYxdQ
+         Z6JVbt31LezzDArBbJjiKL2Y5fmaM9zvJ7unZ4BgDdfgF9mW0AXrx+BoEeZrvPk8v4Na
+         vFp/6s+uvZ+tazuT9dOHmkygy3CCIjNpWHbDS4RdoO1Ax+9gtplcOkQGyvu+xkTNpwvf
+         BQOZDKA6W1skAgd0wkcQQjy4KYmerLP5JSisRTka6/XXrK6yecbJSVLJ+KeRGxhACdKH
+         8qTLgfs22vZ7hOJ8kyH9jH6x5yGzqyYsrJoASTpX+UbbwnAEwMt16yGMLqfSMGWl0VET
+         jivg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=gcL+cCps1XEbvom3DJi1H0YNvrqxKgbmfQNhyR0Wbes=;
-        b=bAIwWJTdREJImQbxcnCr+2coOOt+fCcMWxWf6XghLYch5egAQpE3wgKNDqBWUMotvt
-         2kaZs2m1itR4OTH7wNChZaEr3Z9a6vTBD5gws7152PppecwcHsxeahnZvcu6KmcSCBJN
-         TZuonG22dOKwKB9XkadjO4xjX6bZids6iMngYP+CRm9T6xy7HbOycdOuHod8xN1/XAhG
-         v05PPCtHqDg8NAmr7E1rcpEqqixZZ5Qdc7K+dPfmsYo8w0yK4ANrI/S7D1hyBt8VPdDJ
-         RFXypyee1VFCh+rnEmfknJQMude/fNd7OPJd9h4i8diiB8bRxmezN8qXrNF0sIZzfe8J
-         kdrg==
-X-Gm-Message-State: APjAAAV4ljt2IGbkplExS0oJO8epLsssX+EBpXYM49cCQXBPVlbZmiza
-        y3yhju++U6s0bmuS59nW7FbBc6I=
-X-Google-Smtp-Source: APXvYqxnCbw04IOwN/6GS6ahDFop3WLjpbLkwgzwAgxcL6xh0k+ed/GJmNMOjAIf0XpQQatPW5n64Q==
-X-Received: by 2002:aca:450:: with SMTP id 77mr3723326oie.113.1573740906604;
-        Thu, 14 Nov 2019 06:15:06 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z66sm1938576ota.54.2019.11.14.06.15.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 06:15:05 -0800 (PST)
-Date:   Thu, 14 Nov 2019 08:15:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: rcar-vin: Convert bindings to
- json-schema
-Message-ID: <20191114141505.GA22574@bogus>
-References: <20191108021609.2584272-1-niklas.soderlund+renesas@ragnatech.se>
- <20191108021609.2584272-4-niklas.soderlund+renesas@ragnatech.se>
- <20191112094231.ssi2qaksvn7djxmq@uno.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mF9QJkIN8Qk+EGkxO+jVoBbFR7FMIpRA3CjmA8m3d7Y=;
+        b=ELj+4TF1IdypVeoimInmKIA/yAb7QTMDSPX8O9uq0eBB8oBBpRXFefBr715sMEN4Wo
+         z3SazDHjbQLaDcGl4rhDIR72GDlbTvQeeiyfzgCfuSWKWtKZfq/FvLhCEAGA20zD0+IL
+         lfEZFx5QUWkB6s/ocuER7GudF9c0VPhcmnojsvG3XmzL3V7heat+7eZEX+CE2kqEPdkj
+         RnnCKBAQ8a34OgZC/jx1TZQXU6uHHu2/7ayYA8g5C3oZtjcsAvoJVAOqBIrw/tmAxBCx
+         tnaP/KCemC91EP2nmC96VLq812/8QBeS7sA51ZA1SkeGxVYtTn+VgPgQtUYwRYP5RXp6
+         i1+Q==
+X-Gm-Message-State: APjAAAUCWz7I6v4SoTj5gC6bHFys3Msh6HkDqc4YNANkhtyp8TQmbGAK
+        PjaYbAZ1ZHoX7zZn23dUjs12PZk8HYzpyqSMg59b5w==
+X-Google-Smtp-Source: APXvYqwgCmwHYSDSJ68Em4upupN+YGH3wrjpaM8fSyc24xbueo9viz0GrcVPQXBkKEvWLAXn8LtIFd6tV6myvBaAjVM=
+X-Received: by 2002:a05:6102:36d:: with SMTP id f13mr6019578vsa.34.1573741145328;
+ Thu, 14 Nov 2019 06:19:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191112094231.ssi2qaksvn7djxmq@uno.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1573122644.git.hns@goldelico.com>
+In-Reply-To: <cover.1573122644.git.hns@goldelico.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 14 Nov 2019 15:18:29 +0100
+Message-ID: <CAPDyKFrntf2Kd9Zf7uxRCUk_OrKD8B3xOKmvPaf04X21L5HwWA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] OpenPandora: make wl1251 connected to mmc3 sdio
+ port of OpenPandora work again
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:42:31AM +0100, Jacopo Mondi wrote:
-> Hi Niklas,
->    thanks for the patch
-> 
-> On Fri, Nov 08, 2019 at 03:16:09AM +0100, Niklas Söderlund wrote:
-> > Convert Renesas R-Car VIN bindings documentation to json-schema.
-> >
-> > As the examples in the bindings now can be tested add a new one which
-> > describes how the both a parallel and a CSI-2 source can be connected on
-> > Gen3 SoCs.
-> >
-> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > ---
-> >  .../devicetree/bindings/media/renesas,vin.txt | 217 ----------
-> >  .../bindings/media/renesas,vin.yaml           | 409 ++++++++++++++++++
-> >  2 files changed, 409 insertions(+), 217 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/media/renesas,vin.txt
-> >  create mode 100644 Documentation/devicetree/bindings/media/renesas,vin.yaml
+On Thu, 7 Nov 2019 at 11:31, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+>
+> * add a revisit note for special wl1251 handling code because it should
+>   be solved more generic in mmc core - suggested by Ulf Hansson <ulf.hansson@linaro.org>
+> * remove init_card callback from platform_data/hsmmc-omap.h - suggested by Ulf Hansson <ulf.hansson@linaro.org>
+> * remove obstructive always-on for vwlan regulator - suggested by Ulf Hansson <ulf.hansson@linaro.org>
+> * rename DT node - suggested by Rob Herring <robh@kernel.org>
+> * fix ARM: dts: subject prefix - suggested by Tony Lindgren <tony@atomide.com>
+> * also remove omap2_hsmmc_info and obc-y line in Makefile - suggested by Tony Lindgren <tony@atomide.com>
 
+No further comments from my side. Let's just agree on how to deal with
+the ti,power-gpio, then I can apply this.
 
-> > diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > new file mode 100644
-> > index 0000000000000000..be261d9a98d62dcd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > @@ -0,0 +1,409 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> 
-> I think you should use GPL-2.0-only
-> 
-> > +# Copyright (C) 2019 Renesas Electronics Corp.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/renesas,vin.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Renesas R-Car Video Input (VIN)
-> > +
-> > +maintainers:
-> > +  - Niklas Söderlund <niklas.soderlund@ragnatech.se>
-> 
-> I also put the mailing lists here, not sure if that's desired.
+Thanks a lot for fixing all this mess!
 
-Not really. A Renesas list is fine, but no need for linux-media as the 
-file path will pick that up.
+Kind regards
+Uffe
 
-> > +
-> > +description: |-
-> > +  The R-Car Video Input (VIN) device provides video input capabilities for the
-> > +  Renesas R-Car family of devices.
-> > +
-> > +  Each VIN instance has a single parallel input that supports RGB and YUV video,
-> > +  with both external synchronization and BT.656 synchronization for the latter.
-> > +  Depending on the instance the VIN input is connected to external SoC pins, or
-> > +  on Gen3 and RZ/G2 platforms to a CSI-2 receiver.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +        - enum:
-> > +          - renesas,vin-r8a7743  # RZ/G1M
-> > +          - renesas,vin-r8a7744  # RZ/G1N
-> > +          - renesas,vin-r8a7745  # RZ/G1E
-> > +          - renesas,vin-r8a77470 # RZ/G1C
-> > +          - renesas,vin-r8a7790  # R-Car H2
-> > +          - renesas,vin-r8a7791  # R-Car M2-W
-> > +          - renesas,vin-r8a7792  # R-Car V2H
-> > +          - renesas,vin-r8a7793  # R-Car M2-N
-> > +          - renesas,vin-r8a7794  # R-Car E2
-> > +        - const: renesas,rcar-gen2-vin # Generic R-Car Gen2 or RZ/G1
-> > +
-> > +      - items:
-> > +        - enum:
-> > +          - renesas,vin-r8a774a1 # RZ/G2M
-> > +          - renesas,vin-r8a774b1 # RZ/G2N
-> > +          - renesas,vin-r8a774c0 # RZ/G2E
-> > +          - renesas,vin-r8a7778  # R-Car M1
-> > +          - renesas,vin-r8a7779  # R-Car H1
-> > +          - renesas,vin-r8a7795  # R-Car H3
-> > +          - renesas,vin-r8a7796  # R-Car M3-W
-> > +          - renesas,vin-r8a77965 # R-Car M3-N
-> > +          - renesas,vin-r8a77970 # R-Car V3M
-> > +          - renesas,vin-r8a77980 # R-Car V3H
-> > +          - renesas,vin-r8a77990 # R-Car E3
-> > +          - renesas,vin-r8a77995 # R-Car D3
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  #The per-board settings for Gen2 and RZ/G1 platforms:
-> > +  port:
-> > +    type: object
-> > +    description: |-
-> > +      A node containing a parallel input with a singel endpoint definitions as
-> > +      documented in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +
-> > +    properties:
-> > +      reg:
-> > +        const: 1
-> 
-> Do you need reg for the single 'port' ?
-> 
-> > +
-> > +      endpoint:
-> > +        type: object
-> > +
-> > +        properties:
-> > +          hsync-active:
-> > +            description: |-
-> > +              Default is active high. If both HSYNC and VSYNC polarities are not
-> > +              specified, embedded synchronization is selected.
-> > +            enum: [ 0, 1 ]
-> > +
-> > +          vsync-active:
-> > +            description: |-
-> > +              Default is active high. If both HSYNC and VSYNC polarities are not
-> > +              specified, embedded synchronization is selected.
-> > +            enum: [ 0, 1 ]
-> > +
-> > +          field-active-even:
-> > +            description: Default is active high.
-> > +            enum: [ 0, 1 ]
-> > +
-> > +          bus-width:
-> > +            enum: [ 8, 10, 12, 16, 24, 32 ]
-> > +
-> > +          data-shift:
-> > +            enum: [ 0, 8 ]
-> > +
-> > +          data-enable-active:
-> > +            description: Polarity of CLKENB signal, default is active high.
-> > +            enum: [ 0, 1 ]
-> > +
-> > +          pclk-sample:
-> > +            enum: [ 0, 1 ]
-> > +
-> > +          data-active:
-> > +            enum: [ 0, 1 ]
-> > +
-> > +          remote-endpoint:
-> > +            maxItems: 1
-> > +
-> > +        required:
-> > +          - remote-endpoint
-> > +
-> > +        additionalProperties: false
-> > +
-> > +    additionalProperties: false
-> > +
-> > +  #The per-board settings for Gen3 and RZ/G2 platforms:
-> > +  renesas,id:
-> > +    description: VIN channel number
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - enum: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description: |-
-> > +      A node containing input nodes with endpoint definitions as documented in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +
-> > +    properties:
-> > +      port@0:
-> > +        type: object
-> > +        description: |-
-> > +          Input port node, single endpoint describing a parallel input source.
-> > +
-> > +        properties:
-> > +          reg:
-> > +            const: 0
-> > +
-> > +          endpoint:
-> > +            type: object
-> > +
-> > +            properties:
-> > +              hsync-active:
-> > +                description: |-
-
-Drop the literal block (|-).
-
-> > +                  Default is active high. If both HSYNC and VSYNC polarities are not
-> > +                  specified, embedded synchronization is selected.
-
-Express defaults as a schema:
-
-default: 1
-
-> > +                enum: [ 0, 1 ]
-
-Unless a subset of possible values apply, assume this is defined 
-elsewhere (hopefully someone converts video-interfaces.txt to schema 
-soon).
-
-> > +
-> > +              vsync-active:
-> > +                description: |-
-> > +                  Default is active high. If both HSYNC and VSYNC polarities are not
-> > +                  specified, embedded synchronization is selected.
-> > +                enum: [ 0, 1 ]
-> > +
-> > +              field-active-even:
-> > +                description: Default is active high.
-> > +                enum: [ 0, 1 ]
-> > +
-> > +              bus-width:
-> > +                enum: [ 8, 10, 12, 16, 24, 32 ]
-> > +
-> > +              data-shift:
-> > +                enum: [ 0, 8 ]
-> 
-> Why are those two not described ? I feel like or you either refrain
-> from describing all poperties and point the reader to
-> video-interfaces.txt, or you describe all of them, at least to provide
-> an indication of the default if the property is not specified.
-> 
-> > +
-> > +              data-enable-active:
-> > +                description: Polarity of CLKENB signal, default is active high.
-> > +                enum: [ 0, 1 ]
-> > +
-> > +              pclk-sample:
-> > +                enum: [ 0, 1 ]
-> > +
-> > +              data-active:
-> > +                enum: [ 0, 1 ]
-> > +
-> > +              remote-endpoint:
-> > +                maxItems: 1
-
-Just 'true' is enough here. Assume it's defined as a phandle elsewhere.
-
-> > +
-> > +            required:
-> > +              - remote-endpoint
-> > +
-> > +            additionalProperties: false
-> > +
-> > +        additionalProperties: false
-> > +
-> > +      port@1:
-> > +        type: object
-> > +        description: |-
-> > +          Input port node, multiple endpoints describing all the R-Car CSI-2
-> > +          modules connected the VIN.
-> > +
-> > +        properties:
-> > +          '#address-cells':
-> > +            const: 1
-> > +
-> > +          '#size-cells':
-> > +            const: 0
-> > +
-> > +          reg:
-> > +            const: 1
-> > +
-> > +          endpoint@0:
-> > +            type: object
-> > +            description: Endpoint connected to CSI20.
-> > +
-> > +            properties:
-> > +              reg:
-> > +                const: 0
-> > +
-> > +              remote-endpoint:
-> > +                maxItems: 1
-> > +
-> > +            required:
-> > +              - reg
-> > +              - remote-endpoint
-> > +
-> > +            additionalProperties: false
-> > +
-> > +          endpoint@1:
-> > +            type: object
-> > +            description: Endpoint connected to CSI21.
-> > +
-> > +            properties:
-> > +              reg:
-> > +                const: 1
-> > +
-> > +              remote-endpoint:
-> > +                maxItems: 1
-> > +
-> > +            required:
-> > +              - reg
-> > +              - remote-endpoint
-> > +
-> > +            additionalProperties: false
-> > +
-> > +          endpoint@2:
-> > +            type: object
-> > +            description: Endpoint connected to CSI40.
-> > +
-> > +            properties:
-> > +              reg:
-> > +                const: 2
-> > +
-> > +              remote-endpoint:
-> > +                maxItems: 1
-> > +
-> > +            required:
-> > +              - reg
-> > +              - remote-endpoint
-> > +
-> > +            additionalProperties: false
-> > +
-> > +          endpoint@3:
-> > +            type: object
-> > +            description: Endpoint connected to CSI41.
-> > +
-> > +            properties:
-> > +              reg:
-> > +                const: 3
-> > +
-> > +              remote-endpoint:
-> > +                maxItems: 1
-> > +
-> > +            required:
-> > +              - reg
-> > +              - remote-endpoint
-> 
-> Here and in the other endpoints of port@1, do you need required
-> properties ? As I read in writing-schema.rts:
-> "Unless noted otherwise, all properties are required."
-
-That is referring to schema properties ($id, properties, title, etc.), 
-not binding properties. That's also just the top-level 
-properties/keywords. If that's confusing, try reading the meta-schemas 
-which has schema keywords as both properties and schema.
-
-
-> > +
-> > +            additionalProperties: false
-> > +
-> > +        additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - power-domains
-> > +  - resets
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        anyOf:
-> > +          - const: renesas,vin-r8a7778
-> > +          - const: renesas,vin-r8a7779
-> > +          - const: renesas,rcar-gen2-vin
-> > +then:
-> > +  required:
-> > +    - port
-> > +else:
-> > +  required:
-> > +    - renesas,id
-> > +    - ports
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  # Device node example for Gen2 platform
-> > +  - |
-> > +    #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/power/r8a7790-sysc.h>
-> > +
-> > +    vin1: vin@e6ef1000 {
-> > +            compatible = "renesas,vin-r8a7790",
-> > +                         "renesas,rcar-gen2-vin";
-> > +            reg = <0 0xe6ef1000 0 0x1000>;
-> > +            interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-> > +            clocks = <&cpg CPG_MOD 810>;
-> > +            power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
-> > +            resets = <&cpg 810>;
-> > +
-> > +            port {
-> > +                    vin1ep0: endpoint {
-> > +                            remote-endpoint = <&adv7180>;
-> > +                            bus-width = <8>;
-> > +                    };
-> > +            };
-> > +    };
-> > +
-> > +  # Device node example for Gen3 platform with only CSI-2
-> > +  - |
-> > +    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/power/r8a7795-sysc.h>
-> > +
-> > +    vin0: video@e6ef0000 {
-> > +            compatible = "renesas,vin-r8a7795";
-> > +            reg = <0 0xe6ef0000 0 0x1000>;
-> > +            interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-> > +            clocks = <&cpg CPG_MOD 811>;
-> > +            power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> > +            resets = <&cpg 811>;
-> > +            renesas,id = <0>;
-> > +
-> > +            ports {
-> > +                    #address-cells = <1>;
-> > +                    #size-cells = <0>;
-> > +
-> > +                    port@1 {
-> > +                            #address-cells = <1>;
-> > +                            #size-cells = <0>;
-> > +
-> > +                            reg = <1>;
-> > +
-> > +                            vin0csi20: endpoint@0 {
-> > +                                    reg = <0>;
-> > +                                    remote-endpoint= <&csi20vin0>;
-> > +                            };
-> > +                            vin0csi40: endpoint@2 {
-> > +                                    reg = <2>;
-> > +                                    remote-endpoint= <&csi40vin0>;
-> > +                            };
-> > +                    };
-> > +            };
-> > +    };
-> > +
-> > +  # Device node example for Gen3 platform with CSI-2 and parallel
-> > +  - |
-> > +    #include <dt-bindings/clock/r8a77970-cpg-mssr.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/power/r8a77970-sysc.h>
-> > +
-> > +    vin2: video@e6ef2000 {
-> > +            compatible = "renesas,vin-r8a77970";
-> > +            reg = <0 0xe6ef2000 0 0x1000>;
-> > +            interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-> > +            clocks = <&cpg CPG_MOD 809>;
-> > +            power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-> > +            resets = <&cpg 809>;
-> > +            renesas,id = <2>;
-> > +
-> > +            ports {
-> > +                    #address-cells = <1>;
-> > +                    #size-cells = <0>;
-> > +
-> > +                    port@0 {
-> > +                            reg = <0>;
-> > +
-> > +                            vin2_in: endpoint {
-> > +                                    remote-endpoint = <&adv7612_out>;
-> > +                                    hsync-active = <0>;
-> > +                                    vsync-active = <0>;
-> > +                            };
-> > +                    };
-> > +
-> > +                    port@1 {
-> > +                            #address-cells = <1>;
-> > +                            #size-cells = <0>;
-> > +
-> > +                            reg = <1>;
-> > +
-> > +                            vin2csi40: endpoint@2 {
-> > +                                    reg = <2>;
-> > +                                    remote-endpoint = <&csi40vin2>;
-> > +                            };
-> > +                    };
-> > +            };
-> > +    };
-> 
-> I can't really comment on the json-schema most complex parts, but from
-> a device point of view, minors apart, it seems sane to me.
-> 
-> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-> 
-> Thanks
->   j
-> 
-> > --
-> > 2.23.0
-> >
-
-
+>
+> PATCH V2 2019-10-19 20:41:47:
+> * added acked-by for wl1251 patches - Kalle Valo <kvalo@codeaurora.org>
+> * really removed old pdata-quirks code (not through #if 0)
+> * splited out a partial revert of
+>         efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
+>   because that was introduced after v4.19 and stops the removal of
+>   the pdata-quirks patch from cleanly applying to v4.9, v4.14, v4.19
+>   - reported by Sasha Levin <sashal@kernel.org>
+> * added a new patch to remove old omap hsmmc since pdata quirks
+>   were last user - suggested by Tony Lindgren <tony@atomide.com>
+>
+> PATCH V1 2019-10-18 22:25:39:
+> Here we have a set of scattered patches to make the OpenPandora WiFi work again.
+>
+> v4.7 did break the pdata-quirks which made the mmc3 interface
+> fail completely, because some code now assumes device tree
+> based instantiation.
+>
+> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+>
+> v4.11 did break the sdio qirks for wl1251 which made the driver no longer
+> load, although the device was found as an sdio client.
+>
+> Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+>
+> To solve these issues:
+> * we convert mmc3 and wl1251 initialization from pdata-quirks
+>   to device tree
+> * we make the wl1251 driver read properties from device tree
+> * we fix the mmc core vendor ids and quirks
+> * we fix the wl1251 (and wl1271) driver to use only vendor ids
+>   from header file instead of (potentially conflicting) local
+>   definitions
+>
+>
+> H. Nikolaus Schaller (12):
+>   Documentation: dt: wireless: update wl1251 for sdio
+>   net: wireless: ti: wl1251 add device tree support
+>   ARM: dts: pandora-common: define wl1251 as child node of mmc3
+>   mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid
+>     of pandora_wl1251_init_card
+>   omap: pdata-quirks: revert pandora specific gpiod additions
+>   omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+>   omap: remove omap2_hsmmc_info in old hsmmc.[ch] and update Makefile
+>   mmc: host: omap-hsmmc: remove init_card pdata callback from pdata
+>   mmc: sdio: fix wl1251 vendor id
+>   mmc: core: fix wl1251 sdio quirks
+>   net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
+>   net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
+>
+>  .../bindings/net/wireless/ti,wl1251.txt       |  26 +++
+>  arch/arm/boot/dts/omap3-pandora-common.dtsi   |  36 +++-
+>  arch/arm/mach-omap2/Makefile                  |   3 -
+>  arch/arm/mach-omap2/common.h                  |   1 -
+>  arch/arm/mach-omap2/hsmmc.c                   | 171 ------------------
+>  arch/arm/mach-omap2/hsmmc.h                   |  32 ----
+>  arch/arm/mach-omap2/pdata-quirks.c            | 105 -----------
+>  drivers/mmc/core/quirks.h                     |   7 +
+>  drivers/mmc/host/omap_hsmmc.c                 |  30 ++-
+>  drivers/net/wireless/ti/wl1251/sdio.c         |  23 ++-
+>  drivers/net/wireless/ti/wlcore/sdio.c         |   8 -
+>  include/linux/mmc/sdio_ids.h                  |   2 +
+>  include/linux/platform_data/hsmmc-omap.h      |   3 -
+>  13 files changed, 111 insertions(+), 336 deletions(-)
+>  delete mode 100644 arch/arm/mach-omap2/hsmmc.c
+>  delete mode 100644 arch/arm/mach-omap2/hsmmc.h
+>
+> --
+> 2.23.0
+>
