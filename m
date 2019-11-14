@@ -2,111 +2,116 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDD2C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 13:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55677C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 13:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218EA206D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 13:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573736810;
-	bh=KCNO+MrgVqwz18fwdIJHkLq2GV4c6TSpcgDSJNunoDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CMWWz8RZcRP6utdYRqIRDYQee50y7/4mgvVMZI8fVX5lJaa4OmkDjmoa266aq3Xoe
-	 7xi5LPvsWvDzIcU4vxnwEpcTuTD4eY4S3zpzCm83dQNhdfk/TOJwFt/zggl27d8nCU
-	 zcJzP6OH3Zphw+xVNp0xK9Qaq2VKygXMZGiSzUZ8=
+	by mail.kernel.org (Postfix) with ESMTP id 3673120709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 13:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfKNNGt (ORCPT
+        id S1726378AbfKNNLE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:06:49 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46676 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfKNNGt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 08:06:49 -0500
-Received: by mail-pg1-f194.google.com with SMTP id r18so3737635pgu.13;
-        Thu, 14 Nov 2019 05:06:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jKxQ3g2QCYw1ETJ7eUyt+P4Yh1YMiRwmIUhbyNGbkvI=;
-        b=rLZ3bzbEbWhNLHL4Ssj2NSpg4wSwAIR1dlqCuNj2rYva0CZYBW3HcGF5jLDifxbHQu
-         i2SJGfcBmmzDZmvIWCdfTNcX7TK2px7OJedspXOuxXiqoDF0Aj6Xe7vnvG9GmloMCOen
-         j85OgtPLNbWvFpfh+7yk4VSYtTalzE/MVF/6qkHSRLvoRiyVFlTS9gT8ua3nHZ+y0N+W
-         n/6GrxBzCjbqZn0ZCBATFwMxJJH1Oz+uiW+BMbgXDWAny5xnBtZLRzVCxy1L+hMu/6sU
-         7hCVI9DXnnbxOxKdD/W+bcaYw+HjcNeFKCvsl8SDX/iscqoc+IoLVI7eAEmqRwK4JizL
-         h2xw==
-X-Gm-Message-State: APjAAAXMcebFkveW4ATYo1Tova328DDjlgcyYBZ3UPqhecBHEcTscyEw
-        wBHlwNEplUw50K4IY4drsO0=
-X-Google-Smtp-Source: APXvYqz6HcLDXMbPV2kam2Ol4yOZFbMzJdRPhAXcsvJIpmq2YBHH7ZD8SfAkqfvj4SThTSNe5HmhhA==
-X-Received: by 2002:a17:90a:e90:: with SMTP id 16mr12337378pjx.65.1573736808378;
-        Thu, 14 Nov 2019 05:06:48 -0800 (PST)
-Received: from kozik-lap ([118.189.143.39])
-        by smtp.googlemail.com with ESMTPSA id fz12sm5781898pjb.15.2019.11.14.05.06.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 05:06:47 -0800 (PST)
-Date:   Thu, 14 Nov 2019 14:06:43 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marian Mihailescu <mihailescu2m@gmail.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kgene@kernel.org
-Subject: Re: [PATCH v5] ARM: dts: exynos5420: add mali dt node and enable
- mali on Odroid XU3/4
-Message-ID: <20191114130643.GB3084@kozik-lap>
-References: <20191114000900.26962-1-mihailescu2m@gmail.com>
+        Thu, 14 Nov 2019 08:11:04 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:34068 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbfKNNLE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:11:04 -0500
+Received: from wf0530.dip.tu-dresden.de ([141.76.182.18] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iVEtU-0002Qj-R0; Thu, 14 Nov 2019 14:10:40 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com,
+        devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        linux-kernel@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-rockchip@lists.infradead.org,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Randy Li <ayaka@soulik.info>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Subject: Re: arm64: dts: rockchip: Disable HS400 for mmc on rk3399-roc-pc
+Date:   Thu, 14 Nov 2019 14:10:39 +0100
+Message-ID: <2766673.iMURPl8gB5@phil>
+In-Reply-To: <367bf78a-f079-f0b4-68fe-52c86823c174@fivetechno.de>
+References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com> <20190301153348.29870-2-christoph.muellner@theobroma-systems.com> <367bf78a-f079-f0b4-68fe-52c86823c174@fivetechno.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191114000900.26962-1-mihailescu2m@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 10:39:00AM +1030, Marian Mihailescu wrote:
-> Add device tree node for Mali GPU for Exynos 542x SoC.
-> GPU is disabled by default, and is enabled for each board after the
-> regulator is defined. Tested on Odroid-XU4.
+Hi Markus,
+
+$subject is missing the [PATCH] prefix
+
+Am Montag, 11. November 2019, 10:51:04 CET schrieb Markus Reichl:
+> Working with rootfs on two 128GB mmcs on rk3399-roc-pc.
 > 
-> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+> One (mmc name 128G72, one screw hole) works fine in HS400 mode.
+> Other (mmc name DJNB4R, firefly on pcb, two screw holes) gets lots of
+> mmc1: "running CQE recovery", even hangs with damaged fs,
+> when running under heavy load, e.g. compiling kernel.
+> Both run fine with HS200.
+> 
+> Disabling CQ with patch mmc: core: Add MMC Command Queue Support kernel parameter [0] did not help.
+> [0] https://gitlab.com/ayufan-repos/rock64/linux-mainline-kernel/commit/54e264154b87dfe32a8359b2726e2d5611adbaf3
+
+I'm hoping for some input from other people in Cc but your mail headers
+also referenced the drive-impendance series from Christoph [0], which
+it seems we need to poke the phy maintainer again.
+
+Did you check if changing the impedance helped (like the signal dampening
+Philipp described in one of the replies there).
+
+[0] https://patchwork.kernel.org/patch/10835567/
+most current v2 it seems is https://patchwork.kernel.org/patch/10842421/
+
+> Therefore I propose to disable HS400 mode on roc-pc for now.
+
+Hoping for more input :-)
+
+
+Heiko
+
+
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
 > ---
+>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> Changes since v4:
-> - fixed so it applies for latest 5.4-rc7
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> index 29a50a083c42..33df95e384b4 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> @@ -660,8 +660,6 @@
+>  
+>  &sdhci {
+>  	bus-width = <8>;
+> -	mmc-hs400-1_8v;
+> -	mmc-hs400-enhanced-strobe;
+>  	non-removable;
+>  	status = "okay";
+>  };
 > 
-> Changes since v3:
-> - fixed compatible to match bindings
-> 
-> Changes since v2:
-> - separate patch for bindings
-> - fixed bindings typo
-> 
-> Changes since v1:
-> - used generic node and label for GPU
-> - added bindings for compatible
-> - fixed irq indentation
-> - fixed interrupt-names to match bindings
-> - added cooling cells for future TMU connection
-> - used generic node and label for GPU opp table
-> - removed always-on from SoC GPU regulator
-> 
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi             | 50 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  6 +++-
->  2 files changed, 55 insertions(+), 1 deletion(-)
 
-Again tried to apply... but it causes new DTS warnings:
 
-arch/arm/boot/dts/exynos5420.dtsi:692.19-695.7: Warning (unit_address_vs_reg): /soc/gpu@11800000/opp-table/opp@177000000: node has a unit name, but no reg property
 
-Send the patches passing checkpatch and not introducing warnings (make
-dtbs W=1).
-
-Best regards,
-Krzysztof
 
