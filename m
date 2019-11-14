@@ -2,215 +2,143 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1ACC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EED4C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 23:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBAA20718
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF2B2071B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 23:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoX51meU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zcddy4m/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKNWrP (ORCPT
+        id S1726881AbfKNXJJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:47:15 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42274 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNWrP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 17:47:15 -0500
-Received: by mail-wr1-f65.google.com with SMTP id a15so8717246wrf.9;
-        Thu, 14 Nov 2019 14:47:13 -0800 (PST)
+        Thu, 14 Nov 2019 18:09:09 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42546 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfKNXJI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 18:09:08 -0500
+Received: by mail-il1-f196.google.com with SMTP id n18so6995575ilt.9;
+        Thu, 14 Nov 2019 15:09:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JGRlcMeoKAOOhjcDJOF5DFr5u4BH2xeU+rJMkirYWaY=;
-        b=eoX51meUHmLR8wQIfteVxzkvSZri+BeLozXZmXDuNhJcArpEX+XUjnEc506JaWySMF
-         fvfTvmAQPASJqGPozMCGBtFSbhzGbCjWqUf5lEc9CFOS/S4CNSyVFPebOVza2DnCJ+Jc
-         nivEEojQyUnOkHQV/qTkqlr31rG86Qver7ATIhE1o3SVN3YaFUUke59puk/mNRsDvi1L
-         743tCms9wMdlL3+oXMxB3JymLJbpIGtsel0gDu0efrr/npXxjoPi4ScrRX4FX5XlEALV
-         r++Sfbs/rw2znawKFhrfSeNb0rfkBzWPA0NPnExU6BhIcHPccLYQvxNPoJFG4pOj0Vd8
-         OUJQ==
+         :cc;
+        bh=B+ZSU/anVETJxDtIO+tJlt7OeoRyRDm1nl7XDr1Osps=;
+        b=Zcddy4m/9nwvl3i1c0CdByq4GvKc02waL58snhLIPrYHpDJfVu7dJ8eAJRxCOfsSaP
+         JDAOi1EFjUENiX2uc66oO7nr6cDFUdO8W6J6ZA977u6+GKPnoWzxATzh4FUK4731nzz2
+         Zytsvymc+nOBEJf0N2SZ6saxSqUW2m+clVZD3SOzRHNOe/T/1nESVksNBpz4xHy7qKoR
+         R8qNAz5RTQddaka3LDp2P/U9LRvKwry9XkCPH8mwuUCU2fEtSyTl9vOLSWv9Qo4x3UJD
+         IsG8qG0eF2s52ZGcXBJvnSKLKQ9woQjXDBylwhCaNTM1aY8WD3WHQo+6eBgQII7sosOa
+         pV9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JGRlcMeoKAOOhjcDJOF5DFr5u4BH2xeU+rJMkirYWaY=;
-        b=T7RYs0hnQAn3nWkMCYhe+2JEirn701YtDTRL3NNBRVJsFXxKNDKuetRTvL67M+4WbA
-         /spfzu8kPgcxH/wLi1IZzWtuSFLFUdK+fii1Qdz02L2cl845thpYoTgokOTVBBMAQst6
-         +4t5ksnV+gfqEYeDItsq/n1m2K23vXHMr5RnMQqgrXyBb+G46fDu5GD/CKaqvQ4L/2Z7
-         tgaBVBmC3LcVdj4kluXx0QTozLdp7fOpwgPYHFq52CTPWLQDXan+/lBQ44pztewsSKUc
-         9HSfncigNilJx9ja1FcIoNm9h1jUjIXkdXulAObRAvD8Cl93+ys1j0QpBJ2awvun5OnE
-         ZaWA==
-X-Gm-Message-State: APjAAAVZXFMrvH5cpzuGBbjJPR8o7RRvj0caGWXSkomJAlc7K2sSmS8n
-        4UMna6L/lXycJbQSdI3XFEwr7zaDkkRDjj+rcfg=
-X-Google-Smtp-Source: APXvYqwuKMxsXT28TKbuQooL9rQ1QVttKzL0StbnqApJLFSD/gam1Od9P5ARGt5yH6+H78iilIRoigLLmxYsdIh2VJ4=
-X-Received: by 2002:adf:ef0c:: with SMTP id e12mr11270259wro.270.1573771632171;
- Thu, 14 Nov 2019 14:47:12 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=B+ZSU/anVETJxDtIO+tJlt7OeoRyRDm1nl7XDr1Osps=;
+        b=U0/eKkh5grmdWkcdEA/y/qKFCSTJY2ac5F//KrveDEIVjgqyuEcQ6SaUhiaFnLgQe4
+         E+vyWsVzG9n8E8Ake7Ys3KeQWVYuz9YBGSDSi3MYqcSbqNpIJt7/a1s7bmK5623xjam4
+         /g6vTiqA8x5GjTX1+y/Q+yvOcL86P53T3AYiT56/3XpuPa148rc5w7isgk0N+8KtkYll
+         z7oyHfkRJVWCHuIq/D9vxMQM5qF6IPc/aDpra4x1NOoQC8sJDJouMa+In9nusrdex/sY
+         sF5b6VBkzbD/uFtQoomZSePTLfS+yE5w7q+Z5M3kq9giCoCw4L3rSFLZ45dOWyz/ZXDj
+         TSeA==
+X-Gm-Message-State: APjAAAW+tMWgegvcZkmbiziJYohsMM2VqMrobAYX9bRbQogwz6xtcWr1
+        94oozcQmJ2by6EffcjsNv3hA8F9lkChjkkJRGCw=
+X-Google-Smtp-Source: APXvYqyYvoeU2pvH/llzhsbCSX/Z/jehjr4vrHK+EDflCWW58RqtMvmmhhpT1iQezdc9WgIfR/sQO642qa/Ar5q8LgQ=
+X-Received: by 2002:a02:ac0a:: with SMTP id a10mr10294488jao.53.1573772945552;
+ Thu, 14 Nov 2019 15:09:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20191108084517.21617-1-peron.clem@gmail.com> <20191108084517.21617-5-peron.clem@gmail.com>
- <20191113085858.76rad3vpszknu4cp@pengutronix.de>
-In-Reply-To: <20191113085858.76rad3vpszknu4cp@pengutronix.de>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 14 Nov 2019 23:47:00 +0100
-Message-ID: <CAJiuCceYg7WC=peHYeC=eE-HOsKH_SdsKyWwkWY5VpeY+uzaKA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] pwm: sun4i: Add support to output source clock directly
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com> <20191112120307.GB5195@sirena.co.uk>
+ <20191112190328.GA199853@dtor-ws> <20191112191547.GK5195@sirena.co.uk>
+ <20191112193653.GB13374@dtor-ws> <20191114222652.GA7517@bogus>
+In-Reply-To: <20191114222652.GA7517@bogus>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Thu, 14 Nov 2019 15:08:54 -0800
+Message-ID: <CAKdAkRQBrKOUTW8puakA26ODYW9=0H4VhwFhGQAqMs-cMmj3CQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
+        DTML <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Uwe,
+On Thu, Nov 14, 2019 at 2:26 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Nov 12, 2019 at 11:36:53AM -0800, Dmitry Torokhov wrote:
+> > On Tue, Nov 12, 2019 at 07:15:47PM +0000, Mark Brown wrote:
+> > > On Tue, Nov 12, 2019 at 11:03:28AM -0800, Dmitry Torokhov wrote:
+> > > > On Tue, Nov 12, 2019 at 12:03:07PM +0000, Mark Brown wrote:
+> > > > > On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
+> > >
+> > > > > > +      interrupts:
+> > > > > > +        items:
+> > > > > > +          - description: main interrupt (attention) line.
+> > > > > > +          - description: dedicated wakeup interrupt.
+> > > > > > +        minItems: 1 # The wakeup interrupt is optional.
+> > >
+> > > > > > +      interrupt-names:
+> > > > > > +        items:
+> > > > > > +          - const: irq
+> > > > > > +          - const: wakeup
+> > > > > > +        minItems: 1
+> > >
+> > > > > How will this interact with a SPI device that defines interrupts at the
+> > > > > device level, possibly more than one of them?  Especially if the device
+> > > > > has its own idea what the interrupts should be called.
+> > >
+> > > > My understanding that individual drivers should be able to override
+> > > > whatever the default behavior core has configured, and the device can
+> > > > establish their own mapping. We have this in I2C and I believe this
+> > > > works well.
+> > >
+> > > > Is the concern about the device tree scheme or SPI core handling?
+> > >
+> > > Both really.
+> >
+> > So as I mentioned, the driver is not forced to use the interrupt
+> > supplied by the SPI core, and the worst thing is that the core
+> > configures the main IRQ as wakeirq and driver would need to call
+> > dev_pm_clear_wake_irq() before switching to correct one. I expect there
+> > will be just a few drivers needing that and many more would benefit from
+> > the default behavior and not needing to repeat the same boilerplate
+> > code.
+> >
+> > As far as scheme goes - I hope that Rob could confirm that we can
+> > override number of interrupts and names in consumers of the binding, as
+> > needed.
+>
+> This won't work. A device schema doesn't override what's defined here,
+> but just further constrains this schema.
+>
+> You could define a "spi irq" schema which devices can include if they
+> want to, but I don't think this pattern is that common to SPI devices.
+> There's not any spec behind compared to say alert irq for SMBus.
+>
+> The 'wakeup' irq name is standardized (for DT), but that's not SPI
+> specific. About all we could define there is 'wakeup-source' is boolean
+> and if there is more than one interrupt, one should be named 'wakeup'.
 
-On Wed, 13 Nov 2019 at 09:58, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Fri, Nov 08, 2019 at 09:45:14AM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > PWM core has an option to bypass whole logic and output unchanged sourc=
-e
-> > clock as PWM output. This is achieved by enabling bypass bit.
-> >
-> > Note that when bypass is enabled, no other setting has any meaning, not
-> > even enable bit.
-> >
-> > This mode of operation is needed to achieve high enough frequency to
-> > serve as clock source for AC200 chip which is integrated into same
-> > package as H6 SoC.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-sun4i.c | 44 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> >
-> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > index a10022d6c0fd..9cc928ab47bc 100644
-> > --- a/drivers/pwm/pwm-sun4i.c
-> > +++ b/drivers/pwm/pwm-sun4i.c
-> > @@ -3,6 +3,10 @@
-> >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
-> >   *
-> >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electr=
-ons.com>
-> > + *
-> > + * Limitations:
-> > + * - When outputing the source clock directly, the PWM logic will be b=
-ypassed
-> > + *   and the currently running period is not guaranteed to be complete=
-d
-> >   */
-> >
-> >  #include <linux/bitops.h>
-> > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
-> >
-> >  struct sun4i_pwm_data {
-> >       bool has_prescaler_bypass;
-> > +     bool has_direct_mod_clk_output;
-> >       unsigned int npwm;
-> >  };
-> >
-> > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *c=
-hip,
-> >
-> >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> >
-> > +     /*
-> > +      * PWM chapter in H6 manual has a diagram which explains that if =
-bypass
-> > +      * bit is set, no other setting has any meaning. Even more, exper=
-iment
-> > +      * proved that also enable bit is ignored in this case.
-> > +      */
-> > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> > +         sun4i_pwm->data->has_direct_mod_clk_output) {
-> > +             state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate=
-);
-> > +             state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period, 2);
->
-> I first thought you're losing precision here by reusing state->period
-> here, but with a divisor of 2 everything is fine.
->
-> > +             state->polarity =3D PWM_POLARITY_NORMAL;
-> > +             state->enabled =3D true;
-> > +             return;
-> > +     }
-> > +
-> >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
-> >           sun4i_pwm->data->has_prescaler_bypass)
-> >               prescaler =3D 1;
-> > @@ -204,6 +223,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
-> >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
-> >       struct pwm_state cstate;
-> >       u32 ctrl;
-> > +     bool bypass =3D false;
-> >       int ret;
-> >       unsigned int delay_us;
-> >       unsigned long now;
-> > @@ -218,9 +238,24 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, =
-struct pwm_device *pwm,
-> >               }
-> >       }
-> >
-> > +     /*
-> > +      * Although it would make much more sense to check for bypass in
-> > +      * sun4i_pwm_calculate(), value of bypass bit also depends on "en=
-abled".
->
-> I don't understand this reasoning. sun4i_pwm_calculate knows about
-> .enabled and also sun4i_pwm->data->has_direct_mod_clk_output. Maybe just
-> add a bool *bypass as parameter and move the logic there?
+OK, so what I am hearing is "interrupt"/"interrupt-names" properties
+should be defined in individual device's bindings, and wakeup-source
+can stay in spi-controller.yaml, right?
 
-I asked myself the same question, however the sun4i_pwm_calculate is
-only called when period or duty_cycle is updated not when state is
-toggled between disabled / enabled.
+And as far as SPI core goes, we can still do what I proposed, because
+we already handle "first" interrupt as the default one and the drivers
+can override as needed anyway...
 
-Should we also call it when the state is switched to enabled ?
+Thanks.
 
-Regards,
-Cl=C3=A9ment
-
->
-> > +      */
-> > +     if (state->enabled) {
-> > +             u32 clk_rate =3D clk_get_rate(sun4i_pwm->clk);
-> > +             bypass =3D (state->period * clk_rate >=3D NSEC_PER_SEC) &=
-&
-> > +                      (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
-> > +                      (state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_=
-SEC);
-> > +     }
-> > +
->
-> This looks right now.
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+-- 
+Dmitry
