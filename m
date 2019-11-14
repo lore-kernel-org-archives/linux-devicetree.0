@@ -2,149 +2,152 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E40C43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B46C43141
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA4220718
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zxy9Va/g"
+	by mail.kernel.org (Postfix) with ESMTP id 3853F2070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfKNOLx (ORCPT
+        id S1726674AbfKNONO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:11:53 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:36992 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbfKNOLt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 09:11:49 -0500
-Received: by mail-vk1-f196.google.com with SMTP id l5so1491345vkb.4
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 06:11:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XSmwLWNo5Rh6fe+p8Uu7DFNnAFhXmFiTvhxWz1V+B8w=;
-        b=Zxy9Va/g5HeujT0G/Yr81ssNa+Mrn59GATo64imHO5v4yPYwyPPGs095S9yLGHZZct
-         1hxeTUWiuBZWvi+O1vf0npeqW5PjS6EDcNVV/BuKq+FHtrEOxZldeFAkfves+9/Zc/nA
-         Jfl+7lufr0kMeZAOu4jE2erwkVZzPMxG8lpE6MQdIaqDuXXS5sdJm3+y9FiWm52EK2l3
-         WwyGBsnQjzhGRAggZDE4omJqyKpHbyv37Af0YKrpFhQbUSYZTgpsAw3qsoRhd/fdwACE
-         5iSUjaPDvT/GCI+c4fijdDcGkjUJFX9Fldn0zizjgcTiajuBoo8z8CbjC/JqAxv7Pnw6
-         eStg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XSmwLWNo5Rh6fe+p8Uu7DFNnAFhXmFiTvhxWz1V+B8w=;
-        b=h3/m2VxhmJKfRzXjstb5oA/ivgM1/0jtZHn+iYfNl/yEPE/AhoBVWD95Qh6cbX784O
-         WpNwkd/0gtdwCyIWIxWRnMXE/eFZHZkkr8385oETRtzFKGCGTQLG7//erLzVAnm6o9mr
-         CZZPMVaR21Nz9QKg/YQIa0OxiSNwFJeaL0SI0jaVGSk5VXQQrd/Ij0yBYHBejXZz/sdR
-         8mzOn1bpmDoTcC1LG/Pk0KNs+WCTv3xfmAvY1bkdDZ+RgnxS33VhswrwYtcnZhSy/KQu
-         Gwfrgw5F4mr2+mSqkCtR0ke7ilFSDzjlfR6Cn4ACVqrZocmeBKMBs8GG2TFMD1DHjB85
-         uREA==
-X-Gm-Message-State: APjAAAU5POJIJjP14GbmuOg938okG0d9kQMnWsnZ/NcFZR+eyewjB/2V
-        uzWaECccd/S2rKrD9ziVfZ9R4TxsSQGBgitHQB84OQ==
-X-Google-Smtp-Source: APXvYqxNH6tQ6y7J3OfkNA5oBwmBY5VTe296JKBsrF2xLv130hd/N0da6UeuSUpnmtRg4fw9qbywtQvMfesNLW0c7dc=
-X-Received: by 2002:a1f:2f51:: with SMTP id v78mr5258686vkv.101.1573740707355;
- Thu, 14 Nov 2019 06:11:47 -0800 (PST)
+        Thu, 14 Nov 2019 09:13:14 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6668 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727239AbfKNONN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 09:13:13 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3277FDC2F7B13D9705AE;
+        Thu, 14 Nov 2019 22:12:35 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 22:12:29 +0800
+Date:   Thu, 14 Nov 2019 14:12:25 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     <tomislav.denis@avl.com>
+CC:     <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 3/3] bindings: iio: pressure: Add dlh-i2c documentation
+Message-ID: <20191114141225.00002f4f@huawei.com>
+In-Reply-To: <20191114100908.11180-4-tomislav.denis@avl.com>
+References: <20191114100908.11180-1-tomislav.denis@avl.com>
+        <20191114100908.11180-4-tomislav.denis@avl.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <cover.1573122644.git.hns@goldelico.com> <17b12e91c878dcb74160e3df5f88bc8a9e3f7fce.1573122644.git.hns@goldelico.com>
-In-Reply-To: <17b12e91c878dcb74160e3df5f88bc8a9e3f7fce.1573122644.git.hns@goldelico.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 14 Nov 2019 15:11:11 +0100
-Message-ID: <CAPDyKFpGU+tXC8thz52BQfKHNerzYSUroSihh6GpZELFm-1gRQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/12] Documentation: dt: wireless: update wl1251 for sdio
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 Nov 2019 at 11:32, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> The standard method for sdio devices connected to
-> an sdio interface is to define them as a child node
-> like we can see with wlcore.
->
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+On Thu, 14 Nov 2019 11:09:08 +0100
+<tomislav.denis@avl.com> wrote:
+
+> From: Tomislav Denis <tomislav.denis@avl.com>
+> 
+> Add a device tree binding documentation for DLH series pressure
+> sensors.
+> 
+> Signed-off-by: Tomislav Denis <tomislav.denis@avl.com>
+Hi Tomislav,
+
+A few little comments inline
+
+Thanks,
+
+Jonathan
+
+
 > ---
->  .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-> index bb2fcde6f7ff..f38950560982 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
-> @@ -35,3 +35,29 @@ Examples:
->                 ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
->         };
->  };
-> +
-> +&mmc3 {
-> +       vmmc-supply = <&wlan_en>;
-> +
-> +       bus-width = <4>;
-> +       non-removable;
-> +       ti,non-removable;
-> +       cap-power-off-card;
-> +
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mmc3_pins>;
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       wlan: wifi@1 {
-> +               compatible = "ti,wl1251";
-> +
-> +               reg = <1>;
-> +
-> +               interrupt-parent = <&gpio1>;
-> +               interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;  /* GPIO_21 */
-> +
-> +               ti,wl1251-has-eeprom;
-> +       };
-> +};
+>  .../devicetree/bindings/iio/pressure/dlh-i2c.yaml  | 43 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml b/Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
+> new file mode 100644
+> index 0000000..43539ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
 
-One minor thing, the "ti,power-gpio" is not required anymore, as it's
-not needed for the SDIO case for pandora.
+prefix the filename as per the compatible - so
+asc,slh-i2c.yaml
 
-Please move it to an option section.
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Kind regards
-Uffe
+I'm guessing you own the copyright on this binding.  Where possible
+the DT maintainers are requesting that bindings are dual licensed as
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/pressure/dlh-i2c.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: All Sensors DLH series low voltage digital pressure sensors
+> +
+> +maintainers:
+> +  - Tomislav Denis <tomislav.denis@avl.com>
+> +
+> +description: |
+> +  Bindings for the All Sensors DLH series pressure sensors.
+> +
+> +  Specifications about the sensors can be found at:
+> +    http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
+
+I took a quick look at the datasheet.  Whilst I guess you don't have
+it wired up, there is an EOC line which should be here as the
+doc should cover the hardware, rather than what we currently
+use in the driver.  The EOC line looks like a data ready
+interrupt from my quick read.
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - asc,dlhl60d
+> +      - asc,dlhl60g
+> +
+> +  reg:
+> +    description: I2C device address
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      pressure@29 {
+> +          compatible = "asc,dlhl60d";
+> +          reg = <0x29>;
+> +      };
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2a08923..b45081d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -674,6 +674,7 @@ W:	http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
+>  S:	Maintained
+>  L:	linux-iio@vger.kernel.org
+>  F:	drivers/iio/pressure/dlh-i2c.c
+> +F:	Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
+>  
+>  ALLEGRO DVT VIDEO IP CORE DRIVER
+>  M:	Michael Tretter <m.tretter@pengutronix.de>
+
+
