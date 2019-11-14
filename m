@@ -2,78 +2,106 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C82C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BA5C43141
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF03206DC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D05020727
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b/58ij9z"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="16ljNnZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKNP3B (ORCPT
+        id S1726952AbfKNPrn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:29:01 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:39832 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfKNP3A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:29:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ElG8Ta8wnxyvEpph2Zdu0/QL/JmLef30hlFTtXPVY2w=; b=b/58ij9zk28SivK4r5tm14Hq55
-        iuccP5RskD/WgI5i93dWzWsR8CMNTJ098NMLPvjZbt/6jPB7gIH3M5QmOxZ7D5p2HOpaBNNQ8aLJa
-        vF7huaLIaHiyw8bLOJqBGBsmT2Ptjq11+iN+/Qc3/gy1AfDGhFpRoZHcXH0URtb6CrcA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iVH3A-0004kD-8P; Thu, 14 Nov 2019 16:28:48 +0100
-Date:   Thu, 14 Nov 2019 16:28:48 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the
- SGMII PHYs
-Message-ID: <20191114152848.GR10875@lunn.ch>
-References: <20191114110254.32171-1-linux@rasmusvillemoes.dk>
- <20191114110254.32171-3-linux@rasmusvillemoes.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114110254.32171-3-linux@rasmusvillemoes.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 14 Nov 2019 10:47:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40806 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfKNPrn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 10:47:43 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f3so6434440wmc.5
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 07:47:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=imGdJFRY185pAjfBUWLyckhXCcG52iE7peF0ICno/F4=;
+        b=16ljNnZZ3upX9VKdbIxvnGbmp3ksWorXodwuEZnI0eJMUoR/Azxa6ZKokc6j/yFYps
+         yVDo39z9pyaxVEOZxpNxgPCctOMcEjHLC4kqwORp7Sc1a93fmpMCUTxjtbe87KroWh3t
+         JNOufYpWTeBKlutEqIbAupCsod4OaDc1A4QTMCWCJeefaaOlYsP0wRVTZnKfQ6c0sBxo
+         OXUSdslWFm1yzScrWCEq7l1+fz7s0kzHL63eeQ3CfO7aPEOQQUIw2nJGoC4x+THgjrGl
+         0Yn0mnrewajEi4TZcv4v4ICQ97/j7DIFtnrNd7p4GIPVnY1eKkMSq5z3DObgHVYmdKYQ
+         WLfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=imGdJFRY185pAjfBUWLyckhXCcG52iE7peF0ICno/F4=;
+        b=dgHwD7EB5zslrr0QYOYVtylAH9FEA/3Dlcb2FcIMO69vZCQ9aDQs3ZpPGPnggqysMe
+         xY7X8hSwo+CGbd7epLxoIsxg1SQ/pj3KAcfFx7HeOvLtLqzLm3guadD9iYAhoS7HmzuQ
+         ezt7cQ1Ilq/pid0DoGIbhDs4UTCYuhy70GCJ1t9lhnQ/1EBxM0iu8PDA0+w84vTmZkxl
+         dXwMWrjDcT0lBIS1JuzbYBDl1xvIMII0eNifxSkCF1FB6GqoQ5QCOzilRoefyzMesZDN
+         I820wyBR3rvuDlrmqb+d2DkIq46WUxyovooHWInQvqF7BfXTspEl8rbxSGCsG17DdWdp
+         3mLw==
+X-Gm-Message-State: APjAAAX7HJD0qDi+GF7qAUbAPBCyu6s81UXeQWQdczeneb4cNjWD3Fz5
+        OrayV8QSx3DkmNt2HextFyM5Qg==
+X-Google-Smtp-Source: APXvYqz7knAPH/YcnLeF5r5hBN9NhdC3ua2uUlCCJ/XubBMe9FwhaqiZw1YHW/Qo3Wdwd/M0eILyoQ==
+X-Received: by 2002:a7b:cc8c:: with SMTP id p12mr8336719wma.82.1573746459863;
+        Thu, 14 Nov 2019 07:47:39 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id l4sm6428629wml.33.2019.11.14.07.47.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 14 Nov 2019 07:47:38 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v5 0/2] ARM64: dts: allwinner: Add devicetree for pineH64 modelB
+Date:   Thu, 14 Nov 2019 15:47:31 +0000
+Message-Id: <1573746453-5123-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 12:02:53PM +0100, Rasmus Villemoes wrote:
-> From: Vladimir Oltean <olteanv@gmail.com>
-> 
-> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
-> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
-> 
-> Switching to interrupts offloads the PHY library from the task of
-> polling the MDIO status and AN registers (1, 4, 5) every second.
-> 
-> Unfortunately, the BCM5464R quad PHY connected to the switch does not
-> appear to have an interrupt line routed to the SoC.
-> 
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Hello
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Pineh64 have two existing model (A and B) with some hardware difference and
+so need two different DT file.
+But the current situation has only one file for both.
+This serie fix this situation by being more clear on which DT file is
+needed for both model.
 
-    Andrew
+Regards
+
+Changes since v4:
+- reverted compatible change for model A
+- renamed compatible of model B
+
+Change since v3:
+- state the current file is model A and add a new modelB file.
+
+Change since v2:
+- Added the HDMI connector node to model A
+
+Changes since v1:
+- Added the first patch for stating which model support the
+  sun50i-h6-pine-h64.dts
+
+Corentin Labbe (2):
+  ARM64: dts: sun50i-h6-pine-h64: state that the DT supports the modelA
+  ARM64: dts: allwinner: add pineh64 model B
+
+ .../devicetree/bindings/arm/sunxi.yaml        |  7 ++++++-
+ arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+ .../allwinner/sun50i-h6-pine-h64-model-b.dts  | 21 +++++++++++++++++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 17 ++++++++++++---
+ 4 files changed, 42 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-model-b.dts
+
+-- 
+2.23.0
+
