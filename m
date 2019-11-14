@@ -2,867 +2,569 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5679BC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EECC43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA0420724
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9B7206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="he3JYRYe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TIOMk7lf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfKNRKo (ORCPT
+        id S1726473AbfKNRP2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:10:44 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41918 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfKNRKo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 12:10:44 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAEHAGW5042233;
-        Thu, 14 Nov 2019 11:10:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573751416;
-        bh=zHrlmvg0HldhO+7sd496Gx6aK9O606XSVa99WiGhDhk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=he3JYRYeRIlab3HXNaUTeXKMu1j/anpGd6Xa0YNVr7kjaa7nv7Nm6rWt1j3wRs4eh
-         UjWfiP/5lKBtWVrt9Excg5Bc/Xi1ZnNhTwhRMh3E98YXOSeNPs8tXToQ+B4RH5q9Q7
-         fNIN4xFyEea22+Z5AiTTVS455DQiLvGTtLq4x8EM=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEHAGEp027222;
-        Thu, 14 Nov 2019 11:10:16 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 14
- Nov 2019 11:10:16 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 14 Nov 2019 11:10:15 -0600
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAEHAFA4084054;
-        Thu, 14 Nov 2019 11:10:15 -0600
-Received: from localhost (ulb0232989.dhcp.ti.com [172.25.137.130])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xAEHAEu11220;
-        Thu, 14 Nov 2019 11:10:14 -0600 (CST)
-From:   Caleb Robey <c-robey@ti.com>
-To:     <linux-omap@vger.kernel.org>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Caleb Robey <c-robey@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] ARM: dts: am5729: beaglebone-ai: adding device tree
-Date:   Thu, 14 Nov 2019 11:09:31 -0600
-Message-ID: <20191114170933.12623-3-c-robey@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191114170933.12623-1-c-robey@ti.com>
-References: <20191114170933.12623-1-c-robey@ti.com>
+        Thu, 14 Nov 2019 12:15:28 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39153 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfKNRP2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 12:15:28 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 29so4174030pgm.6
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 09:15:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=mXGc15ze5FkLvK8bKyJikjN/XitZLiqox2qKqZ0ej7M=;
+        b=TIOMk7lfZRHEzhgLxniST8xwCaUkax4lb9wy8IDtdMl7x/1ayef0CC5FHkxKnb665l
+         eUZN+NKq1gGP0IYXhtRZqkqOcrg+B8f/JW01COtBWtrVAAH8hCjPFP6C8bsz6/chTmxY
+         N2iFQ1ZnDVeQnsgkUCLlXWwEnqNsnPOYB2jCs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=mXGc15ze5FkLvK8bKyJikjN/XitZLiqox2qKqZ0ej7M=;
+        b=aoPstuvH/iXwdSYf6B2TqMTehnNvSizLd0SH3uAvB5BIw/aJB+EhefyD5tGwNrV3Oa
+         9efUCL0uybE7mM8u6z56marC/9gG9Nfg+P55jUzNj1aknmqq/Tp5XI7xGFg/GaSYbhrV
+         vmtxuAUB4unC5hVWIKCxAUppfta/yvzGOTtEtYsv8qzboWYFlaXY2PSSTfmJqtvjo2+N
+         jFKpIbMx4Q7GeE7azRCYyDXZ8WtNit+VEgituzqOpgvDSmeM7utyUbdKWdp360dfR4Oh
+         8P83Ln2nuWWIIDjtveDXKLXU/wRLk0Lz6pXb61d96iW4j+9doBtwBCSjft+h0QVlFphr
+         I9qg==
+X-Gm-Message-State: APjAAAU6kMfOakwrpCftvtAtsrD5RLGuvVGEKmxkWfC6FLdFy2WJjLOS
+        jjHs3ipvvnyO5MTluUmHOEOZCA==
+X-Google-Smtp-Source: APXvYqz/9IgSpWBHpYH+F4lnVYLIaWHthdusN1FnC4aPUIjyMUv7RjdCi9mU0gmhzpEhUdgwiijBnA==
+X-Received: by 2002:a62:2bc1:: with SMTP id r184mr12046578pfr.88.1573751725638;
+        Thu, 14 Nov 2019 09:15:25 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s26sm6898757pfh.66.2019.11.14.09.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 09:15:25 -0800 (PST)
+Message-ID: <5dcd8bad.1c69fb81.7569b.3b13@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573726588-18897-2-git-send-email-harigovi@codeaurora.org>
+References: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org> <1573726588-18897-2-git-send-email-harigovi@codeaurora.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+To:     Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v1 1/2] drm/panel: add support for rm69299 visionox panel driver
+User-Agent: alot/0.8.1
+Date:   Thu, 14 Nov 2019 09:15:24 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jason Kridner <jdk@ti.com>
+Quoting Harigovindan P (2019-11-14 02:16:27)
+> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu=
+/drm/panel/panel-visionox-rm69299.c
+> new file mode 100644
+> index 0000000..faf6d05
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> @@ -0,0 +1,478 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
 
-BeagleBoard.org BeagleBone AI is an open source hardware single
-board computer based on the Texas Instruments AM5729 SoC featuring
-dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-signal processor (DSP), quad-core embedded vision engine (EVE),
-Arm Cortex-M4 processors, dual programmable realtime unit
-industrial control subsystems and more. The board features 1GB
-DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-headers.
+This is included twice. It's really a panel!
 
-For more information, refer to:
-https://beaglebone.ai
+> +#include <drm/drm_print.h>
+> +
+> +#include <linux/of_gpio.h>
 
-This patch introduces the BeagleBone AI device tree.
+Is this include used?
 
-Note that the device use the "ti,tpd12s016" component which is
-software compatible with "ti,tpd12s015". Thus we only use the
-latter driver.
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_graph.h>
 
-Signed-off-by: Jason Kridner <jdk@ti.com>
-Cc: Robert Nelson <robertcnelson@gmail.com>
-Cc: Caleb Robey <c-robey@ti.com>
+Is this include used?
 
----
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/am5729-beagleboneai.dts | 733 ++++++++++++++++++++++
- 2 files changed, 734 insertions(+)
- create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
+> +#include <linux/pinctrl/consumer.h>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b21b3a64641a..b1154dbda73c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -791,6 +791,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
- 	am57xx-beagle-x15.dtb \
- 	am57xx-beagle-x15-revb1.dtb \
- 	am57xx-beagle-x15-revc.dtb \
-+	am5729-beagleboneai.dtb \
- 	am57xx-cl-som-am57x.dtb \
- 	am57xx-sbc-am57x.dtb \
- 	am572x-idk.dtb \
-diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
-new file mode 100644
-index 000000000000..76551295290a
---- /dev/null
-+++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-@@ -0,0 +1,733 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2014-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+
-+#include "dra74x.dtsi"
-+#include "am57xx-commercial-grade.dtsi"
-+#include "dra74x-mmc-iodelay.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/dra.h>
-+
-+/ {
-+	model = "BeagleBoard.org BeagleBone AI";
-+	compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
-+		     "ti,dra742", "ti,dra74", "ti,dra7";
-+
-+	aliases {
-+		rtc0 = &tps659038_rtc;
-+		rtc1 = &rtc;
-+		display0 = &hdmi_conn;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x40000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ipu2_memory_region: ipu2-memory@95800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x95800000 0x0 0x3800000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		dsp1_memory_region: dsp1-memory@99000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x99000000 0x0 0x4000000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		ipu1_memory_region: ipu1-memory@9d000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x9d000000 0x0 0x2000000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		dsp2_memory_region: dsp2-memory@9f000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x9f000000 0x0 0x800000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+	};
-+
-+	vdd_adc: gpioregulator-vdd_adc {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vdd_adc";
-+		vin-supply = <&vdd_5v>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0
-+			3300000 1>;
-+	};
-+
-+	vdd_5v: fixedregulator-vdd_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vtt_fixed: fixedregulator-vtt {
-+		/* TPS51200 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vtt_fixed";
-+		vin-supply = <&vdd_ddr>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			label = "beaglebone:green:usr0";
-+			gpios = <&gpio3 17 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led1 {
-+			label = "beaglebone:green:usr1";
-+			gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "beaglebone:green:usr2";
-+			gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "cpu";
-+			default-state = "off";
-+		};
-+
-+		led3 {
-+			label = "beaglebone:green:usr3";
-+			gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		led4 {
-+			label = "beaglebone:green:usr4";
-+			gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "netdev";
-+			default-state = "off";
-+		};
-+	};
-+
-+	hdmi_conn: connector@0 {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_encoder_out>;
-+			};
-+		};
-+	};
-+
-+	hdmi_enc: encoder@0 {
-+		/* "ti,tpd12s016" software compatible with "ti,tpd12s015"
-+		 *  no need for individual driver
-+		 */
-+		compatible = "ti,tpd12s015";
-+		gpios = <0>,
-+			<0>,
-+			<&gpio7 12 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <0x1>;
-+			#size-cells = <0x0>;
-+
-+			port@0 {
-+				reg = <0x0>;
-+
-+				hdmi_encoder_in: endpoint@0 {
-+					remote-endpoint = <&hdmi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <0x1>;
-+
-+				hdmi_encoder_out: endpoint@0 {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	emmc_pwrseq: emmc_pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	brcmf_pwrseq: brcmf_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>,	/* BT-REG-ON */
-+				<&gpio3 18 GPIO_ACTIVE_LOW>;	/* WL-REG-ON */
-+	};
-+
-+	extcon_usb1: extcon_usb1 {
-+		compatible = "linux,extcon-usb-gpio";
-+		ti,enable-id-detection;
-+		id-gpio = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&ocp {
-+	pruss1_shmem: pruss_shmem@4b200000 {
-+		status = "okay";
-+		compatible = "ti,pruss-shmem";
-+		reg = <0x4b200000 0x020000>;
-+	};
-+
-+	pruss2_shmem: pruss_shmem@4b280000 {
-+		status = "okay";
-+		compatible = "ti,pruss-shmem";
-+		reg = <0x4b280000 0x020000>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tps659038: tps659038@58 {
-+		compatible = "ti,tps659038";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
-+
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+
-+		ti,system-power-controller;
-+		ti,palmas-override-powerhold;
-+
-+		tps659038_pmic {
-+			compatible = "ti,tps659038-pmic";
-+
-+			smps12-in-supply = <&vdd_5v>;
-+			smps3-in-supply = <&vdd_5v>;
-+			smps45-in-supply = <&vdd_5v>;
-+			smps6-in-supply = <&vdd_5v>;
-+			smps7-in-supply = <&vdd_5v>;
-+			mps3-in-supply = <&vdd_5v>;
-+			smps8-in-supply = <&vdd_5v>;
-+			smps9-in-supply = <&vdd_5v>;
-+			ldo1-in-supply = <&vdd_5v>;
-+			ldo2-in-supply = <&vdd_5v>;
-+			ldo3-in-supply = <&vdd_5v>;
-+			ldo4-in-supply = <&vdd_5v>;
-+			ldo9-in-supply = <&vdd_5v>;
-+			ldoln-in-supply = <&vdd_5v>;
-+			ldousb-in-supply = <&vdd_5v>;
-+			ldortc-in-supply = <&vdd_5v>;
-+
-+			regulators {
-+				vdd_mpu: smps12 {
-+					/* VDD_MPU */
-+					regulator-name = "smps12";
-+					regulator-min-microvolt = <850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_ddr: smps3 {
-+					/* VDD_DDR EMIF1 EMIF2 */
-+					regulator-name = "smps3";
-+					regulator-min-microvolt = <1350000>;
-+					regulator-max-microvolt = <1350000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_dspeve: smps45 {
-+					/* VDD_DSPEVE on AM572 */
-+					regulator-name = "smps45";
-+					regulator-min-microvolt = < 850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_gpu: smps6 {
-+					/* VDD_GPU */
-+					regulator-name = "smps6";
-+					regulator-min-microvolt = < 850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_core: smps7 {
-+					/* VDD_CORE */
-+					regulator-name = "smps7";
-+					regulator-min-microvolt = < 850000>;	/*** 1.15V */
-+					regulator-max-microvolt = <1150000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_iva: smps8 {
-+					/* VDD_IVAHD */				/*** 1.06V */
-+					regulator-name = "smps8";
-+				};
-+
-+				vdd_3v3: smps9 {
-+					/* VDD_3V3 */
-+					regulator-name = "smps9";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_sd: ldo1 {
-+					/* VDDSHV8 - VSDMMC  */
-+					regulator-name = "ldo1";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+
-+				vdd_1v8: ldo2 {
-+					/* VDDSH18V */
-+					regulator-name = "ldo2";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_phy_ldo3: ldo3 {
-+					/* R1.3a 572x V1_8PHY_LDO3: USB, SATA */
-+					regulator-name = "ldo3";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_phy_ldo4: ldo4 {
-+					/* R1.3a 572x V1_8PHY_LDO4: PCIE, HDMI*/
-+					regulator-name = "ldo4";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				/* LDO5-8 unused */
-+
-+				vdd_rtc: ldo9 {
-+					/* VDD_RTC  */
-+					regulator-name = "ldo9";
-+					regulator-min-microvolt = < 840000>;
-+					regulator-max-microvolt = <1160000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_pll: ldoln {
-+					/* VDDA_1V8_PLL */
-+					regulator-name = "ldoln";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldousb_reg: ldousb {
-+					/* VDDA_3V_USB: VDDA_USBHS33 */
-+					regulator-name = "ldousb";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldortc_reg: ldortc {
-+					/* VDDA_RTC  */
-+					regulator-name = "ldortc";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				regen1: regen1 {
-+					/* VDD_3V3_ON */
-+					regulator-name = "regen1";
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+
-+				regen2: regen2 {
-+					/* Needed for PMIC internal resource */
-+					regulator-name = "regen2";
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+			};
-+		};
-+
-+		tps659038_rtc: tps659038_rtc {
-+			compatible = "ti,palmas-rtc";
-+			interrupt-parent = <&tps659038>;
-+			interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
-+			wakeup-source;
-+		};
-+
-+		tps659038_pwr_button: tps659038_pwr_button {
-+			compatible = "ti,palmas-pwrbutton";
-+			interrupt-parent = <&tps659038>;
-+			interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-+			wakeup-source;
-+			ti,palmas-long-press-seconds = <12>;
-+		};
-+
-+		tps659038_gpio: tps659038_gpio {
-+			compatible = "ti,palmas-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+	};
-+
-+	/* STMPE811 touch screen controller */
-+	stmpe811@41 {
-+		compatible = "st,stmpe811";
-+		reg = <0x41>;
-+		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-parent = <&gpio2>;
-+		interrupt-controller;
-+		id = <0>;
-+		blocks = <0x5>;
-+		irq-trigger = <0x1>;
-+		st,mod-12b = <1>; /* 12-bit ADC */
-+		st,ref-sel = <0>; /* internal ADC reference */
-+		st,adc-freq = <1>; /* 3.25 MHz ADC clock speed */
-+		st,sample-time = <4>; /* ADC converstion time: 80 clocks */
-+
-+		stmpe_adc {
-+			compatible = "st,stmpe-adc";
-+			st,norequest-mask = <0x00>; /* mask any channels to be used by touchscreen */
-+			adc0: iio-device@0 {
-+				#io-channel-cells = <1>;
-+				iio-channels = <&adc0 4>, <&adc0 1>, <&adc0 2>, <&adc0 3>, <&adc0 4>, <&adc0 5>, <&adc0 6>;
-+				iio-channel-names = "AIN0_P9_39", "AIN1_P9_40", "AIN2_P9_37", "AIN3_P9_38",
-+					"AIN4_P9_33", "AIN5_P9_36", "AIN6_P9_35";
-+			};
-+		};
-+
-+		stmpe_touchscreen {
-+			status = "disabled";
-+			compatible = "st,stmpe-ts";
-+			/* 8 sample average control */
-+			st,ave-ctrl = <3>;
-+			/* 7 length fractional part in z */
-+			st,fraction-z = <7>;
-+			/*
-+			 * 50 mA typical 80 mA max touchscreen drivers
-+			 * current limit value
-+			 */
-+			st,i-drive = <1>;
-+			/* 1 ms panel driver settling time */
-+			st,settling = <3>;
-+			/* 5 ms touch detect interrupt delay */
-+			st,touch-det-delay = <5>;
-+		};
-+
-+		stmpe_gpio {
-+			compatible = "st,stmpe-gpio";
-+		};
-+
-+		stmpe_pwm {
-+			compatible = "st,stmpe-pwm";
-+			#pwm-cells = <2>;
-+		};
-+	};
-+};
-+
-+&cpu0 {
-+	vdd-supply = <&vdd_mpu>;
-+	voltage-tolerance = <1>;
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	reset-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
-+	reset-delay-us = <2>;
-+
-+	phy0: ethernet-phy@1 {
-+		reg = <4>;
-+		compatible = "ethernet-phy-id004d.d072",
-+			"ethernet-phy-ieee802.3-c22";
-+		eee-broken-100tx;
-+		eee-broken-1000t;
-+	};
-+};
-+
-+&mac {
-+	slaves = <1>;
-+	status = "okay";
-+};
-+
-+&cpsw_emac0 {
-+	phy-handle = <&phy0>;
-+	phy-mode = "rgmii";
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	vmmc-supply = <&vdd_3v3>;
-+	vqmmc-supply = <&vdd_sd>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
-+
-+	ti,needs-special-reset;
-+	ti,dual-volt;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-ddr50;
-+	sd-uhs-sdr104;
-+	mmc-hs200-1_8v;
-+	cap-sd-highspeed;
-+	cap-mmc-highspeed;
-+	dmas = <&sdma_xbar 61>, <&sdma_xbar 62>;
-+	dma-names = "tx", "rx";
-+
-+};
-+
-+&mmc2 {
-+	status = "okay";
-+	vmmc-supply = <&vdd_1v8>;
-+	vqmmc-supply = <&vdd_1v8>;
-+	bus-width = <8>;
-+	ti,non-removable;
-+	non-removable;
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+
-+	ti,needs-special-reset;
-+	dmas = <&sdma_xbar 47>, <&sdma_xbar 48>;
-+	dma-names = "tx", "rx";
-+
-+};
-+
-+&mmc4 {
-+	/* DS: Default speed (DS) up to 25 MHz, including 1- and 4-bit modes (3.3 V signaling). */
-+	/* HS: High speed up to 50 MHz (3.3 V signaling). */
-+	/* SDR12: SDR up to 25 MHz (1.8 V signaling). */
-+	/* SDR25: SDR up to 50 MHz (1.8 V signaling). */
-+	/* SDR50: SDR up to 100 MHz (1.8 V signaling). */
-+	/* SDR104: SDR up to 208 MHz (1.8 V signaling) */
-+	/* DDR50: DDR up to 50 MHz (1.8 V signaling). */
-+	status = "okay";
-+
-+	ti,needs-special-reset;
-+	vmmc-supply = <&vdd_3v3>;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+	bus-width = <4>;
-+	ti,non-removable;
-+	non-removable;
-+	no-1-8-v;
-+	max-frequency = <24000000>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	mmc-pwrseq = <&brcmf_pwrseq>;
-+
-+	brcmf: wifi@1 {
-+		status = "okay";
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+
-+		brcm,sd-head-align = <4>;
-+		brcm,sd_head_align = <4>;
-+		brcm,sd_sgentry_align = <512>;
-+
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&usb2_phy1 {
-+	phy-supply = <&ldousb_reg>;
-+};
-+
-+&usb2_phy2 {
-+	phy-supply = <&ldousb_reg>;
-+};
-+
-+&usb1 {
-+	status = "okay";
-+	dr_mode = "otg";
-+};
-+
-+&omap_dwc3_1 {
-+	extcon = <&extcon_usb1>;
-+};
-+
-+&usb2 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&dss {
-+	status = "okay";
-+	vdda_video-supply = <&vdd_1v8_pll>;
-+};
-+
-+&hdmi {
-+	status = "okay";
-+	vdda-supply = <&vdd_1v8_phy_ldo4>;
-+
-+	port {
-+		hdmi_out: endpoint {
-+			remote-endpoint = <&hdmi_encoder_in>;
-+		};
-+	};
-+};
-+
-+&bandgap {
-+	status = "okay";
-+};
-+
-+&mailbox1 {
-+	status = "okay";
-+};
-+
-+&mailbox2 {
-+	status = "okay";
-+};
-+
-+&mailbox3 {
-+	status = "okay";
-+};
-+
-+&mailbox4 {
-+	status = "okay";
-+};
-+
-+&mailbox5 {
-+	status = "okay";
-+};
-+
-+&mailbox6 {
-+	status = "okay";
-+};
-+
-+&mailbox7 {
-+	status = "okay";
-+};
-+
-+&mailbox8 {
-+	status = "okay";
-+};
-+
-+&mailbox9 {
-+	status = "okay";
-+};
-+
-+&mailbox10 {
-+	status = "okay";
-+};
-+
-+&mailbox11 {
-+	status = "okay";
-+};
-+
-+&mailbox12 {
-+	status = "okay";
-+};
-+
-+&mailbox13 {
-+	status = "okay";
-+};
-+
-+&cpu_alert0 {
-+	temperature = <55000>; /* milliCelsius */
-+};
-+
-+&cpu_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&gpu_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&core_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&dspeve_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&iva_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&sata {
-+	status = "disabled";
-+};
-+
-+&sata_phy {
-+	status = "disabled";
-+};
-+
-+/* bluetooth */
-+&uart6 {
-+	status = "okay";
-+};
-+
-+/* cape header stuff */
-+&i2c4 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&cpu0_opp_table {
-+	opp_slow-500000000 {
-+		opp-hz = /bits/ 64 <500000000>;
-+		opp-microvolt = <1060000 850000 1150000>;
-+		opp-supported-hw = <0xFF 0x01>;
-+		opp-suspend;
-+	};
-+};
-+
--- 
-2.17.1
+Is this include used?
 
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/backlight.h>
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +static const char * const regulator_names[] =3D {
+> +       "vdda",
+> +       "vdd3p3",
+> +};
+> +
+> +static unsigned long const regulator_enable_loads[] =3D {
+> +       32000,
+> +       13200,
+> +};
+> +
+> +static unsigned long const regulator_disable_loads[] =3D {
+> +       80,
+> +       80,
+> +};
+
+Why do we need these static arrays for two regulators? Is the panel
+going to have additional regulators added in the future? I'd prefer
+these arrays go away and the regulator setup is open coded in probe.
+Maybe that means dropping the use of bulk APIs, I'm not sure.
+
+> +
+> +struct cmd_set {
+> +       u8 commands[4];
+> +       u8 size;
+> +};
+> +
+> +struct rm69299_config {
+> +       u32 width_mm;
+> +       u32 height_mm;
+
+Why u32 for these types? Do they need to be 32 bits wide or can they be
+more generic like unsigned long types?
+
+> +       const char *panel_name;
+> +       const struct cmd_set *panel_on_cmds;
+> +       u32 num_on_cmds;
+> +       const struct drm_display_mode *dm;
+> +};
+> +
+> +struct visionox_rm69299 {
+> +       struct device *dev;
+> +       struct drm_panel panel;
+> +
+> +       struct regulator_bulk_data supplies[ARRAY_SIZE(regulator_names)];
+> +
+> +       struct gpio_desc *reset_gpio;
+> +
+> +       struct backlight_device *backlight;
+> +
+> +       struct mipi_dsi_device *dsi;
+> +       const struct rm69299_config *config;
+> +       bool prepared;
+> +       bool enabled;
+> +};
+> +
+> +static inline struct visionox_rm69299 *panel_to_ctx(struct drm_panel *pa=
+nel)
+> +{
+> +       return container_of(panel, struct visionox_rm69299, panel);
+> +}
+> +
+> +static const struct cmd_set qcom_rm69299_1080p_panel_magic_cmds[] =3D {
+
+I like magic.
+
+> +       { { 0xfe, 0x00 }, 2 },
+> +       { { 0xc2, 0x08 }, 2 },
+> +       { { 0x35, 0x00 }, 2 },
+> +       { { 0x51, 0xff }, 2 },
+> +};
+> +
+> +static int visionox_dcs_write(struct drm_panel *panel, u32 command)
+> +{
+> +       struct visionox_rm69299 *ctx =3D panel_to_ctx(panel);
+> +       int i =3D 0, ret;
+> +
+> +       ret =3D mipi_dsi_dcs_write(ctx->dsi, command, NULL, 0);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "cmd 0x%x failed for dsi =3D %d\n",
+> +                       command, i);
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int visionox_dcs_write_buf(struct drm_panel *panel,
+> +       u32 size, const u8 *buf)
+> +{
+> +       struct visionox_rm69299 *ctx =3D panel_to_ctx(panel);
+> +       int ret =3D 0;
+> +       int i =3D 0;
+
+Please don't assign variables by default and then reassign them without
+testing them in between. Also, i is never used so it's confusing that it
+isn't just hardcoded into the printk message as '0'.
+
+> +
+> +       ret =3D mipi_dsi_dcs_write_buffer(ctx->dsi, buf, size);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "failed to tx cmd [%d], err: %d\n", i, ret);
+> +               return ret;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int visionox_35597_power_on(struct visionox_rm69299 *ctx)
+> +{
+> +       int ret, i;
+
+Nitpick: Add a newline between declarations and statements.
+
+> +       for (i =3D 0; i < ARRAY_SIZE(ctx->supplies); i++) {
+> +               ret =3D regulator_set_load(ctx->supplies[i].consumer,
+> +                                       regulator_enable_loads[i]);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       ret =3D regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->sup=
+plies);
+> +       if (ret < 0)
+> +               return ret;
+
+We forgot to drop the load... O well. Probably best to just never drop
+the load anyway, see below.
+
+> +
+> +       /*
+> +        * Reset sequence of visionox panel requires the panel to be
+> +        * out of reset for 10ms, followed by being held in reset
+> +        * for 10ms and then out again
+> +        */
+> +       gpiod_set_value(ctx->reset_gpio, 1);
+> +       usleep_range(10000, 20000);
+> +       gpiod_set_value(ctx->reset_gpio, 0);
+> +       usleep_range(10000, 20000);
+> +       gpiod_set_value(ctx->reset_gpio, 1);
+> +       usleep_range(10000, 20000);
+> +
+> +       return 0;
+> +}
+> +
+> +static int visionox_rm69299_power_off(struct visionox_rm69299 *ctx)
+> +{
+> +       int ret =3D 0;
+
+Ugh. Please stop pre-assigning ret.
+
+> +       int i;
+> +
+> +       gpiod_set_value(ctx->reset_gpio, 0);
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(ctx->supplies); i++) {
+> +               ret =3D regulator_set_load(ctx->supplies[i].consumer,
+> +                               regulator_disable_loads[i]);
+
+Do we need to drop the load? I thought that disabling the regulator
+would make the regulator core stop considering the load from these
+consumers.
+
+> +               if (ret) {
+> +                       DRM_DEV_ERROR(ctx->dev,
+> +                               "regulator_set_load failed %d\n", ret);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       ret =3D regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->su=
+pplies);
+> +       if (ret) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "regulator_bulk_disable failed %d\n", ret);
+> +       }
+> +       return ret;
+> +}
+> +
+> +static int visionox_rm69299_disable(struct drm_panel *panel)
+> +{
+> +       struct visionox_rm69299 *ctx =3D panel_to_ctx(panel);
+> +       int ret;
+> +
+> +       if (!ctx->enabled)
+> +               return 0;
+> +
+> +       if (ctx->backlight) {
+
+backlight_disable() and backlight_enable() already check for NULL so
+these NULL checks can go away.
+
+> +               ret =3D backlight_disable(ctx->backlight);
+> +               if (ret < 0)
+> +                       DRM_DEV_ERROR(ctx->dev, "backlight disable failed=
+ %d\n",
+> +                               ret);
+> +       }
+> +
+> +       ctx->enabled =3D false;
+> +       return 0;
+> +}
+> +
+> +static int visionox_rm69299_unprepare(struct drm_panel *panel)
+> +{
+> +       struct visionox_rm69299 *ctx =3D panel_to_ctx(panel);
+> +       int ret =3D 0;
+> +
+> +       if (!ctx->prepared)
+> +               return 0;
+> +
+> +       ctx->dsi->mode_flags =3D 0;
+> +
+> +       ret =3D visionox_dcs_write(panel, MIPI_DCS_SET_DISPLAY_OFF);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "set_display_off cmd failed ret =3D %d\n",
+> +                       ret);
+
+There will be double error prints in this case. Can we just have one
+print instead?
+
+> +       }
+> +
+> +       /* 120ms delay required here as per DCS spec */
+> +       msleep(120);
+> +
+> +       ret =3D visionox_dcs_write(panel, MIPI_DCS_ENTER_SLEEP_MODE);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "enter_sleep cmd failed ret =3D %d\n", ret);
+> +       }
+> +
+> +       ret =3D visionox_rm69299_power_off(ctx);
+> +       if (ret < 0)
+> +               DRM_DEV_ERROR(ctx->dev, "power_off failed ret =3D %d\n", =
+ret);
+> +
+> +       ctx->prepared =3D false;
+> +       return ret;
+> +}
+> +
+> +static int visionox_rm69299_prepare(struct drm_panel *panel)
+> +{
+> +       struct visionox_rm69299 *ctx =3D panel_to_ctx(panel);
+> +       int ret;
+> +       int i;
+> +       const struct cmd_set *panel_on_cmds;
+> +       const struct rm69299_config *config;
+> +       u32 num_cmds;
+> +
+> +       if (ctx->prepared)
+> +               return 0;
+> +
+> +       ret =3D visionox_35597_power_on(ctx);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ctx->dsi->mode_flags |=3D MIPI_DSI_MODE_LPM;
+> +
+> +       config =3D ctx->config;
+> +       panel_on_cmds =3D config->panel_on_cmds;
+> +       num_cmds =3D config->num_on_cmds;
+> +
+> +       for (i =3D 0; i < num_cmds; i++) {
+> +               ret =3D visionox_dcs_write_buf(panel,
+> +                               panel_on_cmds[i].size,
+> +                                       panel_on_cmds[i].commands);
+> +               if (ret < 0) {
+> +                       DRM_DEV_ERROR(ctx->dev,
+> +                               "cmd set tx failed i =3D %d ret =3D %d\n",
+> +                                       i, ret);
+> +                       goto power_off;
+> +               }
+> +       }
+> +
+> +       ret =3D visionox_dcs_write(panel, MIPI_DCS_EXIT_SLEEP_MODE);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "exit_sleep_mode cmd failed ret =3D %d\n",
+> +                       ret);
+> +               goto power_off;
+> +       }
+> +
+> +       /* Per DSI spec wait 120ms after sending exit sleep DCS command */
+> +       msleep(120);
+> +
+> +       ret =3D visionox_dcs_write(panel, MIPI_DCS_SET_DISPLAY_ON);
+> +       if (ret < 0) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "set_display_on cmd failed ret =3D %d\n", ret);
+> +               goto power_off;
+> +       }
+> +
+> +       /* Per DSI spec wait 120ms after sending set_display_on DCS comma=
+nd */
+> +       msleep(120);
+> +
+> +       ctx->prepared =3D true;
+> +
+> +       return 0;
+> +
+> +power_off:
+> +       if (visionox_rm69299_power_off(ctx))
+> +               DRM_DEV_ERROR(ctx->dev, "power_off failed\n");
+> +       return ret;
+> +}
+> +
+> +static int visionox_rm69299_enable(struct drm_panel *panel)
+> +{
+> +       struct visionox_rm69299 *ctx =3D panel_to_ctx(panel);
+> +       int ret;
+> +
+> +       if (ctx->enabled)
+> +               return 0;
+> +
+> +       if (ctx->backlight) {
+> +               ret =3D backlight_enable(ctx->backlight);
+> +               if (ret < 0)
+> +                       DRM_DEV_ERROR(ctx->dev, "backlight enable failed =
+%d\n",
+> +                                                 ret);
+> +       }
+> +
+> +       ctx->enabled =3D true;
+> +
+> +       return 0;
+> +}
+> +
+> +static int visionox_rm69299_get_modes(struct drm_panel *panel)
+> +{
+> +       struct drm_connector *connector =3D panel->connector;
+> +       struct visionox_rm69299 *ctx =3D panel_to_ctx(panel);
+> +       struct drm_display_mode *mode;
+> +       const struct rm69299_config *config;
+> +
+> +       config =3D ctx->config;
+> +       mode =3D drm_mode_create(connector->dev);
+> +       if (!mode) {
+> +               DRM_DEV_ERROR(ctx->dev,
+> +                       "failed to create a new display mode\n");
+> +               return 0;
+> +       }
+> +
+> +       connector->display_info.width_mm =3D config->width_mm;
+> +       connector->display_info.height_mm =3D config->height_mm;
+> +       drm_mode_copy(mode, config->dm);
+> +       mode->type =3D DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> +       drm_mode_probed_add(connector, mode);
+> +
+> +       return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs visionox_rm69299_drm_funcs =3D {
+> +       .disable =3D visionox_rm69299_disable,
+> +       .unprepare =3D visionox_rm69299_unprepare,
+> +       .prepare =3D visionox_rm69299_prepare,
+> +       .enable =3D visionox_rm69299_enable,
+> +       .get_modes =3D visionox_rm69299_get_modes,
+> +};
+> +
+> +static int visionox_rm69299_panel_add(struct visionox_rm69299 *ctx)
+
+Please inline this function into probe. It's not helping much to be
+split out.
+
+> +{
+> +       struct device *dev =3D ctx->dev;
+> +       int ret, i;
+> +       const struct rm69299_config *config;
+> +
+> +       config =3D ctx->config;
+> +       for (i =3D 0; i < ARRAY_SIZE(ctx->supplies); i++)
+> +               ctx->supplies[i].supply =3D regulator_names[i];
+> +
+> +       ret =3D devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+> +                                     ctx->supplies);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ctx->reset_gpio =3D devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +       if (IS_ERR(ctx->reset_gpio)) {
+> +               DRM_DEV_ERROR(dev, "cannot get reset gpio %ld\n",
+> +                       PTR_ERR(ctx->reset_gpio));
+> +               return PTR_ERR(ctx->reset_gpio);
+> +       }
+> +
+> +       ret =3D gpiod_direction_output(ctx->reset_gpio, 0);
+
+Didn't the devm_gpiod_get() call above make the gpio use output
+direction already? Why call this again?
+
+> +       if(ret < 0) {
+> +               pr_err("direction output failed \n");
+> +       }
+> +
+> +       drm_panel_init(&ctx->panel);
+> +       ctx->panel.dev =3D dev;
+> +       ctx->panel.funcs =3D &visionox_rm69299_drm_funcs;
+> +       drm_panel_add(&ctx->panel);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct drm_display_mode qcom_sc7180_mtp_1080p_mode =3D {
+> +       .name =3D "1080x2248",
+> +       .clock =3D 158695,
+> +       .hdisplay =3D 1080,
+> +       .hsync_start =3D 1080 + 26,
+> +       .hsync_end =3D 1080 + 26 + 2,
+> +       .htotal =3D 1080 + 26 + 2 + 36,
+> +       .vdisplay =3D 2248,
+> +       .vsync_start =3D 2248 + 56,
+> +       .vsync_end =3D 2248 + 56 + 4,
+> +       .vtotal =3D 2248 + 56 + 4 + 4,
+> +       .vrefresh =3D 60,
+> +       .flags =3D 0,
+> +};
+> +
+> +static const struct rm69299_config rm69299_dir =3D {
+> +       .width_mm =3D 74,
+> +       .height_mm =3D 131,
+> +       .panel_name =3D "qcom_sc7180_mtp_1080p_panel",
+> +       .dm =3D &qcom_sc7180_mtp_1080p_mode,
+> +       .panel_on_cmds =3D qcom_rm69299_1080p_panel_magic_cmds,
+> +       .num_on_cmds =3D ARRAY_SIZE(qcom_rm69299_1080p_panel_magic_cmds),
+> +};
+> +
+> +static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
+> +{
+> +       struct device *dev =3D &dsi->dev;
+> +       struct visionox_rm69299 *ctx;
+> +       int ret =3D 0;
+> +
+> +       ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +
+> +       if (!ctx)
+> +               return -ENOMEM;
+> +
+> +       ctx->config =3D of_device_get_match_data(dev);
+
+Call device_get_match_data() instead?
+
+> +
+> +       if (!ctx->config) {
+> +               dev_err(dev, "missing device configuration\n");
+> +               return -ENODEV;
+> +       }
+> +
