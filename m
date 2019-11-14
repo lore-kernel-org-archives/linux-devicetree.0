@@ -2,70 +2,122 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E65C43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 12:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9692C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 12:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4932520715
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 12:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF76206DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 12:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbfKNMNT (ORCPT
+        id S1726179AbfKNMXZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 07:13:19 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:44603 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbfKNMNT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:13:19 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Nov 2019 17:43:14 +0530
-IronPort-SDR: kwngexKqDpviVScc+CllB8fKAVERMvXgR00r3gbbdq72AdGAke6sHbMj14AYknKSIcmSsmOsmG
- DONrrBy3JBH6AWcMQjCXUbgdsMiiyl1Ffh6s7VdBOEhKcZBX+W+olezmrfMw6pA/Dsjc7frruB
- rFe/CXbQXRfdlkb3ZmSMLzMb24HHEi4tf9/sZJmV0KIK+4+PRlJUGkfnWdzijYPHHto2gSo5ai
- OigLJ0256GELpKOgmvlFEmW/8zlNdYIrpy1laRod9nBTVIlJffZ0cM7uapy91jAfB6xlB7zZ5/
- 4JizrweYEljd4t9RFMHHuWeN
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 14 Nov 2019 17:43:01 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 6EFA0189A; Thu, 14 Nov 2019 17:43:00 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Thu, 14 Nov 2019 07:23:25 -0500
+Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:54976 "EHLO
+        SHSQR01.unisoc.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726057AbfKNMXY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 07:23:24 -0500
+X-Greylist: delayed 2023 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Nov 2019 07:23:22 EST
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+        by SHSQR01.unisoc.com with ESMTP id xAEBnZYP019500;
+        Thu, 14 Nov 2019 19:49:35 +0800 (CST)
+        (envelope-from Orson.Zhai@unisoc.com)
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id xAEBm05r017883
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 14 Nov 2019 19:48:01 +0800 (CST)
+        (envelope-from Orson.Zhai@unisoc.com)
+Received: from localhost (10.0.74.112) by BJMBX01.spreadtrum.com (10.0.64.7)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Thu, 14 Nov 2019 19:48:04
+ +0800
+From:   Orson Zhai <orson.zhai@unisoc.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     =linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v2 0/1] Add USB related nodes for SC7180
-Date:   Thu, 14 Nov 2019 17:42:48 +0530
-Message-Id: <1573733569-25940-1-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Arnd Bergmann <arnd@arndb.de>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <steven.tang@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH 1/2] dt-bindings: Add syscon-names support
+Date:   Thu, 14 Nov 2019 19:45:24 +0800
+Message-ID: <20191114114525.12675-2-orson.zhai@unisoc.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20191114114525.12675-1-orson.zhai@unisoc.com>
+References: <20191114114525.12675-1-orson.zhai@unisoc.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.0.74.112]
+X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL: SHSQR01.spreadtrum.com xAEBm05r017883
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add nodes for DWC3 USB controller, QMP and QUSB PHYs
-and enable them in idp device
 
-This patch has dependency on below series
+Make life easier when syscon consumer want to access multiple syscon
+nodes.
+Add syscon-names and relative properties to help manage complicated
+cases when accessing more one syscon node.
 
-https://lkml.org/lkml/2019/11/8/149
+Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+---
+ .../devicetree/bindings/mfd/syscon.txt        | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-changes in v2:
-* Addressed Stephen's comments on sorting the include file
- and alignment issues. 
-
-Sandeep Maheswaram (1):
-  arm64: dts: qcom: sc7180: Add USB related nodes
-
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  25 ++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 105 ++++++++++++++++++++++++++++++++
- 2 files changed, 130 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+index 25d9e9c2fd53..ca7bc7608c15 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.txt
++++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+@@ -17,6 +17,8 @@ Optional property:
+ - reg-io-width: the size (in bytes) of the IO accesses that should be
+   performed on the device.
+ - hwlocks: reference to a phandle of a hardware spinlock provider node.
++- #syscon-cells: represents the number of args. Used when syscon-names
++  is going to be used. The value is vendor specific.
+ 
+ Examples:
+ gpr: iomuxc-gpr@20e0000 {
+@@ -30,3 +32,37 @@ hwlock1: hwspinlock@40500000 {
+ 	reg = <0x40500000 0x1000>;
+ 	#hwlock-cells = <1>;
+ };
++
++
++==Syscon names==
++
++Refer to syscon node by names with phandle args in syscon consumer node.
++
++Required properties:
++- syscons:	List of phandle and any number of args. Args is specific to
++		differnet vendor. For example: In Unisoc SoCs, the 1st arg
++		will be treated as register address offset and the 2nd is bit
++		mask as default.
++
++- syscon-names:	List of syscon node name strings sorted in the same
++		order as the syscons property.
++
++Examples:
++
++apb_regs: syscon@20008000 {
++	compatible = "sprd,apb-glb", "syscon";
++	#syscon-cells = <2>;
++	reg = <0x20008000 0x100>;
++};
++
++aon_regs: syscon@40008000 {
++	compatible = "sprd,aon-glb", "syscon";
++	#syscon-cells = <1>;
++	reg = <0x40008000 0x100>;
++};
++
++display@40500000 {
++	...
++	syscons = <&ap_apb_regs 0x4 0xf00>, <&aon_regs 0x8>;
++	syscon-names = "enable", "power";
++};
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.18.0
+
 
