@@ -2,142 +2,86 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9806C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D4CC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8918B20718
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0BC820723
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573758660;
-	bh=UrWfCz662jAu9waWAU1lLJs7kUW0NNU0DmtBXAw+iPo=;
+	s=default; t=1573758733;
+	bh=h6i+jO4ClmW2IeSbOGO8TMT3lJHc7Vol4IZ0eOI4cEo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pg47Jdo4jrjb2+zWBsW2qPyJkVo9+4BelrtveErszEUNe0vKc3RpjWpHi+MmRb+4F
-	 +ghj9gTSvsUoowTwm8E2GGCqmxS2qe87EcUiAgwUKcyo/WvEZOtp0mbUXYW0Cit/Yu
-	 HW8bo0XKsAoUl17feDvFSPLWDRXAo4ZycoI1982E=
+	b=sOMeelvvYGeHuMbtpk7bEME/fl91PcIikaZglUSxtgPNeh2XJOWJ0vgpvEPkO5sRe
+	 2o9wredwC+R3zMqE9+s/EvRmufhN2IkQOa2S7/hkGQOar3X9FmnUFyU5Ax9xbj2CCz
+	 uGDRI0XjUBsUzIMy6oul2t6EEUUWyM23TjPW1XjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfKNTK5 (ORCPT
+        id S1726632AbfKNTMM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:10:57 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42660 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfKNTK4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 14:10:56 -0500
-Received: by mail-oi1-f195.google.com with SMTP id i185so6301683oif.9;
-        Thu, 14 Nov 2019 11:10:56 -0800 (PST)
+        Thu, 14 Nov 2019 14:12:12 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39423 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNTMM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 14:12:12 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w24so5364886otk.6;
+        Thu, 14 Nov 2019 11:12:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3YL56SWPGQVsNjFHXt4/e0yB7JGA/eRhTgMv1S0Kl3k=;
-        b=cg1QihGubpiLJbD8xXtTtczk4+00w8WoeLbtf2GL/9lL4IiDIr3wAL/u6w7A3JPaGa
-         hadKC+vdTMZDVCgqlkBsrHKRcQgMJDrsPjV+ky9rIAxQ7eg3r3Pji7tZrR82XNSa255L
-         irMBZi90eUg15ek7xiD84mEgcwV64n94MhHE0AVLxXp7Rrv369liKDghiZwCdcH6wTN4
-         JtCsmNsYxLCDyUZ2s1GZZbiF7Pk5gOpeV5FJBW1UvuMCXCvBA66zAgvx5tmZz1jviK4/
-         hO7wS+fUEXvOGYje76AVV/Fp5wOhoXwKLwMWYB1BAy32ekmidK16TbhFxq+L3Z2YfkOH
-         JHLw==
-X-Gm-Message-State: APjAAAWuIP8fmO0HlL6r8Utd18UYM2y0weaEjDpYOyjgxCzxgLPoPlMe
-        LH//cIT8M3RHarZY4AGV1w==
-X-Google-Smtp-Source: APXvYqz71HZf5S7VSUThFF27uk9VXrn+jKsPsmwXCQmMu3Ynhm/j3rU0b2jARLb2VuHT/w4/OT8Pag==
-X-Received: by 2002:aca:d0d:: with SMTP id 13mr4993560oin.44.1573758655714;
-        Thu, 14 Nov 2019 11:10:55 -0800 (PST)
+        bh=+C86HU47Ruq8ie43k/9gRtCKU5MxuhIIqhntEz1NPZQ=;
+        b=IchMeODD2cvjbbsGoWVhSEaRY8BoqJyxHXaZEGjSCWxIpyRKk7o+wt3T80/l8jAc78
+         N9h3WLfhu564opz7wWrotg+ng/a19fofq45i67StXvKXlN0DPEV9XhnGldfyoez5/xnG
+         fu7hIZlScvCV0uXAT5WHJBRon4BJo2q6LfPdHd61OJrVsXzHRTSZl9ceGi7sKXMeEP/f
+         blztBo3ZDd/wsHyWuWlbjdq+bv+jmqlyUkeueQt1yoi6SqgRuC6+snQIpRt233I1nGKw
+         FoUDwryUTgyVSGXcIe9mGReq7Imkdxtks5R+MGFe5tevMcwdJ2AQFp4awqoSJUQQx/2d
+         svEg==
+X-Gm-Message-State: APjAAAXX/z03tSpiG8CHEbqXqDalgjw7UfT+VV2JtHEMPKIx7eiO9w3w
+        bWrd1SCGl91EGfkdENyBdwNBqU8=
+X-Google-Smtp-Source: APXvYqyK9IS1/37lWqaHxvuWrpHCJsZDLpbEJyl9jVccb1gWuKI2tXRvRTaUMaR3uOkMFMa/eX1sYQ==
+X-Received: by 2002:a9d:5e1a:: with SMTP id d26mr7845139oti.96.1573758731278;
+        Thu, 14 Nov 2019 11:12:11 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o22sm2028669otk.47.2019.11.14.11.10.54
+        by smtp.gmail.com with ESMTPSA id s66sm2140530otb.65.2019.11.14.11.12.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 11:10:54 -0800 (PST)
-Date:   Thu, 14 Nov 2019 13:10:54 -0600
+        Thu, 14 Nov 2019 11:12:10 -0800 (PST)
+Date:   Thu, 14 Nov 2019 13:12:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        ayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hagar@nuvoton.com,
-        amir.mizinski@nuvoton.com
-Subject: Re: [PATCH v1 4/5] dt-bindings: tpm: Add the TPM TIS I2C device tree
- binding documentaion
-Message-ID: <20191114191054.GA20209@bogus>
-References: <20191110162137.230913-1-amirmizi6@gmail.com>
- <20191110162137.230913-5-amirmizi6@gmail.com>
+        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2 4/4] dt-bindings: arm: imx: Add the i.MX6SLL-EVK Rev-A
+ board
+Message-ID: <20191114191210.GA4324@bogus>
+References: <1573435732-30361-1-git-send-email-Anson.Huang@nxp.com>
+ <1573435732-30361-4-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191110162137.230913-5-amirmizi6@gmail.com>
+In-Reply-To: <1573435732-30361-4-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 06:21:36PM +0200, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
+On Mon, 11 Nov 2019 09:28:52 +0800, Anson Huang wrote:
+> Add board binding for i.MX6SLL-EVK Rev-A board.
 > 
-> this file aim at documenting TPM TIS I2C related dt-bindings for the I2C PTP based Physical TPM.
-> 
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../bindings/security/tpm/tpm_tis_i2c.txt          | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
-
-Please make this a schema. See 
-Documentation/devicetree/writing-schema.rst.
-
+> No changes.
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
-> new file mode 100644
-> index 0000000..7d5a69e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_i2c.txt
-> @@ -0,0 +1,24 @@
-> +* Device Tree Bindings for I2C PTP based Trusted Platform Module(TPM)
-> +
-> +The TCG defines hardware protocol, registers and interface (based
-> +on the TPM Interface Specification) for accessing TPM devices
-> +implemented with an I2C interface.
-> +
-> +Refer to the 'I2C Interface Definition' section in 'TCG PC Client
-> +PlatformTPMProfile(PTP) Specification' publication for specification.
-> +
-> +Required properties:
-> +
-> +- compatible     : Should be "tcg,tpm_tis-i2c"
 
-s/_/-/
-
-As this has to be under an I2C controller node, the '-i2c' part is 
-redundant.
-
-There's a bigger issue that the h/w here is more than just an I2C 
-protocol. The chip may have multiple power supplies, clocks, reset 
-lines, etc. HID over I2C seems like a similar case. Does the spec define 
-*all* of that? If not, you need chip specific compatibles. You can keep 
-this as a fallback though.
-
-> +- reg            : Address on the bus
-> +- tpm-pirq       : Input gpio pin, used for host interrupts
-
-GPIO connections are properties ending in '-gpios'. However, if the only 
-use is an interrupt, then you should use 'interrupts'.
-
-> +
-> +Example (for Raspberry Pie 3 Board with Nuvoton's NPCT75X (2.0)
-> +-------------------------------------------------------------------
-> +
-> +tpm_tis-i2c: tpm_tis-i2c@2e {
-> +
-> +       compatible = "tcg,tpm_tis-i2c";
-> +       reg = <0x2e>;
-> +       tpm-pirq = <&gpio 24 GPIO_ACTIVE_HIGH>;
-> +};
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh@kernel.org>
