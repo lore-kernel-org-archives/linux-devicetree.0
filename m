@@ -2,86 +2,89 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE74C43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 00:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D686BC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 00:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58922206EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 00:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbUR73oL"
+	by mail.kernel.org (Postfix) with ESMTP id D2C40206F2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 00:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573692833;
+	bh=qIBAaaB/1bOiTB08VD/Pmhb9APSKMmxReoIrQlljxCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jSfg0QrO9TFQLaZUbcHTAkSJf8JYZbH+pB+uAh1z8SRKK4ze+TQ6JR47vd7TLk2Lt
+	 JG51p7TV4+EJbuXoqHE5OJI983riz9wg4mFJWR9hCwQufhF5ytOUAHBPX1taCmo4YQ
+	 4u0RdRYUuvRr5wDQ/Sqm3jKkCou8bzPNUq7Dn3Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfKNALP (ORCPT
+        id S1726418AbfKNAxx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 19:11:15 -0500
-Received: from mail-ot1-f45.google.com ([209.85.210.45]:45024 "EHLO
-        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfKNALP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 19:11:15 -0500
-Received: by mail-ot1-f45.google.com with SMTP id c19so3291652otr.11;
-        Wed, 13 Nov 2019 16:11:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iwQe7ttqRrl/0DFYkdah3hasupJxW4zYjkHbDJRN7MA=;
-        b=gbUR73oLA2i5hjNAw3ZR8RAa2lh2MSjfRlT9w5zqCmUIe40qpFiEnXof+2SXPtKV6i
-         HmGzOtzdiPw0juJ6wbjz01Fr0lD2ns++Z+pjOCtu7RBnWmRUYHIiE9qJuvYUbUjz1kBl
-         xdFzGhg0t97CqcrsTQJmsCcQBEL+jE5g+FqLbsXyKMi6ydYHwydgyvxlyUCGOVBSFKjr
-         yD7/ejlxmme1ZlnBmQrIKYMASLjomq4sBQmEytUKEVf77VUmyZpqY0fEc+60f/+K5vF2
-         688leDW8RBmnfUcaLPhPbezegaigbjkCHYZNLMU4npAwjvdjfs4igPEOM30eKP6MbQqr
-         5rSA==
+        Wed, 13 Nov 2019 19:53:53 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45957 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfKNAxw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 19:53:52 -0500
+Received: by mail-oi1-f193.google.com with SMTP id 14so3649881oir.12;
+        Wed, 13 Nov 2019 16:53:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iwQe7ttqRrl/0DFYkdah3hasupJxW4zYjkHbDJRN7MA=;
-        b=MgWIPoPOi5Y/QwTu/Z4iR0V1cCyR7WHUrjtlA5K5WEupymHCpfzk5ksEeoqYEd0e4Y
-         pD4p9khepm3F2u1iFVe/K70haqdTLYbm9RHD0bigUn0hMQOMLQOAQRuOF2Qw9us+6Z4T
-         C2ym2q5fhoCwdhn+230wwViXcJYt5gL1FW0kjDEC50iJD8ey22mOTDESAFTPbfrskXH6
-         dhQ+KZlolOTOPzZTWBmVLAeH2N+3lPEtyYtLhA3PixCM6aH+36985zSrUMtDoghpF9DF
-         Jd00Huq4RrTZ8+9u5W69hi9wDNr7I4tn7p6ivGLIPZdDsTBS1semN3Qzz8fflLTFmtQ1
-         GgnA==
-X-Gm-Message-State: APjAAAWNKWMRE9Fvj1DIVY2ArNWrvCyhO2wAJZGJ+nPpOPyETALILLXW
-        isgowzx0ov+5g1EDufbQQtwUl4jtyHcvC7abZ0Y=
-X-Google-Smtp-Source: APXvYqyQaXNsVNIH34kITq3TgXwMzDRIHWu0sO1TZj4MP0TAq+CqBiSuHk1ZclHRETZt7eVnPNlNPutVd+SLT/GQiYs=
-X-Received: by 2002:a9d:4712:: with SMTP id a18mr5742915otf.49.1573690274313;
- Wed, 13 Nov 2019 16:11:14 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WiR0ypBh3Fj7NpRPQKyGnCgyTRA5E81l+DOjjcx1SJU=;
+        b=Zh9oTnXN0POT0dGSNbI1qfTNvLCWoNOpbFqzKS5eEGwlVtWvs/xdxCRlLrbNQzfFdQ
+         z5HqalEw1XdmOzI3wR3tgQJ5GDnItjaJWj1xjz/N85jLwT3Vc+AZdSsF8x8lMn6ut/dl
+         gqlhr109IPeTUgOX7w5M/0PBMA15vjrIN4QbuD1qJb6HsAUZ5R1Noz0EGPfTyV1EAGr1
+         Blz65TlZNIp3zKfFUFeohIQ2CHEfMquB0MlkAm2KIsFFWagi2baRXYsa0sZk8x7jdy29
+         x4ugNIfBXhkow0JNqAqaMDWG7bA1ShrZdGnrs1fdSHjc6eqHgc0S6/k/E3xn5QJHL7mA
+         5yqg==
+X-Gm-Message-State: APjAAAXXa7jojX2WGCXFUe5xS6I72STXeJhmbvvH3qUTiutI0pFGYt3a
+        5Q7MHxn9LSsXHBMSnsKWkaIMlP0=
+X-Google-Smtp-Source: APXvYqxvCcVvgVN98761rsnFULS7AIgOklv+HIvmBNh/OmjZZqrKbwHetHnntAnLYFc4Szpeu4eo9w==
+X-Received: by 2002:aca:c3cf:: with SMTP id t198mr1358608oif.10.1573692830326;
+        Wed, 13 Nov 2019 16:53:50 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b12sm1289988otl.34.2019.11.13.16.53.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 16:53:49 -0800 (PST)
+Date:   Wed, 13 Nov 2019 18:53:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: Re: [PATCH v6 2/5] dt-bindings: power: supply: Max17040: Add DT
+ bindings for max17040 fuel gauge
+Message-ID: <20191114005349.GA23919@bogus>
+References: <20191105095905.GA31721@pi3>
+ <20191107031710.5672-1-matheus@castello.eng.br>
+ <20191107031710.5672-3-matheus@castello.eng.br>
 MIME-Version: 1.0
-References: <20191106225527.9121-1-mihailescu2m@gmail.com> <20191107091657.GA1828@pi3>
- <CAL_Jsq+b_7ELTp+cShPJWwAv3arJ-Fp3C+Eor2dX3O_d4pmUvA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+b_7ELTp+cShPJWwAv3arJ-Fp3C+Eor2dX3O_d4pmUvA@mail.gmail.com>
-From:   Marian Mihailescu <mihailescu2m@gmail.com>
-Date:   Thu, 14 Nov 2019 10:41:03 +1030
-Message-ID: <CAM3PiRzO9Xz7=2brSXaCsRTLfSphbgf+C=7-X0vG8Bt8dsyf-A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: gpu: mali-midgard: add samsung exynos
- 5420 compatible
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107031710.5672-3-matheus@castello.eng.br>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> >
-> > I would prefer to order it logically/alphabetically, so after 5250 and
-> > before 5433. With that change:
->
-> I didn't see your comment, but that's what I did. This has been
-> re-ordered to be sorted by Mali part numbers (though partially to
-> avoid a conflict). Good thing Arm and Samsung agree
-> newer/better/faster should be higher numbers. :)
->
-> Rob
+On Thu,  7 Nov 2019 00:17:07 -0300, Matheus Castello wrote:
+> Documentation of max17040 based fuel gauge characteristics.
+> For configure low level state of charge threshold alert signaled from
+> max17043/max17044 we add "maxim,alert-low-soc-level" property.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../power/supply/max17040_battery.txt         | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> 
 
-Thank you.
--Marian
+Reviewed-by: Rob Herring <robh@kernel.org>
