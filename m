@@ -2,74 +2,143 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3DFC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDEAC43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12225206F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573751748;
-	bh=wqXw2GU/fWqyagYIshMsfzEUSC9I5oHEjWnEEo4D/6I=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=iP23Ffwom54mAt3jV/G3S7VflD/NeW5TnNDg+xM7H7IJbv9g6633FAKF/mCSAUD/P
-	 dtk0L5TGqwxEO46SOgsuzOzG8lAvfN0MtT5W25Yn7t93YL7GzgXJhLMNn9RSBbQa4H
-	 /8WVqqiLZCXtYswu3p3++TJ90j7a96y20ie0ada4=
+	by mail.kernel.org (Postfix) with ESMTP id 994BE2070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:18:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eBH4zUyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKNRPr (ORCPT
+        id S1726812AbfKNRSh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:15:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbfKNRPr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:15:47 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77870206F4;
-        Thu, 14 Nov 2019 17:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573751746;
-        bh=wqXw2GU/fWqyagYIshMsfzEUSC9I5oHEjWnEEo4D/6I=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=DDu+wkPJH5/e9q5cXcoO5DV4uFX6hDP8XyQRYx6WyPXASmYL0i5uR5v6SxXjYrFRL
-         5nvbU4bOmJgcFa3FDyFo7HD6pbfeeS8rw6Td8R4h6+IEILsNzfouASCg4VN8x4oUEo
-         muQi2TXUUAWkAAFbGZONRt8LasK6fh7gsdchQXx4=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 14 Nov 2019 12:18:37 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43480 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfKNRSg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 12:18:36 -0500
+Received: by mail-io1-f67.google.com with SMTP id r2so2521239iot.10
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 09:18:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f7reOlZqp6iwOkryxtYw5chswKvS9lLb7R9DbAzTcdk=;
+        b=eBH4zUytcqB2NJQGehzzUs2Rd8EkW1/vxYlqC2L1UhI9UXREEztWk4LW3tOac5cCul
+         VkgqPmE8y3rgdKmYdRu2B+ZExAu1qQI0a7dfWcrG3T6FDR2B1jWFizO5cJKEGw6SwRCF
+         8gbh/Iapie7nE1gbggHz9xRcC1TibRz8Bkyb8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f7reOlZqp6iwOkryxtYw5chswKvS9lLb7R9DbAzTcdk=;
+        b=JmAYH0YCGy15MTnu/rv83aSJa4Uk6/Ksf3khRUrBJZLhW4uFUnC3+QCf0iTl6lRl3b
+         dTpgACvH0dZ5rqmxwcoTV0kY5V41WgfgYJRUDSMoGOHGViRdY3p8Ny/Ru/+RGT/vc72e
+         B2d3nQLNLIbhIOXEd53Ywk2qnGOxoBhZSvQPui8k/GMjK/6i3omv/pjQ1d67PP0u0Yfa
+         MHoii24V5YsScIeHpkRoXZdc6tUHFVWS7d5vJl/QFYYRqFQGmtPr3FstjDpistCprJTR
+         kA57VcRbBgu7ZNIPtAFgQfWv9qKuTQsovL8f4djpPoPF36PbkLijdxitJuz5AdlyD4XI
+         r7XA==
+X-Gm-Message-State: APjAAAXeDaSaiBiwamFHVqgoPRP+EHCEvyhjilE69vvJDn3/w6Jh1QIf
+        wCn3ypywXIkJnsN2shibD7iyKTUxTzs=
+X-Google-Smtp-Source: APXvYqzRLt/pS32EZ+Lej3qJYYseERX0xtH1t/G4d2P1zqqzLPbriti1bt0te68pMnFPz4GczT5RaQ==
+X-Received: by 2002:a02:ad14:: with SMTP id s20mr9143576jan.132.1573751914298;
+        Thu, 14 Nov 2019 09:18:34 -0800 (PST)
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
+        by smtp.gmail.com with ESMTPSA id w2sm907244ilg.51.2019.11.14.09.18.33
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 09:18:33 -0800 (PST)
+Received: by mail-io1-f42.google.com with SMTP id s3so7674429ioe.3
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 09:18:33 -0800 (PST)
+X-Received: by 2002:a6b:a0c:: with SMTP id z12mr124697ioi.142.1573751912819;
+ Thu, 14 Nov 2019 09:18:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org>
-References: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org>
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-To:     Harigovindan P <harigovi@codeaurora.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v1 0/2] Add suppport for rm69299 Visionox panel driver and add DSI config to support DSI version
-User-Agent: alot/0.8.1
-Date:   Thu, 14 Nov 2019 09:15:45 -0800
-Message-Id: <20191114171546.77870206F4@mail.kernel.org>
+References: <20191112004700.185304-1-abhishekpandit@chromium.org> <3639233.d3cbfcQTlM@phil>
+In-Reply-To: <3639233.d3cbfcQTlM@phil>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 14 Nov 2019 09:18:19 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Vkto_n2sBSJSvDhoA3scdeW+OROP4geyUrhjnvn6meMQ@mail.gmail.com>
+Message-ID: <CAD=FV=Vkto_n2sBSJSvDhoA3scdeW+OROP4geyUrhjnvn6meMQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add brcm bluetooth for rk3288-veyron
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        linux-bluetooth@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Harigovindan P (2019-11-14 02:16:26)
-> Current patchset adds support for rm69299 visionox panel driver used in M=
-SM reference platforms=20
-> and also adds DSI config that supports the respective DSI version.
->=20
-> The visionox panel driver supports a resolution of 1080x2248 with 4 lanes=
- and supports only single DSI mode.
->=20
-> Current patchset is tested on actual panel.
+Hi,
 
-Do you have the DT binding patch?
+On Thu, Nov 14, 2019 at 5:45 AM Heiko Stuebner <heiko@sntech.de> wrote:
+>
+> Hi,
+>
+> Am Dienstag, 12. November 2019, 01:47:00 CET schrieb Abhishek Pandit-Subedi:
+> > This enables the Broadcom uart bluetooth driver on uart0 and gives it
+> > ownership of its gpios. In order to use this, you must enable the
+> > following kconfig options:
+> > - CONFIG_BT_HCIUART_BCM
+> > - CONFIG_SERIAL_DEV
+> >
+> > This is applicable to rk3288-veyron series boards that use the bcm43540
+> > wifi+bt chips.
+> >
+> > As part of this change, also refactor the pinctrl across the various
+> > boards. All the boards using broadcom bluetooth shouldn't touch the
+> > bt_dev_wake pin.
+> >
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>
+> looks good to me
+> @dianders: does this look ok to you too?
 
+Yes, but it's not ready to land yet.  Specifically the bindings are
+still being discussed [1].  Abhishek: you should probably add
+information about the fact that the bindings need to land first to
+your Commit-notes.  When the bindings land I'm happy to add my
+Reviewed-by.
+
+For history, +Matthias and I both did an early review of this [2].
+Compared to that version the only diffs here (other than merge
+conflicts) are:
+
+-               pcm-parameters          = [01 02 00 01 01 00 00 00 00 00];
+
++
++               brcm,bt-sco-routing     = [01];
++               brcm,pcm-interface-rate = [02];
++               brcm,pcm-sync-mode      = [01];
++               brcm,pcm-clock-mode     = [01];
+
+
+> Just to confirm, I guess mickey and brain do not have the suspend_l pin
+> settings? [They only seem to get the default pinctrl state but not the
+> sleep state in @pinctrl]
+
+The suspend_l pin just goes to the EC and lets the EC know that we're
+in suspend.  I know for sure mickey has no EC.  I'd believe the same
+to be true of brain, though perhaps you and +Alexandru are the only
+two people with working brains?  I know I don't have one, as can be
+evidenced by some of the stupid things I do.  :-P  I would also note
+that this CL doesn't change whether or not mickey/brain control
+suspend_l.  They used to inherit from 'rk3288-veyron.dtsi' which
+didn't define it.
+
+[1] https://lore.kernel.org/r/20191112230944.48716-5-abhishekpandit@chromium.org
+[2] https://crrev.com/c/1772261
+
+-Doug
