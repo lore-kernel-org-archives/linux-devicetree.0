@@ -2,143 +2,233 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDEAC43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5179CC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994BE2070E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eBH4zUyt"
+	by mail.kernel.org (Postfix) with ESMTP id 1F9CF206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573751927;
+	bh=ocz46gTCP/NUGPTiVuVJqGTutFbDRHy1wr+ZIMUnIJY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iOrvP0LtREg8C5lziHjUZGQrrj339zKkpy9zE2h5toULi1cjmchgLfu1AnlRZdwyv
+	 AXtpAZ9u2OqYDAfHVhltnR0gsOxUW8aGhBSFQgYxXrwsm9GP40eRAaPcRpgk/wtsFJ
+	 SzS2KrkoZhF/twT0R8hFGz/gv+fFrVvI0hfhIMt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfKNRSh (ORCPT
+        id S1726674AbfKNRSq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:18:37 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43480 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfKNRSg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 12:18:36 -0500
-Received: by mail-io1-f67.google.com with SMTP id r2so2521239iot.10
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 09:18:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f7reOlZqp6iwOkryxtYw5chswKvS9lLb7R9DbAzTcdk=;
-        b=eBH4zUytcqB2NJQGehzzUs2Rd8EkW1/vxYlqC2L1UhI9UXREEztWk4LW3tOac5cCul
-         VkgqPmE8y3rgdKmYdRu2B+ZExAu1qQI0a7dfWcrG3T6FDR2B1jWFizO5cJKEGw6SwRCF
-         8gbh/Iapie7nE1gbggHz9xRcC1TibRz8Bkyb8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f7reOlZqp6iwOkryxtYw5chswKvS9lLb7R9DbAzTcdk=;
-        b=JmAYH0YCGy15MTnu/rv83aSJa4Uk6/Ksf3khRUrBJZLhW4uFUnC3+QCf0iTl6lRl3b
-         dTpgACvH0dZ5rqmxwcoTV0kY5V41WgfgYJRUDSMoGOHGViRdY3p8Ny/Ru/+RGT/vc72e
-         B2d3nQLNLIbhIOXEd53Ywk2qnGOxoBhZSvQPui8k/GMjK/6i3omv/pjQ1d67PP0u0Yfa
-         MHoii24V5YsScIeHpkRoXZdc6tUHFVWS7d5vJl/QFYYRqFQGmtPr3FstjDpistCprJTR
-         kA57VcRbBgu7ZNIPtAFgQfWv9qKuTQsovL8f4djpPoPF36PbkLijdxitJuz5AdlyD4XI
-         r7XA==
-X-Gm-Message-State: APjAAAXeDaSaiBiwamFHVqgoPRP+EHCEvyhjilE69vvJDn3/w6Jh1QIf
-        wCn3ypywXIkJnsN2shibD7iyKTUxTzs=
-X-Google-Smtp-Source: APXvYqzRLt/pS32EZ+Lej3qJYYseERX0xtH1t/G4d2P1zqqzLPbriti1bt0te68pMnFPz4GczT5RaQ==
-X-Received: by 2002:a02:ad14:: with SMTP id s20mr9143576jan.132.1573751914298;
-        Thu, 14 Nov 2019 09:18:34 -0800 (PST)
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
-        by smtp.gmail.com with ESMTPSA id w2sm907244ilg.51.2019.11.14.09.18.33
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Nov 2019 09:18:33 -0800 (PST)
-Received: by mail-io1-f42.google.com with SMTP id s3so7674429ioe.3
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 09:18:33 -0800 (PST)
-X-Received: by 2002:a6b:a0c:: with SMTP id z12mr124697ioi.142.1573751912819;
- Thu, 14 Nov 2019 09:18:32 -0800 (PST)
+        Thu, 14 Nov 2019 12:18:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726410AbfKNRSq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:18:46 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 412EE20718;
+        Thu, 14 Nov 2019 17:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573751925;
+        bh=ocz46gTCP/NUGPTiVuVJqGTutFbDRHy1wr+ZIMUnIJY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FEltqMdfOa5s52eVq2HDJrCWY63pFr+eHadBHw1DVPLEAbhcAhRYFLbOR4NBVLJOA
+         U6JM/AfIJ9xq46+VbVjsuRKMHAsC4jkyCbI2duqLtUcj+iTIWEqphmPj10YvKLY7qM
+         j6fMRfMgAtoWRJIXpIcU0JimN8FIb592KhgMDKjw=
+Received: by mail-qk1-f182.google.com with SMTP id d13so5661723qko.3;
+        Thu, 14 Nov 2019 09:18:45 -0800 (PST)
+X-Gm-Message-State: APjAAAWdC8qFFuwkIRTJ/3bH8kilPSOOjgvDbg1sn38dc9p+GV92lZQ0
+        crobV7F/XE5QZIs+OfFbtSZIxh0G36NfF5BJGQ==
+X-Google-Smtp-Source: APXvYqydolbw7U1IFwsmCdguELeny4+5hB8lSGa1lqgOoHuaINM81p54+J/thh41N+0dOQJlAExq8K8modx+6jO6l6Y=
+X-Received: by 2002:a37:30b:: with SMTP id 11mr8607360qkd.254.1573751924338;
+ Thu, 14 Nov 2019 09:18:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20191112004700.185304-1-abhishekpandit@chromium.org> <3639233.d3cbfcQTlM@phil>
-In-Reply-To: <3639233.d3cbfcQTlM@phil>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 14 Nov 2019 09:18:19 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Vkto_n2sBSJSvDhoA3scdeW+OROP4geyUrhjnvn6meMQ@mail.gmail.com>
-Message-ID: <CAD=FV=Vkto_n2sBSJSvDhoA3scdeW+OROP4geyUrhjnvn6meMQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add brcm bluetooth for rk3288-veyron
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        linux-bluetooth@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>
+References: <20191114164104.22782-1-alexandre.torgue@st.com>
+In-Reply-To: <20191114164104.22782-1-alexandre.torgue@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 14 Nov 2019 11:18:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKJZwJ0MyRp37Y-F0ujPdVEKARd8qcUCN1xmawpkiffLg@mail.gmail.com>
+Message-ID: <CAL_JsqKJZwJ0MyRp37Y-F0ujPdVEKARd8qcUCN1xmawpkiffLg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert stm32-exti to json-schema
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Nov 14, 2019 at 5:45 AM Heiko Stuebner <heiko@sntech.de> wrote:
+On Thu, Nov 14, 2019 at 10:41 AM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
 >
-> Hi,
+> Convert the STM32 external interrupt controller (EXTI) binding to DT
+> schema format using json-schema.
 >
-> Am Dienstag, 12. November 2019, 01:47:00 CET schrieb Abhishek Pandit-Subedi:
-> > This enables the Broadcom uart bluetooth driver on uart0 and gives it
-> > ownership of its gpios. In order to use this, you must enable the
-> > following kconfig options:
-> > - CONFIG_BT_HCIUART_BCM
-> > - CONFIG_SERIAL_DEV
-> >
-> > This is applicable to rk3288-veyron series boards that use the bcm43540
-> > wifi+bt chips.
-> >
-> > As part of this change, also refactor the pinctrl across the various
-> > boards. All the boards using broadcom bluetooth shouldn't touch the
-> > bt_dev_wake pin.
-> >
-> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> ---
 >
-> looks good to me
-> @dianders: does this look ok to you too?
+> Hi Rob,
+>
+> I planned to use "additionalProperties: false" for this schema but as I add a
+> property under condition, I got an error (property added under contion seems
+> to be detected as an "additional" property and then error is raised).
+>
+> Is there a way to fix that ?
 
-Yes, but it's not ready to land yet.  Specifically the bindings are
-still being discussed [1].  Abhishek: you should probably add
-information about the fact that the bindings need to land first to
-your Commit-notes.  When the bindings land I'm happy to add my
-Reviewed-by.
+See below.
 
-For history, +Matthias and I both did an early review of this [2].
-Compared to that version the only diffs here (other than merge
-conflicts) are:
+>
+> regards
+> Alex
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+> deleted file mode 100644
+> index cd01b2292ec6..000000000000
+> --- a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+> +++ /dev/null
+> @@ -1,29 +0,0 @@
+> -STM32 External Interrupt Controller
+> -
+> -Required properties:
+> -
+> -- compatible: Should be:
+> -    "st,stm32-exti"
+> -    "st,stm32h7-exti"
+> -    "st,stm32mp1-exti"
+> -- reg: Specifies base physical address and size of the registers
+> -- interrupt-controller: Indentifies the node as an interrupt controller
+> -- #interrupt-cells: Specifies the number of cells to encode an interrupt
+> -  specifier, shall be 2
+> -- interrupts: interrupts references to primary interrupt controller
+> -  (only needed for exti controller with multiple exti under
+> -  same parent interrupt: st,stm32-exti and st,stm32h7-exti)
+> -
+> -Optional properties:
+> -
+> -- hwlocks: reference to a phandle of a hardware spinlock provider node.
+> -
+> -Example:
+> -
+> -exti: interrupt-controller@40013c00 {
+> -       compatible = "st,stm32-exti";
+> -       interrupt-controller;
+> -       #interrupt-cells = <2>;
+> -       reg = <0x40013C00 0x400>;
+> -       interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml
+> new file mode 100644
+> index 000000000000..39be37e1e532
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
--               pcm-parameters          = [01 02 00 01 01 00 00 00 00 00];
+If ST has copyright on the old binding, can you add BSD here.
 
-+
-+               brcm,bt-sco-routing     = [01];
-+               brcm,pcm-interface-rate = [02];
-+               brcm,pcm-sync-mode      = [01];
-+               brcm,pcm-clock-mode     = [01];
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/st,stm32-exti.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STM32 External Interrupt Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Alexandre Torgue <alexandre.torgue@st.com>
+> +  - Ludovic Barre <ludovic.barre@st.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +        - enum:
+> +          - st,stm32-exti
+> +          - st,stm32h7-exti
+> +      - items:
+> +        - enum:
+> +          - st,stm32mp1-exti
+> +        - const: syscon
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  hwlocks:
+> +    maxItems: 1
+> +    description:
+> +      Reference to a phandle of a hardware spinlock provider node.
+> +
+> +required:
+> +  - "#interrupt-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupt-controller
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - st,stm32-exti
+> +              - st,stm32h7-exti
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          allOf:
+> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
 
+Standard property, doesn't need a type. You just need 'maxItems' or an
+'items' list if the index is not meaningful. This appears to be the
+former case.
 
-> Just to confirm, I guess mickey and brain do not have the suspend_l pin
-> settings? [They only seem to get the default pinctrl state but not the
-> sleep state in @pinctrl]
+> +          description:
+> +            Interrupts references to primary interrupt controller
+> +      required:
+> +        - interrupts
 
-The suspend_l pin just goes to the EC and lets the EC know that we're
-in suspend.  I know for sure mickey has no EC.  I'd believe the same
-to be true of brain, though perhaps you and +Alexandru are the only
-two people with working brains?  I know I don't have one, as can be
-evidenced by some of the stupid things I do.  :-P  I would also note
-that this CL doesn't change whether or not mickey/brain control
-suspend_l.  They used to inherit from 'rk3288-veyron.dtsi' which
-didn't define it.
+You can move the definition to the main section as you only need
+'required' here. That should fix your additionalProperties issue.
 
-[1] https://lore.kernel.org/r/20191112230944.48716-5-abhishekpandit@chromium.org
-[2] https://crrev.com/c/1772261
+In hindsight, the mp1 case probably should have used interrupt-map.
 
--Doug
+> +
+> +examples:
+> +  - |
+> +    //Example 1
+> +    exti1: interrupt-controller@5000d000 {
+> +        compatible = "st,stm32mp1-exti", "syscon";
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        reg = <0x5000d000 0x400>;
+> +    };
+> +
+> +    //Example 2
+> +    exti2: interrupt-controller@40013c00 {
+> +        compatible = "st,stm32-exti";
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        reg = <0x40013C00 0x400>;
+> +        interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+> +    };
+> +
+> +...
+> --
+> 2.17.1
+>
