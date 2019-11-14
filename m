@@ -7,83 +7,85 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5059C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B89C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B731E2071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC25206D6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573770464;
-	bh=08fnnqS7Zn4/LMs0wyS+HRQLQJVRn3gxe2zAVaXDe9I=;
+	s=default; t=1573770702;
+	bh=HxBQ9mc5wckd8K8v9pUL0G8SUtIpuD6J7MEoHvOFh5A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tJNl5OQwkccpm+eLW8+bPI5/r0BfjUI0AUOfhr/ink7AhRYMKobd1NnlvNb8rvf/H
-	 /I4L2krHttSPBtHRmYnKEdD/Jj39gkqYn5ypXoGSaXKfLHeQmT8rBIsOSbLBWP4Fxd
-	 c8WcABZH6WfDU+QIXUSz2OLnOrHiuErb5uNu346g=
+	b=WFJnKUrEvbX122tQCdVhvVY7+Q/t0pSEtAKDCGC1DeWXDETwK60ohDwUl9cwUaLTZ
+	 OH5La8nzuSuXJsYXffo/29fDwKUAjfxmOxkiegrEXHcM/OOTan7NLUw75dY6NF9i3f
+	 h9IAqAhlObWNHE+EM/hbAoNAR/10t4EWARy+H3Wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfKNW1o (ORCPT
+        id S1726992AbfKNWbm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:27:44 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38050 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfKNW1o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 17:27:44 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a14so6847998oid.5;
-        Thu, 14 Nov 2019 14:27:43 -0800 (PST)
+        Thu, 14 Nov 2019 17:31:42 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39451 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNWbl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 17:31:41 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v138so6844338oif.6;
+        Thu, 14 Nov 2019 14:31:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :user-agent;
-        bh=Cq0LD8yuKCnh2UTHogff41GNJ+0SDF9ePhudesBQyZU=;
-        b=WvZCgKlaOzUkP79yPt1v+h/oC06X77/+nValeo+eeKpeAY8wm7kXGM2kgefx/tWvzU
-         nEzjIjTPcGU2nVBr9KvOVQql6yT23TFhI8WERBt+x0vXA4RYFNFGxvgX2dyCGyV4IVMN
-         BwJe5BREBOxKJegwaXe6N3C1+EkNIYk6d3MgUADE2cYEERJsQv2DdWKHcb2/fAW7TZrg
-         B9JYQq8mBl826vE8fmSr2i7PxEAE2HukgmRPT8CBjdlLRLEHG/y0jS8tsC33AHK47v17
-         OROT4BrkElZU6+9OeA2pWX8z26sGeVov4m09tUyV3Al3BrgQjh5q20P5ZLz3BLQiWDn0
-         42MQ==
-X-Gm-Message-State: APjAAAUolgfVMcRSblBinpzFHRJpxc24S7yN3pBsD82qIqBgProkt3fN
-        +bpxe6g8FTIUSBBz6nORnA==
-X-Google-Smtp-Source: APXvYqx1PQt5sf4JKKbpGfkraBP3rybv7qUasEttesaViZEp6krjgQxVXIm2ZR69LyO0X3dVn2oYyg==
-X-Received: by 2002:a05:6808:5c3:: with SMTP id d3mr5373342oij.81.1573770462944;
-        Thu, 14 Nov 2019 14:27:42 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3aEDSd//CUr7obM8pnwgRvPfaqbSjrz8RXYZcOBaO5o=;
+        b=OxckcMJdG1GQkCy3qGHoCHlusLXfEu2sVxtm6AHt4cFb6Ed9tF4RNEiXkXncnmX5Vf
+         /FgUoMhXCm1tNwDzWGDwJyeiX4KJ+6C70cAaTYWR2SkM18CrsxWSohkehCk0KtKM5eUN
+         PQQWLV/cVrIqtcBjMwxHI9FmgbuglWGDBmKCV04YZhX8Pe9L0P8Ifxf0ytYmw7UVXlym
+         r/iJRvpZxuKKM0ke8AlM9uGa9wbnV4rYwcLuxVVi5xiuaWtvL25BxDlHmUeeSaNJhouz
+         mK4cAi67mA/VxGeFbpyTIKHn9GSDEKVz0k0cDTbfTb0FCjVOoZZ922hFlzJtBc5+d12p
+         DfGA==
+X-Gm-Message-State: APjAAAVMbwyRgNJXxY7qyQkfGjU5KLxXEmSfYCxn++CqJBeL+1BO0QbV
+        siOgsxHky01HFf8obEXO1YWdaYw=
+X-Google-Smtp-Source: APXvYqzmC0S3EemtVMsdOmnrb9ciGoy0JBKuBOZVKmRqGidvzvwwtfy146j39IXLhjQXTTFWSqO/Dw==
+X-Received: by 2002:aca:4a84:: with SMTP id x126mr5293793oia.47.1573770700636;
+        Thu, 14 Nov 2019 14:31:40 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m11sm2217136otp.15.2019.11.14.14.27.41
+        by smtp.gmail.com with ESMTPSA id f93sm2246396otb.64.2019.11.14.14.31.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 14:27:42 -0800 (PST)
-Date:   Thu, 14 Nov 2019 16:27:41 -0600
+        Thu, 14 Nov 2019 14:31:39 -0800 (PST)
+Date:   Thu, 14 Nov 2019 16:31:39 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Eugen.Hristev@microchip.com
-Cc:     robh+dt@kernel.org, Nicolas.Ferre@microchip.com,
-        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Eugen.Hristev@microchip.com
-Subject: Re: [PATCH 3/4] dt-bindings: ARM: at91: Document SAMA5D27 WLSOM1 and
-  Evaluation Kit
-Message-ID: <20191114222741.GA28212@bogus>
-References: <1573543139-8533-1-git-send-email-eugen.hristev@microchip.com>
- <1573543139-8533-3-git-send-email-eugen.hristev@microchip.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] of: property: Fix documentation for out values
+Message-ID: <20191114223139.GA4161@bogus>
+References: <20191113064338.GA13274@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573543139-8533-3-git-send-email-eugen.hristev@microchip.com>
-Content-Language: en-US
+In-Reply-To: <20191113064338.GA13274@localhost.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 07:19:54 +0000, <Eugen.Hristev@microchip.com> wrote:
+On Wed, 13 Nov 2019 08:43:38 +0200, Matti Vaittinen wrote:
+> Property fetching functions which return number of successfully fetched
+> properties should not state that out-values are only modified if 0 is
+> returned. Fix this. Also, "pointer to return value" is slightly suboptimal
+> phrase as "return value" commonly refers to value function returns (not via
+> arguments). Rather use "pointer to found values".
 > 
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Document device tree binding of SAMA5D27 WLSOM1 - Wireless module;
-> and SAMA5D27 WLSOM1 EK - Wireless module evaluation kit, from Microchip.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > ---
->  Documentation/devicetree/bindings/arm/atmel-at91.yaml | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> 
+> Changes from v1. Removed statement about modifying arg ptr only upon
+> successful execution (as requested by Frank). Also changed "pointer to
+> return value" with "pointer to found values"
+> 
+>  drivers/of/property.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
