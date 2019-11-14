@@ -2,121 +2,122 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2B9C43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 06:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C220C33C9A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 06:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9720B206D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 06:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaUsoDMk"
+	by mail.kernel.org (Postfix) with ESMTP id 6466A20715
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 06:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbfKNGJr (ORCPT
+        id S1726276AbfKNG3L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:09:47 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40158 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfKNGJr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 01:09:47 -0500
-Received: by mail-pl1-f194.google.com with SMTP id e3so2136924plt.7
-        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 22:09:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aw8y1jiGvDQuLoad9v02dXK5MRBBqE3yqRJRCShjhww=;
-        b=KaUsoDMkOxGtKBYv81fJMUCgETapU2RakSt6h22VwS5B3+ecb9eOhYEJFqAU6u7coF
-         4kb5d+Ozunov31XfwFnnoz+TFDqpuWPnyhQ5NOh2Kxs3JfccG8wE/SunSG1etjaVlV1j
-         x/1wP6NZ6LKtUXjHzQk2koVYBye1heoA1pZPjPcvpxvmiu64B1nE5UxTeqGgLxt4eCj1
-         b5ta7L4aWkW/vqmygbxb/Ku1N5239Ua6vJR8p2EBPEM0tey6KYECmV2MTpM4Cqsbs0sa
-         dAksZhSCR9ZbieXb+/y6d2xsCKAW+Ajbo68p6PXoc9lTpPA/Ry4N8C/dfek+uf0i5NWs
-         0RhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aw8y1jiGvDQuLoad9v02dXK5MRBBqE3yqRJRCShjhww=;
-        b=lmsq3cwFkD9Yyca5VfTpM+JlPwpVoYe8B0PMQoZEX40RjXYKC7KGJjuD7jTcMy3Imk
-         e1BgqU8QwFX58Qv2jpTEy8734MNGNovRpZJThxpDhNf286mn51BezhWJEn2aY3FDztbS
-         2FLum6od9vmC9HGnDzVJ7M7dED1deLWvNtQK0sI1HTc45LR0Yz2hdqjCYDg1AvG7hqrn
-         ymDr+pX7KgCmaKtungLmjjsft3ml87hIn+qlX3zIPioPHYZ/INt4boaDoQic/eKtBPEo
-         ViRbJl0OjydNM5JDaqnJJu8vHyZHjCoVKYqLxbiWx/KQuqlUrJcpEZB0EgijfbXh8JrF
-         bFdw==
-X-Gm-Message-State: APjAAAVb+GJFOQ9yPXRdOeFS6b+BbeKxzTz68vxPJJFyOj21p1Fh6/Ct
-        qoALHmlbgQ6+u7xRAjUYWaQp
-X-Google-Smtp-Source: APXvYqzVItSwZLHCuH1SFvN8lnszFgvIq8ecWeEhJ4mhuw9CcYH9GPraKqjzKFczcLQSD2Wgpor8iA==
-X-Received: by 2002:a17:902:ab87:: with SMTP id f7mr8011816plr.78.1573711785394;
-        Wed, 13 Nov 2019 22:09:45 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id w11sm4579443pgp.28.2019.11.13.22.09.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Nov 2019 22:09:44 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:39:37 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     mturquette@baylibre.com, robh+dt@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        fisher.cheng@bitmain.com, alec.lin@bitmain.com
-Subject: Re: [PATCH v6 0/7] Add Bitmain BM1880 clock driver
-Message-ID: <20191114060937.GD8459@mani>
-References: <20191026110253.18426-1-manivannan.sadhasivam@linaro.org>
- <20191113222116.E5E9B206E3@mail.kernel.org>
- <20191114053404.GA8459@mani>
- <20191114055054.C280F206DA@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114055054.C280F206DA@mail.kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 14 Nov 2019 01:29:11 -0500
+Received: from mga14.intel.com ([192.55.52.115]:33873 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfKNG3L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:29:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 22:29:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
+   d="scan'208";a="214475381"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Nov 2019 22:29:08 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v7 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date:   Thu, 14 Nov 2019 14:29:05 +0800
+Message-Id: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 09:50:53PM -0800, Stephen Boyd wrote:
-> Quoting Manivannan Sadhasivam (2019-11-13 21:34:04)
-> > On Wed, Nov 13, 2019 at 02:21:15PM -0800, Stephen Boyd wrote:
-> > > Quoting Manivannan Sadhasivam (2019-10-26 04:02:46)
-> > > > Hello,
-> > > > 
-> > > > This patchset adds common clock driver for Bitmain BM1880 SoC clock
-> > > > controller. The clock controller consists of gate, divider, mux
-> > > > and pll clocks with different compositions. Hence, the driver uses
-> > > > composite clock structure in place where multiple clocking units are
-> > > > combined together.
-> > > > 
-> > > > This patchset also removes UART fixed clock and sources clocks from clock
-> > > > controller for Sophon Edge board where the driver has been validated.
-> > > > 
-> > > 
-> > > Are you waiting for review here? I see some kbuild reports so I assumed
-> > > you would fix and resend.
-> > 
-> > I'll fix it but I was expecting some review from you so that I can send the
-> > next revision incorporating all comments.
-> > 
-> 
-> Ok. I'm glad I broke the silence then.
-> 
-> Can you please resend without any dts changes? Those don't go through
-> clk tree. 
+Hi,
 
-I'm the platform maintainer, so I'll take the dts changes via ARM SoC tree.
+This series is to add pinctrl & GPIO controller driver for a new SoC.
+Patch 1 adds pinmux & GPIO controller driver.
+Patch 2 adds the corresponding dt bindings YAML document.
 
-> I think otherwise the patches look OK, although I was hoping
-> you could register clks by using the new way of specifying parents. Is
-> that possible?
-> 
+Patches are against Linux 5.4-rc1 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 
-Eventhough I'd like to do, my time is very constrained these days. So please
-consider merging it as it is and as I promised, I'll switch to the new way of
-specifying parents soon.
+v7:
+- Fix code quality/style related review concerns.
+- Correct license id & data types used for some properties in dt bindings.
+- Add possible values for drive-strength & slew rate in dt bindings.
+- Rename compatible name to more self explanatory name in dt bindings.
+- Fix make dt_binding_check reported errors. Ensure make dt_binding_check
+  passes.
 
-Thanks,
-Mani
+v6:
+- Fix code quality/style/readability related review concerns.
+- Remove enum usage from pinmux property in dt bindings.
+
+v5:
+- Fix code style/readability related review concerns.
+- Change data type of groups property to uint32-array in dt bindings.
+
+v4:
+- Correct data types for some pin config properties in dt bindings.
+- Improve pattern regex as per review feedback in dt bindings.
+- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
+  do reg updates in eqbr_pinconf_set() routine itself.
+- Add locking in few ops where it was missing.
+- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
+  in variable namings so as not to confuse with GPIO descriptors.
+- Address code quality/convention/style related review concerns.
+
+v3:
+- Add locking for GPIO IRQ ops.
+- Fix property naming mistake in dt bindings document.
+- Address other code quality related review concerns.
+- Fix a build error reported by kbuild test robot.
+- Remove deleted structure fields from comments.
+
+v2:
+- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
+  provided code for pinmux_ops & pinctrl_ops. Remove related code from
+  the driver.
+- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
+  code from the driver.
+- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
+  in the driver.
+- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
+  design. 
+- Use standard pinctrl DT properties instead of custom made properties.
+- Address review concerns for dt bindings document.
+- Address code quality related review concerns.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  pinctrl: Add pinmux & GPIO controller driver for a new SoC
+  dt-bindings: pinctrl: intel: Add for new SoC
+
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++
+ drivers/pinctrl/Kconfig                            |  18 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-equilibrium.c              | 944 +++++++++++++++++++++
+ drivers/pinctrl/pinctrl-equilibrium.h              | 144 ++++
+ 5 files changed, 1223 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
+ create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+
+-- 
+2.11.0
 
