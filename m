@@ -2,173 +2,460 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C341AC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FD8C43141
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE38206F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:08:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ooW5Ua4E"
+	by mail.kernel.org (Postfix) with ESMTP id A03AB20723
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573748758;
+	bh=19RlmVS9h0ZiqaL4zF3Rbq7bN2tpBmh2GjIMY6tueeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B+mLVZNhfQTRVoh6MWRlkNE3mtJQmDSKFK6ReVWVNkAkpq7byrG+fzLWacTncZGUc
+	 pZXErel5mzaLEMS4Q7jj9fBR8g3cP2K1mPvWvH6b1vrfroWRTX5rP+3Me3PC5TeSE3
+	 NHrH8phbO8TD9IdYrdwwh1bGAO0RxS8iSfYxaFkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfKNQIV (ORCPT
+        id S1726533AbfKNQZ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:08:21 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45229 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfKNQIU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 11:08:20 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k1so2742181pgg.12;
-        Thu, 14 Nov 2019 08:08:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ayAVj6XklJJBJPKHbdoumjHnfHk65xz206ddr7YvVB0=;
-        b=ooW5Ua4E4EOqBaLeWVLobQoOF6HaU61zJ2P4lJPsXX735kybv1kRnmqogrM2jVOw2i
-         C1sg3K0QAMdnkowcVTNVO+LpoRz4pOFXkoxgSYF0N6jLHQLUJI+zp6hUFurlQKcGj+gv
-         lZekcsWWMHmcw3qoZ767UtSXJigukhyENaOIVszLHWP9R1ef0zPTdu+DazLnijRbhYTC
-         m4zeYIGISgrq+i3Z34IKCIRdb8ChjpPb/vM+68cSF2kvzJw+p7DXbxltbWE88JfcydQQ
-         TQ3+0S6ovbe8BE/3Slky0QEfgAUOuPczS4BQT342YJvB6Yp9i64rNTnK5BHwfLB1zjb2
-         Og+Q==
+        Thu, 14 Nov 2019 11:25:58 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34255 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfKNQZ5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 11:25:57 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l202so5829122oig.1;
+        Thu, 14 Nov 2019 08:25:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=ayAVj6XklJJBJPKHbdoumjHnfHk65xz206ddr7YvVB0=;
-        b=BX83U1SkbaFg4tdXPhE/LS1Zq3ACOoG7uKyNSCoS3xrSCWxwEpJJYngFizmrEtxNpB
-         Bv7vSeQRLpYlkg4B3xX06Jl5oVy9A0d5aw25EOJPnQGHUJff85RPJfQcLK56eZ3qbwS0
-         B0imjSLqHVZZKOVboa72EEYpzQWnIz+FU8WmS2OFPdwDMwqVc3PebEcC+HKSHEZ1FWK7
-         Wo0aA9vHHuHr2pkOcGhz0JZBCt04WxbXNT5bNQNX9RHpnexUUKloFemXb8oxZTAKsLsb
-         BiQWBq44XNeukHxaQBwUWa8pqL3j2CZ2GJ7ENhIprdV/uuoCGBsyy6csU735d98JEVC8
-         YOfQ==
-X-Gm-Message-State: APjAAAXKRij7kss/0dM+sb4yYl1zIz0+g0o6VYQkWxIgS0yoG6bpHKFj
-        uVgwXxpKpc9y4x1yJr4H1JB/Qjfw
-X-Google-Smtp-Source: APXvYqyCmyzBlJHqpHHUz/lJupT5sWCvCMDatQwNrXhNrIxK/LqC8IZj9I4WdrOqcffBRVooMYtCbQ==
-X-Received: by 2002:a62:2ccf:: with SMTP id s198mr1915441pfs.42.1573747699509;
-        Thu, 14 Nov 2019 08:08:19 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q1sm5889789pgr.92.2019.11.14.08.08.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 08:08:18 -0800 (PST)
-Date:   Thu, 14 Nov 2019 08:08:16 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eugen.Hristev@microchip.com
-Cc:     robh+dt@kernel.org, wim@linux-watchdog.org,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
-Message-ID: <20191114160816.GA25430@roeck-us.net>
-References: <1573474383-21915-1-git-send-email-eugen.hristev@microchip.com>
- <e34df163-60f5-35c6-05c6-845d70143fd9@roeck-us.net>
- <70ba833e-2acc-7b5a-ca29-1ae9476eb0f5@microchip.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/NTmWPmp8GMLo6UVdc+VGmjKBW/gWIFHb/AVLkYiROg=;
+        b=Zj5qFzT0YmEnriONVBtflgEwzlSNY/pYqq3x/IeONkfUuYMuuVeRrUMB1PIJJRdPH4
+         B4/cbR9ZEn0qhER7kcVDgfYTVUabEQlKjgEE5nUWMk2Qqp+n9H7jgvspqdR7hEj9eoUd
+         qLsflUzWUFkWsD14r9RvfCr9hn/7I5zKsdEm/5uOhgsj+nvvIAvVDytNlaxZvTbB+M3L
+         D8i+XK+7ZaNpyZhJPU16Dk9nPaFgNnBLG8+DF04Xue8azzbUJGAsXSTh2ZAlGOqF8cpu
+         PSUxHybwaiY5OVtgijjZ93FLGVnLJbVB1uMW8DChi91h2ztrwIFHhZO+AqYn4DYWPSil
+         sHoA==
+X-Gm-Message-State: APjAAAUWSNYZCN4PnknThbhBcdQT3k+vTBexEM3CBJiqFSN6ILNSOdsI
+        A9MrYwYveG2xZDNBjdjZas7roZ0=
+X-Google-Smtp-Source: APXvYqx3Ony5vD2zT/+w0HVcd09IyLTLfgtFi6iX9MgkLqkYxtMFglwyF0tV/CWms0+vzYVYIpyftg==
+X-Received: by 2002:aca:3f87:: with SMTP id m129mr4299050oia.30.1573748755626;
+        Thu, 14 Nov 2019 08:25:55 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b62sm1931528oia.6.2019.11.14.08.25.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 08:25:54 -0800 (PST)
+Date:   Thu, 14 Nov 2019 10:25:54 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: rcar-csi2: Convert bindings to json-schema
+Message-ID: <20191114162554.GA31116@bogus>
+References: <20191108021748.2584486-1-niklas.soderlund+renesas@ragnatech.se>
+ <20191112104110.nxjntjaqudaw2n7x@uno.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <70ba833e-2acc-7b5a-ca29-1ae9476eb0f5@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191112104110.nxjntjaqudaw2n7x@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:34:31AM +0000, Eugen.Hristev@microchip.com wrote:
+On Tue, Nov 12, 2019 at 11:41:10AM +0100, Jacopo Mondi wrote:
+> Hi Niklas,
+>    thanks for the patch
 > 
+> On Fri, Nov 08, 2019 at 03:17:48AM +0100, Niklas Söderlund wrote:
+> > Convert Renesas R-Car MIPI CSI-2 receiver bindings documentation to
+> > json-schema.
+> >
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > ---
+> >  .../bindings/media/renesas,csi2.txt           | 107 ----------
+> >  .../bindings/media/renesas,csi2.yaml          | 200 ++++++++++++++++++
+> >  2 files changed, 200 insertions(+), 107 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/media/renesas,csi2.txt
+> >  create mode 100644 Documentation/devicetree/bindings/media/renesas,csi2.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,csi2.txt b/Documentation/devicetree/bindings/media/renesas,csi2.txt
+> > deleted file mode 100644
+> > index 2da6f60b2b5659f6..0000000000000000
+> > --- a/Documentation/devicetree/bindings/media/renesas,csi2.txt
+> > +++ /dev/null
+> > @@ -1,107 +0,0 @@
+> > -Renesas R-Car MIPI CSI-2
+> > -------------------------
+> > -
+> > -The R-Car CSI-2 receiver device provides MIPI CSI-2 capabilities for the
+> > -Renesas R-Car and RZ/G2 family of devices. It is used in conjunction with the
+> > -R-Car VIN module, which provides the video capture capabilities.
+> > -
+> > -Mandatory properties
+> > ---------------------
+> > - - compatible: Must be one or more of the following
+> > -   - "renesas,r8a774a1-csi2" for the R8A774A1 device.
+> > -   - "renesas,r8a774b1-csi2" for the R8A774B1 device.
+> > -   - "renesas,r8a774c0-csi2" for the R8A774C0 device.
+> > -   - "renesas,r8a7795-csi2" for the R8A7795 device.
+> > -   - "renesas,r8a7796-csi2" for the R8A7796 device.
+> > -   - "renesas,r8a77965-csi2" for the R8A77965 device.
+> > -   - "renesas,r8a77970-csi2" for the R8A77970 device.
+> > -   - "renesas,r8a77980-csi2" for the R8A77980 device.
+> > -   - "renesas,r8a77990-csi2" for the R8A77990 device.
+> > -
+> > - - reg: the register base and size for the device registers
+> > - - interrupts: the interrupt for the device
+> > - - clocks: A phandle + clock specifier for the module clock
+> > - - resets: A phandle + reset specifier for the module reset
+> > -
+> > -The device node shall contain two 'port' child nodes according to the
+> > -bindings defined in Documentation/devicetree/bindings/media/
+> > -video-interfaces.txt. port@0 shall connect to the CSI-2 source. port@1
+> > -shall connect to all the R-Car VIN modules that have a hardware
+> > -connection to the CSI-2 receiver.
+> > -
+> > -- port@0- Video source (mandatory)
+> > -	- endpoint@0 - sub-node describing the endpoint that is the video source
+> > -
+> > -- port@1 - VIN instances (optional)
+> > -	- One endpoint sub-node for every R-Car VIN instance which is connected
+> > -	  to the R-Car CSI-2 receiver.
+> > -
+> > -Example:
+> > -
+> > -	csi20: csi2@fea80000 {
+> > -		compatible = "renesas,r8a7796-csi2";
+> > -		reg = <0 0xfea80000 0 0x10000>;
+> > -		interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
+> > -		clocks = <&cpg CPG_MOD 714>;
+> > -		power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > -		resets = <&cpg 714>;
+> > -
+> > -		ports {
+> > -			#address-cells = <1>;
+> > -			#size-cells = <0>;
+> > -
+> > -			port@0 {
+> > -				#address-cells = <1>;
+> > -				#size-cells = <0>;
+> > -
+> > -				reg = <0>;
+> > -
+> > -				csi20_in: endpoint@0 {
+> > -					reg = <0>;
+> > -					clock-lanes = <0>;
+> > -					data-lanes = <1>;
+> > -					remote-endpoint = <&adv7482_txb>;
+> > -				};
+> > -			};
+> > -
+> > -			port@1 {
+> > -				#address-cells = <1>;
+> > -				#size-cells = <0>;
+> > -
+> > -				reg = <1>;
+> > -
+> > -				csi20vin0: endpoint@0 {
+> > -					reg = <0>;
+> > -					remote-endpoint = <&vin0csi20>;
+> > -				};
+> > -				csi20vin1: endpoint@1 {
+> > -					reg = <1>;
+> > -					remote-endpoint = <&vin1csi20>;
+> > -				};
+> > -				csi20vin2: endpoint@2 {
+> > -					reg = <2>;
+> > -					remote-endpoint = <&vin2csi20>;
+> > -				};
+> > -				csi20vin3: endpoint@3 {
+> > -					reg = <3>;
+> > -					remote-endpoint = <&vin3csi20>;
+> > -				};
+> > -				csi20vin4: endpoint@4 {
+> > -					reg = <4>;
+> > -					remote-endpoint = <&vin4csi20>;
+> > -				};
+> > -				csi20vin5: endpoint@5 {
+> > -					reg = <5>;
+> > -					remote-endpoint = <&vin5csi20>;
+> > -				};
+> > -				csi20vin6: endpoint@6 {
+> > -					reg = <6>;
+> > -					remote-endpoint = <&vin6csi20>;
+> > -				};
+> > -				csi20vin7: endpoint@7 {
+> > -					reg = <7>;
+> > -					remote-endpoint = <&vin7csi20>;
+> > -				};
+> > -			};
+> > -		};
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,csi2.yaml b/Documentation/devicetree/bindings/media/renesas,csi2.yaml
+> > new file mode 100644
+> > index 0000000000000000..a6d2b597c4944693
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/renesas,csi2.yaml
+> > @@ -0,0 +1,200 @@
+> > +# SPDX-License-Identifier: GPL-2.0
 > 
-> On 12.11.2019 15:47, Guenter Roeck wrote:
+> GPL-2.0-only
 > 
-> > 
-> > On 11/11/19 4:13 AM, Eugen.Hristev@microchip.com wrote:
-> >> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>
-> >> Cleanup the macro definitions to use BIT and align with two spaces.
-> >>
-> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> >> ---
-> >> Changes in v3:
-> >> - new patch as requested from review on ML
-> >>
-> >>   drivers/watchdog/at91sam9_wdt.h | 30 +++++++++++++++---------------
-> >>   1 file changed, 15 insertions(+), 15 deletions(-)
-> >>
-> >> diff --git a/drivers/watchdog/at91sam9_wdt.h 
-> >> b/drivers/watchdog/at91sam9_wdt.h
-> >> index 390941c..2ca5fc5 100644
-> >> --- a/drivers/watchdog/at91sam9_wdt.h
-> >> +++ b/drivers/watchdog/at91sam9_wdt.h
-> >> @@ -14,23 +14,23 @@
-> >>   #define AT91_WDT_H
-> >>   #define AT91_WDT_CR        0x00            /* Watchdog Control 
-> >> Register */
-> >> -#define        AT91_WDT_WDRSTT        (1    << 0)        /* Restart */
-> >> -#define        AT91_WDT_KEY        (0xa5 << 24)        /* KEY 
-> >> Password */
-> >> +#define  AT91_WDT_WDRSTT    BIT(0)            /* Restart */
-> > 
-> > Using BIT() requires including linux/bits.h.
-> 
-> 
-> Hi Guenter,
-> 
-> The C files include/will include the bits.h as the drivers use this 
-> definition header, or, you have something else in mind ?
-> 
-You are supposed to include the file where it is used. If the C file
-uses it again, it will need to include it again.
+> > +# Copyright (C) 2019 Renesas Electronics Corp.
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/renesas,csi2.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Renesas R-Car MIPI CSI-2 receiver
+> > +
+> > +maintainers:
+> > +  - Niklas Söderlund <niklas.soderlund@ragnatech.se>
+> > +
+> > +description: |-
+> > +  The R-Car CSI-2 receiver device provides MIPI CSI-2 capabilities for the
+> > +  Renesas R-Car and RZ/G2 family of devices. It is used in conjunction with the
+> > +  R-Car VIN module, which provides the video capture capabilities.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +        - renesas,r8a774a1-csi2 # RZ/G2M
+> > +        - renesas,r8a774b1-csi2 # RZ/G2N
+> > +        - renesas,r8a774c0-csi2 # RZ/G2E
+> > +        - renesas,r8a7795-csi2  # R-Car H3
+> > +        - renesas,r8a7796-csi2  # R-Car M3-W
+> > +        - renesas,r8a77965-csi2 # R-Car M3-N
+> > +        - renesas,r8a77970-csi2 # R-Car V3M
+> > +        - renesas,r8a77980-csi2 # R-Car V3H
+> > +        - renesas,r8a77990-csi2 # R-Car E3
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  ports:
+> > +    type: object
+> > +    description: |-
 
-Guenter
+Drop the literal block when not needed.
 
-> Thanks,
-> Eugen
+> > +      A node containing input and output port nodes with endpoint definitions
+> > +      as documented in
+> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +
+> > +    properties:
+> > +      port@0:
+> > +        type: object
+> > +        description: |-
+> > +          Input port node, single endpoint describing the CSI-2 transmitter.
+> > +
+> > +        properties:
+> > +          reg:
+> > +            const: 0
+> > +
+> > +          endpoint:
+> > +            type: object
+> > +
+> > +            properties:
+> > +              clock-lanes:
+> > +                maxItems: 1
 > 
-> > 
-> >> +#define  AT91_WDT_KEY        (0xa5 << 24)        /* KEY Password */
-> >>   #define AT91_WDT_MR        0x04            /* Watchdog Mode Register */
-> >> -#define        AT91_WDT_WDV        (0xfff << 0)        /* Counter 
-> >> Value */
-> >> -#define            AT91_WDT_SET_WDV(x)    ((x) & AT91_WDT_WDV)
-> >> -#define        AT91_WDT_WDFIEN        (1     << 12)        /* Fault 
-> >> Interrupt Enable */
-> >> -#define        AT91_WDT_WDRSTEN    (1     << 13)        /* Reset 
-> >> Processor */
-> >> -#define        AT91_WDT_WDRPROC    (1     << 14)        /* Timer 
-> >> Restart */
-> >> -#define        AT91_WDT_WDDIS        (1     << 15)        /* Watchdog 
-> >> Disable */
-> >> -#define        AT91_WDT_WDD        (0xfff << 16)        /* Delta 
-> >> Value */
-> >> -#define            AT91_WDT_SET_WDD(x)    (((x) << 16) & AT91_WDT_WDD)
-> >> -#define        AT91_WDT_WDDBGHLT    (1     << 28)        /* Debug 
-> >> Halt */
-> >> -#define        AT91_WDT_WDIDLEHLT    (1     << 29)        /* Idle 
-> >> Halt */
-> >> +#define  AT91_WDT_WDV        (0xfff << 0)        /* Counter Value */
-> >> +#define  AT91_WDT_SET_WDV(x)    ((x) & AT91_WDT_WDV)
-> >> +#define  AT91_WDT_WDFIEN    BIT(12)        /* Fault Interrupt Enable */
-> >> +#define  AT91_WDT_WDRSTEN    BIT(13)        /* Reset Processor */
-> >> +#define  AT91_WDT_WDRPROC    BIT(14)        /* Timer Restart */
-> >> +#define  AT91_WDT_WDDIS        BIT(15)        /* Watchdog Disable */
-> >> +#define  AT91_WDT_WDD        (0xfff << 16)        /* Delta Value */
-> >> +#define  AT91_WDT_SET_WDD(x)    (((x) << 16) & AT91_WDT_WDD)
-> >> +#define  AT91_WDT_WDDBGHLT    BIT(28)        /* Debug Halt */
-> >> +#define  AT91_WDT_WDIDLEHLT    BIT(29)        /* Idle Halt */
-> >> -#define AT91_WDT_SR        0x08            /* Watchdog Status 
-> >> Register */
-> >> -#define        AT91_WDT_WDUNF        (1 << 0)        /* Watchdog 
-> >> Underflow */
-> >> -#define        AT91_WDT_WDERR        (1 << 1)        /* Watchdog 
-> >> Error */
-> >> +#define AT91_WDT_SR        0x08        /* Watchdog Status Register */
-> >> +#define  AT91_WDT_WDUNF        BIT(0)        /* Watchdog Underflow */
-> >> +#define  AT91_WDT_WDERR        BIT(1)        /* Watchdog Error */
-> >>   #endif
-> >>
-> > 
+> Does the R-Car CSI-2 receiver allows changing swapping the clock lane?
+> I see it allows swapping data lanes, but not the clock lane, through
+> register LSWAP.
+> 
+> Several Gen3 DTS specify that property, if you agree it could be
+> removed or you either fix the DTS as well by removing it, or you keep
+> the property here as optional
+> 
+> I however see that the clock continuous mode could be handled through
+> the ICLK_NONSTOP bit of LINKCNT register. Should the
+> clock-noncontinuous property be listed here ?
+> 
+> > +
+> > +              data-lanes:
+> > +                maxItems: 1
+> > +
+> > +              remote-endpoint:
+> > +                maxItems: 1
+
+Not an array. Just 'true' is sufficient.
+
+> > +
+> > +            required:
+> > +              - clock-lanes
+> > +              - data-lanes
+> > +              - remote-endpoint
+> > +
+> > +            additionalProperties: false
+> > +
+> > +        additionalProperties: false
+> 
+> I'm not sure about the additionalProperties intended use, but you seem
+> to place it in every node, something other bindings do not seems to
+> do.
+
+It means any other property not listed here will be an error. Simple 
+bindings should have it, but it doesn't work for ones which include 
+another schema file.
+
+> > +
+> > +      port@1:
+> > +        type: object
+> > +        description: |-
+> > +          Output port node, multiple endpoints describing all the R-Car VIN
+> > +          modules connected the CSI-2 receiver.
+> > +
+> > +        properties:
+> > +          '#address-cells':
+> > +            const: 1
+> > +
+> > +          '#size-cells':
+> > +            const: 0
+> > +
+> > +          reg:
+> > +            const: 1
+> > +
+> > +        patternProperties:
+> > +          "^endpoint@[0-9]+$":
+> 
+> Doesn't this allow endpoint@99 ? Should this be limited to the maxium
+> number of VINs  (16 if I'm not mistaken) ?
+
+And it is also decimal instead of hex.
+
+> 
+> 
+> > +            type: object
+> > +
+> > +            properties:
+> > +              reg:
+> > +                maxItems: 1
+> > +
+> > +              remote-endpoint:
+> > +                maxItems: 1
+> > +
+> > +            required:
+> > +              - reg
+> > +              - remote-endpoint
+> > +
+> > +            additionalProperties: false
+> > +
+> > +        additionalProperties: false
+> 
+> The textual bindings describe port@1 as optional but port@0 as
+> mandatory. If this is correct shouldn't we have it listed here as
+> required ?
+> 
+> Thanks
+>    j
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - power-domains
+> > +  - resets
+> > +  - ports
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/power/r8a7796-sysc.h>
+> > +
+> > +    csi20: csi2@fea80000 {
+> > +            compatible = "renesas,r8a7796-csi2";
+> > +            reg = <0 0xfea80000 0 0x10000>;
+> > +            interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
+> > +            clocks = <&cpg CPG_MOD 714>;
+> > +            power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > +            resets = <&cpg 714>;
+> > +
+> > +            ports {
+> > +                    #address-cells = <1>;
+> > +                    #size-cells = <0>;
+> > +
+> > +                    port@0 {
+> > +                            reg = <0>;
+> > +
+> > +                            csi20_in: endpoint {
+> > +                                    clock-lanes = <0>;
+> > +                                    data-lanes = <1>;
+> > +                                    remote-endpoint = <&adv7482_txb>;
+> > +                            };
+> > +                    };
+> > +
+> > +                    port@1 {
+> > +                            #address-cells = <1>;
+> > +                            #size-cells = <0>;
+> > +
+> > +                            reg = <1>;
+> > +
+> > +                            csi20vin0: endpoint@0 {
+> > +                                    reg = <0>;
+> > +                                    remote-endpoint = <&vin0csi20>;
+> > +                            };
+> > +                            csi20vin1: endpoint@1 {
+> > +                                    reg = <1>;
+> > +                                    remote-endpoint = <&vin1csi20>;
+> > +                            };
+> > +                            csi20vin2: endpoint@2 {
+> > +                                    reg = <2>;
+> > +                                    remote-endpoint = <&vin2csi20>;
+> > +                            };
+> > +                            csi20vin3: endpoint@3 {
+> > +                                    reg = <3>;
+> > +                                    remote-endpoint = <&vin3csi20>;
+> > +                            };
+> > +                            csi20vin4: endpoint@4 {
+> > +                                    reg = <4>;
+> > +                                    remote-endpoint = <&vin4csi20>;
+> > +                            };
+> > +                            csi20vin5: endpoint@5 {
+> > +                                    reg = <5>;
+> > +                                    remote-endpoint = <&vin5csi20>;
+> > +                            };
+> > +                            csi20vin6: endpoint@6 {
+> > +                                    reg = <6>;
+> > +                                    remote-endpoint = <&vin6csi20>;
+> > +                            };
+> > +                            csi20vin7: endpoint@7 {
+> > +                                    reg = <7>;
+> > +                                    remote-endpoint = <&vin7csi20>;
+> > +                            };
+> > +                    };
+> > +            };
+> > +    };
+> > --
+> > 2.23.0
+> >
+
+
