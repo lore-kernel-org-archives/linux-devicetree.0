@@ -2,105 +2,168 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE634C43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D36FC43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B06F2070E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF692070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 14:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QzTOvJsU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AVxDQJqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfKNOsf (ORCPT
+        id S1727050AbfKNOuC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 09:48:35 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55339 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfKNOse (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 09:48:34 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b11so5954666wmb.5;
-        Thu, 14 Nov 2019 06:48:32 -0800 (PST)
+        Thu, 14 Nov 2019 09:50:02 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45158 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfKNOuB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 09:50:01 -0500
+Received: by mail-vs1-f68.google.com with SMTP id n9so4003391vsa.12
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 06:49:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2B2LpipVnpcikIQT0x1upjHHHGv7Y9LmS9XCwDXMgAk=;
-        b=QzTOvJsUoxtW+SPuB8afNzO6eZZrc2SOdfCV0ACcBTuBEAcMOXqLF/nskjVebVDkyS
-         BX3at3Hcvn7tTSNiAiodto6NtTirEPfXAcqEzetWCGqFahNxJNxJlV+84fzykRP6BeZF
-         lh/gYiDte4hbIC6KK94Twg9ue+ejEsjUPBnTRRHlz98c/1MfkWcQcfMYf8IoioHMFwR7
-         iSzpKj7p7VaPlkAgRhxVRedPzdDQWI3twMr320zX6QUgqWqiRstvHzYK/0VLuFZj7O8G
-         8eJvGTjMoggxwYiwqhFotNXMqwRDn817oyWRxhb2GnBKuUSW+e6f022GCX9tC0fkQ/5l
-         kLjA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=O7wapv4EE4G+0Gc1i2jjis8KTbTPULbvSuyjxNMdOtM=;
+        b=AVxDQJqsoylkSQmx08lzQrUBZCxelJXskce1tNwhtJqrv1m/adiDXhfzeb/LLtfBmP
+         9J1MdAGXQYOU9lve3TdlhlSPCWYIik4z3gbcbniH/2ZP/ZXc2kJetKj4I6hyBbDXALnt
+         iKgDNTMw7gO1UcDjUwYeFQTYgymS3hwkbr6BYeprE9le1g2rtD7363gMpJaobyJD2GCh
+         gPfFepXZyZOTSZe8PbbwFXolc3mrqQPUCjmh109X07tuR9ew5b1b8Jf0XUoKppFBALdL
+         lykqOOtEIukCrxxKeAwPCpErBEAHgDQIf7n8jAKX4QF8oNgh1YmEKac+5Hot/3WZQEHA
+         V5uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2B2LpipVnpcikIQT0x1upjHHHGv7Y9LmS9XCwDXMgAk=;
-        b=WLMBMgqMAJ6bMYy//6+/lzPBnOqn5reeLBf8nvLKXmtekF4Qsvp1zrNIFoqqXvXqBr
-         3jhY+P/1Mv6S+MKXjOKO0BgZH3yuAYGrB3neJSoI37JwiVZnkLW8Nmh5VXIKDl/Rj/B3
-         jTaIuqOyNhvVbzSFZbwQoKhf/Xf+1/VMcHLJW4eFk9ZYO6c/qvQRxBP+HQAyz5+ySFwA
-         El7FcJG9EZIMlePMWCLOWvtHAfA32+C2acaQSANab68Wf6/1PW1GquqPvUTODCUexwRA
-         CfpdAri/FXMfGkCHSbF9Msl9OrZ6O73KFJUNELscByKfe972Laohc6k4FdaTySu9D4rt
-         U2zA==
-X-Gm-Message-State: APjAAAXjMNoXopg/1U3bW2K4tfXK5U2L+Wfog1lFx1yTGvJxxk1Izo1B
-        oS/l+DZyjsQtap1pJA3CiXk=
-X-Google-Smtp-Source: APXvYqwVWKJ+CPBpdBrfIygTU0IjG98m6xBqS5XBMsByPkTK63A8CefzDxud1WiLu/6YFlckiteNRA==
-X-Received: by 2002:a1c:650b:: with SMTP id z11mr8196107wmb.149.1573742912178;
-        Thu, 14 Nov 2019 06:48:32 -0800 (PST)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id v9sm7153223wrs.95.2019.11.14.06.48.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 06:48:31 -0800 (PST)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 1/3] dt-bindings: crypto: add new compatible for A33 SecuritySystem
-Date:   Thu, 14 Nov 2019 15:48:10 +0100
-Message-Id: <20191114144812.22747-2-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191114144812.22747-1-clabbe.montjoie@gmail.com>
-References: <20191114144812.22747-1-clabbe.montjoie@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O7wapv4EE4G+0Gc1i2jjis8KTbTPULbvSuyjxNMdOtM=;
+        b=S1bHPRtjuF0APAtIlU4gwpTzAwO4kdO4TrDQPmiC47iQpv4EylWNt4zmpIdFqxZ2Hy
+         SbpVCrMyQeQw31gpMxSLoMaFiXejx+z6XyOUOrIW+hUgr2LHDfguPdQ7gH1G1BIbTpDf
+         412hP1kxLz/R6nyar8TCqV0J4WrQj3nUKuBSDbBRdtDzoiDtiei0CG3QVE2Km+wNWdET
+         X+1YKTtb6js8N89HmgfH0InOFBRA4VQbj757rae3HDH7mzrtmL2strNnYHWdGUq484uS
+         GS3Evu+d/bII7r5ycc3SmeTMtZauqGU9mzHvhDahghLYmrvI3BTsf8cKrFvxPfTO8k/H
+         ooIw==
+X-Gm-Message-State: APjAAAVuI/RbMzl4kElMrZ/8gfAA11d9TKKFckl+XmpXMtEjquvgl9Iy
+        UlsCgmBvYG9OkaOHluYtn1v0K1rNG/EkbdIRKvUyLA==
+X-Google-Smtp-Source: APXvYqzcyR0y7F+ha4XEbI+5EzDrdrJyK1AZpIJppA2pHa1tvpOnu8Gvhe0K17/wE+Byt8XJXfmdlVGMNecJ5wVu/x0=
+X-Received: by 2002:a05:6102:36d:: with SMTP id f13mr6134394vsa.34.1573742998082;
+ Thu, 14 Nov 2019 06:49:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191011131502.29579-1-ludovic.Barre@st.com> <20191011131502.29579-2-ludovic.Barre@st.com>
+ <CAPDyKFqE09nqdev_qewwNzjjUuhm0UUC03tgvY=ZukYY4az7wg@mail.gmail.com> <d8d82f39-319b-c8f8-255a-a02a81980671@st.com>
+In-Reply-To: <d8d82f39-319b-c8f8-255a-a02a81980671@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 14 Nov 2019 15:49:21 +0100
+Message-ID: <CAPDyKFpvOdwnwNa94ppF_Gum26ML52oeXDSeR1qKtSaH_wQU+g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mmc: add unstuck function if host is in deadlock state
+To:     Ludovic BARRE <ludovic.barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The A33 SecuritySystem has a difference with all other SS, it give SHA1 digest
-directly in BE.
-This difference need to be handlded by the driver and so need a new
-compatible.
+On Wed, 13 Nov 2019 at 17:54, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>
+>
+>
+> Le 10/21/19 =C3=A0 3:35 PM, Ulf Hansson a =C3=A9crit :
+> > On Fri, 11 Oct 2019 at 15:15, Ludovic Barre <ludovic.Barre@st.com> wrot=
+e:
+> >>
+> >> From: Ludovic Barre <ludovic.barre@st.com>
+> >>
+> >> After a request a host may be in deadlock state, and wait
+> >> a specific action to unstuck the hardware block before
+> >> re-sending a new command.
+> >
+> > Rather than talking about "unstuck" and "deadlock", how about instead
+> > describing that an MMC controller, may end up in an non-functional
+> > state hanging on something. Then to allow it to serve new requests it
+> > needs to be reset.
+> >
+>
+> Ok, deadlock naming is perhaps too stronght and scary.
+>
+> >>
+> >> This patch adds an optional callback mmc_hw_unstuck which
+> >> allows the host to unstuck the controller. In order to avoid
+> >> a critical context, this callback must be called when the
+> >> request is completed. Depending the mmc request, the completion
+> >> function is defined by mrq->done and could be in block.c or core.c.
+> >
+> > I think it's important to state exactly what is expected from the core
+> > perspective, by the mmc host driver when it calls this new host ops.
+> > We need to clarify that.
+> >
+> >>
+> >> mmc_hw_unstuck is called if the host returns an cmd/sbc/stop/data
+> >> DEADLK error.
+> >
+> > To me, this approach seems a bit upside-down. Although, I have to
+> > admit that I haven't thought through this completely yet.
+> >
+> > The thing is, to make this useful for host drivers in general, I
+> > instead think we need to add timeout to each request that the core
+> > sends to the host driver. In other words, rather than waiting forever
+> > in the core for the completion variable to be set, via calling
+> > wait_for_completion() we could call wait_for_completion_timeout(). The
+> > tricky part is to figure out what timeout to use for each request.
+> > Perhaps that is even why you picked the approach as implemented in
+> > @subject patch instead?
+>
+> On STM32 SDMMC variant, If datatimeout occurs on R1B request the Data
+> Path State Machine stays in busy and only the DPSM is non-functional.
+> The hardware block waits a software action to abort the DPSM.
+>
+> Like the CPSM stay alive, the framework can sent some requests
+> (without data, example cmd13:status) before to had this
+> timeout issue.
+>
+> POV framework I understand the possibility to have a completion_timeout,
+> for more safety. But for this specific sdmmc case, I'm not fan, because
+> the completion timeout error will occur several requests after the real
+> issue (which put the DPSM non-functional). when the completion timeout
+> occurs we can't know if it's due to R1B timeout or an other issue.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- .../devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+Right, I see what you are saying. So let's drop the approach suggested
+in $subject series.
 
-diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-index 80b3e7350a73..ae6dcfa795d1 100644
---- a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-+++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-@@ -23,6 +23,9 @@ properties:
-       - items:
-         - const: allwinner,sun7i-a20-crypto
-         - const: allwinner,sun4i-a10-crypto
-+      - items:
-+        - const: allwinner,sun8i-a33-crypto
-+        - const: allwinner,sun4i-a10-crypto
- 
-   reg:
-     maxItems: 1
--- 
-2.23.0
+>
+> To resolve the SDMMC's specificity, I can proposed you to add a threaded
+> irq in mmci drivers to abort the DPSM and terminate the request.
 
+Okay, so the threaded IRQ handler is needed, because the reset
+operation may sleep (can't be executed in atomic context). Right?
+
+That should work, but... let's move the discussion to that patch instead.
+
+>
+> >
+> > Anyway, the typical scenario I see, is that the host driver is
+> > hanging, likely waiting for an IRQ that never get raised. So, unless
+> > it implements it own variant of a "request timeout" mechanism, it
+> > simple isn't able to call mmc_request_done() to inform the core about
+> > that the request has failed.
+> >
+> > For comments to the code, I defer that to the next step, when we have
+> > agreed on the way forward.
+> >
+> > Kind regards
+> > Uffe
+> >
+
+Kind regards
+Uffe
