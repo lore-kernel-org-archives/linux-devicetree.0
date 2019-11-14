@@ -2,128 +2,110 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571BFC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A4DC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30AD92071F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573749725;
-	bh=vtbCclPT+zYqUalm1ApV+FNGPcRf/b9M6eu8ZE4q16Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pvQqK7I5q/DSG4HoLXXzGx6dZaLgouoFmYFzAQ9TcdiCMAg4tXcdBaiYFQGrRxEQI
-	 ob/mt7G8ysmJavlYrOFW/mzl0QSOt8NJThrbSUMjvpd40Pqrc0n/PhFtmHrn/REF0+
-	 eJFtOIzwolByZVPUKOmoLZYA3MkkWiN/ogd9NUZ4=
+	by mail.kernel.org (Postfix) with ESMTP id 082A6206DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:44:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LpuWBohR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKNQmE (ORCPT
+        id S1726505AbfKNQof (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:42:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfKNQmE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:42:04 -0500
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD51920727;
-        Thu, 14 Nov 2019 16:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573749722;
-        bh=vtbCclPT+zYqUalm1ApV+FNGPcRf/b9M6eu8ZE4q16Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eSe0IvX2y9Wj/36cOsbQWZo2r/flZoR95ZUx9zbAQ72DT7NfJH7j3KTR29VnrqtoH
-         jnNw5uqT7e0Gds5meXc+jFJjbsMH0XhlTSeT7VxkLcBboqkO0SmGsrUM7gUfqQn5RQ
-         w/A9jtP+kVlgVy9Aigrw0Nm04tD72R3d5391n1hA=
-Received: by mail-qt1-f170.google.com with SMTP id r20so7412342qtp.13;
-        Thu, 14 Nov 2019 08:42:02 -0800 (PST)
-X-Gm-Message-State: APjAAAVEUW1bwnWbEbl3PzqcTQEuIkJZyW35KEdkZfhB0mIIxhEUlXQ/
-        TIqnVXM3JVwufYFat7hEdtYzIWvlrz3+33l7MQ==
-X-Google-Smtp-Source: APXvYqxjuNP7BfYPb5x+ylRHTKdxw88/n1phCYuux3ImKi057RYvcMQ05BWyQKmncaEprsWM0Zap0QYGz4BodN4GT7w=
-X-Received: by 2002:ac8:3094:: with SMTP id v20mr9302910qta.110.1573749721974;
- Thu, 14 Nov 2019 08:42:01 -0800 (PST)
+        Thu, 14 Nov 2019 11:44:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32845 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfKNQof (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 11:44:35 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h27so4141594pgn.0
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 08:44:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=z9i2SqlCSPTf1RDuhk0bEKcTfgK1Ck/QMzmHGPOu1Rs=;
+        b=LpuWBohR+eI58I69S8JmazOQI7uK9MdeqB/qCG3vB+6ZiitoDNR44CQn1G5NnP05is
+         kS44gFry4VUCjQ4bpPpQ5drGUpUrltx6aZPKH1MGOP47ghIN2Zhre0nsu3kwrj5rv1xc
+         xLkZSz9o2Bn6RaTPa7CDZJTt3yOOutG0JPtwc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=z9i2SqlCSPTf1RDuhk0bEKcTfgK1Ck/QMzmHGPOu1Rs=;
+        b=IlD9RbFwb2eNK9o+p5lrQbHuYMmy4drCbqVXmuamLkScy0rZ/1UKKmJFkyZuj8x1/w
+         tbcmgmYB8EkUoXYmhlXQ9e6Dn5BoyBweG0DSTpzjvLh8WUhHgbkmG48LSX4NgpF7aOXc
+         eFC2hplnThkQlbKZSM+QJg+CRPyvFXe+1SaGc3Z+79NFi3msbeQPbhWe5GISL7JJDic3
+         xbViLufKO8sUSAyrueA22Hsa7LCWtnVF5fXW3Ffzzu7w0D+Lb+zYvzBwlKTn1ynn8mpE
+         HdQYreqJQq72txxEC3//WxmR9h1H9Z8qlQSkFl4nxI5yyz5ZjbB7nQ73dCuWSrvRR2jo
+         1lew==
+X-Gm-Message-State: APjAAAWAE27zf0ZmhNEPDkvaRpqdoiVZBA5RUbXJbJBjXP+3fGj1S6Wp
+        rVgukS+viJxyBvmwbg8zYgxANKxFic8=
+X-Google-Smtp-Source: APXvYqxUHBzT+KizgsIBpqIVYFjEIgCJMN0NbhTOv7Ag5teVD4a5wX6WoGifevIQaDF2Amn0VoWyRw==
+X-Received: by 2002:a17:90b:1243:: with SMTP id gx3mr13315314pjb.98.1573749874512;
+        Thu, 14 Nov 2019 08:44:34 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 16sm8387255pfc.21.2019.11.14.08.44.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 08:44:33 -0800 (PST)
+Message-ID: <5dcd8471.1c69fb81.aee46.634e@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191030173216.5993-1-krzk@kernel.org> <20191105194257.GA16066@bogus>
- <20191114125923.GA3084@kozik-lap>
-In-Reply-To: <20191114125923.GA3084@kozik-lap>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 14 Nov 2019 10:41:50 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJCps_s1OGt2SvPa4uBj9EQp0ZqyeHVw8fMR+rSSVh9ow@mail.gmail.com>
-Message-ID: <CAL_JsqJCps_s1OGt2SvPa4uBj9EQp0ZqyeHVw8fMR+rSSVh9ow@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: power: Convert Generic Power Domain
- bindings to json-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573733569-25940-2-git-send-email-sanm@codeaurora.org>
+References: <1573733569-25940-1-git-send-email-sanm@codeaurora.org> <1573733569-25940-2-git-send-email-sanm@codeaurora.org>
+Cc:     =linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add USB related nodes
+User-Agent: alot/0.8.1
+Date:   Thu, 14 Nov 2019 08:44:32 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 6:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Tue, Nov 05, 2019 at 01:42:58PM -0600, Rob Herring wrote:
-> > On Wed, 30 Oct 2019 18:32:15 +0100, Krzysztof Kozlowski wrote:
-> > > Convert Generic Power Domain bindings to DT schema format using
-> > > json-schema.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> > >
-> > > ---
-> > >
-> > > Changes since v2:
-> > > 1. Keep description of consumers in power-domain.txt,
-> > > 2. Rename power_domain.txt to power-domain.txt,
-> > > 3. Indent example with four spaces (more readable).
-> > >
-> > > Changes since v1:
-> > > 1. Select all nodes for consumers,
-> > > 2. Remove from consumers duplicated properties with dt-schema,
-> > > 3. Fix power domain pattern,
-> > > 4. Remove unneeded types.
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > ---
-> > >  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
-> > >  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
-> > >  .../bindings/arm/freescale/fsl,scu.txt        |   2 +-
-> > >  .../bindings/clock/renesas,cpg-mssr.txt       |   2 +-
-> > >  .../bindings/clock/ti/davinci/psc.txt         |   2 +-
-> > >  .../firmware/nvidia,tegra186-bpmp.txt         |   2 +-
-> > >  .../bindings/power/amlogic,meson-gx-pwrc.txt  |   2 +-
-> > >  .../devicetree/bindings/power/fsl,imx-gpc.txt |   2 +-
-> > >  .../bindings/power/fsl,imx-gpcv2.txt          |   2 +-
-> > >  .../{power_domain.txt => power-domain.txt}    |  95 +------------
-> > >  .../bindings/power/power-domain.yaml          | 133 ++++++++++++++++++
-> > >  .../bindings/power/renesas,sysc-rmobile.txt   |   2 +-
-> > >  .../bindings/power/xlnx,zynqmp-genpd.txt      |   2 +-
-> > >  .../bindings/soc/bcm/brcm,bcm2835-pm.txt      |   2 +-
-> > >  .../bindings/soc/mediatek/scpsys.txt          |   2 +-
-> > >  .../bindings/soc/ti/sci-pm-domain.txt         |   2 +-
-> > >  MAINTAINERS                                   |   2 +-
-> > >  17 files changed, 149 insertions(+), 109 deletions(-)
-> > >  rename Documentation/devicetree/bindings/power/{power_domain.txt => power-domain.txt} (51%)
-> > >  create mode 100644 Documentation/devicetree/bindings/power/power-domain.yaml
-> > >
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> The patches should apply cleanly in top of your tree so maybe you can
-> pick them up?
+Quoting Sandeep Maheswaram (2019-11-14 04:12:49)
+> Add nodes for DWC3 USB controller, QMP and QUSB PHYs.
+>=20
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 
-I didn't on this one because it touches a lot of files. Though on
-second thought, they are all across the tree, so I might as well apply
-them.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Rob
+One minor nit below.
+
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
+> index 666e9b9..82f0b3a 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -911,6 +924,98 @@
+>                         status =3D "disabled";
+>                 };
+> =20
+> +               usb_1_hsphy: phy@88e3000 {
+> +                       compatible =3D "qcom,sc7180-qusb2-phy";
+> +                       reg =3D <0 0x088e3000 0 0x400>;
+> +                       status =3D "disabled";
+> +                       #phy-cells =3D <0>;
+> +                       clocks =3D <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+> +                                <&rpmhcc RPMH_CXO_CLK>;
+> +                       clock-names =3D "cfg_ahb","ref";
+
+Add a space after that comma please.
+
+> +                       resets =3D <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+> +
+> +                       nvmem-cells =3D <&qusb2p_hstx_trim>;
+> +               };
+> +
