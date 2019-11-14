@@ -2,228 +2,211 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE59DC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B60C43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB3E2070E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538E52070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dban84Ak"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="pSyCIHS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKNPKA (ORCPT
+        id S1726969AbfKNPQW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:10:00 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:34050 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfKNPJ7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 10:09:59 -0500
-Received: by mail-vs1-f67.google.com with SMTP id y23so4098196vso.1
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 07:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xnl8/R+wC38rXwVuF4Uv1hht9TdtUwdSGAq6WJK/Inw=;
-        b=Dban84AkznJz4/Lo/AGf01Og1BxBmDR+H65oFtBjz52lqptwVFpC1gWv3V8jYPsBpI
-         As6k5VcWLVCOIMCyBkzaCesd6pKtXjMeU6xbf4qcYJE1Qu/4yEHTYA3noX4RsOZSYgzQ
-         STXXzW7X7w1gqLjdSnPUTzLpPcD3RkTvrBnCnijnCOcwaH2+t+zC6dkaffiGxkBH4la2
-         bHVElB+VRghkDSDaKSct8oDhHUG9KHGEmEU6DPLHRuNhnio0uzkswhzJGchV1rDCZlAn
-         J7THWdPWIjq42YLCCN+wFYb8fc/vV6/6nKM6UIBu6E+u8QHgnd4RPJyWyKV4TEYdkOhV
-         jIJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xnl8/R+wC38rXwVuF4Uv1hht9TdtUwdSGAq6WJK/Inw=;
-        b=GtvmpkpXfVmmRYsAgfGwJUTACjFWRrXk0KIxnFh3jOcAr/6PJY+x0TMQx3cbClMJHR
-         64M4ZSifOfXvo+PqwUY6Yojn8soZsSTB/votChrTSqv6Re+S0bZmoOobvXr6PrhypE+z
-         fZDJpKtlB6cUWe87I5lnr6DirkKNTtpIPapx3mlasasG0cmUD6iHaoIe8FyVgsppmb9g
-         vxG55BeqPuwNsIaDUbzsSMdXDMyRLbXw4s2h1MQobTECOTPrLM7wn5troG6yW3xMzjC0
-         Ny9wSsO+XzrLj1nwEzp0LBRMxA8MU0RFrXf3/DU8h2gUCA0PHfYWRzHDBkvaVsIxIj3p
-         nIVg==
-X-Gm-Message-State: APjAAAX3whpax8XXA7HXhTFmW3T/m/HNyxGtda1gJnQREqq5kwkIR1O8
-        0dn7lrh5/4iitlLUeFRMdEd7zMVVovQIxgtuiXV0UQ==
-X-Google-Smtp-Source: APXvYqxtziN/hu01bi+v1OPZ/nveSSQBkA3nNdrugi9zOjFDw+spxc18pADtGTWNLmf/e/FtNr359aBj6yMsZNnsg90=
-X-Received: by 2002:a67:2087:: with SMTP id g129mr5900116vsg.191.1573744198308;
- Thu, 14 Nov 2019 07:09:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20191113172514.19052-1-ludovic.Barre@st.com>
-In-Reply-To: <20191113172514.19052-1-ludovic.Barre@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 14 Nov 2019 16:09:22 +0100
-Message-ID: <CAPDyKFooSJUn6UCE6QkFmJOCovm00ehz_nAPbiNQM3AcJT_bJQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mmc: mmci: add threaded irq to abort DPSM of
- non-functional state
-To:     Ludovic Barre <ludovic.Barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thu, 14 Nov 2019 10:16:22 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:23193 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfKNPQW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 10:16:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573744577;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=dIdO6+wWmfeQm+EP9ocIN+ER7iLsR+gearCu29RvDj8=;
+        b=pSyCIHS8/1KAKUVF1Jiyz1A47gb8fTEjSqtwUEo7ExOs/5Fojli+GIOemZfPtJshkm
+        NOPgUius99rQk5SvaDJFOSAeKVpeNISEZYsWGgLew78IjpfNtNhgJta6uw1Q2j0zZZaz
+        +deiCAxzmTmP/A7bBXPAjs5Zy00FqK1IaG2dQ1R4xcsAruzTb/IfQoBEI4DlInxUKwBZ
+        bcjxIFs9mF1odJdj9gKUV7Vf/HNfWZFoknnySx/ggnevKH2P2bQqzEpR5PK2sigsCcVG
+        lBpIuhJ33KrsSvZKyfDXzormoy4NTJE9m8g+oGP7+zXALJ2qPaMHytpV5dSgk3PbVIPZ
+        XbIg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCbXA4F8vU="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id L09db3vAEFFiEyY
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 14 Nov 2019 16:15:44 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v3 00/12] OpenPandora: make wl1251 connected to mmc3 sdio port of OpenPandora work again
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CAPDyKFrntf2Kd9Zf7uxRCUk_OrKD8B3xOKmvPaf04X21L5HwWA@mail.gmail.com>
+Date:   Thu, 14 Nov 2019 16:15:44 +0100
+Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
         DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5F5A5FC0-8F91-4D5B-9EF6-AF36FE38B588@goldelico.com>
+References: <cover.1573122644.git.hns@goldelico.com> <CAPDyKFrntf2Kd9Zf7uxRCUk_OrKD8B3xOKmvPaf04X21L5HwWA@mail.gmail.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 Nov 2019 at 18:25, Ludovic Barre <ludovic.Barre@st.com> wrote:
->
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> If datatimeout occurs on R1B request, the Data Path State Machine stays
-> in busy and is non-functional. Only a reset aborts the DPSM.
+Hi Ulf,
 
-Please clarify/extend this information to tell that this is for the
-variant, that keeps DPSM enabled and uses the data timer while sending
-a CMD12. Or something along those lines.
+> Am 14.11.2019 um 15:18 schrieb Ulf Hansson <ulf.hansson@linaro.org>:
+>=20
+> On Thu, 7 Nov 2019 at 11:31, H. Nikolaus Schaller <hns@goldelico.com> =
+wrote:
+>>=20
+>>=20
+>> * add a revisit note for special wl1251 handling code because it =
+should
+>>  be solved more generic in mmc core - suggested by Ulf Hansson =
+<ulf.hansson@linaro.org>
+>> * remove init_card callback from platform_data/hsmmc-omap.h - =
+suggested by Ulf Hansson <ulf.hansson@linaro.org>
+>> * remove obstructive always-on for vwlan regulator - suggested by Ulf =
+Hansson <ulf.hansson@linaro.org>
+>> * rename DT node - suggested by Rob Herring <robh@kernel.org>
+>> * fix ARM: dts: subject prefix - suggested by Tony Lindgren =
+<tony@atomide.com>
+>> * also remove omap2_hsmmc_info and obc-y line in Makefile - suggested =
+by Tony Lindgren <tony@atomide.com>
+>=20
+> No further comments from my side. Let's just agree on how to deal with
+> the ti,power-gpio, then I can apply this.
 
->
-> Like a reset must be outside of critical section, this patch adds
+I'd say it can be a separate patch since it does not fix the Pandora
+issues, but is a new and independent optimization.
 
-/s/critical section/atomic context
+And in case someone complains and uses it for some out-of tree purpose
+it can be discussed or even be reverted easier if it is a separate =
+patch.
 
-> threaded irq function to release state machine. In this case,
-> the mmc_request_done is called at the end of threaded irq and
-> skipped into irq handler.
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.c | 44 ++++++++++++++++++++++++++++++++++++-----
->  drivers/mmc/host/mmci.h |  1 +
->  2 files changed, 40 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 40e72c30ea84..ec6e249c87ca 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -556,6 +556,9 @@ static void mmci_dma_error(struct mmci_host *host)
->  static void
->  mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
->  {
-> +       if (host->irq_action == IRQ_WAKE_THREAD)
-> +               return;
-> +
->         writel(0, host->base + MMCICOMMAND);
->
->         BUG_ON(host->data);
-> @@ -1321,6 +1324,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->         } else if (host->variant->busy_timeout && busy_resp &&
->                    status & MCI_DATATIMEOUT) {
->                 cmd->error = -ETIMEDOUT;
-> +               host->irq_action = IRQ_WAKE_THREAD;
->         } else {
->                 cmd->resp[0] = readl(base + MMCIRESPONSE0);
->                 cmd->resp[1] = readl(base + MMCIRESPONSE1);
-> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->  {
->         struct mmci_host *host = dev_id;
->         u32 status;
-> -       int ret = 0;
->
->         spin_lock(&host->lock);
-> +       host->irq_action = IRQ_HANDLED;
->
->         do {
->                 status = readl(host->base + MMCISTATUS);
-> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->                 if (host->variant->busy_detect_flag)
->                         status &= ~host->variant->busy_detect_flag;
->
-> -               ret = 1;
->         } while (status);
->
->         spin_unlock(&host->lock);
->
-> -       return IRQ_RETVAL(ret);
-> +       return host->irq_action;
-> +}
-> +
-> +/*
-> + * mmci_irq_threaded is call if the mmci host need to release state machines
-> + * before to terminate the request.
-> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
-> + * in busy and is non-functional. Only a reset can to abort the DPSM.
-> + */
-> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
-> +{
-> +       struct mmci_host *host = dev_id;
-> +       unsigned long flags;
-> +
-> +       if (host->rst) {
-> +               reset_control_assert(host->rst);
-> +               udelay(2);
-> +               reset_control_deassert(host->rst);
-> +       }
-> +
-> +       spin_lock_irqsave(&host->lock, flags);
-> +       writel(host->clk_reg, host->base + MMCICLOCK);
-> +       writel(host->pwr_reg, host->base + MMCIPOWER);
-> +       writel(MCI_IRQENABLE | host->variant->start_err,
-> +              host->base + MMCIMASK0);
-> +
-> +       host->irq_action = IRQ_HANDLED;
-> +       mmci_request_end(host, host->mrq);
-> +       spin_unlock_irqrestore(&host->lock, flags);
-> +
-> +       return host->irq_action;
->  }
->
->  static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
->                         goto clk_disable;
->         }
->
-> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
-> -                       DRIVER_NAME " (cmd)", host);
-> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
-> +                                       mmci_irq_threaded, IRQF_SHARED,
-> +                                       DRIVER_NAME " (cmd)", host);
+I can do it in the next days.
 
-In general it's a good idea to move drivers into using a threaded IRQ handler.
+> Thanks a lot for fixing all this mess!
 
-However, the reason this hasn't been done for mmci before, is because
-there are some legacy variants, that doesn't support HW flow control.
+I hope the users also appreciate our work.
 
-Unless I am mistaken, that means when the fifo gets full during data
-transfers - it's too late to act. In other words, running the handler
-in hard IRQ context, should increase the probability of not missing
-the deadline.
+Best regards,
+Nikolaus
 
-If a threaded IRQ handler also is sufficient for these legacy
-variants, only tests can tell.
+>=20
+> Kind regards
+> Uffe
+>=20
+>>=20
+>> PATCH V2 2019-10-19 20:41:47:
+>> * added acked-by for wl1251 patches - Kalle Valo =
+<kvalo@codeaurora.org>
+>> * really removed old pdata-quirks code (not through #if 0)
+>> * splited out a partial revert of
+>>        efdfeb079cc3b ("regulator: fixed: Convert to use GPIO =
+descriptor only")
+>>  because that was introduced after v4.19 and stops the removal of
+>>  the pdata-quirks patch from cleanly applying to v4.9, v4.14, v4.19
+>>  - reported by Sasha Levin <sashal@kernel.org>
+>> * added a new patch to remove old omap hsmmc since pdata quirks
+>>  were last user - suggested by Tony Lindgren <tony@atomide.com>
+>>=20
+>> PATCH V1 2019-10-18 22:25:39:
+>> Here we have a set of scattered patches to make the OpenPandora WiFi =
+work again.
+>>=20
+>> v4.7 did break the pdata-quirks which made the mmc3 interface
+>> fail completely, because some code now assumes device tree
+>> based instantiation.
+>>=20
+>> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for =
+requesting DMA channel")
+>>=20
+>> v4.11 did break the sdio qirks for wl1251 which made the driver no =
+longer
+>> load, although the device was found as an sdio client.
+>>=20
+>> Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks =
+file")
+>>=20
+>> To solve these issues:
+>> * we convert mmc3 and wl1251 initialization from pdata-quirks
+>>  to device tree
+>> * we make the wl1251 driver read properties from device tree
+>> * we fix the mmc core vendor ids and quirks
+>> * we fix the wl1251 (and wl1271) driver to use only vendor ids
+>>  from header file instead of (potentially conflicting) local
+>>  definitions
+>>=20
+>>=20
+>> H. Nikolaus Schaller (12):
+>>  Documentation: dt: wireless: update wl1251 for sdio
+>>  net: wireless: ti: wl1251 add device tree support
+>>  ARM: dts: pandora-common: define wl1251 as child node of mmc3
+>>  mmc: host: omap_hsmmc: add code for special init of wl1251 to get =
+rid
+>>    of pandora_wl1251_init_card
+>>  omap: pdata-quirks: revert pandora specific gpiod additions
+>>  omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+>>  omap: remove omap2_hsmmc_info in old hsmmc.[ch] and update Makefile
+>>  mmc: host: omap-hsmmc: remove init_card pdata callback from pdata
+>>  mmc: sdio: fix wl1251 vendor id
+>>  mmc: core: fix wl1251 sdio quirks
+>>  net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 =
+definition
+>>  net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
+>>=20
+>> .../bindings/net/wireless/ti,wl1251.txt       |  26 +++
+>> arch/arm/boot/dts/omap3-pandora-common.dtsi   |  36 +++-
+>> arch/arm/mach-omap2/Makefile                  |   3 -
+>> arch/arm/mach-omap2/common.h                  |   1 -
+>> arch/arm/mach-omap2/hsmmc.c                   | 171 =
+------------------
+>> arch/arm/mach-omap2/hsmmc.h                   |  32 ----
+>> arch/arm/mach-omap2/pdata-quirks.c            | 105 -----------
+>> drivers/mmc/core/quirks.h                     |   7 +
+>> drivers/mmc/host/omap_hsmmc.c                 |  30 ++-
+>> drivers/net/wireless/ti/wl1251/sdio.c         |  23 ++-
+>> drivers/net/wireless/ti/wlcore/sdio.c         |   8 -
+>> include/linux/mmc/sdio_ids.h                  |   2 +
+>> include/linux/platform_data/hsmmc-omap.h      |   3 -
+>> 13 files changed, 111 insertions(+), 336 deletions(-)
+>> delete mode 100644 arch/arm/mach-omap2/hsmmc.c
+>> delete mode 100644 arch/arm/mach-omap2/hsmmc.h
+>>=20
+>> --
+>> 2.23.0
+>>=20
 
-An option, would be to use a threaded handler for those variants that
-supports HW flow control. Not sure how messy the code would be with
-this option, perhaps you can give this a try?
-
-
->         if (ret)
->                 goto clk_disable;
->
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 158e1231aa23..5e63c0596364 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -412,6 +412,7 @@ struct mmci_host {
->
->         struct timer_list       timer;
->         unsigned int            oldstat;
-> +       u32                     irq_action;
->
->         /* pio stuff */
->         struct sg_mapping_iter  sg_miter;
-> --
-> 2.17.1
->
-
-Kind regards
-Uffe
