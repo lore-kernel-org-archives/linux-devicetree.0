@@ -2,103 +2,108 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645FAC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 21:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E900C43141
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367FD206CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 21:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEQgq1op"
+	by mail.kernel.org (Postfix) with ESMTP id 14E74206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573769532;
+	bh=iKvN/RhldEHN01IRF2CqzbyipgqP4UyeluozvJSJkjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eLnUqTSBKDGQEJW8Wg1pw6jUBTOXMIdZ6pjOM+xMy2KrU7JFWuPsUkX3qT74TrT11
+	 1rZEManD3eiyYT2jPtn7xEXkW18BifJ/FPFL4FZL8Aqvj4LtAOCeLORMMFHxBeCXAX
+	 i949St5E6JDhK1X+iOmsJKdPByPTSCaYwCpgUSuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKNVxT (ORCPT
+        id S1726812AbfKNWML (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 16:53:19 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39740 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbfKNVxT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 16:53:19 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t26so8002327wmi.4;
-        Thu, 14 Nov 2019 13:53:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AYtxXvV7rq10di0nCWaqkGfMn0fSIV9NDKI+yoF5mf8=;
-        b=vEQgq1op9ByoduD0PSXhrq+mTjXh/a9Gtfy2C1k2DUjnz8JbxAvA8+U5GF1tv9Lk6R
-         IsJPImJwyCgxRAdHe4sWwbis38qHhz5db7v3BSmaY6CAKtFDRa62ra2hSaAGIgGiYUW4
-         H9347pZryUbpiAIYVc3M0czQxk6u/MiKfhH/blYvu99pGd4Tpi1S6SxbK0asz5cyHTOf
-         I20Hm3bi6T+H5nEVXNn62VNv6qx63Gvp1PrgZkzxT6DyINgQWfcsT2fDehCfkt2vU/XT
-         eIDeZkVHQzXqPmwGvHJoCObgeUQiIXVf8f7JhGT9IMeRA7cvW1WAXaRJF3PiZ3/wqSpd
-         C6bQ==
+        Thu, 14 Nov 2019 17:12:11 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46856 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKNWML (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 17:12:11 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n14so6764004oie.13;
+        Thu, 14 Nov 2019 14:12:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AYtxXvV7rq10di0nCWaqkGfMn0fSIV9NDKI+yoF5mf8=;
-        b=V06Z+Knkd3J+KItgXykO3EDPz+UOZ8+dhBuQ+O+hcoyNX/Coyvj8anliIdDlx8V+7V
-         PIT2pVEvkjtBcFyhTpFkzdCkEFpiDVN9kmfxQ68YdrgobIujvwW3dmghZeioVMGKDLB1
-         b033guN3pdLpInFsvIeGvLNfTmJUMuN9NgL+6HWb7gI4A+1mcRnpE2lo2zfbZxnTi9qq
-         S0uQmRKOIhgflWezo/PlEoj9mAYjh/fPyOnDDi9vklc5+FIFGdTwwtBjtW9WcW5mMXgX
-         Gjt1Noz0vWZupyfP7TyvVQjRxkdGFXTSCpZWnwMo/J9RcGFOBzxIHA0p7xxWYAHyJba1
-         EnTg==
-X-Gm-Message-State: APjAAAUdCjOp424vLhQav/AVbz6qMsGPDlc0GEM80xTqpAHWL7ffXM58
-        KmV5BMi37rBwnNSsplHvrX6q6B8YhcvbrBg5UXA=
-X-Google-Smtp-Source: APXvYqyer25pIwMp04AbL8hennAHCOuUosGk+t1VEFMYAff37A/7WH3EIPa1ZSLfmfuxc9MZc4jsGSnMrgSUVRXVktQ=
-X-Received: by 2002:a1c:ed16:: with SMTP id l22mr10462653wmh.151.1573768395760;
- Thu, 14 Nov 2019 13:53:15 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MuYayFgV9Txkwisv1aDmW8/y0KcXnB9JehAybbEgv9k=;
+        b=fUe6wBB4Md3CHAZ4+3IF0iagRFDRYfeQCsSK8Qj6G218YDQOuof321mt1Los3rRFJI
+         EHwtjUWiKhKTCqPmLyGBz3MLeANJjHruE3SBUEw3qG9DzznoF0iwa9wYYH8BuhkZZLgg
+         6I/P7QneZazZknwTC51uyIYd5g2WGf4gt4BBl2rOFBsKpdkp+EiVB7q6qIdLfDROZbxN
+         DOGKOeAeWVYrxuCSmO7JMkp48s0RC6TghYxuc1AKbuHa79o7qPBPGzO9+sXrd3+kfLt2
+         6mqPUmJEyZHIi24/4WObsltZZ7w2KQqi0lUDxH+Eh4BxhfOyRi2+wY3Jo2iQr4Id6BZ1
+         zwoQ==
+X-Gm-Message-State: APjAAAWcb6B6/PbH5GbU2vOuvUJGeG3sjPBDtyq18MIcWOs+Fv/U3LHP
+        g4zDlGPOq9Xks5HHDkBxSQ==
+X-Google-Smtp-Source: APXvYqyt3fj7h5jduriAaMs0c1KBLJJTi+ofWUC480KU8O7Sb9OBTk4SmD5IA/lHidAxKidB9itRfA==
+X-Received: by 2002:a54:4e85:: with SMTP id c5mr5276950oiy.71.1573769529947;
+        Thu, 14 Nov 2019 14:12:09 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a25sm2291719otr.30.2019.11.14.14.12.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 14:12:09 -0800 (PST)
+Date:   Thu, 14 Nov 2019 16:12:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andrea Merello <andrea.merello@gmail.com>
+Cc:     jic23@kernel.org, Andrea Merello <andrea.merello@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Colin Ian King <colin.king@canonical.com>,
+        Patrick Havelange <patrick.havelange@essensium.com>,
+        Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>,
+        Matt Weber <matthew.weber@rockwellcollins.com>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Daniel Gomez <dagmcr@gmail.com>, linux-iio@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [v2 9/9] dt-bindings: iio: maxim_thermocouple: document new
+ 'compatible' strings
+Message-ID: <20191114221208.GA2764@bogus>
+References: <20190923121714.13672-1-andrea.merello@gmail.com>
+ <20191111153517.13862-1-andrea.merello@gmail.com>
+ <20191111153517.13862-10-andrea.merello@gmail.com>
 MIME-Version: 1.0
-References: <20191114110254.32171-1-linux@rasmusvillemoes.dk> <20191114.133959.2299796714037910835.davem@davemloft.net>
-In-Reply-To: <20191114.133959.2299796714037910835.davem@davemloft.net>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 14 Nov 2019 23:53:04 +0200
-Message-ID: <CA+h21hqXnUE4d777T05y6tcS61B5SvdqSpCti=_0QAgUeEkqLw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] ARM: dts: ls1021a: define and use external
- interrupt lines
-To:     David Miller <davem@davemloft.net>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, netdev <netdev@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111153517.13862-10-andrea.merello@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 14 Nov 2019 at 23:40, David Miller <davem@davemloft.net> wrote:
->
-> From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Date: Thu, 14 Nov 2019 12:02:51 +0100
->
-> > A device tree binding documentation as well as a driver implementing
-> > support for the external interrupt lines on the ls1021a has been
-> > merged into irqchip-next, so will very likely appear in v5.5. See
-> >
-> > 87cd38dfd9e6 dt/bindings: Add bindings for Layerscape external irqs
-> > 0dcd9f872769 irqchip: Add support for Layerscape external interrupt lines
-> >
-> > present in next-20191114.
-> >
-> > These patches simply add the extirq node to the ls1021a.dtsi and make
-> > use of it on the LS1021A-TSN board. I hope these can be picked up so
-> > they also land in v5.5, so we don't have to wait a full extra release
-> > cycle.
-> >
-> > v2: fix interrupt type in 2/2 (s/IRQ_TYPE_EDGE_FALLING/IRQ_TYPE_LEVEL_LOW/).
->
-> I am assuming this will go via an ARM tree.
+On Mon, 11 Nov 2019 16:35:17 +0100, Andrea Merello wrote:
+> Now the maxim_thermocouple has new, more specific, 'compatible' strings for
+> better distinguish the various supported chips.
+> 
+> This patch updates the DT bindings documentation accordingly
+> 
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: Colin Ian King <colin.king@canonical.com>
+> Cc: Patrick Havelange <patrick.havelange@essensium.com>
+> Cc: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+> Cc: Matt Weber <matthew.weber@rockwellcollins.com>
+> Cc: Matt Ranostay <matt.ranostay@konsulko.com>
+> Cc: Chuhong Yuan <hslester96@gmail.com>
+> Cc: Daniel Gomez <dagmcr@gmail.com>
+> Cc: linux-iio@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+> ---
+>  .../bindings/iio/temperature/maxim_thermocouple.txt        | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
 
-Yes, of course, they are for Shawn. Netdev and Andrew was copied for
-patch 2/2 (an SGMII PHY interrupt).
-
-Regards,
--Vladimir
+Acked-by: Rob Herring <robh@kernel.org>
