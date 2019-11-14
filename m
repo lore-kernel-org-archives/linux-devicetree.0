@@ -2,90 +2,104 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D16C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 13:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A498C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 13:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9173206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 13:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573738492;
-	bh=EEAEkmDoKweu4dlBhfeLxwV4julud9PO90e3uHqc6M0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nT2Vk5uSzUFAE0XxAoDrc5yxEt1VYA6NT5cAGWS4AhW1Q1w4mtKIyIAlMiKMg4RyY
-	 FrTFVt4pVOVV5jTQMiivDx+g0Fk7MrRSJH3qcfP2e7O/+au3k5u+8+6FkbcDRYv6gn
-	 MXGQ4iplO9jwNMuAy7t+iLSxfCr2WptGWcf0W5Gg=
+	by mail.kernel.org (Postfix) with ESMTP id F1FBA206E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 13:37:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="jtcTtrw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfKNNev (ORCPT
+        id S1726469AbfKNNhk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 08:34:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfKNNev (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:34:51 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5086A205C9;
-        Thu, 14 Nov 2019 13:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573738490;
-        bh=EEAEkmDoKweu4dlBhfeLxwV4julud9PO90e3uHqc6M0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ffl006Z/xsCHagAVS+I1wxczbjfoYgCJXW4GwKvPuauKjkuWcRbG1rebWF1jEGMR9
-         iipPOzqv0aghhsrBcDzaFTgbeat5xyOREu5fWWCvcHGR0VuA8PH0uKyvjaiO/v9Fst
-         7Iyc55O2Akz+lU5jD6IxlRA3yLcfn0QIy/AB/COo=
-Date:   Thu, 14 Nov 2019 14:34:48 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Georgii Staroselskii <georgii.staroselskii@emlid.com>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Neutis N5H3 support
-Message-ID: <20191114133448.GQ4345@gilmour.lan>
-References: <1573575320-29546-1-git-send-email-georgii.staroselskii@emlid.com>
+        Thu, 14 Nov 2019 08:37:40 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25871 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfKNNhk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 08:37:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1573738644; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=FdOQiHFeC6aCmfyGmWisw36xuQYXQa4bK3Z1I6RlF0HbjWtTTPQmbVyaYTw7Jij1ZsTraydwLJ9Oioul/Uk23mX2pJZ8nw9gprNvxdNodtexjh473P3FSH6VhXmXvmX6o1TSpWNpjuWrPuy7a2f66SXC541tmyzho/eqJchnQQA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1573738644; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=NfiC+cinjSWRt41jD5jXQ2ueHOhgmVAdrHkxzjmGKlo=; 
+        b=Tpo7W7Pf/wO3m8cUa+1PW0oe7gHnV9eIsgkHTdmYOABxxuZ3Cm77pZeFr8okldtBDEFa+aSBn5jT1HH130Hv3RHin/U2aZC/sBvePcLHoT7BnmHfRYIPCwPVueEZ2KIvvr5SYFD8ReU7wj3QCcTrF6OoFjRvNaZ4JOtkk9gGZWc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=er0q6KMsXWMJx/9NDexN/JHCN4w07a93L/INEGkUfisGFkd5a3rnxXM6dDDB0Ues5385ZXxO5yGX
+    h7XxGVXuZZ7AF4ZsdJ1+jVk4Df7rqZDFvA7Jo+xolZ1+/tsxY7al  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573738644;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=1056; bh=NfiC+cinjSWRt41jD5jXQ2ueHOhgmVAdrHkxzjmGKlo=;
+        b=jtcTtrw1onsboQFcintNiPlH2M8TzlpO6/Fuz7E0WVXcnxjOupxuYC4XojhVtISq
+        wvovWpBafiQQsjrm0jsgtimzF6OrElCGXNa397kUjmxc04wPLMwDMGDywWwxaxG0IMf
+        0VYkGfbE1Qr+Nldbcsg5rYJpEjnbm2JJfth17TIk=
+Received: from [192.168.10.218] (171.221.112.167 [171.221.112.167]) by mx.zohomail.com
+        with SMTPS id 15737386427141007.0962792641557; Thu, 14 Nov 2019 05:37:22 -0800 (PST)
+Subject: Re: [PATCH 1/2 v3] dt-bindings: clock: Add X1000 bindings.
+To:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+ <1573378102-72380-1-git-send-email-zhouyanjie@zoho.com>
+ <1573378102-72380-2-git-send-email-zhouyanjie@zoho.com>
+ <20191112005544.GB7038@bogus> <20191113235955.927B6206EE@mail.kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, paul.burton@mips.com, robh+dt@kernel.org,
+        syq@debian.org, mark.rutland@arm.com, paul@crapouillou.net
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DCD5880.9090504@zoho.com>
+Date:   Thu, 14 Nov 2019 21:37:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YzDq+9le76OY47R0"
-Content-Disposition: inline
-In-Reply-To: <1573575320-29546-1-git-send-email-georgii.staroselskii@emlid.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191113235955.927B6206EE@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Stephen,
 
---YzDq+9le76OY47R0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Nov 12, 2019 at 07:15:17PM +0300, Georgii Staroselskii wrote:
-> Emlid Neutis board has another variant with H3 instead of H5. This patchset
-> adds support for this board by moving common bits to
-> sunxi-h3-h5-emlid-neutis.dtsi and then including it in processor-specific DTS.
+On 2019=E5=B9=B411=E6=9C=8814=E6=97=A5 07:59, Stephen Boyd wrote:
+> Quoting Rob Herring (2019-11-11 16:55:44)
+>> On Sun, 10 Nov 2019 17:28:21 +0800, Zhou Yanjie wrote:
+>>> Add the clock bindings for the X1000 Soc from Ingenic.
+>>>
+>>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>>> ---
+>>>   .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
+>>>   include/dt-bindings/clock/x1000-cgu.h              | 44 +++++++++++++=
++++++++++
+>>>   2 files changed, 45 insertions(+)
+>>>   create mode 100644 include/dt-bindings/clock/x1000-cgu.h
+>>>
+>> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+>> there's no need to repost patches *only* to add the tags. The upstream
+>> maintainer will do that for acks received on the version they apply.
+>>
+>> If a tag was not added on purpose, please state why and what changed.
+> It looks like some extra defines were added. I carried forward your
+> review tag.
 >
-> Changes from V1:
->
-> - moved HDMI nodes from DTSI to DTS
-> - added dt-bindings for Neutis N5H3
-> - made use of an array of pins in gpio-regulator node
 
-Queued for 5.6, thanks!
-Maxime
+I'm sorry that my mistake has caused you extra work,
+I'll be careful to add tags next time.
 
---YzDq+9le76OY47R0
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards!
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXc1X+AAKCRDj7w1vZxhR
-xS+XAQCL2lsF/qkt6GxF6S1LEmFaJQ9MQn0IlH9HMfVsp1eBxAEAq/C8sR5q93Cd
-DILZUP/reTHOaQcMkXJMngOK+dQIvAc=
-=cGLZ
------END PGP SIGNATURE-----
-
---YzDq+9le76OY47R0--
