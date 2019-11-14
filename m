@@ -2,143 +2,93 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B262C43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A864BC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A1A20729
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:21:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JX54imOv"
+	by mail.kernel.org (Postfix) with ESMTP id 78C9720729
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573759650;
+	bh=tlPXQr9K0JHcO9hjmUxoCvQEtHBTWA1pDKjwjzUu/S0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Expq2G3ag27UHj2BOXdmlTjwVn6QPdKHIe1WZOPUGQ/rJ8lu/8HAujPPMsbsMWv+K
+	 fN/wbs2N4q4AMhJtfKPb/g9g6CyPlNS+croTSXjJKEviIhT4oYzsHDcrq5SwQH2z/r
+	 yy2z2v4MNuj8488pmPkp+Pz0Dr/lqzPU8dI2cpc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKNTV5 (ORCPT
+        id S1726289AbfKNT13 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:21:57 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39127 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbfKNTV4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 14:21:56 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 15so6016436qkh.6
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 11:21:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2+dA9T6MH4sNbOzz4jWY/HUz9UYvTwVEPvgzw5IY25o=;
-        b=JX54imOvMkg6TCZIIl7TjVODjvdE3eJWOBIn/TFXI/K3XBbyoUgnyMHp3+jWXwZcpA
-         qC9dQDhc9YTs0ZD5QD1D5sVEP0wVu3UriNJS/O8GlMjey/Yo50i1c5JxHNugoR7fOFse
-         v1ZuqMc/cGqti3BKA5y6oQGs2EJ00KMkWFCU0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2+dA9T6MH4sNbOzz4jWY/HUz9UYvTwVEPvgzw5IY25o=;
-        b=AD4lnJWaYIO3l2yOy+4WXZv2jTamM1X22KUm9lIsWVf1DiX6h+5Kd03zAO108LI35Z
-         EOEvQaedcWb1i7EaPGh6i5qBOCr2/WW9ixiDaflahUkuYI+Qf8ph6B7ly0a6cS/W2woh
-         JRwv849eW2I67aVAPEJySwvj+bZT6qU98l1ueP4mEeXW0RA7LW7bjAfWuH+yDppRml0N
-         j1rqp46WcS0iPItsRS7Dcoc8Sz8q/lq5mw56pAAPDwT+lXrKIu6y+T4Nw/5lDfyUcqiv
-         LoZdxKZDaHSKW9J3sGGX4J2UwB7WMPgZ6vJ8svhqLytQ8ROyAb0uXBh0QWSwNCO/2jWM
-         X7ag==
-X-Gm-Message-State: APjAAAWtTODShrMU5DOFYnLnrxOuqhErXIGp7tG/G7y+/iT4tTTxCTjP
-        Ha/rLpo9AKFj10Zc+JWiwHaV9HQBYojN8RoMdRKq4g==
-X-Google-Smtp-Source: APXvYqzt7LFP6F0xw3d3PYvSjUoOlxGbFwywBADu+rd0E/KeDMf/vRwQbeoderg31GWDs+7zrfVUalr6EybZ5j7ItHM=
-X-Received: by 2002:a05:620a:1032:: with SMTP id a18mr7536658qkk.305.1573759313671;
- Thu, 14 Nov 2019 11:21:53 -0800 (PST)
+        Thu, 14 Nov 2019 14:27:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbfKNT13 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 14:27:29 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCE1120725;
+        Thu, 14 Nov 2019 19:27:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573759649;
+        bh=tlPXQr9K0JHcO9hjmUxoCvQEtHBTWA1pDKjwjzUu/S0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k4MqYahsoAugDXrOcIbK0SghUV0BJpL74XNPnwi9gGFRl/NvKf7OmYraXPE7m8btL
+         1bX2nsJcJFr8Rw9jTf3aLwf3/gDYESm+Kb0ziXquV/nuPP4EHDdnfaz//z8/Y8fEgw
+         cwbBbQD99JPc3Z67N/+MoASCdjiMllV6Tq4eBWsI=
+Date:   Thu, 14 Nov 2019 20:27:25 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v5 0/2] ARM64: dts: allwinner: Add devicetree for pineH64
+ modelB
+Message-ID: <20191114192725.GX4345@gilmour.lan>
+References: <1573746453-5123-1-git-send-email-clabbe@baylibre.com>
 MIME-Version: 1.0
-References: <20191112230944.48716-1-abhishekpandit@chromium.org>
- <20191112230944.48716-5-abhishekpandit@chromium.org> <0642BE4E-D3C7-48B3-9893-11828EAFA7EF@holtmann.org>
- <20191114175836.GI27773@google.com>
-In-Reply-To: <20191114175836.GI27773@google.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Thu, 14 Nov 2019 11:21:42 -0800
-Message-ID: <CANFp7mXfhs3mw_QuVQHcQwkz8+4DpJ8SMbTiwS=7fo5kXGrBQQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="JVdfu60Euw8Ey+/T"
+Content-Disposition: inline
+In-Reply-To: <1573746453-5123-1-git-send-email-clabbe@baylibre.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 9:58 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Wed, Nov 13, 2019 at 01:21:06AM +0100, Marcel Holtmann wrote:
-> > Hi Abhishek,
-> >
-> > > Add documentation for pcm parameters.
-> > >
-> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > >
-> > > ---
-> > >
-> > > Changes in v4:
-> > > - Fix incorrect function name in hci_bcm
-> > >
-> > > Changes in v3:
-> > > - Change disallow baudrate setting to return -EBUSY if called before
-> > >  ready. bcm_proto is no longer modified and is back to being const.
-> > > - Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
-> > > - Changed brcm,sco-routing to brcm,bt-sco-routing
-> > >
-> > > Changes in v2:
-> > > - Use match data to disallow baudrate setting
-> > > - Parse pcm parameters by name instead of as a byte string
-> > > - Fix prefix for dt-bindings commit
-> > >
-> > > .../devicetree/bindings/net/broadcom-bluetooth.txt    | 11 +++++++++++
-> > > 1 file changed, 11 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > > index c749dc297624..42fb2fa8143d 100644
-> > > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> > > @@ -29,6 +29,11 @@ Optional properties:
-> > >    - "lpo": external low power 32.768 kHz clock
-> > >  - vbat-supply: phandle to regulator supply for VBAT
-> > >  - vddio-supply: phandle to regulator supply for VDDIO
-> > > + - brcm,bt-sco-routing: 0-3 (PCM, Transport, Codec, I2S)
-> > > + - brcm,pcm-interface-rate: 0-4 (128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps)
-> > > + - brcm,pcm-frame-type: 0-1 (short, long)
-> > > + - brcm,pcm-sync-mode: 0-1 (slave, master)
-> > > + - brcm,pcm-clock-mode: 0-1 (slave, master)
-> >
-> > I think that all of them need to start with brcm,bt- prefix since it is rather Bluetooth specific.
-> >
-> > >
-> > >
-> > > Example:
-> > > @@ -40,5 +45,11 @@ Example:
-> > >        bluetooth {
-> > >                compatible = "brcm,bcm43438-bt";
-> > >                max-speed = <921600>;
-> > > +
-> > > +               brcm,bt-sco-routing = [01];
-> > > +               brcm,pcm-interface-rate = [02];
-> > > +               brcm,pcm-frame-type = [00];
-> > > +               brcm,pcm-sync-mode = [01];
-> > > +               brcm,pcm-clock-mode = [01];
-> > >        };
-> >
-> > My personal taste would be to add a comment after each entry that gives the human readable setting.
->
-> I'd suggest to define constants in include/dt-bindings/bluetooth/brcm.h
-> and use them instead of literals, with this we wouldn't rely on (optional)
-> comments to make the configuration human readable.
 
-:+1: Sounds like a good idea; expect it in next patch revision
+--JVdfu60Euw8Ey+/T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Thu, Nov 14, 2019 at 03:47:31PM +0000, Corentin Labbe wrote:
+> Hello
+>
+> Pineh64 have two existing model (A and B) with some hardware difference and
+> so need two different DT file.
+> But the current situation has only one file for both.
+> This serie fix this situation by being more clear on which DT file is
+> needed for both model.
+
+sorry I didn't tell you on v1, the prefix for arm64 is lowercase
+(unlike arm where it's uppercase).
+
+I've fixed it while applying, thanks!
+Maxime
+--JVdfu60Euw8Ey+/T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXc2qnQAKCRDj7w1vZxhR
+xSWVAQCBPr2s0WW9ArMBn4OEKu8Q5C7BaeyG22Vq1rN5Z8PwVgEA533j7d1rP19K
+sGwHnhtbWexfClKTTe+6B1qfHaK5jwo=
+=AIGJ
+-----END PGP SIGNATURE-----
+
+--JVdfu60Euw8Ey+/T--
