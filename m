@@ -2,108 +2,218 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A101EC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C829C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B13206E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573749514;
-	bh=r6239xpNQjiA90Hu7abkz2VVimdZsUkVBgJYAv84NIE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wT9+Clpe7vZ3ODuhzBOyRRbQQJh8l5BLcnQC+z2xjPZx4b+hxtiDJ3jOlTawXX+gm
-	 280Dys8wliBSwJfCGXt7NISuio7RZq9GTZ6j/8rTTNc71dJxJ5cl+r5N8/2Sk2RNKl
-	 p1tg9/7Byye6fYDY0Ki9sRRgx7v1IV2SUsEbiBRw=
+	by mail.kernel.org (Postfix) with ESMTP id 1320C206DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:41:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hkI/WIpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfKNQid (ORCPT
+        id S1726640AbfKNQlc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:38:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbfKNQid (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:38:33 -0500
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A396E2071F
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 16:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573749512;
-        bh=r6239xpNQjiA90Hu7abkz2VVimdZsUkVBgJYAv84NIE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Fn2j8MozP/jF5WgRbNYSyQjkyNonioQIgDpSTCQ4mJ5MswbHnv1F5Ff12vXJKXV4R
-         guq7Exy1m2ihDuWwt4dAJGRF87bi6okPbtdkDe9yANrjT0bXwZMnSV8+UERIx8+eDU
-         S23iqFnPXq+ZPiV7yc0LVGiBZPaq31LcPhB7aO8E=
-Received: by mail-qt1-f176.google.com with SMTP id r20so7399485qtp.13
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 08:38:32 -0800 (PST)
-X-Gm-Message-State: APjAAAU2RPYJyGNfQ/EXQnhs4x1oYWSZENNO3FHTSyvJPe7Yvaw2crTS
-        X7UMAhjLtChmXemxjCOWq9qRZkzzdAHW3CNhqg==
-X-Google-Smtp-Source: APXvYqwDR8S9cYrUYILLP/I2tU3UMGkZtLBmA2zLHpUvplAXjetDE9ennCRPukJ9ArEABqjaXO1HmqiEessy+uBaq+4=
-X-Received: by 2002:aed:2706:: with SMTP id n6mr9138767qtd.224.1573749511747;
- Thu, 14 Nov 2019 08:38:31 -0800 (PST)
+        Thu, 14 Nov 2019 11:41:32 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25332 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726214AbfKNQlc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:41:32 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAEGRfQv012514;
+        Thu, 14 Nov 2019 17:41:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=/A39Sh+nCYrrupVXGJZyMVV+LPFXNnjXh6rGGijztCw=;
+ b=hkI/WIpfS0WslxmzwqRUtIm1FWpoHNI4/2n2xp4znd9LQEhp6zclQ+xFbyxfWh/OO4nV
+ RnlzowKJ9Wceeg9AMUqe+SOT4gspwnnBvEtWi81iGA1KZf94ruwh2UIx6dZCAil/fhID
+ HqpyUfrj7hwYgNtoCSkdzmL7cFm8MO+4CGgKdVoqQ5E8NnWGLvrZUfaCCa7LjlCG5Jm8
+ 028QQ14O2h0/yh+FbRvkF7dzzJx+EKQven4tgjrPGaoMoYu12duS8ZpPCXWwV5m+Basj
+ lt6fAssTIhcizj6jzW2HsWEhRGkW/wqEvLPYAhs4kLd+t01tK9xnfFY3HeGnJhyHFxJ2 tA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w7psbf99g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Nov 2019 17:41:07 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B6DA3100038;
+        Thu, 14 Nov 2019 17:41:05 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9D0DE2C2DB5;
+        Thu, 14 Nov 2019 17:41:05 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 Nov 2019 17:41:05
+ +0100
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] dt-bindings: interrupt-controller: Convert stm32-exti to json-schema
+Date:   Thu, 14 Nov 2019 17:41:04 +0100
+Message-ID: <20191114164104.22782-1-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191114131525.3988-1-linus.walleij@linaro.org>
-In-Reply-To: <20191114131525.3988-1-linus.walleij@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 14 Nov 2019 10:38:20 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+P6-V2L_JJmwkuoV=DzBzMGdfqsUpZLY6pR_+B-uOF1g@mail.gmail.com>
-Message-ID: <CAL_Jsq+P6-V2L_JJmwkuoV=DzBzMGdfqsUpZLY6pR_+B-uOF1g@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v6] drm/panel: Add DT bindings for Sony ACX424AKP
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-14_05:2019-11-14,2019-11-14 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 7:15 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> This adds device tree bindings for the Sony ACX424AKP panel.
-> Let's use YAML.
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v5->v6:
-> - Fix the binding by simply not referencing the display controller
->   bindings from a panel binding.
-> ChangeLog v4->v5:
-> - Fix up all warnings etc incurred from the now working schema check
->   and DTS compilation.
-> - I still have a vert annoying error message in the Sony
->   panel bindings that uses this schema:
->   sony,acx424akp.example.dt.yaml: panel@0: $nodename:0: 'panel@0' does not match '^dsi-controller(@.*)?$'
->   As this is modeled very closely to
->   Documentation/devicetree/bindings/net/mdio.yaml
->   and that one doesn't emit this type of warning for its ethernet-phy@0
->   etc I am pretty much clueless and just can't see what the problem
->   is.
-> - If I can't figure this out the only viable next step is to drop the
->   ambition to create yaml bindings simply because I'm unable to do
->   it, and go back to traditional text bindings :(
-> ChangeLog v3->v4:
-> - Adjust to adjusted DSI bindings.
-> ChangeLog v2->v3:
-> - Put the example inside a dsi-controller so we have a complete
->   example that verifies to the DSI panel generic binding.
-> ChangeLog v1->v2:
-> - Suggest a stand-alone YAML bindings file for DSI panels in
->   a separate patch, and use that to reference the
->   boolean "enforce-video-mode" attribute for DSI panels
-> ---
->  .../display/panel/sony,acx424akp.yaml         | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
+Convert the STM32 external interrupt controller (EXTI) binding to DT
+schema format using json-schema.
 
-I'll trust that you get the dsi-controller.yaml schema done as without
-it this is incomplete even though there's not a direct dependency.
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Rob,
+
+I planned to use "additionalProperties: false" for this schema but as I add a
+property under condition, I got an error (property added under contion seems
+to be detected as an "additional" property and then error is raised).
+
+Is there a way to fix that ?
+
+regards
+Alex
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+deleted file mode 100644
+index cd01b2292ec6..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-STM32 External Interrupt Controller
+-
+-Required properties:
+-
+-- compatible: Should be:
+-    "st,stm32-exti"
+-    "st,stm32h7-exti"
+-    "st,stm32mp1-exti"
+-- reg: Specifies base physical address and size of the registers
+-- interrupt-controller: Indentifies the node as an interrupt controller
+-- #interrupt-cells: Specifies the number of cells to encode an interrupt
+-  specifier, shall be 2
+-- interrupts: interrupts references to primary interrupt controller
+-  (only needed for exti controller with multiple exti under
+-  same parent interrupt: st,stm32-exti and st,stm32h7-exti)
+-
+-Optional properties:
+-
+-- hwlocks: reference to a phandle of a hardware spinlock provider node.
+-
+-Example:
+-
+-exti: interrupt-controller@40013c00 {
+-	compatible = "st,stm32-exti";
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-	reg = <0x40013C00 0x400>;
+-	interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+-};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml
+new file mode 100644
+index 000000000000..39be37e1e532
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/st,stm32-exti.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STM32 External Interrupt Controller Device Tree Bindings
++
++maintainers:
++  - Alexandre Torgue <alexandre.torgue@st.com>
++  - Ludovic Barre <ludovic.barre@st.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - st,stm32-exti
++          - st,stm32h7-exti
++      - items:
++        - enum:
++          - st,stm32mp1-exti
++        - const: syscon
++
++  "#interrupt-cells":
++    const: 2
++
++  reg:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  hwlocks:
++    maxItems: 1
++    description:
++      Reference to a phandle of a hardware spinlock provider node.
++
++required:
++  - "#interrupt-cells"
++  - compatible
++  - reg
++  - interrupt-controller
++
++allOf:
++  - $ref: /schemas/interrupt-controller.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - st,stm32-exti
++              - st,stm32h7-exti
++    then:
++      properties:
++        interrupts:
++          allOf:
++            - $ref: /schemas/types.yaml#/definitions/uint32-array
++          description:
++            Interrupts references to primary interrupt controller
++      required:
++        - interrupts
++
++examples:
++  - |
++    //Example 1
++    exti1: interrupt-controller@5000d000 {
++        compatible = "st,stm32mp1-exti", "syscon";
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        reg = <0x5000d000 0x400>;
++    };
++
++    //Example 2
++    exti2: interrupt-controller@40013c00 {
++        compatible = "st,stm32-exti";
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        reg = <0x40013C00 0x400>;
++        interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
++    };
++
++...
+-- 
+2.17.1
+
