@@ -2,101 +2,91 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F6BC43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 05:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F11AC43141
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 05:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE92E2071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 05:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dZ1o3iwZ"
+	by mail.kernel.org (Postfix) with ESMTP id 61CD120718
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 05:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573710658;
+	bh=4A75EbHYfhyoJ0lhDbgLRn70lmtQcL0MNpem0+VHKtk=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=oeaLX55ZUhhFvaIwkyN/1EQr0IkfsCPYfyIzk4cmHc8jc/NCtILQjb/eaXddntPpI
+	 rqw0T73jf8LYkVo6wveNeyFrnMIQk9kMjSCvi2k1P83OnmJZlbJDzZ0O61jEYLpmIF
+	 Yos4Hq0UQI6c2VwX9iSW6H/CLsMGtp4vALP+ziqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfKNFeP (ORCPT
+        id S1725852AbfKNFuz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 00:34:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40895 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfKNFeP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 00:34:15 -0500
-Received: by mail-pl1-f193.google.com with SMTP id e3so2099166plt.7
-        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 21:34:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WnPnwB7+tEaKVjCeEYFNQsf68FzMqh6+Atc4G5a3DV4=;
-        b=dZ1o3iwZaKoXYDcRarBQMQQIbKGvT1/uZMV5QvrQzNLfSdAlLK+2QdPZBIew6mpaIY
-         ruDLhVoQIQuzH9BzmKaFISKbu7tXlHil6mvxPX4h193BiRyUDIVhoOwxo9Ms1DSYFAMz
-         Qfl9hiELr7/Vdh03dNvG13EPY6DxW7wQWCYyv9z7WmLmSyPZeOqi4526TduGbdAn2yc4
-         rvMg1Q59MQrClfg07Gi843S3HAFvF0RDhFgagkoOhYQmSmWun4jIJJb24rEQjAn5+Gjs
-         vTmpmTYRiv7Cd6qupBYjpBhwIKYiuoDVbs07gtDUFF+f2LDw3LtSWjIplL1VUpkjSt4W
-         Od3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WnPnwB7+tEaKVjCeEYFNQsf68FzMqh6+Atc4G5a3DV4=;
-        b=tXG3lSUWJEuBqgJf2ukf44O2tJywbJItHftPp8qA404ZI7XJBBfYEZuNJnGhf2zLdE
-         6GBJ6X+7ZHpMy0TZ+Tm2D/6OQeHftu03vcNa0MOn9GzW2ISMzjNJ6PINpYYUI43swdGx
-         TuIwIYQyBW40dMX/6Efqx8LlIu5RJLS/aroXLABh/fM2m+Z2YDNDi/5UOK36tLCmZ1pb
-         UVwC0InNAf5171Am0ucPHa6UL77dcapQQV2SfT6p6+k8Efxc96/VpN3n2o86PrisfbGF
-         FUfiAfBpjV/DkAyhKef1rWW1faz8v/shqPgEd+JG5631ngsI6f7pxl4vAZEOasEj6p/E
-         A/Ww==
-X-Gm-Message-State: APjAAAVmPN163182rdWvxhAmWd/DrnUuJpiWxAuF4ISaN7xwHwy008xm
-        pR/rUnDkZQ2ZglMow5G+NP2D
-X-Google-Smtp-Source: APXvYqyBGC15lugybXpYqMOdeznxM2kQyrl4gUr+Lq6xXQOeIbhXd1uM0KupL0ilL7lwC4fL9OOk9Q==
-X-Received: by 2002:a17:902:6bc3:: with SMTP id m3mr7529922plt.329.1573709654189;
-        Wed, 13 Nov 2019 21:34:14 -0800 (PST)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id a16sm4520474pfc.56.2019.11.13.21.34.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Nov 2019 21:34:12 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:04:04 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
+        Thu, 14 Nov 2019 00:50:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbfKNFuz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 00:50:55 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C280F206DA;
+        Thu, 14 Nov 2019 05:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573710654;
+        bh=4A75EbHYfhyoJ0lhDbgLRn70lmtQcL0MNpem0+VHKtk=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=1n08guEVhPb8UK6CAVnBSbKcdr1bhzFAIYzVKmdZyTwg3cLFLt/y/po33Fzs3Z23j
+         yU5A9GSYX5vYnxlWu6QZ9iRnSMh+HDgucz/akSpMXc4HslM/XwnjgTN5+GeY37Hl5d
+         db1fLr78Pu6s7rG92jverAQAFSl9D1Y5Dz/cIgDU=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191114053404.GA8459@mani>
+References: <20191026110253.18426-1-manivannan.sadhasivam@linaro.org> <20191113222116.E5E9B206E3@mail.kernel.org> <20191114053404.GA8459@mani>
 Cc:     mturquette@baylibre.com, robh+dt@kernel.org,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         haitao.suo@bitmain.com, darren.tsao@bitmain.com,
         fisher.cheng@bitmain.com, alec.lin@bitmain.com
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From:   Stephen Boyd <sboyd@kernel.org>
 Subject: Re: [PATCH v6 0/7] Add Bitmain BM1880 clock driver
-Message-ID: <20191114053404.GA8459@mani>
-References: <20191026110253.18426-1-manivannan.sadhasivam@linaro.org>
- <20191113222116.E5E9B206E3@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113222116.E5E9B206E3@mail.kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: alot/0.8.1
+Date:   Wed, 13 Nov 2019 21:50:53 -0800
+Message-Id: <20191114055054.C280F206DA@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 02:21:15PM -0800, Stephen Boyd wrote:
-> Quoting Manivannan Sadhasivam (2019-10-26 04:02:46)
-> > Hello,
-> > 
-> > This patchset adds common clock driver for Bitmain BM1880 SoC clock
-> > controller. The clock controller consists of gate, divider, mux
-> > and pll clocks with different compositions. Hence, the driver uses
-> > composite clock structure in place where multiple clocking units are
-> > combined together.
-> > 
-> > This patchset also removes UART fixed clock and sources clocks from clock
-> > controller for Sophon Edge board where the driver has been validated.
-> > 
-> 
-> Are you waiting for review here? I see some kbuild reports so I assumed
-> you would fix and resend.
+Quoting Manivannan Sadhasivam (2019-11-13 21:34:04)
+> On Wed, Nov 13, 2019 at 02:21:15PM -0800, Stephen Boyd wrote:
+> > Quoting Manivannan Sadhasivam (2019-10-26 04:02:46)
+> > > Hello,
+> > >=20
+> > > This patchset adds common clock driver for Bitmain BM1880 SoC clock
+> > > controller. The clock controller consists of gate, divider, mux
+> > > and pll clocks with different compositions. Hence, the driver uses
+> > > composite clock structure in place where multiple clocking units are
+> > > combined together.
+> > >=20
+> > > This patchset also removes UART fixed clock and sources clocks from c=
+lock
+> > > controller for Sophon Edge board where the driver has been validated.
+> > >=20
+> >=20
+> > Are you waiting for review here? I see some kbuild reports so I assumed
+> > you would fix and resend.
+>=20
+> I'll fix it but I was expecting some review from you so that I can send t=
+he
+> next revision incorporating all comments.
+>=20
 
-I'll fix it but I was expecting some review from you so that I can send the
-next revision incorporating all comments.
+Ok. I'm glad I broke the silence then.
 
-Thanks,
-Mani
+Can you please resend without any dts changes? Those don't go through
+clk tree. I think otherwise the patches look OK, although I was hoping
+you could register clks by using the new way of specifying parents. Is
+that possible?
 
-> 
