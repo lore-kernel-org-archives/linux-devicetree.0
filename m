@@ -2,158 +2,78 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31F6C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C82C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93251206DC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF03206DC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 15:29:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ynzd2vfH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ynzd2vfH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b/58ij9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKNPVj (ORCPT
+        id S1726957AbfKNP3B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 10:21:39 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:58018 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfKNPVj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 10:21:39 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8554960877; Thu, 14 Nov 2019 15:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573744897;
-        bh=PU3yZVOeBpzkLQjkHpVff7IXxNz5VK8V0mZiVHhrJ+Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ynzd2vfH9jrfwrTeOQIoSzZVBdX2DCXId0z013j5byO9yhxEEYxqU0MThLTrjN+C6
-         N0sHZxAG4QFS57Hg5eIlP1JS0n3A9UyEWXYYJeuE8/jbzAF5U/KenjY2sg0GenAi7M
-         V8cDgCxfYjsfBhO/AeDCd21AlCcSPYyPIbApj9zw=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AEEE4601B4;
-        Thu, 14 Nov 2019 15:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573744897;
-        bh=PU3yZVOeBpzkLQjkHpVff7IXxNz5VK8V0mZiVHhrJ+Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ynzd2vfH9jrfwrTeOQIoSzZVBdX2DCXId0z013j5byO9yhxEEYxqU0MThLTrjN+C6
-         N0sHZxAG4QFS57Hg5eIlP1JS0n3A9UyEWXYYJeuE8/jbzAF5U/KenjY2sg0GenAi7M
-         V8cDgCxfYjsfBhO/AeDCd21AlCcSPYyPIbApj9zw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AEEE4601B4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH] dt-bindings: Improve validation build error handling
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-References: <20191113210544.1894-1-robh@kernel.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <30b73f89-1ba1-6052-53bd-414ebdfa142c@codeaurora.org>
-Date:   Thu, 14 Nov 2019 08:21:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 14 Nov 2019 10:29:01 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:39832 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbfKNP3A (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 10:29:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ElG8Ta8wnxyvEpph2Zdu0/QL/JmLef30hlFTtXPVY2w=; b=b/58ij9zk28SivK4r5tm14Hq55
+        iuccP5RskD/WgI5i93dWzWsR8CMNTJ098NMLPvjZbt/6jPB7gIH3M5QmOxZ7D5p2HOpaBNNQ8aLJa
+        vF7huaLIaHiyw8bLOJqBGBsmT2Ptjq11+iN+/Qc3/gy1AfDGhFpRoZHcXH0URtb6CrcA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iVH3A-0004kD-8P; Thu, 14 Nov 2019 16:28:48 +0100
+Date:   Thu, 14 Nov 2019 16:28:48 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] ARM: dts: ls1021a-tsn: Use interrupts for the
+ SGMII PHYs
+Message-ID: <20191114152848.GR10875@lunn.ch>
+References: <20191114110254.32171-1-linux@rasmusvillemoes.dk>
+ <20191114110254.32171-3-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-In-Reply-To: <20191113210544.1894-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114110254.32171-3-linux@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/13/2019 2:05 PM, Rob Herring wrote:
-> Schema errors can cause make to exit before useful information is
-> printed. This leaves developers wondering what's wrong. It can be
-> overcome passing '-k' to make, but that's not an obvious solution.
-> There's 2 scenarios where this happens.
+On Thu, Nov 14, 2019 at 12:02:53PM +0100, Rasmus Villemoes wrote:
+> From: Vladimir Oltean <olteanv@gmail.com>
 > 
-> When using DT_SCHEMA_FILES to validate with a single schema, any error
-> in the schema results in processed-schema.yaml being empty causing a
-> make error. The result is the specific errors in the schema are never
-> shown because processed-schema.yaml is the first target built. Simply
-> making processed-schema.yaml last in extra-y ensures the full schema
-> validation with detailed error messages happen first.
+> On the LS1021A-TSN board, the 2 Atheros AR8031 PHYs for eth0 and eth1
+> have interrupt lines connected to the shared IRQ2_B LS1021A pin.
 > 
-> The 2nd problem is while schema errors are ignored for
-> processed-schema.yaml, full validation of the schema still runs in
-> parallel and any schema validation errors will still stop the build when
-> running validation of dts files. The fix is to not add the schema
-> examples to extra-y in this case. This means 'dtbs_check' is no longer a
-> superset of 'dt_binding_check'. Update the documentation to make this
-> clear.
+> Switching to interrupts offloads the PHY library from the task of
+> polling the MDIO status and AN registers (1, 4, 5) every second.
 > 
-> Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-
-I injected a syntax error into a random binding file, and compared the 
-output with and without this patch.  This patch makes a massive 
-improvement in giving the user the necessary information to identify and 
-fix issues.  Thanks!
-
-Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-
-> ---
->   Documentation/devicetree/bindings/Makefile  | 5 ++++-
->   Documentation/devicetree/writing-schema.rst | 6 ++++--
->   2 files changed, 8 insertions(+), 3 deletions(-)
+> Unfortunately, the BCM5464R quad PHY connected to the switch does not
+> appear to have an interrupt line routed to the SoC.
 > 
-> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-> index 5138a2f6232a..646cb3525373 100644
-> --- a/Documentation/devicetree/bindings/Makefile
-> +++ b/Documentation/devicetree/bindings/Makefile
-> @@ -12,7 +12,6 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
->   	$(call if_changed,chk_binding)
->   
->   DT_TMP_SCHEMA := processed-schema.yaml
-> -extra-y += $(DT_TMP_SCHEMA)
->   
->   quiet_cmd_mk_schema = SCHEMA  $@
->         cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
-> @@ -26,8 +25,12 @@ DT_DOCS = $(shell \
->   
->   DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
->   
-> +ifeq ($(CHECK_DTBS),)
->   extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
->   extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-> +endif
->   
->   $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
->   	$(call if_changed,mk_schema)
-> +
-> +extra-y += $(DT_TMP_SCHEMA)
-> diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-> index 3fce61cfd649..efcd5d21dc2b 100644
-> --- a/Documentation/devicetree/writing-schema.rst
-> +++ b/Documentation/devicetree/writing-schema.rst
-> @@ -133,11 +133,13 @@ binding schema. All of the DT binding documents can be validated using the
->   
->       make dt_binding_check
->   
-> -In order to perform validation of DT source files, use the `dtbs_check` target::
-> +In order to perform validation of DT source files, use the ``dtbs_check`` target::
->   
->       make dtbs_check
->   
-> -This will first run the `dt_binding_check` which generates the processed schema.
-> +Note that ``dtbs_check`` will skip any binding schema files with errors. It is
-> +necessary to use ``dt_binding_check`` to get all the validation errors in the
-> +binding schema files.
->   
->   It is also possible to run checks with a single schema file by setting the
->   ``DT_SCHEMA_FILES`` variable to a specific schema file.
-> 
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+    Andrew
