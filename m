@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA0EC33C9D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 20:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159EEC33C9A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 20:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4395320679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 20:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF3F206F0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 20:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfKNUKq (ORCPT
+        id S1726985AbfKNUKw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:10:46 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:39442 "EHLO inva021.nxp.com"
+        Thu, 14 Nov 2019 15:10:52 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:39642 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbfKNUKq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 15:10:46 -0500
+        id S1726533AbfKNUKw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 15:10:52 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E91520045A;
-        Thu, 14 Nov 2019 21:10:43 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 51A3020047C;
+        Thu, 14 Nov 2019 21:10:49 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 844F1200079;
-        Thu, 14 Nov 2019 21:10:43 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 409B62001E7;
+        Thu, 14 Nov 2019 21:10:49 +0100 (CET)
 Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7479E205D5;
-        Thu, 14 Nov 2019 21:10:42 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E10B2060A;
+        Thu, 14 Nov 2019 21:10:48 +0100 (CET)
 From:   Leonard Crestez <leonard.crestez@nxp.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -55,9 +56,9 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
         Silvano di Ninno <silvano.dininno@nxp.com>,
         linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH RFC v6 3/9] PM / devfreq: imx: Register interconnect device
-Date:   Thu, 14 Nov 2019 22:09:50 +0200
-Message-Id: <e0e6a1685ccdad95c9d0c922801afdda8adb9f05.1573761527.git.leonard.crestez@nxp.com>
+Subject: [PATCH RFC v6 8/9] arm64: dts: imx8m: Add NOC nodes
+Date:   Thu, 14 Nov 2019 22:09:55 +0200
+Message-Id: <da75b45954e3bf58a63be6f3713aafca4258bcf2.1573761527.git.leonard.crestez@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1573761527.git.leonard.crestez@nxp.com>
 References: <cover.1573761527.git.leonard.crestez@nxp.com>
@@ -69,102 +70,131 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is no single device which can represent the imx interconnect.
-Instead of adding a virtual one just make the main &noc act as the
-global interconnect provider.
+Add initial support for dynamic frequency scaling of main NOC.
 
-The imx interconnect provider driver will scale the NOC and DDRC based
-on bandwidth request. More scalable nodes can be added in the future,
-for example for audio/display/vpu/gpu NICs.
+Make DDRC the parent of the NOC (using passive governor) so that the
+main NOC is automatically scaled together with DDRC by default.
+
+Support for proactive scaling via interconnect will come on top.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- drivers/devfreq/imx-devfreq.c | 37 +++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 22 ++++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 22 ++++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
+ 3 files changed, 66 insertions(+)
 
-diff --git a/drivers/devfreq/imx-devfreq.c b/drivers/devfreq/imx-devfreq.c
-index 620b344e87aa..585d340c0f6e 100644
---- a/drivers/devfreq/imx-devfreq.c
-+++ b/drivers/devfreq/imx-devfreq.c
-@@ -15,10 +15,11 @@
- struct imx_devfreq {
- 	struct devfreq_dev_profile profile;
- 	struct devfreq *devfreq;
- 	struct clk *clk;
- 	struct devfreq_passive_data passive_data;
-+	struct platform_device *icc_pdev;
- };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index cf235956bef3..a7eafaedeb40 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -772,10 +772,32 @@
+ 				status = "disabled";
+ 			};
  
- static int imx_devfreq_target(struct device *dev,
- 			      unsigned long *freq, u32 flags)
- {
-@@ -60,11 +61,40 @@ static int imx_devfreq_get_dev_status(struct device *dev,
- 	return 0;
- }
+ 		};
  
- static void imx_devfreq_exit(struct device *dev)
- {
-+	struct imx_devfreq *priv = dev_get_drvdata(dev);
++		noc: interconnect@32700000 {
++			compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
++			reg = <0x32700000 0x100000>;
++			clocks = <&clk IMX8MM_CLK_NOC>;
++			devfreq = <&ddrc>;
++			operating-points-v2 = <&noc_opp_table>;
 +
- 	dev_pm_opp_of_remove_table(dev);
-+	platform_device_unregister(priv->icc_pdev);
-+}
++			noc_opp_table: opp-table {
++				compatible = "operating-points-v2";
 +
-+/* imx_devfreq_init_icc() - register matching icc provider if required */
-+static int imx_devfreq_init_icc(struct device *dev)
-+{
-+	struct imx_devfreq *priv = dev_get_drvdata(dev);
-+	const char *icc_driver_name;
++				opp-150M {
++					opp-hz = /bits/ 64 <150000000>;
++				};
++				opp-375M {
++					opp-hz = /bits/ 64 <375000000>;
++				};
++				opp-750M {
++					opp-hz = /bits/ 64 <750000000>;
++				};
++			};
++		};
 +
-+	if (!IS_ENABLED(CONFIG_INTERCONNECT_IMX))
-+		return 0;
-+	if (!of_get_property(dev->of_node, "#interconnect-cells", 0))
-+		return 0;
-+
-+	icc_driver_name = of_device_get_match_data(dev);
-+	if (!icc_driver_name)
-+		return 0;
-+
-+	priv->icc_pdev = platform_device_register_data(
-+			dev, icc_driver_name, 0, NULL, 0);
-+	if (IS_ERR(priv->icc_pdev)) {
-+		dev_err(dev, "failed to register icc provider %s: %ld\n",
-+				icc_driver_name, PTR_ERR(priv->devfreq));
-+		return PTR_ERR(priv->devfreq);
-+	}
-+
-+	return 0;
- }
+ 		aips4: bus@32c00000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x32c00000 0x32c00000 0x400000>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index 4b44884e857c..fd47f4aef666 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -668,10 +668,32 @@
+ 				status = "disabled";
+ 			};
  
- static int imx_devfreq_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -120,18 +150,25 @@ static int imx_devfreq_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(priv->devfreq);
- 		dev_err(dev, "failed to add devfreq device: %d\n", ret);
- 		goto err;
- 	}
+ 		};
  
-+	ret = imx_devfreq_init_icc(dev);
-+	if (ret)
-+		goto err;
++		noc: interconnect@32700000 {
++			compatible = "fsl,imx8mn-noc", "fsl,imx8m-noc";
++			reg = <0x32700000 0x100000>;
++			clocks = <&clk IMX8MN_CLK_NOC>;
++			devfreq = <&ddrc>;
++			operating-points-v2 = <&noc_opp_table>;
 +
- 	return 0;
++			noc_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-100M {
++					opp-hz = /bits/ 64 <100000000>;
++				};
++				opp-600M {
++					opp-hz = /bits/ 64 <600000000>;
++				};
++				opp-800M {
++					opp-hz = /bits/ 64 <800000000>;
++				};
++			};
++		};
++
+ 		aips4: bus@32c00000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+ 			reg = <0x32c00000 0x400000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index ae4c24c347e2..55231ace5344 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -931,10 +931,32 @@
+ 				fsl,num-rx-queues = <3>;
+ 				status = "disabled";
+ 			};
+ 		};
  
- err:
- 	dev_pm_opp_of_remove_table(dev);
- 	return ret;
- }
- 
- static const struct of_device_id imx_devfreq_of_match[] = {
-+	{ .compatible = "fsl,imx8mq-noc", .data = "imx8mq-interconnect", },
-+	{ .compatible = "fsl,imx8mm-noc", .data = "imx8mm-interconnect", },
-+	{ .compatible = "fsl,imx8mn-noc", .data = "imx8mn-interconnect", },
- 	{ .compatible = "fsl,imx8m-noc", },
- 	{ .compatible = "fsl,imx8m-nic", },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, imx_devfreq_of_match);
++		noc: interconnect@32700000 {
++			compatible = "fsl,imx8mq-noc", "fsl,imx8m-noc";
++			reg = <0x32700000 0x100000>;
++			clocks = <&clk IMX8MQ_CLK_NOC>;
++			devfreq = <&ddrc>;
++			operating-points-v2 = <&noc_opp_table>;
++
++			noc_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-133M {
++					opp-hz = /bits/ 64 <133333333>;
++				};
++				opp-400M {
++					opp-hz = /bits/ 64 <400000000>;
++				};
++				opp-800M {
++					opp-hz = /bits/ 64 <800000000>;
++				};
++			};
++		};
++
+ 		bus@32c00000 { /* AIPS4 */
+ 			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x32c00000 0x32c00000 0x400000>;
 -- 
 2.17.1
 
