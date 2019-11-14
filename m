@@ -2,632 +2,324 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15172C43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 18:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2EDC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 18:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FE92071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 18:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6qpTBFp"
+	by mail.kernel.org (Postfix) with ESMTP id 2DD0420709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 18:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573755738;
+	bh=2MZ7JeBchv6kObO/ttO+Ym4v4mxQGBZeKyg59h8kaDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Fkp1oAemJjdag8n3SoRVq6LxVDzcBrbzphBruM3Vw/VKAM4BzUazFI0IbDViQ98B0
+	 XPvgP7fKeYGnbv/ExdQ8RBVixn4yKoZ9lApK8qb9MhcpviETj1tH2AaU82fBnW838Z
+	 j9gWUwE5vnGp8lpg9KvtEpVqeX430eG2RPazlods=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfKNSNE (ORCPT
+        id S1726549AbfKNSWR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:13:04 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34619 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfKNSNE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 13:13:04 -0500
-Received: by mail-wm1-f68.google.com with SMTP id j18so8087942wmk.1;
-        Thu, 14 Nov 2019 10:13:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e1YGkP3YYWvfobcdQXF349HfrSJSFS8d+634UN9nQdo=;
-        b=g6qpTBFpu7hbN0DNlhTYKEB/EDQXwzuy/rFdXLodRIcYG/Fsd0HthDmF1CTs77jOTd
-         WmPx34XSPqFujnqyajzICPgS8jZL6BiUJgkAYGjFI0Y/c2K/WFaGLYfeg6AZy8ZMXNbP
-         UIftfCSQnlKNzXJEQVaWJpXedUZDKwVMOhcZWHVgtlDm4fTevcMreIURsXkHtt37Tgqi
-         d+DmahMuDPkPKkQWEKOIcEqLN4lmefadHgmvPajbE80mMpedWQTe9t8TXEIVQSbtsDUc
-         xIqElxLzt/0yhWiKBKZpMKD2Tp/3oEdalSKfHGagzjuoe05j0FMr6BbF7M6+QWEV7NGu
-         qeRA==
+        Thu, 14 Nov 2019 13:22:17 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33644 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfKNSWR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 13:22:17 -0500
+Received: by mail-oi1-f195.google.com with SMTP id m193so6189110oig.0;
+        Thu, 14 Nov 2019 10:22:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e1YGkP3YYWvfobcdQXF349HfrSJSFS8d+634UN9nQdo=;
-        b=qewGyZxSWM+9rmnejKt7XpGYLCFlmc2UnDU8FCTPXfDs26Pj6Ertu1If6wetNRO8FW
-         6rnguU5tOX60Ch5SgaGBnIwPsLZjL2PvhMx2ZIP9cX3otJ4qiiSzWXhvd4t4RH7u1R/X
-         GReC7dyv3m/ykjbCnQP/BfIrE6jrSuEVcUnuMJfOdGMIwm54vdTDBCAWBLgrGk4mxrbn
-         m7jtHEqf8KqhoGsyE6u0bpWGhh2uHefFDwyWx/ERZmIjeJ/BJyylM/oz2b30YnGJFUUz
-         q7UaYf3g0GJ9K/AnzD0Fcs5ejmRHQMduMkAPQ/hKVAIyaynCU4xMxlvkknb5dt//MBVK
-         spLA==
-X-Gm-Message-State: APjAAAWoDd1tu+qER6FQHFNoTNHTgyMx08Ny2SwdBICTVX5YBseUgg2G
-        7rbd6/kJqx8Qoq4pekFP2YHsGq6OlD+UhdMrlQc=
-X-Google-Smtp-Source: APXvYqzOhPqpe2Ya5w6enWDgqclI9ThBE4RliZTOVi6zALagLzNnqIkwLM4vHMjAsA+1AGTmJT9bv/qlYP1a0mshPb4=
-X-Received: by 2002:a1c:ed09:: with SMTP id l9mr3913059wmh.101.1573755179254;
- Thu, 14 Nov 2019 10:12:59 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3ZM0l7/aVkkc7/tbWYVkGWwf0qSsYfEVwIFWdU8EXKQ=;
+        b=bage/SXe4HFKGVqSoIBg4HxZBBI9sM+/38vNPYqbir9bagw7WaAv59NSlqMF49sjz6
+         ObEdhGLfwxDyIrjuR/OYczCt+Z9LjXMQ+9bTxRwDIUeMTKLlvGdP8YwIcewESpbTkTgP
+         btiyfXBQqPFtD9tW+O4uxWaUKBoHLis3/CEaTYHlF8Z2BpQW53/XfYz0pHoflSpZTPDo
+         m0BKGgrNDO0bPKvLiYuS768a/JW2ntgcZ4Z94rGYq/M9D6ajqavAO39L34CMs7cRf2WG
+         eBVchjHFj24K674ICYjaGdP8npRJIlOVFquMfgiIfVzc5mhqzYZJ9yRVB6wrCs/R9obG
+         sFAA==
+X-Gm-Message-State: APjAAAVSPA+X2cjdfe40XrqIKzONOj4noRbRbzuX9XePxFPMCCsqbS0b
+        /yGfIMXLLw3SY1DZ5p8YoQ==
+X-Google-Smtp-Source: APXvYqxgQRQdrim9O091TB59rW3d/3ojEsp/TMb0NUApED2QTgVSziIztxDUDPJ0tpPU7uU0F7UhOA==
+X-Received: by 2002:aca:4891:: with SMTP id v139mr2287416oia.175.1573755735866;
+        Thu, 14 Nov 2019 10:22:15 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i12sm2079082ota.10.2019.11.14.10.22.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 10:22:15 -0800 (PST)
+Date:   Thu, 14 Nov 2019 12:22:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Christophe Roullier <christophe.roullier@st.com>
+Cc:     davem@davemloft.net, mark.rutland@arm.com, mripard@kernel.org,
+        martin.blumenstingl@googlemail.com, alexandru.ardelean@analog.com,
+        narmstrong@baylibre.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH  2/2] dt-bindings: net: dwmac: Convert stm32 dwmac to DT
+ schema
+Message-ID: <20191114182214.GA22693@bogus>
+References: <20191108103526.22254-1-christophe.roullier@st.com>
+ <20191108103526.22254-3-christophe.roullier@st.com>
 MIME-Version: 1.0
-References: <1573726588-18897-1-git-send-email-harigovi@codeaurora.org> <1573726588-18897-2-git-send-email-harigovi@codeaurora.org>
-In-Reply-To: <1573726588-18897-2-git-send-email-harigovi@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 14 Nov 2019 10:12:47 -0800
-Message-ID: <CAF6AEGs2VNJMMCxTRrosKaijjs2HV318Sak7vwdRyLw5kDjXTg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] drm/panel: add support for rm69299 visionox panel driver
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        nganji@codeaurora.org, Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191108103526.22254-3-christophe.roullier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 2:17 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> Add support for Visionox panel driver.
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+On Fri, Nov 08, 2019 at 11:35:26AM +0100, Christophe Roullier wrote:
+> Convert stm32 dwmac to DT schema.
+
+Lots of checkpatch errors with trailing WS.
+
+> 
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 > ---
->  drivers/gpu/drm/panel/Kconfig                  |   9 +
->  drivers/gpu/drm/panel/Makefile                 |   1 +
->  drivers/gpu/drm/panel/panel-visionox-rm69299.c | 478 +++++++++++++++++++++++++
->  3 files changed, 488 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-visionox-rm69299.c
->
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index f152bc4..c06c403 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -355,4 +355,13 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
->         help
->           Say Y here if you want to enable support for Truly NT35597 WQXGA Dual DSI
->           Video Mode panel
-> +
-> +config DRM_PANEL_VISIONOX_RM69299
-> +       tristate "Visionox RM69299"
-> +       depends on OF
-> +       depends on DRM_MIPI_DSI
-> +       help
-> +         Say Y here if you want to enable support for Visionox
-> +         RM69299  DSI Video Mode panel.
-> +
->  endmenu
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index b6cd39f..6f1e4c6 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -38,3 +38,4 @@ obj-$(CONFIG_DRM_PANEL_TPO_TD028TTEC1) += panel-tpo-td028ttec1.o
->  obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
->  obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
->  obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
-> +obj-$(CONFIG_DRM_PANEL_VISIONOX_RM69299) += panel-visionox-rm69299.o
-> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+>  .../devicetree/bindings/net/stm32-dwmac.txt   |  44 -----
+>  .../devicetree/bindings/net/stm32-dwmac.yaml  | 161 ++++++++++++++++++
+>  2 files changed, 161 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> deleted file mode 100644
+> index a90eef11dc46..000000000000
+> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> +++ /dev/null
+> @@ -1,44 +0,0 @@
+> -STMicroelectronics STM32 / MCU DWMAC glue layer controller
+> -
+> -This file documents platform glue layer for stmmac.
+> -Please see stmmac.txt for the other unchanged properties.
+> -
+> -The device node has following properties.
+> -
+> -Required properties:
+> -- compatible:  For MCU family should be "st,stm32-dwmac" to select glue, and
+> -	       "snps,dwmac-3.50a" to select IP version.
+> -	       For MPU family should be "st,stm32mp1-dwmac" to select
+> -	       glue, and "snps,dwmac-4.20a" to select IP version.
+> -- clocks: Must contain a phandle for each entry in clock-names.
+> -- clock-names: Should be "stmmaceth" for the host clock.
+> -	       Should be "mac-clk-tx" for the MAC TX clock.
+> -	       Should be "mac-clk-rx" for the MAC RX clock.
+> -	       For MPU family need to add also "ethstp" for power mode clock
+> -- interrupt-names: Should contain a list of interrupt names corresponding to
+> -           the interrupts in the interrupts property, if available.
+> -		   Should be "macirq" for the main MAC IRQ
+> -		   Should be "eth_wake_irq" for the IT which wake up system
+> -- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+> -	       encompases the glue register, and the offset of the control register.
+> -
+> -Optional properties:
+> -- clock-names:     For MPU family "eth-ck" for PHY without quartz
+> -- st,eth-clk-sel (boolean) : set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
+> -- st,eth-ref-clk-sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
+> -
+> -Example:
+> -
+> -	ethernet@40028000 {
+> -		compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+> -		reg = <0x40028000 0x8000>;
+> -		reg-names = "stmmaceth";
+> -		interrupts = <0 61 0>, <0 62 0>;
+> -		interrupt-names = "macirq", "eth_wake_irq";
+> -		clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
+> -		clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+> -		st,syscon = <&syscfg 0x4>;
+> -		snps,pbl = <8>;
+> -		snps,mixed-burst;
+> -		dma-ranges;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
 > new file mode 100644
-> index 0000000..faf6d05
+> index 000000000000..eb0fd831f59d
 > --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> @@ -0,0 +1,478 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + */
+> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> @@ -0,0 +1,161 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/net/stm32-dwmac.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +#include <drm/drm_panel.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_modes.h>
-> +#include <drm/drm_panel.h>
-> +#include <drm/drm_print.h>
+> +title: STMicroelectronics STM32 / MCU DWMAC glue layer controller
 > +
-> +#include <linux/of_gpio.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/backlight.h>
-> +#include <linux/module.h>
-> +#include <linux/delay.h>
+> +maintainers:
+> +  - Alexandre Torgue <alexandre.torgue@st.com>
+> +  - Christophe Roullier <christophe.roullier@st.com>
 > +
-> +#include <video/mipi_display.h>
+> +description:
+> +  This file documents platform glue layer for stmmac.
 > +
-> +static const char * const regulator_names[] = {
-> +       "vdda",
-> +       "vdd3p3",
-> +};
+> +# We need a select here so we don't match all nodes with 'snps,dwmac'
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - st,stm32-dwmac
+> +          - st,stm32mp1-dwmac
+> +  required:
+> +    - compatible
 > +
-> +static unsigned long const regulator_enable_loads[] = {
-> +       32000,
-> +       13200,
-> +};
-> +
-> +static unsigned long const regulator_disable_loads[] = {
-> +       80,
-> +       80,
-> +};
-> +
-> +struct cmd_set {
-> +       u8 commands[4];
-> +       u8 size;
-> +};
-> +
-> +struct rm69299_config {
-> +       u32 width_mm;
-> +       u32 height_mm;
-> +       const char *panel_name;
-> +       const struct cmd_set *panel_on_cmds;
-> +       u32 num_on_cmds;
-> +       const struct drm_display_mode *dm;
-> +};
-> +
-> +struct visionox_rm69299 {
-> +       struct device *dev;
-> +       struct drm_panel panel;
-> +
-> +       struct regulator_bulk_data supplies[ARRAY_SIZE(regulator_names)];
-> +
-> +       struct gpio_desc *reset_gpio;
-> +
-> +       struct backlight_device *backlight;
-> +
-> +       struct mipi_dsi_device *dsi;
-> +       const struct rm69299_config *config;
-> +       bool prepared;
-> +       bool enabled;
-> +};
-> +
-> +static inline struct visionox_rm69299 *panel_to_ctx(struct drm_panel *panel)
-> +{
-> +       return container_of(panel, struct visionox_rm69299, panel);
-> +}
-> +
-> +static const struct cmd_set qcom_rm69299_1080p_panel_magic_cmds[] = {
-> +       { { 0xfe, 0x00 }, 2 },
-> +       { { 0xc2, 0x08 }, 2 },
-> +       { { 0x35, 0x00 }, 2 },
-> +       { { 0x51, 0xff }, 2 },
-> +};
+> +allOf:
+> +  - $ref: "snps,dwmac.yaml#"
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - st,stm32-dwmac
+> +              - st,stm32mp1-dwmac
+> +    then:
+> +      properties:
+> +       clocks:
+> +         minItems: 3 
+> +         maxItems: 5
+> +         items:
+> +          - description: GMAC main clock
+> +          - description: MAC TX clock
+> +          - description: MAC RX clock
+> +          - description: For MPU family, used for power mode
 
-I'm not really seeing the value of a table of cmds, vs just a sequence
-of mipi_dsi_dcs_write_buffer() calls.. it is only used in one place,
-so it just seems like a level of indirection that doesn't add value,
-compared to something like:
+What does 'power mode' mean? IIRC, some DW MACs have a clock for WoL 
+called LPI or something. Are you sure this is ST specific and not DW 
+config or version specific?
 
-  mipi_dsi_dsc_write_buffer(dsi, (u8[]){ 0xfe, 0x00 }, 2);
+> +          - description: For MPU family, used for PHY without quartz
 
-(otoh, some of the other panel so maybe Thierry is less picky)
+It would be cleaner to define the clock always present and use a 
+fixed-clock when you have an external quartz. 
 
 > +
-> +static int visionox_dcs_write(struct drm_panel *panel, u32 command)
-> +{
-> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> +       int i = 0, ret;
+> +       clock-names:
+> +         minItems: 3          
+> +         maxItems: 5
+> +         contains:
+> +          enum:
+> +            - stmmaceth
+> +            - mac-clk-tx
+> +            - mac-clk-rx
+> +            - ethstp
+> +            - eth-ck     
 > +
-> +       ret = mipi_dsi_dcs_write(ctx->dsi, command, NULL, 0);
-> +       if (ret < 0) {
-> +               DRM_DEV_ERROR(ctx->dev,
-> +                       "cmd 0x%x failed for dsi = %d\n",
-> +                       command, i);
-> +       }
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - st,stm32mp1-dwmac
+> +          - const: snps,dwmac-4.20a
+> +      - items:
+> +          - enum:
+> +              - st,stm32-dwmac
+> +          - const: snps,dwmac-4.10a
+> +      - items:
+> +          - enum:
+> +              - st,stm32-dwmac
+> +          - const: snps,dwmac-3.50a            
 > +
-> +       return ret;
-> +}
+> +  st,syscon:
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> +    description:
+> +      Should be phandle/offset pair. The phandle to the syscon node which
+> +      encompases the glue register, and the offset of the control register
 > +
-> +static int visionox_dcs_write_buf(struct drm_panel *panel,
-> +       u32 size, const u8 *buf)
-> +{
-> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> +       int ret = 0;
-> +       int i = 0;
-> +
-> +       ret = mipi_dsi_dcs_write_buffer(ctx->dsi, buf, size);
-> +       if (ret < 0) {
-> +               DRM_DEV_ERROR(ctx->dev,
-> +                       "failed to tx cmd [%d], err: %d\n", i, ret);
-> +               return ret;
-> +       }
-> +
-> +       return ret;
-> +}
+> +  st,eth-clk-sel:
+> +    description:
+> +      set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
+> +    type: boolean
+> +    
+> +  st,eth-ref-clk-sel:
+> +    description:
+> +      set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
 
-drop these two and just use mipi_dsi_dcs_write(_buffer)() directly..
-the only extra thing these seem to do is error reporting, which is
-already done at the call-sites of these.
+Wrap lines.
 
+> +    type: boolean   
 > +
-> +static int visionox_35597_power_on(struct visionox_rm69299 *ctx)
-> +{
-> +       int ret, i;
-> +       for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++) {
-> +               ret = regulator_set_load(ctx->supplies[i].consumer,
-> +                                       regulator_enable_loads[i]);
-> +               if (ret)
-> +                       return ret;
-> +       }
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - st,syscon
 > +
-> +       ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> +       if (ret < 0)
-> +               return ret;
+> +examples:
+> + - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    #include <dt-bindings/reset/stm32mp1-resets.h>
+> +    #include <dt-bindings/mfd/stm32h7-rcc.h>  
+> +    //Example 1
+> +     ethernet0: ethernet@5800a000 {
+> +       compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
+> +       reg = <0x5800a000 0x2000>;
+> +       reg-names = "stmmaceth";
+> +       interrupts = <&intc GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+> +       interrupt-names = "macirq";
+> +       clock-names = "stmmaceth",
+> +                     "mac-clk-tx",
+> +                     "mac-clk-rx",
+> +                     "ethstp",
+> +                     "eth-ck";				      
+> +       clocks = <&rcc ETHMAC>,
+> +                <&rcc ETHTX>,
+> +                <&rcc ETHRX>,
+> +                <&rcc ETHSTP>,
+> +                <&rcc ETHCK_K>;	
+> +       st,syscon = <&syscfg 0x4>;
+> +       snps,pbl = <2>;
+> +       snps,axi-config = <&stmmac_axi_config_0>;
+> +       snps,tso;
+> +       status = "disabled";
+> +       phy-mode = "rgmii";       
+> +       };
 > +
-> +       /*
-> +        * Reset sequence of visionox panel requires the panel to be
-> +        * out of reset for 10ms, followed by being held in reset
-> +        * for 10ms and then out again
-> +        */
-> +       gpiod_set_value(ctx->reset_gpio, 1);
-> +       usleep_range(10000, 20000);
-> +       gpiod_set_value(ctx->reset_gpio, 0);
-> +       usleep_range(10000, 20000);
-> +       gpiod_set_value(ctx->reset_gpio, 1);
-> +       usleep_range(10000, 20000);
-> +
-> +       return 0;
-> +}
-> +
-> +static int visionox_rm69299_power_off(struct visionox_rm69299 *ctx)
-> +{
-> +       int ret = 0;
-> +       int i;
-> +
-> +       gpiod_set_value(ctx->reset_gpio, 0);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++) {
-> +               ret = regulator_set_load(ctx->supplies[i].consumer,
-> +                               regulator_disable_loads[i]);
-> +               if (ret) {
-> +                       DRM_DEV_ERROR(ctx->dev,
-> +                               "regulator_set_load failed %d\n", ret);
-> +                       return ret;
-> +               }
-> +       }
-> +
-> +       ret = regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> +       if (ret) {
-> +               DRM_DEV_ERROR(ctx->dev,
-> +                       "regulator_bulk_disable failed %d\n", ret);
-> +       }
-> +       return ret;
-> +}
-> +
-> +static int visionox_rm69299_disable(struct drm_panel *panel)
-> +{
-> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> +       int ret;
-> +
-> +       if (!ctx->enabled)
-> +               return 0;
-> +
-> +       if (ctx->backlight) {
-> +               ret = backlight_disable(ctx->backlight);
-> +               if (ret < 0)
-> +                       DRM_DEV_ERROR(ctx->dev, "backlight disable failed %d\n",
-> +                               ret);
-> +       }
-> +
-> +       ctx->enabled = false;
-> +       return 0;
-> +}
-> +
-> +static int visionox_rm69299_unprepare(struct drm_panel *panel)
-> +{
-> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> +       int ret = 0;
-> +
-> +       if (!ctx->prepared)
-> +               return 0;
-> +
-> +       ctx->dsi->mode_flags = 0;
-> +
-> +       ret = visionox_dcs_write(panel, MIPI_DCS_SET_DISPLAY_OFF);
+> +    //Example 1 (MCU example)
 
-mipi_dsi_dcs_set_display_off()
+2 Example 1's?
 
-> +       if (ret < 0) {
-> +               DRM_DEV_ERROR(ctx->dev,
-> +                       "set_display_off cmd failed ret = %d\n",
-> +                       ret);
-> +       }
+> +     ethernet1: ethernet@40028000 {
+> +       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+> +       reg = <0x40028000 0x8000>;
+> +       reg-names = "stmmaceth";
+> +       interrupts = <0 61 0>, <0 62 0>;
+> +       interrupt-names = "macirq", "eth_wake_irq";
+> +       clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
+> +       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+> +       st,syscon = <&syscfg 0x4>;
+> +       snps,pbl = <8>;
+> +       snps,mixed-burst;
+> +       dma-ranges;
+> +       phy-mode = "mii";       
+> +       };
 > +
-> +       /* 120ms delay required here as per DCS spec */
-> +       msleep(120);
+> +    //Example 2 
+> +     ethernet2: ethernet@40027000 {
+> +       compatible = "st,stm32-dwmac", "snps,dwmac-4.10a";
+> +       reg = <0x40028000 0x8000>;
+> +       reg-names = "stmmaceth";
+> +       interrupts = <61>;
+> +       interrupt-names = "macirq";
+> +       clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
+> +       clocks = <&rcc 62>, <&rcc 61>, <&rcc 60>;
+> +       st,syscon = <&syscfg 0x4>;
+> +       snps,pbl = <8>;
+> +       status = "disabled";
+> +       phy-mode = "mii";        
+> +       };
 > +
-> +       ret = visionox_dcs_write(panel, MIPI_DCS_ENTER_SLEEP_MODE);
-
-mipi_dsi_dcs_enter_sleep_mode()
-
-(same comment at a few points below as well)
-
-BR,
--R
-
-
-> +       if (ret < 0) {
-> +               DRM_DEV_ERROR(ctx->dev,
-> +                       "enter_sleep cmd failed ret = %d\n", ret);
-> +       }
-> +
-> +       ret = visionox_rm69299_power_off(ctx);
-> +       if (ret < 0)
-> +               DRM_DEV_ERROR(ctx->dev, "power_off failed ret = %d\n", ret);
-> +
-> +       ctx->prepared = false;
-> +       return ret;
-> +}
-> +
-> +static int visionox_rm69299_prepare(struct drm_panel *panel)
-> +{
-> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> +       int ret;
-> +       int i;
-> +       const struct cmd_set *panel_on_cmds;
-> +       const struct rm69299_config *config;
-> +       u32 num_cmds;
-> +
-> +       if (ctx->prepared)
-> +               return 0;
-> +
-> +       ret = visionox_35597_power_on(ctx);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ctx->dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-> +
-> +       config = ctx->config;
-> +       panel_on_cmds = config->panel_on_cmds;
-> +       num_cmds = config->num_on_cmds;
-> +
-> +       for (i = 0; i < num_cmds; i++) {
-> +               ret = visionox_dcs_write_buf(panel,
-> +                               panel_on_cmds[i].size,
-> +                                       panel_on_cmds[i].commands);
-> +               if (ret < 0) {
-> +                       DRM_DEV_ERROR(ctx->dev,
-> +                               "cmd set tx failed i = %d ret = %d\n",
-> +                                       i, ret);
-> +                       goto power_off;
-> +               }
-> +       }
-> +
-> +       ret = visionox_dcs_write(panel, MIPI_DCS_EXIT_SLEEP_MODE);
-> +       if (ret < 0) {
-> +               DRM_DEV_ERROR(ctx->dev,
-> +                       "exit_sleep_mode cmd failed ret = %d\n",
-> +                       ret);
-> +               goto power_off;
-> +       }
-> +
-> +       /* Per DSI spec wait 120ms after sending exit sleep DCS command */
-> +       msleep(120);
-> +
-> +       ret = visionox_dcs_write(panel, MIPI_DCS_SET_DISPLAY_ON);
-> +       if (ret < 0) {
-> +               DRM_DEV_ERROR(ctx->dev,
-> +                       "set_display_on cmd failed ret = %d\n", ret);
-> +               goto power_off;
-> +       }
-> +
-> +       /* Per DSI spec wait 120ms after sending set_display_on DCS command */
-> +       msleep(120);
-> +
-> +       ctx->prepared = true;
-> +
-> +       return 0;
-> +
-> +power_off:
-> +       if (visionox_rm69299_power_off(ctx))
-> +               DRM_DEV_ERROR(ctx->dev, "power_off failed\n");
-> +       return ret;
-> +}
-> +
-> +static int visionox_rm69299_enable(struct drm_panel *panel)
-> +{
-> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> +       int ret;
-> +
-> +       if (ctx->enabled)
-> +               return 0;
-> +
-> +       if (ctx->backlight) {
-> +               ret = backlight_enable(ctx->backlight);
-> +               if (ret < 0)
-> +                       DRM_DEV_ERROR(ctx->dev, "backlight enable failed %d\n",
-> +                                                 ret);
-> +       }
-> +
-> +       ctx->enabled = true;
-> +
-> +       return 0;
-> +}
-> +
-> +static int visionox_rm69299_get_modes(struct drm_panel *panel)
-> +{
-> +       struct drm_connector *connector = panel->connector;
-> +       struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> +       struct drm_display_mode *mode;
-> +       const struct rm69299_config *config;
-> +
-> +       config = ctx->config;
-> +       mode = drm_mode_create(connector->dev);
-> +       if (!mode) {
-> +               DRM_DEV_ERROR(ctx->dev,
-> +                       "failed to create a new display mode\n");
-> +               return 0;
-> +       }
-> +
-> +       connector->display_info.width_mm = config->width_mm;
-> +       connector->display_info.height_mm = config->height_mm;
-> +       drm_mode_copy(mode, config->dm);
-> +       mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-> +       drm_mode_probed_add(connector, mode);
-> +
-> +       return 1;
-> +}
-> +
-> +static const struct drm_panel_funcs visionox_rm69299_drm_funcs = {
-> +       .disable = visionox_rm69299_disable,
-> +       .unprepare = visionox_rm69299_unprepare,
-> +       .prepare = visionox_rm69299_prepare,
-> +       .enable = visionox_rm69299_enable,
-> +       .get_modes = visionox_rm69299_get_modes,
-> +};
-> +
-> +static int visionox_rm69299_panel_add(struct visionox_rm69299 *ctx)
-> +{
-> +       struct device *dev = ctx->dev;
-> +       int ret, i;
-> +       const struct rm69299_config *config;
-> +
-> +       config = ctx->config;
-> +       for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++)
-> +               ctx->supplies[i].supply = regulator_names[i];
-> +
-> +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-> +                                     ctx->supplies);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> +       if (IS_ERR(ctx->reset_gpio)) {
-> +               DRM_DEV_ERROR(dev, "cannot get reset gpio %ld\n",
-> +                       PTR_ERR(ctx->reset_gpio));
-> +               return PTR_ERR(ctx->reset_gpio);
-> +       }
-> +
-> +       ret = gpiod_direction_output(ctx->reset_gpio, 0);
-> +       if(ret < 0) {
-> +               pr_err("direction output failed \n");
-> +       }
-> +
-> +       drm_panel_init(&ctx->panel);
-> +       ctx->panel.dev = dev;
-> +       ctx->panel.funcs = &visionox_rm69299_drm_funcs;
-> +       drm_panel_add(&ctx->panel);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct drm_display_mode qcom_sc7180_mtp_1080p_mode = {
-> +       .name = "1080x2248",
-> +       .clock = 158695,
-> +       .hdisplay = 1080,
-> +       .hsync_start = 1080 + 26,
-> +       .hsync_end = 1080 + 26 + 2,
-> +       .htotal = 1080 + 26 + 2 + 36,
-> +       .vdisplay = 2248,
-> +       .vsync_start = 2248 + 56,
-> +       .vsync_end = 2248 + 56 + 4,
-> +       .vtotal = 2248 + 56 + 4 + 4,
-> +       .vrefresh = 60,
-> +       .flags = 0,
-> +};
-> +
-> +static const struct rm69299_config rm69299_dir = {
-> +       .width_mm = 74,
-> +       .height_mm = 131,
-> +       .panel_name = "qcom_sc7180_mtp_1080p_panel",
-> +       .dm = &qcom_sc7180_mtp_1080p_mode,
-> +       .panel_on_cmds = qcom_rm69299_1080p_panel_magic_cmds,
-> +       .num_on_cmds = ARRAY_SIZE(qcom_rm69299_1080p_panel_magic_cmds),
-> +};
-> +
-> +static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
-> +{
-> +       struct device *dev = &dsi->dev;
-> +       struct visionox_rm69299 *ctx;
-> +       int ret = 0;
-> +
-> +       ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +
-> +       if (!ctx)
-> +               return -ENOMEM;
-> +
-> +       ctx->config = of_device_get_match_data(dev);
-> +
-> +       if (!ctx->config) {
-> +               dev_err(dev, "missing device configuration\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       mipi_dsi_set_drvdata(dsi, ctx);
-> +
-> +       ctx->dev = dev;
-> +       ctx->dsi = dsi;
-> +
-> +       ret = visionox_rm69299_panel_add(ctx);
-> +       if (ret) {
-> +               DRM_DEV_ERROR(dev, "failed to add panel\n");
-> +               goto err_panel_add;
-> +       }
-> +
-> +       dsi->lanes = 4;
-> +       dsi->format = MIPI_DSI_FMT_RGB888;
-> +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_LPM |
-> +               MIPI_DSI_CLOCK_NON_CONTINUOUS;
-> +       ret = mipi_dsi_attach(dsi);
-> +       if (ret < 0) {
-> +               DRM_DEV_ERROR(dev,
-> +                       "dsi attach failed ret = %d\n", ret);
-> +               goto err_dsi_attach;
-> +       }
-> +
-> +       return 0;
-> +
-> +err_dsi_attach:
-> +       drm_panel_remove(&ctx->panel);
-> +err_panel_add:
-> +       mipi_dsi_device_unregister(dsi);
-> +       return ret;
-> +}
-> +
-> +static int visionox_rm69299_remove(struct mipi_dsi_device *dsi)
-> +{
-> +       struct visionox_rm69299 *ctx = mipi_dsi_get_drvdata(dsi);
-> +
-> +       if (ctx->dsi) {
-> +               mipi_dsi_detach(ctx->dsi);
-> +               mipi_dsi_device_unregister(ctx->dsi);
-> +       }
-> +
-> +       drm_panel_remove(&ctx->panel);
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id visionox_rm69299_of_match[] = {
-> +       {
-> +               .compatible = "visionox,rm69299-1080p-display",
-> +               .data = &rm69299_dir,
-> +       },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, visionox_rm69299_of_match);
-> +
-> +static struct mipi_dsi_driver visionox_rm69299_driver = {
-> +       .driver = {
-> +               .name = "panel-visionox-rm69299",
-> +               .of_match_table = visionox_rm69299_of_match,
-> +       },
-> +       .probe = visionox_rm69299_probe,
-> +       .remove = visionox_rm69299_remove,
-> +};
-> +module_mipi_dsi_driver(visionox_rm69299_driver);
-> +
-> +MODULE_DESCRIPTION("VISIONOX RM69299 DSI Panel Driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.7.4
->
+> +       
+> -- 
+> 2.17.1
+> 
