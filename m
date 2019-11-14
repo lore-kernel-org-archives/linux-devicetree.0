@@ -2,324 +2,85 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2EDC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 18:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCA1C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 18:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD0420709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 18:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B702071B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 18:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573755738;
-	bh=2MZ7JeBchv6kObO/ttO+Ym4v4mxQGBZeKyg59h8kaDE=;
+	s=default; t=1573755806;
+	bh=uXz9ewlppFBAk9iQQDwHMvaA4aW3M7EC9m9ykvqKlO8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fkp1oAemJjdag8n3SoRVq6LxVDzcBrbzphBruM3Vw/VKAM4BzUazFI0IbDViQ98B0
-	 XPvgP7fKeYGnbv/ExdQ8RBVixn4yKoZ9lApK8qb9MhcpviETj1tH2AaU82fBnW838Z
-	 j9gWUwE5vnGp8lpg9KvtEpVqeX430eG2RPazlods=
+	b=txhJLS4ln4uYAJIirY1I6NA2+uJ1p43oEce01BJB0rnCHeGmzCCBs/bjlmlwtdTuB
+	 LNpvyA0PoszRZE/szatwNv17rmy+ob1+kBNZuENbhQnuUNiVfpmB15a2oIQfZUypwx
+	 4wuU5gn05nYyrDZJQMidGPmRKPjs/fkLahoLiKNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfKNSWR (ORCPT
+        id S1727022AbfKNSXW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 13:22:17 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33644 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfKNSWR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 13:22:17 -0500
-Received: by mail-oi1-f195.google.com with SMTP id m193so6189110oig.0;
-        Thu, 14 Nov 2019 10:22:16 -0800 (PST)
+        Thu, 14 Nov 2019 13:23:22 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39622 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfKNSXW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 13:23:22 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w24so5230612otk.6;
+        Thu, 14 Nov 2019 10:23:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3ZM0l7/aVkkc7/tbWYVkGWwf0qSsYfEVwIFWdU8EXKQ=;
-        b=bage/SXe4HFKGVqSoIBg4HxZBBI9sM+/38vNPYqbir9bagw7WaAv59NSlqMF49sjz6
-         ObEdhGLfwxDyIrjuR/OYczCt+Z9LjXMQ+9bTxRwDIUeMTKLlvGdP8YwIcewESpbTkTgP
-         btiyfXBQqPFtD9tW+O4uxWaUKBoHLis3/CEaTYHlF8Z2BpQW53/XfYz0pHoflSpZTPDo
-         m0BKGgrNDO0bPKvLiYuS768a/JW2ntgcZ4Z94rGYq/M9D6ajqavAO39L34CMs7cRf2WG
-         eBVchjHFj24K674ICYjaGdP8npRJIlOVFquMfgiIfVzc5mhqzYZJ9yRVB6wrCs/R9obG
-         sFAA==
-X-Gm-Message-State: APjAAAVSPA+X2cjdfe40XrqIKzONOj4noRbRbzuX9XePxFPMCCsqbS0b
-        /yGfIMXLLw3SY1DZ5p8YoQ==
-X-Google-Smtp-Source: APXvYqxgQRQdrim9O091TB59rW3d/3ojEsp/TMb0NUApED2QTgVSziIztxDUDPJ0tpPU7uU0F7UhOA==
-X-Received: by 2002:aca:4891:: with SMTP id v139mr2287416oia.175.1573755735866;
-        Thu, 14 Nov 2019 10:22:15 -0800 (PST)
+        bh=We1eIYfe7WX/UTvD7cIZM+ofCDWLAgk+Qxj1BAO42b0=;
+        b=MS9OmltjYAePhdsy4glsehhX8e9L+qcA/zlKdT+uKSNsDjF+v9xztc2Sx2+FwEszq1
+         jRi/a6q4NWnRiCYWMvcqYlg6l3tRE0iMA+s0/c4aSQ0B+TEPbu1XyZ12RdWx578BrX8b
+         BcdF+nrQ0u0uuBnMNrQw0z61CQPRUyLK6JpwP7ccsMp9LWu6DFxgF+EgUhOlOjgBPj72
+         1+hwZZOP6VcNOyJJBRNke0g2/hcA+YL4ET9Q+Xv3Lv1aWjCUDZp95997sLCUDoyaLv2r
+         pJdgS6qfVP6KzMa+xWFKPwdXJck4yGYKQXlJTAG3zRyf8T61ECJumrxTocs3BmVxBKnB
+         NA0w==
+X-Gm-Message-State: APjAAAVXdLcj3cpAxTiMLVnLC1zyzHKInt7CEg+wp3/Vy1EoYU5uDYAL
+        sBBiSAsepecbZPODb/ROxg==
+X-Google-Smtp-Source: APXvYqwo6kXGEPryKuL+HGAKREL3C89a1kwOGngbbA0H80iPNwUDrvY5GU9i+B3nKYJHrbeIg95QjQ==
+X-Received: by 2002:a05:6830:1143:: with SMTP id x3mr8612180otq.274.1573755801307;
+        Thu, 14 Nov 2019 10:23:21 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i12sm2079082ota.10.2019.11.14.10.22.15
+        by smtp.gmail.com with ESMTPSA id 37sm2055877oti.40.2019.11.14.10.23.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 10:22:15 -0800 (PST)
-Date:   Thu, 14 Nov 2019 12:22:14 -0600
+        Thu, 14 Nov 2019 10:23:20 -0800 (PST)
+Date:   Thu, 14 Nov 2019 12:23:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Christophe Roullier <christophe.roullier@st.com>
-Cc:     davem@davemloft.net, mark.rutland@arm.com, mripard@kernel.org,
-        martin.blumenstingl@googlemail.com, alexandru.ardelean@analog.com,
-        narmstrong@baylibre.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH  2/2] dt-bindings: net: dwmac: Convert stm32 dwmac to DT
- schema
-Message-ID: <20191114182214.GA22693@bogus>
-References: <20191108103526.22254-1-christophe.roullier@st.com>
- <20191108103526.22254-3-christophe.roullier@st.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, andrew.smirnov@gmail.com,
+        manivannan.sadhasivam@linaro.org, andreas@kemnade.info,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: add compatible string for
+ Tolino Shine 3
+Message-ID: <20191114182320.GA21532@bogus>
+References: <20191108111834.18610-1-andreas@kemnade.info>
+ <20191108111834.18610-2-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191108103526.22254-3-christophe.roullier@st.com>
+In-Reply-To: <20191108111834.18610-2-andreas@kemnade.info>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 08, 2019 at 11:35:26AM +0100, Christophe Roullier wrote:
-> Convert stm32 dwmac to DT schema.
-
-Lots of checkpatch errors with trailing WS.
-
+On Fri,  8 Nov 2019 12:18:33 +0100, Andreas Kemnade wrote:
+> This adds a compatible string for the Tolino Shine 3 eBook reader.
 > 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 > ---
->  .../devicetree/bindings/net/stm32-dwmac.txt   |  44 -----
->  .../devicetree/bindings/net/stm32-dwmac.yaml  | 161 ++++++++++++++++++
->  2 files changed, 161 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
->  create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> deleted file mode 100644
-> index a90eef11dc46..000000000000
-> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> +++ /dev/null
-> @@ -1,44 +0,0 @@
-> -STMicroelectronics STM32 / MCU DWMAC glue layer controller
-> -
-> -This file documents platform glue layer for stmmac.
-> -Please see stmmac.txt for the other unchanged properties.
-> -
-> -The device node has following properties.
-> -
-> -Required properties:
-> -- compatible:  For MCU family should be "st,stm32-dwmac" to select glue, and
-> -	       "snps,dwmac-3.50a" to select IP version.
-> -	       For MPU family should be "st,stm32mp1-dwmac" to select
-> -	       glue, and "snps,dwmac-4.20a" to select IP version.
-> -- clocks: Must contain a phandle for each entry in clock-names.
-> -- clock-names: Should be "stmmaceth" for the host clock.
-> -	       Should be "mac-clk-tx" for the MAC TX clock.
-> -	       Should be "mac-clk-rx" for the MAC RX clock.
-> -	       For MPU family need to add also "ethstp" for power mode clock
-> -- interrupt-names: Should contain a list of interrupt names corresponding to
-> -           the interrupts in the interrupts property, if available.
-> -		   Should be "macirq" for the main MAC IRQ
-> -		   Should be "eth_wake_irq" for the IT which wake up system
-> -- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
-> -	       encompases the glue register, and the offset of the control register.
-> -
-> -Optional properties:
-> -- clock-names:     For MPU family "eth-ck" for PHY without quartz
-> -- st,eth-clk-sel (boolean) : set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-> -- st,eth-ref-clk-sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
-> -
-> -Example:
-> -
-> -	ethernet@40028000 {
-> -		compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-> -		reg = <0x40028000 0x8000>;
-> -		reg-names = "stmmaceth";
-> -		interrupts = <0 61 0>, <0 62 0>;
-> -		interrupt-names = "macirq", "eth_wake_irq";
-> -		clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-> -		clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-> -		st,syscon = <&syscfg 0x4>;
-> -		snps,pbl = <8>;
-> -		snps,mixed-burst;
-> -		dma-ranges;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> new file mode 100644
-> index 000000000000..eb0fd831f59d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> @@ -0,0 +1,161 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/net/stm32-dwmac.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: STMicroelectronics STM32 / MCU DWMAC glue layer controller
-> +
-> +maintainers:
-> +  - Alexandre Torgue <alexandre.torgue@st.com>
-> +  - Christophe Roullier <christophe.roullier@st.com>
-> +
-> +description:
-> +  This file documents platform glue layer for stmmac.
-> +
-> +# We need a select here so we don't match all nodes with 'snps,dwmac'
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - st,stm32-dwmac
-> +          - st,stm32mp1-dwmac
-> +  required:
-> +    - compatible
-> +
-> +allOf:
-> +  - $ref: "snps,dwmac.yaml#"
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - st,stm32-dwmac
-> +              - st,stm32mp1-dwmac
-> +    then:
-> +      properties:
-> +       clocks:
-> +         minItems: 3 
-> +         maxItems: 5
-> +         items:
-> +          - description: GMAC main clock
-> +          - description: MAC TX clock
-> +          - description: MAC RX clock
-> +          - description: For MPU family, used for power mode
 
-What does 'power mode' mean? IIRC, some DW MACs have a clock for WoL 
-called LPI or something. Are you sure this is ST specific and not DW 
-config or version specific?
-
-> +          - description: For MPU family, used for PHY without quartz
-
-It would be cleaner to define the clock always present and use a 
-fixed-clock when you have an external quartz. 
-
-> +
-> +       clock-names:
-> +         minItems: 3          
-> +         maxItems: 5
-> +         contains:
-> +          enum:
-> +            - stmmaceth
-> +            - mac-clk-tx
-> +            - mac-clk-rx
-> +            - ethstp
-> +            - eth-ck     
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - st,stm32mp1-dwmac
-> +          - const: snps,dwmac-4.20a
-> +      - items:
-> +          - enum:
-> +              - st,stm32-dwmac
-> +          - const: snps,dwmac-4.10a
-> +      - items:
-> +          - enum:
-> +              - st,stm32-dwmac
-> +          - const: snps,dwmac-3.50a            
-> +
-> +  st,syscon:
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      Should be phandle/offset pair. The phandle to the syscon node which
-> +      encompases the glue register, and the offset of the control register
-> +
-> +  st,eth-clk-sel:
-> +    description:
-> +      set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-> +    type: boolean
-> +    
-> +  st,eth-ref-clk-sel:
-> +    description:
-> +      set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
-
-Wrap lines.
-
-> +    type: boolean   
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - st,syscon
-> +
-> +examples:
-> + - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    #include <dt-bindings/mfd/stm32h7-rcc.h>  
-> +    //Example 1
-> +     ethernet0: ethernet@5800a000 {
-> +       compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
-> +       reg = <0x5800a000 0x2000>;
-> +       reg-names = "stmmaceth";
-> +       interrupts = <&intc GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +       interrupt-names = "macirq";
-> +       clock-names = "stmmaceth",
-> +                     "mac-clk-tx",
-> +                     "mac-clk-rx",
-> +                     "ethstp",
-> +                     "eth-ck";				      
-> +       clocks = <&rcc ETHMAC>,
-> +                <&rcc ETHTX>,
-> +                <&rcc ETHRX>,
-> +                <&rcc ETHSTP>,
-> +                <&rcc ETHCK_K>;	
-> +       st,syscon = <&syscfg 0x4>;
-> +       snps,pbl = <2>;
-> +       snps,axi-config = <&stmmac_axi_config_0>;
-> +       snps,tso;
-> +       status = "disabled";
-> +       phy-mode = "rgmii";       
-> +       };
-> +
-> +    //Example 1 (MCU example)
-
-2 Example 1's?
-
-> +     ethernet1: ethernet@40028000 {
-> +       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-> +       reg = <0x40028000 0x8000>;
-> +       reg-names = "stmmaceth";
-> +       interrupts = <0 61 0>, <0 62 0>;
-> +       interrupt-names = "macirq", "eth_wake_irq";
-> +       clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-> +       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-> +       st,syscon = <&syscfg 0x4>;
-> +       snps,pbl = <8>;
-> +       snps,mixed-burst;
-> +       dma-ranges;
-> +       phy-mode = "mii";       
-> +       };
-> +
-> +    //Example 2 
-> +     ethernet2: ethernet@40027000 {
-> +       compatible = "st,stm32-dwmac", "snps,dwmac-4.10a";
-> +       reg = <0x40028000 0x8000>;
-> +       reg-names = "stmmaceth";
-> +       interrupts = <61>;
-> +       interrupt-names = "macirq";
-> +       clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-> +       clocks = <&rcc 62>, <&rcc 61>, <&rcc 60>;
-> +       st,syscon = <&syscfg 0x4>;
-> +       snps,pbl = <8>;
-> +       status = "disabled";
-> +       phy-mode = "mii";        
-> +       };
-> +
-> +       
-> -- 
-> 2.17.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
