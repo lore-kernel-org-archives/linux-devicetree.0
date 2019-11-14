@@ -2,68 +2,81 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EA0C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 23:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DA2C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 23:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47007206F0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 23:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A21C2072C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 23:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfKNXNm (ORCPT
+        id S1726952AbfKNXXI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:13:42 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:55590 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKNXNm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 18:13:42 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6FC1014AC47DD;
-        Thu, 14 Nov 2019 15:13:41 -0800 (PST)
-Date:   Thu, 14 Nov 2019 15:13:40 -0800 (PST)
-Message-Id: <20191114.151340.735858877920708489.davem@davemloft.net>
-To:     Mark-MC.Lee@mediatek.com
-Cc:     sean.wang@mediatek.com, john@phrozen.org, matthias.bgg@gmail.com,
-        andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com,
-        opensource@vdorst.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jakub.kicinski@netronome.com
-Subject: Re: [PATCH net,v3 0/3] Rework mt762x GDM setup flow
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191113023844.17800-1-Mark-MC.Lee@mediatek.com>
-References: <20191113023844.17800-1-Mark-MC.Lee@mediatek.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 14 Nov 2019 15:13:41 -0800 (PST)
+        Thu, 14 Nov 2019 18:23:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35778 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726912AbfKNXXH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 18:23:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 243A1AE07;
+        Thu, 14 Nov 2019 23:23:06 +0000 (UTC)
+Subject: Re: [PATCH 3/7] arm64: dts: realtek: rtd129x: Introduce r-bus
+To:     James Tai <james.tai@realtek.com>
+Cc:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191111030434.29977-1-afaerber@suse.de>
+ <20191111030434.29977-4-afaerber@suse.de>
+ <f70d00d8b1f8446fb138b36c61d952f4@realtek.com>
+ <a4d9c42767ac4f3a9eacab72be224f3c@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <8003e143-19f7-1de6-6e23-dadbb134a2e0@suse.de>
+Date:   Fri, 15 Nov 2019 00:23:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <a4d9c42767ac4f3a9eacab72be224f3c@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: MarkLee <Mark-MC.Lee@mediatek.com>
-Date: Wed, 13 Nov 2019 10:38:41 +0800
+Hi James,
 
-> The mt762x GDM block is mainly used to setup the HW internal
-> rx path from GMAC to RX DMA engine(PDMA) and the packet
-> switching engine(PSE) is responsed to do the data forward
-> following the GDM configuration.
+Am 13.11.19 um 04:02 schrieb James Tai:
+>>> +		rbus: r-bus@98000000 {
+>>> +			compatible = "simple-bus";
+>>> +			reg = <0x98000000 0x100000>;
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <1>;
+>>> +			ranges = <0x0 0x98000000 0x100000>;
+>>> +
+>>
+>> The r-bus size of RTD1395 is 0x200000.
+>>
 > 
-> This patch set have three goals :
-> 
-> 1. Integrate GDM/PSE setup operations into single function "mtk_gdm_config"
-> 
-> 2. Refine the timing of GDM/PSE setup, move it from mtk_hw_init 
->    to mtk_open
-> 
-> 3. Enable GDM GDMA_DROP_ALL mode to drop all packet during the 
->    stop operation
+> Sorry for the typo. The r-bus size of RTD1295 is 0x200000.
 
-Series applied, thanks.
+Fixed.
+
+Thanks,
+Andreas
+
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
