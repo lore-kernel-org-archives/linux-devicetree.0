@@ -2,108 +2,130 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E900C43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08022C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E74206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0FE20727
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 22:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573769532;
-	bh=iKvN/RhldEHN01IRF2CqzbyipgqP4UyeluozvJSJkjw=;
+	s=default; t=1573770415;
+	bh=KuxfeqX5EcXUqmt8/Zaj0gqsqVbQFp80jiduBQOv7LY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eLnUqTSBKDGQEJW8Wg1pw6jUBTOXMIdZ6pjOM+xMy2KrU7JFWuPsUkX3qT74TrT11
-	 1rZEManD3eiyYT2jPtn7xEXkW18BifJ/FPFL4FZL8Aqvj4LtAOCeLORMMFHxBeCXAX
-	 i949St5E6JDhK1X+iOmsJKdPByPTSCaYwCpgUSuM=
+	b=hCwo6pt3OwIkPxSYss1o2CX/F+9gdz1RM4TWPsnFkUTJfkVCxE9nHQl0FG0egDf66
+	 KY3nksuhHoUQE+0fZDI60bCECyLagr8auid4MgtdR+MahwP59aLSL8kfFrPMnKsPXp
+	 FWmmFOwN/Ybud/JJoAogDklV5GBbuMgED+s60JP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfKNWML (ORCPT
+        id S1727056AbfKNW0z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 17:12:11 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46856 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKNWML (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 17:12:11 -0500
-Received: by mail-oi1-f193.google.com with SMTP id n14so6764004oie.13;
-        Thu, 14 Nov 2019 14:12:10 -0800 (PST)
+        Thu, 14 Nov 2019 17:26:55 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35610 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfKNW0z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 17:26:55 -0500
+Received: by mail-ot1-f68.google.com with SMTP id n19so2538452otk.2;
+        Thu, 14 Nov 2019 14:26:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MuYayFgV9Txkwisv1aDmW8/y0KcXnB9JehAybbEgv9k=;
-        b=fUe6wBB4Md3CHAZ4+3IF0iagRFDRYfeQCsSK8Qj6G218YDQOuof321mt1Los3rRFJI
-         EHwtjUWiKhKTCqPmLyGBz3MLeANJjHruE3SBUEw3qG9DzznoF0iwa9wYYH8BuhkZZLgg
-         6I/P7QneZazZknwTC51uyIYd5g2WGf4gt4BBl2rOFBsKpdkp+EiVB7q6qIdLfDROZbxN
-         DOGKOeAeWVYrxuCSmO7JMkp48s0RC6TghYxuc1AKbuHa79o7qPBPGzO9+sXrd3+kfLt2
-         6mqPUmJEyZHIi24/4WObsltZZ7w2KQqi0lUDxH+Eh4BxhfOyRi2+wY3Jo2iQr4Id6BZ1
-         zwoQ==
-X-Gm-Message-State: APjAAAWcb6B6/PbH5GbU2vOuvUJGeG3sjPBDtyq18MIcWOs+Fv/U3LHP
-        g4zDlGPOq9Xks5HHDkBxSQ==
-X-Google-Smtp-Source: APXvYqyt3fj7h5jduriAaMs0c1KBLJJTi+ofWUC480KU8O7Sb9OBTk4SmD5IA/lHidAxKidB9itRfA==
-X-Received: by 2002:a54:4e85:: with SMTP id c5mr5276950oiy.71.1573769529947;
-        Thu, 14 Nov 2019 14:12:09 -0800 (PST)
+        bh=i/iNq2b5ltR+9fYOihLUMFxATvvS7Fy9uMXgDlcEfQM=;
+        b=NVE+HRebP3baz91eW+CjVuW7RNFTm0rJGKz+FuM6X+QpcaCe7ABOF6PPXsWZy/D7OK
+         b8ESzFmGDIm2dlFUsI84ZxO+qAxlJx7hRyCa0cYdr8hBnWgGh18H6YShCMlCyxgr2Dou
+         c++/FscfdosaRQlcWqyNRhsHSSjeiZHMO/D+uu3jTv0LwuWZt2IjJK0Rq4jyU29PHKmd
+         HeM/RJZOJpLKaM9OmEUGccl5f877n2Tpkq3J8M8KVGK725n2TEOHKxFq/+0Vt3xsJ9Mo
+         WwzupHea42+RbjGahNrwV/IXVIOTA+fAvZ7ncyaWCINT2kdjhM477n4y+qHOTMTuv4RS
+         NMSw==
+X-Gm-Message-State: APjAAAVCEwVA06TPLvQB78A8T9tfzZlTsCYrx+THysdNfKJoEFfNG+bA
+        7xwslNgRGFlIS3djD6x1YQ==
+X-Google-Smtp-Source: APXvYqxsoZ0hyPff9ybgafyqCaAsP+RfF8L2i8yn9ePNs1IgLIi7Gjm2T8DnmYbHet+4hyZrOQyCVQ==
+X-Received: by 2002:a05:6830:215a:: with SMTP id r26mr8512506otd.136.1573770413826;
+        Thu, 14 Nov 2019 14:26:53 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a25sm2291719otr.30.2019.11.14.14.12.09
+        by smtp.gmail.com with ESMTPSA id y4sm2257755oie.42.2019.11.14.14.26.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 14:12:09 -0800 (PST)
-Date:   Thu, 14 Nov 2019 16:12:08 -0600
+        Thu, 14 Nov 2019 14:26:52 -0800 (PST)
+Date:   Thu, 14 Nov 2019 16:26:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Andrea Merello <andrea.merello@gmail.com>
-Cc:     jic23@kernel.org, Andrea Merello <andrea.merello@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        Patrick Havelange <patrick.havelange@essensium.com>,
-        Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>,
-        Matt Weber <matthew.weber@rockwellcollins.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Daniel Gomez <dagmcr@gmail.com>, linux-iio@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [v2 9/9] dt-bindings: iio: maxim_thermocouple: document new
- 'compatible' strings
-Message-ID: <20191114221208.GA2764@bogus>
-References: <20190923121714.13672-1-andrea.merello@gmail.com>
- <20191111153517.13862-1-andrea.merello@gmail.com>
- <20191111153517.13862-10-andrea.merello@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+Message-ID: <20191114222652.GA7517@bogus>
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com>
+ <20191112120307.GB5195@sirena.co.uk>
+ <20191112190328.GA199853@dtor-ws>
+ <20191112191547.GK5195@sirena.co.uk>
+ <20191112193653.GB13374@dtor-ws>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191111153517.13862-10-andrea.merello@gmail.com>
+In-Reply-To: <20191112193653.GB13374@dtor-ws>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2019 16:35:17 +0100, Andrea Merello wrote:
-> Now the maxim_thermocouple has new, more specific, 'compatible' strings for
-> better distinguish the various supported chips.
+On Tue, Nov 12, 2019 at 11:36:53AM -0800, Dmitry Torokhov wrote:
+> On Tue, Nov 12, 2019 at 07:15:47PM +0000, Mark Brown wrote:
+> > On Tue, Nov 12, 2019 at 11:03:28AM -0800, Dmitry Torokhov wrote:
+> > > On Tue, Nov 12, 2019 at 12:03:07PM +0000, Mark Brown wrote:
+> > > > On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
+> > 
+> > > > > +      interrupts:
+> > > > > +        items:
+> > > > > +          - description: main interrupt (attention) line.
+> > > > > +          - description: dedicated wakeup interrupt.
+> > > > > +        minItems: 1 # The wakeup interrupt is optional.
+> > 
+> > > > > +      interrupt-names:
+> > > > > +        items:
+> > > > > +          - const: irq
+> > > > > +          - const: wakeup
+> > > > > +        minItems: 1
+> > 
+> > > > How will this interact with a SPI device that defines interrupts at the
+> > > > device level, possibly more than one of them?  Especially if the device
+> > > > has its own idea what the interrupts should be called.
+> > 
+> > > My understanding that individual drivers should be able to override
+> > > whatever the default behavior core has configured, and the device can
+> > > establish their own mapping. We have this in I2C and I believe this
+> > > works well.
+> > 
+> > > Is the concern about the device tree scheme or SPI core handling?
+> > 
+> > Both really.
 > 
-> This patch updates the DT bindings documentation accordingly
+> So as I mentioned, the driver is not forced to use the interrupt
+> supplied by the SPI core, and the worst thing is that the core
+> configures the main IRQ as wakeirq and driver would need to call
+> dev_pm_clear_wake_irq() before switching to correct one. I expect there
+> will be just a few drivers needing that and many more would benefit from
+> the default behavior and not needing to repeat the same boilerplate
+> code.
 > 
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Colin Ian King <colin.king@canonical.com>
-> Cc: Patrick Havelange <patrick.havelange@essensium.com>
-> Cc: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> Cc: Matt Weber <matthew.weber@rockwellcollins.com>
-> Cc: Matt Ranostay <matt.ranostay@konsulko.com>
-> Cc: Chuhong Yuan <hslester96@gmail.com>
-> Cc: Daniel Gomez <dagmcr@gmail.com>
-> Cc: linux-iio@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> ---
->  .../bindings/iio/temperature/maxim_thermocouple.txt        | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
+> As far as scheme goes - I hope that Rob could confirm that we can
+> override number of interrupts and names in consumers of the binding, as
+> needed.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This won't work. A device schema doesn't override what's defined here, 
+but just further constrains this schema.
+
+You could define a "spi irq" schema which devices can include if they 
+want to, but I don't think this pattern is that common to SPI devices. 
+There's not any spec behind compared to say alert irq for SMBus. 
+
+The 'wakeup' irq name is standardized (for DT), but that's not SPI 
+specific. About all we could define there is 'wakeup-source' is boolean 
+and if there is more than one interrupt, one should be named 'wakeup'.
+
+Rob
+
