@@ -2,181 +2,187 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8792C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 01:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BCAC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 01:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D97F8206EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 01:17:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mkMgCkh7"
+	by mail.kernel.org (Postfix) with ESMTP id CC9CB206EF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 01:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573694416;
+	bh=zDO9Js3j0YNxL31th55daw42XoRTkC6MaVj3ds3HBdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HIo+pouWJLgT1Leq5OTMSP0o6XXb0G3cfdKpGtR7PZGSg9LBVydGlrQdU3MsXJ6dy
+	 OjTrlW0p++2bh/Jiq9WDBIXYn0HqohgAK/5le3jNxGPCHO0wetSv4O1RGgy8r92v9c
+	 aU2LtCnrEea2oY8LcsZwKRV15oTY+K0x6FK259Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfKNBRc (ORCPT
+        id S1726410AbfKNBUQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 20:17:32 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:41986 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfKNBRc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 20:17:32 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191114011730epoutp017004e5ff5bde5cce880cf9ad79cb1b86~W4pUv4wsV1106011060epoutp01r
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 01:17:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191114011730epoutp017004e5ff5bde5cce880cf9ad79cb1b86~W4pUv4wsV1106011060epoutp01r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573694250;
-        bh=FXBWpKlesXfLLw3BqLNBcPCoTpNabhJYTRJ9xcKy+2s=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=mkMgCkh7haAsJsDxoNUTG5lTAJamuYbXWULXUnWZZjPNh11n8rhY3hokj+wWkMuZS
-         /eEWnaji/JfhVh7YymU8CddAeRYucpSfyb9wKaTK97tyytyLE/qStZ8RTPwbOE0B0r
-         goh2BSuU4nXo2PPEEbu7JtMg3Kb0G7clJ27u7UXI=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191114011729epcas1p4b78b1369c535049f005d7e52a60c58b9~W4pTyfXwJ2168921689epcas1p4L;
-        Thu, 14 Nov 2019 01:17:29 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47D3Vt6J7zzMqYkm; Thu, 14 Nov
-        2019 01:17:26 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        57.2B.04144.22BACCD5; Thu, 14 Nov 2019 10:17:22 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191114011722epcas1p21cf9970859318b0dec0e9ab652f4e29a~W4pNo2ez71298012980epcas1p2v;
-        Thu, 14 Nov 2019 01:17:22 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191114011722epsmtrp2bcd573bbe8670ed4a7673f4a58ea9ed3~W4pNm8Fey1353513535epsmtrp2V;
-        Thu, 14 Nov 2019 01:17:22 +0000 (GMT)
-X-AuditID: b6c32a35-2c7ff70000001030-67-5dccab22a2d5
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6B.6D.24756.22BACCD5; Thu, 14 Nov 2019 10:17:22 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191114011721epsmtip21e0a9e40911214b7cbef6ffecba0a490~W4pNEKs0R2018120181epsmtip2P;
-        Thu, 14 Nov 2019 01:17:21 +0000 (GMT)
-Subject: Re: [RFC PATCH] PM / devfreq: clk_get_parent_by_index() can be
- static
-To:     kbuild test robot <lkp@intel.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     kbuild-all@lists.01.org, Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Shawn Guo <shawnguo@kernel.org>,
+        Wed, 13 Nov 2019 20:20:16 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45971 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKNBUQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 20:20:16 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 14so3700986oir.12;
+        Wed, 13 Nov 2019 17:20:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/K5jnJYkn2AvQdcmqwZlI7+QyjIXXZrWLvpnHt8x5XA=;
+        b=Tz+FxUkH6xMvUTga8czsWe7dnoNSyGaqJQaQAvFpCcCpW089RkVPcUkw7mCi/JyvUK
+         BafSuMyw8HRn5opofA4FBSKJsHODtxr6aB4SIQ4IKTZfePfqgQD8RO8o56AI1YhQqewh
+         2qBuSie0h1kIAK6Q5J4LoFQ+5WELIaRcsAZyL5ggktr8H76NcC7wcnraGzaCfdRjiVIz
+         nmFLiq0mxM4GjmIjUJ5KJB+fZX/levNczpjqmMgAq4RNalnaWirqUXXY+ZhGUVmb+D+a
+         K17DkQzWlzdqKuMlWlRuXXiNuClbdVyWQB0xR6usWkOnmkLuUqiXmQMi8HV22MXj/LAo
+         K86A==
+X-Gm-Message-State: APjAAAWnRgIKuiNtjB1ip8TZ7Eto/BKRiPQaCVZgEKqN5IGuPFs3NP+r
+        xZz3/LCpCRuoGLCJ8Dd9Iw==
+X-Google-Smtp-Source: APXvYqyEIOl8lwb4tjxfJzJO7GYF8YSZw8Qlvayg5mTnoyRtLO6AIrgKiwBF/MtTFld693lhmoQU9A==
+X-Received: by 2002:aca:a8d4:: with SMTP id r203mr1428225oie.12.1573694414787;
+        Wed, 13 Nov 2019 17:20:14 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u1sm1267887oie.37.2019.11.13.17.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 17:20:14 -0800 (PST)
+Date:   Wed, 13 Nov 2019 19:20:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-kernel@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <71305a8a-9bb0-1317-3618-0ad18295ea92@samsung.com>
-Date:   Thu, 14 Nov 2019 10:23:07 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH 06/13] dt-bindings: Add Broadcom STB USB PHY binding
+ document
+Message-ID: <20191114012013.GA25050@bogus>
+References: <20191107141339.6079-1-alcooperx@gmail.com>
+ <20191107141339.6079-7-alcooperx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191113140710.jynosjegdq7t6igk@4978f4969bb8>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xbVRzHc3ofvZBVL2WsR6JZubiEYQq9sOLZHPgYLjdxiWTLDDEheAM3
-        hdBXeimyzWSgYTxFQdAMNmAZSGFMoBSBWYYwdBmvDQyVx3CLkAUXLE7oNMCIfbDIf9/f73y+
-        5/c4ORQmH5eGUpmGbMFs4HUMGYh/f+ugSsVcG0tRd9XFoaGfu6XIPToC0LdTPwG0Xn0DQ4sP
-        5gHquZiG6ocnCNTZNY+jb/ptJBovdQLUWt2Ho7t3O6Ro/NMVKbIuPCGQbdFJoCdlvxGoZKMF
-        Q2ufDwP0+LPfSdT066QEOa0VBFrrWARocuRdNJ9vJdG1iUESjY1OEaigf1iKSoaekWjb2Ymj
-        ZbsCdbq5t/Zz1SVWwLXVtQFudaZAytXmTeJcg83CXXX8IeFsrcUkd9/pILnS2m2c62o8z3W6
-        eiXcoMsh4b54puY2boVw9ulCnCu3t4KkoA+zjmYIfLpgVgqGNGN6pkEbz7x3KvVYqiZOzarY
-        w+h1Rmng9UI8k3giSXU8U+dZF6PM4XUWTyqJF0UmOuGo2WjJFpQZRjE7nhFM6TrTYVOUyOtF
-        i0EblWbUH2HV6hiNB/woK2PqhzLc5CZzZ5sugTwwQpSAAArSh+D09W5QAgIpOd0L4Ib1IeYP
-        /gawfP2mxEvJ6acAdjTve+4oz9/YgfoBzOvYkvqDVQBbKgeBlwqmk6B7rt6n99InYZur0efA
-        6HYKVl14hHsPSDoSDizPkF79Ih0Gp/9d9BlkdALcWi/2aZw+ABtbVj08RYXQyXDUzfuRIHjn
-        4pLvmgD6DdhU4fZ1itEKOLdUv6P3w54/L/nqQvoeBZcfDO8MnQjttaU7Ohg+vm2X+nUoXHP1
-        k359DrbcGSb95iIA7QP3dgyxcKDpK4m3IYw+CNtvRPvTYbBv8zLwF34ButxlhBeBtAwWXZD7
-        kXD4y8MFiV+/BK8WFpNfAqZm1zg1u0ao2TVCzf/FGgDeCvYJJlGvFUTWxO5+bRvwfaVITS+o
-        mjgxBGgKMHtkP4aMpcgJPkc8ox8CkMKYvbIIgyclS+fPnBXMxlSzRSeIQ0DjWXYFFhqSZvR8
-        TEN2KquJiY2NRYfYOA3LMgrZ281NKXJay2cLWYJgEszPfRIqIDQPOFbC/4pY/O5lsqWunZW/
-        3zW40DxnyG04WXk/eVunXZk8FlWovLKVq12KII6rCz62KAKKj0RGKSJ7VLng9OaVd/KDz59z
-        zJzFXot95XbRzcrqpxU53QFfzyfvOR2T+Ci4QD/5T8KBKmtZkdkWHRY0q+x5c2xzhQifDUr9
-        4JP6wK5X+xhczODZSMws8v8BERQ1KGAEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRzGeXcuO0qr01R8M0EcRCVoCn54oRIhqrcvFSViQdloxwu6KTtq
-        KVJaSjhvCU3xklo60XnJTc075pyCOhUnniwrQ7uKl6RWISq5aeC3H8//+T2f/gwh7aA8mGhV
-        AqdWyWNltDP5ckDm5Surt9zw15g8kGmoTYxsoyMA1VgHAfql7SLQwtwsQO3Ft1GFeZxChpZZ
-        EhX1Gmk0li0ApNd2kmhiolmMxh4siVHt+zUKGRcECq3lfKCQZr2OQD9zzQAtPpynke71pAgJ
-        tQUU+tm8ANDkyFk0m15Lo/rxfhpZRq0Uyuw1i5HGtEmjLcFAom+t7shgw8FeWKupBbihvAHg
-        1ZlMMS5NmyRxpTERV/V8F2GjPovG74QeGmeXbpG4pfo+Nqx0iHD/So8I52/64/UBN9w6/YjE
-        ea16cPngdedTCi42OolTnwi65Rxl7c4h42303Te6MpAGRigNcGIgGwjz0tcJDXBmpGw3gLlF
-        ZcTO4RAsnBzcZmabXeDAAG+PpewygObue3Z2YS/C73ObjrorewWaBQtt3yHYNgYKNWX0zuj8
-        ttAl0PYWzfrAvm8zDj7AesPpvwvAzhI2CG78ynIwyR6B1XWrpJ3d2DD4tX1mt3MQDhd/cuRO
-        7EmoK7CJ7EywR+FGuZXYYXf49lPFbu4F25fLiMfApWSPXrJHKdmjlOxRKgGpB4e4eF4ZqeQD
-        4gNU3B0/Xq7kE1WRfrfjlEbg+Cef4x1gqjrcBFgGyPZJXrlZbkgpeRKfrDQByBAyV8kx1XYk
-        UciTUzh1XLg6MZbjTeAwQ8rcJZ9VQ9ekbKQ8gYvhuHhO/f8qYpw80kDi2rlnfT9WUjxdLyR3
-        6E1LOWMvwvMaFU2rChBzvvOmJFUnSm0t9Kg3f/wdGagAvSjqz/M2/XSjQet9df/wTMYXr9RL
-        nslb7rbyyogmXWiQIThGPRIx1Z4Rtlr5JJgPyV8sJXvHqk5Piay+oSHygubhp2yotnBIwZzh
-        soT1fBnJR8kDfAg1L/8HdvbQcUsDAAA=
-X-CMS-MailID: 20191114011722epcas1p21cf9970859318b0dec0e9ab652f4e29a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191113140815epcas1p194a07ca0cf4b2776d32a25ee71f804c4
-References: <d33acdcc043ce12713a9279636e32d039da5ee54.1573595319.git.leonard.crestez@nxp.com>
-        <CGME20191113140815epcas1p194a07ca0cf4b2776d32a25ee71f804c4@epcas1p1.samsung.com>
-        <20191113140710.jynosjegdq7t6igk@4978f4969bb8>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107141339.6079-7-alcooperx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Leonard,
-
-Please apply this to next version.
-
-On 11/13/19 11:07 PM, kbuild test robot wrote:
+On Thu, Nov 07, 2019 at 09:13:32AM -0500, Al Cooper wrote:
+> Add support for bcm7216 and bcm7211
 > 
-> Fixes: f01e004107f3 ("PM / devfreq: Add dynamic scaling for imx8m ddr controller")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 > ---
->  imx8m-ddrc.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/phy/brcm,brcmstb-usb-phy.txt     | 69 +++++++++++++++----
+>  1 file changed, 56 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/devfreq/imx8m-ddrc.c b/drivers/devfreq/imx8m-ddrc.c
-> index 62abb9b79d8a0..228561de94425 100644
-> --- a/drivers/devfreq/imx8m-ddrc.c
-> +++ b/drivers/devfreq/imx8m-ddrc.c
-> @@ -122,7 +122,7 @@ static void imx8m_ddrc_smc_set_freq(int target_freq)
->  	local_irq_enable();
->  }
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> index 24a0d06acd1d..14184cec15dc 100644
+> --- a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> @@ -1,30 +1,49 @@
+>  Broadcom STB USB PHY
 >  
-> -struct clk *clk_get_parent_by_index(struct clk *clk, int index)
-> +static struct clk *clk_get_parent_by_index(struct clk *clk, int index)
->  {
->  	struct clk_hw *hw;
+>  Required properties:
+> - - compatible: brcm,brcmstb-usb-phy
+> - - reg: two offset and length pairs.
+> -	The first pair specifies a manditory set of memory mapped
+> -	registers used for general control of the PHY.
+> -	The second pair specifies optional registers used by some of
+> -	the SoCs that support USB 3.x
+> - - #phy-cells: Shall be 1 as it expects one argument for setting
+> -	       the type of the PHY. Possible values are:
+> -	       - PHY_TYPE_USB2 for USB1.1/2.0 PHY
+> -	       - PHY_TYPE_USB3 for USB3.x PHY
+> +- compatible: should be one of
+> +	"brcm,brcmstb-usb-phy"
+> +	"brcm,bcm7216-usb-phy"
+> +	"brcm,bcm7211-usb-phy"
+> +
+> +- reg and reg-names properties requirements are specific to the
+> +  compatible string.
+> +  "brcm,brcmstb-usb-phy":
+> +    - reg: 1 or 2 offset and length pairs. One for the base CTRL registers
+> +           and an optional pair for systems with USB 3.x support
+> +    - reg-names: not specified
+> +  "brcm,bcm7216-usb-phy":
+> +    - reg: 3 offset and length pairs for CTRL, XHCI_EC and XHCI_GBL
+> +           registers
+> +    - reg-names: "ctrl", "xhci_ec", "xhci_gbl"
+> +  "brcm,bcm7211-usb-phy":
+> +    - reg: 5 offset and length pairs for CTRL, XHCI_EC, XHCI_GBL,
+> +           USB_PHY and USB_MDIO registers and an optional pair
+> +	   for the BDC registers
+> +    - reg-names: "ctrl", "xhci_ec", "xhci_gbl", "usb_phy", "usb_mdio", "bdc_ec"
+> +
+> +- #phy-cells: Shall be 1 as it expects one argument for setting
+> +	      the type of the PHY. Possible values are:
+> +	      - PHY_TYPE_USB2 for USB1.1/2.0 PHY
+> +	      - PHY_TYPE_USB3 for USB3.x PHY
 >  
-> 
-> 
+>  Optional Properties:
+>  - clocks : clock phandles.
+>  - clock-names: String, clock name.
+> +- interrupts: wake interrupt
+> +- interrupt-names: "wake"
 
+If a wakeup source, the standard name is 'wakeup'.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+>  - brcm,ipp: Boolean, Invert Port Power.
+>    Possible values are: 0 (Don't invert), 1 (Invert)
+>  - brcm,ioc: Boolean, Invert Over Current detection.
+>    Possible values are: 0 (Don't invert), 1 (Invert)
+> -NOTE: one or both of the following two properties must be set
+> -- brcm,has-xhci: Boolean indicating the phy has an XHCI phy.
+> -- brcm,has-eohci: Boolean indicating the phy has an EHCI/OHCI phy.
+>  - dr_mode: String, PHY Device mode.
+>    Possible values are: "host", "peripheral ", "drd" or "typec-pd"
+>    If this property is not defined, the phy will default to "host" mode.
+> +- syscon-piarbctl: phandle to syscon for handling config registers
+
+Needs vendor prefix.
+
+> +NOTE: one or both of the following two properties must be set
+> +- brcm,has-xhci: Boolean indicating the phy has an XHCI phy.
+> +- brcm,has-eohci: Boolean indicating the phy has an EHCI/OHCI phy.
+> +
+>  
+>  Example:
+>  
+> @@ -41,3 +60,27 @@ usbphy_0: usb-phy@f0470200 {
+>  	clocks = <&usb20>, <&usb30>;
+>  	clock-names = "sw_usb", "sw_usb3";
+>  };
+> +
+> +usb-phy@29f0200 {
+> +	reg = <0x29f0200 0x200>,
+> +		<0x29c0880 0x30>,
+> +		<0x29cc100 0x534>,
+> +		<0x2808000 0x24>,
+> +		<0x2980080 0x8>;
+> +	reg-names = "ctrl",
+> +		"xhci_ec",
+> +		"xhci_gbl",
+> +		"usb_phy",
+> +		"usb_mdio";
+> +	brcm,ioc = <0x0>;
+> +	brcm,ipp = <0x0>;
+> +	compatible = "brcm,bcm7211-usb-phy";
+> +	interrupts = <0x30>;
+> +	interrupt-parent = <&vpu_intr1_nosec_intc>;
+> +	interrupt-names = "wake";
+> +	#phy-cells = <0x1>;
+> +	brcm,has-xhci;
+> +	syscon-piarbctl = <&syscon_piarbctl>;
+> +	clocks = <&scmi_clk 256>;
+> +	clock-names = "sw_usb";
+> +};
+> -- 
+> 2.17.1
+> 
