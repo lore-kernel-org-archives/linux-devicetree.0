@@ -6,100 +6,104 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC679C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A101EC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B7720723
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B13206E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 16:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573749293;
-	bh=dNceW5/2JIbHCI0Ab/8muEpZcy/gU6c3yG9FqORKNOU=;
+	s=default; t=1573749514;
+	bh=r6239xpNQjiA90Hu7abkz2VVimdZsUkVBgJYAv84NIE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ofdWxhtEdAbvXlaFFU5hJxn6BI2N+iWz5bSEmIoyGYYdOV773BUrdQJejJ0qE8kmm
-	 a1pgv3OYmsfwjA2Zd4MH+Mk7OUHm5iK1Q3SG0WZXMEM6JMn5IPUUkJRz/DRbNXlYKO
-	 wviSHH5pdkkRD8w5yw4OlgPdsw0sOxnszlKD08E8=
+	b=wT9+Clpe7vZ3ODuhzBOyRRbQQJh8l5BLcnQC+z2xjPZx4b+hxtiDJ3jOlTawXX+gm
+	 280Dys8wliBSwJfCGXt7NISuio7RZq9GTZ6j/8rTTNc71dJxJ5cl+r5N8/2Sk2RNKl
+	 p1tg9/7Byye6fYDY0Ki9sRRgx7v1IV2SUsEbiBRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfKNQex (ORCPT
+        id S1726592AbfKNQid (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 11:34:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47390 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 11:38:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbfKNQew (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 11:34:52 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        id S1726410AbfKNQid (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 11:38:33 -0500
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 632B320724;
-        Thu, 14 Nov 2019 16:34:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A396E2071F
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 16:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573749292;
-        bh=dNceW5/2JIbHCI0Ab/8muEpZcy/gU6c3yG9FqORKNOU=;
+        s=default; t=1573749512;
+        bh=r6239xpNQjiA90Hu7abkz2VVimdZsUkVBgJYAv84NIE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0rrnp7YLb6ZW4Wh2jc3TY9uHPIUVLMaVk8Z6uNAziRS0qjzG0DNjonzB/VudcnhtE
-         Jrif7/VoFnAiECjZiYWl89pH3a1eFwr3k+Oo9/Ej5ArHz3klfrQqQAiRT6kefSZMOZ
-         n/dTrdQ+PjObIrMhU5/d0AJBI8zZV014QOmUl7fQ=
-Received: by mail-qk1-f173.google.com with SMTP id m4so5493860qke.9;
-        Thu, 14 Nov 2019 08:34:52 -0800 (PST)
-X-Gm-Message-State: APjAAAUWBYGuaBFvWoRYiDCqO0SwAX/16mMYd7OOwDMCtwSchi3G4gJL
-        PhS/P4VnzE9bdn+gwf3mEeMth/vUfcoa2xot+Q==
-X-Google-Smtp-Source: APXvYqyTT89qPyhwQ8HbCne8V44sYkR4vJwSLLq3suXRCO5HAxlj6sw4/AVmK4gepiW4WN6VNuNgbAUjWTH0DnkbUlg=
-X-Received: by 2002:a37:4904:: with SMTP id w4mr7612533qka.119.1573749291482;
- Thu, 14 Nov 2019 08:34:51 -0800 (PST)
+        b=Fn2j8MozP/jF5WgRbNYSyQjkyNonioQIgDpSTCQ4mJ5MswbHnv1F5Ff12vXJKXV4R
+         guq7Exy1m2ihDuWwt4dAJGRF87bi6okPbtdkDe9yANrjT0bXwZMnSV8+UERIx8+eDU
+         S23iqFnPXq+ZPiV7yc0LVGiBZPaq31LcPhB7aO8E=
+Received: by mail-qt1-f176.google.com with SMTP id r20so7399485qtp.13
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 08:38:32 -0800 (PST)
+X-Gm-Message-State: APjAAAU2RPYJyGNfQ/EXQnhs4x1oYWSZENNO3FHTSyvJPe7Yvaw2crTS
+        X7UMAhjLtChmXemxjCOWq9qRZkzzdAHW3CNhqg==
+X-Google-Smtp-Source: APXvYqwDR8S9cYrUYILLP/I2tU3UMGkZtLBmA2zLHpUvplAXjetDE9ennCRPukJ9ArEABqjaXO1HmqiEessy+uBaq+4=
+X-Received: by 2002:aed:2706:: with SMTP id n6mr9138767qtd.224.1573749511747;
+ Thu, 14 Nov 2019 08:38:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20191113210544.1894-1-robh@kernel.org> <30b73f89-1ba1-6052-53bd-414ebdfa142c@codeaurora.org>
-In-Reply-To: <30b73f89-1ba1-6052-53bd-414ebdfa142c@codeaurora.org>
+References: <20191114131525.3988-1-linus.walleij@linaro.org>
+In-Reply-To: <20191114131525.3988-1-linus.walleij@linaro.org>
 From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 14 Nov 2019 10:34:39 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+WFvwBy4rpZkT=_KMYzzvrsLcaTMFSydY_euuFLAsZEQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+WFvwBy4rpZkT=_KMYzzvrsLcaTMFSydY_euuFLAsZEQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Improve validation build error handling
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 14 Nov 2019 10:38:20 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+P6-V2L_JJmwkuoV=DzBzMGdfqsUpZLY6pR_+B-uOF1g@mail.gmail.com>
+Message-ID: <CAL_Jsq+P6-V2L_JJmwkuoV=DzBzMGdfqsUpZLY6pR_+B-uOF1g@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v6] drm/panel: Add DT bindings for Sony ACX424AKP
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 9:21 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+On Thu, Nov 14, 2019 at 7:15 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> On 11/13/2019 2:05 PM, Rob Herring wrote:
-> > Schema errors can cause make to exit before useful information is
-> > printed. This leaves developers wondering what's wrong. It can be
-> > overcome passing '-k' to make, but that's not an obvious solution.
-> > There's 2 scenarios where this happens.
-> >
-> > When using DT_SCHEMA_FILES to validate with a single schema, any error
-> > in the schema results in processed-schema.yaml being empty causing a
-> > make error. The result is the specific errors in the schema are never
-> > shown because processed-schema.yaml is the first target built. Simply
-> > making processed-schema.yaml last in extra-y ensures the full schema
-> > validation with detailed error messages happen first.
-> >
-> > The 2nd problem is while schema errors are ignored for
-> > processed-schema.yaml, full validation of the schema still runs in
-> > parallel and any schema validation errors will still stop the build when
-> > running validation of dts files. The fix is to not add the schema
-> > examples to extra-y in this case. This means 'dtbs_check' is no longer a
-> > superset of 'dt_binding_check'. Update the documentation to make this
-> > clear.
-> >
-> > Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
+> This adds device tree bindings for the Sony ACX424AKP panel.
+> Let's use YAML.
 >
-> I injected a syntax error into a random binding file, and compared the
-> output with and without this patch.  This patch makes a massive
-> improvement in giving the user the necessary information to identify and
-> fix issues.  Thanks!
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v5->v6:
+> - Fix the binding by simply not referencing the display controller
+>   bindings from a panel binding.
+> ChangeLog v4->v5:
+> - Fix up all warnings etc incurred from the now working schema check
+>   and DTS compilation.
+> - I still have a vert annoying error message in the Sony
+>   panel bindings that uses this schema:
+>   sony,acx424akp.example.dt.yaml: panel@0: $nodename:0: 'panel@0' does not match '^dsi-controller(@.*)?$'
+>   As this is modeled very closely to
+>   Documentation/devicetree/bindings/net/mdio.yaml
+>   and that one doesn't emit this type of warning for its ethernet-phy@0
+>   etc I am pretty much clueless and just can't see what the problem
+>   is.
+> - If I can't figure this out the only viable next step is to drop the
+>   ambition to create yaml bindings simply because I'm unable to do
+>   it, and go back to traditional text bindings :(
+> ChangeLog v3->v4:
+> - Adjust to adjusted DSI bindings.
+> ChangeLog v2->v3:
+> - Put the example inside a dsi-controller so we have a complete
+>   example that verifies to the DSI panel generic binding.
+> ChangeLog v1->v2:
+> - Suggest a stand-alone YAML bindings file for DSI panels in
+>   a separate patch, and use that to reference the
+>   boolean "enforce-video-mode" attribute for DSI panels
+> ---
+>  .../display/panel/sony,acx424akp.yaml         | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
 
-BTW, update dtschema and you'll get better (or more at least) messages
-when 'is not valid under any of the given schemas' errors occur.
+I'll trust that you get the dsi-controller.yaml schema done as without
+it this is incomplete even though there's not a direct dependency.
 
-> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-
-Thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
