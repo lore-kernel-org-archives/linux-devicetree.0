@@ -2,184 +2,72 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5E6C33C9A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 06:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9561C43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 06:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C522C2073B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 06:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE8220725
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 06:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfKNG3U (ORCPT
+        id S1726010AbfKNGmq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 01:29:20 -0500
-Received: from mga05.intel.com ([192.55.52.43]:16311 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbfKNG3T (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 01:29:19 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 22:29:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
-   d="scan'208";a="355705794"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 13 Nov 2019 22:29:16 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v7 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Thu, 14 Nov 2019 14:29:07 +0800
-Message-Id: <6492745eb95964797b69456413f8b1ac96c95e7f.1573712060.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573712059.git.rahul.tanwar@linux.intel.com>
+        Thu, 14 Nov 2019 01:42:46 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725807AbfKNGmq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:42:46 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 79F771C349B78791F986;
+        Thu, 14 Nov 2019 14:42:41 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 14 Nov 2019
+ 14:42:32 +0800
+Subject: Re: [PATCH v2 3/8] ACPI/IORT: Support PASID for platform devices
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <joro@8bytes.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <sudeep.holla@arm.com>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <zhangfei.gao@linaro.org>,
+        <eric.auger@redhat.com>, <jonathan.cameron@huawei.com>
+References: <20191108152508.4039168-1-jean-philippe@linaro.org>
+ <20191108152508.4039168-4-jean-philippe@linaro.org>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <c34e37aa-af9b-5560-9c98-2cb5c55904c3@huawei.com>
+Date:   Thu, 14 Nov 2019 14:42:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
+MIME-Version: 1.0
+In-Reply-To: <20191108152508.4039168-4-jean-philippe@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+On 2019/11/8 23:25, Jean-Philippe Brucker wrote:
+> Named component nodes in the IORT tables describe the number of
+> Substream ID bits (aka. PASID) supported by the device. Propagate this
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++++++++++++++++++++
- 1 file changed, 116 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+This feature is needed for HiSilicon Ascend AI chip, thanks
+for adding this.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..73d63f858926
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,116 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lightning-mountain-io
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+
-+      bias-pull-up:
-+        type: boolean
-+
-+      bias-pull-down:
-+        type: boolean
-+
-+      drive-strength:
-+        description: |
-+          Selects the drive strength for the specified pins in mA.
-+          0: 2 mA
-+          1: 4 mA
-+          2: 8 mA
-+          3: 12 mA
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/uint32
-+          - enum: [0, 1, 2, 3]
-+
-+      slew-rate:
-+        type: boolean
-+        description: |
-+          Sets slew rate for specified pins.
-+          0: slow slew
-+          1: fast slew
-+
-+      drive-open-drain:
-+        type: boolean
-+
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+        compatible = "intel,lgm-pinctrl";
-+        reg = <0xe2880000 0x100000>;
-+
-+        uart0-pins {
-+             pins = <64>, /* UART_RX0 */
-+                    <65>; /* UART_TX0 */
-+             function = "CONSOLE_UART0";
-+             pinmux = <1>,
-+                      <1>;
-+             groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
+> value to the fwspec structure in order to enable PASID for platform
+> devices.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/acpi/arm64/iort.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+
+Acked-by: Hanjun Guo <guohanjun@huawei.com>
 
