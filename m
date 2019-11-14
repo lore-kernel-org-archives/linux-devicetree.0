@@ -2,108 +2,68 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA5DC43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC61CC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C318C2071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573753193;
-	bh=VzKteWn1F/CosCCsd6C4IKUCGWE4H5oQV8jGARZ48tc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=agS637ggsYDz0VGJ+HPZ+5Kiwh8IM5pcN3afNn60eOqe37L/qYQOf5wrAg8QkoAGc
-	 i3kzJsz9sdljy0DbZ4/A4FaHVzYEaipuNc1N/naMu8BoZ2E2E0Aep7xcckgikw+1qs
-	 lLnVWyY4hgeGhiLDzMeyXl7wV/Xhuo0pNBCw2u3s=
+	by mail.kernel.org (Postfix) with ESMTP id A8D91206DC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 17:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfKNRjx (ORCPT
+        id S1726473AbfKNRrK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 12:39:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 12:47:10 -0500
+Received: from muru.com ([72.249.23.125]:42292 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfKNRjx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:39:53 -0500
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B0120718;
-        Thu, 14 Nov 2019 17:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573753192;
-        bh=VzKteWn1F/CosCCsd6C4IKUCGWE4H5oQV8jGARZ48tc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qN2v5wV095fAUbYtR5P6fE7B5vGnb+vx313xCT936CPIndi5UGPzUwBJ4RrLRuJ3x
-         doWz3mevftGogNgXftWdpHE1RIm0Y5J6GvK5tLIDIKNpwQIF4FFify2At4paexUm3K
-         4SIxI+snb5+OFz1v88ytyKBaUGmq/kZP83rqrNBI=
-Received: by mail-qv1-f48.google.com with SMTP id s18so2698307qvr.4;
-        Thu, 14 Nov 2019 09:39:52 -0800 (PST)
-X-Gm-Message-State: APjAAAWU3N45mXI3Ud44Pp4vYPoEZm/VZN9MOpL5LaaVCp0AL7a7LjP+
-        ZR2aMon3mU4pSQ46aeWgIpGYozdnZqVv/a9nCw==
-X-Google-Smtp-Source: APXvYqxjXzdKzRE0EK2pcCqMsxPiZ4eYz6WenDnilDBfvtuJZs9Eo9skkMhiHprH/vEA4CI6gl4l72fI4G+D1tx4Ce4=
-X-Received: by 2002:a0c:d2b4:: with SMTP id q49mr8873666qvh.135.1573753191385;
- Thu, 14 Nov 2019 09:39:51 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com> <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-In-Reply-To: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 14 Nov 2019 11:39:40 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
-Message-ID: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1725976AbfKNRrK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 12:47:10 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 13CEC80E7;
+        Thu, 14 Nov 2019 17:47:44 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 09:47:05 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Caleb Robey <c-robey@ti.com>
+Cc:     linux-omap@vger.kernel.org, Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tom Rini <trini@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin zhu <yixin.zhu@linux.intel.com>,
-        cheol.yong.kim@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ARM: dts: am5729: beaglebone-ai: dra7 reqs in dts
+Message-ID: <20191114174705.GV5610@atomide.com>
+References: <20191114170933.12623-1-c-robey@ti.com>
+ <20191114170933.12623-2-c-robey@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114170933.12623-2-c-robey@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 9:27 PM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
->
->
-> Hi Linus,
->
-> On 13/11/2019 10:46 PM, Linus Walleij wrote:
-> > On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
-> > <rahul.tanwar@linux.intel.com> wrote:
-> >
-> >> Add dt bindings document for pinmux & GPIO controller driver of
-> >> Intel Lightning Mountain SoC.
-> >>
-> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> > (...)
-> >
-> >> +properties:
-> >> +  compatible:
-> >> +    const: intel,lgm-pinctrl
-> > Just noted from another review where Rob noted that this name should
-> > match the internal name in the datasheet for this hardware block. Is it
-> > really called "lgm-pinctrl" inside Intel?
-> >
-> > intel,lightning-mountain-io and similar are perfectly fine if that is the
-> > name it has in your documentation.
->
-> Our documentation does not have any specific names for these hardware
-> blocks. It names it in a very generic/standard manner like GPIO, pinmux..
->
-> To make the name explicit & self explanatory, i should probably change
-> the name as you suggested i.e. intel,lightning-mountain-io.
+* Caleb Robey <c-robey@ti.com> [191114 17:11]:
 
-You should also be consistent with 'lgm' vs. 'lightning-mountain' use
-across bindings some of which I think have already been accepted.
+Hmm I think this one is still missing
 
-Rob
+From: Jason Kridner <jdk@ti.com>
+
+If this too is Jason's patch? This happens if you apply a patch
+manually instead of applying an email with git am.
+
+You might be able to just change the From: line with
+git commit --amend.
+
+Regards,
+
+Tony
