@@ -7,81 +7,79 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D4CC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A052EC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0BC820723
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD0520718
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 19:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573758733;
-	bh=h6i+jO4ClmW2IeSbOGO8TMT3lJHc7Vol4IZ0eOI4cEo=;
+	s=default; t=1573758871;
+	bh=MrHLLVpCIkGJpA9d4tYEFE4lE8rqdAwb2pP0Zrfvkxg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sOMeelvvYGeHuMbtpk7bEME/fl91PcIikaZglUSxtgPNeh2XJOWJ0vgpvEPkO5sRe
-	 2o9wredwC+R3zMqE9+s/EvRmufhN2IkQOa2S7/hkGQOar3X9FmnUFyU5Ax9xbj2CCz
-	 uGDRI0XjUBsUzIMy6oul2t6EEUUWyM23TjPW1XjQ=
+	b=0me/luzwbRHRUfvTqJfByXTrUw3NiFwMyl80UnEPn7z1LYv8fDhAKcnQ0ZxQD8H//
+	 Lx21qOvoEjO+VcUfCKNOtGuSPqo155hL3BgomDFcgBKNY+S9Oxf3wQDC02rpK0xvB8
+	 u5Kpehoq8kxIFVVagDgP4AfW54y8ddJ3LsIMiJag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfKNTMM (ORCPT
+        id S1726444AbfKNTOa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 14:12:12 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39423 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfKNTMM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 14:12:12 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w24so5364886otk.6;
-        Thu, 14 Nov 2019 11:12:11 -0800 (PST)
+        Thu, 14 Nov 2019 14:14:30 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33314 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfKNTOa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 14:14:30 -0500
+Received: by mail-ot1-f65.google.com with SMTP id u13so5861909ote.0;
+        Thu, 14 Nov 2019 11:14:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+C86HU47Ruq8ie43k/9gRtCKU5MxuhIIqhntEz1NPZQ=;
-        b=IchMeODD2cvjbbsGoWVhSEaRY8BoqJyxHXaZEGjSCWxIpyRKk7o+wt3T80/l8jAc78
-         N9h3WLfhu564opz7wWrotg+ng/a19fofq45i67StXvKXlN0DPEV9XhnGldfyoez5/xnG
-         fu7hIZlScvCV0uXAT5WHJBRon4BJo2q6LfPdHd61OJrVsXzHRTSZl9ceGi7sKXMeEP/f
-         blztBo3ZDd/wsHyWuWlbjdq+bv+jmqlyUkeueQt1yoi6SqgRuC6+snQIpRt233I1nGKw
-         FoUDwryUTgyVSGXcIe9mGReq7Imkdxtks5R+MGFe5tevMcwdJ2AQFp4awqoSJUQQx/2d
-         svEg==
-X-Gm-Message-State: APjAAAXX/z03tSpiG8CHEbqXqDalgjw7UfT+VV2JtHEMPKIx7eiO9w3w
-        bWrd1SCGl91EGfkdENyBdwNBqU8=
-X-Google-Smtp-Source: APXvYqyK9IS1/37lWqaHxvuWrpHCJsZDLpbEJyl9jVccb1gWuKI2tXRvRTaUMaR3uOkMFMa/eX1sYQ==
-X-Received: by 2002:a9d:5e1a:: with SMTP id d26mr7845139oti.96.1573758731278;
-        Thu, 14 Nov 2019 11:12:11 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kxLLQE/JqRR/Jbs96WVmwWzDnecL0QTETfc0TZ/qlQc=;
+        b=bKHIRvJV0C5VC+tHNJ+/fy+EHdPih9wLOr0Pv3Ps4gaBfrM22gNVy9p7fU17wRVlJm
+         G4f+W3WRn2ozEhmFrFtfzsHsKwTPz5Kd4dmS+dfQy0i3xnRoO2nShmliEtwqo4+2Xm5m
+         S1kQJg02ASq8XMBT7Nfa9308/9sZdIgFwsfcvw/HbMcjf4Gc2vTVDYn3jH2yBqvtQQJg
+         +6ONnvdItPT4CcYIoV7EoY8li/3gEtqvQiywzD11N3aSt4xx2qq7/RWqLwzQfsYH0fwz
+         9Q63srKp1MmpwAoy2nlr8BbAjKHiVEQLAuBo4LJP4SF0z5tEvFDy7ZWEL40RS8zJmDuZ
+         4+PA==
+X-Gm-Message-State: APjAAAWizXCvZPboo//Zruq5hm1lzZNKI2JyLAUQM6GO3RQMcVLIeoBV
+        BIiu+Lc3w2P6ZxfOk4BhiN2Ka4E=
+X-Google-Smtp-Source: APXvYqyfJ87LD/QB5c0TMX/wIWoYP6o9C36/6w/reacZ6clzrv95SPvMKEP9+KvMr6GemvBs7XNNOQ==
+X-Received: by 2002:a9d:4813:: with SMTP id c19mr8176906otf.337.1573758869585;
+        Thu, 14 Nov 2019 11:14:29 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s66sm2140530otb.65.2019.11.14.11.12.10
+        by smtp.gmail.com with ESMTPSA id k18sm1965555oij.32.2019.11.14.11.14.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 11:12:10 -0800 (PST)
-Date:   Thu, 14 Nov 2019 13:12:10 -0600
+        Thu, 14 Nov 2019 11:14:29 -0800 (PST)
+Date:   Thu, 14 Nov 2019 13:14:28 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 4/4] dt-bindings: arm: imx: Add the i.MX6SLL-EVK Rev-A
- board
-Message-ID: <20191114191210.GA4324@bogus>
-References: <1573435732-30361-1-git-send-email-Anson.Huang@nxp.com>
- <1573435732-30361-4-git-send-email-Anson.Huang@nxp.com>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 6/7] dt-bindings: arm: realtek: Add RTD1395 and Banana Pi
+ BPI-M4
+Message-ID: <20191114191428.GA8113@bogus>
+References: <20191111030434.29977-1-afaerber@suse.de>
+ <20191111030434.29977-7-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1573435732-30361-4-git-send-email-Anson.Huang@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191111030434.29977-7-afaerber@suse.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2019 09:28:52 +0800, Anson Huang wrote:
-> Add board binding for i.MX6SLL-EVK Rev-A board.
+On Mon, 11 Nov 2019 04:04:33 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
+> Define compatible strings for Realtek RTD1395 SoC and BPI-M4 SBC.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
-> No changes.
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
