@@ -3,56 +3,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D12DC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 03:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC68C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 03:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAC3206F2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 03:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CE9206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 03:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfKND1g (ORCPT
+        id S1726923AbfKNDwE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 22:27:36 -0500
-Received: from mga01.intel.com ([192.55.52.88]:41987 "EHLO mga01.intel.com"
+        Wed, 13 Nov 2019 22:52:04 -0500
+Received: from mga09.intel.com ([134.134.136.24]:41327 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfKND1g (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Nov 2019 22:27:36 -0500
+        id S1726988AbfKNDwE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Nov 2019 22:52:04 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 19:27:34 -0800
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Nov 2019 19:52:03 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,302,1569308400"; 
-   d="scan'208";a="235515175"
+   d="scan'208";a="257337629"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Nov 2019 19:27:34 -0800
-Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
-        by linux.intel.com (Postfix) with ESMTP id 1724F58049B;
-        Wed, 13 Nov 2019 19:27:31 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
-Date:   Thu, 14 Nov 2019 11:27:31 +0800
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Nov 2019 19:52:02 -0800
+Received: from [10.226.39.46] (unknown [10.226.39.46])
+        by linux.intel.com (Postfix) with ESMTP id B39A858049A;
+        Wed, 13 Nov 2019 19:51:59 -0800 (PST)
+Subject: Re: [PATCH v6 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1573613534.git.eswara.kota@linux.intel.com>
+ <897ef494f39291797a92efb87a59961d36384019.1573613534.git.eswara.kota@linux.intel.com>
+ <CH2PR12MB40074C910983FF97DDCF8478DA760@CH2PR12MB4007.namprd12.prod.outlook.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <ec2e7ef1-b549-f8f7-d5f3-908c534bbd4f@linux.intel.com>
+Date:   Thu, 14 Nov 2019 11:51:58 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CH2PR12MB40074C910983FF97DDCF8478DA760@CH2PR12MB4007.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
@@ -61,33 +66,40 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-Hi Linus,
-
-On 13/11/2019 10:46 PM, Linus Walleij wrote:
-> On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
-> <rahul.tanwar@linux.intel.com> wrote:
+On 11/13/2019 5:59 PM, Gustavo Pimentel wrote:
+> On Wed, Nov 13, 2019 at 7:21:21, Dilip Kota <eswara.kota@linux.intel.com>
+> wrote:
 >
->> Add dt bindings document for pinmux & GPIO controller driver of
->> Intel Lightning Mountain SoC.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> (...)
+[...]
+> +static struct platform_driver intel_pcie_driver = {
+> +	.probe = intel_pcie_probe,
+> +	.remove = intel_pcie_remove,
+> +	.driver = {
+> +		.name = "intel-gw-pcie",
+> +		.of_match_table = of_intel_pcie_match,
+> +		.pm = &intel_pcie_pm_ops,
+> +	},
+> +};
+> +builtin_platform_driver(intel_pcie_driver);
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 29d6e93fd15e..548e22e07a52 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -673,6 +673,7 @@
+>   #define  PCI_EXP_LNKCTL2_TLS_8_0GT	0x0003 /* Supported Speed 8GT/s */
+>   #define  PCI_EXP_LNKCTL2_TLS_16_0GT	0x0004 /* Supported Speed 16GT/s */
+>   #define  PCI_EXP_LNKCTL2_TLS_32_0GT	0x0005 /* Supported Speed 32GT/s */
+> +#define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
+>   #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+>   #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+>   #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
+> -- 
+> 2.11.0
 >
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-pinctrl
-> Just noted from another review where Rob noted that this name should
-> match the internal name in the datasheet for this hardware block. Is it
-> really called "lgm-pinctrl" inside Intel?
->
-> intel,lightning-mountain-io and similar are perfectly fine if that is the
-> name it has in your documentation.
-
-Our documentation does not have any specific names for these hardware
-blocks. It names it in a very generic/standard manner like GPIO, pinmux..
-
-To make the name explicit & self explanatory, i should probably change
-the name as you suggested i.e. intel,lightning-mountain-io.
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Thanks for reviewing the patch.
 
 Regards,
-Rahul
+Dilip
+>
+>
