@@ -2,338 +2,119 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B1DC43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 07:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99268C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 07:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CAD620718
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 07:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F1E2070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 07:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B9xFb8FN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOPAr9Qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbfKNHl5 (ORCPT
+        id S1725852AbfKNH44 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 02:41:57 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37057 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfKNHl5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 02:41:57 -0500
-Received: by mail-ed1-f65.google.com with SMTP id k14so4176383eds.4
-        for <devicetree@vger.kernel.org>; Wed, 13 Nov 2019 23:41:53 -0800 (PST)
+        Thu, 14 Nov 2019 02:56:56 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55705 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfKNH44 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 02:56:56 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b11so4588711wmb.5;
+        Wed, 13 Nov 2019 23:56:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=b4oVKxmBs4/RCYOKu4hwaTsf6M0D7a2xIkhCkKT+Pto=;
-        b=B9xFb8FNqh/gxYhmiXwmoboX9b0W301cObyelGcHy+jepHxS+R9vPMMrJYylMOQXlM
-         51z2p/t5u0IbsMSgsDBX5z2VowBIW5MPZtYErL29n1z3iPMkQrfib/Lu2WTZRChW3FXd
-         0zV4AvJNKL+6nlpVVhTwC7oi15bZdlzyWb7rM=
+        bh=3K2jlKns5uBLkzDh9Yqp5vanNtQbiJVshVMnoLizCHU=;
+        b=LOPAr9QpwxQZ6yy5Z+4+Tbtd9Lt+/s7RGkLsFMpjZVMGHUYG8IJilruwObPEw2erMn
+         HowM/VT/xT+bB4TCfwnJuXqPklx724lgWIfRhkz6v2eDkEJ4zhMLNUlUcElK2Nl+8KVK
+         SAYvK7OQwbU9kdiWKA2m7Jkcmq+fr96f0xKpmNBdL571lsWm8LEQMlYDDgKLXcCTXqjT
+         x5PrtMbuN7QaH1J/v1NUi+3gAxB3Ph0oYxSU5rzsWCmvgbS0I5xkJ4wJpjR41/uDZHD3
+         gBRIY9zxM7eA9SSj/nIdWlVEhEfLOZ7mgUf9O+jTKVwToMCZTBL8qvEHPT3pRay9bZyX
+         sMrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=b4oVKxmBs4/RCYOKu4hwaTsf6M0D7a2xIkhCkKT+Pto=;
-        b=UDY2YJD3VogdbIlSgKzit81jA3VYTovMG3wOZKQS7abRwnb7NzWv+LCyVEeFlo0z+m
-         qJDArYbuL+zX6Yp0XWPWFGfJ1F3MyUggya2YG/onvl1JJDjZWIhHbVhRupBSLQoIwm//
-         Rhpv0GzKvrKKzpu9yq2ZMjYIWL8gVbgYuMlT3nWXFVHBmscnSbIn+WN+kI6GFpBZ4kIq
-         ldDKE8rSJXNktLkTCAo4UHKSYf+Gxeos9/ey+w+uoR3C5rZeXxm4fC4EPYTNL59Wx4A/
-         O0bSFJJ4MoEQVDXTZYSPrWWcYcCBJs94mYOtZSnDyfSN/i4LuEnXF1LApir+gqfpJ8bw
-         nGjg==
-X-Gm-Message-State: APjAAAVQAT0bSa9RpRKCJndEL3XUvOgnhINgtW0MZ9r8u48c7O/SlJWw
-        yiV9Kt5iVugX+wvzGt5VL55fYRWETPhUaDm23JexIg==
-X-Google-Smtp-Source: APXvYqz6yZbtrJ5sSQUSRuZpeFS1kkbqDoajndNm+AhsVzWJvYBAWCTn8mxQzSajS+KvpujI+sImRayrC8IGh/nQuQg=
-X-Received: by 2002:a17:906:2518:: with SMTP id i24mr7155659ejb.4.1573717312605;
- Wed, 13 Nov 2019 23:41:52 -0800 (PST)
+        bh=3K2jlKns5uBLkzDh9Yqp5vanNtQbiJVshVMnoLizCHU=;
+        b=oEyUnLve2qHrWki21bQH5Lw00i3CMcF1lHKpaYcSefkIksOjC8uREVWv0YCELLk2CT
+         y+LfjaKyqjNxPzFv4Huxau+pq0T6gg7A+Cq1EzovmWacMwbDJ+aOmIgri7mHfP5lgpaS
+         qaPlfkuJa7WCuIlCKaaayCnLlT66g0g/cjReisMRS5JoSDo64zsMq5bf89tO3FdVPqPs
+         vf+M1fU1xe2dcSb7vFvw/0KAbPH/LFEZVuFOeoGTK8lZBCB8WGczSyDt2qWH1IV5iWlP
+         kRn88MPUB6G529io5VXtWx73cv9yM1BRMQv7TuKcQyNf0nG+POZmMrd+Vys3dsciApEh
+         eZcQ==
+X-Gm-Message-State: APjAAAVHUAWRgvV2Dsf1eZnc70gkFouUj20PObKrDx0pTGsenwQ1dhUC
+        hRpS5hJAW0qgkVrsT2b2RrRKJ8rHxW1MXqpNYM4=
+X-Google-Smtp-Source: APXvYqxBerVbJgV3OSodNbBETUOG4GiQVDJ4dW1YDf5/mNBYS1hXAjI97JZxFxwK80d6fUKmOiAK9WUORUEZ/dL0iyA=
+X-Received: by 2002:a1c:4456:: with SMTP id r83mr6205339wma.2.1573718214611;
+ Wed, 13 Nov 2019 23:56:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20190906100514.30803-1-roger.lu@mediatek.com> <20190906100514.30803-4-roger.lu@mediatek.com>
-In-Reply-To: <20190906100514.30803-4-roger.lu@mediatek.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Thu, 14 Nov 2019 15:41:16 +0800
-Message-ID: <CANdKZ0eEMQe+OFOJxOs37gyUm2vGQ2F-NeAkcxmgYXVKvRzQBw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] PM / AVS: SVS: Introduce SVS engine
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        HenryC Chen <HenryC.Chen@mediatek.com>, yt.lee@mediatek.com,
-        Angus Lin <Angus.Lin@mediatek.com>,
+References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
+ <20191111090230.3402-5-chunyan.zhang@unisoc.com> <20191112005600.GA9055@bogus>
+ <CAAfSe-uohXXHyQ7txhPmLCpyQODDHAuxjuUVbGcwYySN6G9tNQ@mail.gmail.com> <CAL_JsqLUkaL=dq0Nrdcax3KG7TXW3LErHTSONa9mH2gXu4du9w@mail.gmail.com>
+In-Reply-To: <CAL_JsqLUkaL=dq0Nrdcax3KG7TXW3LErHTSONa9mH2gXu4du9w@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Thu, 14 Nov 2019 15:56:18 +0800
+Message-ID: <CAAfSe-vVxYsHBVorqpw1sTyi-B+VtU8pgAe79-T8WXhW8ZZHwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] dt-bindings: serial: Add a new compatible string
+ for SC9863A
+To:     Rob Herring <robh@kernel.org>
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nishanth Menon <nm@ti.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Roger,
-
-On Fri, Sep 6, 2019 at 6:06 PM Roger Lu <roger.lu@mediatek.com> wrote:
+On Thu, 14 Nov 2019 at 08:06, Rob Herring <robh@kernel.org> wrote:
 >
-> The SVS (Smart Voltage Scaling) engine is a piece of hardware which is
-> used to calculate optimized voltage values of several power domains, e.g.
-> CPU/GPU/CCI, according to chip process corner, temperatures, and other
-> factors. Then DVFS driver could apply those optimized voltage values to
-> reduce power consumption.
+> On Mon, Nov 11, 2019 at 7:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> >
+> > On Tue, 12 Nov 2019 at 08:56, Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Mon, 11 Nov 2019 17:02:29 +0800, Chunyan Zhang wrote:
+> > > >
+> > > > SC9863A use the same serial device which SC9836 uses.
+> > > >
+> > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/serial/sprd-uart.yaml | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > >
+> > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> >
+> > Yes, I know.
+> >
+> > > there's no need to repost patches *only* to add the tags. The upstream
+> > > maintainer will do that for acks received on the version they apply.
+> > >
+> > > If a tag was not added on purpose, please state why and what changed.
+> >
+> > The reason was that I switched to yaml rather than txt in last version
+> > which recieved your Acked-by.
+> > Not sure for this kind of case I can still add your Acked-by.
 >
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> ---
->  drivers/power/avs/Kconfig     |   10 +
->  drivers/power/avs/Makefile    |    1 +
->  drivers/power/avs/mtk_svs.c   | 2075 +++++++++++++++++++++++++++++++++
->  include/linux/power/mtk_svs.h |   23 +
->  4 files changed, 2109 insertions(+)
->  create mode 100644 drivers/power/avs/mtk_svs.c
->  create mode 100644 include/linux/power/mtk_svs.h
+> This was a semi-automated reply. I do review it first, but if the
+
+Thanks for the review!
+
+Can you please also have a look at other binding patches in this
+series when convenient?
+
+Thanks,
+Chunyan
+
+> changelog is not in the patch I may miss the reason.
 >
-> [...]
-> diff --git a/drivers/power/avs/mtk_svs.c b/drivers/power/avs/mtk_svs.c
-> new file mode 100644
-> index 000000000000..78ec93c3a4a5
-> --- /dev/null
-> +++ b/drivers/power/avs/mtk_svs.c
-> [...]
-> +static int svs_set_volts(struct svs_bank *svsb, bool force_update)
-> +{
-> +       u32 i, svsb_volt, opp_volt, low_temp_offset = 0;
-> +       int zone_temp, ret;
-> +
-> +       mutex_lock(&svsb->lock);
-> +
-> +       /* If bank is suspended, it means init02 voltage is applied.
-> +        * Don't need to update opp voltage anymore.
-> +        */
-> +       if (svsb->suspended && !force_update) {
-> +               pr_notice("%s: bank is suspended\n", svsb->name);
-> +               mutex_unlock(&svsb->lock);
-> +               return -EPERM;
-> +       }
-> +
-> +       /* get thermal effect */
-> +       if (svsb->phase == SVS_PHASE_MON) {
-> +               if (svsb->svs_temp > svsb->upper_temp_bound &&
-> +                   svsb->svs_temp < svsb->lower_temp_bound) {
-> +                       pr_err("%s: svs_temp is abnormal (0x%x)?\n",
-> +                              svsb->name, svsb->svs_temp);
-> +                       mutex_unlock(&svsb->lock);
-> +                       return -EINVAL;
-> +               }
-> +
-> +               ret = svs_get_zone_temperature(svsb, &zone_temp);
-> +               if (ret) {
-> +                       pr_err("%s: cannot get zone \"%s\" temperature\n",
-> +                              svsb->name, svsb->zone_name);
-> +                       pr_err("%s: add low_temp_offset = %u\n",
-> +                              svsb->name, svsb->low_temp_offset);
-> +                       zone_temp = svsb->low_temp_threashold;
-> +               }
-> +
-> +               if (zone_temp <= svsb->low_temp_threashold)
-> +                       low_temp_offset = svsb->low_temp_offset;
-> +       }
-> +
-> +       /* vmin <= svsb_volt (opp_volt) <= signed-off voltage */
-> +       for (i = 0; i < svsb->opp_count; i++) {
-> +               if (svsb->phase == SVS_PHASE_MON) {
-> +                       svsb_volt = max((svsb->volts[i] + svsb->volt_offset +
-> +                                        low_temp_offset), svsb->vmin);
-> +                       opp_volt = svs_volt_to_opp_volt(svsb_volt,
-> +                                                       svsb->volt_step,
-> +                                                       svsb->volt_base);
-> +               } else if (svsb->phase == SVS_PHASE_INIT02) {
-> +                       svsb_volt = max((svsb->init02_volts[i] +
-> +                                        svsb->volt_offset), svsb->vmin);
-> +                       opp_volt = svs_volt_to_opp_volt(svsb_volt,
-> +                                                       svsb->volt_step,
-> +                                                       svsb->volt_base);
-> +               } else if (svsb->phase == SVS_PHASE_ERROR) {
-> +                       opp_volt = svsb->opp_volts[i];
-> +               } else {
-> +                       pr_err("%s: unknown phase: %u?\n",
-> +                              svsb->name, svsb->phase);
-> +                       mutex_unlock(&svsb->lock);
-> +                       return -EINVAL;
-> +               }
-> +
-> +               opp_volt = min(opp_volt, svsb->opp_volts[i]);
-> +               ret = dev_pm_opp_adjust_voltage(svsb->dev, svsb->opp_freqs[i],
-> +                                               opp_volt);
-
-The version of this function in opp tree
-(https://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git/commit/?h=opp/linux-next&id=25cb20a212a1f989385dfe23230817e69c62bee5)
-has a different function signature, so this should be changed too.
-
-> +               if (ret) {
-> +                       pr_err("%s: set voltage failed: %d\n", svsb->name, ret);
-> +                       mutex_unlock(&svsb->lock);
-> +                       return ret;
-> +               }
-> +       }
-> +
-> +       mutex_unlock(&svsb->lock);
-> +
-> +       return 0;
-> +}
-> +
-> [...]
-> +static int svs_init01(struct mtk_svs *svs)
-> +{
-> +       const struct svs_platform *svsp = svs->platform;
-> +       struct svs_bank *svsb;
-> +       struct pm_qos_request qos_request = { {0} };
-> +       unsigned long flags, time_left;
-> +       bool search_done;
-> +       int ret = -EINVAL;
-> +       u32 opp_freqs, opp_vboot, buck_volt, idx, i;
-> +
-> +       /* Let CPUs leave idle-off state for initializing svs_init01. */
-> +       pm_qos_add_request(&qos_request, PM_QOS_CPU_DMA_LATENCY, 0);
-> +
-> +       /* Sometimes two svs_bank use the same buck.
-> +        * Therefore, we set each svs_bank to vboot voltage first.
-> +        */
-> +       for (idx = 0; idx < svsp->bank_num; idx++) {
-> +               svsb = &svsp->banks[idx];
-> +               search_done = false;
-> +
-> +               if (!svsb->init01_support)
-> +                       continue;
-> +
-> +               ret = regulator_set_mode(svsb->buck, REGULATOR_MODE_FAST);
-> +               if (ret)
-> +                       pr_notice("%s: fail to set fast mode: %d\n",
-> +                                 svsb->name, ret);
-> +
-> +               if (svsb->mtcmos_request) {
-> +                       ret = regulator_enable(svsb->buck);
-> +                       if (ret) {
-> +                               pr_err("%s: fail to enable %s power: %d\n",
-> +                                      svsb->name, svsb->buck_name, ret);
-> +                               goto init01_finish;
-> +                       }
-> +
-> +                       ret = dev_pm_domain_attach(svsb->dev, false);
-> +                       if (ret) {
-> +                               pr_err("%s: attach pm domain fail: %d\n",
-> +                                      svsb->name, ret);
-> +                               goto init01_finish;
-> +                       }
-> +
-> +                       pm_runtime_enable(svsb->dev);
-> +                       ret = pm_runtime_get_sync(svsb->dev);
-> +                       if (ret < 0) {
-> +                               pr_err("%s: turn mtcmos on fail: %d\n",
-> +                                      svsb->name, ret);
-> +                               goto init01_finish;
-> +                       }
-> +               }
-> +
-> +               /* Find the fastest freq that can be run at vboot and
-> +                * fix to that freq until svs_init01 is done.
-> +                */
-> +               opp_vboot = svs_volt_to_opp_volt(svsb->vboot,
-> +                                                svsb->volt_step,
-> +                                                svsb->volt_base);
-> +
-> +               for (i = 0; i < svsb->opp_count; i++) {
-> +                       opp_freqs = svsb->opp_freqs[i];
-> +                       if (!search_done && svsb->opp_volts[i] <= opp_vboot) {
-> +                               ret = dev_pm_opp_adjust_voltage(svsb->dev,
-> +                                                               opp_freqs,
-> +                                                               opp_vboot);
-
-Same here.
-
-> +                               if (ret) {
-> +                                       pr_err("%s: set voltage failed: %d\n",
-> +                                              svsb->name, ret);
-> +                                       goto init01_finish;
-> +                               }
-> +
-> +                               search_done = true;
-> +                       } else {
-> +                               dev_pm_opp_disable(svsb->dev,
-> +                                                  svsb->opp_freqs[i]);
-> +                       }
-> +               }
-> +       }
-> +
-> +       for (idx = 0; idx < svsp->bank_num; idx++) {
-> +               svsb = &svsp->banks[idx];
-> +               svs->bank = svsb;
-> +
-> +               if (!svsb->init01_support)
-> +                       continue;
-> +
-> +               opp_vboot = svs_volt_to_opp_volt(svsb->vboot,
-> +                                                svsb->volt_step,
-> +                                                svsb->volt_base);
-> +
-> +               buck_volt = regulator_get_voltage(svsb->buck);
-> +               if (buck_volt != opp_vboot) {
-> +                       pr_err("%s: buck voltage: %u, expected vboot: %u\n",
-> +                              svsb->name, buck_volt, opp_vboot);
-> +                       ret = -EPERM;
-> +                       goto init01_finish;
-> +               }
-> +
-> +               init_completion(&svsb->init_completion);
-> +               flags = claim_mtk_svs_lock();
-> +               svs_set_phase(svs, SVS_PHASE_INIT01);
-> +               release_mtk_svs_lock(flags);
-> +               time_left =
-> +                       wait_for_completion_timeout(&svsb->init_completion,
-> +                                                   msecs_to_jiffies(2000));
-> +               if (time_left == 0) {
-> +                       pr_err("%s: init01 completion timeout\n", svsb->name);
-> +                       ret = -EBUSY;
-> +                       goto init01_finish;
-> +               }
-> +       }
-> +
-> +init01_finish:
-> +       for (idx = 0; idx < svsp->bank_num; idx++) {
-> +               svsb = &svsp->banks[idx];
-> +
-> +               if (!svsb->init01_support)
-> +                       continue;
-> +
-> +               for (i = 0; i < svsb->opp_count; i++)
-> +                       dev_pm_opp_enable(svsb->dev, svsb->opp_freqs[i]);
-> +
-> +               if (regulator_set_mode(svsb->buck, REGULATOR_MODE_NORMAL))
-> +                       pr_notice("%s: fail to set normal mode: %d\n",
-> +                                 svsb->name, ret);
-> +
-> +               if (svsb->mtcmos_request) {
-> +                       if (pm_runtime_put_sync(svsb->dev))
-> +                               pr_err("%s: turn mtcmos off fail: %d\n",
-> +                                      svsb->name, ret);
-> +                       pm_runtime_disable(svsb->dev);
-> +                       dev_pm_domain_detach(svsb->dev, 0);
-> +                       if (regulator_disable(svsb->buck))
-> +                               pr_err("%s: fail to disable %s power: %d\n",
-> +                                      svsb->name, svsb->buck_name, ret);
-> +               }
-> +       }
-> +
-> +       pm_qos_remove_request(&qos_request);
-> +
-> +       return ret;
-> +}
-> +
-> [...]
+> Anyways,
+>
+> Acked-by: Rob Herring <robh@kernel.org>
