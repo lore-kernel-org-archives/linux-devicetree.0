@@ -2,105 +2,226 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F12C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 11:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3011EC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 12:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9E5206E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 11:43:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUaH7bFR"
+	by mail.kernel.org (Postfix) with ESMTP id 118F420715
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 12:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfKNLna (ORCPT
+        id S1726179AbfKNMNS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 06:43:30 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37794 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfKNLna (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 06:43:30 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t1so6099468wrv.4;
-        Thu, 14 Nov 2019 03:43:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nQNqrubOlUUYZPppnjrDT5gghOk1RD7VpCkLrJlKMDQ=;
-        b=lUaH7bFRd2dhXRSlw+qcr3GHuOtqyG8vd8F0OdlZgPharmpXM3PwpHtGslEKKUTnHM
-         27t6qBaIXKh9gGWzxI5rYY4nIBq7FD+trKsQmmL3xDJejBQR3R4DdVL8nb1tzR//uvRj
-         kGodRl0qd5Q7uRKoUBYwmpofXZllW0DYzt235GAxRyTrvti+8qVzddQ9by8x7pKAmRXe
-         oZzTv0uZpVpOU9vJGgVyUzS9zVrpykUkJv2/nPbOl5lSLoPCAhCrpVCqmDjSKuRW/Vca
-         5ZAbUDA5YTxZWn7QJi75URZ097xjC0+ScXkUI3I8/F9Gox0VW4ha0L4O0TMPn8yj+xst
-         /b6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nQNqrubOlUUYZPppnjrDT5gghOk1RD7VpCkLrJlKMDQ=;
-        b=Js1wr8OSdiJYBUxbPYTxYW/tANdSpb4Ua5UGb1H2M37cEaSyWr7vfm25cthq8O/haU
-         sFTMHcm2G9ZBYauH1zFledHMLUfypGe0Xmh+lqb+GUwKYiTd+wBs8PU1ggOY2+QkgOIH
-         dwztktaApI7HynmIoIg6ezDVfZVNVQtTvyIYQcGNsZA7G/DLacWCrj9K4WVg4hVCDM6V
-         U8OAgbj+U+rC2I7jhNntEFSVUdJ+VszTBU/7KRWAYzlipddRxrkJdXZDnvv4IxgALTaz
-         6GH9TMVyTsl63Zjj2hr/Gfbu2Mb0QqqqW02FVPmTv3RpzckawiuIcGs8bxMBV/4rPVSa
-         lJmw==
-X-Gm-Message-State: APjAAAXAcs8p0W0MvvsaGNs0QK2GTeOcmVbFSGE7Bn7tWUbPPCsBDZaV
-        g3t20awvmXmMzDpHSlqU2OI=
-X-Google-Smtp-Source: APXvYqy88aC3vqt2wu5quF6h4AmdgM/VgNut4bo25B9uywblwPxT9Fv0GJagE45hAuflHj5UsL2a4A==
-X-Received: by 2002:adf:ef91:: with SMTP id d17mr7505042wro.145.1573731807811;
-        Thu, 14 Nov 2019 03:43:27 -0800 (PST)
-Received: from localhost ([193.47.161.132])
-        by smtp.gmail.com with ESMTPSA id w18sm7021172wrp.31.2019.11.14.03.43.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 Nov 2019 03:43:26 -0800 (PST)
-Date:   Thu, 14 Nov 2019 11:48:48 +0100
-From:   "oliver.graute@gmail.com" <oliver.graute@gmail.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc:     "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>,
-        "peng.fan@nxp.com" <peng.fan@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 14 Nov 2019 07:13:18 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:44603 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfKNMNS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 07:13:18 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Nov 2019 17:43:14 +0530
+IronPort-SDR: rufJA+6/4w14hAQHvkrW8SljzKUbvTSYQ5WR10INuI8+tLxupJF44G1lhuojb250Sax6RT+Ajy
+ 5Sxf8koh+5JOlUglM0ZpayKJhpizGyE/pCV+Ovj7t1mvpsE5PhFcHJvhr9QTnGjLV0/wSUb87i
+ 7T5SkhAaBTgB0t2lmjKbPp70cmhsSq2v06c0Mnoizl51bEbfFtSpaFfLurmRVk6eZCBEtz/QvI
+ Ga6V78b385HvsI9HsGKGDoa7TkqnxslgB6SmpOJ6esxJpeYSOMlRbrVHkBu7CR/K9CAgoqnQcs
+ ecaYVzKzyw7hXCkRXytnXqDa
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 14 Nov 2019 17:43:04 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id CC0E1189A; Thu, 14 Nov 2019 17:43:02 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Pramod Kumar <pramod.kumar_1@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
-        Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC PATCH 1/1] arm64: dts: added basic DTS for qmx8 congatec
- board
-Message-ID: <20191114104848.GH4147@optiplex>
-References: <20191029122026.14208-1-oliver.graute@kococonnector.com>
- <20191029122026.14208-2-oliver.graute@kococonnector.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029122026.14208-2-oliver.graute@kococonnector.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     =linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add USB related nodes
+Date:   Thu, 14 Nov 2019 17:42:49 +0530
+Message-Id: <1573733569-25940-2-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573733569-25940-1-git-send-email-sanm@codeaurora.org>
+References: <1573733569-25940-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/10/19, Oliver Graute wrote:
-> Add basic dts support for a Congatec iMX8QM Qseven Board
-> 
-> Product Page: https://www.congatec.com/de/produkte/qseven/conga-qmx8x.html
+Add nodes for DWC3 USB controller, QMP and QUSB PHYs.
 
-just noticed that above product link is wrong. The right one is this:
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  25 ++++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 105 ++++++++++++++++++++++++++++++++
+ 2 files changed, 130 insertions(+)
 
-https://www.congatec.com/de/produkte/qseven/conga-qmx8.html
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 189254f..282d33e 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -400,3 +400,28 @@
+ 			bias-pull-up;
+ 		};
+ };
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++	vdd-supply = <&vreg_l4a_0p8>;
++	vdda-pll-supply = <&vreg_l11a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l17a_3p0>;
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++	vdda-phy-supply = <&vreg_l3c_1p2>;
++	vdda-pll-supply = <&vreg_l4a_0p8>;
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 666e9b9..82f0b3a 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/phy/phy-qcom-qusb2.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ 
+ / {
+@@ -182,6 +183,18 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		qfprom@784000 {
++			compatible = "qcom,qfprom";
++			reg = <0 0x00784000 0 0x8ff>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			qusb2p_hstx_trim: hstx-trim-primary@25b {
++				reg = <0x25b 0x1>;
++				bits = <1 3>;
++			};
++		};
++
+ 		qupv3_id_0: geniqup@8c0000 {
+ 			compatible = "qcom,geni-se-qup";
+ 			reg = <0 0x008c0000 0 0x6000>;
+@@ -911,6 +924,98 @@
+ 			status = "disabled";
+ 		};
+ 
++		usb_1_hsphy: phy@88e3000 {
++			compatible = "qcom,sc7180-qusb2-phy";
++			reg = <0 0x088e3000 0 0x400>;
++			status = "disabled";
++			#phy-cells = <0>;
++			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "cfg_ahb","ref";
++			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
++
++			nvmem-cells = <&qusb2p_hstx_trim>;
++		};
++
++		usb_1_qmpphy: phy@88e9000 {
++			compatible = "qcom,sc7180-qmp-usb3-phy";
++			reg = <0 0x088e9000 0 0x18c>,
++			      <0 0x088e8000 0 0x38>;
++			reg-names = "reg-base", "dp_com";
++			status = "disabled";
++			#clock-cells = <1>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
++				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
++				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
++			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
++
++			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
++				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
++			reset-names = "phy", "common";
++
++			usb_1_ssphy: lanes@88e9200 {
++				reg = <0 0x088e9200 0 0x128>,
++				      <0 0x088e9400 0 0x200>,
++				      <0 0x088e9c00 0 0x218>,
++				      <0 0x088e9600 0 0x128>,
++				      <0 0x088e9800 0 0x200>,
++				      <0 0x088e9a00 0 0x18>;
++				#phy-cells = <0>;
++				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
++				clock-names = "pipe0";
++				clock-output-names = "usb3_phy_pipe_clk_src";
++			};
++		};
++
++		usb_1: usb@a6f8800 {
++			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
++			reg = <0 0x0a6f8800 0 0x400>;
++			status = "disabled";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			dma-ranges;
++
++			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
++				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
++				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
++				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
++			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
++				      "sleep";
++
++			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <150000000>;
++
++			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hs_phy_irq", "ss_phy_irq",
++					  "dm_hs_phy_irq", "dp_hs_phy_irq";
++
++			power-domains = <&gcc USB30_PRIM_GDSC>;
++
++			resets = <&gcc GCC_USB30_PRIM_BCR>;
++
++			usb_1_dwc3: dwc3@a600000 {
++				compatible = "snps,dwc3";
++				reg = <0 0x0a600000 0 0xe000>;
++				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
++				iommus = <&apps_smmu 0x540 0>;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
++				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++		};
++
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0 0x0c440000 0 0x1100>,
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-Best regards,
-
-Oliver
