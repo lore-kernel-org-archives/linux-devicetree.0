@@ -2,171 +2,114 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90532C43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 10:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A348C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 10:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67890206F0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 10:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44077206F0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 10:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=avl.com header.i=@avl.com header.b="oI99kGKs";
-	dkim=pass (2048-bit key) header.d=avl.com header.i=@avl.com header.b="pUSef10P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QmKQUDdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfKNKav (ORCPT
+        id S1726185AbfKNKrD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 05:30:51 -0500
-Received: from mx08-002cda01.pphosted.com ([185.183.28.84]:1718 "EHLO
-        mx08-002cda01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726567AbfKNKav (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:30:51 -0500
-Received: from pps.filterd (m0135533.ppops.net [127.0.0.1])
-        by mx07-002cda01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAEA9tJ9000751;
-        Thu, 14 Nov 2019 10:10:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=avl.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=08102019; bh=b0SHC9LPYhG2ytHcpiMCUUBwLEVunuxoQw31P9doY6s=;
- b=oI99kGKsjeu291xkEFOdEfmVWfoDrcKp8O6fwc5qjIYGODWthYJhrCG9FM9A8NecFSZB
- ayXuuJ3leJ8jtLDJu9fWsdJB241qUXN8rvENwy3lQOJshayu3UvGa9lyc0n/u8Xe+yMA
- ooJcRJ1uf74/M6xFNNBjigf5MF0MeUk2DrQLhrW34bp6b0Gd0Z9ELsqQt6wSUaLxBKjB
- nAWs3H9RCS+RwkWqQchGpNOD4NTpIFofywN21YQyMO1XhrU689WPGN47QeXw+5ByTi37
- sR6Gb5adGhIKm0z0uYCXXuGL2gFzviyURS+vchIt0qUQ3QZ1cR9hbaLOY2YACpTy04vU nw== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=avl.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=19122018; bh=b0SHC9LPYhG2ytHcpiMCUUBwLEVunuxoQw31P9doY6s=;
- b=pUSef10PmotCBViMqV8GYwHSJMetMDE+RkdtfXgooBdBuJGY+L/kd+6LotYVFSZn5LEi
- /Hrfjm2p9uekUkL2yqYW+bswG2QF45g/5zSgdGVzBj1ZO37gc9G+Ca58iYEfuZJL4Y8g
- bh+voESaOrF1TECVLYNF4AEaWEwTDkbMqRPGJa09O3Ka5dLLN6R1c37PVKdfRX11kh51
- Q3i4QBcy3f4i7e3m63Jaq9H1Ydqv1WmDwRVENqfus8V3lebXqIYh0GEdoNgDsEHrc0RQ
- 9z7tYvZRj1uNeZHbQvhZGb5sSclluR4Qat8bP1zpG1yr8KjFQl2kVztvjdyfVLQ5h3BJ kA== 
-Received: from atgrzso2901.avl01.avlcorp.lan ([192.102.17.76])
-        by mx07-002cda01.pphosted.com with ESMTP id 2w5p88a26p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Nov 2019 10:10:25 +0000
-Received: from pps.filterd (atgrzso2901.avl01.avlcorp.lan [127.0.0.1])
-        by atgrzso2901.avl01.avlcorp.lan (8.16.0.27/8.16.0.27) with SMTP id xAEA9BJh001938;
-        Thu, 14 Nov 2019 11:10:24 +0100
-Received: from atgrzsw1693.avl01.avlcorp.lan ([10.13.100.86])
-        by atgrzso2901.avl01.avlcorp.lan with ESMTP id 2w93dg02xk-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 14 Nov 2019 11:10:24 +0100
-Received: from atgrzsw3271.avl01.avlcorp.lan (10.12.65.157) by
- atgrzsw1693.avl01.avlcorp.lan (10.12.64.114) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 14 Nov 2019 11:10:23 +0100
-Received: from atgrzsw1696.avl01.avlcorp.lan (10.12.64.164) by
- atgrzsw3271.avl01.avlcorp.lan (10.12.65.157) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 14 Nov 2019 11:09:09 +0100
-Received: from ATGRZWN210080.avl01.avlcorp.lan (10.12.100.12) by
- atgrzsw1696.avl01.avlcorp.lan (10.12.64.164) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Thu, 14 Nov 2019 11:09:09 +0100
-From:   <tomislav.denis@avl.com>
-To:     <jic23@kernel.org>
-CC:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <tomislav.denis@avl.com>
-Subject: [PATCH 3/3] bindings: iio: pressure: Add dlh-i2c documentation
-Date:   Thu, 14 Nov 2019 11:09:08 +0100
-Message-ID: <20191114100908.11180-4-tomislav.denis@avl.com>
-X-Mailer: git-send-email 2.12.0.windows.1
-In-Reply-To: <20191114100908.11180-1-tomislav.denis@avl.com>
-References: <20191114100908.11180-1-tomislav.denis@avl.com>
+        Thu, 14 Nov 2019 05:47:03 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:42489 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbfKNKrD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 05:47:03 -0500
+Received: by mail-ua1-f67.google.com with SMTP id 31so1700648uas.9
+        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 02:47:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+Z7zzjF1yR5HW1GmAitGOf39HmOM3mJTrajNy5woG3s=;
+        b=QmKQUDdoeOMyx6GoduNvAB+A6ByZBHDCd+m44cbjKkLycBOCHODSVbwGUtmtZnFncI
+         jBSatmf+RWZClV7+/BbAdYlKRMyyAijZM/mTIM/4AIh3nL2mbNlizGws7XFqqjSyznmX
+         Dn0gEK8v15SByp0mIgAuXm4ACcaG+8wlLEZZIjr9uDr4PeVGEzM043Uj4wVOg+qktF6d
+         PE94zBhSofxflwJqnIoljIpQNv0gzelfMX/0QBMZNpLbhBsuR9WUPo8TdZDTUPrI9b4H
+         HFDaB0Obzgblcc6SmVLw2/kbduFDbXerQRneC2C3GZMrJz5OvaV7L/qCpremwSvgrsIl
+         +o0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Z7zzjF1yR5HW1GmAitGOf39HmOM3mJTrajNy5woG3s=;
+        b=RNiEQ33Hv8tpaJEOxGJlSA5J2oB3Es7XWEzCUXNrEOCA/ZEKKj4mBX6SXzKP/vqplc
+         IaAYjiyAfyZYWl5x/SIrZzotYh1iGQRSCNoWCY9iTQajs6ydrj+XabTSDx0V16ZcjzXR
+         FcknTNVY/DiDH9o1jt2dmvDwAqNRd/Ps0NypYC0WtuJ0vCPsBKmDK7X1pensPzrXWW3Q
+         nu6qZK3vLqGRjWJzDWqnAH8XDuieHmi6m8S05ZSPFXeHxlmC128MoaPsieVhMKEqzSQb
+         eeHzPCqfoh3+wt7J1yMY1ZYju2x7VAc/hDuvBblDm1lo+QNLr1EzdJPzodNAKavCrkj3
+         kvtQ==
+X-Gm-Message-State: APjAAAX7VaPU8020d+YbhLmGktF6bhSdGIBvIGh+exocdc/7ta0LEyuF
+        KK1WCCNRXlaLdQbNDqn3F7PCzfg7+iwhm2KE9hyooA==
+X-Google-Smtp-Source: APXvYqzs2hzCHGhzo4MLkvjZ4GdlPj6hUM6/5I/OJ+TEn23Lr7XxbNQB98pkh3DLyHV1zrutRRH8jaIY8J3D/SKfoY0=
+X-Received: by 2002:ab0:2042:: with SMTP id g2mr4940760ual.19.1573728422241;
+ Thu, 14 Nov 2019 02:47:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: f9e74532-fb7d-4806-8539-2b9574eafa9a
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911140094
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-14_01:2019-11-14,2019-11-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- priorityscore=1501 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
- spamscore=0 phishscore=0 bulkscore=0 suspectscore=1 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911140094
+References: <20191105055015.23656-1-erosca@de.adit-jv.com> <20191105062223.GB1048@kunai>
+ <20191105083213.GA24603@vmlxhi-102.adit-jv.com> <20191107003907.GA22634@bogus>
+ <20191112211950.GB3402@kunai>
+In-Reply-To: <20191112211950.GB3402@kunai>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 14 Nov 2019 11:46:26 +0100
+Message-ID: <CAPDyKFoXT-UtO05xbHRVJTJAg+yYJK9AM7KjK18QcaGM0Bqn9g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add 'fixed-emmc-driver-type-hs{200,400}'
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Rob Herring <robh@kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Pavel Machek <pavel@ucw.cz>, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tomislav Denis <tomislav.denis@avl.com>
+[...]
 
-Add a device tree binding documentation for DLH series pressure
-sensors.
+> > >
+> > > One option to achieve a similar degree of flexibility by using an array
+> > > OF property (instead of several u32 properties) would be to agree on a
+> > > convention based on magic values, i.e. below DT one-liner could be an
+> > > example of providing solely the "fixed-emmc-driver-type-hs200" value
+> > > (based on the agreement that 0xFF values are discarded by the driver):
+> > >
+> > >     fixed-emmc-driver-type = <0xFF 0x1 0xFF>;
+> >
+> > I don't understand why you have 3 values instead of 2.
+>
+> Because he sketches maximum flexibility here. Have a non-HS (default)
+> value, one for HS200, and one for HS400:
+>
+>         fixed-emmc-driver-type = <[default] [HS200] [HS400]>;
+>
+> > I would just use -1 if you want to ignore an entry. If that's the common
+>
+> '-1' sounds good to me, too.
+>
+> > case, then I'd stick with what you originally proposed. If rare, then I
+> > think an array is the better route.
+>
+> What I have seen so far: setting drive strength alone is more on the
+> rare side. Setting specific values for default and HS200/400 seems even
+> more rare to me. With this patchset, it is the first time I hear about
+> it.
+>
+> Yet, my experience might be a bit limited, maybe others (Hi Ulf! ;)) can add
+> their views, too?
 
-Signed-off-by: Tomislav Denis <tomislav.denis@avl.com>
----
- .../devicetree/bindings/iio/pressure/dlh-i2c.yaml  | 43 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
+My experience in this field is quite limited. No input from me, sorry.
 
-diff --git a/Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml b/Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
-new file mode 100644
-index 0000000..43539ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/pressure/dlh-i2c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: All Sensors DLH series low voltage digital pressure sensors
-+
-+maintainers:
-+  - Tomislav Denis <tomislav.denis@avl.com>
-+
-+description: |
-+  Bindings for the All Sensors DLH series pressure sensors.
-+
-+  Specifications about the sensors can be found at:
-+    http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
-+
-+properties:
-+  compatible:
-+    enum:
-+      - asc,dlhl60d
-+      - asc,dlhl60g
-+
-+  reg:
-+    description: I2C device address
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      pressure@29 {
-+          compatible = "asc,dlhl60d";
-+          reg = <0x29>;
-+      };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2a08923..b45081d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -674,6 +674,7 @@ W:	http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
- S:	Maintained
- L:	linux-iio@vger.kernel.org
- F:	drivers/iio/pressure/dlh-i2c.c
-+F:	Documentation/devicetree/bindings/iio/pressure/dlh-i2c.yaml
- 
- ALLEGRO DVT VIDEO IP CORE DRIVER
- M:	Michael Tretter <m.tretter@pengutronix.de>
--- 
-2.7.4
-
+Kind regards
+Uffe
