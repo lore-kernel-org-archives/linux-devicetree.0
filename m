@@ -2,160 +2,96 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66045C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 01:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4998C43141
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 02:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E13206E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 01:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7068206F3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 02:33:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DE1IpPyB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbfKNByC (ORCPT
+        id S1726516AbfKNCdp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 13 Nov 2019 20:54:02 -0500
-Received: from regular1.263xmail.com ([211.150.70.201]:56522 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfKNByC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 20:54:02 -0500
-Received: from localhost (unknown [192.168.167.32])
-        by regular1.263xmail.com (Postfix) with ESMTP id 1F1D8405;
-        Thu, 14 Nov 2019 09:53:49 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.9] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P47878T139986162661120S1573696426616732_;
-        Thu, 14 Nov 2019 09:53:48 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <438ac3b0e67c996fd5c2911b5379e891>
-X-RL-SENDER: kever.yang@rock-chips.com
-X-SENDER: yk@rock-chips.com
-X-LOGIN-NAME: kever.yang@rock-chips.com
-X-FST-TO: npcomplete13@gmail.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH 3/3] arm64: dts: rk3399: Add init voltage for vdd_log
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexis Ballier <aballier@gentoo.org>,
-        Soeren Moch <smoch@web.de>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        Andy Yan <andyshrk@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Nick Xie <nick@khadas.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Akash Gajjar <akash@openedev.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?Q?Andrius_=c5=a0tikonas?= <andrius@stikonas.eu>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vivek Unune <npcomplete13@gmail.com>
-References: <20191111005158.25070-1-kever.yang@rock-chips.com>
- <20191111005158.25070-3-kever.yang@rock-chips.com>
- <CAD=FV=UjbPALRU2r0s27F4RxjsbDyQ+horUBezVQejk1pT=vqA@mail.gmail.com>
-From:   Kever Yang <kever.yang@rock-chips.com>
-Message-ID: <a6d41fc5-4ed5-6ec2-5697-ca2b0abe288c@rock-chips.com>
-Date:   Thu, 14 Nov 2019 09:53:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 Nov 2019 21:33:45 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:10737 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726473AbfKNCdp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 13 Nov 2019 21:33:45 -0500
+X-UUID: 273aaed76625470ebb4fee21e3be15fe-20191114
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=jdpcBWc7HBlDBSHQj9W7l/lAc9ZUoty9ehXTUgWCTGw=;
+        b=DE1IpPyBL+mC1m1knTLKZFTpztGf8k13sLrkBIVTY6cyZX7Le3W/Huc0mCBlTe82eBmGGdmRI5p6xCcEzGIWGgk0rWP47CbEBZXXM86lDwTe2Kf1M/dQ7CGelnvi8/9ZPZkvSYG2hjOKWWyv05Lh/pAkHSveOOjHJTh2Q9HLqt0=;
+X-UUID: 273aaed76625470ebb4fee21e3be15fe-20191114
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2040405152; Thu, 14 Nov 2019 10:33:30 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 14 Nov 2019 10:33:21 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 14 Nov 2019 10:33:20 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Tianping Fang <tianping.fang@mediatek.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [RFC PATCH] usb: mtu3: fix random remote wakeup
+Date:   Thu, 14 Nov 2019 10:33:11 +0800
+Message-ID: <1573698791-24310-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=UjbPALRU2r0s27F4RxjsbDyQ+horUBezVQejk1pT=vqA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 2075714ACED72CBB15C4DCA956E5D8B2E8C542FC8427F2F77C2C39642685507E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Doug,
-
-On 2019/11/14 上午1:01, Doug Anderson wrote:
-> Hi,
->
-> On Sun, Nov 10, 2019 at 4:52 PM Kever Yang <kever.yang@rock-chips.com> wrote:
->> Since there is no devfreq used for vdd_log, so the vdd_log(pwm regulator)
->> will be 'enable' with the dts node at a default PWM state with high or low
->> output. Both too high or too low for vdd_log is not good for the board,
->> add init voltage for driver to make the regulator get into a know output.
->>
->> Note that this will be used by U-Boot for init voltage output, and this
->> is very important for it may get system hang somewhere during system
->> boot up with regulator enable and without this init value.
-> I'm a tad bit confused here.  When U-Boot boots the kernel, how is the
-> PWM configured?
->
-> I remember folks going through a lot of work to make sure that we
-> could actually _read_ the PWM state that the bootloader gave us and
-> report it as the initial voltage.  If the kernel ends up needing to
-> configure the PWM regulator's period for some reason, I remember it
-> would actually pick something close.  Is that not working for you?
->
-> For instance, on rk3288-veyron when I boot up mainline (no devfreq on
-> rk3288-veyron on mainline) the vdd_logic reports 1.2 volts because it
-> read what the bootloader left it as.
->
-> ...are you saying that U-Boot doesn't configure the PWM and you're
-> trying to fix it up in the kernel?
-
-U-Boot will configure the PWM with dts setting(and now U-Boot would like 
-to sync the dts
-
-from kernel directly):
-
-- no dts node for pwm regulator, it will be default as input IO without 
-any configure;
-
-- with pwm regulator dts enable, no 'init-microvolt', enable PWM with 
-default 0% output;
-
-- with pwm regulator dts with 'init-microvolt', enable PWM with 
-corresponding duty output;
-
-We should leave it not configure(around 0.9V for most of board) or 
-configure to correct
-
-output(some boards need 0.95V while default is 0.9V for stability issue).
-
-For the rk3399 boards on upstream, some of them do not have a vdd_log in 
-dts,
-
-and others have dts node but without 'init-microvolt' for init setting, 
-that's what I want
-
-to fix to make sure all the boards can work correctly.
-
-
-Thanks,
-
-- Kever
-
->
-> -Doug
->
->
-> -Doug
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
-
+V2FrZXVwX3NpZ25hbCB3aWxsIHRvZ2dsZSBzdGF0dXMgYWNjb3JkaW5nIHRvIHNzdXNiX2lwX3Ns
+ZWVwIHNpZ25hbA0KYWZ0ZXIgZGVib3VuY2UgdGltZSwgc28gbmVlZCBhZGQgYSBkZWxheSB0aW1l
+IGFuZCB3YWl0IGZvciB3YWtldXBfc2lnbmFsDQp0b2dnbGUgdG8gY29tcGxldGUsIHRoZW4gZW5h
+YmxlIHRoZSByZW1vdGUgd2FrZXVwLiBNZWFud2hpbGUgcmVkdWNlIHRoZQ0KZGVib3VuY2UgdGlt
+ZSBvZiB3YWtldXBfc2lnbmFsLiBUaGVzZSB3aWxsIGF2b2lkIHNwdXJpb3VzIHdha2V1cCBldmVu
+dC4NCg0KU2lnbmVkLW9mZi1ieTogVGlhbnBpbmcgRmFuZyA8dGlhbnBpbmcuZmFuZ0BtZWRpYXRl
+ay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRl
+ay5jb20+DQotLS0NCk5vdGUsIGRlcGVuZHMgb24gZm9sbG93aW5nIHBhdGNoIG5vdCBtZXJnZWQ6
+DQoNCiAgICBbdjMsMy83XSB1c2I6IG10dTM6IHN1cHBvcnQgaXAtc2xlZXAgd2FrZXVwIGZvciBN
+VDgxODMNCiAgICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTIzMTUxLw0K
+LS0tDQogZHJpdmVycy91c2IvbXR1My9tdHUzX2hvc3QuYyB8IDYgKysrKy0tDQogMSBmaWxlIGNo
+YW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvdXNiL210dTMvbXR1M19ob3N0LmMgYi9kcml2ZXJzL3VzYi9tdHUzL210dTNfaG9zdC5j
+DQppbmRleCAxODJjOTQzOWMxNWEuLmNhNDhmZjc1MWM4YiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
+dXNiL210dTMvbXR1M19ob3N0LmMNCisrKyBiL2RyaXZlcnMvdXNiL210dTMvbXR1M19ob3N0LmMN
+CkBAIC01MywxMiArNTMsMTIgQEAgc3RhdGljIHZvaWQgc3N1c2Jfd2FrZXVwX2lwX3NsZWVwX3Nl
+dChzdHJ1Y3Qgc3N1c2JfbXRrICpzc3VzYiwgYm9vbCBlbmFibGUpDQogCWNhc2UgU1NVU0JfVVdL
+X1YwOg0KIAkJcmVnID0gc3N1c2ItPnV3a19yZWdfYmFzZSArIFBFUklfV0tfQ1RSTDA7DQogCQlt
+c2sgPSAodTMyKShXQzBfSVNfRU4gfCBXQzBfSVNfQygweGYpIHwgV0MwX0lTX1ApOw0KLQkJdmFs
+ID0gZW5hYmxlID8gKFdDMF9JU19FTiB8IFdDMF9JU19DKDB4OCkpIDogMDsNCisJCXZhbCA9IGVu
+YWJsZSA/IChXQzBfSVNfRU4gfCBXQzBfSVNfQygweDMpKSA6IDA7DQogCQlicmVhazsNCiAJY2Fz
+ZSBTU1VTQl9VV0tfVjE6DQogCQlyZWcgPSBzc3VzYi0+dXdrX3JlZ19iYXNlICsgUEVSSV9XS19D
+VFJMMTsNCiAJCW1zayA9IFdDMV9JU19FTiB8IFdDMV9JU19DKDB4ZikgfCBXQzFfSVNfUDsNCi0J
+CXZhbCA9IGVuYWJsZSA/IChXQzFfSVNfRU4gfCBXQzFfSVNfQygweDgpKSA6IDA7DQorCQl2YWwg
+PSBlbmFibGUgPyAoV0MxX0lTX0VOIHwgV0MxX0lTX0MoMHgzKSkgOiAwOw0KIAkJYnJlYWs7DQog
+CWNhc2UgU1NVU0JfVVdLX1YyOg0KIAkJcmVnID0gc3N1c2ItPnV3a19yZWdfYmFzZSArIFBFUklf
+U1NVU0JfU1BNX0NUUkw7DQpAQCAtMTk3LDYgKzE5Nyw4IEBAIGludCBzc3VzYl9ob3N0X2Rpc2Fi
+bGUoc3RydWN0IHNzdXNiX210ayAqc3N1c2IsIGJvb2wgc3VzcGVuZCkNCiAJCQkgICh2YWx1ZSAm
+IFNTVVNCX0lQX1NMRUVQX1NUUyksIDEwMCwgMTAwMDAwKTsNCiAJaWYgKHJldCkNCiAJCWRldl9l
+cnIoc3N1c2ItPmRldiwgImlwIHNsZWVwIGZhaWxlZCEhIVxuIik7DQorCWVsc2UgIC8qIHdhaXQg
+Zm9yIHdha2V1cF9zaWduYWwgdG9nZ2xlIGRvbmUgYWZ0ZXIgZW50ZXIgaXAtc2xlZXAgKi8NCisJ
+CXVzbGVlcF9yYW5nZSgyNDUsIDI1NSk7DQogDQogCXJldHVybiByZXQ7DQogfQ0KLS0gDQoyLjIz
+LjANCg==
 
