@@ -2,91 +2,134 @@ Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02F4C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 20:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C585C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 20:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B925720723
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 20:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjAuB1h0"
+	by mail.kernel.org (Postfix) with ESMTP id D2E9B20709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 20:52:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573764758;
+	bh=NlVCjRxMkRqk5Azo+j3vk2a1KwSTuX1tB1bWS296FVg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vBbfqd20MS2uF9vjKgwuAIRzJ8bqWbDHPO0QYVn9IRs8s7XLTU7KiKuTZhxnbLlSm
+	 yA56zeEPjmggTjOyDFCwCrI89qYTuCQZUiDsZT/RrecVDeGk+ZpRDwptw3n5UJLIml
+	 2wT6GjEpttAc2rF7tRYEaM0n7XI2NkYg12wLqRWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfKNUgH (ORCPT
+        id S1726567AbfKNUwi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 15:36:07 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39887 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfKNUgH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 15:36:07 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t26so7681178wmi.4;
-        Thu, 14 Nov 2019 12:36:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/T0Rg4n36uJouyisIYq+OO8Wawxqm7AHTLdrmHhfwqQ=;
-        b=QjAuB1h0TJNq+R/eBV5ZaGcnL2pZ5kGnbAeZWcn1gpJybTwSKK/Zzadbrd0n9U/yUy
-         A59YXwKP3qzMaUKNBWpi4YkXeZzrkEmeSBTv0YRXNIIyofOzs0YPu2HdFCTcRBP8uCzQ
-         sPp6eNcJMJz895oTZKAoQYjao7O3RuvJ0UHg07Zi2snQageqQjTWd1cG23TIjpbWyaVS
-         PaYnTDeikzJTl8aLycPmtk8Kgqe/zcnWWngaUtIeR0YB41jH5PcQLna4pdrlhmKv0q6g
-         lltmj/tddiZlXNUG5Clig0ZA3Qc5KIhFDYVE6lSgR5srqWM7rCaiOQDkwcioJdP4aKeX
-         GXog==
+        Thu, 14 Nov 2019 15:52:38 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35225 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfKNUwi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 15:52:38 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n16so6613113oig.2;
+        Thu, 14 Nov 2019 12:52:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/T0Rg4n36uJouyisIYq+OO8Wawxqm7AHTLdrmHhfwqQ=;
-        b=ETt3ITdwADVFc0GbXIYAABhyKj7zFgqhGNJw0i7X3AjXBAKqzluGvD6DkhiW6X/y4s
-         PNfDHtv1BuhzK8zQIoRrCnrcylCp0ly+n/mWx7aPmfl24jZibP7tOYM54Zh7/Ke7KWL+
-         ENW1hUMbgvQ2tsLwzA4mY3Pk+5ufFKifXQ0wLhsdvK908yJf9KW1RdoHleMUUddHLlAo
-         G4pcPJB1RAe9dFvcqdnjYe+O03MfnVp3/VIb6esmRa877isximHseb4RXpmSmTdAomyX
-         nahK2t++PZKgJ1HTSntaVqRZrpAngYn1ao7gzRELxK/Jxuf7dCEz28PQNgLoiNcct+VB
-         CY4g==
-X-Gm-Message-State: APjAAAXSkk4S7sD7VaXNsHWy6+a2MaKgBDOqyVrtvf/tyyOQnyY6Szox
-        X3n6EQAFbHGVZl7FrSddKgY=
-X-Google-Smtp-Source: APXvYqxco0B6kyD8XmcSzehMoYkUCYFnw99z4LvXd73jRYCdNM2xfHk1C1VpFemgIurnM6vbrKHahg==
-X-Received: by 2002:a1c:62c5:: with SMTP id w188mr9861447wmb.77.1573763764596;
-        Thu, 14 Nov 2019 12:36:04 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g184sm7914263wma.8.2019.11.14.12.36.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zBojHFMIp4w0kfIAZN5FF9FT2LN0lcrYZ7vKt4cgOQY=;
+        b=jKBtUTAP17znvpSOLteir2XU7aeHo7hX+Tf6UB8yA1ieOW47IgU2bQXeSmjSWYl9eF
+         cVCqm2kMkBATph8eBU/j71wrNeFJLjWCS9HTgF5SXbUBLl3Z+U4xCM4rC+kvFqSJUe4o
+         7ibia8vv8gTZX15soKdRn8R+5RvE3V2lDHjfqKTVLtl5/79vPQnEqjkEJnLLlbpKSoed
+         b2w2v/PYdF+cBx9j5uwtrO+7YaWDGtiy9Z3WBiL9lKDp2GP2YThHyEIpHaWl+d+Mmmy8
+         sdx04BVI4wqev4l4icfhYP8x89RypNcEQjg2WZZE86WVZ4vPAs2LSJaHxmh6q4r2AbKK
+         hccA==
+X-Gm-Message-State: APjAAAXKQ26AVESsqZP/LLq+e/oKKNRL6VlgHaCEk4O4r51eg0cBmZtn
+        YBYM4DjuiJVI9pcOQ1snNQ==
+X-Google-Smtp-Source: APXvYqzoEL7iaxuPU86ILWpIVI0usyAt1tZvU65HgsoA+C35lNKYQKh1PZsxYles7K9mQ1D66Sksxg==
+X-Received: by 2002:aca:d6d7:: with SMTP id n206mr5211559oig.147.1573764756782;
+        Thu, 14 Nov 2019 12:52:36 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 4sm2190881otc.77.2019.11.14.12.52.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 12:36:03 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Matthias Brugger <matthias.bgg@kernel.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Eric Anholt <eric@anholt.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Doug Berger <opendmb@gmail.com>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH V5 net-next 7/7] ARM: dts: bcm2711-rpi-4: Enable GENET support
-Date:   Thu, 14 Nov 2019 12:35:59 -0800
-Message-Id: <20191114203559.1250-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <1573501766-21154-8-git-send-email-wahrenst@gmx.net>
-References: <1573501766-21154-1-git-send-email-wahrenst@gmx.net> <1573501766-21154-8-git-send-email-wahrenst@gmx.net>
+        Thu, 14 Nov 2019 12:52:36 -0800 (PST)
+Date:   Thu, 14 Nov 2019 14:52:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: serial: Convert sprd-uart to
+ json-schema
+Message-ID: <20191114205235.GA16668@bogus>
+References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
+ <20191111090230.3402-3-chunyan.zhang@unisoc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111090230.3402-3-chunyan.zhang@unisoc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2019 20:49:26 +0100, Stefan Wahren <wahrenst@gmx.net> wrote:
-> This enables the Gigabit Ethernet support on the Raspberry Pi 4.
-> The defined PHY mode is equivalent to the default register settings
-> in the downstream tree.
+On Mon, Nov 11, 2019 at 05:02:27PM +0800, Chunyan Zhang wrote:
 > 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Convert the sprd-uart binding to DT schema using json-schema.
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
+>  .../devicetree/bindings/serial/sprd-uart.txt  | 32 ---------
+>  .../devicetree/bindings/serial/sprd-uart.yaml | 69 +++++++++++++++++++
+>  2 files changed, 69 insertions(+), 32 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> deleted file mode 100644
+> index 9607dc616205..000000000000
+> --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> +++ /dev/null
+> @@ -1,32 +0,0 @@
+> -* Spreadtrum serial UART
+> -
+> -Required properties:
+> -- compatible: must be one of:
+> -  * "sprd,sc9836-uart"
+> -  * "sprd,sc9860-uart", "sprd,sc9836-uart"
+> -
+> -- reg: offset and length of the register set for the device
+> -- interrupts: exactly one interrupt specifier
+> -- clock-names: Should contain following entries:
+> -  "enable" for UART module enable clock,
+> -  "uart" for UART clock,
+> -  "source" for UART source (parent) clock.
+> -- clocks: Should contain a clock specifier for each entry in clock-names.
+> -  UART clock and source clock are optional properties, but enable clock
+> -  is required.
+> -
+> -Optional properties:
+> -- dma-names: Should contain "rx" for receive and "tx" for transmit channels.
+> -- dmas: A list of dma specifiers, one for each entry in dma-names.
+> -
+> -Example:
+> -	uart0: serial@0 {
+> -		compatible = "sprd,sc9860-uart",
+> -			     "sprd,sc9836-uart";
+> -		reg = <0x0 0x100>;
+> -		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> -		dma-names = "rx", "tx";
+> -		dmas = <&ap_dma 19>, <&ap_dma 20>;
+> -		clock-names = "enable", "uart", "source";
+> -		clocks = <&clk_ap_apb_gates 9>, <&clk_uart0>, <&ext_26m>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.yaml b/Documentation/devicetree/bindings/serial/sprd-uart.yaml
+> new file mode 100644
+> index 000000000000..0cc4668a9b9c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/sprd-uart.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Applied to devicetree/next, thanks!
---
-Florian
+Dual license please. If you are okay with that on both patches, I can 
+fix them and apply patches 1-4.
+
+Rob
