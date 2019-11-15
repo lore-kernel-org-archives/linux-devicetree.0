@@ -2,133 +2,372 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FC8C43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F81C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905522075E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820783;
-	bh=hCV/FGxoHknjJu4UEFxg/QAqMjxyOF6Pyv9qpgelyRQ=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=I7+Zve7s7lzFa+Lbqf+87qJAwXX7Sa32EJ7MIdWoX/VRbxEkdNaIH2oHsGa5Sr/LO
-	 f/En1zOnCgF0xN/xBAa40F457Eb8WBzY1viQnSUO/Wwt3+MohGHFOhW6fmDQXopMfa
-	 2e6QCoLvJ5w7aGzYVeFU+OBd3sMqhDnpYPbwYn3U=
+	by mail.kernel.org (Postfix) with ESMTP id BEA2D2075E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:27:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JK0LfWi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfKOMZP (ORCPT
+        id S1727535AbfKOM1j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:25:15 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32884 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbfKOMZO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 07:25:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=4AGPkKPSVyOTs5n0W0mJVA5CUUCsjeEv/AClqhuZzv4=; b=qzFKtRmxYbbx
-        bGe9vsc580IghowflZsvWJTvC4y/mPeSs+UAZrMoT0TpI0kL1zEYB+R3i2fIbx1d5k1c+1sve/Pnn
-        DMdcbZjd6l8oxtpDgVH3StavMUHRPNTEkuePI7ANTtBJjLR9y2uFYAyEiteMXaTQsWF6yDDDdoeUV
-        153rk=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaex-0000Kk-OA; Fri, 15 Nov 2019 12:25:07 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3CFBC27415A7; Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Christoph Fritz <chf.fritz@googlemail.com>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Applied "dt-bindings: mfd: da9062: describe buck modes" to the regulator tree
-In-Reply-To: <1573652416-9848-4-git-send-email-chf.fritz@googlemail.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191115122507.3CFBC27415A7@ypsilon.sirena.org.uk>
-Date:   Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
+        Fri, 15 Nov 2019 07:27:39 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42133 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727323AbfKOM1i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:27:38 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFCC3DP030963;
+        Fri, 15 Nov 2019 13:27:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=+ySUyuIgppZscAXuN5IFd1l92uGKjRfWMz0ArEYbKMg=;
+ b=JK0LfWi89WCk8ooVq9J6K8MmK5G8ByfR1TP+Am1vgJJ4EpvI1uLXGfcT1wQqVg2a8JUO
+ z7bs+PJ0e8gIpuyda2PwAjci1609IKKHPdzZvbxFd2gTwK2JzzFm/l3T/JHmjM/wXVIJ
+ hn3r1fi8zvIVk0XoguiGvByik5m6hBPsKUACGg/P6bWBvcjlZwUb2NT7hc8LTrCG97MN
+ E1LZdrl2br0TPxwkoGqfqd0FlNbppbS7WFsfJhZVNyqFA7uT0RM4SL3d8RpnW+DeNVyd
+ TAxiDckTIWPdwWw3utVF7gMp0zGQQHLLuF8t0Sqb4Ayqz9FBcmYp/Q4l8Q2yqSJ6Met3 Dw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w7psbm1k0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 13:27:04 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 63C46100034;
+        Fri, 15 Nov 2019 13:27:03 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 34D852A96EE;
+        Fri, 15 Nov 2019 13:27:03 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov 2019 13:27:02
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <fabrice.gasnier@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
+        <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <lee.jones@linaro.org>,
+        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: mfd: Convert stm32 low power timers bindings to json-schema
+Date:   Fri, 15 Nov 2019 13:27:00 +0100
+Message-ID: <20191115122700.12688-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Convert the STM32 low power timers binding to DT schema format using json-schema
 
-   dt-bindings: mfd: da9062: describe buck modes
-
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From a4bb429811bd4a5be94873ae218062c83c476ed9 Mon Sep 17 00:00:00 2001
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Date: Wed, 13 Nov 2019 14:40:15 +0100
-Subject: [PATCH] dt-bindings: mfd: da9062: describe buck modes
-
-This patch adds DT description of da9062 buck regulator modes.
-
-Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-Link: https://lore.kernel.org/r/1573652416-9848-4-git-send-email-chf.fritz@googlemail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- Documentation/devicetree/bindings/mfd/da9062.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/counter/stm32-lptimer-cnt.txt         |  29 -----
+ .../bindings/iio/timer/stm32-lptimer-trigger.txt   |  23 ----
+ .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 117 +++++++++++++++++++++
+ .../devicetree/bindings/mfd/stm32-lptimer.txt      |  48 ---------
+ .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  30 ------
+ 5 files changed, 117 insertions(+), 130 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
+ delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
-index edca653a5777..bc4b59de6a55 100644
---- a/Documentation/devicetree/bindings/mfd/da9062.txt
-+++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-@@ -66,6 +66,9 @@ Sub-nodes:
-   details of individual regulator device can be found in:
-   Documentation/devicetree/bindings/regulator/regulator.txt
- 
-+  regulator-initial-mode may be specified for buck regulators using mode values
-+  from include/dt-bindings/regulator/dlg,da9063-regulator.h.
+diff --git a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
+deleted file mode 100644
+index e90bc47f752a..000000000000
+--- a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer quadrature encoder and counter
+-
+-STM32 Low-Power Timer provides several counter modes. It can be used as:
+-- quadrature encoder to detect angular position and direction of rotary
+-  elements, from IN1 and IN2 input signals.
+-- simple counter from IN1 input signal.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer-counter".
+-- pinctrl-names: 	Set to "default". An additional "sleep" state can be
+-			defined to set pins in sleep state.
+-- pinctrl-n: 		List of phandles pointing to pin configuration nodes,
+-			to set IN1/IN2 pins in mode of operation for Low-Power
+-			Timer input on external pin.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		counter {
+-			compatible = "st,stm32-lptimer-counter";
+-			pinctrl-names = "default", "sleep";
+-			pinctrl-0 = <&lptim1_in_pins>;
+-			pinctrl-1 = <&lptim1_sleep_in_pins>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
+deleted file mode 100644
+index 85e6806b17d7..000000000000
+--- a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer Trigger
+-
+-STM32 Low-Power Timer provides trigger source (LPTIM output) that can be used
+-by STM32 internal ADC and/or DAC.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer-trigger".
+-- reg:			Identify trigger hardware block. Must be 0, 1 or 2
+-			respectively for lptimer1, lptimer2 or lptimer3
+-			trigger output.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		trigger@0 {
+-			compatible = "st,stm32-lptimer-trigger";
+-			reg = <0>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+new file mode 100644
+index 000000000000..8f42c9a4c6cb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+@@ -0,0 +1,117 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/st,stm32-lptimer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- - rtc : This node defines settings required for the Real-Time Clock associated
-   with the DA9062. There are currently no entries in this binding, however
-   compatible = "dlg,da9062-rtc" should be added if a node is created.
-@@ -96,6 +99,7 @@ Example:
- 				regulator-max-microvolt = <1570000>;
- 				regulator-min-microamp = <500000>;
- 				regulator-max-microamp = <2000000>;
-+				regulator-initial-mode = <DA9063_BUCK_MODE_SYNC>;
- 				regulator-boot-on;
- 			};
- 			DA9062_LDO1: ldo1 {
++title: STMicroelectronics STM32 Low-Power Timers bindings
++
++description: |
++  The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
++  functions
++   - PWM output (with programmable prescaler, configurable polarity)
++   - Quadrature encoder, counter
++   - Trigger source for STM32 ADC/DAC (LPTIM_OUT)
++
++maintainers:
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++
++properties:
++  compatible:
++    const: st,stm32-lptimer
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: mux
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  pwm:
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-pwm-lp
++
++      "#pwm-cells":
++        const: 3
++
++    required:
++      - "#pwm-cells"
++      - compatible
++
++patternProperties:
++  "^trigger@[0-9]+$":
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-lptimer-trigger
++
++      reg:
++        description: Identify trigger hardware block.
++        items:
++         minimum: 0
++         maximum: 3
++
++    required:
++      - compatible
++      - reg
++
++  counter:
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-lptimer-counter
++
++    required:
++      - compatible
++
++required:
++  - "#address-cells"
++  - "#size-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    timer@40002400 {
++      compatible = "st,stm32-lptimer";
++      reg = <0x40002400 0x400>;
++      clocks = <&timer_clk>;
++      clock-names = "mux";
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      pwm {
++        compatible = "st,stm32-pwm-lp";
++        #pwm-cells = <3>;
++      };
++
++      trigger@0 {
++        compatible = "st,stm32-lptimer-trigger";
++        reg = <0>;
++      };
++
++      counter {
++        compatible = "st,stm32-lptimer-counter";
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+deleted file mode 100644
+index fb54e4dad5b3..000000000000
+--- a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer
+-
+-The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
+-functions:
+-- PWM output (with programmable prescaler, configurable polarity)
+-- Quadrature encoder, counter
+-- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer".
+-- reg:			Offset and length of the device's register set.
+-- clocks:		Phandle to the clock used by the LP Timer module.
+-- clock-names:		Must be "mux".
+-- #address-cells:	Should be '<1>'.
+-- #size-cells:		Should be '<0>'.
+-
+-Optional subnodes:
+-- pwm:			See ../pwm/pwm-stm32-lp.txt
+-- counter:		See ../counter/stm32-lptimer-cnt.txt
+-- trigger:		See ../iio/timer/stm32-lptimer-trigger.txt
+-
+-Example:
+-
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		reg = <0x40002400 0x400>;
+-		clocks = <&timer_clk>;
+-		clock-names = "mux";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		pwm {
+-			compatible = "st,stm32-pwm-lp";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&lppwm1_pins>;
+-		};
+-
+-		trigger@0 {
+-			compatible = "st,stm32-lptimer-trigger";
+-			reg = <0>;
+-		};
+-
+-		counter {
+-			compatible = "st,stm32-lptimer-counter";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&lptim1_in_pins>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+deleted file mode 100644
+index 6521bc44a74e..000000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer PWM
+-
+-STM32 Low-Power Timer provides single channel PWM.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required parameters:
+-- compatible:		Must be "st,stm32-pwm-lp".
+-- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
+-			bindings defined in pwm.txt.
+-
+-Optional properties:
+-- pinctrl-names: 	Set to "default". An additional "sleep" state can be
+-			defined to set pins in sleep state when in low power.
+-- pinctrl-n: 		Phandle(s) pointing to pin configuration node for PWM,
+-			respectively for "default" and "sleep" states.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		pwm {
+-			compatible = "st,stm32-pwm-lp";
+-			#pwm-cells = <3>;
+-			pinctrl-names = "default", "sleep";
+-			pinctrl-0 = <&lppwm1_pins>;
+-			pinctrl-1 = <&lppwm1_sleep_pins>;
+-		};
+-	};
 -- 
-2.20.1
+2.15.0
 
