@@ -2,186 +2,245 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD04C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 14:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C491EC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 14:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD746207FC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 14:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573829563;
-	bh=cAugVQqnfOJDIZQAyQVPIYP8CjsNR+kKtTc6VBr8RPE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Scz3RQk4DwBI9BXEPV6SfJl5fahMzXr2jNMGkCbfWUUp2w/9iUAKzj1RUW0dZRLFj
-	 k5IOZZ+nfzGjThaKS+g0M27Al1N0Fc6ivu8E5XDEUZAFaAKaNs3S5VxM7A04dEC0mQ
-	 7IgyZ9ixpv3lGzjwo9tpZLSdWvWYYD4YHBK0e098=
+	by mail.kernel.org (Postfix) with ESMTP id 9CD1620740
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 14:55:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j29J5gGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfKOOwn (ORCPT
+        id S1727496AbfKOOzi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:52:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727588AbfKOOwm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:52:42 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DFC02075E;
-        Fri, 15 Nov 2019 14:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573829561;
-        bh=cAugVQqnfOJDIZQAyQVPIYP8CjsNR+kKtTc6VBr8RPE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NfKnZ0wShweb+o//n4ef+q6txsUq189RZ43VQyzN1eTtfXSMUbQsqdvf0mFLu/1eh
-         gB22P6aGgHdHrbSSuCNkwHlfVDdUszFB1CZ/IZ9LJcealpcA3j4NFIC7VC8PH2GDAH
-         OA/MRNQ4rvSh2tsgssWUogkCRu9fOHCAPNUYGhbQ=
-Received: by mail-qk1-f174.google.com with SMTP id m16so8261134qki.11;
-        Fri, 15 Nov 2019 06:52:41 -0800 (PST)
-X-Gm-Message-State: APjAAAV2HISZ92dB4jC3eTgq9sI8EvecsW6lyJ3IBYU7dnNnKfHP/MB9
-        dCmMIxokb/njThtwmBzsM9QpBN9r37DsM+bNcg==
-X-Google-Smtp-Source: APXvYqyXpGPFd9dzp+nyir0q1Fm0wlWrqJRPWRpg47RGzyTiBMtJ1tJy2r+lUTTrK8LCwu5o2Zx4RL0nnwj49ZakawM=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr12885993qka.152.1573829560581;
- Fri, 15 Nov 2019 06:52:40 -0800 (PST)
+        Fri, 15 Nov 2019 09:55:38 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41898 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727577AbfKOOzi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 09:55:38 -0500
+Received: by mail-lf1-f68.google.com with SMTP id j14so8220439lfb.8;
+        Fri, 15 Nov 2019 06:55:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wVQxG2BiztzSwM3KfGoVbwyCoQTakGKYV/pOVNlceF8=;
+        b=j29J5gGEaIVTPS5bGn1MxfaTslEQCSW3ATpaV4k8wS0CrD/IJrjIoG2UNl71tyxNR6
+         rmelP856C9QaKbYUOeBGHx7PvToYTeXT7fqTO0mpV8YU1jNLcUGdlJc4v0YdZevDqNsA
+         ct6UBWHN5iVfuxv46A/rPOx915BFf9lF1pg8UWxVi8S+86UNOyPB6P7DT/GC4Nm2q5lt
+         ELypeOyLknBzik2qBYBbRZ6vCdzUAMeolNew1GKEuGKF3hChMqXCWAuTo7c7n6E19cUD
+         ylo4PISrD/u9ONGfRAOHsBhoOZM/QpIPm/2baJ8PmBCpFAVWVENiu0T107yGQ0lniKVX
+         cAOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wVQxG2BiztzSwM3KfGoVbwyCoQTakGKYV/pOVNlceF8=;
+        b=YPtF+cO80J1MWxoWSfFYNIonxhi782F8YZJl6dJE80gYubX7aLmc6w3BZs56MCngWX
+         amuqaMT0P9cYo4tFks69EQWREa5fjB5RDcpqmlr9pIapOedD0NnL5SxyvKEJEzZfYyxp
+         cn/g95FEBN5evnPsJbq3i9BzeDwkQtlivdIdyn1yq2S8RBTQkpY9rYunCFmMcwdTjU9v
+         yl/LUV2V9+vn+60pcN6lMaqokZ02vQ8c3R2L697Y2A2ZikUZd0BjjgNBpBeYs1lkY7NR
+         y+NGnzq7OXhG1N+4m7vzTJEupaDKt03+/bUjKW5MGBGWkpXMxYB7X/4e/mxZbS6MetE/
+         /G7w==
+X-Gm-Message-State: APjAAAVFQ3A8KYsOpc8r5VG72P/XGyr3xAxUTUDqNoLBAHDnEY5n9Lng
+        C2QxC+G18dqTOt9ulAoYkwU3IT5P
+X-Google-Smtp-Source: APXvYqyfur8KS1xDBSUOk2QlmzXkp9gX3Ajdg4HgB/ZKMUnw1DlVzYbWwK77C+HNTM0D46A/oU2+cA==
+X-Received: by 2002:a19:8092:: with SMTP id b140mr11428544lfd.13.1573829735117;
+        Fri, 15 Nov 2019 06:55:35 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id r4sm3989537ljn.64.2019.11.15.06.55.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 06:55:34 -0800 (PST)
+Subject: Re: [PATCH v2 17/17] ARM: dts: tegra30: cardhu-a04: Add CPU Operating
+ Performance Points
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191024221416.14197-1-digetx@gmail.com>
+ <20191024221416.14197-18-digetx@gmail.com>
+ <be6deeff-4294-c945-1539-57ec28b4c895@nvidia.com>
+ <8974f1a8-72bb-4413-d2b5-057853696fb4@gmail.com>
+ <ef22b044-2bc1-1fdc-97cb-f9b036d3d5a9@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <15962ea4-20a8-0bf9-6982-f94123b9a324@gmail.com>
+Date:   Fri, 15 Nov 2019 17:55:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191113210544.1894-1-robh@kernel.org> <30b73f89-1ba1-6052-53bd-414ebdfa142c@codeaurora.org>
- <CAL_Jsq+WFvwBy4rpZkT=_KMYzzvrsLcaTMFSydY_euuFLAsZEQ@mail.gmail.com> <CAK7LNASNugzCjzgObh8+fMvDhUNspapZy9rCA57eX3cLs6NW_g@mail.gmail.com>
-In-Reply-To: <CAK7LNASNugzCjzgObh8+fMvDhUNspapZy9rCA57eX3cLs6NW_g@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 15 Nov 2019 08:52:29 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+iTrSPsnAJyN9TVhqWzX4vv9KizTvHV08D7gCUTmEv+A@mail.gmail.com>
-Message-ID: <CAL_Jsq+iTrSPsnAJyN9TVhqWzX4vv9KizTvHV08D7gCUTmEv+A@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Improve validation build error handling
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ef22b044-2bc1-1fdc-97cb-f9b036d3d5a9@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:59 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Fri, Nov 15, 2019 at 1:34 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Nov 14, 2019 at 9:21 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
-> > >
-> > > On 11/13/2019 2:05 PM, Rob Herring wrote:
-> > > > Schema errors can cause make to exit before useful information is
-> > > > printed. This leaves developers wondering what's wrong. It can be
-> > > > overcome passing '-k' to make, but that's not an obvious solution.
-> > > > There's 2 scenarios where this happens.
-> > > >
-> > > > When using DT_SCHEMA_FILES to validate with a single schema, any error
-> > > > in the schema results in processed-schema.yaml being empty causing a
-> > > > make error. The result is the specific errors in the schema are never
-> > > > shown because processed-schema.yaml is the first target built. Simply
-> > > > making processed-schema.yaml last in extra-y ensures the full schema
-> > > > validation with detailed error messages happen first.
-> > > >
-> > > > The 2nd problem is while schema errors are ignored for
-> > > > processed-schema.yaml, full validation of the schema still runs in
-> > > > parallel and any schema validation errors will still stop the build when
-> > > > running validation of dts files. The fix is to not add the schema
-> > > > examples to extra-y in this case. This means 'dtbs_check' is no longer a
-> > > > superset of 'dt_binding_check'. Update the documentation to make this
-> > > > clear.
-> > > >
-> > > > Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-> > > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > >
-> > > I injected a syntax error into a random binding file, and compared the
-> > > output with and without this patch.  This patch makes a massive
-> > > improvement in giving the user the necessary information to identify and
-> > > fix issues.  Thanks!
->
->
-> Could you show me an example of the injected syntax error,
-> and how this commit will improve the diagnostic?
->
->
-> For example, I changed as follows:
->
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> index 47bc1ac36426..358cb1fa4bb6 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> @@ -89,7 +89,7 @@ required:
->    - clocks
->
->  allOf:
-> -  - if:
-> +  - if2:
->        properties:
->          compatible:
->            contains:
->
->
->
-> The tool clearly explains the cause of the error.
-> I am struggling to understand what the current problem is.
->
->
->
-> masahiro@pug:~/ref/linux$ make -j8  ARCH=arm  dt_binding_check
+15.11.2019 15:52, Jon Hunter пишет:
+> 
+> On 13/11/2019 13:57, Dmitry Osipenko wrote:
+>> Hello Jon,
+>>
+>> 13.11.2019 09:52, Jon Hunter пишет:
+>>>
+>>> On 24/10/2019 23:14, Dmitry Osipenko wrote:
+>>>> Utilize common Tegra30 CPU OPP table. CPU DVFS is available now on
+>>>> cardhu-a04.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/tegra30-cardhu-a04.dts | 24 ++++++++++++++++++++++++
+>>>>  1 file changed, 24 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/tegra30-cardhu-a04.dts b/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+>>>> index 0d71925d4f0b..9234988624ec 100644
+>>>> --- a/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+>>>> +++ b/arch/arm/boot/dts/tegra30-cardhu-a04.dts
+>>>> @@ -2,6 +2,8 @@
+>>>>  /dts-v1/;
+>>>>  
+>>>>  #include "tegra30-cardhu.dtsi"
+>>>> +#include "tegra30-cpu-opp.dtsi"
+>>>> +#include "tegra30-cpu-opp-microvolt.dtsi"
+>>>>  
+>>>>  /* This dts file support the cardhu A04 and later versions of board */
+>>>>  
+>>>> @@ -127,4 +129,26 @@
+>>>>  			nvidia,tegra-core-regulator;
+>>>>  		};
+>>>>  	};
+>>>> +
+>>>> +	cpus {
+>>>> +		cpu0: cpu@0 {
+>>>> +			cpu-supply = <&vddctrl_reg>;
+>>>> +			operating-points-v2 = <&cpu0_opp_table>;
+>>>> +		};
+>>>> +
+>>>> +		cpu@1 {
+>>>> +			cpu-supply = <&vddctrl_reg>;
+>>>> +			operating-points-v2 = <&cpu0_opp_table>;
+>>>> +		};
+>>>> +
+>>>> +		cpu@2 {
+>>>> +			cpu-supply = <&vddctrl_reg>;
+>>>> +			operating-points-v2 = <&cpu0_opp_table>;
+>>>> +		};
+>>>> +
+>>>> +		cpu@3 {
+>>>> +			cpu-supply = <&vddctrl_reg>;
+>>>> +			operating-points-v2 = <&cpu0_opp_table>;
+>>>> +		};
+>>>> +	};
+>>>>  };
+>>>
+>>> Sorry for not testing this sooner, but this is generating the
+>>> following WARNING on boot ...
+>>>
+>>> [    2.916019] ------------[ cut here ]------------
+>>> [    2.920669] WARNING: CPU: 2 PID: 1 at /dvs/git/dirty/git-master_l4t-upstream/kernel/drivers/opp/of.c:688 _of_add_opp_table_v2.part.2+0x45c/0x4d4
+>>> [    2.933713] Modules linked in:
+>>> [    2.936785] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc7-next-20191112-gfc6d6db1df2c #1
+>>> [    2.945403] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+>>> [    2.951706] [<c0112924>] (unwind_backtrace) from [<c010c9d0>] (show_stack+0x10/0x14)
+>>> [    2.959467] [<c010c9d0>] (show_stack) from [<c0aa4494>] (dump_stack+0xc0/0xd4)
+>>> [    2.966707] [<c0aa4494>] (dump_stack) from [<c0124750>] (__warn+0xe0/0xf8)
+>>> [    2.973593] [<c0124750>] (__warn) from [<c0124818>] (warn_slowpath_fmt+0xb0/0xb8)
+>>> [    2.981090] [<c0124818>] (warn_slowpath_fmt) from [<c0754be0>] (_of_add_opp_table_v2.part.2+0x45c/0x4d4)
+>>> [    2.990583] [<c0754be0>] (_of_add_opp_table_v2.part.2) from [<c0754c98>] (dev_pm_opp_of_add_table+0x40/0x15c)
+>>> [    3.000508] [<c0754c98>] (dev_pm_opp_of_add_table) from [<c0754de8>] (dev_pm_opp_of_cpumask_add_table+0x34/0xb4)
+>>> [    3.010704] [<c0754de8>] (dev_pm_opp_of_cpumask_add_table) from [<c075b058>] (cpufreq_init+0xf8/0x2cc)
+>>> [    3.020024] [<c075b058>] (cpufreq_init) from [<c0758758>] (cpufreq_online+0x260/0x824)
+>>> [    3.027953] [<c0758758>] (cpufreq_online) from [<c0758d98>] (cpufreq_add_dev+0x6c/0x78)
+>>> [    3.035976] [<c0758d98>] (cpufreq_add_dev) from [<c05b3188>] (subsys_interface_register+0xa0/0xec)
+>>> [    3.044951] [<c05b3188>] (subsys_interface_register) from [<c07574d4>] (cpufreq_register_driver+0x14c/0x20c)
+>>> [    3.054792] [<c07574d4>] (cpufreq_register_driver) from [<c075aee0>] (dt_cpufreq_probe+0x94/0x114)
+>>> [    3.063771] [<c075aee0>] (dt_cpufreq_probe) from [<c05b6a88>] (platform_drv_probe+0x48/0x98)
+>>> [    3.072225] [<c05b6a88>] (platform_drv_probe) from [<c05b4a38>] (really_probe+0x234/0x34c)
+>>> [    3.080502] [<c05b4a38>] (really_probe) from [<c05b4cc8>] (driver_probe_device+0x60/0x168)
+>>> [    3.088780] [<c05b4cc8>] (driver_probe_device) from [<c05b4f78>] (device_driver_attach+0x58/0x60)
+>>> [    3.097664] [<c05b4f78>] (device_driver_attach) from [<c05b5000>] (__driver_attach+0x80/0xbc)
+>>> [    3.106200] [<c05b5000>] (__driver_attach) from [<c05b2db0>] (bus_for_each_dev+0x74/0xb4)
+>>> [    3.114389] [<c05b2db0>] (bus_for_each_dev) from [<c05b3da4>] (bus_add_driver+0x164/0x1e8)
+>>> [    3.122666] [<c05b3da4>] (bus_add_driver) from [<c05b5b54>] (driver_register+0x7c/0x114)
+>>> [    3.130774] [<c05b5b54>] (driver_register) from [<c010306c>] (do_one_initcall+0x54/0x2a8)
+>>> [    3.138974] [<c010306c>] (do_one_initcall) from [<c0f01040>] (kernel_init_freeable+0x14c/0x1e8)
+>>> [    3.147695] [<c0f01040>] (kernel_init_freeable) from [<c0abbe88>] (kernel_init+0x8/0x10c)
+>>> [    3.155887] [<c0abbe88>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+>>> [    3.163462] Exception stack(0xef0c9fb0 to 0xef0c9ff8)
+>>> [    3.168519] 9fa0:                                     00000000 00000000 00000000 00000000
+>>> [    3.176706] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>>> [    3.184893] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>>> [    3.191695] ---[ end trace a7dc36f7a4ddbdb2 ]---
+>>> [    3.197855] ------------[ cut here ]------------
+>>>
+>>> Let me know if you can take a look at this.
+>>
+>> The warning happens because Cardhu now has CPU OPPs in the device-tree,
+>> but supported_hw isn't set for the OPPs and thus the count of available
+>> OPPs is 0.
+>>
+>> This is expected to happen because patch "cpufreq: tegra20: Use generic
+>> cpufreq-dt driver (Tegra30 supported now)" isn't applied yet.
+>>
+>> It is possible to factor out the blacklisting of Tegra SoCs in
+>> cpufreq_dt_platdev_init() into a separate patch and request backporting
+>> of that change in order to avoid the warning noise for older kernel
+>> versions + newer device-tree. Please let me know if you think that it's
+>> worth to do the separation.
+> 
+> Unfortunately, I think we are going to need to drop this patch. Booting
+> Tegra30-cardhu-a04 with Thierry's for-5.5/arm/dt branch does not even
+> boot. There is no crash log but it hangs on boot. This patch appears to
+> be the culprit. What is odd is that Tegra30-cardhu-a04 boots fine with
+> Thierry's for-next branch which includes this. However, this is causing
+> lots of bisect problems. Updating the DT shouldn't break the boot.
+The diff between "for-5.5/arm/dt" and "for-next" is quite small, you
+only need to try to revert one or two patches. Seems the only major
+change which could be somehow related to CPUFreq is that
+"for-5.5/arm/dt" doesn't have regulators coupling support, but I don't
+see how it could cause any effect since CPUFreq just doesn't load due to
+a missing setup of supported_hw.
 
-Before this patch, you should see processed-schema.yaml built first.
-Clean your tree and do:
+Unfortunately for now I can't reproduce the hang with a similar setup
+that has OPPs in DT, doesn't have Tegra CPUFreq driver, doesn't
+blacklist Tegra in cpufreq-dt-platdev.c and doesn't have regulators
+coupling. I see the warning splats on boot and everything appears to be
+working fine.
 
-make -j8  ARCH=arm
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-dt_binding_check
+It's likely that the hang is caused by something else than this patch.
+It's also a bit odd that you're accusing this patch while apparently it
+worked a day before.
 
-Building processed-schema.yaml will fail because it will be empty as
-the 1 file included had an error.
+Please give a try to the recent upstream linux-next. If it works, then
+probably there is nothing to worry about.
 
->   CHKDT   Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
->   DTC     Documentation/devicetree/bindings/arm/altera.example.dt.yaml
->   DTC     Documentation/devicetree/bindings/arm/nxp/lpc32xx.example.dt.yaml
->   DTC     Documentation/devicetree/bindings/arm/pmu.example.dt.yaml
->   DTC     Documentation/devicetree/bindings/arm/rockchip.example.dt.yaml
->   DTC     Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.example.dt.yaml
->   DTC     Documentation/devicetree/bindings/arm/primecell.example.dt.yaml
->   DTC     Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/arm/nxp/lpc32xx.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/arm/pmu.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/arm/altera.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/arm/rockchip.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/arm/primecell.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
-> /home/masahiro/ref/linux/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml:
-> allOf:0: 'if2' is not one of ['$ref', 'if', 'then', 'else']
-> make[1]: *** [Documentation/devicetree/bindings/Makefile;12:
-> Documentation/devicetree/bindings/gpu/arm,mali-midgard.example.dts]
-> Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [Makefile;1266: dt_binding_check] Error 2
->
->
->
->
->
->
-> > BTW, update dtschema and you'll get better (or more at least) messages
-> > when 'is not valid under any of the given schemas' errors occur.
-> >
-> > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> >
-> > Thanks.
-> >
-> > Rob
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+I'll factor out the blacklisting change and add it as a separate patch
+into the next revision of the series, marking the patch as "fixes" and
+"stable" in order to get rid of the warning on stable kernels.
+
+I'm also fine with reverting of the DT changes for now, if you prefer
+that. But again, this DT change shouldn't cause any critical problems.
+
+I need a detailed report or a way to reproduce the problem in order to
+solve it, please try to collect some more details. Try to compile the
+cpufreq-dt driver as a loadable module, enable tracing of clk and
+regulator events (tp_printk
+trace_event=regulator_set_voltage,clk_set_rate,clk_set_parent).
