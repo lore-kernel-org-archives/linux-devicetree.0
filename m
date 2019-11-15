@@ -2,109 +2,93 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E5BC43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF9CC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 20:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFFEE2073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:56:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dfdTwFyv"
+	by mail.kernel.org (Postfix) with ESMTP id 6A48C206D9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 20:14:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfKOT4z (ORCPT
+        id S1726869AbfKOUOP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 14:56:55 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:49962 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfKOT4z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 14:56:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
-        In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7naFpllFQ3+7RciL2Lvr1sFHQDInwMFYUeKYOibh0+8=; b=dfdTwFyvfPdEJhR6Dd2wSmgMOr
-        gt7jLFDHlTV2+2wxNKmAHGMrJ9e7KTUAb7ZGjShQ+eS49rqJ+JIsimh7RBDD3yv2+rzE4b9nRlwmu
-        +6z3xUy/WmIaBbz646yK4r25CbnWdRKmWIGHqS5zT7hOtSYysw6oKus7UNDCrpePA2r6AgoiVZL5O
-        ouFksnoBK6WuUgms+ZCUikDrJnZ+ECdVaph/GCep+SFs/SOUoHsKKBL8/xLULGwih/siBrcjCIva+
-        Hp798CheNebAff9rCm8rJ6ntF+4sU9+lDoRJXZGHGSHqHwl7Gm6dzMCtZd8Bq/3iE4HAEqz/r4zax
-        Y25AU02A==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([2001:4d48:ad52:3201:222:68ff:fe15:37dd]:33160 helo=rmk-PC.armlinux.org.uk)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1iVhi2-00036l-QY; Fri, 15 Nov 2019 19:56:46 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1iVhi2-0007au-2S; Fri, 15 Nov 2019 19:56:46 +0000
-In-Reply-To: <20191115195339.GR25745@shell.armlinux.org.uk>
-References: <20191115195339.GR25745@shell.armlinux.org.uk>
-From:   Russell King <rmk+kernel@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH net-next v2 1/3] dt-bindings: net: add ethernet controller and
- phy sfp property
+        Fri, 15 Nov 2019 15:14:15 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45337 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfKOUOP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 15:14:15 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iVhys-0000VS-Rp; Fri, 15 Nov 2019 21:14:10 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iVhyr-0000NS-RY; Fri, 15 Nov 2019 21:14:09 +0100
+Date:   Fri, 15 Nov 2019 21:14:09 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ARM: dts: imx25: fix usbhost1 node
+Message-ID: <20191115201409.5ztt7vrhf2btpoed@pengutronix.de>
+References: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
+ <20191115083415.28976-1-m.grzeschik@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1iVhi2-0007au-2S@rmk-PC.armlinux.org.uk>
-Date:   Fri, 15 Nov 2019 19:56:46 +0000
+In-Reply-To: <20191115083415.28976-1-m.grzeschik@pengutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the missing sfp property for ethernet controllers (which
-has existed for some time) which is being extended to ethernet PHYs.
+Hello Michael,
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- .../devicetree/bindings/net/ethernet-controller.yaml         | 5 +++++
- Documentation/devicetree/bindings/net/ethernet-phy.yaml      | 5 +++++
- 2 files changed, 10 insertions(+)
+On Fri, Nov 15, 2019 at 09:34:15AM +0100, Michael Grzeschik wrote:
+> The usb port represented by &usbhost1 uses an USB phy internal to the
+> SoC. We add the phy_type to the base dtsi so the board dts only have to
+> overwrite it if they use a different configuration. While at it we also
+> pin the usbhost port to host mode and limit the speed of the phy to
+> full-speed only, which it is only capable of.
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-index 0e7c31794ae6..ac471b60ed6a 100644
---- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-@@ -121,6 +121,11 @@ title: Ethernet Controller Generic Binding
-       and is useful for determining certain configuration settings
-       such as flow control thresholds.
- 
-+  sfp:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      Specifies a reference to a node representing a SFP cage.
-+
-   tx-fifo-depth:
-     $ref: /schemas/types.yaml#definitions/uint32
-     description:
-diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-index f70f18ff821f..8927941c74bb 100644
---- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-@@ -153,6 +153,11 @@ title: Ethernet PHY Generic Binding
-       Delay after the reset was deasserted in microseconds. If
-       this property is missing the delay will be skipped.
- 
-+  sfp:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      Specifies a reference to a node representing a SFP cage.
-+
- required:
-   - reg
- 
+The subject line suggests this is a fix but the commit log and the
+actual change don't support this. Maybe better:
+
+	ARM: dts: imx25: consolidate properties of usbhost1 in dtsi file
+
+? 
+
+> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+> index 9a097ef014af5..40b95a290bd6b 100644
+> --- a/arch/arm/boot/dts/imx25.dtsi
+> +++ b/arch/arm/boot/dts/imx25.dtsi
+> @@ -570,6 +570,9 @@
+>  				clock-names = "ipg", "ahb", "per";
+>  				fsl,usbmisc = <&usbmisc 1>;
+>  				fsl,usbphy = <&usbphy1>;
+> +				maximum-speed = "full-speed";
+> +				phy_type = "serial";
+> +				dr_mode = "host";
+
+Would it make sense to split this patch in two? One that moves phy_type
+and dr_mode from the dts files using imx25.dtsi (which has no effects on
+the resulting dtb files). And another that adds maximum-speed.
+
+Best regards
+Uwe
+
 -- 
-2.20.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
