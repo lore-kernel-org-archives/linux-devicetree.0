@@ -2,109 +2,93 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF2BC43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 22:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFD0C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 22:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146B02073C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 22:18:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JRDqK4gJ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="C2WEG4IP"
+	by mail.kernel.org (Postfix) with ESMTP id AFBAE20733
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 22:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfKOWRu (ORCPT
+        id S1726984AbfKOW7T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:17:50 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:47346 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbfKOWRt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 17:17:49 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 70FE96119E; Fri, 15 Nov 2019 22:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856268;
-        bh=XhcTDR2gaQVtD8sQoO/Q38U8s3YqqcSActxZfPvDRNA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JRDqK4gJA2KF26bjEL5sTndALhzKgx90hU913YeTA2ueA+BAQsQRdHcx/GsOHTdY5
-         f7+lUb1tPUUtJ+Vyw2j0jnRvUaXp3T+7S+73Y2t8nS9/r3iqsTD6VVAi03WZ++3gur
-         W3LN477VXTBb/H6YrH18nmopKR/SI3XfeFNdxXqA=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A44586110B;
-        Fri, 15 Nov 2019 22:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856267;
-        bh=XhcTDR2gaQVtD8sQoO/Q38U8s3YqqcSActxZfPvDRNA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C2WEG4IP1dqEJYTg1VWBMA8QjLebTBQY66KyAbz8OGIomEEFYQ+5i/jiVz3sICmMy
-         hh64LgEaoTJrQrhwLiJPbFSA4hyvTb3bt9DpRRgqOHKo1rgx51f13VLrNU2fjIBcTl
-         b4u3QZE28+DNaukEoTXgPgrXbailW6nZZDnLHisg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A44586110B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     swboyd@chromium.org, maz@kernel.org, linus.walleij@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 05/12] of: irq: document properties for wakeup interrupt parent
-Date:   Fri, 15 Nov 2019 15:11:48 -0700
-Message-Id: <1573855915-9841-6-git-send-email-ilina@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
-References: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
+        Fri, 15 Nov 2019 17:59:19 -0500
+Received: from mailgate-2.ics.forth.gr ([139.91.1.5]:59278 "EHLO
+        mailgate-2.ics.forth.gr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfKOW7T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 17:59:19 -0500
+X-Greylist: delayed 2624 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 Nov 2019 17:59:17 EST
+Received: from av3.ics.forth.gr (av3in [139.91.1.77])
+        by mailgate-2.ics.forth.gr (8.14.4/ICS-FORTH/V10-1.8-GATE) with ESMTP id xAFMEr1p017647;
+        Fri, 15 Nov 2019 22:14:55 GMT
+X-AuditID: 8b5b014d-771ff70000003678-bf-5dcf235dc69b
+Received: from enigma.ics.forth.gr (enigma.ics.forth.gr [139.91.151.35])
+        by av3.ics.forth.gr (Symantec Messaging Gateway) with SMTP id C0.AA.13944.D532FCD5; Sat, 16 Nov 2019 00:14:53 +0200 (EET)
+X-ICS-AUTH-INFO: Authenticated user:  at ics.forth.gr
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 16 Nov 2019 00:14:52 +0200
+From:   Nick Kossifidis <mick@ics.forth.gr>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: Re: QEMU RISC-V virt machine poweroff driver
+Organization: FORTH
+In-Reply-To: <20191107212408.11857-1-hch@lst.de>
+References: <20191107212408.11857-1-hch@lst.de>
+Message-ID: <cca46a52ee91548962e2f9da4cf2202e@mailhost.ics.forth.gr>
+X-Sender: mick@mailhost.ics.forth.gr
+User-Agent: Roundcube Webmail/1.3.9
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsXSHT1dWTdW+XyswcZjPBbzj5xjtVi5+iiT
+        xefeI4wW2z63sFksvX6RyeLl5R5mi7ZZ/Bate4+wW5zeXeLA6bFm3hpGjzcvX7J4bFrVyeax
+        eUm9x+6bDWwel5qvs3t83iQXwB7FZZOSmpNZllqkb5fAlfHj8SPWghlsFX8mdLM1MM5g7WLk
+        5JAQMJF43XGSBcQWEjjCKLHsUC1E3FRi9t5ORhCbV0BQ4uTMJ2A1zAIWElOv7GeEsOUlmrfO
+        ZgaxWQRUJWZcXQFmswloSsy/dBCsXkRASeLpq7NA9VxA9TuZJDYeXQO2WBhoQUfrTTYQm19A
+        WOLT3YtAcQ4OTgEDiYNvJCHu0ZeYvm8iO0iYV8BF4tlxV4jTVCQ+/H7ADmKLCihL3Dz8nH0C
+        o+AsJJfOQnLpLCSXLmBkXsUokFhmrJeZXKyXll9UkqGXXrSJERwRjL47GG9vfqt3iJGJg/EQ
+        owQHs5II746KE7FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEefO4l8cKCaQnlqRmp6YWpBbBZJk4
+        OKUamOb3XT0b8jIwkOOxa7xm1dyvE2fzTVNlcTzyIHRmrIvUgc2T7tQv+F+hlvRG52Ls7wU1
+        uhIzbW18BJe9MX+4P+ljhvTU9qp1140MrLceV2ub7lzVZPq3nzeuY1VHAn9E7H1uhy9u/85d
+        ufNqreyKif2i2yLlhA7wLJg6952y01nV13eSKxn/bbz09qPOIw71U2UBh14l7+GJOe6ys+WG
+        +YfiiMO/7p4JmvTx9zvR0JxNoawnWWpefCtYaLqsT+bgpR1HJk7+/ED8y9WJNab/hM5uzZm0
+        Zll3Ku+WtT8tVFmu923c7jvnr2msNZcVy6GeRzv3+XzZmVW9bMu7n24BtS+F/hcE2M5X+MD6
+        ck3omRkHlFiKMxINtZiLihMBSll9NvcCAAA=
+X-Greylist: inspected by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Fri, 15 Nov 2019 22:14:55 +0000 (GMT) for IP:'139.91.1.77' DOMAIN:'av3in' HELO:'av3.ics.forth.gr' FROM:'mick@ics.forth.gr' RCPT:''
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Fri, 15 Nov 2019 22:14:55 +0000 (GMT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some interrupt controllers in a SoC, are always powered on and have a
-select interrupts routed to them, so that they can wakeup the SoC from
-suspend. Add wakeup-parent DT property to refer to these interrupt
-controllers.
+Στις 2019-11-07 23:24, Christoph Hellwig έγραψε:
+> Hi all,
+> 
+> this patch add a driver for the test device in the Qemu RISC-V
+> virt machine which allows properly shutting down the VM.
+> It also is added to the riscv defconfig given that qemu-virt
+> is the most popular riscv platform.
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
-Changes in v1:
-	- Remove whitespace at end of patch
----
- .../devicetree/bindings/interrupt-controller/interrupts.txt  | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+We do this already through OpenSBI, I contributed a patch for this some 
+time ago.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-index 4a3ee25..4ebfa00 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-@@ -108,3 +108,15 @@ commonly used:
- 			sensitivity = <7>;
- 		};
- 	};
-+
-+3) Interrupt wakeup parent
-+--------------------------
-+
-+Some interrupt controllers in a SoC, are always powered on and have a select
-+interrupts routed to them, so that they can wakeup the SoC from suspend. These
-+interrupt controllers do not fall into the category of a parent interrupt
-+controller and can be specified by the "wakeup-parent" property and contain a
-+single phandle referring to the wakeup capable interrupt controller.
-+
-+   Example:
-+	wakeup-parent = <&pdc_intc>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+https://github.com/riscv/opensbi/commit/51e543511a7425da1a5378e149de0b45928c7111#diff-36ecc47313ff13e406c53b99471f294e
 
+Last time I checked I could just halt and the system would shut down 
+properly.
+
+Regards,
+Nick
