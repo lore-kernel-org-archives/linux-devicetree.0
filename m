@@ -2,126 +2,112 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 130C8C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0B0C43141
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53A920723
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113202073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfKOHVg (ORCPT
+        id S1726505AbfKOHZj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:21:36 -0500
-Received: from mga18.intel.com ([134.134.136.126]:49781 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfKOHVg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:21:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 23:21:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,307,1569308400"; 
-   d="scan'208";a="235980233"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Nov 2019 23:21:31 -0800
-Subject: Re: [PATCH v2 2/2] mmc: sdhci-of-aspeed: add inversion
- sighttps://elixir.bootlin.com/linux/v4.6/ident/sdhci_opsnal presence
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
+        Fri, 15 Nov 2019 02:25:39 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54469 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbfKOHZi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 02:25:38 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iVVyz-000553-Pd; Fri, 15 Nov 2019 08:25:29 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iVVyy-0000MK-4d; Fri, 15 Nov 2019 08:25:28 +0100
+Date:   Fri, 15 Nov 2019 08:25:28 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, openbmc@lists.ozlabs.org
-References: <20191114125435.27756-1-i.mikhaylov@yadro.com>
- <20191114125435.27756-3-i.mikhaylov@yadro.com>
- <fcb5f8b5-40b9-6497-b24d-0b73e2525949@intel.com>
- <b443738f5e2a3c7ba96b329a8347374f7f934483.camel@yadro.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <d177ef37-643e-442d-d536-750e0bb5e86d@intel.com>
-Date:   Fri, 15 Nov 2019 09:20:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v4 3/7] pwm: sun4i: Add an optional probe for bus clock
+Message-ID: <20191115072528.7p5ks7xhifjiso2p@pengutronix.de>
+References: <20191108084517.21617-1-peron.clem@gmail.com>
+ <20191108084517.21617-4-peron.clem@gmail.com>
+ <20191113083524.aqtf2ed4ltuiazjg@pengutronix.de>
+ <CAJiuCccqyPbxRLjv1NRy6eukMnma8OUJGKvVHHDSKwybNJgKrg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b443738f5e2a3c7ba96b329a8347374f7f934483.camel@yadro.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCccqyPbxRLjv1NRy6eukMnma8OUJGKvVHHDSKwybNJgKrg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14/11/19 7:19 PM, Ivan Mikhaylov wrote:
-> On Thu, 2019-11-14 at 15:10 +0200, Adrian Hunter wrote:
->> On 14/11/19 2:54 PM, Ivan Mikhaylov wrote:
->>> Change the default .get_cd callback. Add inverted signal card detection
->>> check.
->>>
->>> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
->>>
->>> diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-
->>> aspeed.c
->>> index 8962f6664381..186559ee8fcc 100644
->>> --- a/drivers/mmc/host/sdhci-of-aspeed.c
->>> +++ b/drivers/mmc/host/sdhci-of-aspeed.c
->>> @@ -143,6 +143,19 @@ static inline int aspeed_sdhci_calculate_slot(struct
->>> aspeed_sdhci *dev,
->>>  	return (delta / 0x100) - 1;
->>>  }
->>>  
->>> +static int aspeed_get_cd(struct mmc_host *mmc)
->>> +{
->>> +	struct sdhci_host *host = mmc_priv(mmc);
->>> +
->>> +	int present = !!(sdhci_readl(host, SDHCI_PRESENT_STATE)
->>> +			 & SDHCI_CARD_PRESENT);
->>> +
->>> +	if (mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
->>> +		present = !present;
->>
->> Perhaps safer to flip the bit using CONFIG_MMC_SDHCI_IO_ACCESSORS and
->> ->readl() callback
->>
-> 
-> Sorry, don't quite understand what you're saying. You want to instantiate
-> '.read_l' callback instead of '.get_cd' in sdhci_ops and substitute the real
-> value?
-> 
-> res = readl(base, reg);
-> if (reg == SDHCI_PRESENT_STATE)
-> 	if (mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
-> 		return !res;
+Hello Clément,
 
-Presumably just flip the SDHCI_CARD_PRESENT bit i.e.
-
-		return res ^ SDHCI_CARD_PRESENT;
-
-> return res;
+On Thu, Nov 14, 2019 at 11:36:16PM +0100, Clément Péron wrote:
+> On Wed, 13 Nov 2019 at 09:35, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Fri, Nov 08, 2019 at 09:45:13AM +0100, Clément Péron wrote:
+> > > +     /*
+> > > +      * Fallback for old dtbs with a single clock and no name.
+> > > +      * If a parent has a clock-name called "mod" whereas the
+> > > +      * current node is unnamed the clock reference will be
+> > > +      * incorrectly obtained and will not go into this fallback.
+> >
+> > For me "old dtbs" suggests that today a device tree should have a "mod"
+> > clock. Is this true also for machines other than H6? And I'd put the
+> > comment before the acquisition of the "mod" clock. Something like:
 > 
-> Something like this?
+> Agree to remove the "old dtbs" but specifying the SoC instead
+> of the reason is less clear for me.
+> 
+> I would prefer to have something like this:
+> 
+> A clock is explicitly called "mod" when several clocks are referenced.
+> However, when only one clock is declared this one is unamed.
+> So we request "mod" first (and ignore the corner case that a parent
+> provides a "mod" clock)
+> and if this is not found we fall back to the first clock of the PWM.
 
-Yes
+It gets better. What about also describing shortly the purpose of this
+clock (assuming this is the source clock of the PWM that is then
+divided):
 
-> 
->>  
->>> +	host->mmc_host_ops.get_cd = aspeed_get_cd;
->>> +	if (of_property_read_bool(pdev->dev.of_node, "cd-inverted"))
->>> +		dev_info(&pdev->dev, "aspeed: sdhci: presence signal inversion
->>> enabled\n");
->>
->> Is this print really needed?
->>
-> I can remove it if you think it's redundant.
-> 
-> Thanks.
-> 
-> 
+	All hardware variants need a source clock that is divided and
+	then feeds the counter that defines the output wave form. In the
+	device tree this clock is either unnamed or called "mod".
+	Some variants (e.g. H6) need another clock to access the
+	hardware registers; this is called "bus".
 
+	So we request "mod" first (and ignore the corner case that a
+	parent provides a "mod" clock while the right one would be the
+	unnamed one of the PWM device) and if this is not found we fall
+	back to the first clock of the PWM.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
