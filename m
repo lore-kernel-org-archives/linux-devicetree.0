@@ -3,30 +3,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC272C43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 18:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BADC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 18:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C74C2073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 18:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B949A206CC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 18:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbfKOSOx (ORCPT
+        id S1726182AbfKOSQo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:14:53 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:54462 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfKOSOw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:14:52 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iVg7B-0001eB-99; Fri, 15 Nov 2019 19:14:37 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     "Matwey V. Kornilov" <matwey@sai.msu.ru>
-Cc:     matwey.kornilov@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Fri, 15 Nov 2019 13:16:44 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34949 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfKOSQo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 13:16:44 -0500
+Received: by mail-il1-f195.google.com with SMTP id z12so9967634ilp.2;
+        Fri, 15 Nov 2019 10:16:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rKdLjfAH1h2JYCzXLa2uKNlLJWREL+e9FB64JDOkPEo=;
+        b=N8BWWbg+Q6rjmSSAuB31hgx2GDdp18Tup7UnwmlSsigvtwwkyCvSjp+3FiZ0U+RYcb
+         LcY4Ed6LH7DPMJmT5Woieo7Z+YqPcqFVPnpc/lGRs3bsqi8CqyvJLuKbVDUJqNtnLolr
+         GUHdKUJ0ST/CmW3qY6ZQDOd9GMyaieAoR/Wah9F/LY6yNNHUNFPYkmTh4uHBm/HDFnyn
+         WD+2G7gIMWO135pDCvJG3YPLD94JapTwIYkI/XmKxMB6fZpv5XllcepZMBrTLs2ezROw
+         bWF5AEAGnKns4tovqxSH5cSYe8tOlKUKk2iIwepbyLBNKEb19MX+dymuuZR9hm7xuvGX
+         47mQ==
+X-Gm-Message-State: APjAAAXCyfrCZ4ejF2UXTVislf8xcYsvLRzvag0Oo1oHgK27DL1jec7Y
+        vVoVm3L6HgqwH+tFilF+lx8aKW4RSXdyo7fcXnc=
+X-Google-Smtp-Source: APXvYqwdBJ8rNtN+EZdewVmchYbVuye3g8V5/SEW3mhTUGjUBd6v26ZhMBNZbxiFVwipN8ZIsSBw8LNVvdEOSPaXau0=
+X-Received: by 2002:a92:8605:: with SMTP id g5mr2238459ild.172.1573841801481;
+ Fri, 15 Nov 2019 10:16:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20191115180825.10526-1-matwey@sai.msu.ru> <1708909.MJzrS8JzXa@diego>
+In-Reply-To: <1708909.MJzrS8JzXa@diego>
+From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
+Date:   Fri, 15 Nov 2019 21:16:29 +0300
+Message-ID: <CAJs94EYGmU3RYEP0bd387XEN=B_zA8rwGkJeSVqWycNPO95r=w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Enable PCIe for Radxa Rock Pi 4 board
+To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Ezequiel Garcia <ezequiel@collabora.com>,
         Akash Gajjar <akash@openedev.com>,
@@ -37,69 +56,78 @@ Cc:     matwey.kornilov@gmail.com, Rob Herring <robh+dt@kernel.org>,
         "open list:ARM/Rockchip SoC support" 
         <linux-rockchip@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: Enable PCIe for Radxa Rock Pi 4 board
-Date:   Fri, 15 Nov 2019 19:14:36 +0100
-Message-ID: <1708909.MJzrS8JzXa@diego>
-In-Reply-To: <20191115180825.10526-1-matwey@sai.msu.ru>
-References: <20191115180825.10526-1-matwey@sai.msu.ru>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matwey,
+пт, 15 нояб. 2019 г. в 21:14, Heiko Stübner <heiko@sntech.de>:
+>
+> Hi Matwey,
+>
+> Am Freitag, 15. November 2019, 19:08:21 CET schrieb Matwey V. Kornilov:
+> > Radxa Rock Pi 4 is equipped with M.2 PCIe slot,
+> > so enable PCIe for the board.
+> >
+> > The changes has been tested with Intel SSD 660p series device.
+> >
+> >     01:00.0 Class 0108: Device 8086:f1a8 (rev 03)
+> >
+> > Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+> > index 1ae1ebd4efdd..9c2927faba41 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+> > @@ -463,6 +463,20 @@
+> >       pmu1830-supply = <&vcc_3v0>;
+> >  };
+> >
+> > +&pcie_phy {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&pcie0 {
+> > +     status = "okay";
+> > +
+> > +     ep-gpios = <&gpio4 RK_PD3 GPIO_ACTIVE_HIGH>;
+> > +     num-lanes = <4>;
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&pcie_clkreqnb_cpm>;
+> > +     max-link-speed = <2>;
+>
+> the RockPi schematics should be available, so could you also check
+> the supply regulators and add them please?
+>
+> Thanks
+> Heiko
 
-Am Freitag, 15. November 2019, 19:08:21 CET schrieb Matwey V. Kornilov:
-> Radxa Rock Pi 4 is equipped with M.2 PCIe slot,
-> so enable PCIe for the board.
-> 
-> The changes has been tested with Intel SSD 660p series device.
-> 
->     01:00.0 Class 0108: Device 8086:f1a8 (rev 03)
-> 
-> Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-> index 1ae1ebd4efdd..9c2927faba41 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-> @@ -463,6 +463,20 @@
->  	pmu1830-supply = <&vcc_3v0>;
->  };
->  
-> +&pcie_phy {
-> +	status = "okay";
-> +};
-> +
-> +&pcie0 {
-> +	status = "okay";
-> +
-> +	ep-gpios = <&gpio4 RK_PD3 GPIO_ACTIVE_HIGH>;
-> +	num-lanes = <4>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreqnb_cpm>;
-> +	max-link-speed = <2>;
+Hi,
 
-the RockPi schematics should be available, so could you also check
-the supply regulators and add them please?
+What do you mean? pcie 3.3v regulator is already in dts. I've checked
+that its gpio is correctly configured.
 
-Thanks
-Heiko
+>
+>
+> > +};
+> > +
+> >  &pinctrl {
+> >       bt {
+> >               bt_enable_h: bt-enable-h {
+> >
+>
+>
+>
+>
 
 
-> +};
-> +
->  &pinctrl {
->  	bt {
->  		bt_enable_h: bt-enable-h {
-> 
-
-
-
-
+-- 
+With best regards,
+Matwey V. Kornilov.
+Sternberg Astronomical Institute, Lomonosov Moscow State University, Russia
+119234, Moscow, Universitetsky pr-k 13, +7 (495) 9392382
