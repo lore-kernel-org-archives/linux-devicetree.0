@@ -2,102 +2,227 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6B7C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE80C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6832073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FC820740
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nGQ4lsiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfKOJdt (ORCPT
+        id S1727020AbfKOJoV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:33:49 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:44295 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfKOJdt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 04:33:49 -0500
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1My2pz-1hfdsh0DyZ-00zV17; Fri, 15 Nov 2019 10:33:48 +0100
-Received: by mail-qk1-f170.google.com with SMTP id d13so7589673qko.3;
-        Fri, 15 Nov 2019 01:33:47 -0800 (PST)
-X-Gm-Message-State: APjAAAXS/EV5BsFcJFwN5VESTmD3xzK1lo4Tpyx3tZDu3ZV4vc/th8Iq
-        tbAJcCQrU1iJ+99PiZZyUU0NGuiczPNXYO+vloI=
-X-Google-Smtp-Source: APXvYqyHs9ad/+3HaWdqKuzJptVRHCVwDklMrgq5Mkioy7i8IrZPX+/M8dSz9o3BBSnMlS0BE9d05Ry9BXPIzZIB7/k=
-X-Received: by 2002:a37:58d:: with SMTP id 135mr11660269qkf.394.1573810426879;
- Fri, 15 Nov 2019 01:33:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20191114114525.12675-1-orson.zhai@unisoc.com> <20191114114525.12675-2-orson.zhai@unisoc.com>
-In-Reply-To: <20191114114525.12675-2-orson.zhai@unisoc.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 Nov 2019 10:33:30 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
-Message-ID: <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add syscon-names support
-To:     Orson Zhai <orson.zhai@unisoc.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
+        Fri, 15 Nov 2019 04:44:21 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50428 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfKOJoV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 04:44:21 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAF9i9cM070472;
+        Fri, 15 Nov 2019 03:44:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573811049;
+        bh=E0WzhltMB1uCqHukFqL7nvpsZ7Dg3L6LXU0D/M/afHk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nGQ4lsiTTMA/u3mYvQBGiCimGGu+zhohaFc7OZ7bIu+CWjxxF1eWkRUBFtOuyYeCa
+         OKc7HWEV9E2Vb0B10pGrfZ2BFSL/Q+m77cERWOeDxYFdTbhQd2autXTZqwz9BxfO+g
+         lJ4q4DWNpBtxmyRXdYJSyxkH7gWGik8yTMi/ByJI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAF9i9JV054404;
+        Fri, 15 Nov 2019 03:44:09 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 15
+ Nov 2019 03:44:08 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 15 Nov 2019 03:44:08 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAF9i55L081214;
+        Fri, 15 Nov 2019 03:44:05 -0600
+Subject: Re: [PATCH v4 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Rob Herring <robh@kernel.org>
+CC:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        steven.tang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:eAMMgYvcgQoIgeVOJdJnUY/zP11VckfLtwFUG99sJIU8dAsgB97
- u+/vqG/j8y5hJiZP05FZJmsBaHHVRdgp9Q2pj1HvCU31AbH3QMzT8Obj4hvoDVfdDciCdb7
- q1RpMPtr/0FgtjxpBbA/2vqCJnA9sos/rT3tomqcs9pcjTXG0WfEja+K5ZeeLJkDfxvL40O
- 4KgiVz2t3zMISXv1BBgjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3zhn3xOu5SQ=:XN5QE8YqU9AxAkLLOGzELj
- 4WN0CHJacEG2b4cF2W6VXmxgTitnHkllDhz/1eu+tPDjFN1BiN8Nuihcf8qpksrRt+S1CNNqx
- 5+PK+riuhCsyA68T9d0c8d+0pA3cPwMLn/TWTBNa6VdTRjbsUMBf1dtKMB7XgMh4iiOna2DG8
- yxqPyk3FUt8YgMjezbKmtrRR/cds8G1YukNhPCrqUyBr3dq1GXpJCMh+g41OC9rv4dL4Oak82
- oTHaNfmY2QBks8HF1Om7CIYdX7flDfflMqxrHV+MHjGQIkyvL9TKkXqSzVFFZNmVQVpLJDhEK
- hvYm0Twf3eVvtBnZRPasrmTXIJtrDrqQb5kZq1I2kvT0vAWHK+kwwoF6tNrAsvEMbgcEVDklA
- TfiDaBh/evD6CTycBB5CPhPXFAWa0sT/E06l9HGTjvFe6yEdbf/k4yG7YfqNZJX8oTpjY0T4A
- /2B+fokO01pGeOuN+VmpqTWsQ101KCMRBRAiHrihbFHNqukh2+sBb+SfePfYycjC3rZyDJhiB
- oLzUEABLr64u9YOx5qvU1BYqGru4ywTTgaVXBlf1tcc0YugZSrMG98zz6YuEBTEYYvtE7pNpe
- 0EFU9P5YUe9mG2wwOpV2tccUHirhRnPYIVgKoemx0UEuX2E0/znFTM1jFiPU/YGbEFKu9IsSL
- 8OEDh7cX0xAXLNStwMlsgrnnxRML7VSfEjDoLL4ytIgoTCR+cYbHwkf1m1BlJo4sX5iixltLk
- As5QXXSM5aiqufpyOCg8IPNMt80iHkHckfk9uijT1jHMB42DgANNavX9Z/Y9g6Mg9i27mWYs7
- +jINjnKPIBskDGPI20MYah/jEqecwbmrzPVefrpl0QO+V95Z74TPPaKppM43UDs3j8PZPL0zs
- vVCdoq8csaWrQQhrVJeA==
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-9-peter.ujfalusi@ti.com> <20191105021900.GA17829@bogus>
+ <fc1ea525-54f1-ff1a-7e1c-61b54f5be862@ti.com>
+ <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <b4705f2e-b2fb-f00f-7d4d-bd440fe89135@ti.com>
+Date:   Fri, 15 Nov 2019 11:45:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 12:48 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
->
->
-> Make life easier when syscon consumer want to access multiple syscon
-> nodes.
-> Add syscon-names and relative properties to help manage complicated
-> cases when accessing more one syscon node.
->
-> Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+Rob,
 
-Hi Orson,
+On 14/11/2019 19.53, Rob Herring wrote:
+> On Tue, Nov 5, 2019 at 4:07 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>>
+>>
+>> On 05/11/2019 4.19, Rob Herring wrote:
+>>> On Fri, Nov 01, 2019 at 10:41:28AM +0200, Peter Ujfalusi wrote:
+>>>> New binding document for
+>>>> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
+>>>>
+>>>> UDMA-P is introduced as part of the K3 architecture and can be found in
+>>>> AM654 and j721e.
+>>>>
+>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>>> ---
+>>>> Rob,
+>>>>
+>>>> can you give me some hint on how to fix these two warnings from dt_binding_check:
+>>>>
+>>>>   DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
+>>>> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dts:23.13-72: Warning (ranges_format): /example-0/interconnect@30800000:ranges: "ranges" property has invalid length (24 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
+>>>>   CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
+>>>
+>>> The default #address-cells is 1 for examples. So you need to
+>>> either override it or change ranges parent address size.
+>>
+>> wrapping the cbass_main_navss inside:
+>> cbass_main {
+>>     #address-cells = <2>;
+>>     #size-cells = <2>;
+>>     ...
+>> };
+>>
+>> fixes it.
+>>
+>>>>
+>>>> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml: interconnect@30800000: $nodename:0: 'interconnect@30800000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+>>>
+>>> Use 'bus' for the node name of 'simple-bus'.
+>>
+>> I took the navss node from the upstream dts (I'm going to fix it there
+>> as well).
+>> It has simple-bus for the navss, which is not quite right as NAVSS is
+>> not a bus, but a big subsystem with multiple components (UDMAP, ringacc,
+>> INTA, INTR, timers, etc).
+>>
+>> What about to change the binding doc to simple-mfd like this
+> 
+> That's really for things not memory-mapped (I'm sure you can probably
+> find an example to contradict me), so better to keep simple-bus if all
+> the child nodes have addresses.
 
-Can you explain why the number of cells in this binding is specific
-to the syscon node rather than the node referencing it?
+According to Documentation/devicetree/bindings/mfd/mfd.txt:
+- A range of memory registers containing "miscellaneous system
+  registers" also known as a system controller "syscon" or any other
+  memory range containing a mix of unrelated hardware devices.
 
-In most other bindings that follow the same scheme, the additional
-arguments are interpreted by the subsystem that is being referenced,
-but the syscon driver is just a simple driver with no subsystem and no
-code to interpret those arguments.
+NAVSS (NAVigator SubSystem) falls in the later case, it contains
+unrelated blocks, like the UDMAP, ringacc, mailboxes, spinlocks,
+interrupt aggregator, interrupt router, etc.
 
-The way would otherwise handle the example from your binding
-would be with two separate properties in the display node, like
+- compatible : "simple-mfd" - this signifies that the operating system
+  should consider all subnodes of the MFD device as separate devices
+  akin to how "simple-bus" indicates when to see subnodes as children
+  for a simple memory-mapped bus.
 
-syscon-enable = <&ap_apb_regs 0x4 0xf00>;
-syscon-power = <&aon_regs 0x8>;
+This is a bit confusing, but NAVSS is not really a bus, everything in it
+can be accessed by the CPU via memory mapped registers (some sub devices
+does not have registers defined, they are controlled via system firmware).
 
-in which case, the syscon driver does not need to know anything
-about how it's being used, and the display driver is the one making
-sense of the arguments according to its own binding.
+> Do you need the node name to be 'navss' for some reason? If so, then
+> better have a compatible string in there to identify it. If not, just
+> use 'bus' and be done with it.
 
-I assume you have some good reason for introducing the other
-approach, but I don't understand it from your submission.
+We don't need unique compatible for the NAVSS itself as there is not
+much we can configure on the top level, it is 'just' a big subsystem
+with all sorts of things.
 
-       Arnd
+I like to keep the 'navss' as node name as it gives human understandable
+representation of it in /sys for example, easier to see the topology.
+
+I just feel that the 'bus' does not really apply to what NAVSS is.
+Probably my view of simple-bus is not correct.
+
+>> cbass_main_navss: navss@30800000 {
+>>     compatible = "simple-mfd";
+>>     #address-cells = <2>;
+>>     #size-cells = <2>;
+>>     ...
+>> };
+>>
+>> and fix up the DT when I got to the point when I can send the patches to
+>> enable DMA for am654 and j721e?
+> 
+> There's no requirement yet for DTS files to not have warnings.
+
+Sure, but it does not hurt if they are clean ;)
+
+>>>> +  compatible:
+>>>> +    oneOf:
+>>>> +      - const: ti,am654-navss-main-udmap
+>>>> +      - const: ti,am654-navss-mcu-udmap
+>>>> +      - const: ti,j721e-navss-main-udmap
+>>>> +      - const: ti,j721e-navss-mcu-udmap
+>>>
+>>> enum works better than oneOf+const. Better error messages.
+>>
+>> Like this:
+>>   compatible:
+>>     oneOf:
+>>       - description: for AM654
+>>         items:
+>>           - enum:
+>>               - ti,am654-navss-main-udmap
+>>               - ti,am654-navss-mcu-udmap
+>>
+>>       - description: for J721E
+>>         items:
+>>           - enum:
+>>               - ti,j721e-navss-main-udmap
+>>               - ti,j721e-navss-mcu-udmap
+> 
+> If the 'description' was useful, but it's not. Just:
+> 
+> compatible:
+>   enum:
+>     - ti,am654-navss-main-udmap
+>     - ti,am654-navss-mcu-udmap
+>     - ti,j721e-navss-main-udmap
+>     - ti,j721e-navss-mcu-udmap
+
+OK, can I keep your Reviewed-by you have given to v5 if I do this change
+for v6?
+
+> 
+> 
+> Rob
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
