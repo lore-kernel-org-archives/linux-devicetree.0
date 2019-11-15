@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC37C43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7A5C33C99
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C422073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765242073C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UtGcVOPw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UXpz2/GG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfKOTia (ORCPT
+        id S1726881AbfKOTig (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 14:38:30 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40791 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfKOTia (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 14:38:30 -0500
-Received: by mail-pf1-f196.google.com with SMTP id r4so7152195pfl.7
-        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 11:38:30 -0800 (PST)
+        Fri, 15 Nov 2019 14:38:36 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37680 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKOTif (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 14:38:35 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p24so7164783pfn.4
+        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 11:38:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:cc:to:subject:from:user-agent:date;
-        bh=N3RglndAty+Q/Su9LZ87Avtb9ayjrGHyeAiCuksi9yI=;
-        b=UtGcVOPwv+Sz7IoEtQf5f6u5Bwgm0baqY2Pm/LkCq5Y+myds1WEgPKSc/h4IFVnGfM
-         4cJdrIwH0moWO54hBHgBqhBcFoRIB5Gi6eNmpMXxG108ONJdy3ibW5lS+7A3vvNUpUPU
-         hnztaqL+IFnT/g0h1yPCraXD14WhOHqnkPB8Y=
+        bh=rpIokldTgdr5Exrhz1mWV7HaLCSuNS/NOSl6iO2Uvg8=;
+        b=UXpz2/GGf6m28T8JsRJL22/FmaujD4Zkm42D4hqF1gSN9xyzIKBP3jZPikdFoLutN0
+         1QwHjpjumV9GiZEurjnQujKejh1y/BRNClPVP3v+DWWoMqXo/U/+jfny1z67SpJ8Aedd
+         x6F5L4BYk9ZEUUHmuomaBUpqdhxgthCmLWzwI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
          :user-agent:date;
-        bh=N3RglndAty+Q/Su9LZ87Avtb9ayjrGHyeAiCuksi9yI=;
-        b=MwsHoE2coe4y+DovgX6n2nJ9chQH23w2H+PtADhqf0Fsl4ojPm4Gr2sWG8I8QR8I7c
-         sbsv8/MWctR6gvlfkSG/S/a09NAZT2Gnxn1ZlCKxiIDuJ1n/FITMORkC/3FaAyUadDMY
-         cZQbzot8wKULin1DCWiff/RILviYl8guPYDRZVs5wFpg/VXz97n9ZfNRXQbfXcpMwh/x
-         nlx3pR1nK7qTcYsWinOqU4cY5cpXozMYB8EaAfkDNRm8RI28kv8KAg+c6JIKeZyr82kB
-         iQv76OqfRXToapsT1U8T5wZYk8lECnXMfr7ZP/pTPCYj5Q42EQgw2E/ck6zWE2wjzsaK
-         GeHg==
-X-Gm-Message-State: APjAAAVY/4yBk5kWhbIxt3xd6tIKV+SxkV1rf0H/j14IBD7KMMuU+j/k
-        53gwTkG0S3EMaxVOATEOSHN/wA==
-X-Google-Smtp-Source: APXvYqyIIQmbO8Jh5LsYVJAkG9qSWUVFtjTBJtmPW9PBcFmGXEA3YzAVQ7//IHl8Rf9YfaPCT7oA/A==
-X-Received: by 2002:a63:395:: with SMTP id 143mr12694732pgd.93.1573846709916;
-        Fri, 15 Nov 2019 11:38:29 -0800 (PST)
+        bh=rpIokldTgdr5Exrhz1mWV7HaLCSuNS/NOSl6iO2Uvg8=;
+        b=oo/30MUpGbHROcImUbXf8qOeYnruGXmcHH6c3mERRspqNcMpvp9OLMI42t4NWPeSj+
+         AEu0WUp5R1k2RhNoy6PGtkomcarl3+o9XU0I98cYa57sS+y5YoWPs7N7NOceXYau1gwt
+         0Fosh3dYy2OsleTEbPCBQae5Htpqz5EH5gzgJJ3mlewF0tpvO1TYlsW7U0+AJrDfBm8M
+         5Rm9AgrvZjRkRaQhbRMw3UOez0nI7E8h44Mk7tDJz1TWltcpltFJ7E38k9ms5odr0svA
+         GaD8sbes1+SiUqIkZFMZyB+YUNgyMoMfBlY0vzyhqtrDrjQdkNTjZpfB/HtVzPzraLtu
+         mPHA==
+X-Gm-Message-State: APjAAAWz5Wcd7mTcppEePWYFhvj/ujEwx4F1XRVX4z+pKFgSU4cubQG1
+        GK1lr9OrXIKsx/v1wGjMB+3MQA==
+X-Google-Smtp-Source: APXvYqykqc5dyf2YeTH9F9RX5Ivj9h24yWKDFvAQmQ98bDBv24JthZfMkfiBfpD1ahLZlS9AfiPdcg==
+X-Received: by 2002:a65:6145:: with SMTP id o5mr17611208pgv.38.1573846714978;
+        Fri, 15 Nov 2019 11:38:34 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 82sm11338835pfa.115.2019.11.15.11.38.29
+        by smtp.gmail.com with ESMTPSA id h23sm10528899pgg.58.2019.11.15.11.38.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 11:38:29 -0800 (PST)
-Message-ID: <5dcefeb5.1c69fb81.757a7.0d4f@mx.google.com>
+        Fri, 15 Nov 2019 11:38:34 -0800 (PST)
+Message-ID: <5dcefeba.1c69fb81.258f2.f70e@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <83394ae827ce7c123228b749bcae2a2c470e88a4.1573814758.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1573814758.git.saiprakash.ranjan@codeaurora.org> <83394ae827ce7c123228b749bcae2a2c470e88a4.1573814758.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <a2bb92de65e90768bf1d6b8c0b7fbd43cba704d2.1573814758.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1573814758.git.saiprakash.ranjan@codeaurora.org> <a2bb92de65e90768bf1d6b8c0b7fbd43cba704d2.1573814758.git.saiprakash.ranjan@codeaurora.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Rajendra Nayak <rnayak@codeaurora.org>,
@@ -68,24 +68,20 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         bjorn.andersson@linaro.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: msm: Rename cache-controller to system-cache-controller
+Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Update the device tree node for LLCC
 From:   Stephen Boyd <swboyd@chromium.org>
 User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 11:38:28 -0800
+Date:   Fri, 15 Nov 2019 11:38:33 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sai Prakash Ranjan (2019-11-15 02:59:11)
-> DT schema checks for the node name 'cache-controller' and enforces
-> that there has to be a cache-level associated with it. But LLCC is
-> a system cache and does not have a cache-level property and hence
-> the dt binding check fails. So let us rename the LLCC cache-controller
-> to system-cache-controller which is the proper description and also
-> makes the schema happy.
+Quoting Sai Prakash Ranjan (2019-11-15 02:59:12)
+> LLCC cache-controller was renamed to system-cache-controller
+> to make schema pass the dt binding check. Update the device
+> tree node to reflect this change.
 >=20
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
 > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
 
