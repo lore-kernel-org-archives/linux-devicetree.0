@@ -2,286 +2,96 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE95C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D50C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E029020748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C59A20740
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yG/n0v4M"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JpxOoizO";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ba1l6i6a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfKOMSB (ORCPT
+        id S1727215AbfKOMS4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:18:01 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40732 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727413AbfKOMSB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 07:18:01 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q2so10483456ljg.7
-        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 04:17:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GzXbFQkPrKMVsons+QpYWmVJ2fxp7Rx5snNgvCvieVY=;
-        b=yG/n0v4MhRYVnb5vUXGkRi6oDV6K/u1lsPBGqqDtMe9eQPej0mbaUgAxww7zpeDK3V
-         0yAsmiPtDAfY89uW8P19F6ARJ03M6WTr8BJ/Qgo82odDvha5POqGBBtsEFiek1YoOUMs
-         +Rgk4MvL/tX7GyolCqh71czAJXhVeYhVCzX8tS6Ix5JvtzkB7/oxMFEz4vgV4zVHIx8D
-         79iMkpCODZXATEcqCTGdIw9ICPeSxz4GUmIX5oFsZ1CuanHEQtNuISSmvmoK7zyNASvH
-         aKY2eXwIDPXiv5Yn2cjuwUSmX0z/mLlKFwd8eRcaH3DBDOEQ4r3xjZqdVZN2//o/jQLk
-         oNsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GzXbFQkPrKMVsons+QpYWmVJ2fxp7Rx5snNgvCvieVY=;
-        b=FvUwF7dy8XD6JXx6qzSOeL+nCx5TLbyvKZCuDOgKvLcyAOw6B26pX66SlHth9kYdhw
-         cAaQ9D4ULRw3N4fHi7zh+toNaZ48GEw7kCCsCQJrkCs2C67Deb4e435s3LXU/jrppyEU
-         3ZiOULVfM6h3OTUOlySKN2sjlIipftAL2Zw+Tf0nw+oEXkTV4sQQ1Ooy7jWQawmrZy+8
-         SepToW2T/v65h33GoEM2nCSexVKo8QK5HgHoRqjTHOdjFh5V2z1YuO1Sg7dJgP7PGaDt
-         adhF4zr15MNk3p7ls7QLUCr5Ndt/aBd8WZsLr+EsYf65GeG4b+zDAeUD1VKx2GxshHqK
-         KvBw==
-X-Gm-Message-State: APjAAAXEos50KIuRVTu85oH0LC9FrIIfaFNmdEiPQjtS6lRP0If7n+do
-        HYbnRUpaParRj0lDmiGn4YhoCw==
-X-Google-Smtp-Source: APXvYqxJkeCD/5wb5eD1Fvas043368L7QAtHjtM9zm9+kZzqByV7eg8Jzd+QpcMMOcm4VKUxwP+C/A==
-X-Received: by 2002:a2e:9659:: with SMTP id z25mr11200659ljh.132.1573820279064;
-        Fri, 15 Nov 2019 04:17:59 -0800 (PST)
-Received: from centauri.lan (ua-84-217-220-205.bbcust.telenor.se. [84.217.220.205])
-        by smtp.gmail.com with ESMTPSA id c16sm331070lfp.93.2019.11.15.04.17.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 04:17:58 -0800 (PST)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org, vireshk@kernel.org, ulf.hansson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/5] arm64: dts: qcom: qcs404: Add CPR and populate OPP table
-Date:   Fri, 15 Nov 2019 13:15:40 +0100
-Message-Id: <20191115121544.2339036-4-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191115121544.2339036-1-niklas.cassel@linaro.org>
-References: <20191115121544.2339036-1-niklas.cassel@linaro.org>
+        Fri, 15 Nov 2019 07:18:56 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:48030 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727196AbfKOMS4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 07:18:56 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 153F460E74; Fri, 15 Nov 2019 12:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573820336;
+        bh=inze6281I3ANNET/l8NKpBp9h8VIMrF912CJ7dHN7+A=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=JpxOoizO7ox0s0XNIQP7DhP2NAcT5h/gYB7AiUhYpKSXisoMZb8M5UfIN0w+9YRuB
+         oZjfb54s3e0s0tSLDiJZ8rbmkzFNeZ8e8hJxr1LBaA0NT/dcT/lM4tNGmtYpQmgK5T
+         AgHamU5mGCBeWn1KNvyipt72dyEoIc9YhCs5RkCU=
+Received: from x230.qca.qualcomm.com (unknown [83.145.195.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94BD460E0D;
+        Fri, 15 Nov 2019 12:18:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573820335;
+        bh=inze6281I3ANNET/l8NKpBp9h8VIMrF912CJ7dHN7+A=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Ba1l6i6aLpDlf3qPWmkIfATaLTtPKY6zvhq7QjXtkNjwvKuz6QOXkQSJMPN6eC146
+         OCei/xWmBF+SjcF/JfGSqR4+l63sDChWC8RD6zbnyMb4W1RjPTCRYqGexxjpEasr2f
+         NczvT3Mdi5NcAlGAvr/+xG8cpIgDVuq5awkfaKPw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94BD460E0D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath11k@lists.infradead.org
+Subject: Re: [PATCH v2 01/49] dt: bindings: net: add qcom,ath11k.yaml
+References: <1571565847-10338-1-git-send-email-kvalo@codeaurora.org>
+        <1571565847-10338-2-git-send-email-kvalo@codeaurora.org>
+        <20191025213028.GA5117@bogus>
+        <87k18by9w0.fsf@kamboji.qca.qualcomm.com>
+Date:   Fri, 15 Nov 2019 14:18:50 +0200
+In-Reply-To: <87k18by9w0.fsf@kamboji.qca.qualcomm.com> (Kalle Valo's message
+        of "Thu, 07 Nov 2019 17:38:23 +0200")
+Message-ID: <8736epwcwl.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add CPR and populate OPP table.
+Kalle Valo <kvalo@codeaurora.org> writes:
 
-Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 132 +++++++++++++++++++++++++--
- 1 file changed, 124 insertions(+), 8 deletions(-)
+> Rob Herring <robh@kernel.org> writes:
+>
+>> On Sun, Oct 20, 2019 at 01:03:19PM +0300, Kalle Valo wrote:
+>>> ath11k is a driver for Qualcomm IEEE 802.11ax devices. Add a
+>>> bindings document for the driver, first documenting IPQ8074 which is the
+>>> only device ath11k currently supports.
+>>> 
+>>> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+>>> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+>
+> [...]
+>
+>>> +  interrupts:
+>>> +    minItems: 53
+>>> +    maxItems: 53
+>>
+>> Assuming the list below has 53 entries min/maxItems is implied.
+>
+> There's actually 52 entries in the items list below this, I need to
+> check if we are missing an entry or is this just a miscalculation.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index d03782e7bc11..30b9c7f8f200 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -44,7 +44,8 @@
- 			#cooling-cells = <2>;
- 			clocks = <&apcs_glb>;
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&pms405_s3>;
-+			power-domains = <&cpr>;
-+			power-domain-names = "cpr";
- 		};
- 
- 		CPU1: cpu@101 {
-@@ -57,7 +58,8 @@
- 			#cooling-cells = <2>;
- 			clocks = <&apcs_glb>;
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&pms405_s3>;
-+			power-domains = <&cpr>;
-+			power-domain-names = "cpr";
- 		};
- 
- 		CPU2: cpu@102 {
-@@ -70,7 +72,8 @@
- 			#cooling-cells = <2>;
- 			clocks = <&apcs_glb>;
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&pms405_s3>;
-+			power-domains = <&cpr>;
-+			power-domain-names = "cpr";
- 		};
- 
- 		CPU3: cpu@103 {
-@@ -83,7 +86,8 @@
- 			#cooling-cells = <2>;
- 			clocks = <&apcs_glb>;
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&pms405_s3>;
-+			power-domains = <&cpr>;
-+			power-domain-names = "cpr";
- 		};
- 
- 		L2_0: l2-cache {
-@@ -107,20 +111,37 @@
- 	};
- 
- 	cpu_opp_table: cpu-opp-table {
--		compatible = "operating-points-v2";
-+		compatible = "operating-points-v2-kryo-cpu";
- 		opp-shared;
- 
- 		opp-1094400000 {
- 			opp-hz = /bits/ 64 <1094400000>;
--			opp-microvolt = <1224000 1224000 1224000>;
-+			required-opps = <&cpr_opp1>;
- 		};
- 		opp-1248000000 {
- 			opp-hz = /bits/ 64 <1248000000>;
--			opp-microvolt = <1288000 1288000 1288000>;
-+			required-opps = <&cpr_opp2>;
- 		};
- 		opp-1401600000 {
- 			opp-hz = /bits/ 64 <1401600000>;
--			opp-microvolt = <1384000 1384000 1384000>;
-+			required-opps = <&cpr_opp3>;
-+		};
-+	};
-+
-+	cpr_opp_table: cpr-opp-table {
-+		compatible = "operating-points-v2-qcom-level";
-+
-+		cpr_opp1: opp1 {
-+			opp-level = <1>;
-+			qcom,opp-fuse-level = <1>;
-+		};
-+		cpr_opp2: opp2 {
-+			opp-level = <2>;
-+			qcom,opp-fuse-level = <2>;
-+		};
-+		cpr_opp3: opp3 {
-+			opp-level = <3>;
-+			qcom,opp-fuse-level = <3>;
- 		};
- 	};
- 
-@@ -310,6 +331,62 @@
- 			tsens_caldata: caldata@d0 {
- 				reg = <0x1f8 0x14>;
- 			};
-+			cpr_efuse_speedbin: speedbin@13c {
-+				reg = <0x13c 0x4>;
-+				bits = <2 3>;
-+			};
-+			cpr_efuse_quot_offset1: qoffset1@231 {
-+				reg = <0x231 0x4>;
-+				bits = <4 7>;
-+			};
-+			cpr_efuse_quot_offset2: qoffset2@232 {
-+				reg = <0x232 0x4>;
-+				bits = <3 7>;
-+			};
-+			cpr_efuse_quot_offset3: qoffset3@233 {
-+				reg = <0x233 0x4>;
-+				bits = <2 7>;
-+			};
-+			cpr_efuse_init_voltage1: ivoltage1@229 {
-+				reg = <0x229 0x4>;
-+				bits = <4 6>;
-+			};
-+			cpr_efuse_init_voltage2: ivoltage2@22a {
-+				reg = <0x22a 0x4>;
-+				bits = <2 6>;
-+			};
-+			cpr_efuse_init_voltage3: ivoltage3@22b {
-+				reg = <0x22b 0x4>;
-+				bits = <0 6>;
-+			};
-+			cpr_efuse_quot1: quot1@22b {
-+				reg = <0x22b 0x4>;
-+				bits = <6 12>;
-+			};
-+			cpr_efuse_quot2: quot2@22d {
-+				reg = <0x22d 0x4>;
-+				bits = <2 12>;
-+			};
-+			cpr_efuse_quot3: quot3@230 {
-+				reg = <0x230 0x4>;
-+				bits = <0 12>;
-+			};
-+			cpr_efuse_ring1: ring1@228 {
-+				reg = <0x228 0x4>;
-+				bits = <0 3>;
-+			};
-+			cpr_efuse_ring2: ring2@228 {
-+				reg = <0x228 0x4>;
-+				bits = <4 3>;
-+			};
-+			cpr_efuse_ring3: ring3@229 {
-+				reg = <0x229 0x4>;
-+				bits = <0 3>;
-+			};
-+			cpr_efuse_revision: revision@218 {
-+				reg = <0x218 0x4>;
-+				bits = <3 3>;
-+			};
- 		};
- 
- 		rng: rng@e3000 {
-@@ -952,6 +1029,45 @@
- 			clocks = <&sleep_clk>;
- 		};
- 
-+		cpr: power-controller@b018000 {
-+			compatible = "qcom,qcs404-cpr", "qcom,cpr";
-+			reg = <0x0b018000 0x1000>;
-+			interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&xo_board>;
-+			clock-names = "ref";
-+			vdd-apc-supply = <&pms405_s3>;
-+			#power-domain-cells = <0>;
-+			operating-points-v2 = <&cpr_opp_table>;
-+			acc-syscon = <&tcsr>;
-+
-+			nvmem-cells = <&cpr_efuse_quot_offset1>,
-+				<&cpr_efuse_quot_offset2>,
-+				<&cpr_efuse_quot_offset3>,
-+				<&cpr_efuse_init_voltage1>,
-+				<&cpr_efuse_init_voltage2>,
-+				<&cpr_efuse_init_voltage3>,
-+				<&cpr_efuse_quot1>,
-+				<&cpr_efuse_quot2>,
-+				<&cpr_efuse_quot3>,
-+				<&cpr_efuse_ring1>,
-+				<&cpr_efuse_ring2>,
-+				<&cpr_efuse_ring3>,
-+				<&cpr_efuse_revision>;
-+			nvmem-cell-names = "cpr_quotient_offset1",
-+				"cpr_quotient_offset2",
-+				"cpr_quotient_offset3",
-+				"cpr_init_voltage1",
-+				"cpr_init_voltage2",
-+				"cpr_init_voltage3",
-+				"cpr_quotient1",
-+				"cpr_quotient2",
-+				"cpr_quotient3",
-+				"cpr_ring_osc1",
-+				"cpr_ring_osc2",
-+				"cpr_ring_osc3",
-+				"cpr_fuse_revision";
-+		};
-+
- 		timer@b120000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
+I got a confirmation internally, 52 entries is correct.
+
 -- 
-2.23.0
-
+Kalle Valo
