@@ -2,103 +2,115 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F15BC432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414F4C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423F3206DC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150B320733
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YQVJAjOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfKONCD (ORCPT
+        id S1727405AbfKONEt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:02:03 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43759 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbfKONCC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 08:02:02 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l20so8499427oie.10;
-        Fri, 15 Nov 2019 05:02:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fFCEymgW22IOXjAfj44wBlKSuJ/Vx7mcifImk+2KKVg=;
-        b=ER/EhUYC5QkiYAW0NuWXmHh3nGBEqMeczo7bfaQfML9i+NLruK4Gh5CXsQ1oHEis+0
-         IE8o0YLOYLJEgxb+3fcFgTtNYhpBxdbhZ2FU1wH74ngVny8isWEvKLeOM1EUp6IuQsyR
-         sa0MRyDWpN+kwfVPNtsG1o0E1//U7Hlwu78BeVNbuGpyIbBfyOxvWvXUZjB1yvVO7M8/
-         RDioRr0MoDzQ/tz29Ggt1O30Q8GVzat1zaR+ApOHFm758kPj8fhguBvsclrvWsHN+jew
-         7VLz1NV9tYGbCnsdLjloB99a32LB5kA3JRDiwx9BLhg4TLrXqIQMWmvaDx4osSx0r6c6
-         TNJA==
-X-Gm-Message-State: APjAAAVrrtTmotSUsASqlWR6dyihUZRYtS0teQXGqlO9QGlhyuhg7PI8
-        CTzsWhJH7RePDyd49gStBA7jm8I1NLYgxGcliD0=
-X-Google-Smtp-Source: APXvYqwDJnmXPh1+p0V9jnah9Cftz47hQsDfVVyH6+VKTuHFMEr5sJTTgNmBTMY4L5m3/E6+pM7lmaFLG66wGDKmJn0=
-X-Received: by 2002:aca:4ac5:: with SMTP id x188mr7493713oia.148.1573822921804;
- Fri, 15 Nov 2019 05:02:01 -0800 (PST)
+        Fri, 15 Nov 2019 08:04:49 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36866 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727329AbfKONEt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 08:04:49 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFCx9Ue167692;
+        Fri, 15 Nov 2019 13:04:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=NFSSVbjhEqElsrA73XhmCVdsI7Nss0hsHyVS7FwP2+Q=;
+ b=YQVJAjOD8u/DCdzbTWgjB6kB+86XbwfNvVG7HB4og2jcOuYIoorw9Q0nkqXYcYRYisSN
+ aepKCWa+8+eYyaAJ3vCuvuCAxqGNJYt/T/V07mfYHzTeQo0Gy/ggjPSc0Vc98o2b30ul
+ wtXquJGr3i3w8r/zQiIYaXbhGct+RBGyxizIoCLdpAGfNU8GwaV4T7UQQmWSLq6/hBwU
+ oP2OyO7QXXejzW08cEid5+zGbKT/76G/p51uxVcWg5xjdIWdMshHO9vtZzBKNhgff9a4
+ Vam6PKjXqF83Nz2Y/U7zL6RKBmqe40HuI9EQLO5rpaip/GGr3Qnm3sGc1oSR8u82aGyS mw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2w9gxpk4b3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Nov 2019 13:04:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFCx7p0167338;
+        Fri, 15 Nov 2019 13:04:15 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2w9h14fam4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Nov 2019 13:04:15 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAFD48Hx001873;
+        Fri, 15 Nov 2019 13:04:08 GMT
+Received: from kadam.lan (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 15 Nov 2019 05:04:08 -0800
+Date:   Fri, 15 Nov 2019 16:03:59 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     jic23@kernel.org, devel@driverdev.osuosl.org, mark.rutland@arm.com,
+        lars@metafoo.de, biabeniamin@outlook.com,
+        Michael.Hennerich@analog.com, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        pmeerw@pmeerw.net, knaack.h@gmx.de,
+        Paul Cercueil <paul.cercueil@analog.com>
+Subject: Re: [PATCH v4 2/4] iio: adc: ad7091r5: Add scale and external VREF
+ support
+Message-ID: <20191115130359.GE19101@kadam.lan>
+References: <20191115122316.20893-1-beniamin.bia@analog.com>
+ <20191115122316.20893-2-beniamin.bia@analog.com>
 MIME-Version: 1.0
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com> <20190609190803.14815-4-jacek.anaszewski@gmail.com>
-In-Reply-To: <20190609190803.14815-4-jacek.anaszewski@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 15 Nov 2019 14:01:50 +0100
-Message-ID: <CAMuHMdXkQCVXdsbS1Tf+7wkafJ4JxhxXeh4R7OWOz5uGs-jL5Q@mail.gmail.com>
-Subject: Re: [PATCH v5 03/26] dt-bindings: leds: Add LED_FUNCTION definitions
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-leds@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-        dtor@google.com, Guenter Roeck <linux@roeck-us.net>,
-        Dan Murphy <dmurphy@ti.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Simon Shields <simon@lineageos.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115122316.20893-2-beniamin.bia@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911150120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911150120
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacek,
+On Fri, Nov 15, 2019 at 02:23:14PM +0200, Beniamin Bia wrote:
+> @@ -216,6 +240,21 @@ int ad7091r_probe(struct device *dev, const char *name,
+>  			return ret;
+>  	}
+>  
+> +	st->vref = devm_regulator_get_optional(dev, "vref");
+> +	if (IS_ERR(st->vref)) {
+> +		if (PTR_ERR(st->vref) == EPROBE_DEFER)
+                                      ^^^^^^^^^^^^^^^
+Missing - on EPROBE_DEFER.
 
-On Sun, Jun 9, 2019 at 9:09 PM Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
-> Add initial set of common LED function definitions.
->
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> +			return -EPROBE_DEFER;
+> +
+> +		st->vref = NULL;
+> +	} else {
+> +		ret = regulator_enable(st->vref);
+> +		if (ret)
+> +			return ret;
+> +		ret = devm_add_action_or_reset(dev, ad7091r_remove, st);
+> +		if (ret)
+> +			return ret;
+> +		}
 
-> --- a/include/dt-bindings/leds/common.h
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -30,4 +31,45 @@
->  #define LED_COLOR_ID_IR                7
->  #define LED_COLOR_ID_MAX       8
->
-> +/* Standard LED functions */
-> +#define LED_FUNCTION_ACTIVITY "activity"
+Curly brace is indented an extra tab.
 
-What's the appropriate function for "general purpose" or "user" LEDs on
-development boards, where the LEDs don't have fixed functions, unlike
-on real products?
-Perhaps just LED_FUNCTION_INDICATOR?
-
-I noticed your very initial submission defined LED_FUNCTION_USER "user".
-I couldn't find an explanation for the rationale behind its removal in later
-revisions, or any discussion asking for that.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+regards,
+dan carpenter
