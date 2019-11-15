@@ -2,98 +2,109 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39F6C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E5BC43141
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC29620732
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFEE2073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 19:56:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VPWwE9Rr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dfdTwFyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKOTsx (ORCPT
+        id S1726550AbfKOT4z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 14:48:53 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45015 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfKOTsx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 14:48:53 -0500
-Received: by mail-oi1-f195.google.com with SMTP id s71so9617195oih.11
-        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 11:48:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=89ki5gCyFaFazPM4MT3GuICeyjOsNZnH539wVj6PzCM=;
-        b=VPWwE9RrAqszxVB1mKYP6/s1DmY2ix8Y1fafLQWAW1wg1eaMprmTPWK/iPrrMUJsTB
-         7HEWh2OpE4cCL76nODlrp2JnwOpKlYYMVjdoYSIPaXcFxcjAoA5oC9tfbmZ86sZE87qS
-         kf1TVxe90rRN7AbhalLFMHiY57JoeloJ6qnB4tqTtyb/F3V9ygt/d+Fik42s54QbOsfP
-         /0Mp7D/W4KFUqzRxjFNjxRYHCOArf612hqwEDcodf4WmkpkKtQERh4i/bj62U2U7lTvu
-         L8iBUfClvKXkhGJjNB/jDJevtMJL7zKz0p46Bx1wFJVCEWjK5mwMY/8oQ/VumMGopZVZ
-         uyqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=89ki5gCyFaFazPM4MT3GuICeyjOsNZnH539wVj6PzCM=;
-        b=unwQLI/WHVrT+eBGxNjPDv/7ujVnKN/1Nxkk4oVYX9pzRmIybgTXJ+nGyIoKPfHe8P
-         AbtwMlm7/d+loqwPtiyqsl9uKzNNBT8YLVQSWRttdHfW8wheY7WHa1EF7gBu1mXNQudc
-         8AprTt6qD35Czw5fAkXezzvO8keGwL+QbDtdKWpYiMTxTNAaOgh4Mn21TjiRlkcquhe1
-         +H1qjbfHjNvNyRB0Kftsk7Y9LZZKcW+VQyCcQ1kbK5TFA/E/YBEAPwiXNqtKfgoP3VPX
-         Go+FPvSaOIrEzzpTUS+XXwk3rigO1MLpyNm6+4ekUndsXo8Ea52L5F5OFU9zmgGelb8Y
-         LqFg==
-X-Gm-Message-State: APjAAAUC2lpUr8Y4xNpq25uB0gtQ6coggJCt06TcEQlSqj3Djd0SgAxD
-        9XON79ClTFmwsbwGOkO4OHLARA==
-X-Google-Smtp-Source: APXvYqxC+q6bqr48ncu6FV5lYoc6la8mAyX4ATuvLwxlhhukNSzuVzK+EEvv648084tqxyvuAKlo+Q==
-X-Received: by 2002:aca:c4d3:: with SMTP id u202mr9701947oif.59.1573847330775;
-        Fri, 15 Nov 2019 11:48:50 -0800 (PST)
-Received: from localhost (42.sub-174-240-141.myvzw.com. [174.240.141.42])
-        by smtp.gmail.com with ESMTPSA id z16sm3100151oih.56.2019.11.15.11.48.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 11:48:50 -0800 (PST)
-Date:   Fri, 15 Nov 2019 11:48:49 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Green Wan <green.wan@sifive.com>
-cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/4] riscv: dts: add support for PDMA device of HiFive
- Unleashed Rev A00
-In-Reply-To: <20191107084955.7580-3-green.wan@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1911151148400.3813@viisi.sifive.com>
-References: <20191107084955.7580-1-green.wan@sifive.com> <20191107084955.7580-3-green.wan@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 15 Nov 2019 14:56:55 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49962 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfKOT4z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 14:56:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
+        In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7naFpllFQ3+7RciL2Lvr1sFHQDInwMFYUeKYOibh0+8=; b=dfdTwFyvfPdEJhR6Dd2wSmgMOr
+        gt7jLFDHlTV2+2wxNKmAHGMrJ9e7KTUAb7ZGjShQ+eS49rqJ+JIsimh7RBDD3yv2+rzE4b9nRlwmu
+        +6z3xUy/WmIaBbz646yK4r25CbnWdRKmWIGHqS5zT7hOtSYysw6oKus7UNDCrpePA2r6AgoiVZL5O
+        ouFksnoBK6WuUgms+ZCUikDrJnZ+ECdVaph/GCep+SFs/SOUoHsKKBL8/xLULGwih/siBrcjCIva+
+        Hp798CheNebAff9rCm8rJ6ntF+4sU9+lDoRJXZGHGSHqHwl7Gm6dzMCtZd8Bq/3iE4HAEqz/r4zax
+        Y25AU02A==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([2001:4d48:ad52:3201:222:68ff:fe15:37dd]:33160 helo=rmk-PC.armlinux.org.uk)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1iVhi2-00036l-QY; Fri, 15 Nov 2019 19:56:46 +0000
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1iVhi2-0007au-2S; Fri, 15 Nov 2019 19:56:46 +0000
+In-Reply-To: <20191115195339.GR25745@shell.armlinux.org.uk>
+References: <20191115195339.GR25745@shell.armlinux.org.uk>
+From:   Russell King <rmk+kernel@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH net-next v2 1/3] dt-bindings: net: add ethernet controller and
+ phy sfp property
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1iVhi2-0007au-2S@rmk-PC.armlinux.org.uk>
+Date:   Fri, 15 Nov 2019 19:56:46 +0000
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 7 Nov 2019, Green Wan wrote:
+Document the missing sfp property for ethernet controllers (which
+has existed for some time) which is being extended to ethernet PHYs.
 
-> Add PDMA support to (arch/riscv/boot/dts/sifive/fu540-c000.dtsi)
-> 
-> Signed-off-by: Green Wan <green.wan@sifive.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ .../devicetree/bindings/net/ethernet-controller.yaml         | 5 +++++
+ Documentation/devicetree/bindings/net/ethernet-phy.yaml      | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-Thanks, queued for v5.5-rc1.
+diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+index 0e7c31794ae6..ac471b60ed6a 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+@@ -121,6 +121,11 @@ title: Ethernet Controller Generic Binding
+       and is useful for determining certain configuration settings
+       such as flow control thresholds.
+ 
++  sfp:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      Specifies a reference to a node representing a SFP cage.
++
+   tx-fifo-depth:
+     $ref: /schemas/types.yaml#definitions/uint32
+     description:
+diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+index f70f18ff821f..8927941c74bb 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+@@ -153,6 +153,11 @@ title: Ethernet PHY Generic Binding
+       Delay after the reset was deasserted in microseconds. If
+       this property is missing the delay will be skipped.
+ 
++  sfp:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      Specifies a reference to a node representing a SFP cage.
++
+ required:
+   - reg
+ 
+-- 
+2.20.1
 
-
-- Paul
