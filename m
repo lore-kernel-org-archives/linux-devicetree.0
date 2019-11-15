@@ -2,225 +2,157 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B4FC33CA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5FAC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3665B20733
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF7420733
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dms2AT6y"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="J+v68EU6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CyApTf7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfKOJaZ (ORCPT
+        id S1727031AbfKOJal (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:30:25 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:39773 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfKOJaY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 04:30:24 -0500
-Received: by mail-ua1-f68.google.com with SMTP id r13so2809928uan.6
-        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 01:30:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U0K8GRiXqSgIpN48tBNHcV+jI/oiDgvDhl7ShZIVOhE=;
-        b=dms2AT6yjYIujdBp5vLXzT3QSWBUJdp+Ja/bHoPGCKS84bKo37q9DYAWmQ+OhvnX47
-         wQESQqhFjyBsKxLBW14sJM6Kkxy/Yvicy1Vttr/bmnfFi1qkmbGWwvZC6/I2T2hc0dc4
-         E6e4jsZ8R7HPGQj7VhbAeZXMKd4W+mV9z0NBs1wYV93Cw7drye59WzshJHguKEkNXCPt
-         fHF0ouNrAUlgmAVwGBwpW7V1N92+w5PRrvnambZTbfMnbWUBMJIPHZCBuMz5iDZ3km48
-         QxwxVl+99j/KVNaPgNldx2y1f+snHTdbPP0IYzr0FUgyc31xgzkXkCrLt9Puderh1g1W
-         O9fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U0K8GRiXqSgIpN48tBNHcV+jI/oiDgvDhl7ShZIVOhE=;
-        b=qtUOmuhRBFvo8t0DYBcU3R0w5PuwRZJeyVk5a1pZe324FDqYq6Eo7jc+8SzxZIfRgP
-         5PSDoLUNCZA1nnAc/trwGPvhfwDhrnE3oXVRbg9wcg6tO8IP0G7+MVZFYzydGoFn1LtL
-         YpZPQ1o99nRPbS2V2W4XkIZQcbChMHF2V1jDDfJ59qicFsflGaGGHlbFj72VvhBGMhbM
-         QBOsb3irOdu95C0q/H3U5yTMhLV119OuRN94qbtxcz+4RmKhHFQxeQxZWX/b97qV5Oou
-         CWwLnCiwqdLo4liWvos5zofsyJ371DTXjgmTbVRKR+pDk8m0sJJ4UErZYcYptDXQt87q
-         69kg==
-X-Gm-Message-State: APjAAAX6EQ/YgVtRNbeXt5G6jqJO4nb09XBFZI77iqI5z3UlgBpMFj7E
-        DG9Vv9nS9tdmjLJzGm1nRlJCRQHb7MJA/9vRjfipJQ==
-X-Google-Smtp-Source: APXvYqzU6WJnGjb2iLphku/+v8QsaQ8unugsql39hfm0KRqoySp6l08BYKltD9R0v8e99ePYA9xvGwkzshWggfN0FEM=
-X-Received: by 2002:ab0:74cd:: with SMTP id f13mr8348393uaq.104.1573810223324;
- Fri, 15 Nov 2019 01:30:23 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1573122644.git.hns@goldelico.com> <CAPDyKFrntf2Kd9Zf7uxRCUk_OrKD8B3xOKmvPaf04X21L5HwWA@mail.gmail.com>
- <5F5A5FC0-8F91-4D5B-9EF6-AF36FE38B588@goldelico.com>
-In-Reply-To: <5F5A5FC0-8F91-4D5B-9EF6-AF36FE38B588@goldelico.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 15 Nov 2019 10:29:46 +0100
-Message-ID: <CAPDyKFr=Uk1i0c=3WvuOYCQ__Skpr-9mjVM2Yqst-hd8zY6OeQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] OpenPandora: make wl1251 connected to mmc3 sdio
- port of OpenPandora work again
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Petr Mladek <pmladek@suse.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        kernel@pyra-handheld.com,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        David Sterba <dsterba@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Nov 2019 04:30:41 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55998 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfKOJal (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 04:30:41 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 43A54615C4; Fri, 15 Nov 2019 09:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573810240;
+        bh=PiIWvdSQZsP6jGeaQgl/Q7FZ/cwUfJpPJrXC/qOCe0U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J+v68EU6wikCqor8r+bmbmV88HB93OPCOBT63IGrx4kWP6bIbWmeVzJW/zIzwnAqo
+         vcgrDhtDFQhW0j39U+pjldS1Nah2NZadbQDY9felshgWXwt7F9JcrOduRJsjmqVzwp
+         W3+U4WhGUGKaR5TCwzDcIAWBkAP3drmsPWw0/Vxs=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60E6061497;
+        Fri, 15 Nov 2019 09:30:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573810226;
+        bh=PiIWvdSQZsP6jGeaQgl/Q7FZ/cwUfJpPJrXC/qOCe0U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CyApTf7f4vOVfbCz2yVQ5LVXyDJM+utozNP6I2v61oazwq7kHcZWSVJEXYfSFdLJD
+         Z21rObgBQXDraro5SiAuLagdksYxHpc+5WiflJC+SPtrMavuuP7xWzAayvjOT53CDe
+         D7c3XJD2LFTz6BnPLAXXI2L/JI6Esr6RDsYGuZ5I=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60E6061497
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     linux-wireless@vger.kernel.org
+Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 27/49] ath11k: add hal_tx.h
+Date:   Fri, 15 Nov 2019 11:28:51 +0200
+Message-Id: <1573810153-29623-28-git-send-email-kvalo@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573810153-29623-1-git-send-email-kvalo@codeaurora.org>
+References: <1573810153-29623-1-git-send-email-kvalo@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 14 Nov 2019 at 16:16, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Hi Ulf,
->
-> > Am 14.11.2019 um 15:18 schrieb Ulf Hansson <ulf.hansson@linaro.org>:
-> >
-> > On Thu, 7 Nov 2019 at 11:31, H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >>
-> >>
-> >> * add a revisit note for special wl1251 handling code because it should
-> >>  be solved more generic in mmc core - suggested by Ulf Hansson <ulf.hansson@linaro.org>
-> >> * remove init_card callback from platform_data/hsmmc-omap.h - suggested by Ulf Hansson <ulf.hansson@linaro.org>
-> >> * remove obstructive always-on for vwlan regulator - suggested by Ulf Hansson <ulf.hansson@linaro.org>
-> >> * rename DT node - suggested by Rob Herring <robh@kernel.org>
-> >> * fix ARM: dts: subject prefix - suggested by Tony Lindgren <tony@atomide.com>
-> >> * also remove omap2_hsmmc_info and obc-y line in Makefile - suggested by Tony Lindgren <tony@atomide.com>
-> >
-> > No further comments from my side. Let's just agree on how to deal with
-> > the ti,power-gpio, then I can apply this.
->
-> I'd say it can be a separate patch since it does not fix the Pandora
-> issues, but is a new and independent optimization.
->
-> And in case someone complains and uses it for some out-of tree purpose
-> it can be discussed or even be reverted easier if it is a separate patch.
->
-> I can do it in the next days.
+(patches split for easier review, see the cover letter for more)
 
-Okay, that sounds reasonable.
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+---
+ drivers/net/wireless/ath/ath11k/hal_tx.h | 80 ++++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-In the meantime, I have queued up the series on my next branch (for v5.5).
+diff --git a/drivers/net/wireless/ath/ath11k/hal_tx.h b/drivers/net/wireless/ath/ath11k/hal_tx.h
+new file mode 100644
+index 000000000000..f955070bcf1e
+--- /dev/null
++++ b/drivers/net/wireless/ath/ath11k/hal_tx.h
+@@ -0,0 +1,80 @@
++/* SPDX-License-Identifier: BSD-3-Clause-Clear */
++/*
++ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
++ */
++
++#ifndef ATH11K_HAL_TX_H
++#define ATH11K_HAL_TX_H
++
++#include "hal_desc.h"
++
++#define HAL_TX_ADDRX_EN			1
++#define HAL_TX_ADDRY_EN			2
++
++#define HAL_TX_ADDR_SEARCH_INDEX	0
++#define HAL_TX_ADDR_SEARCH_DEFAULT	1
++
++struct hal_tx_info {
++	u16 meta_data_flags; /* %HAL_TCL_DATA_CMD_INFO0_META_ */
++	u8 ring_id;
++	u32 desc_id;
++	enum hal_tcl_desc_type type;
++	enum hal_tcl_encap_type encap_type;
++	dma_addr_t paddr;
++	u32 data_len;
++	u32 pkt_offset;
++	enum hal_encrypt_type encrypt_type;
++	u32 flags0; /* %HAL_TCL_DATA_CMD_INFO1_ */
++	u32 flags1; /* %HAL_TCL_DATA_CMD_INFO2_ */
++	u16 addr_search_flags; /* %HAL_TCL_DATA_CMD_INFO0_ADDR(X/Y)_ */
++	u16 bss_ast_hash;
++	u8 tid;
++	u8 search_type; /* %HAL_TX_ADDR_SEARCH_ */
++	u8 lmac_id;
++	u8 dscp_tid_tbl_idx;
++};
++
++/* TODO: Check if the actual desc macros can be used instead */
++#define HAL_TX_STATUS_FLAGS_FIRST_MSDU		BIT(0)
++#define HAL_TX_STATUS_FLAGS_LAST_MSDU		BIT(1)
++#define HAL_TX_STATUS_FLAGS_MSDU_IN_AMSDU	BIT(2)
++#define HAL_TX_STATUS_FLAGS_RATE_STATS_VALID	BIT(3)
++#define HAL_TX_STATUS_FLAGS_RATE_LDPC		BIT(4)
++#define HAL_TX_STATUS_FLAGS_RATE_STBC		BIT(5)
++#define HAL_TX_STATUS_FLAGS_OFDMA		BIT(6)
++
++#define HAL_TX_STATUS_DESC_LEN		sizeof(struct hal_wbm_release_ring)
++
++/* Tx status parsed from srng desc */
++struct hal_tx_status {
++	enum hal_wbm_rel_src_module buf_rel_source;
++	u32 desc_id;
++	enum hal_wbm_tqm_rel_reason status;
++	u8 ack_rssi;
++	enum hal_tx_rate_stats_bw bw;
++	enum hal_tx_rate_stats_pkt_type pkt_type;
++	enum hal_tx_rate_stats_sgi sgi;
++	u8 mcs;
++	u16 num_tones_in_ru;
++	u32 flags; /* %HAL_TX_STATUS_FLAGS_ */
++	u32 tsf;
++	u32 ppdu_id;
++	u8 try_cnt;
++	u8 tid;
++	u16 peer_id;
++};
++
++void ath11k_hal_tx_cmd_desc_setup(struct ath11k_base *ab, void *cmd,
++				  struct hal_tx_info *ti);
++void ath11k_hal_tx_desc_sync(void *tx_desc_cached, void *hw_desc);
++void ath11k_hal_tx_status_parse(struct ath11k_base *ab,
++				struct hal_wbm_release_ring *desc,
++				struct hal_tx_status *ts);
++void ath11k_hal_tx_status_desc_sync(void *hw_desc, void *local_desc);
++void ath11k_hal_tx_set_dscp_tid_map(struct ath11k_base *ab, int id);
++int ath11k_hal_reo_cmd_send(struct ath11k_base *ab, struct hal_srng *srng,
++			    enum hal_reo_cmd_type type,
++			    struct ath11k_hal_reo_cmd *cmd);
++void ath11k_hal_tx_init_data_ring(struct ath11k_base *ab,
++				  struct hal_srng *srng);
++#endif
 
-I fixed up a couple of complaints from checkpatch, and also added
-stable tags for the first two patches in the series, as that what
-missing.
-
-Kind regards
-Uffe
-
-
->
-> > Thanks a lot for fixing all this mess!
->
-> I hope the users also appreciate our work.
->
-> Best regards,
-> Nikolaus
->
-> >
-> > Kind regards
-> > Uffe
-> >
-> >>
-> >> PATCH V2 2019-10-19 20:41:47:
-> >> * added acked-by for wl1251 patches - Kalle Valo <kvalo@codeaurora.org>
-> >> * really removed old pdata-quirks code (not through #if 0)
-> >> * splited out a partial revert of
-> >>        efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
-> >>  because that was introduced after v4.19 and stops the removal of
-> >>  the pdata-quirks patch from cleanly applying to v4.9, v4.14, v4.19
-> >>  - reported by Sasha Levin <sashal@kernel.org>
-> >> * added a new patch to remove old omap hsmmc since pdata quirks
-> >>  were last user - suggested by Tony Lindgren <tony@atomide.com>
-> >>
-> >> PATCH V1 2019-10-18 22:25:39:
-> >> Here we have a set of scattered patches to make the OpenPandora WiFi work again.
-> >>
-> >> v4.7 did break the pdata-quirks which made the mmc3 interface
-> >> fail completely, because some code now assumes device tree
-> >> based instantiation.
-> >>
-> >> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-> >>
-> >> v4.11 did break the sdio qirks for wl1251 which made the driver no longer
-> >> load, although the device was found as an sdio client.
-> >>
-> >> Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-> >>
-> >> To solve these issues:
-> >> * we convert mmc3 and wl1251 initialization from pdata-quirks
-> >>  to device tree
-> >> * we make the wl1251 driver read properties from device tree
-> >> * we fix the mmc core vendor ids and quirks
-> >> * we fix the wl1251 (and wl1271) driver to use only vendor ids
-> >>  from header file instead of (potentially conflicting) local
-> >>  definitions
-> >>
-> >>
-> >> H. Nikolaus Schaller (12):
-> >>  Documentation: dt: wireless: update wl1251 for sdio
-> >>  net: wireless: ti: wl1251 add device tree support
-> >>  ARM: dts: pandora-common: define wl1251 as child node of mmc3
-> >>  mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid
-> >>    of pandora_wl1251_init_card
-> >>  omap: pdata-quirks: revert pandora specific gpiod additions
-> >>  omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
-> >>  omap: remove omap2_hsmmc_info in old hsmmc.[ch] and update Makefile
-> >>  mmc: host: omap-hsmmc: remove init_card pdata callback from pdata
-> >>  mmc: sdio: fix wl1251 vendor id
-> >>  mmc: core: fix wl1251 sdio quirks
-> >>  net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
-> >>  net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
-> >>
-> >> .../bindings/net/wireless/ti,wl1251.txt       |  26 +++
-> >> arch/arm/boot/dts/omap3-pandora-common.dtsi   |  36 +++-
-> >> arch/arm/mach-omap2/Makefile                  |   3 -
-> >> arch/arm/mach-omap2/common.h                  |   1 -
-> >> arch/arm/mach-omap2/hsmmc.c                   | 171 ------------------
-> >> arch/arm/mach-omap2/hsmmc.h                   |  32 ----
-> >> arch/arm/mach-omap2/pdata-quirks.c            | 105 -----------
-> >> drivers/mmc/core/quirks.h                     |   7 +
-> >> drivers/mmc/host/omap_hsmmc.c                 |  30 ++-
-> >> drivers/net/wireless/ti/wl1251/sdio.c         |  23 ++-
-> >> drivers/net/wireless/ti/wlcore/sdio.c         |   8 -
-> >> include/linux/mmc/sdio_ids.h                  |   2 +
-> >> include/linux/platform_data/hsmmc-omap.h      |   3 -
-> >> 13 files changed, 111 insertions(+), 336 deletions(-)
-> >> delete mode 100644 arch/arm/mach-omap2/hsmmc.c
-> >> delete mode 100644 arch/arm/mach-omap2/hsmmc.h
-> >>
-> >> --
-> >> 2.23.0
-> >>
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
