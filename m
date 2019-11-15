@@ -2,98 +2,90 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9174AC33C9A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 02:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DD3C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 03:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEE920718
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 02:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8A9206E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 03:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfKOCbK (ORCPT
+        id S1726977AbfKODDX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 21:31:10 -0500
-Received: from mga18.intel.com ([134.134.136.126]:34174 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbfKOCbJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 21:31:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 18:31:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,306,1569308400"; 
-   d="scan'208";a="207991946"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga003.jf.intel.com with ESMTP; 14 Nov 2019 18:31:05 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com
-Cc:     linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v7 3/3] PCI: artpec6: Configure FTS with dwc helper function
-Date:   Fri, 15 Nov 2019 10:30:44 +0800
-Message-Id: <681724c95e9a15083337d67a45350c1bf5e4ad8d.1573784557.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573784557.git.eswara.kota@linux.intel.com>
-References: <cover.1573784557.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1573784557.git.eswara.kota@linux.intel.com>
-References: <cover.1573784557.git.eswara.kota@linux.intel.com>
+        Thu, 14 Nov 2019 22:03:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49994 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726674AbfKODDX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 22:03:23 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5F901AFCD;
+        Fri, 15 Nov 2019 03:03:21 +0000 (UTC)
+Subject: Re: [PATCH v3 0/2] arm64: dts: Initial RTD1619 SoC and Realtek
+ Mjolnir EVB support
+To:     James Tai <james.tai@realtek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        'DTML' <devicetree@vger.kernel.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <540b62715e77486485365081e992af76@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <44a543b9-988f-b56c-ca70-7d1faa40bffb@suse.de>
+Date:   Fri, 15 Nov 2019 04:03:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <540b62715e77486485365081e992af76@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use DesignWare helper functions to configure Fast Training
-Sequence. Drop the respective code in the driver.
+Hi James,
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
-Changes on v7:
-	No change
+Am 12.11.19 um 16:45 schrieb James Tai:
+> This series adds initial Device Trees for Realtek RTD1619 SoC and
+> Realtek Mjolnir EVB.
+> 
+> v2 -> v3:
+> * Adjust the address-cells and address-size property of root node
+> * Adjust ranges property of r-bus node
+> * Adjust uart node addressing
+> * Add comments for uart node
+> * Revert soc node
+> 
+> v1 -> v2:
+> * Define compatible strings for Realtek RTD1619 SoC and Realtek Mjolnir
+> * Add uart1 and uart2 device node into rtd16xx.dtsi
+> * move cpus node and the interrupt-affinity into rtd16xx.dtsi
+> * Specify the r-bus ranges
 
-Changes on v6:
-	Typo fix:s/DesugnWare/DesignWare
-	Update 'Utilize DesignWare' --> 'Use DesignWare'
-	Add Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Some observations of what is not in this patchset:
 
- drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+* There is neither /memreserve/ nor /reserved-memory here. What about
+Boot ROM, TEE and RPC?
+* The reset controllers for the UARTs are missing. Can we take the same
+shortcut as in my RTD1395 patch to add them now, i.e. are they
+compatible with RTD1295?
+* Is the watchdog incompatible, or is it just not enabled by the
+bootloader and depends on future, e.g., clk patches?
+* Is the RTC not enabled on boot, similar to the other SoCs?
 
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index d00252bd8fae..02d93b8c7942 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
- #define ACK_N_FTS_MASK			GENMASK(15, 8)
- #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
- 
--#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
--#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
--
- /* ARTPEC-6 specific registers */
- #define PCIECFG				0x18
- #define  PCIECFG_DBG_OEN		BIT(24)
-@@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
- 	 * Set the Number of Fast Training Sequences that the core
- 	 * advertises as its N_FTS during Gen2 or Gen3 link training.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &= ~FAST_TRAINING_SEQ_MASK;
--	val |= FAST_TRAINING_SEQ(180);
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_link_set_n_fts(pci, 180);
- }
- 
- static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
+Regards,
+Andreas
+
 -- 
-2.11.0
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
