@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CAAC432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 18:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6E9C43141
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 18:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E70F20740
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 18:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E9B20740
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 18:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUJy6L0F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZfQzyGBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfKOSny (ORCPT
+        id S1727211AbfKOSoB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:43:54 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36446 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfKOSnx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 13:43:53 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c22so11494820wmd.1;
-        Fri, 15 Nov 2019 10:43:52 -0800 (PST)
+        Fri, 15 Nov 2019 13:44:01 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38611 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727176AbfKOSn5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 13:43:57 -0500
+Received: by mail-wr1-f67.google.com with SMTP id i12so12049679wro.5;
+        Fri, 15 Nov 2019 10:43:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=44lDiZC/HyWHizJUTFlT+jmrIvxAJf5o2GDXJq7Fi20=;
-        b=AUJy6L0FiPANesawRIslnabTIItR6XMOS4WHYQ3D6pc8miNDb/Z5X11gNI1eTl9q5q
-         n3GmIiY8X9Nr7Lk5icpkz585MPqmz9RqdiCLJ+JJBHr9Yfk9/vSAAugoXB1FA5L7dSqi
-         2AO3pQaBc65xkk/eh4X21dXAGMs0Nls620cHZyeBymyKKUUjHI/E+zU/NFppB9oTvxt3
-         5jyhjIxeYtTiYjsC6NiptPWC8kjJRQBCIg2oiqPBsr8M0YOQlhj3CjhgSHI4ZWL4tWyK
-         /EPJEkyZQSoNIel0I+TSbq8m8cRC/Q1U3lboURLdfxOxeVrtMYWNI5m420a24NxJGUS1
-         G9Ig==
+        bh=wS4OYwLXLEvBtINm/7GwVk3W/9nI5ZzRdQ3AYe/w/RE=;
+        b=ZfQzyGBTDq2JsmAF6Eh9iDl+Q8ae6hWrlfyq1qDABegjvni4ncRQe7VfUvjwF8NZOm
+         zqDIxIfzys9VdjodVY+M+y+H4Y23arlmvL4yTcmzZyH2WBG+dCAvYIUxSV1UPQjw5zI6
+         2kUubxMAG/576F7xmvw+IHx3iBzS7qPXTzLjKhM44OHG7CY4rBS77k9gnqwkvOI9KDYZ
+         WrtUkiK5hOPFyrrW3YC8xUVygOMuS3UWCsnlpQbBSCGcX9bP0WvjSN13B2FpG/b2FkAp
+         0Rr/XhxLZFXTZSWI0CiMysGIAvsl1do3BL0JXEYwRQRsvYnTS/FiHQ+fZGe9NBuJWEUH
+         pPSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=44lDiZC/HyWHizJUTFlT+jmrIvxAJf5o2GDXJq7Fi20=;
-        b=h71VNfmb3RJDlZuBvdLgAc/BwfsJwsLdjuMxpFCW8KzTkFbTg2kALOEmJPpFrC5eSu
-         vMo65Q/zkNW6a4fach4RxfJfueRThKEQEZ4zvnz+yHSn2FJDETL9v9oBPYPIopXaQ7la
-         TTHZurokIKY/oDpotH3uS3JfwIk7txdRa7Z05DwuXVCj17pgtDwuoicwDFAcIXjhvQMw
-         svcNdRmDkE+6w1gtoC76X5bEr8pfCI3iobBR/yUfSgAjxdnj3LYPVbtZP7w0np99nm+C
-         jGHQ69dNE86LlkHtok5ND22NPw99lFomSSsTVB6ZCUAsSz/6+mODMMwvHIICzA0hr6hk
-         ytbg==
-X-Gm-Message-State: APjAAAU9r2k9/WMs/rZVvcYGqUPJS6rjOntzShvasmACB32+0tUUIitK
-        qx/pG0Az8srP7HwFXZqEN3IhrNQBw9Y=
-X-Google-Smtp-Source: APXvYqwsBuwArKC2zsEagHcuDz0VELwiJxoMPPhcSFoPYDNRSb2qkuibjkIOivEmh4xMhP4E639SOg==
-X-Received: by 2002:a05:600c:2041:: with SMTP id p1mr15806760wmg.11.1573843431625;
-        Fri, 15 Nov 2019 10:43:51 -0800 (PST)
+        bh=wS4OYwLXLEvBtINm/7GwVk3W/9nI5ZzRdQ3AYe/w/RE=;
+        b=o/1TQH8EnJrQde6yw6cR7Rmnm3Wo5lnqIu7lUCCe/szPoAyImM0/bpVfg51mOhh9jE
+         sl2ZQS2uZsCUBpUFjgYEHw7GH11Oik6suyWt5u7HHZDIjX6DoOt3geZuffVsLv7Lf/zz
+         lIbPgFNKBOej/SPM7ESWBEKTrIv7i+sq6kWpGny/VwUqp32CzJIs4BFhgRgFPSQcBUL5
+         gju2y1nkFncisjwQKOpjpnucff/VR854f+YKP/41KYyEILLiVm31dvj/F1ae0SUSDrPa
+         Nb0X6IwGWUKnPXnQJpWuCdDWjrfsIYdCkoX0W/Zz4eOrfqcmE/dqWxygA4WNty5PAwOs
+         rAFQ==
+X-Gm-Message-State: APjAAAVWqQRTt635tuLkX49knCMm8ucwKxnGTnNN5M1y1lhXY8U4tfim
+        +be6r5Jn1u8pDo/KSOFjXPKA7vTCsbI=
+X-Google-Smtp-Source: APXvYqx5Ackgu5oO7MlkxDLNeqrXtQzAqtgQjJXWKc6eQCl5NZT10rv9zLGyYs9Wmoopnoh/iyFT7A==
+X-Received: by 2002:adf:de86:: with SMTP id w6mr16923037wrl.220.1573843436058;
+        Fri, 15 Nov 2019 10:43:56 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id g138sm2620989wmg.11.2019.11.15.10.43.49
+        by smtp.gmail.com with ESMTPSA id g138sm2620989wmg.11.2019.11.15.10.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 10:43:51 -0800 (PST)
+        Fri, 15 Nov 2019 10:43:55 -0800 (PST)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>,
@@ -65,9 +65,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 10/13] phy: usb: PHY's MDIO registers not accessible without device installed
-Date:   Fri, 15 Nov 2019 13:42:20 -0500
-Message-Id: <20191115184223.41504-11-alcooperx@gmail.com>
+Subject: [PATCH v2 12/13] phy: usb: USB driver is crashing during S3 resume on 7216
+Date:   Fri, 15 Nov 2019 13:42:22 -0500
+Message-Id: <20191115184223.41504-13-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115184223.41504-1-alcooperx@gmail.com>
 References: <20191115184223.41504-1-alcooperx@gmail.com>
@@ -76,44 +76,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When there is no device connected and FSM is enabled, the XHCI puts
-the PHY into suspend mode.  When the PHY is put into suspend mode
-the USB LDO powers down the PHY. This causes the MDIO to be
-inaccessible and its registers reset to default. The fix is to
-disable FSM.
+This is a result of the USB 2.0 clocks not being disabled/enabled
+during suspend/resume on XHCI only systems.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/phy/broadcom/phy-brcm-usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-index bf138867efb1..fe3f653c64a7 100644
---- a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-@@ -56,6 +56,7 @@
- #define USB_PHY_PLL_LDO_CTL		0x08
- #define   USB_PHY_PLL_LDO_CTL_AFE_CORERDY_MASK		0x00000004
- #define USB_PHY_UTMI_CTL_1		0x04
-+#define   USB_PHY_UTMI_CTL_1_POWER_UP_FSM_EN_MASK	0x00000800
- #define   USB_PHY_UTMI_CTL_1_PHY_MODE_MASK		0x0000000c
- #define   USB_PHY_UTMI_CTL_1_PHY_MODE_SHIFT		2
- #define USB_PHY_STATUS			0x20
-@@ -229,6 +230,14 @@ static void usb_init_common_7211b0(struct brcm_usb_init_params *params)
- 
- 	usb_init_common(params);
- 
-+	/*
-+	 * Disable FSM, otherwise the PHY will auto suspend when no
-+	 * device is connected and will be reset on resume.
-+	 */
-+	reg = brcm_usb_readl(usb_phy + USB_PHY_UTMI_CTL_1);
-+	reg &= ~USB_PHY_UTMI_CTL_1_POWER_UP_FSM_EN_MASK;
-+	brcm_usb_writel(reg, usb_phy + USB_PHY_UTMI_CTL_1);
-+
- 	usb2_eye_fix_7211b0(params);
- }
- 
+diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
+index cc5763ace3ad..1ab44f54244b 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb.c
++++ b/drivers/phy/broadcom/phy-brcm-usb.c
+@@ -543,7 +543,7 @@ static int brcm_usb_phy_suspend(struct device *dev)
+ 		brcm_usb_wake_enable(&priv->ini, true);
+ 		if (priv->phys[BRCM_USB_PHY_3_0].inited)
+ 			clk_disable_unprepare(priv->usb_30_clk);
+-		if (priv->phys[BRCM_USB_PHY_2_0].inited)
++		if (priv->phys[BRCM_USB_PHY_2_0].inited || !priv->has_eohci)
+ 			clk_disable_unprepare(priv->usb_20_clk);
+ 		if (priv->wake_irq >= 0)
+ 			enable_irq_wake(priv->wake_irq);
 -- 
 2.17.1
 
