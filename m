@@ -5,69 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B357C33C99
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE95C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D872077B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E029020748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyyUxA5g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yG/n0v4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfKOMRn (ORCPT
+        id S1727483AbfKOMSB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:17:43 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:47069 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727272AbfKOMRm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 07:17:42 -0500
-Received: by mail-lf1-f68.google.com with SMTP id o65so7833246lff.13
-        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 04:17:40 -0800 (PST)
+        Fri, 15 Nov 2019 07:18:01 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40732 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727413AbfKOMSB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 07:18:01 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q2so10483456ljg.7
+        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 04:17:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WjYI/X9KhLpPe+dM6Xb8a7TPwu69OizRLxEzrmHuCFU=;
-        b=hyyUxA5gdn4bskn0ZMaZCkdLeEDoWoWMTf8lZ7rmIlwT1VoZOGOMEkYbpQqVDgsfBi
-         l5z0uzX79gRiW3zEsCJEc3M+x8gocqPrhDjneeMQ/Uxd86EZE4Aijb8x3vRh1pwR0vNA
-         01AM7aW2/egNsiFrR/CKmnC5fepi/+H1wYz1XyKwiduIkMmn9Wni8r58C2iVEqXOtRgP
-         FygXOrtDOzH8dvxdDcQzk7Nziovb7SggUEVwk06S3/w5oNcRnO7RM1ux/xk+IePLPcbC
-         mSbqaMs84yYBmTgdtvOeJv7LxIwOV0v0oZPcmx+TFfHgqECxpSMXBdoKOTOEuoOPRq7z
-         Yx9Q==
+        bh=GzXbFQkPrKMVsons+QpYWmVJ2fxp7Rx5snNgvCvieVY=;
+        b=yG/n0v4MhRYVnb5vUXGkRi6oDV6K/u1lsPBGqqDtMe9eQPej0mbaUgAxww7zpeDK3V
+         0yAsmiPtDAfY89uW8P19F6ARJ03M6WTr8BJ/Qgo82odDvha5POqGBBtsEFiek1YoOUMs
+         +Rgk4MvL/tX7GyolCqh71czAJXhVeYhVCzX8tS6Ix5JvtzkB7/oxMFEz4vgV4zVHIx8D
+         79iMkpCODZXATEcqCTGdIw9ICPeSxz4GUmIX5oFsZ1CuanHEQtNuISSmvmoK7zyNASvH
+         aKY2eXwIDPXiv5Yn2cjuwUSmX0z/mLlKFwd8eRcaH3DBDOEQ4r3xjZqdVZN2//o/jQLk
+         oNsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WjYI/X9KhLpPe+dM6Xb8a7TPwu69OizRLxEzrmHuCFU=;
-        b=mfJNGC+alvrdlseznnAl3yQNUH1ZxPUlU7rIU2pN7DCUNSZQUEH31r3+IQOm7TgFGf
-         x2XAd0OkzWUq0Gu31JFzBb14fDrF53TMSx4cv0vNuvkrBiu8u6LtOixbD9wMgk4xy9Mh
-         KbwQsY2pobR+2o0eUMJt6z03PEVozsA4DwzBrNJhYbEN9ZA/cKj3pygyJ7WCg/S+4bbF
-         /gOc8X24U1kJ4kSvx8luEecvPiOSaO0GRdpMMMN28/XxfFKbQWpUCRqdFi9wNpW6TZpa
-         mFUc24fJSxcGvIcuVswV0s17OOOrB9KVdSLqFHSjO5l1G60k97+XZHa7Re3b1A/9hZg9
-         aP/g==
-X-Gm-Message-State: APjAAAWkDKDBEcSehGZ7+h5BxBghkfG91fpFIyP1mp8yR0F0jYZTsHHH
-        N6ftIdxNW4/aPDzSYykVIHwcGw==
-X-Google-Smtp-Source: APXvYqx9qd14EnMDllQArw8rO5lIJb+BFcYr8n00pdazSp1RmuothxW3F4Wv7Y0suyVvSD5DGLveQg==
-X-Received: by 2002:a19:41d7:: with SMTP id o206mr10887081lfa.188.1573820259986;
-        Fri, 15 Nov 2019 04:17:39 -0800 (PST)
+        bh=GzXbFQkPrKMVsons+QpYWmVJ2fxp7Rx5snNgvCvieVY=;
+        b=FvUwF7dy8XD6JXx6qzSOeL+nCx5TLbyvKZCuDOgKvLcyAOw6B26pX66SlHth9kYdhw
+         cAaQ9D4ULRw3N4fHi7zh+toNaZ48GEw7kCCsCQJrkCs2C67Deb4e435s3LXU/jrppyEU
+         3ZiOULVfM6h3OTUOlySKN2sjlIipftAL2Zw+Tf0nw+oEXkTV4sQQ1Ooy7jWQawmrZy+8
+         SepToW2T/v65h33GoEM2nCSexVKo8QK5HgHoRqjTHOdjFh5V2z1YuO1Sg7dJgP7PGaDt
+         adhF4zr15MNk3p7ls7QLUCr5Ndt/aBd8WZsLr+EsYf65GeG4b+zDAeUD1VKx2GxshHqK
+         KvBw==
+X-Gm-Message-State: APjAAAXEos50KIuRVTu85oH0LC9FrIIfaFNmdEiPQjtS6lRP0If7n+do
+        HYbnRUpaParRj0lDmiGn4YhoCw==
+X-Google-Smtp-Source: APXvYqxJkeCD/5wb5eD1Fvas043368L7QAtHjtM9zm9+kZzqByV7eg8Jzd+QpcMMOcm4VKUxwP+C/A==
+X-Received: by 2002:a2e:9659:: with SMTP id z25mr11200659ljh.132.1573820279064;
+        Fri, 15 Nov 2019 04:17:59 -0800 (PST)
 Received: from centauri.lan (ua-84-217-220-205.bbcust.telenor.se. [84.217.220.205])
-        by smtp.gmail.com with ESMTPSA id y18sm4107961lja.12.2019.11.15.04.17.38
+        by smtp.gmail.com with ESMTPSA id c16sm331070lfp.93.2019.11.15.04.17.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 04:17:39 -0800 (PST)
+        Fri, 15 Nov 2019 04:17:58 -0800 (PST)
 From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
-        ulf.hansson@linaro.org,
+        sboyd@kernel.org, vireshk@kernel.org, ulf.hansson@linaro.org,
+        Niklas Cassel <niklas.cassel@linaro.org>,
         Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Rob Herring <robh@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/5] dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
-Date:   Fri, 15 Nov 2019 13:15:38 +0100
-Message-Id: <20191115121544.2339036-2-niklas.cassel@linaro.org>
+Subject: [PATCH v5 3/5] arm64: dts: qcom: qcs404: Add CPR and populate OPP table
+Date:   Fri, 15 Nov 2019 13:15:40 +0100
+Message-Id: <20191115121544.2339036-4-niklas.cassel@linaro.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191115121544.2339036-1-niklas.cassel@linaro.org>
 References: <20191115121544.2339036-1-niklas.cassel@linaro.org>
@@ -78,102 +78,83 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
+Add CPR and populate OPP table.
 
 Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes since v4:
--Dropped "qcom,*" properties as per review comment from
-Stephen Boyd. This is now SoC config data in the driver
-that changes based on the SoC compatible string.
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 132 +++++++++++++++++++++++++--
+ 1 file changed, 124 insertions(+), 8 deletions(-)
 
- .../bindings/power/avs/qcom,cpr.txt           | 130 ++++++++++++++++++
- 1 file changed, 130 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-
-diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-new file mode 100644
-index 000000000000..ab0d5ebbad4e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-@@ -0,0 +1,130 @@
-+QCOM CPR (Core Power Reduction)
-+
-+CPR (Core Power Reduction) is a technology to reduce core power on a CPU
-+or other device. Each OPP of a device corresponds to a "corner" that has
-+a range of valid voltages for a particular frequency. While the device is
-+running at a particular frequency, CPR monitors dynamic factors such as
-+temperature, etc. and suggests adjustments to the voltage to save power
-+and meet silicon characteristic requirements.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: should be "qcom,qcs404-cpr", "qcom,cpr" for qcs404
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: base address and size of the rbcpr register region
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the CPR interrupt
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: phandle to the reference clock
-+
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "ref"
-+
-+- vdd-apc-supply:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: phandle to the vdd-apc-supply regulator
-+
-+- #power-domain-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: should be 0
-+
-+- operating-points-v2:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: A phandle to the OPP table containing the
-+		    performance states supported by the CPR
-+		    power domain
-+
-+- acc-syscon:
-+	Usage: optional
-+	Value type: <phandle>
-+	Definition: phandle to syscon for writing ACC settings
-+
-+- nvmem-cells:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: phandle to nvmem cells containing the data
-+		    that makes up a fuse corner, for each fuse corner.
-+		    As well as the CPR fuse revision.
-+
-+- nvmem-cell-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: should be "cpr_quotient_offset1", "cpr_quotient_offset2",
-+		    "cpr_quotient_offset3", "cpr_init_voltage1",
-+		    "cpr_init_voltage2", "cpr_init_voltage3", "cpr_quotient1",
-+		    "cpr_quotient2", "cpr_quotient3", "cpr_ring_osc1",
-+		    "cpr_ring_osc2", "cpr_ring_osc3", "cpr_fuse_revision"
-+		    for qcs404.
-+
-+Example:
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index d03782e7bc11..30b9c7f8f200 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -44,7 +44,8 @@
+ 			#cooling-cells = <2>;
+ 			clocks = <&apcs_glb>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+-			cpu-supply = <&pms405_s3>;
++			power-domains = <&cpr>;
++			power-domain-names = "cpr";
+ 		};
+ 
+ 		CPU1: cpu@101 {
+@@ -57,7 +58,8 @@
+ 			#cooling-cells = <2>;
+ 			clocks = <&apcs_glb>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+-			cpu-supply = <&pms405_s3>;
++			power-domains = <&cpr>;
++			power-domain-names = "cpr";
+ 		};
+ 
+ 		CPU2: cpu@102 {
+@@ -70,7 +72,8 @@
+ 			#cooling-cells = <2>;
+ 			clocks = <&apcs_glb>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+-			cpu-supply = <&pms405_s3>;
++			power-domains = <&cpr>;
++			power-domain-names = "cpr";
+ 		};
+ 
+ 		CPU3: cpu@103 {
+@@ -83,7 +86,8 @@
+ 			#cooling-cells = <2>;
+ 			clocks = <&apcs_glb>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+-			cpu-supply = <&pms405_s3>;
++			power-domains = <&cpr>;
++			power-domain-names = "cpr";
+ 		};
+ 
+ 		L2_0: l2-cache {
+@@ -107,20 +111,37 @@
+ 	};
+ 
+ 	cpu_opp_table: cpu-opp-table {
+-		compatible = "operating-points-v2";
++		compatible = "operating-points-v2-kryo-cpu";
+ 		opp-shared;
+ 
+ 		opp-1094400000 {
+ 			opp-hz = /bits/ 64 <1094400000>;
+-			opp-microvolt = <1224000 1224000 1224000>;
++			required-opps = <&cpr_opp1>;
+ 		};
+ 		opp-1248000000 {
+ 			opp-hz = /bits/ 64 <1248000000>;
+-			opp-microvolt = <1288000 1288000 1288000>;
++			required-opps = <&cpr_opp2>;
+ 		};
+ 		opp-1401600000 {
+ 			opp-hz = /bits/ 64 <1401600000>;
+-			opp-microvolt = <1384000 1384000 1384000>;
++			required-opps = <&cpr_opp3>;
++		};
++	};
 +
 +	cpr_opp_table: cpr-opp-table {
 +		compatible = "operating-points-v2-qcom-level";
@@ -189,47 +170,118 @@ index 000000000000..ab0d5ebbad4e
 +		cpr_opp3: opp3 {
 +			opp-level = <3>;
 +			qcom,opp-fuse-level = <3>;
+ 		};
+ 	};
+ 
+@@ -310,6 +331,62 @@
+ 			tsens_caldata: caldata@d0 {
+ 				reg = <0x1f8 0x14>;
+ 			};
++			cpr_efuse_speedbin: speedbin@13c {
++				reg = <0x13c 0x4>;
++				bits = <2 3>;
++			};
++			cpr_efuse_quot_offset1: qoffset1@231 {
++				reg = <0x231 0x4>;
++				bits = <4 7>;
++			};
++			cpr_efuse_quot_offset2: qoffset2@232 {
++				reg = <0x232 0x4>;
++				bits = <3 7>;
++			};
++			cpr_efuse_quot_offset3: qoffset3@233 {
++				reg = <0x233 0x4>;
++				bits = <2 7>;
++			};
++			cpr_efuse_init_voltage1: ivoltage1@229 {
++				reg = <0x229 0x4>;
++				bits = <4 6>;
++			};
++			cpr_efuse_init_voltage2: ivoltage2@22a {
++				reg = <0x22a 0x4>;
++				bits = <2 6>;
++			};
++			cpr_efuse_init_voltage3: ivoltage3@22b {
++				reg = <0x22b 0x4>;
++				bits = <0 6>;
++			};
++			cpr_efuse_quot1: quot1@22b {
++				reg = <0x22b 0x4>;
++				bits = <6 12>;
++			};
++			cpr_efuse_quot2: quot2@22d {
++				reg = <0x22d 0x4>;
++				bits = <2 12>;
++			};
++			cpr_efuse_quot3: quot3@230 {
++				reg = <0x230 0x4>;
++				bits = <0 12>;
++			};
++			cpr_efuse_ring1: ring1@228 {
++				reg = <0x228 0x4>;
++				bits = <0 3>;
++			};
++			cpr_efuse_ring2: ring2@228 {
++				reg = <0x228 0x4>;
++				bits = <4 3>;
++			};
++			cpr_efuse_ring3: ring3@229 {
++				reg = <0x229 0x4>;
++				bits = <0 3>;
++			};
++			cpr_efuse_revision: revision@218 {
++				reg = <0x218 0x4>;
++				bits = <3 3>;
++			};
+ 		};
+ 
+ 		rng: rng@e3000 {
+@@ -952,6 +1029,45 @@
+ 			clocks = <&sleep_clk>;
+ 		};
+ 
++		cpr: power-controller@b018000 {
++			compatible = "qcom,qcs404-cpr", "qcom,cpr";
++			reg = <0x0b018000 0x1000>;
++			interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
++			clocks = <&xo_board>;
++			clock-names = "ref";
++			vdd-apc-supply = <&pms405_s3>;
++			#power-domain-cells = <0>;
++			operating-points-v2 = <&cpr_opp_table>;
++			acc-syscon = <&tcsr>;
++
++			nvmem-cells = <&cpr_efuse_quot_offset1>,
++				<&cpr_efuse_quot_offset2>,
++				<&cpr_efuse_quot_offset3>,
++				<&cpr_efuse_init_voltage1>,
++				<&cpr_efuse_init_voltage2>,
++				<&cpr_efuse_init_voltage3>,
++				<&cpr_efuse_quot1>,
++				<&cpr_efuse_quot2>,
++				<&cpr_efuse_quot3>,
++				<&cpr_efuse_ring1>,
++				<&cpr_efuse_ring2>,
++				<&cpr_efuse_ring3>,
++				<&cpr_efuse_revision>;
++			nvmem-cell-names = "cpr_quotient_offset1",
++				"cpr_quotient_offset2",
++				"cpr_quotient_offset3",
++				"cpr_init_voltage1",
++				"cpr_init_voltage2",
++				"cpr_init_voltage3",
++				"cpr_quotient1",
++				"cpr_quotient2",
++				"cpr_quotient3",
++				"cpr_ring_osc1",
++				"cpr_ring_osc2",
++				"cpr_ring_osc3",
++				"cpr_fuse_revision";
 +		};
-+	};
 +
-+	power-controller@b018000 {
-+		compatible = "qcom,qcs404-cpr", "qcom,cpr";
-+		reg = <0x0b018000 0x1000>;
-+		interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
-+		clocks = <&xo_board>;
-+		clock-names = "ref";
-+		vdd-apc-supply = <&pms405_s3>;
-+		#power-domain-cells = <0>;
-+		operating-points-v2 = <&cpr_opp_table>;
-+		acc-syscon = <&tcsr>;
-+
-+		nvmem-cells = <&cpr_efuse_quot_offset1>,
-+			<&cpr_efuse_quot_offset2>,
-+			<&cpr_efuse_quot_offset3>,
-+			<&cpr_efuse_init_voltage1>,
-+			<&cpr_efuse_init_voltage2>,
-+			<&cpr_efuse_init_voltage3>,
-+			<&cpr_efuse_quot1>,
-+			<&cpr_efuse_quot2>,
-+			<&cpr_efuse_quot3>,
-+			<&cpr_efuse_ring1>,
-+			<&cpr_efuse_ring2>,
-+			<&cpr_efuse_ring3>,
-+			<&cpr_efuse_revision>;
-+		nvmem-cell-names = "cpr_quotient_offset1",
-+			"cpr_quotient_offset2",
-+			"cpr_quotient_offset3",
-+			"cpr_init_voltage1",
-+			"cpr_init_voltage2",
-+			"cpr_init_voltage3",
-+			"cpr_quotient1",
-+			"cpr_quotient2",
-+			"cpr_quotient3",
-+			"cpr_ring_osc1",
-+			"cpr_ring_osc2",
-+			"cpr_ring_osc3",
-+			"cpr_fuse_revision";
-+	};
+ 		timer@b120000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 -- 
 2.23.0
 
