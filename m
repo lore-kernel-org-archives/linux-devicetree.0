@@ -2,173 +2,167 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92144C43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 02:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18931C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 02:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF412071B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 02:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB4D2072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 02:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lVcIlp0P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5q0wHOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfKOCKp (ORCPT
+        id S1726912AbfKOCL1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 21:10:45 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33135 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfKOCKY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 21:10:24 -0500
-Received: by mail-pf1-f195.google.com with SMTP id c184so5581657pfb.0
-        for <devicetree@vger.kernel.org>; Thu, 14 Nov 2019 18:10:24 -0800 (PST)
+        Thu, 14 Nov 2019 21:11:27 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34355 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfKOCL1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 21:11:27 -0500
+Received: by mail-qk1-f196.google.com with SMTP id 205so6926714qkk.1;
+        Thu, 14 Nov 2019 18:11:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gbXUAxZNsHxVmSYyY01pbTkMGbOktpFu/n8zvHDTyVA=;
-        b=lVcIlp0POHYabb/W5WB+ryqB8lkVzSTkyHapt2hqxlbn46uP/NpFjKNOSAaRAN2jEt
-         wH1i9GRfQ63kBOvgRYI68VAoZ9/lUc5bG/StOVC1vJy5X0gPMt/H4l+svBEW6fsYTm46
-         RzXsMn+IwpH97rJawM8Hh6SiC1Q0ZXV8n8XHA=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iwrIjV3rAOWSyJGG0/sIPU9f3LX/vsYsv+fodZVW0cU=;
+        b=B5q0wHOfASmZ2Lh14yogezn+rxmdrhLEqWhuNk93pGbwQbaO6sLoWN7peQg5V6zIB6
+         KHayoKlXplSk/aAY4eaN8FJ/LAw9ESKXao6PP24mYa/m6e90+PSSO74emOhetwN0BmXu
+         x4/s0wWLW7qZEQoT34tbAxMOASITbRC12NeR9YdqxBOuZcoQvxYgnFDcm9j6MATYT+L6
+         jXZi8EgW68Tv/u65e1Vh0dJ0TP4SInsfheo6NTaxtuF6qIk0orBHmmXtqCB5djpK2PBl
+         5IIP2SiNR3Z/SA2ocdB8O4KPAnhgDXzbHSYDOGXEhLIbfxrZXIrOrXRk3z8Y3LPaiICF
+         GjMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gbXUAxZNsHxVmSYyY01pbTkMGbOktpFu/n8zvHDTyVA=;
-        b=VFctulhvxu/FZ3RygfJIsXvSb4DV9KY76sYS/6kSe1qi7ceV1FattCLe0zbIXD1Hbk
-         O+6+XXbMTAmjpOrgyST9SHeAr23ZGbO2U/0XewN0Fk+yf+y1FNA7crvsDE814yjf41ZZ
-         hyB2CapjHQNR8lEYkzI6IJqk7eZTvFGip3eB3meCdnxh1djmiHE4BQunoQ3BNZtOIsJt
-         CT04hsjoBoxRAFe3B3LXg2VuRo34fMjbXWTRL2b8eqKSjkGOBTkgf4Y5I/bcfwkk3Og7
-         sFbHnzRCuGg7ezAxKXIq/O+1I73+q2GwzCN6GqvDEKH49yCGSo86o8Jx+0BE4Nqry2Ao
-         akaQ==
-X-Gm-Message-State: APjAAAWyIMPziHiUpF+JRE2NVujPdQY9Hz0pW0aCJrFuz0aG1vrC+nl/
-        i7Uxsn5+TcYmVpOz07Gyv77UtQ==
-X-Google-Smtp-Source: APXvYqyIGqCqz0EaE6ktIQDtRhSuMQ7ZMOSt0Ag3ir2QQqAVf0ErJpPOFGOoxIGyFZ85KOEgijIs6Q==
-X-Received: by 2002:a65:67c7:: with SMTP id b7mr13410291pgs.339.1573783823987;
-        Thu, 14 Nov 2019 18:10:23 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id f7sm9695820pfa.150.2019.11.14.18.10.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 18:10:23 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v5 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
-Date:   Thu, 14 Nov 2019 18:10:07 -0800
-Message-Id: <20191114180959.v5.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-In-Reply-To: <20191115021008.32926-1-abhishekpandit@chromium.org>
-References: <20191115021008.32926-1-abhishekpandit@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iwrIjV3rAOWSyJGG0/sIPU9f3LX/vsYsv+fodZVW0cU=;
+        b=NRzz+cBR/kuAcanpMgfleEk6pLGF5FydMMRTXW0he5C7leHwlI2gE1fmJTCsPD/O2D
+         E0MbhsyB4W0hjJxp/s/gsqe6JlVEFYAErIWJLuuKoNrGKaj+fakkxDHBgx9h0H3tvnG+
+         fv1fuxZssoaV5FNbGv1FWZdDL5enYjaFBZq1owR3gr6n+VXjJX8xgJzHXqrPhX/CfIg2
+         qxSVwJzsz3u0EzwSiQ0r53pg08YjaIcUNFLYjMhTGEIP8VhmBbXGYc8oEUNmVcehRbZo
+         3GlaX9zmlPZS5O7o6DD6hpA8N++JrnsNupAWEwwO72CoZliPRxKJ7OTp3ea66ykn+E9P
+         X4Vg==
+X-Gm-Message-State: APjAAAU/kHUgpsG3G9rCxgE5BaLIFZ0VVTuM0IOjDX0FYf1xs0dbAFmW
+        Ce/Oo7Q19ufhA3M9eHQvAzEsUz2racBNuxPub0CHM2ffnIfcgQ==
+X-Google-Smtp-Source: APXvYqzZHeRcZIgni1l1ogsgH8eDjDju0/cJCQTbsqWiKfxK9978qCLi+jtHTfqk6AqN7EAjBIsCUqRktKpqKTvt5gY=
+X-Received: by 2002:a37:a00f:: with SMTP id j15mr10776968qke.103.1573783886106;
+ Thu, 14 Nov 2019 18:11:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <b1c922b3496020f611ecd6ea27d262369646d830.1573462647.git.shengjiu.wang@nxp.com>
+ <20191114211237.GA25375@bogus>
+In-Reply-To: <20191114211237.GA25375@bogus>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Fri, 15 Nov 2019 10:11:14 +0800
+Message-ID: <CAA+D8AOfPbS4dn=p+0f8icWBsZegUubJ21qsY7yFw2a=a3Mb_A@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH V3 1/2] ASoC: dt-bindings: fsl_asrc: add
+ compatible string for imx8qm
+To:     Rob Herring <robh@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        timur@kernel.org, Xiubo.Lee@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, tiwai@suse.com, lgirdwood@gmail.com,
+        Nicolin Chen <nicoleotsuka@gmail.com>, broonie@kernel.org,
+        festevam@gmail.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for pcm parameters.
+Hi Rob
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
+On Fri, Nov 15, 2019 at 5:14 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Nov 11, 2019 at 05:18:22PM +0800, Shengjiu Wang wrote:
+> > Add compatible string "fsl,imx8qm-asrc" for imx8qm platform.
+> >
+> > There are two asrc modules in imx8qm, the clock mapping is
+> > different for each other, so add new property "fsl,asrc-clk-map"
+> > to distinguish them.
+>
+> What's the clock mapping?
+>
+The two asrc have different clock source connected to it,  also
+the asrc in other platform, like imx6, has different clock source.
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+We collect all these clock source together, defined an enumerate
+format structure in driver, so for the asrc in each platform, we
+need to remap the clock source from the enumerate index to
+the real connection index in hardware.
 
- .../bindings/net/broadcom-bluetooth.txt       | 20 +++++++++++-
- include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
- 2 files changed, 51 insertions(+), 1 deletion(-)
- create mode 100644 include/dt-bindings/bluetooth/brcm.h
+The range of  the enumerate structure is 0-0x30, some index
+may not be used in this platform, but used in other platform
+the range of the real connection range is 0-0xf, so we do
+the remapping for [0, 0x30]  to [0, 0xf]
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index c749dc297624..a92da31daa79 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -29,10 +29,22 @@ Optional properties:
-    - "lpo": external low power 32.768 kHz clock
-  - vbat-supply: phandle to regulator supply for VBAT
-  - vddio-supply: phandle to regulator supply for VDDIO
--
-+ - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
-+                        This value must be set in order for the latter
-+                        properties to take effect.
-+ - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
-+ - brcm,bt-pcm-frame-type: short, long
-+ - brcm,bt-pcm-sync-mode: slave, master
-+ - brcm,bt-pcm-clock-mode: slave, master
-+
-+See include/dt-bindings/bluetooth/brcm.h for SCO/PCM parameters. The default
-+value for all these values are 0 (except for brcm,bt-sco-routing which requires
-+a value) if you choose to leave it out.
- 
- Example:
- 
-+#include <dt-bindings/bluetooth/brcm.h>
-+
- &uart2 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&uart2_pins>;
-@@ -40,5 +52,11 @@ Example:
-        bluetooth {
-                compatible = "brcm,bcm43438-bt";
-                max-speed = <921600>;
-+
-+               brcm,bt-sco-routing        = <BRCM_SCO_ROUTING_TRANSPORT>;
-+               brcm,bt-pcm-interface-rate = <BRCM_PCM_IF_RATE_512KBPS>;
-+               brcm,bt-pcm-frame-type     = <BRCM_PCM_FRAME_TYPE_SHORT>;
-+               brcm,bt-pcm-sync-mode      = <BRCM_PCM_SYNC_MODE_MASTER>;
-+               brcm,bt-pcm-clock-mode     = <BRCM_PCM_CLOCK_MODE_MASTER>;
-        };
- };
-diff --git a/include/dt-bindings/bluetooth/brcm.h b/include/dt-bindings/bluetooth/brcm.h
-new file mode 100644
-index 000000000000..8b86f90d7dd2
---- /dev/null
-+++ b/include/dt-bindings/bluetooth/brcm.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * This header provides constants for Broadcom bluetooth dt-bindings.
+>
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> > changes in v2
+> > -none
+> >
+> > changes in v3
+> > -use only one compatible string "fsl,imx8qm-asrc",
+> > -add new property "fsl,asrc-clk-map".
+> >
+> >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > index 1d4d9f938689..02edab7cf3e0 100644
+> > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > @@ -8,7 +8,8 @@ three substreams within totally 10 channels.
+> >
+> >  Required properties:
+> >
+> > -  - compatible               : Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
+> > +  - compatible               : Contains "fsl,imx35-asrc", "fsl,imx53-asrc",
+> > +                       "fsl,imx8qm-asrc".
+> >
+> >    - reg                      : Offset and length of the register set for the device.
+> >
+> > @@ -35,6 +36,13 @@ Required properties:
+> >
+> >     - fsl,asrc-width  : Defines a mutual sample width used by DPCM Back Ends.
+> >
+> > +   - fsl,asrc-clk-map   : Defines clock map used in driver. which is required
+> > +                       by imx8qm/imx8qxp platform
+> > +                       <0> - select the map for asrc0 in imx8qm
+> > +                       <1> - select the map for asrc1 in imx8qm
+> > +                       <2> - select the map for asrc0 in imx8qxp
+> > +                       <3> - select the map for asrc1 in imx8qxp
+>
+> Is this 4 modes of the h/w or just selecting 1 of 4 settings defined in
+> the driver? How does one decide? This seems strange.
+
+The setting is defined in driver.  please see the following definition in
+driver.  This is some kind of hard code, for the asrc0 in imx8qm,
+we need to set fsl,asrc-clk-map = 0.
+
++/**
++ * i.MX8QM/i.MX8QXP uses the same map for input and output.
++ * clk_map_imx8qm[0] is for i.MX8QM asrc0
++ * clk_map_imx8qm[1] is for i.MX8QM asrc1
++ * clk_map_imx8qm[2] is for i.MX8QXP asrc0
++ * clk_map_imx8qm[3] is for i.MX8QXP asrc1
 + */
-+#ifndef _DT_BINDINGS_BLUETOOTH_BRCM_H
-+#define _DT_BINDINGS_BLUETOOTH_BRCM_H
-+
-+#define BRCM_BT_SCO_ROUTING_PCM			0
-+#define BRCM_BT_SCO_ROUTING_TRANSPORT		1
-+#define BRCM_BT_SCO_ROUTING_CODEC		2
-+#define BRCM_BT_SCO_ROUTING_I2S			3
-+
-+/* Default is 128KBPs */
-+#define BRCM_BT_PCM_INTERFACE_RATE_128KBPS	0
-+#define BRCM_BT_PCM_INTERFACE_RATE_256KBPS	1
-+#define BRCM_BT_PCM_INTERFACE_RATE_512KBPS	2
-+#define BRCM_BT_PCM_INTERFACE_RATE_1024KBPS	3
-+#define BRCM_BT_PCM_INTERFACE_RATE_2048KBPS	4
-+
-+/* Default should be short */
-+#define BRCM_BT_PCM_FRAME_TYPE_SHORT		0
-+#define BRCM_BT_PCM_FRAME_TYPE_LONG		1
-+
-+/* Default should be master */
-+#define BRCM_BT_PCM_SYNC_MODE_SLAVE		0
-+#define BRCM_BT_PCM_SYNC_MODE_MASTER		1
-+
-+/* Default should be master */
-+#define BRCM_BT_PCM_CLOCK_MODE_SLAVE		0
-+#define BRCM_BT_PCM_CLOCK_MODE_MASTER		1
-+
-+#endif /* _DT_BINDINGS_BLUETOOTH_BRCM_H */
--- 
-2.24.0.432.g9d3f5f5b63-goog
++static unsigned char clk_map_imx8qm[4][ASRC_CLK_MAP_LEN] = {
 
+
+>
+> imx8qxp should perhaps be a separate compatible. Then you only need 1 of
+> 2 modes...
+>
+Yes, that is an option.  If you agree that we can use fsl,asrc-clk-map to
+distinguish the clock mapping defined in driver,  I can do this change that
+add new compatible string for imx8qxp.
+
+
+Best Regards
+Wang Shengjiu
