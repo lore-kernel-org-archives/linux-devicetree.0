@@ -2,106 +2,260 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DEDC432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185FEC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 17:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1119E20728
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573838110;
-	bh=RSU9xSqNeXK85aOMIM/PzLN1ORp5RwSgqA3qb8ti8io=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F1iXV7TrWAKBdQnG9QUeDf0a7FDrERg0ZO/WVkZ7qkCN0syXJAs+2tUMgpGYEn4ms
-	 s9aTUDvvuW7ITXDBnXBs7OMXnmrC6RBYWAw37PpcLJbCN4QlGLy3npysGIuHO08r7a
-	 6vWYCSaGI9RBtxwVImmFrBcOXM2qWpTzCe7C+CSA=
+	by mail.kernel.org (Postfix) with ESMTP id DE61E20748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 17:29:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="h2X6yxD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfKORPD (ORCPT
+        id S1727645AbfKOR26 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:15:03 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40360 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbfKORPD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 12:15:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RQJdKvZKfMsKQBwkCaC47KvblkeBygS3Ak3RT8kxRFU=; b=hGfqb+/mHc6s3XI50svFEuIPK
-        jIXYHIDS3rfz8GPADtDIHhbe1ZJEbh4BPb+OTVbg4qbTvwH2kXzast2yWKmRS+Zo0BU85SGYK4fI4
-        v85PwxDYKsoAXrKfrfcMAI6NAQFBAln4xoWyuH/XNnxHjXETf6bcXt69ZgdrN/qMfpwYQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iVfBP-0000m4-L6; Fri, 15 Nov 2019 17:14:55 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7B0D727429D2; Fri, 15 Nov 2019 17:14:54 +0000 (GMT)
-Date:   Fri, 15 Nov 2019 17:14:54 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     robh+dt@kernel.org, KCHSU0@nuvoton.com,
-        thomas.fehrenbacher@siedle.de, kernel@pengutronix.de,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3] ASoC: nau8810: add aux input control, available on
- NAU8812
-Message-ID: <20191115171454.GC4210@sirena.co.uk>
-References: <20191115160819.15557-1-m.felsch@pengutronix.de>
- <20191115160819.15557-4-m.felsch@pengutronix.de>
- <20191115161210.GB4210@sirena.co.uk>
- <20191115162053.fgsd45seg526gafv@pengutronix.de>
+        Fri, 15 Nov 2019 12:28:58 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28030 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727543AbfKOR26 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 12:28:58 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFHR2Bb022462;
+        Fri, 15 Nov 2019 18:28:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=Vv7O4F/V6ixbd+frkI+QsLdh11OHFWF8Mp0fyUbyBg0=;
+ b=h2X6yxD6m5aDfzGWZpbtttJkSWPTPGMF/bYfW1y0BmuIFWW34L3iPPFXb9ZFRSYLRWzr
+ SrFcLyKeGJtk7cUIg2JXzYuyMB9rWka9B/kq7nalJz1cil53mGaNeF11kRyuQT/Cx2oW
+ bUhzLtmkXnt35aTBNMWBKT4sGgqcU4k1K8ZZLgJir0l+oHyzbi7R9PZwpswOAWHUN2cq
+ axV1enA8CNNgA2sz5r9QwYffuPULi6FFgyJaQCPT6GbOciPA+aVv1g0YWqeUN2Yxz/dH
+ /r+IamdHqcYoPgFMl2yuxwuKAqSrFJgKH0CtFsnrVKGjxLkAnr457pvO2Y1ZvVvXXL3G sQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w7psbng5v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 18:28:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 50B4E10002A;
+        Fri, 15 Nov 2019 18:28:33 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1AF022D3777;
+        Fri, 15 Nov 2019 18:28:33 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov
+ 2019 18:28:32 +0100
+Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert stm32-exti to
+ json-schema
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20191114164104.22782-1-alexandre.torgue@st.com>
+ <CAL_JsqKJZwJ0MyRp37Y-F0ujPdVEKARd8qcUCN1xmawpkiffLg@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <7415fff5-030c-a65b-a405-a1197e166432@st.com>
+Date:   Fri, 15 Nov 2019 18:28:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eHhjakXzOLJAF9wJ"
-Content-Disposition: inline
-In-Reply-To: <20191115162053.fgsd45seg526gafv@pengutronix.de>
-X-Cookie: Tell me what to think!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_JsqKJZwJ0MyRp37Y-F0ujPdVEKARd8qcUCN1xmawpkiffLg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_05:2019-11-15,2019-11-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---eHhjakXzOLJAF9wJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Nov 15, 2019 at 05:20:53PM +0100, Marco Felsch wrote:
-> On 19-11-15 16:12, Mark Brown wrote:
+On 11/14/19 6:18 PM, Rob Herring wrote:
+> On Thu, Nov 14, 2019 at 10:41 AM Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+>>
+>> Convert the STM32 external interrupt controller (EXTI) binding to DT
+>> schema format using json-schema.
+>>
+>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>> ---
+>>
+>> Hi Rob,
+>>
+>> I planned to use "additionalProperties: false" for this schema but as I add a
+>> property under condition, I got an error (property added under contion seems
+>> to be detected as an "additional" property and then error is raised).
+>>
+>> Is there a way to fix that ?
+> 
+> See below.
+> 
+>>
+>> regards
+>> Alex
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>> deleted file mode 100644
+>> index cd01b2292ec6..000000000000
+>> --- a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>> +++ /dev/null
+>> @@ -1,29 +0,0 @@
+>> -STM32 External Interrupt Controller
+>> -
+>> -Required properties:
+>> -
+>> -- compatible: Should be:
+>> -    "st,stm32-exti"
+>> -    "st,stm32h7-exti"
+>> -    "st,stm32mp1-exti"
+>> -- reg: Specifies base physical address and size of the registers
+>> -- interrupt-controller: Indentifies the node as an interrupt controller
+>> -- #interrupt-cells: Specifies the number of cells to encode an interrupt
+>> -  specifier, shall be 2
+>> -- interrupts: interrupts references to primary interrupt controller
+>> -  (only needed for exti controller with multiple exti under
+>> -  same parent interrupt: st,stm32-exti and st,stm32h7-exti)
+>> -
+>> -Optional properties:
+>> -
+>> -- hwlocks: reference to a phandle of a hardware spinlock provider node.
+>> -
+>> -Example:
+>> -
+>> -exti: interrupt-controller@40013c00 {
+>> -       compatible = "st,stm32-exti";
+>> -       interrupt-controller;
+>> -       #interrupt-cells = <2>;
+>> -       reg = <0x40013C00 0x400>;
+>> -       interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+>> -};
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml
+>> new file mode 100644
+>> index 000000000000..39be37e1e532
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.yaml
+>> @@ -0,0 +1,82 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> 
+> If ST has copyright on the old binding, can you add BSD here.
+> 
 
-> > It'd still be better to only register these controls if the device isn't
-> > a nau8812 so that userspace doesn't see them.
+I will.
 
-> That's the thing I tought about 10min.. Imagine that: You have an
-> embedded device with a very good codec driver (all codec controlls are
-> available) but the hw-guys didn't connect all the in-/outputs. So
-> switching those controls are useless too. IMHO this is exactly the same
-> thing here.
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/interrupt-controller/st,stm32-exti.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: STM32 External Interrupt Controller Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Alexandre Torgue <alexandre.torgue@st.com>
+>> +  - Ludovic Barre <ludovic.barre@st.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - items:
+>> +        - enum:
+>> +          - st,stm32-exti
+>> +          - st,stm32h7-exti
+>> +      - items:
+>> +        - enum:
+>> +          - st,stm32mp1-exti
+>> +        - const: syscon
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +  hwlocks:
+>> +    maxItems: 1
+>> +    description:
+>> +      Reference to a phandle of a hardware spinlock provider node.
+>> +
+>> +required:
+>> +  - "#interrupt-cells"
+>> +  - compatible
+>> +  - reg
+>> +  - interrupt-controller
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/interrupt-controller.yaml#
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - st,stm32-exti
+>> +              - st,stm32h7-exti
+>> +    then:
+>> +      properties:
+>> +        interrupts:
+>> +          allOf:
+>> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
+> 
+> Standard property, doesn't need a type. You just need 'maxItems' or an
+> 'items' list if the index is not meaningful. This appears to be the
+> former case.
 
-We do have the start of facilities to mask out unreachable controls
-already (a machine driver could use them manually as things stand).  If
-we ever get the graph API done properly that work is more likely to get
-finished.
+ok
 
---eHhjakXzOLJAF9wJ
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+>> +          description:
+>> +            Interrupts references to primary interrupt controller
+>> +      required:
+>> +        - interrupts
+> 
+> You can move the definition to the main section as you only need
+> 'required' here. That should fix your additionalProperties issue.
+> 
+Doing that it fails as I don't have interrupts define for mp1 
+compatible. Maybe I missed something ?
 
------BEGIN PGP SIGNATURE-----
+> In hindsight, the mp1 case probably should have used interrupt-map.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3O3Q0ACgkQJNaLcl1U
-h9ABdAf+JGTslv/txd8VsZLn4CfToO1Tctrdfr1vcqrb3bsI9hAKjuUuLFO1ffNR
-Rh7dZLXeQx54u4KsAiqF8EUuFYIfzaDR2OSk8nKxCxheKSrcx92YyBN9zL2tBvj3
-lW3B+pa+/o1Ioa2uP+TB7wd4UYy3w0uQXGky/Ihs5EYgc8ermvkwhgihQ25AwVyk
-PtfCYFvAbGMivk3HzIGL4nffYs618v7LWeEzC3f+ZUr0iUlbAa+sYdQAuownwQHD
-3PZqgTIJeQPyovRHK82B+nxf49KFfxrOUDDbkYCk8BFPsBOm8yTOVftdW2JCBmhK
-qwdb+7uYDn6OH+mABTq0Erpv/vghsg==
-=ozqw
------END PGP SIGNATURE-----
+For MP1 driver is written differently and mapping is done inside the driver.
 
---eHhjakXzOLJAF9wJ--
+> 
+>> +
+>> +examples:
+>> +  - |
+>> +    //Example 1
+>> +    exti1: interrupt-controller@5000d000 {
+>> +        compatible = "st,stm32mp1-exti", "syscon";
+>> +        interrupt-controller;
+>> +        #interrupt-cells = <2>;
+>> +        reg = <0x5000d000 0x400>;
+>> +    };
+>> +
+>> +    //Example 2
+>> +    exti2: interrupt-controller@40013c00 {
+>> +        compatible = "st,stm32-exti";
+>> +        interrupt-controller;
+>> +        #interrupt-cells = <2>;
+>> +        reg = <0x40013C00 0x400>;
+>> +        interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+>> +    };
+>> +
+>> +...
+>> --
+>> 2.17.1
+>>
