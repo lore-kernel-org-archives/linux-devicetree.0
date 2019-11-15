@@ -2,57 +2,57 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AE4C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 01:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96715C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 01:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B1220725
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 01:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6682820723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 01:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573781604;
-	bh=TjfPdNVPIeEvReyGDHdp+l0oWyIBAlhdiKCkIA2SxF4=;
+	s=default; t=1573781701;
+	bh=FM7mYg/6+NiEj2ej8cWPQVFxq0x2k6N9T/icEBkFu64=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vwxLVEoF0ubbGZjRllUOiWCXUAbEuGuldlDMh4UrAvdKvrOqQnKIhHsyQYBLg1Yly
-	 ppcUESn+XHbyxbiGqkAEk2IRyuUx/fU/PYf5vSQiVvIcWq/8Mgf75r5UBEgVonfjsu
-	 lCSw0stbdrS/DhDQ+4KP+zIcSJJTVhYrh0Ggt95Y=
+	b=IezpOmWd/yE70qJWjne1zjGoVHGaXvdeMjF/o+iwSbnETaTrZGNNv87BEWNESOIHS
+	 S2GQy46F10Dadsc9vOU6VvtGFm3oLaCFZoR6TrrGRO6QDsitvAq2zlOs+bxt7vamOA
+	 NXwDiyicAAWIcneIUHWE6Qpfckz79ZTjNpD0tGjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfKOBdY (ORCPT
+        id S1727121AbfKOBfB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 20:33:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41894 "EHLO mail.kernel.org"
+        Thu, 14 Nov 2019 20:35:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbfKOBdY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 20:33:24 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        id S1727022AbfKOBfA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 20:35:00 -0500
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DB2820725;
-        Fri, 15 Nov 2019 01:33:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 367FB20723;
+        Fri, 15 Nov 2019 01:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573781603;
-        bh=TjfPdNVPIeEvReyGDHdp+l0oWyIBAlhdiKCkIA2SxF4=;
+        s=default; t=1573781699;
+        bh=FM7mYg/6+NiEj2ej8cWPQVFxq0x2k6N9T/icEBkFu64=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wXwmH1o9Ntc1eiYydifMeSePrvyPdp843OoG1MKhziCfF0WKkKntoLojZuqNXZSWQ
-         XRPqSbpgzjleJDHBFSQd90rNYLV0/lkKPUaCvcZZ2Z0Ui6dKVLAOLqry7gLks5DZG/
-         hGCABoAeV60FY/M7dMTGMagtjKD8VKuUcn7yU7PA=
-Received: by mail-qk1-f173.google.com with SMTP id z23so6812489qkj.10;
-        Thu, 14 Nov 2019 17:33:23 -0800 (PST)
-X-Gm-Message-State: APjAAAVwUWy/o344JbZIiInJo+26DxxbwJYFjWlu1+hTAkWstT44Yg/b
-        L5Jv2Vzf889RDvtHaP2TcVaZdAd5eCcx7aJWAQ==
-X-Google-Smtp-Source: APXvYqyrKS5cVeQ3i3w1IPqL0wZve42ikZtItrJjuSQMwNf9oO+9PoexTpjhpJX3Vg+HensaTGHh5ytaFFs4FY1vmfw=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr10453959qka.152.1573781602693;
- Thu, 14 Nov 2019 17:33:22 -0800 (PST)
+        b=UB35JLpwUaKnERFQx86p21dIIYJB+YknS2gzLIPiUbT/8zQRoZU5VhpBNGJvmnUUA
+         FjwYM60dyXKAniIivnhD5Wclp17WYbrNzimtZtYI5N6MXXeU44g2+fzdDt4zNCQH81
+         a6PiJZkQKQsplLdttcQYe5Eyv7zbWKKX1HTYpios=
+Received: by mail-qk1-f169.google.com with SMTP id d13so6856155qko.3;
+        Thu, 14 Nov 2019 17:34:59 -0800 (PST)
+X-Gm-Message-State: APjAAAWBcbcRvkwriI/b2A1bQxfp4vljle1On6m1UyoMAdNJjaFhOMPw
+        KtiVZqd/Tb6zGkqwBTrWR8bYCffBSPP+7EoUvw==
+X-Google-Smtp-Source: APXvYqxz9j05GwmaTCc16w66GIq0s+n5kpdf5ngLzlrlw5UuuM6/wKEBRGfv34b1gB5ITk95f4T0wiJFCdroySKtY6k=
+X-Received: by 2002:a37:30b:: with SMTP id 11mr10622838qkd.254.1573781698329;
+ Thu, 14 Nov 2019 17:34:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20191031165308.14102-1-afaerber@suse.de> <20191031165308.14102-4-afaerber@suse.de>
-In-Reply-To: <20191031165308.14102-4-afaerber@suse.de>
+References: <20191111030434.29977-1-afaerber@suse.de> <20191111030434.29977-6-afaerber@suse.de>
+In-Reply-To: <20191111030434.29977-6-afaerber@suse.de>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 14 Nov 2019 19:33:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKON3rp61e=_7D7zD6k7XFJxbwEziZxWeKB7+i+bnTGPA@mail.gmail.com>
-Message-ID: <CAL_JsqKON3rp61e=_7D7zD6k7XFJxbwEziZxWeKB7+i+bnTGPA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
+Date:   Thu, 14 Nov 2019 19:34:47 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+fdksCHQ1_NaizkM6dVWT1h2wocJpD4NB8K2dOO-yZ4Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+fdksCHQ1_NaizkM6dVWT1h2wocJpD4NB8K2dOO-yZ4Q@mail.gmail.com>
+Subject: Re: [PATCH 5/7] ARM: dts: rtd1195: Introduce r-bus
 To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
 Cc:     linux-realtek-soc@lists.infradead.org,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
@@ -66,27 +66,87 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 11:53 AM Andreas F=C3=A4rber <afaerber@suse.de> wro=
-te:
+On Sun, Nov 10, 2019 at 9:04 PM Andreas F=C3=A4rber <afaerber@suse.de> wrot=
+e:
 >
-> Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
->
-> Reuse the existing RTD1295 watchdog compatible for now.
+> Model Realtek's register bus in DT.
 >
 > Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 > ---
->  v1 -> v2:
->  * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR=
- (Rob)
->  * Carved them out from memory reg instead (Rob)
->  * Converted some /memreserve/s to reserved-memory nodes
+>  This could be squashed into the original RTD1195 patch.
 >
->  arch/arm/boot/dts/Makefile               |   2 +
->  arch/arm/boot/dts/rtd1195-mele-x1000.dts |  31 ++++++++
->  arch/arm/boot/dts/rtd1195.dtsi           | 127 +++++++++++++++++++++++++=
-++++++
->  3 files changed, 160 insertions(+)
->  create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
->  create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+>  arch/arm/boot/dts/rtd1195.dtsi | 52 ++++++++++++++++++++++++------------=
+------
+>  1 file changed, 30 insertions(+), 22 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.d=
+tsi
+> index a8cc2d23e7ef..3439647ecf97 100644
+> --- a/arch/arm/boot/dts/rtd1195.dtsi
+> +++ b/arch/arm/boot/dts/rtd1195.dtsi
+> @@ -92,28 +92,36 @@
+>                          <0x18100000 0x18100000 0x01000000>,
+>                          <0x40000000 0x40000000 0xc0000000>;
+>
+> -               wdt: watchdog@18007680 {
+> -                       compatible =3D "realtek,rtd1295-watchdog";
+> -                       reg =3D <0x18007680 0x100>;
+> -                       clocks =3D <&osc27M>;
+> -               };
+> -
+> -               uart0: serial@18007800 {
+> -                       compatible =3D "snps,dw-apb-uart";
+> -                       reg =3D <0x18007800 0x400>;
+> -                       reg-shift =3D <2>;
+> -                       reg-io-width =3D <4>;
+> -                       clock-frequency =3D <27000000>;
+> -                       status =3D "disabled";
+> -               };
+> -
+> -               uart1: serial@1801b200 {
+> -                       compatible =3D "snps,dw-apb-uart";
+> -                       reg =3D <0x1801b200 0x100>;
+> -                       reg-shift =3D <2>;
+> -                       reg-io-width =3D <4>;
+> -                       clock-frequency =3D <27000000>;
+> -                       status =3D "disabled";
+> +               rbus: r-bus@18000000 {
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Following node names should be generic: bus@...
+
+> +                       compatible =3D "simple-bus";
+> +                       reg =3D <0x18000000 0x100000>;
+> +                       #address-cells =3D <1>;
+> +                       #size-cells =3D <1>;
+> +                       ranges =3D <0x0 0x18000000 0x100000>;
+> +
+> +                       wdt: watchdog@7680 {
+> +                               compatible =3D "realtek,rtd1295-watchdog"=
+;
+> +                               reg =3D <0x7680 0x100>;
+> +                               clocks =3D <&osc27M>;
+> +                       };
+> +
+> +                       uart0: serial@7800 {
+> +                               compatible =3D "snps,dw-apb-uart";
+> +                               reg =3D <0x7800 0x400>;
+> +                               reg-shift =3D <2>;
+> +                               reg-io-width =3D <4>;
+> +                               clock-frequency =3D <27000000>;
+> +                               status =3D "disabled";
+> +                       };
+> +
+> +                       uart1: serial@1b200 {
+> +                               compatible =3D "snps,dw-apb-uart";
+> +                               reg =3D <0x1b200 0x100>;
+> +                               reg-shift =3D <2>;
+> +                               reg-io-width =3D <4>;
+> +                               clock-frequency =3D <27000000>;
+> +                               status =3D "disabled";
+> +                       };
+>                 };
+>
+>                 gic: interrupt-controller@ff011000 {
+> --
+> 2.16.4
+>
