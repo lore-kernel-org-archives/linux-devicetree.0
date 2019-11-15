@@ -2,98 +2,131 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47370C33C99
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 16:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154E7C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 16:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194EA20730
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 16:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15CF2073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 16:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vYxpcpmY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJhoamSf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfKOQaA (ORCPT
+        id S1727587AbfKOQva (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:30:00 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46899 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbfKOQ37 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 11:29:59 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 193so6895288pfc.13
-        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 08:29:58 -0800 (PST)
+        Fri, 15 Nov 2019 11:51:30 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36954 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfKOQva (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 11:51:30 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b17so11149800wmj.2
+        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 08:51:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vyxQq6l0DnXXPlNTL9PGBy7Itz+G0TwXgp9Tr10w+hM=;
-        b=vYxpcpmYjKU505XimxG9aE30KFTlxC3O2y6sV+mQAjvNjy/GP0tyg9bWBnxqBHXyup
-         kN/FSlMRPGm0nSAEWl/wfvXvZnmCw0CPqq9kszndciTlgHWqgGQT5hW+QPJd6k46wuQp
-         EATT0nvCSJztIcTfqEfIFdt5472rcLHHooeMLtjHsmYqr2oo6MZZsZTcGCGAA1vakiop
-         ilN1gfkgAc4BE5i9UcBtFMwuMdOHTbFb/vnntnFZyRIm5dbP39LKMxsF74gmUjuL5PkP
-         TjSiPci8ZiI5PCKlVMZ5delLH/tJJiycPvCriQrKz28Bkoyr7NRbegbINpM++fZFlk1L
-         z7RQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VdOP5MdkiRa742wuZPU3Ia86dlFC1mZ4Epch8je0ZsQ=;
+        b=kJhoamSfi+/vkfFmd4tNviBydKZRD8tO2Ip6TbqvxKRbn0fKEMXSdcrsYVs0YRzOyv
+         IAX7OTN2enmHRj3B8o3ytHpqqK4EOkqNech8L73OvZzddZBMxCrWdBQppjXekTbbzbQr
+         2xt4ufY0Wbzg/L8WL6e4tZS+O8G3PlS0F5fk9UHWbO6ZySQFvLFt/u/SqLVo+M7ldMKf
+         QyF3S0lNPxW80L952FJWJ0XgWjhLJ9gYguM45QpVTkyAEakJ2cWk08kmwyxDKWm+WSwk
+         nDBnrDFf0vo9Z0mTa2c/QAnVJRLPCq8g8QXH2/m3ITtNpCijqLF+0q89fIuldNFfkxxV
+         +F5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=vyxQq6l0DnXXPlNTL9PGBy7Itz+G0TwXgp9Tr10w+hM=;
-        b=qFtKHQyZUn9IdbhS67DGCGj6dUvYv7pfuUPCuU//MvaCTdeFQZYub1obX7iomjXRuY
-         Uvvp37Bxk9F76fHrCjF5qoLWzbKkVHeRnl3W2u/wtih5A2t8N4QwIQ5BzoHH7q1lo6no
-         NY5PIdnDyT8E6eZVgF9Wvt/zoNlcgnsY67ufza2mNrJ+PvYeCTpojJjw/bGjbMg400bW
-         4hKr2cq4X41LDhZuEYRmyIkJgQoWiUAB/8OV4KOLA2mMpVrcQm2qBNvvMw1/1K9QeJKV
-         qouKPDrH+lN+s3CCr751IxSh87Qh4y/TVUfd77V/twZOi6hHfpCExMiybNNu8ZGYGhMI
-         c8+A==
-X-Gm-Message-State: APjAAAVI4Db2sTqCwHM472zKq4k76VlOkFFQ842TS0Sb4WqiHBTOSIoR
-        QqKarjmA9aALRaXJQL+z5vwI
-X-Google-Smtp-Source: APXvYqyHvbWvUHsrotDXNo3Uqb/ciOmuTBbvH69h1MhX5fWECe2j+LdfQeiepIjfp6mk4OXar6ZLVw==
-X-Received: by 2002:a62:ae11:: with SMTP id q17mr7393595pff.103.1573835398499;
-        Fri, 15 Nov 2019 08:29:58 -0800 (PST)
-Received: from localhost.localdomain ([2409:4072:6183:6d55:8418:2bbc:e6d8:2b4])
-        by smtp.gmail.com with ESMTPSA id y24sm12295288pfr.116.2019.11.15.08.29.52
+         :references:mime-version:content-transfer-encoding;
+        bh=VdOP5MdkiRa742wuZPU3Ia86dlFC1mZ4Epch8je0ZsQ=;
+        b=k3l4JaOidoWEwRM4SmIavvJn34VBW7L1ioQrSEeJo9TVcVwajPV9ayyyvSVwQz70sU
+         RJjVAvq18R2dW+WnslZYT4s92hoErdPJsjxzefkzdsVMwMUtq4EM2Ujzz8+1IBMisVXG
+         4yEQn7Q7t9h8b+N20EPTO/TWXbeMiZuYmC/NaY3ruAvlboVealELYalGYlnXwzGsLp3c
+         Zug05g1gK9AMEZn/WIeTO3HMECe1kF51hVHCn/Dqech2QigAnaUO7+FsMrMtP2WkDxke
+         3ofekHi4TOrJjJUyk3SUpmFNelFIuUQEJK5zMZTtZAlXqS1iERkHdj//FfKTYQZVvmeE
+         wTDw==
+X-Gm-Message-State: APjAAAWja9U7M/JrbOmmiRUtPdgQL+RG41ne71ZpAoy/ToCUECaDD2LP
+        yYHRIOv1uSuHnatfJgPIHkM=
+X-Google-Smtp-Source: APXvYqx/vABp+uHtpGDx3HX1T7K5X3e6ac6tFHtw4GaL2E1AormhRyo8+7T2afvE0M4eG9unJSoDKQ==
+X-Received: by 2002:a05:600c:1088:: with SMTP id e8mr4336535wmd.7.1573836687858;
+        Fri, 15 Nov 2019 08:51:27 -0800 (PST)
+Received: from localhost ([37.238.189.15])
+        by smtp.gmail.com with ESMTPSA id j22sm13527040wrd.41.2019.11.15.08.51.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 08:29:57 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v7 7/7] MAINTAINERS: Add entry for BM1880 SoC clock driver
-Date:   Fri, 15 Nov 2019 21:59:01 +0530
-Message-Id: <20191115162901.17456-8-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191115162901.17456-1-manivannan.sadhasivam@linaro.org>
-References: <20191115162901.17456-1-manivannan.sadhasivam@linaro.org>
+        Fri, 15 Nov 2019 08:51:27 -0800 (PST)
+From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>
+Subject: [RFC PATCH 2/2] Add support for Videostrong KII Pro tv box
+Date:   Fri, 15 Nov 2019 19:50:27 +0300
+Message-Id: <20191115165026.19376-3-mohammad.rasim96@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191115165026.19376-1-mohammad.rasim96@gmail.com>
+References: <20191115165026.19376-1-mohammad.rasim96@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for Bitmain BM1880 SoC clock driver.
+This patch adds support for the Videostrong KII Pro tv box which is based on the gxbb-p201 reference design
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+ .../boot/dts/amlogic/meson-gxbb-KII-Pro.dts   | 25 +++++++++++++++++++
+ 2 files changed, 26 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 52f3ac28b69e..40e9ba15ad2a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1529,8 +1529,10 @@ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm64/boot/dts/bitmain/
-+F:	drivers/clk/clk-bm1880.c
- F:	drivers/pinctrl/pinctrl-bm1880.c
- F:	Documentation/devicetree/bindings/arm/bitmain.yaml
-+F:	Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
- F:	Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
- 
- ARM/CALXEDA HIGHBANK ARCHITECTURE
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index 84afecba9ec0..1d72e93691f2 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p200.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p201.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-KII-Pro.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-pro.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-meta.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
+new file mode 100644
+index 000000000000..e79d75bfa8dd
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ */
++
++/dts-v1/;
++
++#include "meson-gxbb-p201.dts"
++
++/ {
++	compatible = "Videostrong,KII-Pro","amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
++	model = "Videostrong KII Pro";
++
++
++};
++
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
++	pinctrl-names = "default";
++	uart-has-rtscts;
++	bluetooth {
++		compatible = "brcm,bcm4335A0";
++		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
++	};
++};
 -- 
-2.17.1
+2.23.0
 
