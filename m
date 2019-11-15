@@ -2,115 +2,95 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414F4C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD12FC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150B320733
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8172B2073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YQVJAjOD"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="it38MDpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfKONEt (ORCPT
+        id S1727359AbfKONKe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:04:49 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:36866 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfKONEt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 08:04:49 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFCx9Ue167692;
-        Fri, 15 Nov 2019 13:04:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=NFSSVbjhEqElsrA73XhmCVdsI7Nss0hsHyVS7FwP2+Q=;
- b=YQVJAjOD8u/DCdzbTWgjB6kB+86XbwfNvVG7HB4og2jcOuYIoorw9Q0nkqXYcYRYisSN
- aepKCWa+8+eYyaAJ3vCuvuCAxqGNJYt/T/V07mfYHzTeQo0Gy/ggjPSc0Vc98o2b30ul
- wtXquJGr3i3w8r/zQiIYaXbhGct+RBGyxizIoCLdpAGfNU8GwaV4T7UQQmWSLq6/hBwU
- oP2OyO7QXXejzW08cEid5+zGbKT/76G/p51uxVcWg5xjdIWdMshHO9vtZzBKNhgff9a4
- Vam6PKjXqF83Nz2Y/U7zL6RKBmqe40HuI9EQLO5rpaip/GGr3Qnm3sGc1oSR8u82aGyS mw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2w9gxpk4b3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 13:04:16 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFCx7p0167338;
-        Fri, 15 Nov 2019 13:04:15 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2w9h14fam4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 13:04:15 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAFD48Hx001873;
-        Fri, 15 Nov 2019 13:04:08 GMT
-Received: from kadam.lan (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 15 Nov 2019 05:04:08 -0800
-Date:   Fri, 15 Nov 2019 16:03:59 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     jic23@kernel.org, devel@driverdev.osuosl.org, mark.rutland@arm.com,
-        lars@metafoo.de, biabeniamin@outlook.com,
-        Michael.Hennerich@analog.com, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        pmeerw@pmeerw.net, knaack.h@gmx.de,
-        Paul Cercueil <paul.cercueil@analog.com>
-Subject: Re: [PATCH v4 2/4] iio: adc: ad7091r5: Add scale and external VREF
- support
-Message-ID: <20191115130359.GE19101@kadam.lan>
-References: <20191115122316.20893-1-beniamin.bia@analog.com>
- <20191115122316.20893-2-beniamin.bia@analog.com>
+        Fri, 15 Nov 2019 08:10:34 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51151 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727223AbfKONKd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:10:33 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFD2Pcu022731;
+        Fri, 15 Nov 2019 14:10:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=9rmwto7fOBN39SiXRHKuxkPMdmv3HZGhG7BMLDLWBXs=;
+ b=it38MDpuYDLhG6jamaFeoXmLhqluiQEOXdJsj4ujecEVyW1onH6GHGQ0bekhkvwenlC4
+ 07uZCgXKkx0GLS3DG1SG02fFxmzQtNHs9MuK4Pz5TXoWmcKAbNlOHN2BCJldDEnqfjYb
+ uXeHsmFKaavG/nAr+2Y49GmfOCN/KXhigkGF+vFFfxlKV30IEGZpMmkEORjZgaCbBnBK
+ 7T+hNMNL/xLdxrYWhIiwegLkhRGLrADw5ZA0YRiMyk6vGHQCXaMwJpJbndNQoM4uRsik
+ CGA/8J750EcqctHJBrNmWyQdDKL1skR0tht2fjjbDjpTADlGZIlPuTmLczGgdHAu7GfY 3g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w7psbm8hg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 14:10:20 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ED50910002A;
+        Fri, 15 Nov 2019 14:10:19 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D6A6F2BC106;
+        Fri, 15 Nov 2019 14:10:19 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov
+ 2019 14:10:19 +0100
+Subject: Re: [PATCH 0/2] Add support for ADC on stm32mp157c-ed1
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <54a1b172-df71-0fec-cd40-e974dc70af34@st.com>
+Date:   Fri, 15 Nov 2019 14:10:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115122316.20893-2-beniamin.bia@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911150120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911150120
+In-Reply-To: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 02:23:14PM +0200, Beniamin Bia wrote:
-> @@ -216,6 +240,21 @@ int ad7091r_probe(struct device *dev, const char *name,
->  			return ret;
->  	}
->  
-> +	st->vref = devm_regulator_get_optional(dev, "vref");
-> +	if (IS_ERR(st->vref)) {
-> +		if (PTR_ERR(st->vref) == EPROBE_DEFER)
-                                      ^^^^^^^^^^^^^^^
-Missing - on EPROBE_DEFER.
+Hi Fabrice
 
-> +			return -EPROBE_DEFER;
-> +
-> +		st->vref = NULL;
-> +	} else {
-> +		ret = regulator_enable(st->vref);
-> +		if (ret)
-> +			return ret;
-> +		ret = devm_add_action_or_reset(dev, ad7091r_remove, st);
-> +		if (ret)
-> +			return ret;
-> +		}
+On 11/8/19 5:37 PM, Fabrice Gasnier wrote:
+> This series adds support for digital-to-analog converter on
+> stm32mp157c-ed1 board:
+> - define pins that can be used for ADC
+> - configure ADC channels to use these
+> 
+> Fabrice Gasnier (2):
+>    ARM: dts: stm32: add ADC pins used for stm32mp157c-ed1
+>    ARM: dts: stm32: add ADC support to stm32mp157c-ed1
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi |  6 ++++++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts     | 16 ++++++++++++++++
+>   2 files changed, 22 insertions(+)
+> 
+Series applied on stm32-next.
 
-Curly brace is indented an extra tab.
-
-regards,
-dan carpenter
+Regards
+Alex
