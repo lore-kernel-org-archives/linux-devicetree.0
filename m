@@ -6,101 +6,63 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F795C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 06:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E875C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 06:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1A2206D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 06:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E38120718
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 06:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfKOGBo (ORCPT
+        id S1726985AbfKOGFt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:01:44 -0500
-Received: from mga09.intel.com ([134.134.136.24]:20451 "EHLO mga09.intel.com"
+        Fri, 15 Nov 2019 01:05:49 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:57800 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfKOGBn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:01:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 22:01:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,307,1569308400"; 
-   d="scan'208";a="405232266"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Nov 2019 22:01:42 -0800
-Received: from [10.226.38.118] (rtanwar-mobl.gar.corp.intel.com [10.226.38.118])
-        by linux.intel.com (Postfix) with ESMTP id 47A875802B1;
-        Thu, 14 Nov 2019 22:01:40 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin zhu <yixin.zhu@linux.intel.com>,
-        cheol.yong.kim@intel.com
-References: <cover.1573455324.git.rahul.tanwar@linux.intel.com>
- <96537f8702501a45501d5a59ca029f92e36a9e4a.1573455324.git.rahul.tanwar@linux.intel.com>
- <CACRpkdYhy1KLyZd4MNSODpy0Q59_SAcc+wkofrZr4b4N+rYDxw@mail.gmail.com>
- <1d3be294-5f12-462c-855c-e53ecb9190b7@linux.intel.com>
- <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <0136c596-202c-ec43-8d79-66c3b8c03fe5@linux.intel.com>
-Date:   Fri, 15 Nov 2019 14:01:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726182AbfKOGFs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:05:48 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iVUjr-0004fW-D5; Fri, 15 Nov 2019 14:05:47 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iVUjj-000650-GH; Fri, 15 Nov 2019 14:05:39 +0800
+Date:   Fri, 15 Nov 2019 14:05:39 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, arnd@arndb.de,
+        Tudor.Ambarus@microchip.com, Claudiu.Beznea@microchip.com,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: rng: atmel-trng: add new compatible
+Message-ID: <20191115060539.u6wamay56otcqcnm@gondor.apana.org.au>
+References: <20191104115457.2681-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+okgZgqdbosrOHhL1m0BW4E718Kb4tmyuexEfPwAZLmg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104115457.2681-1-codrin.ciubotariu@microchip.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Nov 04, 2019 at 01:54:56PM +0200, Codrin Ciubotariu wrote:
+> Add compatible for new IP found on sam9x60 SoC.
+> 
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> Changes in v2:
+>  - added 'Acked-by' from Rob;
+> 
+>  Documentation/devicetree/bindings/rng/atmel-trng.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-On 15/11/2019 1:39 AM, Rob Herring wrote:
-> On Wed, Nov 13, 2019 at 9:27 PM Tanwar, Rahul
-> <rahul.tanwar@linux.intel.com> wrote:
->>
->> Hi Linus,
->>
->> On 13/11/2019 10:46 PM, Linus Walleij wrote:
->>> On Mon, Nov 11, 2019 at 11:11 AM Rahul Tanwar
->>> <rahul.tanwar@linux.intel.com> wrote:
->>>
->>>> Add dt bindings document for pinmux & GPIO controller driver of
->>>> Intel Lightning Mountain SoC.
->>>>
->>>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->>> (...)
->>>
->>>> +properties:
->>>> +  compatible:
->>>> +    const: intel,lgm-pinctrl
->>> Just noted from another review where Rob noted that this name should
->>> match the internal name in the datasheet for this hardware block. Is it
->>> really called "lgm-pinctrl" inside Intel?
->>>
->>> intel,lightning-mountain-io and similar are perfectly fine if that is the
->>> name it has in your documentation.
->> Our documentation does not have any specific names for these hardware
->> blocks. It names it in a very generic/standard manner like GPIO, pinmux..
->>
->> To make the name explicit & self explanatory, i should probably change
->> the name as you suggested i.e. intel,lightning-mountain-io.
-> You should also be consistent with 'lgm' vs. 'lightning-mountain' use
-> across bindings some of which I think have already been accepted.
->
-
-Yes, other accepted drivers/bindings use 'lgm'. I will rename it to
-'intel,lgm-io'to be consistent.Thanks.
-
-Regards,
-Rahul
-
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
