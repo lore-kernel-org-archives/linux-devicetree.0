@@ -2,147 +2,103 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A65C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F15BC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD89820803
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:57:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="EKU8Yavv"
+	by mail.kernel.org (Postfix) with ESMTP id 423F3206DC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfKOM5r (ORCPT
+        id S1727365AbfKONCD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:57:47 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:39680 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727223AbfKOM5q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:57:46 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 26AEA411F8;
-        Fri, 15 Nov 2019 12:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1573822664; x=1575637065; bh=QeijnkT3SOw/daHURBDhLCLSR
-        5tzZMfBzaBd9ltBxX8=; b=EKU8YavvosEYSvUbEDPS9hiu7i23N/cqdGiI8hNWf
-        zrE8b0EX5r50SWlPf9gj2FhnnQMGPCPsIoUgUoRFbLTScEcMZSM4itcjnbjvEZAU
-        qwbAkyOEig6onc8OipQDA7DoLEFqtpB7BS4wLVKg4uks5df1/pY8ItdQXU2EN4n7
-        As=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id BDyr-ZM6IAI0; Fri, 15 Nov 2019 15:57:44 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 532F6411D9;
-        Fri, 15 Nov 2019 15:57:41 +0300 (MSK)
-Received: from localhost.localdomain (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Fri, 15 Nov 2019 15:57:41 +0300
-Message-ID: <221381ebad0236625775bda5655fcd7c78455e6f.camel@yadro.com>
-Subject: Re: [PATCH v2 2/2] mmc: sdhci-of-aspeed: add inversion signal
- presence
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <openbmc@lists.ozlabs.org>
-Date:   Fri, 15 Nov 2019 15:56:54 +0300
-In-Reply-To: <d177ef37-643e-442d-d536-750e0bb5e86d@intel.com>
-References: <20191114125435.27756-1-i.mikhaylov@yadro.com>
-         <20191114125435.27756-3-i.mikhaylov@yadro.com>
-         <fcb5f8b5-40b9-6497-b24d-0b73e2525949@intel.com>
-         <b443738f5e2a3c7ba96b329a8347374f7f934483.camel@yadro.com>
-         <d177ef37-643e-442d-d536-750e0bb5e86d@intel.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 15 Nov 2019 08:02:03 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43759 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbfKONCC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 08:02:02 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l20so8499427oie.10;
+        Fri, 15 Nov 2019 05:02:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fFCEymgW22IOXjAfj44wBlKSuJ/Vx7mcifImk+2KKVg=;
+        b=ER/EhUYC5QkiYAW0NuWXmHh3nGBEqMeczo7bfaQfML9i+NLruK4Gh5CXsQ1oHEis+0
+         IE8o0YLOYLJEgxb+3fcFgTtNYhpBxdbhZ2FU1wH74ngVny8isWEvKLeOM1EUp6IuQsyR
+         sa0MRyDWpN+kwfVPNtsG1o0E1//U7Hlwu78BeVNbuGpyIbBfyOxvWvXUZjB1yvVO7M8/
+         RDioRr0MoDzQ/tz29Ggt1O30Q8GVzat1zaR+ApOHFm758kPj8fhguBvsclrvWsHN+jew
+         7VLz1NV9tYGbCnsdLjloB99a32LB5kA3JRDiwx9BLhg4TLrXqIQMWmvaDx4osSx0r6c6
+         TNJA==
+X-Gm-Message-State: APjAAAVrrtTmotSUsASqlWR6dyihUZRYtS0teQXGqlO9QGlhyuhg7PI8
+        CTzsWhJH7RePDyd49gStBA7jm8I1NLYgxGcliD0=
+X-Google-Smtp-Source: APXvYqwDJnmXPh1+p0V9jnah9Cftz47hQsDfVVyH6+VKTuHFMEr5sJTTgNmBTMY4L5m3/E6+pM7lmaFLG66wGDKmJn0=
+X-Received: by 2002:aca:4ac5:: with SMTP id x188mr7493713oia.148.1573822921804;
+ Fri, 15 Nov 2019 05:02:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com> <20190609190803.14815-4-jacek.anaszewski@gmail.com>
+In-Reply-To: <20190609190803.14815-4-jacek.anaszewski@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 15 Nov 2019 14:01:50 +0100
+Message-ID: <CAMuHMdXkQCVXdsbS1Tf+7wkafJ4JxhxXeh4R7OWOz5uGs-jL5Q@mail.gmail.com>
+Subject: Re: [PATCH v5 03/26] dt-bindings: leds: Add LED_FUNCTION definitions
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+        dtor@google.com, Guenter Roeck <linux@roeck-us.net>,
+        Dan Murphy <dmurphy@ti.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2019-11-15 at 09:20 +0200, Adrian Hunter wrote:
-> On 14/11/19 7:19 PM, Ivan Mikhaylov wrote:
-> > On Thu, 2019-11-14 at 15:10 +0200, Adrian Hunter wrote:
-> > On 14/11/19 2:54 PM, Ivan Mikhaylov wrote:
-> > > > Change the default .get_cd callback. Add inverted signal card detection
-> > > > check.
-> > > > 
-> > > > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> > > > 
-> > > > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c
-> > > > b/drivers/mmc/host/sdhci-of-
-> > > > aspeed.c
-> > > > index 8962f6664381..186559ee8fcc 100644
-> > > > --- a/drivers/mmc/host/sdhci-of-aspeed.c
-> > > > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
-> > > > @@ -143,6 +143,19 @@ static inline int
-> > > > aspeed_sdhci_calculate_slot(struct
-> > > > aspeed_sdhci *dev,
-> > > >  	return (delta / 0x100) - 1;
-> > > >  }
-> > > >  
-> > > > +static int aspeed_get_cd(struct mmc_host *mmc)
-> > > > +{
-> > > > +	struct sdhci_host *host = mmc_priv(mmc);
-> > > > +
-> > > > +	int present = !!(sdhci_readl(host, SDHCI_PRESENT_STATE)
-> > > > +			 & SDHCI_CARD_PRESENT);
-> > > > +
-> > > > +	if (mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
-> > > > +		present = !present;
-> > > 
-> > > Perhaps safer to flip the bit using CONFIG_MMC_SDHCI_IO_ACCESSORS and
-> > > ->readl() callback
-> 
-> 
-> > Sorry, don't quite understand what you're saying. You want to instantiate
-> > '.read_l' callback instead of '.get_cd' in sdhci_ops and substitute the real
-> > value?
-> > 
-> > res = readl(base, reg);
-> > if (reg == SDHCI_PRESENT_STATE)
-> > 	if (mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
-> > 		return !res;
-> 
-> Presumably just flip the SDHCI_CARD_PRESENT bit i.e.
-> 
-> 		return res ^ SDHCI_CARD_PRESENT;
-> 
-> > return res;
-> > 
-> > Something like this?
-> 
-> Yes
-> 
+Hi Jacek,
 
-Don't you think it will bring a little overhead on any sdhci_readl plus
-sdhci_readl will not get the real value in case of inverted signal which seems
-is not right from communication fairness between hw and sw? I took that approach
-with .get_cd from variety of drivers in host/mmc but if you think it will be
-better and safer with .read_l - I'll do that way. 
+On Sun, Jun 9, 2019 at 9:09 PM Jacek Anaszewski
+<jacek.anaszewski@gmail.com> wrote:
+> Add initial set of common LED function definitions.
+>
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
-Sorry for the link in subject, didn't notice that I put it in previous message
-somehow.
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -30,4 +31,45 @@
+>  #define LED_COLOR_ID_IR                7
+>  #define LED_COLOR_ID_MAX       8
+>
+> +/* Standard LED functions */
+> +#define LED_FUNCTION_ACTIVITY "activity"
 
-Thanks.
+What's the appropriate function for "general purpose" or "user" LEDs on
+development boards, where the LEDs don't have fixed functions, unlike
+on real products?
+Perhaps just LED_FUNCTION_INDICATOR?
 
+I noticed your very initial submission defined LED_FUNCTION_USER "user".
+I couldn't find an explanation for the rationale behind its removal in later
+revisions, or any discussion asking for that.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
