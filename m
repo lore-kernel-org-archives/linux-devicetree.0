@@ -2,175 +2,117 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A44C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CA4C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 08:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C32BC2072A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573804216;
-	bh=N5y9/j9jBDmNZvdMr4J2c/QD6EJfi4NYUK5ANzDGnqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VUk69AQ8a5pjiiSFZIn+tO7lNgJHLCN9BKplwbAyXlbnxE/B3fbYkO2U/AbLf9woY
-	 6uwHM77758Gjm1zqTqHOAowMYauHJiO53ojq1VNVQAzug8uBgKesAMOJXd+iDADXpz
-	 h4zyf97zfjPo/ApTZg/yqu80DFAL3j+u48kZwLe8=
+	by mail.kernel.org (Postfix) with ESMTP id 79CC42072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 08:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfKOHuM (ORCPT
+        id S1727075AbfKOIB5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:50:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfKOHuM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:50:12 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B63B92072A;
-        Fri, 15 Nov 2019 07:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573804211;
-        bh=N5y9/j9jBDmNZvdMr4J2c/QD6EJfi4NYUK5ANzDGnqc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oifm6v9/MIrfdTFrfE3u0TStPDjx8gWCUbH7cfP+DrK/7cEn6jOrKLR+x6nvdWHsq
-         bD6U5rkgwVBc0onFAOv6BjEpg+rV2swpf2Oyve36luFTe7cWhG+arflCpgXBY0v8lo
-         zCZ18z8QZlN2ddgL74/mlHnIIbciyditdaqB1hMg=
-Date:   Fri, 15 Nov 2019 08:50:08 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Christophe ROULLIER <christophe.roullier@st.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
- 'clocks', 'clock-names' properties
-Message-ID: <20191115075008.GY4345@gilmour.lan>
-References: <20191108103526.22254-1-christophe.roullier@st.com>
- <20191108103526.22254-2-christophe.roullier@st.com>
- <20191108104231.GE4345@gilmour.lan>
- <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5ZoQamfY1dF16JN0"
-Content-Disposition: inline
-In-Reply-To: <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Fri, 15 Nov 2019 03:01:57 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:37540 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfKOIB4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 03:01:56 -0500
+Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id A8C1ECED16;
+        Fri, 15 Nov 2019 09:11:00 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v5 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm
+ config
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191114180959.v5.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+Date:   Fri, 15 Nov 2019 09:01:54 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        dianders@chromium.org, devicetree <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <CAF11E66-CD51-47CA-82AD-3DF3302FC456@holtmann.org>
+References: <20191115021008.32926-1-abhishekpandit@chromium.org>
+ <20191114180959.v5.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Abhishek,
 
---5ZoQamfY1dF16JN0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Add documentation for pcm parameters.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> 
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+> .../bindings/net/broadcom-bluetooth.txt       | 20 +++++++++++-
+> include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
+> 2 files changed, 51 insertions(+), 1 deletion(-)
+> create mode 100644 include/dt-bindings/bluetooth/brcm.h
+> 
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> index c749dc297624..a92da31daa79 100644
+> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> @@ -29,10 +29,22 @@ Optional properties:
+>    - "lpo": external low power 32.768 kHz clock
+>  - vbat-supply: phandle to regulator supply for VBAT
+>  - vddio-supply: phandle to regulator supply for VDDIO
+> -
+> + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
+> +                        This value must be set in order for the latter
+> +                        properties to take effect.
+> + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
+> + - brcm,bt-pcm-frame-type: short, long
+> + - brcm,bt-pcm-sync-mode: slave, master
+> + - brcm,bt-pcm-clock-mode: slave, master
+> +
+> +See include/dt-bindings/bluetooth/brcm.h for SCO/PCM parameters. The default
+> +value for all these values are 0 (except for brcm,bt-sco-routing which requires
+> +a value) if you choose to leave it out.
+> 
+> Example:
+> 
+> +#include <dt-bindings/bluetooth/brcm.h>
+> +
+> &uart2 {
+>        pinctrl-names = "default";
+>        pinctrl-0 = <&uart2_pins>;
+> @@ -40,5 +52,11 @@ Example:
+>        bluetooth {
+>                compatible = "brcm,bcm43438-bt";
+>                max-speed = <921600>;
+> +
+> +               brcm,bt-sco-routing        = <BRCM_SCO_ROUTING_TRANSPORT>;
+> +               brcm,bt-pcm-interface-rate = <BRCM_PCM_IF_RATE_512KBPS>;
+> +               brcm,bt-pcm-frame-type     = <BRCM_PCM_FRAME_TYPE_SHORT>;
+> +               brcm,bt-pcm-sync-mode      = <BRCM_PCM_SYNC_MODE_MASTER>;
+> +               brcm,bt-pcm-clock-mode     = <BRCM_PCM_CLOCK_MODE_MASTER>;
+>        };
 
-On Fri, Nov 08, 2019 at 01:02:14PM +0000, Christophe ROULLIER wrote:
-> On 11/8/19 11:42 AM, Maxime Ripard wrote:
-> > Hi,
-> >
-> > On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
-> >> This change is needed for some soc based on snps,dwmac, which have
-> >> more than 3 clocks.
-> >>
-> >> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> >> ---
-> >>   Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
-> >>   1 file changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/D=
-ocumentation/devicetree/bindings/net/snps,dwmac.yaml
-> >> index 4845e29411e4..376a531062c2 100644
-> >> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-> >> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-> >> @@ -27,6 +27,7 @@ select:
-> >>             - snps,dwmac-3.710
-> >>             - snps,dwmac-4.00
-> >>             - snps,dwmac-4.10a
-> >> +          - snps,dwmac-4.20a
-> >>             - snps,dwxgmac
-> >>             - snps,dwxgmac-2.10
-> >>
-> >> @@ -62,6 +63,7 @@ properties:
-> >>           - snps,dwmac-3.710
-> >>           - snps,dwmac-4.00
-> >>           - snps,dwmac-4.10a
-> >> +        - snps,dwmac-4.20a
-> >>           - snps,dwxgmac
-> >>           - snps,dwxgmac-2.10
-> >>
-> >> @@ -87,7 +89,8 @@ properties:
-> >>
-> >>     clocks:
-> >>       minItems: 1
-> >> -    maxItems: 3
-> >> +    maxItems: 5
-> >> +    additionalItems: true
-> > Those additional clocks should be documented
-> >
-> > Maxime
->
-> Hi Maxime,
->
-> The problem it is specific to our soc, so is it possible to
->
-> propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
->
-> and "official" description in soc yaml file (stm32-dwmac.yaml) ?
->
->  =A0 clocks:
->  =A0=A0=A0 minItems: 1
->  =A0=A0=A0 maxItems: 5
->  =A0=A0=A0 additionalItems: true
->  =A0=A0=A0 items:
->  =A0=A0=A0=A0=A0 - description: GMAC main clock
->  =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
->  =A0=A0=A0=A0=A0 - description:
->  =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used for =
-programming the
->  =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed the=
-n the system
->  =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on some =
-platforms.
->
-> +=A0=A0=A0=A0=A0 - description: optional clock
->
-> +=A0=A0=A0=A0=A0 - description: optional clock
+I am not sure this makes this all that much more readable. I would have been fine with using actual integer values with a comment behind it. Especially since in the driver itself we will never compare against the constants, we set whatever the DT gives us.
 
-I guess we'd really need to figure out what those clocks are doing,
-they are probably helpful (and used, under a different name) by
-others.
+Anyway, for the names, I like Rob to ack them before applying them.
 
-Hopefully the questions Rob asked will clear that out
+Regards
 
-Maxime
+Marcel
 
---5ZoQamfY1dF16JN0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXc5YsAAKCRDj7w1vZxhR
-xfOIAQDuF3beQ9RfPAYD67pkf3/F/dORXIo+wvQohXSAQvcs3QD/UFc1TjzfsZGJ
-pYg8YtyMyILwneRXRbb0MDJ8mG1A2Q0=
-=DopP
------END PGP SIGNATURE-----
-
---5ZoQamfY1dF16JN0--
