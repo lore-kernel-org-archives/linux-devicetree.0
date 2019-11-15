@@ -2,170 +2,147 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B546CC432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FD5C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8412F20728
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ROuTp1LN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="msJryt5h"
+	by mail.kernel.org (Postfix) with ESMTP id 3DA142072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfKOLYL (ORCPT
+        id S1727135AbfKOLt2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:24:11 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:45288 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfKOLYK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 06:24:10 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9926B60FCF; Fri, 15 Nov 2019 11:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573817049;
-        bh=jhlsJfa/CIIKPDu4dgmeIauTYrE/caZ2o/tn2eCcBe0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ROuTp1LNy63IKm6kmUk3thTaxwTGxOSrvqGt2GSE2l7+9CyFBbQkbLldX5ujNlhJj
-         zSYz9X70UrOxHxYyBZfzvZGFMdIVomFIGulj1vn4PUAeYtKx3TzTAaWCVWsfvIxPnq
-         mx6kKQOcnV1mMoABn0cl8xVmGjnVOcO+/YXNOMTM=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 727D260FCF;
-        Fri, 15 Nov 2019 11:24:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573817048;
-        bh=jhlsJfa/CIIKPDu4dgmeIauTYrE/caZ2o/tn2eCcBe0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=msJryt5hn5MPERKvMvZWQoBAWnONKUFt7c8OC3TVaXyGlZwxFXM2RHEUr5jeROvxk
-         SJJKEAWWBagr739vq4UmUHFq68ZI8rJb/tjN8XgfzT3auExBPBAZciKXlE7Wvt0uvG
-         momPPozBWI+0lZmyvtJl1QovRS9wTNZ35PzYk8M8=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 15 Nov 2019 16:54:08 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Fri, 15 Nov 2019 06:49:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57548 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726983AbfKOLt2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 06:49:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AEDCEADCB;
+        Fri, 15 Nov 2019 11:49:25 +0000 (UTC)
+Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
+ soc_device_to_device() helper)
+To:     Rob Herring <robh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-realtek-soc@lists.infradead.org,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
-In-Reply-To: <5dcd8588.1c69fb81.2528a.3460@mx.google.com>
-References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
- <20191021033220.GG4500@tuxbook-pro>
- <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
- <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
- <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
- <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org>
- <1565197bda60573937453e95dcafbe68@codeaurora.org>
- <5dcd8588.1c69fb81.2528a.3460@mx.google.com>
-Message-ID: <139c37cbf267fcc6b363f04c6b5d1256@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Thierry Reding <thierry.reding@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        LAKML <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Architecture Mailman List <boot-architecture@lists.linaro.org>,
+        DTML <devicetree@vger.kernel.org>
+References: <20191103013645.9856-3-afaerber@suse.de>
+ <20191111045609.7026-1-afaerber@suse.de> <20191111052741.GB3176397@kroah.com>
+ <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
+ <20191111064040.GA3502217@kroah.com>
+ <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
+ <20191112052347.GA1197504@kroah.com>
+ <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
+ <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
+ <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <8411cceb-56f1-bcb3-96b6-5a2aaedd18cf@suse.de>
+Date:   Fri, 15 Nov 2019 12:49:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-14 22:19, Stephen Boyd wrote:
-> Quoting Sai Prakash Ranjan (2019-11-13 07:00:40)
->> Hello Rob,
->> 
->> On 2019-10-25 13:24, Sai Prakash Ranjan wrote:
->> > On 2019-10-25 04:03, Rob Herring wrote:
->> >> On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
->> >> <saiprakash.ranjan@codeaurora.org> wrote:
->> >>>
->> >>> Hi Rob,
->> >>>
->> >>> On 2019-10-24 01:19, Rob Herring wrote:
->> >>> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
->> >>> > <bjorn.andersson@linaro.org> wrote:
->> >>> >>
->> >>> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
->> >>> >>
->> >>> >> > LLCC behaviour is controlled by the configuration data set
->> >>> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
->> >>> >> > Also convert the existing bindings to json-schema and add
->> >>> >> > the compatible for SC7180 SoC.
->> >>> >> >
->> >>> >>
->> >>> >> Thanks for the patches and thanks for the review Stephen. Series
->> >>> >> applied
->> >>> >
->> >>> > And they break dt_binding_check. Please fix.
->> >>> >
->> >>>
->> >>> I did check this and think that the error log from dt_binding_check
->> >>> is
->> >>> not valid because it says cache-level is a required property [1], but
->> >>> there is no such property in LLCC bindings.
->> >>
->> >> Then you should point out the issue and not just submit stuff ignoring
->> >> it. It has to be resolved one way or another.
->> >>
->> >
->> > I did not ignore it. When I ran the dt-binding check locally, it did
->> > not
->> > error out and just passed on [1] and it was my bad that I did not check
->> > the entire build logs to see if llcc dt binding check had some warning
->> > or
->> > not. But this is the usual case where most of us don't look at the
->> > entire
->> > build logs to check if there is a warning or not. We notice if there is
->> > an
->> > immediate exit/fail in case of some warning/error. So it would be good
->> > if
->> > we fail the dt-binding check build if there is some warning/error or
->> > atleast
->> > provide some option to strict build to fail on warning, maybe there is
->> > already
->> > a flag to do this?
->> >
->> > After submitting the patch, I noticed this build failure on
->> > patchwork.ozlabs.org and was waiting for your reply.
->> >
->> > [1] https://paste.ubuntu.com/p/jNK8yfVkMG/
->> >
->> >> If you refer to the DT spec[1], cache-level is required. The schema is
->> >> just enforcing that now. It's keying off the node name of
->> >> 'cache-controller'.
->> >>
->> >
->> > This is not L2 or L3 cache, this is a system cache (last level cache)
->> > shared by
->> > clients other than just CPU. So I don't know how do we specify
->> > cache-level for
->> > this, let me know if you have some pointers.
->> >
->> 
->> Any ideas on specifying the cache-level for system cache? Does
->> dt-binding-check
->> needs to be updated for this case?
->> 
+Am 14.11.19 um 23:09 schrieb Rob Herring:
+> On Tue, Nov 12, 2019 at 4:47 AM Andreas Färber <afaerber@suse.de> wrote:
+>> Finally, arch/arm seems unique in that it has the machine_desc mechanism
+>> that allows individual SoCs to force creating their soc_device early and
+>> using it as parent for further DT-created platform_devices. With arm64
+>> we've lost that ability, and nios2 is not using it either.
+>> A bad side effect (with SUSE hat on) is that this parent design pattern
+>> does not allow to build such drivers as modules, which means that distro
+>> configs using arm's multi-platform, e.g., CONFIG_ARCH_MULTI_V7 will get
+>> unnecessary code creep as new platforms get added over time (beyond the
+>> basic clk, pinctrl, tty and maybe timer).
+>> Even if it were possible to call into a driver module that early, using
+>> it as parent would seem to imply that all the references by its children
+>> would not allow to unload the module, which I'd consider a flawed design
+>> for such an "optional" read-once driver. If we want the device hierarchy
+>> to have a soc root then most DT based platforms will have a /soc DT node
+>> anyway (although no device_type = "soc") that we probably could have a
+>> device registered for in common code rather than each SoC platform
+>> handling that differently? That might then make soc_register_device()
+>> not the creator of the device (if pre-existent) but the supplier of data
+>> to that core device, which should then allow to unload the data provider
+>> with just the sysfs data disappearing until re-inserted (speeding up the
+>> develop-and-test cycle on say not-so-resource-constrained platforms).
 > 
-> I don't see how 'cache-level' fits here. Maybe the node name should be
-> changed to 'system-cache-controller' and then the schema checker can
-> skip it?
+> I for one would like to for this to be consistent. Either we always
+> have an SoC device parent or never. I wouldn't decide based on having
+> a DT node or not either.
 
-Sounds good and correct. I made this change and ran the dt binding check
-and no warning was observed.
+Sure, if we can always be consistent, that might be best.
 
-Sent a patch - 
-https://lore.kernel.org/lkml/cover.1573814758.git.saiprakash.ranjan@codeaurora.org/
+Where I was coming from here is that, if we're not supposed to use
+soc_device_to_device(), then we have no way to associate an of_node with
+the soc_device from the outside (and nobody was doing it today, as per
+my analysis). We'd either need a new helper of_soc_device_register()
+with additional argument for the node, or it would need to be done
+entirely in the infrastructure as I suggested, be it by looking for one
+hardcoded /soc node or for nodes with device_type = "soc".
 
--Sai
+Rob, in light of this discussion, should we start adding the latter
+property for new DTs such as my new Realtek SoCs, or was there a reason
+this has not been used consistently outside of powerpc and nios2?
+Intel/Altera appear to be the only two in arm64, with only three more in
+arm, none in mips.
+
+(BTW my assumption was that we don't follow the booting-without-of.txt
+documented schema of soc<SOCname> so that we can share .dtsi across
+differently named SoCs, is that correct?)
+
+> Generally, we should always have MMIO devices
+> under a bus node and perhaps more than one, but that doesn't always
+> happen. I think building the drivers as modules is a good reason to do
+> away with the parent device.
+> 
+> It would also allow getting rid of remaining
+> of_platform_default_populate calls in arm platforms except for auxdata
+> cases. Pretty much that's the ones you list below in arch/arm/.
+
+The majority was indeed passing in NULL, so yeah, we might clean that
+up, if someone could come up with a plan of where/how to implement it.
+
+Cheers,
+Andreas
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
