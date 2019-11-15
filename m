@@ -2,147 +2,113 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FD5C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3A6C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA142072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AB620740
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfKOLt2 (ORCPT
+        id S1727386AbfKOMD7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:49:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57548 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726983AbfKOLt2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:49:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AEDCEADCB;
-        Fri, 15 Nov 2019 11:49:25 +0000 (UTC)
-Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
- soc_device_to_device() helper)
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-realtek-soc@lists.infradead.org,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
+        Fri, 15 Nov 2019 07:03:59 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:22340 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbfKOMD7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 07:03:59 -0500
+Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 15 Nov 2019
+ 20:04:18 +0800
+From:   Qianggui Song <qianggui.song@amlogic.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Qianggui Song <qianggui.song@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        LAKML <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Architecture Mailman List <boot-architecture@lists.linaro.org>,
-        DTML <devicetree@vger.kernel.org>
-References: <20191103013645.9856-3-afaerber@suse.de>
- <20191111045609.7026-1-afaerber@suse.de> <20191111052741.GB3176397@kroah.com>
- <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
- <20191111064040.GA3502217@kroah.com>
- <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
- <20191112052347.GA1197504@kroah.com>
- <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
- <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
- <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <8411cceb-56f1-bcb3-96b6-5a2aaedd18cf@suse.de>
-Date:   Fri, 15 Nov 2019 12:49:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v6 0/3] pinctrl: meson-a1: add pinctrl driver
+Date:   Fri, 15 Nov 2019 20:03:46 +0800
+Message-ID: <1573819429-6937-1-git-send-email-qianggui.song@amlogic.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.28.8.19]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 14.11.19 um 23:09 schrieb Rob Herring:
-> On Tue, Nov 12, 2019 at 4:47 AM Andreas Färber <afaerber@suse.de> wrote:
->> Finally, arch/arm seems unique in that it has the machine_desc mechanism
->> that allows individual SoCs to force creating their soc_device early and
->> using it as parent for further DT-created platform_devices. With arm64
->> we've lost that ability, and nios2 is not using it either.
->> A bad side effect (with SUSE hat on) is that this parent design pattern
->> does not allow to build such drivers as modules, which means that distro
->> configs using arm's multi-platform, e.g., CONFIG_ARCH_MULTI_V7 will get
->> unnecessary code creep as new platforms get added over time (beyond the
->> basic clk, pinctrl, tty and maybe timer).
->> Even if it were possible to call into a driver module that early, using
->> it as parent would seem to imply that all the references by its children
->> would not allow to unload the module, which I'd consider a flawed design
->> for such an "optional" read-once driver. If we want the device hierarchy
->> to have a soc root then most DT based platforms will have a /soc DT node
->> anyway (although no device_type = "soc") that we probably could have a
->> device registered for in common code rather than each SoC platform
->> handling that differently? That might then make soc_register_device()
->> not the creator of the device (if pre-existent) but the supplier of data
->> to that core device, which should then allow to unload the data provider
->> with just the sysfs data disappearing until re-inserted (speeding up the
->> develop-and-test cycle on say not-so-resource-constrained platforms).
-> 
-> I for one would like to for this to be consistent. Either we always
-> have an SoC device parent or never. I wouldn't decide based on having
-> a DT node or not either.
+This patchset adds Pin controller driver support for Meson-A1 Soc
+which shares the same register layout of pinmux with previous
+Meson-G12A, however there is difference for gpio and pin config
+registers in A1.
 
-Sure, if we can always be consistent, that might be best.
+Note that since dt-binding patch has been removed from this patch set,
+compiling need header file in patch 1 of [3].
 
-Where I was coming from here is that, if we're not supposed to use
-soc_device_to_device(), then we have no way to associate an of_node with
-the soc_device from the outside (and nobody was doing it today, as per
-my analysis). We'd either need a new helper of_soc_device_register()
-with additional argument for the node, or it would need to be done
-entirely in the infrastructure as I suggested, be it by looking for one
-hardcoded /soc node or for nodes with device_type = "soc".
+Changes since v5 at [4]
+ - modify return value when meson_map_resource return err or null for gpio/mux
+ in meson_pinctrl_parse_dt.
 
-Rob, in light of this discussion, should we start adding the latter
-property for new DTs such as my new Realtek SoCs, or was there a reason
-this has not been used consistently outside of powerpc and nios2?
-Intel/Altera appear to be the only two in arm64, with only three more in
-arm, none in mips.
+Changes since v4 at [3]
+ - remove dt-binding patch for it can be merged first according to
+ Linus Walleij's suggestion.
+ - make SoCs before g12a share the same aobus dt paser function
+ - make A1 dt paser function also as common part for later chip will
+ re-use this definition.
+ - modify meson_map_resource return value
 
-(BTW my assumption was that we don't follow the booting-without-of.txt
-documented schema of soc<SOCname> so that we can share .dtsi across
-differently named SoCs, is that correct?)
+Changes since v3 at [2]
+ - separate ao fixup from meson_pinctrl_parse_dt
+ - provide ao extra dt parse callback for each SoC
 
-> Generally, we should always have MMIO devices
-> under a bus node and perhaps more than one, but that doesn't always
-> happen. I think building the drivers as modules is a good reason to do
-> away with the parent device.
-> 
-> It would also allow getting rid of remaining
-> of_platform_default_populate calls in arm platforms except for auxdata
-> cases. Pretty much that's the ones you list below in arch/arm/.
+Changes since v2 at [1]:
+ - make dt parser callback as a separate patch
 
-The majority was indeed passing in NULL, so yeah, we might clean that
-up, if someone could come up with a plan of where/how to implement it.
+Changes since v1 at [0]:
+ - collect Reviewed-by
+ - modify commit log
+ - add an extra dt parser function for a1
 
-Cheers,
-Andreas
+[0] https://lore.kernel.org/linux-amlogic/1568700442-18540-1-git-send-email-qianggui.song@amlogic.com/
+[1] https://lore.kernel.org/linux-amlogic/1570532999-23302-1-git-send-email-qianggui.song@amlogic.com/
+[2] https://lore.kernel.org/linux-amlogic/1571050492-6598-1-git-send-email-qianggui.song@amlogic.com/
+[3] https://lore.kernel.org/linux-amlogic/1572004167-24150-1-git-send-email-qianggui.song@amlogic.com/
+[4] https://lore.kernel.org/linux-amlogic/1573203636-7436-1-git-send-email-qianggui.song@amlogic.com/
+
+Qianggui Song (3):
+  pinctrl: meson: add a new callback for SoCs fixup
+  pinctrl: meson: add pinctrl driver support for Meson-A1 SoC
+  arm64: dts: meson: a1: add pinctrl controller support
+
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi  |  18 +
+ drivers/pinctrl/meson/Kconfig              |   6 +
+ drivers/pinctrl/meson/Makefile             |   1 +
+ drivers/pinctrl/meson/pinctrl-meson-a1.c   | 942 +++++++++++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson-axg.c  |   1 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c |   9 +
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c |   1 +
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c  |   1 +
+ drivers/pinctrl/meson/pinctrl-meson.c      |  38 +-
+ drivers/pinctrl/meson/pinctrl-meson.h      |   7 +
+ drivers/pinctrl/meson/pinctrl-meson8.c     |   1 +
+ drivers/pinctrl/meson/pinctrl-meson8b.c    |   1 +
+ 12 files changed, 1017 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-a1.c
 
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+1.9.1
+
