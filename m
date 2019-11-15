@@ -2,205 +2,113 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767C9C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 08:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FD5C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 08:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC292073C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 08:11:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PzjnM9WD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NDY2inAd"
+	by mail.kernel.org (Postfix) with ESMTP id A7BA62072B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 08:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfKOILl (ORCPT
+        id S1726890AbfKOI2b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:11:41 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:56674 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOILj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 03:11:39 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 04B186119A; Fri, 15 Nov 2019 08:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573805499;
-        bh=VIDJtqVnj1N3O9u4S6EbSKIAqRAJrizRqy/9JUGFLRc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PzjnM9WDniLssIx6+2HtBqscuD+iCc/9RHdk7ThYjLmS9nFLyngm7pyvFIlK1nmui
-         iBAMjqTsY6dlGh33V+x8ieCtaWJO1agGuvMPfes/BBbTcVoy6SL1Fugfeil6+lC9lz
-         zdHA+LzVrrhmgZgAAybbqoAAqecc9GBfQBXOJUZs=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7064F61160;
-        Fri, 15 Nov 2019 08:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573805498;
-        bh=VIDJtqVnj1N3O9u4S6EbSKIAqRAJrizRqy/9JUGFLRc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NDY2inAdO6NUPRxAH9y18ooAP1gU/sawfR3L+7ixSxBSL6llFfG5y/GLfkQs5vV4r
-         I2HjbrkbsiFW/p5K62Dp5raymefeI4Ko9Fn41DwmeXCvC1ljyfTe/OQkKrGfx1C2Nk
-         wPAZ/4Vl9l/FqddKpFF4bs5GU/SqfQ4IOqBSvLTo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7064F61160
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v1 7/7] clk: qcom: Add video clock controller driver for
- SC7180
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org
-References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
- <1572524473-19344-8-git-send-email-tdas@codeaurora.org>
- <20191106003944.1BDAE2178F@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <80e79595-0672-1d16-f251-717dbe449c57@codeaurora.org>
-Date:   Fri, 15 Nov 2019 13:41:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 15 Nov 2019 03:28:31 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34243 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfKOI2b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 03:28:31 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iVWxx-00035K-1e; Fri, 15 Nov 2019 09:28:29 +0100
+Received: from mgr by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iVWxw-0005Il-Io; Fri, 15 Nov 2019 09:28:28 +0100
+Date:   Fri, 15 Nov 2019 09:28:28 +0100
+From:   Michael Grzeschik <mgr@pengutronix.de>
+To:     Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        shawnguo@kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de,
+        festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx25: fix usbhost1 node
+Message-ID: <20191115082828.tc3dbjnv7bojgrg4@pengutronix.de>
+References: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
+ <20191114211708.77d6bttkyj426yqy@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191106003944.1BDAE2178F@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="prnwotkb3gjhqohe"
+Content-Disposition: inline
+In-Reply-To: <20191114211708.77d6bttkyj426yqy@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:27:20 up 130 days, 14:37, 121 users,  load average: 0.17, 0.16,
+ 0.15
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-Thanks for the review.
+--prnwotkb3gjhqohe
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 11/6/2019 6:09 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-10-31 05:21:13)
->> diff --git a/drivers/clk/qcom/videocc-sc7180.c b/drivers/clk/qcom/videocc-sc7180.c
->> new file mode 100644
->> index 0000000..bef034b
->> --- /dev/null
->> +++ b/drivers/clk/qcom/videocc-sc7180.c
->> @@ -0,0 +1,263 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
-> 
-> Are these of includes used?
-> 
+On Thu, Nov 14, 2019 at 10:17:08PM +0100, Uwe Kleine-K=F6nig wrote:
+> On Mon, Nov 11, 2019 at 12:46:56PM +0100, Michael Grzeschik wrote:
+> > The usb port represented by &usbhost1 uses an USB phy internal to the
+> > SoC. We add the phy_type to the base dtsi so the board dts only have to
+> > overwrite it if they use a different configuration. While at it we also
+> > pin the usbhost port to host mode.
+> >=20
+> > Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+> Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-I will clean them up.
+Thanks for the ACK.
 
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/qcom,videocc-sc7180.h>
->> +
->> +#include "clk-alpha-pll.h"
->> +#include "clk-branch.h"
->> +#include "clk-rcg.h"
->> +#include "clk-regmap.h"
->> +#include "common.h"
->> +#include "gdsc.h"
->> +
->> +enum {
->> +       P_BI_TCXO,
->> +       P_CHIP_SLEEP_CLK,
->> +       P_CORE_BI_PLL_TEST_SE,
->> +       P_VIDEO_PLL0_OUT_EVEN,
->> +       P_VIDEO_PLL0_OUT_MAIN,
->> +       P_VIDEO_PLL0_OUT_ODD,
->> +};
->> +
->> +static struct pll_vco fabia_vco[] = {
-> 
-> const?
-> 
+I just figured out that we also can add the limitation
+to maximum-speed =3D "full-speed" into to dts. Since the
+internal phy maximum speed is limited to that.
 
-yes, will add it.
+I will send an v2.
 
->> +       { 249600000, 2000000000, 0 },
->> +};
->> +
-> [...]
->> +
->> +static int video_cc_sc7180_probe(struct platform_device *pdev)
->> +{
->> +       struct regmap *regmap;
->> +       struct alpha_pll_config video_pll0_config = {};
->> +
->> +       regmap = qcom_cc_map(pdev, &video_cc_sc7180_desc);
->> +       if (IS_ERR(regmap))
->> +               return PTR_ERR(regmap);
->> +
->> +       video_pll0_config.l = 0x1F;
-> 
-> lowercase hex please.
-> 
->> +       video_pll0_config.alpha = 0x4000;
->> +       video_pll0_config.user_ctl_val = 0x00000001;
->> +       video_pll0_config.user_ctl_hi_val = 0x00004805;
-> 
-> Same question, why on stack?
-> 
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Will update the same.
+--prnwotkb3gjhqohe
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> +
->> +       clk_fabia_pll_configure(&video_pll0, regmap, &video_pll0_config);
->> +
->> +       /* video_cc_xo_clk */
-> 
-> What are we doing? Enabling it?
-> 
+-----BEGIN PGP SIGNATURE-----
 
-yes, enabling it. Did not model and mark it CRITICAL.
+iQIzBAABCAAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAl3OYakACgkQC+njFXoe
+LGQPhRAAwwmh0pLFGDajFYvnBK59/qcOgTpCWpRj3DRglHJp8Eu7aI9tTLrfGed1
+MWpJPtrvFKFWdc4HjC7XEcSo/KwIzpI9d92oiXB7LwfiLoCrVmDvwTCxICqe3aLM
+XgU9otlF2k8cK9s7IRb0UEo2wj06B1FUVGlBpd6YbxhI/mLtgvQGRb/RXacbEJC1
+fvc7YtgjeA1piiVadonjrS2WuxMdz7aPxgHGDuC9pO5/O04xSBIZ1w96oxnbyxtp
+dFH+Cf5lNIbUcAn+V6HIyc54ZOWgdc7ZdlBbnXrBHM2eqsF/+VDJuEynCr/rVTcs
+l29Iwq/jcN6vP1mFeoBAPkLtBFQ3ReszjK7kaiDsK6NG7oNSMDWyMf6L4DDpO5kr
+MScLAqZHU9/7lXg+CmtBw2EJGQW5/cSLWQuIUqWrtDJkRD0yjvVS+mQyHrx+hkFI
+y6SxaHpj7y98uBActiB/8CBJZJ+g8w1hsB0ttlN7qOUr2zq9cf0qzRgvG+6k9zlp
+SN5AG5zWoUF6JFfyd9u5GZWfpwmHiiOfqmXpy3X/riXW5YsVEYUiXtmlLydCPt/x
++SyehRxLa0DA79vFju5ykeNj4GmwR3DaYKuYTJDie2m7olt9TQY2Y6Erk+aHDVkD
+90ji6y4LTivFUPo364/rTliM7mO80sRb4/Nw1Fu7MfMnuHmQq+w=
+=oazr
+-----END PGP SIGNATURE-----
 
->> +       regmap_update_bits(regmap, 0x984, 0x1, 0x1);
->> +
->> +       return qcom_cc_really_probe(pdev, &video_cc_sc7180_desc, regmap);
->> +}
->> +
->> +static struct platform_driver video_cc_sc7180_driver = {
->> +       .probe = video_cc_sc7180_probe,
->> +       .driver = {
->> +               .name = "sc7180-videocc",
->> +               .of_match_table = video_cc_sc7180_match_table,
->> +       },
->> +};
->> +
->> +static int __init video_cc_sc7180_init(void)
->> +{
->> +       return platform_driver_register(&video_cc_sc7180_driver);
->> +}
->> +core_initcall(video_cc_sc7180_init);
->> +
->> +static void __exit video_cc_sc7180_exit(void)
->> +{
->> +       platform_driver_unregister(&video_cc_sc7180_driver);
->> +}
->> +module_exit(video_cc_sc7180_exit);
-> 
-> Same question, module platform driver perhaps?
-> 
-
-I will move it to subsys_initcall().
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+--prnwotkb3gjhqohe--
