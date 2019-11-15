@@ -2,95 +2,159 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD12FC432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2FDC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8172B2073B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8F320740
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 13:17:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="it38MDpu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mz+RtK2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfKONKe (ORCPT
+        id S1727385AbfKONRt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:10:34 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51151 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727223AbfKONKd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:10:33 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFD2Pcu022731;
-        Fri, 15 Nov 2019 14:10:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=9rmwto7fOBN39SiXRHKuxkPMdmv3HZGhG7BMLDLWBXs=;
- b=it38MDpuYDLhG6jamaFeoXmLhqluiQEOXdJsj4ujecEVyW1onH6GHGQ0bekhkvwenlC4
- 07uZCgXKkx0GLS3DG1SG02fFxmzQtNHs9MuK4Pz5TXoWmcKAbNlOHN2BCJldDEnqfjYb
- uXeHsmFKaavG/nAr+2Y49GmfOCN/KXhigkGF+vFFfxlKV30IEGZpMmkEORjZgaCbBnBK
- 7T+hNMNL/xLdxrYWhIiwegLkhRGLrADw5ZA0YRiMyk6vGHQCXaMwJpJbndNQoM4uRsik
- CGA/8J750EcqctHJBrNmWyQdDKL1skR0tht2fjjbDjpTADlGZIlPuTmLczGgdHAu7GfY 3g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w7psbm8hg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 Nov 2019 14:10:20 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ED50910002A;
-        Fri, 15 Nov 2019 14:10:19 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D6A6F2BC106;
-        Fri, 15 Nov 2019 14:10:19 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov
- 2019 14:10:19 +0100
-Subject: Re: [PATCH 0/2] Add support for ADC on stm32mp157c-ed1
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <54a1b172-df71-0fec-cd40-e974dc70af34@st.com>
-Date:   Fri, 15 Nov 2019 14:10:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 15 Nov 2019 08:17:49 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46297 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfKONRt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 08:17:49 -0500
+Received: by mail-lj1-f193.google.com with SMTP id e9so10634819ljp.13;
+        Fri, 15 Nov 2019 05:17:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LaT4x0/Kn3VzE52WjGHu+FObrFAqvFc8L85812xoatc=;
+        b=mz+RtK2yqtwyU+TnBxer5tMlnxuXQMLXeb2JAtEkvIZToF426WhJxXIhL5plwglouD
+         +h+Uj26zJTzqT69+2sXRr1+ej6YfRP8945+QfaacL88Gh2MYRAxJjoH8dk1fHmBKPQQt
+         AIH3/7Z5ljaFSSQZ1J4wtiuwu0eOLrhfe4EtUgdBXkqOn0XPdzelyr9RK8GCRLlGQhRs
+         5D13X4GVcQzdrP69wrz6ULxcQfsjb7ImUrMR0tSynqatzfxh1WPjD5TxXUrpQXrjyomb
+         RGTwiPneOwNVLT99Ti2NhREzZeLmuJDVDgwmG8UaRAPl1QnnaM7g1SVvw+ORtVWssB47
+         0Tyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LaT4x0/Kn3VzE52WjGHu+FObrFAqvFc8L85812xoatc=;
+        b=HTGOZWmSv1BHDLHQua4U7hY7HaceW40/ePH4oRy+MYV5ig7dTJqWHivI2WD8uvYxUW
+         MZXwywwTplPCNYg2T3PazFEWtFuk2VBLQaODh92A8wo6mGm3bpVntMrI7QoSSb4AGEKx
+         rasTg8/G6oYhlfFq7c+9BBC8QMCVbEYmVwACZRXuGD/BYSrXn7NwR3tS+f545dKkPiu7
+         /djOvZmY01U54K3vxYuT0+wWam7AcjH7/d+sdvOHPjjpuUK7Q7Dj48qkZBM+mySlgKoN
+         VwgY7Xdqh9iBAxtoMkKzlNP7LPLBAchUemogVeuLcPSGqgi/R1CL3vmU5QLRP7dP9RVU
+         gkpA==
+X-Gm-Message-State: APjAAAWBIoN4XbWzDdo4klMXtFLWAWLXyBeJu49dkAw4XpJZyt5tkoHs
+        PBRWj6lwbe+thuRqDPu350/c6no7
+X-Google-Smtp-Source: APXvYqyoHPvDBFzYpzzcjiOYRsoChjplgewAT3NGoJCo7TO+Z9xmod+iayB/xKe5/6hwje3Gwb0qjA==
+X-Received: by 2002:a2e:97d8:: with SMTP id m24mr11567246ljj.62.1573823865644;
+        Fri, 15 Nov 2019 05:17:45 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id u11sm3874338ljo.17.2019.11.15.05.17.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 05:17:44 -0800 (PST)
+Subject: Re: [PATCH v10 12/15] memory: tegra: Introduce Tegra30 EMC driver
+To:     Jon Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190811210043.20122-1-digetx@gmail.com>
+ <20190811210043.20122-13-digetx@gmail.com>
+ <41ab3704-46e4-696d-2577-9d0a35ed2861@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <01141234-b0c2-63a9-1c81-b7ec3b44fb6d@gmail.com>
+Date:   Fri, 15 Nov 2019 16:17:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <1573231059-395-1-git-send-email-fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <41ab3704-46e4-696d-2577-9d0a35ed2861@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabrice
+15.11.2019 15:54, Jon Hunter пишет:
+> 
+> On 11/08/2019 22:00, Dmitry Osipenko wrote:
+>> Introduce driver for the External Memory Controller (EMC) found on Tegra30
+>> chips, it controls the external DRAM on the board. The purpose of this
+>> driver is to program memory timing for external memory on the EMC clock
+>> rate change.
+>>
+>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/memory/tegra/Kconfig       |   10 +
+>>  drivers/memory/tegra/Makefile      |    1 +
+>>  drivers/memory/tegra/mc.c          |    9 +-
+>>  drivers/memory/tegra/mc.h          |   30 +-
+>>  drivers/memory/tegra/tegra30-emc.c | 1232 ++++++++++++++++++++++++++++
+>>  drivers/memory/tegra/tegra30.c     |   42 +
+>>  include/soc/tegra/mc.h             |    2 +-
+>>  7 files changed, 1311 insertions(+), 15 deletions(-)
+>>  create mode 100644 drivers/memory/tegra/tegra30-emc.c
+> 
+> This patch is causing the following crash on Tegra30-cardhu-a04 on
+> entering suspend ...
+> 
+> [   58.320034] 8<--- cut here ---
+> [   58.323166] Unable to handle kernel NULL pointer dereference at virtual address 0000004c
+> [   58.331262] pgd = 62bca252
+> [   58.334028] [0000004c] *pgd=00000000
+> [   58.337615] Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+> [   58.342927] Modules linked in: brcmfmac brcmutil
+> [   58.347559] CPU: 1 PID: 689 Comm: rtcwake Tainted: G        W         5.4.0-rc6-next-20191108 #1
+> [   58.356343] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+> [   58.362620] PC is at tegra_emc_suspend+0x4/0x50
+> [   58.367161] LR is at dpm_run_callback+0x38/0x1d4
+> [   58.371778] pc : [<c07a9ce0>]    lr : [<c05c2a2c>]    psr: a0000113
+> [   58.378042] sp : ee3afd98  ip : 00000000  fp : 00000000
+> [   58.383265] r10: c1077e1c  r9 : ef254c54  r8 : c1077de4
+> [   58.388488] r7 : c0d1d3e4  r6 : ef254c10  r5 : 00000002  r4 : c05b5e28
+> [   58.395013] r3 : c07a9cdc  r2 : 00000000  r1 : c0bbadc4  r0 : ef254c10
+> [   58.401542] Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+> [   58.408677] Control: 10c5387d  Table: adcf804a  DAC: 00000051
+> [   58.414423] Process rtcwake (pid: 689, stack limit = 0x8afb9f6f)
+> [   58.420429] Stack: (0xee3afd98 to 0xee3b0000)
+> [   58.424787] fd80:                                                       ef254c10 c110c438
+> [   58.432969] fda0: 00000000 00000002 c1077de4 ef254c54 c1077e1c c05c30fc 00000000 ef254ca8
+> [   58.441150] fdc0: ef254c10 c1077de4 c110c438 c1077de4 c05c3560 c1077e1c 00000000 c05c5730
+> [   58.449330] fde0: 00000002 c10c3648 c10d3df0 00000000 00000002 00000003 c1004e48 00000004
+> [   58.457511] fe00: ede68100 edf50210 00475228 c05c6030 c10d3dbc 00000000 00000003 c017d16c
+> [   58.465693] fe20: c10c889c 00000004 ede68100 edf50210 00475228 c0181404 c0cbbba4 ee3afe5c
+> [   58.473873] fe40: c10c889c e8e19516 ee3afe5c c1004e48 00000000 00000003 c10c889c 00000004
+> [   58.482054] fe60: ede68100 edf50210 00475228 c017dd18 00000008 e8e19516 00000cc0 00000003
+> [   58.490234] fe80: c0cbeff4 00000003 c10d3dd0 c017c088 00000004 edf50200 00000000 00000000
+> [   58.498415] fea0: ede68100 ee3aff78 edf50210 c02fcfe4 00000000 00000000 c1004e48 c02fceec
+> [   58.506602] fec0: 00476438 ee3aff78 00000000 00476438 00000004 c027a3f0 00000055 00000cc0
+> [   58.514791] fee0: 00000477 00477000 edcf8010 edcf8010 00000000 00000000 00000000 00000000
+> [   58.522981] ff00: ffefe1dc eff2b394 00000000 e8e19516 00000001 ee3affb0 ef2bb700 edf2a200
+> [   58.531166] ff20: 0047743c 00000817 eddd5ad0 e8e19516 edf2a240 00000004 edc53e40 00476438
+> [   58.539352] ff40: ee3aff78 00000000 00476438 00000004 00475228 c027b99c 00000000 00000000
+> [   58.547542] ff60: c1004e48 edc53e40 00000000 00000000 edc53e40 c027bc3c 00000000 00000000
+> [   58.555732] ff80: 00001008 e8e19516 0000006c 00476438 00475228 00000004 c0101204 ee3ae000
+> [   58.563922] ffa0: 00000004 c0101000 0000006c 00476438 00000004 00476438 00000004 00000000
+> [   58.572107] ffc0: 0000006c 00476438 00475228 00000004 00000004 00000004 0046278c 00475228
+> [   58.580294] ffe0: 00000004 be9db9b8 b6eb3c0b b6e3e206 600f0030 00000004 00000000 00000000
+> [   58.588491] [<c07a9ce0>] (tegra_emc_suspend) from [<c110c438>] (0xc110c438)
+> [   58.595466] Code: e7c4321f e5c4304c e8bd8010 e5902040 (e5d2304c) 
+> [   58.601656] ---[ end trace 8d7d1a7fb898a1d0 ]---
+> [   88.142888] ------------[ cut here ]------------
 
-On 11/8/19 5:37 PM, Fabrice Gasnier wrote:
-> This series adds support for digital-to-analog converter on
-> stm32mp157c-ed1 board:
-> - define pins that can be used for ADC
-> - configure ADC channels to use these
-> 
-> Fabrice Gasnier (2):
->    ARM: dts: stm32: add ADC pins used for stm32mp157c-ed1
->    ARM: dts: stm32: add ADC support to stm32mp157c-ed1
-> 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi |  6 ++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts     | 16 ++++++++++++++++
->   2 files changed, 22 insertions(+)
-> 
-Series applied on stm32-next.
+Oh, right. I never tried to suspend without memory timings being defined
+in DT.
 
-Regards
-Alex
+Jon, thank you very much for the report. I'll make a patch to fix that
+problem.
