@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F13BC43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E1EC33CA1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0772073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D502073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I4jzqdOB";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EUDsPOx8"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jvZ8vZ2v";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="m8UGoGDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfKOJaf (ORCPT
+        id S1726962AbfKOJai (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:30:35 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:55426 "EHLO
+        Fri, 15 Nov 2019 04:30:38 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55658 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbfKOJae (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 04:30:34 -0500
+        with ESMTP id S1726901AbfKOJai (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 04:30:38 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 22BF661459; Fri, 15 Nov 2019 09:30:25 +0000 (UTC)
+        id 6F3776160E; Fri, 15 Nov 2019 09:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573810233;
-        bh=Oq1R1qTwaQUyPpO5oDp2OIM7D6uWby0FNTk2Tr/h+4Q=;
+        s=default; t=1573810236;
+        bh=snncLReTw1yMIh3xsZC0GMJaIxzyIQxfYI9od1UMK1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I4jzqdOB2p8xeNkrZ0ojsSNTyh1DiD9SzEK/Qs5NGwheB0be8aJmUutSXWkomZIiO
-         WNr9jhzrnYfCur6Uh2EwllW7jVegNxcGRPv0IARWnx0AH80YcrAbVfLUZNd4AK0tsM
-         3tl+L11oKM+6CGH7/Js5NELBf4TdbgtMnzNC0CWk=
+        b=jvZ8vZ2vOLEKyqhX1upGtwwO51fJey+Q0GJBtvlvirTnGSiDGxKDlX/N42iqHzINz
+         1yHLNIkk7eS9CeY3szniP4ZbyLuR4EPL8aeTJMMROHNnj72IYF/T852qdwXOvlwKB6
+         TOkVe9c0meJkzsfGjTwZdXxHRxZoJbA2ru+sHBtY=
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B43356115E;
-        Fri, 15 Nov 2019 09:30:21 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 799CC61188;
+        Fri, 15 Nov 2019 09:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573810223;
-        bh=Oq1R1qTwaQUyPpO5oDp2OIM7D6uWby0FNTk2Tr/h+4Q=;
+        s=default; t=1573810230;
+        bh=snncLReTw1yMIh3xsZC0GMJaIxzyIQxfYI9od1UMK1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EUDsPOx8hXtF1JTHQfXFrmbOk0BKEyC0QnMFHQMG2PVh1JB6RrTuldH8RzcvEINUN
-         4JeoGJ1lca2/Mjy78KdmgUxThlJVarBUKH4uzz6rNpGNefjzfUq8crgm7m7yR/NuBq
-         sUC0zdu2bK43Pocz7Z6ZAXAAgzyUVTdMhnioh2Vg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B43356115E
+        b=m8UGoGDr8EKBZyElQQwESE5Yfc7pbTTwnb9ViPgtD9QUwfqQ8xeJu7NI9spoR0gws
+         O1z1GND/ZO8+QMTR8ZHs8KGjUH0hsGs5PZPY20oHpLBr3/onHxNN/kHnn53pN3QRXf
+         r/uxWZj9Uoniu55G+WTBE2ETfDoowdnUf13D4NuI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 799CC61188
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 From:   Kalle Valo <kvalo@codeaurora.org>
 To:     linux-wireless@vger.kernel.org
 Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 25/49] ath11k: add hal_rx.h
-Date:   Fri, 15 Nov 2019 11:28:49 +0200
-Message-Id: <1573810153-29623-26-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH v3 29/49] ath11k: add htc.h
+Date:   Fri, 15 Nov 2019 11:28:53 +0200
+Message-Id: <1573810153-29623-30-git-send-email-kvalo@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573810153-29623-1-git-send-email-kvalo@codeaurora.org>
 References: <1573810153-29623-1-git-send-email-kvalo@codeaurora.org>
@@ -66,365 +66,326 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 ---
- drivers/net/wireless/ath/ath11k/hal_rx.h | 352 +++++++++++++++++++++++++++++++
- 1 file changed, 352 insertions(+)
+ drivers/net/wireless/ath/ath11k/htc.h | 313 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 313 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/hal_rx.h b/drivers/net/wireless/ath/ath11k/hal_rx.h
+diff --git a/drivers/net/wireless/ath/ath11k/htc.h b/drivers/net/wireless/ath/ath11k/htc.h
 new file mode 100644
-index 000000000000..96555e4f4ef3
+index 000000000000..f0a3387567ca
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/hal_rx.h
-@@ -0,0 +1,352 @@
++++ b/drivers/net/wireless/ath/ath11k/htc.h
+@@ -0,0 +1,313 @@
 +/* SPDX-License-Identifier: BSD-3-Clause-Clear */
 +/*
 + * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 + */
 +
-+#ifndef ATH11K_HAL_RX_H
-+#define ATH11K_HAL_RX_H
++#ifndef ATH11K_HTC_H
++#define ATH11K_HTC_H
 +
-+struct hal_rx_mpdu_meta {
-+	u32 peer_meta;
-+	u16 msdu_cnt;
-+	u16 seq_num;
-+	bool frag;
-+	bool retry;
-+	bool ampdu;
-+	bool raw;
++#include <linux/kernel.h>
++#include <linux/list.h>
++#include <linux/bug.h>
++#include <linux/skbuff.h>
++#include <linux/timer.h>
++
++struct ath11k_base;
++
++#define HTC_HDR_ENDPOINTID                       GENMASK(7, 0)
++#define HTC_HDR_FLAGS                            GENMASK(15, 8)
++#define HTC_HDR_PAYLOADLEN                       GENMASK(31, 16)
++#define HTC_HDR_CONTROLBYTES0                    GENMASK(7, 0)
++#define HTC_HDR_CONTROLBYTES1                    GENMASK(15, 8)
++#define HTC_HDR_RESERVED                         GENMASK(31, 16)
++
++#define HTC_SVC_MSG_SERVICE_ID                   GENMASK(31, 16)
++#define HTC_SVC_MSG_CONNECTIONFLAGS              GENMASK(15, 0)
++#define HTC_SVC_MSG_SERVICEMETALENGTH            GENMASK(23, 16)
++#define HTC_READY_MSG_CREDITCOUNT                GENMASK(31, 16)
++#define HTC_READY_MSG_CREDITSIZE                 GENMASK(15, 0)
++#define HTC_READY_MSG_MAXENDPOINTS               GENMASK(23, 16)
++
++#define HTC_READY_EX_MSG_HTCVERSION              GENMASK(7, 0)
++#define HTC_READY_EX_MSG_MAXMSGSPERHTCBUNDLE     GENMASK(15, 8)
++
++#define HTC_SVC_RESP_MSG_SERVICEID           GENMASK(31, 16)
++#define HTC_SVC_RESP_MSG_STATUS              GENMASK(7, 0)
++#define HTC_SVC_RESP_MSG_ENDPOINTID          GENMASK(15, 8)
++#define HTC_SVC_RESP_MSG_MAXMSGSIZE          GENMASK(31, 16)
++#define HTC_SVC_RESP_MSG_SERVICEMETALENGTH   GENMASK(7, 0)
++
++#define HTC_MSG_MESSAGEID                        GENMASK(15, 0)
++#define HTC_SETUP_COMPLETE_EX_MSG_SETUPFLAGS     GENMASK(31, 0)
++#define HTC_SETUP_COMPLETE_EX_MSG_MAXMSGSPERBUNDLEDRECV      GENMASK(7, 0)
++#define HTC_SETUP_COMPLETE_EX_MSG_RSVD0          GENMASK(15, 8)
++#define HTC_SETUP_COMPLETE_EX_MSG_RSVD1          GENMASK(23, 16)
++#define HTC_SETUP_COMPLETE_EX_MSG_RSVD2          GENMASK(31, 24)
++
++enum ath11k_htc_tx_flags {
++	ATH11K_HTC_FLAG_NEED_CREDIT_UPDATE = 0x01,
++	ATH11K_HTC_FLAG_SEND_BUNDLE        = 0x02
 +};
 +
-+struct hal_rx_msdu_meta {
-+	u32 cookie;
-+	u32 msdu_len;
-+	bool first;
-+	bool last;
-+	bool continuation;
++enum ath11k_htc_rx_flags {
++	ATH11K_HTC_FLAG_TRAILER_PRESENT = 0x02,
++	ATH11K_HTC_FLAG_BUNDLE_MASK     = 0xF0
 +};
 +
-+struct hal_rx_meta_info {
-+	enum hal_reo_dest_ring_push_reason push_reason;
-+	struct hal_rx_mpdu_meta mpdu_meta;
-+	struct hal_rx_msdu_meta msdu_meta;
++struct ath11k_htc_hdr {
++	u32 htc_info;
++	u32 ctrl_info;
++} __packed __aligned(4);
++
++enum ath11k_htc_msg_id {
++	ATH11K_HTC_MSG_READY_ID                = 1,
++	ATH11K_HTC_MSG_CONNECT_SERVICE_ID      = 2,
++	ATH11K_HTC_MSG_CONNECT_SERVICE_RESP_ID = 3,
++	ATH11K_HTC_MSG_SETUP_COMPLETE_ID       = 4,
++	ATH11K_HTC_MSG_SETUP_COMPLETE_EX_ID    = 5,
++	ATH11K_HTC_MSG_SEND_SUSPEND_COMPLETE   = 6
 +};
 +
-+struct hal_rx_wbm_rel_info {
-+	u32 cookie;
-+	enum hal_wbm_rel_src_module err_rel_src;
-+	enum hal_reo_dest_ring_push_reason push_reason;
-+	u32 err_code;
-+	bool first_msdu;
-+	bool last_msdu;
++enum ath11k_htc_version {
++	ATH11K_HTC_VERSION_2P0 = 0x00, /* 2.0 */
++	ATH11K_HTC_VERSION_2P1 = 0x01, /* 2.1 */
 +};
 +
-+#define HAL_INVALID_PEERID 0xffff
-+#define VHT_SIG_SU_NSS_MASK 0x7
++#define ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_MASK GENMASK(1, 0)
++#define ATH11K_HTC_CONN_FLAGS_RECV_ALLOC GENMASK(15, 8)
 +
-+#define HAL_RX_MAX_MCS 12
-+#define HAL_RX_MAX_NSS 8
-+
-+struct hal_rx_mon_status_tlv_hdr {
-+	u32 hdr;
-+	u8 value[0];
++enum ath11k_htc_conn_flags {
++	ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_ONE_FOURTH    = 0x0,
++	ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_ONE_HALF      = 0x1,
++	ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_THREE_FOURTHS = 0x2,
++	ATH11K_HTC_CONN_FLAGS_THRESHOLD_LEVEL_UNITY         = 0x3,
++	ATH11K_HTC_CONN_FLAGS_REDUCE_CREDIT_DRIBBLE    = 1 << 2,
++	ATH11K_HTC_CONN_FLAGS_DISABLE_CREDIT_FLOW_CTRL = 1 << 3
 +};
 +
-+enum hal_rx_su_mu_coding {
-+	HAL_RX_SU_MU_CODING_BCC,
-+	HAL_RX_SU_MU_CODING_LDPC,
-+	HAL_RX_SU_MU_CODING_MAX,
++enum ath11k_htc_conn_svc_status {
++	ATH11K_HTC_CONN_SVC_STATUS_SUCCESS      = 0,
++	ATH11K_HTC_CONN_SVC_STATUS_NOT_FOUND    = 1,
++	ATH11K_HTC_CONN_SVC_STATUS_FAILED       = 2,
++	ATH11K_HTC_CONN_SVC_STATUS_NO_RESOURCES = 3,
++	ATH11K_HTC_CONN_SVC_STATUS_NO_MORE_EP   = 4
 +};
 +
-+enum hal_rx_gi {
-+	HAL_RX_GI_0_8_US,
-+	HAL_RX_GI_0_4_US,
-+	HAL_RX_GI_1_6_US,
-+	HAL_RX_GI_3_2_US,
-+	HAL_RX_GI_MAX,
++struct ath11k_htc_ready {
++	u32 id_credit_count;
++	u32 size_ep;
++} __packed;
++
++struct ath11k_htc_ready_extended {
++	struct ath11k_htc_ready base;
++	u32 ver_bundle;
++} __packed;
++
++struct ath11k_htc_conn_svc {
++	u32 msg_svc_id;
++	u32 flags_len;
++} __packed;
++
++struct ath11k_htc_conn_svc_resp {
++	u32 msg_svc_id;
++	u32 flags_len;
++	u32 svc_meta_pad;
++} __packed;
++
++struct ath11k_htc_setup_complete_extended {
++	u32 msg_id;
++	u32 flags;
++	u32 max_msgs_per_bundled_recv;
++} __packed;
++
++struct ath11k_htc_msg {
++	u32 msg_svc_id;
++	u32 flags_len;
++} __packed __aligned(4);
++
++enum ath11k_htc_record_id {
++	ATH11K_HTC_RECORD_NULL    = 0,
++	ATH11K_HTC_RECORD_CREDITS = 1
 +};
 +
-+enum hal_rx_bw {
-+	HAL_RX_BW_20MHZ,
-+	HAL_RX_BW_40MHZ,
-+	HAL_RX_BW_80MHZ,
-+	HAL_RX_BW_160MHZ,
-+	HAL_RX_BW_MAX,
++struct ath11k_htc_record_hdr {
++	u8 id; /* @enum ath11k_htc_record_id */
++	u8 len;
++	u8 pad0;
++	u8 pad1;
++} __packed;
++
++struct ath11k_htc_credit_report {
++	u8 eid; /* @enum ath11k_htc_ep_id */
++	u8 credits;
++	u8 pad0;
++	u8 pad1;
++} __packed;
++
++struct ath11k_htc_record {
++	struct ath11k_htc_record_hdr hdr;
++	union {
++		struct ath11k_htc_credit_report credit_report[0];
++		u8 pauload[0];
++	};
++} __packed __aligned(4);
++
++/* note: the trailer offset is dynamic depending
++ * on payload length. this is only a struct layout draft
++ */
++struct ath11k_htc_frame {
++	struct ath11k_htc_hdr hdr;
++	union {
++		struct ath11k_htc_msg msg;
++		u8 payload[0];
++	};
++	struct ath11k_htc_record trailer[0];
++} __packed __aligned(4);
++
++enum ath11k_htc_svc_gid {
++	ATH11K_HTC_SVC_GRP_RSVD = 0,
++	ATH11K_HTC_SVC_GRP_WMI = 1,
++	ATH11K_HTC_SVC_GRP_NMI = 2,
++	ATH11K_HTC_SVC_GRP_HTT = 3,
++	ATH11K_HTC_SVC_GRP_CFG = 4,
++	ATH11K_HTC_SVC_GRP_IPA = 5,
++	ATH11K_HTC_SVC_GRP_PKTLOG = 6,
++
++	ATH11K_HTC_SVC_GRP_TEST = 254,
++	ATH11K_HTC_SVC_GRP_LAST = 255,
 +};
 +
-+enum hal_rx_preamble {
-+	HAL_RX_PREAMBLE_11A,
-+	HAL_RX_PREAMBLE_11B,
-+	HAL_RX_PREAMBLE_11N,
-+	HAL_RX_PREAMBLE_11AC,
-+	HAL_RX_PREAMBLE_11AX,
-+	HAL_RX_PREAMBLE_MAX,
++#define SVC(group, idx) \
++	(int)(((int)(group) << 8) | (int)(idx))
++
++enum ath11k_htc_svc_id {
++	/* NOTE: service ID of 0x0000 is reserved and should never be used */
++	ATH11K_HTC_SVC_ID_RESERVED	= 0x0000,
++	ATH11K_HTC_SVC_ID_UNUSED	= ATH11K_HTC_SVC_ID_RESERVED,
++
++	ATH11K_HTC_SVC_ID_RSVD_CTRL	= SVC(ATH11K_HTC_SVC_GRP_RSVD, 1),
++	ATH11K_HTC_SVC_ID_WMI_CONTROL	= SVC(ATH11K_HTC_SVC_GRP_WMI, 0),
++	ATH11K_HTC_SVC_ID_WMI_DATA_BE	= SVC(ATH11K_HTC_SVC_GRP_WMI, 1),
++	ATH11K_HTC_SVC_ID_WMI_DATA_BK	= SVC(ATH11K_HTC_SVC_GRP_WMI, 2),
++	ATH11K_HTC_SVC_ID_WMI_DATA_VI	= SVC(ATH11K_HTC_SVC_GRP_WMI, 3),
++	ATH11K_HTC_SVC_ID_WMI_DATA_VO	= SVC(ATH11K_HTC_SVC_GRP_WMI, 4),
++	ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC1 = SVC(ATH11K_HTC_SVC_GRP_WMI, 5),
++	ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC2 = SVC(ATH11K_HTC_SVC_GRP_WMI, 6),
++
++	ATH11K_HTC_SVC_ID_NMI_CONTROL	= SVC(ATH11K_HTC_SVC_GRP_NMI, 0),
++	ATH11K_HTC_SVC_ID_NMI_DATA	= SVC(ATH11K_HTC_SVC_GRP_NMI, 1),
++
++	ATH11K_HTC_SVC_ID_HTT_DATA_MSG	= SVC(ATH11K_HTC_SVC_GRP_HTT, 0),
++
++	/* raw stream service (i.e. flash, tcmd, calibration apps) */
++	ATH11K_HTC_SVC_ID_TEST_RAW_STREAMS = SVC(ATH11K_HTC_SVC_GRP_TEST, 0),
++	ATH11K_HTC_SVC_ID_IPA_TX = SVC(ATH11K_HTC_SVC_GRP_IPA, 0),
++	ATH11K_HTC_SVC_ID_PKT_LOG = SVC(ATH11K_HTC_SVC_GRP_PKTLOG, 0),
 +};
 +
-+enum hal_rx_reception_type {
-+	HAL_RX_RECEPTION_TYPE_SU,
-+	HAL_RX_RECEPTION_TYPE_MU_MIMO,
-+	HAL_RX_RECEPTION_TYPE_MU_OFDMA,
-+	HAL_RX_RECEPTION_TYPE_MU_OFDMA_MIMO,
-+	HAL_RX_RECEPTION_TYPE_MAX,
++#undef SVC
++
++enum ath11k_htc_ep_id {
++	ATH11K_HTC_EP_UNUSED = -1,
++	ATH11K_HTC_EP_0 = 0,
++	ATH11K_HTC_EP_1 = 1,
++	ATH11K_HTC_EP_2,
++	ATH11K_HTC_EP_3,
++	ATH11K_HTC_EP_4,
++	ATH11K_HTC_EP_5,
++	ATH11K_HTC_EP_6,
++	ATH11K_HTC_EP_7,
++	ATH11K_HTC_EP_8,
++	ATH11K_HTC_EP_COUNT,
 +};
 +
-+#define HAL_TLV_STATUS_PPDU_NOT_DONE            0
-+#define HAL_TLV_STATUS_PPDU_DONE                1
-+#define HAL_TLV_STATUS_BUF_DONE                 2
-+#define HAL_TLV_STATUS_PPDU_NON_STD_DONE        3
-+#define HAL_RX_FCS_LEN                          4
-+
-+enum hal_rx_mon_status {
-+	HAL_RX_MON_STATUS_PPDU_NOT_DONE,
-+	HAL_RX_MON_STATUS_PPDU_DONE,
-+	HAL_RX_MON_STATUS_BUF_DONE,
++struct ath11k_htc_ops {
++	void (*target_send_suspend_complete)(struct ath11k_base *ar);
 +};
 +
-+struct hal_rx_mon_ppdu_info {
-+	u32 ppdu_id;
-+	u32 ppdu_ts;
-+	u32 num_mpdu_fcs_ok;
-+	u32 num_mpdu_fcs_err;
-+	u32 preamble_type;
-+	u16 chan_num;
-+	u16 tcp_msdu_count;
-+	u16 tcp_ack_msdu_count;
-+	u16 udp_msdu_count;
-+	u16 other_msdu_count;
-+	u16 peer_id;
-+	u8 rate;
-+	u8 mcs;
-+	u8 nss;
-+	u8 bw;
-+	u8 is_stbc;
-+	u8 gi;
-+	u8 ldpc;
-+	u8 beamformed;
-+	u8 rssi_comb;
-+	u8 tid;
-+	u8 reception_type;
-+	u64 rx_duration;
++struct ath11k_htc_ep_ops {
++	void (*ep_tx_complete)(struct ath11k_base *, struct sk_buff *);
++	void (*ep_rx_complete)(struct ath11k_base *, struct sk_buff *);
++	void (*ep_tx_credits)(struct ath11k_base *);
 +};
 +
-+#define HAL_RX_PPDU_START_INFO0_PPDU_ID		GENMASK(15, 0)
-+
-+struct hal_rx_ppdu_start {
-+	__le32 info0;
-+	__le32 chan_num;
-+	__le32 ppdu_start_ts;
-+} __packed;
-+
-+#define HAL_RX_PPDU_END_USER_STATS_INFO0_MPDU_CNT_FCS_ERR	GENMASK(25, 16)
-+
-+#define HAL_RX_PPDU_END_USER_STATS_INFO1_MPDU_CNT_FCS_OK	GENMASK(8, 0)
-+#define HAL_RX_PPDU_END_USER_STATS_INFO1_FC_VALID		BIT(9)
-+#define HAL_RX_PPDU_END_USER_STATS_INFO1_QOS_CTRL_VALID		BIT(10)
-+#define HAL_RX_PPDU_END_USER_STATS_INFO1_HT_CTRL_VALID		BIT(11)
-+#define HAL_RX_PPDU_END_USER_STATS_INFO1_PKT_TYPE		GENMASK(23, 20)
-+
-+#define HAL_RX_PPDU_END_USER_STATS_INFO2_AST_INDEX		GENMASK(15, 0)
-+#define HAL_RX_PPDU_END_USER_STATS_INFO2_FRAME_CTRL		GENMASK(31, 16)
-+
-+#define HAL_RX_PPDU_END_USER_STATS_INFO3_QOS_CTRL		GENMASK(31, 16)
-+
-+#define HAL_RX_PPDU_END_USER_STATS_INFO4_UDP_MSDU_CNT		GENMASK(15, 0)
-+#define HAL_RX_PPDU_END_USER_STATS_INFO4_TCP_MSDU_CNT		GENMASK(31, 16)
-+
-+#define HAL_RX_PPDU_END_USER_STATS_INFO5_OTHER_MSDU_CNT		GENMASK(15, 0)
-+#define HAL_RX_PPDU_END_USER_STATS_INFO5_TCP_ACK_MSDU_CNT	GENMASK(31, 16)
-+
-+#define HAL_RX_PPDU_END_USER_STATS_INFO6_TID_BITMAP		GENMASK(15, 0)
-+#define HAL_RX_PPDU_END_USER_STATS_INFO6_TID_EOSP_BITMAP	GENMASK(31, 16)
-+
-+struct hal_rx_ppdu_end_user_stats {
-+	__le32 rsvd0[2];
-+	__le32 info0;
-+	__le32 info1;
-+	__le32 info2;
-+	__le32 info3;
-+	__le32 ht_ctrl;
-+	__le32 rsvd1[2];
-+	__le32 info4;
-+	__le32 info5;
-+	__le32 info6;
-+	__le32 rsvd2[11];
-+} __packed;
-+
-+#define HAL_RX_HT_SIG_INFO_INFO0_MCS		GENMASK(6, 0)
-+#define HAL_RX_HT_SIG_INFO_INFO0_BW		BIT(7)
-+
-+#define HAL_RX_HT_SIG_INFO_INFO1_STBC		GENMASK(5, 4)
-+#define HAL_RX_HT_SIG_INFO_INFO1_FEC_CODING	BIT(6)
-+#define HAL_RX_HT_SIG_INFO_INFO1_GI		BIT(7)
-+
-+struct hal_rx_ht_sig_info {
-+	__le32 info0;
-+	__le32 info1;
-+} __packed;
-+
-+#define HAL_RX_LSIG_B_INFO_INFO0_RATE	GENMASK(3, 0)
-+#define HAL_RX_LSIG_B_INFO_INFO0_LEN	GENMASK(15, 4)
-+
-+struct hal_rx_lsig_b_info {
-+	__le32 info0;
-+} __packed;
-+
-+#define HAL_RX_LSIG_A_INFO_INFO0_RATE		GENMASK(3, 0)
-+#define HAL_RX_LSIG_A_INFO_INFO0_LEN		GENMASK(16, 5)
-+#define HAL_RX_LSIG_A_INFO_INFO0_PKT_TYPE	GENMASK(27, 24)
-+
-+struct hal_rx_lsig_a_info {
-+	__le32 info0;
-+} __packed;
-+
-+#define HAL_RX_VHT_SIG_A_INFO_INFO0_BW		GENMASK(1, 0)
-+#define HAL_RX_VHT_SIG_A_INFO_INFO0_STBC	BIT(3)
-+#define HAL_RX_VHT_SIG_A_INFO_INFO0_GROUP_ID	GENMASK(9, 4)
-+#define HAL_RX_VHT_SIG_A_INFO_INFO0_NSTS	GENMASK(21, 10)
-+
-+#define HAL_RX_VHT_SIG_A_INFO_INFO1_GI_SETTING		GENMASK(1, 0)
-+#define HAL_RX_VHT_SIG_A_INFO_INFO1_SU_MU_CODING	BIT(2)
-+#define HAL_RX_VHT_SIG_A_INFO_INFO1_MCS			GENMASK(7, 4)
-+#define HAL_RX_VHT_SIG_A_INFO_INFO1_BEAMFORMED		BIT(8)
-+
-+struct hal_rx_vht_sig_a_info {
-+	__le32 info0;
-+	__le32 info1;
-+} __packed;
-+
-+#define HAL_RX_HE_SIG_A_SU_INFO_INFO0_TRANSMIT_MCS	GENMASK(6, 3)
-+#define HAL_RX_HE_SIG_A_SU_INFO_INFO0_DCM		BIT(7)
-+#define HAL_RX_HE_SIG_A_SU_INFO_INFO0_TRANSMIT_BW	GENMASK(20, 19)
-+#define HAL_RX_HE_SIG_A_SU_INFO_INFO0_CP_LTF_SIZE	GENMASK(22, 21)
-+#define HAL_RX_HE_SIG_A_SU_INFO_INFO0_NSTS		GENMASK(25, 23)
-+
-+#define HAL_RX_HE_SIG_A_SU_INFO_INFO1_CODING		BIT(7)
-+#define HAL_RX_HE_SIG_A_SU_INFO_INFO1_STBC		BIT(9)
-+#define HAL_RX_HE_SIG_A_SU_INFO_INFO1_TXBF		BIT(10)
-+
-+struct hal_rx_he_sig_a_su_info {
-+	__le32 info0;
-+	__le32 info1;
-+} __packed;
-+
-+#define HAL_RX_HE_SIG_A_MU_DL_INFO_INFO0_TRANSMIT_BW	GENMASK(17, 15)
-+#define HAL_RX_HE_SIG_A_MU_DL_INFO_INFO0_CP_LTF_SIZE	GENMASK(24, 23)
-+
-+#define HAL_RX_HE_SIG_A_MU_DL_INFO_INFO1_STBC		BIT(12)
-+
-+struct hal_rx_he_sig_a_mu_dl_info {
-+	__le32 info0;
-+	__le32 info1;
-+} __packed;
-+
-+#define HAL_RX_HE_SIG_B1_MU_INFO_INFO0_RU_ALLOCATION	GENMASK(7, 0)
-+
-+struct hal_rx_he_sig_b1_mu_info {
-+	__le32 info0;
-+} __packed;
-+
-+#define HAL_RX_HE_SIG_B2_MU_INFO_INFO0_STA_MCS		GENMASK(18, 15)
-+#define HAL_RX_HE_SIG_B2_MU_INFO_INFO0_STA_CODING	BIT(20)
-+#define HAL_RX_HE_SIG_B2_MU_INFO_INFO0_STA_NSTS		GENMASK(31, 29)
-+
-+struct hal_rx_he_sig_b2_mu_info {
-+	__le32 info0;
-+} __packed;
-+
-+#define HAL_RX_HE_SIG_B2_OFDMA_INFO_INFO0_STA_NSTS	GENMASK(13, 11)
-+#define HAL_RX_HE_SIG_B2_OFDMA_INFO_INFO0_STA_TXBF	BIT(19)
-+#define HAL_RX_HE_SIG_B2_OFDMA_INFO_INFO0_STA_MCS	GENMASK(18, 15)
-+#define HAL_RX_HE_SIG_B2_OFDMA_INFO_INFO0_STA_DCM	BIT(19)
-+#define HAL_RX_HE_SIG_B2_OFDMA_INFO_INFO0_STA_CODING	BIT(20)
-+
-+struct hal_rx_he_sig_b2_ofdma_info {
-+	__le32 info0;
-+} __packed;
-+
-+#define HAL_RX_PHYRX_RSSI_LEGACY_INFO_INFO1_RSSI_COMB	GENMASK(15, 8)
-+
-+struct hal_rx_phyrx_rssi_legacy_info {
-+	__le32 rsvd[35];
-+	__le32 info0;
-+} __packed;
-+
-+#define HAL_RX_MPDU_INFO_INFO0_PEERID	GENMASK(31, 16)
-+struct hal_rx_mpdu_info {
-+	__le32 rsvd0;
-+	__le32 info0;
-+	__le32 rsvd1[21];
-+} __packed;
-+
-+#define HAL_RX_PPDU_END_DURATION	GENMASK(23, 0)
-+struct hal_rx_ppdu_end_duration {
-+	__le32 rsvd0[9];
-+	__le32 info0;
-+	__le32 rsvd1[4];
-+} __packed;
-+
-+struct hal_rx_rxpcu_classification_overview {
-+	u32 rsvd0;
-+} __packed;
-+
-+struct hal_rx_msdu_desc_info {
-+	u32 msdu_flags;
-+	u16 msdu_len; /* 14 bits for length */
++/* service connection information */
++struct ath11k_htc_svc_conn_req {
++	u16 service_id;
++	struct ath11k_htc_ep_ops ep_ops;
++	int max_send_queue_depth;
 +};
 +
-+#define HAL_RX_NUM_MSDU_DESC 6
-+struct hal_rx_msdu_list {
-+	struct hal_rx_msdu_desc_info msdu_info[HAL_RX_NUM_MSDU_DESC];
-+	u32 sw_cookie[HAL_RX_NUM_MSDU_DESC];
-+	u8 rbm[HAL_RX_NUM_MSDU_DESC];
++/* service connection response information */
++struct ath11k_htc_svc_conn_resp {
++	u8 buffer_len;
++	u8 actual_len;
++	enum ath11k_htc_ep_id eid;
++	unsigned int max_msg_len;
++	u8 connect_resp_code;
 +};
 +
-+void ath11k_hal_reo_status_queue_stats(struct ath11k_base *ab, u32 *reo_desc,
-+				       struct hal_reo_status *status);
-+void ath11k_hal_reo_flush_queue_status(struct ath11k_base *ab, u32 *reo_desc,
-+				       struct hal_reo_status *status);
-+void ath11k_hal_reo_flush_cache_status(struct ath11k_base *ab, u32 *reo_desc,
-+				       struct hal_reo_status *status);
-+void ath11k_hal_reo_flush_cache_status(struct ath11k_base *ab, u32 *reo_desc,
-+				       struct hal_reo_status *status);
-+void ath11k_hal_reo_unblk_cache_status(struct ath11k_base *ab, u32 *reo_desc,
-+				       struct hal_reo_status *status);
-+void ath11k_hal_reo_flush_timeout_list_status(struct ath11k_base *ab,
-+					      u32 *reo_desc,
-+					      struct hal_reo_status *status);
-+void ath11k_hal_reo_desc_thresh_reached_status(struct ath11k_base *ab,
-+					       u32 *reo_desc,
-+					       struct hal_reo_status *status);
-+void ath11k_hal_reo_update_rx_reo_queue_status(struct ath11k_base *ab,
-+					       u32 *reo_desc,
-+					       struct hal_reo_status *status);
-+int ath11k_hal_reo_process_status(u8 *reo_desc, u8 *status);
-+void ath11k_hal_rx_msdu_link_info_get(void *link_desc, u32 *num_msdus,
-+				      struct hal_rx_msdu_meta *meta,
-+				      enum hal_rx_buf_return_buf_manager *rbm);
-+void ath11k_hal_rx_msdu_link_desc_set(struct ath11k_base *ab, void *desc,
-+				      void *link_desc,
-+				      enum hal_wbm_rel_bm_act action);
-+void ath11k_hal_rx_buf_addr_info_set(void *desc, dma_addr_t paddr,
-+				     u32 cookie, u8 manager);
-+void ath11k_hal_rx_buf_addr_info_get(void *desc, dma_addr_t *paddr,
-+				     u32 *cookie, u8 *rbm);
-+int ath11k_hal_desc_reo_parse_err(struct ath11k_base *ab, u32 *rx_desc,
-+				  dma_addr_t *paddr, u32 *desc_bank);
-+void ath11k_hal_rx_parse_dst_ring_desc(struct ath11k_base *ab, u32 *rx_desc,
-+				       struct hal_rx_meta_info *meta_info);
-+int ath11k_hal_wbm_desc_parse_err(struct ath11k_base *ab, void *desc,
-+				  struct hal_rx_wbm_rel_info *rel_info);
-+void ath11k_hal_rx_reo_ent_paddr_get(struct ath11k_base *ab, void *desc,
-+				     dma_addr_t *paddr, u32 *desc_bank);
-+void ath11k_hal_rx_reo_ent_buf_paddr_get(void *rx_desc,
-+					 dma_addr_t *paddr, u32 *sw_cookie,
-+					 void **pp_buf_addr_info,
-+					 u32 *msdu_cnt);
-+enum hal_rx_mon_status
-+ath11k_hal_rx_parse_mon_status(struct ath11k_base *ab,
-+			       struct hal_rx_mon_ppdu_info *ppdu_info,
-+			       struct sk_buff *skb);
-+#define REO_QUEUE_DESC_MAGIC_DEBUG_PATTERN_0 0xDDBEEF
-+#define REO_QUEUE_DESC_MAGIC_DEBUG_PATTERN_1 0xADBEEF
-+#define REO_QUEUE_DESC_MAGIC_DEBUG_PATTERN_2 0xBDBEEF
-+#define REO_QUEUE_DESC_MAGIC_DEBUG_PATTERN_3 0xCDBEEF
++#define ATH11K_NUM_CONTROL_TX_BUFFERS 2
++#define ATH11K_HTC_MAX_LEN 4096
++#define ATH11K_HTC_MAX_CTRL_MSG_LEN 256
++#define ATH11K_HTC_WAIT_TIMEOUT_HZ (1 * HZ)
++#define ATH11K_HTC_CONTROL_BUFFER_SIZE (ATH11K_HTC_MAX_CTRL_MSG_LEN + \
++					sizeof(struct ath11k_htc_hdr))
++#define ATH11K_HTC_CONN_SVC_TIMEOUT_HZ (1 * HZ)
++#define ATH11K_HTC_MAX_SERVICE_ALLOC_ENTRIES 8
++
++struct ath11k_htc_ep {
++	struct ath11k_htc *htc;
++	enum ath11k_htc_ep_id eid;
++	enum ath11k_htc_svc_id service_id;
++	struct ath11k_htc_ep_ops ep_ops;
++
++	int max_tx_queue_depth;
++	int max_ep_message_len;
++	u8 ul_pipe_id;
++	u8 dl_pipe_id;
++
++	u8 seq_no; /* for debugging */
++	int tx_credits;
++	bool tx_credit_flow_enabled;
++};
++
++struct ath11k_htc_svc_tx_credits {
++	u16 service_id;
++	u8  credit_allocation;
++};
++
++struct ath11k_htc {
++	struct ath11k_base *ab;
++	struct ath11k_htc_ep endpoint[ATH11K_HTC_EP_COUNT];
++
++	/* protects endpoints */
++	spinlock_t tx_lock;
++
++	struct ath11k_htc_ops htc_ops;
++
++	u8 control_resp_buffer[ATH11K_HTC_MAX_CTRL_MSG_LEN];
++	int control_resp_len;
++
++	struct completion ctl_resp;
++
++	int total_transmit_credits;
++	struct ath11k_htc_svc_tx_credits
++		service_alloc_table[ATH11K_HTC_MAX_SERVICE_ALLOC_ENTRIES];
++	int target_credit_size;
++	u8 wmi_ep_count;
++};
++
++int ath11k_htc_init(struct ath11k_base *ar);
++int ath11k_htc_wait_target(struct ath11k_htc *htc);
++int ath11k_htc_start(struct ath11k_htc *htc);
++int ath11k_htc_connect_service(struct ath11k_htc *htc,
++			       struct ath11k_htc_svc_conn_req  *conn_req,
++			       struct ath11k_htc_svc_conn_resp *conn_resp);
++int ath11k_htc_send(struct ath11k_htc *htc, enum ath11k_htc_ep_id eid,
++		    struct sk_buff *packet);
++struct sk_buff *ath11k_htc_alloc_skb(struct ath11k_base *ar, int size);
++void ath11k_htc_rx_completion_handler(struct ath11k_base *ar,
++				      struct sk_buff *skb);
++
 +#endif
 
