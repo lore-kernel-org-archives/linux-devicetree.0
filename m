@@ -2,98 +2,94 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30198C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 10:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51160C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DC12072B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 10:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCA72072B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:15:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MbhIYZC/";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MbhIYZC/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVORshqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfKOK7l (ORCPT
+        id S1726986AbfKOLPG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:59:41 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:34662 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfKOK7l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 05:59:41 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id AE31C60FF6; Fri, 15 Nov 2019 10:59:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573815580;
-        bh=0CeatUUu67cKJ94G83JIPHr0HFJ4KEzJ4osRSG1ecA8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MbhIYZC/CmHN/SFZ+/poSf1wICUKN9RjcBdQ96yjCDds8bxGya3LDEbYNjZTZSMRY
-         QajOQbAE/0Q6LbUNEeqRqQKfZ5BHeKvJejiBrqBI1Yb+6MjthXq4zLzymaDf47z90e
-         YLp8mN8Nuu5hwTI7EVANMXr898IEpF9oEKY7psDs=
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C74760E0D;
-        Fri, 15 Nov 2019 10:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573815580;
-        bh=0CeatUUu67cKJ94G83JIPHr0HFJ4KEzJ4osRSG1ecA8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MbhIYZC/CmHN/SFZ+/poSf1wICUKN9RjcBdQ96yjCDds8bxGya3LDEbYNjZTZSMRY
-         QajOQbAE/0Q6LbUNEeqRqQKfZ5BHeKvJejiBrqBI1Yb+6MjthXq4zLzymaDf47z90e
-         YLp8mN8Nuu5hwTI7EVANMXr898IEpF9oEKY7psDs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C74760E0D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 2/2] arm64: dts: sdm845: Update the device tree node for LLCC
-Date:   Fri, 15 Nov 2019 16:29:12 +0530
-Message-Id: <a2bb92de65e90768bf1d6b8c0b7fbd43cba704d2.1573814758.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1573814758.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1573814758.git.saiprakash.ranjan@codeaurora.org>
+        Fri, 15 Nov 2019 06:15:06 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36033 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbfKOLPG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 06:15:06 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r10so10559085wrx.3;
+        Fri, 15 Nov 2019 03:15:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n8V3MrejWzhb3k4NOooEju9diG1hvNPQtxVaPIcJims=;
+        b=NVORshqCuZdXdiaY8iP1cBSWLK+CvUqi7Af0gAsRD/ShCjZhqh8dVBaa5lfPTrMZmJ
+         eCmFTYid3RyKKJiOl47W2eWX7KuVs8fSU3BkLrwXLi1wYZpdTKH8mrmqpcaqeIbhhPn3
+         MpLrABTJKeb6KrvU9ayGgKU8C/2p+ErhYe/a0Y5tvgbeozmMOHJxj4UExVr5Ski92DUT
+         +AO0+HB+ewFy0bRK5O0eSt+zUKhjzYGiz+OWJBx8/H4d/WzUcSV2mmP37FHhdNeuIQE0
+         DkwwVRd1iv+bCME9PqnUvc9LBbuldHeE0bi85Yo8cnPWHX+S+cVNhTzuYVjQsJw1ejSh
+         A0Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n8V3MrejWzhb3k4NOooEju9diG1hvNPQtxVaPIcJims=;
+        b=NdOXt4vN1T+EooyzlbiSfJrRs5g819j3ogrGva6XiwxzoSj0kN8vbOP8F0IdYloKS4
+         QHwC26FEt0i2rG2kB/pmir3QlC0AEjI5NMyUG69hmunlz1UL0OO5eoTQw31m3lPOXoo/
+         noGOQoFygh3RQVAqnZmhsHXElqNlaHEZWA2VNweNdg7ZLMZc0o7jpeBO36lMRd7FjmFE
+         jxiDWRPWWso/CYRptHmDbPcPzQ028eV61Vly8o3wcAioVhrPqijfp3qTb37iR1IZREEG
+         d0udFb9AzyO9rVcW4JqKyRisK+WssCsoW08zy+lGxKgWBO4eMC1Yde5ha5d83E4ezUi8
+         z0LA==
+X-Gm-Message-State: APjAAAUC9M3/0dRByHpktCS2XQZh+8U5RC5NNoNfiHULWjqZJJruFkHQ
+        17bwb5rvwR61aXj1nf2wQNxxrOSk/LW3c/vBPFxfnmFY
+X-Google-Smtp-Source: APXvYqxsBWGbFcyYwphuRtzfWV4fObMitrZ9jisVvO6ZMo8vLhTodwoUcAn9cTLjg+hKCSWEpzMwJT3RLwjfQsgOQUU=
+X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr4954748wru.35.1573816504400;
+ Fri, 15 Nov 2019 03:15:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191111090230.3402-1-chunyan.zhang@unisoc.com> <20191111090230.3402-3-chunyan.zhang@unisoc.com>
+In-Reply-To: <20191111090230.3402-3-chunyan.zhang@unisoc.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 15 Nov 2019 19:14:28 +0800
+Message-ID: <CAAfSe-sCM7T2TZ25hgXSdqOCWzXN2J4qeoSRi8bveqnwGy3vBw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: serial: Convert sprd-uart to json-schema
+To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-LLCC cache-controller was renamed to system-cache-controller
-to make schema pass the dt binding check. Update the device
-tree node to reflect this change.
+Hi Rob,
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, 11 Nov 2019 at 17:03, Chunyan Zhang <chunyan.zhang@unisoc.com> wrote:
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index ddb1f23c936f..250b65e8f7e5 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1357,7 +1357,7 @@
- 			};
- 		};
- 
--		cache-controller@1100000 {
-+		system-cache-controller@1100000 {
- 			compatible = "qcom,sdm845-llcc";
- 			reg = <0 0x01100000 0 0x200000>, <0 0x01300000 0 0x50000>;
- 			reg-names = "llcc_base", "llcc_broadcast_base";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+[cut]
 
+> +
+> +examples:
+> +  - |
+> +    serial@0 {
+> +      compatible = "sprd,sc9860-uart", "sprd,sc9836-uart";
+> +      reg = <0x0 0x100>;
+> +      interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+
+Seems this setence cannot pass dt_binding_check, it need to be changed to:
+interrupts = <0 2 4>;
+
+Do you need me to send another patch, or you can help to fix that on
+your tree :)
+
+Thanks,
+Chunyan
