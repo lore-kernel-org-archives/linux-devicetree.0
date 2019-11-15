@@ -2,90 +2,146 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DD3C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 03:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE06C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 03:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8A9206E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 03:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B4D206F0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 03:28:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFIgWxCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKODDX (ORCPT
+        id S1727021AbfKOD27 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 22:03:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49994 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726674AbfKODDX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 14 Nov 2019 22:03:23 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5F901AFCD;
-        Fri, 15 Nov 2019 03:03:21 +0000 (UTC)
-Subject: Re: [PATCH v3 0/2] arm64: dts: Initial RTD1619 SoC and Realtek
- Mjolnir EVB support
-To:     James Tai <james.tai@realtek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        'DTML' <devicetree@vger.kernel.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <540b62715e77486485365081e992af76@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <44a543b9-988f-b56c-ca70-7d1faa40bffb@suse.de>
-Date:   Fri, 15 Nov 2019 04:03:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 14 Nov 2019 22:28:59 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34128 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfKOD27 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 22:28:59 -0500
+Received: by mail-qk1-f195.google.com with SMTP id 205so7045651qkk.1;
+        Thu, 14 Nov 2019 19:28:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D+30VBQ6Z6pahGzwHddR4V87xEKzy9SO3iX26pCuliI=;
+        b=nFIgWxCJ2dZ8AUUfrv0rBQqDPsE/g8aWDwr4HMuPFIEKpaOIi6EVMubajiKEh6jCW6
+         H/RgXIFJXhd70OnQ6oObOTeMo0OhmLRkHOaadLiHuiD8yVVmWytBR7zy8oP2jEmZhBql
+         kfAYz+Fql23qHA0/BEMZyoOajXF4G/DC27SKMpBNTEhizPcYGzrhMKw0fFh6MiqWXM3G
+         ia9ou95D5ZtF1zj82ilfZRtVHz5t/7xNFTbsUPkJLCeKuhuo6rvZAASwybUzJT/rq0UD
+         q13bwhOppW486v84zFWOGGfLR4L/nFDiL9FLLWNtr67JUaEKSVyLN3oHJip2bhNVFqbZ
+         qFrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D+30VBQ6Z6pahGzwHddR4V87xEKzy9SO3iX26pCuliI=;
+        b=YMgGAT/GfyFEVfZ7NDxiWm8jUVd/y74dy9VbjVwfV2nW+etj8UVts+KueDOZAXcjQ9
+         petPunoqUPC1ZSMwL8gEvcNbYQ3/ik1tQjdXAYo40sLoiCVh3CqG0/2hOae3kxhJtc9l
+         CNEVz4Scxiokclt2X2fSCmlT2B+RfxAK8LbRkCFzI2ULPh+cZSmgwgV+IwneU6RLxEQY
+         yMKYZG3qv1Iyfp+daWEjKzXebRERWH+l0KAT4YWZN4qbaeVtkmgxNYmtz1kTT7Ekf/Tk
+         Z5r6g238eC/DVsvNPCVT3wxruRnPGFXH1UCXWFu4d0IRs1LIOAnVTdhMgGYhpufqmX1j
+         FLvQ==
+X-Gm-Message-State: APjAAAWRBXZlLUf8CpaUEMO/BgBJPnC5LUMWE1ArHpunkAqsIASKKhiE
+        ABHENnPn3E1zr6BlOQI8XHEkpP/bazGEVXrGdrsHWg==
+X-Google-Smtp-Source: APXvYqxsrgGnkZmjzHHh9s5lDeis0yQ/6UHqrpj3Z/tO+JbLzt/a8BVZivpTzV/HhB1gm2pA9rs180XhETvLdVvMCGQ=
+X-Received: by 2002:a37:4b97:: with SMTP id y145mr10563545qka.133.1573788538446;
+ Thu, 14 Nov 2019 19:28:58 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <540b62715e77486485365081e992af76@realtek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <0a6b113010ad772a633b9cfeeb280dc41f17b951.1573206815.git.baolin.wang@linaro.org>
+ <20191114180233.GA14860@bogus>
+In-Reply-To: <20191114180233.GA14860@bogus>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 15 Nov 2019 11:28:46 +0800
+Message-ID: <CADBw62pdQ+xFkkPkzsy7j6OFh-6DTdMwPV4j4RTJ0p4+nBJJDQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum
+ thermal documentation
+To:     Rob Herring <robh@kernel.org>
+Cc:     Baolin Wang <baolin.wang@linaro.org>, rui.zhang@intel.com,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        Orson Zhai <orsonzhai@gmail.com>, freeman.liu@unisoc.com,
+        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
+Hi Rob,
 
-Am 12.11.19 um 16:45 schrieb James Tai:
-> This series adds initial Device Trees for Realtek RTD1619 SoC and
-> Realtek Mjolnir EVB.
-> 
-> v2 -> v3:
-> * Adjust the address-cells and address-size property of root node
-> * Adjust ranges property of r-bus node
-> * Adjust uart node addressing
-> * Add comments for uart node
-> * Revert soc node
-> 
-> v1 -> v2:
-> * Define compatible strings for Realtek RTD1619 SoC and Realtek Mjolnir
-> * Add uart1 and uart2 device node into rtd16xx.dtsi
-> * move cpus node and the interrupt-affinity into rtd16xx.dtsi
-> * Specify the r-bus ranges
+On Fri, Nov 15, 2019 at 2:02 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Nov 08, 2019 at 05:54:30PM +0800, Baolin Wang wrote:
+> > From: Freeman Liu <freeman.liu@unisoc.com>
+> >
+> > Add the Spreadtrum thermal documentation.
+> >
+> > Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  .../devicetree/bindings/thermal/sprd-thermal.txt   |   41 ++++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.txt
+>
+> Please make this a schema. See Documentation/devicetree/writing-schema.rst
 
-Some observations of what is not in this patchset:
+OK.
 
-* There is neither /memreserve/ nor /reserved-memory here. What about
-Boot ROM, TEE and RPC?
-* The reset controllers for the UARTs are missing. Can we take the same
-shortcut as in my RTD1395 patch to add them now, i.e. are they
-compatible with RTD1295?
-* Is the watchdog incompatible, or is it just not enabled by the
-bootloader and depends on future, e.g., clk patches?
-* Is the RTC not enabled on boot, similar to the other SoCs?
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.txt b/Documentation/devicetree/bindings/thermal/sprd-thermal.txt
+> > new file mode 100644
+> > index 0000000..a9da7f4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.txt
+> > @@ -0,0 +1,41 @@
+> > +* Spreadtrum thermal sensor controller bindings
+> > +
+> > +Required properties:
+> > +- compatible : Should be "sprd,ums512-thermal"
+> > +- reg: Address range of the thermal registers
+> > +- clock-names: "enable" for thermal module enable clock.
+> > +- clocks: Should contain a clock specifier for each entry in clock-names.
+> > +- nvmem-cells: A phandle to the calibration data provided by a nvmem device.
+> > +- nvmem-cell-names: Should be "thm_sign_cal" and "thm_ratio_cal".
+> > +- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
+> > +
+> > +Child nodes properties:
+> > +- reg: Specify the sensor id.
+> > +- nvmem-cells: A phandle to the calibration data provided by a nvmem device.
+> > +- nvmem-cell-names: Should be "sen_delta_cal".
+> > +
+> > +Example:
+> > +
+> > +     ap_thm0: thermal@32200000 {
+> > +             compatible = "sprd,ums512-thermal";
+> > +             reg = <0 0x32200000 0 0x10000>;
+> > +             clock-names = "enable";
+> > +             clocks = <&aonapb_gate CLK_THM0_EB>;
+> > +             #thermal-sensor-cells = <1>;
+> > +             nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
+> > +             nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
+> > +
+> > +             prometheus0-sensor@0{
+>
+> space                               ^
 
-Regards,
-Andreas
+OK. Will fix.
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+>
+> > +                     reg = <0>;
+> > +                     nvmem-cells = <&thm0_sen0>;
+> > +                     nvmem-cell-names = "sen_delta_cal";
+> > +             };
+> > +
+> > +             ank1-sensor@1{
+>
+> space                        ^
+
+Yes, will fix in next version. Thanks for your comments.
