@@ -2,117 +2,359 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF72C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 15:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FE0C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 15:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D4520732
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 15:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573831346;
-	bh=U/9QfvsYYC8xVBCh+SiGp3vO8P82NI0IaST3A6GJQwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QCmzsk94XkSsfGzDVayFbLmljcLWqIkm3MpdLzOUUYruR/0Nmd2EH9RdR93k5MJHg
-	 hk3GxkmPKbwQEwk4BDQOMJpkaTxOBQcKrst5zLmjQXp8Nwmk5DdwTCrxXnkbK1V2Gz
-	 P09eUeyPhnfsAKjGIFTPIqWes82MkWo7b98F4MiM=
+	by mail.kernel.org (Postfix) with ESMTP id 9A7F820732
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 15:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfKOPW0 (ORCPT
+        id S1727546AbfKOP3j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:22:26 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48674 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfKOPWZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 10:22:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yvGphVXhC7kan4yS8OPR8FI6+zg0lqmd5nW8y91qGdI=; b=CRII/5pq9X1slHsMZYuJp1M8h
-        +9sKk2a7XZyUZWPC0vq/InQhtD4PUo+mF14nMIkX0kYfAntqaE5YPK1R5jW7Ped/2aX6cDYHjyo1m
-        bs6tWPoN7XuQF8lwrdvIGodQWANZTEeZYIyJpUq0xNqWZMK1K+LgLzJcXPXp/MwxBCa8Y=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iVdQU-0000bv-LF; Fri, 15 Nov 2019 15:22:22 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 91A9927429D2; Fri, 15 Nov 2019 15:22:21 +0000 (GMT)
-Date:   Fri, 15 Nov 2019 15:22:21 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
+        Fri, 15 Nov 2019 10:29:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60956 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727412AbfKOP3j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 10:29:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EF00DB9E5;
+        Fri, 15 Nov 2019 15:29:35 +0000 (UTC)
+Subject: Re: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1619 SoC and Realtek
+ Mjolnir EVB
+To:     James Tai <james.tai@realtek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
- and interrupts
-Message-ID: <20191115152221.GA4210@sirena.co.uk>
-References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
- <20191112055412.192675-2-dmitry.torokhov@gmail.com>
- <20191112120307.GB5195@sirena.co.uk>
- <20191112190328.GA199853@dtor-ws>
- <20191112191547.GK5195@sirena.co.uk>
- <20191112193653.GB13374@dtor-ws>
- <20191114222652.GA7517@bogus>
- <CAKdAkRQBrKOUTW8puakA26ODYW9=0H4VhwFhGQAqMs-cMmj3CQ@mail.gmail.com>
- <CAL_JsqKUXPTC-fmUowpaHQpuKTfgfQ6D2n7kOZgkYt+MS7OfaA@mail.gmail.com>
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        'DTML' <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+References: <73fb8106ec1a4665b59a2d187a576b71@realtek.com>
+ <9cadb78c-99af-8948-e76f-c26f263693b3@suse.de>
+ <fbc4dee61c2547458fa0791f38abaed2@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <610ad23f-d133-8fd9-1741-80eb47157929@suse.de>
+Date:   Fri, 15 Nov 2019 16:29:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKUXPTC-fmUowpaHQpuKTfgfQ6D2n7kOZgkYt+MS7OfaA@mail.gmail.com>
-X-Cookie: Tell me what to think!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fbc4dee61c2547458fa0791f38abaed2@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Am 15.11.19 um 15:52 schrieb James Tai:
+>>> Add Device Trees for Realtek RTD1619 SoC family, RTD1619 SoC and
+>>> Realtek Mjolnir EVB.
+>>>
+>>> Signed-off-by: James Tai <james.tai@realtek.com>
+>>> ---
+>>
+>> Lacking the requested changelog.
+>>
+>>>  arch/arm64/boot/dts/realtek/Makefile          |   2 +
+>>>  .../boot/dts/realtek/rtd1619-mjolnir.dts      |  40 +++++
+>>>  arch/arm64/boot/dts/realtek/rtd1619.dtsi      |  12 ++
+>>>  arch/arm64/boot/dts/realtek/rtd16xx.dtsi      | 163
+>> ++++++++++++++++++
+>>>  4 files changed, 217 insertions(+)
+>>>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+>>>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619.dtsi
+>>>  create mode 100644 arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+>>
+>> Somehow the last hunk (rtd16xx.dtsi) didn't apply with git-am or patch -p1, not
+>> sure why. I have manually copied the file into place and fixed up some more
+>> nits below:
+>>
+>>>
+>>> diff --git a/arch/arm64/boot/dts/realtek/Makefile
+>>> b/arch/arm64/boot/dts/realtek/Makefile
+>>> index 555638ada721..fb5f05978ecc 100644
+>>> --- a/arch/arm64/boot/dts/realtek/Makefile
+>>> +++ b/arch/arm64/boot/dts/realtek/Makefile
+>>> @@ -7,3 +7,5 @@ dtb-$(CONFIG_ARCH_REALTEK) +=
+>> rtd1295-probox2-ava.dtb
+>>>  dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
+>>>
+>>>  dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
+>>> +
+>>> +dtb-$(CONFIG_ARCH_REALTEK) += rtd1619-mjolnir.dtb
+>>> diff --git a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+>>> b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+>>> new file mode 100644
+>>> index 000000000000..6ab791af3896
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+>>> @@ -0,0 +1,40 @@
+>>> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+>>> +/*
+>>> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+>>> + */
+>>> +
+>>> +/dts-v1/;
+>>> +
+>>> +#include "rtd1619.dtsi"
+>>> +
+>>> +/ {
+>>> +	compatible = "realtek,rtd1619", "realtek,mjolnir";
+>>
+>> Order not fixed from v2. This is a schema violation and logically wrong.
+>>
+>>> +	model= "Realtek Mjolnir EVB";
+>>
+>> Space missing before =. Missed that in v2.
+>>
+>>> +
+>>> +	memory@0 {
+>>> +		device_type = "memory";
+>>> +		reg = <0x0 0x80000000>;
+>>> +	};
+>>> +
+>>> +	chosen {
+>>> +		stdout-path = "serial0:115200n8";
+>>> +	};
+>>> +
+>>> +	aliases {
+>>> +		serial0 = &uart0; /* The UART0 is debug console */
+>>> +		serial1 = &uart1; /* The UART1 is on M.2 slot */
+>>> +		serial2 = &uart2; /* The UART2 is on GPIO connector */
+>>> +	};
+>>> +};
+>>> +
+>>> +&uart0 {
+>>> +	status = "okay";
+>>> +};
+>>> +
+>>> +&uart1 {
+>>> +	status = "disabled";
+>>> +};
+>>> +
+>>> +&uart2 {
+>>> +	status = "disabled";
+>>> +};
+>>
+>> The comments were intended to go above each node, not after the aliases.
+>> I've taken the liberty to annotate them further with their PCB label.
+>>
+>>> diff --git a/arch/arm64/boot/dts/realtek/rtd1619.dtsi
+>>> b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
+>>> new file mode 100644
+>>> index 000000000000..e52bf708b04e
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
+>>> @@ -0,0 +1,12 @@
+>>> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+>>> +/*
+>>> + * Realtek RTD1619 SoC
+>>> + *
+>>> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+>>> + */
+>>> +
+>>> +#include "rtd16xx.dtsi"
+>>> +
+>>> +/ {
+>>> +	compatible = "realtek,rtd1619";
+>>> +};
+>>> diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+>>> b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+>>> new file mode 100644
+>>> index 000000000000..d9b572a870f5
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+>>> @@ -0,0 +1,163 @@
+>>> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+>>> +/*
+>>> + * Realtek RTD16xx SoC family
+>>> + *
+>>> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+>>> + */
+>>> +
+>>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>>> +#include <dt-bindings/interrupt-controller/irq.h>
+>>> +
+>>> +/{
+>>
+>> Space missing. Missed that in v2.
+>>
+>>> +	interrupt-parent = <&gic>;
+>>> +	#address-cells = <1>;
+>>> +	#size-cells = <1>;
+>>> +
+>>> +	cpus {
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +
+>>> +		cpu0: cpu@0 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a55";
+>>> +			reg = <0x0>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&l2>;
+>>> +		};
+>>> +
+>>> +		cpu1: cpu@100 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a55";
+>>> +			reg = <0x100>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&l3>;
+>>> +		};
+>>> +
+>>> +		cpu2: cpu@200 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a55";
+>>> +			reg = <0x200>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&l3>;
+>>> +		};
+>>> +
+>>> +		cpu3: cpu@300 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a55";
+>>> +			reg = <0x300>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&l3>;
+>>> +		};
+>>> +
+>>> +		cpu4: cpu@400 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a55";
+>>> +			reg = <0x400>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&l3>;
+>>> +		};
+>>> +
+>>> +		cpu5: cpu@500 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a55";
+>>> +			reg = <0x500>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&l3>;
+>>> +		};
+>>> +
+>>> +		l2: l2-cache {
+>>> +			compatible = "cache";
+>>> +			next-level-cache = <&l3>;
+>>> +
+>>> +		};
+>>> +
+>>> +		l3: l3-cache {
+>>> +			compatible = "cache";
+>>> +		};
+>>> +	};
+>>> +
+>>> +	timer {
+>>> +		compatible = "arm,armv8-timer";
+>>> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+>>> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+>>> +	};
+>>> +
+>>> +	arm_pmu: pmu {
+>>> +		compatible = "arm,armv8-pmuv3";
+>>> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>>> +	};
+>>> +
+>>> +	psci {
+>>> +		compatible = "arm,psci-1.0";
+>>> +		method = "smc";
+>>> +	};
+>>> +
+>>> +	osc27M: osc {
+>>> +		compatible = "fixed-clock";
+>>> +		clock-frequency = <27000000>;
+>>> +		clock-output-names = "osc27M";
+>>> +		#clock-cells = <0>;
+>>> +	};
+>>> +
+>>> +	soc@98000000 {
+>>
+>> If the node has a unit address, it also needs a reg property with that value. So
+>> let's drop the unit address.
+>>
+>>> +		compatible = "simple-bus";
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <1>;
+>>> +		ranges = <0x98000000 0x98000000 0x68000000>;
+>>> +
+>>> +		rbus: r-bus@98000000 {
+>>> +			compatible = "simple-bus";
+>>> +			reg = <0x98000000 0x200000>;
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <1>;
+>>> +			ranges = <0x0 0x98000000 0x200000>;
+>>> +
+>>> +			uart0: serial0@7800 {
+>>> +				compatible = "snps,dw-apb-uart";
+>>> +				reg = <0x7800 0x400>;
+>>> +				reg-shift = <2>;
+>>> +				reg-io-width = <4>;
+>>> +				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				clock-frequency = <27000000>;
+>>> +				status = "disabled";
+>>> +			};
+>>> +
+>>> +			uart1: serial1@1b200 {
+>>> +				compatible = "snps,dw-apb-uart";
+>>> +				reg = <0x1b200 0x400>;
+>>> +				reg-shift = <2>;
+>>> +				reg-io-width = <4>;
+>>> +				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				clock-frequency = <432000000>;
+>>> +				status = "disabled";
+>>> +			};
+>>> +
+>>> +			uart2: serial2@1b400 {
+>>> +				compatible = "snps,dw-apb-uart";
+>>> +				reg = <0x1b400 0x400>;
+>>> +				reg-shift = <2>;
+>>> +				reg-io-width = <4>;
+>>> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+>>> +				clock-frequency = <432000000>;
+>>> +				status = "disabled";
+>>> +			};
+>>> +		};
+>>> +
+>>> +		gic: interrupt-controller@ff100000 {
+>>> +			compatible = "arm,gic-v3";
+>>> +			reg = <0xff100000 0x10000>,
+>>> +			      <0xff140000 0xc0000>;
+>>> +			interrupt-controller;
+>>> +			#interrupt-cells = <3>;
+>>> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>>> +		};
+>>> +	};
+>>> +};
+>>> +
+>>> +&arm_pmu {
+>>> +	interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
+>>> +		<&cpu3>, <&cpu4>, <&cpu5>;
+>>> +};
+>>
+>> Now that they're in the same file, this can just go into the node.
+>>
+> 
+> I'll correct these mistakes in next version.
+> 
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No need for a v4, I already have it queued.
 
-On Fri, Nov 15, 2019 at 07:52:22AM -0600, Rob Herring wrote:
+Regards,
+Andreas
 
-> if:
->   properties:
->     interrupt-names:
->       contains:
->         const: wakeup
->   required:
->     - interrupt-names
-> then:
->   required:
->     - wakeup-source
-
-That seems to say that if we have a device that has an interrupt called
-"wakeup" then it must be a wakeup source.  Is that desirable?  Being
-able to wake the system is partly a property of the system as a whole
-(the wakeup signal needs to be wired somewhere where it can wake things)
-and a device might have a signal that could be used to wake the system,
-may even be called "wakeup" by the device but for some reason isn't
-wired suitably in a given system.
-
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3OwqoACgkQJNaLcl1U
-h9AJgQf+JcZQhkga1MGvTU7f3pEsnMjZ9MRBtcDpMdDLrz4o3Vo5OUCODs2E6W0h
-T6j+P2IInqE4J74dF0jwwkNyOPuDwezdBKKUsZp+ERNYwF3aP4JeMJusN3AiAaCL
-h4KrVXnaiIi3eJoqhmDU3pq8soeITSYSaZ/pSeKlsRw5j5g/NBzkP6GfjlkBuV6p
-X1NzocN46iXcB1NRLVVkrbtxx3et1bPGWs0ZJBkVMU07GXY6i4znWUHB5SvEG4mJ
-6qWYeNJOCXxsiSLMOYByRSub+xb4c5HvgtMiRMK8nH9x6dzZl0s51tWisJim6O2q
-8RSmewbDkUOuvz1SQEVvd/lEqpyAvA==
-=GLB9
------END PGP SIGNATURE-----
-
---RnlQjJ0d97Da+TV1--
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
