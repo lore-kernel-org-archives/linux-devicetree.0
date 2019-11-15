@@ -2,91 +2,175 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927BBC432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A44C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E4920740
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32BC2072A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 07:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573804216;
+	bh=N5y9/j9jBDmNZvdMr4J2c/QD6EJfi4NYUK5ANzDGnqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VUk69AQ8a5pjiiSFZIn+tO7lNgJHLCN9BKplwbAyXlbnxE/B3fbYkO2U/AbLf9woY
+	 6uwHM77758Gjm1zqTqHOAowMYauHJiO53ojq1VNVQAzug8uBgKesAMOJXd+iDADXpz
+	 h4zyf97zfjPo/ApTZg/yqu80DFAL3j+u48kZwLe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfKOHqA (ORCPT
+        id S1727262AbfKOHuM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:46:00 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:33415 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfKOHqA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 02:46:00 -0500
-Received: from localhost ([46.78.193.225]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MgNxZ-1hxGfZ3Nkt-00ht6M; Fri, 15 Nov 2019 08:45:27 +0100
-Date:   Fri, 15 Nov 2019 08:45:24 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
-Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
-        tglx@linutronix.de, mchehab+samsung@kernel.org,
-        davem@davemloft.net, paulmck@linux.ibm.com,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] MAINTAINERS: add maintainer for ping iio sensors
-Message-ID: <20191115074522.o237qv2hivdawn45@arbad>
+        Fri, 15 Nov 2019 02:50:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfKOHuM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 02:50:12 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B63B92072A;
+        Fri, 15 Nov 2019 07:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573804211;
+        bh=N5y9/j9jBDmNZvdMr4J2c/QD6EJfi4NYUK5ANzDGnqc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Oifm6v9/MIrfdTFrfE3u0TStPDjx8gWCUbH7cfP+DrK/7cEn6jOrKLR+x6nvdWHsq
+         bD6U5rkgwVBc0onFAOv6BjEpg+rV2swpf2Oyve36luFTe7cWhG+arflCpgXBY0v8lo
+         zCZ18z8QZlN2ddgL74/mlHnIIbciyditdaqB1hMg=
+Date:   Fri, 15 Nov 2019 08:50:08 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Christophe ROULLIER <christophe.roullier@st.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Message-ID: <20191115075008.GY4345@gilmour.lan>
+References: <20191108103526.22254-1-christophe.roullier@st.com>
+ <20191108103526.22254-2-christophe.roullier@st.com>
+ <20191108104231.GE4345@gilmour.lan>
+ <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5ZoQamfY1dF16JN0"
 Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:R3YeHRSDgxZM/qfBF5BAAc6W1GiIOvqg9saqoNCLjAxLOpbM8xM
- +9Alvx4ZVShXDqkTrssJagSSVf1w/DbIXR6e6icWOF8Yrd5t1VyxYAV4MtZfJ6RdDUe/6bA
- hr/HIVU6T4F3GLnvtasBeeL4usPUf3DH8VOxRXcXfrXYXHvaWkFIWqZY450LjUE6dkX9mu5
- nws5fQtq9nVbOu3ujsYQA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jtiVqWsSXIQ=:quQlDAO92j49Xs7ucDVLyd
- Tv6x9xha7xQNE7Y+wtyjZuJjrkO/IdRgnZJlpgF0QFw1A5CRNCHzShiZTsA7AveaH1tgNDBh/
- hik/E3azwHgEnljxXheJDbY4HyqAWpUrLnOhNZGICyIl265kl7u8iPA9kIfMfNAKJYH0ALZjD
- 0Tc79P6Hvqb+SxBfE6VxM8rMf6cZhMZKw2MgLaGq+OU88ncQgF9Ip4eYMcHnu1w4C5LSXMf9d
- Qr12Y4lPWBjZrVcASch4sz8kR8yQ0aCGVwd0PCqbgj0Ba0FVqH69kFaZ/7RxGvn2neMhAS7kw
- YPw0lwOqNJ8zFUJMOPqUUx6SKzI9DVjXrDTKsYyh37Ni45DLSihYKulvwGSWGkv/MFTVUycrK
- ZUOHgnR1VagXU42aXUPuqbGUTdf4V2M42qpleVIQXvLlXpo0UWrmys5PvCKub6IFfL/oQWlWN
- +fLo1XT732ou2VHxmeiF9CO3RvN5vYuqXyguSkc/3M30z99AcWWXw569fCL/MdsMRpiLWKCHY
- bJ15mcH2vmPht2wFwG4DWH6tyTs6A94Tf4fUNM3LogddRzCdVGAsfMaJZw5cUNajWenmsPbXG
- OnQYB3xJATZ30iW2wpNdcnAMeHzvadIcVBxmGVB+i0z87Xg0UrNeE3eQa0c+jYlpLuvqYMKLQ
- +DsTvl9+rnXeIJq+usBtt0w/0j6BPo9V/Fv7DCSg+7oWz83MAQ5cc1b3eOtr/ch6Zn60On/Qs
- Rkw8ts31GfWZ9e78OKAroOn1MsKYdam2h+QxWRcpNYjat+H7TxAXxHh03UMf4zM3RVQ0CNwgp
- 54+7pgquR1SOGg1HbhhcRIUqiEYsPMoM7py33hFVaCGrmsMDBtjO/pq69n2z8tyd4GYmC/M3D
- lucPrQnUQCnf37h2QcoQ==
+In-Reply-To: <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a maintainer for the new parallax PING))) and LaserPING IIO sensors
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+--5ZoQamfY1dF16JN0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c6c34d04ce95..ad469adffb99 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12264,6 +12264,13 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/panasonic-laptop.c
- 
-+PARALLAX PING IIO SENSOR DRIVER
-+M:	Andreas Klinger <ak@it-klinger.de>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-+F:	drivers/iio/proximity/ping.c
-+
- PARALLEL LCD/KEYPAD PANEL DRIVER
- M:	Willy Tarreau <willy@haproxy.com>
- M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
--- 
-2.11.0
+On Fri, Nov 08, 2019 at 01:02:14PM +0000, Christophe ROULLIER wrote:
+> On 11/8/19 11:42 AM, Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
+> >> This change is needed for some soc based on snps,dwmac, which have
+> >> more than 3 clocks.
+> >>
+> >> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
+> >>   1 file changed, 7 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/D=
+ocumentation/devicetree/bindings/net/snps,dwmac.yaml
+> >> index 4845e29411e4..376a531062c2 100644
+> >> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> >> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> >> @@ -27,6 +27,7 @@ select:
+> >>             - snps,dwmac-3.710
+> >>             - snps,dwmac-4.00
+> >>             - snps,dwmac-4.10a
+> >> +          - snps,dwmac-4.20a
+> >>             - snps,dwxgmac
+> >>             - snps,dwxgmac-2.10
+> >>
+> >> @@ -62,6 +63,7 @@ properties:
+> >>           - snps,dwmac-3.710
+> >>           - snps,dwmac-4.00
+> >>           - snps,dwmac-4.10a
+> >> +        - snps,dwmac-4.20a
+> >>           - snps,dwxgmac
+> >>           - snps,dwxgmac-2.10
+> >>
+> >> @@ -87,7 +89,8 @@ properties:
+> >>
+> >>     clocks:
+> >>       minItems: 1
+> >> -    maxItems: 3
+> >> +    maxItems: 5
+> >> +    additionalItems: true
+> > Those additional clocks should be documented
+> >
+> > Maxime
+>
+> Hi Maxime,
+>
+> The problem it is specific to our soc, so is it possible to
+>
+> propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
+>
+> and "official" description in soc yaml file (stm32-dwmac.yaml) ?
+>
+>  =A0 clocks:
+>  =A0=A0=A0 minItems: 1
+>  =A0=A0=A0 maxItems: 5
+>  =A0=A0=A0 additionalItems: true
+>  =A0=A0=A0 items:
+>  =A0=A0=A0=A0=A0 - description: GMAC main clock
+>  =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
+>  =A0=A0=A0=A0=A0 - description:
+>  =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used for =
+programming the
+>  =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed the=
+n the system
+>  =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on some =
+platforms.
+>
+> +=A0=A0=A0=A0=A0 - description: optional clock
+>
+> +=A0=A0=A0=A0=A0 - description: optional clock
+
+I guess we'd really need to figure out what those clocks are doing,
+they are probably helpful (and used, under a different name) by
+others.
+
+Hopefully the questions Rob asked will clear that out
+
+Maxime
+
+--5ZoQamfY1dF16JN0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXc5YsAAKCRDj7w1vZxhR
+xfOIAQDuF3beQ9RfPAYD67pkf3/F/dORXIo+wvQohXSAQvcs3QD/UFc1TjzfsZGJ
+pYg8YtyMyILwneRXRbb0MDJ8mG1A2Q0=
+=DopP
+-----END PGP SIGNATURE-----
+
+--5ZoQamfY1dF16JN0--
