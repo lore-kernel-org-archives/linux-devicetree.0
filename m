@@ -2,94 +2,73 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51160C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30886C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCA72072B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVORshqC"
+	by mail.kernel.org (Postfix) with ESMTP id 0461B2072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 11:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfKOLPG (ORCPT
+        id S1727022AbfKOLSv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:15:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36033 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbfKOLPG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 06:15:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r10so10559085wrx.3;
-        Fri, 15 Nov 2019 03:15:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n8V3MrejWzhb3k4NOooEju9diG1hvNPQtxVaPIcJims=;
-        b=NVORshqCuZdXdiaY8iP1cBSWLK+CvUqi7Af0gAsRD/ShCjZhqh8dVBaa5lfPTrMZmJ
-         eCmFTYid3RyKKJiOl47W2eWX7KuVs8fSU3BkLrwXLi1wYZpdTKH8mrmqpcaqeIbhhPn3
-         MpLrABTJKeb6KrvU9ayGgKU8C/2p+ErhYe/a0Y5tvgbeozmMOHJxj4UExVr5Ski92DUT
-         +AO0+HB+ewFy0bRK5O0eSt+zUKhjzYGiz+OWJBx8/H4d/WzUcSV2mmP37FHhdNeuIQE0
-         DkwwVRd1iv+bCME9PqnUvc9LBbuldHeE0bi85Yo8cnPWHX+S+cVNhTzuYVjQsJw1ejSh
-         A0Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n8V3MrejWzhb3k4NOooEju9diG1hvNPQtxVaPIcJims=;
-        b=NdOXt4vN1T+EooyzlbiSfJrRs5g819j3ogrGva6XiwxzoSj0kN8vbOP8F0IdYloKS4
-         QHwC26FEt0i2rG2kB/pmir3QlC0AEjI5NMyUG69hmunlz1UL0OO5eoTQw31m3lPOXoo/
-         noGOQoFygh3RQVAqnZmhsHXElqNlaHEZWA2VNweNdg7ZLMZc0o7jpeBO36lMRd7FjmFE
-         jxiDWRPWWso/CYRptHmDbPcPzQ028eV61Vly8o3wcAioVhrPqijfp3qTb37iR1IZREEG
-         d0udFb9AzyO9rVcW4JqKyRisK+WssCsoW08zy+lGxKgWBO4eMC1Yde5ha5d83E4ezUi8
-         z0LA==
-X-Gm-Message-State: APjAAAUC9M3/0dRByHpktCS2XQZh+8U5RC5NNoNfiHULWjqZJJruFkHQ
-        17bwb5rvwR61aXj1nf2wQNxxrOSk/LW3c/vBPFxfnmFY
-X-Google-Smtp-Source: APXvYqxsBWGbFcyYwphuRtzfWV4fObMitrZ9jisVvO6ZMo8vLhTodwoUcAn9cTLjg+hKCSWEpzMwJT3RLwjfQsgOQUU=
-X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr4954748wru.35.1573816504400;
- Fri, 15 Nov 2019 03:15:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20191111090230.3402-1-chunyan.zhang@unisoc.com> <20191111090230.3402-3-chunyan.zhang@unisoc.com>
-In-Reply-To: <20191111090230.3402-3-chunyan.zhang@unisoc.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Fri, 15 Nov 2019 19:14:28 +0800
-Message-ID: <CAAfSe-sCM7T2TZ25hgXSdqOCWzXN2J4qeoSRi8bveqnwGy3vBw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: serial: Convert sprd-uart to json-schema
-To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Nov 2019 06:18:51 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:49320 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726521AbfKOLSv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 06:18:51 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B4DAD1A050C;
+        Fri, 15 Nov 2019 12:18:49 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 42CCD1A0A30;
+        Fri, 15 Nov 2019 12:18:44 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A57B0402F8;
+        Fri, 15 Nov 2019 19:18:37 +0800 (SGT)
+From:   haibo.chen@nxp.com
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, kernel@pengutronix.de
+Cc:     devicetree@vger.kernel.org, festevam@gmail.com,
+        linux-mmc@vger.kernel.org, linux-imx@nxp.com, haibo.chen@nxp.com
+Subject: [PATCH 08/14] doc: dt: fsl-imx-esdhc: add strobe-dll-delay-target binding
+Date:   Fri, 15 Nov 2019 19:16:45 +0800
+Message-Id: <1573816606-26779-1-git-send-email-haibo.chen@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Haibo Chen <haibo.chen@nxp.com>
 
-On Mon, 11 Nov 2019 at 17:03, Chunyan Zhang <chunyan.zhang@unisoc.com> wrote:
+Add fsl,strobe-dll-delay-target binding.
 
-[cut]
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+---
+ Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> +
-> +examples:
-> +  - |
-> +    serial@0 {
-> +      compatible = "sprd,sc9860-uart", "sprd,sc9836-uart";
-> +      reg = <0x0 0x100>;
-> +      interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+index f707b8bee304..d50144f5f1d2 100644
+--- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
++++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+@@ -38,6 +38,11 @@ Optional properties:
+   This property allows user to change the tuning step to more than one delay
+   cells which is useful for some special boards or cards when the default
+   tuning step can't find the proper delay window within limited tuning retries.
++- fsl,strobe-dll-delay-target: Specify the strobe dll control slave delay target.
++  This delay target programming host controller loopback read clock, and this
++  property allows user to change the delay target for the strobe input read clock.
++  If not use this property, driver default set the delay target to value 7.
++  Only eMMC HS400 mode need to take care of this property.
+ 
+ Examples:
+ 
+-- 
+2.17.1
 
-Seems this setence cannot pass dt_binding_check, it need to be changed to:
-interrupts = <0 2 4>;
-
-Do you need me to send another patch, or you can help to fix that on
-your tree :)
-
-Thanks,
-Chunyan
