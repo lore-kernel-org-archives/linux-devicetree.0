@@ -2,92 +2,50 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D64C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 15:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F24C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 15:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91EC2073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 15:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573830042;
-	bh=e6AqUu0tvIsjZpg7MkGAdgpO+2f9FFqD80mC49I3A1w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v8L9ekFBxwaaTSf5zqzv3G3xadPwuE9HsQ9t5+ECrY9QzZsJmjA/HtmVW1KxyIDm8
-	 FIgQSkWUzVSZfkPQeIDf+DGc20Pmw3xSrn+CRTsUdXLLpSPh8pZkFR4nwBoINJkxGJ
-	 P3++6vdjZBujuHtU8OewvwdnOkq9O63EX1I+tkoQ=
+	by mail.kernel.org (Postfix) with ESMTP id 367F620733
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 15:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfKOPAm (ORCPT
+        id S1727406AbfKOPLG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:00:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727406AbfKOPAm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:00:42 -0500
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FE192075E;
-        Fri, 15 Nov 2019 15:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573830041;
-        bh=e6AqUu0tvIsjZpg7MkGAdgpO+2f9FFqD80mC49I3A1w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FiDx/Atpmvy/JB5JQSBRXq+jhgF8zuiC9eeQVLUPzR08zTEenqcITIvRgkedeZccJ
-         yG1bwrhRau/BG55Ld5/t7pUpCKiiWf+LNRVj4FjfTuVo9ZDnviNHaucxSRF0kDtEVs
-         P1wNqDWuHGMG5xk6Vuz8FRWktfom61G+ImoDQcVw=
-Received: by mail-qt1-f178.google.com with SMTP id r20so11043745qtp.13;
-        Fri, 15 Nov 2019 07:00:41 -0800 (PST)
-X-Gm-Message-State: APjAAAV7L/AqO+FaEVOz6+k/53q8kFzJK9JlycKgp2J3Y+RktzQ9dc1K
-        PYIes+OffAiohkb71H24iEbLSD/mVpNOXHRl7Q==
-X-Google-Smtp-Source: APXvYqya8dDmgqMXFYG+B2TXV92bU4T/lbXrVVmBGbEe9H1TzMG+IxXMhC9StqYyWHztu8gou6AA7UkUXzPHvR3099w=
-X-Received: by 2002:ac8:7612:: with SMTP id t18mr14221857qtq.143.1573830040314;
- Fri, 15 Nov 2019 07:00:40 -0800 (PST)
+        Fri, 15 Nov 2019 10:11:06 -0500
+Received: from [211.53.128.215] ([211.53.128.215]:64911 "EHLO MAIL.isd.co.kr"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727380AbfKOPLG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 10:11:06 -0500
+Received: from 192.168.1.3 (217.217.179.17) by MAIL.isd.co.kr (10.10.10.22)
+ with Microsoft SMTP Server id 14.3.123.3; Sat, 16 Nov 2019 00:10:35 +0900
+Date:   Fri, 15 Nov 2019 16:11:02 +0100
+From:   Peter Wong <choimj@isd.co.kr>
+Reply-To: Peter Wong <pw178483@gmail.com>
+To:     <devicetree@vger.kernel.org>
+Message-ID: <24685174.109237.1573830664332.JavaMail.cash@webmail.isd.co.kr>
+Subject: Investment opportunity
 MIME-Version: 1.0
-References: <20191115074424.cnk3xleobvusfuci@arbad>
-In-Reply-To: <20191115074424.cnk3xleobvusfuci@arbad>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 15 Nov 2019 09:00:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJHAGoBwwrLZezVNrZbUwKmS=+xVw_6h9R_=uGea+YDEA@mail.gmail.com>
-Message-ID: <CAL_JsqJHAGoBwwrLZezVNrZbUwKmS=+xVw_6h9R_=uGea+YDEA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: add parallax ping sensors
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        devicetree@vger.kernel.org,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [217.217.179.17]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 1:44 AM Andreas Klinger <ak@it-klinger.de> wrote:
->
-> Add dt-bindings for parallax PING))) and LaserPING iio sensors, which
-> are used for measuring distances.
->
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  .../bindings/iio/proximity/parallax-ping.yaml      | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
+Greetings,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Find attached email very confidential. reply for more details
+
+Thanks.
+Peter Wong
+
+
+
+
+----------------------------------------------------
+This email was sent by the shareware version of Postman Professional.
+
