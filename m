@@ -1,84 +1,97 @@
-Return-Path: <SRS0=7KoJ=ZG=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C46C43141
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 23:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011A9C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 00:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804A320729
-	for <linux-devicetree@archiver.kernel.org>; Thu, 14 Nov 2019 23:43:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olrwoquy"
+	by mail.kernel.org (Postfix) with ESMTP id CB876206EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 00:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfKNXnl (ORCPT
+        id S1726953AbfKOAQv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 14 Nov 2019 18:43:41 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37654 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfKNXnk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Nov 2019 18:43:40 -0500
-Received: by mail-ot1-f66.google.com with SMTP id d5so6493423otp.4;
-        Thu, 14 Nov 2019 15:43:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I8vG0IT0MDKAiIMq9HyAspnaej6ptXHEchDGTD4N3nc=;
-        b=olrwoquy+e4zS381RYST+ZX9Fbm9n+26qGv2sUfDGn0bJw5DVJ3dWBcTEY4MnhxTNj
-         Q0nZygHrTIxLOETPwY1lyHup9lkOkYcSvpWT2N6ySSryEIhYqWs8eNjfvjPP34Tjh6nS
-         /Vk1VFiyCx/vRoboELKtgvyQih4OMJbBryyUrQUwqnlXkT2z9t+Dj7qRDs3jt/I9BtQ4
-         ur9KmghKE+M2msESfmP4cDmXWEiR4JRLja2L2r7giNAS0d69d50rcKaew5EG6rmzgjm/
-         YrTrSLeIDcV62cPR1udljnAp/MoUy14rr3crvXXVvHkLLM/1lC+djm6jrVukdR4T/vyb
-         qPTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I8vG0IT0MDKAiIMq9HyAspnaej6ptXHEchDGTD4N3nc=;
-        b=C+BD0iuJ1V3Rpz2X8IhQfUYp1t6QWtavyy9b0uB8jDNQMk2VgYOuoP4Khr/nu6Ogqk
-         NpNXEKXV3mnPdQ8u3p4LP4K9lULaFKroGCn+dOfY4pNbQbMzlpEIAy2p8M43XNFx9PL/
-         CHTB2mv5oeosRWV8npjkks5tbAi5KCa6lndzXjsmFqnCw4vTGqs03nX6xYPmIA0/gHEw
-         2tdCnMp9TdqJVdOeCM6MrWBCTSPq9g2GxQgpA/zZiN/+Axq1NIdpF0z7cE+POjRcheb0
-         y01LtN3AC7RLUsXlyq1IL5rkfI3bDVtLR3Lbi/b4Ctuwf4i7YpX9vCuRcylPkiEi03Aq
-         8FzA==
-X-Gm-Message-State: APjAAAV903nsNgn9M9tjEU/5QP/QvlLhS9nvg7F2eZU9J25rK+trn/tq
-        7+6oYhRGJxx0tdo9XbmUVyBjhQ5gSSqLKAinc9k=
-X-Google-Smtp-Source: APXvYqzsrqBPtoNNMhFQSNzHFp5kcSNIvmO4gkcFegzTLuVEJ443QEDwBXQ+CJT2/fLmI0qtRTSVwcOeLkLsC0hFXfo=
-X-Received: by 2002:a9d:4712:: with SMTP id a18mr9867331otf.49.1573775019728;
- Thu, 14 Nov 2019 15:43:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20191114000900.26962-1-mihailescu2m@gmail.com> <20191114130643.GB3084@kozik-lap>
-In-Reply-To: <20191114130643.GB3084@kozik-lap>
-From:   Marian Mihailescu <mihailescu2m@gmail.com>
-Date:   Fri, 15 Nov 2019 10:13:30 +1030
-Message-ID: <CAM3PiRwfrFde-fv6_q2+KVCmasczsVus=ozk4B35g6GHdU9G2Q@mail.gmail.com>
-Subject: Re: [PATCH v5] ARM: dts: exynos5420: add mali dt node and enable mali
- on Odroid XU3/4
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Thu, 14 Nov 2019 19:16:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58860 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726852AbfKOAQv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Nov 2019 19:16:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 26C1DAD78;
+        Fri, 15 Nov 2019 00:16:49 +0000 (UTC)
+Subject: Re: [PATCH 5/7] ARM: dts: rtd1195: Introduce r-bus
+To:     James Tai <james.tai@realtek.com>
+Cc:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191111030434.29977-1-afaerber@suse.de>
+ <20191111030434.29977-6-afaerber@suse.de>
+ <a43d184d74c34e269714858b2635c35e@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <960a80b9-b1bf-3709-bbb7-fc2a3c3ae1da@suse.de>
+Date:   Fri, 15 Nov 2019 01:16:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <a43d184d74c34e269714858b2635c35e@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Send the patches passing checkpatch and not introducing warnings (make
-> dtbs W=1).
->
-> Best regards,
-> Krzysztof
->
+Hi James,
 
-checkpatch passes successfully, fixed compile warnings in v6, please try again.
+Am 13.11.19 um 03:53 schrieb James Tai:
+>> +		rbus: r-bus@18000000 {
+>> +			compatible = "simple-bus";
+>> +			reg = <0x18000000 0x100000>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges = <0x0 0x18000000 0x100000>;
+>> +
+> 
+> The r-bus size of RTD1195 is 0x70000‬.
 
--Marian
+Fixed, also further above for the soc node. This now leaves a gap until
+0x18100000 - is that gap RAM or non-r-bus registers then?
+
+		ranges = <0x18000000 0x18000000 0x00070000>,
+		         <0x18100000 0x18100000 0x01000000>,
+		         <0x40000000 0x40000000 0xc0000000>;
+
+Did you also review the other two ranges? The middle one was labeled NOR
+flash somewhere - are start and size correct? The final one depends on
+the maximum RAM size - does RTD1195 allow more than 1 GiB RAM? All
+non-RAM regions should be covered here.
+
+So another question, applicable to all SoCs: This reserved Boot ROM area
+at the start of the address space, here of size 0xa800, is that copied
+into RAM, or is that the actual ROM overlapping RAM? If the latter, we
+should exclude it from /memory@0's reg (making it /memory@a800), and add
+it to soc's ranges here for correctness.
+
+With the follow-up question: Is it correct that, given the size 0xa800,
+I have a gap between /memreserve/s from 0xa800 to 0xc000, or should we
+reserve that gap by extending the next /memreserve/ or inserting one?
+
+Thanks,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
