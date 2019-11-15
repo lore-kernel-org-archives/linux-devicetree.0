@@ -2,487 +2,145 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60429C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6451BC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417582067D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336CF20723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:34:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fKK3Wr37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbfKOMbK (ORCPT
+        id S1727196AbfKOMe6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:31:10 -0500
-Received: from mail-eopbgr820048.outbound.protection.outlook.com ([40.107.82.48]:33280
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        Fri, 15 Nov 2019 07:34:58 -0500
+Received: from mail-eopbgr30077.outbound.protection.outlook.com ([40.107.3.77]:32401
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727196AbfKOMbK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:31:10 -0500
-Received: from DM6PR02CA0037.namprd02.prod.outlook.com (2603:10b6:5:177::14)
- by MWHPR02MB2189.namprd02.prod.outlook.com (2603:10b6:300:5b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Fri, 15 Nov
- 2019 12:31:06 +0000
-Received: from CY1NAM02FT019.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::206) by DM6PR02CA0037.outlook.office365.com
- (2603:10b6:5:177::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22 via Frontend
- Transport; Fri, 15 Nov 2019 12:31:06 +0000
-Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
- smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- gmail.com discourages use of 149.199.60.83 as permitted sender)
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT019.mail.protection.outlook.com (10.152.75.177) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2451.23
- via Frontend Transport; Fri, 15 Nov 2019 12:31:06 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1iVacc-0000lx-MV; Fri, 15 Nov 2019 04:22:42 -0800
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1iVacX-00086n-Jb; Fri, 15 Nov 2019 04:22:37 -0800
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAFCMaOH011619;
-        Fri, 15 Nov 2019 04:22:36 -0800
-Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1iVacW-00086f-A8; Fri, 15 Nov 2019 04:22:36 -0800
-From:   shubhrajyoti.datta@gmail.com
-To:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, shubhrajyoti.datta@gmail.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCHv2 1/2] clk: clock-wizard: Move the clockwizard to clk
-Date:   Fri, 15 Nov 2019 17:52:31 +0530
-Message-Id: <1573820552-21164-1-git-send-email-shubhrajyoti.datta@gmail.com>
-X-Mailer: git-send-email 2.1.1
+        id S1727272AbfKOMe6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:34:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kgHDV4dniX3PRtyIeLCnUEe5K7jktosDE976qxILeAMSTuekGDLRZaFxTLuGF6jKd8O20Q01V/FNp0NxcuPrkuKMFfBh24ijvWKvZkJNkZf6qidQA1zMfQ9fdoKVyWRiT/6fC61RGm1S2EutH72nPYQA87QYtk3D2vOzxhf75HsOcG/rfuDs5wbi9a/t0coKce0vyu53NTp1Jqi6koRoNirCfkhkJ0ofB+XljuVcGenBQRL6G8/7dU0Okg1gKmRQwEOZ9aK7FULsxgR51/ObFpAZ2ZUQlEIWkV/LRh/+exzooLrzwAixxV6Va/D/NJr3dNhOLr+kUXlzgfpTB9yLJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JCsSqeTpHKGP67eGQZbd04WlSyZe7K7KWXcwiNaSVrY=;
+ b=GvlCdvOnOzqKNgaFwnwfHC+3DVN0gjKwt5za5uEk/WfAMKqgskvh7rZ6zd+XlUWHRae4EkDXPNOx4c4i8NvqJ1FtFecPAA2OjNPqREly6VBr6/Ox3REWFvDsLOx+OpbLgUgfUZ4p4uhIGnFWP1RFAUS9cGnn0G9lre/lf7KVPIhR0Jr2hzkrz+QPVnRpGh++6d7823WvZ9NUCyKUx/D5mUztBKKqv5hcrIiMKnyAmHiA2C6f7BnS81uXKFMPwialfW0NWVdSJ1CBsMyZCIbrWzhx4D49cj/UmsWHGcjEI+ZWByDQ5/mBIHw0X7xET3dgCL0wsK2M/WE25WqwxvZK0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JCsSqeTpHKGP67eGQZbd04WlSyZe7K7KWXcwiNaSVrY=;
+ b=fKK3Wr37Sel1btqTpW//rTpWTsEdzs/9OKbBxMK3QTc9BpOGPAJE5Yp35N9162XCB3IqbW/rYChtdB1PS55J4sUUxofim21trG90ZY9ID94UBLXqOZnBwVlqY2HnHr4MsBT6feSOKRtGWyKHZBTbkUlP68sulE4Y1xFoLRjAgVc=
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
+ VI1PR0402MB2830.eurprd04.prod.outlook.com (10.175.21.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Fri, 15 Nov 2019 12:34:13 +0000
+Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::1d41:f7cc:ffa2:270c]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
+ ([fe80::1d41:f7cc:ffa2:270c%6]) with mapi id 15.20.2451.027; Fri, 15 Nov 2019
+ 12:34:13 +0000
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     "mchehab@kernel.org" <mchehab@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "nicolas@ndufresne.ca" <nicolas@ndufresne.ca>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+Thread-Topic: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+Thread-Index: AQHVlLXLzR/BR8Qmu0iHDS94ZPyJ2qd+RrWAgAATH4CAAAH2AIAC7eQAgAAIUICACuaOAA==
+Date:   Fri, 15 Nov 2019 12:34:13 +0000
+Message-ID: <1573821252.16477.56.camel@nxp.com>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+         <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
+         <1573058741.16477.18.camel@nxp.com>
+         <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
+         <1573220200.16477.32.camel@nxp.com>
+         <ffbc7501-bb56-b5f2-cd43-209f099be594@xs4all.nl>
+In-Reply-To: <ffbc7501-bb56-b5f2-cd43-209f099be594@xs4all.nl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mirela.rabulea@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d047e3ac-e15f-4c91-7d33-08d769c81f67
+x-ms-traffictypediagnostic: VI1PR0402MB2830:|VI1PR0402MB2830:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB2830D0FE990C2E5745BD1E228F700@VI1PR0402MB2830.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02229A4115
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(366004)(136003)(376002)(54094003)(189003)(199004)(2501003)(66476007)(64756008)(229853002)(44832011)(25786009)(478600001)(8676002)(7416002)(14454004)(966005)(99286004)(186003)(7736002)(11346002)(446003)(305945005)(4326008)(86362001)(91956017)(76116006)(6436002)(81166006)(2906002)(81156014)(316002)(486006)(476003)(54906003)(110136005)(26005)(6486002)(102836004)(36756003)(2616005)(6246003)(50226002)(76176011)(8936002)(6306002)(6512007)(71200400001)(71190400001)(5660300002)(256004)(6116002)(3846002)(103116003)(66446008)(66556008)(66946007)(6506007)(66066001)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2830;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Wpe2Rwgqcdx97TffiheBL+tpere7t4wS9zNn+Ahp7rTOHGLmNh4IAgcHhygJCCEIanSq09r0Rz6m81ACXseiKSjkhkhivXjoHYwuM6Tba4CLNx//I/lCJp6/44d0/PFm7SfyPwZ36VycTa0NA+K+Bb2Ul2JGJIIEptnqVkC6dfUKd8PTgVrWbAxgzvZZtozmwSqgDQYZbuEbCAKrYbg4dts0VThYCUtSC1PlPjZHzERdFmT80dDMw/UKozrgkkljT50y4tGj0SH8IGUehKvTPndkEjmBKi+scbKH2xNIP3qVFR18f9lr6PYj4ir4hikCfTZnZq/UJegjJSR37KLNHNQDLcMlMN5iu4kzS2l5dNdrChNjyN6OQbwxII4WDEEb3l3VbZ8RgB3y9MOyE/MY2VqbnXOKB9WnFQ9SIPaspzts+TUI2GzP8SD5si8ie4WK
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <22084845BD3D9C439E03B5667CCDF4CE@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--8.614-7.0-31-1
-X-imss-scan-details: No--8.614-7.0-31-1;No--8.614-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-Matching-Connectors: 132182946663960875;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(979002)(346002)(39860400002)(376002)(396003)(136003)(199004)(189003)(2870700001)(498600001)(66574012)(82202003)(70586007)(6666004)(356004)(486006)(76482006)(36756003)(2616005)(61266001)(47776003)(426003)(14444005)(9786002)(70206006)(50466002)(336012)(4326008)(450100002)(86362001)(23676004)(81156014)(8936002)(81166006)(5660300002)(26005)(2906002)(55446002)(107886003)(126002)(30864003)(73392003)(8676002)(9686003)(476003)(316002)(305945005)(50226002)(42866002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2189;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a805359b-70a8-474a-2695-08d769c7afbb
-X-MS-TrafficTypeDiagnostic: MWHPR02MB2189:
-X-Microsoft-Antispam-PRVS: <MWHPR02MB2189E7DA8079D0E211565D0487700@MWHPR02MB2189.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:514;
-X-Forefront-PRVS: 02229A4115
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: F/6IQQhndFYxZ41t9jd0nh9CYgGhCD5PJANBVzn/lxO5elbqA8mWH9G2ttZKiGNeflo66ZfagWzKt/dwcFQwW6EH9O0Aif0NmQ64mijcjJBQhTerVFtIzlN3JzeIOlc8xSvmg7MKJwLCFUG8qSS77m4UXrlQICDZV+Z+d3l/3Wot8sHEe44Luj7QrGDEpk9+IXvrToFO6PDWHIGhcr0YLX8eS8XqUfjstTQOABSKtEc+L9VqH70VfcB+TvwCKaVJhpsUsd08cRFvBqBYNqXU+p/WV80+LfDNMElsawzJ/5QdsAnF3Rdz1udRo5yAjMZeSiGqw0J3+nnCLIUO+VPVYJXATWAU5ihifowPZTIjHncJDWGDNPUss6ux5Yt86k+8R16qQYj8TFCEV2EnM0Jrqu2yQzH6QzEG570gYgJj9xa1AVbF8TDW2mrbELrpSWl5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2019 12:31:06.1719
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d047e3ac-e15f-4c91-7d33-08d769c81f67
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 12:34:13.5247
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a805359b-70a8-474a-2695-08d769c7afbb
-X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2189
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OJIHgTkm4DN9Yj7dJVC8lTs1w2S8pIhN7aW4XQ3A/rFPZ3mSRtGVu0gFbg1DNPV/UmIOq6ALGcLxNZwXJFIfPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2830
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-
-Move the clocking wizard driver from staging to clk.
-
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-this is moving the drivers/staging/clocking-wizard to clk
-v2:
-Added the makefile  and kconfig
-
- drivers/clk/Kconfig                 |   6 +
- drivers/clk/Makefile                |   1 +
- drivers/clk/clk-xlnx-clock-wizard.c | 335 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 342 insertions(+)
- create mode 100644 drivers/clk/clk-xlnx-clock-wizard.c
-
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index c44247d..ff7d0f6 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -305,6 +305,12 @@ config COMMON_CLK_FIXED_MMIO
- 	help
- 	  Support for Memory Mapped IO Fixed clocks
- 
-+config COMMON_CLK_XLNX_CLKWZRD
-+	tristate "Xilinx Clocking Wizard"
-+	depends on COMMON_CLK && OF
-+	help
-+	  Support for the Xilinx Clocking Wizard IP core clock generator.
-+
- source "drivers/clk/actions/Kconfig"
- source "drivers/clk/analogbits/Kconfig"
- source "drivers/clk/bcm/Kconfig"
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 0138fb1..bce022f 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -65,6 +65,7 @@ obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
- obj-$(CONFIG_COMMON_CLK_VC5)		+= clk-versaclock5.o
- obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
- obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
-+obj-$(CONFIG_COMMON_CLK_XLNX_CLKWZRD)	+= clk-xlnx-clock-wizard.o
- 
- # please keep this section sorted lexicographically by directory path name
- obj-y					+= actions/
-diff --git a/drivers/clk/clk-xlnx-clock-wizard.c b/drivers/clk/clk-xlnx-clock-wizard.c
-new file mode 100644
-index 0000000..15b7a82
---- /dev/null
-+++ b/drivers/clk/clk-xlnx-clock-wizard.c
-@@ -0,0 +1,335 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx 'Clocking Wizard' driver
-+ *
-+ *  Copyright (C) 2013 - 2014 Xilinx
-+ *
-+ *  Sören Brinkmann <soren.brinkmann@xilinx.com>
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/slab.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+
-+#define WZRD_NUM_OUTPUTS	7
-+#define WZRD_ACLK_MAX_FREQ	250000000UL
-+
-+#define WZRD_CLK_CFG_REG(n)	(0x200 + 4 * (n))
-+
-+#define WZRD_CLKOUT0_FRAC_EN	BIT(18)
-+#define WZRD_CLKFBOUT_FRAC_EN	BIT(26)
-+
-+#define WZRD_CLKFBOUT_MULT_SHIFT	8
-+#define WZRD_CLKFBOUT_MULT_MASK		(0xff << WZRD_CLKFBOUT_MULT_SHIFT)
-+#define WZRD_DIVCLK_DIVIDE_SHIFT	0
-+#define WZRD_DIVCLK_DIVIDE_MASK		(0xff << WZRD_DIVCLK_DIVIDE_SHIFT)
-+#define WZRD_CLKOUT_DIVIDE_SHIFT	0
-+#define WZRD_CLKOUT_DIVIDE_MASK		(0xff << WZRD_DIVCLK_DIVIDE_SHIFT)
-+
-+enum clk_wzrd_int_clks {
-+	wzrd_clk_mul,
-+	wzrd_clk_mul_div,
-+	wzrd_clk_int_max
-+};
-+
-+/**
-+ * struct clk_wzrd:
-+ * @clk_data:		Clock data
-+ * @nb:			Notifier block
-+ * @base:		Memory base
-+ * @clk_in1:		Handle to input clock 'clk_in1'
-+ * @axi_clk:		Handle to input clock 's_axi_aclk'
-+ * @clks_internal:	Internal clocks
-+ * @clkout:		Output clocks
-+ * @speed_grade:	Speed grade of the device
-+ * @suspended:		Flag indicating power state of the device
-+ */
-+struct clk_wzrd {
-+	struct clk_onecell_data clk_data;
-+	struct notifier_block nb;
-+	void __iomem *base;
-+	struct clk *clk_in1;
-+	struct clk *axi_clk;
-+	struct clk *clks_internal[wzrd_clk_int_max];
-+	struct clk *clkout[WZRD_NUM_OUTPUTS];
-+	unsigned int speed_grade;
-+	bool suspended;
-+};
-+
-+#define to_clk_wzrd(_nb) container_of(_nb, struct clk_wzrd, nb)
-+
-+/* maximum frequencies for input/output clocks per speed grade */
-+static const unsigned long clk_wzrd_max_freq[] = {
-+	800000000UL,
-+	933000000UL,
-+	1066000000UL
-+};
-+
-+static int clk_wzrd_clk_notifier(struct notifier_block *nb, unsigned long event,
-+				 void *data)
-+{
-+	unsigned long max;
-+	struct clk_notifier_data *ndata = data;
-+	struct clk_wzrd *clk_wzrd = to_clk_wzrd(nb);
-+
-+	if (clk_wzrd->suspended)
-+		return NOTIFY_OK;
-+
-+	if (ndata->clk == clk_wzrd->clk_in1)
-+		max = clk_wzrd_max_freq[clk_wzrd->speed_grade - 1];
-+	else if (ndata->clk == clk_wzrd->axi_clk)
-+		max = WZRD_ACLK_MAX_FREQ;
-+	else
-+		return NOTIFY_DONE;	/* should never happen */
-+
-+	switch (event) {
-+	case PRE_RATE_CHANGE:
-+		if (ndata->new_rate > max)
-+			return NOTIFY_BAD;
-+		return NOTIFY_OK;
-+	case POST_RATE_CHANGE:
-+	case ABORT_RATE_CHANGE:
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+}
-+
-+static int __maybe_unused clk_wzrd_suspend(struct device *dev)
-+{
-+	struct clk_wzrd *clk_wzrd = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(clk_wzrd->axi_clk);
-+	clk_wzrd->suspended = true;
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused clk_wzrd_resume(struct device *dev)
-+{
-+	int ret;
-+	struct clk_wzrd *clk_wzrd = dev_get_drvdata(dev);
-+
-+	ret = clk_prepare_enable(clk_wzrd->axi_clk);
-+	if (ret) {
-+		dev_err(dev, "unable to enable s_axi_aclk\n");
-+		return ret;
-+	}
-+
-+	clk_wzrd->suspended = false;
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(clk_wzrd_dev_pm_ops, clk_wzrd_suspend,
-+			 clk_wzrd_resume);
-+
-+static int clk_wzrd_probe(struct platform_device *pdev)
-+{
-+	int i, ret;
-+	u32 reg;
-+	unsigned long rate;
-+	const char *clk_name;
-+	struct clk_wzrd *clk_wzrd;
-+	struct resource *mem;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	clk_wzrd = devm_kzalloc(&pdev->dev, sizeof(*clk_wzrd), GFP_KERNEL);
-+	if (!clk_wzrd)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, clk_wzrd);
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	clk_wzrd->base = devm_ioremap_resource(&pdev->dev, mem);
-+	if (IS_ERR(clk_wzrd->base))
-+		return PTR_ERR(clk_wzrd->base);
-+
-+	ret = of_property_read_u32(np, "speed-grade", &clk_wzrd->speed_grade);
-+	if (!ret) {
-+		if (clk_wzrd->speed_grade < 1 || clk_wzrd->speed_grade > 3) {
-+			dev_warn(&pdev->dev, "invalid speed grade '%d'\n",
-+				 clk_wzrd->speed_grade);
-+			clk_wzrd->speed_grade = 0;
-+		}
-+	}
-+
-+	clk_wzrd->clk_in1 = devm_clk_get(&pdev->dev, "clk_in1");
-+	if (IS_ERR(clk_wzrd->clk_in1)) {
-+		if (clk_wzrd->clk_in1 != ERR_PTR(-EPROBE_DEFER))
-+			dev_err(&pdev->dev, "clk_in1 not found\n");
-+		return PTR_ERR(clk_wzrd->clk_in1);
-+	}
-+
-+	clk_wzrd->axi_clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
-+	if (IS_ERR(clk_wzrd->axi_clk)) {
-+		if (clk_wzrd->axi_clk != ERR_PTR(-EPROBE_DEFER))
-+			dev_err(&pdev->dev, "s_axi_aclk not found\n");
-+		return PTR_ERR(clk_wzrd->axi_clk);
-+	}
-+	ret = clk_prepare_enable(clk_wzrd->axi_clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "enabling s_axi_aclk failed\n");
-+		return ret;
-+	}
-+	rate = clk_get_rate(clk_wzrd->axi_clk);
-+	if (rate > WZRD_ACLK_MAX_FREQ) {
-+		dev_err(&pdev->dev, "s_axi_aclk frequency (%lu) too high\n",
-+			rate);
-+		ret = -EINVAL;
-+		goto err_disable_clk;
-+	}
-+
-+	/* we don't support fractional div/mul yet */
-+	reg = readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
-+		    WZRD_CLKFBOUT_FRAC_EN;
-+	reg |= readl(clk_wzrd->base + WZRD_CLK_CFG_REG(2)) &
-+		     WZRD_CLKOUT0_FRAC_EN;
-+	if (reg)
-+		dev_warn(&pdev->dev, "fractional div/mul not supported\n");
-+
-+	/* register multiplier */
-+	reg = (readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
-+		     WZRD_CLKFBOUT_MULT_MASK) >> WZRD_CLKFBOUT_MULT_SHIFT;
-+	clk_name = kasprintf(GFP_KERNEL, "%s_mul", dev_name(&pdev->dev));
-+	if (!clk_name) {
-+		ret = -ENOMEM;
-+		goto err_disable_clk;
-+	}
-+	clk_wzrd->clks_internal[wzrd_clk_mul] = clk_register_fixed_factor
-+			(&pdev->dev, clk_name,
-+			 __clk_get_name(clk_wzrd->clk_in1),
-+			 0, reg, 1);
-+	kfree(clk_name);
-+	if (IS_ERR(clk_wzrd->clks_internal[wzrd_clk_mul])) {
-+		dev_err(&pdev->dev, "unable to register fixed-factor clock\n");
-+		ret = PTR_ERR(clk_wzrd->clks_internal[wzrd_clk_mul]);
-+		goto err_disable_clk;
-+	}
-+
-+	/* register div */
-+	reg = (readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
-+			WZRD_DIVCLK_DIVIDE_MASK) >> WZRD_DIVCLK_DIVIDE_SHIFT;
-+	clk_name = kasprintf(GFP_KERNEL, "%s_mul_div", dev_name(&pdev->dev));
-+	if (!clk_name) {
-+		ret = -ENOMEM;
-+		goto err_rm_int_clk;
-+	}
-+
-+	clk_wzrd->clks_internal[wzrd_clk_mul_div] = clk_register_fixed_factor
-+			(&pdev->dev, clk_name,
-+			 __clk_get_name(clk_wzrd->clks_internal[wzrd_clk_mul]),
-+			 0, 1, reg);
-+	if (IS_ERR(clk_wzrd->clks_internal[wzrd_clk_mul_div])) {
-+		dev_err(&pdev->dev, "unable to register divider clock\n");
-+		ret = PTR_ERR(clk_wzrd->clks_internal[wzrd_clk_mul_div]);
-+		goto err_rm_int_clk;
-+	}
-+
-+	/* register div per output */
-+	for (i = WZRD_NUM_OUTPUTS - 1; i >= 0 ; i--) {
-+		const char *clkout_name;
-+
-+		if (of_property_read_string_index(np, "clock-output-names", i,
-+						  &clkout_name)) {
-+			dev_err(&pdev->dev,
-+				"clock output name not specified\n");
-+			ret = -EINVAL;
-+			goto err_rm_int_clks;
-+		}
-+		reg = readl(clk_wzrd->base + WZRD_CLK_CFG_REG(2) + i * 12);
-+		reg &= WZRD_CLKOUT_DIVIDE_MASK;
-+		reg >>= WZRD_CLKOUT_DIVIDE_SHIFT;
-+		clk_wzrd->clkout[i] = clk_register_fixed_factor
-+			(&pdev->dev, clkout_name, clk_name, 0, 1, reg);
-+		if (IS_ERR(clk_wzrd->clkout[i])) {
-+			int j;
-+
-+			for (j = i + 1; j < WZRD_NUM_OUTPUTS; j++)
-+				clk_unregister(clk_wzrd->clkout[j]);
-+			dev_err(&pdev->dev,
-+				"unable to register divider clock\n");
-+			ret = PTR_ERR(clk_wzrd->clkout[i]);
-+			goto err_rm_int_clks;
-+		}
-+	}
-+
-+	kfree(clk_name);
-+
-+	clk_wzrd->clk_data.clks = clk_wzrd->clkout;
-+	clk_wzrd->clk_data.clk_num = ARRAY_SIZE(clk_wzrd->clkout);
-+	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_wzrd->clk_data);
-+
-+	if (clk_wzrd->speed_grade) {
-+		clk_wzrd->nb.notifier_call = clk_wzrd_clk_notifier;
-+
-+		ret = clk_notifier_register(clk_wzrd->clk_in1,
-+					    &clk_wzrd->nb);
-+		if (ret)
-+			dev_warn(&pdev->dev,
-+				 "unable to register clock notifier\n");
-+
-+		ret = clk_notifier_register(clk_wzrd->axi_clk, &clk_wzrd->nb);
-+		if (ret)
-+			dev_warn(&pdev->dev,
-+				 "unable to register clock notifier\n");
-+	}
-+
-+	return 0;
-+
-+err_rm_int_clks:
-+	clk_unregister(clk_wzrd->clks_internal[1]);
-+err_rm_int_clk:
-+	kfree(clk_name);
-+	clk_unregister(clk_wzrd->clks_internal[0]);
-+err_disable_clk:
-+	clk_disable_unprepare(clk_wzrd->axi_clk);
-+
-+	return ret;
-+}
-+
-+static int clk_wzrd_remove(struct platform_device *pdev)
-+{
-+	int i;
-+	struct clk_wzrd *clk_wzrd = platform_get_drvdata(pdev);
-+
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	for (i = 0; i < WZRD_NUM_OUTPUTS; i++)
-+		clk_unregister(clk_wzrd->clkout[i]);
-+	for (i = 0; i < wzrd_clk_int_max; i++)
-+		clk_unregister(clk_wzrd->clks_internal[i]);
-+
-+	if (clk_wzrd->speed_grade) {
-+		clk_notifier_unregister(clk_wzrd->axi_clk, &clk_wzrd->nb);
-+		clk_notifier_unregister(clk_wzrd->clk_in1, &clk_wzrd->nb);
-+	}
-+
-+	clk_disable_unprepare(clk_wzrd->axi_clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id clk_wzrd_ids[] = {
-+	{ .compatible = "xlnx,clocking-wizard" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, clk_wzrd_ids);
-+
-+static struct platform_driver clk_wzrd_driver = {
-+	.driver = {
-+		.name = "clk-wizard",
-+		.of_match_table = clk_wzrd_ids,
-+		.pm = &clk_wzrd_dev_pm_ops,
-+	},
-+	.probe = clk_wzrd_probe,
-+	.remove = clk_wzrd_remove,
-+};
-+module_platform_driver(clk_wzrd_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Soeren Brinkmann <soren.brinkmann@xilinx.com");
-+MODULE_DESCRIPTION("Driver for the Xilinx Clocking Wizard IP core");
--- 
-2.1.1
-
+SGkgSGFucywNCg0KT24gVmksIDIwMTktMTEtMDggYXQgMTU6MDYgKzAxMDAsIEhhbnMgVmVya3Vp
+bCB3cm90ZToNCj4gPiBJcyB0aGVyZSBhICJnb29kIGV4YW1wbGUiIG9mIGEgdjRsIG0ybSBkcml2
+ZXIgdGhhdCBwYXNzZXMgdGhlc2UNCj4gdmltMm0uIEFsc28gZHJpdmVycy9tZWRpYS9wbGF0Zm9y
+bS9tdGstanBlZy8gKGFsdGhvdWdoIEknbSBub3Qgc3VyZQ0KPiB3aGVuDQo+IGl0IHdhcyBsYXN0
+IHRlc3RlZCB3aXRoIHY0bDItY29tcGxpYW5jZSwgc28gaXQgbWlnaHQgYmUgYSBiaXQgb3V0IG9m
+DQo+IGRhdGUpLg0KPiANCj4gPiANCj4gPiBzdHJlYW1pbmcgdGVzdHM/IFRoYXQgd291bGQgc2F2
+ZSBzb21lIHRpbWUgb24gbXkgc2lkZS4NCg0KVGhhbmtzIGEgbG90IGZvciB0aGUgZXhhbXBsZXMu
+DQpJJ20gc2VuZGluZyBfdjIgb2YgdGhlIHBhdGNoLCB3aXRoIGZpeGVzIGZvciBzdHJlYW1pbmcg
+dGVzdHMuDQpPbmUgbWVudGlvbiBoZXJlLCBJIGRyb3BwZWQgdGhlIHN1cHBvcnQgZm9yIFVTRVJQ
+VFIgYnVmZmVycywgYmFzZWQgb24NCnRoaXM6DQpodHRwczovL2x3bi5uZXQvQXJ0aWNsZXMvNDQ3
+NDM1Lw0KIlZCMl9VU0VSUFRSOiBidWZmZXJzIGFsbG9jYXRlZCBpbiB1c2VyIHNwYWNlLiBOb3Jt
+YWxseSwgb25seSBkZXZpY2VzDQp3aGljaCBjYW4gZG8gc2NhdHRlci9nYXRoZXIgSS9PIGNhbiBk
+ZWFsIHdpdGggdXNlci1zcGFjZSBidWZmZXJzLg0KSW50ZXJlc3RpbmdseSwgdmlkZW9idWYyIHN1
+cHBvcnRzIGNvbnRpZ3VvdXMgYnVmZmVycyBhbGxvY2F0ZWQgYnkgdXNlcg0Kc3BhY2U7IHRoZSBv
+bmx5IHdheSB0byBnZXQgdGhvc2UsIHRob3VnaCwgaXMgdG8gdXNlIHNvbWUgc29ydCBvZg0Kc3Bl
+Y2lhbCBtZWNoYW5pc20gbGlrZSB0aGUgb3V0LW9mLXRyZWUgQW5kcm9pZCAicG1lbSIgZHJpdmVy
+Lg0KQ29udGlndW91cyBJL08gdG8gaHVnZSBwYWdlcyBpcyBub3Qgc3VwcG9ydGVkLiINCg0KSSB3
+b25kZXIgaWYgVkIyX1VTRVJQVFIgbWFrZSBzZW5zZSB0b2dldGhlcg0Kd2l0aMKgJnZiMl9kbWFf
+Y29udGlnX21lbW9wcz8gSSBzZWUgYXQgbGVhc3QgMSBkcml2ZXIgd2l0aCB0aGlzDQpjb21iaW5h
+dGlvbiAoczVwLWpwZWcpLCBJIHdvdWxkIGJlIHN1cnByaXNlZCBpZiB0aGF0IHBhc3NlcyB0aGUN
+CnN0cmVhbWluZyB0ZXN0cy4NCg0KUmVnYXJkcywNCk1pcmVsYQ==
