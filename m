@@ -2,184 +2,175 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171C6C43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 803F6C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC48B2073B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55ABE2073C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 09:29:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X7MpvLcS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="S2YHC3tM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfKOJZW (ORCPT
+        id S1727141AbfKOJ3T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:25:22 -0500
-Received: from mga14.intel.com ([192.55.52.115]:47552 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbfKOJZW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:25:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 01:25:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,307,1569308400"; 
-   d="scan'208";a="356065503"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 15 Nov 2019 01:25:18 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v8 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Date:   Fri, 15 Nov 2019 17:25:08 +0800
-Message-Id: <b59afc497e41404fea06aa48d633cba183ee944d.1573797249.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
-References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
+        Fri, 15 Nov 2019 04:29:19 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:50040 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfKOJ3T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 04:29:19 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 752DF611A0; Fri, 15 Nov 2019 09:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573810158;
+        bh=X7R7K3nn8a1h8zFooYO+s283VI3WWKxDBVpp6C8kBaQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=X7MpvLcST/uT7XwxqmjRdfOog6AKiZEfDxJkktqY2yyGBGrmQJ43nCPXGRzCjViHj
+         hgreDP72BebeHQx+7nPtfg5tOUzKYj+qvivYPKpFIWnFj/7eI3zqCHHEFsykTrbNeq
+         dlmUdKZnGJGWoJm3UJgjFFwQTHrXzsQ0YR/wfwrE=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A48EE6119B;
+        Fri, 15 Nov 2019 09:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573810157;
+        bh=X7R7K3nn8a1h8zFooYO+s283VI3WWKxDBVpp6C8kBaQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=S2YHC3tM8niwG4aXS52NAzg3ODbg5mgVtgsmtrXpI2AakkVg66NPjmPuwq/IAB361
+         Bwkw/SfRajBBmnwS1+BH8DuTQ1tR47B4eRH8843EVj06gUrpef7Fa1Jx9ryZsPLDuu
+         60wPLXeM6haIms4LFSn6km0eW2PD8yDyEhgoM3h0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A48EE6119B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     linux-wireless@vger.kernel.org
+Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 00/49] ath11k: driver for Qualcomm IEEE 802.11ax devices
+Date:   Fri, 15 Nov 2019 11:28:24 +0200
+Message-Id: <1573810153-29623-1-git-send-email-kvalo@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt bindings document for pinmux & GPIO controller driver of
-Intel Lightning Mountain SoC.
+ath11k is a new driver for Qualcomm IEEE 802.11ax devices, first
+supporting only IPQ8074 SoC using the shared memory AHB bus. ath11k
+uses mac80211 and supports AP, Station and Mesh modes.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++++++++++++++++++++
- 1 file changed, 116 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+Even though ath11k has some similar code as with ath10k (especially
+the WMI layer) it was concluded to be simpler to have a "clean start"
+for ath11k code base and not try to share the code with ath10k. This
+makes maintenance easier and avoids major changes in ath10k, which
+would have significantly increased the risk of regressions in existing
+setups.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-new file mode 100644
-index 000000000000..240d429f773b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-@@ -0,0 +1,116 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Pinmux & GPIO controller controls pin multiplexing & configuration including
-+  GPIO function selection & GPIO attributes configuration.
-+
-+  Please refer to [1] for details of the common pinctrl bindings used by the
-+  client devices.
-+
-+  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-io
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      function:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description:
-+          A string containing the name of the function to mux to the group.
-+
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          An array of strings identifying the list of groups.
-+
-+      pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          List of pins to select with this function.
-+
-+      pinmux:
-+        description: The applicable mux group.
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+
-+      bias-pull-up:
-+        type: boolean
-+
-+      bias-pull-down:
-+        type: boolean
-+
-+      drive-strength:
-+        description: |
-+          Selects the drive strength for the specified pins in mA.
-+          0: 2 mA
-+          1: 4 mA
-+          2: 8 mA
-+          3: 12 mA
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/uint32
-+          - enum: [0, 1, 2, 3]
-+
-+      slew-rate:
-+        type: boolean
-+        description: |
-+          Sets slew rate for specified pins.
-+          0: slow slew
-+          1: fast slew
-+
-+      drive-open-drain:
-+        type: boolean
-+
-+      output-enable:
-+        type: boolean
-+
-+    required:
-+      - function
-+      - groups
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    pinctrl: pinctrl@e2880000 {
-+        compatible = "intel,lgm-pinctrl";
-+        reg = <0xe2880000 0x100000>;
-+
-+        uart0-pins {
-+             pins = <64>, /* UART_RX0 */
-+                    <65>; /* UART_TX0 */
-+             function = "CONSOLE_UART0";
-+             pinmux = <1>,
-+                      <1>;
-+             groups = "CONSOLE_UART0";
-+          };
-+    };
-+
-+...
--- 
-2.11.0
+Even though the driver is very similar with ath10k but there are major
+differences as well. The datapath is completely different. ath11k
+supports multiple MACs, called "soc" in the firmware interface. And
+there's only one WMI interface to support.
+
+Currently ath11k supports only IEEE 802.11ac mode, but patches for
+802.11ax are available and they will be submitted after ath11k is
+accepted to upstream.
+
+The firmware images are available from ath11k-firmware repository but
+they will be also submitted to linux-firmware:
+
+https://github.com/kvalo/ath11k-firmware
+
+The driver has had multiple authors who are listed in alphabetical
+order below.
+
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
+Signed-off-by: Ganesh Sesetti <gseset@codeaurora.org>
+Signed-off-by: Govindaraj Saminathan <gsamin@codeaurora.org>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Karthikeyan Periyasamy <periyasa@codeaurora.org>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Maharaja Kennadyrajan <mkenna@codeaurora.org>
+Signed-off-by: Manikanta Pubbisetty <mpubbise@codeaurora.org>
+Signed-off-by: Miles Hu <milehu@codeaurora.org>
+Signed-off-by: Muna Sinada <msinada@codeaurora.org>
+Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
+Signed-off-by: Rajkumar Manoharan <rmanohar@codeaurora.org>
+Signed-off-by: Sathishkumar Muruganandam <murugana@codeaurora.org>
+Signed-off-by: Shashidhar Lakkavalli <slakkavalli@datto.com>
+Signed-off-by: Sriram R <srirrama@codeaurora.org>
+Signed-off-by: Sven Eckelmann <seckelmann@datto.com>
+Signed-off-by: Vasanthakumar Thiagarajan <vthiagar@codeaurora.org>
+Signed-off-by: Venkateswara Naralasetty <vnaralas@codeaurora.org>
+
+--------------[cut]-------------------[cut]-----------------
+
+I have split the driver into multiple patches for easier review, but
+the final version will be split into three commits:
+
+1. adding Documentatio/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+
+2. adding drivers/net/wireless/ath/ath11k/ with the commit log being the
+   text before the cut line above.
+
+3. adding ath11k entry to MAINTAINERS file
+
+This version is based on commit ad10d2ff619f0797cb102b2ff488429d3f8e4a8a
+from ath11k-bringup branch on my ath.git tree:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/log/?h=ath11k-bringup
+
+This patchset applies to wireless-drivers-next but needs
+CONFIG_COMPILE_TEST, CONFIG_REMOTEPROC AND CONFIG_QCOM_QMI_HELPERS to
+be able to compile on x86.
+
+Please review and comment.
+
+Kalle
+
+v3:
+
+* Fixes and license change to Device Tree bindings document
+
+* git log --oneline --reverse ath11k-review-v2..ath11k-review-v3:
+
+51dcdfd7a2bf ath11k: fix ATH11K_TRACING kconfig help text
+b6b50cbae8a1 dt: bindings: net: ath11k: fix whitespace
+2120332777dd dt: bindings: net: ath11k: fixes from review
+93804d04c6d6 dt: bindings: net: ath11k: change license
+
+v2:
+
+* There are three final patches to commit, not just one.
+
+* Write commit log for the device tree bindings patch.
+
+* License changed to BSD 3-clause "Clear".
+
+* git log --oneline --reverse ath11k-review-v1..ath11k-review-v2:
+
+f6153fa78616 ath11k: fix Kconfig, replace spaces with tabs
+b6b140aa1739 ath11k: Use C99 structure initialization for target_service_to_ce_map_wlan[]
+d054355585aa ath11k: Remove ring mask macros defined for 0
+4c980dcca60a ath11k: Move ath11k_ahb_read32() and ath11k_ahb_write32() to ahb.h
+be7eb8bbca02 ath11k: Avoid code duplication in set/clear of a register bit values
+11978c109885 ath11k: Few clean ups in comments
+8cc72b480777 ath11k: Clean ups in ath11k_ce_rx_buf_enqueue_pipe() error path
+9f55e5658237 ath11k: Clean up parameter list in ath11k_ce_completed_send_next()
+3dcb3e76a260 ath11k: Use struct_size() to get the structure size with trailing array
+a1329c05a4e0 ath11k: change license to BSD 3-clause "Clear"
+bcd3f5043856 ath11k: fix multicast rate parameter size
+e4386fb86f51 ath11k: assigning values to enum
+78b6da0fb67c ath11k: Add debugfs per chip
+e44597a02dad ath11k: fix tkip mic error reporting to cfg80211
+ea1107a93b4a dt-bindings: net: add qcom,ath11k.yaml
+ab4d2bd0f217 ath11k: whitespace cleanup in core.c
+
 
