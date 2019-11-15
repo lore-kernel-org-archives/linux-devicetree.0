@@ -2,372 +2,153 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F81C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D83C43141
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA2D2075E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:27:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JK0LfWi8"
+	by mail.kernel.org (Postfix) with ESMTP id EFC47207FA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfKOM1j (ORCPT
+        id S1727343AbfKOMbK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:27:39 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42133 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727323AbfKOM1i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:27:38 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFCC3DP030963;
-        Fri, 15 Nov 2019 13:27:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=+ySUyuIgppZscAXuN5IFd1l92uGKjRfWMz0ArEYbKMg=;
- b=JK0LfWi89WCk8ooVq9J6K8MmK5G8ByfR1TP+Am1vgJJ4EpvI1uLXGfcT1wQqVg2a8JUO
- z7bs+PJ0e8gIpuyda2PwAjci1609IKKHPdzZvbxFd2gTwK2JzzFm/l3T/JHmjM/wXVIJ
- hn3r1fi8zvIVk0XoguiGvByik5m6hBPsKUACGg/P6bWBvcjlZwUb2NT7hc8LTrCG97MN
- E1LZdrl2br0TPxwkoGqfqd0FlNbppbS7WFsfJhZVNyqFA7uT0RM4SL3d8RpnW+DeNVyd
- TAxiDckTIWPdwWw3utVF7gMp0zGQQHLLuF8t0Sqb4Ayqz9FBcmYp/Q4l8Q2yqSJ6Met3 Dw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w7psbm1k0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 Nov 2019 13:27:04 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 63C46100034;
-        Fri, 15 Nov 2019 13:27:03 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 34D852A96EE;
-        Fri, 15 Nov 2019 13:27:03 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov 2019 13:27:02
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <fabrice.gasnier@st.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
-        <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <lee.jones@linaro.org>,
-        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: mfd: Convert stm32 low power timers bindings to json-schema
-Date:   Fri, 15 Nov 2019 13:27:00 +0100
-Message-ID: <20191115122700.12688-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 15 Nov 2019 07:31:10 -0500
+Received: from mail-eopbgr800077.outbound.protection.outlook.com ([40.107.80.77]:45259
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727200AbfKOMbK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:31:10 -0500
+Received: from DM6PR02CA0037.namprd02.prod.outlook.com (2603:10b6:5:177::14)
+ by DM6PR02MB4699.namprd02.prod.outlook.com (2603:10b6:5:fa::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.26; Fri, 15 Nov
+ 2019 12:31:07 +0000
+Received: from CY1NAM02FT043.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::207) by DM6PR02CA0037.outlook.office365.com
+ (2603:10b6:5:177::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22 via Frontend
+ Transport; Fri, 15 Nov 2019 12:31:07 +0000
+Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
+ smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ gmail.com discourages use of 149.199.60.83 as permitted sender)
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT043.mail.protection.outlook.com (10.152.74.182) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2451.23
+ via Frontend Transport; Fri, 15 Nov 2019 12:31:07 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iVacf-0000ly-BX; Fri, 15 Nov 2019 04:22:45 -0800
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iVaca-00086u-6r; Fri, 15 Nov 2019 04:22:40 -0800
+Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAFCMdu6020507;
+        Fri, 15 Nov 2019 04:22:39 -0800
+Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iVacY-00086f-RP; Fri, 15 Nov 2019 04:22:39 -0800
+From:   shubhrajyoti.datta@gmail.com
+To:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shubhrajyoti.datta@gmail.com,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCHv2 2/2] dt-bindings: add documentation of xilinx clocking wizard
+Date:   Fri, 15 Nov 2019 17:52:32 +0530
+Message-Id: <1573820552-21164-2-git-send-email-shubhrajyoti.datta@gmail.com>
+X-Mailer: git-send-email 2.1.1
+In-Reply-To: <1573820552-21164-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1573820552-21164-1-git-send-email-shubhrajyoti.datta@gmail.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--9.223-7.0-31-1
+X-imss-scan-details: No--9.223-7.0-31-1;No--9.223-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-Matching-Connectors: 132182946675093049;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(396003)(199004)(189003)(16586007)(86362001)(316002)(498600001)(55446002)(50226002)(8676002)(81156014)(81166006)(8936002)(51416003)(76176011)(9786002)(26005)(36756003)(50466002)(48376002)(2906002)(126002)(9686003)(6666004)(6306002)(73392003)(356004)(47776003)(82202003)(336012)(486006)(61266001)(426003)(5660300002)(305945005)(4326008)(450100002)(2616005)(70586007)(76482006)(70206006)(446003)(11346002)(476003)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4699;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 17226a15-63cb-457a-95f9-08d769c7b060
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4699:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <DM6PR02MB46994D580F0523470797D80787700@DM6PR02MB4699.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 02229A4115
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aTekPEpOxvNZr9/QqfPbPZhDjVFW/c586kQZOFSIIsUAhkQvW0v7+d8bLqX6FFMxBM1sSmB+KxJ+e6+8c2k/XS35RSh2tppffoeRlMuYMfUDc0lQbCO9vrycvjJD1eYU/VEIYYh1UtY7WLQ7ZhcJF8EEOJm1Z9BxXrSdBJGfao50IOCrOSpwkxQajwcKtpk2QM6ATM6WMZpUkFqFSijerqI2YCBpmxucVr7zZLJL9+LAR+pTHwr+Egoohfza/93g76F8oJ5+51MFYfhHCoUdVnTLGSczTdpszzRf/b2vVv7lCcEGM7SX4i3uXANEsLMzrePbWU/ulHODsznTB0UR++mXsduMHLTMOmxH63X83r1QZy1XamBOUBKmqWYUQ+n3Tb6fAax1gNAL7tQYdjJq4AqA0uepDXIAvFN3v5j/BF/NVdZzUHu/BO7II4dg5q022Z5AhmDRTtFyCDWYUFGtHC3iU7zro+/6xu5eujIjoOU=
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2019 12:31:07.3461
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17226a15-63cb-457a-95f9-08d769c7b060
+X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4699
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 low power timers binding to DT schema format using json-schema
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Add the devicetree binding for the xilinx clocking wizard.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
- .../bindings/counter/stm32-lptimer-cnt.txt         |  29 -----
- .../bindings/iio/timer/stm32-lptimer-trigger.txt   |  23 ----
- .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 117 +++++++++++++++++++++
- .../devicetree/bindings/mfd/stm32-lptimer.txt      |  48 ---------
- .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  30 ------
- 5 files changed, 117 insertions(+), 130 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+moving from drivers/staging/clocking-wizard/dt-binding.txt
 
-diff --git a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
-deleted file mode 100644
-index e90bc47f752a..000000000000
---- a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--STMicroelectronics STM32 Low-Power Timer quadrature encoder and counter
--
--STM32 Low-Power Timer provides several counter modes. It can be used as:
--- quadrature encoder to detect angular position and direction of rotary
--  elements, from IN1 and IN2 input signals.
--- simple counter from IN1 input signal.
--
--Must be a sub-node of an STM32 Low-Power Timer device tree node.
--See ../mfd/stm32-lptimer.txt for details about the parent node.
--
--Required properties:
--- compatible:		Must be "st,stm32-lptimer-counter".
--- pinctrl-names: 	Set to "default". An additional "sleep" state can be
--			defined to set pins in sleep state.
--- pinctrl-n: 		List of phandles pointing to pin configuration nodes,
--			to set IN1/IN2 pins in mode of operation for Low-Power
--			Timer input on external pin.
--
--Example:
--	timer@40002400 {
--		compatible = "st,stm32-lptimer";
--		...
--		counter {
--			compatible = "st,stm32-lptimer-counter";
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&lptim1_in_pins>;
--			pinctrl-1 = <&lptim1_sleep_in_pins>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
-deleted file mode 100644
-index 85e6806b17d7..000000000000
---- a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--STMicroelectronics STM32 Low-Power Timer Trigger
--
--STM32 Low-Power Timer provides trigger source (LPTIM output) that can be used
--by STM32 internal ADC and/or DAC.
--
--Must be a sub-node of an STM32 Low-Power Timer device tree node.
--See ../mfd/stm32-lptimer.txt for details about the parent node.
--
--Required properties:
--- compatible:		Must be "st,stm32-lptimer-trigger".
--- reg:			Identify trigger hardware block. Must be 0, 1 or 2
--			respectively for lptimer1, lptimer2 or lptimer3
--			trigger output.
--
--Example:
--	timer@40002400 {
--		compatible = "st,stm32-lptimer";
--		...
--		trigger@0 {
--			compatible = "st,stm32-lptimer-trigger";
--			reg = <0>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+ .../bindings/clock/xlnx,clocking-wizard.txt        | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/xlnx,clocking-wizard.txt
+
+diff --git a/Documentation/devicetree/bindings/clock/xlnx,clocking-wizard.txt b/Documentation/devicetree/bindings/clock/xlnx,clocking-wizard.txt
 new file mode 100644
-index 000000000000..8f42c9a4c6cb
+index 0000000..aedac84
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-@@ -0,0 +1,117 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/st,stm32-lptimer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/devicetree/bindings/clock/xlnx,clocking-wizard.txt
+@@ -0,0 +1,32 @@
++Binding for Xilinx Clocking Wizard IP Core
 +
-+title: STMicroelectronics STM32 Low-Power Timers bindings
++This binding uses the common clock binding[1]. Details about the devices can be
++found in the product guide[2].
 +
-+description: |
-+  The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
-+  functions
-+   - PWM output (with programmable prescaler, configurable polarity)
-+   - Quadrature encoder, counter
-+   - Trigger source for STM32 ADC/DAC (LPTIM_OUT)
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Clocking Wizard Product Guide
++http://www.xilinx.com/support/documentation/ip_documentation/clk_wiz/v5_1/pg065-clk-wiz.pdf
 +
-+maintainers:
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
++Required properties:
++ - compatible: Must be 'xlnx,clocking-wizard'
++ - #clock-cells: Number of cells in a clock specifier. Should be 1
++ - reg: Base and size of the cores register space
++ - clocks: Handle to input clock
++ - clock-names: Tuple containing 'clk_in1' and 's_axi_aclk'
++ - clock-output-names: Names for the output clocks
 +
-+properties:
-+  compatible:
-+    const: st,stm32-lptimer
++Optional properties:
++ - speed-grade: Speed grade of the device (valid values are 1..3)
 +
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: mux
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  pwm:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-pwm-lp
-+
-+      "#pwm-cells":
-+        const: 3
-+
-+    required:
-+      - "#pwm-cells"
-+      - compatible
-+
-+patternProperties:
-+  "^trigger@[0-9]+$":
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-lptimer-trigger
-+
-+      reg:
-+        description: Identify trigger hardware block.
-+        items:
-+         minimum: 0
-+         maximum: 3
-+
-+    required:
-+      - compatible
-+      - reg
-+
-+  counter:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-lptimer-counter
-+
-+    required:
-+      - compatible
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    timer@40002400 {
-+      compatible = "st,stm32-lptimer";
-+      reg = <0x40002400 0x400>;
-+      clocks = <&timer_clk>;
-+      clock-names = "mux";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      pwm {
-+        compatible = "st,stm32-pwm-lp";
-+        #pwm-cells = <3>;
-+      };
-+
-+      trigger@0 {
-+        compatible = "st,stm32-lptimer-trigger";
-+        reg = <0>;
-+      };
-+
-+      counter {
-+        compatible = "st,stm32-lptimer-counter";
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
-deleted file mode 100644
-index fb54e4dad5b3..000000000000
---- a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--STMicroelectronics STM32 Low-Power Timer
--
--The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
--functions:
--- PWM output (with programmable prescaler, configurable polarity)
--- Quadrature encoder, counter
--- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
--
--Required properties:
--- compatible:		Must be "st,stm32-lptimer".
--- reg:			Offset and length of the device's register set.
--- clocks:		Phandle to the clock used by the LP Timer module.
--- clock-names:		Must be "mux".
--- #address-cells:	Should be '<1>'.
--- #size-cells:		Should be '<0>'.
--
--Optional subnodes:
--- pwm:			See ../pwm/pwm-stm32-lp.txt
--- counter:		See ../counter/stm32-lptimer-cnt.txt
--- trigger:		See ../iio/timer/stm32-lptimer-trigger.txt
--
--Example:
--
--	timer@40002400 {
--		compatible = "st,stm32-lptimer";
--		reg = <0x40002400 0x400>;
--		clocks = <&timer_clk>;
--		clock-names = "mux";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		pwm {
--			compatible = "st,stm32-pwm-lp";
--			pinctrl-names = "default";
--			pinctrl-0 = <&lppwm1_pins>;
--		};
--
--		trigger@0 {
--			compatible = "st,stm32-lptimer-trigger";
--			reg = <0>;
--		};
--
--		counter {
--			compatible = "st,stm32-lptimer-counter";
--			pinctrl-names = "default";
--			pinctrl-0 = <&lptim1_in_pins>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
-deleted file mode 100644
-index 6521bc44a74e..000000000000
---- a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--STMicroelectronics STM32 Low-Power Timer PWM
--
--STM32 Low-Power Timer provides single channel PWM.
--
--Must be a sub-node of an STM32 Low-Power Timer device tree node.
--See ../mfd/stm32-lptimer.txt for details about the parent node.
--
--Required parameters:
--- compatible:		Must be "st,stm32-pwm-lp".
--- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
--			bindings defined in pwm.txt.
--
--Optional properties:
--- pinctrl-names: 	Set to "default". An additional "sleep" state can be
--			defined to set pins in sleep state when in low power.
--- pinctrl-n: 		Phandle(s) pointing to pin configuration node for PWM,
--			respectively for "default" and "sleep" states.
--
--Example:
--	timer@40002400 {
--		compatible = "st,stm32-lptimer";
--		...
--		pwm {
--			compatible = "st,stm32-pwm-lp";
--			#pwm-cells = <3>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&lppwm1_pins>;
--			pinctrl-1 = <&lppwm1_sleep_pins>;
--		};
--	};
++Example:
++	clock-generator@40040000 {
++		#clock-cells = <1>;
++		reg = <0x40040000 0x1000>;
++		compatible = "xlnx,clocking-wizard";
++		speed-grade = <1>;
++		clock-names = "clk_in1", "s_axi_aclk";
++		clocks = <&clkc 15>, <&clkc 15>;
++		clock-output-names = "clk_out0", "clk_out1", "clk_out2",
++				     "clk_out3", "clk_out4", "clk_out5",
++				     "clk_out6", "clk_out7";
++	};
 -- 
-2.15.0
+2.1.1
 
