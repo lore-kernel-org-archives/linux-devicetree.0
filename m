@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CF7C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FC8C43141
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA44207DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905522075E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820778;
-	bh=2kT458QwiUoJ1anrPh85zSPZ+t9Tlaax6hx/8GssUrU=;
+	s=default; t=1573820783;
+	bh=hCV/FGxoHknjJu4UEFxg/QAqMjxyOF6Pyv9qpgelyRQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=UulPg1m4FGC8p1HE3TqB05zczbybPEwl7KDp3S/9MLun1mc1ULGCanGRg/kq3fIrT
-	 nWA3Hl9l6YFqEB7JGQ4JnC39boRr3/wiSkrzrG7fFe50LiqqHx2lqUXFzagj+SME0L
-	 YWX+xMzDlj0WgX1GaGw3Eqrq0qN178HwWOZgvdAw=
+	b=I7+Zve7s7lzFa+Lbqf+87qJAwXX7Sa32EJ7MIdWoX/VRbxEkdNaIH2oHsGa5Sr/LO
+	 f/En1zOnCgF0xN/xBAa40F457Eb8WBzY1viQnSUO/Wwt3+MohGHFOhW6fmDQXopMfa
+	 2e6QCoLvJ5w7aGzYVeFU+OBd3sMqhDnpYPbwYn3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfKOM0O (ORCPT
+        id S1727669AbfKOMZP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:26:14 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32956 "EHLO
+        Fri, 15 Nov 2019 07:25:15 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32884 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727668AbfKOMZQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 07:25:16 -0500
+        with ESMTP id S1727646AbfKOMZO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 07:25:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=NoJQ/BiAhwJPJINl8oVLkVKiRSpmH92kSU++XZetC4w=; b=AX7xCxNoUWqj
-        vtQ7yCrfzLG7qoCLrx8SeqModvFHZhqGcXsHGU8f0pPjbTnSPNs7C88qKQ0OIVB6RRQ5noDvHyVNl
-        GyEVps9wjMmmyFD5WIQVNuKrmAr+kwtGtINtOUJYg+FFDbJVWyb9gFAYhb/W4Bttk+Y9/ceHShYaO
-        lsDOM=;
+        List-Archive; bh=4AGPkKPSVyOTs5n0W0mJVA5CUUCsjeEv/AClqhuZzv4=; b=qzFKtRmxYbbx
+        bGe9vsc580IghowflZsvWJTvC4y/mPeSs+UAZrMoT0TpI0kL1zEYB+R3i2fIbx1d5k1c+1sve/Pnn
+        DMdcbZjd6l8oxtpDgVH3StavMUHRPNTEkuePI7ANTtBJjLR9y2uFYAyEiteMXaTQsWF6yDDDdoeUV
+        153rk=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaex-0000Km-W9; Fri, 15 Nov 2019 12:25:08 +0000
+        id 1iVaex-0000Kk-OA; Fri, 15 Nov 2019 12:25:07 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7C3AF2741609; Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
+        id 3CFBC27415A7; Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Christoph Fritz <chf.fritz@googlemail.com>
 Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Christian Hemp <c.hemp@phytec.de>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -56,12 +55,11 @@ Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
         Support Opensource <support.opensource@diasemi.com>
-Subject: Applied "regulator: da9062: add of_map_mode support for bucks" to the regulator tree
-In-Reply-To: <1573652416-9848-3-git-send-email-chf.fritz@googlemail.com>
+Subject: Applied "dt-bindings: mfd: da9062: describe buck modes" to the regulator tree
+In-Reply-To: <1573652416-9848-4-git-send-email-chf.fritz@googlemail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122507.7C3AF2741609@ypsilon.sirena.org.uk>
+Message-Id: <20191115122507.3CFBC27415A7@ypsilon.sirena.org.uk>
 Date:   Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -70,7 +68,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: da9062: add of_map_mode support for bucks
+   dt-bindings: mfd: da9062: describe buck modes
 
 has been applied to the regulator tree at
 
@@ -95,104 +93,42 @@ to this mail.
 Thanks,
 Mark
 
-From 844e7492ee3da1a8714bf3cc1dd54d777a5257c2 Mon Sep 17 00:00:00 2001
+From a4bb429811bd4a5be94873ae218062c83c476ed9 Mon Sep 17 00:00:00 2001
 From: Christoph Fritz <chf.fritz@googlemail.com>
-Date: Wed, 13 Nov 2019 14:40:14 +0100
-Subject: [PATCH] regulator: da9062: add of_map_mode support for bucks
+Date: Wed, 13 Nov 2019 14:40:15 +0100
+Subject: [PATCH] dt-bindings: mfd: da9062: describe buck modes
 
-This patch adds of_map_mode support for bucks to set regulator modes
-from within regulator framework.
+This patch adds DT description of da9062 buck regulator modes.
 
 Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-Signed-off-by: Christian Hemp <c.hemp@phytec.de>
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Link: https://lore.kernel.org/r/1573652416-9848-3-git-send-email-chf.fritz@googlemail.com
+Link: https://lore.kernel.org/r/1573652416-9848-4-git-send-email-chf.fritz@googlemail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/da9062-regulator.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ Documentation/devicetree/bindings/mfd/da9062.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index 601002e3e012..29f4a60398a3 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -98,6 +98,20 @@ static const unsigned int da9062_buck_b_limits[] = {
- 	2300000, 2400000, 2500000, 2600000, 2700000, 2800000, 2900000, 3000000
- };
+diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
+index edca653a5777..bc4b59de6a55 100644
+--- a/Documentation/devicetree/bindings/mfd/da9062.txt
++++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+@@ -66,6 +66,9 @@ Sub-nodes:
+   details of individual regulator device can be found in:
+   Documentation/devicetree/bindings/regulator/regulator.txt
  
-+static unsigned int da9062_map_buck_mode(unsigned int mode)
-+{
-+	switch (mode) {
-+	case DA9063_BUCK_MODE_SLEEP:
-+		return REGULATOR_MODE_STANDBY;
-+	case DA9063_BUCK_MODE_SYNC:
-+		return REGULATOR_MODE_FAST;
-+	case DA9063_BUCK_MODE_AUTO:
-+		return REGULATOR_MODE_NORMAL;
-+	default:
-+		return -EINVAL;
-+	}
-+}
++  regulator-initial-mode may be specified for buck regulators using mode values
++  from include/dt-bindings/regulator/dlg,da9063-regulator.h.
 +
- static int da9062_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
- {
- 	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
-@@ -360,6 +374,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK1_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK1_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK1_A,
- 			__builtin_ffs((int)DA9062AA_BUCK1_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -396,6 +411,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK3_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK3_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK3_A,
- 			__builtin_ffs((int)DA9062AA_BUCK3_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -432,6 +448,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK4_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK4_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK4_A,
- 			__builtin_ffs((int)DA9062AA_BUCK4_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -604,6 +621,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK1_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK1_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK1_A,
- 			__builtin_ffs((int)DA9062AA_BUCK1_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -640,6 +658,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK2_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK2_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK2_A,
- 			__builtin_ffs((int)DA9062AA_BUCK2_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -676,6 +695,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK3_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK3_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK3_A,
- 			__builtin_ffs((int)DA9062AA_BUCK3_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -712,6 +732,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK4_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK4_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK4_A,
- 			__builtin_ffs((int)DA9062AA_BUCK4_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
+ - rtc : This node defines settings required for the Real-Time Clock associated
+   with the DA9062. There are currently no entries in this binding, however
+   compatible = "dlg,da9062-rtc" should be added if a node is created.
+@@ -96,6 +99,7 @@ Example:
+ 				regulator-max-microvolt = <1570000>;
+ 				regulator-min-microamp = <500000>;
+ 				regulator-max-microamp = <2000000>;
++				regulator-initial-mode = <DA9063_BUCK_MODE_SYNC>;
+ 				regulator-boot-on;
+ 			};
+ 			DA9062_LDO1: ldo1 {
 -- 
 2.20.1
 
