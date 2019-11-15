@@ -2,131 +2,106 @@ Return-Path: <SRS0=ud5f=ZH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154E7C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 16:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DEDC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15CF2073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 16:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJhoamSf"
+	by mail.kernel.org (Postfix) with ESMTP id 1119E20728
+	for <linux-devicetree@archiver.kernel.org>; Fri, 15 Nov 2019 17:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573838110;
+	bh=RSU9xSqNeXK85aOMIM/PzLN1ORp5RwSgqA3qb8ti8io=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F1iXV7TrWAKBdQnG9QUeDf0a7FDrERg0ZO/WVkZ7qkCN0syXJAs+2tUMgpGYEn4ms
+	 s9aTUDvvuW7ITXDBnXBs7OMXnmrC6RBYWAw37PpcLJbCN4QlGLy3npysGIuHO08r7a
+	 6vWYCSaGI9RBtxwVImmFrBcOXM2qWpTzCe7C+CSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfKOQva (ORCPT
+        id S1727625AbfKORPD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:51:30 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36954 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfKOQva (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 11:51:30 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b17so11149800wmj.2
-        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 08:51:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VdOP5MdkiRa742wuZPU3Ia86dlFC1mZ4Epch8je0ZsQ=;
-        b=kJhoamSfi+/vkfFmd4tNviBydKZRD8tO2Ip6TbqvxKRbn0fKEMXSdcrsYVs0YRzOyv
-         IAX7OTN2enmHRj3B8o3ytHpqqK4EOkqNech8L73OvZzddZBMxCrWdBQppjXekTbbzbQr
-         2xt4ufY0Wbzg/L8WL6e4tZS+O8G3PlS0F5fk9UHWbO6ZySQFvLFt/u/SqLVo+M7ldMKf
-         QyF3S0lNPxW80L952FJWJ0XgWjhLJ9gYguM45QpVTkyAEakJ2cWk08kmwyxDKWm+WSwk
-         nDBnrDFf0vo9Z0mTa2c/QAnVJRLPCq8g8QXH2/m3ITtNpCijqLF+0q89fIuldNFfkxxV
-         +F5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VdOP5MdkiRa742wuZPU3Ia86dlFC1mZ4Epch8je0ZsQ=;
-        b=k3l4JaOidoWEwRM4SmIavvJn34VBW7L1ioQrSEeJo9TVcVwajPV9ayyyvSVwQz70sU
-         RJjVAvq18R2dW+WnslZYT4s92hoErdPJsjxzefkzdsVMwMUtq4EM2Ujzz8+1IBMisVXG
-         4yEQn7Q7t9h8b+N20EPTO/TWXbeMiZuYmC/NaY3ruAvlboVealELYalGYlnXwzGsLp3c
-         Zug05g1gK9AMEZn/WIeTO3HMECe1kF51hVHCn/Dqech2QigAnaUO7+FsMrMtP2WkDxke
-         3ofekHi4TOrJjJUyk3SUpmFNelFIuUQEJK5zMZTtZAlXqS1iERkHdj//FfKTYQZVvmeE
-         wTDw==
-X-Gm-Message-State: APjAAAWja9U7M/JrbOmmiRUtPdgQL+RG41ne71ZpAoy/ToCUECaDD2LP
-        yYHRIOv1uSuHnatfJgPIHkM=
-X-Google-Smtp-Source: APXvYqx/vABp+uHtpGDx3HX1T7K5X3e6ac6tFHtw4GaL2E1AormhRyo8+7T2afvE0M4eG9unJSoDKQ==
-X-Received: by 2002:a05:600c:1088:: with SMTP id e8mr4336535wmd.7.1573836687858;
-        Fri, 15 Nov 2019 08:51:27 -0800 (PST)
-Received: from localhost ([37.238.189.15])
-        by smtp.gmail.com with ESMTPSA id j22sm13527040wrd.41.2019.11.15.08.51.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 08:51:27 -0800 (PST)
-From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: [RFC PATCH 2/2] Add support for Videostrong KII Pro tv box
-Date:   Fri, 15 Nov 2019 19:50:27 +0300
-Message-Id: <20191115165026.19376-3-mohammad.rasim96@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191115165026.19376-1-mohammad.rasim96@gmail.com>
-References: <20191115165026.19376-1-mohammad.rasim96@gmail.com>
+        Fri, 15 Nov 2019 12:15:03 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40360 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfKORPD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 12:15:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RQJdKvZKfMsKQBwkCaC47KvblkeBygS3Ak3RT8kxRFU=; b=hGfqb+/mHc6s3XI50svFEuIPK
+        jIXYHIDS3rfz8GPADtDIHhbe1ZJEbh4BPb+OTVbg4qbTvwH2kXzast2yWKmRS+Zo0BU85SGYK4fI4
+        v85PwxDYKsoAXrKfrfcMAI6NAQFBAln4xoWyuH/XNnxHjXETf6bcXt69ZgdrN/qMfpwYQ=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iVfBP-0000m4-L6; Fri, 15 Nov 2019 17:14:55 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 7B0D727429D2; Fri, 15 Nov 2019 17:14:54 +0000 (GMT)
+Date:   Fri, 15 Nov 2019 17:14:54 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, KCHSU0@nuvoton.com,
+        thomas.fehrenbacher@siedle.de, kernel@pengutronix.de,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] ASoC: nau8810: add aux input control, available on
+ NAU8812
+Message-ID: <20191115171454.GC4210@sirena.co.uk>
+References: <20191115160819.15557-1-m.felsch@pengutronix.de>
+ <20191115160819.15557-4-m.felsch@pengutronix.de>
+ <20191115161210.GB4210@sirena.co.uk>
+ <20191115162053.fgsd45seg526gafv@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eHhjakXzOLJAF9wJ"
+Content-Disposition: inline
+In-Reply-To: <20191115162053.fgsd45seg526gafv@pengutronix.de>
+X-Cookie: Tell me what to think!!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for the Videostrong KII Pro tv box which is based on the gxbb-p201 reference design
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
----
- arch/arm64/boot/dts/amlogic/Makefile          |  1 +
- .../boot/dts/amlogic/meson-gxbb-KII-Pro.dts   | 25 +++++++++++++++++++
- 2 files changed, 26 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
+--eHhjakXzOLJAF9wJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 84afecba9ec0..1d72e93691f2 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p200.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p201.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-KII-Pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-meta.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
-new file mode 100644
-index 000000000000..e79d75bfa8dd
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxbb-p201.dts"
-+
-+/ {
-+	compatible = "Videostrong,KII-Pro","amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
-+	model = "Videostrong KII Pro";
-+
-+
-+};
-+
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+	bluetooth {
-+		compatible = "brcm,bcm4335A0";
-+		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
-+	};
-+};
--- 
-2.23.0
+On Fri, Nov 15, 2019 at 05:20:53PM +0100, Marco Felsch wrote:
+> On 19-11-15 16:12, Mark Brown wrote:
 
+> > It'd still be better to only register these controls if the device isn't
+> > a nau8812 so that userspace doesn't see them.
+
+> That's the thing I tought about 10min.. Imagine that: You have an
+> embedded device with a very good codec driver (all codec controlls are
+> available) but the hw-guys didn't connect all the in-/outputs. So
+> switching those controls are useless too. IMHO this is exactly the same
+> thing here.
+
+We do have the start of facilities to mask out unreachable controls
+already (a machine driver could use them manually as things stand).  If
+we ever get the graph API done properly that work is more likely to get
+finished.
+
+--eHhjakXzOLJAF9wJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3O3Q0ACgkQJNaLcl1U
+h9ABdAf+JGTslv/txd8VsZLn4CfToO1Tctrdfr1vcqrb3bsI9hAKjuUuLFO1ffNR
+Rh7dZLXeQx54u4KsAiqF8EUuFYIfzaDR2OSk8nKxCxheKSrcx92YyBN9zL2tBvj3
+lW3B+pa+/o1Ioa2uP+TB7wd4UYy3w0uQXGky/Ihs5EYgc8ermvkwhgihQ25AwVyk
+PtfCYFvAbGMivk3HzIGL4nffYs618v7LWeEzC3f+ZUr0iUlbAa+sYdQAuownwQHD
+3PZqgTIJeQPyovRHK82B+nxf49KFfxrOUDDbkYCk8BFPsBOm8yTOVftdW2JCBmhK
+qwdb+7uYDn6OH+mABTq0Erpv/vghsg==
+=ozqw
+-----END PGP SIGNATURE-----
+
+--eHhjakXzOLJAF9wJ--
