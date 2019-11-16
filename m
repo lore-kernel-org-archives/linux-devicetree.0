@@ -2,109 +2,106 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFDAC432C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 10:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA35CC432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 11:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CE320715
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 10:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0ECC20728
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 11:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gf8+xE3u"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WgV3OSCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfKPK2o (ORCPT
+        id S1727340AbfKPLHR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 05:28:44 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46099 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfKPK2n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 05:28:43 -0500
-Received: by mail-oi1-f193.google.com with SMTP id n14so10929657oie.13
-        for <devicetree@vger.kernel.org>; Sat, 16 Nov 2019 02:28:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sZhD/EUwU2LYmqXZzHYtr3lzbEoemhuYST7IWlhE6j0=;
-        b=gf8+xE3ulehOsc5z+4rMPuOai0+uZBLR7+efZJ+o42vDgffLsx17nKEGw3IsWe9QSQ
-         sPNSML0APKutXIbdn+rr6CRx+Sj9QaEpH676Kxt15sQ5jYJCDEq7p1YsIlB9kjFbHP4Y
-         ZC+o0he5dzxFd7mjAUt6LumMP/0GNX1PVZ+mULwLWRDX7qZMRjG8ytfZcHJ0084Epup6
-         tajx3wMGOODe1MWrC28i64e76ITL5lFIyCUh8EsZxCysG+fBwpV1jP7QpW91/dbB8ih/
-         ER74co302G/Pu5nHfk0mcHhXB2gWjfFPtoiJvv1xrmvYTzlFg3IUVjx+pp2dCAHbWzFN
-         P9ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sZhD/EUwU2LYmqXZzHYtr3lzbEoemhuYST7IWlhE6j0=;
-        b=UxTmQk521Q/amUhsJFPpq0AJ+MW9wsUaicnmK4gqvTDEcMzKKiwj+pZTytjt7UeSwx
-         kpLhtd39KiFPLlUeWPx0szePnYNHzOYHaIHDG8Jt258G3gA4hAHHVEVHp5R5JjpfFzx3
-         TIENnd9R1oQDiJX5iDbX9REmNCGAmh5uqgcbBiL4ltNW1E1OjjTlnNqER+2qCD18rVks
-         sawaQ2ANICznzuf3E63lnJTzRV7vu23wtFW84Mz0HxQcwQ8o/Liur5SWwm3HovOUJnrJ
-         GMmztcZ9u/O+Q0LSTXzMbDkO6nZfVbJX3DcucgBaqInxJJTDUQgSFzMG0FV1dnSXVtOq
-         k51w==
-X-Gm-Message-State: APjAAAXUVs3Zn9j/Zr537VO/o2rHNlnwgeuF2MSEU1QXmMNWNEFqdb7I
-        6KcXvi/9kPskvnDgvRQ3TRHr/BI8gG7D8Bpo1jQ=
-X-Google-Smtp-Source: APXvYqzqpR3r9z/YwmrTeU5WMMZLPoNaek3O+69iFR3LbGOpV+usYWFgo/EYlXBZZmBYLoxRvxzaPrHZfbRUB6hYgY8=
-X-Received: by 2002:aca:504d:: with SMTP id e74mr12138443oib.140.1573900122769;
- Sat, 16 Nov 2019 02:28:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20191115165026.19376-1-mohammad.rasim96@gmail.com>
- <20191115165026.19376-3-mohammad.rasim96@gmail.com> <6fa93c06-ecab-c8da-32c4-db40533c09ec@suse.de>
-In-Reply-To: <6fa93c06-ecab-c8da-32c4-db40533c09ec@suse.de>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 16 Nov 2019 11:28:31 +0100
-Message-ID: <CAFBinCBFopdV8yRNN+jBc1DmB8mx85T0SKaFkxe_So_fsvcejA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] Add support for Videostrong KII Pro tv box
-To:     Mohammad Rasim <mohammad.rasim96@gmail.com>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        Sat, 16 Nov 2019 06:07:17 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:59640 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbfKPLHQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 06:07:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1ABfceJ8v9HVoFdZuVH2Lb3YMt4FTQFcIcYcGq5Usew=; b=WgV3OSCtufHCSOCuUZoXpRA94e
+        PpWaLUCsnRUAe1X5UA7Wu3axSopVk9EEnDw8r6SbKtfnma5IQKejdgRwSBs9y44BbRiXP7ka5R6Mt
+        A8Jo+dzBS27B6KByXv8MPiZE92TLkhsFRRCKPi73p81RupTi1TMVMci04IIJZGG+jmX/sbNToIvJ+
+        erhMnbprp9rVysI8XaFN5OJ46htP31tW2vo3SsWeAe5PCeEXknJ6J8KHg05KGS4OUC1tabEy7lAns
+        VRz7f+nbvRCDJeQoRlOVhi3g54+122CGrb9wF+6gZ3c3hYV0dQep+KQzihYrxE9+IXeKOLymXDh4L
+        fHTMM91w==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([2001:4d48:ad52:3201:222:68ff:fe15:37dd]:37616 helo=rmk-PC.armlinux.org.uk)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1iVvur-000788-IY; Sat, 16 Nov 2019 11:06:57 +0000
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1iVvuq-0002sd-KR; Sat, 16 Nov 2019 11:06:56 +0000
+From:   Russell King <rmk+kernel@armlinux.org.uk>
+To:     Gregory Clement <gregory.clement@bootlin.com>,
+        Vladimir Vid <vladimir.vid@sartura.hr>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH 1/2] arm64: dts: uDPU: fix broken ethernet
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1iVvuq-0002sd-KR@rmk-PC.armlinux.org.uk>
+Date:   Sat, 16 Nov 2019 11:06:56 +0000
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mohammad,
+The uDPU uses both ethernet controllers, which ties up COMPHY 0 for
+eth1 and COMPHY 1 for eth0, with no USB3 comphy.  The addition of
+COMPHY support made the kernel override the setup by the boot loader
+breaking this platform by assuming that COMPHY 0 was always used for
+USB3.  Delete the USB3 COMPHY definition at platform level, and add
+phy specifications for the ethernet channels.
 
-On Sat, Nov 16, 2019 at 10:53 AM Andreas F=C3=A4rber <afaerber@suse.de> wro=
-te:
-[...]
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "meson-gxbb-p201.dts"
->
-> This is rather unusual, normally you would include the SoC's .dtsi, not
-> another board.
-you may even get another benefit from this:
-we don't know the Ethernet PHY setup on the P201 board (because nobody
-has an actual P201 board) so we don't use interrupts etc.
+Fixes: bd3d25b07342 ("arm64: dts: marvell: armada-37xx: link USB hosts with their PHYs")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-however, since you do have a access to your KII Pro you can do better
-than P201 and define the Ethernet bits similar to Odroid-C2 for
-example: [0]
-if you board doesn't use a Realtek RTL8211F PHY then please also
-update the comment in the Ethmac node
-testing the PHY interrupt (which means less polling -> your CPU has
-more time to do other things) is easy:
-* cat /proc/interrupts
-* unplug and re-plug the Ethernet cable
-* cat /proc/interrupts again and check the Ethernet PHY interrupt
-(should be +2 compared to the first invocation)
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+index bd4aab6092e0..e31813a4f972 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+@@ -143,6 +143,7 @@
+ 	phy-mode = "sgmii";
+ 	status = "okay";
+ 	managed = "in-band-status";
++	phys = <&comphy1 0>;
+ 	sfp = <&sfp_eth0>;
+ };
+ 
+@@ -150,11 +151,14 @@
+ 	phy-mode = "sgmii";
+ 	status = "okay";
+ 	managed = "in-band-status";
++	phys = <&comphy0 1>;
+ 	sfp = <&sfp_eth1>;
+ };
+ 
+ &usb3 {
+ 	status = "okay";
++	phys = <&usb2_utmi_otg_phy>;
++	phy-names = "usb2-utmi-otg-phy";
+ };
+ 
+ &uart0 {
+-- 
+2.20.1
 
-
-Martin
-
-
-[0] https://github.com/torvalds/linux/blob/f9717178b9be9477877d4c3776c61ff5=
-6d854ddf/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts#L122
