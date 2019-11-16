@@ -2,131 +2,141 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2943C43215
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 029E3C432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEC321479
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921147;
-	bh=+Tu81s/jZSdhO5WGgtrMGG8ucgrcGU+ah1WI414OjVc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIx/1ptogNjQJkgUxKaH5VIjxBny60YvRhTd9tZD2WVCOkGazI5pQyqIJZDtHaAFi
-	 bllLCLoc+2V5bjduuWgUobqQxWqD90fReV/WOEDAg40bmaAubWAgkh5ZsfJHdVb1xM
-	 ySGzk+twAfyExEaNYmFCmA/QuB6E+aqzsDdAy8a4=
+	by mail.kernel.org (Postfix) with ESMTP id CA7D6214DE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ydq+ryFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbfKPPqT (ORCPT
+        id S1731917AbfKPQU4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbfKPPqS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:18 -0500
-Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C8E12083B;
-        Sat, 16 Nov 2019 15:46:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919178;
-        bh=+Tu81s/jZSdhO5WGgtrMGG8ucgrcGU+ah1WI414OjVc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2tTi3lM4+ifw8TrAvx+imKniBJf8q5JjPHEBH3Mn2JFslXmo7HpYbUdH2348N0hdK
-         oCW0rH1QNVE7J3OSiellNwXyiAVTIpoUncjB8hDFeNkDt2j4tge3U8C0XMzVXcKRn+
-         4zc0fXE8ZnLS/tNzLKmPQ7UIe8QDIXyYWZWxan/o=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 187/237] ARM: dts: imx6sx-sdb: Fix enet phy regulator
-Date:   Sat, 16 Nov 2019 10:40:22 -0500
-Message-Id: <20191116154113.7417-187-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
-References: <20191116154113.7417-1-sashal@kernel.org>
+        Sat, 16 Nov 2019 11:20:56 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33654 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729652AbfKPQUx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 11:20:53 -0500
+Received: by mail-pg1-f194.google.com with SMTP id h27so7430030pgn.0;
+        Sat, 16 Nov 2019 08:20:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3ThCOn+QwgspJ3kxAATKe5mgdC4dFBHT7/R2+FrM5uE=;
+        b=Ydq+ryFHXyCcCndRf0G9/AN0hFrn0rS9hynpb848hB82abgjXFz2z4BqEgRkNB9xXP
+         Ob7eqFO/Xq8K6kEL6fRe6Hc1dPEmOsQRmAby1ZRPGsNckUFgRusxiNKgizyKLm02Yxjq
+         iQwbo5HmHuT/iIlj/nGvHRgATRwG8PzwQpp0yT0WfqBlMhOiEclEC/gpEKQr52HlAJZ3
+         +Hq9I4na89H0lpGnirkHvAUIEole4l1UnFUE12jNCVFWEulvMT1wPRyjvOOacmaPnuwd
+         DXyYCwz/a9FToDYFTJJODt3VvIsxakpbROqhhyc3I4RJph+XpkV7wfGv1JhfTbzdFX/j
+         GidA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3ThCOn+QwgspJ3kxAATKe5mgdC4dFBHT7/R2+FrM5uE=;
+        b=fZDHWvAmusrKa6WejNPXltzVdQ0uhgWrTvtjOIdT3wZWGYtH94SyiAu91vS/IqGtxa
+         bHymMpu2ou12vp1dGhL3Zeu3mj4IyoPom8WybMNH/O4pjZ6Xwk9t1kduCa1O22sk7Mi8
+         P2fsmclwThL3Fcb3Lz7cUSst+nvYuUwccmFc4k7WKpkUCURSC2xsylVMPaD6NhemEbTU
+         fa70C3+CmVk1vXIUB4B+b81UDJQ4IcPHVG3S3W+f8u9CiV8yJJqCG2v9aNPwv56ANqar
+         mDuw3k+Pl5luirfgtRnUnGbliOcGVG+tza4ZuNFoQaxeplSP7W68GRG8/QHAucTV6s57
+         NiGw==
+X-Gm-Message-State: APjAAAVy5qQn63u/k+a7qU/yz3VCdfgeyi8PyOTeooGlplbIgukbGWvz
+        BxenY1BTgdqu+p7QsQe54HZmwer3
+X-Google-Smtp-Source: APXvYqw8+YtA13X+2DcbFCm2WNiq/03l8qtmNPUJkbuUIVpNhKs1oVxFoW7yPNZWmSTRPhkaZHB4YA==
+X-Received: by 2002:a63:e70f:: with SMTP id b15mr22797805pgi.116.1573921252799;
+        Sat, 16 Nov 2019 08:20:52 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id em16sm12577766pjb.21.2019.11.16.08.20.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Nov 2019 08:20:52 -0800 (PST)
+Date:   Sat, 16 Nov 2019 08:20:51 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eugen.Hristev@microchip.com
+Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nicolas.Ferre@microchip.com, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] watchdog: sama5d4_wdt: addition of sam9x60
+ compatible watchdog
+Message-ID: <20191116162051.GA23056@roeck-us.net>
+References: <1573806579-7981-1-git-send-email-eugen.hristev@microchip.com>
+ <1573806579-7981-3-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573806579-7981-3-git-send-email-eugen.hristev@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+On Fri, Nov 15, 2019 at 08:30:18AM +0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Add support for SAM9X60 WDT into sama5d4_wdt.
+> This means that this driver gets a flag inside the data struct
+> that represents the sam9x60 support.
+> This flag differentiates between the two hardware blocks, and is set
+> according to the compatible of the driver instantiation.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> ---
+> Changes in v4:
+> - check compatible with different of_ function
+> - call irq parse and map only if need_irq
+> - changed tabbing in struct defintion
+> 
+> Changes in v3:
+> - changed need_irq to bool, instead of a single bit variable.
+> - the platform data config struct is gone now, changed to a pointer to a bool
+> to have the sam9x60_support as 'true', pointing to a static bool with true value.
+> Can have a better solution than this ?
+> - the specific sam9x60_support flag is assigned at probe time, corresponding
+> to the flag value in .data
+> 
+>  drivers/watchdog/at91sam9_wdt.h |  14 ++++++
+>  drivers/watchdog/sama5d4_wdt.c  | 109 +++++++++++++++++++++++++++++++---------
+>  2 files changed, 98 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
+> index abfe34d..4b3bd1d 100644
+> --- a/drivers/watchdog/at91sam9_wdt.h
+> +++ b/drivers/watchdog/at91sam9_wdt.h
+> @@ -24,7 +24,10 @@
+>  #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
+>  #define  AT91_WDT_WDV		(0xfffUL << 0)		/* Counter Value */
+>  #define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+> +#define  AT91_SAM9X60_PERIODRST	BIT(4)		/* Period Reset */
+> +#define  AT91_SAM9X60_RPTHRST	BIT(5)		/* Minimum Restart Period */
+>  #define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
+> +#define  AT91_SAM9X60_WDDIS	BIT(12)		/* Watchdog Disable */
+>  #define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
+>  #define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
+>  #define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
+> @@ -37,4 +40,15 @@
+>  #define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
+>  #define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
+>  
+> +#define AT91_SAM9X60_VR		0x08			/* Watchdog Timer Value Register */
+> +
+> +#define AT91_SAM9X60_WLR		0x0c
+> +#define  AT91_SAM9X60_COUNTER	(0xfffUL << 0)		/* Watchdog Period Value */
+> +#define  AT91_SAM9X60_SET_COUNTER(x)	((x) & AT91_SAM9X60_COUNTER)
+> +
+> +#define AT91_SAM9X60_IER		0x14		/* Interrupt Enable Register */
+> +#define  AT91_SAM9X60_PERINT		BIT(0)		/* Period Interrupt Enable */
+> +#define AT91_SAM9X60_IDR		0x18		/* Interrupt Disable Register */
+> +#define AT91_SAM9X60_ISR		0x1c		/* Interrupt Status Register */
+> +
 
-[ Upstream commit 1ad9fb750a104f51851c092edd7b3553f0218428 ]
+Lots of line-too-long checkpatch warnings. Please avoid.
 
-Bindings for "fixed-regulator" only explicitly support "gpio" property,
-not "gpios". Fix by correcting the property name.
-
-The enet PHYs on imx6sx-sdb needs to be explicitly reset after a power
-cycle, this can be handled by the phy-reset-gpios property. Sadly this
-is not handled on suspend: the fec driver turns phy-supply off but
-doesn't assert phy-reset-gpios again on resume.
-
-Since additional phy-level work is required to support powering off the
-phy in suspend fix the problem by just marking the regulator as
-"boot-on" "always-on" so that it's never turned off. This behavior is
-equivalent to older releases.
-
-Keep the phy-reset-gpios property on fec anyway because it is a correct
-description of board design.
-
-This issue was exposed by commit efdfeb079cc3 ("regulator: fixed:
-Convert to use GPIO descriptor only") which causes the "gpios" property
-to also be parsed. Before that commit the "gpios" property had no
-effect, PHY reset was only handled in the the bootloader.
-
-This fixes linux-next boot failures previously reported here:
- https://lore.kernel.org/patchwork/patch/982437/#1177900
- https://lore.kernel.org/patchwork/patch/994091/#1178304
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/imx6sx-sdb.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-index f8f31872fa144..d6d517e4922ff 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -115,7 +115,9 @@
- 		regulator-name = "enet_3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+		regulator-boot-on;
-+		regulator-always-on;
- 	};
- 
- 	reg_pcie_gpio: regulator-pcie-gpio {
-@@ -178,6 +180,7 @@
- 	phy-supply = <&reg_enet_3v3>;
- 	phy-mode = "rgmii";
- 	phy-handle = <&ethphy1>;
-+	phy-reset-gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- 
- 	mdio {
-@@ -371,6 +374,8 @@
- 				MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3	0x3081
- 				MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN	0x3081
- 				MX6SX_PAD_ENET2_RX_CLK__ENET2_REF_CLK_25M	0x91
-+				/* phy reset */
-+				MX6SX_PAD_ENET2_CRS__GPIO2_IO_7		0x10b0
- 			>;
- 		};
- 
--- 
-2.20.1
-
+Thanks,
+Guenter
