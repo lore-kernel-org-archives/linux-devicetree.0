@@ -2,67 +2,154 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4266C43215
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FB7C43215
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8885F206C0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406E421479
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="X7Q0sZQk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWDwUslp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfKPQI0 (ORCPT
+        id S1730788AbfKPQMI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:08:26 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:42958 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729508AbfKPQIZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 16 Nov 2019 11:08:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=7X7mD4/J7GefBlrK83ZfK/rqCK6MSlr+UCc9YsyYMSE=; b=X7Q0sZQktRuz6D+vdwKe2rnySP
-        PNy8BgZxbto2F6T/O39sNQrHMLcVGS4V6kjSBfCoD64hu+cxJV5PPEfmrLZpDYBZ3gZjC48VJmC0s
-        MNZoFtK5Hu7gScs+hvI4qca14jIPtBbFBtAjl9OgHyzFlAnqhqlc0ma5aHxDrkj1fhn8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iW0cW-0005si-5M; Sat, 16 Nov 2019 17:08:20 +0100
-Date:   Sat, 16 Nov 2019 17:08:20 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/3] dt-bindings: net: add ethernet
- controller and phy sfp property
-Message-ID: <20191116160820.GD5653@lunn.ch>
-References: <20191115195339.GR25745@shell.armlinux.org.uk>
- <E1iVhi2-0007au-2S@rmk-PC.armlinux.org.uk>
+        Sat, 16 Nov 2019 11:12:08 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46399 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728735AbfKPQMH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 11:12:07 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 193so8111751pfc.13;
+        Sat, 16 Nov 2019 08:12:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DLBwNS04s3vTncd8h6wYjqP9/zqj5Hw6C3ovDZPMJNw=;
+        b=aWDwUslpmIQVa4GYtfBvd2CMsrtdrtzAXSurvFxn9mgpdxN5BKh64sYvKAAbYDKfSj
+         4YMXLI9Fua6OvuYxk9aWHHjKqdWTtquxgyU2Ekugjx0AhH0B2lhuJMJVRi+yk65QDRdh
+         CoQCd0F3l4D53DhJkRKl2tlal42XOJ5NtiyXPDIMbxtijjHPxUlqeCwzdUwgjDihryL/
+         CJ5cwucFeg0xSf4TYkBeyf3doCOFGOg+Q1odrSMKSHCCaWOwWiJ4brhdjJUtyYBT8cDS
+         0TMlKeK9t/aA+6JqhkkAPhqn1+7XTFmvaVvt4Y/wY6Y5CY47hgLvCakN7MxAv9gtLu9L
+         ul6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DLBwNS04s3vTncd8h6wYjqP9/zqj5Hw6C3ovDZPMJNw=;
+        b=cfeqYPL+SoFf8U+8bvoEg5s0TeoI9o4k36GLDONPzR0BwGYnJP7nmBFUu0erfxWaQ+
+         8pLM0Xmey4i3Uod/d29auQhK+IJqeJb+Z+UHlFFh681PzBaW9IF1dUgPD5RYMQJPSzdV
+         cEx+DOX66IiHJrGt0vGXZhBNAc6EcDsSojlQ/p5jHJ9vmLOk6YKUsa9kcjpRuLaHwzjq
+         39Db13FJAzWbpdPp0u/uITIUlOWcgoG5Y3bq+oO97SNAUCPylU1366HeT02bNMFjMpHm
+         uNMWsjC4C47WzxLfIzFdJUzlLx+Ztwcu946HDTp8vW1ts2s0niEW3lapdy8l0pVzyfDi
+         k2Zg==
+X-Gm-Message-State: APjAAAXOf5eyRQ09S+fFTmZjGRMvwZrOeq3U8Qjr50yeJoz9Yw9t0ARm
+        Ss8ZZf1YHbMDweYoB9Z91yeJvutk
+X-Google-Smtp-Source: APXvYqyUjaIuhyaRHuw7HuQ7JdypEFfmmQ6CWLzYfMZsoL54sdj1Me9cxMFnQnrWwYl56ebRbcqIPA==
+X-Received: by 2002:a63:e156:: with SMTP id h22mr7865038pgk.266.1573920726128;
+        Sat, 16 Nov 2019 08:12:06 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 83sm14198063pgh.86.2019.11.16.08.12.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Nov 2019 08:12:05 -0800 (PST)
+Date:   Sat, 16 Nov 2019 08:12:04 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eugen.Hristev@microchip.com
+Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nicolas.Ferre@microchip.com, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
+Message-ID: <20191116161204.GA22568@roeck-us.net>
+References: <1573806579-7981-1-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <E1iVhi2-0007au-2S@rmk-PC.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1573806579-7981-1-git-send-email-eugen.hristev@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 07:56:46PM +0000, Russell King wrote:
-> Document the missing sfp property for ethernet controllers (which
-> has existed for some time) which is being extended to ethernet PHYs.
+On Fri, Nov 15, 2019 at 08:30:13AM +0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
 > 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Cleanup the macro definitions to use BIT and align with two spaces.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-    Andrew
+> ---
+> Changes in v4:
+> - added UL suffix to value macros to avoid compile warnings
+> - modified file header to include new copyright and datasheet
+> - include linux/bits.h
+> 
+> Changes in v3:
+> - new patch as requested from review on ML
+> 
+>  drivers/watchdog/at91sam9_wdt.h | 34 +++++++++++++++++++---------------
+>  1 file changed, 19 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
+> index 390941c..abfe34d 100644
+> --- a/drivers/watchdog/at91sam9_wdt.h
+> +++ b/drivers/watchdog/at91sam9_wdt.h
+> @@ -4,33 +4,37 @@
+>   *
+>   * Copyright (C) 2007 Andrew Victor
+>   * Copyright (C) 2007 Atmel Corporation.
+> + * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries
+>   *
+>   * Watchdog Timer (WDT) - System peripherals regsters.
+>   * Based on AT91SAM9261 datasheet revision D.
+> + * Based on SAM9X60 datasheet.
+>   *
+>   */
+>  
+>  #ifndef AT91_WDT_H
+>  #define AT91_WDT_H
+>  
+> +#include <linux/bits.h>
+> +
+>  #define AT91_WDT_CR		0x00			/* Watchdog Control Register */
+> -#define		AT91_WDT_WDRSTT		(1    << 0)		/* Restart */
+> -#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
+> +#define  AT91_WDT_WDRSTT	BIT(0)			/* Restart */
+> +#define  AT91_WDT_KEY		(0xa5UL << 24)		/* KEY Password */
+>  
+>  #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
+> -#define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+> -#define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+> -#define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
+> -#define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
+> -#define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
+> -#define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
+> -#define		AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
+> -#define			AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+> -#define		AT91_WDT_WDDBGHLT	(1     << 28)		/* Debug Halt */
+> -#define		AT91_WDT_WDIDLEHLT	(1     << 29)		/* Idle Halt */
+> +#define  AT91_WDT_WDV		(0xfffUL << 0)		/* Counter Value */
+> +#define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+> +#define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
+> +#define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
+> +#define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
+> +#define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
+> +#define  AT91_WDT_WDD		(0xfffUL << 16)		/* Delta Value */
+> +#define  AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+> +#define  AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
+> +#define  AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
+>  
+> -#define AT91_WDT_SR		0x08			/* Watchdog Status Register */
+> -#define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
+> -#define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
+> +#define AT91_WDT_SR		0x08		/* Watchdog Status Register */
+> +#define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
+> +#define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
+>  
+>  #endif
