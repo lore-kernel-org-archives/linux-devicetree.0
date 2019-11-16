@@ -2,541 +2,308 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E834FC43141
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 17:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3D2C43141
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 18:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C194E2184B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 17:12:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573924328;
-	bh=Cgl3QGX61J4ah0YvXTpRjFWq+vurvM+aPGtx1yLb+2c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AxHeo4wZ7PkFfLjWhZIatKIdCtPaV1ZxwH9RzIlcWIZANGYV7LSLZLI0tIVkAc8aV
-	 AZCmhv5MqyZmHzUWuxVs2McDTT6MToPJWGAJFTXm/BRlIn7FgC1ZLVuRMZV9HcN4L+
-	 PNHXN6GENrCm8hVG2FwJmb9/Hzm/sa2DFSzCwGoI=
+	by mail.kernel.org (Postfix) with ESMTP id CD9142081E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 18:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfKPRMI (ORCPT
+        id S1727744AbfKPSzk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 12:12:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727568AbfKPRMI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 16 Nov 2019 12:12:08 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BA97214E0;
-        Sat, 16 Nov 2019 17:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573924327;
-        bh=Cgl3QGX61J4ah0YvXTpRjFWq+vurvM+aPGtx1yLb+2c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LZycKMFF8C52YSkqij+ypXyn0GHTSdIGu9Sq+Yu3nLfT5dpe7KQ9DVcJXXVWincqd
-         +ENo/3kuVZ1jcoeqKxC6iOZ/qLysoDe4jCWRSvbBUyn/muySXkicGRSc83hXaoH4QT
-         P8ML4yJUQRzAxN3vqQu/EBbB0MpLqOg97Hw0GKvI=
-Date:   Sat, 16 Nov 2019 16:58:32 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <gregkh@linuxfoundation.org>,
-        <linux-iio@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>,
-        Paul Cercueil <paul.cercueil@analog.com>
-Subject: Re: [PATCH v5 1/4] iio: adc: Add support for AD7091R5 ADC
-Message-ID: <20191116165832.2dcb48c2@archlinux>
-In-Reply-To: <20191115135723.12219-1-beniamin.bia@analog.com>
-References: <20191115135723.12219-1-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 Nov 2019 13:55:40 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34238 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727720AbfKPSzj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 13:55:39 -0500
+Received: by mail-lf1-f68.google.com with SMTP id l28so1082153lfj.1;
+        Sat, 16 Nov 2019 10:55:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=1jfHydbKQAVtDc9rB7jdObuleF9wI/wxnKKLR7L8H6Q=;
+        b=CTXD8UpkpT6absfteQyFVOXG9+LUtGjZQKKyp+7ba0B/lmyAE29WUwTOaM17v5sJ+t
+         Y3bDM3cyrsaZNGeLHqylgAa9XvZB/Oec7NhgmseBv1NuggAK7z04EiypJeIeZrrBORzE
+         boiXcta7bZqJVnn0s7YQAUsrwKO8MeZmJV8HlALrKDb/QYJhzppl317jFJEdal6x83Yd
+         9XBMVslps9/b/TwTNiWm37bg/eLCHWOUrzMsS5+Z2zCGE2lm5vjyf8llLI7Fz8JdaRdU
+         9jCOO+n0eVmxztLZFlvwg3+u+JHkFtYczdgZw8SNZjnqoAWXTFjsfLHw6uD3pvb5zA1g
+         wQLw==
+X-Gm-Message-State: APjAAAWks9ezonxQM5GbmDna2Y6F5C8xWB4QG1S0xZpVO4keRWg1YvX8
+        V+b5EbMHGEqF3iJZPqYcmbE=
+X-Google-Smtp-Source: APXvYqxwQtbbEvxyxKY9cxDGsLwn3vsL2l8WV+R6N8T8NeGGpawVRhIQF1nPFSqdpOhA0ovyKJCZwA==
+X-Received: by 2002:a19:651b:: with SMTP id z27mr15108580lfb.117.1573930534499;
+        Sat, 16 Nov 2019 10:55:34 -0800 (PST)
+Received: from localhost.localdomain (dyttqz39y2bkc1ryvyh3t-4.rev.dnainternet.fi. [2001:14bb:420:da5f:a0b0:502a:b811:1af])
+        by smtp.gmail.com with ESMTPSA id m62sm6700005lfa.10.2019.11.16.10.55.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Nov 2019 10:55:33 -0800 (PST)
+Date:   Sat, 16 Nov 2019 20:55:23 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v4 00/16] Support ROHM BD71828 PMIC
+Message-ID: <cover.1573928775.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 15 Nov 2019 15:57:20 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
+Patch series introducing support for ROHM BD71828 PMIC
 
-> From: Paul Cercueil <paul.cercueil@analog.com>
-> 
-> AD7091R5 is 4-Channel, I2C, Ultra Low Power,12-Bit ADC.
-> 
-> This driver will also support AD7091R2/4/8 in the future.
-> 
-> Datasheet:
-> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7091r-5.pdf
-> 
-> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
-> Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
+regulators can either be controlled individually via I2C. Bucks 1,2,6 and
+7 can also be assigned to a "regulator group" controlled by run-levels.
+Eg. Run level specific voltages and enable/disable statuses for each of
+these bucks can be set via register interface. The buck run-level group
+assignment (selection if buck is to be controlled individually or via
+run-levels) can be changed at run-time via I2C.
 
-Thanks,
+Run level changes can then be initiated wither via I2C writes or GPIO.
+and when run-level is changed, state of all bucks which are set to be
+controlled via run-levels are changed accrdingly.
 
-Jonathan
+This control mechanism selection (I2C or GPIO) is selected by data in
+one time programmable PMIC memory area (during production) and can't be
+changed later.
 
-> ---
-> Changes in v5:
-> -nothing changed
-> 
->  drivers/iio/adc/Kconfig        |   7 +
->  drivers/iio/adc/Makefile       |   1 +
->  drivers/iio/adc/ad7091r-base.c | 260 +++++++++++++++++++++++++++++++++
->  drivers/iio/adc/ad7091r-base.h |  25 ++++
->  drivers/iio/adc/ad7091r5.c     | 108 ++++++++++++++
->  5 files changed, 401 insertions(+)
->  create mode 100644 drivers/iio/adc/ad7091r-base.c
->  create mode 100644 drivers/iio/adc/ad7091r-base.h
->  create mode 100644 drivers/iio/adc/ad7091r5.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 7e3286265a38..80b1b9551749 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -22,6 +22,13 @@ config AD7124
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called ad7124.
->  
-> +config AD7091R5
-> +	tristate "Analog Devices AD7091R5 ADC Driver"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  Say yes here to build support for Analog Devices AD7091R-5 ADC.
-> +
->  config AD7266
->  	tristate "Analog Devices AD7265/AD7266 ADC driver"
->  	depends on SPI_MASTER
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index ef9cc485fb67..55e44735aaac 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -6,6 +6,7 @@
->  # When adding new entries keep the list in alphabetical order
->  obj-$(CONFIG_AD_SIGMA_DELTA) += ad_sigma_delta.o
->  obj-$(CONFIG_AD7124) += ad7124.o
-> +obj-$(CONFIG_AD7091R5) += ad7091r5.o ad7091r-base.o
->  obj-$(CONFIG_AD7266) += ad7266.o
->  obj-$(CONFIG_AD7291) += ad7291.o
->  obj-$(CONFIG_AD7298) += ad7298.o
-> diff --git a/drivers/iio/adc/ad7091r-base.c b/drivers/iio/adc/ad7091r-base.c
-> new file mode 100644
-> index 000000000000..854de7c654c2
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7091r-base.c
-> @@ -0,0 +1,260 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AD7091RX Analog to Digital converter driver
-> + *
-> + * Copyright 2014-2019 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/iio/events.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "ad7091r-base.h"
-> +
-> +#define AD7091R_REG_RESULT  0
-> +#define AD7091R_REG_CHANNEL 1
-> +#define AD7091R_REG_CONF    2
-> +#define AD7091R_REG_ALERT   3
-> +#define AD7091R_REG_CH_LOW_LIMIT(ch) ((ch) * 3 + 4)
-> +#define AD7091R_REG_CH_HIGH_LIMIT(ch) ((ch) * 3 + 5)
-> +#define AD7091R_REG_CH_HYSTERESIS(ch) ((ch) * 3 + 6)
-> +
-> +/* AD7091R_REG_RESULT */
-> +#define AD7091R_REG_RESULT_CH_ID(x)	    (((x) >> 13) & 0x3)
-> +#define AD7091R_REG_RESULT_CONV_RESULT(x)   ((x) & 0xfff)
-> +
-> +/* AD7091R_REG_CONF */
-> +#define AD7091R_REG_CONF_AUTO   BIT(8)
-> +#define AD7091R_REG_CONF_CMD    BIT(10)
-> +
-> +#define AD7091R_REG_CONF_MODE_MASK  \
-> +	(AD7091R_REG_CONF_AUTO | AD7091R_REG_CONF_CMD)
-> +
-> +enum ad7091r_mode {
-> +	AD7091R_MODE_SAMPLE,
-> +	AD7091R_MODE_COMMAND,
-> +	AD7091R_MODE_AUTOCYCLE,
-> +};
-> +
-> +struct ad7091r_state {
-> +	struct device *dev;
-> +	struct regmap *map;
-> +	const struct ad7091r_chip_info *chip_info;
-> +	enum ad7091r_mode mode;
-> +	struct mutex lock; /*lock to prevent concurent reads */
-> +};
-> +
-> +static int ad7091r_set_mode(struct ad7091r_state *st, enum ad7091r_mode mode)
-> +{
-> +	int ret, conf;
-> +
-> +	switch (mode) {
-> +	case AD7091R_MODE_SAMPLE:
-> +		conf = 0;
-> +		break;
-> +	case AD7091R_MODE_COMMAND:
-> +		conf = AD7091R_REG_CONF_CMD;
-> +		break;
-> +	case AD7091R_MODE_AUTOCYCLE:
-> +		conf = AD7091R_REG_CONF_AUTO;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-> +				 AD7091R_REG_CONF_MODE_MASK, conf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->mode = mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7091r_set_channel(struct ad7091r_state *st, unsigned int channel)
-> +{
-> +	unsigned int dummy;
-> +	int ret;
-> +
-> +	/* AD7091R_REG_CHANNEL specified which channels to be converted */
-> +	ret = regmap_write(st->map, AD7091R_REG_CHANNEL,
-> +			BIT(channel) | (BIT(channel) << 8));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * There is a latency of one conversion before the channel conversion
-> +	 * sequence is updated
-> +	 */
-> +	return regmap_read(st->map, AD7091R_REG_RESULT, &dummy);
-> +}
-> +
-> +static int ad7091r_read_one(struct iio_dev *iio_dev,
-> +		unsigned int channel, unsigned int *read_val)
-> +{
-> +	struct ad7091r_state *st = iio_priv(iio_dev);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	ret = ad7091r_set_channel(st, channel);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_read(st->map, AD7091R_REG_RESULT, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (AD7091R_REG_RESULT_CH_ID(val) != channel)
-> +		return -EIO;
-> +
-> +	*read_val = AD7091R_REG_RESULT_CONV_RESULT(val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7091r_read_raw(struct iio_dev *iio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val, int *val2, long m)
-> +{
-> +	struct ad7091r_state *st = iio_priv(iio_dev);
-> +	unsigned int read_val;
-> +	int ret;
-> +
-> +	mutex_lock(&st->lock);
-> +
-> +	switch (m) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		if (st->mode != AD7091R_MODE_COMMAND) {
-> +			ret = -EBUSY;
-> +			goto unlock;
-> +		}
-> +
-> +		ret = ad7091r_read_one(iio_dev, chan->channel, &read_val);
-> +		if (ret)
-> +			goto unlock;
-> +
-> +		*val = read_val;
-> +		ret = IIO_VAL_INT;
-> +		break;
-> +
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +unlock:
-> +	mutex_unlock(&st->lock);
-> +	return ret;
-> +}
-> +
-> +static const struct iio_info ad7091r_info = {
-> +	.read_raw = ad7091r_read_raw,
-> +};
-> +
-> +static irqreturn_t ad7091r_event_handler(int irq, void *private)
-> +{
-> +	struct ad7091r_state *st = (struct ad7091r_state *) private;
-> +	struct iio_dev *iio_dev = dev_get_drvdata(st->dev);
-> +	unsigned int i, read_val;
-> +	int ret;
-> +	s64 timestamp = iio_get_time_ns(iio_dev);
-> +
-> +	ret = regmap_read(st->map, AD7091R_REG_ALERT, &read_val);
-> +	if (ret)
-> +		return IRQ_HANDLED;
-> +
-> +	for (i = 0; i < st->chip_info->num_channels; i++) {
-> +		if (read_val & BIT(i * 2))
-> +			iio_push_event(iio_dev,
-> +					IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
-> +						IIO_EV_TYPE_THRESH,
-> +						IIO_EV_DIR_RISING), timestamp);
-> +		if (read_val & BIT(i * 2 + 1))
-> +			iio_push_event(iio_dev,
-> +					IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
-> +						IIO_EV_TYPE_THRESH,
-> +						IIO_EV_DIR_FALLING), timestamp);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +int ad7091r_probe(struct device *dev, const char *name,
-> +		const struct ad7091r_chip_info *chip_info,
-> +		struct regmap *map, int irq)
-> +{
-> +	struct iio_dev *iio_dev;
-> +	struct ad7091r_state *st;
-> +	int ret;
-> +
-> +	iio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!iio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(iio_dev);
-> +	st->dev = dev;
-> +	st->chip_info = chip_info;
-> +	st->map = map;
-> +
-> +	iio_dev->dev.parent = dev;
-> +	iio_dev->name = name;
-> +	iio_dev->info = &ad7091r_info;
-> +	iio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	iio_dev->num_channels = chip_info->num_channels;
-> +	iio_dev->channels = chip_info->channels;
-> +
-> +	if (irq) {
-> +		ret = devm_request_threaded_irq(dev, irq, NULL,
-> +				ad7091r_event_handler,
-> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT, name, st);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* Use command mode by default to convert only desired channels*/
-> +	ret = ad7091r_set_mode(st, AD7091R_MODE_COMMAND);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_device_register(dev, iio_dev);
-> +}
-> +EXPORT_SYMBOL_GPL(ad7091r_probe);
-> +
-> +static bool ad7091r_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case AD7091R_REG_RESULT:
-> +	case AD7091R_REG_ALERT:
-> +		return false;
-> +	default:
-> +		return true;
-> +	}
-> +}
-> +
-> +static bool ad7091r_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case AD7091R_REG_RESULT:
-> +	case AD7091R_REG_ALERT:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +const struct regmap_config ad7091r_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 16,
-> +	.writeable_reg = ad7091r_writeable_reg,
-> +	.volatile_reg = ad7091r_volatile_reg,
-> +};
-> +EXPORT_SYMBOL_GPL(ad7091r_regmap_config);
-> +
-> +MODULE_AUTHOR("Beniamin Bia <beniamin.bia@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD7091Rx multi-channel converters");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iio/adc/ad7091r-base.h b/drivers/iio/adc/ad7091r-base.h
-> new file mode 100644
-> index 000000000000..b0b4fe01a681
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7091r-base.h
-> @@ -0,0 +1,25 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * AD7091RX Analog to Digital converter driver
-> + *
-> + * Copyright 2014-2019 Analog Devices Inc.
-> + */
-> +
-> +#ifndef __DRIVERS_IIO_ADC_AD7091R_BASE_H__
-> +#define __DRIVERS_IIO_ADC_AD7091R_BASE_H__
-> +
-> +struct device;
-> +struct ad7091r_state;
-> +
-> +struct ad7091r_chip_info {
-> +	unsigned int num_channels;
-> +	const struct iio_chan_spec *channels;
-> +};
-> +
-> +extern const struct regmap_config ad7091r_regmap_config;
-> +
-> +int ad7091r_probe(struct device *dev, const char *name,
-> +		const struct ad7091r_chip_info *chip_info,
-> +		struct regmap *map, int irq);
-> +
-> +#endif /* __DRIVERS_IIO_ADC_AD7091R_BASE_H__ */
-> diff --git a/drivers/iio/adc/ad7091r5.c b/drivers/iio/adc/ad7091r5.c
-> new file mode 100644
-> index 000000000000..30ff0108a6ed
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7091r5.c
-> @@ -0,0 +1,108 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AD7091R5 Analog to Digital converter driver
-> + *
-> + * Copyright 2014-2019 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "ad7091r-base.h"
-> +
-> +static const struct iio_event_spec ad7091r5_events[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +				 BIT(IIO_EV_INFO_ENABLE),
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +				 BIT(IIO_EV_INFO_ENABLE),
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_EITHER,
-> +		.mask_separate = BIT(IIO_EV_INFO_HYSTERESIS),
-> +	},
-> +};
-> +
-> +#define AD7091R_CHANNEL(idx, bits, ev, num_ev) { \
-> +	.type = IIO_VOLTAGE, \
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-> +	.indexed = 1, \
-> +	.channel = idx, \
-> +	.event_spec = ev, \
-> +	.num_event_specs = num_ev, \
-> +}
-> +static const struct iio_chan_spec ad7091r5_channels_irq[] = {
-> +	AD7091R_CHANNEL(0, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> +	AD7091R_CHANNEL(1, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> +	AD7091R_CHANNEL(2, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> +	AD7091R_CHANNEL(3, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> +};
-> +
-> +static const struct iio_chan_spec ad7091r5_channels_noirq[] = {
-> +	AD7091R_CHANNEL(0, 12, NULL, 0),
-> +	AD7091R_CHANNEL(1, 12, NULL, 0),
-> +	AD7091R_CHANNEL(2, 12, NULL, 0),
-> +	AD7091R_CHANNEL(3, 12, NULL, 0),
-> +};
-> +
-> +static const struct ad7091r_chip_info ad7091r5_chip_info_irq = {
-> +	.channels = ad7091r5_channels_irq,
-> +	.num_channels = ARRAY_SIZE(ad7091r5_channels_irq),
-> +};
-> +
-> +static const struct ad7091r_chip_info ad7091r5_chip_info_noirq = {
-> +	.channels = ad7091r5_channels_noirq,
-> +	.num_channels = ARRAY_SIZE(ad7091r5_channels_noirq),
-> +};
-> +
-> +static int ad7091r5_i2c_probe(struct i2c_client *i2c,
-> +		const struct i2c_device_id *id)
-> +{
-> +	const struct ad7091r_chip_info *chip_info;
-> +	struct regmap *map = devm_regmap_init_i2c(i2c, &ad7091r_regmap_config);
-> +
-> +	if (IS_ERR(map))
-> +		return PTR_ERR(map);
-> +
-> +	if (i2c->irq)
-> +		chip_info = &ad7091r5_chip_info_irq;
-> +	else
-> +		chip_info = &ad7091r5_chip_info_noirq;
-> +
-> +	return ad7091r_probe(&i2c->dev, id->name, chip_info, map, i2c->irq);
-> +}
-> +
-> +static const struct of_device_id ad7091r5_dt_ids[] = {
-> +	{ .compatible = "adi,ad7091r5" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ad7091r5_dt_ids);
-> +
-> +static const struct i2c_device_id ad7091r5_i2c_ids[] = {
-> +	{"ad7091r5", 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ad7091r5_i2c_ids);
-> +
-> +static struct i2c_driver ad7091r5_driver = {
-> +	.driver = {
-> +		.name = "ad7091r5",
-> +		.of_match_table = ad7091r5_dt_ids,
-> +	},
-> +	.probe = ad7091r5_i2c_probe,
-> +	.id_table = ad7091r5_i2c_ids,
-> +};
-> +module_i2c_driver(ad7091r5_driver);
-> +
-> +MODULE_AUTHOR("Beniamin Bia <beniamin.bia@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD7091R5 multi-channel ADC driver");
-> +MODULE_LICENSE("GPL v2");
+In addition to the bucks and LDOs there are:
 
+- The usual clk gate
+- 4 IO pins (mostly usable as GPO or tied to specific purpose)
+- power button support
+- RTC
+- two LEDs
+- battery charger
+- HALL sensor input
+
+This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
+
+Power-supply driver for charger is "under construction" and not included
+in this series.
+
+The series also adds LED DT-node lookup based on node name or given
+property name/value pair in LED core. It also adds generic default-state
+and default-trigger property handling to LED core. Follow-up patches
+simplifying few other LED drivers should follow.
+
+In GPIO framework this series adds devm-support for gpio_array getting
+for MFD sub-devices whose GPIO consumer information may be in parent
+device's DT node. And while I was at it I also added few missing GPIO devm
+functions to the documentaton listing.
+
+Changelog v4 (first non RFC):
+  General:
+    - Changed subdevice loading and chip version identification to use
+      platform ID.
+    - License identifiers changed to GPL-2.0-only
+  MFD:
+    - Styling fixes mostly
+  DT-Bindings:
+    - a few more checks as suggested by Rob Herring.
+    - Order of DT patches changed.
+    - me as maintainer
+    - standard units to new properties (microvolts, ohms)
+    - runlevel values in an array
+  LED:
+    - BD71828 driver added (back)
+      - Added DT support
+    - Added LED DT node lookup in led framework when init_data is given
+      with DT node match information.
+    - Added common property parsing for default-state and
+      default-trigger.
+  Regulators:
+    - dropped sysfs interfaces
+    - fixed module unload/reload by binding gpio consumer information to
+      regulator device not to MFD.
+  GPIO:
+    - Added devm_gpiod_get_parent_array
+    - added few missing devm functions to documentation
+
+Changelog v3:
+  DT-Bindings:
+    - yamlify
+    - add LED binding doc
+  CLK:
+    - Move clk register definitions from MFD headers to clk driver
+  GPIO:
+    - Add generic direction define and use it.
+  LED:
+    - Drop LED driver from the series (for now).
+
+Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz
+  General:
+    -Patch ordering changed to provide dt binding documents right after the
+     MFD core.
+  DT-Bindings for regulators (Patch 3)
+    -Fix typo in PMIC model number
+  RTC (patch 11)
+    -Reverted renaming in order to reduce patch size.
+    -Reworded commit message
+  BD71828 regulator (patch 7)
+    -Add MODULE_ALIAS
+  GPIO (patch 12)
+    -Remove file-name from comment
+    -prefix IN and OUT defines with chip type
+    -improved documentation for the INPUT only pin.
+    -removed empty left-over function
+    -removed unnecessary #ifdef CONFIG_OF_GPIO
+    -removed unnecessary error print
+    -Add MODULE_ALIAS
+
+Patch 1:
+        dt-bindings for regulators on BD71828 PMIC
+Patch 2:
+        dt-bindings for LEDs on BD71828 PMIC
+Patch 3:
+	dt-bindings for BD71828 PMIC
+Patch 4:
+	Convert rohm PMICs with common sub-devices to use platform_
+	device_id to match MFD sub-devices
+Patch 5:
+        BD71828 MFD core.
+Patch 6:
+	Power button support using GPIO keys.
+Patch 7:
+        CLK gate support using existing clk-bd718x7
+Patch 8:
+        Split existing bd718x7 regulator driver to generic ROHM dt
+        parsing portion (used by more than one ROHM drivers) and
+        bd718x8 specific parts
+Patch 9:
+        Basic regulator support (individual control via I2C). This
+        should be pretty standard stuff.
+Patch 10:
+	Add devm_gpiod_get_parent_array
+Patch 11:
+	Add missing managed GPIO array get functions to documentation
+Patch 12:
+        Add support for getting regulator voltages when run-levels are
+	used. Allow specifying voltages for run-levels via DT and
+	in-kernel API. Support changing run-levels via in-kernel API.
+Patch 13:
+        Support BD71828 RTC block using BD70528 RTC driver
+Patch 14:
+        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
+Patch 15:
+	Add LED node lookup and common LED binding parsing support
+	to LED class/core
+Patch 16:
+        Support toggling the LEDs on BD71828.
+
+This patch series is based on v5.4-rc7
+
+---
+
+Matti Vaittinen (16):
+  dt-bindings: regulator: Document ROHM BD71282 regulator bindings
+  dt-bindings: leds: ROHM BD71282 PMIC LED driver
+  dt-bindings: mfd: Document ROHM BD71828 bindings
+  mfd: rohm PMICs - use platform_device_id to match MFD sub-devices
+  mfd: bd71828: Support ROHM BD71828 PMIC - core
+  mfd: input: bd71828: Add power-key support
+  clk: bd718x7: Support ROHM BD71828 clk block
+  regulator: bd718x7: Split driver to common and bd718x7 specific parts
+  regulator: bd71828: Basic support for ROHM bd71828 PMIC regulators
+  gpio: devres: Add devm_gpiod_get_parent_array
+  docs: driver-model: Add missing managed GPIO array get functions
+  regulator: bd71828: Add GPIO based run-level control for regulators
+  rtc: bd70528 add BD71828 support
+  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
+  leds: Add common LED binding parsing support to LED class/core
+  led: bd71828: Support LED outputs on ROHM BD71828 PMIC
+
+ .../bindings/leds/rohm,bd71828-leds.yaml      |   49 +
+ .../bindings/mfd/rohm,bd71828-pmic.yaml       |  249 +++
+ .../regulator/rohm,bd71828-regulator.yaml     |  122 ++
+ .../driver-api/driver-model/devres.rst        |    3 +
+ drivers/clk/Kconfig                           |    6 +-
+ drivers/clk/clk-bd718x7.c                     |   50 +-
+ drivers/gpio/Kconfig                          |   12 +
+ drivers/gpio/Makefile                         |    1 +
+ drivers/gpio/gpio-bd71828.c                   |  159 ++
+ drivers/gpio/gpiolib-devres.c                 |   65 +-
+ drivers/leds/Kconfig                          |   10 +
+ drivers/leds/Makefile                         |    1 +
+ drivers/leds/led-class.c                      |   88 +-
+ drivers/leds/led-core.c                       |  246 ++-
+ drivers/leds/leds-bd71828.c                   |  104 ++
+ drivers/mfd/Kconfig                           |   15 +
+ drivers/mfd/Makefile                          |    2 +-
+ drivers/mfd/rohm-bd70528.c                    |    3 +-
+ drivers/mfd/rohm-bd71828.c                    |  345 +++++
+ drivers/mfd/rohm-bd718x7.c                    |   39 +-
+ drivers/regulator/Kconfig                     |   16 +
+ drivers/regulator/Makefile                    |    2 +
+ drivers/regulator/bd71828-regulator.c         | 1374 +++++++++++++++++
+ drivers/regulator/bd718x7-regulator.c         |  200 +--
+ drivers/regulator/rohm-regulator.c            |   95 ++
+ drivers/rtc/Kconfig                           |    3 +-
+ drivers/rtc/rtc-bd70528.c                     |  167 +-
+ include/linux/gpio/consumer.h                 |    5 +
+ include/linux/leds.h                          |   90 +-
+ include/linux/mfd/rohm-bd70528.h              |   19 +-
+ include/linux/mfd/rohm-bd71828.h              |  428 +++++
+ include/linux/mfd/rohm-bd718x7.h              |    6 -
+ include/linux/mfd/rohm-generic.h              |   48 +-
+ include/linux/mfd/rohm-shared.h               |   27 +
+ 34 files changed, 3772 insertions(+), 277 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+ create mode 100644 drivers/gpio/gpio-bd71828.c
+ create mode 100644 drivers/leds/leds-bd71828.c
+ create mode 100644 drivers/mfd/rohm-bd71828.c
+ create mode 100644 drivers/regulator/bd71828-regulator.c
+ create mode 100644 drivers/regulator/rohm-regulator.c
+ create mode 100644 include/linux/mfd/rohm-bd71828.h
+ create mode 100644 include/linux/mfd/rohm-shared.h
+
+
+base-commit: 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
