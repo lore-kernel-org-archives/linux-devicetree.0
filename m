@@ -2,108 +2,110 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59D8C432C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9234C432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 17:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE22A2168B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F39421844
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 17:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="GLn3GsW7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GUnnAwXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfKPQxN (ORCPT
+        id S1727654AbfKPRI4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:53:13 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40369 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbfKPQxN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 11:53:13 -0500
-Received: by mail-ot1-f68.google.com with SMTP id m15so10778904otq.7;
-        Sat, 16 Nov 2019 08:53:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dXtgv3ZMrjgjBz6CgZ0b7bfGQQBi49c5X2XfW8BjbXo=;
-        b=GLn3GsW7yvmiMlfIvPSmzKDcm8Dak0w44KiKMBRGYSGWBtgg5dKTJymRmFkiX8frmA
-         3bkBPEJh1gkg7bbnf14KpFLh0xrvmbpXSIo3s1/sEZcJC/N+CbPQQqjTc10PQrcqfDFP
-         H+r8b1gOapO/TBc1PyTCCgeBvUqjpucbKhyDAEK6jQtSRu2bq8IagIljzdU9yEURzOsO
-         fQJRJN7Hboj7dQlWSyzq7QuhQyfOq3cuYvLubz/npiq0PSMkv9dZWCADeSTZZluvDo1r
-         L7I5/pQb1HuaiF0YVWms/u/mpupXtiXDuomxnAKqaQODAGv2q2Hu3w1X4dUJoYGug5eN
-         ccgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dXtgv3ZMrjgjBz6CgZ0b7bfGQQBi49c5X2XfW8BjbXo=;
-        b=dRWv4KzhQvxdiRRB9YJuIv1/Q0q++UKlWU0/Qv/wKsT2As1SqJUN6R8NeNuTuToZlc
-         5GX/k5F1pI1qZ8QBL/fwIKr0dxm8O4ohUiPTSntMcyFJx2XzxQTgU5Kclu5zipjHzNL3
-         0QkRKaJ8e64hli9ZKLVZ1U5bA3jfFMRWh30hPoK0/eKN+EdbmUZzxTKgg9N5lKKOu0Mf
-         vixE/Ykb0aGdOiX0yIXnN/DBafqZWfX+pDOMGLa98x/ZBCvCRfDvT/ouhoFcWw5HED3N
-         AdtqvRSowssWyLsXvzG2Esog1BAcGPPkAIt7pguo9AO+hh9HSRdulh9+I55UqKHpCRCP
-         /FkQ==
-X-Gm-Message-State: APjAAAV+7hucj4HR8yIU10NyTOt1bWAUTG7rv+D47mftRfYdQXfJew/F
-        mGOvJUbc2xb0yh0LWVdJIW9sFxDx/RPGofJJzqc=
-X-Google-Smtp-Source: APXvYqyR3PXcNr8vt06aopgYnCoIGBtZvup0dKIFbYvImWezEBBB/Ap2vPG0iVW+wEBCjmsSZPgydmiLNy0Tr2Xh38Y=
-X-Received: by 2002:a9d:5e1a:: with SMTP id d26mr14584710oti.96.1573923190609;
- Sat, 16 Nov 2019 08:53:10 -0800 (PST)
+        Sat, 16 Nov 2019 12:08:56 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:39550 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727568AbfKPRIz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 12:08:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1573924132; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=H4fn2K8qNbR81iqS2OPnELmE3eh646O9s3d/5Chkcoo=;
+        b=GUnnAwXp5Msy6zoKocdrgp1NzW2BfJyvXJ0Usr23BxB4SWnoUgtB0/20CPCugjOvpv+fEC
+        iNBDZQ4+T0ww/FXSHcNcw6QDPaTn4oh4CACGwZR9lmOnwZcWOtdZmgCE8pOMsN1Zuskl1O
+        MGyNXN18X3jWcsl0MZVEbruXl3LyjWw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 1/4] dt-bindings: Document JZ47xx VPU auxiliary processor
+Date:   Sat, 16 Nov 2019 18:08:43 +0100
+Message-Id: <20191116170846.67220-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20191027162328.1177402-1-martin.blumenstingl@googlemail.com>
- <20191027162328.1177402-3-martin.blumenstingl@googlemail.com>
- <20191108221652.32FA2206C3@mail.kernel.org> <1jd0dxf1uz.fsf@starbuckisacylon.baylibre.com>
- <CAFBinCBnUs0JdHT3TS+1++NMHtgbMvoT7RYRCnB0eNgs4L-2CA@mail.gmail.com>
-In-Reply-To: <CAFBinCBnUs0JdHT3TS+1++NMHtgbMvoT7RYRCnB0eNgs4L-2CA@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 16 Nov 2019 17:52:59 +0100
-Message-ID: <CAFBinCCQS_8w0x_dDqwjw2sUv1tHwQYjPBxTbH4f8mOetTCj+g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] clk: meson: add a driver for the Meson8/8b/8m2 DDR
- clock controller
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jerome,
+Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+Ingenic is a second Xburst MIPS CPU very similar to the main core.
+This document describes the devicetree bindings for this auxiliary
+processor.
 
-On Tue, Nov 12, 2019 at 9:52 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Jerome,
->
-> On Tue, Nov 12, 2019 at 6:20 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> >
-> >
-> > >> +static const struct of_device_id meson8_ddr_clkc_match_table[] = {
-> > >> +       { .compatible = "amlogic,meson8-ddr-clkc" },
-> > >> +       { .compatible = "amlogic,meson8b-ddr-clkc" },
-> > >> +       { /* sentinel */ },
-> > >
-> > > Super nitpick, drop the comma above so that nothing can follow this.
-> >
-> > I don't think it is worth reposting the series Martin.
-> > If it is ok with you, I'll just apply it with Stephen comments
-> I am more than happy with this.
-> just to confirm, you would address all three comments from Stephen:
-> - including clk-provider.h
-> - use devm_platform_ioremap_resource
-> - trailing comma after the sentinel
-I'll have to re-send this series anyway, so I'll fix these myself.
-still thank you for the offer :)
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-I think it's better to move patch #3 from this series to the "XTAL
-from OF" series, which means I have to re-send
+Notes:
+    v2: Update TCSM0 address in example
+    v3: Change node name to 'video-decoder'
 
+ .../bindings/remoteproc/ingenic,vpu.txt       | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
 
-Martin
+diff --git a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+new file mode 100644
+index 000000000000..54566e941869
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+@@ -0,0 +1,36 @@
++* Ingenic JZ47xx auxiliary processor
++
++Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from Ingenic
++is a second Xburst MIPS CPU very similar to the main core.
++This document describes the devicetree bindings for this auxiliary processor.
++
++Required properties:
++- compatible: Should be "ingenic,jz4770-vpu-rproc"
++- reg: Must contain the registers location and length for:
++  * the auxiliary processor,
++  * the Tightly Coupled Shared Memory 0 (TCSM0),
++  * the Tightly Coupled Shared Memory 1 (TCSM1),
++  * the shared SRAM.
++- reg-names: Must contain "aux", "tcsm0", "tcsm1", "sram".
++- clocks: Clock specifier for the AUX and VPU clocks.
++- clock-names: Must contain "aux", "vpu".
++- interrupts: Interrupt specifier for the VPU hardware block.
++
++Example:
++
++vpu: video-decoder@132a0000 {
++	compatible = "ingenic,jz4770-vpu-rproc";
++
++	reg = <0x132a0000 0x20 /* AUX */
++		   0x132b0000 0x4000 /* TCSM0 */
++		   0x132c0000 0xc000 /* TCSM1 */
++		   0x132f0000 0x7000 /* SRAM */
++	>;
++	reg-names = "aux", "tcsm0", "tcsm1", "sram";
++
++	clocks = <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
++	clock-names = "aux", "vpu";
++
++	interrupt-parent = <&cpuintc>;
++	interrupts = <3>;
++};
+-- 
+2.24.0
+
