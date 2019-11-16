@@ -2,100 +2,112 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180EBC432C0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 20:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB30C432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 22:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2FB20729
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 20:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DFF206D5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 22:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBIuhlxf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcXGJU44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfKPUvV (ORCPT
+        id S1727601AbfKPWZE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 15:51:21 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36463 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbfKPUvS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 15:51:18 -0500
-Received: by mail-qt1-f195.google.com with SMTP id y10so15198343qto.3;
-        Sat, 16 Nov 2019 12:51:17 -0800 (PST)
+        Sat, 16 Nov 2019 17:25:04 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44271 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbfKPWZE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 17:25:04 -0500
+Received: by mail-il1-f196.google.com with SMTP id i6so3054721ilr.11;
+        Sat, 16 Nov 2019 14:25:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=d20wT0cl7XgbwKLLYIFQXwUjPZkC30E2izyCFJ7mTnY=;
-        b=QBIuhlxfj5Ty9/Pg1M7p1H+GFJf8dXW1rgRCfzDqhbyyI1EP/wDXeh5xcM10BAEBNE
-         uV5ZZmOcTv2UsQLMOvr1nZEn3j4BuErWw3OLJTQmAdmPjT5Bvdojcv+ENK5zjVgcqu04
-         lMmVkgyA7WxoMTQOTx+d4qYUaTGw9v19e36iEoHhN0YUtAb7q00F3Z4hrCmtHaxsf7BN
-         aG1Ygd7qGYNMj9CJDLy1wheKzq4YBm/0wi5o3b2MBS/POylCJLfD2TliPNwymBF4RCNC
-         ImqOFbarbZFdy97A4Tf+QgZ655Rd/lQuxU3bnJz6LGoR4FUpGPtrKc5PC0p+6nvPe3il
-         kCqg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0kr0PGCQy0Z97bgHM5LKSHLI8FBQC2icjFwrSq2WjiI=;
+        b=mcXGJU44h2VhVUi44c0HCwkZowXeV+SUbiixMSGtj5F+6qlghGFT2Xq8YFIsBM3b6a
+         NB2j5Nvgi1eWjexCryE5t7Z9PFBEjTZgRl7FpG0HVfliudk+t6skWdFnAPAgDsiXWMOD
+         H0JdBXkeu00GGM50LQS1NVVKhOnWS8ae/Gv2n/g36A9sqRAsCeHL6fRqBVCZlqSnrUV8
+         FulaYnkIh9Bwmvgv/5Tci63+PxwFdYSXlKyq8KcUkvFreu/o0zpqs8zePODC+D0CKMz9
+         b5YR2yz9gcNrpO6d1aQ+a2KiiT3vYxwjF9WYOBnakvQ0HcBi4oDkRhiL6X57twKT33NO
+         b7Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=d20wT0cl7XgbwKLLYIFQXwUjPZkC30E2izyCFJ7mTnY=;
-        b=K/BYHjU/3i9cGN+BupkM551jZPaWhWBjZK92THWIi6BODOxEG1ZVhocrUcdJKt957H
-         dkyemR6Cj+i5MTuyoEkkWzRbYDsPm2oOwfUdIsr3dNd4mPIaSmw/so7lTOVZMLHDjcYZ
-         njTu5StUDOCZe7tGP5q25Ym18jTNDIJgNY449UdMOsLsYf4i40A4aMc7F1I4jDc8BFQO
-         BDYmpuyLwJt88bTOuZZf2FOBNo0ek5TdTIAWuxaDd/+gVupDeuY8Zi9ugyf0sH4BQhST
-         CgoBO2J2vjkCn8otI3ddZxWpahNH0cg3r3JdPJvkSGBMpZapaeg4QeMtYJA05IcxBh96
-         FU3g==
-X-Gm-Message-State: APjAAAV0U51OzJt+GifmKTNv1UBv9iMx31S+qzm2jDZ290hxkf0OM+Rd
-        PUfg4A1dVoa+Rsrrs1RsIK8=
-X-Google-Smtp-Source: APXvYqyIMK5pNhn+/b0UG7IpGqDwo1UGwwZf1w16A//jV2cen+QvGxurE6/H0rN8/YC6Q4+m0J+rCQ==
-X-Received: by 2002:ac8:7103:: with SMTP id z3mr20706819qto.387.1573937477031;
-        Sat, 16 Nov 2019 12:51:17 -0800 (PST)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id n3sm6999136qtv.17.2019.11.16.12.51.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 12:51:16 -0800 (PST)
-Date:   Sat, 16 Nov 2019 17:51:13 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     jic23@kernel.org, robh@kernel.org
-Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH 2/2] dt-bindings: iio: adc: ad7292: fix constraint over
- channel quantity
-Message-ID: <20191116205110.vvqkmujecc6u5fvi@smtp.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0kr0PGCQy0Z97bgHM5LKSHLI8FBQC2icjFwrSq2WjiI=;
+        b=fhmey4iga4g1xYAGjSjmS6I2okPwVR2gdPCvewMhZ3ub8jiec3FPhA5/SiWl2nMpOx
+         n8T5nwyc4wjmaxUUCo0382ZuGWoCuF0LaGE/ljLCySd50GUlIMk3eDwgiCL4X5wldyUU
+         ZxEcbtlbH8H3J0hbs8dtjUcDwv7vB4lB0eVh6VqgQDEiMUum0VloN2Lv3R6NwF2Zsst1
+         5WdN0WvmrCykEvoD1dbYZ3NGX9+6w+N/cU6TBCBeoI5GSQaPEmjEmya2MEScOZV4nzXD
+         9W9vKvtBwc1Jd2/C4lQ0o1cKJtquuaFbOQKBKICpauLjiBU9CpkuNqlyKNrLm+rHgxFY
+         xajw==
+X-Gm-Message-State: APjAAAVUKRQxoeAzys7OO2Yyd+PgAJbS+qnjHlz7+QWWvq+W3AvUQxjL
+        6rTnYEWQEShi+uvMeNbDCt7rX+r3nuPg7gWNQeg=
+X-Google-Smtp-Source: APXvYqzPn3HQYK20FTVeH+W1yj1lPcrDj1BwE1CLbpmiUnRIY00feiJCzGRMO7t/qKoOnMNQwYe2938iUr38hcC/qto=
+X-Received: by 2002:a05:6e02:c91:: with SMTP id b17mr7894961ile.33.1573943103501;
+ Sat, 16 Nov 2019 14:25:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+References: <20191116064415.159899-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20191116064415.159899-1-bjorn.andersson@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Sat, 16 Nov 2019 15:24:52 -0700
+Message-ID: <CAOCk7Nov_HvZe1Z6COd2z=VUf=mVbvqS4wjqU4Ee=F1qR_KKww@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Change items property of AD7292 channels to correctly constrain their
-quantity.
+On Fri, Nov 15, 2019 at 11:44 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> The msm_serial driver uses a simple counter to determine which port to
+> use when no alias is defined, but there's no logic to prevent this from
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
----
- Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Which port to use for what, the default console?
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-index 5770f63dd511..e1f6d64bdccd 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-@@ -53,7 +53,8 @@ patternProperties:
-         description: |
-           The channel number. It can have up to 8 channels numbered from 0 to 7.
-         items:
--          maximum: 7
-+          - minimum: 0
-+            maximum: 7
- 
-       diff-channels:
-         description: see Documentation/devicetree/bindings/iio/adc/adc.txt
--- 
-2.23.0
+> not colliding with what's defined by the aliases. As a result either
+> none or all of the active msm_serial instances must be listed as
+> aliases.
+>
+> Define blsp1_uart3 as "serial1" to mitigate this problem.
+>
+> Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+That driver behavior seems like a strange thing to be doing.
+
+If you clarify the question above, -
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+
+> ---
+>  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> index 5f101a20a20a..e08fcb426bbf 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> @@ -9,6 +9,7 @@
+>  / {
+>         aliases {
+>                 serial0 = &blsp2_uart1;
+> +               serial1 = &blsp1_uart3;
+>         };
+>
+>         chosen {
+> --
+> 2.23.0
+>
