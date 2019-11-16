@@ -2,136 +2,109 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2D1C43141
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 09:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFDAC432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 10:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1049A2073B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 09:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CE320715
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 10:28:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gf8+xE3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfKPJxK (ORCPT
+        id S1726831AbfKPK2o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 04:53:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53118 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727115AbfKPJxK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 16 Nov 2019 04:53:10 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C468AAE03;
-        Sat, 16 Nov 2019 09:53:08 +0000 (UTC)
+        Sat, 16 Nov 2019 05:28:44 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46099 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbfKPK2n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 05:28:43 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n14so10929657oie.13
+        for <devicetree@vger.kernel.org>; Sat, 16 Nov 2019 02:28:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sZhD/EUwU2LYmqXZzHYtr3lzbEoemhuYST7IWlhE6j0=;
+        b=gf8+xE3ulehOsc5z+4rMPuOai0+uZBLR7+efZJ+o42vDgffLsx17nKEGw3IsWe9QSQ
+         sPNSML0APKutXIbdn+rr6CRx+Sj9QaEpH676Kxt15sQ5jYJCDEq7p1YsIlB9kjFbHP4Y
+         ZC+o0he5dzxFd7mjAUt6LumMP/0GNX1PVZ+mULwLWRDX7qZMRjG8ytfZcHJ0084Epup6
+         tajx3wMGOODe1MWrC28i64e76ITL5lFIyCUh8EsZxCysG+fBwpV1jP7QpW91/dbB8ih/
+         ER74co302G/Pu5nHfk0mcHhXB2gWjfFPtoiJvv1xrmvYTzlFg3IUVjx+pp2dCAHbWzFN
+         P9ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sZhD/EUwU2LYmqXZzHYtr3lzbEoemhuYST7IWlhE6j0=;
+        b=UxTmQk521Q/amUhsJFPpq0AJ+MW9wsUaicnmK4gqvTDEcMzKKiwj+pZTytjt7UeSwx
+         kpLhtd39KiFPLlUeWPx0szePnYNHzOYHaIHDG8Jt258G3gA4hAHHVEVHp5R5JjpfFzx3
+         TIENnd9R1oQDiJX5iDbX9REmNCGAmh5uqgcbBiL4ltNW1E1OjjTlnNqER+2qCD18rVks
+         sawaQ2ANICznzuf3E63lnJTzRV7vu23wtFW84Mz0HxQcwQ8o/Liur5SWwm3HovOUJnrJ
+         GMmztcZ9u/O+Q0LSTXzMbDkO6nZfVbJX3DcucgBaqInxJJTDUQgSFzMG0FV1dnSXVtOq
+         k51w==
+X-Gm-Message-State: APjAAAXUVs3Zn9j/Zr537VO/o2rHNlnwgeuF2MSEU1QXmMNWNEFqdb7I
+        6KcXvi/9kPskvnDgvRQ3TRHr/BI8gG7D8Bpo1jQ=
+X-Google-Smtp-Source: APXvYqzqpR3r9z/YwmrTeU5WMMZLPoNaek3O+69iFR3LbGOpV+usYWFgo/EYlXBZZmBYLoxRvxzaPrHZfbRUB6hYgY8=
+X-Received: by 2002:aca:504d:: with SMTP id e74mr12138443oib.140.1573900122769;
+ Sat, 16 Nov 2019 02:28:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20191115165026.19376-1-mohammad.rasim96@gmail.com>
+ <20191115165026.19376-3-mohammad.rasim96@gmail.com> <6fa93c06-ecab-c8da-32c4-db40533c09ec@suse.de>
+In-Reply-To: <6fa93c06-ecab-c8da-32c4-db40533c09ec@suse.de>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 16 Nov 2019 11:28:31 +0100
+Message-ID: <CAFBinCBFopdV8yRNN+jBc1DmB8mx85T0SKaFkxe_So_fsvcejA@mail.gmail.com>
 Subject: Re: [RFC PATCH 2/2] Add support for Videostrong KII Pro tv box
 To:     Mohammad Rasim <mohammad.rasim96@gmail.com>
-References: <20191115165026.19376-1-mohammad.rasim96@gmail.com>
- <20191115165026.19376-3-mohammad.rasim96@gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Message-ID: <6fa93c06-ecab-c8da-32c4-db40533c09ec@suse.de>
-Date:   Sat, 16 Nov 2019 10:53:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191115165026.19376-3-mohammad.rasim96@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 15.11.19 um 17:50 schrieb Mohammad Rasim:
-> This patch adds support for the Videostrong KII Pro tv box which is based on the gxbb-p201 reference design
-> 
-> Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
->  .../boot/dts/amlogic/meson-gxbb-KII-Pro.dts   | 25 +++++++++++++++++++
->  2 files changed, 26 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 84afecba9ec0..1d72e93691f2 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p201.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-KII-Pro.dtb
+Hi Mohammad,
 
-Lowercase: -kii-pro.dtb
-And please sort alphabetically.
+On Sat, Nov 16, 2019 at 10:53 AM Andreas F=C3=A4rber <afaerber@suse.de> wro=
+te:
+[...]
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "meson-gxbb-p201.dts"
+>
+> This is rather unusual, normally you would include the SoC's .dtsi, not
+> another board.
+you may even get another benefit from this:
+we don't know the Ethernet PHY setup on the P201 board (because nobody
+has an actual P201 board) so we don't use interrupts etc.
 
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-pro.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-meta.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
-> new file mode 100644
-> index 000000000000..e79d75bfa8dd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
-> @@ -0,0 +1,25 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + */
-
-What is this? :) You may want to add a copyright here.
-
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-gxbb-p201.dts"
-
-This is rather unusual, normally you would include the SoC's .dtsi, not
-another board.
-
-> +
-> +/ {
-> +	compatible = "Videostrong,KII-Pro","amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
-
-This is not a valid vendor prefix (undefined, should be lowercase), same
-for the compatible string, which should be lowercase as all others.
-
-Please run ./scripts/checkpatch.pl, which would warn you of such issues.
-
-Also a space missing after comma.
+however, since you do have a access to your KII Pro you can do better
+than P201 and define the Ethernet bits similar to Odroid-C2 for
+example: [0]
+if you board doesn't use a Realtek RTL8211F PHY then please also
+update the comment in the Ethmac node
+testing the PHY interrupt (which means less polling -> your CPU has
+more time to do other things) is easy:
+* cat /proc/interrupts
+* unplug and re-plug the Ethernet cable
+* cat /proc/interrupts again and check the Ethernet PHY interrupt
+(should be +2 compared to the first invocation)
 
 
-> +	model = "Videostrong KII Pro";
+Martin
 
-Here you can spell it the original way, like you did.
 
-> +
-> +
-> +};
-> +
-> +&uart_A {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-> +	pinctrl-names = "default";
-> +	uart-has-rtscts;
-
-Leave an empty line here for spacing.
-
-> +	bluetooth {
-> +		compatible = "brcm,bcm4335A0";
-> +		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+[0] https://github.com/torvalds/linux/blob/f9717178b9be9477877d4c3776c61ff5=
+6d854ddf/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts#L122
