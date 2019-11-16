@@ -2,141 +2,112 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029E3C432C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589FCC432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7D6214DE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ydq+ryFH"
+	by mail.kernel.org (Postfix) with ESMTP id 2E36E20895
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573921294;
+	bh=v07zbc7vShP28g0iL9bjsCC4WxDrC1Mp4bhpHU4L4qA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yomcv/nG/vFTgzvoKju9FtRuQiksIiqkilbaxQyUxBMQvcMZIIqBJfVfr0/axHQhQ
+	 MDaIlXCnctEtMIJS8prPTyvBz6nGn3zMSGk8vFRKRlQoTaEczGvKcUcmEsrxoxxQaU
+	 oJIaK2DqLAOlpglZTxUBgHY5YzWH3TK13xDFcfZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbfKPQU4 (ORCPT
+        id S1728777AbfKPQV2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:20:56 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33654 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729652AbfKPQUx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 11:20:53 -0500
-Received: by mail-pg1-f194.google.com with SMTP id h27so7430030pgn.0;
-        Sat, 16 Nov 2019 08:20:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3ThCOn+QwgspJ3kxAATKe5mgdC4dFBHT7/R2+FrM5uE=;
-        b=Ydq+ryFHXyCcCndRf0G9/AN0hFrn0rS9hynpb848hB82abgjXFz2z4BqEgRkNB9xXP
-         Ob7eqFO/Xq8K6kEL6fRe6Hc1dPEmOsQRmAby1ZRPGsNckUFgRusxiNKgizyKLm02Yxjq
-         iQwbo5HmHuT/iIlj/nGvHRgATRwG8PzwQpp0yT0WfqBlMhOiEclEC/gpEKQr52HlAJZ3
-         +Hq9I4na89H0lpGnirkHvAUIEole4l1UnFUE12jNCVFWEulvMT1wPRyjvOOacmaPnuwd
-         DXyYCwz/a9FToDYFTJJODt3VvIsxakpbROqhhyc3I4RJph+XpkV7wfGv1JhfTbzdFX/j
-         GidA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3ThCOn+QwgspJ3kxAATKe5mgdC4dFBHT7/R2+FrM5uE=;
-        b=fZDHWvAmusrKa6WejNPXltzVdQ0uhgWrTvtjOIdT3wZWGYtH94SyiAu91vS/IqGtxa
-         bHymMpu2ou12vp1dGhL3Zeu3mj4IyoPom8WybMNH/O4pjZ6Xwk9t1kduCa1O22sk7Mi8
-         P2fsmclwThL3Fcb3Lz7cUSst+nvYuUwccmFc4k7WKpkUCURSC2xsylVMPaD6NhemEbTU
-         fa70C3+CmVk1vXIUB4B+b81UDJQ4IcPHVG3S3W+f8u9CiV8yJJqCG2v9aNPwv56ANqar
-         mDuw3k+Pl5luirfgtRnUnGbliOcGVG+tza4ZuNFoQaxeplSP7W68GRG8/QHAucTV6s57
-         NiGw==
-X-Gm-Message-State: APjAAAVy5qQn63u/k+a7qU/yz3VCdfgeyi8PyOTeooGlplbIgukbGWvz
-        BxenY1BTgdqu+p7QsQe54HZmwer3
-X-Google-Smtp-Source: APXvYqw8+YtA13X+2DcbFCm2WNiq/03l8qtmNPUJkbuUIVpNhKs1oVxFoW7yPNZWmSTRPhkaZHB4YA==
-X-Received: by 2002:a63:e70f:: with SMTP id b15mr22797805pgi.116.1573921252799;
-        Sat, 16 Nov 2019 08:20:52 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id em16sm12577766pjb.21.2019.11.16.08.20.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 Nov 2019 08:20:52 -0800 (PST)
-Date:   Sat, 16 Nov 2019 08:20:51 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eugen.Hristev@microchip.com
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nicolas.Ferre@microchip.com, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] watchdog: sama5d4_wdt: addition of sam9x60
- compatible watchdog
-Message-ID: <20191116162051.GA23056@roeck-us.net>
-References: <1573806579-7981-1-git-send-email-eugen.hristev@microchip.com>
- <1573806579-7981-3-git-send-email-eugen.hristev@microchip.com>
+        Sat, 16 Nov 2019 11:21:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728738AbfKPPnb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:31 -0500
+Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E157320815;
+        Sat, 16 Nov 2019 15:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573919011;
+        bh=v07zbc7vShP28g0iL9bjsCC4WxDrC1Mp4bhpHU4L4qA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iEK037BfSHhBFty++qGjzYyEQu/KxU+dCxUTFzIYt712bIc5dfalT6V9NYgThTMP0
+         dV/sfWPggheOVOCP4EQ++7Zq4tOT0hZ6Qba6WGY2rM0scwqFoxA4wLVF0sJkMok/Ge
+         IrfsKevIYM8keufkBpo+6o0wJbfM6ys7oAJC5xjU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Keiji Hayashibara <hayashibara.keiji@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 115/237] spi: uniphier: fix incorrect property items
+Date:   Sat, 16 Nov 2019 10:39:10 -0500
+Message-Id: <20191116154113.7417-115-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
+References: <20191116154113.7417-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573806579-7981-3-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 08:30:18AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Add support for SAM9X60 WDT into sama5d4_wdt.
-> This means that this driver gets a flag inside the data struct
-> that represents the sam9x60 support.
-> This flag differentiates between the two hardware blocks, and is set
-> according to the compatible of the driver instantiation.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
-> Changes in v4:
-> - check compatible with different of_ function
-> - call irq parse and map only if need_irq
-> - changed tabbing in struct defintion
-> 
-> Changes in v3:
-> - changed need_irq to bool, instead of a single bit variable.
-> - the platform data config struct is gone now, changed to a pointer to a bool
-> to have the sam9x60_support as 'true', pointing to a static bool with true value.
-> Can have a better solution than this ?
-> - the specific sam9x60_support flag is assigned at probe time, corresponding
-> to the flag value in .data
-> 
->  drivers/watchdog/at91sam9_wdt.h |  14 ++++++
->  drivers/watchdog/sama5d4_wdt.c  | 109 +++++++++++++++++++++++++++++++---------
->  2 files changed, 98 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
-> index abfe34d..4b3bd1d 100644
-> --- a/drivers/watchdog/at91sam9_wdt.h
-> +++ b/drivers/watchdog/at91sam9_wdt.h
-> @@ -24,7 +24,10 @@
->  #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
->  #define  AT91_WDT_WDV		(0xfffUL << 0)		/* Counter Value */
->  #define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
-> +#define  AT91_SAM9X60_PERIODRST	BIT(4)		/* Period Reset */
-> +#define  AT91_SAM9X60_RPTHRST	BIT(5)		/* Minimum Restart Period */
->  #define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
-> +#define  AT91_SAM9X60_WDDIS	BIT(12)		/* Watchdog Disable */
->  #define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
->  #define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
->  #define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
-> @@ -37,4 +40,15 @@
->  #define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
->  #define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
->  
-> +#define AT91_SAM9X60_VR		0x08			/* Watchdog Timer Value Register */
-> +
-> +#define AT91_SAM9X60_WLR		0x0c
-> +#define  AT91_SAM9X60_COUNTER	(0xfffUL << 0)		/* Watchdog Period Value */
-> +#define  AT91_SAM9X60_SET_COUNTER(x)	((x) & AT91_SAM9X60_COUNTER)
-> +
-> +#define AT91_SAM9X60_IER		0x14		/* Interrupt Enable Register */
-> +#define  AT91_SAM9X60_PERINT		BIT(0)		/* Period Interrupt Enable */
-> +#define AT91_SAM9X60_IDR		0x18		/* Interrupt Disable Register */
-> +#define AT91_SAM9X60_ISR		0x1c		/* Interrupt Status Register */
-> +
+From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
 
-Lots of line-too-long checkpatch warnings. Please avoid.
+[ Upstream commit 3511ba7d4ca6f39e2d060bb94e42a41ad1fee7bf ]
 
-Thanks,
-Guenter
+This commit fixes incorrect property because it was different
+from the actual.
+The parameters of '#address-cells' and '#size-cells' were removed,
+and 'interrupts', 'pinctrl-names' and 'pinctrl-0' were added.
+
+Fixes: 4dcd5c2781f3 ("spi: add DT bindings for UniPhier SPI controller")
+Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../devicetree/bindings/spi/spi-uniphier.txt       | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
+index 504a4ecfc7b16..b04e66a52de5d 100644
+--- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
++++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
+@@ -5,18 +5,20 @@ UniPhier SoCs have SCSSI which supports SPI single channel.
+ Required properties:
+  - compatible: should be "socionext,uniphier-scssi"
+  - reg: address and length of the spi master registers
+- - #address-cells: must be <1>, see spi-bus.txt
+- - #size-cells: must be <0>, see spi-bus.txt
+- - clocks: A phandle to the clock for the device.
+- - resets: A phandle to the reset control for the device.
++ - interrupts: a single interrupt specifier
++ - pinctrl-names: should be "default"
++ - pinctrl-0: pin control state for the default mode
++ - clocks: a phandle to the clock for the device
++ - resets: a phandle to the reset control for the device
+ 
+ Example:
+ 
+ spi0: spi@54006000 {
+ 	compatible = "socionext,uniphier-scssi";
+ 	reg = <0x54006000 0x100>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
++	interrupts = <0 39 4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi0>;
+ 	clocks = <&peri_clk 11>;
+ 	resets = <&peri_rst 11>;
+ };
+-- 
+2.20.1
+
