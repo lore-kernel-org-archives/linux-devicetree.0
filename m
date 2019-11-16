@@ -2,102 +2,136 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B41C43141
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 06:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2D1C43141
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 09:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693CE20715
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 06:44:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="etF6/auc"
+	by mail.kernel.org (Postfix) with ESMTP id 1049A2073B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 09:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfKPGoW (ORCPT
+        id S1727414AbfKPJxK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 01:44:22 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36477 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbfKPGoW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 01:44:22 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k13so7014736pgh.3
-        for <devicetree@vger.kernel.org>; Fri, 15 Nov 2019 22:44:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=83mOzCZrk2hLeBIavxFW02Ub7zgigDrZgcfo7Rp02xE=;
-        b=etF6/auczY/PHyj2EW/5m9MAfa7+4KhKO2DKDAQqUiiJ/HJycDvebsWhFyy7ltErNz
-         GPdUetQoCqDTxijT0aZPIe5TPLoBcuI/HcwwSLoQvfsRwKrEcXKyfNi58/nXbyswpqjH
-         BprxdonwAHRWF6P4gsThGhzKQh/Py9iApmDHlM3sQN6OXVP0V9y6jMAMLR3TIIUCIAOs
-         wiAUpDM/MxLmyKx/CsTNelNQqSJLaS4PsRhsYQm37K7kVfWPrj01BPVG5X/0yGHts/rX
-         wRCVlVZ2lrtpKQbhURCDfqzz26gKxLE7PQlrRpXzosM17VsQnO3aK56Z84Nzqk9noZcq
-         43eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=83mOzCZrk2hLeBIavxFW02Ub7zgigDrZgcfo7Rp02xE=;
-        b=iDdIkMhMTY/efKiYayGrsTJEcAq9ZpFzDxv16N87lhl9gMvyHDxCymUELH/XaNXnQY
-         tRORZZv2GSQMCPEu3tHlQ7WqUyJS31vFr/JVflsj3uZV4O9GN7RFyJD7AsM4NY8UXdya
-         qwvPprVlxmMvtsMY/QaZoadpeSQmoiWCIgE6468kP/qm98s2LdBILYCb88ZG11Prc5xh
-         dL5t92qy0T4W+Xig7fhrgDgAJGL0CBZFKVFZ685NVT0SvQyrX72k4zFYB4SZ66uGdpwX
-         2Xc1D/QQ1LdndnusQi3WG1InC3bKpxZ3CMUBk8ADn2h5Zg3WkRPgSrNKGztCDlkSsEOI
-         jmBA==
-X-Gm-Message-State: APjAAAVU1HOa0/adF70IP9TIgJFjPRs5NMoWROtZARMiBGEj/ANrA/ji
-        FrpKOTKvZcTJ0GFf7v4SrqEB5w==
-X-Google-Smtp-Source: APXvYqwkM4lZh6cRGZMVmRD+7muqSOChY7AWDb7zXeO/JwqTvRigHw1HpZUm08pwffapf4Vo4sOuEg==
-X-Received: by 2002:a63:5164:: with SMTP id r36mr7664120pgl.143.1573886659746;
-        Fri, 15 Nov 2019 22:44:19 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f26sm10985615pgf.22.2019.11.15.22.44.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 22:44:18 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
-Date:   Fri, 15 Nov 2019 22:44:15 -0800
-Message-Id: <20191116064415.159899-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Sat, 16 Nov 2019 04:53:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53118 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727115AbfKPJxK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 16 Nov 2019 04:53:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C468AAE03;
+        Sat, 16 Nov 2019 09:53:08 +0000 (UTC)
+Subject: Re: [RFC PATCH 2/2] Add support for Videostrong KII Pro tv box
+To:     Mohammad Rasim <mohammad.rasim96@gmail.com>
+References: <20191115165026.19376-1-mohammad.rasim96@gmail.com>
+ <20191115165026.19376-3-mohammad.rasim96@gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Message-ID: <6fa93c06-ecab-c8da-32c4-db40533c09ec@suse.de>
+Date:   Sat, 16 Nov 2019 10:53:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191115165026.19376-3-mohammad.rasim96@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The msm_serial driver uses a simple counter to determine which port to
-use when no alias is defined, but there's no logic to prevent this from
-not colliding with what's defined by the aliases. As a result either
-none or all of the active msm_serial instances must be listed as
-aliases.
+Am 15.11.19 um 17:50 schrieb Mohammad Rasim:
+> This patch adds support for the Videostrong KII Pro tv box which is based on the gxbb-p201 reference design
+> 
+> Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+>  .../boot/dts/amlogic/meson-gxbb-KII-Pro.dts   | 25 +++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index 84afecba9ec0..1d72e93691f2 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p200.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p201.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-KII-Pro.dtb
 
-Define blsp1_uart3 as "serial1" to mitigate this problem.
+Lowercase: -kii-pro.dtb
+And please sort alphabetically.
 
-Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-pro.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-meta.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
+> new file mode 100644
+> index 000000000000..e79d75bfa8dd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-KII-Pro.dts
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + */
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-index 5f101a20a20a..e08fcb426bbf 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-@@ -9,6 +9,7 @@
- / {
- 	aliases {
- 		serial0 = &blsp2_uart1;
-+		serial1 = &blsp1_uart3;
- 	};
- 
- 	chosen {
+What is this? :) You may want to add a copyright here.
+
+> +
+> +/dts-v1/;
+> +
+> +#include "meson-gxbb-p201.dts"
+
+This is rather unusual, normally you would include the SoC's .dtsi, not
+another board.
+
+> +
+> +/ {
+> +	compatible = "Videostrong,KII-Pro","amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
+
+This is not a valid vendor prefix (undefined, should be lowercase), same
+for the compatible string, which should be lowercase as all others.
+
+Please run ./scripts/checkpatch.pl, which would warn you of such issues.
+
+Also a space missing after comma.
+
+
+> +	model = "Videostrong KII Pro";
+
+Here you can spell it the original way, like you did.
+
+> +
+> +
+> +};
+> +
+> +&uart_A {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+> +	pinctrl-names = "default";
+> +	uart-has-rtscts;
+
+Leave an empty line here for spacing.
+
+> +	bluetooth {
+> +		compatible = "brcm,bcm4335A0";
+> +		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+
+Regards,
+Andreas
+
 -- 
-2.23.0
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
