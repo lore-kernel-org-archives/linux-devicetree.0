@@ -2,154 +2,190 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FB7C43215
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB132C432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406E421479
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWDwUslp"
+	by mail.kernel.org (Postfix) with ESMTP id C385A2168B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573920999;
+	bh=O4jI/UD5cwgEfztd/WN3i8vXnYRkU/s8BThrOIUqah0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Riq9h6P7dqSuvbvIWiUnTdiaokG1jvcR+YQbDFNH+ypCuOgr8nT9ThtXvera7+d77
+	 mpAaCTizjHaYTYQ+ezmpdV3GkvI6JqjH84/qKUm8ThCYRtGykygsj1twLO2xwsjSZ6
+	 2XZBpXjGc7oDpDSJBk7hcLBW0eRX7Lwz59LJmPBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730788AbfKPQMI (ORCPT
+        id S1729917AbfKPQQi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:12:08 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46399 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfKPQMH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 11:12:07 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 193so8111751pfc.13;
-        Sat, 16 Nov 2019 08:12:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DLBwNS04s3vTncd8h6wYjqP9/zqj5Hw6C3ovDZPMJNw=;
-        b=aWDwUslpmIQVa4GYtfBvd2CMsrtdrtzAXSurvFxn9mgpdxN5BKh64sYvKAAbYDKfSj
-         4YMXLI9Fua6OvuYxk9aWHHjKqdWTtquxgyU2Ekugjx0AhH0B2lhuJMJVRi+yk65QDRdh
-         CoQCd0F3l4D53DhJkRKl2tlal42XOJ5NtiyXPDIMbxtijjHPxUlqeCwzdUwgjDihryL/
-         CJ5cwucFeg0xSf4TYkBeyf3doCOFGOg+Q1odrSMKSHCCaWOwWiJ4brhdjJUtyYBT8cDS
-         0TMlKeK9t/aA+6JqhkkAPhqn1+7XTFmvaVvt4Y/wY6Y5CY47hgLvCakN7MxAv9gtLu9L
-         ul6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DLBwNS04s3vTncd8h6wYjqP9/zqj5Hw6C3ovDZPMJNw=;
-        b=cfeqYPL+SoFf8U+8bvoEg5s0TeoI9o4k36GLDONPzR0BwGYnJP7nmBFUu0erfxWaQ+
-         8pLM0Xmey4i3Uod/d29auQhK+IJqeJb+Z+UHlFFh681PzBaW9IF1dUgPD5RYMQJPSzdV
-         cEx+DOX66IiHJrGt0vGXZhBNAc6EcDsSojlQ/p5jHJ9vmLOk6YKUsa9kcjpRuLaHwzjq
-         39Db13FJAzWbpdPp0u/uITIUlOWcgoG5Y3bq+oO97SNAUCPylU1366HeT02bNMFjMpHm
-         uNMWsjC4C47WzxLfIzFdJUzlLx+Ztwcu946HDTp8vW1ts2s0niEW3lapdy8l0pVzyfDi
-         k2Zg==
-X-Gm-Message-State: APjAAAXOf5eyRQ09S+fFTmZjGRMvwZrOeq3U8Qjr50yeJoz9Yw9t0ARm
-        Ss8ZZf1YHbMDweYoB9Z91yeJvutk
-X-Google-Smtp-Source: APXvYqyUjaIuhyaRHuw7HuQ7JdypEFfmmQ6CWLzYfMZsoL54sdj1Me9cxMFnQnrWwYl56ebRbcqIPA==
-X-Received: by 2002:a63:e156:: with SMTP id h22mr7865038pgk.266.1573920726128;
-        Sat, 16 Nov 2019 08:12:06 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 83sm14198063pgh.86.2019.11.16.08.12.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 Nov 2019 08:12:05 -0800 (PST)
-Date:   Sat, 16 Nov 2019 08:12:04 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eugen.Hristev@microchip.com
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nicolas.Ferre@microchip.com, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
-Message-ID: <20191116161204.GA22568@roeck-us.net>
-References: <1573806579-7981-1-git-send-email-eugen.hristev@microchip.com>
+        Sat, 16 Nov 2019 11:16:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729573AbfKPPq7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:59 -0500
+Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E34520B7C;
+        Sat, 16 Nov 2019 15:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573919218;
+        bh=O4jI/UD5cwgEfztd/WN3i8vXnYRkU/s8BThrOIUqah0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gab8qWMzy30WpCcUr+EWBSmSilrx/XJ48h8zW+cJe/HQs11qmaBAP1iAVjsySzvf4
+         driQa7BU9WVBDc1vGogbVQn3NQdqzfdPn8ds25MZwex72MyhhBXIy+AoG43VZe1y6G
+         9YqCycosLVwiagTsjJ4IFb8kUajxlqqFu/zfcfHg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Frank Rowand <frank.rowand@sony.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alan Tull <atull@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 224/237] of: unittest: initialize args before calling of_*parse_*()
+Date:   Sat, 16 Nov 2019 10:40:59 -0500
+Message-Id: <20191116154113.7417-224-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
+References: <20191116154113.7417-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573806579-7981-1-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 08:30:13AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Cleanup the macro definitions to use BIT and align with two spaces.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+From: Frank Rowand <frank.rowand@sony.com>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+[ Upstream commit eeb07c573ec307c53fe2f6ac6d8d11c261f64006 ]
 
-> ---
-> Changes in v4:
-> - added UL suffix to value macros to avoid compile warnings
-> - modified file header to include new copyright and datasheet
-> - include linux/bits.h
-> 
-> Changes in v3:
-> - new patch as requested from review on ML
-> 
->  drivers/watchdog/at91sam9_wdt.h | 34 +++++++++++++++++++---------------
->  1 file changed, 19 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
-> index 390941c..abfe34d 100644
-> --- a/drivers/watchdog/at91sam9_wdt.h
-> +++ b/drivers/watchdog/at91sam9_wdt.h
-> @@ -4,33 +4,37 @@
->   *
->   * Copyright (C) 2007 Andrew Victor
->   * Copyright (C) 2007 Atmel Corporation.
-> + * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries
->   *
->   * Watchdog Timer (WDT) - System peripherals regsters.
->   * Based on AT91SAM9261 datasheet revision D.
-> + * Based on SAM9X60 datasheet.
->   *
->   */
->  
->  #ifndef AT91_WDT_H
->  #define AT91_WDT_H
->  
-> +#include <linux/bits.h>
-> +
->  #define AT91_WDT_CR		0x00			/* Watchdog Control Register */
-> -#define		AT91_WDT_WDRSTT		(1    << 0)		/* Restart */
-> -#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
-> +#define  AT91_WDT_WDRSTT	BIT(0)			/* Restart */
-> +#define  AT91_WDT_KEY		(0xa5UL << 24)		/* KEY Password */
->  
->  #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
-> -#define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
-> -#define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
-> -#define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
-> -#define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
-> -#define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
-> -#define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
-> -#define		AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
-> -#define			AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
-> -#define		AT91_WDT_WDDBGHLT	(1     << 28)		/* Debug Halt */
-> -#define		AT91_WDT_WDIDLEHLT	(1     << 29)		/* Idle Halt */
-> +#define  AT91_WDT_WDV		(0xfffUL << 0)		/* Counter Value */
-> +#define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
-> +#define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
-> +#define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
-> +#define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
-> +#define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
-> +#define  AT91_WDT_WDD		(0xfffUL << 16)		/* Delta Value */
-> +#define  AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
-> +#define  AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
-> +#define  AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
->  
-> -#define AT91_WDT_SR		0x08			/* Watchdog Status Register */
-> -#define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
-> -#define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
-> +#define AT91_WDT_SR		0x08		/* Watchdog Status Register */
-> +#define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
-> +#define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
->  
->  #endif
+Callers of of_irq_parse_one() blindly use the pointer args.np
+without checking whether of_irq_parse_one() had an error and
+thus did not set the value of args.np.  Initialize args to
+zero so that using the format "%pOF" to show the value of
+args.np will show "(null)" when of_irq_parse_one() has an
+error.  This prevents the dereference of a random value.
+
+Make the same fix for callers of of_parse_phandle_with_args()
+and of_parse_phandle_with_args_map().
+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Alan Tull <atull@kernel.org>
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/of/unittest.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index e8997cdb228cb..68f52966bbc04 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -375,6 +375,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	for (i = 0; i < 8; i++) {
+ 		bool passed = true;
+ 
++		memset(&args, 0, sizeof(args));
+ 		rc = of_parse_phandle_with_args(np, "phandle-list",
+ 						"#phandle-cells", i, &args);
+ 
+@@ -428,6 +429,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	}
+ 
+ 	/* Check for missing list property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-missing",
+ 					"#phandle-cells", 0, &args);
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
+@@ -436,6 +438,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
+ 
+ 	/* Check for missing cells property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list",
+ 					"#phandle-cells-missing", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -444,6 +447,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for bad phandle in list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-phandle",
+ 					"#phandle-cells", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -452,6 +456,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for incorrectly formed argument list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-args",
+ 					"#phandle-cells", 1, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -502,6 +507,7 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 	for (i = 0; i < 8; i++) {
+ 		bool passed = true;
+ 
++		memset(&args, 0, sizeof(args));
+ 		rc = of_parse_phandle_with_args_map(np, "phandle-list",
+ 						    "phandle", i, &args);
+ 
+@@ -559,21 +565,25 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 	}
+ 
+ 	/* Check for missing list property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-missing",
+ 					    "phandle", 0, &args);
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
+ 
+ 	/* Check for missing cells,map,mask property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list",
+ 					    "phandle-missing", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for bad phandle in list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-phandle",
+ 					    "phandle", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for incorrectly formed argument list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-args",
+ 					    "phandle", 1, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -783,7 +793,7 @@ static void __init of_unittest_parse_interrupts(void)
+ 	for (i = 0; i < 4; i++) {
+ 		bool passed = true;
+ 
+-		args.args_count = 0;
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		passed &= !rc;
+@@ -804,7 +814,7 @@ static void __init of_unittest_parse_interrupts(void)
+ 	for (i = 0; i < 4; i++) {
+ 		bool passed = true;
+ 
+-		args.args_count = 0;
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		/* Test the values from tests-phandle.dtsi */
+@@ -860,6 +870,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
+ 	for (i = 0; i < 7; i++) {
+ 		bool passed = true;
+ 
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		/* Test the values from tests-phandle.dtsi */
+-- 
+2.20.1
+
