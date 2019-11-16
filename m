@@ -7,60 +7,55 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212F7C43215
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 14:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7576FC43141
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 15:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE23E20728
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 14:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8AF20728
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 15:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573915898;
-	bh=5AAU5o7pidJr4sMwD8GPtO2mtigTEtJtVk/H9tKTbTY=;
+	s=default; t=1573917777;
+	bh=jWnniCxtWs1Awb4m3wt7Ib2Si3DnLRCkXA/19wju3a0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WVJj4AT9ZzreBUk9ax7JGOESCwp1eJVdQr5foYBncLm//axdhntyMRtoLWJqHCDQE
-	 X8vsu/XO7wrfHqsjK5vLpqg5YGgq/f2XLX4IyyF/tgkT1Vge0x0M0VBUD6enUvzXFr
-	 kQoJGegew55bSOEwJis6WETyMqJnII1Kemjl9dlk=
+	b=jwuFcTJWfljusXEQO5e+zSAuv3uE5zg8ZDiNMn+8H3haC2tfqmHsQi4/URrr43nH8
+	 nfX4yDuiIL9M4fxnyzr8m3y3IRTdKUWlXHY1vp+gZO6U3aeOCIG1Hp4LA1v+Qsk0R4
+	 U0KYzLSsNHkrF1ti1N4RKtR8xhgeT0VBczHIArjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfKPOvh (ORCPT
+        id S1727691AbfKPPW4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 09:51:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37106 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:22:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbfKPOvh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 16 Nov 2019 09:51:37 -0500
+        id S1727646AbfKPPW4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:22:56 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A006206E1;
-        Sat, 16 Nov 2019 14:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E1A20700;
+        Sat, 16 Nov 2019 15:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573915895;
-        bh=5AAU5o7pidJr4sMwD8GPtO2mtigTEtJtVk/H9tKTbTY=;
+        s=default; t=1573917775;
+        bh=jWnniCxtWs1Awb4m3wt7Ib2Si3DnLRCkXA/19wju3a0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UEh66OMicAYa1Pctu1fEKGw8pVZB0glrIqzrkaCe9qSdIXsEhINzfTBEo9PrYirtt
-         CNFUJLF/Oh2ZcVyDfEFmzGqMNGfwd2iBpL0Fmqg1K8rL+3KdA/h5IeWcThZUmROGNQ
-         TgxfwfFTBRzxGIyjxOdWsxvkhMsJVXX9AQfxoAnM=
-Date:   Sat, 16 Nov 2019 14:51:30 +0000
+        b=Hj529MRIXWbYITy3lMsjxDcjJj/4xhnTjRN8HpvZPVqMXlt/pG7iHsQYA9UG3YGim
+         IKdRfCuVFB4C3pu4ru+8uoveu3gDQpmgc3mk8RUvE5X0ZfV1yKuYVAbK1/diQUVbL3
+         LnjSVTwaUFn9JCjVKrMhgzom+Ui1b15X832+8Zas=
+Date:   Sat, 16 Nov 2019 15:22:49 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andrea Merello <andrea.merello@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        Patrick Havelange <patrick.havelange@essensium.com>,
-        Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>,
-        Matt Weber <matthew.weber@rockwellcollins.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Daniel Gomez <dagmcr@gmail.com>, linux-iio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [v2 8/9] RFC/RFT: iio: maxim_thermocouple: add
- thermocouple_type sysfs attribute
-Message-ID: <20191116145130.265f84fc@archlinux>
-In-Reply-To: <20191111153517.13862-9-andrea.merello@gmail.com>
-References: <20190923121714.13672-1-andrea.merello@gmail.com>
-        <20191111153517.13862-1-andrea.merello@gmail.com>
-        <20191111153517.13862-9-andrea.merello@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
+Message-ID: <20191116152249.483e1eaf@archlinux>
+In-Reply-To: <CAL_JsqJY6YMC2ba4DNFnsq=XESOoUTDA6Q+Y7gutMT0VN--DNw@mail.gmail.com>
+References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
+        <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
+        <20191112193942.GA27334@bogus>
+        <20191113145159.vw7icflfve7dnefm@smtp.gmail.com>
+        <CAL_JsqJY6YMC2ba4DNFnsq=XESOoUTDA6Q+Y7gutMT0VN--DNw@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -70,192 +65,159 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 11 Nov 2019 16:35:16 +0100
-Andrea Merello <andrea.merello@gmail.com> wrote:
+On Wed, 13 Nov 2019 11:06:45 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-> We added a sysfs ABI for getting/setting the type of a thermocouple. This
-> driver supports chips that support specific fixed thermocouple types; we
-> cannot set it, but still we can add this sysfs attribute in RO mode to
-> read-back the thermocouple type.
+> On Wed, Nov 13, 2019 at 8:52 AM Marcelo Schmitt
+> <marcelo.schmitt1@gmail.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > Thanks for reviewing the binding doc again.
+> > Aparently, this patch was added to Greg KH's staging tree.
+> > What is the right procedure in this case? Should I send a v5 patchset or
+> > just send a patch for this doc?  
 > 
-> This driver supports actually several chips:
->  - max6675
->  - max31855[k/j/n/s/t/e/r]asa family
-> 
-> Max6675 supports only K-type thermocouples, so we can just report that.
-> 
-> Each chip in max31855 family supports just one specific thermocouple type
-> (in the obvious way: i.e. max31855jasa supports J-type). This driver did
-> accept a generic SPI ID and OF compatible "max31855" which does not give
-> any clue about which chip is really involved (and unfortunately it seems
-> we have no way to detect it).
-> 
-> This patch introduces a new set of, more specific, SPI IDs and OF
-> compatible strings to better match the chip type.
-> 
-> The old, generic, "max31855" binding is kept for compatibility reasons, but
-> this patch aims to deprecate it, so, should we hit it, a warning is spit.
-> In such case the reported thermocouple type in sysfs is '?', because we
-> have no way to know.
-> 
-> Regarding the implementation: the thermocouple type information is stored
-> in the driver private data and I've kept only two maxim_thermocouple_chip
-> types in order to avoid a lot of duplications (seven chip types with just
-> a different thermocouple type).
-> 
-> RFT because I have no real HW to test this.
-Trivial comment inline.
+> You need to do an incremental patch. Greg doesn't rebase.
+Sorry. I jumped the gun a bit here.  Send me an incremental patch and
+we'll get it queued up.  As it can be considered 'a license fix'
+we can get it lined up for straight after the merge window.
 
 Thanks,
 
-J
-> 
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Colin Ian King <colin.king@canonical.com>
-> Cc: Patrick Havelange <patrick.havelange@essensium.com>
-> Cc: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> Cc: Matt Weber <matthew.weber@rockwellcollins.com>
-> Cc: Matt Ranostay <matt.ranostay@konsulko.com>
-> Cc: Chuhong Yuan <hslester96@gmail.com>
-> Cc: Daniel Gomez <dagmcr@gmail.com>
-> Cc: linux-iio@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> ---
->  drivers/iio/temperature/maxim_thermocouple.c | 45 ++++++++++++++++++--
->  1 file changed, 41 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/temperature/maxim_thermocouple.c b/drivers/iio/temperature/maxim_thermocouple.c
-> index d1360605209c..6fa5ae9fb4ec 100644
-> --- a/drivers/iio/temperature/maxim_thermocouple.c
-> +++ b/drivers/iio/temperature/maxim_thermocouple.c
-> @@ -14,6 +14,7 @@
->  #include <linux/of_device.h>
->  #include <linux/spi/spi.h>
->  #include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
->  #include <linux/iio/trigger.h>
->  #include <linux/iio/buffer.h>
->  #include <linux/iio/triggered_buffer.h>
-> @@ -24,13 +25,25 @@
->  enum {
->  	MAX6675,
->  	MAX31855,
-> +	MAX31855K,
-> +	MAX31855J,
-> +	MAX31855N,
-> +	MAX31855S,
-> +	MAX31855T,
-> +	MAX31855E,
-> +	MAX31855R,
-> +};
-> +
-> +const char maxim_tc_types[] = {
-> +	'K', '?', 'K', 'J', 'N', 'S', 'T', 'E', 'R'
->  };
->  
->  static const struct iio_chan_spec max6675_channels[] = {
->  	{	/* thermocouple temperature */
->  		.type = IIO_TEMP,
->  		.info_mask_separate =
-> -			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> +			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE) |
-> +			BIT(IIO_CHAN_INFO_THERMOCOUPLE_TYPE),
->  		.scan_index = 0,
->  		.scan_type = {
->  			.sign = 's',
-> @@ -48,7 +61,8 @@ static const struct iio_chan_spec max31855_channels[] = {
->  		.type = IIO_TEMP,
->  		.address = 2,
->  		.info_mask_separate =
-> -			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> +			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE) |
-> +			BIT(IIO_CHAN_INFO_THERMOCOUPLE_TYPE),
->  		.scan_index = 0,
->  		.scan_type = {
->  			.sign = 's',
-> @@ -110,6 +124,7 @@ struct maxim_thermocouple_data {
->  	const struct maxim_thermocouple_chip *chip;
->  
->  	u8 buffer[16] ____cacheline_aligned;
-> +	char tc_type;
->  };
->  
->  static int maxim_thermocouple_read(struct maxim_thermocouple_data *data,
-> @@ -196,8 +211,11 @@ static int maxim_thermocouple_read_raw(struct iio_dev *indio_dev,
->  			ret = IIO_VAL_INT;
->  		}
->  		break;
-> +	case IIO_CHAN_INFO_THERMOCOUPLE_TYPE:
-> +		*val = data->tc_type;
-> +		ret = IIO_VAL_CHAR;
-> +		break;
->  	}
-> -
+Jonathan
 
-Another stray whitespace change. 
 
->  	return ret;
->  }
->  
-> @@ -210,8 +228,9 @@ static int maxim_thermocouple_probe(struct spi_device *spi)
->  	const struct spi_device_id *id = spi_get_device_id(spi);
->  	struct iio_dev *indio_dev;
->  	struct maxim_thermocouple_data *data;
-> +	const int chip_type = (id->driver_data == MAX6675) ? MAX6675 : MAX31855;
->  	const struct maxim_thermocouple_chip *chip =
-> -			&maxim_thermocouple_chips[id->driver_data];
-> +		&maxim_thermocouple_chips[chip_type];
->  	int ret;
->  
->  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*data));
-> @@ -229,6 +248,7 @@ static int maxim_thermocouple_probe(struct spi_device *spi)
->  	data = iio_priv(indio_dev);
->  	data->spi = spi;
->  	data->chip = chip;
-> +	data->tc_type = maxim_tc_types[id->driver_data];
->  
->  	ret = devm_iio_triggered_buffer_setup(&spi->dev,
->  				indio_dev, NULL,
-> @@ -236,12 +256,22 @@ static int maxim_thermocouple_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> +	if (id->driver_data == MAX31855)
-> +		dev_warn(&spi->dev, "generic max31855 ID is deprecated\nplease use more specific part type");
-> +
->  	return devm_iio_device_register(&spi->dev, indio_dev);
->  }
->  
->  static const struct spi_device_id maxim_thermocouple_id[] = {
->  	{"max6675", MAX6675},
->  	{"max31855", MAX31855},
-> +	{"max31855k", MAX31855K},
-> +	{"max31855j", MAX31855J},
-> +	{"max31855n", MAX31855N},
-> +	{"max31855s", MAX31855S},
-> +	{"max31855t", MAX31855T},
-> +	{"max31855e", MAX31855E},
-> +	{"max31855r", MAX31855R},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(spi, maxim_thermocouple_id);
-> @@ -249,6 +279,13 @@ MODULE_DEVICE_TABLE(spi, maxim_thermocouple_id);
->  static const struct of_device_id maxim_thermocouple_of_match[] = {
->          { .compatible = "maxim,max6675" },
->          { .compatible = "maxim,max31855" },
-> +	{ .compatible = "maxim,max31855k" },
-> +	{ .compatible = "maxim,max31855j" },
-> +	{ .compatible = "maxim,max31855n" },
-> +	{ .compatible = "maxim,max31855s" },
-> +	{ .compatible = "maxim,max31855t" },
-> +	{ .compatible = "maxim,max31855e" },
-> +	{ .compatible = "maxim,max31855r" },
->          { },
->  };
->  MODULE_DEVICE_TABLE(of, maxim_thermocouple_of_match);
+> 
+> > In any case, I still have some doubts about the maximum constraint of
+> > the channel property. Comments inline.
+> >
+> >
+> > Thanks
+> >
+> > Marcelo
+> >
+> > On 11/12, Rob Herring wrote:  
+> > > On Fri, Nov 08, 2019 at 10:56:09AM -0300, Marcelo Schmitt wrote:  
+> > > > Add a devicetree schema for AD7292 monitor and control system.
+> > > >
+> > > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > > > ---
+> > > > Changelog V3 -> V4:
+> > > > - updated SPDX identifier to GPL-2.0-only
+> > > > - changed maxitems constraint on channel property
+> > > >
+> > > >  .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
+> > > >  MAINTAINERS                                   |   7 ++
+> > > >  2 files changed, 111 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..b68be3aaf587
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > > > @@ -0,0 +1,104 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only  
+> > >
+> > > Sigh, I gave you the exact line to use:
+> > >
+> > > # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > >
+> > > I've said to dual license with (GPL-2.0-only OR BSD-2-Clause) and people
+> > > think I mean to pick one. So now I just give the whole line. I don't
+> > > know how to be clearer.  
+> >
+> > I thought I could use just GPL-2.0 since the driver code is GPL-2.0.
+> > Anyway, I'll use the above line to specify the dt-binding license.
+> >  
+> > >  
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Analog Devices AD7292 10-Bit Monitor and Control System
+> > > > +
+> > > > +maintainers:
+> > > > +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > > > +
+> > > > +description: |
+> > > > +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
+> > > > +  Temperature Sensor, and GPIOs
+> > > > +
+> > > > +  Specifications about the part can be found at:
+> > > > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - adi,ad7292
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  vref-supply:
+> > > > +    description: |
+> > > > +      The regulator supply for ADC and DAC reference voltage.
+> > > > +
+> > > > +  spi-cpha: true
+> > > > +
+> > > > +  '#address-cells':
+> > > > +    const: 1
+> > > > +
+> > > > +  '#size-cells':
+> > > > +    const: 0
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - spi-cpha
+> > > > +
+> > > > +patternProperties:
+> > > > +  "^channel@[0-7]$":
+> > > > +    type: object
+> > > > +    description: |
+> > > > +      Represents the external channels which are connected to the ADC.
+> > > > +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> > > > +
+> > > > +    properties:
+> > > > +      reg:
+> > > > +        description: |
+> > > > +          The channel number. It can have up to 8 channels numbered from 0 to 7.
+> > > > +        items:
+> > > > +          maximum: 7  
+> > >
+> > > Not what I said either. A slight but important difference in that you
+> > > are missing a '-' to make 'items' a list rather than a schema/dict.
+> > >
+> > > Update dt-schema. This should give a warning now.  
+> >
+> > I'm confused, I don't know how to make this doc the way you want.
+> > I pulled the updates from the master branch of dt-schema repo and
+> > reinstalled it.
+> > Then I tried
+> >         items:
+> >           - maximum: 7
+> > I've tried
+> >         - items:
+> >             maximum: 7
+> > I also tried
+> >         - items:
+> >           maximum: 7
+> > all gave me parsing errors when processing the ad7292 schema with
+> > 'make dt_binding_check' and also with 'make -k dt_binding_check'.
+> > Am I using the right branch? Should I pull from a branch other than the
+> > master?  
+> 
+> Sorry, my fault there. The meta-schema requires 'minimum' if you give
+> 'maximum'. So:
+> 
+>         items:
+>           - minimum: 0
+>             maximum: 7
+> 
+> The error message was less than useful, but I think I have a fix for that too.
+> 
+> Rob
 
