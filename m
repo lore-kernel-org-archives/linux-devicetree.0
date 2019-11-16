@@ -2,113 +2,85 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF5BC43141
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 15:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750BDC43141
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11DAE20730
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 15:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573917912;
-	bh=rRnti0BrmIf79tbc/YpCsyMOtR8FyK78b/mO62ih4OM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZpqYb1xHtsjBrsGHorgop0HsZiFS91s6DwR6rFLO7hSMazWWHF5Lnd9MArbG+VOTP
-	 BmP/ExVNivTfga7e4RHclt3X3QprN/Akw3plP4qVe2ygfnDm7SyOk9jWYzPDyvnNg2
-	 slDzyVZXoycSimUgL39A7lOSuQmSbL431Jx0tY4g=
+	by mail.kernel.org (Postfix) with ESMTP id 4CCB420815
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKPPZL (ORCPT
+        id S1729577AbfKPP60 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:25:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727754AbfKPPZL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:25:11 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 401FA20700;
-        Sat, 16 Nov 2019 15:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573917910;
-        bh=rRnti0BrmIf79tbc/YpCsyMOtR8FyK78b/mO62ih4OM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=h8Jdnw1v+fE7ZDPqn+HAktivWUMAULqEbrNuZH1p9NBKjRHGl7HnLTaKDovUH+o6+
-         vazqx563Z0UZGzzLUMmLuU4dv9H2Zws0SoadsvwtjdyY5xS+63wUIG8lVfWX234z1O
-         zbZ57toUvVg77isZ5AyujbeaW+pyWh867A32tKXs=
-Date:   Sat, 16 Nov 2019 15:25:04 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH 1/3] iio: adc: ltc2496: provide device tree binding
- document
-Message-ID: <20191116152504.499e2a54@archlinux>
-In-Reply-To: <1e1a148095d2ea6c49c62e5fb2e5e741faa9d5f4.camel@analog.com>
-References: <20191111214025.18310-1-u.kleine-koenig@pengutronix.de>
-        <b6ed43afbfb0128301f11198eb83a8f72b7661e9.camel@analog.com>
-        <20191112070405.zinuqnfb3wqbehvw@pengutronix.de>
-        <1e1a148095d2ea6c49c62e5fb2e5e741faa9d5f4.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 Nov 2019 10:58:26 -0500
+Received: from 50-87-157-213.static.tentacle.fi ([213.157.87.50]:44405 "EHLO
+        bitmer.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731335AbfKPP60 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:58:26 -0500
+X-Greylist: delayed 2480 seconds by postgrey-1.27 at vger.kernel.org; Sat, 16 Nov 2019 10:58:25 EST
+Received: from dsl-hkibng31-54faf1-87.dhcp.inet.fi ([84.250.241.87] helo=localhost.localdomain)
+        by bitmer.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <jarkko.nikula@bitmer.com>)
+        id 1iVzon-00077d-37; Sat, 16 Nov 2019 17:16:57 +0200
+From:   Jarkko Nikula <jarkko.nikula@bitmer.com>
+To:     devicetree@vger.kernel.org
+Cc:     linux-omap@vger.kernel.org,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, Stefan Roese <sr@denx.de>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        linux-stable <stable@vger.kernel.org>
+Subject: [PATCH] ARM: dts: omap3-tao3530: Fix incorrect MMC card detection GPIO polarity
+Date:   Sat, 16 Nov 2019 17:16:51 +0200
+Message-Id: <20191116151651.7042-1-jarkko.nikula@bitmer.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 11:56:52 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+The MMC card detection GPIO polarity is active low on TAO3530, like in many
+other similar boards. Now the card is not detected and it is unable to
+mount rootfs from an SD card.
 
-> On Tue, 2019-11-12 at 08:04 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > [External]
-> >=20
-> > Hello Alexandru,
-> >=20
-> > On Tue, Nov 12, 2019 at 06:57:49AM +0000, Ardelean, Alexandru wrote: =20
-> > > On Mon, 2019-11-11 at 22:40 +0100, Uwe Kleine-K=C3=B6nig wrote: =20
-> > > > The ADC only requires the standard stuff for spi devices and a
-> > > > reference
-> > > > voltage. =20
-> > >=20
-> > > DT bindings must be in YAML format. =20
-> >=20
-> > Yeah, I noticed this trend. But given that I only saw .txt files for
-> > iio, I thought I'd stick to that.
-> >  =20
-> > > But in this case, you can probably extend the existing
-> > > "Documentation/devicetree/bindings/iio/adc/ltc2497.txt". =20
-> >=20
-> > I considered that shortly, but as the ltc2497 is an i2c device and the
-> > ltc2496 uses spi I chose to create another simple document instead of
-> > complicating the existing one by describing two nearly orthogonal sets
-> > of properties. =20
->=20
-> There are dt-bindings that cover both SPI & I2C.
-> I think ADXL372 does that too.
-True, but in that case no real choice as the same part does both
-bus types.  Here it's probably cleaner to just have a second document.
+Fix this by using the correct polarity.
 
-Thanks,
+This incorrect polarity was defined already in the commit 30d95c6d7092
+("ARM: dts: omap3: Add Technexion TAO3530 SOM omap3-tao3530.dtsi") in v3.18
+kernel and later changed to use defined GPIO constants in v4.4 kernel by
+the commit 3a637e008e54 ("ARM: dts: Use defined GPIO constants in flags
+cell for OMAP2+ boards").
 
-Jonathan
+While the latter commit did not introduce the issue I'm marking it with
+Fixes tag due the v4.4 kernels still being maintained.
 
->=20
->=20
-> >=20
-> > Best regards
-> > Uwe
-> >  =20
+Fixes: 3a637e008e54 ("ARM: dts: Use defined GPIO constants in flags cell for OMAP2+ boards")
+Cc: linux-stable <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Jarkko Nikula <jarkko.nikula@bitmer.com>
+---
+ arch/arm/boot/dts/omap3-tao3530.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/omap3-tao3530.dtsi b/arch/arm/boot/dts/omap3-tao3530.dtsi
+index a7a04d78deeb..f24e2326cfa7 100644
+--- a/arch/arm/boot/dts/omap3-tao3530.dtsi
++++ b/arch/arm/boot/dts/omap3-tao3530.dtsi
+@@ -222,7 +222,7 @@
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	vmmc-supply = <&vmmc1>;
+ 	vqmmc-supply = <&vsim>;
+-	cd-gpios = <&twl_gpio 0 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
+ 	bus-width = <8>;
+ };
+ 
+-- 
+2.24.0
 
