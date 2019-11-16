@@ -2,178 +2,129 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA72BC432C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 01:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769C8C43141
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 05:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA742073C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 01:43:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="jKIbZw7O"
+	by mail.kernel.org (Postfix) with ESMTP id 509CC20733
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 05:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573883417;
+	bh=cqibmtWhugPFIdWWdJC/LaDl+aZlb97vNdXIjuHltc8=;
+	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
+	b=VS+EppMhYUy91UOOVelVjqj/vEnr8woXJzmnFtFVQdKDBpX7HWTp6Fx2JKHXHgV8x
+	 YofqNztW7XsnoAhdMDXXKQ3VMtVTumfz3LadrCHCv9M8cHTSFs5z+Pv35ssxCrMtJa
+	 INmxTDvvd7qon1y+iBN1A1o4cF0kDZwp8diCtthI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfKPBnS (ORCPT
+        id S1725830AbfKPFuQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 20:43:18 -0500
-Received: from mail-eopbgr1310051.outbound.protection.outlook.com ([40.107.131.51]:41657
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727089AbfKPBnS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Nov 2019 20:43:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IjvQiqjUTgZvMUmC1hAlCmFqakHUkDqgy7NaNXTbudpSYCAQ6FlfES033d5o2EyfY/0VTJqLdaQ/pYgWMA9Sh2v7U+BrePZYkc2IRlMIHH9d+U58s3YZeVVhdSwS7ZEXU1CHyb350O1g3ztZS31jynz7oc8t+z+gxiTXFLeQ/fjl5QWh/hwkUeCswTgNmthKo9P++6vl/DrjaxH8g9/Q1o9viwZOm8bsuTTvC4CjuPd1YzDO1Nw3NB5xqMmolKW0VYzRS9E/E1+mTEOHFExbuL9ndprjTZkL7JKi0oEtZI2/pQvR2Dw5amiJiNgTfCGDmil0/OIR4kBK5n3D0dsdtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sJLYbIRNCFM+HbD56IXmGnZQP/81gFQiRQjdf2iXkFk=;
- b=hu4/DAK4z9U68OXnQ/jz26hPBt+hjM/fC9SRJRz7AFmWph+SiMCDQZaFfeo//snymN1AycBXJgrUARr3nve9c5ZSeWHWUfw28BxeWPUpY83Plmn48MmFjMZI3Qlj/A59R2Pqja9ydlbmBgJPfeY5mPNqjFOWvKwO/t1WNFVO6FvOJxincD4fgD1GYbsmDNf1MbRwiCf9n829ZB/V4DGWHh16yx8q40lPw2Rniv85qqWv2a/R06Zpe9KuY/C+oLJVkoQpkHAeupo+yzhDKJQkm91CW6jjPtuHp58QY21scG4UXroyUfoxXXyMAHmCTHcVtwH30JoBfR3mB0iHNyhLOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nuvoton.com; dmarc=pass action=none header.from=nuvoton.com;
- dkim=pass header.d=nuvoton.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sJLYbIRNCFM+HbD56IXmGnZQP/81gFQiRQjdf2iXkFk=;
- b=jKIbZw7OZstl/Qag5TqH6wp30ByveB+IX7vXzgZ5Km5eqRKGa7XS9nbfI9FJ0oMetQPM8YfyGYBsQyr6a4kcpgMaQGpq4adhMCnT/r9lFdEClNgkFRv1t4E6RX5s1sMq2fvhCWlBZ2grUPx3miY6yB+2rU/r/iaD9yHiNSx/Cqo=
-Received: from SG2PR03MB5134.apcprd03.prod.outlook.com (52.132.234.202) by
- SG2PR03MB2749.apcprd03.prod.outlook.com (52.133.138.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.9; Sat, 16 Nov 2019 01:43:09 +0000
-Received: from SG2PR03MB5134.apcprd03.prod.outlook.com
- ([fe80::21ca:39a4:25e9:c398]) by SG2PR03MB5134.apcprd03.prod.outlook.com
- ([fe80::21ca:39a4:25e9:c398%5]) with mapi id 15.20.2474.012; Sat, 16 Nov 2019
- 01:43:08 +0000
-From:   AS50 KCHsu0 <KCHSU0@nuvoton.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "thomas.fehrenbacher@siedle.de" <thomas.fehrenbacher@siedle.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        AS50 CTLin0 <CTLIN0@nuvoton.com>, AS50 WTLi <WTLI@nuvoton.com>
-Subject: Re: [PATCH 3/3] ASoC: nau8810: add aux input control, available on
- NAU8812
-Thread-Topic: [PATCH 3/3] ASoC: nau8810: add aux input control, available on
- NAU8812
-Thread-Index: AQHVm88ulvBeSF4QAU2lHN0X+78biqeNBrAA
-Date:   Sat, 16 Nov 2019 01:43:08 +0000
-Message-ID: <55560429-3504-d2f3-2ce5-c8644fbeb333@nuvoton.com>
-References: <20191115160819.15557-1-m.felsch@pengutronix.de>
- <20191115160819.15557-4-m.felsch@pengutronix.de>
-In-Reply-To: <20191115160819.15557-4-m.felsch@pengutronix.de>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [114.43.73.81]
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-clientproxiedby: HK2PR02CA0151.apcprd02.prod.outlook.com
- (2603:1096:201:1f::11) To SG2PR03MB5134.apcprd03.prod.outlook.com
- (2603:1096:4:da::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=KCHSU0@nuvoton.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b707a5c1-d842-459a-0efc-08d76a36552b
-x-ms-traffictypediagnostic: SG2PR03MB2749:|SG2PR03MB2749:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SG2PR03MB27492CAFD12EDF5E72A046C694730@SG2PR03MB2749.apcprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:248;
-x-forefront-prvs: 02234DBFF6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(39850400004)(396003)(136003)(199004)(189003)(58126008)(316002)(6246003)(6306002)(66066001)(65956001)(54906003)(65806001)(76176011)(110136005)(107886003)(71200400001)(86362001)(256004)(66556008)(8936002)(66446008)(64756008)(66476007)(81156014)(81166006)(71190400001)(229853002)(14444005)(5660300002)(6512007)(4326008)(99286004)(6486002)(6436002)(8676002)(2906002)(26005)(6116002)(2501003)(3846002)(186003)(478600001)(476003)(2616005)(486006)(446003)(14454004)(31696002)(11346002)(7736002)(102836004)(66946007)(52116002)(36756003)(31686004)(305945005)(6506007)(386003)(25786009)(966005)(11716003);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR03MB2749;H:SG2PR03MB5134.apcprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nuvoton.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1PlufYNxUiK3ua6HP9VR9oiCrcaZm4rTyGU+2+7muSgDEQnHmzNr6LN+l9SeEC+2ZeIwu7H9hb4Nh3dfOj/GNOcVP56l08OPjSW/8ATTxCqLtWMyn4z13UTJ/IwDqnJpSwrbRj7FT0j9Qu9/gpBar6p9BAOCSRC86AAuJpBi0A/AxF4eq1mN2xWRyidKh4J5Blt70XmEbQqeuiNEumxyx1vPCsmtWSVacBP7FLG/yLSpWC3AGDg8EK6A8ijQSh4Ao/pcsQzNc0i/1XBJXCiHP5/dRSgGiqNNyw24Kju21hhPmWADEPddnoAKwDLrp7ZR1hZyl5z+Zp9R5ArsRoPts3bO6jl0Mq+2iMDuK6k8kpdh2Bmuvqi7qOmPyZU6DLn/REBdzYjyZRQQZvZwYgV63wZJB6roqa3/pSRqRixSyueh4U37RXOEH3PHw8vNXCwG
+        Sat, 16 Nov 2019 00:50:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbfKPFuQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 16 Nov 2019 00:50:16 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FBCE20729;
+        Sat, 16 Nov 2019 05:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573883415;
+        bh=cqibmtWhugPFIdWWdJC/LaDl+aZlb97vNdXIjuHltc8=;
+        h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
+        b=1Zk9wAz5nUsulI2tlJtlKZeDOw4Cfc3A9Qu9NO2eA7Aw+SQLwfkYz7d7Ez+geeUu+
+         KbmHJC4U1kP8QQGUagT+bewwcNW2xMWBXj6/Pf3KRbdzTv5RK3EOZh89QGWjshaQbf
+         pfnKuI2OKVJr1xUDq2ojknyZqnAOXO8RdIO1rt5Y=
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <1D9B030CF1EE864CABD06A5CFD97CCEE@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b707a5c1-d842-459a-0efc-08d76a36552b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Nov 2019 01:43:08.7796
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I1XuhpGaVermpEVNjjaucz98MTqXb2RIKjiYw0zEubTb0i1ia8XNCtUf/LdlNZqF+mDGYZBS6H5+/QpybiAQsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR03MB2749
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <307ce88d-ab1b-ce2b-0e25-79b7fde637e5@codeaurora.org>
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org> <1572524473-19344-5-git-send-email-tdas@codeaurora.org> <20191106003053.DA8462178F@mail.kernel.org> <307ce88d-ab1b-ce2b-0e25-79b7fde637e5@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v1 4/7] clk: qcom: Add graphics clock controller driver for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 21:50:14 -0800
+Message-Id: <20191116055015.8FBCE20729@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpNYXJjbyBGZWxzY2gg5pa8IDIwMTkvMTEvMTYg5LiK5Y2IIDEyOjA4IOWvq+mBkzoNCj4gRnJv
-bTogVGhvbWFzIEZlaHJlbmJhY2hlciA8dGhvbWFzLmZlaHJlbmJhY2hlckBzaWVkbGUuZGU+DQo+
-DQo+IFRoaXMgY29tbWl0IGFkZHMgdGhlIHN1cHBvcnQgdG8gY29udHJvbCB0aGUgYXV4LXBvcnQg
-b24gdGhlIG5hdTg4MTINCj4gZGV2aWNlcy4gV2UgZG9uJ3QgbmVlZCB0byBkaWZmZXJlbnRpYXRl
-IHRoZSBhdXgtcG9ydCByZWdpc3RlcnMgc2luY2UNCj4gdGhvc2UgYml0ZmllbGRzIGFyZSBzZXQg
-dG8gJzAnIG9uIHRoZSBuYXU4ODEwIGRldmljZXMgWzEsMl0uDQo+DQo+IFsxXSBodHRwOi8vd3d3
-Lm51dm90b24uY29tL3Jlc291cmNlLWZpbGVzL05BVTg4MTBfRGF0YXNoZWV0X1Jldl8yLjgucGRm
-DQo+IFsyXSBodHRwOi8vd3d3Lm51dm90b24uY29tL3Jlc291cmNlLWZpbGVzL05BVTg4MTJEYXRh
-c2hlZXRSZXYyLjcucGRmDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFRob21hcyBGZWhyZW5iYWNoZXIg
-PHRob21hcy5mZWhyZW5iYWNoZXJAc2llZGxlLmRlPg0KPiBbbS5mZWxzY2hAcGVuZ3V0cm9uaXgu
-ZGU6IGFkZCBjb21taXQgbWVzc2FnZV0NCj4gU2lnbmVkLW9mZi1ieTogTWFyY28gRmVsc2NoIDxt
-LmZlbHNjaEBwZW5ndXRyb25peC5kZT4NCj4gLS0tDQo+ICAgc291bmQvc29jL2NvZGVjcy9uYXU4
-ODEwLmMgfCA3ICsrKysrKysNCj4gICBzb3VuZC9zb2MvY29kZWNzL25hdTg4MTAuaCB8IDIgKysN
-Cj4gICAyIGZpbGVzIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQ0KPg0KPiBkaWZmIC0tZ2l0IGEv
-c291bmQvc29jL2NvZGVjcy9uYXU4ODEwLmMgYi9zb3VuZC9zb2MvY29kZWNzL25hdTg4MTAuYw0K
-PiBpbmRleCBhMzJhNGE4ZDVmNTAuLmIxMDI0ZDI0ZDQxMyAxMDA2NDQNCj4gLS0tIGEvc291bmQv
-c29jL2NvZGVjcy9uYXU4ODEwLmMNCj4gKysrIGIvc291bmQvc29jL2NvZGVjcy9uYXU4ODEwLmMN
-Cj4gQEAgLTM1MSw2ICszNTEsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9rY29udHJvbF9u
-ZXcgbmF1ODgxMF9zbmRfY29udHJvbHNbXSA9IHsNCj4gICBOQVU4ODEwX0RBQ09TX1NGVCwgMSwg
-MCksDQo+ICAgU09DX1NJTkdMRSgiQURDIE92ZXJzYW1wbGluZyBSYXRlKDEyOHgpIFN3aXRjaCIs
-IE5BVTg4MTBfUkVHX0FEQywNCj4gICBOQVU4ODEwX0FEQ09TX1NGVCwgMSwgMCksDQo+ICsNCj4g
-K1NPQ19TSU5HTEUoIkFVWCBJbnB1dCBFbmFibGUgU3dpdGNoIiwgTkFVODgxMF9SRUdfUE9XRVIx
-LA0KPiArTkFVODgxMF9BVVhfRU5fU0ZULCAxLCAwKSwNCj4gICB9Ow0KPg0KDQoNClRoZSBwb3dl
-ciBjb250cm9sIGhhcyB0byBtb3ZlIHRvIHRoZSBuYXU4ODEwX2RhcG1fd2lkZ2V0cy4NCg0KVGhl
-IERBUE0gY2FuIGp1c3QgY29udHJvbCB0aGUgcG93ZXIgc3dpdGNoIG9mIEFVWEkgZHluYW1pY2Fs
-bHkuDQoNCg0KPiAgIC8qIFNwZWFrZXIgT3V0cHV0IE1peGVyICovDQo+IEBAIC0zODMsNiArMzg2
-LDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfa2NvbnRyb2xfbmV3IG5hdTg4MTBfaW5wZ2Fb
-XSA9IHsNCj4gICBOQVU4ODEwX05NSUNQR0FfU0ZULCAxLCAwKSwNCj4gICBTT0NfREFQTV9TSU5H
-TEUoIk1pY1AgU3dpdGNoIiwgTkFVODgxMF9SRUdfSU5QVVRfU0lHTkFMLA0KPiAgIE5BVTg4MTBf
-UE1JQ1BHQV9TRlQsIDEsIDApLA0KPiArU09DX0RBUE1fU0lOR0xFKCJBVVggU3dpdGNoIiwgTkFV
-ODgxMF9SRUdfSU5QVVRfU0lHTkFMLA0KPiArTkFVODgxMF9BVVhQR0FfU0ZULCAxLCAwKSwNCj4g
-ICB9Ow0KPg0KPiAgIC8qIExvb3BiYWNrIFN3aXRjaCAqLw0KPiBAQCAtNDM2LDYgKzQ0MSw3IEBA
-IHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBuYXU4ODEwX2RhcG1fd2lk
-Z2V0c1tdID0gew0KPg0KPiAgIFNORF9TT0NfREFQTV9JTlBVVCgiTUlDTiIpLA0KPiAgIFNORF9T
-T0NfREFQTV9JTlBVVCgiTUlDUCIpLA0KPiArU05EX1NPQ19EQVBNX0lOUFVUKCJBVVgiKSwNCj4g
-ICBTTkRfU09DX0RBUE1fT1VUUFVUKCJNT05PT1VUIiksDQo+ICAgU05EX1NPQ19EQVBNX09VVFBV
-VCgiU1BLT1VUUCIpLA0KPiAgIFNORF9TT0NfREFQTV9PVVRQVVQoIlNQS09VVE4iKSwNCj4gQEAg
-LTQ3MCw2ICs0NzYsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2NfZGFwbV9yb3V0ZSBu
-YXU4ODEwX2RhcG1fcm91dGVzW10gPSB7DQo+ICAgeyJJbnB1dCBQR0EiLCBOVUxMLCAiTWljIEJp
-YXMifSwNCj4gICB7IklucHV0IFBHQSIsICJNaWNOIFN3aXRjaCIsICJNSUNOIn0sDQo+ICAgeyJJ
-bnB1dCBQR0EiLCAiTWljUCBTd2l0Y2giLCAiTUlDUCJ9LA0KPiAreyJJbnB1dCBQR0EiLCAiQVVY
-IFN3aXRjaCIsICJBVVgifSwNCj4NCj4gICAvKiBEaWdpdGFsIExvb3B0YWNrICovDQo+ICAgeyJE
-aWdpdGFsIExvb3BiYWNrIiwgIlN3aXRjaCIsICJBREMifSwNCj4gZGlmZiAtLWdpdCBhL3NvdW5k
-L3NvYy9jb2RlY3MvbmF1ODgxMC5oIGIvc291bmQvc29jL2NvZGVjcy9uYXU4ODEwLmgNCj4gaW5k
-ZXggMWFkYTMxODgzZGM2Li43YjVlY2FkMTczZDMgMTAwNjQ0DQo+IC0tLSBhL3NvdW5kL3NvYy9j
-b2RlY3MvbmF1ODgxMC5oDQo+ICsrKyBiL3NvdW5kL3NvYy9jb2RlY3MvbmF1ODgxMC5oDQo+IEBA
-IC02OSw2ICs2OSw3IEBADQo+DQo+ICAgLyogTkFVODgxMF9SRUdfUE9XRVIxICgweDEpICovDQo+
-ICAgI2RlZmluZSBOQVU4ODEwX0RDQlVGX0VOKDB4MSA8PCA4KQ0KPiArI2RlZmluZSBOQVU4ODEw
-X0FVWF9FTl9TRlQ2DQo+ICAgI2RlZmluZSBOQVU4ODEwX1BMTF9FTl9TRlQ1DQo+ICAgI2RlZmlu
-ZSBOQVU4ODEwX01JQ0JJQVNfRU5fU0ZUNA0KPiAgICNkZWZpbmUgTkFVODgxMF9BQklBU19FTigw
-eDEgPDwgMykNCj4gQEAgLTIyOSw2ICsyMzAsNyBAQA0KPiAgIC8qIE5BVTg4MTBfUkVHX0lOUFVU
-X1NJR05BTCAoMHgyQykgKi8NCj4gICAjZGVmaW5lIE5BVTg4MTBfUE1JQ1BHQV9TRlQwDQo+ICAg
-I2RlZmluZSBOQVU4ODEwX05NSUNQR0FfU0ZUMQ0KPiArI2RlZmluZSBOQVU4ODEwX0FVWFBHQV9T
-RlQyDQo+DQo+ICAgLyogTkFVODgxMF9SRUdfUEdBR0FJTiAoMHgyRCkgKi8NCj4gICAjZGVmaW5l
-IE5BVTg4MTBfUEdBR0FJTl9TRlQwDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCiBUaGUgcHJpdmlsZWdlZCBjb25maWRl
-bnRpYWwgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZW1haWwgaXMgaW50ZW5kZWQgZm9y
-IHVzZSBvbmx5IGJ5IHRoZSBhZGRyZXNzZWVzIGFzIGluZGljYXRlZCBieSB0aGUgb3JpZ2luYWwg
-c2VuZGVyIG9mIHRoaXMgZW1haWwuIElmIHlvdSBhcmUgbm90IHRoZSBhZGRyZXNzZWUgaW5kaWNh
-dGVkIGluIHRoaXMgZW1haWwgb3IgYXJlIG5vdCByZXNwb25zaWJsZSBmb3IgZGVsaXZlcnkgb2Yg
-dGhlIGVtYWlsIHRvIHN1Y2ggYSBwZXJzb24sIHBsZWFzZSBraW5kbHkgcmVwbHkgdG8gdGhlIHNl
-bmRlciBpbmRpY2F0aW5nIHRoaXMgZmFjdCBhbmQgZGVsZXRlIGFsbCBjb3BpZXMgb2YgaXQgZnJv
-bSB5b3VyIGNvbXB1dGVyIGFuZCBuZXR3b3JrIHNlcnZlciBpbW1lZGlhdGVseS4gWW91ciBjb29w
-ZXJhdGlvbiBpcyBoaWdobHkgYXBwcmVjaWF0ZWQuIEl0IGlzIGFkdmlzZWQgdGhhdCBhbnkgdW5h
-dXRob3JpemVkIHVzZSBvZiBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24gb2YgTnV2b3RvbiBpcyBz
-dHJpY3RseSBwcm9oaWJpdGVkOyBhbmQgYW55IGluZm9ybWF0aW9uIGluIHRoaXMgZW1haWwgaXJy
-ZWxldmFudCB0byB0aGUgb2ZmaWNpYWwgYnVzaW5lc3Mgb2YgTnV2b3RvbiBzaGFsbCBiZSBkZWVt
-ZWQgYXMgbmVpdGhlciBnaXZlbiBub3IgZW5kb3JzZWQgYnkgTnV2b3Rvbi4NCg==
+Quoting Taniya Das (2019-11-15 00:11:28)
+> Hi Stephen,
+>=20
+> Thanks for the review.
+>=20
+> On 11/6/2019 6:00 AM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2019-10-31 05:21:10)
+> >> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-=
+sc7180.c
+> >> new file mode 100644
+> >> index 0000000..0d893e6
+> >> --- /dev/null
+> >> +++ b/drivers/clk/qcom/gpucc-sc7180.c
+> >> @@ -0,0 +1,274 @@
+> >> +// SPDX-License-Identifier: GPL-2.0-only
+> >> +/*
+> >> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> >> + */
+> >> +
+> >> +#include <linux/clk-provider.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_device.h>
+> >=20
+> > Are these of includes used?
+> >
+>=20
+> yes, would clean up these headers.
+>=20
+
+Maybe they're used. I'm not sure.
+
+> >> +       regmap =3D qcom_cc_map(pdev, &gpu_cc_sc7180_desc);
+> >> +       if (IS_ERR(regmap))
+> >> +               return PTR_ERR(regmap);
+> >> +
+> >> +       /* 360MHz Configuration */
+> >> +       gpu_cc_pll_config.l =3D 0x12;
+> >> +       gpu_cc_pll_config.alpha =3D 0xC000;
+> >> +       gpu_cc_pll_config.config_ctl_val =3D 0x20485699;
+> >> +       gpu_cc_pll_config.config_ctl_hi_val =3D 0x00002067;
+> >> +       gpu_cc_pll_config.user_ctl_val =3D 0x00000001;
+> >> +       gpu_cc_pll_config.user_ctl_hi_val =3D 0x00004805;
+> >> +       gpu_cc_pll_config.test_ctl_hi_val =3D 0x40000000;
+> >=20
+> > Is there a reason this is built on the stack? Save space or something?
+> >=20
+>=20
+> I have done as we had discussed during the dispcc review for SDM845
+> https://patchwork.kernel.org/patch/10446073/
+>  >>>
+>  >> +static const struct alpha_pll_config disp_cc_pll0_config =3D {
+>  >> +       .l =3D 0x2c,
+>  >> +       .alpha =3D 0xcaaa,
+>  >> +};
+>  >
+>  > Any reason this can't be put on the stack in the probe function?
+>  >
+> I would move it.
+>  >>>
+>=20
+> In case you think I should move it outside I can do that too.
+
+No I was just wondering what prompted it.
+
