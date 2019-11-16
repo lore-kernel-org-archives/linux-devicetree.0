@@ -2,302 +2,178 @@ Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567A8C43215
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 00:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA72BC432C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 01:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262BC20733
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 00:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573865571;
-	bh=w11hF+8S7RN0l7WYVfSo8S/6fdKgsmt2Asf8mJYJKzw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yw+sERIyCgkgQox0HdADq2UOyp6zTDhcWLeiwfbdFqIiprtNMamP3DBStmvoTYQhY
-	 kCc+hr79OMKyXjnbc0saNvQ1LlXbS3jbYOZmm3BMXa3W6Q1rwK5AhywsBCo0VzzZvF
-	 e9ko16FZRl33LmNgbBNOGv2svqwON1fGuEyCHDLU=
+	by mail.kernel.org (Postfix) with ESMTP id 7EA742073C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 01:43:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="jKIbZw7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfKPAwo (ORCPT
+        id S1727159AbfKPBnS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 15 Nov 2019 19:52:44 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35743 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbfKPAwn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 15 Nov 2019 19:52:43 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n16so10279990oig.2;
-        Fri, 15 Nov 2019 16:52:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AetbleCxh59RFQA50mSfhwx5Tr8S+w1DkHRLL89kPsY=;
-        b=ehs0di2T/yogUUmAhIUwAe3pZliPyYkl/X14ykSaWulBIZ9XkqCKN1te6ulnBO3G4e
-         FGAeH06Fgn841gh1af+Cisgh0rvPaLNMfycTHEnvyQb3MbR+sgZl32mpIAa3LOkdNawX
-         cMGAyxobVVkzPT25mY/kcq035JcSxjnIAjnFqEulqojrK+XCg0u+nl9sm47mUc0djpnx
-         K24Pfu6qCpBjZam/PMY15IEJlJyFK0cdd8qNJK2Y28FKaHaoPZi4Aj0yKDChe2p4POoz
-         HSTtutgoV2g9h9nF97THZih8EZGm6vC4cvjdLNhEP7rQaNpeHsi2MunsmpxHGH2719Rp
-         z5JQ==
-X-Gm-Message-State: APjAAAXdgO2yoXfzP49PH7z1HJ/VBqBS5Tu2oXBmeY3oJkm5vxiIuDlA
-        oibGVYqEVRYZ1aajCRGvEeSiNfA=
-X-Google-Smtp-Source: APXvYqwg/VgS3/evD7c7sKv17gVvXIxXTLVIjdz9nGUVlGfrbDpv5PJX/I/IXrd7tvhjMBRZoNi6Ug==
-X-Received: by 2002:aca:d8c5:: with SMTP id p188mr9914595oig.140.1573865562371;
-        Fri, 15 Nov 2019 16:52:42 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id g18sm3525680otg.50.2019.11.15.16.52.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 16:52:41 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alan Douglas <adouglas@cadence.com>,
-        Scott Telford <stelford@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: [PATCH 2/3] dt-bindings: PCI: Convert Cadence host to DT schema
-Date:   Fri, 15 Nov 2019 18:52:39 -0600
-Message-Id: <20191116005240.15722-2-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116005240.15722-1-robh@kernel.org>
-References: <20191116005240.15722-1-robh@kernel.org>
+        Fri, 15 Nov 2019 20:43:18 -0500
+Received: from mail-eopbgr1310051.outbound.protection.outlook.com ([40.107.131.51]:41657
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727089AbfKPBnS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Nov 2019 20:43:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IjvQiqjUTgZvMUmC1hAlCmFqakHUkDqgy7NaNXTbudpSYCAQ6FlfES033d5o2EyfY/0VTJqLdaQ/pYgWMA9Sh2v7U+BrePZYkc2IRlMIHH9d+U58s3YZeVVhdSwS7ZEXU1CHyb350O1g3ztZS31jynz7oc8t+z+gxiTXFLeQ/fjl5QWh/hwkUeCswTgNmthKo9P++6vl/DrjaxH8g9/Q1o9viwZOm8bsuTTvC4CjuPd1YzDO1Nw3NB5xqMmolKW0VYzRS9E/E1+mTEOHFExbuL9ndprjTZkL7JKi0oEtZI2/pQvR2Dw5amiJiNgTfCGDmil0/OIR4kBK5n3D0dsdtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sJLYbIRNCFM+HbD56IXmGnZQP/81gFQiRQjdf2iXkFk=;
+ b=hu4/DAK4z9U68OXnQ/jz26hPBt+hjM/fC9SRJRz7AFmWph+SiMCDQZaFfeo//snymN1AycBXJgrUARr3nve9c5ZSeWHWUfw28BxeWPUpY83Plmn48MmFjMZI3Qlj/A59R2Pqja9ydlbmBgJPfeY5mPNqjFOWvKwO/t1WNFVO6FvOJxincD4fgD1GYbsmDNf1MbRwiCf9n829ZB/V4DGWHh16yx8q40lPw2Rniv85qqWv2a/R06Zpe9KuY/C+oLJVkoQpkHAeupo+yzhDKJQkm91CW6jjPtuHp58QY21scG4UXroyUfoxXXyMAHmCTHcVtwH30JoBfR3mB0iHNyhLOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nuvoton.com; dmarc=pass action=none header.from=nuvoton.com;
+ dkim=pass header.d=nuvoton.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sJLYbIRNCFM+HbD56IXmGnZQP/81gFQiRQjdf2iXkFk=;
+ b=jKIbZw7OZstl/Qag5TqH6wp30ByveB+IX7vXzgZ5Km5eqRKGa7XS9nbfI9FJ0oMetQPM8YfyGYBsQyr6a4kcpgMaQGpq4adhMCnT/r9lFdEClNgkFRv1t4E6RX5s1sMq2fvhCWlBZ2grUPx3miY6yB+2rU/r/iaD9yHiNSx/Cqo=
+Received: from SG2PR03MB5134.apcprd03.prod.outlook.com (52.132.234.202) by
+ SG2PR03MB2749.apcprd03.prod.outlook.com (52.133.138.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.9; Sat, 16 Nov 2019 01:43:09 +0000
+Received: from SG2PR03MB5134.apcprd03.prod.outlook.com
+ ([fe80::21ca:39a4:25e9:c398]) by SG2PR03MB5134.apcprd03.prod.outlook.com
+ ([fe80::21ca:39a4:25e9:c398%5]) with mapi id 15.20.2474.012; Sat, 16 Nov 2019
+ 01:43:08 +0000
+From:   AS50 KCHsu0 <KCHSU0@nuvoton.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "thomas.fehrenbacher@siedle.de" <thomas.fehrenbacher@siedle.de>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        AS50 CTLin0 <CTLIN0@nuvoton.com>, AS50 WTLi <WTLI@nuvoton.com>
+Subject: Re: [PATCH 3/3] ASoC: nau8810: add aux input control, available on
+ NAU8812
+Thread-Topic: [PATCH 3/3] ASoC: nau8810: add aux input control, available on
+ NAU8812
+Thread-Index: AQHVm88ulvBeSF4QAU2lHN0X+78biqeNBrAA
+Date:   Sat, 16 Nov 2019 01:43:08 +0000
+Message-ID: <55560429-3504-d2f3-2ce5-c8644fbeb333@nuvoton.com>
+References: <20191115160819.15557-1-m.felsch@pengutronix.de>
+ <20191115160819.15557-4-m.felsch@pengutronix.de>
+In-Reply-To: <20191115160819.15557-4-m.felsch@pengutronix.de>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.43.73.81]
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-clientproxiedby: HK2PR02CA0151.apcprd02.prod.outlook.com
+ (2603:1096:201:1f::11) To SG2PR03MB5134.apcprd03.prod.outlook.com
+ (2603:1096:4:da::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=KCHSU0@nuvoton.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b707a5c1-d842-459a-0efc-08d76a36552b
+x-ms-traffictypediagnostic: SG2PR03MB2749:|SG2PR03MB2749:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SG2PR03MB27492CAFD12EDF5E72A046C694730@SG2PR03MB2749.apcprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:248;
+x-forefront-prvs: 02234DBFF6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(39850400004)(396003)(136003)(199004)(189003)(58126008)(316002)(6246003)(6306002)(66066001)(65956001)(54906003)(65806001)(76176011)(110136005)(107886003)(71200400001)(86362001)(256004)(66556008)(8936002)(66446008)(64756008)(66476007)(81156014)(81166006)(71190400001)(229853002)(14444005)(5660300002)(6512007)(4326008)(99286004)(6486002)(6436002)(8676002)(2906002)(26005)(6116002)(2501003)(3846002)(186003)(478600001)(476003)(2616005)(486006)(446003)(14454004)(31696002)(11346002)(7736002)(102836004)(66946007)(52116002)(36756003)(31686004)(305945005)(6506007)(386003)(25786009)(966005)(11716003);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR03MB2749;H:SG2PR03MB5134.apcprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nuvoton.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1PlufYNxUiK3ua6HP9VR9oiCrcaZm4rTyGU+2+7muSgDEQnHmzNr6LN+l9SeEC+2ZeIwu7H9hb4Nh3dfOj/GNOcVP56l08OPjSW/8ATTxCqLtWMyn4z13UTJ/IwDqnJpSwrbRj7FT0j9Qu9/gpBar6p9BAOCSRC86AAuJpBi0A/AxF4eq1mN2xWRyidKh4J5Blt70XmEbQqeuiNEumxyx1vPCsmtWSVacBP7FLG/yLSpWC3AGDg8EK6A8ijQSh4Ao/pcsQzNc0i/1XBJXCiHP5/dRSgGiqNNyw24Kju21hhPmWADEPddnoAKwDLrp7ZR1hZyl5z+Zp9R5ArsRoPts3bO6jl0Mq+2iMDuK6k8kpdh2Bmuvqi7qOmPyZU6DLn/REBdzYjyZRQQZvZwYgV63wZJB6roqa3/pSRqRixSyueh4U37RXOEH3PHw8vNXCwG
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1D9B030CF1EE864CABD06A5CFD97CCEE@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b707a5c1-d842-459a-0efc-08d76a36552b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Nov 2019 01:43:08.7796
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: I1XuhpGaVermpEVNjjaucz98MTqXb2RIKjiYw0zEubTb0i1ia8XNCtUf/LdlNZqF+mDGYZBS6H5+/QpybiAQsg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR03MB2749
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Cadence PCIe host binding to DT schema.
-
-The 'phy-names' definition is incomplete.
-
-'vendor-id' and 'device-id' aren't listed as those are standard PCI
-properties. They were incorrectly defined as 16-bit when they should be
-32-bits (even though only 16-bits are used).
-
-'cdns,max-outbound-regions' should really be removed. It serves no
-purpose other than bounds checking 'ranges'. If 'ranges' is wrong for
-the h/w, what's going to ensure 'cdns,max-outbound-regions' is correct.
-
-'cdns,no-bar-match-nbits' is also suspect. This probably could be
-determined from 'dma-ranges' using the sizes.
-
-Cc: Alan Douglas <adouglas@cadence.com>
-Cc: Scott Telford <stelford@cadence.com>
-Cc: Tom Joseph <tjoseph@cadence.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/pci/cdns,cdns-pcie-host.txt      |  66 -----------
- .../bindings/pci/cdns,cdns-pcie-host.yaml     | 106 ++++++++++++++++++
- MAINTAINERS                                   |   2 +-
- 3 files changed, 107 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-deleted file mode 100644
-index 91de69c713a9..000000000000
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-+++ /dev/null
-@@ -1,66 +0,0 @@
--* Cadence PCIe host controller
--
--This PCIe controller inherits the base properties defined in
--host-generic-pci.txt.
--
--Required properties:
--- compatible: Should contain "cdns,cdns-pcie-host" to identify the IP used.
--- reg: Should contain the controller register base address, PCIe configuration
--  window base address, and AXI interface region base address respectively.
--- reg-names: Must be "reg", "cfg" and "mem" respectively.
--- #address-cells: Set to <3>
--- #size-cells: Set to <2>
--- device_type: Set to "pci"
--- ranges: Ranges for the PCI memory and I/O regions
--- #interrupt-cells: Set to <1>
--- interrupt-map-mask and interrupt-map: Standard PCI properties to define the
--  mapping of the PCIe interface to interrupt numbers.
--
--Optional properties:
--- cdns,max-outbound-regions: Set to maximum number of outbound regions
--  (default 32)
--- cdns,no-bar-match-nbits: Set into the no BAR match register to configure the
--  number of least significant bits kept during inbound (PCIe -> AXI) address
--  translations (default 32)
--- vendor-id: The PCI vendor ID (16 bits, default is design dependent)
--- device-id: The PCI device ID (16 bits, default is design dependent)
--- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
--  than one in the list.  If only one PHY listed it must manage all lanes. 
--- phy-names:  List of names to identify the PHY.
--
--Example:
--
--pcie@fb000000 {
--	compatible = "cdns,cdns-pcie-host";
--	device_type = "pci";
--	#address-cells = <3>;
--	#size-cells = <2>;
--	bus-range = <0x0 0xff>;
--	linux,pci-domain = <0>;
--	cdns,max-outbound-regions = <16>;
--	cdns,no-bar-match-nbits = <32>;
--	vendor-id = /bits/ 16 <0x17cd>;
--	device-id = /bits/ 16 <0x0200>;
--
--	reg = <0x0 0xfb000000  0x0 0x01000000>,
--	      <0x0 0x41000000  0x0 0x00001000>,
--	      <0x0 0x40000000  0x0 0x04000000>;
--	reg-names = "reg", "cfg", "mem";
--
--	ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
--		 <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
--
--	#interrupt-cells = <0x1>;
--
--	interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
--			 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
--			 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
--			 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
--
--	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
--
--	msi-parent = <&its_pci>;
--
--	phys = <&pcie_phy0>;
--	phy-names = "pcie-phy";
--};
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-new file mode 100644
-index 000000000000..ada77e267b68
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-@@ -0,0 +1,106 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cadence PCIe host controller
-+
-+maintainers:
-+  - Alan Douglas <adouglas@cadence.com>
-+  - Scott Telford <stelford@cadence.com>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+properties:
-+  compatible:
-+    const: cdns,cdns-pcie-host
-+
-+  reg:
-+    maxItems: 3
-+
-+  reg-names:
-+    items:
-+      - const: reg
-+      - const: cfg
-+      - const: mem
-+
-+  cdns,max-outbound-regions:
-+    description: maximum number of outbound regions
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 32
-+    default: 32
-+
-+  cdns,no-bar-match-nbits:
-+    description:
-+      Set into the no BAR match register to configure the number of least
-+      significant bits kept during inbound (PCIe -> AXI) address translations
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 32
-+    default: 32
-+
-+  msi-parent: true
-+
-+  phys:
-+    description:
-+      One per lane if more than one in the list. If only one PHY listed it must
-+      manage all lanes.
-+    minItems: 1
-+    maxItems: 16
-+
-+  phy-names:
-+    items:
-+      - const: pcie-phy
-+    # FIXME: names when more than 1
-+
-+required:
-+  - reg
-+  - reg-names
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie@fb000000 {
-+            compatible = "cdns,cdns-pcie-host";
-+            device_type = "pci";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            bus-range = <0x0 0xff>;
-+            linux,pci-domain = <0>;
-+            cdns,max-outbound-regions = <16>;
-+            cdns,no-bar-match-nbits = <32>;
-+            vendor-id = /bits/ 16 <0x17cd>;
-+            device-id = /bits/ 16 <0x0200>;
-+
-+            reg = <0x0 0xfb000000  0x0 0x01000000>,
-+                  <0x0 0x41000000  0x0 0x00001000>,
-+                  <0x0 0x40000000  0x0 0x04000000>;
-+            reg-names = "reg", "cfg", "mem";
-+
-+            ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-+                     <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-+
-+            #interrupt-cells = <0x1>;
-+
-+            interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1>,
-+                 <0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1>,
-+                 <0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1>,
-+                 <0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
-+
-+            interrupt-map-mask = <0x0 0x0 0x0  0x7>;
-+
-+            msi-parent = <&its_pci>;
-+
-+            phys = <&pcie_phy0>;
-+            phy-names = "pcie-phy";
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 48a90f0833b8..21f3393c36e3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12416,7 +12416,7 @@ PCI DRIVER FOR CADENCE PCIE IP
- M:	Tom Joseph <tjoseph@cadence.com>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/pci/cdns,*.txt
-+F:	Documentation/devicetree/bindings/pci/cdns,*
- F:	drivers/pci/controller/pcie-cadence*
- 
- PCI DRIVER FOR FREESCALE LAYERSCAPE
--- 
-2.20.1
-
+DQpNYXJjbyBGZWxzY2gg5pa8IDIwMTkvMTEvMTYg5LiK5Y2IIDEyOjA4IOWvq+mBkzoNCj4gRnJv
+bTogVGhvbWFzIEZlaHJlbmJhY2hlciA8dGhvbWFzLmZlaHJlbmJhY2hlckBzaWVkbGUuZGU+DQo+
+DQo+IFRoaXMgY29tbWl0IGFkZHMgdGhlIHN1cHBvcnQgdG8gY29udHJvbCB0aGUgYXV4LXBvcnQg
+b24gdGhlIG5hdTg4MTINCj4gZGV2aWNlcy4gV2UgZG9uJ3QgbmVlZCB0byBkaWZmZXJlbnRpYXRl
+IHRoZSBhdXgtcG9ydCByZWdpc3RlcnMgc2luY2UNCj4gdGhvc2UgYml0ZmllbGRzIGFyZSBzZXQg
+dG8gJzAnIG9uIHRoZSBuYXU4ODEwIGRldmljZXMgWzEsMl0uDQo+DQo+IFsxXSBodHRwOi8vd3d3
+Lm51dm90b24uY29tL3Jlc291cmNlLWZpbGVzL05BVTg4MTBfRGF0YXNoZWV0X1Jldl8yLjgucGRm
+DQo+IFsyXSBodHRwOi8vd3d3Lm51dm90b24uY29tL3Jlc291cmNlLWZpbGVzL05BVTg4MTJEYXRh
+c2hlZXRSZXYyLjcucGRmDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFRob21hcyBGZWhyZW5iYWNoZXIg
+PHRob21hcy5mZWhyZW5iYWNoZXJAc2llZGxlLmRlPg0KPiBbbS5mZWxzY2hAcGVuZ3V0cm9uaXgu
+ZGU6IGFkZCBjb21taXQgbWVzc2FnZV0NCj4gU2lnbmVkLW9mZi1ieTogTWFyY28gRmVsc2NoIDxt
+LmZlbHNjaEBwZW5ndXRyb25peC5kZT4NCj4gLS0tDQo+ICAgc291bmQvc29jL2NvZGVjcy9uYXU4
+ODEwLmMgfCA3ICsrKysrKysNCj4gICBzb3VuZC9zb2MvY29kZWNzL25hdTg4MTAuaCB8IDIgKysN
+Cj4gICAyIGZpbGVzIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQ0KPg0KPiBkaWZmIC0tZ2l0IGEv
+c291bmQvc29jL2NvZGVjcy9uYXU4ODEwLmMgYi9zb3VuZC9zb2MvY29kZWNzL25hdTg4MTAuYw0K
+PiBpbmRleCBhMzJhNGE4ZDVmNTAuLmIxMDI0ZDI0ZDQxMyAxMDA2NDQNCj4gLS0tIGEvc291bmQv
+c29jL2NvZGVjcy9uYXU4ODEwLmMNCj4gKysrIGIvc291bmQvc29jL2NvZGVjcy9uYXU4ODEwLmMN
+Cj4gQEAgLTM1MSw2ICszNTEsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9rY29udHJvbF9u
+ZXcgbmF1ODgxMF9zbmRfY29udHJvbHNbXSA9IHsNCj4gICBOQVU4ODEwX0RBQ09TX1NGVCwgMSwg
+MCksDQo+ICAgU09DX1NJTkdMRSgiQURDIE92ZXJzYW1wbGluZyBSYXRlKDEyOHgpIFN3aXRjaCIs
+IE5BVTg4MTBfUkVHX0FEQywNCj4gICBOQVU4ODEwX0FEQ09TX1NGVCwgMSwgMCksDQo+ICsNCj4g
+K1NPQ19TSU5HTEUoIkFVWCBJbnB1dCBFbmFibGUgU3dpdGNoIiwgTkFVODgxMF9SRUdfUE9XRVIx
+LA0KPiArTkFVODgxMF9BVVhfRU5fU0ZULCAxLCAwKSwNCj4gICB9Ow0KPg0KDQoNClRoZSBwb3dl
+ciBjb250cm9sIGhhcyB0byBtb3ZlIHRvIHRoZSBuYXU4ODEwX2RhcG1fd2lkZ2V0cy4NCg0KVGhl
+IERBUE0gY2FuIGp1c3QgY29udHJvbCB0aGUgcG93ZXIgc3dpdGNoIG9mIEFVWEkgZHluYW1pY2Fs
+bHkuDQoNCg0KPiAgIC8qIFNwZWFrZXIgT3V0cHV0IE1peGVyICovDQo+IEBAIC0zODMsNiArMzg2
+LDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfa2NvbnRyb2xfbmV3IG5hdTg4MTBfaW5wZ2Fb
+XSA9IHsNCj4gICBOQVU4ODEwX05NSUNQR0FfU0ZULCAxLCAwKSwNCj4gICBTT0NfREFQTV9TSU5H
+TEUoIk1pY1AgU3dpdGNoIiwgTkFVODgxMF9SRUdfSU5QVVRfU0lHTkFMLA0KPiAgIE5BVTg4MTBf
+UE1JQ1BHQV9TRlQsIDEsIDApLA0KPiArU09DX0RBUE1fU0lOR0xFKCJBVVggU3dpdGNoIiwgTkFV
+ODgxMF9SRUdfSU5QVVRfU0lHTkFMLA0KPiArTkFVODgxMF9BVVhQR0FfU0ZULCAxLCAwKSwNCj4g
+ICB9Ow0KPg0KPiAgIC8qIExvb3BiYWNrIFN3aXRjaCAqLw0KPiBAQCAtNDM2LDYgKzQ0MSw3IEBA
+IHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBuYXU4ODEwX2RhcG1fd2lk
+Z2V0c1tdID0gew0KPg0KPiAgIFNORF9TT0NfREFQTV9JTlBVVCgiTUlDTiIpLA0KPiAgIFNORF9T
+T0NfREFQTV9JTlBVVCgiTUlDUCIpLA0KPiArU05EX1NPQ19EQVBNX0lOUFVUKCJBVVgiKSwNCj4g
+ICBTTkRfU09DX0RBUE1fT1VUUFVUKCJNT05PT1VUIiksDQo+ICAgU05EX1NPQ19EQVBNX09VVFBV
+VCgiU1BLT1VUUCIpLA0KPiAgIFNORF9TT0NfREFQTV9PVVRQVVQoIlNQS09VVE4iKSwNCj4gQEAg
+LTQ3MCw2ICs0NzYsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2NfZGFwbV9yb3V0ZSBu
+YXU4ODEwX2RhcG1fcm91dGVzW10gPSB7DQo+ICAgeyJJbnB1dCBQR0EiLCBOVUxMLCAiTWljIEJp
+YXMifSwNCj4gICB7IklucHV0IFBHQSIsICJNaWNOIFN3aXRjaCIsICJNSUNOIn0sDQo+ICAgeyJJ
+bnB1dCBQR0EiLCAiTWljUCBTd2l0Y2giLCAiTUlDUCJ9LA0KPiAreyJJbnB1dCBQR0EiLCAiQVVY
+IFN3aXRjaCIsICJBVVgifSwNCj4NCj4gICAvKiBEaWdpdGFsIExvb3B0YWNrICovDQo+ICAgeyJE
+aWdpdGFsIExvb3BiYWNrIiwgIlN3aXRjaCIsICJBREMifSwNCj4gZGlmZiAtLWdpdCBhL3NvdW5k
+L3NvYy9jb2RlY3MvbmF1ODgxMC5oIGIvc291bmQvc29jL2NvZGVjcy9uYXU4ODEwLmgNCj4gaW5k
+ZXggMWFkYTMxODgzZGM2Li43YjVlY2FkMTczZDMgMTAwNjQ0DQo+IC0tLSBhL3NvdW5kL3NvYy9j
+b2RlY3MvbmF1ODgxMC5oDQo+ICsrKyBiL3NvdW5kL3NvYy9jb2RlY3MvbmF1ODgxMC5oDQo+IEBA
+IC02OSw2ICs2OSw3IEBADQo+DQo+ICAgLyogTkFVODgxMF9SRUdfUE9XRVIxICgweDEpICovDQo+
+ICAgI2RlZmluZSBOQVU4ODEwX0RDQlVGX0VOKDB4MSA8PCA4KQ0KPiArI2RlZmluZSBOQVU4ODEw
+X0FVWF9FTl9TRlQ2DQo+ICAgI2RlZmluZSBOQVU4ODEwX1BMTF9FTl9TRlQ1DQo+ICAgI2RlZmlu
+ZSBOQVU4ODEwX01JQ0JJQVNfRU5fU0ZUNA0KPiAgICNkZWZpbmUgTkFVODgxMF9BQklBU19FTigw
+eDEgPDwgMykNCj4gQEAgLTIyOSw2ICsyMzAsNyBAQA0KPiAgIC8qIE5BVTg4MTBfUkVHX0lOUFVU
+X1NJR05BTCAoMHgyQykgKi8NCj4gICAjZGVmaW5lIE5BVTg4MTBfUE1JQ1BHQV9TRlQwDQo+ICAg
+I2RlZmluZSBOQVU4ODEwX05NSUNQR0FfU0ZUMQ0KPiArI2RlZmluZSBOQVU4ODEwX0FVWFBHQV9T
+RlQyDQo+DQo+ICAgLyogTkFVODgxMF9SRUdfUEdBR0FJTiAoMHgyRCkgKi8NCj4gICAjZGVmaW5l
+IE5BVTg4MTBfUEdBR0FJTl9TRlQwDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCiBUaGUgcHJpdmlsZWdlZCBjb25maWRl
+bnRpYWwgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZW1haWwgaXMgaW50ZW5kZWQgZm9y
+IHVzZSBvbmx5IGJ5IHRoZSBhZGRyZXNzZWVzIGFzIGluZGljYXRlZCBieSB0aGUgb3JpZ2luYWwg
+c2VuZGVyIG9mIHRoaXMgZW1haWwuIElmIHlvdSBhcmUgbm90IHRoZSBhZGRyZXNzZWUgaW5kaWNh
+dGVkIGluIHRoaXMgZW1haWwgb3IgYXJlIG5vdCByZXNwb25zaWJsZSBmb3IgZGVsaXZlcnkgb2Yg
+dGhlIGVtYWlsIHRvIHN1Y2ggYSBwZXJzb24sIHBsZWFzZSBraW5kbHkgcmVwbHkgdG8gdGhlIHNl
+bmRlciBpbmRpY2F0aW5nIHRoaXMgZmFjdCBhbmQgZGVsZXRlIGFsbCBjb3BpZXMgb2YgaXQgZnJv
+bSB5b3VyIGNvbXB1dGVyIGFuZCBuZXR3b3JrIHNlcnZlciBpbW1lZGlhdGVseS4gWW91ciBjb29w
+ZXJhdGlvbiBpcyBoaWdobHkgYXBwcmVjaWF0ZWQuIEl0IGlzIGFkdmlzZWQgdGhhdCBhbnkgdW5h
+dXRob3JpemVkIHVzZSBvZiBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24gb2YgTnV2b3RvbiBpcyBz
+dHJpY3RseSBwcm9oaWJpdGVkOyBhbmQgYW55IGluZm9ybWF0aW9uIGluIHRoaXMgZW1haWwgaXJy
+ZWxldmFudCB0byB0aGUgb2ZmaWNpYWwgYnVzaW5lc3Mgb2YgTnV2b3RvbiBzaGFsbCBiZSBkZWVt
+ZWQgYXMgbmVpdGhlciBnaXZlbiBub3IgZW5kb3JzZWQgYnkgTnV2b3Rvbi4NCg==
