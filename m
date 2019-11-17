@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A71C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 17:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A8FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 17:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D522084C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 17:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624C62084D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 17:56:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSeJy5g3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BENXFluH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbfKQR4S (ORCPT
+        id S1726047AbfKQR4V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 12:56:18 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35603 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfKQR4S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 12:56:18 -0500
-Received: by mail-wr1-f68.google.com with SMTP id s5so16798772wrw.2
-        for <devicetree@vger.kernel.org>; Sun, 17 Nov 2019 09:56:16 -0800 (PST)
+        Sun, 17 Nov 2019 12:56:21 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50586 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbfKQR4V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 12:56:21 -0500
+Received: by mail-wm1-f66.google.com with SMTP id l17so14951666wmh.0
+        for <devicetree@vger.kernel.org>; Sun, 17 Nov 2019 09:56:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KQN6gwOKGkmVRkt+hwPxqq6Jnl9Fa2wsCKH+gEVtNFk=;
-        b=eSeJy5g3gv+YTAl+bQkUerbEkkqew528sHN1YJqT7ZXDps4MWSlYhAv55GIVXDYpfj
-         sYh9VIv36Yato1zA7vjZzWQkRZmbkx2YeL/kfH45zVSNfJ6TmnlLI0nxxnepr2o2Cona
-         NplR5KK6X+hGLuGFtjeZ2u65+RTRg6PY/TXcAso3OfSPFbjRFxwp+7y019CeekaoMd0g
-         vQS0RQjAHvuTZvyQGu0Z8sXyzebdQCvDpIN81njD+k8gIKWYT2pq4ZZuzw0Mt0QUhGlG
-         iHf0sOPhRGjluG3a31Yb4jzRZ8msA8BQCwj5ot6T0nbZJPpa6UYUQ32ZmhZlfMozDwye
-         k97A==
+        bh=nseA18IfcAAU7Wg54lQWKhf8XC1WsrkfqWoQlZMmhgU=;
+        b=BENXFluH5ZnDQ21Na2hvqzKKV8rt0bnoDfw1TXo3C/iM/vk23ASOP2vCl7+XLVxLff
+         a8aHPKvA0zX2uCLUxQqgkAC7vH7Sei/9cJd6gxb0xTrlqv1UFj9EuQWTuLbL2YMipduN
+         ES70HZ3EBfOQ5TwXps59dO/xDtlHVZ6koDlbepZeTj68QO00eXuomY5T3XwEZ5jEV2Y+
+         rV1OZQMkw62mlUGAScbijugPTzBPrp9k0Y/AkGzvE2yTiOwD3M7v717s3GDQb5q48QUQ
+         bx4V7vfJNguIWpMxyLKqy+cOyuEeZYtRZzsPzxZWDX6zJlZEawxMTQXf+0lpWvNBRFPJ
+         /dzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KQN6gwOKGkmVRkt+hwPxqq6Jnl9Fa2wsCKH+gEVtNFk=;
-        b=KYliymJHkMuJigbt/GxiTbdy7P3nNGozrnaJOJKaKK9MzrqRkOkaXOwNNLOzH3Rmga
-         roQPEYzDREyrKBfgxGyel5Kx3/8GHC0UqJOpwNWVoJkFd2vzfX61MrQVfFJhhjUu831Q
-         I9aGMNjnSly+WBk7tTkpEJTlLEjRQHNvaI4aU2xY0lPbVx8HXv4JpQDHyqGAaOwPBV5f
-         EPIMWRnwgtuMgaWd7VGyMdtJQRKT9jxn+9C6fbdd8jh+Vf9Mdz58POchbsiBiRkXilkP
-         lMdBorIu1g3l5KF5nMjVQhABQNJ9m5MhOoM5MGhpJs0x3OZsMmxy5bDps3fVNixMue7a
-         qkiA==
-X-Gm-Message-State: APjAAAVw9+pkGnLNwG+GWzNpU8MyFTBLGcWBJxnGFgiFbsx45st+X1tC
-        k/FGT5fG++slGDn5boS0a4g=
-X-Google-Smtp-Source: APXvYqwy9tcGuT7hTcbnXIMNvbu3T1d3rU2SQ4YzmMMVn7sXKSP5lJ4lS7dr/LvPdANiaeZuUsfRYA==
-X-Received: by 2002:a5d:522e:: with SMTP id i14mr10330423wra.27.1574013376288;
-        Sun, 17 Nov 2019 09:56:16 -0800 (PST)
+        bh=nseA18IfcAAU7Wg54lQWKhf8XC1WsrkfqWoQlZMmhgU=;
+        b=sYslw/fo/KJ2we/qU7DOFp0HXMJyzcVSVqF/Q/BNvYIYg4OVjJQD6+ZI7nG2RQVyRJ
+         hAe4rLK0kSL92WU+0htAy9UzFgReoUg9iuYR+7q8ZEIsgzlVMOP9SU8AYv1GgWpVPr0W
+         GPJfFQ56/IfARhyENgGEPxMwu8yCprP6HMgU7WP/9ZbSFH8iEXFQolE3t/zufegbQ6pb
+         6PQIjz3Ee4CBWLb9MKriOH2B54KSczX/dsHodHfOz3gzXetOUvAVKJ1ehvDIzqcWCH8X
+         Uh3Zn0KGjSN4M+lqfasD70koVlBan8C9DXS2cgsD8HZaqrduwXL2gZixvgUF83OnNpt8
+         DMww==
+X-Gm-Message-State: APjAAAX1rD0n9+qi9k8JIevDiAfcjQTgVRQ/CZJU54viGv67bLfFfEer
+        JqtzN9WsZD3NaCT6uMwmxN1HRYp3it5HUg==
+X-Google-Smtp-Source: APXvYqyMkYz2BF5C7yBfSHQSBs8iGPy57rl80hGbc2Y/uQTUE/ShpmskE7SK9UzlgPW2+ThZqExnKg==
+X-Received: by 2002:a1c:9d07:: with SMTP id g7mr25458586wme.53.1574013379709;
+        Sun, 17 Nov 2019 09:56:19 -0800 (PST)
 Received: from localhost ([37.238.189.25])
-        by smtp.gmail.com with ESMTPSA id j11sm19574118wrq.26.2019.11.17.09.56.15
+        by smtp.gmail.com with ESMTPSA id n1sm20397490wrr.24.2019.11.17.09.56.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 09:56:15 -0800 (PST)
+        Sun, 17 Nov 2019 09:56:19 -0800 (PST)
 From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
 To:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
+        Marcel Holtmann <marcel@holtmann.org>
 Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC PATCH 1/4] dt-bindings: Add vendor prefix for Videostrong Technology Co., Ltd.
-Date:   Sun, 17 Nov 2019 20:56:03 +0300
-Message-Id: <20191117175606.5050-2-mohammad.rasim96@gmail.com>
+Subject: [RFC PATCH 2/4] dt-bindings: net: Add compatible for BCM4335A0 bluetooth module
+Date:   Sun, 17 Nov 2019 20:56:04 +0300
+Message-Id: <20191117175606.5050-3-mohammad.rasim96@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191117175606.5050-1-mohammad.rasim96@gmail.com>
 References: <20191117175606.5050-1-mohammad.rasim96@gmail.com>
@@ -77,26 +77,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Videostrong Technology Co., Ltd., A manufacturer of Android Players & STB( Android with DVB Hybrid box &DVB-T2/S2/C/ISDB-T/DTMB-TH/ATSC,,)as well as HD media players.
+
+Available in the Ampak AP6335 WiFi/Bluetooth combo
 
 Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 967e78c5ec0a..e4bd0a9fd4e5 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1006,6 +1006,8 @@ patternProperties:
-     description: Variscite Ltd.
-   "^via,.*":
-     description: VIA Technologies, Inc.
-+  "^videostrong,.*":
-+    description: Videostrong Technology Co., Ltd.
-   "^virtio,.*":
-     description: Virtual I/O Device Specification, developed by the OASIS consortium
-   "^vishay,.*":
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+index 4fa00e2eafcf..0717399191a2 100644
+--- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -14,6 +14,7 @@ Required properties:
+    * "brcm,bcm4330-bt"
+    * "brcm,bcm43438-bt"
+    * "brcm,bcm4345c5"
++   * "brcm,bcm4335a0"
+ 
+ Optional properties:
+ 
 -- 
 2.23.0
 
