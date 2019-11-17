@@ -6,71 +6,65 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAEAC43215
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 13:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A694AC43141
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 13:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DA420857
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 13:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FDF2084D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 13:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfKQNBJ (ORCPT
+        id S1726207AbfKQNBL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 08:01:09 -0500
-Received: from mailoutvs28.siol.net ([185.57.226.219]:57380 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726037AbfKQNBJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 08:01:09 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 72D09523C3E;
-        Sun, 17 Nov 2019 14:01:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id PoHoZK4RZXTG; Sun, 17 Nov 2019 14:01:07 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 2F7F4522BA0;
-        Sun, 17 Nov 2019 14:01:07 +0100 (CET)
-Received: from localhost.localdomain (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id C06D2523C3E;
-        Sun, 17 Nov 2019 14:01:04 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] media: dt-bindings: media: add new rc map name
-Date:   Sun, 17 Nov 2019 14:00:57 +0100
-Message-Id: <20191117130058.1341989-2-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191117130058.1341989-1-jernej.skrabec@siol.net>
-References: <20191117130058.1341989-1-jernej.skrabec@siol.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Sun, 17 Nov 2019 08:01:11 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:40120 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbfKQNBK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 Nov 2019 08:01:10 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1B0D31A070E;
+        Sun, 17 Nov 2019 14:01:09 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3C1CA1A0222;
+        Sun, 17 Nov 2019 14:01:05 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1F36F402A9;
+        Sun, 17 Nov 2019 21:01:00 +0800 (SGT)
+From:   Dong Aisheng <aisheng.dong@nxp.com>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, dongas86@gmail.com,
+        kernel@pengutronix.de, shawnguo@kernel.org, robh+dt@kernel.org,
+        linux-imx@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH 2/3] dt-bindings: serial: lpuart: add imx8qm compatible string
+Date:   Sun, 17 Nov 2019 20:58:49 +0800
+Message-Id: <1573995530-14573-2-git-send-email-aisheng.dong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573995530-14573-1-git-send-email-aisheng.dong@nxp.com>
+References: <1573995530-14573-1-git-send-email-aisheng.dong@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add new entry for rc-tanix-tx5max in linux,rc-map-name
+Add imx8qm compatible string.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- Documentation/devicetree/bindings/media/rc.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/serial/fsl-lpuart.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rc.yaml b/Documentat=
-ion/devicetree/bindings/media/rc.yaml
-index d11380794ff4..a64ee038d235 100644
---- a/Documentation/devicetree/bindings/media/rc.yaml
-+++ b/Documentation/devicetree/bindings/media/rc.yaml
-@@ -123,6 +123,7 @@ properties:
-           - rc-su3000
-           - rc-tango
-           - rc-tanix-tx3mini
-+          - rc-tanix-tx5max
-           - rc-tbs-nec
-           - rc-technisat-ts35
-           - rc-technisat-usb2
---=20
-2.24.0
+diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+index 3495eee81d53..24ab789b22f7 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+@@ -10,6 +10,8 @@ Required properties:
+     on i.MX7ULP SoC with 32-bit little-endian register organization
+   - "fsl,imx8qxp-lpuart" for lpuart compatible with the one integrated
+     on i.MX8QXP SoC with 32-bit little-endian register organization
++  - "fsl,imx8qm-lpuart" for lpuart compatible with the one integrated
++    on i.MX8QM SoC with 32-bit little-endian register organization
+ - reg : Address and length of the register set for the device
+ - interrupts : Should contain uart interrupt
+ - clocks : phandle + clock specifier pairs, one for each entry in clock-names
+-- 
+2.23.0
 
