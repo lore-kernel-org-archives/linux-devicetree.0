@@ -2,72 +2,69 @@ Return-Path: <SRS0=biny=ZJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA88C33C9C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 14:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FAAC43215
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 14:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A792084D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 14:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7171C20740
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 14:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="uX3kkks5"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="QLF0FvhZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfKQOAD (ORCPT
+        id S1726174AbfKQN77 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 09:00:03 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35272 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfKQOAC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 09:00:02 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 8so15870245wmo.0;
-        Sun, 17 Nov 2019 05:59:59 -0800 (PST)
+        Sun, 17 Nov 2019 08:59:59 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42260 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfKQN77 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 08:59:59 -0500
+Received: by mail-wr1-f66.google.com with SMTP id a15so16353414wrf.9;
+        Sun, 17 Nov 2019 05:59:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VK1JO8dp501rCEWUDhaKb+5p4cyh/6ctrMeXSGi6/vI=;
-        b=uX3kkks5u09MSU6+9FB6NjV7WG1co9tZzINsNjFFrAuUPaeY/LpqjaxYBKw1rgs2ci
-         AtRVoMgC/7mQXqQaxeNAjmEBgaq8AlfvbgG6GN17hSWOKG8XpuN9qVxgbaGXLMMjmWG9
-         T9UlDdy5XnqdavAM+l6CY+nHHTMpTnCfwXb9P0s0kSycGW3T8J9W3ppong8i+YvXPvio
-         9pu2FQpHTpOYG3YHJWhg37Pe5S9Ty03Z6WAz0fqMWszAFPYokzm1iqPTUWD9Jy1hBZx/
-         F++OWtatB0jXOEZMXmS3MlK2rkhcjPH4o/LTvaHQko2TRMyVwf8QZcOgydXrTP90crJK
-         X2VQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=05nE8+MHUGvDlOaHhFyY9hdfqx0IM0OvamCE7zybe74=;
+        b=QLF0FvhZwFM+TBA7bz7hdl9LccI8q8cq5MvI1/15MaGDEIUxrPD03tnnFu9KImUmEj
+         nSgwq80iTIDuKY+REyNzrYNtVd7Gm0GGeaYElnqlfeSfRB0hkL+p4tnfvyazduMrcTQx
+         GFBV8yLqoovy5YzpuW47Yj8vkVQecKQyGvYbxTW8A8hJlW6DXJSPFBQ5Ku6reF8V7BuA
+         w7LsBg/EUzcFYu8S3UCVcqDkviYcsJnlvx+/peBk4Szgq6YmXbD9rmqFh9NrsNDZ4uQs
+         jYMx43vrlBQtiUECnbsW0PzNnnMdPXWXF+F+k/+XOs/VHHhtowFvWkkxhBfFEChhGmWT
+         RTjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VK1JO8dp501rCEWUDhaKb+5p4cyh/6ctrMeXSGi6/vI=;
-        b=VTqt8O9qFzx+EH+0E5EMJL/SE98F0+HtB8rgByIvDFkOEFHni5MSN0Q4Ee08/8WIBo
-         LnTOX5T4jNltgYwyH88bo0SggpATU8mqxfy7MdN0oRKCfXJmJdVjSHp62BTpbWXKIFRP
-         YiEEYqceY7HtxIoUHeqIs7ZhG1Q4jCX7wQOQmc2+uLcbQdDkQAI3mUn/bkfyP1P9eVSU
-         AAE5VsuIjX3/Yj/MUfj7ifAOaMdFRiuCjiDBSGmAt1iZf9HWbwpmyoOVxNOTsd0E/vZH
-         KJBRgOQeyy399P78v2L3DQuDRfsUL3fGZV+LjNV4GrLAke/P2w1ddQzxGpvr3gMUq+rk
-         SjnQ==
-X-Gm-Message-State: APjAAAW+n4ailROEncf2lgCHvw0UZsCbfGyMHJG9OIj2Am0NrvyES+QW
-        QgnSx/M+djhRI2U05xhAd4s=
-X-Google-Smtp-Source: APXvYqz2ho4QekV3NNoeQpC90s5YyGanfRKJwSw4FD4KLJzoleyj2nZK5zI9GOyuKLXdGsv2ZtMcOg==
-X-Received: by 2002:a05:600c:21d5:: with SMTP id x21mr19273737wmj.162.1573999198652;
-        Sun, 17 Nov 2019 05:59:58 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=05nE8+MHUGvDlOaHhFyY9hdfqx0IM0OvamCE7zybe74=;
+        b=R0RMZqpBZKeefscyp05+4j9uuYFx+iEwT1eWGp0126qCjJT4x0WRQQD3kbSaJUyL3g
+         efMnLDIONJlT2Uzhv/pyqogFW+k5Y2gd0uQO0s+1w7ZzeMAuigTLorsh769OlU9E2dvR
+         Vfz04snuMY94HxrbAxdocJh3Wic9NGtlXkZa1snC1UyTBkcrlz/KldtAaSVDTWbQhe4g
+         o5z8BnGf6jPCxNEVRTvTg4mOg7sR1XVAg7Dr9ICJuNA9Uq7ZO3a/o5M0DkfgGCfNJupz
+         MC7I8o6VDT/pKVk69rVcak4MI6TLmNc1k24LFkGXV0RXlrmClLF93NOhWJ6mcMlUK75Q
+         Zg2g==
+X-Gm-Message-State: APjAAAW6BwSPVGj3N6wmIx+BxAf6MYL2FN83WK7bNZdHNSHE0GbJXeXU
+        uca7bw5BRKm+yQoK4sfbRW8=
+X-Google-Smtp-Source: APXvYqwRI04F3xiORLf9hlO37+rwxbGZhusfuTQ8VMbNc7FjWCwkDlN4OVOZrqfhRfK7zqNf8PuzQw==
+X-Received: by 2002:adf:ab41:: with SMTP id r1mr27076505wrc.281.1573999195527;
+        Sun, 17 Nov 2019 05:59:55 -0800 (PST)
 Received: from localhost.localdomain (p200300F1371CB100428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:371c:b100:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id n65sm18004803wmf.28.2019.11.17.05.59.57
+        by smtp.googlemail.com with ESMTPSA id n65sm18004803wmf.28.2019.11.17.05.59.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 05:59:58 -0800 (PST)
+        Sun, 17 Nov 2019 05:59:54 -0800 (PST)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
         linux-amlogic@lists.infradead.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 3/5] clk: meson: meson8b: change references to the XTAL clock to use [fw_]name
-Date:   Sun, 17 Nov 2019 14:59:25 +0100
-Message-Id: <20191117135927.135428-4-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 0/5] provide the XTAL clock via OF on Meson8/8b/8m2
+Date:   Sun, 17 Nov 2019 14:59:22 +0100
+Message-Id: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
-References: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -75,181 +72,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The XTAL clock is an actual crystal which is mounted on the PCB. Thus
-the meson8b clock controller driver should not provide the XTAL clock.
+So far the HHI clock controller has been providing the XTAL clock on
+Amlogic Meson8/Meson8b/Meson8m2 SoCs.
+This is not correct because the XTAL is actually a crystal on the
+boards and the SoC has a dedicated input for it.
 
-The meson8b clock controller driver must not use references to
-the meson8b_xtal clock anymore before we can provide the XTAL clock
-via OF. Replace the references to the meson8b_xtal.hw by using
-clk_parent_data's .fw_name and .name = "xtal" (along with index = -1).
-This makes the common clock framework use the clock provided via OF and
-if that's not available it falls back to getting the clock by it's name
-(which is then the clk_fixed_rate which we register in our driver).
+This updates the dt-bindings of the HHI clock controller and defines
+a fixed-clock in meson.dtsi (along with switching everything over to
+use this clock).
+The clock driver needs three updates to use this:
+- patch #2 uses clk_hw_set_parent in the CPU clock notifier. This drops
+  the explicit reference to CLKID_XTAL while at the same time making
+  the code much easier (thanks to Neil for providing this new method
+  as part of the G12A CPU clock bringup!)
+- patch #3 ensures that the clock driver doesn't rely on it's internal
+  XTAL clock while not losing support for older .dtbs that don't have
+  the XTAL clock input yet
+- with patch #4 the clock controller's own XTAL clock is not registered
+  anymore when a clock input is provided via OF
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/meson8b.c | 78 +++++++++++++++++++++----------------
- 1 file changed, 44 insertions(+), 34 deletions(-)
+This series is a functional no-op. It's main goal is to better represent
+how the actual hardware looks like.
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index d376f80e806d..f857a2c4d025 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -97,8 +97,10 @@ static struct clk_regmap meson8b_fixed_pll_dco = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "fixed_pll_dco",
- 		.ops = &meson_clk_pll_ro_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.fw_name = "xtal",
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 	},
-@@ -162,8 +164,10 @@ static struct clk_regmap meson8b_hdmi_pll_dco = {
- 		/* sometimes also called "HPLL" or "HPLL PLL" */
- 		.name = "hdmi_pll_dco",
- 		.ops = &meson_clk_pll_ro_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.fw_name = "xtal",
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 	},
-@@ -237,8 +241,10 @@ static struct clk_regmap meson8b_sys_pll_dco = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "sys_pll_dco",
- 		.ops = &meson_clk_pll_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.fw_name = "xtal",
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 	},
-@@ -631,9 +637,9 @@ static struct clk_regmap meson8b_cpu_in_sel = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "cpu_in_sel",
- 		.ops = &clk_regmap_mux_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw,
--			&meson8b_sys_pll.hw,
-+		.parent_data = (const struct clk_parent_data[]) {
-+			{ .fw_name = "xtal", .name = "xtal", .index = -1, },
-+			{ .hw = &meson8b_sys_pll.hw, },
- 		},
- 		.num_parents = 2,
- 		.flags = (CLK_SET_RATE_PARENT |
-@@ -736,9 +742,9 @@ static struct clk_regmap meson8b_cpu_clk = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "cpu_clk",
- 		.ops = &clk_regmap_mux_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw,
--			&meson8b_cpu_scale_out_sel.hw,
-+		.parent_data = (const struct clk_parent_data[]) {
-+			{ .fw_name = "xtal", .name = "xtal", .index = -1, },
-+			{ .hw = &meson8b_cpu_scale_out_sel.hw, },
- 		},
- 		.num_parents = 2,
- 		.flags = (CLK_SET_RATE_PARENT |
-@@ -758,12 +764,12 @@ static struct clk_regmap meson8b_nand_clk_sel = {
- 		.name = "nand_clk_sel",
- 		.ops = &clk_regmap_mux_ops,
- 		/* FIXME all other parents are unknown: */
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_fclk_div4.hw,
--			&meson8b_fclk_div3.hw,
--			&meson8b_fclk_div5.hw,
--			&meson8b_fclk_div7.hw,
--			&meson8b_xtal.hw,
-+		.parent_data = (const struct clk_parent_data[]) {
-+			{ .hw = &meson8b_fclk_div4.hw, },
-+			{ .hw = &meson8b_fclk_div3.hw, },
-+			{ .hw = &meson8b_fclk_div5.hw, },
-+			{ .hw = &meson8b_fclk_div7.hw, },
-+			{ .fw_name = "xtal", .name = "xtal", .index = -1, },
- 		},
- 		.num_parents = 5,
- 		.flags = CLK_SET_RATE_PARENT,
-@@ -1721,8 +1727,10 @@ static struct clk_regmap meson8b_hdmi_sys_sel = {
- 		.name = "hdmi_sys_sel",
- 		.ops = &clk_regmap_mux_ro_ops,
- 		/* FIXME: all other parents are unknown */
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.fw_name = "xtal",
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 		.flags = CLK_SET_RATE_NO_REPARENT,
-@@ -1767,14 +1775,14 @@ static struct clk_regmap meson8b_hdmi_sys = {
-  * muxed by a glitch-free switch on Meson8b and Meson8m2. Meson8 only
-  * has mali_0 and no glitch-free mux.
-  */
--static const struct clk_hw *meson8b_mali_0_1_parent_hws[] = {
--	&meson8b_xtal.hw,
--	&meson8b_mpll2.hw,
--	&meson8b_mpll1.hw,
--	&meson8b_fclk_div7.hw,
--	&meson8b_fclk_div4.hw,
--	&meson8b_fclk_div3.hw,
--	&meson8b_fclk_div5.hw,
-+static const struct clk_parent_data meson8b_mali_0_1_parent_data[] = {
-+	{ .fw_name = "xtal", .name = "xtal", .index = -1, },
-+	{ .hw = &meson8b_mpll2.hw, },
-+	{ .hw = &meson8b_mpll1.hw, },
-+	{ .hw = &meson8b_fclk_div7.hw, },
-+	{ .hw = &meson8b_fclk_div4.hw, },
-+	{ .hw = &meson8b_fclk_div3.hw, },
-+	{ .hw = &meson8b_fclk_div5.hw, },
- };
- 
- static u32 meson8b_mali_0_1_mux_table[] = { 0, 2, 3, 4, 5, 6, 7 };
-@@ -1789,8 +1797,8 @@ static struct clk_regmap meson8b_mali_0_sel = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "mali_0_sel",
- 		.ops = &clk_regmap_mux_ops,
--		.parent_hws = meson8b_mali_0_1_parent_hws,
--		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_hws),
-+		.parent_data = meson8b_mali_0_1_parent_data,
-+		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_data),
- 		/*
- 		 * Don't propagate rate changes up because the only changeable
- 		 * parents are mpll1 and mpll2 but we need those for audio and
-@@ -1844,8 +1852,8 @@ static struct clk_regmap meson8b_mali_1_sel = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "mali_1_sel",
- 		.ops = &clk_regmap_mux_ops,
--		.parent_hws = meson8b_mali_0_1_parent_hws,
--		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_hws),
-+		.parent_data = meson8b_mali_0_1_parent_data,
-+		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_data),
- 		/*
- 		 * Don't propagate rate changes up because the only changeable
- 		 * parents are mpll1 and mpll2 but we need those for audio and
-@@ -1944,8 +1952,10 @@ static struct clk_regmap meson8m2_gp_pll_dco = {
- 	.hw.init = &(struct clk_init_data){
- 		.name = "gp_pll_dco",
- 		.ops = &meson_clk_pll_ops,
--		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_xtal.hw
-+		.parent_data = &(const struct clk_parent_data) {
-+			.fw_name = "xtal",
-+			.name = "xtal",
-+			.index = -1,
- 		},
- 		.num_parents = 1,
- 	},
+
+Changes since v2 at [1]:
+- add .fw_name in addition to .name in patch #3 as suggested by Jerome
+- dropped the dts patch so this whole series targets clk-meson
+- moved patch #5 from another series to this one because once we drop
+  .name = "xtal" the clocks need to be aware of the OF node
+
+Changes since v1 at [0]:
+- add Rob's Reviewed-by to the dt-bindings patch
+- check that "xtal" clock is actually passed via OF instead of checking
+  that there's any parent at all (which in the worst case may not be the
+  xtal clock) as suggested by Jerome
+  
+
+[0] https://patchwork.kernel.org/cover/11155515/
+[1] https://patchwork.kernel.org/cover/11214189/
+
+
+Martin Blumenstingl (5):
+  dt-bindings: clock: meson8b: add the clock inputs
+  clk: meson: meson8b: use clk_hw_set_parent in the CPU clock notifier
+  clk: meson: meson8b: change references to the XTAL clock to use
+    [fw_]name
+  clk: meson: meson8b: don't register the XTAL clock when provided via
+    OF
+  clk: meson: meson8b: use of_clk_hw_register to register the clocks
+
+ .../bindings/clock/amlogic,meson8b-clkc.txt   |   5 +
+ drivers/clk/meson/meson8b.c                   | 113 ++++++++++--------
+ 2 files changed, 67 insertions(+), 51 deletions(-)
+
 -- 
 2.24.0
 
