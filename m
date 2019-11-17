@@ -2,116 +2,107 @@ Return-Path: <SRS0=biny=ZJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A91C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 03:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10115C43215
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 07:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B64A2084C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 03:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="akRkk8HH"
+	by mail.kernel.org (Postfix) with ESMTP id CC6DA2075C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 07:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573974833;
+	bh=j7Bs+diMZEMbUIQkhivZLARsKXnsztOT8Ds55IBEdwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qfnmGPpNKT5JX5PXK1raDAXTnPL1rM0tWJEiFgxyOLuRkCiFBfiMtrNWPkRW+5uUQ
+	 RWQz8KOODsgJD8tD8CTaKpceQVvN3lH1zUSaFR4r8iHBsj0WbQfMN7ZAUi0fqABRhK
+	 tjfEsQp/b6qaFl0FMiB5HVi2TMZ2nVWLq3PD3CiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfKQDdO (ORCPT
+        id S1725927AbfKQHNt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 22:33:14 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41805 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfKQDdN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 22:33:13 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p26so8598538pfq.8
-        for <devicetree@vger.kernel.org>; Sat, 16 Nov 2019 19:33:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+NoD3EUOCGUvMC6d9X/brhPNv/r5QebdFkK7wUmW6FA=;
-        b=akRkk8HH2AXBy3S4qn4X4qmVpyG5H/A21FhC71FZ7xJj0WZ183dhITiiJNfScujL2P
-         C1s/NVshiZIFI+Nixj/MX8rloZeYG6NQbwsv2IeNQa2x9wOIxBA9HvSwYE7c8qFAOC7X
-         d68X85meG3xL4SToBO/4eDl4HoPhioyYvFb2A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+NoD3EUOCGUvMC6d9X/brhPNv/r5QebdFkK7wUmW6FA=;
-        b=M6ChyUpLisN39T4uEEl9FOSq15w/bV0qVoKgVxv6UhDNCskKCWdqrZYkNgw9qnbpOu
-         heixphqCG93VpMH3fWoGGh/J/BVKVzjjITcxKx0KFRqiW01EbbBkQkOK9w1qvjBpGcTh
-         dQAUy3xdKULuhpbF2mLnncI2konl24BM857EcLgxJXOEpzzDr5wuHoc68vwsFZr+qKPK
-         5TXfQPgQ3CcVHmVsOqBBZQrAOiYHQDCpJK7jmuIaTqgijMN74IF4yTOH+KC+mM41nzng
-         MNZC6Esko1p3vmoobwUs156N3tnPO+ZyYu6XleSadpZeBTlbVTmKAzfFCc188CaqhKJz
-         rPsw==
-X-Gm-Message-State: APjAAAVN39gwH3wAlcp59bSKDTfbCp2VVP/8ESLSgmPKqX71ExC5R/yB
-        QyTICmlt3Teqwg6pHQ5V0kIHGw==
-X-Google-Smtp-Source: APXvYqyJ3AadsblxQaCmis/WfFKQ1ihIy+pUanb3b5iZ1mEtzyFLXa81fQMeHeVGvcWlWocjY/WKGA==
-X-Received: by 2002:a63:dd51:: with SMTP id g17mr771867pgj.388.1573961593006;
-        Sat, 16 Nov 2019 19:33:13 -0800 (PST)
-Received: from ikjn-glaptop.roam.corp.google.com (2001-b400-e27e-4718-13bf-d274-f5e0-91a5.emome-ip6.hinet.net. [2001:b400:e27e:4718:13bf:d274:f5e0:91a5])
-        by smtp.gmail.com with ESMTPSA id j7sm13780748pgl.38.2019.11.16.19.33.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 19:33:12 -0800 (PST)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Sun, 17 Nov 2019 02:13:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfKQHNt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 Nov 2019 02:13:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BE6C20740;
+        Sun, 17 Nov 2019 07:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573974828;
+        bh=j7Bs+diMZEMbUIQkhivZLARsKXnsztOT8Ds55IBEdwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ut+RM31+rtjGadKv8x+wnC948FoabkE8ZblLVbhWDVUNhnO9ITahC2kaGFTRaydVJ
+         mVd2bPJB8PMsVo7o460X2DfJdZM+op6YprBrKmXakrIwy9yRyzElqq47G4Y19Tg+OY
+         KnoE8IGlw0gavvNAd0Qbv6QZrU/nea9MDC6OE3+A=
+Date:   Sun, 17 Nov 2019 08:13:45 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alan Stern <stern@rowland.harvard.edu>,
         Suwan Kim <suwan.kim027@gmail.com>,
         "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
         Johan Hovold <johan@kernel.org>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH 2/2] usb: overridable hub bInterval by device node
-Date:   Sun, 17 Nov 2019 11:33:05 +0800
-Message-Id: <20191117033305.259789-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+        Nicolas Boitchat <drinkcat@chromium.org>
+Subject: Re: [PATCH 2/2] usb: overridable hub bInterval by device node
+Message-ID: <20191117071345.GB496402@kroah.com>
+References: <20191117033305.259789-1-ikjn@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191117033305.259789-1-ikjn@chromium.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch enables hub device to override its own endpoint descriptor's
-bInterval when the hub has a device node with "hub,interval" property,
+On Sun, Nov 17, 2019 at 11:33:05AM +0800, Ikjoon Jang wrote:
+> This patch enables hub device to override its own endpoint descriptor's
+> bInterval when the hub has a device node with "hub,interval" property,
+> 
+> Some existing hub devices have adjustable interval so the device is
+> allowed to use different bInterval. This is useful when the hub's default
+> bInterval is too big, so child device's waking up from autosuspend
+> takes much time.
+> 
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> ---
+>  drivers/usb/core/config.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+> index 5f40117e68e7..234ca6124c98 100644
+> --- a/drivers/usb/core/config.c
+> +++ b/drivers/usb/core/config.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/usb.h>
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/hcd.h>
+> +#include <linux/usb/of.h>
+>  #include <linux/usb/quirks.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+> @@ -257,6 +258,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+>  	memcpy(&endpoint->desc, d, n);
+>  	INIT_LIST_HEAD(&endpoint->urb_list);
+>  
+> +	/* device node property overrides bInterval */
+> +	if (unlikely(usb_of_has_combined_node(to_usb_device(ddev))))
 
-Some existing hub devices have adjustable interval so the device is
-allowed to use different bInterval. This is useful when the hub's default
-bInterval is too big, so child device's waking up from autosuspend
-takes much time.
+Only ever use likely/unlikely if you can measure the difference with a
+benchmark.  If not, then never use it as the compiler and CPU will
+almost always get it right and more correct than you can.
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
----
- drivers/usb/core/config.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+And for code that has no performance issues/impact like this one, never
+do it.
 
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 5f40117e68e7..234ca6124c98 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -6,6 +6,7 @@
- #include <linux/usb.h>
- #include <linux/usb/ch9.h>
- #include <linux/usb/hcd.h>
-+#include <linux/usb/of.h>
- #include <linux/usb/quirks.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -257,6 +258,11 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
- 	memcpy(&endpoint->desc, d, n);
- 	INIT_LIST_HEAD(&endpoint->urb_list);
- 
-+	/* device node property overrides bInterval */
-+	if (unlikely(usb_of_has_combined_node(to_usb_device(ddev))))
-+		of_property_read_u8(ddev->of_node, "hub, interval",
-+				    &d->bInterval);
-+
- 	/*
- 	 * Fix up bInterval values outside the legal range.
- 	 * Use 10 or 8 ms if no proper value can be guessed.
--- 
-2.24.0.432.g9d3f5f5b63-goog
+thanks,
 
+greg k-h
