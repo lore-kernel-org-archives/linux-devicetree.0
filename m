@@ -2,146 +2,178 @@ Return-Path: <SRS0=biny=ZJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC535C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 17:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74DBC432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 21:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEE020850
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 17:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10952075C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 21:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Si15IJlZ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lN/E0YLN";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="dbcljpPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbfKQR4Y (ORCPT
+        id S1726157AbfKQV1F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 12:56:24 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39364 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfKQR4X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 12:56:23 -0500
-Received: by mail-wr1-f68.google.com with SMTP id l7so16765662wrp.6
-        for <devicetree@vger.kernel.org>; Sun, 17 Nov 2019 09:56:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uYh5k1atIFrZcosKykvNKMIaFl60XNRIm3qhmbiz4ng=;
-        b=Si15IJlZ5t3Zw8gwoQfsgZUMqHEOtQXVTKZamQU7JFD+rfOYyZ9mSx0p/851W1TqtJ
-         ua//wSldEGVWvRYcJerge4AD3k2fCGNpqll07Ez2HQb/ahiU87vqAuv7cKmez20ahMr9
-         B4xIck/cYz+0mDsQ2FUJWqn0p8gxXI760AuYaz4RTkWBcG51ELaykgexrQzVb6MXLE89
-         c6qQqREsQAG45sTky7U2r0KRwcw9KlxFyzmS+o4z46TGM1bwGjz22hpeRxFzr+2zlJls
-         S6ySng6mGpAxtMATviXmNJu+1X3wg/k63ZlTdQap7VV5LDeG4IhOWF3gbi4L/VLomjZQ
-         S8Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uYh5k1atIFrZcosKykvNKMIaFl60XNRIm3qhmbiz4ng=;
-        b=Sjx3/HA3BpbXJp2JU6W4axzx0G1rU0UkorQbLJWXlKQu85RWeN2LfqdJRDoLZ18FEo
-         IIDsyVBGYwXvqS2X5heJA4vLdoaFJJlZboaF/Dw3sBcAXtn3N0JYCYznsQPGfwgoQxl8
-         BXRqNBMIvLBcu1HRwpOxz6NTC66LW9cXtUZ/vHy4Q2mezz+dEGjuC0qCMqssko97B85i
-         kzZgV/C64AOFTv8WNYLt2m6aDVyKQDbbP+hEonAU0I4RSER0ts1I0shkIkxe45gjztwr
-         2UZcDyssxNIi/UrzH0626mLTNujITII5buiUfF+h0EhJBQzrZ7hKemVv3qguI1d3YN3r
-         jmIw==
-X-Gm-Message-State: APjAAAWR0SqWx+1TreWmmTfIOXOsY/G+YfEyUKSSIrQuB5LBdo0WaeWW
-        Rm37M/1MhA1AoSp673ALLvE=
-X-Google-Smtp-Source: APXvYqyYyURrONlIBMzLFqhxoQUMIDJGHrnlAOx+9cp+dtk2u27RJOXQb2BTJuUDNCNFs+niS1fxpg==
-X-Received: by 2002:a5d:4b05:: with SMTP id v5mr7323484wrq.210.1574013382444;
-        Sun, 17 Nov 2019 09:56:22 -0800 (PST)
-Received: from localhost ([37.238.189.25])
-        by smtp.gmail.com with ESMTPSA id g4sm19058110wru.75.2019.11.17.09.56.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 09:56:22 -0800 (PST)
-From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
-To:     linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC PATCH 3/4] arm64: dts: meson-gxbb: add support for Videostrong KII Pro
-Date:   Sun, 17 Nov 2019 20:56:05 +0300
-Message-Id: <20191117175606.5050-4-mohammad.rasim96@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191117175606.5050-1-mohammad.rasim96@gmail.com>
-References: <20191117175606.5050-1-mohammad.rasim96@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 17 Nov 2019 16:27:05 -0500
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:40164
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726128AbfKQV1F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 Nov 2019 16:27:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574026023;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=5PpfUPH5hT1SepK72OYVg5oTtoV8o9G5dTu2K6VQqLM=;
+        b=lN/E0YLNF/ps0RWcmycQRmoPVGQLzOlUidOBso2ZLkXUjsvZSnSdv9dWX8RA8gO2
+        8LRdkVMSoy7QAm0lMvjuqLqErlrjfMAVdqQBx3HOMtvmNPhnYjjghaBYTVsVxuXsQtV
+        y8PwC8JPt8xudZrtDONJdfL4QpoFbZw0mHxdFhrw=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574026023;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=5PpfUPH5hT1SepK72OYVg5oTtoV8o9G5dTu2K6VQqLM=;
+        b=dbcljpPFyzICvXrDoqFBpZfKXL9DO15/CwiYbE/27PJw7GocTp83tHg4moYYx52+
+        wDo+6G5jBAp+MohDPTMDi9g9Ra6uWiHmqxsBqFB1BVEqUs+Wv1x+Hdt7LZyoEi2UOB9
+        d9U66JSNw2e0JifoGFhvu402qzFWMGBriFyW4BDg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA585C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v10 2/4] dt-bindings: clock: Convert qcom,mmcc to DT schema
+Date:   Sun, 17 Nov 2019 21:27:03 +0000
+Message-ID: <0101016e7b4311fe-8edd7849-df65-47dd-98fa-1e2063c83178-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
+References: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
+X-SES-Outgoing: 2019.11.17-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for the Videostrong KII Pro tv box which is based on the gxbb-p201 reference design
+Convert the qcom,mmcc-X clock controller binding to DT schema.  Add the
+protected-clocks property to the schema to show that is it explicitly
+allowed, instead of relying on the generic, pre-schema binding.
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- arch/arm64/boot/dts/amlogic/Makefile          |  1 +
- .../boot/dts/amlogic/meson-gxbb-kii-pro.dts   | 39 +++++++++++++++++++
- 2 files changed, 40 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+ .../devicetree/bindings/clock/qcom,mmcc.txt        | 28 ----------
+ .../devicetree/bindings/clock/qcom,mmcc.yaml       | 60 ++++++++++++++++++++++
+ 2 files changed, 60 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 84afecba9ec0..a795a170dcab 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-kii-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+deleted file mode 100644
+index 8b0f784..0000000
+--- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Qualcomm Multimedia Clock & Reset Controller Binding
+-----------------------------------------------------
+-
+-Required properties :
+-- compatible : shall contain only one of the following:
+-
+-			"qcom,mmcc-apq8064"
+-			"qcom,mmcc-apq8084"
+-			"qcom,mmcc-msm8660"
+-			"qcom,mmcc-msm8960"
+-			"qcom,mmcc-msm8974"
+-			"qcom,mmcc-msm8996"
+-
+-- reg : shall contain base register location and length
+-- #clock-cells : shall contain 1
+-- #reset-cells : shall contain 1
+-
+-Optional properties :
+-- #power-domain-cells : shall contain 1
+-
+-Example:
+-	clock-controller@4000000 {
+-		compatible = "qcom,mmcc-msm8960";
+-		reg = <0x4000000 0x1000>;
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-		#power-domain-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
 new file mode 100644
-index 000000000000..b63dabb7bf97
+index 0000000..78b1a22
 --- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+/* Copyright (c) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
-+*/
++++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,mmcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/dts-v1/;
++title: Qualcomm Multimedia Clock & Reset Controller Binding
 +
-+#include "meson-gxbb-p20x.dtsi"
++maintainers:
++  - Jeffrey Hugo <jhugo@codeaurora.org>
++  - Taniya Das <tdas@codeaurora.org>
 +
-+/ {
-+	compatible = "videostrong,kii-pro", "amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
-+	model = "Videostrong KII Pro";
++description: |
++  Qualcomm multimedia clock control module which supports the clocks, resets and
++  power domains.
 +
++properties:
++  compatible :
++    enum:
++       - qcom,mmcc-apq8064
++       - qcom,mmcc-apq8084
++       - qcom,mmcc-msm8660
++       - qcom,mmcc-msm8960
++       - qcom,mmcc-msm8974
++       - qcom,mmcc-msm8996
 +
-+};
++  '#clock-cells':
++    const: 1
 +
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
++  '#reset-cells':
++    const: 1
 +
-+	bluetooth {
-+		compatible = "brcm,bcm4335a0";
-+	};
-+};
++  '#power-domain-cells':
++    const: 1
 +
-+&ethmac {
-+	status = "okay";
-+	pinctrl-0 = <&eth_rmii_pins>;
-+	pinctrl-names = "default";
-+	phy-mode = "rmii";
++  reg:
++    maxItems: 1
 +
-+	snps,reset-gpio = <&gpio GPIOZ_14 0>;
-+	snps,reset-delays-us = <0>, <10000>, <1000000>;
-+	snps,reset-active-low;
-+};
++  protected-clocks:
++    description:
++       Protected clock specifier list as per common clock binding
 +
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
 +
++examples:
++  # Example for MMCC for MSM8960:
++  - |
++    clock-controller@4000000 {
++      compatible = "qcom,mmcc-msm8960";
++      reg = <0x4000000 0x1000>;
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
 -- 
-2.23.0
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 
