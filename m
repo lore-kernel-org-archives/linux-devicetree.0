@@ -2,244 +2,302 @@ Return-Path: <SRS0=biny=ZJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B524C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 14:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA43C43215
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 15:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB380206D4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 14:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="WYR8x9Kn"
+	by mail.kernel.org (Postfix) with ESMTP id C32EA20740
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 15:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbfKQOhd (ORCPT
+        id S1726273AbfKQPlD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 09:37:33 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.228]:27109 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726037AbfKQOhd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 Nov 2019 09:37:33 -0500
-X-Greylist: delayed 1328 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 Nov 2019 09:37:32 EST
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 0225C69B
-        for <devicetree@vger.kernel.org>; Sun, 17 Nov 2019 08:15:24 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id WLKliP2P6qNtvWLKliCsR6; Sun, 17 Nov 2019 08:15:23 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rfUlDakKv5yVKMK73mGLsSF6+WI5OQYJrDn/ijazhPA=; b=WYR8x9KniX5zXkOL+mkmRtl2AD
-        MLxmE7U5K3JxaVyKefnMW3ftT3VknIEBQcj1w+Uix352RsomNhbTgotINflbs7vu0n/i7ofR7eSUO
-        qCX/xVQnGaqZHL8uy6ix9aUxYRr+hn+8Sv3CqCoqAPMZ0+hMApaNK6TgRP6QY85TcIiDAgfBt018X
-        6PoX6xFJ82QQEPv5zZ5tsqdTy7502hK0LBix+P4Q7a//jGTV2rsATfX60z/32KoTuOMxQcf3LPyO2
-        xzTk/ZOIiu00/CXQHKAUeHD2Jp/zT2+xbXe6isXgWmSZ2IvehCyc5uGMAeFjGisL/2gOuxAcqLI7X
-        sblCQzyQ==;
-Received: from [186.222.229.111] (port=47408 helo=localhost.localdomain)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iWLKk-001Ad4-Km; Sun, 17 Nov 2019 11:15:23 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v7 4/5] power: supply: max17040: Config alert SOC low level threshold from FDT
-Date:   Sun, 17 Nov 2019 11:13:34 -0300
-Message-Id: <20191117141335.23404-5-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191117141335.23404-1-matheus@castello.eng.br>
-References: <20191117141335.23404-1-matheus@castello.eng.br>
+        Sun, 17 Nov 2019 10:41:03 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34108 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726069AbfKQPlD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 17 Nov 2019 10:41:03 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 77297ACA5;
+        Sun, 17 Nov 2019 15:41:00 +0000 (UTC)
+Subject: Re: [PATCH v3 3/8] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
+To:     Marc Zyngier <maz@misterjones.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        James Tai <james.tai@realtek.com>
+References: <20191117072109.20402-1-afaerber@suse.de>
+ <20191117072109.20402-4-afaerber@suse.de> <20191117104726.2b1fccb8@why>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <61bf74ad-b4a1-f443-bf99-be354b4d942b@suse.de>
+Date:   Sun, 17 Nov 2019 16:40:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191117104726.2b1fccb8@why>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 186.222.229.111
-X-Source-L: No
-X-Exim-ID: 1iWLKk-001Ad4-Km
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (localhost.localdomain) [186.222.229.111]:47408
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 48
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For configuration of fuel gauge alert for a low level state of charge
-interrupt we add a function to config level threshold and a device tree
-binding property to set it in flatned device tree node.
+Hi Marc,
 
-Now we can use "maxim,alert-low-soc-level" property with the values from
-1% up to 32% to configure alert interrupt threshold.
+Am 17.11.19 um 11:47 schrieb Marc Zyngier:
+> On Sun, 17 Nov 2019 08:21:04 +0100
+> Andreas Färber <afaerber@suse.de> wrote:
+>> Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
+>>
+>> Reuse the existing RTD1295 watchdog compatible for now.
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> [AF: Fixed r-bus size, fixed GIC CPU mask, updated memreserve]
+>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>> ---
+>>  v2 -> v3:
+>>  * Fixed r-bus size in /soc ranges from 0x1000000 to 0x70000 (James)
+>>  * Adjusted /memreserve/ to close gap from 0xa800 to 0xc000 for full 0x100000
+>>  * Changed arch timer from GIC_CPU_MASK_RAW(0xf) to GIC_CPU_MASK_SIMPLE(2)
+>>    squashed from RTD1395 v1 series
+>>  
+>>  v1 -> v2:
+>>  * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR (Rob)
+>>  * Carved them out from memory reg instead (Rob)
+>>  * Converted some /memreserve/s to reserved-memory nodes
+>>  
+>>  arch/arm/boot/dts/Makefile               |   2 +
+>>  arch/arm/boot/dts/rtd1195-mele-x1000.dts |  31 ++++++++
+>>  arch/arm/boot/dts/rtd1195.dtsi           | 127 +++++++++++++++++++++++++++++++
+>>  3 files changed, 160 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
+>>  create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 08011dc8c7a6..4853a13c8cf2 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -865,6 +865,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>>  dtb-$(CONFIG_ARCH_RDA) += \
+>>  	rda8810pl-orangepi-2g-iot.dtb \
+>>  	rda8810pl-orangepi-i96.dtb
+>> +dtb-$(CONFIG_ARCH_REALTEK) += \
+>> +	rtd1195-mele-x1000.dtb
+>>  dtb-$(CONFIG_ARCH_REALVIEW) += \
+>>  	arm-realview-pb1176.dtb \
+>>  	arm-realview-pb11mp.dtb \
+>> diff --git a/arch/arm/boot/dts/rtd1195-mele-x1000.dts b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
+>> new file mode 100644
+>> index 000000000000..834b430e6250
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
+>> @@ -0,0 +1,31 @@
+>> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+>> +/*
+>> + * Copyright (c) 2017-2019 Andreas Färber
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "rtd1195.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "mele,x1000", "realtek,rtd1195";
+>> +	model = "MeLE X1000";
+>> +
+>> +	aliases {
+>> +		serial0 = &uart0;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +
+>> +	memory@0 {
+>> +		device_type = "memory";
+>> +		reg = <0x0 0x18000000>,
+>> +		      <0x19100000 0x26f00000>;
+>> +	};
+>> +};
+>> +
+>> +&uart0 {
+>> +	status = "okay";
+>> +};
+>> diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
+>> new file mode 100644
+>> index 000000000000..4e3866fe8f6e
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/rtd1195.dtsi
+>> @@ -0,0 +1,127 @@
+>> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+>> +/*
+>> + * Copyright (c) 2017-2019 Andreas Färber
+>> + */
+>> +
+>> +/memreserve/ 0x00000000 0x0000a800; /* boot code */
+>> +/memreserve/ 0x0000a800 0x000f5800;
+>> +/memreserve/ 0x17fff000 0x00001000;
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +	compatible = "realtek,rtd1195";
+>> +	interrupt-parent = <&gic>;
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu0: cpu@0 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a7";
+>> +			reg = <0x0>;
+>> +			clock-frequency = <1000000000>;
+>> +		};
+>> +
+>> +		cpu1: cpu@1 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a7";
+>> +			reg = <0x1>;
+>> +			clock-frequency = <1000000000>;
+>> +		};
+>> +	};
+>> +
+>> +	reserved-memory {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		rpc_comm: rpc@b000 {
+>> +			reg = <0x0000b000 0x1000>;
+>> +		};
+>> +
+>> +		audio@1b00000 {
+>> +			reg = <0x01b00000 0x400000>;
+>> +		};
+>> +
+>> +		rpc_ringbuf: rpc@1ffe000 {
+>> +			reg = <0x01ffe000 0x4000>;
+>> +		};
+>> +
+>> +		secure@10000000 {
+>> +			reg = <0x10000000 0x100000>;
+>> +			no-map;
+>> +		};
+>> +	};
+>> +
+>> +	arm-pmu {
+>> +		compatible = "arm,cortex-a7-pmu";
+>> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-affinity = <&cpu0>, <&cpu1>;
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv7-timer";
+>> +		interrupts = <GIC_PPI 13
+>> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 14
+>> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 11
+>> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 10
+>> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+>> +		clock-frequency = <27000000>;
+> 
+> This is 2019, and yet it feels like 2011. This should be setup in the
+> bootloader, not in DT...
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- drivers/power/supply/max17040_battery.c | 75 ++++++++++++++++++++++---
- 1 file changed, 67 insertions(+), 8 deletions(-)
+What exactly - the whole node, the GIC CPU mask, the clock-frequency?
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 9909f8cd7b5d..3fc9e1c7b257 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -29,6 +29,9 @@
- #define MAX17040_DELAY		1000
- #define MAX17040_BATTERY_FULL	95
+Please compare previous submissions: It's a v2012.07 based downstream
+U-Boot that I don't have GPL sources of. It doesn't even fill in the
+/memory@0 node.
 
-+#define MAX17040_ATHD_MASK		0xFFC0
-+#define MAX17040_ATHD_DEFAULT_POWER_UP	4
-+
- struct max17040_chip {
- 	struct i2c_client		*client;
- 	struct delayed_work		work;
-@@ -43,6 +46,8 @@ struct max17040_chip {
- 	int soc;
- 	/* State Of Charge */
- 	int status;
-+	/* Low alert threshold from 32% to 1% of the State of Charge */
-+	u32 low_soc_alert;
- };
+>> +	};
+>> +
+>> +	osc27M: osc {
+>> +		compatible = "fixed-clock";
+>> +		clock-frequency = <27000000>;
+>> +		#clock-cells = <0>;
+>> +		clock-output-names = "osc27M";
+>> +	};
+>> +
+>> +	soc {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0x18000000 0x18000000 0x00070000>,
+>> +		         <0x18100000 0x18100000 0x01000000>,
+>> +		         <0x40000000 0x40000000 0xc0000000>;
+>> +
+>> +		wdt: watchdog@18007680 {
+>> +			compatible = "realtek,rtd1295-watchdog";
+>> +			reg = <0x18007680 0x100>;
+>> +			clocks = <&osc27M>;
+>> +		};
+>> +
+>> +		uart0: serial@18007800 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x18007800 0x400>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clock-frequency = <27000000>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart1: serial@1801b200 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x1801b200 0x100>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clock-frequency = <27000000>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		gic: interrupt-controller@ff011000 {
+>> +			compatible = "arm,cortex-a7-gic";
+>> +			reg = <0xff011000 0x1000>,
+>> +			      <0xff012000 0x2000>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+> 
+> You know what I'm going to say: GICH and GI[C]V are missing, as well as
+> the maintenance interrupt. This is all bog-standard HW (most probably a
+> GIC400), so there is no reason for this information not to be present.
 
- static int max17040_get_property(struct power_supply *psy,
-@@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
- 	max17040_write_reg(client, MAX17040_CMD, 0x0054);
- }
+Yes, and if you look at my rtd1295-next branch referenced in the cover
+letter, you will find that I do have follow-up patches adding GICH and
+GICV, also a guess for the GICV interrupt, and in a different patch [1]
+I have specifically reminded Realtek to review the v2 of this patch
+please, which still hasn't happened yet...
 
-+static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
-+{
-+	int ret;
-+	u16 data;
-+
-+	level = 32 - level;
-+	data = max17040_read_reg(client, MAX17040_RCOMP);
-+	/* clear the alrt bit and set LSb 5 bits */
-+	data &= MAX17040_ATHD_MASK;
-+	data |= level;
-+	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
-+
-+	return ret;
-+}
-+
- static void max17040_get_vcell(struct i2c_client *client)
- {
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-@@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *client)
- 	u16 soc;
+I inquired for the RTD1619 patch, and James replied that for its GICv3
+they supposedly do _not_ have the optional GICH and GICV [1].
 
- 	soc = max17040_read_reg(client, MAX17040_SOC);
--
- 	chip->soc = (soc >> 8);
- }
+Thus I am waiting on their input for whether they have it on RTD1195.
+The U-Boot that I have on this device does not boot the kernel in HYP
+mode, so I cannot test KVM myself. Same issue on the Horseradish EVB.
 
-@@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *client)
- 		chip->status = POWER_SUPPLY_STATUS_FULL;
- }
+On the Buffalo LinkStation LS520 I still don't have a serial console
+(probably my bad soldering skills), but I doubt it's any different.
 
-+static int max17040_get_of_data(struct max17040_chip *chip)
-+{
-+	struct device *dev = &chip->client->dev;
-+	struct device_node *np = dev->of_node;
-+	int ret = 0;
-+
-+	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
-+				 &chip->low_soc_alert)) {
-+		chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
-+	} else if (chip->low_soc_alert <= 0 ||
-+			chip->low_soc_alert >= 33) {
-+		/* low_soc_alert is not between 1% and 32% */
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
- static void max17040_check_changes(struct i2c_client *client)
- {
- 	max17040_get_vcell(client);
-@@ -192,6 +229,9 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
- 	/* send uevent */
- 	power_supply_changed(chip->battery);
+Regards,
+Andreas
 
-+	/* reset alert bit */
-+	max17040_set_low_soc_alert(client, chip->low_soc_alert);
-+
- 	return IRQ_HANDLED;
- }
+[1] https://patchwork.kernel.org/patch/11227113/
 
-@@ -230,6 +270,7 @@ static int max17040_probe(struct i2c_client *client,
- 	struct i2c_adapter *adapter = client->adapter;
- 	struct power_supply_config psy_cfg = {};
- 	struct max17040_chip *chip;
-+	int ret;
-
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
- 		return -EIO;
-@@ -240,6 +281,12 @@ static int max17040_probe(struct i2c_client *client,
-
- 	chip->client = client;
- 	chip->pdata = client->dev.platform_data;
-+	ret = max17040_get_of_data(chip);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"failed: low SOC alert OF data out of bounds\n");
-+		return ret;
-+	}
-
- 	i2c_set_clientdata(client, chip);
- 	psy_cfg.drv_data = chip;
-@@ -256,14 +303,26 @@ static int max17040_probe(struct i2c_client *client,
-
- 	/* check interrupt */
- 	if (client->irq) {
--		int ret;
--
--		ret = max17040_enable_alert_irq(chip);
--
--		if (ret) {
--			client->irq = 0;
-+		if (of_device_is_compatible(client->dev.of_node,
-+					    "maxim,max77836-battery")) {
-+			ret = max17040_set_low_soc_alert(client,
-+							 chip->low_soc_alert);
-+			if (ret) {
-+				dev_err(&client->dev,
-+					"Failed to set low SOC alert: err %d\n",
-+					ret);
-+				return ret;
-+			}
-+
-+			ret = max17040_enable_alert_irq(chip);
-+			if (ret) {
-+				client->irq = 0;
-+				dev_warn(&client->dev,
-+					 "Failed to get IRQ err %d\n", ret);
-+			}
-+		} else {
- 			dev_warn(&client->dev,
--				 "Failed to get IRQ err %d\n", ret);
-+				 "Device not compatible for IRQ");
- 		}
- 	}
-
---
-2.24.0.rc2
-
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
