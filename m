@@ -1,113 +1,95 @@
-Return-Path: <SRS0=bipS=ZI=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=biny=ZJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB30C432C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 22:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CE3C43215
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 03:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DFF206D5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 16 Nov 2019 22:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09642084E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 03:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcXGJU44"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RKYJOWi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfKPWZE (ORCPT
+        id S1726048AbfKQDcA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 16 Nov 2019 17:25:04 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44271 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfKPWZE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 17:25:04 -0500
-Received: by mail-il1-f196.google.com with SMTP id i6so3054721ilr.11;
-        Sat, 16 Nov 2019 14:25:03 -0800 (PST)
+        Sat, 16 Nov 2019 22:32:00 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37401 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfKQDcA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 16 Nov 2019 22:32:00 -0500
+Received: by mail-pj1-f66.google.com with SMTP id f3so533750pjg.4
+        for <devicetree@vger.kernel.org>; Sat, 16 Nov 2019 19:31:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0kr0PGCQy0Z97bgHM5LKSHLI8FBQC2icjFwrSq2WjiI=;
-        b=mcXGJU44h2VhVUi44c0HCwkZowXeV+SUbiixMSGtj5F+6qlghGFT2Xq8YFIsBM3b6a
-         NB2j5Nvgi1eWjexCryE5t7Z9PFBEjTZgRl7FpG0HVfliudk+t6skWdFnAPAgDsiXWMOD
-         H0JdBXkeu00GGM50LQS1NVVKhOnWS8ae/Gv2n/g36A9sqRAsCeHL6fRqBVCZlqSnrUV8
-         FulaYnkIh9Bwmvgv/5Tci63+PxwFdYSXlKyq8KcUkvFreu/o0zpqs8zePODC+D0CKMz9
-         b5YR2yz9gcNrpO6d1aQ+a2KiiT3vYxwjF9WYOBnakvQ0HcBi4oDkRhiL6X57twKT33NO
-         b7Ig==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wOVdn7VL7yyxBUHZntw/D8IwcAv73NBNkLlL+UAJFSs=;
+        b=RKYJOWi8iEdEMFM9J/pjDm+5FeNgh2U31vD65Ic8a2K1qx92kW0miLGD1lkL57W9nE
+         PzUaQUZNU1OH5AL2XOMEMA9t2AtOScIUN6MFha9yH+IfCyVzjluJJ6xy39s2EdpF23Ne
+         jepM3Hou6Krym2qBscM6BYZOhAVheIGfP2ftU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0kr0PGCQy0Z97bgHM5LKSHLI8FBQC2icjFwrSq2WjiI=;
-        b=fhmey4iga4g1xYAGjSjmS6I2okPwVR2gdPCvewMhZ3ub8jiec3FPhA5/SiWl2nMpOx
-         n8T5nwyc4wjmaxUUCo0382ZuGWoCuF0LaGE/ljLCySd50GUlIMk3eDwgiCL4X5wldyUU
-         ZxEcbtlbH8H3J0hbs8dtjUcDwv7vB4lB0eVh6VqgQDEiMUum0VloN2Lv3R6NwF2Zsst1
-         5WdN0WvmrCykEvoD1dbYZ3NGX9+6w+N/cU6TBCBeoI5GSQaPEmjEmya2MEScOZV4nzXD
-         9W9vKvtBwc1Jd2/C4lQ0o1cKJtquuaFbOQKBKICpauLjiBU9CpkuNqlyKNrLm+rHgxFY
-         xajw==
-X-Gm-Message-State: APjAAAVUKRQxoeAzys7OO2Yyd+PgAJbS+qnjHlz7+QWWvq+W3AvUQxjL
-        6rTnYEWQEShi+uvMeNbDCt7rX+r3nuPg7gWNQeg=
-X-Google-Smtp-Source: APXvYqzPn3HQYK20FTVeH+W1yj1lPcrDj1BwE1CLbpmiUnRIY00feiJCzGRMO7t/qKoOnMNQwYe2938iUr38hcC/qto=
-X-Received: by 2002:a05:6e02:c91:: with SMTP id b17mr7894961ile.33.1573943103501;
- Sat, 16 Nov 2019 14:25:03 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wOVdn7VL7yyxBUHZntw/D8IwcAv73NBNkLlL+UAJFSs=;
+        b=DBO8NlaKdpYSoC6Vl4rYWdGDZujpjqwBPuxSHVaPtUSqMytCR6m3yjar3D4BxyMhhN
+         M1HlHofhdBfruJbdbtxqPsa0yyXTdbv4hZhjkTBVjtCp4joYdIhByxg4HD4aciQQNwra
+         whAm98YgfNxoxM1JajrZmDyKTCs8WusHA0f0JRKucV89K0f6y3RTJVYQe8eICzFvmilc
+         nfk7Vq4SbG5emTUu9FF9E2xPPdU598zh0PDnX0Rht+Sh0IcjCl8afs3gNhizo1QmojAM
+         0PQYxakNZ6ySmCC93wCGU6WSCFXA9tjc44/zJWjHsRRgfle5dDJaRFHQcGLawCpDct4W
+         4s5A==
+X-Gm-Message-State: APjAAAUJr9RXjdR+bL+ii4f11bi5p2/hnaHX44T/L7d9t2OYP5zlXqiZ
+        aawlVpYNje/0q/V1u8kaWOU/ow==
+X-Google-Smtp-Source: APXvYqw8ibeSC9mMX54bu6dURPnqRLsC8s+GYw7BNmhc4RtLyWnWiS2SL+VhTBHiUkfuh8yW5oWrOg==
+X-Received: by 2002:a17:90a:610:: with SMTP id j16mr30938906pjj.85.1573961519371;
+        Sat, 16 Nov 2019 19:31:59 -0800 (PST)
+Received: from ikjn-glaptop.roam.corp.google.com (2001-b400-e27e-4718-13bf-d274-f5e0-91a5.emome-ip6.hinet.net. [2001:b400:e27e:4718:13bf:d274:f5e0:91a5])
+        by smtp.gmail.com with ESMTPSA id a145sm16539353pfa.7.2019.11.16.19.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Nov 2019 19:31:58 -0800 (PST)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Johan Hovold <johan@kernel.org>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH 0/2] usb: override hub device bInterval with device node
+Date:   Sun, 17 Nov 2019 11:31:49 +0800
+Message-Id: <20191117033149.259303-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-References: <20191116064415.159899-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20191116064415.159899-1-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Sat, 16 Nov 2019 15:24:52 -0700
-Message-ID: <CAOCk7Nov_HvZe1Z6COd2z=VUf=mVbvqS4wjqU4Ee=F1qR_KKww@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 11:44 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The msm_serial driver uses a simple counter to determine which port to
-> use when no alias is defined, but there's no logic to prevent this from
+This patchset enables hard wired hub device to use different bInterval
+from its descriptor when the hub has a combined device node.
 
-Which port to use for what, the default console?
+When we know the specific hard wired hub supports changing its polling
+interval, we can adjust hub's interval to reduce the time of waking up
+from autosuspend or connect detection of HIDs.
 
-> not colliding with what's defined by the aliases. As a result either
-> none or all of the active msm_serial instances must be listed as
-> aliases.
->
-> Define blsp1_uart3 as "serial1" to mitigate this problem.
->
-> Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Ikjoon Jang (2):
+  dt-bindings: usb: add "hub,interval" property
+  usb: overridable hub bInterval by device node
 
-That driver behavior seems like a strange thing to be doing.
+ Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+ drivers/usb/core/config.c                            | 6 ++++++
+ 2 files changed, 10 insertions(+)
 
-If you clarify the question above, -
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
-> ---
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> index 5f101a20a20a..e08fcb426bbf 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> @@ -9,6 +9,7 @@
->  / {
->         aliases {
->                 serial0 = &blsp2_uart1;
-> +               serial1 = &blsp1_uart3;
->         };
->
->         chosen {
-> --
-> 2.23.0
->
