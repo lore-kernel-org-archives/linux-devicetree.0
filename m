@@ -2,170 +2,99 @@ Return-Path: <SRS0=biny=ZJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBD7C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 16:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C65AC432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 17:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0390B20718
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 16:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574007744;
-	bh=nZHPS6OD6CHQcikdtIXqbB3AUTkqxrLsnHE3H1ZEkaQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=C3/1bSUsVgne02sPeJqtQSMq4se7BrOzqPeNxmSD0pow2hTvnsffQdfUNd0dEdIrP
-	 g4NqVBXpWSuJtBj1PLCXTlqPZUKO5pvLefT+dtX96l4z0DEp7xjsA1uuxMcNc6jFmW
-	 gzLvbu6MG1fJihbML/JmLCXER5O7o56kZ1yqFdjw=
+	by mail.kernel.org (Postfix) with ESMTP id 00EA1206D9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 17:25:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ND/M9msc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfKQQWX convert rfc822-to-8bit (ORCPT
+        id S1726127AbfKQRZH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 11:22:23 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:44332 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726069AbfKQQWX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 Nov 2019 11:22:23 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iWNJa-0007rk-Jx; Sun, 17 Nov 2019 17:22:18 +0100
-Date:   Sun, 17 Nov 2019 16:22:10 +0000
-Message-ID: <86a78ujwwd.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sun, 17 Nov 2019 12:25:07 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37794 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfKQRZH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 12:25:07 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b17so16173264wmj.2
+        for <devicetree@vger.kernel.org>; Sun, 17 Nov 2019 09:25:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KQN6gwOKGkmVRkt+hwPxqq6Jnl9Fa2wsCKH+gEVtNFk=;
+        b=ND/M9mscgT+cliFMhwYfjCX+qBTbahBDoHQeILn1cjB0/pU78TBH5y6RZVYnQ2Xuiz
+         WJzf19xR9AMpeWjTCa2e68F5epzypApCSPZmT99rz+UvtR66cNNssQg6GgZGvGa2ZWLR
+         PWosJRqhGCYg8bFY/obsKXwlYTFfdQDp5GEvq3SXinkuLwjLHtNqnYUggvTGoEsYxK3d
+         B3M9CllZuODcRy9v24jH/aCVDlYCDtpalpbjRk6pJkTEK+q95o0kZ1Npx7nsZuVQh2Rf
+         NdOaEQbcGaoYPdYjId97ICUm9lqzIv3slYS/1vx4gyDkDSQ0u0ldmneym9yIn9E2eIsj
+         PwQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KQN6gwOKGkmVRkt+hwPxqq6Jnl9Fa2wsCKH+gEVtNFk=;
+        b=WnxQNyqXTC8WmtooVnDcRPwBgeaank7Lyqvj6nXj6ZKunCk/gKnPp/hHzKHUAkdHf8
+         JWu4xvq64xzgIXcd5TAisXMfypvIDsOa+hJrfd172OZoPjR8FHJw2ERtnKk5rLPB/BcJ
+         3ogSrG7XlV36p2I1ldUMcqZMCYt8eS4DFNWav0gplNdaKYsFpNr5SNfS7Pg5jIFmfdrZ
+         6rTMxHQoaKtwMadnzi49akbwLaEXxAechB/uf5wHmqeanrdO8LcpXQ2KP965mkOST1fe
+         WVYadYmElki1BkxhUqR5eEH4Q8z7Po2Isv0TCdJ7fkBz05aFqhnWLhxYEUnk8/Z7IUc7
+         0NuQ==
+X-Gm-Message-State: APjAAAUv0ihnDDDmUzS3g9kCGONk5g3h7GLmf/Dp9oTvOtvtSeWsJEBN
+        Dv6RteURIwIS0Lx3xPM87fs=
+X-Google-Smtp-Source: APXvYqwYCkxH8WT5tnyVMQL8Y+OCQt9QGi+31SfNr+dAqz7TOYBP2GOBP00uQ6UxnDeC5KkdMUdbdg==
+X-Received: by 2002:a1c:c917:: with SMTP id f23mr26008436wmb.95.1574011505146;
+        Sun, 17 Nov 2019 09:25:05 -0800 (PST)
+Received: from localhost ([37.238.189.25])
+        by smtp.gmail.com with ESMTPSA id m9sm19379328wro.66.2019.11.17.09.25.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 09:25:04 -0800 (PST)
+From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
+To:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        James Tai <james.tai@realtek.com>
-Subject: Re: [PATCH v3 3/8] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
-In-Reply-To: <61bf74ad-b4a1-f443-bf99-be354b4d942b@suse.de>
-References: <20191117072109.20402-1-afaerber@suse.de>
-        <20191117072109.20402-4-afaerber@suse.de>
-        <20191117104726.2b1fccb8@why>
-        <61bf74ad-b4a1-f443-bf99-be354b4d942b@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-Organization: Approximate
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: afaerber@suse.de, linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, james.tai@realtek.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [RFC PATCH 1/4] dt-bindings: Add vendor prefix for Videostrong Technology Co., Ltd.
+Date:   Sun, 17 Nov 2019 20:24:59 +0300
+Message-Id: <20191117172459.12688-1-mohammad.rasim96@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 17 Nov 2019 15:40:59 +0000,
-Andreas Färber <afaerber@suse.de> wrote:
-> 
-> Hi Marc,
-> 
-> Am 17.11.19 um 11:47 schrieb Marc Zyngier:
-> > On Sun, 17 Nov 2019 08:21:04 +0100
-> > Andreas Färber <afaerber@suse.de> wrote:
-> >> Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
-> >>
-> >> Reuse the existing RTD1295 watchdog compatible for now.
-> >>
-> >> Reviewed-by: Rob Herring <robh@kernel.org>
-> >> [AF: Fixed r-bus size, fixed GIC CPU mask, updated memreserve]
-> >> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> >> ---
-> >>  v2 -> v3:
-> >>  * Fixed r-bus size in /soc ranges from 0x1000000 to 0x70000 (James)
-> >>  * Adjusted /memreserve/ to close gap from 0xa800 to 0xc000 for full 0x100000
-> >>  * Changed arch timer from GIC_CPU_MASK_RAW(0xf) to GIC_CPU_MASK_SIMPLE(2)
-> >>    squashed from RTD1395 v1 series
-> >>  
-> >>  v1 -> v2:
-> >>  * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR (Rob)
-> >>  * Carved them out from memory reg instead (Rob)
-> >>  * Converted some /memreserve/s to reserved-memory nodes
-> >>  
-> >>  arch/arm/boot/dts/Makefile               |   2 +
-> >>  arch/arm/boot/dts/rtd1195-mele-x1000.dts |  31 ++++++++
-> >>  arch/arm/boot/dts/rtd1195.dtsi           | 127 +++++++++++++++++++++++++++++++
-> >>  3 files changed, 160 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
-> >>  create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+Videostrong Technology Co., Ltd., A manufacturer of Android Players & STB( Android with DVB Hybrid box &DVB-T2/S2/C/ISDB-T/DTMB-TH/ATSC,,)as well as HD media players.
 
-[...]
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> >> +	timer {
-> >> +		compatible = "arm,armv7-timer";
-> >> +		interrupts = <GIC_PPI 13
-> >> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> >> +			     <GIC_PPI 14
-> >> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> >> +			     <GIC_PPI 11
-> >> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> >> +			     <GIC_PPI 10
-> >> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-> >> +		clock-frequency = <27000000>;
-> > 
-> > This is 2019, and yet it feels like 2011. This should be setup in the
-> > bootloader, not in DT...
-> 
-> What exactly - the whole node, the GIC CPU mask, the
-> clock-frequency?
-
-The clock frequency. Having to rely on such hacks 8 years down the
-line makes me feel like we've achieved nothing...
-</depressed>
-
-> Please compare previous submissions: It's a v2012.07 based downstream
-> U-Boot that I don't have GPL sources of. It doesn't even fill in the
-> /memory@0 node.
-
-Qualeetee...
-
-> >> +		gic: interrupt-controller@ff011000 {
-> >> +			compatible = "arm,cortex-a7-gic";
-> >> +			reg = <0xff011000 0x1000>,
-> >> +			      <0xff012000 0x2000>;
-> >> +			interrupt-controller;
-> >> +			#interrupt-cells = <3>;
-> > 
-> > You know what I'm going to say: GICH and GI[C]V are missing, as well as
-> > the maintenance interrupt. This is all bog-standard HW (most probably a
-> > GIC400), so there is no reason for this information not to be present.
-> 
-> Yes, and if you look at my rtd1295-next branch referenced in the cover
-> letter, you will find that I do have follow-up patches adding GICH and
-> GICV, also a guess for the GICV interrupt, and in a different patch [1]
-> I have specifically reminded Realtek to review the v2 of this patch
-> please, which still hasn't happened yet...
-> 
-> I inquired for the RTD1619 patch, and James replied that for its GICv3
-> they supposedly do _not_ have the optional GICH and GICV [1].
-
-Which is expected. Cortex-A55 doesn't have a GICv2 CPU interface
-built-in, and thus doesn't not have the compatibility interface when
-coupled with a GICv3 implementation.
-
-In your case, Cortex A7 has all the required HW, and the required
-values can be derived from the public TRM.
-
-> Thus I am waiting on their input for whether they have it on RTD1195.
-> The U-Boot that I have on this device does not boot the kernel in HYP
-> mode, so I cannot test KVM myself. Same issue on the Horseradish
-> EVB.
-
-Given the vintage of the bootloader, I'm pretty sure he system boots
-in secure mode, so it'd just be a matter of switching to non-secure.
-Just use the existing bootloader as something that initialises memory
-for you and boot a modern u-boot from there.
-
-	M.
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 967e78c5ec0a..e4bd0a9fd4e5 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1006,6 +1006,8 @@ patternProperties:
+     description: Variscite Ltd.
+   "^via,.*":
+     description: VIA Technologies, Inc.
++  "^videostrong,.*":
++    description: Videostrong Technology Co., Ltd.
+   "^virtio,.*":
+     description: Virtual I/O Device Specification, developed by the OASIS consortium
+   "^vishay,.*":
 -- 
-Jazz is not dead, it just smells funny.
+2.23.0
+
