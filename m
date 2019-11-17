@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77896C33C9A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53386C432C3
 	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 12:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552AC2075C
+	by mail.kernel.org (Postfix) with ESMTP id 2D1C420727
 	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 12:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbfKQMqL (ORCPT
+        id S1726102AbfKQMqL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 17 Nov 2019 07:46:11 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:41488 "EHLO inva021.nxp.com"
+Received: from inva021.nxp.com ([92.121.34.21]:41440 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726076AbfKQMqL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726084AbfKQMqL (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 17 Nov 2019 07:46:11 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 91EA42000D2;
-        Sun, 17 Nov 2019 13:46:09 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BD49E2007B9;
+        Sun, 17 Nov 2019 13:46:08 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E24242007DA;
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 18DE72000DF;
         Sun, 17 Nov 2019 13:46:03 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 53D0E402D0;
-        Sun, 17 Nov 2019 20:45:57 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1CACB402B5;
+        Sun, 17 Nov 2019 20:45:56 +0800 (SGT)
 From:   Dong Aisheng <aisheng.dong@nxp.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-clk@vger.kernel.org, sboyd@kernel.org,
@@ -37,9 +37,9 @@ Cc:     linux-clk@vger.kernel.org, sboyd@kernel.org,
         Dong Aisheng <aisheng.dong@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH RESEND v3 06/15] arm64: dts: imx8: add adma lpcg clocks
-Date:   Sun, 17 Nov 2019 20:43:46 +0800
-Message-Id: <1573994635-14479-7-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH RESEND v3 05/15] arm64: dts: imx8: add conn lpcg clocks
+Date:   Sun, 17 Nov 2019 20:43:45 +0800
+Message-Id: <1573994635-14479-6-git-send-email-aisheng.dong@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573994635-14479-1-git-send-email-aisheng.dong@nxp.com>
 References: <1573994635-14479-1-git-send-email-aisheng.dong@nxp.com>
@@ -49,7 +49,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add adma lpcg clocks
+Add conn lpcg clocks
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -60,172 +60,140 @@ Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
 ChangeLog:
-v3->v4:
- * add missing lpcg headfile
 v2->v3:
  * update to use clock-indices property instead of bit-offset property
 v1->v2:
  * Use old SCU clock binding temporarily to avoid build warning due to SCU
    clock cell will be changed to 2.
- * add power domain property
+ * add power domain propertyv1->v2:
 ---
- .../boot/dts/freescale/imx8-ss-adma.dtsi      | 122 ++++++++++++++++++
- 1 file changed, 122 insertions(+)
+ .../boot/dts/freescale/imx8-ss-conn.dtsi      | 104 +++++++++++++++++-
+ 1 file changed, 101 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-index 28b8fc9a81d4..6bd194a98c36 100644
---- a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-@@ -4,17 +4,51 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+index 5cf357fb85ae..66899c5feaac 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+@@ -4,15 +4,34 @@
   *	Dong Aisheng <aisheng.dong@nxp.com>
   */
  
 +#include <dt-bindings/clock/imx8-lpcg.h>
 +#include <dt-bindings/firmware/imx/rsrc.h>
 +
- adma_subsys: bus@59000000 {
+ conn_subsys: bus@5b000000 {
  	compatible = "simple-bus";
  	#address-cells = <1>;
  	#size-cells = <1>;
- 	ranges = <0x59000000 0x0 0x59000000 0x2000000>;
+ 	ranges = <0x5b000000 0x0 0x5b000000 0x1000000>;
  
-+	dma_ipg_clk: clock-dma-ipg {
+-	conn_lpcg: clock-controller@5b200000 {
+-		reg = <0x5b200000 0xb0000>;
+-		#clock-cells = <1>;
++	conn_axi_clk: clock-conn-axi {
 +		compatible = "fixed-clock";
 +		#clock-cells = <0>;
-+		clock-frequency = <120000000>;
-+		clock-output-names = "dma_ipg_clk";
++		clock-frequency = <333333333>;
++		clock-output-names = "conn_axi_clk";
 +	};
++
++	conn_ahb_clk: clock-conn-ahb {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <166666666>;
++		clock-output-names = "conn_ahb_clk";
++	};
++
++	conn_ipg_clk: clock-conn-ipg {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <83333333>;
++		clock-output-names = "conn_ipg_clk";
+ 	};
+ 
+ 	usdhc1: mmc@5b010000 {
+@@ -86,4 +105,83 @@ conn_subsys: bus@5b000000 {
+ 		power-domains = <&pd IMX_SC_R_ENET_1>;
+ 		status = "disabled";
+ 	};
 +
 +	/* LPCG clocks */
- 	adma_lpcg: clock-controller@59000000 {
- 		reg = <0x59000000 0x2000000>;
- 		#clock-cells = <1>;
- 	};
- 
-+	dsp_lpcg: clock-controller@59580000 {
-+		reg = <0x59580000 0x10000>;
++	conn_lpcg: clock-controller-legacy@5b200000 {
++		reg = <0x5b200000 0xb0000>;
 +		#clock-cells = <1>;
-+		clocks = <&dma_ipg_clk>,
-+			 <&dma_ipg_clk>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
-+				<IMX_LPCG_CLK_7>;
-+		clock-output-names = "dsp_lpcg_adb_clk",
-+				     "dsp_lpcg_ipg_clk",
-+				     "dsp_lpcg_core_clk";
-+		power-domains = <&pd IMX_SC_R_DSP>;
 +	};
 +
-+	dsp_ram_lpcg: clock-controller@59590000 {
-+		reg = <0x59590000 0x10000>;
++	sdhc0_lpcg: clock-controller@5b200000 {
++		reg = <0x5b200000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_4>;
-+		clock-output-names = "dsp_ram_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_DSP_RAM>;
++		clocks = <&clk IMX_CONN_SDHC0_CLK>,
++			 <&conn_ipg_clk>, <&conn_axi_clk>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>,
++				<IMX_LPCG_CLK_5>;
++		clock-output-names = "sdhc0_lpcg_per_clk",
++				     "sdhc0_lpcg_ipg_clk",
++				     "sdhc0_lpcg_ahb_clk";
++		power-domains = <&pd IMX_SC_R_SDHC_0>;
 +	};
 +
- 	adma_dsp: dsp@596e8000 {
- 		compatible = "fsl,imx8qxp-dsp";
- 		reg = <0x596e8000 0x88000>;
-@@ -80,6 +114,50 @@ adma_subsys: bus@59000000 {
- 		status = "disabled";
- 	};
- 
-+	uart0_lpcg: clock-controller@5a460000 {
-+		reg = <0x5a460000 0x10000>;
++	sdhc1_lpcg: clock-controller@5b210000 {
++		reg = <0x5b210000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&clk IMX_ADMA_UART0_CLK>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "uart0_lpcg_baud_clk",
-+				     "uart0_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_UART_0>;
++		clocks = <&clk IMX_CONN_SDHC1_CLK>,
++			 <&conn_ipg_clk>, <&conn_axi_clk>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>,
++				<IMX_LPCG_CLK_5>;
++		clock-output-names = "sdhc1_lpcg_per_clk",
++				     "sdhc1_lpcg_ipg_clk",
++				     "sdhc1_lpcg_ahb_clk";
++		power-domains = <&pd IMX_SC_R_SDHC_1>;
 +	};
 +
-+	uart1_lpcg: clock-controller@5a470000 {
-+		reg = <0x5a470000 0x10000>;
++	sdhc2_lpcg: clock-controller@5b220000 {
++		reg = <0x5b220000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&clk IMX_ADMA_UART1_CLK>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "uart1_lpcg_baud_clk",
-+				     "uart1_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_UART_1>;
++		clocks = <&clk IMX_CONN_SDHC2_CLK>,
++			 <&conn_ipg_clk>, <&conn_axi_clk>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>,
++				<IMX_LPCG_CLK_5>;
++		clock-output-names = "sdhc2_lpcg_per_clk",
++				     "sdhc2_lpcg_ipg_clk",
++				     "sdhc2_lpcg_ahb_clk";
++		power-domains = <&pd IMX_SC_R_SDHC_2>;
 +	};
 +
-+	uart2_lpcg: clock-controller@5a480000 {
-+		reg = <0x5a480000 0x10000>;
++	enet0_lpcg: clock-controller@5b230000 {
++		reg = <0x5b230000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&clk IMX_ADMA_UART2_CLK>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "uart2_lpcg_baud_clk",
-+				     "uart2_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_UART_2>;
++		clocks = <&clk IMX_CONN_ENET0_ROOT_CLK>,
++			 <&clk IMX_CONN_ENET0_ROOT_CLK>,
++			 <&conn_axi_clk>, <&conn_ipg_clk>, <&conn_ipg_clk>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_2>, <IMX_LPCG_CLK_4>,
++				<IMX_LPCG_CLK_5>;
++		clock-output-names = "enet0_ipg_root_clk",
++				     "enet0_tx_clk",
++				     "enet0_ahb_clk",
++				     "enet0_ipg_clk",
++				     "enet0_ipg_s_clk";
++		power-domains = <&pd IMX_SC_R_ENET_0>;
 +	};
 +
-+	uart3_lpcg: clock-controller@5a490000 {
-+		reg = <0x5a490000 0x10000>;
++	enet1_lpcg: clock-controller@5b240000 {
++		reg = <0x5b240000 0x10000>;
 +		#clock-cells = <1>;
-+		clocks = <&clk IMX_ADMA_UART3_CLK>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "uart3_lpcg_baud_clk",
-+				     "uart3_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_UART_3>;
-+	};
-+
- 	adma_i2c0: i2c@5a800000 {
- 		reg = <0x5a800000 0x4000>;
- 		interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
-@@ -127,4 +205,48 @@ adma_subsys: bus@59000000 {
- 		power-domains = <&pd IMX_SC_R_I2C_3>;
- 		status = "disabled";
- 	};
-+
-+	i2c0_lpcg: clock-controller@5ac00000 {
-+		reg = <0x5ac00000 0x10000>;
-+		#clock-cells = <1>;
-+		clocks = <&clk IMX_ADMA_I2C0_CLK>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "i2c0_lpcg_clk",
-+				     "i2c0_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_I2C_0>;
-+	};
-+
-+	i2c1_lpcg: clock-controller@5ac10000 {
-+		reg = <0x5ac10000 0x10000>;
-+		#clock-cells = <1>;
-+		clocks = <&clk IMX_ADMA_I2C1_CLK>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "i2c1_lpcg_clk",
-+				     "i2c1_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_I2C_1>;
-+	};
-+
-+	i2c2_lpcg: clock-controller@5ac20000 {
-+		reg = <0x5ac20000 0x10000>;
-+		#clock-cells = <1>;
-+		clocks = <&clk IMX_ADMA_I2C2_CLK>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "i2c2_lpcg_clk",
-+				     "i2c2_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_I2C_2>;
-+	};
-+
-+	i2c3_lpcg: clock-controller@5ac30000 {
-+		reg = <0x5ac30000 0x10000>;
-+		#clock-cells = <1>;
-+		clocks = <&clk IMX_ADMA_I2C3_CLK>,
-+			 <&dma_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "i2c3_lpcg_clk",
-+				     "i2c3_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_I2C_3>;
++		clocks = <&clk IMX_CONN_ENET1_ROOT_CLK>,
++			 <&clk IMX_CONN_ENET1_ROOT_CLK>,
++			 <&conn_axi_clk>, <&conn_ipg_clk>, <&conn_ipg_clk>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_2>, <IMX_LPCG_CLK_4>,
++				<IMX_LPCG_CLK_5>;
++		clock-output-names = "enet1_ipg_root_clk",
++				     "enet1_tx_clk",
++				     "enet1_ahb_clk",
++				     "enet1_ipg_clk",
++				     "enet1_ipg_s_clk";
++		power-domains = <&pd IMX_SC_R_ENET_1>;
 +	};
  };
 -- 
