@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439D4C432C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 22:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A31C432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 22:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A54820730
-	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 22:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139BE206E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 17 Nov 2019 22:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="EGlbayNh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="FZGRNfQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfKQWOt (ORCPT
+        id S1726206AbfKQW2f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 17:14:49 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:19013 "EHLO
+        Sun, 17 Nov 2019 17:28:35 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:22503 "EHLO
         mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKQWOs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 17:14:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574028885;
+        with ESMTP id S1726134AbfKQW2f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 17:28:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574029713;
         s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=OTBQfgiMgiFDMKt/EGwPBC5FtoOl9EQykalo6VCqi+Y=;
-        b=EGlbayNh21jLySf1s/f0N1+Ro6JQoT29EoGM25+kHCt6EGRlG1tHPv/QS3UCHRla9s
-        dSfI9nWWJm61ewcQpHXr1P2aFGMqH2sZxJPjy6AZQTEjCsNVuhm5rhGJbbUG9Iez7Av9
-        gdrHttGJ1FO+MHQBmoLuvhrJ2aIBYF8emOPLVx7Hn+VY94G4nxM2jdOx0Dd5LAGMF7Ic
-        ThcWZWiGB8EKwUNKD9kA5BGqbBQJJsu8STjG+OSoBrmn3UTX3GJEEE8jLOeaPy/tCFLS
-        V9L4jjxGw+ce363gjsnITuLt1Khbh6iLzBysUvOqz2Vl5lXHemAQ3TJt9rWrnqPrM4kl
-        O3fA==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=urCVRDxjtlkSW6YxW0DTjykMpr66oVfNWnAF+7LY2IM=;
+        b=FZGRNfQH4aViZE0gVOXp4F2EjLg3MEz3FvkPrPzWzFpwSfnMpyJAT/8LSu2U+BXrL2
+        q6R0HKzHABI7m0rkbhwt27MPyhuAqUdEz6ripalMnZk5xyJYG7W9ZVIBe79cq6xrsa0I
+        O8amA9RuWFgJBfIZ3DIaKyF6yhbdBtro6I8Ju0AafKKD8olYxdvC+3d0CxkSEXEqrW99
+        G9cKs92zF2NLNVWzOlJf9hvAZtQTwG8pFqPRDN9V3/LCDZ6Sh7r/C74NjmFnGKE2vHFC
+        4x57FinYk1ZXHpcy/Hn24kQXHrOBVEl4UKooviFJgbwcgxwZ0rDY8JL5WHsel8V3RPpF
+        zjYg==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXsMvvtBRRPA=="
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vAHMEebBO
+        with ESMTPSA id e07688vAHMSWbCW
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Sun, 17 Nov 2019 23:14:40 +0100 (CET)
+        Sun, 17 Nov 2019 23:28:32 +0100 (CET)
 From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/2] mfd: ab8500-core: Add device tree support for AB8505
-Date:   Sun, 17 Nov 2019 23:10:53 +0100
-Message-Id: <20191117221053.278415-2-stephan@gerhold.net>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH] ARM: dts: ux500: snowball: Remove unused PRCMU cpufreq node
+Date:   Sun, 17 Nov 2019 23:27:32 +0100
+Message-Id: <20191117222732.283673-1-stephan@gerhold.net>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191117221053.278415-1-stephan@gerhold.net>
-References: <20191117221053.278415-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -61,148 +58,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-AB8505 support was never fully converted to the device tree.
-Most of the MFD cells for AB8505 lack an "of_compatible",
-which prevents them from being configured through the device tree.
+Commit a435adbec264 ("ARM: dts: augment Ux500 to use DT cpufreq")
+switched the Ux500 device tree to use the generic DT cpufreq driver
+and removed the PRCMU cpufreq node.
 
-Align the definition of the AB8505 MFD cells with the ones for AB8500,
-and add device tree compatibles. Except for GPIO and regulators the
-compatibles are equal to those used for AB8500 because the hardware
-does not differ much.
+The snowball DTS still references it, without effect, since cpufreq
+is now enabled by default. Remove the unused node.
 
-Finally, change db8500_prcmu_register_ab8500() to check for the AB8505
-device tree node additionally, and probe it if it is found.
-
-Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 ---
- drivers/mfd/ab8500-core.c  | 14 ++++++++++++--
- drivers/mfd/db8500-prcmu.c | 26 ++++++++++++++++++++------
- 2 files changed, 32 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/ste-snowball.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/mfd/ab8500-core.c b/drivers/mfd/ab8500-core.c
-index bafc729fc434..6db7969101d6 100644
---- a/drivers/mfd/ab8500-core.c
-+++ b/drivers/mfd/ab8500-core.c
-@@ -718,17 +718,20 @@ static const struct mfd_cell ab8505_devs[] = {
- #ifdef CONFIG_DEBUG_FS
- 	{
- 		.name = "ab8500-debug",
-+		.of_compatible = "stericsson,ab8500-debug",
- 	},
- #endif
- 	{
- 		.name = "ab8500-sysctrl",
-+		.of_compatible = "stericsson,ab8500-sysctrl",
- 	},
- 	{
- 		.name = "ab8500-regulator",
-+		.of_compatible = "stericsson,ab8505-regulator",
- 	},
- 	{
- 		.name = "abx500-clk",
--		.of_compatible = "stericsson,abx500-clk",
-+		.of_compatible = "stericsson,ab8500-clk",
- 	},
- 	{
- 		.name = "ab8500-gpadc",
-@@ -736,25 +739,32 @@ static const struct mfd_cell ab8505_devs[] = {
- 	},
- 	{
- 		.name = "ab8500-rtc",
-+		.of_compatible = "stericsson,ab8500-rtc",
- 	},
- 	{
- 		.name = "ab8500-acc-det",
-+		.of_compatible = "stericsson,ab8500-acc-det",
- 	},
- 	{
- 		.name = "ab8500-poweron-key",
-+		.of_compatible = "stericsson,ab8500-poweron-key",
- 	},
- 	{
- 		.name = "ab8500-pwm",
-+		.of_compatible = "stericsson,ab8500-pwm",
- 		.id = 1,
- 	},
- 	{
- 		.name = "pinctrl-ab8505",
-+		.of_compatible = "stericsson,ab8505-gpio",
- 	},
- 	{
- 		.name = "ab8500-usb",
-+		.of_compatible = "stericsson,ab8500-usb",
- 	},
- 	{
- 		.name = "ab8500-codec",
-+		.of_compatible = "stericsson,ab8500-codec",
- 	},
- 	{
- 		.name = "ab-iddet",
-@@ -1276,7 +1286,7 @@ static int ab8500_probe(struct platform_device *pdev)
+diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+index efbc4467b8b7..566b35ac0d0c 100644
+--- a/arch/arm/boot/dts/ste-snowball.dts
++++ b/arch/arm/boot/dts/ste-snowball.dts
+@@ -377,10 +377,6 @@
+ 		};
  
- static const struct platform_device_id ab8500_id[] = {
- 	{ "ab8500-core", AB8500_VERSION_AB8500 },
--	{ "ab8505-i2c", AB8500_VERSION_AB8505 },
-+	{ "ab8505-core", AB8500_VERSION_AB8505 },
- 	{ "ab9540-i2c", AB8500_VERSION_AB9540 },
- 	{ "ab8540-i2c", AB8500_VERSION_AB8540 },
- 	{ }
-diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
-index 57ac58b4b5f3..26d967a1a046 100644
---- a/drivers/mfd/db8500-prcmu.c
-+++ b/drivers/mfd/db8500-prcmu.c
-@@ -3060,30 +3060,44 @@ static const struct mfd_cell db8500_prcmu_devs[] = {
- static int db8500_prcmu_register_ab8500(struct device *parent)
- {
- 	struct device_node *np;
--	struct resource ab8500_resource;
-+	struct resource ab850x_resource;
- 	const struct mfd_cell ab8500_cell = {
- 		.name = "ab8500-core",
- 		.of_compatible = "stericsson,ab8500",
- 		.id = AB8500_VERSION_AB8500,
--		.resources = &ab8500_resource,
-+		.resources = &ab850x_resource,
- 		.num_resources = 1,
- 	};
-+	const struct mfd_cell ab8505_cell = {
-+		.name = "ab8505-core",
-+		.of_compatible = "stericsson,ab8505",
-+		.id = AB8500_VERSION_AB8505,
-+		.resources = &ab850x_resource,
-+		.num_resources = 1,
-+	};
-+	const struct mfd_cell *ab850x_cell;
- 
- 	if (!parent->of_node)
- 		return -ENODEV;
- 
- 	/* Look up the device node, sneak the IRQ out of it */
- 	for_each_child_of_node(parent->of_node, np) {
--		if (of_device_is_compatible(np, ab8500_cell.of_compatible))
-+		if (of_device_is_compatible(np, ab8500_cell.of_compatible)) {
-+			ab850x_cell = &ab8500_cell;
- 			break;
-+		}
-+		if (of_device_is_compatible(np, ab8505_cell.of_compatible)) {
-+			ab850x_cell = &ab8505_cell;
-+			break;
-+		}
- 	}
- 	if (!np) {
--		dev_info(parent, "could not find AB8500 node in the device tree\n");
-+		dev_info(parent, "could not find AB850X node in the device tree\n");
- 		return -ENODEV;
- 	}
--	of_irq_to_resource_table(np, &ab8500_resource, 1);
-+	of_irq_to_resource_table(np, &ab850x_resource, 1);
- 
--	return mfd_add_devices(parent, 0, &ab8500_cell, 1, NULL, 0, NULL);
-+	return mfd_add_devices(parent, 0, ab850x_cell, 1, NULL, 0, NULL);
- }
- 
- /**
+ 		prcmu@80157000 {
+-			cpufreq {
+-				status = "okay";
+-			};
+-
+ 			ab8500 {
+ 				ab8500-gpio {
+ 					/*
 -- 
 2.23.0
 
