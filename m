@@ -2,96 +2,139 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98808C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 14:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33916C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2C8206B6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 14:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0804020862
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="umlsD5D/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSF53An0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfKROpT (ORCPT
+        id S1726970AbfKRPEI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:45:19 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42098 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfKROpT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 09:45:19 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAIEjAqh014685;
-        Mon, 18 Nov 2019 08:45:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574088310;
-        bh=ctTwfjC6MESChCXZHvxDAUGUwacS+WuFLzM6MQMYqkg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=umlsD5D/sxtMHzl6czy9c1X91mIxsoccFHQoBXVCPdYTGEEx8fPfPm1BLik1PgE9s
-         NfQyP+ExvZxhzHA+zwN5pGuYYC9BdF425RkXEMgrSJI3OTZzjoyuhiZYB0+F11sY9J
-         02vmIVibCBA9GqOdG1Eh/tTX8KViU/trkuXcs71Y=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAIEjAlX100119
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Nov 2019 08:45:10 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
- Nov 2019 08:45:10 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 18 Nov 2019 08:45:10 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAIEj8Ur105800;
-        Mon, 18 Nov 2019 08:45:08 -0600
-Subject: Re: [PATCH 1/2] bindings: sound: pcm3168a: Document optional RST gpio
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <alsa-devel@alsa-project.org>,
-        <kuninori.morimoto.gx@renesas.com>, <linus.walleij@linaro.org>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
- <20191113124734.27984-2-peter.ujfalusi@ti.com>
- <20191118130855.GE9761@sirena.org.uk>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <5f824119-9b5b-5ad2-6915-d174f9cca8af@ti.com>
-Date:   Mon, 18 Nov 2019 16:46:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 10:04:08 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36543 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfKRPEI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 10:04:08 -0500
+Received: by mail-io1-f66.google.com with SMTP id s3so19115360ioe.3;
+        Mon, 18 Nov 2019 07:04:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+oZ6XBVVe7I1cX+s2sXIa4IM62fmxh9531yoCFXPTGM=;
+        b=lSF53An03LtCGNOi36GN9iCZ2FyJft6Lik0Rk7cyOReJNpl9VO5hN52HU9NTwc+LdP
+         dESjXptW4UJYEC/AuVVPapfonwMb3ZYrfdJZ1mvWq46f8ilQPc7NPApBJkPxhXTetZUS
+         c0/W50PPQfFqvWjcbYy1rtgjtZwWo8yeC5dp9oXmIA8T8KlVybAbIYNtnMT75Syr5i1B
+         RJiy6UXyhvXH8AoOue873uvKsH1TqguUtNpNcHJFsx5ePlpWuGexKOrMP2dRWZI9vuUX
+         VYIt6+1bu6kIH0yxCfXX/cFwEWriUvp0pQcxTHx4xUy4BJG+TMVTxL8Rbwg6gCcXtUtn
+         TAIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+oZ6XBVVe7I1cX+s2sXIa4IM62fmxh9531yoCFXPTGM=;
+        b=r5jezo/KG79KG+5BBgM2IT70Kh4qHAcTwiMciUEidn0zdl/GQH0RNddcbQxomtI/Uf
+         p9xHY2k6v3b1hPbz8Ivlkv3wojZd58Lm/4mz+O+aLSPD/Q88O8xLRpP40fIhS+rLvNOg
+         yg8QudjeB0pXWbbFUGQHklU7nKM1hRhakxCXiKTMrd0DC4GiKJBhshzrdIJaR/S0akHB
+         qqGhb06Ec1lsgWOxiypYeFHwQgX1x1wWXEqtFYqTM9oWBDDrqDvDqIRct3wWtMpkM8Ub
+         XlMm60gkRm2W6MMz2kNUCa9BgB3Vv7al9Hn55mfYm0XYoDaGoUaNcb4KlUkg8rElMr96
+         AP3Q==
+X-Gm-Message-State: APjAAAXZoSEIy0HbLjy0syHTM1fhYQ3vcH+UCbWkMDQ9czI+ZKqmIQhx
+        i2gQWC9qUdJjt1MWuDEW4kkrHXApOrNQNtiD7oJeTw==
+X-Google-Smtp-Source: APXvYqyFD76RdMxNtH9QSsm4I2faOgXkxZzcI2NcZCJGSGNQ/Z/74ydbBjpOOw5pDA4LFIo37UsslQXGhKPxptOIV78=
+X-Received: by 2002:a5d:8195:: with SMTP id u21mr13641994ion.178.1574089447316;
+ Mon, 18 Nov 2019 07:04:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191118130855.GE9761@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191116064415.159899-1-bjorn.andersson@linaro.org>
+ <CAOCk7Nov_HvZe1Z6COd2z=VUf=mVbvqS4wjqU4Ee=F1qR_KKww@mail.gmail.com> <20191118024145.GC25371@yoga>
+In-Reply-To: <20191118024145.GC25371@yoga>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 18 Nov 2019 08:03:56 -0700
+Message-ID: <CAOCk7Np=SfjThR3mTJDsHMAKsisemYRUzKr6BawNCEy8jPPkdQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mark,
+On Sun, Nov 17, 2019 at 7:41 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Sat 16 Nov 14:24 PST 2019, Jeffrey Hugo wrote:
+>
+> > On Fri, Nov 15, 2019 at 11:44 PM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > The msm_serial driver uses a simple counter to determine which port to
+> > > use when no alias is defined, but there's no logic to prevent this from
+> >
+> > Which port to use for what, the default console?
+> >
+>
+> The driver defines three (3) struct uart_ports (wrapped in struct
+> msm_ports), see msm_uart_port[] around line 1538 in msm_serial.c
+>
+> This means that you can have a whooping 3 instances of msm_serial in the
+> system and per the logic found in msm_serial_probe() the allocation
+> follows the serial%d aliases defined and for entries without an alias a
+> simple counter, starting at 0 is used.
 
-On 18/11/2019 15.08, Mark Brown wrote:
-> On Wed, Nov 13, 2019 at 02:47:33PM +0200, Peter Ujfalusi wrote:
->> On boards where the RST line is not pulled up, but it is connected to a
->> GPIO line this property must present in order to be able to enable the
->> codec.
-> 
-> Please submit patches using subject lines reflecting the style for the
-> subsystem, this makes it easier for people to identify relevant patches.
-> Look at what existing commits in the area you're changing are doing and
-> make sure your subject lines visually resemble what they're doing.
-> There's no need to resubmit to fix this alone.
+Ah.  Clearly no one needs more than 64k of memory, err 3 uart ports  :)
 
-What would be the appropriate subject line for
-Documentation/devicetree/bindings/sound
+>
+> > > not colliding with what's defined by the aliases. As a result either
+> > > none or all of the active msm_serial instances must be listed as
+> > > aliases.
+> > >
+> > > Define blsp1_uart3 as "serial1" to mitigate this problem.
+> > >
+> > > Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >
+> > That driver behavior seems like a strange thing to be doing.
+> >
+> > If you clarify the question above, -
+> > Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> >
+>
+> Thanks, I'll respin the message to properly document this behavior.
 
-Oops, I have missed the dt- prefix for the bindings for sure.
+Sounds good.
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>
+> Regards,
+> Bjorn
+>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > index 5f101a20a20a..e08fcb426bbf 100644
+> > > --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > @@ -9,6 +9,7 @@
+> > >  / {
+> > >         aliases {
+> > >                 serial0 = &blsp2_uart1;
+> > > +               serial1 = &blsp1_uart3;
+> > >         };
+> > >
+> > >         chosen {
+> > > --
+> > > 2.23.0
+> > >
