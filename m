@@ -2,99 +2,80 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF36C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 09:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1552C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 09:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2790320740
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 09:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76C32075C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 09:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKRJWJ (ORCPT
+        id S1726881AbfKRJWj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:22:09 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:42143 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRJWJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 04:22:09 -0500
-Received: from [192.168.1.155] ([77.2.21.1]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MA7Ss-1ih3Le0u1C-00BaBS; Mon, 18 Nov 2019 10:22:00 +0100
-Subject: Re: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Mon, 18 Nov 2019 04:22:39 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:37256 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbfKRJWi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 04:22:38 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAI9MK2f001187, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAI9MK2f001187
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 18 Nov 2019 17:22:20 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Mon, 18 Nov 2019 17:22:20 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 18 Nov 2019 17:22:19 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::5cc4:90a5:6821:926]) by
+ RTEXMB03.realtek.com.tw ([fe80::5cc4:90a5:6821:926%8]) with mapi id
+ 15.01.1779.005; Mon, 18 Nov 2019 17:22:19 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
-Date:   Mon, 18 Nov 2019 10:21:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v3 6/8] ARM: dts: rtd1195: Add reset nodes
+Thread-Topic: [PATCH v3 6/8] ARM: dts: rtd1195: Add reset nodes
+Thread-Index: AQHVnRfWQHpokuCZUUmFW9fO0MELfKeQpIVQ
+Date:   Mon, 18 Nov 2019 09:22:19 +0000
+Message-ID: <20b3d0956bed4338a540216df07f16e5@realtek.com>
+References: <20191117072109.20402-1-afaerber@suse.de>
+ <20191117072109.20402-7-afaerber@suse.de>
+In-Reply-To: <20191117072109.20402-7-afaerber@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.190.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:4denmKhNZWlkhU/6wZxpJ6tT4GPJm7SFEqAwphUjKJ4JwzSIJlT
- HH7hR7I1oNqe3Kuh6tBPs5tV66m86jUTpZKFHLHrS4BXAo1mI3q9RQJvMbdUEjT7kzFPyOR
- iT4WSCiX2wJ/uIRGfilYVKYB8Jj+mSVe5GmBQNgcTMn22HoIJea5t48F3lzUy4DjoGv7BoR
- 8S61Ly8Kws3WmyoneRCAA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4z9+rY3Md2A=:++y1JdnfZxcMCQZQ08DSMW
- YVe+7GI3l8e0AhK1IDEnizdgPeiPTpfNDkcnkkQFxG+olfpFXeWCLgFsOOIQFZYClsp63M4g4
- FnVWdmU+KFiQS7eDcRb0cthHxYrH0LEQO/jTcDNwXXr3mWnJKsJxst2l49AgWNAaTXjHrfQ6V
- rPEaMBu99h2CKtK0R/Oi8DODWZZCIGWi1Q5UteMA4GD1Tsw1RPkbdzYatXNO8kH6vwOLV0mnq
- 9hPi7zWh1fOfium8PjU+Lbsg2W+4PEgDtl21XkCZsTw63sUx7qZXX9DJkxg55BqhXJHaOrosX
- Zvjl4O3syOngg3ujsskc8kj+tvMK3wDmYdtYlVmdL1V0YeoH/N5+J4eBit5W8SuRHms3Nacwy
- DAHBeM8aIodjjPETVXjgSdfxsM/VIwg5zgjnwOyDM3+5bLcCI3bSddKNCw4oIqsyJ9JasRGS8
- xCnmesGTjoAp5j5zTgO5rRmP3QUpUjtI3dfBFgW4FeJmw2LK2CxUQtBjOsBjwHd+LwDXsECPB
- /uKrwK0gwIFB7QqQJgCINIghhSbXwinwmUNMXbbdobW0o0dwMKMdpmr557e88crO3CkgHsIOd
- 75527jQGgoKbnS7zNzxIYAlkAQUPYPWy3PUIUA9di3lmmmnyfq0k659D8e2Arfsz7K/H2inC0
- T2dvaw03JWqUhPKy/7+5GvY6VLb90DPeQj3m2ayn7bkwkFsJR+kd2lLCSmY0B9+qRbshgZH+q
- Jvl5X4icBwLSH43gtgRCCWhrH/sgyM9vicOB+PZJCDALE1HcfZLqqhyjhzTkhuS0F6K+nalSJ
- pis9bQLO+J/yb8PFunl16TTzJcsR877j0sw16pZuvGoXaNu1f/1b5Ljk5rLB05KwbGvqf1fFu
- xvGDspK9BypSQpSMtWuA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-
-> The thing is that
-> this approach requires the LED controller binding to dictate allowed
-> LED node names - which may or may not be doable. I need your help to
-> evaluate this and suggest better options :)
-
-even though I like the idea of convention-over-code, but if that's
-changing allowed LED names that would risk breaking things, eg:
-
-a) existing DT's (in the field) become incompatible with newer
-   kernel versions
-b) existing userlands that rely on speicific LED names become
-   incomatible with newer kernel versions.
-
-
-
---mtx
-
--- 
-Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
-sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
-selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
-stammen scheinen. Andernfalls droht Totalschaden.
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+SGkgQW5kcmVhcywNCg0KPiArCQkJcmVzZXQxOiByZXNldC1jb250cm9sbGVyQDAgew0KPiArCQkJ
+CWNvbXBhdGlibGUgPSAic25wcyxkdy1sb3ctcmVzZXQiOw0KPiArCQkJCXJlZyA9IDwweDAgMHg0
+PjsNCj4gKwkJCQkjcmVzZXQtY2VsbHMgPSA8MT47DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQlyZXNl
+dDI6IHJlc2V0LWNvbnRyb2xsZXJANCB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJzbnBzLGR3LWxv
+dy1yZXNldCI7DQo+ICsJCQkJcmVnID0gPDB4NCAweDQ+Ow0KPiArCQkJCSNyZXNldC1jZWxscyA9
+IDwxPjsNCj4gKwkJCX07DQo+ICsNCj4gKwkJCXJlc2V0MzogcmVzZXQtY29udHJvbGxlckA4IHsN
+Cj4gKwkJCQljb21wYXRpYmxlID0gInNucHMsZHctbG93LXJlc2V0IjsNCj4gKwkJCQlyZWcgPSA8
+MHg4IDB4ND47DQo+ICsJCQkJI3Jlc2V0LWNlbGxzID0gPDE+Ow0KPiArCQkJfTsNCj4gKw0KPiAr
+CQkJaXNvX3Jlc2V0OiByZXNldC1jb250cm9sbGVyQDcwODggew0KPiArCQkJCWNvbXBhdGlibGUg
+PSAic25wcyxkdy1sb3ctcmVzZXQiOw0KPiArCQkJCXJlZyA9IDwweDcwODggMHg0PjsNCj4gKwkJ
+CQkjcmVzZXQtY2VsbHMgPSA8MT47DQo+ICsJCQl9Ow0KPiArDQoNCldlIGRvbid0IHVzZSB0aGUg
+RGVzaWduV2FyZSBJUCBmb3IgdGhlIHJlc2V0IGNvbnRyb2xsZXIuDQoNCg0KUmVnYXJkcywNCkph
+bWVzDQoNCg0K
