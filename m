@@ -2,83 +2,116 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2400C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56020C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A19520878
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D3E20857
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfKRK16 (ORCPT
+        id S1726464AbfKRKib (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:27:58 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35428 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRK15 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 05:27:57 -0500
-Received: by mail-ot1-f66.google.com with SMTP id c14so7057476oth.2;
-        Mon, 18 Nov 2019 02:27:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cps1AEdQSOSYe+4YbYRz6EwFm1Mh8AvkGzzfxXJlMXs=;
-        b=i5nbIik/OgRNx69m+TwJWmBuzUovRySdJVNgeUv9pmThwg5YMB96NPu/cWmQdDEtvc
-         QQrEF5kUIDjsayci+HIIBlb0a4ILf7i0MkDU1R1isf2yNDYH4b3a5u8UOlBEq82470Dy
-         pUTkc2jM34cJzeHhoKJZTsfEU8GYjpSTk83DgrltrF4u0FP1ngGsIZXAOCEotM39zvvK
-         keXvAjE/CNPWj4YNTDtRXRMHgTSEHVNGjPwiGGNgceGrrivgc9DG0p+ccX8A4MoRlLtm
-         FAFuOnqTMu3Kf/jl+MeWXSJ3LSR5aqiBS+PZcq5zgpzhG2TdBTZzrMYEmz/aqLWZq2Wd
-         sLeA==
-X-Gm-Message-State: APjAAAXbESEbpOhFVHxEkFmKmV3srq0dhSkJ54D/N+kEo7nG91E8Wy7q
-        YvNuPe6LYTQFRgNxYSVsVeyEyaTGbu189o2aQcU=
-X-Google-Smtp-Source: APXvYqytQ+bWoP+XIOk4tfcw8HJiBm+bQBe7g+Qla5SOXeOMHSvzieKEPq7sl4Ud7zno8fMGkUR3H2wB8W0foYwrtT0=
-X-Received: by 2002:a9d:17ca:: with SMTP id j68mr21318059otj.250.1574072876862;
- Mon, 18 Nov 2019 02:27:56 -0800 (PST)
+        Mon, 18 Nov 2019 05:38:31 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:50812 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRKib (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 05:38:31 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-33-5dd274a5829f
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 93.B6.08102.5A472DD5; Mon, 18 Nov 2019 11:38:29 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 18 Nov 2019 11:38:17 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "info@metux.net" <info@metux.net>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
+Thread-Topic: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
+Thread-Index: AQHVjlbfnKGQ2A80TEuw50r1eox3kqeQtb4AgAAVbAA=
+Date:   Mon, 18 Nov 2019 10:38:16 +0000
+Message-ID: <946f091e79242b9e71d5ce8ad12c899feefa22cd.camel@fi.rohmeurope.com>
+References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+         <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
+In-Reply-To: <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B15809EE67717246A3283AB86CCE6A6D@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1572591791-11280-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1572591791-11280-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1572591791-11280-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 Nov 2019 11:27:45 +0100
-Message-ID: <CAMuHMdXV0=Sb22cg0od28OTrwro0X+3m2Zd6D+7nx6m30_HX2g@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] clk: renesas: rcar-usb2-clock-sel: Add reset_control
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUgUYRjmm5nd/TwmPqet/VrLaiLCJLfCH0OnP5JWA8ssgmizMSdnSXdl
+        dg0ria2QUhczqLStLNJNs9ssjzJisxu2wy6JRewClwrpwEqy5msq/TXPPMf7vPC9kOYO6c3Q
+        7nBLikPM4/WRzPWGwQsz/O7Htpn1ZxKFo51BnVB+v1kndG+/QgkvL51nhK72w3rh0vuzQPA/
+        f0QJh/13GCF076ZeKOnoNCRHWk/XnAbWNl/IYG1qLNVbK/s/6K23X7RQ1oZTAwbr56a4ZYbV
+        UfOyRfemTHuuw7JgXZQculZDFVSPKxos2WHwgE5cBiIgRkm4y/OTLgORkENPAW5s22XQfu4A
+        fCywnSoDEOrRPFzWbSABI1qLPRe/6YiHRtU0/ljV/kcYjdJwaaiC1kxLcPuPyzTJGtEcXOOV
+        Cc2gqbi0sV5HMIvScd25Zzpi4VARrqg3EToCzccnaob0BAM0AZd6PlIE08iEm94N6LSdEa67
+        +oDW8Bjc93roL8/jju+9DBlJo3h8rt2iRZPx131BoOHJeF95r0HbIAbfPfiGqQRjfSMafMNp
+        34i0b0TaNyJ9DOgaAc4X7Xm5olualahIhYmKU85XP+ud+U1Ae+wvreBXIDUAKAgCYByk+DHs
+        xIWPbNyobGfOZll0yVlKYZ7kCgAMad7Ipr96aOPYHHHzFklx/pNiIcOb2Gm9e20cIl0bJalA
+        Uv6p4yHkMbtTeWzjYhQpVyraYM9zD8sUjCDDI81Gl+TIkRSx0C1nkevIcqnnQaRotZdzqXHW
+        VSDmq6wWvQcSYGXfkeM07DziP05zjMPpkMwmNjletSJilQsd/4vCwAQBP5p9QvaIVi/+/5yw
+        WkGpFQmtQVLhFoclswekb9tRm2Jdlfos9CTotS3flhTd9T4c7umJjVtztMSfs9+WKBenNadW
+        hrbqlkYvsfTuStotZOy9tcd4dor37Qd3ZpUlyK9cE14x+Wsglh1I+RYzCClzw+I9tzfaJ32K
+        z0iImD83bMlqqz6QbmpuKS/uWBS388bJlrTi2VVeb39teAvPuGRx1nRacYm/AVkuD5auAwAA
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 8:03 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> This hardware needs to deassert resets of both host and peripheral.
-> So, this patch adds reset control.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Not yet queueing in clk-renesas-for-v5.6, as this depends on earlier
-patches in the series.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGVsbG8gRW5yaWNvICYgQWxsLA0KDQpGaXJzdCBvZiBhbGwgLSB0aGFua3MgZm9yIHNob3dpbmcg
+dGhlIGludGVyZXN0IDpdIEkgYW0gaGFwcHkga25vd2luZw0Kc29tZW9uZSBhY3R1YWxseSB3YXMg
+aW50ZXJlc3RlZCBhYm91dCB0aGUgUkZDIDopDQoNCk9uIE1vbiwgMjAxOS0xMS0xOCBhdCAxMDoy
+MSArMDEwMCwgRW5yaWNvIFdlaWdlbHQsIG1ldHV4IElUIGNvbnN1bHQNCndyb3RlOg0KPiBIaSwN
+Cj4gDQo+IA0KPiA+IFRoZSB0aGluZyBpcyB0aGF0DQo+ID4gdGhpcyBhcHByb2FjaCByZXF1aXJl
+cyB0aGUgTEVEIGNvbnRyb2xsZXIgYmluZGluZyB0byBkaWN0YXRlDQo+ID4gYWxsb3dlZA0KPiA+
+IExFRCBub2RlIG5hbWVzIC0gd2hpY2ggbWF5IG9yIG1heSBub3QgYmUgZG9hYmxlLiBJIG5lZWQg
+eW91ciBoZWxwDQo+ID4gdG8NCj4gPiBldmFsdWF0ZSB0aGlzIGFuZCBzdWdnZXN0IGJldHRlciBv
+cHRpb25zIDopDQo+IA0KPiBldmVuIHRob3VnaCBJIGxpa2UgdGhlIGlkZWEgb2YgY29udmVudGlv
+bi1vdmVyLWNvZGUsIGJ1dCBpZiB0aGF0J3MNCj4gY2hhbmdpbmcgYWxsb3dlZCBMRUQgbmFtZXMg
+dGhhdCB3b3VsZCByaXNrIGJyZWFraW5nIHRoaW5ncywgZWc6DQo+IA0KPiBhKSBleGlzdGluZyBE
+VCdzIChpbiB0aGUgZmllbGQpIGJlY29tZSBpbmNvbXBhdGlibGUgd2l0aCBuZXdlcg0KPiAgICBr
+ZXJuZWwgdmVyc2lvbnMNCg0KVGhpcyB3YXMgbXkgbWFpbiBjb25jZXJuLiBUaGlzIG9mIGNvdXJz
+ZSB3b3VsZCBub3QgbWVhbiB0aGF0IHdlIGNvdWxkDQpub3QgdGFrZSB0aGlzIGFwcHJvYWNoIGZv
+ciBuZXcgTEVEIGNvbnRyb2xsZXIgZHJpdmVycyAtIGJ1dCB0aGF0IHdvdWxkDQoocHJvYmFibHkp
+IGxlYWQgdG8gZHVhbCBsZWQgcmVnaXN0cmF0aW9uIGludGVyZmFjZSAtIG9uZSBmb3IgY3VycmVu
+dA0KYXBwcm9hY2ggd2hlcmUgTEVEIGRyaXZlcnMgZG8gYWxsIHRoZSBkaXJ0eSB3b3JrIHRoZW1z
+ZWxmIC0gYW5kIHBhcnNlDQp0aGUgRFQgLSBvbmUgZm9yIG5ldyBkcml2ZXJzIHdoaWNoIGNvdWxk
+IGxlYXZlIERUIHBhcnNpbmcgdG8gTEVEIGNvcmUuDQoNCj4gYikgZXhpc3RpbmcgdXNlcmxhbmRz
+IHRoYXQgcmVseSBvbiBzcGVpY2lmaWMgTEVEIG5hbWVzIGJlY29tZQ0KPiAgICBpbmNvbWF0aWJs
+ZSB3aXRoIG5ld2VyIGtlcm5lbCB2ZXJzaW9ucy4NCg0KSSBkaWRuJ3QgZXZlbiB0aGluayB0aGlz
+IGZhciwgYnV0IHllcywgSSBzZWUuLi4gTEVEIG5vZGUgbmFtZSBtaWdodCBiZQ0KcmVmbGVjdGVk
+IGluIHVzZXItc3BhY2UgTEVEIG5hbWUuIEkgd29uJ3Qgc3RhcnQgYXJndWluZyBpZiB0aGlzIGlz
+IHNhbmUNCm9yIG5vdCAtIHRoaXMgaXMgd2hhdCB3ZSBzZWVtIHRvIGJlIGxpdmluZyB3aXRoIHRv
+ZGF5IDopDQoNCkFueXdheXMsIEkgZGlkIHNlbmQgb3V0IGEgTEVEIGNvcmUgY2hhbmdlIHBhdGNo
+IHdoaWNoIGFsbG93cyBvbmUgdG8gYWRkDQplaXRoZXIgdGhlIG5vZGUtbmFtZSwgb3IgYSBwcm9w
+ZXJ0eS12YWx1ZSBwYWlyIGluIGluaXRfZGF0YS4gTEVEIGNvcmUNCmNhbiB0aGVuIHVzZSBlaXRo
+ZXIgb2YgdGhlc2UgdG8gZG8gTEVEIG5vZGUgbG9va3VwLiBJZiBub25lIG9mIHRoZXNlIGlzDQpn
+aXZlbiwgdGhlbiB3ZSBjYW4gZmFsbC1iYWNrIHRvIGV4aXN0aW5nIGxvZ2ljLiBUaGF0IHdheSB3
+ZSB3b24ndA0KY2hhbmdlIGV4aXN0aW5nIHN0dWZmLg0KSGVyZToNCmh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xrbWwvMjU4YjVjOTkzNGUyYjMxYTVmNDMzYTdkYmI5MDhkZmU1ZGEzZDMwYy4xNTc0
+MDU5NjI1LmdpdC5tYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20vVC8jdQ0KDQoNCkkg
+ZGlkbid0IGludmVzdCB0b28gbXVjaCBvZiB0aW1lIG9uIHRoaXMgeWV0IC0gYnV0IGF0IGZpcnN0
+IGdsaW1wc2UgaXQNCnNlZW1lZCB0aGF0IGF0IGxlYXN0IHNvbWUgb2YgdGhlIGRyaXZlcnMgZGlk
+IHVzZSByZWcgLSBwcm9wZXJ0eSB3aXRoDQpmaXhlZCB2YWx1ZSB0byBkbyB0aGUgbWF0Y2hpbmcu
+IFRob3NlIGNvdWxkIHNldCB0aGUgcHJvcGVydHkgbmFtZSB0bw0KJ3JlZycgYW5kIHZhbHVlIHRv
+ICdYJyBhbmQgbGVhdmUgdGhlIERUIG5vZGUgbG9va3VwIGFuZCBjb21tb24gcHJvcGVydHkNCnBh
+cnNpbmcgdG8gdGhlIExFRCBjb3JlLiBJZiBteSBwYXRjaCB3b24ndCBnZXQgdG9vIGJpZyBvYmpl
+Y3Rpb24gKGFuZA0KaWYgbm8gZmF0YWwgZmxhd3MgYXJlIGZvdW5kIGZyb20gdGhlIGlkZWEpIC0g
+dGhlbiBJIG1pZ2h0IHRyeSBhbmQgZmluZA0KdGhlIHRpbWUgdG8gZG8gc29tZSBmb2xsb3ctdXAg
+cGF0Y2hlcyBzaW1wbGlmeWluZyBleGlzdGluZyBMRUQNCmRyaXZlcnMuLi4NCg0KPiANCj4gDQo+
+IA0KPiAtLW10eA0KPiANCg0K
