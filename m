@@ -2,122 +2,235 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660B6C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF55C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7D02075E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574082603;
-	bh=Q2eXGwHQq4s+yurJ+wKhOG5NXQbSVgnFrrs1gy2woBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Jv2mDweQWfXEe+D0RMwplli/jGXCEjAR5w0rLJZ8bcDM1nPvQe5tFxhnat6KriJdd
-	 LOseC8CzKQ/XA5x93GEnVtGrzde44GL+umevnGCcun30BBN8fU0Lvmcpnumr+B+P34
-	 Wp7N19M+xg7yipxnqstybIFMZ8N5l2AjUDVl24ig=
+	by mail.kernel.org (Postfix) with ESMTP id 08BE7206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXP6GE/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfKRNJ7 (ORCPT
+        id S1726506AbfKRNXV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:09:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:34538 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfKRNJ7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:09:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D3681FB;
-        Mon, 18 Nov 2019 05:09:58 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E5563F6C4;
-        Mon, 18 Nov 2019 05:09:57 -0800 (PST)
-Date:   Mon, 18 Nov 2019 13:09:56 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, kuninori.morimoto.gx@renesas.com,
-        lgirdwood@gmail.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        robh+dt@kernel.org
-Subject: Applied "ASoC: pcm3168a: Document optional RST gpio" to the asoc tree
-In-Reply-To: <20191113124734.27984-2-peter.ujfalusi@ti.com>
-Message-Id: <applied-20191113124734.27984-2-peter.ujfalusi@ti.com>
-X-Patchwork-Hint: ignore
+        Mon, 18 Nov 2019 08:23:21 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39439 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfKRNXV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 08:23:21 -0500
+Received: by mail-wr1-f68.google.com with SMTP id l7so19444536wrp.6;
+        Mon, 18 Nov 2019 05:23:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+Fi408zecYZ+JxozjOtIUW0lemV9jQmGDB7s5YARwS4=;
+        b=MXP6GE/s65zeyFbxCAQO8+XQ37PB8b9NTT+gYUaRizGiqk8dzMDnu1ZImZGS7+BU7+
+         W5wL+EpoBz6WZJ1S1Cb0UlMVRkIjXo2mMz6rQ6EEtS0dh9NsjaIye0ZEAc0/syEAHWK4
+         ctEGnHvvzoai9MhB9zz7JbZkVDKLsEgl3pKKiO8vwKbRNf+s7tDwZs5vq5iZgQvwcJCv
+         xyPDK20qmVH1RLImk5ToTNQ4cz1QoU5guGC647j7AeYqgO80pUn+lWpu4xZrfMWga1AF
+         +j7BuyAhA7/0jXrA4Kjt/WYlJ/VBgmt0/ehcsZqBHN0SmRAO9wcdm0qBloh4fzp+iPp2
+         FDqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+Fi408zecYZ+JxozjOtIUW0lemV9jQmGDB7s5YARwS4=;
+        b=AKibUZSnOngaSp23/RLUuGI79KM2dNMZBQm+wBowT8zoHdoHDgxVVl9wYfLaViOwec
+         CJCQrun9Zs+7jDCRJfGcSHU3v1pgrgagaF1N7raIJJPsLMH/IkiNUD9EIjirn74FZBLY
+         cdBEJMIpAlHmhf1Wn617YgTgGP4ufZFiPNvS1A2y7hdD4gn/eyqop/qIq1MYPhPt8W2W
+         LL3vBzPl77mE2nDdGf/oQhugQzVEVU2AxqQrQxQZkgg0jZSpHvTCcTle3x9DtasVKZSG
+         wweKpBnivCtjPjVtQDxL78RFzdFuuQca1sBIerTfPqO58rVUcaRN9aRO/FJd2es3WuAH
+         pQ1Q==
+X-Gm-Message-State: APjAAAWX1OmOA3ExRxB9WODEgKaDxhe/OZ6RnDUgfo6McnjRPQf0n2Qv
+        wEU/Sr1Ya/E2lAUt65ccT8RTEkBkQPjubBWqHOw=
+X-Google-Smtp-Source: APXvYqyo4y/agQzVtH2ECZnIYIOGEv1/ZBv1PJs0+BopW0iO5N/GQIYDUcjrFOcZYJWpd5uRqmvXsp8uSQF/TUlfCiA=
+X-Received: by 2002:adf:da52:: with SMTP id r18mr30182195wrl.167.1574083397043;
+ Mon, 18 Nov 2019 05:23:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20191118110034.19444-1-peron.clem@gmail.com> <20191118110034.19444-2-peron.clem@gmail.com>
+ <20191118110640.GE4345@gilmour.lan> <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
+ <20191118125702.GK4345@gilmour.lan>
+In-Reply-To: <20191118125702.GK4345@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 18 Nov 2019 14:23:05 +0100
+Message-ID: <CAJiuCcfBurkmX-6j9T2JHsdUw+RGCnuBSYCpo5BG+V-H-mcLUw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM description
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Hi,
 
-   ASoC: pcm3168a: Document optional RST gpio
+On Mon, 18 Nov 2019 at 13:57, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Mon, Nov 18, 2019 at 01:42:48PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi Maxime
+> >
+> > On Mon, 18 Nov 2019 at 12:06, Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > >
+> > > > H6 PWM block is basically the same as A20 PWM, except that it also =
+has
+> > > > bus clock and reset line which needs to be handled accordingly.
+> > > >
+> > > > Expand Allwinner PWM binding with H6 PWM specifics.
+> > > >
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > ---
+> > > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++=
+++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-=
+a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
+m.yaml
+> > > > index 0ac52f83a58c..1bae446febbb 100644
+> > > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+.yaml
+> > > > @@ -30,13 +30,51 @@ properties:
+> > > >        - items:
+> > > >            - const: allwinner,sun50i-h5-pwm
+> > > >            - const: allwinner,sun5i-a13-pwm
+> > > > +      - const: allwinner,sun50i-h6-pwm
+> > > >
+> > > >    reg:
+> > > >      maxItems: 1
+> > > >
+> > > >    clocks:
+> > > > +    minItems: 1
+> > > > +    maxItems: 2
+> > > > +    items:
+> > > > +      - description: Module Clock
+> > > > +      - description: Bus Clock
+> > > > +
+> > > > +  # Even though it only applies to subschemas under the conditiona=
+ls,
+> > > > +  # not listing them here will trigger a warning because of the
+> > > > +  # additionalsProperties set to false.
+> > > > +  clock-names: true
+> > > > +
+> > > > +  resets:
+> > > >      maxItems: 1
+> > > >
+> > > > +  if:
+> > > > +    properties:
+> > > > +      compatible:
+> > > > +        contains:
+> > > > +          const: allwinner,sun50i-h6-pwm
+> > > > +
+> > > > +  then:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        maxItems: 2
+> > > > +
+> > > > +      clock-names:
+> > > > +        items:
+> > > > +          - const: mod
+> > > > +          - const: bus
+> > > > +
+> > > > +    required:
+> > > > +      - clock-names
+> > > > +      - resets
+> > > > +
+> > > > +  else:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        maxItems: 1
+> > > > +
+> > >
+> > > Sorry for not noticing this earlier, but this should be at the topmos=
+t
+> > > level
+> >
+> > No problem, but I don't get what you want, (yaml format is new for me).
+> > Do you mean I should put the if condition before the "resets" ?
+>
+> No, here if we condense a bit the file, we have something like:
+>
+> title: PWM
+>
+> properties:
+>   compatible:
+>     ...
+>
+>   ...
+>
+>   resets:
+>     ...
+>
+>   if:
+>     properties:
+>       ...
+>
+>   then:
+>     properties:
+>       ...
+>
+> which means that you expect that the node may contain a compatible
+> property, a resets one, and then two properties "if" and "then", which
+> in turn contain properties (ie, two nodes).
+>
+> This is obviously not what you want, what you want instead is:
+>
+> properties:
+>   compatible:
+>     ...
+>
+>   ...
+>
+>   resets:
+>     ...
+>
+> if:
+>   properties:
+>     ...
+>
+> then:
+>   properties:
+>     ...
+>
+> Which then describes that there's two properties, compatible and
+> resets, and if the schema under 'if' is valid against the node we try
+> to validate, the schema under 'then' is used to validate the node as
+> well.
+>
+> I hope it's clearer,
 
-has been applied to the asoc tree at
+Yes it's totally clear didn't see this bad indentation,
+Thanks for the catch and for the explanation.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+Regards,
+Cl=C3=A9ment
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From cdacc761dae1cbd6475ac79f0e732f2b1ca021e0 Mon Sep 17 00:00:00 2001
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Wed, 13 Nov 2019 14:47:33 +0200
-Subject: [PATCH] ASoC: pcm3168a: Document optional RST gpio
-
-On boards where the RST line is not pulled up, but it is connected to a
-GPIO line this property must present in order to be able to enable the
-codec.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20191113124734.27984-2-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/ti,pcm3168a.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-index 5d9cb84c661d..f30aebc7603a 100644
---- a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-+++ b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-@@ -25,6 +25,12 @@ Required properties:
- 
- For required properties on SPI/I2C, consult SPI/I2C device tree documentation
- 
-+Optional properties:
-+
-+  - rst-gpios : Optional RST gpio line for the codec
-+		RST = low: device power-down
-+		RST = high: device is enabled
-+
- Examples:
- 
- i2c0: i2c0@0 {
-@@ -34,6 +40,7 @@ i2c0: i2c0@0 {
- 	pcm3168a: audio-codec@44 {
- 		compatible = "ti,pcm3168a";
- 		reg = <0x44>;
-+		rst-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
- 		clocks = <&clk_core CLK_AUDIO>;
- 		clock-names = "scki";
- 		VDD1-supply = <&supply3v3>;
--- 
-2.20.1
-
+> Maxime
