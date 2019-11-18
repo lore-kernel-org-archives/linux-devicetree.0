@@ -2,486 +2,411 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FF5C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1721C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F0720643
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749772230C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S8hsXmjp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m2c5Q0c7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfKRWnf (ORCPT
+        id S1726705AbfKRW4c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:43:35 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36891 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbfKRWne (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:43:34 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d5so20924796ljl.4
-        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 14:43:32 -0800 (PST)
+        Mon, 18 Nov 2019 17:56:32 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39907 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKRW4c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:56:32 -0500
+Received: by mail-pl1-f195.google.com with SMTP id o9so10607844plk.6
+        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 14:56:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NfeVkemyC8oyPuWZJoeCqGa9v7ojQFXCd2NHyi2TdYw=;
-        b=S8hsXmjpYuCsCskV7Y6l4Rpaulk2jrQL2fKqFec12o+n9Qvb/dPitq0+qUlugpSo6F
-         ZkJobCv9kiUVHi3wMyjgoxCtZX4oHPziEGuXIrlf9l3SJFu7VLlsukig7PSKmqjpgu4o
-         qt5e38JqN5+5VI57msYHUzvXFy5DgUiliewtE=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VweJvPw9KXJliTxPoEDSfPBhjVqbH3eDBuR8yLkz1fQ=;
+        b=m2c5Q0c74gWhnvp4je3yqVZcm7DqVKA7jisqzl6wqj+KANRa+9gSEkePSx+qbZoaIq
+         R2c1K/fg1JRaP08zgUhVHsKc0UZenovlOMyQ1F2TrUrw6RR3kPVdEqoPCz/2/QV0ujBl
+         d0EYKzY0yKLJSxhzPstWXVbPrtYo9FEq/D4zp6Gzw1Tw6zo7oTYjN7gxJhq4Pn1qFRKo
+         VNPGFVlrlhX8jRdiH9N+9SvGBuJIl/CdyGNXCR4hKHsG2SR6zcgToLbfRJp/c3DjjAku
+         3vMG2cMRTOXpO3/7Vseils5w5rk2vECowKwc3l92CduNFz0rQAYdSzOTB69H2EDUVqjq
+         zavg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NfeVkemyC8oyPuWZJoeCqGa9v7ojQFXCd2NHyi2TdYw=;
-        b=MVPGCSOQrCjePk7sAplszawKmfxHUx72pvoENX7upHiaMA0QdLSIRJGemhmR10/YzJ
-         vIFLOthZAUAfUzj/XoBan8jguTtQ+JpgxIPBbmTKHGc+2hevgpxBgEPiRY3cnumws7nC
-         TWLWd3wciIza/25b0nezdq7bpSmu85AUE9lzKLBTOjDOyS2ccUEsd74A2+sy695CyEUa
-         AnEO0w+k6ht/eRSd0ZkAYFg170ab0+NMJ4w2cyKqNsmJaCVyv9ZYH3S/two1M/jtNEOe
-         SUT4aCctCuiBs6fiuO7zEaL2B151xUSi5+c0ikyGNRhz6MGgBe2Fb+mRNvyFFdv7qNXt
-         nNMA==
-X-Gm-Message-State: APjAAAWmgWKwW7MxYyTL3ADfBBSFHZZ/5u+zCxJjAdL/VfzCQ9kv39xT
-        pjSETllRStLOVlLbrJ4danYgupe7Bt0=
-X-Google-Smtp-Source: APXvYqxZuFnQQyQA7fPRrga6Lgmow2+2YG0Mq5r6Eu5oRwvTNizrnbZjEs6HdvSL2Jvjbcrc7iWO9g==
-X-Received: by 2002:a2e:3c17:: with SMTP id j23mr1341352lja.49.1574117011151;
-        Mon, 18 Nov 2019 14:43:31 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id u67sm9244811lja.78.2019.11.18.14.43.29
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Nov 2019 14:43:29 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id q28so1299166lfp.2
-        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 14:43:29 -0800 (PST)
-X-Received: by 2002:ac2:46d7:: with SMTP id p23mr1241289lfo.104.1574117008414;
- Mon, 18 Nov 2019 14:43:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20191118154435.20357-1-sibis@codeaurora.org> <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Mon, 18 Nov 2019 14:42:51 -0800
-X-Gmail-Original-Message-ID: <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
-Message-ID: <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
- provider support
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VweJvPw9KXJliTxPoEDSfPBhjVqbH3eDBuR8yLkz1fQ=;
+        b=nmFMkvNfO5K+Q+Q57AjqV0JAxKsBI+oNcnrm5cLpqQuVK80RXePzylRmDcWDyOahQY
+         F5YHht5N8RNvHnDZAYopHpdkkHj6A1hq3jlqUymgZt+mQDAw3WhGVPhci1OG/rSOoQVo
+         +EUvoCY/2SBQdWMBdjvRiEO079zU26xw9p3QmoBlfYZN5gPiu+SY/0AhGamC4pjcLBdS
+         dJR/dHDJ+Mj8nsqXHSjmnnglaoRozZCq5kSBhDsY3wHfL3PBvah48eR3AaG8PGV5atCR
+         YhVt26WHHQPRkVThdjNGq3s4dc5Creytrn2TjgozeK9XFs6VVvc9HRYzz/vt8hILQNYd
+         HB2w==
+X-Gm-Message-State: APjAAAXlygJnu95G7fHda54zggUTKEnVc8VHWGkitl2ntdEgdUdPHTdI
+        Eyu2It6ntUU6wHZ8qNywVQyxBg==
+X-Google-Smtp-Source: APXvYqxPxXUh1fUDenKA7oTOOIicqOty+iYA7of050uUKhOw8y0cUSgnUpNevfVWnjpQcfqTd3YtVA==
+X-Received: by 2002:a17:90a:3746:: with SMTP id u64mr1928022pjb.4.1574117790803;
+        Mon, 18 Nov 2019 14:56:30 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id f35sm491856pje.32.2019.11.18.14.56.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Nov 2019 14:56:30 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:56:28 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] remoteproc: ingenic: Added remoteproc driver
+Message-ID: <20191118225628.GA18243@xps15>
+References: <20191116170846.67220-1-paul@crapouillou.net>
+ <20191116170846.67220-4-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191116170846.67220-4-paul@crapouillou.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sibi,
+Hi Paul,
 
-On Mon, Nov 18, 2019 at 7:45 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-> resources of scaling L3 caches. Add a driver to handle bandwidth
-> requests to OSM L3 from CPU/GPU.
->
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+On Sat, Nov 16, 2019 at 06:08:46PM +0100, Paul Cercueil wrote:
+> This driver is used to boot, communicate with and load firmwares to the
+> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
+> Ingenic.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  drivers/interconnect/qcom/Kconfig  |   7 +
->  drivers/interconnect/qcom/Makefile |   2 +
->  drivers/interconnect/qcom/osm-l3.c | 284 +++++++++++++++++++++++++++++
->  3 files changed, 293 insertions(+)
->  create mode 100644 drivers/interconnect/qcom/osm-l3.c
->
-> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-> index ecf057d7e2409..17aee5b0f15b7 100644
-> --- a/drivers/interconnect/qcom/Kconfig
-> +++ b/drivers/interconnect/qcom/Kconfig
-> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
->         help
->           Support for Qualcomm's Network-on-Chip interconnect hardware.
->
-> +config INTERCONNECT_QCOM_OSM_L3
-> +       tristate "Qualcomm OSM L3 interconnect driver"
-> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
+> 
+> Notes:
+>     v2: Remove exception for always-mapped memories
+>     v3: - Use clk_bulk API
+>         - Move device-managed code to its own patch [3/4]
+>     	- Move devicetree table right above ingenic_rproc_driver
+>     	- Removed #ifdef CONFIG_OF around devicetree table
+>     	- Removed .owner = THIS_MODULE in ingenic_rproc_driver
+>     	- Removed useless platform_set_drvdata()
+> 
+>  drivers/remoteproc/Kconfig         |   8 +
+>  drivers/remoteproc/Makefile        |   1 +
+>  drivers/remoteproc/ingenic_rproc.c | 242 +++++++++++++++++++++++++++++
+>  3 files changed, 251 insertions(+)
+>  create mode 100644 drivers/remoteproc/ingenic_rproc.c
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 94afdde4bc9f..f7d4b183d152 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -214,6 +214,14 @@ config STM32_RPROC
+>  
+>  	  This can be either built-in or a loadable module.
+>  
+> +config INGENIC_RPROC
 
-Should we depend on something sdm845 here?
+Are you sure you don't want to make this something like
+INGENIC_RPROC_JZ47XX_VPU so that future remote proc system from Ingenic can be
+added easily?
 
-> +       help
-> +         Say y here to support the Operating State Manager (OSM) interconnect
-> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
+> +	tristate "Ingenic JZ47xx VPU remoteproc support"
+> +	depends on MIPS || COMPILE_TEST
+> +	help
+> +	  Say y or m here to support the VPU in the JZ47xx SoCs from Ingenic.
+> +	  This can be either built-in or a loadable module.
+> +	  If unsure say N.
 > +
->  config INTERCONNECT_QCOM_QCS404
->         tristate "Qualcomm QCS404 interconnect driver"
->         depends on INTERCONNECT_QCOM
-> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-> index 9adf9e380545e..8d86d6515ffc9 100644
-> --- a/drivers/interconnect/qcom/Makefile
-> +++ b/drivers/interconnect/qcom/Makefile
-> @@ -1,10 +1,12 @@
->  # SPDX-License-Identifier: GPL-2.0
->
-> +icc-osm-l3-objs                                := osm-l3.o
->  qnoc-msm8974-objs                      := msm8974.o
->  qnoc-qcs404-objs                       := qcs404.o
->  qnoc-sdm845-objs                       := sdm845.o
->  icc-smd-rpm-objs                       := smd-rpm.o
->
-> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+>  endif # REMOTEPROC
+>  
+>  endmenu
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index 00f09e658cb3..6eb0137abbc7 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -10,6 +10,7 @@ remoteproc-y				+= remoteproc_sysfs.o
+>  remoteproc-y				+= remoteproc_virtio.o
+>  remoteproc-y				+= remoteproc_elf_loader.o
+>  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+> +obj-$(CONFIG_INGENIC_RPROC)			+= ingenic_rproc.a
+
+This comes out as one tab to many on my side.
+
+>  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+>  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+> diff --git a/drivers/remoteproc/ingenic_rproc.c b/drivers/remoteproc/ingenic_rproc.c
 > new file mode 100644
-> index 0000000000000..5e9f9ce02863b
+> index 000000000000..5a7c7d8d9a90
 > --- /dev/null
-> +++ b/drivers/interconnect/qcom/osm-l3.c
-> @@ -0,0 +1,284 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/drivers/remoteproc/ingenic_rproc.c
+> @@ -0,0 +1,242 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 > +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + *
+> + * Ingenic JZ47xx remoteproc driver
+> + * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
 > + */
 > +
-> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
-> +#include <dt-bindings/interconnect/qcom,sdm845.h>
-> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
 > +#include <linux/clk.h>
-> +#include <linux/interconnect-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
 > +#include <linux/io.h>
-> +#include <linux/kernel.h>
 > +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
 > +#include <linux/platform_device.h>
+> +#include <linux/remoteproc.h>
 > +
-> +#define LUT_MAX_ENTRIES                        40U
-> +#define LUT_SRC                                GENMASK(31, 30)
-> +#define LUT_L_VAL                      GENMASK(7, 0)
-> +#define LUT_ROW_SIZE                   32
-> +#define CLK_HW_DIV                     2
+> +#include "remoteproc_internal.h"
 > +
-> +/* Register offsets */
-> +#define REG_ENABLE                     0x0
-> +#define REG_FREQ_LUT                   0x110
-> +#define REG_PERF_STATE                 0x920
+> +#define REG_AUX_CTRL		0x0
+> +#define REG_AUX_MSG_ACK		0x10
+> +#define REG_AUX_MSG		0x14
+> +#define REG_CORE_MSG_ACK	0x18
+> +#define REG_CORE_MSG		0x1C
 > +
-> +#define OSM_L3_MAX_LINKS               1
+> +#define AUX_CTRL_SLEEP		BIT(31)
+> +#define AUX_CTRL_MSG_IRQ_EN	BIT(3)
+> +#define AUX_CTRL_NMI_RESETS	BIT(2)
+> +#define AUX_CTRL_NMI		BIT(1)
+> +#define AUX_CTRL_SW_RESET	BIT(0)
 > +
-> +#define to_qcom_provider(_provider) \
-> +       container_of(_provider, struct qcom_osm_l3_icc_provider, provider)
+> +struct vpu_mem_map {
+> +	const char *name;
+> +	unsigned int da;
+> +};
 > +
-> +enum {
-> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
-> +       SDM845_SLAVE_OSM_L3,
+> +struct vpu_mem_info {
+> +	const struct vpu_mem_map *map;
+> +	unsigned long len;
+> +	void __iomem *base;
+> +};
+> +
+> +static const struct vpu_mem_map vpu_mem_map[] = {
+> +	{ "tcsm0", 0x132b0000 },
+> +	{ "tcsm1", 0xf4000000 },
+> +	{ "sram",  0x132f0000 },
+> +};
+> +
+> +/* Device data */
+> +struct vpu {
+> +	int irq;
+> +	struct clk_bulk_data clks[2];
+> +	void __iomem *aux_base;
+> +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
+> +	struct device *dev;
 > +};
 
-Should these just go in qcom,sdm845.h? Seems nice to have them all in
-one place, and then they can be accessed in the DT if needed.
+Documentation of structure fields is always appreciated but it is up to Bjorn to
+decide on this one.
 
 > +
-> +struct qcom_osm_l3_icc_provider {
-> +       void __iomem *base;
-> +       unsigned int max_state;
-> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
-> +       struct icc_provider provider;
-> +};
-> +
-> +/**
-> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
-> + * @name: the node name used in debugfs
-> + * @links: an array of nodes where we can go next while traversing
-> + * @id: a unique node identifier
-> + * @num_links: the total number of @links
-> + * @buswidth: width of the interconnect between a node and the bus
-> + */
-> +struct qcom_icc_node {
-> +       const char *name;
-> +       u16 links[OSM_L3_MAX_LINKS];
-> +       u16 id;
-> +       u16 num_links;
-> +       u16 buswidth;
-> +};
-> +
-> +struct qcom_icc_desc {
-> +       struct qcom_icc_node **nodes;
-> +       size_t num_nodes;
-> +};
-> +
-> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                       \
-> +               static struct qcom_icc_node _name = {                   \
-> +               .name = #_name,                                         \
-> +               .id = _id,                                              \
-> +               .buswidth = _buswidth,                                  \
-> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),      \
-> +               .links = { __VA_ARGS__ },                               \
-> +       }
-> +
-> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
-> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
-> +
-> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
-
-const?
-
-> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
-> +       [SLAVE_OSM_L3] = &osm_l3,
-> +};
-> +
-> +static struct qcom_icc_desc sdm845_osm_l3 = {
-> +       .nodes = sdm845_osm_l3_nodes,
-> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-> +};
-> +
-> +static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-> +                             u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> +static int ingenic_rproc_prepare(struct rproc *rproc)
 > +{
-> +       *agg_avg += avg_bw;
-> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
+> +	struct vpu *vpu = rproc->priv;
+> +	int ret;
 > +
-> +       return 0;
-> +}
-
-Georgi, I wonder if it's a good idea to make a small collection of
-"std" aggregate functions in the interconnect core that a driver can
-just point to if it's doing something super standard like this (ie
-driver->aggregate = icc_std_aggregate;). This is probably fine as-is
-for now, but if we see a lot more copy/pastes of this function we
-should think about it.
-
+> +	/* The clocks must be enabled for the firmware to be loaded in TCSM */
+> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(vpu->clks), vpu->clks);
+> +	if (ret)
+> +		dev_err(vpu->dev, "Unable to start clocks: %d", ret);
 > +
-> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> +{
-> +       struct qcom_osm_l3_icc_provider *qp;
-> +       struct icc_provider *provider;
-> +       struct qcom_icc_node *qn;
-> +       struct icc_node *n;
-> +       unsigned int index;
-> +       u32 agg_peak = 0;
-> +       u32 agg_avg = 0;
-> +       u64 rate;
-> +
-> +       qn = src->data;
-> +       provider = src->provider;
-> +       qp = to_qcom_provider(provider);
-> +
-> +       list_for_each_entry(n, &provider->nodes, node_list)
-> +               qcom_icc_aggregate(n, 0, n->avg_bw, n->peak_bw,
-> +                                  &agg_avg, &agg_peak);
-> +
-> +       rate = max(agg_avg, agg_peak);
-> +       rate = icc_units_to_bps(rate);
-> +       do_div(rate, qn->buswidth);
-> +
-> +       for (index = 0; index < qp->max_state; index++) {
-
-If the rate is too high, you'll end up setting max_state into the
-register. That's probably bad, right? (Or maybe it's not because the
-table ends with the same value twice, but it seems like relying on an
-implementation detail). We could guard against that by only iterating
-to index < qp->max_state - 1.
-
-> +               if (qp->lut_tables[index] >= rate)
-> +                       break;
-> +       }
-> +
-> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
-> +
-> +       return 0;
+> +	return ret;
 > +}
 > +
-> +static int qcom_osm_l3_remove(struct platform_device *pdev)
+> +static void ingenic_rproc_unprepare(struct rproc *rproc)
 > +{
-> +       struct qcom_osm_l3_icc_provider *qp = platform_get_drvdata(pdev);
-> +       struct icc_provider *provider = &qp->provider;
-> +       struct icc_node *n;
+> +	struct vpu *vpu = rproc->priv;
 > +
-> +       list_for_each_entry(n, &provider->nodes, node_list) {
-
-There was a comment on one of the other threads that we've been
-copy/pasting this snippet around and it's wrong because it doesn't use
-the _safe variant of the macro. So we end up destroying the list we're
-iterating over.
-
-Georgi, did you have a plan to refactor this, or should we just change
-this to be the _safe version?
-
-> +               icc_node_del(n);
-> +               icc_node_destroy(n->id);
-> +       }
-> +
-> +       return icc_provider_del(provider);
+> +	clk_bulk_disable_unprepare(ARRAY_SIZE(vpu->clks), vpu->clks);
 > +}
 > +
-> +static int qcom_osm_l3_probe(struct platform_device *pdev)
+> +static int ingenic_rproc_start(struct rproc *rproc)
 > +{
-> +       u32 info, src, lval, i, prev_freq = 0, freq;
-> +       static unsigned long hw_rate, xo_rate;
-> +       struct qcom_osm_l3_icc_provider *qp;
-> +       const struct qcom_icc_desc *desc;
-> +       struct icc_onecell_data *data;
-> +       struct icc_provider *provider;
-> +       struct qcom_icc_node **qnodes;
-> +       struct icc_node *node;
-> +       size_t num_nodes;
-> +       struct clk *clk;
-> +       int ret;
+> +	struct vpu *vpu = rproc->priv;
+> +	u32 ctrl;
 > +
-> +       clk = clk_get(&pdev->dev, "xo");
-> +       if (IS_ERR(clk))
-> +               return PTR_ERR(clk);
+> +	enable_irq(vpu->irq);
 > +
-> +       xo_rate = clk_get_rate(clk);
-> +       clk_put(clk);
-> +
-> +       clk = clk_get(&pdev->dev, "alternate");
-> +       if (IS_ERR(clk))
-> +               return PTR_ERR(clk);
-> +
-> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
+> +	/* Reset the AUX and enable message IRQ */
+> +	ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
+> +	writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
 
-It's a little weird there's a constant divide in there, though I guess
-it's in the cpufreq driver as well. I guess this is fine if it's
-likely to stay there (and the same) when this driver is generalized
-for other SoCs.
-
-> +       clk_put(clk);
-> +
-> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-> +       if (!qp)
-> +               return -ENOMEM;
-> +
-> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(qp->base))
-> +               return PTR_ERR(qp->base);
-> +
-> +       /* HW should be in enabled state to proceed */
-> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
-> +               dev_err(&pdev->dev, "error hardware not enabled\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
-> +                                    i * LUT_ROW_SIZE);
-> +               src = FIELD_GET(LUT_SRC, info);
-> +               lval = FIELD_GET(LUT_L_VAL, info);
-> +               if (src)
-> +                       freq = xo_rate * lval;
-> +               else
-> +                       freq = hw_rate;
-> +
-> +               /*
-> +                * Two of the same frequencies with the same core counts means
-
-"core counts" seems like a copied comment that doesn't apply.
-
-But you only look at freq and not core count, is that really
-equivalent to the table's boundary condition? Or do you need to be
-comparing info == info_prev?
-
-> +                * end of table
-> +                */
-> +               if (i > 0 && prev_freq == freq)
-> +                       break;
-> +
-> +               qp->lut_tables[i] = freq;
-> +               prev_freq = freq;
-> +       }
-> +       qp->max_state = i;
-
-Should we error out or complain if there are too few entries, or if
-the table is not in increasing order?
+Out of curiosity, there is no power domain associated with this
+co-processor?  Clocks are all you need?
 
 > +
-> +       desc = of_device_get_match_data(&pdev->dev);
-> +       if (!desc)
-> +               return -EINVAL;
-> +
-> +       qnodes = desc->nodes;
-> +       num_nodes = desc->num_nodes;
-> +
-> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       provider = &qp->provider;
-> +       provider->dev = &pdev->dev;
-> +       provider->set = qcom_icc_set;
-> +       provider->aggregate = qcom_icc_aggregate;
-> +       provider->xlate = of_icc_xlate_onecell;
-> +       INIT_LIST_HEAD(&provider->nodes);
-> +       provider->data = data;
-> +
-> +       ret = icc_provider_add(provider);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "error adding interconnect provider\n");
-> +               return ret;
-> +       }
-> +
-> +       for (i = 0; i < num_nodes; i++) {
-> +               size_t j;
-> +
-> +               node = icc_node_create(qnodes[i]->id);
-> +               if (IS_ERR(node)) {
-> +                       ret = PTR_ERR(node);
-> +                       goto err;
-> +               }
-> +
-> +               node->name = qnodes[i]->name;
-> +               node->data = qnodes[i];
-> +               icc_node_add(node, provider);
-> +
-> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
-> +                       qnodes[i]->name, node->id);
-> +
-> +               /* populate links */
-
-Not a super useful comment.
-
-
-> +               for (j = 0; j < qnodes[i]->num_links; j++)
-> +                       icc_link_create(node, qnodes[i]->links[j]);
-> +
-> +               data->nodes[i] = node;
-> +       }
-> +       data->num_nodes = num_nodes;
-> +
-> +       platform_set_drvdata(pdev, qp);
-> +
-> +       return ret;
-> +err:
-> +       qcom_osm_l3_remove(pdev);
-> +       return ret;
+> +	return 0;
 > +}
 > +
-> +static const struct of_device_id osm_l3_of_match[] = {
-> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
+> +static int ingenic_rproc_stop(struct rproc *rproc)
+> +{
+> +	struct vpu *vpu = rproc->priv;
 > +
-> +static struct platform_driver osm_l3_driver = {
-> +       .probe = qcom_osm_l3_probe,
-> +       .remove = qcom_osm_l3_remove,
-> +       .driver = {
-> +               .name = "osm-l3",
-> +               .of_match_table = osm_l3_of_match,
-> +       },
-> +};
-> +module_platform_driver(osm_l3_driver);
+> +	/* Keep AUX in reset mode */
+> +	writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
 > +
-> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+> +	disable_irq_nosync(vpu->irq);
+
+Also out of curiosity, why the need for _nosync()?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
+> +{
+> +	struct vpu *vpu = rproc->priv;
+> +
+> +	writel(vqid, vpu->aux_base + REG_CORE_MSG);
+> +}
+> +
+> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+> +{
+> +	struct vpu *vpu = rproc->priv;
+> +	void __iomem *va = NULL;
+> +	unsigned int i;
+> +
+> +	if (len <= 0)
+> +		return NULL;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+> +		const struct vpu_mem_info *info = &vpu->mem_info[i];
+> +		const struct vpu_mem_map *map = info->map;
+> +
+> +		if (da >= map->da && (da + len) < (map->da + info->len)) {
+> +			va = info->base + (da - map->da);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return (__force void *)va;
+> +}
+> +
+> +static struct rproc_ops ingenic_rproc_ops = {
+> +	.prepare = ingenic_rproc_prepare,
+> +	.unprepare = ingenic_rproc_unprepare,
+> +	.start = ingenic_rproc_start,
+> +	.stop = ingenic_rproc_stop,
+> +	.kick = ingenic_rproc_kick,
+> +	.da_to_va = ingenic_rproc_da_to_va,
+> +};
+> +
+> +static irqreturn_t vpu_interrupt(int irq, void *data)
+> +{
+> +	struct rproc *rproc = data;
+> +	struct vpu *vpu = rproc->priv;
+> +	u32 vring;
+> +
+> +	vring = readl(vpu->aux_base + REG_AUX_MSG);
+> +
+> +	/* Ack the interrupt */
+> +	writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
+> +
+> +	return rproc_vq_interrupt(rproc, vring);
+> +}
+> +
+> +static int ingenic_rproc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *mem;
+> +	struct rproc *rproc;
+> +	struct vpu *vpu;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	rproc = devm_rproc_alloc(dev, "ingenic-vpu",
+> +				 &ingenic_rproc_ops, NULL, sizeof(*vpu));
+> +	if (!rproc)
+> +		return -ENOMEM;
+> +
+> +	vpu = rproc->priv;
+> +	vpu->dev = &pdev->dev;
+> +
+> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
+> +	vpu->aux_base = devm_ioremap_resource(dev, mem);
+> +	if (IS_ERR(vpu->aux_base)) {
+> +		dev_err(dev, "Failed to ioremap");
+> +		return PTR_ERR(vpu->aux_base);
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+> +		mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   vpu_mem_map[i].name);
+> +
+> +		vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
+> +		if (IS_ERR(vpu->mem_info[i].base)) {
+> +			ret = PTR_ERR(vpu->mem_info[i].base);
+> +			dev_err(dev, "Failed to ioremap");
+> +			return ret;
+> +		}
+> +
+> +		vpu->mem_info[i].len = resource_size(mem);
+> +		vpu->mem_info[i].map = &vpu_mem_map[i];
+> +	}
+> +
+> +	vpu->clks[0].id = "vpu";
+> +	vpu->clks[1].id = "aux";
+> +
+> +	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(vpu->clks), vpu->clks);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to get clocks");
+> +		return ret;
+> +	}
+> +
+> +	vpu->irq = platform_get_irq(pdev, 0);
+> +	if (vpu->irq < 0) {
+> +		dev_err(dev, "Failed to get platform IRQ");
+> +		return vpu->irq;
+> +	}
+> +
+> +	ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", rproc);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to request IRQ");
+> +		return ret;
+> +	}
+> +
+> +	disable_irq_nosync(vpu->irq);
+> +
+> +	ret = devm_rproc_add(dev, rproc);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register remote processor");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ingenic_rproc_of_matches[] = {
+> +	{ .compatible = "ingenic,jz4770-vpu-rproc", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
+> +
+> +static struct platform_driver ingenic_rproc_driver = {
+> +	.probe = ingenic_rproc_probe,
+> +	.driver = {
+> +		.name = "ingenic-vpu",
+> +		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
+> +	},
+> +};
+> +module_platform_driver(ingenic_rproc_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
+
+Nice, clean and simple driver.  With the above and after rolling in Julia's
+patch:
+
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+> -- 
+> 2.24.0
+> 
