@@ -2,82 +2,90 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D51EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC28C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B08E2231B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9B422309
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574115404;
-	bh=B6z2zwHOqzO7lpIcZAO5GhLy1JJ7zgTcQLAfu6reJK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hNEDes8qZRmssC0VRop/mVFZo431EmGG6ODOLm1NNV/lPvjv1QO//MgDjNqBuZx7s
-	 I9BIc15zBmH2DX5mnaUEVzSicXfASGNFWeY383ggh6iLb+d47IqQ14xr2uRtteiDF3
-	 3StXcEBbjF/EKvjRpzefw27+1i9aiGKTXc81VcyU=
+	s=default; t=1574116213;
+	bh=khxFIvRa0WHBu3BPSpSp4o8e8vlX/Ch1fJFSYdneD1g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OjPCxmKKbxK2rM9i3ZBZUd8UUQvC12cC0VBDkvuKB3efelI2nxbAfAOQkZp8aqqed
+	 EqA/PtoEcH1ZMy6p1ElNQvErcbVxeXyW6KqittTV3MOAncGdCZ3D7iIHNy18Hmgu5c
+	 Oj4EoKA9227WMYo+2/mTPkRKPfF17KtHjanuwL8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfKRWQn (ORCPT
+        id S1726759AbfKRWaM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:16:43 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46955 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRWQn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:16:43 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n14so16877151oie.13;
-        Mon, 18 Nov 2019 14:16:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=31Fq2MhmM/Urm61qHS/zASd5hxG1Am9pqw2oaM3IrGM=;
-        b=f21WzBNufYWesUh851UVTh0Ly6w3xY/ZkQ3gW9eR513JDIxu1jTaNHynamrrRc7vQ+
-         i7w41PKFr2m4lKNvGp30gp+7UoinAOG1o90M49jTtwjLk6qVvG7hYx2l91flDw5M2JS2
-         +RGy0O/Mn40OlPPgHjomamEZ3WDecUxiFxy2NdM9XCtw9l3VaZt4ifyDmwlYW381Uf+V
-         WneXfXQ4MZqUmc/uiS/G8sleH1p2D6a6JmYimPkrGHxYEnLk1ZHxvano/XmiAm/lRwzU
-         W/aSItQWhfhiREeddk8efEle0Ap2zJYruFak0NdZKyuCit5Z7id9LsJsb+Vj43k4sMHf
-         pIQg==
-X-Gm-Message-State: APjAAAUBnltlVjW77TMG0h1m50pEMoNkFRrnrslPAACJqbdIiNFI9uQN
-        IQtJ/MqWt/jU0DZaZYGgaw==
-X-Google-Smtp-Source: APXvYqwH0uCFhNsGiWA5jSWAZGCA4GvWT52jHanTph/d7N9nMnA7tMhfeBrI8QOtNcUZTsKqI/z6AA==
-X-Received: by 2002:aca:ef04:: with SMTP id n4mr1115455oih.91.1574115401304;
-        Mon, 18 Nov 2019 14:16:41 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n5sm6330647oie.16.2019.11.18.14.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 14:16:40 -0800 (PST)
-Date:   Mon, 18 Nov 2019 16:16:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     tomislav.denis@avl.com
-Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, tomislav.denis@avl.com
-Subject: Re: [PATCH 2/3] dt-bindings: Add asc vendor
-Message-ID: <20191118221639.GA2875@bogus>
-References: <20191114100908.11180-1-tomislav.denis@avl.com>
- <20191114100908.11180-3-tomislav.denis@avl.com>
+        Mon, 18 Nov 2019 17:30:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfKRWaM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 17:30:12 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 814DD22312;
+        Mon, 18 Nov 2019 22:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574116211;
+        bh=khxFIvRa0WHBu3BPSpSp4o8e8vlX/Ch1fJFSYdneD1g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=B8LWMYXp1+IGaUXr0uhktgBFNAO0EUQPoDl4ZO6KXa4ZuxKz1lc+Klt9zdeMN0Byg
+         A1qBk27AObhn8bnOiT+nmyy4ea74+Q1yhe6THBpSc0wQG2Sn5mcYM39u5I80spCYXR
+         H3MTMAbeFuLriXNtdbEuyRFTN/Yx4Z587oUMbUtc=
+Received: by mail-qv1-f45.google.com with SMTP id cv8so7142352qvb.3;
+        Mon, 18 Nov 2019 14:30:11 -0800 (PST)
+X-Gm-Message-State: APjAAAVADF5dd3czrJ+fG0j2g0SkLnGQV2hZQ+a+5mePJ0RZTNkAIM4g
+        IFQNi2qzgjZigG8f75N8E/0XQtQ3M7C0LOMqLw==
+X-Google-Smtp-Source: APXvYqwTs2co+HBbq2oe5+YXOU23+vJDFGQ7niNbj9Q1SHsVHHK3eLM9UQAJDYzQb4QVp4Z73nckDWhocRD43GBWIEg=
+X-Received: by 2002:a0c:d2b4:: with SMTP id q49mr15752471qvh.135.1574116210565;
+ Mon, 18 Nov 2019 14:30:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114100908.11180-3-tomislav.denis@avl.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191114101817.20831-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20191114101817.20831-1-peter.ujfalusi@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 18 Nov 2019 16:29:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLahJZ0TqmgNS_cvwtTUw4kRCjD2bn-vdAN8xYmM7zY0w@mail.gmail.com>
+Message-ID: <CAL_JsqLahJZ0TqmgNS_cvwtTUw4kRCjD2bn-vdAN8xYmM7zY0w@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clock: Move ti-dra7-atl.h to dt-bindigs/clock
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 14 Nov 2019 11:09:07 +0100, <tomislav.denis@avl.com> wrote:
-> From: Tomislav Denis <tomislav.denis@avl.com>
-> 
-> All Sensors Corporation is a manufacturer of MEMS piezoresitive
-> ultra low pressure sensors and pressure transducers.
-> 
-> Signed-off-by: Tomislav Denis <tomislav.denis@avl.com>
+On Thu, Nov 14, 2019 at 4:17 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+
+typo in subject.
+
+> Most of the clock related dt-binding header files are located in
+> dt-bindings/clock folder. It would be good to keep all the similar
+> header files at a single location.
+>
+> Suggested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+>  Documentation/devicetree/bindings/clock/ti/dra7-atl.txt | 4 ++--
+>  arch/arm/boot/dts/dra7-evm-common.dtsi                  | 2 +-
+>  arch/arm/boot/dts/dra72-evm-common.dtsi                 | 2 +-
+>  include/dt-bindings/{clk => clock}/ti-dra7-atl.h        | 0
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+>  rename include/dt-bindings/{clk => clock}/ti-dra7-atl.h (100%)
+
+Otherwise,
 
 Acked-by: Rob Herring <robh@kernel.org>
