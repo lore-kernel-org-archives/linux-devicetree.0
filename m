@@ -2,104 +2,113 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AB6C43141
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D261C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CEE22230D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574113271;
-	bh=L7Rx90T5xtJKu6HZBdjMt5QtdXWw657+HEZYVFyEIK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xn+l59Kv2GpXUfw5Y4z2TBz+3ZmEy8G6pIOc8GEzp/PufhTFEsBXsEitp/tMjRE5x
-	 rO76eNtVpwhLiOUQaMVbu8PkAXfIvbCFYSRHR9WQxgMJnT/Rdd5QtnO2p1stHz4XDE
-	 7HlbnT3S4PintkItHpz0BFcm7qL+7qa6vj5WLEDE=
+	by mail.kernel.org (Postfix) with ESMTP id 105DF222EF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:43:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KuzJXpUQ";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ALf+5PY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfKRVlK (ORCPT
+        id S1726776AbfKRVnG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:41:10 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46082 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKRVlK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:41:10 -0500
-Received: by mail-ot1-f66.google.com with SMTP id n23so15889793otr.13;
-        Mon, 18 Nov 2019 13:41:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FRpvq7Wj/iqnBV7qC9kY5Pc+/NV4VUnf2+TihSU+79o=;
-        b=OwhnrwHaLaNvWa0kR9wmBaZz+/exz8PBedoH9/Ow1P9w9weFDIgLzxu9KwDdnU08Sq
-         Hm4Qd/puvUdvbbJiQImT0j3DirhTRagFYUASxUH58at7KwROBKMjc9YrhzG9WiouVHpQ
-         atIDbgEg8TN9yDPnMXmZkxdQxXQZ2vxAQzzX4TfvrtOH2MgRAW+eV6GQ9tb4Uz/CVyhD
-         WpzG9MVLCDk1TrNfpeBnehkOrM0XuRTdydto7OsWXZVN2tLlDYKGVHxKDGO4U4gyRRuj
-         x9rBId8FWxSRGccvpJ//Z2bJW4pyGcusr1Y0QztxZQmpWeXncYxsedUC2EQpp1Id3ZHT
-         YOlQ==
-X-Gm-Message-State: APjAAAUn1P6He53uRskt3UJcyLgnytneRPi329QbbdupLSQjdc1BkfRc
-        +ebJP1KjzuqH06+lFCoKOg==
-X-Google-Smtp-Source: APXvYqxYNT8S6a4Vcem79ZkjeRstdF2mDqA8FfxIE8121Z6pXvIzENQymk0Bvzj9YGieUUYNDP5jRA==
-X-Received: by 2002:a9d:7a86:: with SMTP id l6mr1091964otn.340.1574113269453;
-        Mon, 18 Nov 2019 13:41:09 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 94sm6653813otg.70.2019.11.18.13.41.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:41:08 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:41:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v4 09/13] dt-bindings: display: bridge: lvds-codec:
- Document ti,ds90cf384a
-Message-ID: <20191118214108.GA10188@bogus>
-References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573660292-10629-10-git-send-email-fabrizio.castro@bp.renesas.com>
+        Mon, 18 Nov 2019 16:43:06 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:56336
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726647AbfKRVnG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 16:43:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574113384;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
+        bh=34n8pONOy4hrnY+bCnkyck81F6RCIYF9zArBzSitqyI=;
+        b=KuzJXpUQ2sk43luVMgNWDhmszK8v4d1ouMsBCMkjV/x9d9JafK3aVc5GJVjn8wNK
+        FZsjjS9QKoQa36doyPrGnyjDfvdidzQMiVVI1Fm/W5YvbPbsvGoJkqxAwnwl3RtdVa+
+        X5cqkScNnz6MBdY5vs31dWxB/IbNh4PRkDjZJF6Q=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574113384;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=34n8pONOy4hrnY+bCnkyck81F6RCIYF9zArBzSitqyI=;
+        b=ALf+5PY/bPEzDEjkuCEpNcsN9pMKxWgKTXiyGLegjKc3u4ZpOt8iBVBf7+M9OM+r
+        hLzYGo8YJlbWlcTNXvTqlVdU56cbVsRJ4WFRySwVh2vIuaa0ua4z/WYp8qa/bu0RI8u
+        c6Y/qBrvlfyx7sO3njW3YPNrHbo6iPkqduvJKoaU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C95D5C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jhugo@codeaurora.org,
+        robh+dt@kernel.org, jonathan@marek.ca
+Cc:     ohad@wizery.com, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 00/16] Add missing remoteprocs on MSM8998/SC7180/SM8150 SoCs
+Date:   Mon, 18 Nov 2019 21:43:04 +0000
+Message-ID: <0101016e80781930-69ece8d5-deda-4950-8cfc-da44d5955ac8-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573660292-10629-10-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2019.11.18-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 Nov 2019 15:51:28 +0000, Fabrizio Castro wrote:
-> The DS90CF384A from TI is a transparent LVDS receiver (decoder),
-> and therefore it is compatible with the lvds-codec driver and
-> bindings.
-> 
-> Document the ti,ds90cf384a compatible string with the dt-bindings.
-> No driver change required.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
-> ---
-> v3->v4:
-> * New patch
-> ---
->  Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
+The patch series adds support for the following remoteprocs:
+* MPSS reset sequence fixup for MSM8998 (Patches 1,2)
+* MPSS on SC7180 SoCs (Patches 3,4)
+* ADSP, SLPI on MSM8998 SoC (Patches 8,9)
+* ADSP, CDSP, MPSS and SLPI on SM8150 SoC (Patches 10,11,12)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Patch 6,7 Adds support for active/proxy voting of power-domain
+for the q6v5_pas driver.
+
+Jeff,
+Please free to drop MPSS node on MSM8998 if you already
+have something prepared and replace the xo with the
+rpmcc xo clock. Just included patch 14 in the series for
+completeness.
+
+This patch series depends on:
+https://patchwork.kernel.org/cover/11250067/
+
+Sibi Sankar (16):
+  remoteproc: q6v5-mss: fixup MSM8998 MSS out of reset sequence
+  remoteproc: q6v5-mss: Streamline the MSS out of reset sequence
+  dt-bindings: remoteproc: qcom: Add Q6V5 Modem PIL binding for SC7180
+  remoteproc: mss: q6v5-mss: Add modem support on SC7180
+  remoteproc: qcom: pas: Disable interrupt on clock enable failure
+  dt-bindings: remoteproc: qcom: Add power-domain bindings for Q6V5 PAS
+  remoteproc: qcom: pas: Vote for active/proxy power domains
+  dt-bindings: remoteproc: qcom: Add ADSP and SLPI support for MSM8998
+    SoC
+  remoteproc: qcom: pas: Add MSM8998 ADSP and SLPI support
+  dt-bindings: remoteproc: qcom: SM8150 Add ADSP, CDSP, MPSS and SLPI
+    support
+  remoteproc: qcom: pas: Add SM8150 ADSP, CDSP, Modem and SLPI support
+  remoteproc: qcom: pas: Add auto_boot flag
+  arm64: dts: qcom: msm8998: Update reserved memory map
+  arm64: dts: qcom: msm8998: Add ADSP, MPSS and SLPI nodes
+  arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and SLPI smp2p
+  arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and SLPI remoteprocs
+
+ .../bindings/remoteproc/qcom,adsp.txt         |  44 +++
+ .../bindings/remoteproc/qcom,q6v5.txt         |  23 +-
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     |   8 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         | 184 +++++++++++-
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts       |  12 +
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          | 231 +++++++++++++++
+ drivers/remoteproc/qcom_q6v5_mss.c            | 264 +++++++++++++++---
+ drivers/remoteproc/qcom_q6v5_pas.c            | 260 ++++++++++++++++-
+ 8 files changed, 979 insertions(+), 47 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
