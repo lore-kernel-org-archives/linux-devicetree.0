@@ -2,117 +2,82 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9643C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBADDC43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD28E222EF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CD5222EF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574112555;
-	bh=1Yd3BfTicbFoNPkhOS6PMSjxBZPnsfO/kWG7Ekt10Zs=;
+	s=default; t=1574112707;
+	bh=lg7PgwZw/0im8/7yygcg58wmDLJTL4QlcVKgAWgVMGA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C/nMYHtB9cbAeVLKIhCa9RFUa4X/q1+soSoFsUA7dT5r0GfJLnlpNgJBNAxvsz0kg
-	 fBzCyN0wPll0ZKgidHUdPECWNmii01Zb4R6OZoVG+X9Gc18GiQLyMQCwGy00CjpEhR
-	 BezWtzHbomFGbg9OC6n8cz9QxL8QifKSzLiFm32I=
+	b=YJiifOsFPtCyEUILR6rdeyFKBtW1NYUvgCAqJKik/gzu1hVh++sCOmfYP4ZnyFcq2
+	 WTqtM13CweKozzw0K4zjMuBMLObpPOvVroZNKNpE1+ypDNMKcZXxuXj6I1QsOXSnYH
+	 KmQn0DnJyjCk0clOb1JV5Z+HoHu9zRiS8K3mgn44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfKRV3P (ORCPT
+        id S1726704AbfKRVbq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:29:15 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38615 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRV3P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:29:15 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z25so15913402oti.5;
-        Mon, 18 Nov 2019 13:29:14 -0800 (PST)
+        Mon, 18 Nov 2019 16:31:46 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45772 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRVbq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:31:46 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 14so16749940oir.12;
+        Mon, 18 Nov 2019 13:31:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i+YO38WgStB7nYPSXcUR6YrSTtp1l2WDphJUjDsiG8A=;
-        b=Rd0khKdGWFLZCMWcTi8To1dfnR/6INLiQJhum3+0UdRjcg8hS7IaeGb1fSfIFqWPS2
-         bOYWucd4oMYYpz1aZRcMcxs7UHe5gA5F49aCge/EvywDRSnfFPUM2IiQMQMGqfdX1PLH
-         l/QVnSfu6qhwquawFv14RbvwBZhMoSBDbH8JZJloxfOQ+8LEoGPgK3VVFaULG0wCqxee
-         fWFUtfyuOErpYhGmEtia6nIYNT/9hYlqOUIWO3A6NM3aA0XLgOKwRBXMrjF959zuyO0X
-         bnItAArHUw4GBmEYkDEJBnA+KhxBIz4VjtUmRwUAaIKQiJiwZ7tv17uK+lTbDultLAq0
-         aerQ==
-X-Gm-Message-State: APjAAAUfId7xP+3Wi/f6cSCwpjh1u0VosPAC7SsQ0he8zDimYKdKiAVk
-        TTQKJDJqt9dBSsTvhK4jbw==
-X-Google-Smtp-Source: APXvYqzrzbwSYe5wu/iJKT9qZvzRqWrX+EPEq/49EneSWuAZ5oGeI5ckJK8JP2PSx39iTQehpaZz8w==
-X-Received: by 2002:a9d:154:: with SMTP id 78mr1031136otu.294.1574112554132;
-        Mon, 18 Nov 2019 13:29:14 -0800 (PST)
+        bh=xbx1aZAc7rEgW+5jmNWNB9eCM3V1hUlP5bh1eb6G9t0=;
+        b=Ij7n1/eydfk0zZOvD/IFpadDYXsjj5cen19dAseW15ySdK9P7XWvinmbYSFgolXnsH
+         cFI6KvHxvyuqybvd4S1DG+PKzXsqiR46P1+B0uYbN1dDFnM+sPulU7QEJsmNkn6g/t6E
+         s34W4EnLlyR8qB0DbcKIKjeR4gSHbOQgwKuWZAXa07zAqAVkUEfKQuRWJYsgk1hUuMMA
+         ma2DV+/HVMPMAmryRqu1lWYwntV8C0dWXXWKmH0FpWOl+jWLkbNmZWfMYPZPiyjzG2wt
+         6JoCiE8wptxBhCJ6V+s9Z2syP82XEfblTMgICopM8RcM+qKmqsUumvK41CcHqNG2ZZKK
+         ia8A==
+X-Gm-Message-State: APjAAAUlhe05/Jh/ffrH3CY2vb5ukotSmIdpsjre00nj+GZ6qBM+ESTe
+        oqxqRNirQ1CQdMdvm6/iBA==
+X-Google-Smtp-Source: APXvYqyR7y1hrlJ4jytE3hcnnWJKh7pNQWwf4SPEfjTTZiLHGSnGV6pvqvm5MiOkvQudiN4HaO1Aiw==
+X-Received: by 2002:aca:ed85:: with SMTP id l127mr967419oih.75.1574112704372;
+        Mon, 18 Nov 2019 13:31:44 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l40sm6634725ota.24.2019.11.18.13.29.12
+        by smtp.gmail.com with ESMTPSA id d205sm6517189oig.28.2019.11.18.13.31.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:29:13 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:29:12 -0600
+        Mon, 18 Nov 2019 13:31:43 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:31:42 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Oliver Graute <oliver.graute@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
-        <sebastien.szymanski@armadeus.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: arm: fsl: Add Variscite i.MX6UL
- compatibles
-Message-ID: <20191118212912.GA16329@bogus>
-References: <1573586526-15007-4-git-send-email-oliver.graute@gmail.com>
- <1573593892-25693-1-git-send-email-oliver.graute@gmail.com>
- <CAOMZO5DYssbnVsemV+U24wbVoYM3LM3ZZtFwWHonXLHKF0Y+kg@mail.gmail.com>
+To:     Eric Tremblay <etremblay@distech-controls.com>
+Cc:     linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        corbet@lwn.net
+Subject: Re: [PATCH v8 1/2] dt-bindings: hwmon: Add TMP512/513
+Message-ID: <20191118213142.GA26376@bogus>
+References: <20191112223001.20844-1-etremblay@distech-controls.com>
+ <20191112223001.20844-2-etremblay@distech-controls.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5DYssbnVsemV+U24wbVoYM3LM3ZZtFwWHonXLHKF0Y+kg@mail.gmail.com>
+In-Reply-To: <20191112223001.20844-2-etremblay@distech-controls.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 08:19:44PM -0300, Fabio Estevam wrote:
-> On Tue, Nov 12, 2019 at 6:25 PM Oliver Graute <oliver.graute@gmail.com> wrote:
-> >
-> > Add the compatibles for Variscite i.MX6UL compatibles
-> >
-> > Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > index f79683a..d0c7e60 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > @@ -182,6 +182,7 @@ properties:
-> >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-> >                - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-> >                - kontron,imx6ul-n6311-som  # Kontron N6311 SOM
-> > +              - variscite,6ulcustomboard" # i.MX UltraLite Carrier-board
+On Tue, 12 Nov 2019 17:30:00 -0500, Eric Tremblay wrote:
+> Document the TMP513/512 device devicetree bindings
 > 
-> I guess what you mean is:
+> Signed-off-by: Eric Tremblay <etremblay@distech-controls.com>
+> ---
+>  .../devicetree/bindings/hwmon/ti,tmp513.yaml  | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
 > 
-> variscite,imx6ul-var-6ulcustomboard # i.MX6 UltraLite Carrier-board
 
-It matched the .dts file. However the '"' in there is an error. Make 
-sure 'make dt_binding_check' passes.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
