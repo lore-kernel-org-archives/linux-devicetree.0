@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FEFC43141
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E635C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D11B22317
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059002231C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574113096;
-	bh=sDC77PH8r2x5YMqyKuchAIILtFagJ63dNOuohutipcA=;
+	s=default; t=1574113117;
+	bh=S98JaN1jnO6oteDYcVdaZdaZnuPm8Yth5zWbqvKKfrw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KIOuqtWenDgYSgqNdavz+2EC78Gii0DHKN4mK7fZDNDQTzNytuCB3gSYnMLoryWLy
-	 uqhNjSnLZFQ3pXqWN55dIdtSJDIZbS5IIRIzbUorZECb4UefwK/6Pt/hFn1RpQERB4
-	 vNSfyRQnTurraM9q9p+QkmwhrSr/6xRkcjzPl+70=
+	b=E5FGJBcpXqhg77dmlx/0+amM1NA7FPc2CRZSw+t5nS3LYpL/phgcC7SPni170CVZg
+	 LxFW5AxWuT6ArwnQg9SSteCgIgSBXewSDNK9CaL6RP+KtE77mXPD6zl+Xem36qgfxQ
+	 MbZXz3CGVdaPWuzH1hO1mitNMVIuFdq9hh8IpFOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfKRViQ (ORCPT
+        id S1726721AbfKRVig (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:38:16 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32972 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRViP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:38:15 -0500
-Received: by mail-ot1-f68.google.com with SMTP id u13so15926201ote.0;
-        Mon, 18 Nov 2019 13:38:15 -0800 (PST)
+        Mon, 18 Nov 2019 16:38:36 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38399 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRVig (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:38:36 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a14so16812417oid.5;
+        Mon, 18 Nov 2019 13:38:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mAc7Q/gtUlmiHluKgpEFvKm0HPMSruDCFKUdodfYdR0=;
-        b=C3HgR7IWy4PqbYZMJcpI6m58pmQeYJDRKq4TGo/IMMfQpUQCqiwnPl6z1JEoSW8OA+
-         cvKoOPyJt/kKOtDITC/mk/o7JHny/asBcuJfj9spO5gk9iWVS7U/wwJdG6xNeKSB84mJ
-         aCifY5gnancf961+Xs6i7EPS0FWB6hRbjCASzi5gPy8mp6TNgIVGcczfGEGRMSWZMchF
-         2v9z6/q5qqyuXUtdfIwCOyfXtNZLk/OodvQdaURfkpF8hlYfc7adSSTTqRkNs8TY74o2
-         CSLkWQ8u5NqD21W90zNrPSPKcU6m4rccciTQmDcKCv1PR5DR3UHf36MCQGkLYtw9jYrg
-         f6xA==
-X-Gm-Message-State: APjAAAUjiw/GGeQqI83jfrSiMN8Y9Te3jp3Jsu7/R6xtz+6LHAWCjUB5
-        gEFhGkiKHUuJBG1+1lVmOw==
-X-Google-Smtp-Source: APXvYqyBcM9ucYjeN+0WdBVulO1FOqLPu7utjXGGWwI64en8P7kn8VoXj4mYdXUFMhdkBH8ZvYGVwQ==
-X-Received: by 2002:a9d:2c25:: with SMTP id f34mr1021910otb.27.1574113094793;
-        Mon, 18 Nov 2019 13:38:14 -0800 (PST)
+        bh=pCxQjBITmvqLnVSUQjs1CPX2mZzwD2s3GOOnzs0YZMI=;
+        b=FpF/Ib6DmHj1nC3jNULaWhsGB0UT5bbrOpYXQcHasCNh9ThRc80bTzIXtUHEJnihBg
+         38Uwr56zvdBKG1NBLhRa0WYIdqmBCeaZY7kdmfLgxfwlSS1BDKDPHmpNqZbC3Y1plRUW
+         KKPvjqzIrFH+SeYheOSPCqIPbX7GV+TcHeSz+K/cLBj/KQ0iCcDSKelG/DdrovJ1V0eL
+         mPHydzU65uWCgwcRM8D4FEXyxP0Vil+23jXFi6y3ZZxq4DS3aBh8gxzuJcUD1fsfTswM
+         s3mM/5vRrgMEoCPS10NREprFf8/H4ASMsgcrajCTde3E8cSKt40k4tNYnxAKp4rcKXW3
+         PcFA==
+X-Gm-Message-State: APjAAAXSgiUuPNA9hPmsSX/SOtHSYBV5VSxurOjiSBpYsKABM0JJQbwG
+        DQmW/8KqXQtck2IcmB0f8Q==
+X-Google-Smtp-Source: APXvYqzSuqFp/B1swfguly5hmQtRXYxJLr4k7XHGsoFJa2jueuZF7o+LMcHgFPChBi+B6fK3kLjB9w==
+X-Received: by 2002:aca:320a:: with SMTP id y10mr946034oiy.152.1574113113674;
+        Mon, 18 Nov 2019 13:38:33 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v11sm6502747ota.13.2019.11.18.13.38.13
+        by smtp.gmail.com with ESMTPSA id i12sm6636202ota.10.2019.11.18.13.38.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:38:14 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:38:13 -0600
+        Mon, 18 Nov 2019 13:38:33 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:38:32 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
@@ -69,27 +69,25 @@ Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH v4 03/13] dt-bindings: display: bridge: lvds-transmitter:
- Absorb ti,ds90c185.txt
-Message-ID: <20191118213813.GA5240@bogus>
+Subject: Re: [PATCH v4 04/13] dt-bindings: display: bridge: lvds-transmitter:
+ Document "ti,sn75lvds83"
+Message-ID: <20191118213832.GA5885@bogus>
 References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573660292-10629-4-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1573660292-10629-5-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573660292-10629-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1573660292-10629-5-git-send-email-fabrizio.castro@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 13 Nov 2019 15:51:22 +0000, Fabrizio Castro wrote:
-> ti,ds90c185.txt documents LVDS encoders using the same driver
-> as the one documented by lvds-transmitter.yaml.
-> Since the properties listed in ti,ds90c185.txt are the same
-> as the ones listed in lvds-transmitter.yaml, absorb the dt-binding
-> into lvds-transmitter.yaml.
+On Wed, 13 Nov 2019 15:51:23 +0000, Fabrizio Castro wrote:
+> Compatible string "ti,sn75lvds83" is being used by device tree
+> rk3188-bqedison2qc.dts, but it's not documented anywhere, therefore
+> document it within lvds-transmitter.yaml.
 > 
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > 
@@ -97,10 +95,8 @@ On Wed, 13 Nov 2019 15:51:22 +0000, Fabrizio Castro wrote:
 > v3->v4:
 > * New patch
 > ---
->  .../bindings/display/bridge/lvds-transmitter.yaml  | 14 +++---
->  .../bindings/display/bridge/ti,ds90c185.txt        | 55 ----------------------
->  2 files changed, 8 insertions(+), 61 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90c185.txt
+>  Documentation/devicetree/bindings/display/bridge/lvds-transmitter.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
