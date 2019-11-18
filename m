@@ -2,265 +2,171 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14572C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C08C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB66206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67EE9206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tC3R1xX7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ius+cbqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfKRMhQ (ORCPT
+        id S1726562AbfKRMnD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:37:16 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41822 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfKRMhQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 07:37:16 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 207so2226725pge.8;
-        Mon, 18 Nov 2019 04:37:15 -0800 (PST)
+        Mon, 18 Nov 2019 07:43:03 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33625 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfKRMnC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 07:43:02 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a17so15923046wmb.0;
+        Mon, 18 Nov 2019 04:43:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=eA/JCApNlYCU5jrBnTYvAgCpSZcMA311vllL5COdNvE=;
-        b=tC3R1xX7Ly//6QapOiAnsxuV4HsZCGw4AD+75iAtE4u88DFAcNSTLWlWXwElelB2Zh
-         tFpNdM+/+5xrT0BkRHGPfOqPKfLnGNoTM6ttfpO5Xb3NPvQYtTxq1AudMI6D6YPTJEF2
-         9qdTlApxAMQbbWUDxmIeFWp2Elcgn9f+MHmq++Lo1tPXHz3yhVYDPX9gAJzCANfUcBqI
-         Sb12jvKBVlC9bnW6DwrrF4isIX7izBN6aiEeoJZk4tM5GKip4zl9wXHik1+ULg2dwnBW
-         QkbTqfPrjUrGtIgBy5dYGcKMr2aWwjuVnybjEBirTZH4fh8L1mP179+0IfbhHcvCF+3R
-         2pkg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pcFlFVkkMbFljmj2ZrTgP1JMEa4NOdAyJ98aVnMQW90=;
+        b=Ius+cbqdRUrpMslhWt5VXcDQyV8qVk+4Q8qQxv7hMKczJGpyf5AodDdZRU1khdJnZe
+         Q4+6tbCPCebPkg+5A0jb/EoLTs1WmxuQidwUlRbSSb/ffaZ7C+nEtTVg6FXABkwxbras
+         x4A4ihtg4YiqSM61NxV/75lb3wrmL6k+9j9m+cfg0b6huKP3jNwQU3WsukP3z+B9pTDU
+         dUyq78+U7spZw6ZTkeehtnN/BbHHbc8uT6zvlhJUWJyf6/GVjKxJeObS6ExLDyuqAkms
+         enBH+zA7zk/kcDqaR9SAYY7RwmyZ9cHJ8zMeuaZceL+Eya/l1Hba/Jaesd78fPxf/duP
+         pRzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=eA/JCApNlYCU5jrBnTYvAgCpSZcMA311vllL5COdNvE=;
-        b=LyKcu+ZCtdo0ydxCnbKf4GwT2cQbIjuYYO92J1k0irnhqOAK9+F8oe67O6yG53qo5F
-         xfk/rJoBp1vkNmawVjiFi/qsQ5iMCJ5gRHDmu5kcLC1101nqP8ICnAzdCYWbiwfVo+yP
-         HZ8AGi6jMpuRGhHNChNJ8Jpu/6iCaWigV5kAY3S46MJzsY89PG9b30lbV9H+dTo+FOM2
-         Fo3ZiZVzvCMoCFWDJiZkLUCivYu/mwbm28YQKwG6VHEQC6kD/SKZLmQ/Q0p2hm5h3fwm
-         VO/FwdT+jEd7xlinZQSFKNvMJJ26cA+tY0mgD3D2bstK91BmpZPyQ9SUmImNRYzp/ObK
-         9Ykg==
-X-Gm-Message-State: APjAAAWg07Artb0+idAVHX2BNdcOFfOi3pTefEo1nBKaZi4s7cgAU9Ks
-        JO9UH7fpo9gUQwtnl0K6oGI=
-X-Google-Smtp-Source: APXvYqyaDNUt4kG2f2KsfysiFDFOgq3pOEIjOR4M85Sqgq0ZyXWWWq9Vy3lHcvYFW8pYfu7N9CadJg==
-X-Received: by 2002:a63:231b:: with SMTP id j27mr21681980pgj.106.1574080635213;
-        Mon, 18 Nov 2019 04:37:15 -0800 (PST)
-Received: from cnn ([2402:3a80:474:446:ad42:52cf:560a:df52])
-        by smtp.gmail.com with ESMTPSA id i22sm18055887pjx.1.2019.11.18.04.37.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 04:37:14 -0800 (PST)
-Date:   Mon, 18 Nov 2019 18:07:07 +0530
-From:   manikandan-e <manikandan.hcl.ers.epl@gmail.com>
-To:     joel@jms.id.au, andrew@aj.id.au
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, manikandan.e@hcl.com
-Subject: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20191118123707.GA5560@cnn>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pcFlFVkkMbFljmj2ZrTgP1JMEa4NOdAyJ98aVnMQW90=;
+        b=hvPMwr8mgjH63cDRy5Ik2h1JbivGDIHT5FFA9sM+j8wReNZPaGMyKmfZ5KothSrc3c
+         YS8cocovxHOMZONVvz/FsVq1fJBXVAsiyD6hK0FC1bhNtVVbIqvSLWnCTcpcwnRG5css
+         Y/nnK3/j8ok8n3gssApXbyxYKsVIS3IW53TJiR/TWrdBEzrW5OXzJj7feSVv45iiCVjJ
+         W4JlDQthHKKfAREvNVYVafK1KDUbEwJv5yIl4++7Q0bI+YxbCuxgNKmmbmTlKhqFH/3j
+         PR9AL8sSw/mnaLuDTRpA8xgzy7Q/XXoDMNlqQokN5uRInm4mU4kKBgDMvkMNtOoyWesf
+         VZnw==
+X-Gm-Message-State: APjAAAWogt3UZ/6CI7Ofk8ucCK7CsZg5RoJQDcY5YPCivl4yYqmLGwgG
+        rpDEiH/33IaBG4oICBa+vleYWTMbyBmR4t6HGmY=
+X-Google-Smtp-Source: APXvYqxxJYds+5SWA8ug7X01HWT+V/7ibyn0gASw4Jf8VDRK4pON3wae0WJKMIz2zs2OISG78EzX3OjYwfu9ndtgm88=
+X-Received: by 2002:a1c:a512:: with SMTP id o18mr27252635wme.4.1574080979808;
+ Mon, 18 Nov 2019 04:42:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191118110034.19444-1-peron.clem@gmail.com> <20191118110034.19444-2-peron.clem@gmail.com>
+ <20191118110640.GE4345@gilmour.lan>
+In-Reply-To: <20191118110640.GE4345@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 18 Nov 2019 13:42:48 +0100
+Message-ID: <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM description
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Yosemite V2 is a facebook multi-node server
-platform that host four OCP server. The BMC
-in the Yosemite V2 platorm based on AST2500 SoC.
+Hi Maxime
 
-This patch adds linux device tree entry related to
-Yosemite V2 specific devices connected to BMC SoC.
+On Mon, 18 Nov 2019 at 12:06, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> Hi,
+>
+> On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM block is basically the same as A20 PWM, except that it also has
+> > bus clock and reset line which needs to be handled accordingly.
+> >
+> > Expand Allwinner PWM binding with H6 PWM specifics.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
+pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.ya=
+ml
+> > index 0ac52f83a58c..1bae446febbb 100644
+> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
+l
+> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
+l
+> > @@ -30,13 +30,51 @@ properties:
+> >        - items:
+> >            - const: allwinner,sun50i-h5-pwm
+> >            - const: allwinner,sun5i-a13-pwm
+> > +      - const: allwinner,sun50i-h6-pwm
+> >
+> >    reg:
+> >      maxItems: 1
+> >
+> >    clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - description: Module Clock
+> > +      - description: Bus Clock
+> > +
+> > +  # Even though it only applies to subschemas under the conditionals,
+> > +  # not listing them here will trigger a warning because of the
+> > +  # additionalsProperties set to false.
+> > +  clock-names: true
+> > +
+> > +  resets:
+> >      maxItems: 1
+> >
+> > +  if:
+> > +    properties:
+> > +      compatible:
+> > +        contains:
+> > +          const: allwinner,sun50i-h6-pwm
+> > +
+> > +  then:
+> > +    properties:
+> > +      clocks:
+> > +        maxItems: 2
+> > +
+> > +      clock-names:
+> > +        items:
+> > +          - const: mod
+> > +          - const: bus
+> > +
+> > +    required:
+> > +      - clock-names
+> > +      - resets
+> > +
+> > +  else:
+> > +    properties:
+> > +      clocks:
+> > +        maxItems: 1
+> > +
+>
+> Sorry for not noticing this earlier, but this should be at the topmost
+> level
 
-Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
----
- .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 170 +++++++++++++++++++++
- 1 file changed, 170 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+No problem, but I don't get what you want, (yaml format is new for me).
+Do you mean I should put the if condition before the "resets" ?
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-new file mode 100644
-index 0000000..46a285a
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-@@ -0,0 +1,170 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Facebook Inc.
-+// Author:
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "Facebook Yosemitev2 BMC";
-+	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial0 = &uart1;
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	iio-hwmon {
-+		// VOLATAGE SENSOR
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-+		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-+		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-+		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
-+
-+&lpc_snoop {
-+	status = "okay";
-+	snoop-ports = <0x80>;
-+};
-+
-+&lpc_ctrl {
-+	// Enable lpc clock
-+	status = "okay";
-+};
-+
-+&vuart {
-+	// VUART Host Console
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	// Host Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default>;
-+};
-+
-+&uart2 {
-+	// SoL Host Console
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	// SoL BMC Console
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&adc {
-+	status = "okay";
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+	//FRU EEPROM
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+	tmp421@4e {
-+	//INLET TEMP
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	//OUTLET TEMP
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+	//HSC
-+	adm1278@40 {
-+		compatible = "adi,adm1278";
-+		reg = <0x40>;
-+	};
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+	//MEZZ_TEMP_SENSOR
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+	//MEZZ_FRU
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+   //FSC
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+};
--- 
-2.7.4
+Regards,
+Cl=C3=A9ment
 
+>
+> Maxime
