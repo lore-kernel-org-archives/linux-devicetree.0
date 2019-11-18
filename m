@@ -2,42 +2,43 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9CBC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 14:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E51C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C4220692
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 14:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290BA20857
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 14:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XabZZVtS";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ObYMNeWO"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="G5yeZRbT";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="BpUrfmcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfKRO1v (ORCPT
+        id S1727199AbfKRO2B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:27:51 -0500
+        Mon, 18 Nov 2019 09:28:01 -0500
 Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:42390
         "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726712AbfKRO1v (ORCPT
+        by vger.kernel.org with ESMTP id S1727146AbfKRO2B (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:27:51 -0500
+        Mon, 18 Nov 2019 09:28:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574087270;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
-        bh=OgF0Z1H+PaADFbMisqszmEQhv/II6Km3xEqFXk+lJkc=;
-        b=XabZZVtSL81eTezQPwK4OniAwR2dbeAazMuXRXU+UpBlomePigAC4tCEeZ0stg1l
-        tR+1/FHHdfNItyxLu27v4hKCafZR5LOigbgx47j+ak2xsdLFhrjDFs88kzOgml+twde
-        0WX8S7xCBOPMdJWib2aQ3ldRdLZiFDHFcTSPla18=
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574087280;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+        bh=vQhmqsPW3fNET/tidnk/RNtP6UsJe6nuRmIFtEn4V5s=;
+        b=G5yeZRbTZwpmAAS6taI6KeGsd0sNweUJyHeqZaI3m51S9ztK9qG00+gS7NAWoco+
+        1HhmcsHASvL1n0Sk2tGvEcJuQkaE3o6B+HvUK2+uEHjLd/2Q0cQhu5uwps/xnk0hTd7
+        9yzegXke609XdIqWfEaihLNaxs9QbweoJhltYYS4=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574087270;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=OgF0Z1H+PaADFbMisqszmEQhv/II6Km3xEqFXk+lJkc=;
-        b=ObYMNeWOMFFIWrQ4XiVwnlB+1CsGDyk/59Xt/jomdHP3aey5HFp1s1/jav+k/Ida
-        fbsYNeWkyE5Vyj8Ru12nBAm144hRG/+baY75oqjxu/TZX1gfqVNKR9cruDTYVi3uhrE
-        gLPBiN73QKuX4K7cw2jL2y5WvYqx9G8q46biHn6o=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33CE3C433CB
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574087280;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=vQhmqsPW3fNET/tidnk/RNtP6UsJe6nuRmIFtEn4V5s=;
+        b=BpUrfmcBwjFULKnGLFjxC4HklxQwQEn5IKxb47DfBi6l8Kg2asTPyu5flt1CbEiY
+        FpBF0CD4e0qEcqbj84RWEqRkK9/kzD0xX/GEe1WGCCZaqhSpXK3zNpMu9QxKp/FiDl6
+        xkJhmkotauz3EwBvQq93TQxmmxaQrDH49r0kx4HA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 25055C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -47,10 +48,12 @@ Cc:     agross@kernel.org, mark.rutland@arm.com,
         linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         rnayak@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 0/3] Introduce Protection Domain Restart (PDR) Helpers
-Date:   Mon, 18 Nov 2019 14:27:50 +0000
-Message-ID: <0101016e7ee9a027-e6223a1b-eafb-4b4e-a69c-75f7586a4a71-000000@us-west-2.amazonses.com>
+Subject: [PATCH 2/3] dt-bindings: soc: qcom: apr: Add protection domain bindings
+Date:   Mon, 18 Nov 2019 14:28:00 +0000
+Message-ID: <0101016e7ee9c5b2-94a0dc24-2f52-4cc3-acd9-0f44f2c7e118-000000@us-west-2.amazonses.com>
 X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20191118142728.30187-1-sibis@codeaurora.org>
+References: <20191118142728.30187-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SES-Outgoing: 2019.11.18-54.240.27.10
@@ -60,33 +63,89 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Qualcomm SoCs (starting with MSM8998) allow for multiple protection
-domains (PDs) to run on the same Q6 sub-system. This allows for
-services like AVS AUDIO to have their own separate address space and
-crash/recover without disrupting the other PDs running on the same Q6
-ADSP. This patch series introduces pdr helper library and adds PD
-tracking functionality for "avs/audio" allowing apr services to register
-themselves asynchronously once the dependent PDs are up.
+Add optional "qcom,protection-domain" bindings for APR services. This
+helps to capture the dependencies between APR services and the PD on
+which each apr service run.
 
-Sibi Sankar (3):
-  soc: qcom: Introduce Protection Domain Restart helpers
-  dt-bindings: soc: qcom: apr: Add protection domain bindings
-  soc: qcom: apr: Add avs/audio tracking functionality
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
- .../devicetree/bindings/soc/qcom/qcom,apr.txt |  59 ++
- drivers/soc/qcom/Kconfig                      |   6 +
- drivers/soc/qcom/Makefile                     |   1 +
- drivers/soc/qcom/apr.c                        | 100 ++-
- drivers/soc/qcom/pdr_interface.c              | 685 ++++++++++++++++++
- drivers/soc/qcom/pdr_internal.h               | 375 ++++++++++
- include/linux/soc/qcom/apr.h                  |   1 +
- include/linux/soc/qcom/pdr.h                  | 102 +++
- include/linux/soc/qcom/qmi.h                  |   1 +
- 9 files changed, 1319 insertions(+), 11 deletions(-)
- create mode 100644 drivers/soc/qcom/pdr_interface.c
- create mode 100644 drivers/soc/qcom/pdr_internal.h
- create mode 100644 include/linux/soc/qcom/pdr.h
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+index db501269f47b8..f87c0b2a48de4 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+@@ -45,6 +45,12 @@ by the individual bindings for the specific service
+ 			12 - Ultrasound stream manager.
+ 			13 - Listen stream manager.
+ 
++- qcom,protection-domain
++	Usage: optional
++	Value type: <stringlist>
++	Definition: Must list the protection domain service name and path
++		    that the particular apr service has a dependency on.
++
+ = EXAMPLE
+ The following example represents a QDSP based sound card on a MSM8996 device
+ which uses apr as communication between Apps and QDSP.
+@@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
+ 			...
+ 		};
+ 	};
++
++= EXAMPLE 2
++The following example represents a QDSP based sound card on SDM845 device.
++Here the apr services are dependent on "avs/audio" service running on AUDIO
++Protection Domain hosted on ADSP remote processor.
++
++	apr {
++		compatible = "qcom,apr-v2";
++		qcom,glink-channels = "apr_audio_svc";
++		qcom,apr-domain = <APR_DOMAIN_ADSP>;
++
++		q6core {
++			compatible = "qcom,q6core";
++			reg = <APR_SVC_ADSP_CORE>;
++			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
++		};
++
++		q6afe: q6afe {
++			compatible = "qcom,q6afe";
++			reg = <APR_SVC_AFE>;
++			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
++			q6afedai: dais {
++				compatible = "qcom,q6afe-dais";
++				#sound-dai-cells = <1>;
++
++				qi2s@22 {
++					reg = <22>;
++					qcom,sd-lines = <3>;
++				};
++			};
++		};
++
++		q6asm: q6asm {
++			compatible = "qcom,q6asm";
++			reg = <APR_SVC_ASM>;
++			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
++			q6asmdai: dais {
++				compatible = "qcom,q6asm-dais";
++				#sound-dai-cells = <1>;
++				iommus = <&apps_smmu 0x1821 0x0>;
++			};
++		};
++
++		q6adm: q6adm {
++			compatible = "qcom,q6adm";
++			reg = <APR_SVC_ADM>;
++			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
++			q6routing: routing {
++				compatible = "qcom,q6adm-routing";
++				#sound-dai-cells = <0>;
++			};
++		};
++	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
