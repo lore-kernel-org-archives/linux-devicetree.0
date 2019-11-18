@@ -4,64 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E148C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6ACC432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700832073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A65920748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574075205;
-	bh=YoYaR1M+lDGoxsiTxlkwf8DP5q8rsGTY5JiNj2sqbTE=;
+	s=default; t=1574075518;
+	bh=8iL77Cbod2Ldiv/Kdt/qOxk6iOq/uRTCIjFxHr20nBg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U8d0KtuK5f35y4da6L4TwQxyNPWyrNQ159eudDhx+N5LK0LLIt03Ef8Oqurw/MguR
-	 g9dh6i2XhG4bzjVUGarOIiOxira48InrdbEozDxQNdyN5GHj3qhDuLTjdzIfuxfnY/
-	 zIampvmvxIssppyXIMotk7pB+epJ5FR8wmtSmUWk=
+	b=ukY5D2uBtnvUIoDLriJAL+bRYUcUy+jnGxmpQ4i0Gf0dZqU+PgkaF9cozpB4e3dCp
+	 4P44tfksSqc52rVEbE5XccxX9G6+Ni+xFmHXkx//FT7eE5D1JOL/O52KNiIXSCkh2O
+	 ceVXBHjvCvjORTA/h7h5dbiFTn24Vp5fkM298ycg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfKRLGp (ORCPT
+        id S1726717AbfKRLLs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:06:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
+        Mon, 18 Nov 2019 06:11:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726461AbfKRLGo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:06:44 -0500
+        id S1726595AbfKRLLr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 06:11:47 -0500
 Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E708C2071B;
-        Mon, 18 Nov 2019 11:06:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C790E2075E;
+        Mon, 18 Nov 2019 11:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574075203;
-        bh=YoYaR1M+lDGoxsiTxlkwf8DP5q8rsGTY5JiNj2sqbTE=;
+        s=default; t=1574075506;
+        bh=8iL77Cbod2Ldiv/Kdt/qOxk6iOq/uRTCIjFxHr20nBg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WvOTFqZH2Tm1IT+xFFdw4YD99+QWWIdABD05lu0lHbZBaBKCA/Ywwd570/CiD6Gst
-         t/0k/2k9OU1IVNON0R9u22AYCXnxTTTY4vvIVhOBU/Rah0/yagTbbfE2PvBE3aUb3V
-         QYibqUrEB0TinljLpUp9D0s8kmzVi/hnd/c/Whw4=
-Date:   Mon, 18 Nov 2019 12:06:40 +0100
+        b=Qq3QIkHDLBpbwRJOsBbMchPRtT1Ua8NRpKp1o1BQyYFmK0/Wxh9Vq0GZUOG6H8xxs
+         r44ljL0TDHb4sJ1TjYcMvn3e3Gv13Vwx4bZo2OwJwjwDS0jOFxpyOb/fhIvk/H+c0p
+         wurFPXM4pgNllY2K6gNcSo1iaEZpBsXU3edAjdTk=
+Date:   Mon, 18 Nov 2019 12:11:43 +0100
 From:   Maxime Ripard <mripard@kernel.org>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM
- description
-Message-ID: <20191118110640.GE4345@gilmour.lan>
-References: <20191118110034.19444-1-peron.clem@gmail.com>
- <20191118110034.19444-2-peron.clem@gmail.com>
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 2/3] ARM: dts: sun8i: a33: add the new SecuritySystem
+ compatible
+Message-ID: <20191118111143.GF4345@gilmour.lan>
+References: <20191114144812.22747-1-clabbe.montjoie@gmail.com>
+ <20191114144812.22747-3-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YE4mVuFar47/lB0E"
+        protocol="application/pgp-signature"; boundary="p76r+0aZ/vhNbw2t"
 Content-Disposition: inline
-In-Reply-To: <20191118110034.19444-2-peron.clem@gmail.com>
+In-Reply-To: <20191114144812.22747-3-clabbe.montjoie@gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -69,97 +64,46 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---YE4mVuFar47/lB0E
-Content-Type: text/plain; charset=iso-8859-1
+--p76r+0aZ/vhNbw2t
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=E9ment P=E9ron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Thu, Nov 14, 2019 at 03:48:11PM +0100, Corentin Labbe wrote:
+> Add the new A33 SecuritySystem compatible to the crypto node.
 >
-> H6 PWM block is basically the same as A20 PWM, except that it also has
-> bus clock and reset line which needs to be handled accordingly.
->
-> Expand Allwinner PWM binding with H6 PWM specifics.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 > ---
->  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
+>  arch/arm/boot/dts/sun8i-a33.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
-m.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> index 0ac52f83a58c..1bae446febbb 100644
-> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> @@ -30,13 +30,51 @@ properties:
->        - items:
->            - const: allwinner,sun50i-h5-pwm
->            - const: allwinner,sun5i-a13-pwm
-> +      - const: allwinner,sun50i-h6-pwm
+> diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+> index 1532a0e59af4..5680fa1de102 100644
+> --- a/arch/arm/boot/dts/sun8i-a33.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+> @@ -215,7 +215,8 @@
+>  		};
 >
->    reg:
->      maxItems: 1
->
->    clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: Module Clock
-> +      - description: Bus Clock
-> +
-> +  # Even though it only applies to subschemas under the conditionals,
-> +  # not listing them here will trigger a warning because of the
-> +  # additionalsProperties set to false.
-> +  clock-names: true
-> +
-> +  resets:
->      maxItems: 1
->
-> +  if:
-> +    properties:
-> +      compatible:
-> +        contains:
-> +          const: allwinner,sun50i-h6-pwm
-> +
-> +  then:
-> +    properties:
-> +      clocks:
-> +        maxItems: 2
-> +
-> +      clock-names:
-> +        items:
-> +          - const: mod
-> +          - const: bus
-> +
-> +    required:
-> +      - clock-names
-> +      - resets
-> +
-> +  else:
-> +    properties:
-> +      clocks:
-> +        maxItems: 1
-> +
+>  		crypto: crypto-engine@1c15000 {
+> -			compatible = "allwinner,sun4i-a10-crypto";
+> +			compatible = "allwinner,sun8i-a33-crypto",
+> +				     "allwinner,sun4i-a10-crypto";
 
-Sorry for not noticing this earlier, but this should be at the topmost
-level
+If some algorithms aren't working properly, we can't really fall back
+to it, we should just use the a33 compatible.
 
 Maxime
 
---YE4mVuFar47/lB0E
+--p76r+0aZ/vhNbw2t
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdJ7QAAKCRDj7w1vZxhR
-xUZpAQDf57xL+KiMJD5aQ0XQT0XHFOYAwW8cCUu/FgXYpgJmjwEAqJZh4AHN3JSQ
-09PXO0+LTVk76RQKjiW46/vLtI+iIgo=
-=u4lN
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdJ8bwAKCRDj7w1vZxhR
+xWSsAQDfuOb7pAGVgHQzg3LHHlN6b2U6D/Lbo36ifRgHXwR4yQEA0GMSVqz5xwZy
+x+K+EU4sfN71BXTin4nzbE/XEZXdQgc=
+=hnch
 -----END PGP SIGNATURE-----
 
---YE4mVuFar47/lB0E--
+--p76r+0aZ/vhNbw2t--
