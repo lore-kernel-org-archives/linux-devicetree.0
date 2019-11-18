@@ -2,307 +2,260 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAB3C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 03:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2B2C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 06:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDE0C2071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 03:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8224B20727
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 06:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="PVa0I+65"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rp/s+NiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfKRD4N (ORCPT
+        id S1726264AbfKRGBh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 22:56:13 -0500
-Received: from mail-eopbgr730061.outbound.protection.outlook.com ([40.107.73.61]:1215
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726266AbfKRD4N (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 Nov 2019 22:56:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uwr0eiW6B7BtiupCkDrEQwr5DXoZUWCz8Z4a4/Hq8Cix7RVVcQJzCxi60IkZymM0zPCP2HwWb1xblwDvqkO+LwODwr/zl2H3wGPYvnkvifdIOMjvLCa6B2nLvcRVwJE1/GkjZ0jrgiLUicMylpkA+2/AgeVHBNbnn+9aqxOsQQJ/2Lwr/z/iJoEYidnzaVaHkEFS6cOtVrv6TQH08kQHfP5q/H+rZ+JONDnq7/JgRhH4MOERlGhF2biDFMJJKAzOORwr1+N0hKNo0v8eXKZewaxrrTCVFUmgVu7tSQYVsONcb4ZbhKr4xJVtlK4Pcsl21TmIHgZdQiwFBsAlmeqEWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9eYL9Ao6QqC25nNrr33sI+SvhtxEGKhQ3MotCVBhsvA=;
- b=Zz6u4aTyWra0LlO1cyD2JdBEHd4dXJJP2pyOpiMBn8glcL5/N13UpNTCoGznUGDA5sbUVa+LeoAYpbTNzyXg0eR2zRgwrbZkowd3jLoWZxoZCAN8jjxJtBq2wpEuMtVqFbzRp/FK8NFpwZfJPUdeL/GaTNNPaJGfRKlqIOCeNUhoFCVnI9C9+NIQ1kSwFtwAkh2vVotBD4VsMATvznen/jWjQCetzN1ex3z0c0vrR8IS0X2ccjXvain/wUnxLGgs9zZ1x09uw082KEuybk5NWsJ+rCZsK9F0NxBkQvW7yezJKV3v8P6EijS2H9bi32w+JCwlUJIgbHrJNkQafVbqxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9eYL9Ao6QqC25nNrr33sI+SvhtxEGKhQ3MotCVBhsvA=;
- b=PVa0I+65e52z52KAYfq/8gJ+ZvYpBaNKNhpdjYF3YP0laSY5sgkAuBYpsTuB9hFKJgQx+cvJxl9yJX4EhvFvxfL5Jczn7OpfIXzgwzmLn9/WffaU1xUeT0yZO0sgUoWlkKazfneOjh2SOIrXza6vdReK9Pw9d8RIlzQoDMjJyQo=
-Received: from MN2PR02MB6029.namprd02.prod.outlook.com (52.132.174.207) by
- MN2PR02MB6687.namprd02.prod.outlook.com (52.135.50.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Mon, 18 Nov 2019 03:55:56 +0000
-Received: from MN2PR02MB6029.namprd02.prod.outlook.com
- ([fe80::7c98:7d3:f15a:27f]) by MN2PR02MB6029.namprd02.prod.outlook.com
- ([fe80::7c98:7d3:f15a:27f%3]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 03:55:56 +0000
-From:   Manish Narani <MNARANI@xilinx.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        Michal Simek <michals@xilinx.com>,
-        Jolly Shah <JOLLYS@xilinx.com>,
-        Nava kishore Manne <navam@xilinx.com>,
-        Rajan Vaja <RAJANV@xilinx.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, git <git@xilinx.com>
-Subject: RE: [PATCH v5 4/8] dt-bindings: mmc: Add optional generic properties
- for mmc
-Thread-Topic: [PATCH v5 4/8] dt-bindings: mmc: Add optional generic properties
- for mmc
-Thread-Index: AQHVkHqBcCBapDuL00GCzGyd3h/hfad7qj+AgAojF2CACplXgA==
-Date:   Mon, 18 Nov 2019 03:55:56 +0000
-Message-ID: <MN2PR02MB6029D9F42B920927DF7813EEC14D0@MN2PR02MB6029.namprd02.prod.outlook.com>
-References: <1572588353-110682-1-git-send-email-manish.narani@xilinx.com>
- <1572588353-110682-5-git-send-email-manish.narani@xilinx.com>
- <20191104231427.GA7606@bogus>
- <MN2PR02MB6029D371F580123CB32BE148C1740@MN2PR02MB6029.namprd02.prod.outlook.com>
-In-Reply-To: <MN2PR02MB6029D371F580123CB32BE148C1740@MN2PR02MB6029.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=MNARANI@xilinx.com; 
-x-originating-ip: [183.83.139.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fc92a5c6-cadb-4a87-2462-08d76bdb3721
-x-ms-traffictypediagnostic: MN2PR02MB6687:|MN2PR02MB6687:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR02MB6687B6E12F14DB9B21834866C14D0@MN2PR02MB6687.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39850400004)(136003)(366004)(396003)(376002)(189003)(199004)(13464003)(305945005)(8676002)(81156014)(81166006)(33656002)(8936002)(66556008)(64756008)(66446008)(66946007)(9686003)(66476007)(107886003)(55016002)(486006)(6436002)(229853002)(26005)(71190400001)(478600001)(14454004)(6506007)(446003)(76176011)(7696005)(186003)(53546011)(2906002)(476003)(11346002)(256004)(14444005)(99286004)(316002)(54906003)(71200400001)(86362001)(3846002)(6116002)(102836004)(6246003)(25786009)(7736002)(74316002)(7416002)(66066001)(5660300002)(4326008)(6916009)(76116006)(52536014)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6687;H:MN2PR02MB6029.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rOZrp0mVJmr7AF7YHnfNrC2O9Ve2tHtyaAxPlMS+RwFeAIQYu+OCEEY1FwJY9Famof+/gNizlcLoN8VBEk0AHu7RtnWQ6Vw/Spi/CJoPdFlMg6bXqWrAZjLfL9opEKQaUWGtkTTH5N/Gpg90Q75wZicXCqnvcMwTZk7u/gXWzeSvYfKPvxx8E2M/1NGZer76UG2nc6SnRN5sPySvXIRCxQ3AkuWj8Bvu4BUJpOiYRDomhyPpWw8KY/rqeOeH10v0nQs3mCKhy6peiYDBocua3g4Hc6ERGSs7G/OJTPb0evbk0KUulu9aQ1z09Sup64cAhTIQVenfefhZ3if94fOg6AgmVLVSVUqM9WqQphYyDBD8Ta99Hm1lQ/ZVxzTFNHb2RKFFiKhXKkmyblr5bStEEa1AYLNXZMLkal7sEvhzTeMf7nY4LwcAx9tGZwS8+/Lb
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 18 Nov 2019 01:01:37 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35700 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfKRGBh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 01:01:37 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAI5xW4j173462;
+        Mon, 18 Nov 2019 06:00:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=lJNfpXyGElRb/i/ta3IUdcy9bQdPNL5BTVX/Bu3Iddw=;
+ b=Rp/s+NiZI4tG44vuNrd74O4I0c3NnHRvOgJljmJ3J0h/KRaoiF5qq/MwenYgNsyfQ6Th
+ AnxHRZ7M5ZzAS9a47C5IgZo/zcMxDMjt5gPsJDKWkbZkm0y6ADCU/4OwsVZIK2RRyJGN
+ 6DVH0f4wpDmwuQjxmnnXl+Lf+yZgqTkBrOPS/nrqWIwOgmbQMEJcn1CUhXGKVUxvgrCi
+ tqRyFBakr778N7egrQ7vbeuT0/KAjU+1PeviVYaS/dTHjG/SMsiVsttzPWID5CESl4/Z
+ d4LP0a56kimUBNR7lDwWdJ8Ca9SoPrnuBbaOkIcH2a2K1DBDH7wmLzpLRj2XDDPKMrpy pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2wa8htdxn4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 06:00:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAI5xUJ0157272;
+        Mon, 18 Nov 2019 06:00:38 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wau93yfw3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 06:00:38 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAI60N72032599;
+        Mon, 18 Nov 2019 06:00:23 GMT
+Received: from kadam (/41.210.154.44)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 17 Nov 2019 22:00:09 -0800
+Date:   Mon, 18 Nov 2019 08:59:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     kbuild-all@lists.01.org, matti.vaittinen@fi.rohmeurope.com,
+        mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v4 15/16] leds: Add common LED binding parsing support to
+ LED class/core
+Message-ID: <20191118055941.GB1776@kadam>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc92a5c6-cadb-4a87-2462-08d76bdb3721
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 03:55:56.1394
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PHLkQiB/6Omxrs/SOYjfYtWaBt5NOwAdj1VP7xBvqPuYXFMlVIjAnqoC4guvtRA9qjaI8CsJX9GGUjahXxLfyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6687
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <773ed63e512f9086483089d67c492d092444bc8a.1573928775.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9444 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911180052
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9444 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911180052
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Matti,
 
-> -----Original Message-----
-> From: Manish Narani
-> Sent: Monday, November 11, 2019 3:38 PM
-> To: Rob Herring <robh@kernel.org>
-> Cc: ulf.hansson@linaro.org; mark.rutland@arm.com;
-> adrian.hunter@intel.com; Michal Simek <michals@xilinx.com>; Jolly Shah
-> <JOLLYS@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Rajan Vaja
-> <RAJANV@xilinx.com>; linux-mmc@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; git <git@xilinx.com>
-> Subject: RE: [PATCH v5 4/8] dt-bindings: mmc: Add optional generic proper=
-ties
-> for mmc
->=20
-> Hi Rob,
->=20
->=20
-> > -----Original Message-----
-> > From: Rob Herring <robh@kernel.org>
-> > Sent: Tuesday, November 5, 2019 4:44 AM
-> > To: Manish Narani <MNARANI@xilinx.com>
-> > Cc: ulf.hansson@linaro.org; mark.rutland@arm.com;
-> > adrian.hunter@intel.com; Michal Simek <michals@xilinx.com>; Jolly Shah
-> > <JOLLYS@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Rajan
-> Vaja
-> > <RAJANV@xilinx.com>; linux-mmc@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> > kernel@lists.infradead.org; git <git@xilinx.com>
-> > Subject: Re: [PATCH v5 4/8] dt-bindings: mmc: Add optional generic
-> > properties for mmc
-> >
-> > On Fri, Nov 01, 2019 at 11:35:49AM +0530, Manish Narani wrote:
-> > > Add optional properties for mmc hosts which are used to set clk delay=
-s
-> > > for different speed modes in the controller.
-> > >
-> > > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> > > ---
-> > >  .../bindings/mmc/mmc-controller.yaml          | 92 +++++++++++++++++=
-++
-> > >  1 file changed, 92 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mmc/mmc-
-> controller.yaml
-> > b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> > > index 080754e0ef35..87a83d966851 100644
-> > > --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> > > +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> > > @@ -212,6 +212,98 @@ properties:
-> > >      description:
-> > >        eMMC HS400 enhanced strobe mode is supported
-> > >
-> > > +  # Below mentioned are the clock (phase) delays which are to be
-> > configured
-> > > +  # in the controller while switching to particular speed mode. The =
-range
-> > > +  # of values are 0 to 359 degrees.
-> > > +
-> > > +  clk-phase-legacy:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for Legacy Mode.
-> > > +
-> > > +  clk-phase-mmc-hs:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair degrees for MMC HS.
-> > > +
-> > > +  clk-phase-sd-hs:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for SD HS.
-> > > +
-> > > +  clk-phase-uhs-sdr12:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for SDR12.
-> > > +
-> > > +  clk-phase-uhs-sdr25:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for SDR25.
-> > > +
-> > > +  clk-phase-uhs-sdr50:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for SDR50.
-> > > +
-> > > +  clk-phase-uhs-sdr104:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for SDR104.
-> > > +
-> > > +  clk-phase-uhs-ddr50:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for SD DDR50.
-> > > +
-> > > +  clk-phase-mmc-ddr52:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for MMC DDR52.
-> > > +
-> > > +  clk-phase-mmc-hs200:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for MMC HS200.
-> > > +
-> > > +  clk-phase-mmc-hs400:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - minimum: 0
-> > > +      - maximum: 359
-> > > +    description:
-> > > +      Input/Output Clock Delay pair in degrees for MMC HS400.
-> >
-> > This can be condensed into:
-> >
-> > patternProperties:
-> >
-> > "^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|uhs-
-> > (sdr(12|25|50|104)|ddr50))$":
-> >
-> > Or if you want to divide them between SD and MMC ones, that would be
-> > fine for me.
->=20
-> Below change should work? Please review.
->=20
-> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> @@ -333,6 +333,16 @@ patternProperties:
->      required:
->        - reg
->=20
-> +  "^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|uhs-
-> (sdr(12|25|50|104)|ddr50))$":
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +      - maximum: 359
-> +    description:
-> +      Set the clock (phase) delays which are to be configured in the
-> +      controller while switching to particular speed mode. These values
-> +      are in pair of degrees.
-> +
->  dependencies:
->    cd-debounce-delay-ms: [ cd-gpios ]
->    fixed-emmc-driver-type: [ non-removable ]
-> @@ -351,6 +361,7 @@ examples:
->          keep-power-in-suspend;
->          wakeup-source;
->          mmc-pwrseq =3D <&sdhci0_pwrseq>;
-> +        clk-phase-sd-hs =3D <63>, <72>;
->      };
->=20
->    - |
+[auto build test WARNING on 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c]
 
+url:    https://github.com/0day-ci/linux/commits/Matti-Vaittinen/Support-ROHM-BD71828-PMIC/20191117-030515
+base:    31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c
 
-Any comment on above change?
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Thanks,
-Manish
+smatch warnings:
+drivers/leds/led-core.c:400 fw_is_match() error: uninitialized symbol 'ret'.
+drivers/leds/led-core.c:465 led_find_fwnode() error: double free of 'val'
+
+# https://github.com/0day-ci/linux/commit/7b8033cfca34525c9e45fe2e74783fef74f4a49c
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 7b8033cfca34525c9e45fe2e74783fef74f4a49c
+vim +/ret +400 drivers/leds/led-core.c
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  368  static int fw_is_match(struct fwnode_handle *fw,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  369  		       struct led_fw_match_property *mp, void *val)
+bb4e9af0348dfe Jacek Anaszewski 2019-06-09  370  {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  371  	void *cmp = mp->raw_val;
+bb4e9af0348dfe Jacek Anaszewski 2019-06-09  372  	int ret;
+bb4e9af0348dfe Jacek Anaszewski 2019-06-09  373  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  374  	if (mp->raw_val) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  375  		ret = fwnode_property_read_u8_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  376  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  377  	} else if (mp->intval) {
+                                                                   ^^^^^^^^^^
+Smatch is complaining about if this is false then ret isn't set.
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  378  		cmp = mp->intval;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  379  		switch (mp->size) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  380  		case 1:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  381  			ret = fwnode_property_read_u8_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  382  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  383  			break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  384  		case 2:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  385  			ret = fwnode_property_read_u16_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  386  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  387  			break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  388  		case 4:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  389  			ret = fwnode_property_read_u32_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  390  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  391  			break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  392  		case 8:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  393  			ret = fwnode_property_read_u64_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  394  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  395  			break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  396  		default:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  397  			return -EINVAL;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  398  		}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  399  	}
+7b8033cfca3452 Matti Vaittinen  2019-11-16 @400  	if (!ret && cmp) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  401  		if (!memcmp(val, cmp, mp->size)) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  402  			kfree(val);
+                                                                        ^^^^^^^^^^
+This kfree leads to a double free below.  Freeing it here is a
+layering violation, so delete this one and keep the kfree in the caller.
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  403  			return 1;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  404  		}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  405  	}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  406  	return 0;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  407  }
+7b8033cfca3452 Matti Vaittinen  2019-11-16  408  /**
+7b8033cfca3452 Matti Vaittinen  2019-11-16  409   * led_find_fwnode - find fwnode for led
+7b8033cfca3452 Matti Vaittinen  2019-11-16  410   * @parent	LED controller device
+7b8033cfca3452 Matti Vaittinen  2019-11-16  411   * @init_data	led init data with match information
+7b8033cfca3452 Matti Vaittinen  2019-11-16  412   *
+7b8033cfca3452 Matti Vaittinen  2019-11-16  413   * Scans the firmware nodes and returns node matching the given init_data.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  414   * NOTE: Function increases refcount for found node. Caller must decrease
+7b8033cfca3452 Matti Vaittinen  2019-11-16  415   * refcount using fwnode_handle_put when finished with node.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  416   */
+7b8033cfca3452 Matti Vaittinen  2019-11-16  417  struct fwnode_handle *led_find_fwnode(struct device *parent,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  418  				      struct led_init_data *init_data)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  419  {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  420  	struct fwnode_handle *fw;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  421  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  422  	/*
+7b8033cfca3452 Matti Vaittinen  2019-11-16  423  	 * This should never be called W/O init data. We could always return
+7b8033cfca3452 Matti Vaittinen  2019-11-16  424  	 * dev_fwnode() - but then we should pump-up the refcount
+7b8033cfca3452 Matti Vaittinen  2019-11-16  425  	 */
+7b8033cfca3452 Matti Vaittinen  2019-11-16  426  	if (!init_data)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  427  		return NULL;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  428  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  429  	if (!init_data->fwnode)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  430  		fw = dev_fwnode(parent);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  431  	else
+7b8033cfca3452 Matti Vaittinen  2019-11-16  432  		fw = init_data->fwnode;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  433  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  434  	if (!fw)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  435  		return NULL;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  436  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  437  	/*
+7b8033cfca3452 Matti Vaittinen  2019-11-16  438  	 * Simple things are pretty. I think simplest is to use DT node-name
+7b8033cfca3452 Matti Vaittinen  2019-11-16  439  	 * for matching the node with LED - same way regulators use the node
+7b8033cfca3452 Matti Vaittinen  2019-11-16  440  	 * name to match with desc.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  441  	 *
+7b8033cfca3452 Matti Vaittinen  2019-11-16  442  	 * This may not work with existing LED DT entries if the node name has
+7b8033cfca3452 Matti Vaittinen  2019-11-16  443  	 * been freely selectible. In order to this to work the binding doc
+7b8033cfca3452 Matti Vaittinen  2019-11-16  444  	 * for LED driver should define usable node names.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  445  	 *
+7b8033cfca3452 Matti Vaittinen  2019-11-16  446  	 * If this is not working we can define specific match property which
+7b8033cfca3452 Matti Vaittinen  2019-11-16  447  	 * value we scan and use for matching for LEDs connected to the
+7b8033cfca3452 Matti Vaittinen  2019-11-16  448  	 * controller.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  449  	 */
+7b8033cfca3452 Matti Vaittinen  2019-11-16  450  	if (init_data->match_property.name && init_data->match_property.size) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  451  		u8 *val;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  452  		int ret;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  453  		struct fwnode_handle *child;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  454  		struct led_fw_match_property *mp;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  455  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  456  		mp = &init_data->match_property;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  457  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  458  		val = kzalloc(mp->size, GFP_KERNEL);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  459  		if (!val)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  460  			return ERR_PTR(-ENOMEM);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  461  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  462  		fwnode_for_each_child_node(fw, child) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  463  			ret = fw_is_match(child, mp, val);
+                                                                                                     ^^^
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  464  			if (ret > 0) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16 @465  				kfree(val);
+                                                                                      ^^^
+
+Oops.
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  466  				return child;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  467  			}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  468  			if (ret < 0) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  469  				dev_err(parent,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  470  					"invalid fw match. Use raw_val?\n");
+7b8033cfca3452 Matti Vaittinen  2019-11-16  471  				fwnode_handle_put(child);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  472  				break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  473  			}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  474  		}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  475  		kfree(val);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  476  	}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  477  	if (init_data->of_match)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  478  		fw = fwnode_get_named_child_node(fw, init_data->of_match);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  479  	else
+7b8033cfca3452 Matti Vaittinen  2019-11-16  480  		fw = fwnode_handle_get(fw);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  481  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  482  	return fw;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  483  }
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
