@@ -2,455 +2,158 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD346C33C99
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 08:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B60C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 09:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889952084D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 08:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68FB20727
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 09:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="tYYDm6Xn"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="EhW6vkti";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="lhVp282x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKRIuk (ORCPT
+        id S1726464AbfKRJBA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:50:40 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:39342 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfKRIuj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 03:50:39 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: bWXkhqeLQ3cuPByW4LVhwq958SSdsjt0F8+tBQUq9wg1SQ4Qh5R5skARkoSD60TvCX3Dlk9C2N
- 6X5sB76c4HMhrWGiENlYtfJEuLRRHzJR4wWVzL/lf7FvTL9mv7NvRXDZkmUth3AyymhxOg2a4/
- EaoxxoZy7Xg0PeuBObQzG5r50MrpNizWRI5eQNX2djGmkBS8GLzAo7bKB6IgDIe8mFq30WmJ/n
- yi825c80qPaSsCQO3aN87QvGVxiakWxVoaNKvk5bqMYJ/rKZJ5V/yILYBzm0h+UNIAWp9pJI9V
- ya8=
-X-IronPort-AV: E=Sophos;i="5.68,319,1569308400"; 
-   d="scan'208";a="55779485"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Nov 2019 01:50:38 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 18 Nov 2019 01:50:38 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Mon, 18 Nov 2019 01:50:38 -0700
+        Mon, 18 Nov 2019 04:01:00 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:45286 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726420AbfKRJBA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:01:00 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAI8rXsx031372;
+        Mon, 18 Nov 2019 01:00:53 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=uTnqQjmoHeWtsO11y6eR9/54eHaUdJy5BaCFU0Q8MGY=;
+ b=EhW6vktiNGsLnFuPaXhQaM6d2YTaVDiX5RytDObo3vgLaFtOrsxqBNSaaMhRzWAvtKCW
+ JuCAGHd0pFVu8m3/udRgQeDJQCgSKrLTaleONKUpm9c4oeD/NJVzepsf/Qb7V0RCKhl7
+ ILPnL0K1a2951BtAiMwEqIvZOBBCFp0bQM4K4aP/PzxewKy5MZ3IltW0DgoMReoCQjPA
+ +Ombl0lNwFJ3b4eYisHl2uZYjzMMz++WmS2f+0RLUBNGfDxfEtIWWMDgQNWZA9kTBJxZ
+ UEsqGBL0xKkcRdw9wRhinYOdQIU3Q5eNjUgdWOu8BU3SQFZtL549s6qZ55e4N9mqX8uC 2g== 
+Received: from nam05-co1-obe.outbound.protection.outlook.com (mail-co1nam05lp2052.outbound.protection.outlook.com [104.47.48.52])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2wadjy5p8f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Nov 2019 01:00:53 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ily/4leFPg0tj6TvNxqayoJFHZCITW8YP25rzb6fcCo6UC6qQk4sW4hbul6AQugUMLa+SLLdMDIKoPiDIvIQcZeeIHHp9BYVyuZy8O4JWSaCugC+Ldnd363wHw4QJ1t06s5SNboM163kqZozTwxdV+6OBhBm9YR/UfAYL3HdahEG4hivdJ+gyZW2T4hh/b7Um72oJuhjqX5BYjjowPBzEhGKzlTpl5YvMiHrcJRXO7gqg5eXkmGHNdWSUruVZ1mJMDXKtQT+tLju7wubQ9QpoaxKIzXfoJWoZup5TAMzAYqzgoM9BV82eGiXROWaMmJtPU00s2BIz+FU5V6rokifEw==
+ b=hMs2P9TiURK0LPdvRUiJuh8icxMETEYH/pcPaasdxaw8YkQbknmB4YejpIt7V4rYeUsFEIZL2iE0uQo1s3Otnyr0rtgOgHsduZqoMwqTSIbjN9wTgmybwdsUZZkhSChUlTUOJ4c7FRmhgtfFRTLewCczk5zPywmE0ejeaJIRiPDotY4kzXNRyIcYKRJG3/FHvtR9AwZUA/JLI30MGT7WdWcrsVVrmfwwKuwevIfqBjeujyqPcig77q1O8FpFwM0hoQgj41yPTWwMZAIKQuRZRFe1YJVLYC6D5Uit4e4YYFM+EfHnDFGPEbtnHBaGvtvcCVaFYZGeInUtoPBuw3jWuQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q9KsLDUP8z/683tnUbgj33udnjICE4ZRjYinXV7mI8g=;
- b=cofDP9H7DX8dP1/2HDcw+w91KwOxsslKHv1JnSNuBNq1Pj2cGAqaDkGUuUv11/DOL5jfHoWKBzsm9oUe/JuIdUwa4ApHBgae6BLa0rZ+k8f3KlJQL8uu4ra8szaLGmkKLKqCgar+HUUaDaqpk57lm93f0QNLoSnvYJM/IF49S7XjPNJkqCe5efdTOqexegpWmzz5nm5Q747q9bVYTnXAshNoXZFvUPU5Y2NUySr55N/z7ti2pwZ7oDTZveDfYeQ9aT22+sFtCzS2vkHGKukLx8UuMcwGRNmDt7UMlguMgxHM6r+vsQQHO0Xl68k/jIzC/HVjmh7dvE2qly/CaLT9ag==
+ bh=uTnqQjmoHeWtsO11y6eR9/54eHaUdJy5BaCFU0Q8MGY=;
+ b=ZbttCEqeVM6GY+Esk+tnx2lSitIggD/2fQJuSAM3dJXSxpCJtxbKKHMIMOfipKdzV9W6rfE+GAWreO0NnjfS3QtVlmnOWen7uxR03nc/U7Ncyu90scoqBGu6tUsdX9dweyIglFmB7qxkSeZKfkRWE96eHEnnDozVNaiar8LCVrUoW42sHKXaJtAJoLsprTUM3G/6dj+nvwV067jOL3U9tQYpLViqd1EwGH3IF1uQy6wzhtWOimS672/3qjhwdZPQNu674muOVhQYixDODqbA2pFYkkkV/c6udwSLwZn3Lw+53lzt6Fq+ajmBa5/Y+l+6gH3d+J/gOYhHiWE5I0axlg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q9KsLDUP8z/683tnUbgj33udnjICE4ZRjYinXV7mI8g=;
- b=tYYDm6XnjB+Wl9lSpUi+5Pgj9EoA3sGajFt1WdEehy4VJdj7S9CKxg4qTe6s9wOLAmaI1pVrSLilsJmZRHA6VQxXtNJPoJxJPONGsWj/TFGMB6OVpjuYZTjqN97MltsOiQCt9Q9EnTkubQEPw5KlxmgAqn7vJksxvV7E7wh2X1g=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1659.namprd11.prod.outlook.com (10.172.35.20) with Microsoft SMTP
+ bh=uTnqQjmoHeWtsO11y6eR9/54eHaUdJy5BaCFU0Q8MGY=;
+ b=lhVp282xmOQCLOjOmkCE87tjiBPJHHwDNoMJUG27g8LMrVgg49g+W/+I1HsFr3sxkwgTBdc3JKUILbGTzwKm2a3GQMNZV3f57DoFS7ztRadYnVU2BLSTR/XLNzgDsWP5bvcxwav5uYtTg85cIo+MtMcJO4e+MwqmCRXznb41jZ4=
+Received: from BY5PR07MB6419.namprd07.prod.outlook.com (10.255.136.12) by
+ BY5PR07MB6936.namprd07.prod.outlook.com (52.133.250.72) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Mon, 18 Nov 2019 08:50:36 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::d594:bcd0:98a9:d2c8]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::d594:bcd0:98a9:d2c8%4]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 08:50:36 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <Nicolas.Ferre@microchip.com>, <linux-watchdog@vger.kernel.org>,
-        <Eugen.Hristev@microchip.com>
-Subject: [PATCH v5 3/3] watchdog: sama5d4_wdt: addition of sam9x60 compatible
- watchdog
-Thread-Topic: [PATCH v5 3/3] watchdog: sama5d4_wdt: addition of sam9x60
- compatible watchdog
-Thread-Index: AQHVne0+qwcE0YQphUGGkPZGE8egcg==
-Date:   Mon, 18 Nov 2019 08:50:36 +0000
-Message-ID: <1574067012-18559-3-git-send-email-eugen.hristev@microchip.com>
-References: <1574067012-18559-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1574067012-18559-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
+ 15.20.2451.23; Mon, 18 Nov 2019 09:00:51 +0000
+Received: from BY5PR07MB6419.namprd07.prod.outlook.com
+ ([fe80::25cd:11f4:7c01:a6d9]) by BY5PR07MB6419.namprd07.prod.outlook.com
+ ([fe80::25cd:11f4:7c01:a6d9%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 09:00:51 +0000
+From:   Anil Joy Varughese <aniljoy@cadence.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     Milind Parab <mparab@cadence.com>,
+        Rafal Ciepiela <rafalc@cadence.com>
+Subject: RE: [PATCH] bindings:phy Mark phy_clk binding as deprecated in
+ Cadence Sierra Phy.
+Thread-Topic: [PATCH] bindings:phy Mark phy_clk binding as deprecated in
+ Cadence Sierra Phy.
+Thread-Index: AQHVnePhVSERbn45oUaHJtPPPnggC6eQkTCAgAANjwA=
+Date:   Mon, 18 Nov 2019 09:00:51 +0000
+Message-ID: <BY5PR07MB6419CF57AD7F6C451C18C840A84D0@BY5PR07MB6419.namprd07.prod.outlook.com>
+References: <1574062988-4751-1-git-send-email-aniljoy@cadence.com>
+ <dce65150-cbd8-eb4d-5778-47658a719eb5@ti.com>
+In-Reply-To: <dce65150-cbd8-eb4d-5778-47658a719eb5@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR05CA0030.eurprd05.prod.outlook.com
- (2603:10a6:208:55::43) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-x-mailer: git-send-email 2.7.4
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.156]
+x-originating-ip: [14.143.9.161]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 76cafce6-ee83-4c02-19df-08d76c04613c
-x-ms-traffictypediagnostic: DM5PR11MB1659:
+x-ms-office365-filtering-correlation-id: 3dd347df-bff8-490c-7f1c-08d76c05cfad
+x-ms-traffictypediagnostic: BY5PR07MB6936:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1659D9F997FDA34413445962E84D0@DM5PR11MB1659.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-microsoft-antispam-prvs: <BY5PR07MB693685E1EA4315C4BC708905A84D0@BY5PR07MB6936.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(136003)(39860400002)(376002)(189003)(199004)(5660300002)(50226002)(478600001)(446003)(11346002)(81166006)(81156014)(4326008)(8676002)(2906002)(36756003)(486006)(6486002)(8936002)(66066001)(14444005)(256004)(6116002)(6512007)(54906003)(3846002)(2201001)(7736002)(305945005)(71190400001)(316002)(71200400001)(6436002)(52116002)(25786009)(110136005)(76176011)(476003)(102836004)(6506007)(386003)(186003)(2501003)(86362001)(99286004)(66476007)(66556008)(64756008)(66446008)(66946007)(2616005)(107886003)(26005)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1659;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(136003)(39850400004)(366004)(36092001)(199004)(189003)(13464003)(8676002)(81156014)(53546011)(6506007)(14454004)(66556008)(7696005)(4326008)(2906002)(55236004)(76176011)(55016002)(102836004)(6436002)(33656002)(229853002)(5660300002)(26005)(11346002)(2501003)(476003)(486006)(54906003)(2201001)(446003)(6246003)(107886003)(86362001)(9686003)(6116002)(316002)(3846002)(25786009)(66066001)(8936002)(7736002)(305945005)(186003)(110136005)(52536014)(71190400001)(74316002)(99286004)(256004)(14444005)(66946007)(478600001)(66446008)(64756008)(76116006)(66476007)(81166006)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR07MB6936;H:BY5PR07MB6419.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 10Date1rKPmV+G58JoqF4p4/rAVqW73UoHPK6fcJ/emPdC7GaXt4ob3WzQMVDMuLeBFjt/2gD+CszSeAwn2GaxJzsCdpXWiFEnfxsaNohUctFPlif0tr7QehAi2FSfR/Kt0IlZDQu7P9DfCbbCh5UtGXCED68LuMi3lqnfDTkoKPsdtBbOK8VcqJpOZMTocwDK9ljXR3oTXrIYeGd73iQqZuiVkIeom5nbXSAwZis41HBDanx51p0igkulpMGKDoXtr8npqA7pCQ2BWUWY7nEWwtGlWgzHaBQLO6BWaDdfzjySYXbphlXDqAYV1zhESk+VV74AkyDcn22DgODzzHejxjOZtM6obik1I8sthTPNz/6lHu6hExs1/tflyzX8lmMLqJ2yfcIbQzUGSjvHakNot1FgdwTQvrKnYNKa6F0xmWGGROXdHhjQVioJLVpZKj
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: jgJp/0YJQ5ivc0KPzN7Z53dObrQDdPDP/qmJuihwRmeUDa+HQSLZVFzh0dsyED2HTmT7+swoljt8al7rlPgZ7U33v/PmTjYNuI85cypFykU2H9vuMfuKhmsR44JZc/cmpYKIi90kAIPr8czF0X5g2AY2WcMkcRJJedkidgNNa/Tbl6cBtEyGq/Z1iACo7sUQnSbp/6c2t7NDkafs3FrYfireVmaFizv/GiA1RxZQWwi4CkFQZJIBw9HAh358jj30beEKOAc0h8ZnZhWItmY0tHcr73jNfUmaNbYoQYDaIlWmMx7G+uAfzEVpkXXnkp8rAsJJwhihtRcQbpY2z3Tw1ZuPGrNIR1+xrwlXC7qpQI6k9fr3NCVWxOij9SGVf1RBic706P9G19igWlcMfsQT6xUmOm7x67mwJOydPJ7H+gNCRkQDHbqsLe1wBBGjvBVMyFqpS1TImT1GXDdYD+poMA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76cafce6-ee83-4c02-19df-08d76c04613c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 08:50:36.6320
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3dd347df-bff8-490c-7f1c-08d76c05cfad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 09:00:51.0465
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mF/p35r1/pOF+j0WUyXiLRUOJqV1Z8Fy7r3yDghzRvHXIkkKm4m8WRfkuckYTowzuiZAiWeDC+xcr9JxAD9u6/A3/NZhnKy03FTzmGbARFU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1659
+X-MS-Exchange-CrossTenant-userprincipalname: tx+2JQW//E0f2cHYMEJ7NbAUx8PMr+CVLJnh8Et52GzvRH28p8/tX8RGCX/3NtkZMBHFxHuVBXTcUXZmli1yre6yfO7/fTy/eatAp9EFPs4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB6936
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_01:2019-11-15,2019-11-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911180081
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
-
-Add support for SAM9X60 WDT into sama5d4_wdt.
-This means that this driver gets a flag inside the data struct
-that represents the sam9x60 support.
-This flag differentiates between the two hardware blocks, and is set
-according to the compatible of the driver instantiation.
-
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
-Changes in v5:
-- Fixed checkpatch issues for excessive long lines in header file
-
-Changes in v4:
-- check compatible with different of_ function
-- call irq parse and map only if need_irq
-- changed tabbing in struct defintion
-
-Changes in v3:
-- changed need_irq to bool, instead of a single bit variable.
-- the platform data config struct is gone now, changed to a pointer to a bo=
-ol
-to have the sam9x60_support as 'true', pointing to a static bool with true =
-value.
-Can have a better solution than this ?
-- the specific sam9x60_support flag is assigned at probe time, correspondin=
-g
-to the flag value in .data
-
- drivers/watchdog/at91sam9_wdt.h |  21 ++++++++
- drivers/watchdog/sama5d4_wdt.c  | 109 +++++++++++++++++++++++++++++++-----=
-----
- 2 files changed, 105 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wd=
-t.h
-index abfe34d..298d545 100644
---- a/drivers/watchdog/at91sam9_wdt.h
-+++ b/drivers/watchdog/at91sam9_wdt.h
-@@ -24,7 +24,10 @@
- #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
- #define  AT91_WDT_WDV		(0xfffUL << 0)		/* Counter Value */
- #define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
-+#define  AT91_SAM9X60_PERIODRST	BIT(4)		/* Period Reset */
-+#define  AT91_SAM9X60_RPTHRST	BIT(5)		/* Minimum Restart Period */
- #define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
-+#define  AT91_SAM9X60_WDDIS	BIT(12)		/* Watchdog Disable */
- #define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
- #define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
- #define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
-@@ -37,4 +40,22 @@
- #define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
- #define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
-=20
-+/* Watchdog Timer Value Register */
-+#define AT91_SAM9X60_VR		0x08
-+
-+/* Watchdog Window Level Register */
-+#define AT91_SAM9X60_WLR	0x0c
-+/* Watchdog Period Value */
-+#define  AT91_SAM9X60_COUNTER	(0xfffUL << 0)
-+#define  AT91_SAM9X60_SET_COUNTER(x)	((x) & AT91_SAM9X60_COUNTER)
-+
-+/* Interrupt Enable Register */
-+#define AT91_SAM9X60_IER	0x14
-+/* Period Interrupt Enable */
-+#define  AT91_SAM9X60_PERINT	BIT(0)
-+/* Interrupt Disable Register */
-+#define AT91_SAM9X60_IDR	0x18
-+/* Interrupt Status Register */
-+#define AT91_SAM9X60_ISR	0x1c
-+
- #endif
-diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wdt.=
-c
-index d193a60..e5d11d6 100644
---- a/drivers/watchdog/sama5d4_wdt.c
-+++ b/drivers/watchdog/sama5d4_wdt.c
-@@ -2,7 +2,7 @@
- /*
-  * Driver for Atmel SAMA5D4 Watchdog Timer
-  *
-- * Copyright (C) 2015 Atmel Corporation
-+ * Copyright (C) 2015-2019 Microchip Technology Inc. and its subsidiaries
-  */
-=20
- #include <linux/delay.h>
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/platform_device.h>
- #include <linux/reboot.h>
-@@ -29,7 +30,10 @@ struct sama5d4_wdt {
- 	struct watchdog_device	wdd;
- 	void __iomem		*reg_base;
- 	u32			mr;
-+	u32			ir;
- 	unsigned long		last_ping;
-+	bool			need_irq;
-+	bool			sam9x60_support;
- };
-=20
- static int wdt_timeout;
-@@ -78,7 +82,12 @@ static int sama5d4_wdt_start(struct watchdog_device *wdd=
-)
- {
- 	struct sama5d4_wdt *wdt =3D watchdog_get_drvdata(wdd);
-=20
--	wdt->mr &=3D ~AT91_WDT_WDDIS;
-+	if (wdt->sam9x60_support) {
-+		writel_relaxed(wdt->ir, wdt->reg_base + AT91_SAM9X60_IER);
-+		wdt->mr &=3D ~AT91_SAM9X60_WDDIS;
-+	} else {
-+		wdt->mr &=3D ~AT91_WDT_WDDIS;
-+	}
- 	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
-=20
- 	return 0;
-@@ -88,7 +97,12 @@ static int sama5d4_wdt_stop(struct watchdog_device *wdd)
- {
- 	struct sama5d4_wdt *wdt =3D watchdog_get_drvdata(wdd);
-=20
--	wdt->mr |=3D AT91_WDT_WDDIS;
-+	if (wdt->sam9x60_support) {
-+		writel_relaxed(wdt->ir, wdt->reg_base + AT91_SAM9X60_IDR);
-+		wdt->mr |=3D AT91_SAM9X60_WDDIS;
-+	} else {
-+		wdt->mr |=3D AT91_WDT_WDDIS;
-+	}
- 	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
-=20
- 	return 0;
-@@ -109,6 +123,14 @@ static int sama5d4_wdt_set_timeout(struct watchdog_dev=
-ice *wdd,
- 	struct sama5d4_wdt *wdt =3D watchdog_get_drvdata(wdd);
- 	u32 value =3D WDT_SEC2TICKS(timeout);
-=20
-+	if (wdt->sam9x60_support) {
-+		wdt_write(wdt, AT91_SAM9X60_WLR,
-+			  AT91_SAM9X60_SET_COUNTER(value));
-+
-+		wdd->timeout =3D timeout;
-+		return 0;
-+	}
-+
- 	wdt->mr &=3D ~AT91_WDT_WDV;
- 	wdt->mr |=3D AT91_WDT_SET_WDV(value);
-=20
-@@ -143,8 +165,14 @@ static const struct watchdog_ops sama5d4_wdt_ops =3D {
- static irqreturn_t sama5d4_wdt_irq_handler(int irq, void *dev_id)
- {
- 	struct sama5d4_wdt *wdt =3D platform_get_drvdata(dev_id);
-+	u32 reg;
-=20
--	if (wdt_read(wdt, AT91_WDT_SR)) {
-+	if (wdt->sam9x60_support)
-+		reg =3D wdt_read(wdt, AT91_SAM9X60_ISR);
-+	else
-+		reg =3D wdt_read(wdt, AT91_WDT_SR);
-+
-+	if (reg) {
- 		pr_crit("Atmel Watchdog Software Reset\n");
- 		emergency_restart();
- 		pr_crit("Reboot didn't succeed\n");
-@@ -157,13 +185,14 @@ static int of_sama5d4_wdt_init(struct device_node *np=
-, struct sama5d4_wdt *wdt)
- {
- 	const char *tmp;
-=20
--	wdt->mr =3D AT91_WDT_WDDIS;
-+	if (wdt->sam9x60_support)
-+		wdt->mr =3D AT91_SAM9X60_WDDIS;
-+	else
-+		wdt->mr =3D AT91_WDT_WDDIS;
-=20
- 	if (!of_property_read_string(np, "atmel,watchdog-type", &tmp) &&
- 	    !strcmp(tmp, "software"))
--		wdt->mr |=3D AT91_WDT_WDFIEN;
--	else
--		wdt->mr |=3D AT91_WDT_WDRSTEN;
-+		wdt->need_irq =3D true;
-=20
- 	if (of_property_read_bool(np, "atmel,idle-halt"))
- 		wdt->mr |=3D AT91_WDT_WDIDLEHLT;
-@@ -176,21 +205,46 @@ static int of_sama5d4_wdt_init(struct device_node *np=
-, struct sama5d4_wdt *wdt)
-=20
- static int sama5d4_wdt_init(struct sama5d4_wdt *wdt)
- {
--	u32 reg;
-+	u32 reg, val;
-+
-+	val =3D WDT_SEC2TICKS(WDT_DEFAULT_TIMEOUT);
- 	/*
- 	 * When booting and resuming, the bootloader may have changed the
- 	 * watchdog configuration.
- 	 * If the watchdog is already running, we can safely update it.
- 	 * Else, we have to disable it properly.
- 	 */
--	if (wdt_enabled) {
--		wdt_write_nosleep(wdt, AT91_WDT_MR, wdt->mr);
--	} else {
-+	if (!wdt_enabled) {
- 		reg =3D wdt_read(wdt, AT91_WDT_MR);
--		if (!(reg & AT91_WDT_WDDIS))
-+		if (wdt->sam9x60_support && (!(reg & AT91_SAM9X60_WDDIS)))
-+			wdt_write_nosleep(wdt, AT91_WDT_MR,
-+					  reg | AT91_SAM9X60_WDDIS);
-+		else if (!wdt->sam9x60_support &&
-+			 (!(reg & AT91_WDT_WDDIS)))
- 			wdt_write_nosleep(wdt, AT91_WDT_MR,
- 					  reg | AT91_WDT_WDDIS);
- 	}
-+
-+	if (wdt->sam9x60_support) {
-+		if (wdt->need_irq)
-+			wdt->ir =3D AT91_SAM9X60_PERINT;
-+		else
-+			wdt->mr |=3D AT91_SAM9X60_PERIODRST;
-+
-+		wdt_write(wdt, AT91_SAM9X60_IER, wdt->ir);
-+		wdt_write(wdt, AT91_SAM9X60_WLR, AT91_SAM9X60_SET_COUNTER(val));
-+	} else {
-+		wdt->mr |=3D AT91_WDT_SET_WDD(WDT_SEC2TICKS(MAX_WDT_TIMEOUT));
-+		wdt->mr |=3D AT91_WDT_SET_WDV(val);
-+
-+		if (wdt->need_irq)
-+			wdt->mr |=3D AT91_WDT_WDFIEN;
-+		else
-+			wdt->mr |=3D AT91_WDT_WDRSTEN;
-+	}
-+
-+	wdt_write_nosleep(wdt, AT91_WDT_MR, wdt->mr);
-+
- 	return 0;
- }
-=20
-@@ -201,7 +255,6 @@ static int sama5d4_wdt_probe(struct platform_device *pd=
-ev)
- 	struct sama5d4_wdt *wdt;
- 	void __iomem *regs;
- 	u32 irq =3D 0;
--	u32 timeout;
- 	int ret;
-=20
- 	wdt =3D devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
-@@ -215,6 +268,8 @@ static int sama5d4_wdt_probe(struct platform_device *pd=
-ev)
- 	wdd->min_timeout =3D MIN_WDT_TIMEOUT;
- 	wdd->max_timeout =3D MAX_WDT_TIMEOUT;
- 	wdt->last_ping =3D jiffies;
-+	wdt->sam9x60_support =3D of_device_is_compatible(dev->of_node,
-+						       "microchip,sam9x60-wdt");
-=20
- 	watchdog_set_drvdata(wdd, wdt);
-=20
-@@ -224,15 +279,19 @@ static int sama5d4_wdt_probe(struct platform_device *=
-pdev)
-=20
- 	wdt->reg_base =3D regs;
-=20
--	irq =3D irq_of_parse_and_map(dev->of_node, 0);
--	if (!irq)
--		dev_warn(dev, "failed to get IRQ from DT\n");
--
- 	ret =3D of_sama5d4_wdt_init(dev->of_node, wdt);
- 	if (ret)
- 		return ret;
-=20
--	if ((wdt->mr & AT91_WDT_WDFIEN) && irq) {
-+	if (wdt->need_irq) {
-+		irq =3D irq_of_parse_and_map(dev->of_node, 0);
-+		if (!irq) {
-+			dev_warn(dev, "failed to get IRQ from DT\n");
-+			wdt->need_irq =3D false;
-+		}
-+	}
-+
-+	if (wdt->need_irq) {
- 		ret =3D devm_request_irq(dev, irq, sama5d4_wdt_irq_handler,
- 				       IRQF_SHARED | IRQF_IRQPOLL |
- 				       IRQF_NO_SUSPEND, pdev->name, pdev);
-@@ -244,11 +303,6 @@ static int sama5d4_wdt_probe(struct platform_device *p=
-dev)
-=20
- 	watchdog_init_timeout(wdd, wdt_timeout, dev);
-=20
--	timeout =3D WDT_SEC2TICKS(wdd->timeout);
--
--	wdt->mr |=3D AT91_WDT_SET_WDD(WDT_SEC2TICKS(MAX_WDT_TIMEOUT));
--	wdt->mr |=3D AT91_WDT_SET_WDV(timeout);
--
- 	ret =3D sama5d4_wdt_init(wdt);
- 	if (ret)
- 		return ret;
-@@ -269,7 +323,12 @@ static int sama5d4_wdt_probe(struct platform_device *p=
-dev)
- }
-=20
- static const struct of_device_id sama5d4_wdt_of_match[] =3D {
--	{ .compatible =3D "atmel,sama5d4-wdt", },
-+	{
-+		.compatible =3D "atmel,sama5d4-wdt",
-+	},
-+	{
-+		.compatible =3D "microchip,sam9x60-wdt",
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, sama5d4_wdt_of_match);
---=20
-2.7.4
-
+SGkgS2lzaG9uLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEtpc2hv
+biBWaWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+DQo+IFNlbnQ6IE1vbmRheSwgTm92ZW1i
+ZXIgMTgsIDIwMTkgMTozMiBQTQ0KPiBUbzogQW5pbCBKb3kgVmFydWdoZXNlIDxhbmlsam95QGNh
+ZGVuY2UuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsg
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmcNCj4gQ2M6IE1pbGluZCBQYXJhYiA8bXBhcmFiQGNhZGVuY2UuY29tPjsgUmFmYWwgQ2llcGll
+bGENCj4gPHJhZmFsY0BjYWRlbmNlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYmluZGlu
+Z3M6cGh5IE1hcmsgcGh5X2NsayBiaW5kaW5nIGFzIGRlcHJlY2F0ZWQgaW4NCj4gQ2FkZW5jZSBT
+aWVycmEgUGh5Lg0KPiANCj4gRVhURVJOQUwgTUFJTA0KPiANCj4gDQo+IEFuaWwsDQo+IA0KPiBP
+biAxOC8xMS8xOSAxOjEzIFBNLCBBbmlsIEpveSBWYXJ1Z2hlc2Ugd3JvdGU6DQo+ID4gVXBkYXRl
+ZCB0aGUgU2llcnJhIFBoeSBiaW5kaW5nIGRvYyB0byBtYXJrIHBoeV9jbGsgYXMgZGVwcmVjYXRl
+ZC4NCj4gDQo+IFRoaXMgc2hvdWxkIGFsc28gaW5kaWNhdGUgd2h5IHlvdXIgYXJlIGRlcHJlY2F0
+aW5nIGl0Lg0KPiANCj4gVGhhbmtzDQo+IEtpc2hvbg0KDQpJIGFtIGRlcHJlY2F0aW5nIGl0IHNp
+bmNlIHRoZXJlIGlzIGEgbmV3IHNldCBvZiBiaW5kaW5ncyAoY21uX3JlZmNsaywgY21uX3JlZmNs
+azEpIGFubm91bmNlZCBieSBUSS4NCg0KV2lsbCB1cGRhdGUgYW5kIHNlbmQgbmV3IHBhdGNoLg0K
+DQpUaGFua3MsDQpBbmlsDQoNCg0KDQo+IA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5pbCBK
+b3kgVmFydWdoZXNlIDxhbmlsam95QGNhZGVuY2UuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LWNhZGVuY2Utc2llcnJhLnR4dCB8ICAgIDIgKy0NCj4g
+PiAgMSBmaWxlcyBjaGFuZ2VkLCAxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb25zKC0pDQo+ID4N
+Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9w
+aHktY2FkZW5jZS1zaWVycmEudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BoeS9waHktY2FkZW5jZS1zaWVycmEudHh0DQo+ID4gaW5kZXggNmUxYjQ3Yi4uOWE0MmI0
+NiAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5
+L3BoeS1jYWRlbmNlLXNpZXJyYS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcGh5L3BoeS1jYWRlbmNlLXNpZXJyYS50eHQNCj4gPiBAQCAtNSw3ICs1LDcg
+QEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgLSBjb21wYXRpYmxlOgljZG5zLHNpZXJyYS1w
+aHktdDANCj4gPiAgLSBjbG9ja3M6CU11c3QgY29udGFpbiBhbiBlbnRyeSBpbiBjbG9jay1uYW1l
+cy4NCj4gPiAgCQlTZWUgLi4vY2xvY2tzL2Nsb2NrLWJpbmRpbmdzLnR4dCBmb3IgZGV0YWlscy4N
+Cj4gPiAtLSBjbG9jay1uYW1lczoJTXVzdCBiZSAicGh5X2NsayINCj4gPiArLSBjbG9jay1uYW1l
+czoJTXVzdCBiZSAicGh5X2NsayIuIFRoaXMgaXMgZGVwcmVjYXRlZCBhbmQgc2hvdWxkIG5vdA0K
+PiBiZSB1c2VkIHdpdGggbmV3ZXIgYmluZGluZ3MuDQo+ID4gIC0gcmVzZXRzOglNdXN0IGNvbnRh
+aW4gYW4gZW50cnkgZm9yIGVhY2ggaW4gcmVzZXQtbmFtZXMuDQo+ID4gIAkJU2VlIC4uL3Jlc2V0
+L3Jlc2V0LnR4dCBmb3IgZGV0YWlscy4NCj4gPiAgLSByZXNldC1uYW1lczoJTXVzdCBpbmNsdWRl
+ICJzaWVycmFfcmVzZXQiIGFuZCAic2llcnJhX2FwYiIuDQo+ID4NCg==
