@@ -2,139 +2,82 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81752C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D51EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5257322319
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B08E2231B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574115374;
-	bh=N99woBNUTEY8YudZfid747INNWN2pB/zmRRfNYJOdjI=;
+	s=default; t=1574115404;
+	bh=B6z2zwHOqzO7lpIcZAO5GhLy1JJ7zgTcQLAfu6reJK0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=paMHQXZOH38b8Z8puakoOILAhYhSvxFu2sPDirQQnmQ573t6qbg/p0wwUqZQV7XvJ
-	 nEEgvwmROGjhVPdeNGX1GHkRZThb4RgWhSBsVR4NJ5G0JozCgGNf4M1Npy2m4MbTeY
-	 NcdcJDWyODmlOpIiCEvhbvOpYbsGqpC9AOEK0QKs=
+	b=hNEDes8qZRmssC0VRop/mVFZo431EmGG6ODOLm1NNV/lPvjv1QO//MgDjNqBuZx7s
+	 I9BIc15zBmH2DX5mnaUEVzSicXfASGNFWeY383ggh6iLb+d47IqQ14xr2uRtteiDF3
+	 3StXcEBbjF/EKvjRpzefw27+1i9aiGKTXc81VcyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKRWQN (ORCPT
+        id S1726666AbfKRWQn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:16:13 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41453 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRWQN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:16:13 -0500
-Received: by mail-oi1-f193.google.com with SMTP id e9so16918158oif.8;
-        Mon, 18 Nov 2019 14:16:12 -0800 (PST)
+        Mon, 18 Nov 2019 17:16:43 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46955 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRWQn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:16:43 -0500
+Received: by mail-oi1-f194.google.com with SMTP id n14so16877151oie.13;
+        Mon, 18 Nov 2019 14:16:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KnuBbVAKHbMtMVfXJXYBniSdagQcrSD0bPdsm4tuqh4=;
-        b=oks8fAFXQNnFpT6MSooCFkQyFl4UhfCyGRCtFF5DH1K2gd0NtSF7tMj+hjT22kV/Qd
-         KJyudEAJBWeyKhpuj8jYtMsVkGpJl4/hzQw8IGz7R5DXxuJ3hRGz5MoKum8nCr2DxRct
-         blV4Ne+WhPd0yyR+NzZ74t2LtIdhKzhepObkHT26Q8g1aCbrSj/Rll8FjmamzR7OL04f
-         xIiNb12K5rXd01j2O96FmkMC6HCI/d+NQBKpHSaSTORumJLkrKm0ukUgCJvQL6oxmoy7
-         YCyJftGS/uablvDSMSAhw29Sjjhow1Tbnlv7CG53sWpYoX200DZpVPy1+d1Lxsj4hmja
-         XorA==
-X-Gm-Message-State: APjAAAVfpbDXviKw9m3RVPLDavnxDFRHVHXKT+ef/CrriCTL6A0T4v3M
-        +eWmwSj2oBaB9/lB460ibY+gPUg=
-X-Google-Smtp-Source: APXvYqygUVenonCmA1oSV8uGqeMySnY2XKrtqxrf+Ry4Vh5n+7pXFTIjziFLnBjOpiLj4dEV/sPg9A==
-X-Received: by 2002:aca:52c2:: with SMTP id g185mr1121042oib.45.1574115372467;
-        Mon, 18 Nov 2019 14:16:12 -0800 (PST)
+        bh=31Fq2MhmM/Urm61qHS/zASd5hxG1Am9pqw2oaM3IrGM=;
+        b=f21WzBNufYWesUh851UVTh0Ly6w3xY/ZkQ3gW9eR513JDIxu1jTaNHynamrrRc7vQ+
+         i7w41PKFr2m4lKNvGp30gp+7UoinAOG1o90M49jTtwjLk6qVvG7hYx2l91flDw5M2JS2
+         +RGy0O/Mn40OlPPgHjomamEZ3WDecUxiFxy2NdM9XCtw9l3VaZt4ifyDmwlYW381Uf+V
+         WneXfXQ4MZqUmc/uiS/G8sleH1p2D6a6JmYimPkrGHxYEnLk1ZHxvano/XmiAm/lRwzU
+         W/aSItQWhfhiREeddk8efEle0Ap2zJYruFak0NdZKyuCit5Z7id9LsJsb+Vj43k4sMHf
+         pIQg==
+X-Gm-Message-State: APjAAAUBnltlVjW77TMG0h1m50pEMoNkFRrnrslPAACJqbdIiNFI9uQN
+        IQtJ/MqWt/jU0DZaZYGgaw==
+X-Google-Smtp-Source: APXvYqwH0uCFhNsGiWA5jSWAZGCA4GvWT52jHanTph/d7N9nMnA7tMhfeBrI8QOtNcUZTsKqI/z6AA==
+X-Received: by 2002:aca:ef04:: with SMTP id n4mr1115455oih.91.1574115401304;
+        Mon, 18 Nov 2019 14:16:41 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h9sm6643971otn.14.2019.11.18.14.16.11
+        by smtp.gmail.com with ESMTPSA id n5sm6330647oie.16.2019.11.18.14.16.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 14:16:11 -0800 (PST)
-Date:   Mon, 18 Nov 2019 16:16:11 -0600
+        Mon, 18 Nov 2019 14:16:40 -0800 (PST)
+Date:   Mon, 18 Nov 2019 16:16:39 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-i2c@vger.kernel.org, peda@axentia.se,
-        devicetree@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: Re: [PATCH] i2c: mux: pca954x: Disable cacheing of the last channel
-Message-ID: <20191118221611.GA30841@bogus>
-References: <1573719422-7414-1-git-send-email-shubhrajyoti.datta@gmail.com>
+To:     tomislav.denis@avl.com
+Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, tomislav.denis@avl.com
+Subject: Re: [PATCH 2/3] dt-bindings: Add asc vendor
+Message-ID: <20191118221639.GA2875@bogus>
+References: <20191114100908.11180-1-tomislav.denis@avl.com>
+ <20191114100908.11180-3-tomislav.denis@avl.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573719422-7414-1-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <20191114100908.11180-3-tomislav.denis@avl.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 01:47:02PM +0530, shubhrajyoti.datta@gmail.com wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-
-Typo in the subject.
-
-Run get_maintainers.pl and Cc the right people.
-
-> In case of multimaster configuration the last channel cached value is
-> not reliable. Basically the first processor/master does a write to the
-> mux and then to the intended slave, it caches the value.
-> Now the second processor/processor does a write to mux on another
-> channel and writes to another slave.
-> The first processor/master when it attempts to write the slave
-> skips the mux as it relies on the mux channel being the same as the
-> intended. This causes an issue.
+On Thu, 14 Nov 2019 11:09:07 +0100, <tomislav.denis@avl.com> wrote:
+> From: Tomislav Denis <tomislav.denis@avl.com>
 > 
-> To fix that write always to the mux address.
+> All Sensors Corporation is a manufacturer of MEMS piezoresitive
+> ultra low pressure sensors and pressure transducers.
 > 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Tomislav Denis <tomislav.denis@avl.com>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
->  drivers/i2c/muxes/i2c-mux-pca954x.c                       | 6 +++++-
->  2 files changed, 6 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> index 30ac6a6..fc4c0b0 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> @@ -34,6 +34,7 @@ Optional Properties:
->      - first cell is the pin number
->      - second cell is used to specify flags.
->      See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +  - no-channel-cache: Write the mux channel always.
->  
->  Example:
->  
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> index 923aa3a..37d32b0 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> @@ -85,6 +85,7 @@ struct pca954x {
->  	const struct chip_desc *chip;
->  
->  	u8 last_chan;		/* last register value */
-> +	u8 last_chan_unchached;	/* write channel register always */
->  	/* MUX_IDLE_AS_IS, MUX_IDLE_DISCONNECT or >= 0 for channel */
->  	s8 idle_state;
->  
-> @@ -244,7 +245,7 @@ static int pca954x_select_chan(struct i2c_mux_core *muxc, u32 chan)
->  		regval = 1 << chan;
->  
->  	/* Only select the channel if its different from the last channel */
-> -	if (data->last_chan != regval) {
-> +	if (last_chan_unchached && data->last_chan != regval) {
->  		ret = pca954x_reg_write(muxc->parent, client, regval);
->  		data->last_chan = ret < 0 ? 0 : regval;
->  	}
-> @@ -479,6 +480,9 @@ static int pca954x_probe(struct i2c_client *client,
->  	if (idle_disconnect_dt)
->  		data->idle_state = MUX_IDLE_DISCONNECT;
->  
-> +	data->last_chan_unchached = np &&
-> +		of_property_read_bool(np, "no-channel-cache");
-> +
->  	ret = pca954x_irq_setup(muxc);
->  	if (ret)
->  		goto fail_cleanup;
-> -- 
-> 2.1.1
-> 
+
+Acked-by: Rob Herring <robh@kernel.org>
