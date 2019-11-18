@@ -2,59 +2,60 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB620C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDBAC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A465A2230E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711202230F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APzSWzS1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6Kd/3tq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfKRUFc (ORCPT
+        id S1727088AbfKRUFk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:05:32 -0500
-Received: from mail-lj1-f170.google.com ([209.85.208.170]:46022 "EHLO
-        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfKRUFc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 15:05:32 -0500
-Received: by mail-lj1-f170.google.com with SMTP id n21so20392550ljg.12;
-        Mon, 18 Nov 2019 12:05:30 -0800 (PST)
+        Mon, 18 Nov 2019 15:05:40 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38845 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfKRUFj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 15:05:39 -0500
+Received: by mail-lj1-f194.google.com with SMTP id v8so20453406ljh.5;
+        Mon, 18 Nov 2019 12:05:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+lYduyo7vPgxp45RLwsY0ZnQLiYVsuFTry8aLXbx4kM=;
-        b=APzSWzS1AWv0t0oARIksAL9UGz8A49gKk4636qenUrw+Td8W04Iz2y8qkPl3AHCr6m
-         l/Y7ReHNWM+fX2S6YoWckzLWIag7992BEYqUq4Gn7ppw4+46i/FfNOopAHsAijIGhjKR
-         tD7SA9PLTVi2s4wgrPZldc+6eFwRb93c5lbw3Ix93bgb7lhuXJ0PlExD9gV/yxANzVju
-         ztDiniGHZn5D2BJ4iYP8hDynklw+eD4ahvr9rBJ6wzY3kA2s+pBf2hpwaxyTKPUB/KNS
-         oCMyalrSMkpWiyay05T2MnJa3wwN2B5WySinWwolMDf4wTAKiDFgGzlR2428ByxDD+/O
-         jcJw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bqBrfnW6oyEXwKIsbHDBGjswWgQFyUFjpg74MBWJm98=;
+        b=Z6Kd/3tqBvD0M7O+PYu7Ii8RlXO0+YawGtX5h9TllVokV9Qzmc+mmaZJjKwaOqN20S
+         vciRZM10CNRGSAjggOApBG/aktZ1egddBzZLK1Cw5zVSHj9sY6wnwyqW5LhTDMgVnPO0
+         kPyiJ1cDdIflcboywIBKSfX4ePvjrzwa7nG11rEtpQ5D6KgvVtOoEz6VJlcVfVKNeSlI
+         BIb+CyR7SSmV/FgJEm+y6wDNdlASp9ZOb45u3YD6ox8labjdDyVAwSbgp/tDlgQqZbvC
+         bdvpkMWX6vR8WxszZg37yPD/36pBzeVdUMd5TohZlebNd0V9EJJsTU0dYC/4aGI3RELa
+         kAyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+lYduyo7vPgxp45RLwsY0ZnQLiYVsuFTry8aLXbx4kM=;
-        b=AMrUuEqRyNQAn3dbqdRGGtTItKb5Fqwy8rXr3WzjZenWV+UtT10zk+EnoQkLWpjxBW
-         qUGdlehbMOQYlf1cITyuSyeOjDbZt0W26wxL5tjvnHfkl5VyTsQmRQj6JsmEJ00GFDHk
-         wpbo9+lDmAOlKtVBa77VW9e+iKzxr1RSCtnv7SGjfxQy93HGeFzTowEHaDlgDlgAo2or
-         uSmCKuMPkLnhAjPjaAqPLQ1AE+uGSRg6grlGSAqDVYTO1xOp+mXfGojAFjdI3/SdDhY/
-         uoA1F7RKuq7rirncpEBEBzDHSjWzp8uKaih9+Y81U/cAL6oUzILxSilKxhypXJEljdjC
-         BcJA==
-X-Gm-Message-State: APjAAAWPyEXjNhCZbod6A2BIvO7BmfM+DT0+MYhBcSc9JjBVzIr01DRJ
-        v7ngAjC3ipwZPWfQOhAxjck=
-X-Google-Smtp-Source: APXvYqxptZWcgvS7sdySo1sH5FxDJRVUucG9P8wDoJrg5exzZstUPyRLwr6nfSCBfGL7tbiFLrJUzA==
-X-Received: by 2002:a2e:574d:: with SMTP id r13mr934150ljd.10.1574107529313;
-        Mon, 18 Nov 2019 12:05:29 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bqBrfnW6oyEXwKIsbHDBGjswWgQFyUFjpg74MBWJm98=;
+        b=Wb/preWecyW2Ms4RBvv1s3+EJCbLAY0oD9ed9513azqYiryMidiC2sPoiNuiSETsnn
+         uPYrgkM6scfje2RG6Za66/mgXDYrjzbY2A5UC6bU/syaFi6tKshCYOrGaYqFLJgs87A4
+         cvoNtRfaoinXcv34sEHH3y2G7Fjy+eIhzCDePZXb9zrB0XnKB9vJljUySee9gy5LzV9M
+         axUsfFFMfY3xcgGn3+dPcFjruoWq2aWuLS2RUXEEucmrZRXnnHchsIWdrM/NO07KZR2e
+         8xQOMQhI/hv0xPH2JNbrUV4AxQL4pC/ba8Q4VwdHlV2+NEa3xG3bcfKL4OOLYVlghJ+a
+         9GcA==
+X-Gm-Message-State: APjAAAV2ck42l1flCW2BKLbdhniHU3MG816t9Qanf5pz+rx/ZmN53IGn
+        A65J882xOhOgwe/UrS4RAO8=
+X-Google-Smtp-Source: APXvYqzGjnmG736kFSi3pxotXWznYFJa6hehgaqv7npk23af++Lg1tmT5bTj457i7qTnfQhOMfeSlA==
+X-Received: by 2002:a2e:93d7:: with SMTP id p23mr939424ljh.102.1574107536965;
+        Mon, 18 Nov 2019 12:05:36 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.27
+        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:05:28 -0800 (PST)
+        Mon, 18 Nov 2019 12:05:36 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,10 +66,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v1 00/29] Introduce memory interconnect for NVIDIA Tegra SoCs
-Date:   Mon, 18 Nov 2019 23:02:18 +0300
-Message-Id: <20191118200247.3567-1-digetx@gmail.com>
+Subject: [PATCH v1 07/29] dt-bindings: host1x: Document new interconnect properties
+Date:   Mon, 18 Nov 2019 23:02:25 +0300
+Message-Id: <20191118200247.3567-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
+References: <20191118200247.3567-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -76,94 +79,208 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Host1x clients are interconnected with memory controller through Graphics
+HOST bus, these clients will issue memory bandwidth requests to the memory
+controller that will adapt arbitration configuration in order to satisfy
+clients and then propagate the aggregated bandwidth request to external
+memory controller. The new interconnect properties are optional, thus
+backwards compatibility is preserved with older device-trees.
 
-This series brings initial support for memory interconnect to Tegra20,
-Terga30 and Tegra124 SoCs. The interconnect provides are quite generic
-and should be suitable for all Tegra SoCs, but currently upstream kernel
-has EMC/MC drivers only for those three generations of Tegra SoCs.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ .../display/tegra/nvidia,tegra20-host1x.txt   | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-For the start only display controllers are getting interconnect API
-support, others could be supported later on. The display controllers
-have the biggest demand for interconnect API right now because dynamic
-memory frequency scaling can't be done safely without taking into account
-bandwidth requirement from the displays.
-
-Dmitry Osipenko (29):
-  dt-bindings: memory: tegra20: mc: Document new interconnect property
-  dt-bindings: memory: tegra20: emc: Document new interconnect property
-  dt-bindings: memory: tegra30: mc: Document new interconnect property
-  dt-bindings: memory: tegra30: emc: Document new interconnect property
-  dt-bindings: memory: tegra124: mc: Document new interconnect property
-  dt-bindings: memory: tegra124: emc: Document new interconnect property
-  dt-bindings: host1x: Document new interconnect properties
-  dt-bindings: interconnect: tegra: Add initial IDs
-  ARM: tegra: Add interconnect properties to Tegra20 device-tree
-  ARM: tegra: Add interconnect properties to Tegra30 device-tree
-  ARM: tegra: Add interconnect properties to Tegra124 device-tree
-  interconnect: Add memory interconnection providers for NVIDIA Tegra
-    SoCs
-  memory: tegra: Register as interconnect provider
-  memory: tegra: Add interconnect nodes for Terga20 display controllers
-  memory: tegra: Add interconnect nodes for Terga30 display controllers
-  memory: tegra: Add interconnect nodes for Terga124 display controllers
-  memory: tegra20-emc: Use devm_platform_ioremap_resource
-  memory: tegra20-emc: Continue probing if timings/IRQ are missing in
-    device-tree
-  memory: tegra20-emc: Register as interconnect provider
-  memory: tegra30-emc: Continue probing if timings are missing in
-    device-tree
-  memory: tegra30-emc: Register as interconnect provider
-  memory: tegra124-emc: Use devm_platform_ioremap_resource
-  memory: tegra124-emc: Register as interconnect provider
-  drm/tegra: dc: Use devm_platform_ioremap_resource
-  drm/tegra: dc: Release PM and RGB output when client's registration
-    fails
-  drm/tegra: dc: Support memory bandwidth management
-  ARM: tegra: Enable interconnect API in tegra_defconfig
-  ARM: multi_v7_defconfig: Enable NVIDIA Tegra interconnect providers
-  MAINTAINERS: Add maintainers for NVIDIA Tegra interconnect drivers
-
- .../display/tegra/nvidia,tegra20-host1x.txt   |  67 +++++
- .../nvidia,tegra124-emc.txt                   |   3 +
- .../nvidia,tegra124-mc.yaml                   |   5 +
- .../memory-controllers/nvidia,tegra20-emc.txt |   4 +
- .../memory-controllers/nvidia,tegra20-mc.txt  |   4 +
- .../nvidia,tegra30-emc.yaml                   |   6 +
- .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
- MAINTAINERS                                   |   9 +
- arch/arm/boot/dts/tegra124.dtsi               |  10 +
- arch/arm/boot/dts/tegra20.dtsi                |  11 +-
- arch/arm/boot/dts/tegra30.dtsi                |  12 +-
- arch/arm/configs/multi_v7_defconfig           |   2 +
- arch/arm/configs/tegra_defconfig              |   2 +
- drivers/gpu/drm/tegra/dc.c                    | 252 +++++++++++++++++-
- drivers/gpu/drm/tegra/dc.h                    |   8 +
- drivers/gpu/drm/tegra/drm.c                   |  18 ++
- drivers/gpu/drm/tegra/plane.c                 |   1 +
- drivers/gpu/drm/tegra/plane.h                 |   4 +-
- drivers/interconnect/Kconfig                  |   1 +
- drivers/interconnect/Makefile                 |   1 +
- drivers/interconnect/tegra/Kconfig            |   6 +
- drivers/interconnect/tegra/Makefile           |   4 +
- drivers/interconnect/tegra/tegra-icc-emc.c    | 138 ++++++++++
- drivers/interconnect/tegra/tegra-icc-mc.c     | 130 +++++++++
- drivers/memory/tegra/mc.c                     |   4 +
- drivers/memory/tegra/tegra124-emc.c           |  28 +-
- drivers/memory/tegra/tegra124.c               |  16 ++
- drivers/memory/tegra/tegra20-emc.c            |  91 ++++---
- drivers/memory/tegra/tegra20.c                |  14 +
- drivers/memory/tegra/tegra30-emc.c            |  34 ++-
- drivers/memory/tegra/tegra30.c                |  14 +
- include/dt-bindings/interconnect/tegra-icc.h  |  11 +
- include/soc/tegra/mc.h                        |  26 ++
- 33 files changed, 883 insertions(+), 58 deletions(-)
- create mode 100644 drivers/interconnect/tegra/Kconfig
- create mode 100644 drivers/interconnect/tegra/Makefile
- create mode 100644 drivers/interconnect/tegra/tegra-icc-emc.c
- create mode 100644 drivers/interconnect/tegra/tegra-icc-mc.c
- create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
-
+diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+index 9999255ac5b6..2a1fc1a194d2 100644
+--- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+@@ -20,6 +20,11 @@ Required properties:
+ - reset-names: Must include the following entries:
+   - host1x
+ 
++Each host1x client module having to perform DMA through the Memory Controller
++should have the interconnect endpoints set to the Memory Client and External
++Memory respectively, interconnect name must be set to "dma-mem".
++The interconnect property is optional.
++
+ The host1x top-level node defines a number of children, each representing one
+ of the following host1x client modules:
+ 
+@@ -36,6 +41,11 @@ of the following host1x client modules:
+   - reset-names: Must include the following entries:
+     - mpe
+ 
++  Optional properties:
++  - interconnects: Must contain entry for the memory interconnect.
++  - interconnect-names: Must include the following entries:
++    - dma-mem
++
+ - vi: video input
+ 
+   Required properties:
+@@ -49,6 +59,11 @@ of the following host1x client modules:
+   - reset-names: Must include the following entries:
+     - vi
+ 
++  Optional properties:
++  - interconnects: Must contain entry for the memory interconnect.
++  - interconnect-names: Must include the following entries:
++    - dma-mem
++
+ - epp: encoder pre-processor
+ 
+   Required properties:
+@@ -62,6 +77,11 @@ of the following host1x client modules:
+   - reset-names: Must include the following entries:
+     - epp
+ 
++  Optional properties:
++  - interconnects: Must contain entry for the memory interconnect.
++  - interconnect-names: Must include the following entries:
++    - dma-mem
++
+ - isp: image signal processor
+ 
+   Required properties:
+@@ -75,6 +95,11 @@ of the following host1x client modules:
+   - reset-names: Must include the following entries:
+     - isp
+ 
++  Optional properties:
++  - interconnects: Must contain entry for the memory interconnect.
++  - interconnect-names: Must include the following entries:
++    - dma-mem
++
+ - gr2d: 2D graphics engine
+ 
+   Required properties:
+@@ -88,6 +113,11 @@ of the following host1x client modules:
+   - reset-names: Must include the following entries:
+     - 2d
+ 
++  Optional properties:
++  - interconnects: Must contain entry for the memory interconnect.
++  - interconnect-names: Must include the following entries:
++    - dma-mem
++
+ - gr3d: 3D graphics engine
+ 
+   Required properties:
+@@ -106,6 +136,11 @@ of the following host1x client modules:
+     - 3d
+     - 3d2 (Only required on SoCs with two 3D clocks)
+ 
++  Optional properties:
++  - interconnects: Must contain entry for the memory interconnect.
++  - interconnect-names: Must include the following entries:
++    - dma-mem
++
+ - dc: display controller
+ 
+   Required properties:
+@@ -133,6 +168,9 @@ of the following host1x client modules:
+   - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
+   - nvidia,edid: supplies a binary EDID blob
+   - nvidia,panel: phandle of a display panel
++  - interconnects: Must contain entry for the memory interconnect.
++  - interconnect-names: Must include the following entries:
++    - dma-mem
+ 
+ - hdmi: High Definition Multimedia Interface
+ 
+@@ -281,6 +319,11 @@ of the following host1x client modules:
+   - reset-names: Must include the following entries:
+     - vic
+ 
++  Optional properties:
++  - interconnects: Must contain entry for the memory interconnect.
++  - interconnect-names: Must include the following entries:
++    - dma-mem
++
+ Example:
+ 
+ / {
+@@ -307,6 +350,9 @@ Example:
+ 			clocks = <&tegra_car TEGRA20_CLK_MPE>;
+ 			resets = <&tegra_car 60>;
+ 			reset-names = "mpe";
++
++			interconnects = <&mc TEGRA_ICC_MC_MPE &emc TEGRA_ICC_EMEM>;
++			interconnect-names = "dma-mem";
+ 		};
+ 
+ 		vi {
+@@ -316,6 +362,9 @@ Example:
+ 			clocks = <&tegra_car TEGRA20_CLK_VI>;
+ 			resets = <&tegra_car 100>;
+ 			reset-names = "vi";
++
++			interconnects = <&mc TEGRA_ICC_MC_VI &emc TEGRA_ICC_EMEM>;
++			interconnect-names = "dma-mem";
+ 		};
+ 
+ 		epp {
+@@ -325,6 +374,9 @@ Example:
+ 			clocks = <&tegra_car TEGRA20_CLK_EPP>;
+ 			resets = <&tegra_car 19>;
+ 			reset-names = "epp";
++
++			interconnects = <&mc TEGRA_ICC_MC_EPP &emc TEGRA_ICC_EMEM>;
++			interconnect-names = "dma-mem";
+ 		};
+ 
+ 		isp {
+@@ -334,6 +386,9 @@ Example:
+ 			clocks = <&tegra_car TEGRA20_CLK_ISP>;
+ 			resets = <&tegra_car 23>;
+ 			reset-names = "isp";
++
++			interconnects = <&mc TEGRA_ICC_MC_ISP &emc TEGRA_ICC_EMEM>;
++			interconnect-names = "dma-mem";
+ 		};
+ 
+ 		gr2d {
+@@ -343,6 +398,9 @@ Example:
+ 			clocks = <&tegra_car TEGRA20_CLK_GR2D>;
+ 			resets = <&tegra_car 21>;
+ 			reset-names = "2d";
++
++			interconnects = <&mc TEGRA_ICC_MC_2D &emc TEGRA_ICC_EMEM>;
++			interconnect-names = "dma-mem";
+ 		};
+ 
+ 		gr3d {
+@@ -351,6 +409,9 @@ Example:
+ 			clocks = <&tegra_car TEGRA20_CLK_GR3D>;
+ 			resets = <&tegra_car 24>;
+ 			reset-names = "3d";
++
++			interconnects = <&mc TEGRA_ICC_MC_3D &emc TEGRA_ICC_EMEM>;
++			interconnect-names = "dma-mem";
+ 		};
+ 
+ 		dc@54200000 {
+@@ -363,6 +424,9 @@ Example:
+ 			resets = <&tegra_car 27>;
+ 			reset-names = "dc";
+ 
++			interconnects = <&mc TEGRA_ICC_MC_DC &emc TEGRA_ICC_EMEM>;
++			interconnect-names = "dma-mem";
++
+ 			rgb {
+ 				status = "disabled";
+ 			};
+@@ -378,6 +442,9 @@ Example:
+ 			resets = <&tegra_car 26>;
+ 			reset-names = "dc";
+ 
++			interconnects = <&mc TEGRA_ICC_MC_DCB &emc TEGRA_ICC_EMEM>;
++			interconnect-names = "dma-mem";
++
+ 			rgb {
+ 				status = "disabled";
+ 			};
 -- 
 2.23.0
 
