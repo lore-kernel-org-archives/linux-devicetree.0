@@ -2,171 +2,120 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C08C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58CAC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67EE9206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:43:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ius+cbqd"
+	by mail.kernel.org (Postfix) with ESMTP id 822F4206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfKRMnD (ORCPT
+        id S1726646AbfKRMo7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:43:03 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33625 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfKRMnC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 07:43:02 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a17so15923046wmb.0;
-        Mon, 18 Nov 2019 04:43:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pcFlFVkkMbFljmj2ZrTgP1JMEa4NOdAyJ98aVnMQW90=;
-        b=Ius+cbqdRUrpMslhWt5VXcDQyV8qVk+4Q8qQxv7hMKczJGpyf5AodDdZRU1khdJnZe
-         Q4+6tbCPCebPkg+5A0jb/EoLTs1WmxuQidwUlRbSSb/ffaZ7C+nEtTVg6FXABkwxbras
-         x4A4ihtg4YiqSM61NxV/75lb3wrmL6k+9j9m+cfg0b6huKP3jNwQU3WsukP3z+B9pTDU
-         dUyq78+U7spZw6ZTkeehtnN/BbHHbc8uT6zvlhJUWJyf6/GVjKxJeObS6ExLDyuqAkms
-         enBH+zA7zk/kcDqaR9SAYY7RwmyZ9cHJ8zMeuaZceL+Eya/l1Hba/Jaesd78fPxf/duP
-         pRzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pcFlFVkkMbFljmj2ZrTgP1JMEa4NOdAyJ98aVnMQW90=;
-        b=hvPMwr8mgjH63cDRy5Ik2h1JbivGDIHT5FFA9sM+j8wReNZPaGMyKmfZ5KothSrc3c
-         YS8cocovxHOMZONVvz/FsVq1fJBXVAsiyD6hK0FC1bhNtVVbIqvSLWnCTcpcwnRG5css
-         Y/nnK3/j8ok8n3gssApXbyxYKsVIS3IW53TJiR/TWrdBEzrW5OXzJj7feSVv45iiCVjJ
-         W4JlDQthHKKfAREvNVYVafK1KDUbEwJv5yIl4++7Q0bI+YxbCuxgNKmmbmTlKhqFH/3j
-         PR9AL8sSw/mnaLuDTRpA8xgzy7Q/XXoDMNlqQokN5uRInm4mU4kKBgDMvkMNtOoyWesf
-         VZnw==
-X-Gm-Message-State: APjAAAWogt3UZ/6CI7Ofk8ucCK7CsZg5RoJQDcY5YPCivl4yYqmLGwgG
-        rpDEiH/33IaBG4oICBa+vleYWTMbyBmR4t6HGmY=
-X-Google-Smtp-Source: APXvYqxxJYds+5SWA8ug7X01HWT+V/7ibyn0gASw4Jf8VDRK4pON3wae0WJKMIz2zs2OISG78EzX3OjYwfu9ndtgm88=
-X-Received: by 2002:a1c:a512:: with SMTP id o18mr27252635wme.4.1574080979808;
- Mon, 18 Nov 2019 04:42:59 -0800 (PST)
-MIME-Version: 1.0
-References: <20191118110034.19444-1-peron.clem@gmail.com> <20191118110034.19444-2-peron.clem@gmail.com>
- <20191118110640.GE4345@gilmour.lan>
-In-Reply-To: <20191118110640.GE4345@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 18 Nov 2019 13:42:48 +0100
-Message-ID: <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM description
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mon, 18 Nov 2019 07:44:59 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:60434 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726518AbfKRMo7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:44:59 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iWgOl-0002Ek-Sp; Mon, 18 Nov 2019 13:44:55 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAICiss7027499
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 18 Nov 2019 13:44:55 +0100
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Subject: [PATCH] arm64: dts: rockchip: Enable MTD Flash on rk3399-roc-pc
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <94f44e1d-86c6-1e32-aa63-56edbd7d75f5@fivetechno.de>
+Date:   Mon, 18 Nov 2019 13:44:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1574081098;7e303123;
+X-HE-SMSGID: 1iWgOl-0002Ek-Sp
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime
+rk3399-roc-pc has 16 MB SPI NOR Flash, enable it.
 
-On Mon, 18 Nov 2019 at 12:06, Maxime Ripard <mripard@kernel.org> wrote:
->
-> Hi,
->
-> On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 PWM block is basically the same as A20 PWM, except that it also has
-> > bus clock and reset line which needs to be handled accordingly.
-> >
-> > Expand Allwinner PWM binding with H6 PWM specifics.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.ya=
-ml
-> > index 0ac52f83a58c..1bae446febbb 100644
-> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
-l
-> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
-l
-> > @@ -30,13 +30,51 @@ properties:
-> >        - items:
-> >            - const: allwinner,sun50i-h5-pwm
-> >            - const: allwinner,sun5i-a13-pwm
-> > +      - const: allwinner,sun50i-h6-pwm
-> >
-> >    reg:
-> >      maxItems: 1
-> >
-> >    clocks:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - description: Module Clock
-> > +      - description: Bus Clock
-> > +
-> > +  # Even though it only applies to subschemas under the conditionals,
-> > +  # not listing them here will trigger a warning because of the
-> > +  # additionalsProperties set to false.
-> > +  clock-names: true
-> > +
-> > +  resets:
-> >      maxItems: 1
-> >
-> > +  if:
-> > +    properties:
-> > +      compatible:
-> > +        contains:
-> > +          const: allwinner,sun50i-h6-pwm
-> > +
-> > +  then:
-> > +    properties:
-> > +      clocks:
-> > +        maxItems: 2
-> > +
-> > +      clock-names:
-> > +        items:
-> > +          - const: mod
-> > +          - const: bus
-> > +
-> > +    required:
-> > +      - clock-names
-> > +      - resets
-> > +
-> > +  else:
-> > +    properties:
-> > +      clocks:
-> > +        maxItems: 1
-> > +
->
-> Sorry for not noticing this earlier, but this should be at the topmost
-> level
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-No problem, but I don't get what you want, (yaml format is new for me).
-Do you mean I should put the if condition before the "resets" ?
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+index a50e5ea52a4c..137e3ce106b3 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+@@ -696,6 +696,16 @@
+ 	status = "okay";
+ };
+ 
++&spi1 {
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++	};
++};
++
+ &tcphy0 {
+ 	status = "okay";
+ };
+-- 
+2.20.1
 
-Regards,
-Cl=C3=A9ment
-
->
-> Maxime
