@@ -2,118 +2,92 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4CFC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEE3C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61D220726
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F9B920885
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:45:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OLe7ntSF";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="DAAR1y6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfKRPZL (ORCPT
+        id S1726654AbfKRPpS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:25:11 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56774 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbfKRPZK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 10:25:10 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 9907428E105
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: [PATCH v3 4/4] dt-bindings: display: add IMX MIPI DSI host controller doc
-Date:   Mon, 18 Nov 2019 17:25:18 +0200
-Message-Id: <20191118152518.3374263-5-adrian.ratiu@collabora.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191118152518.3374263-1-adrian.ratiu@collabora.com>
-References: <20191118152518.3374263-1-adrian.ratiu@collabora.com>
+        Mon, 18 Nov 2019 10:45:18 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:54848
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726216AbfKRPpR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 10:45:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574091916;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
+        bh=+YSVNgnbMs5EFhyJ4h+wAu2fT8OSBVhEsqPZBPNUd8k=;
+        b=OLe7ntSFiI5QH+4ODVnOMey3u/xtl63G9H6PBoP/O9XErnftMJBpCv0SeevagLwJ
+        /ijXqA3SK82OpyGRRglAmXFrODwVLVTwRYyGXVlCtvcPPR+G5RcA5gwocpJH77D2DHi
+        BX9phdNicnko6/LCtCiYkysmQZP0iGmspjY1SwuA=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574091916;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=+YSVNgnbMs5EFhyJ4h+wAu2fT8OSBVhEsqPZBPNUd8k=;
+        b=DAAR1y6+xqmRuzR54Jm2txUDDRsZkOPpp3lDZRVk822MPucZHYkL7q7LPWRbovWk
+        RxqJhgC90OQvx1x0iS8cZerxkS0Upv7OvKQ1OIWkIQYdOAK5x+M8nP5YLNyYMYAtBoo
+        DAoFz+/xw7hYbj5sW5EiUxvCBQNuPoqbJQrXelhg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 46AD7C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     robh+dt@kernel.org, georgi.djakov@linaro.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        evgreen@chromium.org, daidavid1@codeaurora.org,
+        saravanak@google.com, viresh.kumar@linaro.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v3 0/2] Add OSM L3 Interconnect Provider
+Date:   Mon, 18 Nov 2019 15:45:16 +0000
+Message-ID: <0101016e7f3085c2-87e9f748-ec76-4dbe-b8ad-3901e38c75dd-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2019.11.18-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
-Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
----
- .../bindings/display/imx/mipi-dsi.txt         | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
+This patch series aims to add Operating State Manager (OSM) L3
+interconnect provider support on SDM845 SoCs to handle bandwidth
+requests from CPU to scale L3 caches.
 
-diff --git a/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt b/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
-new file mode 100644
-index 000000000000..3f05c32ef963
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
-@@ -0,0 +1,56 @@
-+Freescale i.MX6 DW MIPI DSI Host Controller
-+===========================================
-+
-+The DSI host controller is a Synopsys DesignWare MIPI DSI v1.01 IP
-+with a companion PHY IP.
-+
-+These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
-+Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
-+the following device-specific properties.
-+
-+Required properties:
-+
-+- #address-cells: Should be <1>.
-+- #size-cells: Should be <0>.
-+- compatible: "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi".
-+- reg: See dw_mipi_dsi.txt.
-+- interrupts: The controller's CPU interrupt.
-+- clocks, clock-names: Phandles to the controller's pll reference
-+  clock(ref) and APB clock(pclk), as described in [1].
-+- ports: a port node with endpoint definitions as defined in [2].
-+- gpr: Should be <&gpr>.
-+       Phandle to the iomuxc-gpr region containing the multiplexer
-+       control register.
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
-+
-+	mipi_dsi: mipi@21e0000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
-+		reg = <0x021e0000 0x4000>;
-+		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
-+		gpr = <&gpr>;
-+		clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
-+			 <&clks IMX6QDL_CLK_MIPI_IPG>;
-+		clock-names = "ref", "pclk";
-+		status = "okay";
-+
-+		ports {
-+			port@0 {
-+				reg = <0>;
-+				mipi_mux_0: endpoint {
-+					remote-endpoint = <&ipu1_di0_mipi>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				mipi_mux_1: endpoint {
-+					remote-endpoint = <&ipu1_di1_mipi>;
-+				};
-+			};
-+		};
-+        };
+v3:
+ * switched the dt-bindings to dual-license
+ * Rebased to linux-next
+
+v2:
+ * addressed review comments from Evan
+ * dropped unused gpu icc node on SDM845 SoC
+
+Sibi Sankar (2):
+  dt-bindings: interconnect: Add OSM L3 DT bindings
+  interconnect: qcom: Add OSM L3 interconnect provider support
+
+ .../bindings/interconnect/qcom,osm-l3.yaml    |  56 ++++
+ drivers/interconnect/qcom/Kconfig             |   7 +
+ drivers/interconnect/qcom/Makefile            |   2 +
+ drivers/interconnect/qcom/osm-l3.c            | 284 ++++++++++++++++++
+ .../dt-bindings/interconnect/qcom,osm-l3.h    |  12 +
+ 5 files changed, 361 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+ create mode 100644 drivers/interconnect/qcom/osm-l3.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
+
 -- 
-2.24.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
