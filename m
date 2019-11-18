@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02205C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B00FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F8B2231C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ECA6222EF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DYTsxLs8";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Ds0Gkysb"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YSKwb2h1";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Prm8oKfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfKRVnu (ORCPT
+        id S1727361AbfKRVn4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:43:50 -0500
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:52610
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727324AbfKRVnt (ORCPT
+        Mon, 18 Nov 2019 16:43:56 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:56606
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726739AbfKRVnz (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:43:49 -0500
+        Mon, 18 Nov 2019 16:43:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574113428;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574113434;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=8/55qmzwRNgGcbHYIe1AbOdtgHHSKFnOHmyq70l9u2o=;
-        b=DYTsxLs8DZBMy/1VRQ6HwETNp8X/EVerpDCtnlY4sYGkZ1F0xOdmPNxnqzbrmQY8
-        8lFXCDQ0WxHdqiRJiHgRdoX9SMjZ4tDgto8mMiOBuSx2l4avdcUEC4V9hZ4KKsL8JcX
-        Pvnj9Y58HDTrqFZT+++1GZVyq42IBzkAZTHVWRYU=
+        bh=gflz1Tnf86dtd+vmicl3ujXO2oWhimFrWupL9W+PNOs=;
+        b=YSKwb2h1wZxWquq600JlwuHbEn8Pdk4it4ps8vWzGQvWXC/6qso5rHSQTzxCsnhc
+        bOmcyIToNxYsRpfR3UFtpqlwdTUklxLjUCVTEIPXYbCa8IUohLw9BgWdPntGlKl42ZC
+        a3sQwsLLGRRzBqV7eoMTpAMeYMrmlUgwqIUXcz10=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574113428;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574113434;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=8/55qmzwRNgGcbHYIe1AbOdtgHHSKFnOHmyq70l9u2o=;
-        b=Ds0GkysbJF6KDvk0yQvuL0b1RaSfDN+8QoT6HETtxfYWHtZ8ppUDiurO46+pvt0g
-        dUkVGBjeYNDUXH1tbXo3BtQ4naLG3MBk1EJBOA7HL/O3WUmN7kVWOhTSmsDyl8dAxb4
-        lEWxlQr0jc04D7doNpxQNBfR5ghWLzffpYZEZby4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5FFF5C00451
+        bh=gflz1Tnf86dtd+vmicl3ujXO2oWhimFrWupL9W+PNOs=;
+        b=Prm8oKfbIoR3LQyfBbqfu2Wq0qle1N+6y5e3I8s5VzbdtLHiiv2C0Vh0HS5FJBAh
+        m4I5ZcrEre3EsfzhxYbm0emTUW5o720kZeezl3R4Fn9avJMP1ReZEbcZzIsCkmrm9K2
+        jZLVHg7Q65T8fgALBa5BgLIX5JZLfcqyV7Dwm/Fc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 155A7C00A22
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -48,84 +48,70 @@ Cc:     ohad@wizery.com, mark.rutland@arm.com, p.zabel@pengutronix.de,
         linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 09/16] remoteproc: qcom: pas: Add MSM8998 ADSP and SLPI support
-Date:   Mon, 18 Nov 2019 21:43:48 +0000
-Message-ID: <0101016e8078c4e7-9951b93c-8b27-46d2-a411-dc76c13c8d4e-000000@us-west-2.amazonses.com>
+Subject: [PATCH 10/16] dt-bindings: remoteproc: qcom: SM8150 Add ADSP, CDSP, MPSS and SLPI support
+Date:   Mon, 18 Nov 2019 21:43:54 +0000
+Message-ID: <0101016e8078dad4-458c8501-93fd-4daa-8938-d01027f248cb-000000@us-west-2.amazonses.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20191118214250.14002-1-sibis@codeaurora.org>
 References: <20191118214250.14002-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.18-54.240.27.56
+X-SES-Outgoing: 2019.11.18-54.240.27.21
 Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for booting the Audio and Sensor DSPs found in
-Qualcomm's MSM8998 SoCs.
+Add ADSP, CDSP, MPSS and SLPI compatibles for SM8150 SoC.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_pas.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ .../devicetree/bindings/remoteproc/qcom,adsp.txt   | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index b60cca093400a..2dd693d443ca8 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -476,6 +476,20 @@ static const struct adsp_data adsp_resource_init = {
- 		.ssctl_id = 0x14,
- };
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+index 34dc1d94a78c7..9938918b2fea3 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+@@ -17,6 +17,10 @@ on the Qualcomm ADSP Hexagon core.
+ 		    "qcom,qcs404-wcss-pas"
+ 		    "qcom,sdm845-adsp-pas"
+ 		    "qcom,sdm845-cdsp-pas"
++		    "qcom,sm8150-adsp-pas"
++		    "qcom,sm8150-cdsp-pas"
++		    "qcom,sm8150-mpss-pas"
++		    "qcom,sm8150-slpi-pas"
  
-+static const struct adsp_data msm8998_adsp_resource = {
-+		.crash_reason_smem = 423,
-+		.firmware_name = "adsp.mdt",
-+		.pas_id = 1,
-+		.has_aggre2_clk = false,
-+		.proxy_pd_names = (char*[]){
-+			"cx",
-+			NULL
-+		},
-+		.ssr_name = "lpass",
-+		.sysmon_name = "adsp",
-+		.ssctl_id = 0x14,
-+};
-+
- static const struct adsp_data cdsp_resource_init = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
-@@ -496,6 +510,20 @@ static const struct adsp_data slpi_resource_init = {
- 		.ssctl_id = 0x16,
- };
+ - interrupts-extended:
+ 	Usage: required
+@@ -37,8 +41,12 @@ on the Qualcomm ADSP Hexagon core.
+ 	qcom,qcs404-cdsp-pas:
+ 	qcom,sdm845-adsp-pas:
+ 	qcom,sdm845-cdsp-pas:
++	qcom,sm8150-adsp-pas:
++	qcom,sm8150-cdsp-pas:
++	qcom,sm8150-slpi-pas:
+ 		    must be "wdog", "fatal", "ready", "handover", "stop-ack"
+ 	qcom,qcs404-wcss-pas:
++	qcom,sm8150-mpss-pas:
+ 		    must be "wdog", "fatal", "ready", "handover", "stop-ack",
+ 		    "shutdown-ack"
  
-+static const struct adsp_data msm8998_slpi_resource = {
-+		.crash_reason_smem = 424,
-+		.firmware_name = "slpi.mdt",
-+		.pas_id = 12,
-+		.has_aggre2_clk = true,
-+		.proxy_pd_names = (char*[]){
-+			"ssc_cx",
-+			NULL
-+		},
-+		.ssr_name = "dsps",
-+		.sysmon_name = "slpi",
-+		.ssctl_id = 0x16,
-+};
-+
- static const struct adsp_data wcss_resource_init = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "wcnss.mdt",
-@@ -509,6 +537,8 @@ static const struct of_device_id adsp_of_match[] = {
- 	{ .compatible = "qcom,msm8974-adsp-pil", .data = &adsp_resource_init},
- 	{ .compatible = "qcom,msm8996-adsp-pil", .data = &adsp_resource_init},
- 	{ .compatible = "qcom,msm8996-slpi-pil", .data = &slpi_resource_init},
-+	{ .compatible = "qcom,msm8998-adsp-pas", .data = &msm8998_adsp_resource},
-+	{ .compatible = "qcom,msm8998-slpi-pas", .data = &msm8998_slpi_resource},
- 	{ .compatible = "qcom,qcs404-adsp-pas", .data = &adsp_resource_init },
- 	{ .compatible = "qcom,qcs404-cdsp-pas", .data = &cdsp_resource_init },
- 	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init },
+@@ -95,7 +103,13 @@ on the Qualcomm ADSP Hexagon core.
+ 		    must be "mx"
+ 	qcom,sdm845-adsp-pas:
+ 	qcom,sdm845-cdsp-pas:
++	qcom,sm8150-adsp-pas:
++	qcom,sm8150-cdsp-pas:
+ 		    must be "cx", "load_state"
++	qcom,sm8150-mpss-pas:
++		    must be "cx", "load_state", "mss"
++	qcom,sm8150-slpi-pas:
++		    must be "lcx", "lmx", "load_state"
+ 
+ - memory-region:
+ 	Usage: required
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
