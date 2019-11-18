@@ -2,157 +2,117 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA4CC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 18:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C2C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 18:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D604222AA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 18:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77A3222BF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 18:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxH78jpQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAT/N5vO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKRSNi (ORCPT
+        id S1726453AbfKRSlA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:13:38 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41858 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfKRSNh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 13:13:37 -0500
-Received: by mail-oi1-f195.google.com with SMTP id e9so16195950oif.8;
-        Mon, 18 Nov 2019 10:13:36 -0800 (PST)
+        Mon, 18 Nov 2019 13:41:00 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33191 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfKRSlA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 13:41:00 -0500
+Received: by mail-il1-f193.google.com with SMTP id m5so16986410ilq.0;
+        Mon, 18 Nov 2019 10:40:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0YBDLZW4+twIVpnN2ILKo8XvC4FRlRRziWkB81q9XmU=;
-        b=QxH78jpQRyFraTkoqNxRuwt+OjFvvawMmMlXqi6/8+nTPASMdsqzXwFN9M9ApMLfT2
-         NU1i2Dgl3LFFTgd+3OvSZK23QaVp9V2jxSqSctlZEXJgI0Tqz9LSOLUu0hr0y8mOtzQ+
-         dIQRJbDmWsR5GzvmYfcnDeiJIHFqiAAzRbpFvd/5DIsoCZR++xULR26LHdEbA9envywT
-         RZHTOTh+UzQaevhNvt6LbRpRp9cEK/cfytkjAuBXAYX/00SlODZHrtJLVGx7Gorqjf0P
-         vhibzctT1DIungPUP9kP69iXdKAhVCnXlAVkqP7jVN+mWfy8x5b4+9a7KqOZyZckDxJ0
-         TmnA==
+         :cc:content-transfer-encoding;
+        bh=b3hv6InacuRwktmW+EoXmlffmYdwIhzVHa7KvQHpf/k=;
+        b=VAT/N5vOWN8d5YI/h51g0OFezrcoht7jZZc8sl9xFvbtM2C6MlrupQ/qvB5av3paIt
+         z2KH0SNQWWLVa6215DSLIS9MMDSxCO2MWJZ+UeOeyLH0QmPkSS9O6m6Z9y/vjB+cog5m
+         RUcNpSRD5+vfKV64YvzxnlYSvJixficmxMUgkxlQrWQEuMbq7KqP6kts0+WgLk1ldOC5
+         0INAOKuIVgO3unxwEYBw5Ur04zLYbp/u4ivU+VrcCZ8vtXRYn32uyujMPzexx276QyE6
+         dbPNtHI1jH6j5F5Llve4PnC0hSRk0j/9T5cG2pQF9zN7TDNiSTYunSnq/Nj3g+r+7NVf
+         7pbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0YBDLZW4+twIVpnN2ILKo8XvC4FRlRRziWkB81q9XmU=;
-        b=nMegt8S2R4SNM8rzwcybhC3b/lwmfCTru/hHVs9dBtcWBHzL9ISRwlbV2uibfsRU5s
-         uJRB+JwWBEgG66dPd85xPJv1t7W5JuEqSufSzsmtLkcA1vY6Sx+UM4Fz3ZqTQzlzBuwm
-         WSkQ2LawevGQMdZ72v17MqZ4JfI/78Em+z8ifZDE/b6SLYbe5yBJUEWK3RIWIGYsGHHv
-         Mme36IKD1mennF3qBqqhu7W6r+d7Miigln0kRltXMohqXaVzBjLMoeQ4zxcwzXLdI17g
-         W0G4U/+JcCsXT72ExJiyI8puFCkCIAL2kkBStQPXK2bEjx4TpcrHTfudV4OA0XPclocZ
-         4NsQ==
-X-Gm-Message-State: APjAAAVZAY/2Xpr7ZF2e8OQ2eygpiKEVnGOzToff8wjKbKHgM4dSYRlT
-        KJ6JTNoAiR4d0rTxGaM4hTh0l/ipOO0OeG+FEpo=
-X-Google-Smtp-Source: APXvYqzRDD6gOeJMTxC//zqOu6MSEGAJ3T+n2+CFC9jbLLdZikPuevrJGGkDWGcf+2jJ6k3aREBuThxVwSRB5WYMwQs=
-X-Received: by 2002:a05:6808:3a1:: with SMTP id n1mr232755oie.86.1574100815707;
- Mon, 18 Nov 2019 10:13:35 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=b3hv6InacuRwktmW+EoXmlffmYdwIhzVHa7KvQHpf/k=;
+        b=FQNUza1xIhy/yfNuc6obEafSGbgtoCPcZh+2K2A57py/vfNXJJ4RbUP7OswLMb1PU2
+         1TZiT08wBp8JLKIPuMZeIx0TO3XGy5ggsk5aqCbjaN3STmCEu8WFooqlwNHRJzYqoq9R
+         icVE//XnCy2BRvDjVM2PcxC9IishDdQfsBYwL7ZgjaUOXda81bT7ugRPsHWc7lnOqxZ6
+         fEcF2xQC23LuSuJ3dLIbKoguZSnWTMj1UBgdXVU6g9hocTZnkay4/2l3f1EK7m/7/3DZ
+         xdrdS8opb7drx0M3Mle/Q/y0G8DxqqHK2fj5RYajqy5TYteDJCbY78Z0QCAfKrvVHAxK
+         J9nw==
+X-Gm-Message-State: APjAAAVhdwgKQOMg7iojlc6FDbnsF8miCJuYND2qr9gVgETH/WYfstJw
+        uR5wQMYfrwUw+TDon7/xUyZ52iyNRau+TfMf36nEoqgJFf6sAQ==
+X-Google-Smtp-Source: APXvYqw0aClURjDebOhw3S+luQbOyqe0gZUeqf/5SEa4XVYWW4/OqDrSNeUcoVvMxuP/tAKPDr4jhrqcjaSbD+j6UyY=
+X-Received: by 2002:a92:d58e:: with SMTP id a14mr17667877iln.4.1574102458952;
+ Mon, 18 Nov 2019 10:40:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20191118165400.21985-1-TheSven73@gmail.com> <20191118165400.21985-2-TheSven73@gmail.com>
- <20191118170111.GL9761@sirena.org.uk> <CAGngYiW+8m4fBAY5Ya_4YmEmCTQeiiNP6=aH2mUX6d2wY1442w@mail.gmail.com>
- <20191118174550.GA43585@sirena.org.uk>
-In-Reply-To: <20191118174550.GA43585@sirena.org.uk>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 18 Nov 2019 13:13:24 -0500
-Message-ID: <CAGngYiXLx8rkkKPyALYyCHFyst2Ft8bCkP4uqmzXAHHqXhUvkQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] tps6105x: add optional devicetree support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+References: <20191117101545.6406-1-matwey@sai.msu.ru> <1784520.t1z2W423De@phil>
+In-Reply-To: <1784520.t1z2W423De@phil>
+From:   "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
+Date:   Mon, 18 Nov 2019 21:40:47 +0300
+Message-ID: <CAJs94EZPLedH4w3+5vfJA+f+1+zLETBdETpqNPytp3LG63az9Q@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: Enable PCIe for Radxa Rock Pi 4 board
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Akash Gajjar <akash@openedev.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Rockchip SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC support" 
+        <linux-rockchip@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 12:45 PM Mark Brown <broonie@kernel.org> wrote:
+=D0=BF=D0=BD, 18 =D0=BD=D0=BE=D1=8F=D0=B1. 2019 =D0=B3. =D0=B2 03:46, Heiko=
+ Stuebner <heiko@sntech.de>:
 >
-> So this is one device that has two separate modes?  This sounds like you
-> need a property specifying how the device is wired up, or possibly just
-> different compatibles at the root of the device though that's not quite
-> idiomatic.  Splitting this up with different devices is a bit of a Linux
-> specific implementation detail.
+> Hi Matwey,
+>
+> Am Sonntag, 17. November 2019, 11:15:37 CET schrieb Matwey V. Kornilov:
+> > Radxa Rock Pi 4 is equipped with M.2 PCIe slot,
+> > so enable PCIe for the board.
+> >
+> > The changes has been tested with Intel SSD 660p series device.
+> >
+> >     01:00.0 Class 0108: Device 8086:f1a8 (rev 03)
+> >
+> > Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+>
+> applied the patch, but you could do a follow-up that mimics
+> https://lore.kernel.org/linux-arm-kernel/20191117140728.917-1-linux.amoon=
+@gmail.com/
+>
+> aka find out from the schematics where the 0.9 and 1.8 supplies come from=
+.
 
-Yes, that does make sense and sounds elegant. However, bear with me:
+Current schematics
+(https://dl.radxa.com/rockpi4/docs/hw/rockpi4/rockpi4_v13_sch_20181112.pdf)
+is controversial on 1.8 supply:
 
-This mfd chip can be wired up as one of the following:
-- gpio only
-- gpio + regulator
-- gpio + led
-- gpio + flash
+On sheet 15 it says that 1.8 is supplied by VCC_1V8
+at the same time on sheet 3 it says that it is supplied by VCCA_1V8
 
-So I need a way to indicate this in the dt.
+>
+> Thanks
+> Heiko
+>
+>
 
-Imagine I do this with a text/value property, like this:
 
-i2c0 {
-        tps61052@33 {
-                compatible = "ti,tps61050";
-                reg = <0x33>;
-                mode = "regulator"; // or
-                mode = <TPS6105X_REGULATOR_MODE>;
-        };
-};
-
-in this case, there is no elegant way to specify the regulator properties in
-the devicetree. Except by grabbing a reference to a subnode perhaps. And then
-I'd have to somehow make sure that the sub driver's device->of_node points
-at this subnode, which the mfd core doesn't do automatically.
-
-Now imagine I use a reference property:
-
-i2c0 {
-        tps61052@33 {
-                compatible = "ti,tps61050";
-                reg = <0x33>;
-                mode = <&tps_reg>;
-
-                tps_reg: regulator {
-                        regulator-min-microvolt = <5000000>;
-                        regulator-max-microvolt = <5000000>;
-                        regulator-always-on;
-                };
-        };
-};
-
-However for this to work, I need to make sure the regulator subdriver gets a
-valid dev->of_node, which the mfd core doesn't do automatically. So I'd have
-to follow the 'mode' node, check that its compatible is correct, and then
-manually assign the of_node to the mfd child driver (not sure how to even
-do that).
-
-So I arrived at the following:
-
-i2c0 {
-        tps61052@33 {
-                compatible = "ti,tps61050";
-                reg = <0x33>;
-
-                regulator {
-                        compatible = "ti,tps6105x-regulator";
-                        regulator-min-microvolt = <5000000>;
-                        regulator-max-microvolt = <5000000>;
-                        regulator-always-on;
-                };
-        };
-};
-
-In this case, I only need to verify that there is at most one single subnode.
-And when I specify of_compatible = "ti,tps6105x-regulator" in the mfd cell,
-the mfd core will automatically assign the child driver's of_node. Nice 'n
-elegant?
-
-Would you be able to suggest a way forward?
+--=20
+With best regards,
+Matwey V. Kornilov
