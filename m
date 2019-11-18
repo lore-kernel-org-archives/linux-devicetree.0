@@ -2,230 +2,88 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACCAC432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E142FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A26020692
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BD72071C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574081830;
-	bh=D42/XnP8BTkRdLMB0sfjNYCvjVmtv3XV0wVH/ObQtWU=;
+	s=default; t=1574082538;
+	bh=QWwGQ8Jle04VHUoAqH05/Lg+HHObUs0mhD24cnNIWGg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DXCZjoyF/m5c8MA8QRcEFvKY7QDrmrlc+Wqy3KXxg8MD/nSRhb+RZMstOvXKV/u1N
-	 h5QIdThTBrwYyALK8RC09uBRQHRKEQ9RG1jx0wqzDXH+uFfCvhaOAJNS4cROv2EzjU
-	 T/iRF3fEamPaFCpPluV1ikzP0JMGatcGS8xD9p5I=
+	b=E5fpmvn6kmJF6kf1s5uuh5wMmVEqk3joz3N4YY9dK9MvSblAAv+dOJ1eGSlbG4/W/
+	 Zxh0qbWHHkvOWrcK9pYAXPjXfEK6/E4rch4Dc6GLJPvI8oEdPE51uRvhYucwKxv0ou
+	 89/Kvn00OtlF0NZTVbN0dJ+HqXgAn0QjyXdTNpQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfKRM5H (ORCPT
+        id S1726490AbfKRNI6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:57:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38358 "EHLO mail.kernel.org"
+        Mon, 18 Nov 2019 08:08:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:34484 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbfKRM5H (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:57:07 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E8420692;
-        Mon, 18 Nov 2019 12:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574081825;
-        bh=D42/XnP8BTkRdLMB0sfjNYCvjVmtv3XV0wVH/ObQtWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=REU+MnKH/jfxkLo0UnQ+ACUSgGSvJsHkc36Fgkosi60t+lPgSNnJ3EylqBANKsD18
-         JOtPOTsrOh7xq4pZGrh+7YHfUTFV5SsvF9JIXJ+neHGWm0yVbFzVKLeCMWPH7cKdKz
-         lqDfQPsr2yCymECD4z9NA08J7X595BC7WklnY5oU=
-Date:   Mon, 18 Nov 2019 13:57:02 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM
- description
-Message-ID: <20191118125702.GK4345@gilmour.lan>
-References: <20191118110034.19444-1-peron.clem@gmail.com>
- <20191118110034.19444-2-peron.clem@gmail.com>
- <20191118110640.GE4345@gilmour.lan>
- <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
+        id S1726178AbfKRNI6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 08:08:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D7DA1FB;
+        Mon, 18 Nov 2019 05:08:57 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0A143F6C4;
+        Mon, 18 Nov 2019 05:08:56 -0800 (PST)
+Date:   Mon, 18 Nov 2019 13:08:55 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] bindings: sound: pcm3168a: Document optional RST gpio
+Message-ID: <20191118130855.GE9761@sirena.org.uk>
+References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
+ <20191113124734.27984-2-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="luUS5rQ1j20Qzq8E"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Rgf3q3z9SdmXC6oT"
 Content-Disposition: inline
-In-Reply-To: <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191113124734.27984-2-peter.ujfalusi@ti.com>
+X-Cookie: no maintenance:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---luUS5rQ1j20Qzq8E
-Content-Type: text/plain; charset=iso-8859-1
+--Rgf3q3z9SdmXC6oT
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 18, 2019 at 01:42:48PM +0100, Cl=E9ment P=E9ron wrote:
-> Hi Maxime
->
-> On Mon, 18 Nov 2019 at 12:06, Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=E9ment P=E9ron wrote:
-> > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > >
-> > > H6 PWM block is basically the same as A20 PWM, except that it also has
-> > > bus clock and reset line which needs to be handled accordingly.
-> > >
-> > > Expand Allwinner PWM binding with H6 PWM specifics.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > ---
-> > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++=
-++
-> > >  1 file changed, 48 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a1=
-0-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.=
-yaml
-> > > index 0ac52f83a58c..1bae446febbb 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.y=
-aml
-> > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.y=
-aml
-> > > @@ -30,13 +30,51 @@ properties:
-> > >        - items:
-> > >            - const: allwinner,sun50i-h5-pwm
-> > >            - const: allwinner,sun5i-a13-pwm
-> > > +      - const: allwinner,sun50i-h6-pwm
-> > >
-> > >    reg:
-> > >      maxItems: 1
-> > >
-> > >    clocks:
-> > > +    minItems: 1
-> > > +    maxItems: 2
-> > > +    items:
-> > > +      - description: Module Clock
-> > > +      - description: Bus Clock
-> > > +
-> > > +  # Even though it only applies to subschemas under the conditionals,
-> > > +  # not listing them here will trigger a warning because of the
-> > > +  # additionalsProperties set to false.
-> > > +  clock-names: true
-> > > +
-> > > +  resets:
-> > >      maxItems: 1
-> > >
-> > > +  if:
-> > > +    properties:
-> > > +      compatible:
-> > > +        contains:
-> > > +          const: allwinner,sun50i-h6-pwm
-> > > +
-> > > +  then:
-> > > +    properties:
-> > > +      clocks:
-> > > +        maxItems: 2
-> > > +
-> > > +      clock-names:
-> > > +        items:
-> > > +          - const: mod
-> > > +          - const: bus
-> > > +
-> > > +    required:
-> > > +      - clock-names
-> > > +      - resets
-> > > +
-> > > +  else:
-> > > +    properties:
-> > > +      clocks:
-> > > +        maxItems: 1
-> > > +
-> >
-> > Sorry for not noticing this earlier, but this should be at the topmost
-> > level
->
-> No problem, but I don't get what you want, (yaml format is new for me).
-> Do you mean I should put the if condition before the "resets" ?
+On Wed, Nov 13, 2019 at 02:47:33PM +0200, Peter Ujfalusi wrote:
+> On boards where the RST line is not pulled up, but it is connected to a
+> GPIO line this property must present in order to be able to enable the
+> codec.
 
-No, here if we condense a bit the file, we have something like:
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
 
-title: PWM
-
-properties:
-  compatible:
-    ...
-
-  ...
-
-  resets:
-    ...
-
-  if:
-    properties:
-      ...
-
-  then:
-    properties:
-      ...
-
-which means that you expect that the node may contain a compatible
-property, a resets one, and then two properties "if" and "then", which
-in turn contain properties (ie, two nodes).
-
-This is obviously not what you want, what you want instead is:
-
-properties:
-  compatible:
-    ...
-
-  ...
-
-  resets:
-    ...
-
-if:
-  properties:
-    ...
-
-then:
-  properties:
-    ...
-
-Which then describes that there's two properties, compatible and
-resets, and if the schema under 'if' is valid against the node we try
-to validate, the schema under 'then' is used to validate the node as
-well.
-
-I hope it's clearer,
-Maxime
-
---luUS5rQ1j20Qzq8E
+--Rgf3q3z9SdmXC6oT
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdKVHgAKCRDj7w1vZxhR
-xRf+AQDIKDWmitZKrfNWWYoRdbyxBBWj5ixRoYR6aGpqSbCu9wEA5XGA6Ew4woTI
-rOvVvGt0j8oafbBT1xQ/xkok13nHqAo=
-=Y2SH
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3Sl+YACgkQJNaLcl1U
+h9CQRAf+IOHuqykiR2XV9orGZa0JGfA9jN/HKH9JdghHPcxQ0jzR/dfC3kNnBy/l
+QAeSXU6vF5LuJx75MIHsf6Dx15bZ0kZ0WKpJnI9Fqn+k/PKeXWPhBB+6sPet4msQ
+A5opWLa03tkaXlmNZd14uQrEV6Zbir9q9WT5UqAvM7Ceb3k1jDKRBb7tWvPUggTi
+Rk2DeiXEHNOWWa0eekadtR453n2MTfUtmEncqiKzZu2+PGOI5sz+banoXhgaXlim
+Jwbk83xfZ/HrgB6Wqvw2pneJ+1fEsu8aix6z8ty3UWhPwcIuNqNZGyOlVPjGYUTm
+5g86BZwQ18875HSZ3tAi1meDwJt1cA==
+=7OaS
 -----END PGP SIGNATURE-----
 
---luUS5rQ1j20Qzq8E--
+--Rgf3q3z9SdmXC6oT--
