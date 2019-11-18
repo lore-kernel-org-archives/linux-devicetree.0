@@ -2,96 +2,250 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF5DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199E7C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969D222311
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:18:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUkhNmty"
+	by mail.kernel.org (Postfix) with ESMTP id D81DA222DD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574112196;
+	bh=TmiiCKUWlms/bxRkJ8Wft/BfnPyBb+LIOJaI1DUC+WY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B5FpvUXEuH5BZrYB3NZxutwV4ir9pwj+JMlQLlM0Z3ZwWvkrBGJeZG5951EBhhMeM
+	 T67sq7xQmAQLH46nZPRekoexqb2ymU3fJ8rM1WmcrkUKnojG+BdQHCinsyJgC/+JUz
+	 IKHmAzzaHmMw/lEYnDsFw5c15jWHyF0qPk+B2Noc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfKRVSC (ORCPT
+        id S1726712AbfKRVXP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:18:02 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33228 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRVSC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:18:02 -0500
-Received: by mail-ot1-f67.google.com with SMTP id u13so15871329ote.0;
-        Mon, 18 Nov 2019 13:18:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IabCX6kBV/Mgb1XtRiYbU3GVuFyLKj7vP/odV1Askuo=;
-        b=LUkhNmtywxzw73lNFZSUTSLJvpU4SrC3SSG94jfyYW8wc2YYQFHP2xK3r0UEFQBAO/
-         fJg1OejWr58ym84pgfJn4DzUy67tOxF2Msz93xQlzBmFvYCsRuenp/H3jmOpnfl5cm53
-         aOEUSSOj1qpW+tmdxq5ZKeZ2dqgltOLm/t829Y2NfhpFka3GgqtSzCB32ha3GBtRJJUI
-         moHZr8odRU76Uu3xX1vdLiXuLFzGRNZ33jTCu8QmUbvdz8DEe0f/DrPabGpoRm2JhI7w
-         sVEdEL5zNbrveUEU3aPVcTHJiKuca6os1r/uH++1FiiG3fLl+UDBdsQ60FflhJnwRYUo
-         +DbQ==
+        Mon, 18 Nov 2019 16:23:15 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35479 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfKRVXP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:23:15 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n16so16777316oig.2;
+        Mon, 18 Nov 2019 13:23:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IabCX6kBV/Mgb1XtRiYbU3GVuFyLKj7vP/odV1Askuo=;
-        b=rdnpdYFdj1QSmzWVCTDBeMdu2Y0JfxezK+i+3Pg+aK3vyceQn0TLQdrboSp1nWGX0f
-         3dcYs4BK+jmxnn0Svat4iY9jx7AKBvLnBmjKcIQvP1Q+TFPk4R+hlbCOMCZlGAQpfAkb
-         cusELaZ40UPt48qy3ussgDsXT2TKtkgBah4RSY06pCva1Z0kpiEQQjmUwH/5p+q3V/5y
-         Bz07sk1b88r2dORlm4E3Ep1FN/oDmbyeCFKHOPz4ofuD/1fKcVzNObxAUBEXK0ZM2+jg
-         YRqhkODyNa7ARkVZHBd/i2tsm2m6vI1b8QKpR5RL9TPKc0XDM2aLB6sl6PojvOhOXKP4
-         gL4A==
-X-Gm-Message-State: APjAAAXTnNgHFPkH0SQAM06TLQ/ytYdiyppZ0SG4aUdqHsECON5BuV+i
-        Ful0mCGtLw+ePSpTUmenLLY9HdF30mAgXIKM0/Q=
-X-Google-Smtp-Source: APXvYqy5Csuu3CZ8WGvTufcihjOMe/h9Fe7votgoCqnJbEHErkBVC+bnIWRoLhCs0yChwEz+AMTol5kYrSIIX0OSmYo=
-X-Received: by 2002:a9d:6841:: with SMTP id c1mr1053825oto.224.1574111881395;
- Mon, 18 Nov 2019 13:18:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20191118165400.21985-1-TheSven73@gmail.com> <20191118165400.21985-2-TheSven73@gmail.com>
- <20191118170111.GL9761@sirena.org.uk> <CAGngYiW+8m4fBAY5Ya_4YmEmCTQeiiNP6=aH2mUX6d2wY1442w@mail.gmail.com>
- <20191118174550.GA43585@sirena.org.uk> <CAGngYiXLx8rkkKPyALYyCHFyst2Ft8bCkP4uqmzXAHHqXhUvkQ@mail.gmail.com>
- <20191118203406.GE43585@sirena.org.uk>
-In-Reply-To: <20191118203406.GE43585@sirena.org.uk>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 18 Nov 2019 16:17:49 -0500
-Message-ID: <CAGngYiWQixey6t_4evqPdS9Rw+VNf0M1nax8bEqaUt=nLDjEfw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] tps6105x: add optional devicetree support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aslK2Zau5UQNVUGQIY5kjkRzSDnrxpv/018CjIjj4ig=;
+        b=mv6vCotSGmRkeGWMuK2I6wjfKMKULk0bYHhARRslO8QHhQGfkccy2w7KAmmWgGVNT1
+         Ll1v+5hos8J/d9Jh8zw4bbFylN3E5o3LDr/RzD6CXtx6kcoguPDU80NqSdpx4mpiVMTa
+         zNS48DtOprhsfjKDbzkj5oessGbkvpSUbIQhWttXuB8LBytvC3rLbJ8PZ2zFTdW7SQ83
+         QBlIH5Km6DOSWoFtgEGAJybmyBnpUgh+pf2a+0jj9EqpmRFOVol7qajdm20WsMflX5pF
+         gnhUc8uPnVOFI2ucnkXRwREu/1v5e+gcKZlwunbhU2BqSFGzpIZeK8bROUZlGiP352zJ
+         MYAA==
+X-Gm-Message-State: APjAAAXkFaUepHbQ2IJxzAcLLMb0bwJRPIzaeU6ymd6wIpPf70IcqqGB
+        cnAqppCTGdaQbdiUB11M5Q==
+X-Google-Smtp-Source: APXvYqy9vLHIfptxJOZyAdofVkBHARL4vvFxl6WV3GMXs+WxxP4W8AujWNmvKD8eIz7DkSM9Gg1LIA==
+X-Received: by 2002:aca:4e88:: with SMTP id c130mr895664oib.41.1574112193960;
+        Mon, 18 Nov 2019 13:23:13 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u18sm6575789otq.31.2019.11.18.13.23.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 13:23:12 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:23:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: Add bindings for brcmstb's PCIe
+ device
+Message-ID: <20191118212312.GA24969@bogus>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+ <20191112155926.16476-3-nsaenzjulienne@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112155926.16476-3-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 3:34 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Nov 18, 2019 at 01:13:24PM -0500, Sven Van Asbroeck wrote:
->
-> Is the regulator bit of this perhaps a voltage regulator and a current
-> regulator packaged together mainly for use powering LEDs?  That's a
-> hardware design I've seen before...
+On Tue, Nov 12, 2019 at 04:59:21PM +0100, Nicolas Saenz Julienne wrote:
+> From: Jim Quinlan <james.quinlan@broadcom.com>
+> 
+> The DT bindings description of the brcmstb PCIe device is described.
+> This node can only be used for now on the Raspberry Pi 4.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> 
+> ---
+> 
+> Changes since v1:
+>   - Fix commit Subject
+>   - Remove linux,pci-domain
+> 
+> This was based on Jim's original submission[1], converted to yaml and
+> adapted to the RPi4 case.
+> 
+> [1] https://patchwork.kernel.org/patch/10605937/
+> 
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 110 ++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> new file mode 100644
+> index 000000000000..4cbb18821300
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -0,0 +1,110 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Brcmstb PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> +
 
-Yes, you nailed it :)
+I added a common PCI schema to dt-schema. You can reference it here:
 
->
-> Just point the regulator framework at the MFD's DT node - the children
-> of the MFD can look at the parent device happily, there's several
-> existing MFDs do this.
+allOf:
+  - $ref: /schemas/pci/pci-bus.yaml#
 
-Ok, I think I get it now. Will prepare v2.
+> +properties:
+> +  compatible:
+> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: PCIe host controller
+> +      - description: builtin MSI controller
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: pcie
+> +      - const: msi
+> +
+
+
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-map-mask: true
+> +
+> +  interrupt-map: true
+
+Drop all these as the pci-bus.yaml will cover them.
+
+> +
+> +  ranges: true
+
+Do you know many entries, if not, you can drop it too?
+
+> +
+> +  dma-ranges: true
+
+Do you know many entries, if not, you can drop it too?
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: sw_pcie
+> +
+> +  msi-controller:
+> +    description: Identifies the node as an MSI controller.
+> +    type: boolean
+> +
+> +  msi-parent:
+> +    description: MSI controller the device is capable of using.
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+
+Assume these 2 have a type defined.
+
+> +
+> +  brcm,enable-ssc:
+> +    description: Indicates usage of spread-spectrum clocking.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - "#interrupt-cells"
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - ranges
+> +  - dma-ranges
+
+You can drop ranges, #address-cells and #size-cells as they are required 
+in pci-bus.yaml.
+
+Shouldn't interrupts, interrupt-names, and msi-controller all be 
+required?
+
+> +
+> +additionalProperties: false
+
+This won't work having the commmon binding, but 
+'unevaluatedProperties: false' will (eventually when json-schema draft8 
+is supported). 
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    scb {
+> +            #address-cells = <2>;
+> +            #size-cells = <1>;
+> +            pcie0: pcie@7d500000 {
+> +                    compatible = "brcm,bcm2711-pcie";
+> +                    reg = <0x0 0x7d500000 0x9310>;
+> +                    #address-cells = <3>;
+> +                    #size-cells = <2>;
+> +                    #interrupt-cells = <1>;
+> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "pcie", "msi";
+> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+
+Bracket each entry. The schema is making this stricter.
+
+Rob
