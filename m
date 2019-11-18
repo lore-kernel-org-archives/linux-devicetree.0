@@ -2,92 +2,148 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9026AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 16:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0581C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 16:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571DB21850
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 16:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F7E21479
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 16:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574095817;
-	bh=E5sHJhDJdLwFFcwz2rZtBR5zpGdH7iYE/jUQURsGWTA=;
+	s=default; t=1574096031;
+	bh=Phi0cFYa9lgVxdPFY62NuljjRKPcBdAqR5xKt6I4tWo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DGOc60O7JW6zGRuuZhmBiR5tdAgueHCc7w8NJX/qQpHetsjVENG9Eg+3Kd4AtbvPe
-	 PQ+xWSUZ/PqRB7j1jmAinjKUEd37bWkbTCYHAT7lDJX1UyIl3n8+t5ec/b8/2uyg9m
-	 KaXFMYv1eUaW/kIUFq4ZWExXmLQjOLqSJcqKVlqY=
+	b=QTm2k5IXPOv/KYSiWAe2ThwW9kTgGeQ6F0kgdiDjMDGf8T9NbBXHJkMpZFkx/l7G/
+	 xiEtQtd5ag2n5rzRiObweJ0K4TW9RLP0ueriTWJNq/iUxposUmFzLdk6li6WEGD0B9
+	 SLR/ZxveuhQP3G6YOMwgeJEYLVj+s021UWcEWQsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfKRQuQ (ORCPT
+        id S1726314AbfKRQxr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:50:16 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44448 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfKRQuQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 11:50:16 -0500
-Received: by mail-ot1-f68.google.com with SMTP id c19so15073396otr.11;
-        Mon, 18 Nov 2019 08:50:16 -0800 (PST)
+        Mon, 18 Nov 2019 11:53:47 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42683 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfKRQxr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 11:53:47 -0500
+Received: by mail-oi1-f196.google.com with SMTP id o12so5815511oic.9;
+        Mon, 18 Nov 2019 08:53:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5NYQIVzszlovCzGCoyf9SHkjEAYAPxgYWsdxQCoKIq4=;
-        b=qetaDa4Txc0EdHqZu/KXPh05PyhaIiMT9tnrxo8A5qEzuGnIXeoRnxl4KHD7+eHUWh
-         5xcidHZPQAYvwCv6Di3ct5r0F+uYvj1PzYTtHGALgBp17UtUZfQGa+QyRc8ljMz1fQ9H
-         yPmZ1BESoE32zgkJgDzwrDXJ4b/be8eTPVoTDh8moLqQjit3BrmAhe4CJZ9LsfPRIAph
-         sSwxKqUdTpmlp0iSK42WOcyK6PWfHsDXp7vMNkSwk+ocESXChDuZqKnr+r+M/Ii9pMCV
-         NY3FZbm4lwN9EHiPeIfy4DRSDGPVPiiXsjz97E4vJQKP7WaH6ldH6prJPoBuONQM3Nvb
-         BlvA==
-X-Gm-Message-State: APjAAAUy/4YuQeyTeHLvAKjZC8zppITuXUXzWrAeHHwW2+hebCS1Z85W
-        Y74HZWknrTuBTN4zRnZLXA==
-X-Google-Smtp-Source: APXvYqy5fyTYkoXXqqwQ0H9dOLJstLheW2bjF5U1SrvtNLNVH/MBfBQlyKUyfzD0Wr2bOMi5c0zc1g==
-X-Received: by 2002:a05:6830:1e4c:: with SMTP id e12mr162673otj.358.1574095815692;
-        Mon, 18 Nov 2019 08:50:15 -0800 (PST)
+        bh=hqTOasQxtcpYkZR/qyY0Ns887QHHgqrNr6obLQsmNsI=;
+        b=OWcHeOLBFcvsJGM4bLKrsbHY1ywlzAMVlzijeOfEGBK/N0Jh1Sol1ekSSLR02gfBIY
+         FlkgaQ8h39q6D0Fgso6CK23rttxDepbChSmpC+P34nzqkblv0ZgZLLiG1kiLocci25Wu
+         gKiqoU4s9ynUYwdAc9vaBYnCYoAjdAokWu9Fwgr+QW9Hg+Vd89X4ad3PDOhlvm504Ip8
+         iSpdo6mGx6NBP4SobWaSYYnP8ketB8xNkBfvDWUR7nDcuX4d4a2BeKooQ9JmEYGgt4L1
+         Wxkksa8GDAYnPLUhl2UKzOWYYyBARx10vypQ8WkUsonuXflGMrKKAArVOjxC+Hr56jjI
+         VY1Q==
+X-Gm-Message-State: APjAAAVrB1r4NDT2YvrDZc8Z7mfjGQpqMFH1q/Smw4TWoB+dgnrI1ouk
+        PGmlIjgFobWY77uGmg4oRA==
+X-Google-Smtp-Source: APXvYqxhK6+LinJAXcIhwyYoIbpoJYerjNgZrjGX55HdjJe+rrjIeNxntyurC83Ly9lLYUCNhH+m7w==
+X-Received: by 2002:aca:451:: with SMTP id 78mr21727660oie.170.1574096026456;
+        Mon, 18 Nov 2019 08:53:46 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s133sm6229914oia.58.2019.11.18.08.50.14
+        by smtp.gmail.com with ESMTPSA id o18sm6447650otj.38.2019.11.18.08.53.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 08:50:15 -0800 (PST)
-Date:   Mon, 18 Nov 2019 10:50:14 -0600
+        Mon, 18 Nov 2019 08:53:45 -0800 (PST)
+Date:   Mon, 18 Nov 2019 10:53:45 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 01/11] dt-bindings: phy-mtk-tphy: add two optional
- properties for u2phy
-Message-ID: <20191118165014.GA3621@bogus>
-References: <1573547796-29566-1-git-send-email-chunfeng.yun@mediatek.com>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH 2/4] gpio: sifive: Add DT documentation for SiFive GPIO
+Message-ID: <20191118165345.GA3935@bogus>
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-3-git-send-email-yash.shah@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573547796-29566-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1573560684-48104-3-git-send-email-yash.shah@sifive.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 16:36:26 +0800, Chunfeng Yun wrote:
-> Add two optional properties, one for tuning J-K voltage by INTR,
-> another for disconnect threshold, both of them are related with
-> connect detection
+On Tue, Nov 12, 2019 at 12:12:06PM +0000, Yash Shah wrote:
+> DT documentation for GPIO controller added.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Compatible string update]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
-> v4: no changes
-> 
-> v3: change commit log
-> 
-> v2: change description
-> ---
->  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+>  .../devicetree/bindings/gpio/gpio-sifive.txt       | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sifive.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Please make this a schema. See 
+Documentation/devicetree/writing-schema.rst.
+
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-sifive.txt b/Documentation/devicetree/bindings/gpio/gpio-sifive.txt
+> new file mode 100644
+> index 0000000..d3416d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-sifive.txt
+> @@ -0,0 +1,33 @@
+> +SiFive GPIO controller bindings
+> +
+> +Required properties:
+> +- compatible: Should be "sifive,<chip>-gpio" and "sifive,gpio<version>".
+> +  Supported compatible strings are: "sifive,fu540-c000-gpio" for the SiFive
+> +  GPIO v0 as integrated onto the SiFive FU540 chip, and "sifive,gpio0" for the
+> +  SiFive GPIO v0 IP block with no chip integration tweaks.
+> +  Please refer to sifive-blocks-ip-versioning.txt for details.
+> +- reg: Physical base address and length of the controller's registers.
+> +- clocks: Should contain a clock identifier for the GPIO's parent clock.
+> +- #gpio-cells : Should be 2
+> +  - The first cell is the GPIO offset number.
+> +  - The second cell indicates the polarity of the GPIO
+> +- gpio-controller : Marks the device node as a GPIO controller.
+> +- interrupt-controller: Marks the device node as an interrupt controller.
+> +- #interrupt-cells : Should be 2.
+> +  - The first cell is the GPIO offset number within the GPIO controller.
+> +  - The second cell is the edge/level to use for interrupt generation.
+> +- interrupts: Specify the interrupts, one per GPIO
+
+How many GPIOs?
+
+> +
+> +Example:
+> +
+> +gpio: gpio@10060000 {
+> +	compatible = "sifive,fu540-c000-gpio","sifive,gpio0";
+
+space                                         ^
+
+> +	interrupt-parent = <&plic>;
+> +	interrupts = <7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22>;
+> +	reg = <0x0 0x10060000 0x0 0x1000>;
+> +	clocks = <&tlclk>;
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +};
+> -- 
+> 2.7.4
+> 
