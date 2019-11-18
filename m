@@ -2,109 +2,230 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2523FC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACCAC432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E687620748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A26020692
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 12:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574081272;
-	bh=60CLfEbq4pMzG6+q6vJq/HTMA8IDjElElAmgnjC8V0k=;
+	s=default; t=1574081830;
+	bh=D42/XnP8BTkRdLMB0sfjNYCvjVmtv3XV0wVH/ObQtWU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bO+a7XgdD2P015HCBKoxCzm+KuNcvjtaAHK9T2HQb1CKE2WTalBV/69gbxvufHg82
-	 xJdMgpOVo0zMuQBI6aiK3npPGe77eeTFmHAM3Rcur2HAsyYM3DOFn6UeG2SmVoasXt
-	 L1xwCGjDT1OvcUHtYN79HswYCWEnIBV3laOkiZfg=
+	b=DXCZjoyF/m5c8MA8QRcEFvKY7QDrmrlc+Wqy3KXxg8MD/nSRhb+RZMstOvXKV/u1N
+	 h5QIdThTBrwYyALK8RC09uBRQHRKEQ9RG1jx0wqzDXH+uFfCvhaOAJNS4cROv2EzjU
+	 T/iRF3fEamPaFCpPluV1ikzP0JMGatcGS8xD9p5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKRMrv (ORCPT
+        id S1726714AbfKRM5H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:47:51 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36967 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfKRMrv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 07:47:51 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b10so1078039pgd.4;
-        Mon, 18 Nov 2019 04:47:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Jt2Z2DTdz9m9l3vyvKUFBjKIp4+FU+v0G8DHum771A=;
-        b=Viac8KElXK7RaK+xVRUqrlCLNgnyM5j07czBGWxf4G70Ns1J9YjtxNd67A0FyJo27n
-         PqgixuwjxiAfr4x4WnJafPCZXat1nxEuikRYo+Qln0jm8dABzWcK8z5s8l6Q5M6sPZPU
-         rBghCtD6WKS9p9WjjkjhnZb4NY3nENBUJHj17gsiAYS1A2WBkliPshWoqUQscp1qaG/F
-         KWLSBE8GCU++1mZtzCHIptgrR6q9htDZD5lx0Odt5kTRV2Y3V7za7idxhZAnQWKSpLRw
-         WH527yZg2Oeffflaag6I+PaGTDfw272aJijA4fvbk3hAbr8o7ft1vSurWb/zqJqp3qzu
-         qqIQ==
-X-Gm-Message-State: APjAAAW2AbbXtWt0M6x8Ss2VuT9EdD0MqmYxz4Oj5+IxzD8QYhHUHwVz
-        Hr3E44MmiFnhXr8pCK7h740=
-X-Google-Smtp-Source: APXvYqypHkNV4Ku4i48wIkDxM+JEyi/xuvsuyJR7dNNMFpHvTas3E1Acz5HRaCwycwKDyjfD+TmU9Q==
-X-Received: by 2002:a63:dd51:: with SMTP id g17mr7904180pgj.388.1574081270099;
-        Mon, 18 Nov 2019 04:47:50 -0800 (PST)
-Received: from kozik-lap ([118.189.143.39])
-        by smtp.googlemail.com with ESMTPSA id h185sm5758334pgc.87.2019.11.18.04.47.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Nov 2019 04:47:49 -0800 (PST)
-Date:   Mon, 18 Nov 2019 13:47:45 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marian Mihailescu <mihailescu2m@gmail.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kgene@kernel.org
-Subject: Re: [PATCH v6] ARM: dts: exynos5420: add mali dt node and enable
- mali on Odroid XU3/4
-Message-ID: <20191118124745.GA14766@kozik-lap>
-References: <20191114234211.1032-1-mihailescu2m@gmail.com>
+        Mon, 18 Nov 2019 07:57:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726490AbfKRM5H (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:57:07 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16E8420692;
+        Mon, 18 Nov 2019 12:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574081825;
+        bh=D42/XnP8BTkRdLMB0sfjNYCvjVmtv3XV0wVH/ObQtWU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=REU+MnKH/jfxkLo0UnQ+ACUSgGSvJsHkc36Fgkosi60t+lPgSNnJ3EylqBANKsD18
+         JOtPOTsrOh7xq4pZGrh+7YHfUTFV5SsvF9JIXJ+neHGWm0yVbFzVKLeCMWPH7cKdKz
+         lqDfQPsr2yCymECD4z9NA08J7X595BC7WklnY5oU=
+Date:   Mon, 18 Nov 2019 13:57:02 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM
+ description
+Message-ID: <20191118125702.GK4345@gilmour.lan>
+References: <20191118110034.19444-1-peron.clem@gmail.com>
+ <20191118110034.19444-2-peron.clem@gmail.com>
+ <20191118110640.GE4345@gilmour.lan>
+ <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="luUS5rQ1j20Qzq8E"
 Content-Disposition: inline
-In-Reply-To: <20191114234211.1032-1-mihailescu2m@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 10:12:11AM +1030, Marian Mihailescu wrote:
-> Add device tree node for Mali GPU for Exynos 542x SoC.
-> GPU is disabled by default, and is enabled for each board after the
-> regulator is defined. Tested on Odroid-XU4.
-> 
-> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-> ---
-> 
-> Changes since v5:
-> - fixed compile warnings
-> 
-> Changes since v4:
-> - fixed so it applies for latest 5.4-rc7
-> 
-> Changes since v3:
-> - fixed compatible to match bindings
-> 
-> Changes since v2:
-> - separate patch for bindings
-> - fixed bindings typo
-> 
-> Changes since v1:
-> - used generic node and label for GPU
-> - added bindings for compatible
-> - fixed irq indentation
-> - fixed interrupt-names to match bindings
-> - added cooling cells for future TMU connection
-> - used generic node and label for GPU opp table
-> - removed always-on from SoC GPU regulator
-> 
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi             | 50 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  6 +++-
 
-Thanks, applied.
+--luUS5rQ1j20Qzq8E
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Mon, Nov 18, 2019 at 01:42:48PM +0100, Cl=E9ment P=E9ron wrote:
+> Hi Maxime
+>
+> On Mon, 18 Nov 2019 at 12:06, Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=E9ment P=E9ron wrote:
+> > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > >
+> > > H6 PWM block is basically the same as A20 PWM, except that it also has
+> > > bus clock and reset line which needs to be handled accordingly.
+> > >
+> > > Expand Allwinner PWM binding with H6 PWM specifics.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > ---
+> > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++=
+++
+> > >  1 file changed, 48 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a1=
+0-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.=
+yaml
+> > > index 0ac52f83a58c..1bae446febbb 100644
+> > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.y=
+aml
+> > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.y=
+aml
+> > > @@ -30,13 +30,51 @@ properties:
+> > >        - items:
+> > >            - const: allwinner,sun50i-h5-pwm
+> > >            - const: allwinner,sun5i-a13-pwm
+> > > +      - const: allwinner,sun50i-h6-pwm
+> > >
+> > >    reg:
+> > >      maxItems: 1
+> > >
+> > >    clocks:
+> > > +    minItems: 1
+> > > +    maxItems: 2
+> > > +    items:
+> > > +      - description: Module Clock
+> > > +      - description: Bus Clock
+> > > +
+> > > +  # Even though it only applies to subschemas under the conditionals,
+> > > +  # not listing them here will trigger a warning because of the
+> > > +  # additionalsProperties set to false.
+> > > +  clock-names: true
+> > > +
+> > > +  resets:
+> > >      maxItems: 1
+> > >
+> > > +  if:
+> > > +    properties:
+> > > +      compatible:
+> > > +        contains:
+> > > +          const: allwinner,sun50i-h6-pwm
+> > > +
+> > > +  then:
+> > > +    properties:
+> > > +      clocks:
+> > > +        maxItems: 2
+> > > +
+> > > +      clock-names:
+> > > +        items:
+> > > +          - const: mod
+> > > +          - const: bus
+> > > +
+> > > +    required:
+> > > +      - clock-names
+> > > +      - resets
+> > > +
+> > > +  else:
+> > > +    properties:
+> > > +      clocks:
+> > > +        maxItems: 1
+> > > +
+> >
+> > Sorry for not noticing this earlier, but this should be at the topmost
+> > level
+>
+> No problem, but I don't get what you want, (yaml format is new for me).
+> Do you mean I should put the if condition before the "resets" ?
 
+No, here if we condense a bit the file, we have something like:
+
+title: PWM
+
+properties:
+  compatible:
+    ...
+
+  ...
+
+  resets:
+    ...
+
+  if:
+    properties:
+      ...
+
+  then:
+    properties:
+      ...
+
+which means that you expect that the node may contain a compatible
+property, a resets one, and then two properties "if" and "then", which
+in turn contain properties (ie, two nodes).
+
+This is obviously not what you want, what you want instead is:
+
+properties:
+  compatible:
+    ...
+
+  ...
+
+  resets:
+    ...
+
+if:
+  properties:
+    ...
+
+then:
+  properties:
+    ...
+
+Which then describes that there's two properties, compatible and
+resets, and if the schema under 'if' is valid against the node we try
+to validate, the schema under 'then' is used to validate the node as
+well.
+
+I hope it's clearer,
+Maxime
+
+--luUS5rQ1j20Qzq8E
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdKVHgAKCRDj7w1vZxhR
+xRf+AQDIKDWmitZKrfNWWYoRdbyxBBWj5ixRoYR6aGpqSbCu9wEA5XGA6Ew4woTI
+rOvVvGt0j8oafbBT1xQ/xkok13nHqAo=
+=Y2SH
+-----END PGP SIGNATURE-----
+
+--luUS5rQ1j20Qzq8E--
