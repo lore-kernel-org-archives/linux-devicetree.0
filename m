@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FF3C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB7AC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBBC2230D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B042235D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hHGYYX1g";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VJqz+Pp0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nLMJVH5x";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="PDvKXpyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfKRVoA (ORCPT
+        id S1726739AbfKRVoM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:44:00 -0500
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:56620
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726739AbfKRVn7 (ORCPT
+        Mon, 18 Nov 2019 16:44:12 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:43382
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727415AbfKRVoK (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:43:59 -0500
+        Mon, 18 Nov 2019 16:44:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574113438;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574113449;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=Iz7O4T1zwNUCITFNDfrvGpvoBjyF6w07rVYk+04tXIA=;
-        b=hHGYYX1gMHwhOw0MF7aJ/5HWCmtO/ITh1N1qWSM24Isqzc9JFwABDoXtl1L9RD5t
-        f+K3RerRCrcTFYJW1bE9E7KvO8cTYOrVq8/hDSRozUtZyUE7XyAbaWHLviLR9Pg2BUe
-        oheZZO1Mtb3qd0bup+MZwnuhtYJXlwy5X3fSVikM=
+        bh=JbdKITjCp+aIc2qiRzN1rOmsICYeTwQuEUWZ82PB+Bk=;
+        b=nLMJVH5x4V9LMzIDfj/Ge4+1964FIAPjp143Du2VAzJ9GngRS8Kp4/Y1b1DwVUmW
+        CaYAQrRZGkKIO5uFjvKWRgaLb4aaoYKYU5QvuAtmKczLiX897hOfBO2+k0opUST4FRa
+        D0B2Vs4Mv7CmSzAnO1DMN9WdGe/Nvv8iusgwW5BA=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574113438;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574113449;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=Iz7O4T1zwNUCITFNDfrvGpvoBjyF6w07rVYk+04tXIA=;
-        b=VJqz+Pp0Qwf4pkyggZVBB0EwV75VGbexSVtvao8pNgiMvm06ehEcgEx7Tr7wx0lf
-        7bBzSi7VPBpZ1QifMOP4tZ2EWfbkZkbwuQijlhlDkkwTIaTsD5UaJWTuS/LRk0GYa0O
-        aPMpD5CakQTy2YRpuRUKJTBEIkDpaofKsKdHQudY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB120C2BB59
+        bh=JbdKITjCp+aIc2qiRzN1rOmsICYeTwQuEUWZ82PB+Bk=;
+        b=PDvKXpyFdS+PWyBQ9KLJKM9aKz84lL78sLmdud6KWN1Uv6nJ0P/cX/m6m19U0qKv
+        rY+IN1ePvcL0q/h6zcopXRSqd0t8gUZpZMsb9g6UCl415KkUyzuzqbiblrxHHx2Jx4t
+        /1akR1hJfQDvLAnCueO0L5OBIu3fIHD2A1URANhg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 21B8CC32763
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -48,139 +48,119 @@ Cc:     ohad@wizery.com, mark.rutland@arm.com, p.zabel@pengutronix.de,
         linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 11/16] remoteproc: qcom: pas: Add SM8150 ADSP, CDSP, Modem and SLPI support
-Date:   Mon, 18 Nov 2019 21:43:58 +0000
-Message-ID: <0101016e8078ec52-c0334821-91e3-4542-a451-997041c5b292-000000@us-west-2.amazonses.com>
+Subject: [PATCH 13/16] arm64: dts: qcom: msm8998: Update reserved memory map
+Date:   Mon, 18 Nov 2019 21:44:09 +0000
+Message-ID: <0101016e807915dc-5f8701fd-5c4a-45a5-a9ee-9e4d8700a3fa-000000@us-west-2.amazonses.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20191118214250.14002-1-sibis@codeaurora.org>
 References: <20191118214250.14002-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.18-54.240.27.186
+X-SES-Outgoing: 2019.11.18-54.240.27.18
 Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for booting the Modem, Audio, Compute and Sensor DSPs found on
-Qualcomm's SM8150 SoCs.
+Update existing and add missing regions to the reserved memory map, as
+described in version 7.1
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_pas.c | 78 ++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 62 ++++++++++++++++++++++++---
+ 1 file changed, 55 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 2dd693d443ca8..98e9336302844 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -490,6 +490,24 @@ static const struct adsp_data msm8998_adsp_resource = {
- 		.ssctl_id = 0x14,
- };
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index fc7838ea9a010..707673e3cf28a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -28,8 +28,13 @@
+ 		#size-cells = <2>;
+ 		ranges;
  
-+static const struct adsp_data sm8150_adsp_resource = {
-+		.crash_reason_smem = 423,
-+		.firmware_name = "adsp.mdt",
-+		.pas_id = 1,
-+		.has_aggre2_clk = false,
-+		.active_pd_names = (char*[]){
-+			"load_state",
-+			NULL
-+		},
-+		.proxy_pd_names = (char*[]){
-+			"cx",
-+			NULL
-+		},
-+		.ssr_name = "lpass",
-+		.sysmon_name = "adsp",
-+		.ssctl_id = 0x14,
-+};
+-		memory@85800000 {
+-			reg = <0x0 0x85800000 0x0 0x800000>;
++		hyp_mem: memory@85800000 {
++			reg = <0x0 0x85800000 0x0 0x600000>;
++			no-map;
++		};
 +
- static const struct adsp_data cdsp_resource_init = {
- 	.crash_reason_smem = 601,
- 	.firmware_name = "cdsp.mdt",
-@@ -500,6 +518,43 @@ static const struct adsp_data cdsp_resource_init = {
- 	.ssctl_id = 0x17,
- };
++		xbl_mem: memory@85e00000 {
++			reg = <0x0 0x85e00000 0x0 0x100000>;
+ 			no-map;
+ 		};
  
-+static const struct adsp_data sm8150_cdsp_resource = {
-+	.crash_reason_smem = 601,
-+	.firmware_name = "cdsp.mdt",
-+	.pas_id = 18,
-+	.has_aggre2_clk = false,
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"cx",
-+		NULL
-+	},
-+	.ssr_name = "cdsp",
-+	.sysmon_name = "cdsp",
-+	.ssctl_id = 0x17,
-+};
-+
-+static const struct adsp_data mpss_resource_init = {
-+	.crash_reason_smem = 421,
-+	.firmware_name = "modem.mdt",
-+	.pas_id = 4,
-+	.has_aggre2_clk = false,
-+	.active_pd_names = (char*[]){
-+		"load_state",
-+		NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+		"cx",
-+		"mss",
-+		NULL
-+	},
-+	.ssr_name = "mpss",
-+	.sysmon_name = "modem",
-+	.ssctl_id = 0x12,
-+};
-+
- static const struct adsp_data slpi_resource_init = {
- 		.crash_reason_smem = 424,
- 		.firmware_name = "slpi.mdt",
-@@ -524,6 +579,25 @@ static const struct adsp_data msm8998_slpi_resource = {
- 		.ssctl_id = 0x16,
- };
+@@ -38,21 +43,64 @@
+ 			no-map;
+ 		};
  
-+static const struct adsp_data sm8150_slpi_resource = {
-+		.crash_reason_smem = 424,
-+		.firmware_name = "slpi.mdt",
-+		.pas_id = 12,
-+		.has_aggre2_clk = false,
-+		.active_pd_names = (char*[]){
-+			"load_state",
-+			NULL
-+		},
-+		.proxy_pd_names = (char*[]){
-+			"lcx",
-+			"lmx",
-+			NULL
-+		},
-+		.ssr_name = "dsps",
-+		.sysmon_name = "slpi",
-+		.ssctl_id = 0x16,
-+};
+-		memory@86200000 {
++		tz_mem: memory@86200000 {
+ 			reg = <0x0 0x86200000 0x0 0x2d00000>;
+ 			no-map;
+ 		};
+ 
+-		rmtfs {
++		rmtfs_mem: memory@88f00000 {
+ 			compatible = "qcom,rmtfs-mem";
+-
+-			size = <0x0 0x200000>;
+-			alloc-ranges = <0x0 0xa0000000 0x0 0x2000000>;
++			reg = <0x0 0x88f00000 0x0 0x200000>;
+ 			no-map;
+ 
+ 			qcom,client-id = <1>;
+ 			qcom,vmid = <15>;
+ 		};
 +
- static const struct adsp_data wcss_resource_init = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "wcnss.mdt",
-@@ -544,6 +618,10 @@ static const struct of_device_id adsp_of_match[] = {
- 	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init },
- 	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
- 	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
-+	{ .compatible = "qcom,sm8150-adsp-pas", .data = &sm8150_adsp_resource},
-+	{ .compatible = "qcom,sm8150-cdsp-pas", .data = &sm8150_cdsp_resource},
-+	{ .compatible = "qcom,sm8150-mpss-pas", .data = &mpss_resource_init},
-+	{ .compatible = "qcom,sm8150-slpi-pas", .data = &sm8150_slpi_resource},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, adsp_of_match);
++		spss_mem: memory@8ab00000 {
++			reg = <0x0 0x8ab00000 0x0 0x700000>;
++			no-map;
++		};
++
++		adsp_mem: memory@8b200000 {
++			reg = <0x0 0x8b200000 0x0 0x1a00000>;
++			no-map;
++		};
++
++		mpss_mem: memory@8cc00000 {
++			reg = <0x0 0x8cc00000 0x0 0x7000000>;
++			no-map;
++		};
++
++		venus_mem: memory@93c00000 {
++			reg = <0x0 0x93c00000 0x0 0x500000>;
++			no-map;
++		};
++
++		mba_mem: memory@94100000 {
++			reg = <0x0 0x94100000 0x0 0x200000>;
++			no-map;
++		};
++
++		slpi_mem: memory@94300000 {
++			reg = <0x0 0x94300000 0x0 0xf00000>;
++			no-map;
++		};
++
++		ipa_fw_mem: memory@95200000 {
++			reg = <0x0 0x95200000 0x0 0x10000>;
++			no-map;
++		};
++
++		ipa_gsi_mem: memory@95210000 {
++			reg = <0x0 0x95210000 0x0 0x5000>;
++			no-map;
++		};
++
++		gpu_mem: memory@95215000 {
++			reg = <0x0 0x95215000 0x0 0x1000>;
++			no-map;
++		};
+ 	};
+ 
+ 	clocks {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
