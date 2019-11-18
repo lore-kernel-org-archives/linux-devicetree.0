@@ -2,116 +2,191 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56020C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DF5C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D3E20857
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D60D2071B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GrSgfku+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfKRKib (ORCPT
+        id S1726716AbfKRKnX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:38:31 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:50812 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRKib (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 05:38:31 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-33-5dd274a5829f
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 93.B6.08102.5A472DD5; Mon, 18 Nov 2019 11:38:29 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 18 Nov 2019 11:38:17 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "info@metux.net" <info@metux.net>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
-Thread-Topic: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
-Thread-Index: AQHVjlbfnKGQ2A80TEuw50r1eox3kqeQtb4AgAAVbAA=
-Date:   Mon, 18 Nov 2019 10:38:16 +0000
-Message-ID: <946f091e79242b9e71d5ce8ad12c899feefa22cd.camel@fi.rohmeurope.com>
-References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-         <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
-In-Reply-To: <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B15809EE67717246A3283AB86CCE6A6D@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 18 Nov 2019 05:43:23 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46939 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfKRKnW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 05:43:22 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r18so9422597pgu.13
+        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 02:43:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oal8H4KU9ceKzMRCHfIeWqGJ097aAOuBrL6LAkt5Sts=;
+        b=GrSgfku+mO66VD5S3fXJy0QqA/u2NkhlTQf4eWsc4mfIDEEYtUYATDd73lu47Uxx8K
+         sGgCLMjUfyiasrcvlYBpYXko/hxwYDbDHx5LahBHGesdM+c39jmIh08y23zYqWKD+0+p
+         Kqygrm1arCtVRyG/XE/mPiFlhEVQXMWzBSENA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oal8H4KU9ceKzMRCHfIeWqGJ097aAOuBrL6LAkt5Sts=;
+        b=CRgX+cADoQdRq79dHbt2UhL1CzlIIF8Ydyuh6KTImy3AUlshaQCfQxWW0ehdEymbFF
+         UXX2mp298MdtiHSLy1sLECt/NXCfAw2KaNcRmEJsPCZSdDniR4Iw39CE/MIMuWJ1QKSw
+         vE1jnvafChvw1fbIDQj6KFk+9sI4UohIHt87H4XnQK6D0FX59qdjMwtHYMQ3uAESTeep
+         08kXMnoYagrq4NoCplzVx34LyrQmbsvT7grvfP+4RDvrGundjUTUSeKF285z1wGiB/oO
+         AuikFCefeX+K3nVZn3c3kOPg3chGl3ut2NXvzBNh+LcnjBlnH34XhHyMrAIiR0XWSRbP
+         gjqA==
+X-Gm-Message-State: APjAAAXKxF5vPrbyJ0FsciJFU4vle//Jf66SyumtuafAMCzbb+ePy5iK
+        SY/r0R4/JUYg5BZ5/TkJjm3IhEHhgiQ=
+X-Google-Smtp-Source: APXvYqz73PCW+T58lexcwbtEkYi/LQt0IUyjR4at8WkiLlPclgUmtqSyac2X2Xajrwp/TEsevh0T3Q==
+X-Received: by 2002:a63:db15:: with SMTP id e21mr16299127pgg.21.1574073800047;
+        Mon, 18 Nov 2019 02:43:20 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id p18sm20485310pff.9.2019.11.18.02.43.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 02:43:19 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: mt8173: Add gce setting in mmsys and display node
+Date:   Mon, 18 Nov 2019 18:42:53 +0800
+Message-Id: <20191118104252.228406-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUgUYRjmm5nd/TwmPqet/VrLaiLCJLfCH0OnP5JWA8ssgmizMSdnSXdl
-        dg0ria2QUhczqLStLNJNs9ssjzJisxu2wy6JRewClwrpwEqy5msq/TXPPMf7vPC9kOYO6c3Q
-        7nBLikPM4/WRzPWGwQsz/O7Htpn1ZxKFo51BnVB+v1kndG+/QgkvL51nhK72w3rh0vuzQPA/
-        f0QJh/13GCF076ZeKOnoNCRHWk/XnAbWNl/IYG1qLNVbK/s/6K23X7RQ1oZTAwbr56a4ZYbV
-        UfOyRfemTHuuw7JgXZQculZDFVSPKxos2WHwgE5cBiIgRkm4y/OTLgORkENPAW5s22XQfu4A
-        fCywnSoDEOrRPFzWbSABI1qLPRe/6YiHRtU0/ljV/kcYjdJwaaiC1kxLcPuPyzTJGtEcXOOV
-        Cc2gqbi0sV5HMIvScd25Zzpi4VARrqg3EToCzccnaob0BAM0AZd6PlIE08iEm94N6LSdEa67
-        +oDW8Bjc93roL8/jju+9DBlJo3h8rt2iRZPx131BoOHJeF95r0HbIAbfPfiGqQRjfSMafMNp
-        34i0b0TaNyJ9DOgaAc4X7Xm5olualahIhYmKU85XP+ud+U1Ae+wvreBXIDUAKAgCYByk+DHs
-        xIWPbNyobGfOZll0yVlKYZ7kCgAMad7Ipr96aOPYHHHzFklx/pNiIcOb2Gm9e20cIl0bJalA
-        Uv6p4yHkMbtTeWzjYhQpVyraYM9zD8sUjCDDI81Gl+TIkRSx0C1nkevIcqnnQaRotZdzqXHW
-        VSDmq6wWvQcSYGXfkeM07DziP05zjMPpkMwmNjletSJilQsd/4vCwAQBP5p9QvaIVi/+/5yw
-        WkGpFQmtQVLhFoclswekb9tRm2Jdlfos9CTotS3flhTd9T4c7umJjVtztMSfs9+WKBenNadW
-        hrbqlkYvsfTuStotZOy9tcd4dor37Qd3ZpUlyK9cE14x+Wsglh1I+RYzCClzw+I9tzfaJ32K
-        z0iImD83bMlqqz6QbmpuKS/uWBS388bJlrTi2VVeb39teAvPuGRx1nRacYm/AVkuD5auAwAA
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gRW5yaWNvICYgQWxsLA0KDQpGaXJzdCBvZiBhbGwgLSB0aGFua3MgZm9yIHNob3dpbmcg
-dGhlIGludGVyZXN0IDpdIEkgYW0gaGFwcHkga25vd2luZw0Kc29tZW9uZSBhY3R1YWxseSB3YXMg
-aW50ZXJlc3RlZCBhYm91dCB0aGUgUkZDIDopDQoNCk9uIE1vbiwgMjAxOS0xMS0xOCBhdCAxMDoy
-MSArMDEwMCwgRW5yaWNvIFdlaWdlbHQsIG1ldHV4IElUIGNvbnN1bHQNCndyb3RlOg0KPiBIaSwN
-Cj4gDQo+IA0KPiA+IFRoZSB0aGluZyBpcyB0aGF0DQo+ID4gdGhpcyBhcHByb2FjaCByZXF1aXJl
-cyB0aGUgTEVEIGNvbnRyb2xsZXIgYmluZGluZyB0byBkaWN0YXRlDQo+ID4gYWxsb3dlZA0KPiA+
-IExFRCBub2RlIG5hbWVzIC0gd2hpY2ggbWF5IG9yIG1heSBub3QgYmUgZG9hYmxlLiBJIG5lZWQg
-eW91ciBoZWxwDQo+ID4gdG8NCj4gPiBldmFsdWF0ZSB0aGlzIGFuZCBzdWdnZXN0IGJldHRlciBv
-cHRpb25zIDopDQo+IA0KPiBldmVuIHRob3VnaCBJIGxpa2UgdGhlIGlkZWEgb2YgY29udmVudGlv
-bi1vdmVyLWNvZGUsIGJ1dCBpZiB0aGF0J3MNCj4gY2hhbmdpbmcgYWxsb3dlZCBMRUQgbmFtZXMg
-dGhhdCB3b3VsZCByaXNrIGJyZWFraW5nIHRoaW5ncywgZWc6DQo+IA0KPiBhKSBleGlzdGluZyBE
-VCdzIChpbiB0aGUgZmllbGQpIGJlY29tZSBpbmNvbXBhdGlibGUgd2l0aCBuZXdlcg0KPiAgICBr
-ZXJuZWwgdmVyc2lvbnMNCg0KVGhpcyB3YXMgbXkgbWFpbiBjb25jZXJuLiBUaGlzIG9mIGNvdXJz
-ZSB3b3VsZCBub3QgbWVhbiB0aGF0IHdlIGNvdWxkDQpub3QgdGFrZSB0aGlzIGFwcHJvYWNoIGZv
-ciBuZXcgTEVEIGNvbnRyb2xsZXIgZHJpdmVycyAtIGJ1dCB0aGF0IHdvdWxkDQoocHJvYmFibHkp
-IGxlYWQgdG8gZHVhbCBsZWQgcmVnaXN0cmF0aW9uIGludGVyZmFjZSAtIG9uZSBmb3IgY3VycmVu
-dA0KYXBwcm9hY2ggd2hlcmUgTEVEIGRyaXZlcnMgZG8gYWxsIHRoZSBkaXJ0eSB3b3JrIHRoZW1z
-ZWxmIC0gYW5kIHBhcnNlDQp0aGUgRFQgLSBvbmUgZm9yIG5ldyBkcml2ZXJzIHdoaWNoIGNvdWxk
-IGxlYXZlIERUIHBhcnNpbmcgdG8gTEVEIGNvcmUuDQoNCj4gYikgZXhpc3RpbmcgdXNlcmxhbmRz
-IHRoYXQgcmVseSBvbiBzcGVpY2lmaWMgTEVEIG5hbWVzIGJlY29tZQ0KPiAgICBpbmNvbWF0aWJs
-ZSB3aXRoIG5ld2VyIGtlcm5lbCB2ZXJzaW9ucy4NCg0KSSBkaWRuJ3QgZXZlbiB0aGluayB0aGlz
-IGZhciwgYnV0IHllcywgSSBzZWUuLi4gTEVEIG5vZGUgbmFtZSBtaWdodCBiZQ0KcmVmbGVjdGVk
-IGluIHVzZXItc3BhY2UgTEVEIG5hbWUuIEkgd29uJ3Qgc3RhcnQgYXJndWluZyBpZiB0aGlzIGlz
-IHNhbmUNCm9yIG5vdCAtIHRoaXMgaXMgd2hhdCB3ZSBzZWVtIHRvIGJlIGxpdmluZyB3aXRoIHRv
-ZGF5IDopDQoNCkFueXdheXMsIEkgZGlkIHNlbmQgb3V0IGEgTEVEIGNvcmUgY2hhbmdlIHBhdGNo
-IHdoaWNoIGFsbG93cyBvbmUgdG8gYWRkDQplaXRoZXIgdGhlIG5vZGUtbmFtZSwgb3IgYSBwcm9w
-ZXJ0eS12YWx1ZSBwYWlyIGluIGluaXRfZGF0YS4gTEVEIGNvcmUNCmNhbiB0aGVuIHVzZSBlaXRo
-ZXIgb2YgdGhlc2UgdG8gZG8gTEVEIG5vZGUgbG9va3VwLiBJZiBub25lIG9mIHRoZXNlIGlzDQpn
-aXZlbiwgdGhlbiB3ZSBjYW4gZmFsbC1iYWNrIHRvIGV4aXN0aW5nIGxvZ2ljLiBUaGF0IHdheSB3
-ZSB3b24ndA0KY2hhbmdlIGV4aXN0aW5nIHN0dWZmLg0KSGVyZToNCmh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL2xrbWwvMjU4YjVjOTkzNGUyYjMxYTVmNDMzYTdkYmI5MDhkZmU1ZGEzZDMwYy4xNTc0
-MDU5NjI1LmdpdC5tYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20vVC8jdQ0KDQoNCkkg
-ZGlkbid0IGludmVzdCB0b28gbXVjaCBvZiB0aW1lIG9uIHRoaXMgeWV0IC0gYnV0IGF0IGZpcnN0
-IGdsaW1wc2UgaXQNCnNlZW1lZCB0aGF0IGF0IGxlYXN0IHNvbWUgb2YgdGhlIGRyaXZlcnMgZGlk
-IHVzZSByZWcgLSBwcm9wZXJ0eSB3aXRoDQpmaXhlZCB2YWx1ZSB0byBkbyB0aGUgbWF0Y2hpbmcu
-IFRob3NlIGNvdWxkIHNldCB0aGUgcHJvcGVydHkgbmFtZSB0bw0KJ3JlZycgYW5kIHZhbHVlIHRv
-ICdYJyBhbmQgbGVhdmUgdGhlIERUIG5vZGUgbG9va3VwIGFuZCBjb21tb24gcHJvcGVydHkNCnBh
-cnNpbmcgdG8gdGhlIExFRCBjb3JlLiBJZiBteSBwYXRjaCB3b24ndCBnZXQgdG9vIGJpZyBvYmpl
-Y3Rpb24gKGFuZA0KaWYgbm8gZmF0YWwgZmxhd3MgYXJlIGZvdW5kIGZyb20gdGhlIGlkZWEpIC0g
-dGhlbiBJIG1pZ2h0IHRyeSBhbmQgZmluZA0KdGhlIHRpbWUgdG8gZG8gc29tZSBmb2xsb3ctdXAg
-cGF0Y2hlcyBzaW1wbGlmeWluZyBleGlzdGluZyBMRUQNCmRyaXZlcnMuLi4NCg0KPiANCj4gDQo+
-IA0KPiAtLW10eA0KPiANCg0K
+In order to use GCE function, we need add some informations
+into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
+
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+- This is based on series "support gce on mt8183 platform"
+  https://patchwork.kernel.org/cover/11208309/
+- gce setting in 8183:
+  https://patchwork.kernel.org/patch/11127105/
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 15f1842f6df3..e84ec3f95d81 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -911,6 +911,11 @@ mmsys: clock-controller@14000000 {
+ 			assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
+ 			assigned-clock-rates = <400000000>;
+ 			#clock-cells = <1>;
++			mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST 1>,
++				 <&gce 1 CMDQ_THR_PRIO_HIGHEST 1>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
++			mediatek,gce-events = <CMDQ_EVENT_MUTEX0_STREAM_EOF>,
++					      <CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+ 		};
+ 
+ 		mdp_rdma0: rdma@14001000 {
+@@ -991,6 +996,7 @@ ovl0: ovl@1400c000 {
+ 			clocks = <&mmsys CLK_MM_DISP_OVL0>;
+ 			iommus = <&iommu M4U_PORT_DISP_OVL0>;
+ 			mediatek,larb = <&larb0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
+ 		};
+ 
+ 		ovl1: ovl@1400d000 {
+@@ -1001,6 +1007,7 @@ ovl1: ovl@1400d000 {
+ 			clocks = <&mmsys CLK_MM_DISP_OVL1>;
+ 			iommus = <&iommu M4U_PORT_DISP_OVL1>;
+ 			mediatek,larb = <&larb4>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
+ 		};
+ 
+ 		rdma0: rdma@1400e000 {
+@@ -1011,6 +1018,7 @@ rdma0: rdma@1400e000 {
+ 			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
+ 			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
+ 			mediatek,larb = <&larb0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
+ 		};
+ 
+ 		rdma1: rdma@1400f000 {
+@@ -1021,6 +1029,7 @@ rdma1: rdma@1400f000 {
+ 			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
+ 			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
+ 			mediatek,larb = <&larb4>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
+ 		};
+ 
+ 		rdma2: rdma@14010000 {
+@@ -1031,6 +1040,7 @@ rdma2: rdma@14010000 {
+ 			clocks = <&mmsys CLK_MM_DISP_RDMA2>;
+ 			iommus = <&iommu M4U_PORT_DISP_RDMA2>;
+ 			mediatek,larb = <&larb4>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0 0x1000>;
+ 		};
+ 
+ 		wdma0: wdma@14011000 {
+@@ -1041,6 +1051,7 @@ wdma0: wdma@14011000 {
+ 			clocks = <&mmsys CLK_MM_DISP_WDMA0>;
+ 			iommus = <&iommu M4U_PORT_DISP_WDMA0>;
+ 			mediatek,larb = <&larb0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
+ 		};
+ 
+ 		wdma1: wdma@14012000 {
+@@ -1051,6 +1062,7 @@ wdma1: wdma@14012000 {
+ 			clocks = <&mmsys CLK_MM_DISP_WDMA1>;
+ 			iommus = <&iommu M4U_PORT_DISP_WDMA1>;
+ 			mediatek,larb = <&larb4>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
+ 		};
+ 
+ 		color0: color@14013000 {
+@@ -1059,6 +1071,7 @@ color0: color@14013000 {
+ 			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+ 			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x3000 0x1000>;
+ 		};
+ 
+ 		color1: color@14014000 {
+@@ -1067,6 +1080,7 @@ color1: color@14014000 {
+ 			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+ 			clocks = <&mmsys CLK_MM_DISP_COLOR1>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x4000 0x1000>;
+ 		};
+ 
+ 		aal@14015000 {
+@@ -1075,6 +1089,7 @@ aal@14015000 {
+ 			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+ 			clocks = <&mmsys CLK_MM_DISP_AAL>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
+ 		};
+ 
+ 		gamma@14016000 {
+@@ -1083,6 +1098,7 @@ gamma@14016000 {
+ 			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+ 			clocks = <&mmsys CLK_MM_DISP_GAMMA>;
++			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x6000 0x1000>;
+ 		};
+ 
+ 		merge@14017000 {
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
