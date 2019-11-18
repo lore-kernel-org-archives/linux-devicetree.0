@@ -2,178 +2,95 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FDEC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571FDC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA3B2071B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A4720722
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfKRPMO (ORCPT
+        id S1727220AbfKRPZI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:12:14 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:32771 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfKRPMO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 10:12:14 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1iWihD-0008FH-TD; Mon, 18 Nov 2019 16:12:07 +0100
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>, kernel@pengutronix.de,
-        patchwork-lst@pengutronix.de
-Subject: [PATCH] ASoC: tlv320aic31xx: configure output common-mode voltage
-Date:   Mon, 18 Nov 2019 16:12:06 +0100
-Message-Id: <20191118151207.28576-1-l.stach@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 18 Nov 2019 10:25:08 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56728 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbfKRPZI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 10:25:08 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 7B69B28DFE1
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-imx@nxp.com
+Subject: [PATCH v3 0/4] Genericize DW MIPI DSI bridge and add i.MX 6 driver
+Date:   Mon, 18 Nov 2019 17:25:14 +0200
+Message-Id: <20191118152518.3374263-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The tlv320aic31xx devices allow to adjust the output common-mode voltage
-for best analog performance. The datasheet states that the common mode
-voltage should be set to be <= AVDD/2.
+Having a generic Synopsis DesignWare MIPI-DSI host controller bridge
+driver is a very good idea, however the current implementation has
+hardcoded quite a lot of the register layouts used by the two supported
+SoC vendors, STM and Rockchip, which use IP cores v1.30 and v1.31.
 
-This changes allows to configure the output common-mode voltage via a DT
-property. If the property is absent the voltage is automatically chosen
-as the highest voltage below/equal to AVDD/2.
+This makes it hard to support other SoC vendors like the FSL/NXP i.MX 6
+which use older v1.01 cores or future versions because, based on history,
+layout changes should also be expected in new DSI versions / SoCs.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
- .../bindings/sound/tlv320aic31xx.txt          |  5 +++
- sound/soc/codecs/tlv320aic31xx.c              | 45 +++++++++++++++++++
- sound/soc/codecs/tlv320aic31xx.h              |  8 ++++
- 3 files changed, 58 insertions(+)
+This patch series converts the bridge and platform drivers to access
+registers via generic regmap APIs and allows each platform driver to
+configure its register layout via struct reg_fields, then adds support
+for the host controller found on i.MX 6.
 
-diff --git a/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt b/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
-index 5b3c33bb99e5..e372303697dc 100644
---- a/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
-+++ b/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
-@@ -29,6 +29,11 @@ Optional properties:
-         3 or MICBIAS_AVDD - MICBIAS output is connected to AVDD
- 	If this node is not mentioned or if the value is unknown, then
- 	micbias	is set to 2.0V.
-+- ai31xx-ocmv - output common-mode voltage setting
-+        0 - 1.35V,
-+        1 - 1.5V,
-+        2 - 1.65V,
-+        3 - 1.8V
- 
- Deprecated properties:
- 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index df627a08def9..f6f19fdc72f5 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -171,6 +171,7 @@ struct aic31xx_priv {
- 	int rate_div_line;
- 	bool master_dapm_route_applied;
- 	int irq;
-+	u8 ocmv; /* output common-mode voltage */
- };
- 
- struct aic31xx_rate_divs {
-@@ -1312,6 +1313,11 @@ static int aic31xx_codec_probe(struct snd_soc_component *component)
- 	if (ret)
- 		return ret;
- 
-+	/* set output common-mode voltage */
-+	snd_soc_component_update_bits(component, AIC31XX_HPDRIVER,
-+				      AIC31XX_HPD_OCMV_MASK,
-+				      aic31xx->ocmv << AIC31XX_HPD_OCMV_SHIFT);
-+
- 	return 0;
- }
- 
-@@ -1501,6 +1507,43 @@ static irqreturn_t aic31xx_irq(int irq, void *data)
- 		return IRQ_NONE;
- }
- 
-+static void aic31xx_configure_ocmv(struct aic31xx_priv *priv)
-+{
-+	struct device *dev = priv->dev;
-+	int dvdd, avdd;
-+	u32 value;
-+
-+	if (dev->fwnode &&
-+	    fwnode_property_read_u32(dev->fwnode, "ai31xx-ocmv", &value)) {
-+		/* OCMV setting is forced by DT */
-+		if (value <= 3) {
-+			priv->ocmv = value;
-+			return;
-+		}
-+	}
-+
-+	avdd = regulator_get_voltage(priv->supplies[3].consumer);
-+	dvdd = regulator_get_voltage(priv->supplies[5].consumer);
-+
-+	if (avdd > 3600000 || dvdd > 1950000) {
-+		dev_warn(dev,
-+			 "Too high supply voltage(s) AVDD: %d, DVDD: %d\n",
-+			 avdd, dvdd);
-+	} else if (avdd == 3600000 && dvdd == 1950000) {
-+		priv->ocmv = AIC31XX_HPD_OCMV_1_8V;
-+	} else if (avdd >= 3300000 && dvdd >= 1800000) {
-+		priv->ocmv = AIC31XX_HPD_OCMV_1_65V;
-+	} else if (avdd >= 3000000 && dvdd >= 1650000) {
-+		priv->ocmv = AIC31XX_HPD_OCMV_1_5V;
-+	} else if (avdd >= 2700000 && dvdd >= 1525000) {
-+		priv->ocmv = AIC31XX_HPD_OCMV_1_35V;
-+	} else {
-+		dev_warn(dev,
-+			 "Invalid supply voltage(s) AVDD: %d, DVDD: %d\n",
-+			 avdd, dvdd);
-+	}
-+}
-+
- static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 			     const struct i2c_device_id *id)
- {
-@@ -1570,6 +1613,8 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
-+	aic31xx_configure_ocmv(aic31xx);
-+
- 	if (aic31xx->irq > 0) {
- 		regmap_update_bits(aic31xx->regmap, AIC31XX_GPIO1,
- 				   AIC31XX_GPIO1_FUNC_MASK,
-diff --git a/sound/soc/codecs/tlv320aic31xx.h b/sound/soc/codecs/tlv320aic31xx.h
-index cb024955c978..83a8c7604cc3 100644
---- a/sound/soc/codecs/tlv320aic31xx.h
-+++ b/sound/soc/codecs/tlv320aic31xx.h
-@@ -232,6 +232,14 @@ struct aic31xx_pdata {
- #define AIC31XX_HSD_HP			0x01
- #define AIC31XX_HSD_HS			0x03
- 
-+/* AIC31XX_HPDRIVER */
-+#define AIC31XX_HPD_OCMV_MASK		GENMASK(4, 3)
-+#define AIC31XX_HPD_OCMV_SHIFT		3
-+#define AIC31XX_HPD_OCMV_1_35V		0x0
-+#define AIC31XX_HPD_OCMV_1_5V		0x1
-+#define AIC31XX_HPD_OCMV_1_65V		0x2
-+#define AIC31XX_HPD_OCMV_1_8V		0x3
-+
- /* AIC31XX_MICBIAS */
- #define AIC31XX_MICBIAS_MASK		GENMASK(1, 0)
- #define AIC31XX_MICBIAS_SHIFT		0
+I only have i.MX hardware with MIPI-DSI panel and relevant documentation
+available for testing so I'll really appreciate it if someone could test
+the series on Rockchip and STM... eyeballing register fields could only
+get me so far, so sorry in advance for any breakage!
+
+Many thanks to Boris Brezillon <boris.brezillon@collabora.com> for
+suggesting the regmap solution and to Liu Ying <Ying.Liu@freescale.com>
+for doing the initial i.MX platform driver implementation.
+
+This series applies on top of latest linux-next tree, next-20191118.
+
+v2 -> v3:
+  * Added const declarations to dw-mipi-dsi.c structs (Emil)
+  * Fixed Reviewed-by tags and cc'd some more relevant ML (Emil)
+
+v1 -> v2:
+  * Moved register definitions & regmap initialization into bridge
+  module. Platform drivers get the regmap via plat_data after calling
+  the bridge probe (Emil).
+
+Adrian Ratiu (4):
+  drm: bridge: dw_mipi_dsi: access registers via a regmap
+  drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
+  drm: imx: Add i.MX 6 MIPI DSI host driver
+  dt-bindings: display: add IMX MIPI DSI host controller doc
+
+ .../bindings/display/imx/mipi-dsi.txt         |  56 ++
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 699 +++++++++++++-----
+ drivers/gpu/drm/imx/Kconfig                   |   7 +
+ drivers/gpu/drm/imx/Makefile                  |   1 +
+ drivers/gpu/drm/imx/dw_mipi_dsi-imx.c         | 378 ++++++++++
+ .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |  17 +-
+ drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  34 +-
+ include/drm/bridge/dw_mipi_dsi.h              |   2 +-
+ 8 files changed, 987 insertions(+), 207 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
+ create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx.c
+
 -- 
-2.20.1
+2.24.0
 
