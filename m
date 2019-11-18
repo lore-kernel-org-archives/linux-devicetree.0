@@ -2,159 +2,146 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE22EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644D5C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44EC2067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8CD20855
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:44:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SaHRA7Yf"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="KqQXJdXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfKRLdi (ORCPT
+        id S1726579AbfKRLoi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:33:38 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48502 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbfKRLdi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 06:33:38 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAIBXUlB080670;
-        Mon, 18 Nov 2019 05:33:30 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574076810;
-        bh=U20YmeyGvb3fuVn86ScVQQeSXmImKgQ4tuZlR17nxtE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SaHRA7Yf9B0D6P80GZK+NhzjrOlfTEmYh9aRQXD3RrZK14wEymg/FB3h7MTZJSj95
-         u3KLDue4ZQfL3GlJ6pX09SWWW3Pis28aXV0aMbRnOsFtAvHxG/BtLqz0oFGiv7abJP
-         8kES1S/ClJY5UFJoTAjcQwNDHQrfaFyV/e0ExMj4=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAIBXTUU084668
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Nov 2019 05:33:29 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
- Nov 2019 05:33:29 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 18 Nov 2019 05:33:28 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAIBXMDQ059095;
-        Mon, 18 Nov 2019 05:33:23 -0600
-Subject: Re: [PATCH 2/2] ARM: dts: am5729: beaglebone-ai: adding device tree
-To:     Caleb Robey <c-robey@ti.com>, <linux-omap@vger.kernel.org>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
+        Mon, 18 Nov 2019 06:44:38 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46480 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfKRLoi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 06:44:38 -0500
+Received: by mail-io1-f67.google.com with SMTP id i11so7396255iol.13
+        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 03:44:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=00YS9wU/qJok85ES8iPJQuzhcEYI33tD11SH51bcxeg=;
+        b=KqQXJdXKRFMYWqjFg5qcQO4ctc/d2TpRdOani/P/No4Od0b4bINQYzmCWYNvQcVf+d
+         PZCRLbvgh+K7M5+r7BLX6CDCfO53HqiTbr8GhHJPRWJevLW08f+fVQbv4oTqVQ76two9
+         IR4JUlMVuZ0VcPD+JdbLzg1bhYakmoVlf2iHE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=00YS9wU/qJok85ES8iPJQuzhcEYI33tD11SH51bcxeg=;
+        b=qNKf5YfpAipwHIMN5tNd7of3y1JGr6u/mUdNCus6zWz9kaqzD4di6w0T1zGzEvlBTm
+         0G0ybvCP7K32o/UGQZI7zn4Sr0LPzfEOLgItqfyPFc8ttX0n2d3sSei+DRgAdHjMmoxY
+         yToNePJd79ZDYB26rHSac5HBLu9ZfS54a4v4bxUYB07Y28moewcHw1hC8vcL+nxAV8VN
+         +gGKH4DFGpIETChrT3ZH6PjGYW4uBqT2LQnFX5v35/UHvUlayT8EXFZsTNc8WJ5oi9vo
+         2YxH5QXlDulcgH8eBKJK9Ho3HQ2xDIV/FhPBP6pDcZ9hCNoCeFYr+1CTV4KaL9VF7ySo
+         lk+A==
+X-Gm-Message-State: APjAAAX92QlbJtx4QzXWeH8f/JMKtcAWgv6jZ0ZXsIIAcknSVwUjY33q
+        hzwkEO+4Ir/Tm9BmXtJgg9zWFY644VTlMTqPKaCfHA==
+X-Google-Smtp-Source: APXvYqwzw/vwFbWlrZpD891jS+rPQgb5mUumAL70Wti+rBqMpjUTt1Ef42AIFjAULrwLH2d8+nyqPYfVmyfJ9QEszhU=
+X-Received: by 2002:a02:634d:: with SMTP id j74mr13203246jac.79.1574077477457;
+ Mon, 18 Nov 2019 03:44:37 -0800 (PST)
+MIME-Version: 1.0
+References: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de> <2226540.xovL9aYQn6@diego>
+In-Reply-To: <2226540.xovL9aYQn6@diego>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 18 Nov 2019 17:14:26 +0530
+Message-ID: <CAMty3ZDwjv4ShpbAyQPWk9ewboFOK3nZO0s_QNty_m0hJKR76w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Split rk3399-roc-pc for with and
+ without mezzanine board.
+To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Markus Reichl <m.reichl@fivetechno.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191114170933.12623-1-c-robey@ti.com>
- <20191114170933.12623-3-c-robey@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <ff7aa0c6-b0d5-c87e-1d96-be77f5a7e2af@ti.com>
-Date:   Mon, 18 Nov 2019 13:33:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191114170933.12623-3-c-robey@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Nov 4, 2019 at 5:42 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+>
+> Hi Markus,
+>
+> Am Freitag, 1. November 2019, 17:54:23 CET schrieb Markus Reichl:
+> > For rk3399-roc-pc is a mezzanine board available that carries M.2 and
+> > POE interfaces. Use it with a separate dts.
+> >
+> > Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+> >  .../boot/dts/rockchip/rk3399-roc-pc-mezz.dts  |  52 ++
+> >  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
+> >  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 767 ++++++++++++++++++
+> >  4 files changed, 821 insertions(+), 756 deletions(-)
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dt=
+s/rockchip/Makefile
+> > index a959434ad46e..80ee9f1fc5f5 100644
+> > --- a/arch/arm64/boot/dts/rockchip/Makefile
+> > +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> > @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-nanopi-neo4.d=
+tb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-orangepi.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-puma-haikou.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-roc-pc.dtb
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-roc-pc-mezz.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-rock-pi-4.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-rock960.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-rockpro64.dtb
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts b/arch=
+/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> > new file mode 100644
+> > index 000000000000..ee77677d2cf2
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> > @@ -0,0 +1,52 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
+> > + * Copyright (c) 2019 Markus Reichl <m.reichl@fivetechno.de>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "rk3399-roc-pc.dtsi"
+> > +
+> > +/ {
+> > +     model =3D "Firefly ROC-RK3399-PC Mezzanine Board";
+> > +     compatible =3D "firefly,roc-rk3399-pc", "rockchip,rk3399";
+>
+> different board with same compatible isn't possible, so
+> you'll need a new compatible for it and add a new line to
+> the roc-pc entry in
+>         Documentation/devicetree/bindings/arm/rockchip.yaml
+>
+> Either you see it as
+> - a board + hat, using dt overlay and same compatible
+> - a completely separate board, which needs a separate
+>   compatible as well
+>
+> And as discussed in the previous thread
+> http://lists.infradead.org/pipermail/linux-rockchip/2019-November/027592.=
+html
+> but also in Jagan's response that really is somehow a grey area
+> for something relatively static as the M.2 extension.
 
+Sorry for late response on this. I still think that the "overlay would
+be a better suite" than having separate dts, since it is HAT which is
+optional to insert and have possibility of having another HAT if it
+really fit into it.
 
-On 14/11/2019 19:09, Caleb Robey wrote:
-> From: Jason Kridner <jdk@ti.com>
-> 
-> BeagleBoard.org BeagleBone AI is an open source hardware single
-> board computer based on the Texas Instruments AM5729 SoC featuring
-> dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-> signal processor (DSP), quad-core embedded vision engine (EVE),
-> Arm Cortex-M4 processors, dual programmable realtime unit
-> industrial control subsystems and more. The board features 1GB
-> DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-> 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-> headers.
-> 
-> For more information, refer to:
-> https://beaglebone.ai
-> 
-> This patch introduces the BeagleBone AI device tree.
-> 
-> Note that the device use the "ti,tpd12s016" component which is
-> software compatible with "ti,tpd12s015". Thus we only use the
-> latter driver.
-> 
-> Signed-off-by: Jason Kridner <jdk@ti.com>
-> Cc: Robert Nelson <robertcnelson@gmail.com>
-> Cc: Caleb Robey <c-robey@ti.com>
-> 
-> ---
->   arch/arm/boot/dts/Makefile                |   1 +
->   arch/arm/boot/dts/am5729-beagleboneai.dts | 733 ++++++++++++++++++++++
->   2 files changed, 734 insertions(+)
->   create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b21b3a64641a..b1154dbda73c 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -791,6 +791,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
->   	am57xx-beagle-x15.dtb \
->   	am57xx-beagle-x15-revb1.dtb \
-
-[..]
-
-> +
-> +&davinci_mdio {
-> +	reset-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
-> +	reset-delay-us = <2>;
-> +
-> +	phy0: ethernet-phy@1 {
-> +		reg = <4>;
-> +		compatible = "ethernet-phy-id004d.d072",
-> +			"ethernet-phy-ieee802.3-c22";
-
-is it really required to have above compatible prop?
-It's expected to work without it.
-
-> +		eee-broken-100tx;
-> +		eee-broken-1000t;
-> +	};
-> +};
-> +
-> +&mac {
-> +	slaves = <1>;
-> +	status = "okay";
-> +};
-> +
-> +&cpsw_emac0 {
-> +	phy-handle = <&phy0>;
-> +	phy-mode = "rgmii";
-> +};
-> +
-
-[...]
-
--- 
-Best regards,
-grygorii
+Comments?
