@@ -2,127 +2,215 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4BDC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 08:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683C6C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 08:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F0920740
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 08:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA412075E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 08:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="KgASIq2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfKRIma convert rfc822-to-8bit (ORCPT
+        id S1726460AbfKRIuf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:42:30 -0500
-Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:59226 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726404AbfKRIma (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:42:30 -0500
-Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAI8flGS090700
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 18 Nov 2019 16:41:47 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from spreadtrum.com (10.0.74.112) by BJMBX01.spreadtrum.com
- (10.0.64.7) with Microsoft SMTP Server (TLS) id 15.0.847.32; Mon, 18 Nov 2019
- 16:41:47 +0800
-Date:   Mon, 18 Nov 2019 16:39:52 +0800
-From:   Orson Zhai <orson.zhai@spreadtrum.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Orson Zhai <orson.zhai@unisoc.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <kevin.tang@unisoc.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add syscon-names support
-Message-ID: <20191118083952.GB6039@spreadtrum.com>
-References: <20191114114525.12675-1-orson.zhai@unisoc.com>
- <20191114114525.12675-2-orson.zhai@unisoc.com>
- <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
+        Mon, 18 Nov 2019 03:50:35 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:30090 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfKRIuf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 03:50:35 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: w4WOixnmb66IcClAG9jQECsqCKxJ5bYoPFKnEQjQH+Y9K7VbHAvMV9q40OTwmH1W6uoMRFuuqf
+ wT+lwNBoWphWErR21l3TCWI5g+PU5AkiBTJi5vwDoPyXF8eZVdPhuxL/OylHNgZ2CLdZvHmG9X
+ FWRcPhx6Y7uXTCjDjPeoWSVYe69eK/7GsLvJ4e91zxsFOhH708xrWUVqEF4kRjAf4GlsY8YWHm
+ nAbAqkpoXfIvrYB5Q4O/x37FnLxPfgisWq8itSrv1K+LfDIO7lCRs1a3D2pWflt/PPG3aKkEnS
+ 9EA=
+X-IronPort-AV: E=Sophos;i="5.68,319,1569308400"; 
+   d="scan'208";a="54693688"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Nov 2019 01:50:34 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 18 Nov 2019 01:50:34 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 18 Nov 2019 01:50:33 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VtLq3Y/6VaLrNP3UVPcvEmOHuUpz3kIBZ4YqJY01VaC75Y3Ned0CwJN8uLTOWxuZTrb2ZCx6GNc172FiDy5GgZP+s6vE5ZUDGXRidx1VrzJOg6BeXUUOfUQAv7Cfdq7qlNq8rGIfHelRnM3JgyeIxMXijC5slMg/8pXMjQxJONr128qhDhaR6hzw7OasNLuXMv1WKLsbCKzxczdydF7iDzL0TYdFatJg873GP1WiQthJ6k49TGb0Ff/DrHGLnUg0wDZkX4+57AEJhJOZJQJdld49sVz1OZg6NA2TehKOSZw3TW5MO3GMt9DJTEeEx6P7jEV1pkFvrkG1lF4/9HfJPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KJrAModIrm3Z/kNB5qegFC3pxcQgen6WBoyZCpYQp9M=;
+ b=m4V7YRUlhFW2ZG7OxO6LD5nNg52dEmTlD7NKOgHoW3pwXGdYXv2BpUkld5DD6HQ/6rep3xk1UhMvtNkQWYTlMaIMFYP8knJwxCF/7ATWwT37hTgxO6OHM2LynmVccdym/+3fWlAEK29TPpQgH8Hw20tjS6PIyMvInNXWuK658xKXaDRFQ/mFurUDdCKgAN72sw8abvkl8beBThTPtF6wFPDZNmp5tOf7Kw0pTRgGsVqAKN+ib7BaliBNuR/qb2uL9gOyGg/ma+Uq49Dtgu+n+UUq6u7vD/slkYBJ4R5LMq7kzOqT9SEDAgxHk6opCJ1Z+uRRrHIZJ9Wa/eT9VjGbrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KJrAModIrm3Z/kNB5qegFC3pxcQgen6WBoyZCpYQp9M=;
+ b=KgASIq2WyCon8VcXkIaZpV9Ca24dSGXl5uAFf/J4dMPxMgYdiyH7iNfn/EjvvzxJa6mot+7hgJONjBN/Qogm74QmKUoc8oJtKC/WBbgtg18imsktrtLHCqqJM4e7XKzy3CUtAdYVDtrWAoSEO0RPRFgzkv6UrQPNbRaybArcymw=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1659.namprd11.prod.outlook.com (10.172.35.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Mon, 18 Nov 2019 08:50:31 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::d594:bcd0:98a9:d2c8]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::d594:bcd0:98a9:d2c8%4]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 08:50:31 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Nicolas.Ferre@microchip.com>, <linux-watchdog@vger.kernel.org>,
+        <Eugen.Hristev@microchip.com>
+Subject: [PATCH v5 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
+Thread-Topic: [PATCH v5 1/3] watchdog: sama5d4_wdt: cleanup the bit
+ definitions
+Thread-Index: AQHVne07BiorG6D1ck2PFwW2YCEuIg==
+Date:   Mon, 18 Nov 2019 08:50:31 +0000
+Message-ID: <1574067012-18559-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR05CA0030.eurprd05.prod.outlook.com
+ (2603:10a6:208:55::43) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-mailer: git-send-email 2.7.4
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7ea24f67-9149-4f66-69dc-08d76c045e05
+x-ms-traffictypediagnostic: DM5PR11MB1659:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB165926067160C384B644811DE84D0@DM5PR11MB1659.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(396003)(366004)(346002)(136003)(39860400002)(376002)(189003)(199004)(5660300002)(50226002)(478600001)(81166006)(81156014)(4326008)(8676002)(2906002)(36756003)(486006)(6486002)(8936002)(66066001)(14444005)(256004)(6116002)(6512007)(54906003)(3846002)(2201001)(7736002)(305945005)(71190400001)(316002)(71200400001)(6436002)(52116002)(25786009)(110136005)(476003)(102836004)(6506007)(386003)(186003)(2501003)(86362001)(99286004)(66476007)(66556008)(64756008)(66446008)(66946007)(2616005)(107886003)(26005)(14454004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1659;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 23vn/+jweFtIBeQZ8vhndfqM3UsY+KSL7yPIfLkcKN0kYBa/67voIG30sC3/RfRUS2j4Ud8qHlz/v+WPtJOn6JhD4P7C9/uXsjalz5MRJdO5pLYlhOSQN1tfB7Ry8OW+FtkBgU19HLch75ZAHd6E5xozkwoGb1OH36NnM8rWGgy7BXN2HBbaSr7TwVYrh0z+pakGlMxQvYPH+mISBU0bfSWks3AP/Q1LCRDUjVbfwwkrKZ03VSUzJWwqF4hY/qDZvR9pemKupL3M/oEweWfupY/T4s2NHmpJM4RJS6ZMwN9O7CpekG2jkglCi9TMp5HfPK8ZR0PzNyV6vOcqplK5QrC79Kqe7a87co/1LQ+SvoOhYtJNeau218FeYnQxteGxcKUHZiYsBNA7LkSxu3ASvHqj9gLN+xwJBcvQFRz97ezijooFIGK5zfu1xVsUC+c7
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
-X-Mailer: git-send-email 2.18.0
-X-Originating-IP: [10.0.74.112]
-X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xAI8flGS090700
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ea24f67-9149-4f66-69dc-08d76c045e05
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 08:50:31.2645
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nqG9/VNW4wq3GfPQYSP39hMvixaSmSOTY5SxDW76iv7vi91CjpWAFXKcXiqQMD5FeENbkoztGnLPD++DbsYBcjULHi+KNLdG1k+c60EYAHo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1659
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Arnd,
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-On Fri, Nov 15, 2019 at 10:33:30AM +0100, Arnd Bergmann wrote:
-> On Thu, Nov 14, 2019 at 12:48 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
-> >
-> >
-> > Make life easier when syscon consumer want to access multiple syscon
-> > nodes.
-> > Add syscon-names and relative properties to help manage complicated
-> > cases when accessing more one syscon node.
-> >
-> > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
->
-> Hi Orson,
->
-> Can you explain why the number of cells in this binding is specific
-> to the syscon node rather than the node referencing it?
+Cleanup the macro definitions to use BIT and align with two spaces.
 
-The story is like this. I found there are too many global registers in
-Unisoc(former Spreadtrum) chips. Dozens of offset with dozens of modules
-were needed to be specified. So I thought the dts files would seem "horrible"
-with a big chunk of syscon-xxx (say more than 20 lines)
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+---
+Changes in v4:
+- added UL suffix to value macros to avoid compile warnings
+- modified file header to include new copyright and datasheet
+- include linux/bits.h
 
-I learned from reg-names way which might look clean to hold all these mess things.
-But to implement this, the users need to konw the cell-size if we add arguments to syscon node.
-I thought to add cell-size into every syscon consumer node is a duplicated work and
-I wanted to take advantage of of_parse_phandle_with_args.
-So the bindings were created then.
+Changes in v3:
+- new patch as requested from review on ML
 
+ drivers/watchdog/at91sam9_wdt.h | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
->
-> In most other bindings that follow the same scheme, the additional
-> arguments are interpreted by the subsystem that is being referenced,
-> but the syscon driver is just a simple driver with no subsystem and no
-> code to interpret those arguments.
+diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wd=
+t.h
+index 390941c..abfe34d 100644
+--- a/drivers/watchdog/at91sam9_wdt.h
++++ b/drivers/watchdog/at91sam9_wdt.h
+@@ -4,33 +4,37 @@
+  *
+  * Copyright (C) 2007 Andrew Victor
+  * Copyright (C) 2007 Atmel Corporation.
++ * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries
+  *
+  * Watchdog Timer (WDT) - System peripherals regsters.
+  * Based on AT91SAM9261 datasheet revision D.
++ * Based on SAM9X60 datasheet.
+  *
+  */
+=20
+ #ifndef AT91_WDT_H
+ #define AT91_WDT_H
+=20
++#include <linux/bits.h>
++
+ #define AT91_WDT_CR		0x00			/* Watchdog Control Register */
+-#define		AT91_WDT_WDRSTT		(1    << 0)		/* Restart */
+-#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
++#define  AT91_WDT_WDRSTT	BIT(0)			/* Restart */
++#define  AT91_WDT_KEY		(0xa5UL << 24)		/* KEY Password */
+=20
+ #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
+-#define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
+-#define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
+-#define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
+-#define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
+-#define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
+-#define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
+-#define		AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
+-#define			AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
+-#define		AT91_WDT_WDDBGHLT	(1     << 28)		/* Debug Halt */
+-#define		AT91_WDT_WDIDLEHLT	(1     << 29)		/* Idle Halt */
++#define  AT91_WDT_WDV		(0xfffUL << 0)		/* Counter Value */
++#define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
++#define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
++#define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
++#define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
++#define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
++#define  AT91_WDT_WDD		(0xfffUL << 16)		/* Delta Value */
++#define  AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
++#define  AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
++#define  AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
+=20
+-#define AT91_WDT_SR		0x08			/* Watchdog Status Register */
+-#define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
+-#define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
++#define AT91_WDT_SR		0x08		/* Watchdog Status Register */
++#define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
++#define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
+=20
+ #endif
+--=20
+2.7.4
 
-You're correct. I've realized it is narraw to pass here.
-
->
-> The way would otherwise handle the example from your binding
-> would be with two separate properties in the display node, like
->
-> syscon-enable = <&ap_apb_regs 0x4 0xf00>;
-> syscon-power = <&aon_regs 0x8>;
-
-This is an option for consumers all the time.
-Acturally my patches are not going to replace this.
-I'd like to provide another option to save people like desperate engineers in Spreadtrum :)
-
->
-> in which case, the syscon driver does not need to know anything
-
-Whould it be better if I add syscon-cells into consumer's node?
-Then I could read the cell size and use "of_parse_phandle_with_fixed_args()" instead.
-This will not involve syscon node itself at all.
-
-Best Regards,
--Orson
-> about how it's being used, and the display driver is the one making
-> sense of the arguments according to its own binding.
->
-> I assume you have some good reason for introducing the other
-> approach, but I don't understand it from your submission.
->
->        Arnd
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
