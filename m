@@ -2,199 +2,128 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE68C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 01:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494A6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 02:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51D120672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 01:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9B7206B6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 02:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6bk9r/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbfKRBYe (ORCPT
+        id S1726266AbfKRCKq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 17 Nov 2019 20:24:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33200 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726063AbfKRBYe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 17 Nov 2019 20:24:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3043EAC53;
-        Mon, 18 Nov 2019 01:24:31 +0000 (UTC)
-Subject: Re: [PATCH v3 3/8] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        James Tai <james.tai@realtek.com>
-References: <20191117072109.20402-1-afaerber@suse.de>
- <20191117072109.20402-4-afaerber@suse.de> <20191117104726.2b1fccb8@why>
- <61bf74ad-b4a1-f443-bf99-be354b4d942b@suse.de> <86a78ujwwd.wl-maz@kernel.org>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <25965de3-cc82-7fe6-6b3d-5754c329ac07@suse.de>
-Date:   Mon, 18 Nov 2019 02:24:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Sun, 17 Nov 2019 21:10:46 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35442 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfKRCKq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 17 Nov 2019 21:10:46 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s8so1008942pji.2;
+        Sun, 17 Nov 2019 18:10:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:cc:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=X4uePLRePHS4hFCHmPpfI5ZAvCNjVU1IE4m0Ocmm4jQ=;
+        b=f6bk9r/k5TpMLqq0Ob0TJCq/7aO6+JwJpJBM0zcy4ojXPy1Aa+D5bRmtkFSkY/IhqO
+         Kd/etfVn3LqXtW8tgJfP3KS7z/F+QDMnp+7y4rUxUIgkiIK8VAQL4Y4wJBjK6BtSqfZk
+         7dAFzI+1Ojgm5GxePsbubeAcH1XETsk3WTmXVW9pS9BIs/4aDwSkBOsp7M/1RKWZhQs+
+         plnsXvkHkCS27kkPP7WD7bwjKE64ehzX/2SsDKCfsU9fMtu5X2c6snUl2OqUq7SD9Y6F
+         qE3ECERajTJ2oc0UtSMTfsqqW0fHQMNFOvBGDDW62gtnNwmYlQ6jKJkYiSdLZ5Alpdh4
+         xxzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:cc:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=X4uePLRePHS4hFCHmPpfI5ZAvCNjVU1IE4m0Ocmm4jQ=;
+        b=BRhhCgstWk3SVs5YYGitsK9jIFMMxm3NzbaOhUxwHI7pMIu4KFSHjl9/vBTMwSOZc7
+         zuefypCrOOId3wPJbvgz92a7QG5EN9B/cEQEbeGqETTDGE/YLSt+CSHy3S2bcQU5VqJh
+         wQYdoIE92V+EyRINKshUvGliH7QixWHIKDrNo6IRiRBTn9xzWxIqMzLvPtqqS1rO0jvV
+         dydJu09af+N3HTaajr887N+7Wsj+aHZQJj9eqgKJVLL0lUtJpfngEJ38PeDDCbBjODk0
+         8KY8aeDeKPOxQlLDkdfA+E5JnjZ486Y23fhOLjZrSG0FDqngMxkWmBL2SNLg4FKbppnO
+         CZ+A==
+X-Gm-Message-State: APjAAAVLssW15D/GUt46/2c0j7C4HQ/7MAolunvjlq8Xih67mwHnH+JT
+        /fFJ5Lw66zxjgeOWSC0lCZrvwjNTsB4=
+X-Google-Smtp-Source: APXvYqz95c35KUbPSpI1G5JkO7oKQKCJL2Wdc3NZlImF8P1+3lVEgs5EVjlqzOYxjUyN0hBArkUhoQ==
+X-Received: by 2002:a17:90a:1ac8:: with SMTP id p66mr35524738pjp.24.1574043044004;
+        Sun, 17 Nov 2019 18:10:44 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:1009:d42f:7c91:4399:b8b2? ([2001:4898:80e8:7:6421:7c91:4399:b8b2])
+        by smtp.gmail.com with ESMTPSA id 8sm10976987pfc.42.2019.11.17.18.10.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Nov 2019 18:10:43 -0800 (PST)
+To:     bp@alien8.de, james.morse@arm.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+From:   Shiping Ji <shiping.linux@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mchehab@kernel.org, linux-edac@vger.kernel.org, sashal@kernel.org,
+        hangl@microsoft.com, lewan@microsoft.com, ruizhao@microsoft.com,
+        scott.branden@broadcom.com, yuqing.shen@broadcom.com,
+        ray.jui@broadcom.com, shji@microsoft.com, wangglei@gmail.com
+Subject: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
+Message-ID: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
+Date:   Sun, 17 Nov 2019 18:10:43 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <86a78ujwwd.wl-maz@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 17.11.19 um 17:22 schrieb Marc Zyngier:
-> On Sun, 17 Nov 2019 15:40:59 +0000,
-> Andreas Färber <afaerber@suse.de> wrote:
->> Am 17.11.19 um 11:47 schrieb Marc Zyngier:
->>> On Sun, 17 Nov 2019 08:21:04 +0100
->>> Andreas Färber <afaerber@suse.de> wrote:
->>>> +	timer {
->>>> +		compatible = "arm,armv7-timer";
->>>> +		interrupts = <GIC_PPI 13
->>>> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
->>>> +			     <GIC_PPI 14
->>>> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
->>>> +			     <GIC_PPI 11
->>>> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
->>>> +			     <GIC_PPI 10
->>>> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
->>>> +		clock-frequency = <27000000>;
->>>
->>> This is 2019, and yet it feels like 2011. This should be setup in the
->>> bootloader, not in DT...
->>
->> What exactly - the whole node, the GIC CPU mask, the
->> clock-frequency?
-> 
-> The clock frequency. Having to rely on such hacks 8 years down the
-> line makes me feel like we've achieved nothing...
-> </depressed>
+This is the device tree bindings for new EDAC driver dmc520_edac.c.
 
-Unfortunately I can confirm that without clock-frequency property I get:
+Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 
-[    0.000000] arch_timer: frequency not available
-[    0.000000] ------------[ cut here ]------------
-[    0.000000] WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:38
-cev_delta2ns+0x148/0x170
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-5.4.0-rc7-next-20191115+ #213
-[    0.000000] Hardware name: Realtek RTD1195
-[    0.000000] [<c022f304>] (unwind_backtrace) from [<c022c0d0>]
-(show_stack+0x10/0x14)
-[    0.000000] [<c022c0d0>] (show_stack) from [<c09113e4>]
-(dump_stack+0x84/0x98)
-[    0.000000] [<c09113e4>] (dump_stack) from [<c023c928>]
-(__warn+0xbc/0xd8)
-[    0.000000] [<c023c928>] (__warn) from [<c023c9a8>]
-(warn_slowpath_fmt+0x64/0xc4)
-[    0.000000] [<c023c9a8>] (warn_slowpath_fmt) from [<c02ab910>]
-(cev_delta2ns+0x148/0x170)
-[    0.000000] [<c02ab910>] (cev_delta2ns) from [<c02abf60>]
-(clockevents_config.part.0+0x54/0x74)
-[    0.000000] [<c02abf60>] (clockevents_config.part.0) from
-[<c02abfa0>] (clockevents_config_and_register+0x20/0x2c)
-[    0.000000] [<c02abfa0>] (clockevents_config_and_register) from
-[<c0789904>] (arch_timer_starting_cpu+0xcc/0x208)
-[    0.000000] [<c0789904>] (arch_timer_starting_cpu) from [<c023d7dc>]
-(cpuhp_issue_call+0x110/0x130)
-[    0.000000] [<c023d7dc>] (cpuhp_issue_call) from [<c023d984>]
-(__cpuhp_setup_state_cpuslocked+0x10c/0x2b4)
-[    0.000000] [<c023d984>] (__cpuhp_setup_state_cpuslocked) from
-[<c023e180>] (__cpuhp_setup_state+0x98/0x14c)
-[    0.000000] [<c023e180>] (__cpuhp_setup_state) from [<c0e1f224>]
-(arch_timer_of_init+0x2a8/0x34c)
-[    0.000000] [<c0e1f224>] (arch_timer_of_init) from [<c0e1ecb4>]
-(timer_probe+0x74/0xec)
-[    0.000000] [<c0e1ecb4>] (timer_probe) from [<c0e00c74>]
-(start_kernel+0x310/0x488)
-[    0.000000] [<c0e00c74>] (start_kernel) from [<00000000>] (0x0)
-[    0.000000] ---[ end trace c2db367029c1ec1a ]---
-[    0.000000] arch_timer: cp15 timer(s) running at 0.00MHz (virt).
-[    0.000000] Division by zero in kernel.
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
- 5.4.0-rc7-next-20191115+ #213
-[    0.000000] Hardware name: Realtek RTD1195
-[    0.000000] [<c022f304>] (unwind_backtrace) from [<c022c0d0>]
-(show_stack+0x10/0x14)
-[    0.000000] [<c022c0d0>] (show_stack) from [<c09113e4>]
-(dump_stack+0x84/0x98)
-[    0.000000] [<c09113e4>] (dump_stack) from [<c090eb2c>]
-(Ldiv0_64+0x8/0x18)
-[    0.000000] [<c090eb2c>] (Ldiv0_64) from [<c02a43dc>]
-(clocks_calc_max_nsecs+0x24/0x80)
-[    0.000000] [<c02a43dc>] (clocks_calc_max_nsecs) from [<c02a4568>]
-(__clocksource_update_freq_scale+0x130/0x1ec)
-[    0.000000] [<c02a4568>] (__clocksource_update_freq_scale) from
-[<c02a4638>] (__clocksource_register_scale+0x14/0xc0)
-[    0.000000] [<c02a4638>] (__clocksource_register_scale) from
-[<c0e1ef30>] (arch_timer_common_init+0x198/0x1e4)
-[    0.000000] [<c0e1ef30>] (arch_timer_common_init) from [<c0e1ecb4>]
-(timer_probe+0x74/0xec)
-[    0.000000] [<c0e1ecb4>] (timer_probe) from [<c0e00c74>]
-(start_kernel+0x310/0x488)
-[    0.000000] [<c0e00c74>] (start_kernel) from [<00000000>] (0x0)
-[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff
-max_cycles: 0x0, max_idle_ns: 0 ns
-[    0.000000] Division by zero in kernel.
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
- 5.4.0-rc7-next-20191115+ #213
-[    0.000000] Hardware name: Realtek RTD1195
-[    0.000000] [<c022f304>] (unwind_backtrace) from [<c022c0d0>]
-(show_stack+0x10/0x14)
-[    0.000000] [<c022c0d0>] (show_stack) from [<c09113e4>]
-(dump_stack+0x84/0x98)
-[    0.000000] [<c09113e4>] (dump_stack) from [<c090eb2c>]
-(Ldiv0_64+0x8/0x18)
-[    0.000000] [<c090eb2c>] (Ldiv0_64) from [<c02a418c>]
-(clocks_calc_mult_shift+0xec/0x10c)
-[    0.000000] [<c02a418c>] (clocks_calc_mult_shift) from [<c0e0bb74>]
-(sched_clock_register+0x80/0x278)
-[    0.000000] [<c0e0bb74>] (sched_clock_register) from [<c0e1ef68>]
-(arch_timer_common_init+0x1d0/0x1e4)
-[    0.000000] [<c0e1ef68>] (arch_timer_common_init) from [<c0e1ecb4>]
-(timer_probe+0x74/0xec)
-[    0.000000] [<c0e1ecb4>] (timer_probe) from [<c0e00c74>]
-(start_kernel+0x310/0x488)
-[    0.000000] [<c0e00c74>] (start_kernel) from [<00000000>] (0x0)
-[    0.000000] Division by zero in kernel.
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
- 5.4.0-rc7-next-20191115+ #213
-[    0.000000] Hardware name: Realtek RTD1195
-[    0.000000] [<c022f304>] (unwind_backtrace) from [<c022c0d0>]
-(show_stack+0x10/0x14)
-[    0.000000] [<c022c0d0>] (show_stack) from [<c09113e4>]
-(dump_stack+0x84/0x98)
-[    0.000000] [<c09113e4>] (dump_stack) from [<c090eb2c>]
-(Ldiv0_64+0x8/0x18)
-[    0.000000] [<c090eb2c>] (Ldiv0_64) from [<c02a43dc>]
-(clocks_calc_max_nsecs+0x24/0x80)
-[    0.000000] [<c02a43dc>] (clocks_calc_max_nsecs) from [<c0e0bbb0>]
-(sched_clock_register+0xbc/0x278)
-[    0.000000] [<c0e0bbb0>] (sched_clock_register) from [<c0e1ef68>]
-(arch_timer_common_init+0x1d0/0x1e4)
-[    0.000000] [<c0e1ef68>] (arch_timer_common_init) from [<c0e1ecb4>]
-(timer_probe+0x74/0xec)
-[    0.000000] [<c0e1ecb4>] (timer_probe) from [<c0e00c74>]
-(start_kernel+0x310/0x488)
-[    0.000000] [<c0e00c74>] (start_kernel) from [<00000000>] (0x0)
-[    0.000000] sched_clock: 56 bits at 0 Hz, resolution 0ns, wraps every 0ns
-[    0.000000] Failed to initialize '/timer': -6
-[    0.000000] timer_probe: no matching timers found
+---
+     Changes in v7:
+         - Added arm prefix to the interrupt-config property
 
-Regards,
-Andreas
+---
+ .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
 
+diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+new file mode 100644
+index 000000000000..476cf8b76f2a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+@@ -0,0 +1,26 @@
++* ARM DMC-520 EDAC node
++
++Required properties:
++- compatible  : "brcm,dmc-520", "arm,dmc-520".
++- reg   : Address range of the DMC-520 registers.
++- interrupts  : DMC-520 interrupt numbers. The example below specifies
++     two interrupt lines for dram_ecc_errc_int and
++     dram_ecc_errd_int.
++- arm,interrupt-config : This is an array of interrupt masks. For each of the
++     above interrupt line, add one interrupt mask element to
++     it. That is, there is a 1:1 mapping from each interrupt
++     line to an interrupt mask. An interrupt mask can represent
++     multiple interrupts being enabled. Refer to interrupt_control
++     register in DMC-520 TRM for interrupt mapping. In the example
++     below, the interrupt configuration enables dram_ecc_errc_int
++     and dram_ecc_errd_int. And each interrupt is connected to
++     a separate interrupt line.
++
++Example:
++
++dmc0: dmc@200000 {
++ compatible = "brcm,dmc-520", "arm,dmc-520";
++ reg = <0x200000 0x80000>;
++ interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
++ arm,interrupt-config = <0x4>, <0x8>;
++};
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.17.1
+
