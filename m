@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA55C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A576C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CF920855
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15AC62084D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 11:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfKRL0Y (ORCPT
+        id S1726536AbfKRLXb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:26:24 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:45570 "EHLO
+        Mon, 18 Nov 2019 06:23:31 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:44920 "EHLO
         wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726967AbfKRLXw (ORCPT
+        by vger.kernel.org with ESMTP id S1726460AbfKRLXb (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:23:52 -0500
+        Mon, 18 Nov 2019 06:23:31 -0500
 Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
         by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iWf8G-0008Oa-8i; Mon, 18 Nov 2019 12:23:48 +0100
+        id 1iWf7r-0008Ep-NC; Mon, 18 Nov 2019 12:23:23 +0100
 X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
         linuxbbg.five-lan.de
 Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
         (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAIBNleY023886
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAIBNIbh023875
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 18 Nov 2019 12:23:47 +0100
-Subject: [PATCH v3 2/2] arm64: dts: rockchip: Add SDR104 mode to SD-card I/F
- on rk3399-roc-pc
+        Mon, 18 Nov 2019 12:23:19 +0100
+Subject: [PATCH v3 1/2] arm64: dts: rockchip: Use correct pin for lcd-reset
+ pinctrl on rk3399-roc-pc
 To:     Heiko Stuebner <heiko@sntech.de>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -77,8 +77,8 @@ Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
  Dm43HZwTBXPwasFHnGkF10N7aXf3r8WYpctbZYlcT5EV9m9i4jfWoGzHS5V4DXmv6OBmdLYk
  eD/Xv4SsK2JTO4nkQYw8
 Organization: five technologies GmbH
-Message-ID: <1b9b8314-8778-2d48-6f7a-3502c2146c42@fivetechno.de>
-Date:   Mon, 18 Nov 2019 12:23:47 +0100
+Message-ID: <cd5fd3a8-b0eb-9dc1-c473-9355762cdaa5@fivetechno.de>
+Date:   Mon, 18 Nov 2019 12:23:18 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
@@ -86,76 +86,35 @@ In-Reply-To: <1918981.kTmXGv9Lqf@phil>
 Content-Type: text/plain; charset=utf-8
 Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1574076232;55ebdb4b;
-X-HE-SMSGID: 1iWf8G-0008Oa-8i
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1574076210;46827bfe;
+X-HE-SMSGID: 1iWf7r-0008Ep-NC
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add SDR104 capability and regulators to SD card node.
+Fix typo according to schematics.
+The original pin is needed to enable vcc3v0_sd in second patch of this series.
 
 Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
 ---
-v3: Split patch in two, remove non related changes
-v2: Remove always-on from vcc3v0_sd
+v3: Split patch in two, generate this part 1/2
 ---
- .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 23 ++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index 6d485712f47c..014a9869d61a 100644
+index 44617c8e0773..6d485712f47c 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -135,6 +135,19 @@
- 		vin-supply = <&vcc_1v8>;
- 	};
+@@ -576,7 +576,7 @@
  
-+	vcc3v0_sd: vcc3v0-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc3v0_sd_en>;
-+		regulator-name = "vcc3v0_sd";
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		vin-supply = <&vcc3v3_sys>;
-+	};
-+
- 	vcc3v3_sys: vcc3v3-sys {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3_sys";
-@@ -610,6 +623,12 @@
+ 	lcd-panel {
+ 		lcd_panel_reset: lcd-panel-reset {
+-			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <4 RK_PD5 RK_FUNC_GPIO &pcfg_pull_up>;
  		};
  	};
- 
-+	sdmmc {
-+		vcc3v0_sd_en: vcc3v0-sd-en {
-+			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-@@ -662,13 +681,15 @@
- 
- &sdmmc {
- 	bus-width = <4>;
--	cap-mmc-highspeed;
- 	cap-sd-highspeed;
- 	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	max-frequency = <150000000>;
-+	sd-uhs-sdr104;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
-+	vmmc-supply = <&vcc3v0_sd>;
-+	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
  
 -- 
 2.20.1
