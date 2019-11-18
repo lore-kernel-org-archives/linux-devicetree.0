@@ -2,254 +2,139 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34149C43141
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C257CC43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0CF22318
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otNs3Irl"
+	by mail.kernel.org (Postfix) with ESMTP id 9834D22312
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574115227;
+	bh=23CYkqb1sCbHRS367f6Ef2QNQGacCJPjPowbX7/jTW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b9HN/UM0i/edX9ND5eF5n0ZZVO5PRjuJaFVZf2WNyvrAbXrjbuKmuurYZEmlyug38
+	 o/lCdesJapowIS4+1KYnbAMrueAovGWUOrUURivjqe32u/pfSUDVInztIOcytb5JZo
+	 w5lXe9Ojnob70IxBAJ7mBq5R9RuZpYkoEfvQfJnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfKRWHm (ORCPT
+        id S1726875AbfKRWNq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:07:42 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34815 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKRWHm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:07:42 -0500
-Received: by mail-il1-f196.google.com with SMTP id p6so17578586ilp.1;
-        Mon, 18 Nov 2019 14:07:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O2vW9EdXLQKAp86+GJ5aL6mkzdl6pw5VOu+wcc7bk+g=;
-        b=otNs3IrlL1hNW2ttXl8Q3D4b01vgo3ImArlwnLHgHz6zbUwftwotfVtHtNtlyChyOu
-         R/0tcVkNQav/qO4tnqHZV8/Dvy5ULMY4/OOO713YxKfasV91Y2LFopT7O9t1Knx2tcD4
-         a2InYN/8GUBmM28uI3Mr3AwuZlckREuK+/p5BzTn2d0XLyLwrfVWhuLBFShbdbfuj0fT
-         Gde1XeQ1jLOITJ2vwimt2guhhNr/ektAxL2RiShuL41nL6jCj9k3jmpOWIZTOJsIufXb
-         Cm2mAtkcEM0qad61W0d61TeK/d4EOjyq78UE764/a/MEveABDA0qrAMytqeExmWtm9xH
-         YHxw==
+        Mon, 18 Nov 2019 17:13:46 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36064 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRWNn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:13:43 -0500
+Received: by mail-ot1-f67.google.com with SMTP id f10so16017133oto.3;
+        Mon, 18 Nov 2019 14:13:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O2vW9EdXLQKAp86+GJ5aL6mkzdl6pw5VOu+wcc7bk+g=;
-        b=SDLgNsdan3adz5dXL0wot0lG1O39e1R2NbW7RgYaRhrfzPJb8SiPCx2Itzs+tXxk3O
-         OY1lubu0ZtLInB7lRB0d5j4DbwnzD6OSV4PMmdVpgF47kqDGL8OWFhYYK1wfXOYFNQ5I
-         CT2RmqPgf6Tz8LZjDoCh2QmwNaXwkdodZcrED3+WKKKYQN467mgIdfVt2EahOUsZv8UB
-         cjOaJN6FNpQELP2X5Nu6qJns3cNOenrHZvt9imdDQ4HBvEMjE6hlm13tGdCPpieJH/eO
-         dcnxAH76HGfs3f7wpdXr2jFT3Mvdhuo6rLrZGCKVDym14HJzkaSmtTSH8bPXAnP35boT
-         P0Og==
-X-Gm-Message-State: APjAAAV3hQRwXXy8G7iQgLBEv4T+PCvXYPObWRJ5dc0D8Gy2z4f7IRZa
-        AljrlwWqz18tE+T0Qjdj2aQdhxHBOA41rLAcU7o=
-X-Google-Smtp-Source: APXvYqwCZhmjWDwb1dbWvR3+vgKx3DK9s7HemQxsysKao8W/a9fGZyeGR1iVwx88GGU89CaxmPcdBXLEUm+X1K/+jGc=
-X-Received: by 2002:a92:1d51:: with SMTP id d78mr19083922ild.166.1574114861166;
- Mon, 18 Nov 2019 14:07:41 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Uz71LFY9ZiC02xsaXtidPtTM6eY67MbXjszr1DEYBdw=;
+        b=pFgn+8AsKjAWtF37c920aeglAtloUtSU2vrVHeVHExMAID3eNXKrOb/kRriW8BaDn2
+         JrL4Mv3A7f06YMK16G7EuTJi+xZokHwjCWLjBTi98zQLQilpwzk8YXeehuBqOLG94P//
+         hqM/rRC0EtIRkgQCJymQN+NEdkSZTnorcj+AdW/4yq1gjp23Y8pd/aRhG1Sh/S/0+kFI
+         4/WekN4Q0ByTY1Nzz0UFk0VMbgZa1Sk+8bzHwEF6tDEsQizjrvUqEA0c4a0Q+0taXXsD
+         1QEERtYmoZ+RvHBzRGUASkklWkHS51joWCRaXMVrIzXODhHhcx0wUjGeSilLQPD58yq+
+         Q93Q==
+X-Gm-Message-State: APjAAAVeU6VkW1xOYTtIHrn/SmXF1aIawi4+k7xQZxoRemrzL+RWEqmE
+        qtTbwrphqzQnG4x3c52v9g==
+X-Google-Smtp-Source: APXvYqw6QpdZzQirquW55aln+tRJNgakjQaUccKPAVTwfpO/53lbAe+zERpVYHbBdX6++qUYf6kIKg==
+X-Received: by 2002:a9d:3b26:: with SMTP id z35mr1175001otb.355.1574115222697;
+        Mon, 18 Nov 2019 14:13:42 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 65sm6519025oie.50.2019.11.18.14.13.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 14:13:41 -0800 (PST)
+Date:   Mon, 18 Nov 2019 16:13:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        linux-mtd@lists.infradead.org, Mark Brown <broonie@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
+Subject: Re: [PATCH v4 3/4] dt-bindings: mtd: Describe mtd-concat devices
+Message-ID: <20191118221341.GA30937@bogus>
+References: <20191113171505.26128-1-miquel.raynal@bootlin.com>
+ <20191113171505.26128-4-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-References: <20191118214250.14002-1-sibis@codeaurora.org> <0101016e807934fa-4da223fb-1854-4a1e-a8ee-e088129c4812-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016e807934fa-4da223fb-1854-4a1e-a8ee-e088129c4812-000000@us-west-2.amazonses.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 18 Nov 2019 15:07:30 -0700
-Message-ID: <CAOCk7Nr=Up1LP+-XB7tnoM=XwK+YysDMq8EqyhCLx=WA+eW9PA@mail.gmail.com>
-Subject: Re: [PATCH 14/16] arm64: dts: qcom: msm8998: Add ADSP, MPSS and SLPI nodes
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mark Rutland <mark.rutland@arm.com>, p.zabel@pengutronix.de,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113171505.26128-4-miquel.raynal@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 2:45 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> This patch adds ADSP, MPSS and SLPI nodes for MSM8998 SoCs.
->
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi |   8 ++
->  arch/arm64/boot/dts/qcom/msm8998.dtsi     | 122 ++++++++++++++++++++++
->  2 files changed, 130 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> index 5f101a20a20a2..29e0c2e988e4b 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> @@ -23,6 +23,14 @@
->         };
->  };
->
-> +&adsp_pas {
-> +       status = "okay";
-> +};
-> +
-> +&slpi_pas {
+On Wed, Nov 13, 2019 at 06:15:04PM +0100, Miquel Raynal wrote:
+> From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+> 
+> The main use case to concatenate MTD devices is probably SPI-NOR
+> flashes where the number of address bits is limited to 24, which can
+> access a range of 16MiB. Board manufacturers might want to double the
+> SPI storage size by adding a second flash asserted thanks to a second
+> chip selects which enhances the addressing capabilities to 25 bits,
+> 32MiB. Having two devices for twice the size is great but without more
+> glue, we cannot define partition boundaries spread across the two
+> devices. This is the gap mtd-concat intends to address.
+> 
+> There are two options to describe concatenated devices:
+> 1/ One flash chip is described in the DT with two CS;
+> 2/ Two flash chips are described in the DT with one CS each, a virtual
+> device is also created to describe the concatenation.
+> 
+> Solution 1/ presents at least 3 issues:
+> * The hardware description is abused;
+> * The concatenation only works for SPI devices (while it could be
+>   helpful for any MTD);
+> * It would require a lot of rework in the SPI core as most of the
+>   logic assumes there is and there always will be only one CS per
+>   chip.
 
-"b" comes before "s", no?
+This seems ok if all the devices are identical.
 
-> +       status = "okay";
-> +};
-> +
->  &blsp1_uart3 {
->         status = "okay";
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index 707673e3cf28a..dd1dc35e87b63 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -337,6 +337,73 @@
->                 };
->         };
->
-> +       adsp_pas: remoteproc-adsp {
-> +               compatible = "qcom,msm8998-adsp-pas";
-> +
-> +               interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
-> +                                     <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> +                                     <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> +                                     <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> +                                     <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-> +               interrupt-names = "wdog", "fatal", "ready",
-> +                                 "handover", "stop-ack";
-> +
-> +               clocks = <&xo>;
-> +               clock-names = "xo";
-> +
-> +               memory-region = <&adsp_mem>;
-> +
-> +               qcom,smem-states = <&adsp_smp2p_out 0>;
-> +               qcom,smem-state-names = "stop";
-> +
-> +               power-domains = <&rpmpd MSM8998_VDDCX>;
-> +               power-domain-names = "cx";
-> +
-> +               status = "disabled";
-> +
-> +               glink-edge {
-> +                       interrupts = <GIC_SPI 157 IRQ_TYPE_EDGE_RISING>;
-> +                       label = "lpass";
-> +                       qcom,remote-pid = <2>;
-> +                       mboxes = <&apcs_glb 9>;
-> +               };
-> +       };
-> +
-> +       slpi_pas: remoteproc-slpi {
-> +               compatible = "qcom,msm8998-slpi-pas";
-> +
-> +               interrupts-extended = <&intc GIC_SPI 390 IRQ_TYPE_EDGE_RISING>,
-> +                                     <&slpi_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> +                                     <&slpi_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> +                                     <&slpi_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> +                                     <&slpi_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-> +               interrupt-names = "wdog", "fatal", "ready",
-> +                                 "handover", "stop-ack";
-> +
-> +               px-supply = <&vreg_lvs2a_1p8>;
-> +
-> +               clocks = <&xo>,
-> +                        <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
-> +               clock-names = "xo", "aggre2";
-> +
-> +               memory-region = <&slpi_mem>;
-> +
-> +               qcom,smem-states = <&slpi_smp2p_out 0>;
-> +               qcom,smem-state-names = "stop";
-> +
-> +               power-domains = <&rpmpd MSM8998_SSCCX>;
-> +               power-domain-names = "ssc_cx";
-> +
-> +               status = "disabled";
-> +
-> +               glink-edge {
-> +                       interrupts = <GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-> +                       label = "dsps";
-> +                       qcom,remote-pid = <3>;
-> +                       mboxes = <&apcs_glb 27>;
-> +               };
-> +       };
-> +
->         tcsr_mutex: hwlock {
->                 compatible = "qcom,tcsr-mutex";
->                 syscon = <&tcsr_mutex_regs 0 0x1000>;
-> @@ -1048,6 +1115,61 @@
->                         #interrupt-cells = <0x2>;
->                 };
->
-> +               mss_pil: remoteproc@4080000 {
-> +                       compatible = "qcom,msm8998-mss-pil";
-> +                       reg = <0x04080000 0x100>, <0x04180000 0x20>;
-> +                       reg-names = "qdsp6", "rmb";
-> +
-> +                       interrupts-extended =
-> +                               <&intc GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
-> +                               <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> +                               <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> +                               <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> +                               <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-> +                               <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-> +                       interrupt-names = "wdog", "fatal", "ready",
-> +                                         "handover", "stop-ack",
-> +                                         "shutdown-ack";
-> +
-> +                       clocks = <&xo>,
-> +                                <&gcc GCC_MSS_CFG_AHB_CLK>,
-> +                                <&gcc GCC_BIMC_MSS_Q6_AXI_CLK>,
-> +                                <&gcc GCC_BOOT_ROM_AHB_CLK>,
-> +                                <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
-> +                                <&gcc GCC_MSS_SNOC_AXI_CLK>,
-> +                                <&gcc GCC_MSS_MNOC_BIMC_AXI_CLK>,
-> +                                <&rpmcc RPM_SMD_QDSS_CLK>;
-> +                       clock-names = "xo", "iface", "bus", "mem", "gpll0_mss",
-> +                                     "snoc_axi", "mnoc_axi", "qdss";
-> +
-> +                       qcom,smem-states = <&modem_smp2p_out 0>;
-> +                       qcom,smem-state-names = "stop";
-> +
-> +                       resets = <&gcc GCC_MSS_RESTART>;
-> +                       reset-names = "mss_restart";
-> +
-> +                       qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-> +
-> +                       power-domains = <&rpmpd MSM8998_VDDCX>,
-> +                                       <&rpmpd MSM8998_VDDMX>;
-> +                       power-domain-names = "cx", "mx";
-> +
-> +                       mba {
-> +                               memory-region = <&mba_mem>;
-> +                       };
-> +
-> +                       mpss {
-> +                               memory-region = <&mpss_mem>;
-> +                       };
-> +
-> +                       glink-edge {
-> +                               interrupts = <GIC_SPI 452 IRQ_TYPE_EDGE_RISING>;
-> +                               label = "modem";
-> +                               qcom,remote-pid = <1>;
-> +                               mboxes = <&apcs_glb 15>;
-> +                       };
-> +               };
-> +
->                 stm: stm@6002000 {
->                         compatible = "arm,coresight-stm", "arm,primecell";
->                         reg = <0x06002000 0x1000>,
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+> Solution 2/ also has caveats:
+> * The virtual device has no hardware reality;
+> * Possible optimizations at the hardware level will be hard to enable
+>   efficiently (ie. a common direct mapping abstracted by a SPI
+>   memories oriented controller).
+
+Something like this may be necessary if data is interleaved rather than 
+concatinated.
+
+
+Solution 3
+Describe each device and partition separately and add link(s) from one 
+partition to the next 
+
+flash0 {
+  partitions {
+    compatible = "fixed-partitions";
+    concat-partition = <&flash1_partitions>;
+    ...
+  };
+};
+
+flash1 {
+  flash1_partition: partitions {
+    compatible = "fixed-partitions";
+    ...
+  };
+};
+
+Maybe a link back to the previous paritions too or a boolean to mark as 
+a continuation.
+
+No idea how well this works or not for the kernel, but that really 
+shouldn't matter for the binding design.
+
+Rob
