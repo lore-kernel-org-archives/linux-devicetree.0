@@ -2,139 +2,178 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33916C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FDEC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0804020862
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:04:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSF53An0"
+	by mail.kernel.org (Postfix) with ESMTP id BFA3B2071B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKRPEI (ORCPT
+        id S1726748AbfKRPMO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:04:08 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36543 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfKRPEI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 10:04:08 -0500
-Received: by mail-io1-f66.google.com with SMTP id s3so19115360ioe.3;
-        Mon, 18 Nov 2019 07:04:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+oZ6XBVVe7I1cX+s2sXIa4IM62fmxh9531yoCFXPTGM=;
-        b=lSF53An03LtCGNOi36GN9iCZ2FyJft6Lik0Rk7cyOReJNpl9VO5hN52HU9NTwc+LdP
-         dESjXptW4UJYEC/AuVVPapfonwMb3ZYrfdJZ1mvWq46f8ilQPc7NPApBJkPxhXTetZUS
-         c0/W50PPQfFqvWjcbYy1rtgjtZwWo8yeC5dp9oXmIA8T8KlVybAbIYNtnMT75Syr5i1B
-         RJiy6UXyhvXH8AoOue873uvKsH1TqguUtNpNcHJFsx5ePlpWuGexKOrMP2dRWZI9vuUX
-         VYIt6+1bu6kIH0yxCfXX/cFwEWriUvp0pQcxTHx4xUy4BJG+TMVTxL8Rbwg6gCcXtUtn
-         TAIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+oZ6XBVVe7I1cX+s2sXIa4IM62fmxh9531yoCFXPTGM=;
-        b=r5jezo/KG79KG+5BBgM2IT70Kh4qHAcTwiMciUEidn0zdl/GQH0RNddcbQxomtI/Uf
-         p9xHY2k6v3b1hPbz8Ivlkv3wojZd58Lm/4mz+O+aLSPD/Q88O8xLRpP40fIhS+rLvNOg
-         yg8QudjeB0pXWbbFUGQHklU7nKM1hRhakxCXiKTMrd0DC4GiKJBhshzrdIJaR/S0akHB
-         qqGhb06Ec1lsgWOxiypYeFHwQgX1x1wWXEqtFYqTM9oWBDDrqDvDqIRct3wWtMpkM8Ub
-         XlMm60gkRm2W6MMz2kNUCa9BgB3Vv7al9Hn55mfYm0XYoDaGoUaNcb4KlUkg8rElMr96
-         AP3Q==
-X-Gm-Message-State: APjAAAXZoSEIy0HbLjy0syHTM1fhYQ3vcH+UCbWkMDQ9czI+ZKqmIQhx
-        i2gQWC9qUdJjt1MWuDEW4kkrHXApOrNQNtiD7oJeTw==
-X-Google-Smtp-Source: APXvYqyFD76RdMxNtH9QSsm4I2faOgXkxZzcI2NcZCJGSGNQ/Z/74ydbBjpOOw5pDA4LFIo37UsslQXGhKPxptOIV78=
-X-Received: by 2002:a5d:8195:: with SMTP id u21mr13641994ion.178.1574089447316;
- Mon, 18 Nov 2019 07:04:07 -0800 (PST)
+        Mon, 18 Nov 2019 10:12:14 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32771 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfKRPMO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 10:12:14 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1iWihD-0008FH-TD; Mon, 18 Nov 2019 16:12:07 +0100
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>, kernel@pengutronix.de,
+        patchwork-lst@pengutronix.de
+Subject: [PATCH] ASoC: tlv320aic31xx: configure output common-mode voltage
+Date:   Mon, 18 Nov 2019 16:12:06 +0100
+Message-Id: <20191118151207.28576-1-l.stach@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191116064415.159899-1-bjorn.andersson@linaro.org>
- <CAOCk7Nov_HvZe1Z6COd2z=VUf=mVbvqS4wjqU4Ee=F1qR_KKww@mail.gmail.com> <20191118024145.GC25371@yoga>
-In-Reply-To: <20191118024145.GC25371@yoga>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 18 Nov 2019 08:03:56 -0700
-Message-ID: <CAOCk7Np=SfjThR3mTJDsHMAKsisemYRUzKr6BawNCEy8jPPkdQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 7:41 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Sat 16 Nov 14:24 PST 2019, Jeffrey Hugo wrote:
->
-> > On Fri, Nov 15, 2019 at 11:44 PM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > The msm_serial driver uses a simple counter to determine which port to
-> > > use when no alias is defined, but there's no logic to prevent this from
-> >
-> > Which port to use for what, the default console?
-> >
->
-> The driver defines three (3) struct uart_ports (wrapped in struct
-> msm_ports), see msm_uart_port[] around line 1538 in msm_serial.c
->
-> This means that you can have a whooping 3 instances of msm_serial in the
-> system and per the logic found in msm_serial_probe() the allocation
-> follows the serial%d aliases defined and for entries without an alias a
-> simple counter, starting at 0 is used.
+The tlv320aic31xx devices allow to adjust the output common-mode voltage
+for best analog performance. The datasheet states that the common mode
+voltage should be set to be <= AVDD/2.
 
-Ah.  Clearly no one needs more than 64k of memory, err 3 uart ports  :)
+This changes allows to configure the output common-mode voltage via a DT
+property. If the property is absent the voltage is automatically chosen
+as the highest voltage below/equal to AVDD/2.
 
->
-> > > not colliding with what's defined by the aliases. As a result either
-> > > none or all of the active msm_serial instances must be listed as
-> > > aliases.
-> > >
-> > > Define blsp1_uart3 as "serial1" to mitigate this problem.
-> > >
-> > > Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >
-> > That driver behavior seems like a strange thing to be doing.
-> >
-> > If you clarify the question above, -
-> > Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> >
->
-> Thanks, I'll respin the message to properly document this behavior.
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ .../bindings/sound/tlv320aic31xx.txt          |  5 +++
+ sound/soc/codecs/tlv320aic31xx.c              | 45 +++++++++++++++++++
+ sound/soc/codecs/tlv320aic31xx.h              |  8 ++++
+ 3 files changed, 58 insertions(+)
 
-Sounds good.
+diff --git a/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt b/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
+index 5b3c33bb99e5..e372303697dc 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
++++ b/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
+@@ -29,6 +29,11 @@ Optional properties:
+         3 or MICBIAS_AVDD - MICBIAS output is connected to AVDD
+ 	If this node is not mentioned or if the value is unknown, then
+ 	micbias	is set to 2.0V.
++- ai31xx-ocmv - output common-mode voltage setting
++        0 - 1.35V,
++        1 - 1.5V,
++        2 - 1.65V,
++        3 - 1.8V
+ 
+ Deprecated properties:
+ 
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index df627a08def9..f6f19fdc72f5 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -171,6 +171,7 @@ struct aic31xx_priv {
+ 	int rate_div_line;
+ 	bool master_dapm_route_applied;
+ 	int irq;
++	u8 ocmv; /* output common-mode voltage */
+ };
+ 
+ struct aic31xx_rate_divs {
+@@ -1312,6 +1313,11 @@ static int aic31xx_codec_probe(struct snd_soc_component *component)
+ 	if (ret)
+ 		return ret;
+ 
++	/* set output common-mode voltage */
++	snd_soc_component_update_bits(component, AIC31XX_HPDRIVER,
++				      AIC31XX_HPD_OCMV_MASK,
++				      aic31xx->ocmv << AIC31XX_HPD_OCMV_SHIFT);
++
+ 	return 0;
+ }
+ 
+@@ -1501,6 +1507,43 @@ static irqreturn_t aic31xx_irq(int irq, void *data)
+ 		return IRQ_NONE;
+ }
+ 
++static void aic31xx_configure_ocmv(struct aic31xx_priv *priv)
++{
++	struct device *dev = priv->dev;
++	int dvdd, avdd;
++	u32 value;
++
++	if (dev->fwnode &&
++	    fwnode_property_read_u32(dev->fwnode, "ai31xx-ocmv", &value)) {
++		/* OCMV setting is forced by DT */
++		if (value <= 3) {
++			priv->ocmv = value;
++			return;
++		}
++	}
++
++	avdd = regulator_get_voltage(priv->supplies[3].consumer);
++	dvdd = regulator_get_voltage(priv->supplies[5].consumer);
++
++	if (avdd > 3600000 || dvdd > 1950000) {
++		dev_warn(dev,
++			 "Too high supply voltage(s) AVDD: %d, DVDD: %d\n",
++			 avdd, dvdd);
++	} else if (avdd == 3600000 && dvdd == 1950000) {
++		priv->ocmv = AIC31XX_HPD_OCMV_1_8V;
++	} else if (avdd >= 3300000 && dvdd >= 1800000) {
++		priv->ocmv = AIC31XX_HPD_OCMV_1_65V;
++	} else if (avdd >= 3000000 && dvdd >= 1650000) {
++		priv->ocmv = AIC31XX_HPD_OCMV_1_5V;
++	} else if (avdd >= 2700000 && dvdd >= 1525000) {
++		priv->ocmv = AIC31XX_HPD_OCMV_1_35V;
++	} else {
++		dev_warn(dev,
++			 "Invalid supply voltage(s) AVDD: %d, DVDD: %d\n",
++			 avdd, dvdd);
++	}
++}
++
+ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 			     const struct i2c_device_id *id)
+ {
+@@ -1570,6 +1613,8 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 		return ret;
+ 	}
+ 
++	aic31xx_configure_ocmv(aic31xx);
++
+ 	if (aic31xx->irq > 0) {
+ 		regmap_update_bits(aic31xx->regmap, AIC31XX_GPIO1,
+ 				   AIC31XX_GPIO1_FUNC_MASK,
+diff --git a/sound/soc/codecs/tlv320aic31xx.h b/sound/soc/codecs/tlv320aic31xx.h
+index cb024955c978..83a8c7604cc3 100644
+--- a/sound/soc/codecs/tlv320aic31xx.h
++++ b/sound/soc/codecs/tlv320aic31xx.h
+@@ -232,6 +232,14 @@ struct aic31xx_pdata {
+ #define AIC31XX_HSD_HP			0x01
+ #define AIC31XX_HSD_HS			0x03
+ 
++/* AIC31XX_HPDRIVER */
++#define AIC31XX_HPD_OCMV_MASK		GENMASK(4, 3)
++#define AIC31XX_HPD_OCMV_SHIFT		3
++#define AIC31XX_HPD_OCMV_1_35V		0x0
++#define AIC31XX_HPD_OCMV_1_5V		0x1
++#define AIC31XX_HPD_OCMV_1_65V		0x2
++#define AIC31XX_HPD_OCMV_1_8V		0x3
++
+ /* AIC31XX_MICBIAS */
+ #define AIC31XX_MICBIAS_MASK		GENMASK(1, 0)
+ #define AIC31XX_MICBIAS_SHIFT		0
+-- 
+2.20.1
 
->
-> Regards,
-> Bjorn
->
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > > index 5f101a20a20a..e08fcb426bbf 100644
-> > > --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > > @@ -9,6 +9,7 @@
-> > >  / {
-> > >         aliases {
-> > >                 serial0 = &blsp2_uart1;
-> > > +               serial1 = &blsp1_uart3;
-> > >         };
-> > >
-> > >         chosen {
-> > > --
-> > > 2.23.0
-> > >
