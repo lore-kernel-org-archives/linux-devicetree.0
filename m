@@ -2,83 +2,127 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC81BC432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674FEC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48082075E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4198D20726
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfKRNfZ (ORCPT
+        id S1726761AbfKRNim (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:35:25 -0500
-Received: from smtp2.axis.com ([195.60.68.18]:54400 "EHLO smtp2.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbfKRNfZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:35:25 -0500
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Nov 2019 08:35:23 EST
-IronPort-SDR: bs9+P0Lias7qQgUZjcfe6XsQmJVbm3KCbjy1lVFY1UmOks7hXisFSoWmeXtHRep6TdDl3MQvmP
- uFZ+N+rPQrGnFfVzu/Xe7X1kQjvOpMUeiyy/TmSF7tLZSBByavFQKlZzDC1bzypvAraIj5SIWn
- Adj94MkmoFBeuIZUgq9HYzi15LrtckTobI6LD+xip87mvZSxn5UXeywbBBt02Ad8ANXSioOkdo
- LQ9sVcoie3ylGdyshqgc46bOujZ+s2Q3QPI3XPsD7XqwqY1LqZtPGAnYigG6HQxXSm0hmaMFuu
- bqQ=
-X-IronPort-AV: E=Sophos;i="5.68,320,1569276000"; 
-   d="scan'208";a="2543781"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     pantelis.antoniou@konsulko.com, frowand.list@gmail.com,
+        Mon, 18 Nov 2019 08:38:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55661 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbfKRNim (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 08:38:42 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iWhEe-0007H7-BQ; Mon, 18 Nov 2019 14:38:32 +0100
+Message-ID: <44e94274debadbd778ac529497b77ec1bc52b097.camel@pengutronix.de>
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vincent Whitchurch <rabinv@axis.com>
-Subject: [PATCH 1/2] of: overlay: fix properties memory leak
-Date:   Mon, 18 Nov 2019 14:28:08 +0100
-Message-Id: <20191118132809.30127-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.20.0
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, broonie@kernel.org, t-kristo@ti.com,
+        mripard@kernel.org, devicetree@vger.kernel.org
+Date:   Mon, 18 Nov 2019 14:38:31 +0100
+In-Reply-To: <3c384b40-f353-eaec-b1d6-ba74f5338ce1@metux.net>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+         <3c384b40-f353-eaec-b1d6-ba74f5338ce1@metux.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-No changeset entries are created for #address-cells and #size-cells
-properties, but the duplicated properies are never freed.  This results
-in a memory leak which is detected by kmemleak:
+Hi,
 
- unreferenced object 0x85887180 (size 64):
-   backtrace:
-     kmem_cache_alloc_trace+0x1fb/0x1fc
-     __of_prop_dup+0x25/0x7c
-     add_changeset_property+0x17f/0x370
-     build_changeset_next_level+0x29/0x20c
-     of_overlay_fdt_apply+0x32b/0x6b4
-     ...
+On Mon, 2019-11-18 at 13:15 +0100, Enrico Weigelt, metux IT consult wrote:
+> On 30.10.19 13:04, Peter Ujfalusi wrote:
+[...]
+> Let's sit back and rethink what the driver really wants to tell in those
+> cases. For the enable lines we have:
+> 
+> a) make sure the device is enabled/powered
+> b) device does not need to be enabled/powered anymore
+> c) device must be powercycled
+> 
+> You see, it's actually tristate, which gets relevant if multiple devices
+> on one line.
 
-Fixes: 6f75118800acf77f8 ("of: overlay: validate overlay properties #address-cells and #size-cells")
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
- drivers/of/overlay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Is this just a GPIO-controlled power domain?
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index c423e94baf0f..5f8869e2a8b3 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -360,7 +360,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
- 		pr_err("WARNING: memory leak will occur if overlay removed, property: %pOF/%s\n",
- 		       target->np, new_prop->name);
- 
--	if (ret) {
-+	if (ret || !check_for_non_overlay_node) {
- 		kfree(new_prop->name);
- 		kfree(new_prop->value);
- 		kfree(new_prop);
--- 
-2.20.0
+> Now add reset lines:
+> 
+> a) force device into reset state
+> b) force device out of reset state
+> c) allow device going into reset state (but no need to force)
+> d) allow device coming out of reset state (but no need to force)
+> 
+> It even gets more weird if a device can be reset or powercycled
+> externally.
+
+And some drivers just require "b), but device must have been in reset
+state at any point in the past".
+
+> hmm, not entirely trivial ...
+> 
+> > For example a device needs to be configured after it is enabled, but some other
+> > driver would reset it while handling the same GPIO -> the device is not
+> > operational anymmore as it lost it's configuration.
+> 
+> Yeah, at least we need some signalling to the driver, so it can do the
+> necessary steps. From the driver's PoV, it's an "foreign reset".
+
+This could become complicated fast. It's trivial to add a notification
+mechanism and to let notified drivers veto the foreign reset. But what
+if driver (a) wants to reset its hardware and driver (b) could save its
+state and handle being reset, but only after some currently active
+transfer is finished. Now whether the reset succeeds would depend on how
+long driver (b) expects its transfer to last and on how long driver (a)
+would be willing to wait for the reset?
+
+[...]
+> > and all existing drivers must
+> > be converted to use the reset framework (and adding a linux only warpper on top
+> > of reset GPIOs).
+> 
+> Maybe a bit time consuming, but IMHO not difficult. We could add generic
+> helpers for creating a reset driver on a gpio. So the drivers wouldn't
+> even care about gpio itself anymore, but let the reset subsystem so it
+> all (eg. look for DT node and request corresponding gpio, etc).
+> 
+> IMHO, that's something we should do nevertheless, even if it's just for
+> cleaner code.
+
+We can't change the current DT bindings though. One thing we could do is
+teach the reset controller framework to handle reset-gpios properties
+itself. Still, that wouldn't help with the enable and powerdown GPIOs.
+
+> After that we could put any kind of funny logic behind the scenes (eg.
+> one could connect the reset pin to a spare uart instead of gpio, etc),
+> w/o ever touching the individual drivers.
+
+I'm not convinced at all that this is a good thing to do behind the
+scenes. For those cases I'd prefer adding a "resets" property to the
+device bindings and explicitly describing a "uart-reset-controller" in
+the device tree, see for example the "pwm-clock".
+
+regards
+Philipp
 
