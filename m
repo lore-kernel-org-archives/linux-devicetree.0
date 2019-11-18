@@ -2,183 +2,146 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5DEC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 17:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A442C43141
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 17:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FCA2192B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 17:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4267421934
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 17:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574098213;
-	bh=AIFMjOG1SMLyN7ph0ofkjADh0HpYilqm2YWZs1PDFLQ=;
+	s=default; t=1574098529;
+	bh=rasdBgcNOS8TLz0Cf3ktGT2+AVhHyYlDyNvOMI5nekE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hNU8ZluEej82qqYHGYlw9lV2eQR9CM1wzX8eFK9KMhr56fH9EHKGWwCFkw+bzaNkx
-	 Cy7eN3J0bduhJofoyZcM9Qo2ebUIH6Bf9Ub6xypTLrm7zirZ37Iuqdwmdzk2InsMgv
-	 6RQya9Dyd3GcGrOyApQsX0teQjhAD569lX0xya54=
+	b=XqvPVIxrlllTIKBwU9K6uklDbhSvu1aROElxOpIiSs7gArXizMqNct0G9YxJZDssj
+	 rX4yhjYGFSHZo6V1U1xhLYmlnBQ4cDLV11wnKw7aCFLsFuENXpCwg3+4WtJjmlZzfq
+	 Ok7h93JcHWnCMIlTfRVB+lpMoQcCqCKL5+ls42Ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfKRRaM (ORCPT
+        id S1726322AbfKRRfZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:30:12 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42137 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfKRRaM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 12:30:12 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b16so15219626otk.9;
-        Mon, 18 Nov 2019 09:30:11 -0800 (PST)
+        Mon, 18 Nov 2019 12:35:25 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34466 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfKRRfY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 12:35:24 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so16103124oig.1;
+        Mon, 18 Nov 2019 09:35:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sc1XalYtAcW8vcap9ciRIDbP58GTDwM0RBx4a9ILBAk=;
-        b=Q24LOerBTVIZ3izhUfNtReKcJahX9OtaXw3DyE6NAO02kUcvip+MbGcsKMraboUVQA
-         9o+nP5GxLHTPasvzKN01VL7YpZIP+FrPDLDuXICHz8hNmJohfMmr2SXEJNEwHb8fXe9d
-         rHm5cjnum4qyNQV9uEIzGa1O+kW7+1XoB1Z676fgAZlnZ2TXYxTU9m1PZz0MYIpZRNSF
-         t/s6jIa8nnfO5AaCV1ISpiI8QZZyexPWg9oTLpy4/68KVOAINKbaQILwHu8LDJe5KSrs
-         Ievcgo3C3WE5LYeXAh450tChTaII0SYtG/xo99sG1KAwqYyJFRmkKMCCxCPxjD4faKzv
-         nIvQ==
-X-Gm-Message-State: APjAAAUKAnOj8blnftvPDzu3DpJbSdCUYN60KYZOF1NDVYr5QbaxyPHC
-        VISKniwuEyVp+QJX1eRUnQ==
-X-Google-Smtp-Source: APXvYqw1OlPnWi/HP4m9zDdcj7/ZWCmt8YCrZHzLncVfpzpiqABUT2k1SS9sfJz3gBNd0ZixL3aXsw==
-X-Received: by 2002:a05:6830:1649:: with SMTP id h9mr288452otr.281.1574098210777;
-        Mon, 18 Nov 2019 09:30:10 -0800 (PST)
+        bh=Jcjl+xEyXDK406FvNEw7KIB7W8gDcLzQthDaCbnKJGk=;
+        b=PfP8rW8KmIsK1t9sFuGv1qvRkRDCjxK1mJYcHvaJ9HVpLxSpK79jm6JGOowdgbdw36
+         odI0ErPdhyyT17EMjRsgsrto69kpvNMBc+jFPdIAf+iGy+RoVX3xOVMFmfMybyaWVzYC
+         OrGc4tAZCFMFrDXxWjTsuhHXIb6qG1WDNaeb34LnASB6GyYRwM2ziR5anhd4HB3uHg6p
+         X8jui/dvQdKFAUU+2WAg//OKnsJCUOgM6tVtyPg9bVt5oZoOfEowtiFQ9BNUjbqM886E
+         ytQuL5e/gAYb2yEk0XLsKyKjsoYGus/h3MreYkwzm1V396D0WNHzqosycDo8DlBHpsUx
+         j2oQ==
+X-Gm-Message-State: APjAAAX7c1c3JqxMOR0YSMgTYL/pQJGyxKi2/1vUqJ5heOEUN+SBUoLg
+        lUfv7XL/5Pb4Ua0F21btgQ==
+X-Google-Smtp-Source: APXvYqwfUzBQrNJcOeJA5zqpj+/wS2ZIsgG7m9QKMazBEknnz6EFpoefnzgkRP4MpUSzowTNdWON0g==
+X-Received: by 2002:aca:d4c6:: with SMTP id l189mr108313oig.68.1574098522296;
+        Mon, 18 Nov 2019 09:35:22 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y23sm6139512oih.17.2019.11.18.09.30.09
+        by smtp.gmail.com with ESMTPSA id d3sm6409543otq.25.2019.11.18.09.35.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 09:30:10 -0800 (PST)
-Date:   Mon, 18 Nov 2019 11:30:09 -0600
+        Mon, 18 Nov 2019 09:35:21 -0800 (PST)
+Date:   Mon, 18 Nov 2019 11:35:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Rajan Vaja <rajan.vaja@xilinx.com>, dan.carpenter@oracle.com,
-        gustavo@embeddedor.com, jolly.shah@xilinx.com,
-        m.tretter@pengutronix.de, mark.rutland@arm.com,
-        michal.simek@xilinx.com, mturquette@baylibre.com,
-        nava.manne@xilinx.com, ravi.patel@xilinx.com,
-        tejas.patel@xilinx.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/7] dt-bindings: clock: Add bindings for versal clock
- driver
-Message-ID: <20191118173009.GA1865@bogus>
-References: <1573564580-9006-1-git-send-email-rajan.vaja@xilinx.com>
- <1573564580-9006-2-git-send-email-rajan.vaja@xilinx.com>
- <20191112225147.7E59D21783@mail.kernel.org>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>
+Cc:     sre@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com,
+        jollys@xilinx.com, tejas.patel@xilinx.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: power: reset: xilinx: Add bindings for
+ ipi mailbox
+Message-ID: <20191118173520.GA23767@bogus>
+References: <1573564851-9275-1-git-send-email-rajan.vaja@xilinx.com>
+ <1573564851-9275-2-git-send-email-rajan.vaja@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112225147.7E59D21783@mail.kernel.org>
+In-Reply-To: <1573564851-9275-2-git-send-email-rajan.vaja@xilinx.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 02:51:46PM -0800, Stephen Boyd wrote:
-> Quoting Rajan Vaja (2019-11-12 05:16:14)
-> > diff --git a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-> > new file mode 100644
-> > index 0000000..da82f6a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-> > @@ -0,0 +1,67 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bindings/clock/xlnx,versal-clk.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Xilinx Versal clock controller
-> > +
-> > +maintainers:
-> > +  - Michal Simek <michal.simek@xilinx.com>
-> > +  - Jolly Shah <jolly.shah@xilinx.com>
-> > +  - Rajan Vaja <rajan.vaja@xilinx.com>
-> > +
-> > +description: |
-> > +  The clock controller is a h/w block of Xilinx versal clock tree. It reads
+On Tue, Nov 12, 2019 at 05:20:50AM -0800, Rajan Vaja wrote:
+> Add IPI mailbox property and its example in xilinx zynqmp-power
+> documentation.
 > 
-> hardware instead of h/w
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> ---
+>  .../bindings/power/reset/xlnx,zynqmp-power.txt     | 41 ++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 3 deletions(-)
 > 
-> > +  required input clock frequencies from the devicetree and acts as clock
-> > +  provider for all clock consumers of PS clocks. See clock_bindings.txt
-> > +  for more information on the generic clock bindings.
-> 
-> Please drop this last sentence about clock_bindings.txt
-> 
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: xlnx,versal-clk
-> > +
-> > +  "#clock-cells":
-> > +    const: 1
-> > +
-> > +  clocks:
-> > +    description: List of clock specifiers which are external input
-> > +      clocks to the given clock controller.
-> > +    minItems: 3
-> > +    maxItems: 3
+> diff --git a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+> index d366f1e..450f3a4 100644
+> --- a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+> +++ b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+> @@ -8,9 +8,27 @@ Required properties:
+>   - compatible:		Must contain:	"xlnx,zynqmp-power"
+>   - interrupts:		Interrupt specifier
+>  
+> --------
+> -Example
+> --------
+> +Optional properties:
+> + - mbox-names	: Name given to channels seen in the 'mboxes' property.
+> +		  "rx" - Mailbox corresponding to receive path
+> +		  "tx" - Mailbox corresponding to transmit path
 
-Can drop these. Implied by by 'items' list.
+The order here doesn't match the example. The order should be defined.
 
-> > +    items:
-> > +      - description: ref clk
-> > +      - description: alternate ref clk
-> > +      - description: pl alternate ref clk
-> 
-> What is "pl"? Can you clarify?
-> 
-> > +
-> > +  clock-names:
-> > +    minItems: 3
-> > +    maxItems: 3
+> + - mboxes	: Standard property to specify a Mailbox. Each value of
+> +		  the mboxes property should contain a phandle to the
+> +		  mailbox controller device node and an args specifier
+> +		  that will be the phandle to the intended sub-mailbox
+> +		  child node to be used for communication. See
+> +		  Documentation/devicetree/bindings/mailbox/mailbox.txt
+> +		  for more details about the generic mailbox controller
+> +		  and client driver bindings. Also see
+> +		  Documentation/devicetree/bindings/mailbox/ \
+> +		  xlnx,zynqmp-ipi-mailbox.txt for typical controller that
+> +		  is used to communicate with this System controllers.
+> +
+> +--------
+> +Examples
+> +--------
+> +
+> +Example with interrupt method:
+>  
+>  firmware {
+>  	zynqmp_firmware: zynqmp-firmware {
+> @@ -23,3 +41,20 @@ firmware {
+>  		};
+>  	};
+>  };
+> +
+> +Example with IPI mailbox method:
+> +
+> +firmware {
+> +
+> +	zynqmp_firmware: zynqmp-firmware {
+> +		compatible = "xlnx,zynqmp-firmware";
+> +		method = "smc";
+> +
+> +		zynqmp_power: zynqmp-power {
+> +			compatible = "xlnx,zynqmp-power";
+> +			mboxes = <&ipi_mailbox_pmu0 0>,
+> +				 <&ipi_mailbox_pmu0 1>;
+> +			mbox-names = "tx", "rx";
 
-Same here.
+interrupts is required.
 
-> > +    items:
-> > +      - const: ref_clk
-> > +      - const: alt_ref_clk
-> > +      - const: pl_alt_ref_clk
-
-'_clk' is redundant.
-
-> > +
-> > +required:
-> > +  - compatible
-> > +  - "#clock-cells"
-> > +  - clocks
-> > +  - clock-names
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    firmware {
-> > +      zynqmp_firmware: zynqmp-firmware {
-> > +        compatible = "xlnx,zynqmp-firmware";
-> > +        method = "smc";
-> 
-> Is there a way to say in the binding that this must be a child of a
-> xlnx,zynqmp-firmware node? That would be ideal so we can constrain this
-> to that location somehow.
-
-Yes. Add the node name as a property to the f/w schema and reference 
-($ref) this file and add 'select: false' to this one. The problem is the 
-firmware binding is probably not yet a schema. Once it is a schema, this 
-example will start failing because it's incomplete. For that reason, I 
-prefer the examples in these cases (inc MFDs) in the base schema and not 
-in the child node schemas.
-
-> > +        versal_clk: clock-controller {
-> > +          #clock-cells = <1>;
-> > +          compatible = "xlnx,versal-clk";
-> > +          clocks = <&ref_clk>, <&alt_ref_clk>, <&pl_alt_ref_clk>;
-> > +          clock-names = "ref_clk", "alt_ref_clk", "pl_alt_ref_clk";
-> > +        };
-> > +      };
-> > +    };
-> > +...
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.4
 > 
