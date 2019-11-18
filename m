@@ -4,80 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBADDC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1890DC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CD5222EF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBCF2230D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574112707;
-	bh=lg7PgwZw/0im8/7yygcg58wmDLJTL4QlcVKgAWgVMGA=;
+	s=default; t=1574112725;
+	bh=fPu4bhDnyFoAvMWmJVVH2jzRZ3m97wRXNtL4e/I36no=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YJiifOsFPtCyEUILR6rdeyFKBtW1NYUvgCAqJKik/gzu1hVh++sCOmfYP4ZnyFcq2
-	 WTqtM13CweKozzw0K4zjMuBMLObpPOvVroZNKNpE1+ypDNMKcZXxuXj6I1QsOXSnYH
-	 KmQn0DnJyjCk0clOb1JV5Z+HoHu9zRiS8K3mgn44=
+	b=GT0vKKTyWIVeHEFEGh84Qw7FPu45f0OaiKxl2vEEnUclwTTrS4yrdwEkMY2hhG7JX
+	 VbpGLqij7VL9DHsVj4iN68xHaBG/FNB8grKLq1KEWBCVJiTmkRabhA6awldU8QDLRU
+	 i2KXRHoU2hwhuZANZ4upX8nby/jQsWbEuRyfu44U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKRVbq (ORCPT
+        id S1726698AbfKRVcF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:31:46 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45772 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRVbq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:31:46 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 14so16749940oir.12;
-        Mon, 18 Nov 2019 13:31:44 -0800 (PST)
+        Mon, 18 Nov 2019 16:32:05 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40801 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRVcF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:32:05 -0500
+Received: by mail-ot1-f66.google.com with SMTP id m15so15890868otq.7;
+        Mon, 18 Nov 2019 13:32:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xbx1aZAc7rEgW+5jmNWNB9eCM3V1hUlP5bh1eb6G9t0=;
-        b=Ij7n1/eydfk0zZOvD/IFpadDYXsjj5cen19dAseW15ySdK9P7XWvinmbYSFgolXnsH
-         cFI6KvHxvyuqybvd4S1DG+PKzXsqiR46P1+B0uYbN1dDFnM+sPulU7QEJsmNkn6g/t6E
-         s34W4EnLlyR8qB0DbcKIKjeR4gSHbOQgwKuWZAXa07zAqAVkUEfKQuRWJYsgk1hUuMMA
-         ma2DV+/HVMPMAmryRqu1lWYwntV8C0dWXXWKmH0FpWOl+jWLkbNmZWfMYPZPiyjzG2wt
-         6JoCiE8wptxBhCJ6V+s9Z2syP82XEfblTMgICopM8RcM+qKmqsUumvK41CcHqNG2ZZKK
-         ia8A==
-X-Gm-Message-State: APjAAAUlhe05/Jh/ffrH3CY2vb5ukotSmIdpsjre00nj+GZ6qBM+ESTe
-        oqxqRNirQ1CQdMdvm6/iBA==
-X-Google-Smtp-Source: APXvYqyR7y1hrlJ4jytE3hcnnWJKh7pNQWwf4SPEfjTTZiLHGSnGV6pvqvm5MiOkvQudiN4HaO1Aiw==
-X-Received: by 2002:aca:ed85:: with SMTP id l127mr967419oih.75.1574112704372;
-        Mon, 18 Nov 2019 13:31:44 -0800 (PST)
+        bh=qqYcsKRMT/Ofwu9p9gWIeiSVzyiJC1qQZAiQjgxWaa0=;
+        b=p8LECv3CiHHofjdz3aN4U7ivWyq3FKyFsvBrhfxDUjiMEa76c1DonaFk8SfugP5t5f
+         +Iguo5gzOW10ON8om+yZqyaLSbAljf/cCQMJsT2LJHTAxLBvmgY43VKw+eLO1yLv47nb
+         z/BB5h0eU4a0y+EJxVy7igR2zPrR1WqOJsSHMsNTP02AU7aG5oSo7sK2AsnMlGlyZo6P
+         DTMBzbLACNR8x9kVbGeROGVrBL8cec+VpSUv7z17UElYWfcm3LRoB8iLSa+1dGkNUTKE
+         P8+3tHQn/Axbf1FKSnCOIS8KP4FkMSYJx14gbvO97EPIICiXqptzvIwT7yT7WxM9odb5
+         kMwg==
+X-Gm-Message-State: APjAAAUMyLvNStdOdRod2EM+mgXRzYtfdDfwrgseHnevQajWQyYv/Bm+
+        Tp5+g6bppvZz7mJ/mELhug==
+X-Google-Smtp-Source: APXvYqy5qVSVt+xh2wIzi24hrKLRfXyk0CYioZ9gFcoETioNwzK7Xkbr7IosaBgrxrtdWzERUqCG4w==
+X-Received: by 2002:a05:6830:50:: with SMTP id d16mr1039391otp.132.1574112722863;
+        Mon, 18 Nov 2019 13:32:02 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d205sm6517189oig.28.2019.11.18.13.31.43
+        by smtp.gmail.com with ESMTPSA id p3sm6570097oti.22.2019.11.18.13.32.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:31:43 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:31:42 -0600
+        Mon, 18 Nov 2019 13:32:02 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:32:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Eric Tremblay <etremblay@distech-controls.com>
-Cc:     linux@roeck-us.net, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        corbet@lwn.net
-Subject: Re: [PATCH v8 1/2] dt-bindings: hwmon: Add TMP512/513
-Message-ID: <20191118213142.GA26376@bogus>
-References: <20191112223001.20844-1-etremblay@distech-controls.com>
- <20191112223001.20844-2-etremblay@distech-controls.com>
+To:     Ming-Fan Chen <ming-fan.chen@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Evan Green <evgreen@chromium.org>,
+        Joerg Roedel <jroedel@suse.de>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        Ming-Fan Chen <ming-fan.chen@mediatek.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: mediatek: Add binding for MT6779 SMI
+Message-ID: <20191118213201.GA27040@bogus>
+References: <1573616362-2557-1-git-send-email-ming-fan.chen@mediatek.com>
+ <1573616362-2557-2-git-send-email-ming-fan.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191112223001.20844-2-etremblay@distech-controls.com>
+In-Reply-To: <1573616362-2557-2-git-send-email-ming-fan.chen@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 17:30:00 -0500, Eric Tremblay wrote:
-> Document the TMP513/512 device devicetree bindings
+On Wed, 13 Nov 2019 11:39:21 +0800, Ming-Fan Chen wrote:
+> This patch add description for MT6779 SMI.
 > 
-> Signed-off-by: Eric Tremblay <etremblay@distech-controls.com>
+> Signed-off-by: Ming-Fan Chen <ming-fan.chen@mediatek.com>
 > ---
->  .../devicetree/bindings/hwmon/ti,tmp513.yaml  | 93 +++++++++++++++++++
->  1 file changed, 93 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
+>  .../memory-controllers/mediatek,smi-common.txt     |    3 ++-
+>  .../memory-controllers/mediatek,smi-larb.txt       |    3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
