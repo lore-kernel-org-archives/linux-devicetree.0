@@ -2,183 +2,125 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E75C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DE7C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF9722317
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:44:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n03JLjkG";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="NpIYlVjf"
+	by mail.kernel.org (Postfix) with ESMTP id 87AE22230D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:51:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574113876;
+	bh=S71Uc8JOjvLwXNmL0i2Xe0cJQ4azmy8KFLdHQlM3A5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cIFSKx5Tgn5Wv57ZA4iMS1uBkWQTnwyIkNo2U8c+ugp3V7fKGV4oPuNEccevh9lvH
+	 cHX7YK4xzoEv2e09NlwxXxQz57x/ck1ifRE0DjY6Zmk9QmehZyK3i5knfmTgxyQU01
+	 bJI+0LMkTqEFlEZKdiNICtKlmdf9bpArcSWZnkRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfKRVoW (ORCPT
+        id S1726716AbfKRVvQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:44:22 -0500
-Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:46278
-        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727483AbfKRVoU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:44:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574113459;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=eSsRGANtxvOaDigYGw6XbUzjaDk11SDpDhilMxnQ9/Y=;
-        b=n03JLjkGempejr7uRf+GzwS4UR+lee/IP9hfIPDGiI4uJrNI+OEq8cvYBn9lfKcK
-        x3QAPohQF8jnNe1fFU3RIGCnS+9xe8CMCBObT7IUYaV3X4CLIga5WJ+Cii0Am/c1hoB
-        zHuh5o1AX5MqIsTQNAXyk3tjT0z12jRHCM3IvpdM=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574113459;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=eSsRGANtxvOaDigYGw6XbUzjaDk11SDpDhilMxnQ9/Y=;
-        b=NpIYlVjfSqCGwoj+QEfxTpVjPx+RYCAbqf766PniCG0NrYwO/TLwbGmwYMf12GdS
-        xl0dKYnGJxgoKVBfvzOxKkAc+kQrMWVSl57gxY9BJfaFottHQnZCAPCC6v2YTyFqRtI
-        2q3XOrUcZn+8MKxL/3Tt4mDolJnKIDezUujS6KKg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5644C38633
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jhugo@codeaurora.org,
-        robh+dt@kernel.org, jonathan@marek.ca
-Cc:     ohad@wizery.com, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 15/16] arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and SLPI smp2p
-Date:   Mon, 18 Nov 2019 21:44:19 +0000
-Message-ID: <0101016e80793dfa-9d0f6e93-01db-4c95-a226-d64bb50238cb-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20191118214250.14002-1-sibis@codeaurora.org>
-References: <20191118214250.14002-1-sibis@codeaurora.org>
+        Mon, 18 Nov 2019 16:51:16 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43875 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfKRVvP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:51:15 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l20so16812287oie.10;
+        Mon, 18 Nov 2019 13:51:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hEC0vXainlrwNnEp9G18IEiJOKLOfTAQobDWOxSae4w=;
+        b=A+yn/wIzaWdsbWXGFq3IilafMSnjfeBKcweX3oCU2+cC49ebVqn/1Oxcu3FVzzqJWs
+         wmxzSwvRhUzGr9UywJSiMBRvs+q+0MQYAzB7ROX4jrEBo46bGvNj3m9rl0lsnsmtvpC/
+         CjfzH+n4V0CvCbMaK1SEgFAQsubo4TWK3B3LfStK6Keph32SIMLDCj6vxeDHnHGkuhmR
+         MVBKRjITO+rRuhtxO79pbh4vF7J3XMj0LM1hFLua+AUjTF2t98djcJBHkDVjqUqcq5tE
+         Phg6GtHWbIBxKAYOoibtom2W7E5TW3ykBJxSG8VUvFCzDbUr38qfpQJApAFyn84nMNQr
+         onbA==
+X-Gm-Message-State: APjAAAVsYzcv6PvZ6jOoQuzZJ9/a/v9ICdLybwEnBbMrLnDn4sbfBs7a
+        xJfkLKYWAYDtpcNUWugsyA==
+X-Google-Smtp-Source: APXvYqzRkJzwRQuhVaue+B3wBvYpyxpcTCUMZXwn87IM1tgwW7C2JjpdCBgkt6sqnEAIZDoTSgSAUA==
+X-Received: by 2002:aca:d508:: with SMTP id m8mr995352oig.31.1574113874526;
+        Mon, 18 Nov 2019 13:51:14 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 63sm6650617oty.58.2019.11.18.13.51.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 13:51:13 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:51:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v4 13/13] [HACK] dt-bindings: display: bridge:
+ lvds-codec: Absorb thine,thc63lvdm83d.txt
+Message-ID: <20191118215113.GA10406@bogus>
+References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1573660292-10629-14-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.18-54.240.27.187
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573660292-10629-14-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the SMP2P nodes for the remoteproc states for ADSP, CDSP, MPSS and
-SLPI remoteprocs.
+On Wed, Nov 13, 2019 at 03:51:32PM +0000, Fabrizio Castro wrote:
+> At this point in time, compatible string "thine,thc63lvdm83d" is
+> backed by the lvds-codec driver, and the documentation contained
+> in thine,thc63lvdm83d.txt is basically the same as the one
+> contained in lvds-codec.yaml (generic fallback compatible string
+> aside), therefore absorb thine,thc63lvdm83d.txt.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> ---
+> Hi Laurent,
+> 
+> what do you think about this patch?
+> 
+> Thanks,
+> Fab
+> 
+> v3->v4:
+> * New patch
+> ---
+>  .../bindings/display/bridge/lvds-codec.yaml        |  5 +--
+>  .../bindings/display/bridge/thine,thc63lvdm83d.txt | 50 ----------------------
+>  2 files changed, 2 insertions(+), 53 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> index 21f8c6e..420bfce 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> @@ -30,9 +30,6 @@ description: |
+>  
+>  properties:
+>    compatible:
+> -    description: |
+> -      Must list the device specific compatible string first, followed by the
+> -      generic compatible string.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 96 ++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+Probably better to just omit this from the start. 
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 0ac257637c2af..98a96fd1d6117 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -284,6 +284,102 @@
- 		hwlocks = <&tcsr_mutex 3>;
- 	};
- 
-+	smp2p-cdsp {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <94>, <432>;
-+
-+		interrupts = <GIC_SPI 576 IRQ_TYPE_EDGE_RISING>;
-+
-+		mboxes = <&apss_shared 6>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <5>;
-+
-+		cdsp_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		cdsp_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
-+	smp2p-lpass {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <443>, <429>;
-+
-+		interrupts = <GIC_SPI 158 IRQ_TYPE_EDGE_RISING>;
-+
-+		mboxes = <&apss_shared 10>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <2>;
-+
-+		adsp_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		adsp_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
-+	smp2p-mpss {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <435>, <428>;
-+
-+		interrupts = <GIC_SPI 451 IRQ_TYPE_EDGE_RISING>;
-+
-+		mboxes = <&apss_shared 14>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <1>;
-+
-+		modem_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		modem_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
-+	smp2p-slpi {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <481>, <430>;
-+
-+		interrupts = <GIC_SPI 172 IRQ_TYPE_EDGE_RISING>;
-+
-+		mboxes = <&apss_shared 26>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <3>;
-+
-+		slpi_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		slpi_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
- 	soc: soc@0 {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+In any case:
 
+Reviewed-by: Rob Herring <robh@kernel.org>
