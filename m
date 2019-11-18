@@ -2,112 +2,238 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2317AC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CD9C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053BC20727
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CAF320727
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:15:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lF6z598X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKRKMS (ORCPT
+        id S1726506AbfKRKPL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:12:18 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39686 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRKMS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 05:12:18 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v138so14787269oif.6;
-        Mon, 18 Nov 2019 02:12:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wd/8miQHfG0K/xHeaZKk7Io4Qth+uW7jMmeiQXDJFp4=;
-        b=hKwmeRNB+AQToO+oxyAG09vRjjxGSO96go52bUd9rh+ag4EAU+oCixdYHuPj0BYb1Q
-         EBN/JZIzrJaz/KQIYaYHDd41i54KJDGbkUWDhwUZ8XuZ/zuLanSdGzbt7Z+DBvMZZQSu
-         HjE7fdTVd49PKoe4NfFyEiVZRZS0ZvRR7mFxqAjzz83ktxZcxFSFOX6oysAwdkjlCG4p
-         2v6AZ9tWAz/mh+6MWVJgOvyb+nD8ydpD6r+Dac2wTvBsDq3vqHSZqnlbmSkz8px/QS6F
-         VnyO4vss5R38+Hl7HdvNRemYVmdpIBSy+K8WLrLpNquMAYH4hajHERzuFxaxFhV7toq/
-         7i5g==
-X-Gm-Message-State: APjAAAW6BUsaSzWc+lTa2akNTysccBXDnIWqnPQqvgKnDvn4YmM9orwc
-        3aH+cAAQVJU1F29be7Lyk0ZRw6sBZhMyavdAukXbXBxk
-X-Google-Smtp-Source: APXvYqwQRMtTY9HMTsrPxWAgn9Ws8TAiqUHXp55KhDdFAB1MXZ/e4RD3Nn5oEVsbr+xSw2wom1TwxOiyh3Rt08BFclQ=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr18882008oia.131.1574071937300;
- Mon, 18 Nov 2019 02:12:17 -0800 (PST)
+        Mon, 18 Nov 2019 05:15:11 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58224 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726460AbfKRKPL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 05:15:11 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAIACf3i029389;
+        Mon, 18 Nov 2019 11:14:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=JjcDf7Se1JV93hHJ3IUg1llt1Gmr33d0sDqj28vMS+A=;
+ b=lF6z598XQNP7D8PkuPEODSravAKBbTY5z2krXCYaG1nAkzuD7XOHWiB6kGwhY8ugWEIB
+ mUrvAVLD9wR6VS3Kt0TktGKPqZhXemfEr4NKZ+T3xHkzWBTyBFUlcDPtr3TUc+Iid95i
+ EBJr+zyAB5Kj6pkUxpsdogLB05uyzg2fayipistl9Hj1frG7BHnbSVhvTUsLyD38fJbl
+ N7cQjoESxU56rfllI81FFDiwy2LtiQu3UMyovLitgQM8PSAuWe4R5++CKVKiTSviPv69
+ yFDeYk+mz36HS0JTXzBx1ksOQ7ws0hLa0kQT2Sgv9sIqQudfDCosL2W5tTSLfq/GfKai kQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wa9uv0sjw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Nov 2019 11:14:59 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 846F3100051;
+        Mon, 18 Nov 2019 11:14:48 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7056B2BE245;
+        Mon, 18 Nov 2019 11:14:48 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 Nov 2019 11:14:48
+ +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH v2] dt-bindings: mailbox: convert stm32-ipcc to json-schema
+Date:   Mon, 18 Nov 2019 11:14:20 +0100
+Message-ID: <20191118101420.23610-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1572591791-11280-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1572591791-11280-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1572591791-11280-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 Nov 2019 11:12:06 +0100
-Message-ID: <CAMuHMdWbcDUThotTriK3mCB90FYODPpqPA0Ns50gQ0y8D7JdKw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: clock: renesas: rcar-usb2-clock-sel:
- Add power-domains and resets properties
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_01:2019-11-15,2019-11-17 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Convert the STM32 IPCC bindings to DT schema format using
+json-schema
 
-On Fri, Nov 1, 2019 at 8:03 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> This patch adds missing required properties of power-domains and resets.
-> Fortunately, no one has this device node for now, so that we don't
-> need to think of backward compatibility.
->
-> Fixes: 311accb64570 ("clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0 clock selector PHY")
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ .../bindings/mailbox/st,stm32-ipcc.yaml       | 91 +++++++++++++++++++
+ .../bindings/mailbox/stm32-ipcc.txt           | 47 ----------
+ 2 files changed, 91 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
 
-Thanks for your patch!
-
-> --- a/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
-> @@ -43,6 +43,9 @@ Required properties:
->   - The USB_EXTAL clock pin must be "usb_extal"
->   - The USB_XTAL clock pin must be "usb_xtal"
->  - #clock-cells: Must be 0
-> +- power-domains: A phandle and symbolic PM domain specifier.
-> +                 See power/renesas,rcar-sysc.txt.
-> +- resets: A list of phandles and specifier pairs.
-
-Since there is more than one, I think it would be good to specify
-reset-names, too ("ehci_ohci" and "hs-usb-if").
-
-The rest looks good to me.
-
->  Example (R-Car H3):
->
-> @@ -54,4 +57,6 @@ Example (R-Car H3):
->                          <&usb_extal>, <&usb_xtal>;
->                 clock-names = "ehci_ohci", "hs-usb-if", "usb_extal", "usb_xtal";
->                 #clock-cells = <0>;
-> +               power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> +               resets = <&cpg 703>, <&cpg 704>;
->         };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml b/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
+new file mode 100644
+index 000000000000..90157d4deac1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mailbox/st,stm32-ipcc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: STMicroelectronics STM32 IPC controller bindings
++
++description:
++  The IPCC block provides a non blocking signaling mechanism to post and
++  retrieve messages in an atomic way between two processors.
++  It provides the signaling for N bidirectionnal channels. The number of
++  channels (N) can be read from a dedicated register.
++
++maintainers:
++  - Fabien Dessenne <fabien.dessenne@st.com>
++  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
++
++properties:
++  compatible:
++    const: st,stm32mp1-ipcc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++     maxItems: 1
++
++  interrupts:
++    items:
++      - description: rx channel occupied
++      - description: tx channel free
++      - description: wakeup source
++    minItems: 2
++    maxItems: 3
++
++  interrupt-names:
++    items:
++      enums: [ rx, tx, wakeup ]
++    minItems: 2
++    maxItems: 3
++
++  wakeup-source:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Enables wake up of host system on wakeup IRQ assertion.
++
++  "#mbox-cells":
++    const: 1
++
++  st,proc-id:
++    description: Processor id using the mailbox (0 or 1)
++    allOf:
++      - minimum: 0
++      - maximum: 1
++      - default: 0
++
++required:
++  - compatible
++  - reg
++  - st,proc-id
++  - clocks
++  - interrupt-names
++  - "#mbox-cells"
++
++oneOf:
++  - required:
++      - interrupts
++  - required:
++      - interrupts-extended
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    ipcc: mailbox@4c001000 {
++      compatible = "st,stm32mp1-ipcc";
++      #mbox-cells = <1>;
++      reg = <0x4c001000 0x400>;
++      st,proc-id = <0>;
++      interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
++      		      <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
++      		      <&aiec 62 1>;
++      interrupt-names = "rx", "tx", "wakeup";
++      clocks = <&rcc_clk IPCC>;
++      wakeup-source;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
+deleted file mode 100644
+index 1d2b7fee7b85..000000000000
+--- a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* STMicroelectronics STM32 IPCC (Inter-Processor Communication Controller)
+-
+-The IPCC block provides a non blocking signaling mechanism to post and
+-retrieve messages in an atomic way between two processors.
+-It provides the signaling for N bidirectionnal channels. The number of channels
+-(N) can be read from a dedicated register.
+-
+-Required properties:
+-- compatible:   Must be "st,stm32mp1-ipcc"
+-- reg:          Register address range (base address and length)
+-- st,proc-id:   Processor id using the mailbox (0 or 1)
+-- clocks:       Input clock
+-- interrupt-names: List of names for the interrupts described by the interrupt
+-                   property. Must contain the following entries:
+-                   - "rx"
+-                   - "tx"
+-                   - "wakeup"
+-- interrupts:   Interrupt specifiers for "rx channel occupied", "tx channel
+-                free" and "system wakeup".
+-- #mbox-cells:  Number of cells required for the mailbox specifier. Must be 1.
+-                The data contained in the mbox specifier of the "mboxes"
+-                property in the client node is the mailbox channel index.
+-
+-Optional properties:
+-- wakeup-source: Flag to indicate whether this device can wake up the system
+-
+-
+-
+-Example:
+-	ipcc: mailbox@4c001000 {
+-		compatible = "st,stm32mp1-ipcc";
+-		#mbox-cells = <1>;
+-		reg = <0x4c001000 0x400>;
+-		st,proc-id = <0>;
+-		interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
+-				      <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
+-				      <&aiec 62 1>;
+-		interrupt-names = "rx", "tx", "wakeup";
+-		clocks = <&rcc_clk IPCC>;
+-		wakeup-source;
+-	}
+-
+-Client:
+-	mbox_test {
+-		...
+-		mboxes = <&ipcc 0>, <&ipcc 1>;
+-	};
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
