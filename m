@@ -2,411 +2,122 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1721C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C68AC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 23:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749772230C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CBC2230C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 23:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m2c5Q0c7"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="d8LUIjAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfKRW4c (ORCPT
+        id S1726992AbfKRXD6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:56:32 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39907 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbfKRW4c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:56:32 -0500
-Received: by mail-pl1-f195.google.com with SMTP id o9so10607844plk.6
-        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 14:56:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VweJvPw9KXJliTxPoEDSfPBhjVqbH3eDBuR8yLkz1fQ=;
-        b=m2c5Q0c74gWhnvp4je3yqVZcm7DqVKA7jisqzl6wqj+KANRa+9gSEkePSx+qbZoaIq
-         R2c1K/fg1JRaP08zgUhVHsKc0UZenovlOMyQ1F2TrUrw6RR3kPVdEqoPCz/2/QV0ujBl
-         d0EYKzY0yKLJSxhzPstWXVbPrtYo9FEq/D4zp6Gzw1Tw6zo7oTYjN7gxJhq4Pn1qFRKo
-         VNPGFVlrlhX8jRdiH9N+9SvGBuJIl/CdyGNXCR4hKHsG2SR6zcgToLbfRJp/c3DjjAku
-         3vMG2cMRTOXpO3/7Vseils5w5rk2vECowKwc3l92CduNFz0rQAYdSzOTB69H2EDUVqjq
-         zavg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VweJvPw9KXJliTxPoEDSfPBhjVqbH3eDBuR8yLkz1fQ=;
-        b=nmFMkvNfO5K+Q+Q57AjqV0JAxKsBI+oNcnrm5cLpqQuVK80RXePzylRmDcWDyOahQY
-         F5YHht5N8RNvHnDZAYopHpdkkHj6A1hq3jlqUymgZt+mQDAw3WhGVPhci1OG/rSOoQVo
-         +EUvoCY/2SBQdWMBdjvRiEO079zU26xw9p3QmoBlfYZN5gPiu+SY/0AhGamC4pjcLBdS
-         dJR/dHDJ+Mj8nsqXHSjmnnglaoRozZCq5kSBhDsY3wHfL3PBvah48eR3AaG8PGV5atCR
-         YhVt26WHHQPRkVThdjNGq3s4dc5Creytrn2TjgozeK9XFs6VVvc9HRYzz/vt8hILQNYd
-         HB2w==
-X-Gm-Message-State: APjAAAXlygJnu95G7fHda54zggUTKEnVc8VHWGkitl2ntdEgdUdPHTdI
-        Eyu2It6ntUU6wHZ8qNywVQyxBg==
-X-Google-Smtp-Source: APXvYqxPxXUh1fUDenKA7oTOOIicqOty+iYA7of050uUKhOw8y0cUSgnUpNevfVWnjpQcfqTd3YtVA==
-X-Received: by 2002:a17:90a:3746:: with SMTP id u64mr1928022pjb.4.1574117790803;
-        Mon, 18 Nov 2019 14:56:30 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id f35sm491856pje.32.2019.11.18.14.56.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Nov 2019 14:56:30 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:56:28 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] remoteproc: ingenic: Added remoteproc driver
-Message-ID: <20191118225628.GA18243@xps15>
-References: <20191116170846.67220-1-paul@crapouillou.net>
- <20191116170846.67220-4-paul@crapouillou.net>
+        Mon, 18 Nov 2019 18:03:58 -0500
+Received: from mail-eopbgr20100.outbound.protection.outlook.com ([40.107.2.100]:7517
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726717AbfKRXD6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 18:03:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Davc0FzVsLvyPEOQs/OvDo9TcqkFCrm0dFuLG/U/L0A6WnzV6vSZgv6IexqdtEfzMNRJjkMfPq1NGxNvVNONPbmCKZv2zMAC65+zkzKIuqghXmen7g0FwB9D0hb5MZKZhNNVGQRiorHN2rZ1PcjKsWVPUvCYeVbeQcsxgmVbwEjDAI6620ah5WyehulwJFrROSy7JD6mppxbDzR9Dns0EvB1UnYcmdhlH/3Kassqrxbi9Ps9Ow9axp2A9SOECR3cIsW2ywYldAzShiHJdTybTfPL0K1GM2JzF2xZaC5HAmAq0oJIrGQj30wWjAPiEyXMAuh/5MZzvvVl6Xgexbap5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1dzjGWPdAZcAyE2N+egMQke7Vn7oCdy/0aOgzg7SNws=;
+ b=Kt2CDmpEmsj3lxrj+ValvkITRZszdkl+CDZkhg79DhYj8aF5Fr7E1n0suLRsPVJ1MW1Qx9rm/x19YHYyYox02Ae/xMbSey1qAj8IvVVU1WUi22LPwVK/VzQ84bs4VvRTwoSO9Fhpqf/KsmUuP3oHKTwYYne83z0yzzaTAtQTWNy2XB3fljQg+D0KLb27s0nQpVcC3QiviD4noAAV0uxSFFlOdLcUcB3WIh68wrLeAYJvWEPDm85vIgiyIUp01clIbx+j0pCA/1ha9UbvyDytJPGKv487UBynOGaD4ZI4nJkvYXGcV5f+7aA8SN2BHsE/LIa6gXhA5DQKzRVqzxikEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1dzjGWPdAZcAyE2N+egMQke7Vn7oCdy/0aOgzg7SNws=;
+ b=d8LUIjAnIqCEt3XsW1N8GEo2RAUFJEJLNQDSpqLjR52kaieXD+HPw3oRdYAvky1HNe/ntKy4dTHoc7j91dyjCigEmgOgTtty4D2U4emBxkyi+u48pvuAlIxEKYHsLuOHujPKGYTVSp8X3YR3QgHSh+CiZW0koedKkWpbkM+iSeY=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3289.eurprd02.prod.outlook.com (52.134.65.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Mon, 18 Nov 2019 23:03:53 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::477:9510:3e3:f8ca]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::477:9510:3e3:f8ca%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 23:03:53 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [v5,2/3] i2c: mux: pca954x: support property idle-state
+Thread-Topic: [v5,2/3] i2c: mux: pca954x: support property idle-state
+Thread-Index: AQHViJBm+lcMepwMLU+ndX3u4pkJDaeMK7oAgAWMBYA=
+Date:   Mon, 18 Nov 2019 23:03:53 +0000
+Message-ID: <e04c77cc-6c41-8ce3-b584-944eb1595191@axentia.se>
+References: <20191022041152.3663-1-biwen.li@nxp.com>
+ <20191022041152.3663-2-biwen.li@nxp.com>
+ <DB7PR04MB4490B0121FEED3C74A682C248F700@DB7PR04MB4490.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB4490B0121FEED3C74A682C248F700@DB7PR04MB4490.eurprd04.prod.outlook.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0802CA0007.eurprd08.prod.outlook.com
+ (2603:10a6:3:bd::17) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f4f791f-44f0-4517-96d8-08d76c7b94f0
+x-ms-traffictypediagnostic: DB3PR0202MB3289:
+x-microsoft-antispam-prvs: <DB3PR0202MB3289DFD2CB967780BC474BACBC4D0@DB3PR0202MB3289.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(376002)(136003)(39830400003)(189003)(199004)(31686004)(6486002)(6436002)(31696002)(81156014)(229853002)(8676002)(6116002)(386003)(3846002)(66556008)(2906002)(186003)(25786009)(305945005)(71190400001)(71200400001)(66476007)(7736002)(4326008)(76176011)(66446008)(64756008)(52116002)(256004)(102836004)(53546011)(6506007)(6512007)(4744005)(26005)(86362001)(2501003)(8936002)(81166006)(99286004)(14454004)(486006)(66066001)(66946007)(65956001)(65806001)(4001150100001)(5660300002)(6246003)(110136005)(2616005)(446003)(508600001)(58126008)(11346002)(36756003)(476003)(316002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3289;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qTe1aBwXWcM6+efGo+pyW61XsRXmlK72T1+IZFF2klATUNfB7if8ouKuLU2/NrZH3HI9jua6S6QvBsrWCYzmCUXWySXqU0MgYMW9BPa2pVpKuyBjclWcRqg2NcfPXjjQ/y6nHQoOyaBqCMn26r0VlSUOXISudAay1HZedclR6KfUzN7eAG5fA89hNV0WlyMMkeqMP2ZpzVtPYfrIMBkgLI1qoLAIXiCAGzT29XhdJcI8vCqBJQpnZAVFPdzfSzd2f4iTkMDAnBL+qxgFaii4dhNRqaDggGFfWhhx+1P8x76QJNoSHh+ng2t0jaP3Vx38edhk22fWo4x9TSQ0mZYdoMJjy4kdi2/ezjwWq7AqCDsil0HJIsi04PLULP9Y4GmX2spLjvEZeqFt1Qz1/tk7etYW1pn3gOu5mFyvAeaSNesSdHrRv/UBaLk2NbarhYLi
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DCE7B144E7759445A7D8937EB99236AE@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191116170846.67220-4-paul@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f4f791f-44f0-4517-96d8-08d76c7b94f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 23:03:53.3735
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IVxv6z5qC4Fx389vvfaFdEulG2FxmmWoBVogrtoAMdFoplr0+aopRLFArkdkv9mq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3289
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
-
-On Sat, Nov 16, 2019 at 06:08:46PM +0100, Paul Cercueil wrote:
-> This driver is used to boot, communicate with and load firmwares to the
-> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
-> Ingenic.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: Remove exception for always-mapped memories
->     v3: - Use clk_bulk API
->         - Move device-managed code to its own patch [3/4]
->     	- Move devicetree table right above ingenic_rproc_driver
->     	- Removed #ifdef CONFIG_OF around devicetree table
->     	- Removed .owner = THIS_MODULE in ingenic_rproc_driver
->     	- Removed useless platform_set_drvdata()
-> 
->  drivers/remoteproc/Kconfig         |   8 +
->  drivers/remoteproc/Makefile        |   1 +
->  drivers/remoteproc/ingenic_rproc.c | 242 +++++++++++++++++++++++++++++
->  3 files changed, 251 insertions(+)
->  create mode 100644 drivers/remoteproc/ingenic_rproc.c
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 94afdde4bc9f..f7d4b183d152 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -214,6 +214,14 @@ config STM32_RPROC
->  
->  	  This can be either built-in or a loadable module.
->  
-> +config INGENIC_RPROC
-
-Are you sure you don't want to make this something like
-INGENIC_RPROC_JZ47XX_VPU so that future remote proc system from Ingenic can be
-added easily?
-
-> +	tristate "Ingenic JZ47xx VPU remoteproc support"
-> +	depends on MIPS || COMPILE_TEST
-> +	help
-> +	  Say y or m here to support the VPU in the JZ47xx SoCs from Ingenic.
-> +	  This can be either built-in or a loadable module.
-> +	  If unsure say N.
-> +
->  endif # REMOTEPROC
->  
->  endmenu
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 00f09e658cb3..6eb0137abbc7 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -10,6 +10,7 @@ remoteproc-y				+= remoteproc_sysfs.o
->  remoteproc-y				+= remoteproc_virtio.o
->  remoteproc-y				+= remoteproc_elf_loader.o
->  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
-> +obj-$(CONFIG_INGENIC_RPROC)			+= ingenic_rproc.a
-
-This comes out as one tab to many on my side.
-
->  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
-> diff --git a/drivers/remoteproc/ingenic_rproc.c b/drivers/remoteproc/ingenic_rproc.c
-> new file mode 100644
-> index 000000000000..5a7c7d8d9a90
-> --- /dev/null
-> +++ b/drivers/remoteproc/ingenic_rproc.c
-> @@ -0,0 +1,242 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Ingenic JZ47xx remoteproc driver
-> + * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/remoteproc.h>
-> +
-> +#include "remoteproc_internal.h"
-> +
-> +#define REG_AUX_CTRL		0x0
-> +#define REG_AUX_MSG_ACK		0x10
-> +#define REG_AUX_MSG		0x14
-> +#define REG_CORE_MSG_ACK	0x18
-> +#define REG_CORE_MSG		0x1C
-> +
-> +#define AUX_CTRL_SLEEP		BIT(31)
-> +#define AUX_CTRL_MSG_IRQ_EN	BIT(3)
-> +#define AUX_CTRL_NMI_RESETS	BIT(2)
-> +#define AUX_CTRL_NMI		BIT(1)
-> +#define AUX_CTRL_SW_RESET	BIT(0)
-> +
-> +struct vpu_mem_map {
-> +	const char *name;
-> +	unsigned int da;
-> +};
-> +
-> +struct vpu_mem_info {
-> +	const struct vpu_mem_map *map;
-> +	unsigned long len;
-> +	void __iomem *base;
-> +};
-> +
-> +static const struct vpu_mem_map vpu_mem_map[] = {
-> +	{ "tcsm0", 0x132b0000 },
-> +	{ "tcsm1", 0xf4000000 },
-> +	{ "sram",  0x132f0000 },
-> +};
-> +
-> +/* Device data */
-> +struct vpu {
-> +	int irq;
-> +	struct clk_bulk_data clks[2];
-> +	void __iomem *aux_base;
-> +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
-> +	struct device *dev;
-> +};
-
-Documentation of structure fields is always appreciated but it is up to Bjorn to
-decide on this one.
-
-> +
-> +static int ingenic_rproc_prepare(struct rproc *rproc)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +	int ret;
-> +
-> +	/* The clocks must be enabled for the firmware to be loaded in TCSM */
-> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(vpu->clks), vpu->clks);
-> +	if (ret)
-> +		dev_err(vpu->dev, "Unable to start clocks: %d", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static void ingenic_rproc_unprepare(struct rproc *rproc)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +
-> +	clk_bulk_disable_unprepare(ARRAY_SIZE(vpu->clks), vpu->clks);
-> +}
-> +
-> +static int ingenic_rproc_start(struct rproc *rproc)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +	u32 ctrl;
-> +
-> +	enable_irq(vpu->irq);
-> +
-> +	/* Reset the AUX and enable message IRQ */
-> +	ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
-> +	writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
-
-Out of curiosity, there is no power domain associated with this
-co-processor?  Clocks are all you need?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int ingenic_rproc_stop(struct rproc *rproc)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +
-> +	/* Keep AUX in reset mode */
-> +	writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
-> +
-> +	disable_irq_nosync(vpu->irq);
-
-Also out of curiosity, why the need for _nosync()?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +
-> +	writel(vqid, vpu->aux_base + REG_CORE_MSG);
-> +}
-> +
-> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +	void __iomem *va = NULL;
-> +	unsigned int i;
-> +
-> +	if (len <= 0)
-> +		return NULL;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-> +		const struct vpu_mem_info *info = &vpu->mem_info[i];
-> +		const struct vpu_mem_map *map = info->map;
-> +
-> +		if (da >= map->da && (da + len) < (map->da + info->len)) {
-> +			va = info->base + (da - map->da);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return (__force void *)va;
-> +}
-> +
-> +static struct rproc_ops ingenic_rproc_ops = {
-> +	.prepare = ingenic_rproc_prepare,
-> +	.unprepare = ingenic_rproc_unprepare,
-> +	.start = ingenic_rproc_start,
-> +	.stop = ingenic_rproc_stop,
-> +	.kick = ingenic_rproc_kick,
-> +	.da_to_va = ingenic_rproc_da_to_va,
-> +};
-> +
-> +static irqreturn_t vpu_interrupt(int irq, void *data)
-> +{
-> +	struct rproc *rproc = data;
-> +	struct vpu *vpu = rproc->priv;
-> +	u32 vring;
-> +
-> +	vring = readl(vpu->aux_base + REG_AUX_MSG);
-> +
-> +	/* Ack the interrupt */
-> +	writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
-> +
-> +	return rproc_vq_interrupt(rproc, vring);
-> +}
-> +
-> +static int ingenic_rproc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *mem;
-> +	struct rproc *rproc;
-> +	struct vpu *vpu;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	rproc = devm_rproc_alloc(dev, "ingenic-vpu",
-> +				 &ingenic_rproc_ops, NULL, sizeof(*vpu));
-> +	if (!rproc)
-> +		return -ENOMEM;
-> +
-> +	vpu = rproc->priv;
-> +	vpu->dev = &pdev->dev;
-> +
-> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
-> +	vpu->aux_base = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(vpu->aux_base)) {
-> +		dev_err(dev, "Failed to ioremap");
-> +		return PTR_ERR(vpu->aux_base);
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-> +		mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						   vpu_mem_map[i].name);
-> +
-> +		vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
-> +		if (IS_ERR(vpu->mem_info[i].base)) {
-> +			ret = PTR_ERR(vpu->mem_info[i].base);
-> +			dev_err(dev, "Failed to ioremap");
-> +			return ret;
-> +		}
-> +
-> +		vpu->mem_info[i].len = resource_size(mem);
-> +		vpu->mem_info[i].map = &vpu_mem_map[i];
-> +	}
-> +
-> +	vpu->clks[0].id = "vpu";
-> +	vpu->clks[1].id = "aux";
-> +
-> +	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(vpu->clks), vpu->clks);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get clocks");
-> +		return ret;
-> +	}
-> +
-> +	vpu->irq = platform_get_irq(pdev, 0);
-> +	if (vpu->irq < 0) {
-> +		dev_err(dev, "Failed to get platform IRQ");
-> +		return vpu->irq;
-> +	}
-> +
-> +	ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", rproc);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to request IRQ");
-> +		return ret;
-> +	}
-> +
-> +	disable_irq_nosync(vpu->irq);
-> +
-> +	ret = devm_rproc_add(dev, rproc);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register remote processor");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ingenic_rproc_of_matches[] = {
-> +	{ .compatible = "ingenic,jz4770-vpu-rproc", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
-> +
-> +static struct platform_driver ingenic_rproc_driver = {
-> +	.probe = ingenic_rproc_probe,
-> +	.driver = {
-> +		.name = "ingenic-vpu",
-> +		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
-> +	},
-> +};
-> +module_platform_driver(ingenic_rproc_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
-
-Nice, clean and simple driver.  With the above and after rolling in Julia's
-patch:
-
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-> -- 
-> 2.24.0
-> 
+T24gMjAxOS0xMS0xNSAxMToyMSwgQml3ZW4gTGkgd3JvdGU6DQo+IEhpIFBldGVyLA0KPiANCj4g
+QW55IGNvbW1lbnRzPw0KPiBJZiBubyBjb21tZW50cywgY291bGQgeW91IGdpdmUgbWUgYSByZXZp
+ZXdlZC1ieT8NCg0KSSB3b3VsZCBoYXZlIGxpa2VkIGEgY29tbWVudCBmcm9tIHRoZSBkcml2ZXIg
+bWFpbnRhaW5lciBvciBhIHRlc3RlZC1ieSBmcm9tDQpzb21lb25lIHdpdGggYW5vdGhlciBjYXNl
+IHRoYW4geW91cnMuIEJ1dCBub3cgdGhhdCBJIGNoZWNrIEkgc2VlIHRoYXQgdGhlcmUgLQ0KY29u
+dHJhcnkgdG8gbXkgYXNzdW1wdGlvbiAtIGlzIG5vIG1haW50YWluZXIgbGlzdGVkLiBTbywgSSB0
+aGluayBpdCBsb29rcyBmaW5lLA0KYW5kIEknbSBzdXJlIGl0IGNvbXBpbGVzIGNsZWFubHkgZXRj
+IGlmIEkgdGVzdCB0aGF0LCBidXQgSSBjYW4ndCB0ZXN0IHJ1bnRpbWUNCmJlaGF2aW9yIG15c2Vs
+ZiBzaW5jZSBJIGRvbid0IGhhdmUgdGhlIEhXLiBJIHNob3VsZCBoYXZlIGJlZW4gY2xlYXJlciBh
+Ym91dA0KdGhpcywgYW5kIHNob3VsZCBoYXZlIGRvdWJsZSBjaGVja2VkIHRoZSBtYWludGFpbmVy
+IHN0YXR1cyBpbnN0ZWFkIG9mIHJlbHlpbmcNCm9uIHdoYXQgSSB0aG91Z2h0LiBJIGhhdmUgc2lt
+cGx5IGJlZW4gZXh0cmVtZWx5IGJ1c3kgYW5kIHRoYXQgc2xpcHBlZC4gU29ycnkuDQoNCkJ1dCBJ
+J2xsIHRyeSB0byBzcXVlZXplIHRoaXMgaW50byBsaW51eC1uZXh0IHRvbW9ycm93LCBiZWNhdXNl
+IGlmIGxvb2sgc2FmZSwNCmFuZCBob3BlZnVsbHkgYW55IHByb2JsZW0gd2lsbCBiZWNvbWUgYXBw
+YXJlbnQuDQoNCkdpdmluZyBhIHJldmlld2VkLWJ5IHNlZW1lZCBwb2ludGxlc3MsIHdoZW4gSSdt
+IHRoZSBvbmUgcGlja2luZyBpdCB1cCA6LSkNCg0KQ2hlZXJzLA0KUGV0ZXINCg==
