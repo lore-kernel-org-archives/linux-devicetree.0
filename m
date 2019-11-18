@@ -2,39 +2,66 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DB5C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 20:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF5DC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA5222303
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 20:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574109253;
-	bh=zT5xieo5s1d7/87J92eKpsMK/gmDLcvEqHP61vKhaDg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yJ7eLSjevAE5DMmN7u5LyxZq16tUh7L/yJnCoVdOEs9CMYCXkFTEJnqAuhAasM9sp
-	 WPcBYQITu6a0UU2186H1xV/okCUwj+VrVo+AgeyMnS/NDje0BnndC/6cErZk8DgViS
-	 e0TAvfE7/0Uc8Lciro4YVoqB4salGgvwjEyYbg3w=
+	by mail.kernel.org (Postfix) with ESMTP id 969D222311
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 21:18:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUkhNmty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfKRUeJ (ORCPT
+        id S1726536AbfKRVSC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:34:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:39798 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfKRUeJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:34:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5AE0328;
-        Mon, 18 Nov 2019 12:34:08 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 253EF3F6C4;
-        Mon, 18 Nov 2019 12:34:07 -0800 (PST)
-Date:   Mon, 18 Nov 2019 20:34:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
+        Mon, 18 Nov 2019 16:18:02 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33228 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRVSC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 16:18:02 -0500
+Received: by mail-ot1-f67.google.com with SMTP id u13so15871329ote.0;
+        Mon, 18 Nov 2019 13:18:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IabCX6kBV/Mgb1XtRiYbU3GVuFyLKj7vP/odV1Askuo=;
+        b=LUkhNmtywxzw73lNFZSUTSLJvpU4SrC3SSG94jfyYW8wc2YYQFHP2xK3r0UEFQBAO/
+         fJg1OejWr58ym84pgfJn4DzUy67tOxF2Msz93xQlzBmFvYCsRuenp/H3jmOpnfl5cm53
+         aOEUSSOj1qpW+tmdxq5ZKeZ2dqgltOLm/t829Y2NfhpFka3GgqtSzCB32ha3GBtRJJUI
+         moHZr8odRU76Uu3xX1vdLiXuLFzGRNZ33jTCu8QmUbvdz8DEe0f/DrPabGpoRm2JhI7w
+         sVEdEL5zNbrveUEU3aPVcTHJiKuca6os1r/uH++1FiiG3fLl+UDBdsQ60FflhJnwRYUo
+         +DbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IabCX6kBV/Mgb1XtRiYbU3GVuFyLKj7vP/odV1Askuo=;
+        b=rdnpdYFdj1QSmzWVCTDBeMdu2Y0JfxezK+i+3Pg+aK3vyceQn0TLQdrboSp1nWGX0f
+         3dcYs4BK+jmxnn0Svat4iY9jx7AKBvLnBmjKcIQvP1Q+TFPk4R+hlbCOMCZlGAQpfAkb
+         cusELaZ40UPt48qy3ussgDsXT2TKtkgBah4RSY06pCva1Z0kpiEQQjmUwH/5p+q3V/5y
+         Bz07sk1b88r2dORlm4E3Ep1FN/oDmbyeCFKHOPz4ofuD/1fKcVzNObxAUBEXK0ZM2+jg
+         YRqhkODyNa7ARkVZHBd/i2tsm2m6vI1b8QKpR5RL9TPKc0XDM2aLB6sl6PojvOhOXKP4
+         gL4A==
+X-Gm-Message-State: APjAAAXTnNgHFPkH0SQAM06TLQ/ytYdiyppZ0SG4aUdqHsECON5BuV+i
+        Ful0mCGtLw+ePSpTUmenLLY9HdF30mAgXIKM0/Q=
+X-Google-Smtp-Source: APXvYqy5Csuu3CZ8WGvTufcihjOMe/h9Fe7votgoCqnJbEHErkBVC+bnIWRoLhCs0yChwEz+AMTol5kYrSIIX0OSmYo=
+X-Received: by 2002:a9d:6841:: with SMTP id c1mr1053825oto.224.1574111881395;
+ Mon, 18 Nov 2019 13:18:01 -0800 (PST)
+MIME-Version: 1.0
+References: <20191118165400.21985-1-TheSven73@gmail.com> <20191118165400.21985-2-TheSven73@gmail.com>
+ <20191118170111.GL9761@sirena.org.uk> <CAGngYiW+8m4fBAY5Ya_4YmEmCTQeiiNP6=aH2mUX6d2wY1442w@mail.gmail.com>
+ <20191118174550.GA43585@sirena.org.uk> <CAGngYiXLx8rkkKPyALYyCHFyst2Ft8bCkP4uqmzXAHHqXhUvkQ@mail.gmail.com>
+ <20191118203406.GE43585@sirena.org.uk>
+In-Reply-To: <20191118203406.GE43585@sirena.org.uk>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 18 Nov 2019 16:17:49 -0500
+Message-ID: <CAGngYiWQixey6t_4evqPdS9Rw+VNf0M1nax8bEqaUt=nLDjEfw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] tps6105x: add optional devicetree support
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Lee Jones <lee.jones@linaro.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -46,65 +73,25 @@ Cc:     Lee Jones <lee.jones@linaro.org>,
         devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-leds@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] tps6105x: add optional devicetree support
-Message-ID: <20191118203406.GE43585@sirena.org.uk>
-References: <20191118165400.21985-1-TheSven73@gmail.com>
- <20191118165400.21985-2-TheSven73@gmail.com>
- <20191118170111.GL9761@sirena.org.uk>
- <CAGngYiW+8m4fBAY5Ya_4YmEmCTQeiiNP6=aH2mUX6d2wY1442w@mail.gmail.com>
- <20191118174550.GA43585@sirena.org.uk>
- <CAGngYiXLx8rkkKPyALYyCHFyst2Ft8bCkP4uqmzXAHHqXhUvkQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wTWi5aaYRw9ix9vO"
-Content-Disposition: inline
-In-Reply-To: <CAGngYiXLx8rkkKPyALYyCHFyst2Ft8bCkP4uqmzXAHHqXhUvkQ@mail.gmail.com>
-X-Cookie: Are we live or on tape?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Nov 18, 2019 at 3:34 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Mon, Nov 18, 2019 at 01:13:24PM -0500, Sven Van Asbroeck wrote:
+>
+> Is the regulator bit of this perhaps a voltage regulator and a current
+> regulator packaged together mainly for use powering LEDs?  That's a
+> hardware design I've seen before...
 
---wTWi5aaYRw9ix9vO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, you nailed it :)
 
-On Mon, Nov 18, 2019 at 01:13:24PM -0500, Sven Van Asbroeck wrote:
+>
+> Just point the regulator framework at the MFD's DT node - the children
+> of the MFD can look at the parent device happily, there's several
+> existing MFDs do this.
 
-> This mfd chip can be wired up as one of the following:
-> - gpio only
-> - gpio + regulator
-> - gpio + led
-> - gpio + flash
-
-Is the regulator bit of this perhaps a voltage regulator and a current
-regulator packaged together mainly for use powering LEDs?  That's a
-hardware design I've seen before...
-
-> in this case, there is no elegant way to specify the regulator properties in
-> the devicetree. Except by grabbing a reference to a subnode perhaps. And then
-> I'd have to somehow make sure that the sub driver's device->of_node points
-> at this subnode, which the mfd core doesn't do automatically.
-
-Just point the regulator framework at the MFD's DT node - the children
-of the MFD can look at the parent device happily, there's several
-existing MFDs do this.
-
---wTWi5aaYRw9ix9vO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3TAD0ACgkQJNaLcl1U
-h9Bqlgf8Dib7KYvT7366jnJriGkt0NV9PQ/TYCN+prAOuGPFTXGKFfvvoDwmk+Tc
-1iVLFjL50q8VMfkPpi2AbDZM0MjA7eir/yIOyg9hxutkWz+ttnnELQEUORVSdGhp
-WF+GwkGMYn3kuFysi9uhPs+yX2gLPFia6TcxxiLkR8I/nOIWT36Lc3mEpu401yUN
-MP24CU830l7Su2ip1HgyoNuuI5vfJWvnpQKSo0Kz9iBFVgVlpDhNnPGXar9d3PQO
-c3LxleG+Y+SPXdmXpPE86ENAuAmVoxHU3W03m+rs4QhouK3EX/hjwVI9mASUZxoW
-YrENReY3z5W6007+5oh7wzABjwVxZQ==
-=7W1d
------END PGP SIGNATURE-----
-
---wTWi5aaYRw9ix9vO--
+Ok, I think I get it now. Will prepare v2.
