@@ -2,163 +2,133 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D653FC43141
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 19:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECE6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 19:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B8922318
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 19:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D925C22318
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 19:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pup8uN0/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XtQspD0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfKRTVZ (ORCPT
+        id S1726765AbfKRTVe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:21:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45124 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfKRTVZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 14:21:25 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z10so20870379wrs.12
-        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 11:21:23 -0800 (PST)
+        Mon, 18 Nov 2019 14:21:34 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34836 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfKRTVe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 14:21:34 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k32so4376714pgl.2
+        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 11:21:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=o/90Ms6BI5x9icISft1MSO0ezPRhWphSB1+2IQPK3/A=;
-        b=Pup8uN0/k8+sJUenGIEmJb/vEQ3KpMQoaagCA1h+1CSl+xPG8rs24thJ6EpgMC7BAW
-         ulCN1GQnBgH9fEe9Yfiy1uati6fN/ZRCfW0q1G66kB7hbcKp6bQSu2AmJOIqWBiGXUXu
-         yMUqq9rjpcwVKY+ywaWyVa1ywGD3EpjkUEmiQ8l4GJwnPvmeLbrsdQy7sd6fiA0RU+Pg
-         ZyTsm0KWlvWzRFsn3LnjVWKcNYpZAjQXNwAzFfLFM7kutKBHE/E5AdZYH1A/tVWL4IhR
-         5LbFnKWxyPnW5YS3vDlYaZWJVbMdboRCqJHORiZUPXkjAY8ajPwdaArNmTY3aT62yUFq
-         PstQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d5PWZi/zKiryoyNeQKLfBbB+ek5n6FC2NtouBDWVRQs=;
+        b=XtQspD0uMRIVjaZ4j+RdCKdeQxaQCqQPp0dFHeqONKAZ35AY4eVCQPCYYleRmtsva6
+         jiBaP6dXV6CIhPTqL5k3YcxCbhisRrR03J2vLkV72aCm+pVNX6rvuTWONb3vLXyxlYRs
+         v5O5i+t3G1W2pCt3l+6JsFgLJWtzfK3LsM/dQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=o/90Ms6BI5x9icISft1MSO0ezPRhWphSB1+2IQPK3/A=;
-        b=tspJRNcv2PB9w8ahFlrRGAAdaiSSU+53j9JuWfOS2TFG9ilGXTjVSUgDPmBpVHs7RC
-         r/yl7C8Ps8UuBMyZV6ldOt9zXDboqwD9wMkOPR45Pr6tryL1/G0Ze/kS1jhny7jZp0tm
-         vr4DrOmCNDRqdALnXj0PRsn3hE+Pa1w4kck1FpJRgvZ46+Bgy33TnbUxR15097gsLpJO
-         CrfeJ9LisBUQvOHImMtTqCe1dWySXUmYEU25Z216SVRWiIRrx7bSe+L/+rEIyxg4AtFs
-         DoycRIUVuVsA6BLPMHi2eTCNzcrNMvmloCjMa2r5tl/B35WhypAOJeCc3fro0S4/9BU9
-         1UXA==
-X-Gm-Message-State: APjAAAVhAyJ17FHx6MNtKGzywbbrxs4oZogFfZ+jtQhbJ0MsR4zhv90A
-        yfi5y86a8zFEhK3tdwFT6/4=
-X-Google-Smtp-Source: APXvYqxMVnlTHNXmWdSIJuSfFodkvY6O8Jst/ot5IklWYLq25TKrixg1mk0a6CXuogvsGzKxe0S2iw==
-X-Received: by 2002:adf:f388:: with SMTP id m8mr3407261wro.18.1574104882900;
-        Mon, 18 Nov 2019 11:21:22 -0800 (PST)
-Received: from localhost ([37.238.189.2])
-        by smtp.gmail.com with ESMTPSA id p15sm384430wmb.10.2019.11.18.11.21.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d5PWZi/zKiryoyNeQKLfBbB+ek5n6FC2NtouBDWVRQs=;
+        b=Gp9D7MXn4dalKbvrQjueUEt8Q4AKc8x2IItyQ2SiraxHunMbLyxG+o3kJUIY6OAlxX
+         C6860JJsJSAvAeJzMAZ4SAS89X+WrpTnNmojRLojak5WKwvTCfknOTFRNAjPNywSKfNC
+         HkT48187LfbrOeP854eQ2KPN/6NbZKhqVJ9ej+PUZGPXme/ghwGqTHT0NkrlUy8BGYyG
+         T8uyr3vYbW42+TkMYRsUiW3QUBsXpaB6nu8vpcv2OpUGTM1MK0gWxX5OwzTD+ggOUCSD
+         20e0t3/fIJyY48RF+pnhBRMHhFDsHI1F+JlxyOXQzmb47/NnwI2xSlfnvCmyhLDT9rmN
+         sWzQ==
+X-Gm-Message-State: APjAAAVKbCCnjNXH+JDtFwUKRcj4hvOkRSccI/CgRzkU3WvhhIE1rtCn
+        Bdv9J9kfnTWKygYJo3gwWJJKEw==
+X-Google-Smtp-Source: APXvYqzs+mH7xTW54MFqTm5HE4eK5l6cG37wnugAw2nvX7u/bTQwIc633vnnHFTMf9ZOXDJoQw1YLg==
+X-Received: by 2002:a63:af1a:: with SMTP id w26mr960203pge.251.1574104893199;
+        Mon, 18 Nov 2019 11:21:33 -0800 (PST)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id p123sm22772633pfg.30.2019.11.18.11.21.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 11:21:21 -0800 (PST)
-Date:   Mon, 18 Nov 2019 22:21:19 +0300
-From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFC PATCH 3/4] arm64: dts: meson-gxbb: add support for
- Videostrong KII Pro
-Message-ID: <20191118192119.dht2cpk7so2wztcf@manjaro.localdomain>
-References: <20191117175606.5050-1-mohammad.rasim96@gmail.com>
- <20191117175606.5050-4-mohammad.rasim96@gmail.com>
- <65a64f28-c1fe-0ce2-d954-e96bc1924001@baylibre.com>
+        Mon, 18 Nov 2019 11:21:31 -0800 (PST)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v6 0/4] Bluetooth: hci_bcm: Additional changes for BCM4354 support
+Date:   Mon, 18 Nov 2019 11:21:19 -0800
+Message-Id: <20191118192123.82430-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65a64f28-c1fe-0ce2-d954-e96bc1924001@baylibre.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19/11/18 11:26AM, Neil Armstrong wrote:
-> On 17/11/2019 18:56, Mohammad Rasim wrote:
-> > This patch adds support for the Videostrong KII Pro tv box which is based on the gxbb-p201 reference design
-> > 
-> > Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
-> >  .../boot/dts/amlogic/meson-gxbb-kii-pro.dts   | 39 +++++++++++++++++++
-> >  2 files changed, 40 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-> > 
-> > diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> > index 84afecba9ec0..a795a170dcab 100644
-> > --- a/arch/arm64/boot/dts/amlogic/Makefile
-> > +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> > @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
-> > +dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-kii-pro.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-> > new file mode 100644
-> > index 000000000000..b63dabb7bf97
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-> > @@ -0,0 +1,39 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > +/* Copyright (c) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
-> > +*/
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "meson-gxbb-p20x.dtsi"
-> > +
-> > +/ {
-> > +	compatible = "videostrong,kii-pro", "amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
-> > +	model = "Videostrong KII Pro";
-> > +
-> > +
-> > +};
-> > +
-> > +&uart_A {
-> > +	status = "okay";
-> > +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-> > +	pinctrl-names = "default";
-> > +	uart-has-rtscts;
-> > +
-> > +	bluetooth {
-> > +		compatible = "brcm,bcm4335a0";
-> 
-> Use "brcm,bcm43438-bt" here if the I/F is compatible.
-> 
-> > +	};
-> > +};
-> > +
-> > +&ethmac {
-> > +	status = "okay";
-> > +	pinctrl-0 = <&eth_rmii_pins>;
-> > +	pinctrl-names = "default";
-> > +	phy-mode = "rmii";
-> > +
-> > +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
-> > +	snps,reset-delays-us = <0>, <10000>, <1000000>;
-> > +	snps,reset-active-low> +};
-> > +
-> > +
-> > 
-> 
-> Did you try to determine the PHY and add a PHY node aswell ? The reset stuff could go in the PHY node.
-looking at the PCB I can see the phy is "IP101GR" so I thought I can use
-the phy node of nextbox-a95x [0] but I get these errors:
 
-```
-[   15.867041] meson8b-dwmac c9410000.ethernet eth0: no phy at addr -1
-[   15.867079] meson8b-dwmac c9410000.ethernet eth0: stmmac_open: Cannot attach to PHY (error: -19)
-```
+While adding support for the BCM4354, I discovered a few more things
+that weren't working as they should have.
 
-[0] https://github.com/torvalds/linux/blob/f9717178b9be9477877d4c3776c61ff56d854ddf/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts#L165-L177
-> 
-> Neil
+First, we disallow serdev from setting the baudrate on BCM4354. Serdev
+sets the oper_speed first before calling hu->setup() in
+hci_uart_setup(). On the BCM4354, this results in bcm_setup() failing
+when the hci reset times out.
+
+Next, we add support for setting the PCM parameters, which consists of
+a pair of vendor specific opcodes to set the pcm parameters. The
+documentation for these params are available in the brcm_patchram_plus
+package (i.e. https://github.com/balena-os/brcm_patchram_plus). This is
+necessary for PCM to work properly.
+
+All changes were tested with rk3288-veyron-minnie.dts.
+
+
+Changes in v6:
+- Added btbcm_read_pcm_int_params and change pcm params to first read
+  the pcm params before setting it
+
+Changes in v5:
+- Rename parameters to bt-* and read as integer instead of bytestring
+- Update documentation with defaults and put values in header
+- Changed patch order
+
+Changes in v4:
+- Fix incorrect function name in hci_bcm
+
+Changes in v3:
+- Change disallow baudrate setting to return -EBUSY if called before
+  ready. bcm_proto is no longer modified and is back to being const.
+- Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
+- Changed brcm,sco-routing to brcm,bt-sco-routing
+
+Changes in v2:
+- Use match data to disallow baudrate setting
+- Parse pcm parameters by name instead of as a byte string
+- Fix prefix for dt-bindings commit
+
+Abhishek Pandit-Subedi (4):
+  Bluetooth: hci_bcm: Disallow set_baudrate for BCM4354
+  Bluetooth: btbcm: Support pcm configuration
+  dt-bindings: net: broadcom-bluetooth: Add pcm config
+  Bluetooth: hci_bcm: Support pcm params in dts
+
+ .../bindings/net/broadcom-bluetooth.txt       | 16 ++++
+ drivers/bluetooth/btbcm.c                     | 47 ++++++++++
+ drivers/bluetooth/btbcm.h                     | 16 ++++
+ drivers/bluetooth/hci_bcm.c                   | 88 ++++++++++++++++++-
+ include/dt-bindings/bluetooth/brcm.h          | 32 +++++++
+ 5 files changed, 197 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/bluetooth/brcm.h
+
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
