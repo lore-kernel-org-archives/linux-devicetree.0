@@ -2,195 +2,95 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C270DC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C45CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 16:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A72621D7A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 15:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nzhklT8F";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="dMEH59Fe"
+	by mail.kernel.org (Postfix) with ESMTP id 7079C21479
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 16:01:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574092875;
+	bh=Bu9vMLhhIiz9KwfV7bFauXtgssGkOPeExoWr0VvZXsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mbeAUy9Eybx5uvXoA/3Eq7GeBGcvNRazOimlpRTEnd77mUH6YQ6KO+DGErUVifKev
+	 VQ7vSM1qGlgfnEkFrK+9d3psU3thQZv0jWSDeLXe7gtRBGbpoLBrPeZ99wFtikamWH
+	 tklyU/TsraYq4GajGX/xc2IPWFl1uA9Hy0TOJAn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfKRP5f (ORCPT
+        id S1727333AbfKRQBO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:57:35 -0500
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:49764
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727334AbfKRP5f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:57:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574092654;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=0uOLVzLMI7MHc8k6E5GevpIZG9gm0SmkADc/SJd5Z0U=;
-        b=nzhklT8FJBBpz9mH5tKwRtUpH1XOKlOCBtyRMBv00av7yQeRn+rOJ/TZSd4JjXlT
-        O7PDyrw20tAB+EsdXNP45lJPJHKPmvjdAiAucANqsvx0iKoV2Dgx7jXx0YnwqBc4ruE
-        3E4w6ZCQW9sQZiDxkn6Ku9rmj9pRtW5nqVIRCJLA=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574092654;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
-        bh=0uOLVzLMI7MHc8k6E5GevpIZG9gm0SmkADc/SJd5Z0U=;
-        b=dMEH59FehjHpOlh1Lqk7BxDNcQD0y4BBHDv2fxpTiTYed2NYqjFk9CblgN4fr8md
-        UGn+UsgW0BnVQ78tpnngSMYSbh1GyU3+4hz3YL/zBn77YV+I52jVg7MHvguUY1E6OYT
-        1Kexlqa5TKb8cIQv7RiY/PUh7Hc8igJ9g3HxG0uY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79463C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 18 Nov 2019 15:57:34 +0000
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie,
-        linux-arm-msm@vger.kernel.org, dianders@chromium.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        daniel@ffwll.ch, freedreno@lists.freedesktop.org
-Subject: Re: [Freedreno] [PATCH 2/4] drm/msm/gpu: add support for ocmem
- interconnect path
-Message-ID: <0101016e7f3bc614-0b50ca10-6ca3-459e-831c-af9e18acbacf-000000@us-west-2.amazonses.com>
-Mail-Followup-To: Brian Masney <masneyb@onstation.org>, robdclark@gmail.com,
-        sean@poorly.run, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, airlied@linux.ie,
-        linux-arm-msm@vger.kernel.org, dianders@chromium.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        daniel@ffwll.ch, freedreno@lists.freedesktop.org
-References: <20191117114825.13541-1-masneyb@onstation.org>
- <20191117114825.13541-3-masneyb@onstation.org>
+        Mon, 18 Nov 2019 11:01:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:36402 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbfKRQBO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:01:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14A32DA7;
+        Mon, 18 Nov 2019 08:01:14 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7802F3F703;
+        Mon, 18 Nov 2019 08:01:13 -0800 (PST)
+Date:   Mon, 18 Nov 2019 16:01:11 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] bindings: sound: pcm3168a: Document optional RST gpio
+Message-ID: <20191118160111.GH9761@sirena.org.uk>
+References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
+ <20191113124734.27984-2-peter.ujfalusi@ti.com>
+ <20191118130855.GE9761@sirena.org.uk>
+ <5f824119-9b5b-5ad2-6915-d174f9cca8af@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3ecMC0kzqsE2ddMN"
 Content-Disposition: inline
-In-Reply-To: <20191117114825.13541-3-masneyb@onstation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-SES-Outgoing: 2019.11.18-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+In-Reply-To: <5f824119-9b5b-5ad2-6915-d174f9cca8af@ti.com>
+X-Cookie: no maintenance:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 06:48:23AM -0500, Brian Masney wrote:
-> Some A3xx and all A4xx Adreno GPUs do not have GMEM inside the GPU core
-> and must use the On Chip MEMory (OCMEM) in order to be functional.
-> There's a separate interconnect path that needs to be setup to OCMEM.
-> Add support for this second path to the GPU core.
-> 
-> In the downstream MSM 3.4 sources, the two interconnect paths for the
-> GPU are between:
-> 
->   - MSM_BUS_MASTER_GRAPHICS_3D and MSM_BUS_SLAVE_EBI_CH0
->   - MSM_BUS_MASTER_V_OCMEM_GFX3D and MSM_BUS_SLAVE_OCMEM
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c   |  6 +++---
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 20 ++++++++++++++++----
->  drivers/gpu/drm/msm/msm_gpu.h           |  3 ++-
->  3 files changed, 21 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 85f14feafdec..7885e382fb8f 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -132,7 +132,7 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
->  	 * Eventually we will want to scale the path vote with the frequency but
->  	 * for now leave it at max so that the performance is nominal.
->  	 */
-> -	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> +	icc_set_bw(gpu->gfx_mem_icc_path, 0, MBps_to_icc(7216));
->  }
->  
->  void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
-> @@ -714,7 +714,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->  	}
->  
->  	/* Set the bus quota to a reasonable value for boot */
-> -	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(3072));
-> +	icc_set_bw(gpu->gfx_mem_icc_path, 0, MBps_to_icc(3072));
->  
->  	/* Enable the GMU interrupt */
->  	gmu_write(gmu, REG_A6XX_GMU_AO_HOST_INTERRUPT_CLR, ~0);
-> @@ -858,7 +858,7 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
->  		a6xx_gmu_shutdown(gmu);
->  
->  	/* Remove the bus vote */
-> -	icc_set_bw(gpu->icc_path, 0, 0);
-> +	icc_set_bw(gpu->gfx_mem_icc_path, 0, 0);
->  
->  	/*
->  	 * Make sure the GX domain is off before turning off the GMU (CX)
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 0783e4b5486a..d1cc021c012c 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -887,9 +887,20 @@ static int adreno_get_pwrlevels(struct device *dev,
->  	DBG("fast_rate=%u, slow_rate=27000000", gpu->fast_rate);
->  
->  	/* Check for an interconnect path for the bus */
-> -	gpu->icc_path = of_icc_get(dev, NULL);
-> -	if (IS_ERR(gpu->icc_path))
-> -		gpu->icc_path = NULL;
-> +	gpu->gfx_mem_icc_path = of_icc_get(dev, "gfx-mem");
-> +	if (!gpu->gfx_mem_icc_path) {
-> +		/*
-> +		 * Keep compatbility with device trees that don't have an
-> +		 * interconnect-names property.
-> +		 */
-> +		gpu->gfx_mem_icc_path = of_icc_get(dev, NULL);
-> +	}
-> +	if (IS_ERR(gpu->gfx_mem_icc_path))
-> +		gpu->gfx_mem_icc_path = NULL;
-> +
-> +	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-> +	if (IS_ERR(gpu->ocmem_icc_path))
-> +		gpu->ocmem_icc_path = NULL;
 
-This is the part where I am reminded that icc_set_bw doesn't check
-IS_ERR_OR_NULL and even worse, icc_put warns on IS_ERR and it makes 
-me grumble.
+--3ecMC0kzqsE2ddMN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  	return 0;
->  }
-> @@ -976,7 +987,8 @@ void adreno_gpu_cleanup(struct adreno_gpu *adreno_gpu)
->  	for (i = 0; i < ARRAY_SIZE(adreno_gpu->info->fw); i++)
->  		release_firmware(adreno_gpu->fw[i]);
->  
-> -	icc_put(gpu->icc_path);
-> +	icc_put(gpu->gfx_mem_icc_path);
-> +	icc_put(gpu->ocmem_icc_path);
->  
->  	msm_gpu_cleanup(&adreno_gpu->base);
->  }
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> index ab8f0f9c9dc8..e72e56f7b0ef 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.h
-> +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> @@ -111,7 +111,8 @@ struct msm_gpu {
->  	struct clk *ebi1_clk, *core_clk, *rbbmtimer_clk;
->  	uint32_t fast_rate;
->  
-> -	struct icc_path *icc_path;
-> +	struct icc_path *gfx_mem_icc_path;
-> +	struct icc_path *ocmem_icc_path;
+On Mon, Nov 18, 2019 at 04:46:26PM +0200, Peter Ujfalusi wrote:
+> On 18/11/2019 15.08, Mark Brown wrote:
 
-I'm not sure if we want a bulk rename of the main path.  icc_path and
-ocmem_icc_path seem to be reasonable names and not overly confusing especially
-if we added some documentation to the header).
+> > Please submit patches using subject lines reflecting the style for the
+> > subsystem, this makes it easier for people to identify relevant patches.
+> > Look at what existing commits in the area you're changing are doing and
+> > make sure your subject lines visually resemble what they're doing.
+> > There's no need to resubmit to fix this alone.
 
+> What would be the appropriate subject line for
+> Documentation/devicetree/bindings/sound
 
->  	/* Hang and Inactivity Detection:
->  	 */
-> -- 
-> 2.21.0
-> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> Oops, I have missed the dt- prefix for the bindings for sure.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I prefer ASoC: but yeah, you missed dt-.
+
+--3ecMC0kzqsE2ddMN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3SwEYACgkQJNaLcl1U
+h9CqAQf/TzsDc61IPhX0l9gJTpyxpHP8aQwigm4y1DNpSWUcdHEoR0vSssiPAnLw
+Pt2g9bSvrdUGiSEn9IkUGt4yWiCT0RyGUWSTsQ7/k78PCzGyGLrThmRRWnNu7s2b
+qE7hGNfTMk6oThsMz03ytkIaZl40PJSopNCJHs5h73hkYkBWTZfSDW0XORUPrgYt
+g5hx0bZJtYgwziZi05dFEW3KCpdaVSbyTZgULXAlVSpOhUbfcJpBl2K1rNcp1Opk
+2KeKaWTJ59RxiEf9s32kFVxsKv9jXky55sMk6DrW8+Uwu98sZG/78xNrqXPu0T0d
+pN4DN87GEqlrihD347osS1BBopRKNQ==
+=fktM
+-----END PGP SIGNATURE-----
+
+--3ecMC0kzqsE2ddMN--
