@@ -2,91 +2,154 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01D7C432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED9AC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 07:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9984020878
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3D220409
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 07:43:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="p1uUUIAf";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="vuTRZWWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfKRHh0 (ORCPT
+        id S1726460AbfKRHno (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:37:26 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:38567 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRHhZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 02:37:25 -0500
-Received: from localhost ([185.35.208.129]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N9dg5-1hli4Z3cEH-015WVh; Mon, 18 Nov 2019 08:36:54 +0100
-Date:   Mon, 18 Nov 2019 08:36:50 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
-Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
-        tglx@linutronix.de, mchehab+samsung@kernel.org,
-        davem@davemloft.net, paulmck@linux.ibm.com,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] MAINTAINERS: add maintainer for ping iio sensors
-Message-ID: <20191118073648.tk4otab6alsiuzt7@arbad>
+        Mon, 18 Nov 2019 02:43:44 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:51384 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726425AbfKRHno (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 02:43:44 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAI7d8GF027647;
+        Sun, 17 Nov 2019 23:43:37 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=XUcdbqQgeAGTFE2ltQr7Xa7aN9Fmhxb+WddHaqu7DcE=;
+ b=p1uUUIAfMfQXSYoo+8BINVkrK0Kktn36vLAzF2UrZEwQWFhM9ec4eyR6p3fvn8TBXrCN
+ s8SWCi7W/duhJK4wuyphN++TCWMlzmW4lUTGV2vFwRHlINHI/8Z0GLw/HXdbO0Cm6giu
+ 7blhQh15U7Mv8aLQkvAYekwUEzvGMpIBtuVf+Azo8qHUTmUIeCAG3iwQ8xuxAYB1Qo0A
+ 4bUJvgzOvLKKxEhJx70OTnqTIEBIX5acrX8vfFcckmSymO4EZFAJgHD4nQN+PgZLbxaU
+ /+hsCQ3Xr6t1yteZNaelxtnqMNnyK9wSkae6pDnWMsYBcsxNeas3LCw7NoMykkkQ/3xZ 0Q== 
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2056.outbound.protection.outlook.com [104.47.33.56])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2wadjy5fuv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 17 Nov 2019 23:43:37 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b067fKS0oty+GM4yJkOxPz7wajYiQyDDTInCY0tlEu3XIukbvUDKtsWBxIBYmiJU6Xr47OTWoIej4Fy0EITwHZFVtkr96dMDLc5Slb+Af3lbjV1Xf95jmbr2g6S64AQjvwx9eXYuzHg2d8H7rwvDeu9oEANw6vKkF3EWMA5eord2blGCVTcXMufJ669BneD6phE5tyzVdoZeSAwQbEt7ggei0OlCqRCSdoPkPzRLVJM6/LJGr9Nx3EPGfMxOrWJlZBNNtXVGfHsQm+6JWpEXnysxSdclRxtf+3ouImivHS8+8xBdRzLqPH1C+vYwUcGNMKm2seXrsEaJcB8RFxkieg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XUcdbqQgeAGTFE2ltQr7Xa7aN9Fmhxb+WddHaqu7DcE=;
+ b=H/BhmKKnx3yWlRfPUMN5yGqaopYc24RIbWxu5P97VyydpvJ7SEue7cz2BWvNa70BG1qhyAjjG9I1q706T8rAeLCIo2wzDxpVt1qstETWzougX5xIMW6d/hx1ebQNdWX4Fu0uwvsl2SoHeYGM1tUF1a0814xzfX63qJqMUMlU/8fpTR/tAstiIeuJXalQvZSUgyMwJ9ZhGGU/b9fZhe1NgzVgIzYWX/sPhZmHgeXweSGBqa2QJwIKu5TGYAfCwFbxbxBnpJS04ZFn+CKgswika7X0PRAWiqXEZ8jD3k6Zhyo9qzPe5/uXch6Uj9sjOrDLN2/EB8/W20fkC6xg9oHjMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 199.43.4.28) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XUcdbqQgeAGTFE2ltQr7Xa7aN9Fmhxb+WddHaqu7DcE=;
+ b=vuTRZWWOZdFMWWu9gETKitu4dgoT41FvGSZuAxJfXamm5okwXyu/6CqwYv4qoO1twIgkSL8dXYtEbiv1uFOma61btRYMg5AwinTkoK58ChzhqIkwnQM873JX+ElYG3W0EF7FHocCOgMSMgvPYbbBxSubx3oSGdOQrBtA+pKSt1s=
+Received: from BN8PR07CA0003.namprd07.prod.outlook.com (2603:10b6:408:ac::16)
+ by DM6PR07MB6809.namprd07.prod.outlook.com (2603:10b6:5:17c::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.26; Mon, 18 Nov
+ 2019 07:43:35 +0000
+Received: from MW2NAM12FT009.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5a::208) by BN8PR07CA0003.outlook.office365.com
+ (2603:10b6:408:ac::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23 via Frontend
+ Transport; Mon, 18 Nov 2019 07:43:34 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 199.43.4.28 as permitted sender)
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ MW2NAM12FT009.mail.protection.outlook.com (10.13.180.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23 via Frontend Transport; Mon, 18 Nov 2019 07:43:34 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id xAI7hUXY001611
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 18 Nov 2019 02:43:32 -0500
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Mon, 18 Nov 2019 08:43:30 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 18 Nov 2019 08:43:30 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id xAI7hUuL006242;
+        Mon, 18 Nov 2019 08:43:30 +0100
+Received: (from aniljoy@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id xAI7hS7U006159;
+        Mon, 18 Nov 2019 08:43:28 +0100
+From:   Anil Joy Varughese <aniljoy@cadence.com>
+To:     <kishon@ti.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     <aniljoy@cadence.com>, <mparab@cadence.com>, <rafalc@cadence.com>
+Subject: [PATCH] bindings:phy Mark phy_clk binding as deprecated in Cadence Sierra Phy.
+Date:   Mon, 18 Nov 2019 08:43:08 +0100
+Message-ID: <1574062988-4751-1-git-send-email-aniljoy@cadence.com>
+X-Mailer: git-send-email 2.4.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:ZISP8DP7LxxcjVaKcb0HRurcDIs/0YQTEspXlzOeNUD09UpU21I
- A8MfWMOlgmmvZwYxEVYwbPSQsxW7yxgfzqZdQCxtLfO/MgWG2IqPZMRQR+ZzfvL9TV8tknA
- gJpZuVuMirJ5Dk2t49/AmA/SKYp5VCeCRO1xCWcWn+i79CdlQOeLjKt/bQLFSW8nwsS4xKP
- EHfM7FqfJrwlgsCGPfjzQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pzWtpX5zhZA=:uAPKewFawR4cgNWUdCnfrh
- TKb2ODE7kL5lG4bjmgtm/SMhHhx/6z7AWNU0kO0TTrbrtWe/mGBhHzw6v4VeztTj1wdC7+IJd
- zPXNvZ4S/5LK+u4dAflENtx6btQ41SHOEGxfOZKdkhbCtpOh5Pk4pwiYmuW/IuHHMK7MRynEB
- mCbyrd1q1B1pLmlTkhO0jMvFoWvjBCSJDejDP9B/rRGO9d4/UxOWDhyJAXzUQ1zKdeAoFmTUd
- 6oQMPQXVMR/YG9ed9q9gGHN4uuYvCK5hRULjaSlMF6p0nSTUYXMOeFb3mc11wC54M84KSLJ7N
- 03OVQygOfpdHXEwYLJmcPdjteyFBIvFbwGqyn7U3o3sEMCBeeQoXTaNWXK+Yzkx55P0hX7eMF
- pl/g+auPT/EPhh6WAbyl3CGPlkJ8UOhm8csfemYYdcKGQWci7KzvtIhMhS81f5adabVCIVrNQ
- yQGI9HvlQ0xlagOiRgCJwJoOlZJJiQV6kxDRbXccBFdf5eXG85Up9GAdabbjhCrCEe8mRUKdG
- iINAa9dIkQS36Ugm4xXsQFH0riCfkvLQhjMTms1HW3+0w+N9zZXqT2hWZJw3McmJr+g4PFGm3
- CrPB2jE4wd1kbIfyI1y3FiL1gp1a7qBtYNMHwhFwu9w+ocos8pn254b9Vr5Vg0aaGnbEgJFz5
- e7T1xwEAYbGk0albCkSO/QWAIMNX/8YUqka0KfylCv//nf5+DY7mlWgiPzA2ZbP3kAPXpE4ry
- MHbYBLBWCCJvBdIvdpxvOwDCta/quArlCp9CtIrivJXfZiWVKRtn6SHAm1/OR6S2/DRYU9gDM
- nmP4gUGy0BSXxWSHClGa+VJ5WfsFBdGiYizWTk5YBvT/cr+KtSXKuT/6qvdBkZNk+0QLJOmbE
- 0N0MLkHejM1mychbQr5z9VBDKKf/oY5Ld4CKzAJ1Y=
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39850400004)(346002)(136003)(396003)(36092001)(199004)(189003)(8936002)(16586007)(36756003)(486006)(336012)(76130400001)(26826003)(81156014)(81166006)(54906003)(476003)(87636003)(5660300002)(8676002)(316002)(42186006)(110136005)(478600001)(2616005)(4744005)(2201001)(70206006)(70586007)(50226002)(50466002)(2906002)(305945005)(86362001)(126002)(426003)(51416003)(356004)(6666004)(47776003)(4326008)(26005)(186003)(107886003)(48376002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR07MB6809;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b628247a-d3d5-40cf-540a-08d76bfb03e8
+X-MS-TrafficTypeDiagnostic: DM6PR07MB6809:
+X-Microsoft-Antispam-PRVS: <DM6PR07MB68093B6B79F08A37E3C3A9A5A84D0@DM6PR07MB6809.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 0225B0D5BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sWGUxV8UeQ0edfHWqr4Y0ZZV71sEoBZ47Z6HDkA9ymICSfZDRTCInYUlIqvUFYO9THuhp2ZgA1VEBEwH5254eet+V5aPI5755nOy3CdHrxnc20sXhw4Aeild/l8VPSJ8ivFGnUqmyoMMimvvqgCbxSCZRE9cViHDAE+uFWValGbgQWP1ycHY+xBoOexqiyKP4/F6yppdgZau+PAFtamqEP5S2hc9eZcnbxNm3YsTaEwRhLgM6VZRGCIefbDTh/VUO5DnkKU0ahJc4w4OTen/g/uGfpWZd/493yexuY/5wnMMPKhqWQj1xxtGTmsQGNyGNFHsaWpsyOn1nVjR+QB7AvVrDQ3VCt9e5JKqc4X/zrJdeKG7fURTjzUUa30ikJvl0sKA1Uce/+9gvoqs9MpyPw0ZtZfWLVXD2cEXFrv0XDDGrZIJorbi78DhMqHj9R/9H3YedW7orQL4cJRWWRmbbg==
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2019 07:43:34.1291
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b628247a-d3d5-40cf-540a-08d76bfb03e8
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB6809
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_01:2019-11-15,2019-11-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ clxscore=1011 phishscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911180067
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a maintainer for the new parallax PING))) and LaserPING IIO sensors
+Updated the Sierra Phy binding doc to mark phy_clk as deprecated.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Anil Joy Varughese <aniljoy@cadence.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../devicetree/bindings/phy/phy-cadence-sierra.txt |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c6c34d04ce95..ad469adffb99 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12264,6 +12264,13 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/panasonic-laptop.c
- 
-+PARALLAX PING IIO SENSOR DRIVER
-+M:	Andreas Klinger <ak@it-klinger.de>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-+F:	drivers/iio/proximity/ping.c
-+
- PARALLEL LCD/KEYPAD PANEL DRIVER
- M:	Willy Tarreau <willy@haproxy.com>
- M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
+diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt b/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
+index 6e1b47b..9a42b46 100644
+--- a/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
++++ b/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
+@@ -5,7 +5,7 @@ Required properties:
+ - compatible:	cdns,sierra-phy-t0
+ - clocks:	Must contain an entry in clock-names.
+ 		See ../clocks/clock-bindings.txt for details.
+-- clock-names:	Must be "phy_clk"
++- clock-names:	Must be "phy_clk". This is deprecated and should not be used with newer bindings.
+ - resets:	Must contain an entry for each in reset-names.
+ 		See ../reset/reset.txt for details.
+ - reset-names:	Must include "sierra_reset" and "sierra_apb".
 -- 
-2.11.0
+1.7.1
+
