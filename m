@@ -2,139 +2,139 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C257CC43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81752C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9834D22312
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5257322319
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 22:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574115227;
-	bh=23CYkqb1sCbHRS367f6Ef2QNQGacCJPjPowbX7/jTW0=;
+	s=default; t=1574115374;
+	bh=N99woBNUTEY8YudZfid747INNWN2pB/zmRRfNYJOdjI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b9HN/UM0i/edX9ND5eF5n0ZZVO5PRjuJaFVZf2WNyvrAbXrjbuKmuurYZEmlyug38
-	 o/lCdesJapowIS4+1KYnbAMrueAovGWUOrUURivjqe32u/pfSUDVInztIOcytb5JZo
-	 w5lXe9Ojnob70IxBAJ7mBq5R9RuZpYkoEfvQfJnY=
+	b=paMHQXZOH38b8Z8puakoOILAhYhSvxFu2sPDirQQnmQ573t6qbg/p0wwUqZQV7XvJ
+	 nEEgvwmROGjhVPdeNGX1GHkRZThb4RgWhSBsVR4NJ5G0JozCgGNf4M1Npy2m4MbTeY
+	 NcdcJDWyODmlOpIiCEvhbvOpYbsGqpC9AOEK0QKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfKRWNq (ORCPT
+        id S1726747AbfKRWQN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:13:46 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36064 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRWNn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:13:43 -0500
-Received: by mail-ot1-f67.google.com with SMTP id f10so16017133oto.3;
-        Mon, 18 Nov 2019 14:13:43 -0800 (PST)
+        Mon, 18 Nov 2019 17:16:13 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41453 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRWQN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 17:16:13 -0500
+Received: by mail-oi1-f193.google.com with SMTP id e9so16918158oif.8;
+        Mon, 18 Nov 2019 14:16:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uz71LFY9ZiC02xsaXtidPtTM6eY67MbXjszr1DEYBdw=;
-        b=pFgn+8AsKjAWtF37c920aeglAtloUtSU2vrVHeVHExMAID3eNXKrOb/kRriW8BaDn2
-         JrL4Mv3A7f06YMK16G7EuTJi+xZokHwjCWLjBTi98zQLQilpwzk8YXeehuBqOLG94P//
-         hqM/rRC0EtIRkgQCJymQN+NEdkSZTnorcj+AdW/4yq1gjp23Y8pd/aRhG1Sh/S/0+kFI
-         4/WekN4Q0ByTY1Nzz0UFk0VMbgZa1Sk+8bzHwEF6tDEsQizjrvUqEA0c4a0Q+0taXXsD
-         1QEERtYmoZ+RvHBzRGUASkklWkHS51joWCRaXMVrIzXODhHhcx0wUjGeSilLQPD58yq+
-         Q93Q==
-X-Gm-Message-State: APjAAAVeU6VkW1xOYTtIHrn/SmXF1aIawi4+k7xQZxoRemrzL+RWEqmE
-        qtTbwrphqzQnG4x3c52v9g==
-X-Google-Smtp-Source: APXvYqw6QpdZzQirquW55aln+tRJNgakjQaUccKPAVTwfpO/53lbAe+zERpVYHbBdX6++qUYf6kIKg==
-X-Received: by 2002:a9d:3b26:: with SMTP id z35mr1175001otb.355.1574115222697;
-        Mon, 18 Nov 2019 14:13:42 -0800 (PST)
+        bh=KnuBbVAKHbMtMVfXJXYBniSdagQcrSD0bPdsm4tuqh4=;
+        b=oks8fAFXQNnFpT6MSooCFkQyFl4UhfCyGRCtFF5DH1K2gd0NtSF7tMj+hjT22kV/Qd
+         KJyudEAJBWeyKhpuj8jYtMsVkGpJl4/hzQw8IGz7R5DXxuJ3hRGz5MoKum8nCr2DxRct
+         blV4Ne+WhPd0yyR+NzZ74t2LtIdhKzhepObkHT26Q8g1aCbrSj/Rll8FjmamzR7OL04f
+         xIiNb12K5rXd01j2O96FmkMC6HCI/d+NQBKpHSaSTORumJLkrKm0ukUgCJvQL6oxmoy7
+         YCyJftGS/uablvDSMSAhw29Sjjhow1Tbnlv7CG53sWpYoX200DZpVPy1+d1Lxsj4hmja
+         XorA==
+X-Gm-Message-State: APjAAAVfpbDXviKw9m3RVPLDavnxDFRHVHXKT+ef/CrriCTL6A0T4v3M
+        +eWmwSj2oBaB9/lB460ibY+gPUg=
+X-Google-Smtp-Source: APXvYqygUVenonCmA1oSV8uGqeMySnY2XKrtqxrf+Ry4Vh5n+7pXFTIjziFLnBjOpiLj4dEV/sPg9A==
+X-Received: by 2002:aca:52c2:: with SMTP id g185mr1121042oib.45.1574115372467;
+        Mon, 18 Nov 2019 14:16:12 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 65sm6519025oie.50.2019.11.18.14.13.41
+        by smtp.gmail.com with ESMTPSA id h9sm6643971otn.14.2019.11.18.14.16.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 14:13:41 -0800 (PST)
-Date:   Mon, 18 Nov 2019 16:13:41 -0600
+        Mon, 18 Nov 2019 14:16:11 -0800 (PST)
+Date:   Mon, 18 Nov 2019 16:16:11 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        linux-mtd@lists.infradead.org, Mark Brown <broonie@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Subject: Re: [PATCH v4 3/4] dt-bindings: mtd: Describe mtd-concat devices
-Message-ID: <20191118221341.GA30937@bogus>
-References: <20191113171505.26128-1-miquel.raynal@bootlin.com>
- <20191113171505.26128-4-miquel.raynal@bootlin.com>
+To:     shubhrajyoti.datta@gmail.com
+Cc:     linux-i2c@vger.kernel.org, peda@axentia.se,
+        devicetree@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: Re: [PATCH] i2c: mux: pca954x: Disable cacheing of the last channel
+Message-ID: <20191118221611.GA30841@bogus>
+References: <1573719422-7414-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191113171505.26128-4-miquel.raynal@bootlin.com>
+In-Reply-To: <1573719422-7414-1-git-send-email-shubhrajyoti.datta@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 06:15:04PM +0100, Miquel Raynal wrote:
-> From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+On Thu, Nov 14, 2019 at 01:47:02PM +0530, shubhrajyoti.datta@gmail.com wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+
+Typo in the subject.
+
+Run get_maintainers.pl and Cc the right people.
+
+> In case of multimaster configuration the last channel cached value is
+> not reliable. Basically the first processor/master does a write to the
+> mux and then to the intended slave, it caches the value.
+> Now the second processor/processor does a write to mux on another
+> channel and writes to another slave.
+> The first processor/master when it attempts to write the slave
+> skips the mux as it relies on the mux channel being the same as the
+> intended. This causes an issue.
 > 
-> The main use case to concatenate MTD devices is probably SPI-NOR
-> flashes where the number of address bits is limited to 24, which can
-> access a range of 16MiB. Board manufacturers might want to double the
-> SPI storage size by adding a second flash asserted thanks to a second
-> chip selects which enhances the addressing capabilities to 25 bits,
-> 32MiB. Having two devices for twice the size is great but without more
-> glue, we cannot define partition boundaries spread across the two
-> devices. This is the gap mtd-concat intends to address.
+> To fix that write always to the mux address.
 > 
-> There are two options to describe concatenated devices:
-> 1/ One flash chip is described in the DT with two CS;
-> 2/ Two flash chips are described in the DT with one CS each, a virtual
-> device is also created to describe the concatenation.
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
+>  drivers/i2c/muxes/i2c-mux-pca954x.c                       | 6 +++++-
+>  2 files changed, 6 insertions(+), 1 deletion(-)
 > 
-> Solution 1/ presents at least 3 issues:
-> * The hardware description is abused;
-> * The concatenation only works for SPI devices (while it could be
->   helpful for any MTD);
-> * It would require a lot of rework in the SPI core as most of the
->   logic assumes there is and there always will be only one CS per
->   chip.
-
-This seems ok if all the devices are identical.
-
-> Solution 2/ also has caveats:
-> * The virtual device has no hardware reality;
-> * Possible optimizations at the hardware level will be hard to enable
->   efficiently (ie. a common direct mapping abstracted by a SPI
->   memories oriented controller).
-
-Something like this may be necessary if data is interleaved rather than 
-concatinated.
-
-
-Solution 3
-Describe each device and partition separately and add link(s) from one 
-partition to the next 
-
-flash0 {
-  partitions {
-    compatible = "fixed-partitions";
-    concat-partition = <&flash1_partitions>;
-    ...
-  };
-};
-
-flash1 {
-  flash1_partition: partitions {
-    compatible = "fixed-partitions";
-    ...
-  };
-};
-
-Maybe a link back to the previous paritions too or a boolean to mark as 
-a continuation.
-
-No idea how well this works or not for the kernel, but that really 
-shouldn't matter for the binding design.
-
-Rob
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> index 30ac6a6..fc4c0b0 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> @@ -34,6 +34,7 @@ Optional Properties:
+>      - first cell is the pin number
+>      - second cell is used to specify flags.
+>      See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +  - no-channel-cache: Write the mux channel always.
+>  
+>  Example:
+>  
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> index 923aa3a..37d32b0 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> @@ -85,6 +85,7 @@ struct pca954x {
+>  	const struct chip_desc *chip;
+>  
+>  	u8 last_chan;		/* last register value */
+> +	u8 last_chan_unchached;	/* write channel register always */
+>  	/* MUX_IDLE_AS_IS, MUX_IDLE_DISCONNECT or >= 0 for channel */
+>  	s8 idle_state;
+>  
+> @@ -244,7 +245,7 @@ static int pca954x_select_chan(struct i2c_mux_core *muxc, u32 chan)
+>  		regval = 1 << chan;
+>  
+>  	/* Only select the channel if its different from the last channel */
+> -	if (data->last_chan != regval) {
+> +	if (last_chan_unchached && data->last_chan != regval) {
+>  		ret = pca954x_reg_write(muxc->parent, client, regval);
+>  		data->last_chan = ret < 0 ? 0 : regval;
+>  	}
+> @@ -479,6 +480,9 @@ static int pca954x_probe(struct i2c_client *client,
+>  	if (idle_disconnect_dt)
+>  		data->idle_state = MUX_IDLE_DISCONNECT;
+>  
+> +	data->last_chan_unchached = np &&
+> +		of_property_read_bool(np, "no-channel-cache");
+> +
+>  	ret = pca954x_irq_setup(muxc);
+>  	if (ret)
+>  		goto fail_cleanup;
+> -- 
+> 2.1.1
+> 
