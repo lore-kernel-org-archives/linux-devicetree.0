@@ -2,148 +2,163 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2E4C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 19:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D653FC43141
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 19:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101CB20885
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 19:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B8922318
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 19:21:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pup8uN0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKRTFV (ORCPT
+        id S1726686AbfKRTVZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:05:21 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:42632 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726423AbfKRTFV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:05:21 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iWmKl-000530-T0; Mon, 18 Nov 2019 20:05:12 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from dell2.five-lan.de (p508F31A5.dip0.t-ipconnect.de [80.143.49.165])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAIJ59Ku008128
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 18 Nov 2019 20:05:10 +0100
-Subject: Re: arm64: dts: rockchip: Disable HS400 for mmc on rk3399-roc-pc
-To:     Doug Anderson <dianders@chromium.org>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vicente Bergas <vicencb@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Randy Li <ayaka@soulik.info>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>
-References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
- <2766673.iMURPl8gB5@phil>
- <69472c06-8b21-c3d8-acad-1a0a292c0fa2@fivetechno.de>
- <3460135.SDF8zhHPq4@diego>
- <CAD=FV=VnjyQJpRcW6P1f4+ZrSOzAe2Cnoej=it4aCz+F_ozukw@mail.gmail.com>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Message-ID: <2db7a63f-a091-db8d-3414-cac289011878@fivetechno.de>
-Date:   Mon, 18 Nov 2019 20:05:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 18 Nov 2019 14:21:25 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45124 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbfKRTVZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 14:21:25 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z10so20870379wrs.12
+        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 11:21:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=o/90Ms6BI5x9icISft1MSO0ezPRhWphSB1+2IQPK3/A=;
+        b=Pup8uN0/k8+sJUenGIEmJb/vEQ3KpMQoaagCA1h+1CSl+xPG8rs24thJ6EpgMC7BAW
+         ulCN1GQnBgH9fEe9Yfiy1uati6fN/ZRCfW0q1G66kB7hbcKp6bQSu2AmJOIqWBiGXUXu
+         yMUqq9rjpcwVKY+ywaWyVa1ywGD3EpjkUEmiQ8l4GJwnPvmeLbrsdQy7sd6fiA0RU+Pg
+         ZyTsm0KWlvWzRFsn3LnjVWKcNYpZAjQXNwAzFfLFM7kutKBHE/E5AdZYH1A/tVWL4IhR
+         5LbFnKWxyPnW5YS3vDlYaZWJVbMdboRCqJHORiZUPXkjAY8ajPwdaArNmTY3aT62yUFq
+         PstQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o/90Ms6BI5x9icISft1MSO0ezPRhWphSB1+2IQPK3/A=;
+        b=tspJRNcv2PB9w8ahFlrRGAAdaiSSU+53j9JuWfOS2TFG9ilGXTjVSUgDPmBpVHs7RC
+         r/yl7C8Ps8UuBMyZV6ldOt9zXDboqwD9wMkOPR45Pr6tryL1/G0Ze/kS1jhny7jZp0tm
+         vr4DrOmCNDRqdALnXj0PRsn3hE+Pa1w4kck1FpJRgvZ46+Bgy33TnbUxR15097gsLpJO
+         CrfeJ9LisBUQvOHImMtTqCe1dWySXUmYEU25Z216SVRWiIRrx7bSe+L/+rEIyxg4AtFs
+         DoycRIUVuVsA6BLPMHi2eTCNzcrNMvmloCjMa2r5tl/B35WhypAOJeCc3fro0S4/9BU9
+         1UXA==
+X-Gm-Message-State: APjAAAVhAyJ17FHx6MNtKGzywbbrxs4oZogFfZ+jtQhbJ0MsR4zhv90A
+        yfi5y86a8zFEhK3tdwFT6/4=
+X-Google-Smtp-Source: APXvYqxMVnlTHNXmWdSIJuSfFodkvY6O8Jst/ot5IklWYLq25TKrixg1mk0a6CXuogvsGzKxe0S2iw==
+X-Received: by 2002:adf:f388:: with SMTP id m8mr3407261wro.18.1574104882900;
+        Mon, 18 Nov 2019 11:21:22 -0800 (PST)
+Received: from localhost ([37.238.189.2])
+        by smtp.gmail.com with ESMTPSA id p15sm384430wmb.10.2019.11.18.11.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 11:21:21 -0800 (PST)
+Date:   Mon, 18 Nov 2019 22:21:19 +0300
+From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [RFC PATCH 3/4] arm64: dts: meson-gxbb: add support for
+ Videostrong KII Pro
+Message-ID: <20191118192119.dht2cpk7so2wztcf@manjaro.localdomain>
+References: <20191117175606.5050-1-mohammad.rasim96@gmail.com>
+ <20191117175606.5050-4-mohammad.rasim96@gmail.com>
+ <65a64f28-c1fe-0ce2-d954-e96bc1924001@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=VnjyQJpRcW6P1f4+ZrSOzAe2Cnoej=it4aCz+F_ozukw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1574103921;6de465a7;
-X-HE-SMSGID: 1iWmKl-000530-T0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65a64f28-c1fe-0ce2-d954-e96bc1924001@baylibre.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Doug,
+On 19/11/18 11:26AM, Neil Armstrong wrote:
+> On 17/11/2019 18:56, Mohammad Rasim wrote:
+> > This patch adds support for the Videostrong KII Pro tv box which is based on the gxbb-p201 reference design
+> > 
+> > Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+> >  .../boot/dts/amlogic/meson-gxbb-kii-pro.dts   | 39 +++++++++++++++++++
+> >  2 files changed, 40 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+> > 
+> > diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> > index 84afecba9ec0..a795a170dcab 100644
+> > --- a/arch/arm64/boot/dts/amlogic/Makefile
+> > +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> > @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
+> > +dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-kii-pro.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+> > new file mode 100644
+> > index 000000000000..b63dabb7bf97
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+> > @@ -0,0 +1,39 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > +/* Copyright (c) 2019 Mohammad Rasim <mohammad.rasim96@gmail.com>
+> > +*/
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "meson-gxbb-p20x.dtsi"
+> > +
+> > +/ {
+> > +	compatible = "videostrong,kii-pro", "amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
+> > +	model = "Videostrong KII Pro";
+> > +
+> > +
+> > +};
+> > +
+> > +&uart_A {
+> > +	status = "okay";
+> > +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+> > +	pinctrl-names = "default";
+> > +	uart-has-rtscts;
+> > +
+> > +	bluetooth {
+> > +		compatible = "brcm,bcm4335a0";
+> 
+> Use "brcm,bcm43438-bt" here if the I/F is compatible.
+> 
+> > +	};
+> > +};
+> > +
+> > +&ethmac {
+> > +	status = "okay";
+> > +	pinctrl-0 = <&eth_rmii_pins>;
+> > +	pinctrl-names = "default";
+> > +	phy-mode = "rmii";
+> > +
+> > +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+> > +	snps,reset-delays-us = <0>, <10000>, <1000000>;
+> > +	snps,reset-active-low> +};
+> > +
+> > +
+> > 
+> 
+> Did you try to determine the PHY and add a PHY node aswell ? The reset stuff could go in the PHY node.
+looking at the PCB I can see the phy is "IP101GR" so I thought I can use
+the phy node of nextbox-a95x [0] but I get these errors:
 
-Am 18.11.19 um 17:08 schrieb Doug Anderson:
-> Hi,
-> 
-> 
-> On Fri, Nov 15, 2019 at 3:19 AM Heiko Stübner <heiko@sntech.de> wrote:
->>
->> Hi Markus,
->>
->> Am Freitag, 15. November 2019, 11:37:58 CET schrieb Markus Reichl:
->> > Am 14.11.19 um 14:10 schrieb Heiko Stuebner:
->> > > $subject is missing the [PATCH] prefix
->> > will fix.
->>
->> no need to resend just for this ... just to keep in mind for future patches ;-)
->>
->>
->> > > Am Montag, 11. November 2019, 10:51:04 CET schrieb Markus Reichl:
->> > >> Working with rootfs on two 128GB mmcs on rk3399-roc-pc.
->> > >>
->> > >> One (mmc name 128G72, one screw hole) works fine in HS400 mode.
->> > >> Other (mmc name DJNB4R, firefly on pcb, two screw holes) gets lots of
->> > >> mmc1: "running CQE recovery", even hangs with damaged fs,
->> > >> when running under heavy load, e.g. compiling kernel.
->> > >> Both run fine with HS200.
->> > >>
->> > >> Disabling CQ with patch mmc: core: Add MMC Command Queue Support kernel parameter [0] did not help.
->> > >> [0] https://gitlab.com/ayufan-repos/rock64/linux-mainline-kernel/commit/54e264154b87dfe32a8359b2726e2d5611adbaf3
->> > >
->> > > I'm hoping for some input from other people in Cc but your mail headers
->> > > also referenced the drive-impendance series from Christoph [0], which
->> > > it seems we need to poke the phy maintainer again.
->> > >
->> > > Did you check if changing the impedance helped (like the signal dampening
->> > > Philipp described in one of the replies there).
->> >
->> > checked with
->> >
->> > &emmc_phy {
->> > +       drive-impedance-ohm = <33>;
->> >
->> > gives no improvement:
->>
->> That is sad ... I guess we really should disable hs400 then ...
->> that may give others more incentive to dive deeper ;-)
-> 
-> Just out of curiosity, is the problem with the strobe line, or with
-> hs400?  Have you tried using the solution from "rk3399-gru.dtsi"?
-> Namely:
-> 
->         /*
->          * Signal integrity isn't great at 200 MHz and 150 MHz (DDR) gives the
->          * same (or nearly the same) performance for all eMMC that are intended
->          * to be used.
->          */
->         assigned-clock-rates = <150000000>;
-> 
-> IIRC hs400 on rk3399 was a bit iffy but running at 150 MHz made it
-> much more reliable and still gave you 300 MB/s transfer rate (so much
-> better than hs200).  In reality many eMMC chips can't do > 300 MB/s
-> anyway.
-> 
-I tried 150000000 and 100000000, but it did not help.
+```
+[   15.867041] meson8b-dwmac c9410000.ethernet eth0: no phy at addr -1
+[   15.867079] meson8b-dwmac c9410000.ethernet eth0: stmmac_open: Cannot attach to PHY (error: -19)
+```
 
-Gruß,
---
-Markus
-
-> -Doug
+[0] https://github.com/torvalds/linux/blob/f9717178b9be9477877d4c3776c61ff56d854ddf/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts#L165-L177
 > 
+> Neil
