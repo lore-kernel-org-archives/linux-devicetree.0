@@ -2,191 +2,92 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DF5C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC88C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D60D2071B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1691A2067D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 10:47:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GrSgfku+"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="bgu+9u0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKRKnX (ORCPT
+        id S1726725AbfKRKrE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:43:23 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46939 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfKRKnW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 05:43:22 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r18so9422597pgu.13
-        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 02:43:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oal8H4KU9ceKzMRCHfIeWqGJ097aAOuBrL6LAkt5Sts=;
-        b=GrSgfku+mO66VD5S3fXJy0QqA/u2NkhlTQf4eWsc4mfIDEEYtUYATDd73lu47Uxx8K
-         sGgCLMjUfyiasrcvlYBpYXko/hxwYDbDHx5LahBHGesdM+c39jmIh08y23zYqWKD+0+p
-         Kqygrm1arCtVRyG/XE/mPiFlhEVQXMWzBSENA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oal8H4KU9ceKzMRCHfIeWqGJ097aAOuBrL6LAkt5Sts=;
-        b=CRgX+cADoQdRq79dHbt2UhL1CzlIIF8Ydyuh6KTImy3AUlshaQCfQxWW0ehdEymbFF
-         UXX2mp298MdtiHSLy1sLECt/NXCfAw2KaNcRmEJsPCZSdDniR4Iw39CE/MIMuWJ1QKSw
-         vE1jnvafChvw1fbIDQj6KFk+9sI4UohIHt87H4XnQK6D0FX59qdjMwtHYMQ3uAESTeep
-         08kXMnoYagrq4NoCplzVx34LyrQmbsvT7grvfP+4RDvrGundjUTUSeKF285z1wGiB/oO
-         AuikFCefeX+K3nVZn3c3kOPg3chGl3ut2NXvzBNh+LcnjBlnH34XhHyMrAIiR0XWSRbP
-         gjqA==
-X-Gm-Message-State: APjAAAXKxF5vPrbyJ0FsciJFU4vle//Jf66SyumtuafAMCzbb+ePy5iK
-        SY/r0R4/JUYg5BZ5/TkJjm3IhEHhgiQ=
-X-Google-Smtp-Source: APXvYqz73PCW+T58lexcwbtEkYi/LQt0IUyjR4at8WkiLlPclgUmtqSyac2X2Xajrwp/TEsevh0T3Q==
-X-Received: by 2002:a63:db15:: with SMTP id e21mr16299127pgg.21.1574073800047;
-        Mon, 18 Nov 2019 02:43:20 -0800 (PST)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id p18sm20485310pff.9.2019.11.18.02.43.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 02:43:19 -0800 (PST)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 18 Nov 2019 05:47:04 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:41094 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726460AbfKRKrD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 05:47:03 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 3D39F43597;
+        Mon, 18 Nov 2019 10:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1574074021; x=
+        1575888422; bh=WSfhOJmQyfFAWkKlccMB2tHDhi2Hlxmn98sJpTThN/k=; b=b
+        gu+9u0iI67pDCnf5ECJzVpYatLNW7cJPntbEfkA5SbBfLx+OYm0NRQ+dcaK9e5yC
+        QxsTm9W85+k8cLH75HhQ+jyvK5ysRNGHCxSTN831UUQcPyC0Fag/DGgC/Q3dLVBI
+        5oRIWl0j6Dj3zVTYp5uAcFnKuOhONrWERlOrHKO4X0=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Tc8DqeEH5YAN; Mon, 18 Nov 2019 13:47:01 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 1BEB042009;
+        Mon, 18 Nov 2019 13:47:00 +0300 (MSK)
+Received: from localhost.dev.yadro.com (172.17.15.69) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Mon, 18 Nov 2019 13:46:59 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: mt8173: Add gce setting in mmsys and display node
-Date:   Mon, 18 Nov 2019 18:42:53 +0800
-Message-Id: <20191118104252.228406-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <openbmc@lists.ozlabs.org>
+Subject: [PATCH v3 0/3] add inversion signal presence support
+Date:   Mon, 18 Nov 2019 13:46:43 +0300
+Message-ID: <20191118104646.3838-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.17.15.69]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In order to use GCE function, we need add some informations
-into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
+Vesnin BMC uses microSD with card presence signal inversion in the
+schematics. Add the .read_l callback to detect 'cd-inverted' option
+in dts. There is no WP switch, due to this 'disable-wp' also was added
+into vesnin dts for sdhci.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
-- This is based on series "support gce on mt8183 platform"
-  https://patchwork.kernel.org/cover/11208309/
-- gce setting in 8183:
-  https://patchwork.kernel.org/patch/11127105/
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Ivan Mikhaylov (3):
+  aspeed: dts: add sd card for vesnin
+  mmc: sdhci-of-aspeed: enable CONFIG_MMC_SDHCI_IO_ACCESSORS
+  mmc: sdhci-of-aspeed: add inversion signal presence
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 15f1842f6df3..e84ec3f95d81 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -911,6 +911,11 @@ mmsys: clock-controller@14000000 {
- 			assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
- 			assigned-clock-rates = <400000000>;
- 			#clock-cells = <1>;
-+			mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST 1>,
-+				 <&gce 1 CMDQ_THR_PRIO_HIGHEST 1>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
-+			mediatek,gce-events = <CMDQ_EVENT_MUTEX0_STREAM_EOF>,
-+					      <CMDQ_EVENT_MUTEX1_STREAM_EOF>;
- 		};
- 
- 		mdp_rdma0: rdma@14001000 {
-@@ -991,6 +996,7 @@ ovl0: ovl@1400c000 {
- 			clocks = <&mmsys CLK_MM_DISP_OVL0>;
- 			iommus = <&iommu M4U_PORT_DISP_OVL0>;
- 			mediatek,larb = <&larb0>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
- 		};
- 
- 		ovl1: ovl@1400d000 {
-@@ -1001,6 +1007,7 @@ ovl1: ovl@1400d000 {
- 			clocks = <&mmsys CLK_MM_DISP_OVL1>;
- 			iommus = <&iommu M4U_PORT_DISP_OVL1>;
- 			mediatek,larb = <&larb4>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
- 		};
- 
- 		rdma0: rdma@1400e000 {
-@@ -1011,6 +1018,7 @@ rdma0: rdma@1400e000 {
- 			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
- 			mediatek,larb = <&larb0>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
- 		};
- 
- 		rdma1: rdma@1400f000 {
-@@ -1021,6 +1029,7 @@ rdma1: rdma@1400f000 {
- 			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
- 			mediatek,larb = <&larb4>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
- 		};
- 
- 		rdma2: rdma@14010000 {
-@@ -1031,6 +1040,7 @@ rdma2: rdma@14010000 {
- 			clocks = <&mmsys CLK_MM_DISP_RDMA2>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA2>;
- 			mediatek,larb = <&larb4>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0 0x1000>;
- 		};
- 
- 		wdma0: wdma@14011000 {
-@@ -1041,6 +1051,7 @@ wdma0: wdma@14011000 {
- 			clocks = <&mmsys CLK_MM_DISP_WDMA0>;
- 			iommus = <&iommu M4U_PORT_DISP_WDMA0>;
- 			mediatek,larb = <&larb0>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
- 		};
- 
- 		wdma1: wdma@14012000 {
-@@ -1051,6 +1062,7 @@ wdma1: wdma@14012000 {
- 			clocks = <&mmsys CLK_MM_DISP_WDMA1>;
- 			iommus = <&iommu M4U_PORT_DISP_WDMA1>;
- 			mediatek,larb = <&larb4>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
- 		};
- 
- 		color0: color@14013000 {
-@@ -1059,6 +1071,7 @@ color0: color@14013000 {
- 			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x3000 0x1000>;
- 		};
- 
- 		color1: color@14014000 {
-@@ -1067,6 +1080,7 @@ color1: color@14014000 {
- 			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_COLOR1>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x4000 0x1000>;
- 		};
- 
- 		aal@14015000 {
-@@ -1075,6 +1089,7 @@ aal@14015000 {
- 			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_AAL>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
- 		};
- 
- 		gamma@14016000 {
-@@ -1083,6 +1098,7 @@ gamma@14016000 {
- 			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_GAMMA>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x6000 0x1000>;
- 		};
- 
- 		merge@14017000 {
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 13 +++++++++++++
+ drivers/mmc/host/Kconfig                    |  1 +
+ drivers/mmc/host/sdhci-of-aspeed.c          | 12 ++++++++++++
+ 3 files changed, 26 insertions(+)
+
 -- 
-2.24.0.432.g9d3f5f5b63-goog
+2.20.1
 
