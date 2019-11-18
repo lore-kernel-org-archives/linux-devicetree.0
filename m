@@ -2,247 +2,208 @@ Return-Path: <SRS0=UR7X=ZK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C970C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52E5C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 14:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E7B20855
-	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 13:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42C420722
+	for <linux-devicetree@archiver.kernel.org>; Mon, 18 Nov 2019 14:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXkytG49"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUnWCa8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfKRN7D (ORCPT
+        id S1727111AbfKROQe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:59:03 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47292 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfKRN7D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 08:59:03 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAIDwo8A028342;
-        Mon, 18 Nov 2019 07:58:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574085530;
-        bh=M4zywV29ZtLq77cA4R+/+b3aPpMR1A6bjWsDO7FMqeI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LXkytG49vXFxHq1gUofmKC33lZbsMS8OqAdHTl1bDI30GCDQgWRbyNFun/ETpDnUb
-         xyVFXZGPQrIKnaRm7Lfpn6zfqA0eX63fM50OHPHS3k9+gT1uBbf3e+rdhniwGkaOh/
-         T0OMsQP0NNyWj6lXUmhNTiKMFnhWmZ3snkv3dnR4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAIDwoVf027645
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Nov 2019 07:58:50 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
- Nov 2019 07:58:50 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 18 Nov 2019 07:58:50 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAIDwlg7019882;
-        Mon, 18 Nov 2019 07:58:47 -0600
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
-        <t-kristo@ti.com>, <mripard@kernel.org>, <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <3c384b40-f353-eaec-b1d6-ba74f5338ce1@metux.net>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <faf6f7e3-b64d-1e03-9e17-90b5c352cb32@ti.com>
-Date:   Mon, 18 Nov 2019 16:00:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 09:16:34 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40653 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfKROQd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 09:16:33 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p59so13644628edp.7;
+        Mon, 18 Nov 2019 06:16:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dCmxAbOnh1DEwR9gqcYuPuyebviFJypxHrWw58u6XUI=;
+        b=tUnWCa8xtKMg67o8vDVr3JBTyIdT1MYo0i+TdImZ3F4m4SAcyqlZhXpdRqANsodH+w
+         nNhZ0Yqlgol/6mI1EQvIussnwfghlilJVKLug4q5NzRRlOGVhEHH2fjGQMoO94UbnXDf
+         X4Y/eGO3g6ub3lRA2seNqdPSaBwaosPz10IWoOQLbe39ikRvS/YDyMhU1SfZ0lAaVLg7
+         EYbOoPMERUtAW/yy0CHVkPA+icNFkXFLWZ3up4LinBEp9WJKWHb1ZTD0pbea1qdpB78z
+         xNMTvZFtZmcaMuH+pk1F+sDdmGZv0pXUk/nbpZDCkl0O0ZbZBHnj9r/YEnE2tUWkOqT7
+         Br0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dCmxAbOnh1DEwR9gqcYuPuyebviFJypxHrWw58u6XUI=;
+        b=eLtyxknu0oh7AdAW5xJqaTLOgShJEjWuueox/201OLP59yjmyeoVB8Q6PDP7qePv+1
+         r92ncC+BFsCqNHOtaYgMbHk+A5VvDtsDmgbv35rUL1jEC3nQgB004VlS1u4nyDjJUOuz
+         0bmJEozUUReqx2CdiS6SLkNyHIRnMQlFbyPJGYNDHZnnSQ8AU7KSb6aAsFrSVq7VkKr9
+         kS3L8plgCFjKzXqC1l2vnO0Qhq1erhWK7Bekb3oRzDeXFXWyUaYxIxGH60EiagEFTEWu
+         s6Rp7Z4eVrcENuFYkFHdDazFJyD8Zf7Zdozsvws2LIPdTocq+8skhdtGNUbYjcaZdE+i
+         QUFQ==
+X-Gm-Message-State: APjAAAUANtynK2Q7Qfojb1ZSx8WMTssl+AEpE5b2gqmsHz88t/VsK3u9
+        Q6rt8gwxYI7XtsKi/x5YHmL9kl67BpsFnSoqr/U=
+X-Google-Smtp-Source: APXvYqzvN57cgmr0vzC+8Wg7xerpuW5clGmE/FuIbFlcie09sQ425t8bFW80Y6SiYxim2k0dkPlO9A7L3Eb5WSYQ124=
+X-Received: by 2002:a17:906:1fd5:: with SMTP id e21mr26117015ejt.320.1574086591558;
+ Mon, 18 Nov 2019 06:16:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <3c384b40-f353-eaec-b1d6-ba74f5338ce1@metux.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191114195609.30222-1-marco.franchi@nxp.com> <CAOMZO5Asp-m7zyY6dp72_VKZs0OisxX4B-PJtP4=GuE_-XDBsg@mail.gmail.com>
+In-Reply-To: <CAOMZO5Asp-m7zyY6dp72_VKZs0OisxX4B-PJtP4=GuE_-XDBsg@mail.gmail.com>
+From:   Marco Franchi <marcofrk@gmail.com>
+Date:   Mon, 18 Nov 2019 12:16:30 -0200
+Message-ID: <CAM4PwSX+tkCwt2vmBB4-WAdfaTbxUEutGjzKxCVQiAnWbtD3JA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: freescale: add initial support for Google
+ i.MX 8MQ Phanbell
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Marco Antonio Franchi <marco.franchi@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Fabio,
 
-On 18/11/2019 14.15, Enrico Weigelt, metux IT consult wrote:
-> On 30.10.19 13:04, Peter Ujfalusi wrote:
-> 
-> Hi,
-> 
->> For example any device using the same GPIO as reset/enable line can
->> reset/enable other devices, which is not something the other device might like
->> or can handle.
-> 
-> IMHO, for such cases, invidual drivers shouldn't fiddle w/ raw gpio's
-> directly, but be connected to (gpio-based) reset controllers or
-> regulators instead.
+Thank you for your comments. I have some points to discuss inline:
 
-Which is a (linux) software abstraction of an electric wire coming out
-from the gpio (or gpo) controller then split into two (or more branch)
-and connect to external components...
+Em qui., 14 de nov. de 2019 =C3=A0s 18:13, Fabio Estevam
+<festevam@gmail.com> escreveu:
+>
+> Hi Marco,
+>
+> On Thu, Nov 14, 2019 at 4:56 PM Marco Antonio Franchi
+> <marco.franchi@nxp.com> wrote:
+> >
+> > This patch adds the device tree to support Google Coral Edge TPU,
+> > historicaly named as fsl-imx8mq-phanbell, a computer on module
+> > which can be used for AI/ML propose.
+> >
+> > It introduces a minimal enablement support for this module and
+>
+> What are the features that have been tested?
+I can include one list at the v2.
+>
+> Also, is the schematics available?
+Yes: https://storage.googleapis.com/site_and_emails_static_assets/Files/Cor=
+al-Dev-Board-baseboard-schematic.pdf
+>
+> > was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
+> > Google Source Code for Coral Edge TPU Mendel release:
+> > https://coral.googlesource.com/linux-imx/
+> >
+> > This patch was tested using the U-Boot 2017-03-1-release-chef,
+> > which is supported by the Coral Edge TPU Mendel release:
+> > https://coral.googlesource.com/uboot-imx/
+>
+> I would suggest removing this paragraph from the commit log as it is
+> not relevant to the dts itself.
+This U-Boot is the unique available for the Coral Edge TPU, and it
+does not provides the fdt_file settup, so I cannot change the Device
+Tree name and I thought it was important to put this information
+somehow here.
+>
+> > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/d=
+ts/freescale/Makefile
+> > index 38e344a2f0ff..cc7e02a30ed1 100644
+> > --- a/arch/arm64/boot/dts/freescale/Makefile
+> > +++ b/arch/arm64/boot/dts/freescale/Makefile
+> > @@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls2088a-rdb.dt=
+b
+> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-lx2160a-qds.dtb
+> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-lx2160a-rdb.dtb
+> >
+> > +dtb-$(CONFIG_ARCH_MXC) +=3D fsl-imx8mq-phanbell.dtb
+>
+> Please remove the fsl prefix and call it mx8mq-phanbell.dtb instead to
+> align with the other imx8mq dtbs.
+If I applied this change, I won't be able to boot the board, due to
+the U-Boot dependence.
+Should I try to apply the U-Boot mainline support first?
+>
+> > +&i2c1 {
+> > +       clock-frequency =3D <400000>;
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&pinctrl_i2c1>;
+> > +       status =3D "okay";
+> > +
+> > +       pmic: pmic@4b {
+> > +               reg =3D <0x4b>;
+> > +               compatible =3D "rohm,bd71837";
+> > +               pinctrl-0 =3D <&pinctrl_pmic>;
+> > +               gpio_intr =3D <&gpio1 3 GPIO_ACTIVE_LOW>;
+>
+> This property does not exist upstream.
+>
+> You should describe the interrupt like this instead:
+>
+> interrupt-parent =3D <&gpio1>;
+> interrupts =3D <3 GPIO_ACTIVE_LOW>;
+>
+Sure, I will!
+> > +
+> > +               gpo {
+> > +                       rohm,drv =3D <0x0C>;
+>
+> This property does not exist upstream.
+>
+> > +&sai2 {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&pinctrl_sai2>;
+> > +       assigned-clocks =3D
+> > +               <&clk IMX8MQ_AUDIO_PLL1_BYPASS>, <&clk IMX8MQ_CLK_SAI2>=
+;
+>
+> Please don't split the lines as it gets harder to read.
+>
+> > +       assigned-clock-parents =3D
+> > +               <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+>
+> Same here.
+>
+> > +       assigned-clock-rates =3D <0>, <24576000>;
+> > +       status =3D "okay";
+> > +};
+> > +
+> > +&wdog1 {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&pinctrl_wdog>;
+> > +       fsl,ext-reset-output;
+> > +       status =3D "okay";
+> > +};
+> > +
+> > +&iomuxc {
+> > +       pinctrl-names =3D "default";
+> > +
+> > +       imx8mq-evk {
+>
+> No need for this imx8mq-evk container.
+>
+> > +               pinctrl_pmic: pmicirq {
+> > +                       fsl,pins =3D <
+> > +                               MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3      =
+ 0x41 /*0x17059*/
+>
+> This comment looks confusing. I would suggest removing it.
+>
+> Regards,
+>
+> Fabio Estevam
 
-> I believe, GPIO isn't the correct abstraction layer
-> for such cases: it's not even IO, just O.
+Ok for all the other comments.
 
-A GPIO pin configured as output is O ;)
+Thanks for your suggestion Fabio.
+Please, just check the comments regarding the Device Tree name and I
+will send the v2 with the required changes.
 
-> Let's sit back and rethink what the driver really wants to tell in those
-> cases. For the enable lines we have:
-> 
-> a) make sure the device is enabled/powered
-> b) device does not need to be enabled/powered anymore
-> c) device must be powercycled
-> 
-> You see, it's actually tristate, which gets relevant if multiple devices
-> on one line.
-
-Yes. Things gets a bit blurry when a GPIO line is used to enable/gate
-signals from/to a chip on top of enable/disable, like muting an
-amplifier's analog output.
-
-> Now add reset lines:
-> 
-> a) force device into reset state
-> b) force device out of reset state
-> c) allow device going into reset state (but no need to force)
-> d) allow device coming out of reset state (but no need to force)
-
-I would say that coming out of reset is always forced as there is a
-reason why you want to take it out - it is going to be used.
-
-> It even gets more weird if a device can be reset or powercycled
-> externally.
-> 
-> hmm, not entirely trivial ...
-
-When we have only one user of the GPIO reset/enable line we will have a)
-and b) happening. If the GPIO is shared most likely the intention of the
-hw design dictates c) and d)
-
->> For example a device needs to be configured after it is enabled, but some other
->> driver would reset it while handling the same GPIO -> the device is not
->> operational anymmore as it lost it's configuration.
-> 
-> Yeah, at least we need some signalling to the driver, so it can do the
-> necessary steps. From the driver's PoV, it's an "foreign reset".
-
-Notification callback for state change?
-
->> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
->> the role of making sure that the GPIO line only changes state when it will not
->> disturb any of the clients sharing the same GPIO line.
-> 
-> How exactly do we know when such disturbance can / cannot happen ?
-> That would be depending on individual chips *and* how they're wired on
-> the board. We'd end up with some logical multiplexer, that's board
-> specific.
-> 
-> <snip>
-> 
->> If any of the codec requests the GPIO to be high, the line will go up and will
->> only going to be low when both of them set's their shared line to low.
-> 
-> So, if one driver request reset, all attached devices will be reset ?
-> Or if all drivers request reset, all attached devices will be reset ?
-
-The later.
-
-> Doesn't look so quite non-disturbing to me :o
-
-This is what regulators and the reset framework is doing, no?
-
->> I have also looked at the reset framework, but again it can not be applied in a
->> generic way for GPIOs shared for other purposes 
-> 
-> What are the exact scenarios you have in mind ?
-
-grep -R enable-gpios Documentation/devicetree/bindings/*
-
-pick two random device from the output, place it on a board with shared
-enable GPIO line.
-I know I over simplify (or complicate) the real world use.
-
->> and all existing drivers must
->> be converted to use the reset framework (and adding a linux only warpper on top
->> of reset GPIOs).
-> 
-> Maybe a bit time consuming, but IMHO not difficult. We could add generic
-> helpers for creating a reset driver on a gpio. So the drivers wouldn't
-> even care about gpio itself anymore, but let the reset subsystem so it
-> all (eg. look for DT node and request corresponding gpio, etc).
-
-You mean that users would use reset_control_get_optional_shared() only
-and if there is no valid reset binding that the reset core would look
-for a gpio binding and instantiate a gpio-reset controller?
-But before instantiating it, it would look around in some list to see if
-the gpio-reset controller for the same gpio line is already exist?
-
-> IMHO, that's something we should do nevertheless, even if it's just for
-> cleaner code.
-
-I'm not sure about that.
-D1 have ENABLE pin (enable-gpios as per dt documentation),
- if the line is high, the device is enabled, if low it is disabled.
-
-D2 have RESET pin (reset-gpios as per dt documentation),
- if the line is high, the device is enabled, if low it is disabled.
-
-D1's driver would:
-enable-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-
-priv->reset = reset_control_get_optional_shared(dev, "enable");
-
-/* Place it to reset: ENABLE pin should be pulled low */
-reset_control_assert(priv->reset);
-/* Remove from reset: ENABLE pin should be high */
-reset_control_deassert(priv->reset);
-
-D2's driver would:
-reset-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-
-priv->reset = reset_control_get_optional_shared(dev, "reset");
-
-/* Place it to reset: RESET pin should be pulled low */
-reset_control_assert(priv->reset);
-/* Remove from reset: RESET pin should be high */
-reset_control_deassert(priv->reset);
-
-The reset framework must know somehow that the reset control for D1 is
-an enable type of gpio, so it must treat it as inverted polarity while
-the reset type of binding should be follow the selected active level.
-
-Then it must protect (most likely) the deasserted state: it does not
-mater if there is any assert request for the reset_control if we have
-one deassert active as at least one device must be enabled.
-
-For new dts files the virtual reset-gpio controller node can be present
-and the level of assert and deassert is told to it via the gpio binding.
-
-Something like this?
-
-> After that we could put any kind of funny logic behind the scenes (eg.
-> one could connect the reset pin to a spare uart instead of gpio, etc),
-> w/o ever touching the individual drivers.
-
-Not sure if I follow you here.
-
-On the other hand the gpio line itself can be seen as a regultator
-itself (3.3V most of the time) so in theory all GPIOs can be regulators
-as well, but regulator framework protects the >0 volt state while there
-are devices which can be enabled when the ENABLE/RST pin is pulled low.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+BR,
+Marco
