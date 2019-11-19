@@ -2,153 +2,107 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8B9C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 18:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8C1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 18:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EB0223C7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 18:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B373A2240B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 18:50:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xUaj7hMn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ybxac2pl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfKSSiC (ORCPT
+        id S1727455AbfKSSu4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:38:02 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44006 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727173AbfKSSiB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 13:38:01 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJIbr6Z039222;
-        Tue, 19 Nov 2019 12:37:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574188673;
-        bh=200y+IYezlbg1I7CHIbsZoBP5uAkW4mrYcSZBakSEkA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xUaj7hMnZ4gydoPBzKyzJX1x7VBnBrpEwwFvuYeXRF1HpccFXeJEEpvlbW3AuWBoQ
-         7ruduYMQfXtKq7jYsxvHSdU2wlGXe1n0FBnOIoner3JZxpHEx80H8kGQ3UVJBqNXeM
-         QCjfZyu2GY3zoMIjhubrfN+6oSavdipD25/p96QI=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJIbqOZ061176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 12:37:52 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 12:37:52 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 12:37:52 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJIbqTW082910;
-        Tue, 19 Nov 2019 12:37:52 -0600
-Subject: Re: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20191119154611.29625-1-TheSven73@gmail.com>
- <20191119154611.29625-5-TheSven73@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <a37d098e-12ea-af2e-22cd-cb5ec2856b6d@ti.com>
-Date:   Tue, 19 Nov 2019 12:36:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 13:50:56 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42618 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbfKSSu4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 13:50:56 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q17so11781117pgt.9
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 10:50:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=h3SuHWJ4z/KaTwFaWseZogIbcFeN0SoE6l1nIp4DGz8=;
+        b=Ybxac2plgQ4VLa1bcLRooTRMs4gS/2rpYOUfte7cqw4WfXcLVlygbrLWZE4szcMrRY
+         nupnHxN5/sf0hkxBdlRUnm7kMWfZnSSjmYkAX11/J2erMxPewefLZ4a+xxPAhK0yjLrf
+         1UleWcAFqV2b5RCbgbIKLsa0g0OljDOJqjeQM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=h3SuHWJ4z/KaTwFaWseZogIbcFeN0SoE6l1nIp4DGz8=;
+        b=qN56DPSZj+qm21wT1mAXccarazq6BteS8uKLyzElIpEqnSlyK/HcnFBG30aihLJ0O9
+         oeChyfQZgfMz39Zc6F04w/9ggkw7/jYhkBPXOrsPLCaN5cZYhl00d7KHtjRTgkergm7O
+         ISH2hht5vT0SSKqtF2sVI5o5qB8gzo3juEKwdziFNNI4jUzSTjZa+S4+mNrxwxp4Z3z3
+         1QPxbwx97Vs5xrQ/9gJ91C71YgbjsBNNSIV0dFXbXbQtKJnA6zbtA4JNf/f+h9UH3HuR
+         URFQZ1xWxPKcgiPPZoozXzLz0UTtOmJboGk4lRLBWfzqah/7lxCvw6B3aHPnng9EMdWE
+         9HAg==
+X-Gm-Message-State: APjAAAXikpqYrQyzf/HL91tjpY1+ZZVqzFMAuyJmZWmFmet3ckkhmfHn
+        rxuH7bw9RH71QLOUGlSBD2WUzw==
+X-Google-Smtp-Source: APXvYqyt4fFZBx9WmiKhI9FW3nECOBxo8vbsKkGfI9j6QIB1BmtDWvG7MajWu0meAk9l8J/+5x+1+A==
+X-Received: by 2002:a63:4519:: with SMTP id s25mr7199212pga.240.1574189455042;
+        Tue, 19 Nov 2019 10:50:55 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b18sm15722571pgh.60.2019.11.19.10.50.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 10:50:54 -0800 (PST)
+Message-ID: <5dd4398e.1c69fb81.fb48b.b3bd@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191119154611.29625-5-TheSven73@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0101016e7f99aa17-22b1062e-9922-40e4-ae7e-8b91210bb12c-000000@us-west-2.amazonses.com>
+References: <20191118173944.27043-1-sibis@codeaurora.org> <0101016e7f99aa17-22b1062e-9922-40e4-ae7e-8b91210bb12c-000000@us-west-2.amazonses.com>
+Subject: Re: [PATCH 2/6] dt-bindings: power: Add rpmh power-domain bindings for SM8150
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, dianders@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
+        rnayak@codeaurora.org, robh+dt@kernel.org, ulf.hansson@linaro.org
+User-Agent: alot/0.8.1
+Date:   Tue, 19 Nov 2019 10:50:53 -0800
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sven
-
-On 11/19/19 9:46 AM, Sven Van Asbroeck wrote:
-> The driver has been extended to optionally get its operational
-> mode, regulator init data and led label from the devicetree.
->
-> Tree: next-20191118
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Quoting Sibi Sankar (2019-11-18 09:40:07)
+> Add RPMH power-domain bindings for the SM8150 family of SoCs.
+>=20
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->   .../devicetree/bindings/mfd/tps6105x.txt      | 42 ++++++++++++++++++-
->   1 file changed, 41 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-> index 93602c7a19c8..ab5d4c52074f 100644
-> --- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-> @@ -7,11 +7,51 @@ Required properties:
->   - compatible:		"ti,tps61050" or "ti,tps61052"
->   - reg:			Specifies the I2C slave address
->   
-> -Example:
-> +Optional sub-node:
-> +
-> +This subnode selects the chip's operational mode.
-> +There can be at most one single available subnode.
-> +
-> +- regulator: presence of this sub-node puts the chip in regulator mode.
-> +	see Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +- led: presence of this sub-node puts the chip in led mode.
-> +	Optional properties:
-> +		- label: see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example (GPIO operation only):
-> +
-> +i2c0 {
-> +	tps61052@33 {
-> +		compatible = "ti,tps61052";
-> +		reg = <0x33>;
-> +	};
-> +};
-> +
-> +Example (GPIO + regulator operation):
->   
->   i2c0 {
->   	tps61052@33 {
->   		compatible = "ti,tps61052";
->   		reg = <0x33>;
-> +
-> +		regulator {
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +};
-> +
-> +Example (GPIO + led operation):
-What part of the example is GPIO? Is that the default function?
-> +
-> +i2c0 {
-> +	tps61052@33 {
-> +		compatible = "ti,tps61052";
-> +		reg = <0x33>;
-> +
-> +		led {
-> +			label = "tps-torch";
 
-function and color examples?
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
+>  .../devicetree/bindings/power/qcom,rpmpd.txt       |  1 +
+>  include/dt-bindings/power/qcom-rpmpd.h             | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Doc=
+umentation/devicetree/bindings/power/qcom,rpmpd.txt
+> index bc75bf49cdaea..f3bbaa4aef297 100644
+> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> @@ -10,6 +10,7 @@ Required Properties:
+>         * qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of =
+SoC
+>         * qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
+>         * qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of =
+SoC
+> +       * qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family of =
+SoC
 
-> +		};
->   	};
->   };
+Can you convert this binding to YAML? Would help us validate DTS files
+in the future.
+
+>   - #power-domain-cells: number of cells in Power domain specifier
+>         must be 1.
+>   - operating-points-v2: Phandle to the OPP table for the Power domain.
