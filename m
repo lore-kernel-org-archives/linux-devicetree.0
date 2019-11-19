@@ -2,96 +2,126 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040DFC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8545C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09D5223B0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJ0sFL+u"
+	by mail.kernel.org (Postfix) with ESMTP id C9A72222DC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfKSTqr (ORCPT
+        id S1727050AbfKSTwd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:46:47 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51763 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKSTqr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 14:46:47 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q70so4551957wme.1
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 11:46:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fKtUgPJi24FIzqrE0v4WnWjrv8ka1YzV4SVOi341LVQ=;
-        b=hJ0sFL+u5o5nqriZoZv5s9sZngNo4h9LHTKViWke2quZpvDSFw+PoxZ+jAOMPp12ES
-         v6U27TxnOVjJnSblg2hXMn2l3aY3wY+uKr7PEhRtl9KvZF6rNklBmjQE2sH1Umz1D61c
-         LNPITjgspXYkWkYW+S/zbOTrn+Fy5helHm/MtqezZmVI5U///KPBSd3gMh7Nlw5FZfPW
-         fq7LN1dzQ3ALiHo3BnkRmf3DHLh1WWRRn7dBZY3h1+bOojFXeyrgpOx4d5nOZM/tlb8M
-         tQPnHOebx8x5PcUssQwJ6SLJgrJQ2JUpSIQoBVRf43cvNnRMGBSdZjkUkymk5U1w+iVk
-         j56A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fKtUgPJi24FIzqrE0v4WnWjrv8ka1YzV4SVOi341LVQ=;
-        b=Y+tu0mFRQaw3+O0prlXWSJyvc5Kfo9W7vbZEViNnycOlkQ2MhB4VAdCVYSpMoV9LFD
-         rAZKfwwlpMHBqL6nPqlTadJvMp0r/Rix71dY01MT5PjCFMilF/vRkcuQ5QS6Jeoiq9mm
-         HkyA5ye8zIBeDT97F8FlGk59heIY5pWHOPar0JtFMPhy+S6fnHol3sjHHGRtUuxfB2c2
-         hKTZ88BuwVdToc4Vv6dwfkZpm2S6j0DiVKOK18vkrJkny66C3Yps5t40Wdl8/wHwrR7h
-         RMIIqbx8RxKOb2ggEru90EawyFMJTM1JmNVS9LXvt6Q8xFDlZE1nJ2QHwk8GqKrekfH/
-         1gnA==
-X-Gm-Message-State: APjAAAXo7ogaJz2lk1Ql25NbSOIJDUl7VhVuBx2XCzeoE0+dvHByFJBd
-        az2mrSfUfxEU1lk8bp2Ui5bhjgKNuyQ=
-X-Google-Smtp-Source: APXvYqzCfVD/+3BoAtld9Gm6HlDPgteBTpjkDPApJjaLbqLHkUZbTbJEzgGiGbCps+VQyziZBN7Rgg==
-X-Received: by 2002:a05:600c:212:: with SMTP id 18mr8218527wmi.93.1574192805137;
-        Tue, 19 Nov 2019 11:46:45 -0800 (PST)
-Received: from localhost ([37.238.189.2])
-        by smtp.gmail.com with ESMTPSA id m15sm15180718wrj.52.2019.11.19.11.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 11:46:44 -0800 (PST)
-From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
-To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>
-Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: net: Add compatible for BCM4335A0 bluetooth module
-Date:   Tue, 19 Nov 2019 22:46:37 +0300
-Message-Id: <20191119194638.4967-2-mohammad.rasim96@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119194638.4967-1-mohammad.rasim96@gmail.com>
-References: <20191119194638.4967-1-mohammad.rasim96@gmail.com>
+        Tue, 19 Nov 2019 14:52:33 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:35765 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfKSTwd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 14:52:33 -0500
+Received: from [192.168.1.155] ([77.2.113.117]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M4K6z-1iXQWt1RuD-000PFR; Tue, 19 Nov 2019 20:52:22 +0100
+Subject: Re: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+ <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
+ <946f091e79242b9e71d5ce8ad12c899feefa22cd.camel@fi.rohmeurope.com>
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+Message-ID: <56d3a81e-f675-fd5e-06a7-8039bf02468e@metux.net>
+Date:   Tue, 19 Nov 2019 20:52:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <946f091e79242b9e71d5ce8ad12c899feefa22cd.camel@fi.rohmeurope.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:/ybOfltbWoYQWD7R/RRDMIGGQgKlqh+QYyD9taRCRk2O02V3kvZ
+ E9/vN3sOo3wS6Skj661/hkW9dAiCEIETw/9xyTe2WBXw5ddK5ptZYcSvQ+2ck9SvihCQiNb
+ 2QHSTHgHviQRWbDlX8irzY62v654WcR9gbU99r3xh5weKZn0ItT2zwgfUMptJ/XfD9CXWkM
+ qHCMga69n1pzM+KAvLT+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kItjpHsCPgU=:bxcWQZPnDigH4LcM8ooFMX
+ p+bvmwIv7xirPI92van9kcwtDigaBNEdCIyeEBF5L8rQAdi34f9th9qn7WIgPHSeSpxf2r3rI
+ l8X/P4qNGJk1JwJlJ+tVbzClV7vCbLZityQ6x//ukZmGUc2+PWr1RbuIVHioyIwOpUQ/bAAuv
+ 1Rvd1KZtMUTk+lHcSi/vXClPhZxw6bIkdtK0Lo6axv2BwV1+wWYbdKVquTN3pGcPhK362QFj/
+ FD4xy+/1XaJall1kcUQ0EEqxB7ux28N6qeesbSSSo4Bqb1DLA/iWDP4weKKjhU7yHkN/yVMiV
+ +16ln9oPpsRX7dcQoYTkeY25RD0TiUQUSycMcTuiR4DnbnV3qXRBtTKydCKJOC86H0QKFtUKP
+ VjH+7YvboLHuGQ3GXMktcuCzBLXswLvtk0zNXT0S7L9AcfOqnh1nAimvHMtSVNsUVwtrgCHLM
+ HROmb1Zii7oMyqEh9OGuUicJ2EACVK3GsfjN5HmKKvj9CyBIYFuHMAskyY4YAyn8gXquwx/j4
+ DmM0y+Exa3ImM8jo7SZQCLlbeSpMRwMFGRl5bxi21XucXTFW8kppvcnMlWrCMbENU1PFZ4mEQ
+ TFC87Jf+eYJXKDZ0oskmFkcFSNUCG364mDgQT1oraUP2z0FPzUOoddBc2ZCEpgaXZiPw7CSC6
+ YpirCIRU3DaeFVeTg/8ui7Ax8DX5S0RAq/Uw4ohKLEOqTXjgmxkr3h8wwrjnzZpkadNsK8z8F
+ lfFp2cMPhl/ONinbvPSBKeAMK6EAtVZFh0kIRsVem1xPoTTndkJQgYh8YuLSFEbAASgQqpGIA
+ tMuiPDkXyJPGianirD0N1mpuiMAbLvumz/1rWDkm4Cxy1bxxWyu5PSnm4bbHVuNWax3aKkIuV
+ nABSM7+IIQQgRQA2+WCQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Available in the Ampak AP6335 WiFi/Bluetooth combo
+On 18.11.19 11:38, Vaittinen, Matti wrote:
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
----
- Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 1 +
- 1 file changed, 1 insertion(+)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index 4fa00e2eafcf..0717399191a2 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -14,6 +14,7 @@ Required properties:
-    * "brcm,bcm4330-bt"
-    * "brcm,bcm43438-bt"
-    * "brcm,bcm4345c5"
-+   * "brcm,bcm4335a0"
- 
- Optional properties:
- 
+>> a) existing DT's (in the field) become incompatible with newer
+>>    kernel versions
+> 
+> This was my main concern. This of course would not mean that we could
+> not take this approach for new LED controller drivers - but that would
+> (probably) lead to dual led registration interface 
+
+Maybe just a flag for that ? Perhaps the driver could also specify a
+list of node names for the LEDs, so led-core can do the lookup for them.
+
+>> b) existing userlands that rely on speicific LED names become
+>>    incomatible with newer kernel versions.
+> 
+> I didn't even think this far, but yes, I see... LED node name might be
+> reflected in user-space LED name. I won't start arguing if this is sane
+> or not - this is what we seem to be living with today :)
+
+Especially in embedded world, this can really make sense: applications
+just use a defined LED name, no matter which board it's running on.
+Convention over configuration.
+
+Personally, I also like to use LED subsystem as frontend for things like
+gpio-driven relais, etc, and assign semantically fitting names instead
+of "technical" ones,
+
+> I didn't invest too much of time on this yet - but at first glimpse it
+> seemed that at least some of the drivers did use reg - property with
+> fixed value to do the matching. Those could set the property name to
+> 'reg' and value to 'X' and leave the DT node lookup and common property
+> parsing to the LED core. If my patch won't get too big objection (and
+> if no fatal flaws are found from the idea) - then I might try and find
+> the time to do some follow-up patches simplifying existing LED
+> drivers...
+
+Sounds good :)
+
+
+--mtx
+
 -- 
-2.24.0
-
+Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
+sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
+selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
+stammen scheinen. Andernfalls droht Totalschaden.
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
