@@ -2,99 +2,185 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A76C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 02:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935F1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 03:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8B222311
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 02:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqsn2nAG"
+	by mail.kernel.org (Postfix) with ESMTP id 602C1219F6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 03:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKSChg (ORCPT
+        id S1727440AbfKSDPX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 18 Nov 2019 21:37:36 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35151 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfKSChf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 18 Nov 2019 21:37:35 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r7so21451214ljg.2;
-        Mon, 18 Nov 2019 18:37:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lucCyifi+cNj2bBusqodMTZdSBO5qj6Vap0H2hhae+0=;
-        b=tqsn2nAG3Br2u59mKUWyfMiYlANBBlYkBAAROl0eTj43D008vybSBfn1aIqPwaNqlX
-         3Y0h7JDlKZMw7N2123tGDAgEJM75Gen8sa7qSYPFy/AexfYc+F42R+2KiCCdNvivjqlX
-         kgIZOVur45nzTlfz3sktrN2FV5dMhiNXB8Ok6GX1Q7nJqoCNKlZEdTQhcYMAuvlM78PP
-         5sJP6aItkPYw9Fcvb/1Ckjal1CK3LD8+gSrj2xvxuMJZEUMDXkls9kXKyqLotxjQOhD0
-         xALPcyCNlCVW69l6Ar3OkXmqGwb02AjyXEwlzlaUR+AzHlgStF3nKz/09xU4Nq4hK/jg
-         oZHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lucCyifi+cNj2bBusqodMTZdSBO5qj6Vap0H2hhae+0=;
-        b=UtpEeC8DUOger/mvCzzIOdC5X80wnUj3Q0OGSjHSfIPEalQt4+IGbQdYzS7fawMQxz
-         GqONpyKNk8TChJo8rxamU1INBLrALwCkq1RhdVTyJMWgvzI//ldoxsbKbspV+1l97Aok
-         /n/z47BiSEIsE8O2qPDjL6+p8PnwuXwvWza4GACBMqFMLk2uOrN0B64yDHUSw9G5GuQP
-         ObCu+TIFOBss08zNZFtNGE62D7WXI4WgfENbbqPciPpA5sRGVEZW2QBdkdckbzUJ+cab
-         4aB+CytE3fwaahI9rHgKhcmVz+kGoW0EnuH0APUGcM3//r+Xg6Hl/xOu+l3fe8LrHNjM
-         qD8g==
-X-Gm-Message-State: APjAAAUmw3cvpIWpG1dJKFP4UOGwYvfj+zWQ0rSb7jlWQtPLG5Sy+Rg9
-        CSBStAFsoW7TReH3bAzPP/jIXjuxrJ3y4fTxtXA=
-X-Google-Smtp-Source: APXvYqzQsuRSn+l9haQPfvyu4GjnZzDuxDevPw00bbnzXD6rqv6dBa3+zSNGIlk9xkmiUOFa7FXZtrGL7aXiC7nXYD4=
-X-Received: by 2002:a05:651c:387:: with SMTP id e7mr1844421ljp.0.1574131053718;
- Mon, 18 Nov 2019 18:37:33 -0800 (PST)
+        Mon, 18 Nov 2019 22:15:23 -0500
+Received: from mga07.intel.com ([134.134.136.100]:24657 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727334AbfKSDPW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:15:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 19:15:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
+   d="scan'208";a="289464730"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 18 Nov 2019 19:15:21 -0800
+Received: from [10.226.38.254] (unknown [10.226.38.254])
+        by linux.intel.com (Postfix) with ESMTP id BA98F5800FE;
+        Mon, 18 Nov 2019 19:15:18 -0800 (PST)
+Subject: Re: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1573784557.git.eswara.kota@linux.intel.com>
+ <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
+ <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+ <50dabbc6-eae5-5ae5-95a0-f195c1ef7362@linux.intel.com>
+ <SL2P216MB010580C028A7F88E8FB72574AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+ <5fc0001f-e73c-af1d-4182-d2d2448741fd@linux.intel.com>
+ <SL2P216MB0105BEFFAFEAB06F408C31A2AA4C0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <32f19457-c35f-656c-e434-d52ddb38de25@linux.intel.com>
+Date:   Tue, 19 Nov 2019 11:15:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1573586526-15007-4-git-send-email-oliver.graute@gmail.com>
- <1573593892-25693-1-git-send-email-oliver.graute@gmail.com>
- <CAOMZO5DYssbnVsemV+U24wbVoYM3LM3ZZtFwWHonXLHKF0Y+kg@mail.gmail.com> <20191118212912.GA16329@bogus>
-In-Reply-To: <20191118212912.GA16329@bogus>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 18 Nov 2019 23:37:27 -0300
-Message-ID: <CAOMZO5ALK+YJDQZ3ma6qc2WNnayapVQde3R9MA3sEGnSFBGnxA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: arm: fsl: Add Variscite i.MX6UL compatibles
-To:     Rob Herring <robh@kernel.org>
-Cc:     Oliver Graute <oliver.graute@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <SL2P216MB0105BEFFAFEAB06F408C31A2AA4C0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 6:29 PM Rob Herring <robh@kernel.org> wrote:
 
-> > I guess what you mean is:
-> >
-> > variscite,imx6ul-var-6ulcustomboard # i.MX6 UltraLite Carrier-board
+On 11/19/2019 10:33 AM, Jingoo Han wrote:
+> On 11/18/19, 8:26 PM, Dilip Kota wrote:
+>> On 11/19/2019 12:40 AM, Jingoo Han wrote:
+>>> ﻿On 11/18/19, 2:58 AM, Dilip Kota wrote:
+>>>
+>>>> On 11/16/2019 4:40 AM, Jingoo Han wrote:
+>>>>> On 11/14/19, 9:31 PM, Dilip Kota wrote:
+>>>>>
+>>>>>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>>>>>> PCIe controller is based of Synopsys DesignWare PCIe core.
+>>>>>>
+>>>>>> Intel PCIe driver requires Upconfigure support, Fast Training
+>>>>>> Sequence and link speed configurations. So adding the respective
+>>>>>> helper functions in the PCIe DesignWare framework.
+>>>>>> It also programs hardware autonomous speed during speed
+>>>>>> configuration so defining it in pci_regs.h.
+>>>>>>
+>>>>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>>>>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+>>>>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>>>> ---
+>>>>> [.....]
+>>>>>
+>>>>>>     drivers/pci/controller/dwc/Kconfig           |  10 +
+>>>>>>     drivers/pci/controller/dwc/Makefile          |   1 +
+>>>>>>     drivers/pci/controller/dwc/pcie-designware.c |  57 +++
+>>>>>>     drivers/pci/controller/dwc/pcie-designware.h |  12 +
+>>>>>>     drivers/pci/controller/dwc/pcie-intel-gw.c   | 542 +++++++++++++++++++++++++++
+>>>>>>     include/uapi/linux/pci_regs.h                |   1 +
+>>>>>>     6 files changed, 623 insertions(+)
+>>>>>>     create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
+>>>>>>
+>>>>>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>>>>>> index 0ba988b5b5bc..fb6d474477df 100644
+>>>>>> --- a/drivers/pci/controller/dwc/Kconfig
+>>>>>> +++ b/drivers/pci/controller/dwc/Kconfig
+>>>>>> @@ -82,6 +82,16 @@ config PCIE_DW_PLAT_EP
+>>>>>>     	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>>>>>>     	  selected.
+>>>>>>     
+>>>>>> +config PCIE_INTEL_GW
+>>>>>> +	bool "Intel Gateway PCIe host controller support"
+>>>>>> +	depends on OF && (X86 || COMPILE_TEST)
+>>>>>> +	select PCIE_DW_HOST
+>>>>>> +	help
+>>>>>> +	  Say 'Y' here to enable PCIe Host controller support on Intel
+>>>>>> +	  Gateway SoCs.
+>>>>>> +	  The PCIe controller uses the DesignWare core plus Intel-specific
+>>>>>> +	  hardware wrappers.
+>>>>>> +
+>>>>> Please add this config alphabetical order!
+>>>>> So, this config should be after 'config PCI_IMX6'.
+>>>>> There is no reason to put this config at the first place.
+>>>>>
+>>>>>>     config PCI_EXYNOS
+>>>>>>     	bool "Samsung Exynos PCIe controller"
+>>>>>>     	depends on SOC_EXYNOS5440 || COMPILE_TEST
+>>>>>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+>>>>>> index b30336181d46..99db83cd2f35 100644
+>>>>>> --- a/drivers/pci/controller/dwc/Makefile
+>>>>>> +++ b/drivers/pci/controller/dwc/Makefile
+>>>>>> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>>>>>     obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>>>>>>     obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>>>>>>     obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>>>>>> +obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+>>>>> Ditto.
+>>>> PCIE_INTEL_GW wouldnt come after PCI_IMX6, the complete Makefile and
+>>>> Kconfig are not in order,( PCI_* and PCIE_* are not in any order). So i
+>>>> just followed PCIE_DW and placed PCIE_INTEL_GW after PCIE_DW as I is
+>>>> after D (and i see PCI_* immediately after the PCIE_DW*, so i placed
+>>>> PCIE_INTEL_GW after PCIE_DW* and before PCI_*).
+>>> Hey, although some of them are not in order, you don't have a right to do so.
+>>> If some people do not follow the law, it does not mean that you can break the law.
+>>> Anyway, if you don't follow an alphabetical order, my answer is NACK.
+>>> Also, other people or I will send a patch to fix the order of other drivers.
+>> I am not against following the order. I kept PCIE_INTEL_GW after
+>> PCIE_DW* by checking the best possible order.
+>> As per the alphabetical order, i see all CONFIG_PCIE_* comes first and
+>> CONFIG_PCI_* follows. So, by following this, i placed PCIE_INTEL_GW
+>> after PCIE_DW* (for the same reason PCIE_INTEL_GW cannot be placed after
+>> PCI_IMX6).
+>> Even after re-ordering the Kconfig and Makefile, still PCIE_INTEL_GW
+>> comes after PCIE_DW_PLAT( and PCIE_HISI_STB).
+> Are you kidding me?
 >
-> It matched the .dts file. However the '"' in there is an error. Make
-> sure 'make dt_binding_check' passes.
+> Most PCIE_* drivers are located after PCI_*. Look at PCIE_QCOM, PCIE_ARMADA_8K,
+> PCIE_ARTPEC6, PCIE_KIRIN, PCIE_HISI_STB, PCIE_TEGRA194, PCIE_UNIPHIER, PCIE_AL.
+Ok, So the understanding is PCIE_DW* will be at top as they are 
+framework and then comes CONFIG_PCI_*, CONFIG_PCIE_*.
+> Put PCIE_INTEL_GW between PCIE_ARTPEC6_EP and PCIE_KIRIN.
 
-The dts is called imx6ul-var-6ulcustomboard.dts, so it is not matching
-the dts name.
+Ok. I will update in the next patch version.
+
+Regards,
+Dilip
+
+>
+>
+>> Regards,
+> Dilip
+>
+>>
+>>> Regards,
+>>> Dilip
+>>> Best regards,
+>>> Jingoo Han
+>>>
+>>>>     obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>>>     obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>>>>     obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>>>> index 820488dfeaed..479e250695a0 100644
+>>> [.....]
