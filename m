@@ -2,246 +2,442 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B94C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 10:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECE4C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 10:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07DC2230C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 10:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D8F21D7B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 10:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zak8ug59"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fbMr32Z+";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="hs7mA+a4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfKSKRD (ORCPT
+        id S1727569AbfKSKSl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:17:03 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46110 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfKSKRD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 05:17:03 -0500
-Received: by mail-ed1-f66.google.com with SMTP id t11so10565650eds.13;
-        Tue, 19 Nov 2019 02:17:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9hbii1rvXe3OjAU+9EET7g3kuyKDkNC5l9tGGg3Rr0w=;
-        b=Zak8ug59k2O1p0roRgoyW1n9sY288ZxRAFM6l3LASPNE2bU1tEjWuX/tkz4flnMmAu
-         N0deW1GLG9hcW5axTEBU/FSyf5vpihs92jZkxdcOnP2Bs18i6UXzaVoL22WNrxgopVFh
-         /eCKelOOPTL7GpSotCpSbTckD9pen8uMfHdorYfpqLBBbUhtSk8DvuBqkAc6tEW713Jn
-         QIomHlDALijSRIvcJDh5PLwBesumZ8L9GG7AgVe0UObwBRt8Sb3VtH1Gd8ev3Z8X0uxU
-         ZLbm60b4pdgJw593iGuqzjlXul3EkyHy8SUUMD4LBbJnpmJ55onltqIei/mu27INlGOh
-         yy8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9hbii1rvXe3OjAU+9EET7g3kuyKDkNC5l9tGGg3Rr0w=;
-        b=ZVWt3tPE1MuLvA6JNneodKvZvH44+cu+YTkQowi6B1b21+3/TJr3EEMJMEz8a+4fXM
-         bMYd5IVuqtkkmGGge+mWIFalgdyM292cqaYjiQksCkk9HnvD5xNWCLMQgLxzmPa5lLKP
-         FGy10upRBXPh7VJZYdkoIDDWqqjhRxkkh162cw5+ZYaYQylC9ksbxK+HmXXoBews351Q
-         xCVTDYwYVvrhJqYcc4dpUwnHydFTTbSEeW0Ij6TtHCJTDW/HvZ0GaP3ENx0II2BhcqcV
-         5eOvmfdYnN/WpGTW9vwca6S8FjQRRQSPzRF0IHbxLKPodJQmiiUKyoQ46arDMaRH9FhM
-         fPjw==
-X-Gm-Message-State: APjAAAUy/L1Pfc+cOPzgerNm4v1CNkRTyh1OF+xu4HdzUySaJN/qKSAW
-        Go1PLGYjt3+dKa1mi5Qqg6FFtXVxR4IPTeFEZ8w=
-X-Google-Smtp-Source: APXvYqwkJxMqmg7ZsnrggMatLowQzCcmg0Qlbo3LHEuSiv/RFL5kc0e6TZc+eBNriQcNnlF72ydXy+R3Gn5WHvKUDNg=
-X-Received: by 2002:a17:906:6b01:: with SMTP id q1mr34046962ejr.162.1574158620629;
- Tue, 19 Nov 2019 02:17:00 -0800 (PST)
+        Tue, 19 Nov 2019 05:18:41 -0500
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:42210
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725798AbfKSKSl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 Nov 2019 05:18:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574158719;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=tNouUf24fwWMn7xrLtC0xiqQw6My/pamIPrS/CwXCVU=;
+        b=fbMr32Z+2KOctSQxn1IaK1Ka7KZNdTfhC5ESuQ4mWuxQ9oCSv+ZCQjmUj9tLIDqt
+        s0NMJeN6B/HAUL3+krpAdsLbg5J9CeLIZNP1N68za3hmCi63aJkTpGTBQ7SLWSXArZN
+        dZ3SejiiYzGJzr5D/PxovAZBJi7PItxHIQOK/AiQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574158719;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=tNouUf24fwWMn7xrLtC0xiqQw6My/pamIPrS/CwXCVU=;
+        b=hs7mA+a4C5cotjT834fm0Ml304cFi4gseeut889PyMq00j0qQ0L/KVKtg/R4MsZx
+        tsdbgYPaZPiJfKIHBFRrKbERzdSNUOa0+tKtP0k+oNWXVq8UGq8pZnFIpVRgsGGUxs+
+        o48dvKiX8KajwzC95bV5CstZFB/TRPZR/7ytk+l0=
 MIME-Version: 1.0
-References: <20191114051242.14651-1-helen.koike@collabora.com>
- <20191114051242.14651-3-helen.koike@collabora.com> <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
- <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com>
-In-Reply-To: <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com>
-From:   Jacob Chen <jacobchen110@gmail.com>
-Date:   Tue, 19 Nov 2019 18:16:49 +0800
-Message-ID: <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
-Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for rkisp1
- meta buffer format
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        Eddie Cai <eddie.cai.linux@gmail.com>, kernel@collabora.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jacob Chen <jacob-chen@rock-chips.com>,
-        gregkh@linuxfoundation.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        robh+dt@kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 Nov 2019 10:18:39 +0000
+From:   sibis@codeaurora.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH 1/3] soc: qcom: Introduce Protection Domain Restart
+ helpers
+In-Reply-To: <20191119064026.GE18024@yoga>
+References: <20191118142728.30187-1-sibis@codeaurora.org>
+ <0101016e7ee9be5e-1d6bbe06-4bab-434d-9040-ebfa3918b213-000000@us-west-2.amazonses.com>
+ <20191119064026.GE18024@yoga>
+Message-ID: <0101016e832bd805-a23a4f93-58ea-4a5f-94f7-d2d1d32b9d25-000000@us-west-2.amazonses.com>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.19-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Helen ,
+Hey Bjorn,
+Thanks for taking the time to
+review the series :)
 
-Helen Koike <helen.koike@collabora.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8814=
-=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=886:59=E5=86=99=E9=81=93=EF=BC=
-=9A
->
->
->
-> On 11/14/19 6:21 AM, Hans Verkuil wrote:
-> > On 11/14/19 6:12 AM, Helen Koike wrote:
-> >> From: Jacob Chen <jacob2.chen@rock-chips.com>
-> >>
-> >> This commit add document for rkisp1 meta buffer format
-> >>
-> >> Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
-> >> [refactored for upstream]
-> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> >
-> > checkpatch gives me:
-> >
-> > WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob Che=
-n <jacob2.chen@rock-chips.com>'
-> >
-> > Looking at this series I see duplicate Signed-off-by entries for Jacob =
-Chen and a total
-> > of three different email addresses:
-> >
-> > jacob2.chen@rock-chips.com
-> > jacob-chen@rock-chips.com
-> > cc@rock-chips.com
->
-> And I see a name in the Maintainers file as Jacob Chen <jacob-chen@iotwrt=
-.com>.
-> I was wondering if I could replace the email by jacob-chen@iotwrt.com, or=
- if I should
-> keep the original ones.
->
-> Helen
->
+On 2019-11-19 12:10, Bjorn Andersson wrote:
+> On Mon 18 Nov 06:27 PST 2019, Sibi Sankar wrote:
+>> diff --git a/drivers/soc/qcom/pdr_interface.c 
+>> b/drivers/soc/qcom/pdr_interface.c
+> [..]
+>> +static void pdr_indack_work(struct work_struct *work)
+>> +{
+>> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
+>> +					      indack_work);
+>> +	struct pdr_list_node *ind, *tmp;
+>> +	struct pdr_service *pds;
+>> +
+>> +	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
+>> +		pds = ind->pds;
+>> +		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
+> 
+> So when we et a ind_cb with the new status, we need to send an ack
+> request, which will result in a response, just to confirm that we got
+> the event?
+> 
+> Seems like we should fix the qmi code to make it possible to send a
+> request from the indication handler and then we could simply ignore the
 
-"jacob2.chen@rock-chips.com"/"jacob-chen@rock-chips.com" is me and
-"cc@rock-chips.com" is another one.
-' jacob-chen@rock-chips.com' is invalid now,  so you could replace the
-email by 'jacob-chen@iotwrt.com'.
+yeah maybe having a provision
+to send custom requests back on
+indication would be the way
+to go. Not all indication need
+to be services with requests.
 
-> >
-> > It's confusing.
-> >
-> > Regards,
-> >
-> >       Hans
-> >
-> >>
-> >> ---
-> >>
-> >> Changes in v11: None
-> >> Changes in v10:
-> >> - unsquash
-> >>
-> >> Changes in v9:
-> >> - squash
-> >> - migrate to staging
-> >> - remove meta-formats.rst update
-> >>
-> >> Changes in v8:
-> >> - Add SPDX in the header
-> >> - Remove emacs configs
-> >> - Fix doc style
-> >>
-> >> Changes in v7:
-> >> - s/correspond/corresponding
-> >> - s/use/uses
-> >> - s/docuemnt/document
-> >>
-> >>  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 ++++++++++++++++++=
-+
-> >>  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
-> >>  2 files changed, 45 insertions(+)
-> >>  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/u=
-api/v4l/pixfmt-meta-rkisp1-params.rst
-> >>  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/u=
-api/v4l/pixfmt-meta-rkisp1-stat.rst
-> >>
-> >> diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l=
-/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation=
-/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-> >> new file mode 100644
-> >> index 000000000000..103b5cb79b7c
-> >> --- /dev/null
-> >> +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt=
--meta-rkisp1-params.rst
-> >> @@ -0,0 +1,23 @@
-> >> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >> +
-> >> +.. _v4l2-meta-fmt-rkisp1-params:
-> >> +
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >> +V4L2_META_FMT_RK_ISP1_PARAMS
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >> +
-> >> +Rockchip ISP1 Parameters Data
-> >> +
-> >> +Description
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +This format describes input parameters for the Rockchip ISP1.
-> >> +
-> >> +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
-> >> +the ``linux/rkisp1-config.h`` header file.
-> >> +
-> >> +The parameters consist of multiple modules.
-> >> +The module won't be updated if the corresponding bit was not set in m=
-odule_*_update.
-> >> +
-> >> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-> >> +   :functions: rkisp1_isp_params_cfg
-> >> diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l=
-/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/m=
-edia/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-> >> new file mode 100644
-> >> index 000000000000..4ad303f96421
-> >> --- /dev/null
-> >> +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt=
--meta-rkisp1-stat.rst
-> >> @@ -0,0 +1,22 @@
-> >> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >> +
-> >> +.. _v4l2-meta-fmt-rkisp1-stat:
-> >> +
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> >> +V4L2_META_FMT_RK_ISP1_STAT_3A
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +
-> >> +Rockchip ISP1 Statistics Data
-> >> +
-> >> +Description
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +This format describes image color statistics information generated by=
- the Rockchip
-> >> +ISP1.
-> >> +
-> >> +It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
-> >> +the ``linux/rkisp1-config.h`` header file.
-> >> +
-> >> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-> >> +   :functions: rkisp1_stat_buffer
-> >>
-> >
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> response. Or do we need to not pdr->status() until we get the response
+> for some reason?
+
+adsp waits on the ack response for
+a fixed duration and seems to throw
+a fatal err is the ack is not
+serviced. Hence holding back pd->status
+till we service the ack here.
+
+> 
+> 
+> Regardless, I'm fine with scheduling this for now...
+> 
+>> +		pdr->status(pdr, pds);
+>> +		list_del(&ind->node);
+>> +		kfree(ind);
+>> +	}
+>> +}
+>> +
+>> +static void pdr_servreg_ind_cb(struct qmi_handle *qmi,
+>> +			       struct sockaddr_qrtr *sq,
+>> +			       struct qmi_txn *txn, const void *data)
+>> +{
+>> +	struct pdr_handle *pdr = container_of(qmi, struct pdr_handle,
+>> +					      servreg_client);
+>> +	const struct servreg_state_updated_ind *ind_msg = data;
+>> +	struct pdr_list_node *ind;
+>> +	struct pdr_service *pds;
+>> +
+>> +	if (!ind_msg || !ind_msg->service_path ||
+>> +	    strlen(ind_msg->service_path) > (SERVREG_NAME_LENGTH + 1))
+>> +		return;
+>> +
+>> +	list_for_each_entry(pds, &pdr->lookups, node) {
+>> +		if (!strcmp(pds->service_path, ind_msg->service_path))
+>> +			goto found;
+>> +	}
+>> +	return;
+>> +
+>> +found:
+>> +	pds->state = ind_msg->curr_state;
+>> +
+>> +	ind = kzalloc(sizeof(*ind), GFP_KERNEL);
+>> +	if (!ind)
+>> +		return;
+>> +
+>> +	pr_info("PDR: Indication received from %s, state: 0x%x, trans-id: 
+>> %d\n",
+>> +		ind_msg->service_path, ind_msg->curr_state,
+>> +		ind_msg->transaction_id);
+>> +
+>> +	ind->transaction_id = ind_msg->transaction_id;
+>> +	ind->pds = pds;
+>> +
+>> +	mutex_lock(&pdr->list_lock);
+>> +	list_add_tail(&ind->node, &pdr->indack_list);
+>> +	mutex_unlock(&pdr->list_lock);
+>> +
+>> +	queue_work(pdr->indack_wq, &pdr->indack_work);
+>> +}
+>> +
+>> +static struct qmi_msg_handler qmi_indication_handler[] = {
+>> +	{
+>> +		.type = QMI_INDICATION,
+>> +		.msg_id = SERVREG_STATE_UPDATED_IND_ID,
+>> +		.ei = servreg_state_updated_ind_ei,
+>> +		.decoded_size = sizeof(struct servreg_state_updated_ind),
+>> +		.fn = pdr_servreg_ind_cb,
+>> +	},
+>> +	{}
+>> +};
+>> +
+>> +static int pdr_get_domain_list(struct servreg_get_domain_list_req 
+>> *req,
+>> +			       struct servreg_get_domain_list_resp *resp,
+>> +			       struct pdr_handle *pdr)
+>> +{
+>> +	struct qmi_txn txn;
+>> +	int ret;
+>> +
+>> +	ret = qmi_txn_init(&pdr->servloc_client, &txn,
+>> +			   servreg_get_domain_list_resp_ei, resp);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = qmi_send_request(&pdr->servloc_client,
+>> +			       &pdr->servloc_addr,
+>> +			       &txn, SERVREG_GET_DOMAIN_LIST_REQ,
+>> +			       SERVREG_GET_DOMAIN_LIST_REQ_MAX_LEN,
+>> +			       servreg_get_domain_list_req_ei,
+>> +			       req);
+>> +	if (ret < 0) {
+>> +		qmi_txn_cancel(&txn);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = qmi_txn_wait(&txn, 5 * HZ);
+>> +	if (ret < 0) {
+>> +		pr_err("PDR: %s get domain list txn wait failed: %d\n",
+>> +		       req->service_name, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* Check the response */
+>> +	if (resp->resp.result != QMI_RESULT_SUCCESS_V01) {
+>> +		pr_err("PDR: %s get domain list failed: 0x%x\n",
+>> +		       req->service_name, resp->resp.error);
+>> +		return -EREMOTEIO;
+>> +	}
+>> +
+>> +	return ret;
+> 
+> ret here will be the number of bytes decoded, but you really only care
+> about if this was an error or not. So I would suggest that you just
+> return 0 here.
+
+yeah will return 0
+
+> 
+>> +}
+>> +
+>> +static int pdr_locate_service(struct pdr_handle *pdr, struct 
+>> pdr_service *pds)
+>> +{
+>> +	struct servreg_get_domain_list_resp *resp = NULL;
+>> +	struct servreg_get_domain_list_req req;
+>> +	int db_rev_count = 0, domains_read = 0;
+>> +	struct servreg_location_entry *entry;
+>> +	int ret, i;
+>> +
+>> +	resp = kzalloc(sizeof(*resp), GFP_KERNEL);
+>> +	if (!resp)
+>> +		return -ENOMEM;
+>> +
+>> +	/* Prepare req message */
+>> +	strcpy(req.service_name, pds->service_name);
+>> +	req.domain_offset_valid = true;
+>> +	req.domain_offset = 0;
+>> +
+>> +	do {
+>> +		req.domain_offset = domains_read;
+>> +		ret = pdr_get_domain_list(&req, resp, pdr);
+>> +		if (ret < 0)
+>> +			goto out;
+>> +
+>> +		if (!domains_read)
+>> +			db_rev_count = resp->db_rev_count;
+>> +
+>> +		if (db_rev_count != resp->db_rev_count) {
+>> +			ret = -EAGAIN;
+>> +			goto out;
+>> +		}
+>> +
+>> +		for (i = domains_read; i < resp->domain_list_len; i++) {
+>> +			entry = &resp->domain_list[i];
+>> +
+>> +			if (strlen(entry->name) > (SERVREG_NAME_LENGTH + 1))
+> 
+> In the event that the incoming string isn't NUL-terminated this will 
+> run
+> off the array.
+> 
+> if (strnlen(entry->name, SERVREG_NAME_LENGTH + 1) == 
+> SERVREG_NAME_LENGTH + 1)
+> 
+> or perhaps, relying on sizeof instead of duplicating the knowledge that
+> it is SERVREG_NAME_LENGTH + 1:
+> 
+> if (strnlen(entry->name, sizeof(entry->name)) == sizeof(entry->name))
+
+yeah I'll use ^^ then or maybe switch
+to a strncpy to further simplify things.
+
+> 
+>> +				continue;
+>> +
+>> +			if (!strcmp(entry->name, pds->service_path)) {
+>> +				pds->service_data_valid = entry->service_data_valid;
+>> +				pds->service_data = entry->service_data;
+>> +				pds->instance = entry->instance;
+>> +				goto out;
+>> +			}
+>> +		}
+>> +
+>> +		/* Update ret to indicate that the service is not yet found */
+>> +		ret = -EINVAL;
+>> +
+>> +		/* Always read total_domains from the response msg */
+>> +		if (resp->domain_list_len >  resp->total_domains)
+> 
+> Double space after '>'
+
+thanks for catching this
+
+> 
+>> +			resp->domain_list_len = resp->total_domains;
+>> +
+>> +		domains_read += resp->domain_list_len;
+>> +	} while (domains_read < resp->total_domains);
+>> +out:
+>> +	kfree(resp);
+>> +	return ret;
+>> +}
+>> +
+>> +static void pdr_servloc_work(struct work_struct *work)
+>> +{
+>> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
+>> +					      servloc_work);
+>> +	struct pdr_list_node *servloc, *tmp;
+>> +	struct pdr_service *pds;
+>> +	int ret;
+>> +
+>> +	list_for_each_entry_safe(servloc, tmp, &pdr->servloc_list, node) {
+>> +		pds = servloc->pds;
+>> +
+>> +		/* wait for PD Mapper to come up */
+>> +		ret = wait_for_completion_timeout(&pdr->locator_available, 10 * 
+>> HZ);
+> 
+> Afaict this means that we will only look for the locator during the 10
+> seconds that follows a pdr_add_lookup().
+> 
+> How about changing this so that you bail before the loop if the locator
+> hasn't showed up yet and schedule this worker when the locator is
+> registered?
+
+yes makes sense, will do that.
+But by doing this the client
+will have to track timeouts
+for lookups.
+
+> 
+>> +		if (!ret) {
+>> +			pr_err("PDR: SERVICE LOCATOR service wait failed\n");
+>> +			ret = -ETIMEDOUT;
+>> +			goto err;
+>> +		}
+>> +
+>> +		ret = pdr_locate_service(pdr, pds);
+>> +		if (ret < 0) {
+>> +			pr_err("PDR: service lookup for %s failed: %d\n",
+>> +			       pds->service_name, ret);
+>> +			goto err;
+>> +		}
+>> +
+>> +		qmi_add_lookup(&pdr->servreg_client, pds->service, 1,
+>> +			       pds->instance);
+>> +err:
+>> +		list_del(&servloc->node);
+>> +		kfree(servloc);
+>> +
+>> +		/* cleanup pds on error */
+>> +		if (ret < 0) {
+>> +			pds->state = SERVREG_LOCATOR_ERR;
+>> +			pdr->status(pdr, pds);
+>> +			list_del(&pds->node);
+>> +			kfree(pds);
+>> +		}
+>> +	}
+>> +}
+> [..]
+>> +int pdr_add_lookup(struct pdr_handle *pdr, const char *service_name,
+>> +		   const char *service_path)
+>> +{
+>> +	struct pdr_service *pds, *pds_iter, *tmp;
+>> +	struct pdr_list_node *servloc;
+>> +	int ret;
+>> +
+>> +	if (!service_name || strlen(service_name) > (SERVREG_NAME_LENGTH + 
+>> 1) ||
+>> +	    !service_path || strlen(service_path) > (SERVREG_NAME_LENGTH + 
+>> 1))
+> 
+> When strlen(x) == SERVREG_NAME_LENGTH + 1 your strcpy below would write
+> SERVREG_NAME_LENGTH + 2 bytes to service_name and service_path, so drop
+> the + 1 from the comparisons.
+
+yes will do that
+
+> 
+>> +		return -EINVAL;
+>> +
+>> +	servloc = kzalloc(sizeof(*servloc), GFP_KERNEL);
+>> +	if (!servloc)
+>> +		return -ENOMEM;
+>> +
+>> +	pds = kzalloc(sizeof(*pds), GFP_KERNEL);
+>> +	if (!pds) {
+>> +		ret = -ENOMEM;
+>> +		goto err;
+>> +	}
+>> +
+>> +	pds->service = SERVREG_NOTIFIER_SERVICE;
+>> +	strcpy(pds->service_name, service_name);
+>> +	strcpy(pds->service_path, service_path);
+> [..]
+>> +int pdr_restart_pd(struct pdr_handle *pdr, const char *service_path)
+>> +{
+>> +	struct servreg_restart_pd_req req;
+>> +	struct servreg_restart_pd_resp resp;
+>> +	struct pdr_service *pds = NULL, *pds_iter, *tmp;
+>> +	struct qmi_txn txn;
+>> +	int ret;
+>> +
+>> +	if (!service_path || strlen(service_path) > (SERVREG_NAME_LENGTH + 
+>> 1))
+> 
+> As above, drop the + 1
+
+ditto
+
+> 
+>> +		return -EINVAL;
+>> +
+> [..]
+>> +int pdr_handle_init(struct pdr_handle *pdr,
+>> +		    int (*status)(struct pdr_handle *pdr,
+>> +				  struct pdr_service *pds))
+>> +{
+> [..]
+>> +	pdr->servreg_wq = create_singlethread_workqueue("pdr_servreg_wq");
+>> +	if (!pdr->servreg_wq)
+>> +		return -ENOMEM;
+>> +
+>> +	pdr->indack_wq = alloc_ordered_workqueue("pdr_indack_wq", 
+>> WQ_HIGHPRI);
+> 
+> The two workqueues means that we should be able to call pdr->status()
+> rom two concurrent contexts, I don't think our clients will expect 
+> that.
+> 
+
+would creating another ordered wq to
+relay all the pd->status make sense?
+
+>> +	if (!pdr->indack_wq) {
+>> +		ret = -ENOMEM;
+>> +		goto destroy_servreg;
+>> +	}
+>> +
+> 
+> Regards,
+> Bjorn
