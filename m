@@ -2,105 +2,184 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9507AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 20:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D33C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 21:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6536A2068F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 20:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B510206F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 21:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OilMz7vv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HegsaQ5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfKSUpU (ORCPT
+        id S1727104AbfKSVVj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 15:45:20 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51250 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfKSUpU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 15:45:20 -0500
+        Tue, 19 Nov 2019 16:21:39 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49088 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbfKSVVj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 16:21:39 -0500
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJKj7hP124785;
-        Tue, 19 Nov 2019 14:45:07 -0600
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJLLVpJ038875;
+        Tue, 19 Nov 2019 15:21:31 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574196307;
-        bh=Ojx+SKgazvrggEXzEBg4yMTN/EjefOXCqh4dDaSVgCA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=OilMz7vvFsyhv/lpO57VHl/T6C1horvvAS3/5Pnx/IpdNeydE9hebFY2zZHMm/5st
-         Zru3SVfzJp21dPxDwfLALJxSzBmgEFhTi8dF2eYklCvK5O4NO0ZxxDfL0wmRUzePHb
-         ZV7O7BRd9wReBRu0XWt1DrL/KTVQKsXmRPDtgGiI=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJKj6cc130848
+        s=ti-com-17Q1; t=1574198491;
+        bh=2gWLhEbFHNoDN8m0bQkCKW7dcdar3l1iywGpZK9DtcM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HegsaQ5hqHr4Z+4g5tEK1D6dXaAaWqk3QBa2o9K8Giiksi45zDECLoozPgoxASGm2
+         DfzBMifAvYj+UKxSyR6uxjkWM7FAPjKlAjurJNHIo7Xw92626eFix94uDdVNEwNK5r
+         D7JyIaZLVgM2hCACPoQ3YdIihpNLbS/RrgE9Xftk=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJLLVrk053860
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 14:45:07 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 19 Nov 2019 15:21:31 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 14:45:06 -0600
-Received: from DFLE106.ent.ti.com ([fe80::4dc:7374:f90c:1f12]) by
- DFLE106.ent.ti.com ([fe80::4dc:7374:f90c:1f12%17]) with mapi id
- 15.01.1847.003; Tue, 19 Nov 2019 14:45:06 -0600
-From:   "Robey, Caleb" <c-robey@ti.com>
-To:     "Davis, Andrew" <afd@ti.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+ Nov 2019 15:21:31 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 19 Nov 2019 15:21:31 -0600
+Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJLLUk5112287;
+        Tue, 19 Nov 2019 15:21:30 -0600
+Subject: Re: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
+To:     Caleb Robey <c-robey@ti.com>, <linux-omap@vger.kernel.org>
 CC:     Jason Kridner <jkridner@gmail.com>,
-        "Vutla, Lokesh" <lokeshvutla@ti.com>,
-        "Kridner, Jason" <jdk@ti.com>,
-        "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>,
-        "Dannenberg, Andreas" <dannenberg@ti.com>,
-        "Hiblot, Jean-Jacques" <jjhiblot@ti.com>,
-        "Bajjuri, Praneeth" <praneeth@ti.com>,
-        "Strashko, Grygorii" <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
         Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/1] ARM: dts: am5729: beaglebone-ai: enable board
-Thread-Topic: [PATCH 0/1] ARM: dts: am5729: beaglebone-ai: enable board
-Thread-Index: AQHVnxf+XQY9ZEgIEE6Un/4ZcnJNEqeTWaIA//+ceiA=
-Date:   Tue, 19 Nov 2019 20:45:06 +0000
-Message-ID: <770139b562564445a743e2b7c905e469@ti.com>
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 References: <20191119202850.18149-1-c-robey@ti.com>
- <a117b152-8fcb-01a8-5a53-2cb615e87111@ti.com>
-In-Reply-To: <a117b152-8fcb-01a8-5a53-2cb615e87111@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.247.31.74]
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <20191119202850.18149-2-c-robey@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <05e71585-2480-c764-d6d0-c6a59dcffd21@ti.com>
+Date:   Tue, 19 Nov 2019 16:21:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191119202850.18149-2-c-robey@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGF2aXMsIEFuZHJldw0K
-PiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciAxOSwgMjAxOSAyOjQxIFBNDQo+IFRvOiBSb2JleSwg
-Q2FsZWI7IGxpbnV4LW9tYXBAdmdlci5rZXJuZWwub3JnDQo+IENjOiBKYXNvbiBLcmlkbmVyOyBW
-dXRsYSwgTG9rZXNoOyBLcmlkbmVyLCBKYXNvbjsgUml6dmksIE1vaGFtbWFkIEZhaXoNCj4gQWJi
-YXM7IERhbm5lbmJlcmcsIEFuZHJlYXM7IEhpYmxvdCwgSmVhbi1KYWNxdWVzOyBCYWpqdXJpLCBQ
-cmFuZWV0aDsNCj4gU3RyYXNoa28sIEdyeWdvcmlpOyBUb20gUmluaTsgUm9iIEhlcnJpbmc7IE1h
-cmsgUnV0bGFuZDsgQmVub8OudCBDb3Vzc29uOw0KPiBUb255IExpbmRncmVuOyBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIDAvMV0gQVJNOiBkdHM6IGFtNTcyOTogYmVhZ2xlYm9uZS1haTogZW5hYmxl
-IGJvYXJkDQo+IA0KPiBPbiAxMS8xOS8xOSAzOjI4IFBNLCBDYWxlYiBSb2JleSB3cm90ZToNCj4g
-PiBUaGUgZm9sbG93aW5nIHBhdGNoIGFkZHMgdGhlIGRldmljZSB0cmVlIGZpbGUgZm9yIEJlYWds
-ZUJvbmUgQUkNCj4gPg0KPiANCj4gDQo+IENvdmVyLWxldHRlciBmb3IgYSBzaW5nbGUgcGF0Y2gg
-aXMgcHJvYmFibHkgbm90IG5lZWRlZCwgZXNwZWNpYWxseSB3aGVuDQo+IHlvdSBkb24ndCBhZGQg
-YW55dGhpbmcgdXNlZnVsIGluIHRoZSBjb3ZlciBsZXR0ZXIuDQo+IA0KPiBBbmRyZXcNCg0KT2th
-eSwgdGhhbmsgeW91IGZvciBsZXR0aW5nIG1lIGtub3cgLSBJIHdpbGwga2VlcCB0aGF0IGluIG1p
-bmQgaW4gdGhlIGZ1dHVyZS4NCkNhbGViDQogDQo+IA0KPiANCj4gPiBDYWxlYiBSb2JleSAoMSk6
-DQo+ID4gICBBUk06IGR0czogYW01NzI5OiBiZWFnbGVib25lLWFpOiBhZGRpbmcgZGV2aWNlIHRy
-ZWUNCj4gPg0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICB8
-ICAgMSArDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2FtNTcyOS1iZWFnbGVib25lYWkuZHRzIHwg
-NzgyDQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA3ODMg
-aW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMv
-YW01NzI5LWJlYWdsZWJvbmVhaS5kdHMNCj4gPg0K
+On 11/19/19 3:28 PM, Caleb Robey wrote:
+> From: Jason Kridner <jdk@ti.com>
+> 
+> BeagleBoard.org BeagleBone AI is an open source hardware single
+> board computer based on the Texas Instruments AM5729 SoC featuring
+> dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+> signal processor (DSP), quad-core embedded vision engine (EVE),
+> Arm Cortex-M4 processors, dual programmable realtime unit
+> industrial control subsystems and more. The board features 1GB
+> DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+> 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+> headers.
+> 
+> For more information, refer to:
+> https://beaglebone.ai
+> 
+> This patch introduces the BeagleBone AI device tree.
+> 
+> Note that the device use the "ti,tpd12s016" component which is
+> software compatible with "ti,tpd12s015". Thus we only use the
+> latter driver.
+> 
+> Signed-off-by: Jason Kridner <jdk@ti.com>
+> Signed-off-by: Caleb Robey <c-robey@ti.com>
+> Cc: Robert Nelson <robertcnelson@gmail.com>
+> 
+> ---
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/am5729-beagleboneai.dts | 782 ++++++++++++++++++++++
+>  2 files changed, 783 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b21b3a64641a..b1154dbda73c 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -791,6 +791,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
+>  	am57xx-beagle-x15.dtb \
+>  	am57xx-beagle-x15-revb1.dtb \
+>  	am57xx-beagle-x15-revc.dtb \
+> +	am5729-beagleboneai.dtb \
+>  	am57xx-cl-som-am57x.dtb \
+>  	am57xx-sbc-am57x.dtb \
+>  	am572x-idk.dtb \
+> diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> new file mode 100644
+> index 000000000000..7d0e132e6a23
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> @@ -0,0 +1,782 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2014-2019 Texas Instruments Incorporated - http://www.ti.com/
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "dra74x.dtsi"
+> +#include "am57xx-commercial-grade.dtsi"
+> +#include "dra74x-mmc-iodelay.dtsi"
+> +#include "dra74-ipu-dsp-common.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pinctrl/dra.h>
+> +
+> +/ {
+> +	model = "BeagleBoard.org BeagleBone AI";
+> +	compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
+> +		     "ti,dra742", "ti,dra74", "ti,dra7";
+> +
+> +	aliases {
+> +		rtc0 = &tps659038_rtc;
+> +		rtc1 = &rtc;
+> +		display0 = &hdmi_conn;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &uart1;
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x80000000 0x0 0x40000000>;
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		ipu2_memory_region: ipu2-memory@95800000 {
+
+
+What do you need all this for, the IPU/DSP should use system memory and
+their IOMMUs here.
+
+Looking more at this it looks like you just took this whole file
+directly from our evil vendor tree. If you are trying to get this
+upstream you need to drop all the parts that have bindings that are not
+upstream yet. That includes, most notably, all the PRUSS/IPC stuff.
+
+Andrew
