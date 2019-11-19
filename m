@@ -2,167 +2,398 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EC0C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A93C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543B3222D1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80262082F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btWLNutl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SxpI8ZZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfKSGec (ORCPT
+        id S1727419AbfKSGkd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:34:32 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:47000 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKSGec (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 01:34:32 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b3so22351033wrs.13;
-        Mon, 18 Nov 2019 22:34:30 -0800 (PST)
+        Tue, 19 Nov 2019 01:40:33 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37781 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbfKSGkd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 01:40:33 -0500
+Received: by mail-pl1-f195.google.com with SMTP id bb5so11210707plb.4
+        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 22:40:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=STYck0ldpmlPgUWK/QtmnwfKy44OyOjUVjCG3r/tKEs=;
-        b=btWLNutlP2kDY/yLaixh/BuLXocKTIXi9Ge/nc2DSdpsZX3wYLJ8Va1hZj8xQh+5ve
-         iQ7046zUAQFVSyyc9bYlRZNYXpVAhyfjVCVsoORr8Ght4Oh73ERcgnlCHKs0Is77j/Ai
-         7TLjUMW+5IDBBSYBaQoWf55T5ETIK8T5jtd3t92ndP6tm3FvbYhzQFmAHC6d12UHiRt7
-         sgy5G2u1jw8Q0iCDYYTPJAsEitOV9NWFcj7tZuzq827+rUhMNDYLN1vlJHgba2WpSZ+n
-         m3neIJRvPGUsuRaKNs6bR8d9Uuaq1s6KxKMcb7xqh1zHh/22AixIq62t39PCTiwclEi1
-         5Hig==
+        bh=MRQG5nJu7nwqAH42LpwKdzXc/U/hMSOKXLJecc/2fMY=;
+        b=SxpI8ZZYKjVOUzSSgkynyPl5H+G65bjneu7wv31XqUb4ZNoKaOFZt78ycsN+rVfATb
+         V2PE6tDkSn514B8NrSJsrN6wW4IN8/qwbaG0pVVvMO1ttaTTjJdjIdHbtI60LONuDph6
+         lHFPfPQ13OmH+FvxF52lMyh7tFe3n4q/OMJ1K+bLTQvZPAWPlvhmf2UNLa1TjjMoKp1I
+         5ybqE6AVttwDYMMI7AX9w3G0nlYrJPu62nWpY+FWjj/V/FoLJ3VjHcWX+Qg87rTjbwPt
+         HWL1HYN603WEgKOJ4UIyON+xh5fpONeBOQ8ft2pqwycacVJzVU6aJ7J6SQBVi03OolNS
+         5eEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=STYck0ldpmlPgUWK/QtmnwfKy44OyOjUVjCG3r/tKEs=;
-        b=QOCHNq3fClP1pmZXIBug+HH4NmOCCyX1j21sZWUsgoT3s2K0aOmpOArgr0ke4l2Y8Y
-         RRpGPntjfXIxmM6ksJ8zoD46sIAPYfyfTCRHv1mCHPJkNhPkdorypXuKn44WjnUi2Qcf
-         AC2I0J04AuU2rMOgjln8FcuAT+OFqh39pMQGnpTCYZIYSXPydM+HdWDBKxRtsyXFPmdX
-         KPLdjSK8cHBHkTgmJIJea8xztOf5p9QaBKAc/rA5VP8lM1O0CQUyA11qE67dl93YSk7O
-         cdWbl78Kk13RnwMXjR3Vznh0IgnHrJXEFY1BO0PgFFPU+YC9LrR+8IUD8jIZePjokXIK
-         1AeA==
-X-Gm-Message-State: APjAAAVyjzr7CoxSYIlnIys8MNLrcG3Zj3NQTNg69JT6jnk33NpQKWU7
-        PKL2sP3imv6MwORGeR1ptWU=
-X-Google-Smtp-Source: APXvYqzhNxj3/SJm0AqF0zMY4b2l3tY6B3JVFHzcm50DLbqWtLqLll98yGl8UaG/HY2uDbZ8yq8Icw==
-X-Received: by 2002:adf:f203:: with SMTP id p3mr36441140wro.2.1574145269573;
-        Mon, 18 Nov 2019 22:34:29 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id q15sm25965385wrs.91.2019.11.18.22.34.27
+        bh=MRQG5nJu7nwqAH42LpwKdzXc/U/hMSOKXLJecc/2fMY=;
+        b=o8YTv9fHKImOr4KBXZ24iQ1XEkVDYAOy2vVNiQxrRc9cVmBdvx0X+7bCbQEKijN/69
+         pXLcfLPpwdRhz50yJWyN8ksf5fgZUvTDKutSRVTQ5HcyMNq5N1rmMtWGPmRnrCQhK8uM
+         OdNeigxOM5FJHMI6XIiQWxkQZzjFjjaON9CL9715ekrU9U1aVGwcoImBXzss/e5CYAUz
+         Vj45BI0U1XIhRPgWrf7rl5hy+Rg2JbyCYCrsZgOcQ4j2dVtQokzhor3l7g8gJ2rE9Dui
+         cQKbtOy9ES8zasUCTURNUIEIhsiJ/hgTCmxZ+TkWKrTFJP8CAZQVcqOIxPY7HaOgrZus
+         /K2w==
+X-Gm-Message-State: APjAAAX310RrHDeAmW3+tHd0gX8StG3z6whgVkklgmUJOYRpXCSTvhUA
+        0irt2vzwwXk55eRvoY0eAVOq+g==
+X-Google-Smtp-Source: APXvYqyKvUabBtrBX50z/baZAwlhdtn+pq1nEUc71w/53EXcQX5QRw6ouS2vW6pQHua1wIlhgIpG8Q==
+X-Received: by 2002:a17:902:904c:: with SMTP id w12mr33683271plz.144.1574145630199;
+        Mon, 18 Nov 2019 22:40:30 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c12sm24163279pfp.178.2019.11.18.22.40.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 22:34:28 -0800 (PST)
-Date:   Tue, 19 Nov 2019 07:34:27 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 14/29] memory: tegra: Add interconnect nodes for
- Terga20 display controllers
-Message-ID: <20191119063427.GG2462695@ulmo>
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-15-digetx@gmail.com>
+        Mon, 18 Nov 2019 22:40:29 -0800 (PST)
+Date:   Mon, 18 Nov 2019 22:40:26 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH 1/3] soc: qcom: Introduce Protection Domain Restart
+ helpers
+Message-ID: <20191119064026.GE18024@yoga>
+References: <20191118142728.30187-1-sibis@codeaurora.org>
+ <0101016e7ee9be5e-1d6bbe06-4bab-434d-9040-ebfa3918b213-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="I3tAPq1Rm2pUxvsp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191118200247.3567-15-digetx@gmail.com>
+In-Reply-To: <0101016e7ee9be5e-1d6bbe06-4bab-434d-9040-ebfa3918b213-000000@us-west-2.amazonses.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---I3tAPq1Rm2pUxvsp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 18, 2019 at 11:02:32PM +0300, Dmitry Osipenko wrote:
-> Add initial interconnect nodes that allow display controller driver
-> to perform memory bandwidth requests using interconnect API.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/memory/tegra/tegra20.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/drivers/memory/tegra/tegra20.c b/drivers/memory/tegra/tegra2=
-0.c
-> index a8098bff91d9..dfcd9fdb7ce7 100644
-> --- a/drivers/memory/tegra/tegra20.c
-> +++ b/drivers/memory/tegra/tegra20.c
-> @@ -3,6 +3,7 @@
->   * Copyright (C) 2012 NVIDIA CORPORATION.  All rights reserved.
->   */
-> =20
-> +#include <dt-bindings/interconnect/tegra-icc.h>
->  #include <dt-bindings/memory/tegra20-mc.h>
-> =20
->  #include "mc.h"
-> @@ -280,6 +281,17 @@ static const struct tegra_mc_reset_ops tegra20_mc_re=
-set_ops =3D {
->  	.reset_status =3D tegra20_mc_reset_status,
->  };
-> =20
-> +#define TEGRA20_MC_ICC(_name)				\
-> +	{						\
-> +		.name =3D #_name,				\
-> +		.id =3D TEGRA_ICC_MC_##_name,		\
-> +	}
+On Mon 18 Nov 06:27 PST 2019, Sibi Sankar wrote:
+> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+[..]
+> +static void pdr_indack_work(struct work_struct *work)
+> +{
+> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
+> +					      indack_work);
+> +	struct pdr_list_node *ind, *tmp;
+> +	struct pdr_service *pds;
 > +
-> +static const struct tegra_mc_icc_node tegra20_mc_icc_nodes[] =3D {
-> +	TEGRA20_MC_ICC(DC),
-> +	TEGRA20_MC_ICC(DCB),
+> +	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
+> +		pds = ind->pds;
+> +		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
+
+So when we et a ind_cb with the new status, we need to send an ack
+request, which will result in a response, just to confirm that we got
+the event?
+
+Seems like we should fix the qmi code to make it possible to send a
+request from the indication handler and then we could simply ignore the
+response. Or do we need to not pdr->status() until we get the response
+for some reason?
+
+
+Regardless, I'm fine with scheduling this for now...
+
+> +		pdr->status(pdr, pds);
+> +		list_del(&ind->node);
+> +		kfree(ind);
+> +	}
+> +}
+> +
+> +static void pdr_servreg_ind_cb(struct qmi_handle *qmi,
+> +			       struct sockaddr_qrtr *sq,
+> +			       struct qmi_txn *txn, const void *data)
+> +{
+> +	struct pdr_handle *pdr = container_of(qmi, struct pdr_handle,
+> +					      servreg_client);
+> +	const struct servreg_state_updated_ind *ind_msg = data;
+> +	struct pdr_list_node *ind;
+> +	struct pdr_service *pds;
+> +
+> +	if (!ind_msg || !ind_msg->service_path ||
+> +	    strlen(ind_msg->service_path) > (SERVREG_NAME_LENGTH + 1))
+> +		return;
+> +
+> +	list_for_each_entry(pds, &pdr->lookups, node) {
+> +		if (!strcmp(pds->service_path, ind_msg->service_path))
+> +			goto found;
+> +	}
+> +	return;
+> +
+> +found:
+> +	pds->state = ind_msg->curr_state;
+> +
+> +	ind = kzalloc(sizeof(*ind), GFP_KERNEL);
+> +	if (!ind)
+> +		return;
+> +
+> +	pr_info("PDR: Indication received from %s, state: 0x%x, trans-id: %d\n",
+> +		ind_msg->service_path, ind_msg->curr_state,
+> +		ind_msg->transaction_id);
+> +
+> +	ind->transaction_id = ind_msg->transaction_id;
+> +	ind->pds = pds;
+> +
+> +	mutex_lock(&pdr->list_lock);
+> +	list_add_tail(&ind->node, &pdr->indack_list);
+> +	mutex_unlock(&pdr->list_lock);
+> +
+> +	queue_work(pdr->indack_wq, &pdr->indack_work);
+> +}
+> +
+> +static struct qmi_msg_handler qmi_indication_handler[] = {
+> +	{
+> +		.type = QMI_INDICATION,
+> +		.msg_id = SERVREG_STATE_UPDATED_IND_ID,
+> +		.ei = servreg_state_updated_ind_ei,
+> +		.decoded_size = sizeof(struct servreg_state_updated_ind),
+> +		.fn = pdr_servreg_ind_cb,
+> +	},
+> +	{}
 > +};
 > +
->  const struct tegra_mc_soc tegra20_mc_soc =3D {
->  	.clients =3D tegra20_mc_clients,
->  	.num_clients =3D ARRAY_SIZE(tegra20_mc_clients),
-> @@ -290,4 +302,6 @@ const struct tegra_mc_soc tegra20_mc_soc =3D {
->  	.reset_ops =3D &tegra20_mc_reset_ops,
->  	.resets =3D tegra20_mc_resets,
->  	.num_resets =3D ARRAY_SIZE(tegra20_mc_resets),
-> +	.icc_nodes =3D tegra20_mc_icc_nodes,
-> +	.num_icc_nodes =3D ARRAY_SIZE(tegra20_mc_icc_nodes),
->  };
+> +static int pdr_get_domain_list(struct servreg_get_domain_list_req *req,
+> +			       struct servreg_get_domain_list_resp *resp,
+> +			       struct pdr_handle *pdr)
+> +{
+> +	struct qmi_txn txn;
+> +	int ret;
+> +
+> +	ret = qmi_txn_init(&pdr->servloc_client, &txn,
+> +			   servreg_get_domain_list_resp_ei, resp);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = qmi_send_request(&pdr->servloc_client,
+> +			       &pdr->servloc_addr,
+> +			       &txn, SERVREG_GET_DOMAIN_LIST_REQ,
+> +			       SERVREG_GET_DOMAIN_LIST_REQ_MAX_LEN,
+> +			       servreg_get_domain_list_req_ei,
+> +			       req);
+> +	if (ret < 0) {
+> +		qmi_txn_cancel(&txn);
+> +		return ret;
+> +	}
+> +
+> +	ret = qmi_txn_wait(&txn, 5 * HZ);
+> +	if (ret < 0) {
+> +		pr_err("PDR: %s get domain list txn wait failed: %d\n",
+> +		       req->service_name, ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Check the response */
+> +	if (resp->resp.result != QMI_RESULT_SUCCESS_V01) {
+> +		pr_err("PDR: %s get domain list failed: 0x%x\n",
+> +		       req->service_name, resp->resp.error);
+> +		return -EREMOTEIO;
+> +	}
+> +
+> +	return ret;
 
-As I mentioned, we already have most (if not all) of the information
-that we need for this in the various struct tegra_mc_client tables.
-Those tables also contain some definitions for latency allowance
-registers that we are eventually going to need to do more tweaking as
-you suggested in your cover letter.
+ret here will be the number of bytes decoded, but you really only care
+about if this was an error or not. So I would suggest that you just
+return 0 here.
 
-Thierry
+> +}
+> +
+> +static int pdr_locate_service(struct pdr_handle *pdr, struct pdr_service *pds)
+> +{
+> +	struct servreg_get_domain_list_resp *resp = NULL;
+> +	struct servreg_get_domain_list_req req;
+> +	int db_rev_count = 0, domains_read = 0;
+> +	struct servreg_location_entry *entry;
+> +	int ret, i;
+> +
+> +	resp = kzalloc(sizeof(*resp), GFP_KERNEL);
+> +	if (!resp)
+> +		return -ENOMEM;
+> +
+> +	/* Prepare req message */
+> +	strcpy(req.service_name, pds->service_name);
+> +	req.domain_offset_valid = true;
+> +	req.domain_offset = 0;
+> +
+> +	do {
+> +		req.domain_offset = domains_read;
+> +		ret = pdr_get_domain_list(&req, resp, pdr);
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		if (!domains_read)
+> +			db_rev_count = resp->db_rev_count;
+> +
+> +		if (db_rev_count != resp->db_rev_count) {
+> +			ret = -EAGAIN;
+> +			goto out;
+> +		}
+> +
+> +		for (i = domains_read; i < resp->domain_list_len; i++) {
+> +			entry = &resp->domain_list[i];
+> +
+> +			if (strlen(entry->name) > (SERVREG_NAME_LENGTH + 1))
 
---I3tAPq1Rm2pUxvsp
-Content-Type: application/pgp-signature; name="signature.asc"
+In the event that the incoming string isn't NUL-terminated this will run
+off the array.
 
------BEGIN PGP SIGNATURE-----
+if (strnlen(entry->name, SERVREG_NAME_LENGTH + 1) == SERVREG_NAME_LENGTH + 1)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3TjPIACgkQ3SOs138+
-s6EdSBAAkJq6NUF8h85zOp4aN7BmEM9zr6aQU87PcpheYtxkxBSWJB3FL3ZbULKr
-uWUELJntyp3KXLEuosHFkUZTpvhzDhhyVi5pZ9r45M45uGgZqO1pMPunN9Ha1Uku
-8RzxboJvFEGLAok5/9XW9tsotQ/wjhRQKIQWgzGfxLz2jFEWF0nPc5akod1RHQTz
-dcmDT9D9gDXJqiAHJINlHxfA6O+pkTI3s7K2qr0O9C4ao+xgSOqcjWqr0yCOggw2
-GSerhri3lwwbEAQk8FMi10nIU0gD8DDOD3iVGNqnR6djOzkZMMEfG2i5RzWzHk7G
-ijkE6CnihiZwbDIUKdE9XBQGOp+fdEGnaznERMG1GWyi68u+nSmkGDnCtivJkL8j
-yur3Wdk2RoLyVii0RScej4aAndbyVNhRslgPEhu0hs1e6YNI44L1i6LcAZFck87N
-q/KQl6aiOpVajQ+7eiHgHOeYQYGXcz/GGRWToOmo9RHAu1gMqVdG03wgpAKDYkkQ
-ls3DMn/qSgfH6YeuKWPes9x4gQgXtAtx22hlXxXC3P5cSw4XWXpiQFv9YLN3I/zs
-SLrm0uaV8jsjyI0fF8dWO2RWQMlkyKj/kGQIL44ZRiYgO4iop1Rc3dIUPpn/NtYe
-bOPFW64ShM7Ex2qHSHhiHnv60kq1YqYAUo1mxFa7XE12ygIkn3s=
-=85iP
------END PGP SIGNATURE-----
+or perhaps, relying on sizeof instead of duplicating the knowledge that
+it is SERVREG_NAME_LENGTH + 1:
 
---I3tAPq1Rm2pUxvsp--
+if (strnlen(entry->name, sizeof(entry->name)) == sizeof(entry->name))
+
+> +				continue;
+> +
+> +			if (!strcmp(entry->name, pds->service_path)) {
+> +				pds->service_data_valid = entry->service_data_valid;
+> +				pds->service_data = entry->service_data;
+> +				pds->instance = entry->instance;
+> +				goto out;
+> +			}
+> +		}
+> +
+> +		/* Update ret to indicate that the service is not yet found */
+> +		ret = -EINVAL;
+> +
+> +		/* Always read total_domains from the response msg */
+> +		if (resp->domain_list_len >  resp->total_domains)
+
+Double space after '>'
+
+> +			resp->domain_list_len = resp->total_domains;
+> +
+> +		domains_read += resp->domain_list_len;
+> +	} while (domains_read < resp->total_domains);
+> +out:
+> +	kfree(resp);
+> +	return ret;
+> +}
+> +
+> +static void pdr_servloc_work(struct work_struct *work)
+> +{
+> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
+> +					      servloc_work);
+> +	struct pdr_list_node *servloc, *tmp;
+> +	struct pdr_service *pds;
+> +	int ret;
+> +
+> +	list_for_each_entry_safe(servloc, tmp, &pdr->servloc_list, node) {
+> +		pds = servloc->pds;
+> +
+> +		/* wait for PD Mapper to come up */
+> +		ret = wait_for_completion_timeout(&pdr->locator_available, 10 * HZ);
+
+Afaict this means that we will only look for the locator during the 10
+seconds that follows a pdr_add_lookup().
+
+How about changing this so that you bail before the loop if the locator
+hasn't showed up yet and schedule this worker when the locator is
+registered?
+
+> +		if (!ret) {
+> +			pr_err("PDR: SERVICE LOCATOR service wait failed\n");
+> +			ret = -ETIMEDOUT;
+> +			goto err;
+> +		}
+> +
+> +		ret = pdr_locate_service(pdr, pds);
+> +		if (ret < 0) {
+> +			pr_err("PDR: service lookup for %s failed: %d\n",
+> +			       pds->service_name, ret);
+> +			goto err;
+> +		}
+> +
+> +		qmi_add_lookup(&pdr->servreg_client, pds->service, 1,
+> +			       pds->instance);
+> +err:
+> +		list_del(&servloc->node);
+> +		kfree(servloc);
+> +
+> +		/* cleanup pds on error */
+> +		if (ret < 0) {
+> +			pds->state = SERVREG_LOCATOR_ERR;
+> +			pdr->status(pdr, pds);
+> +			list_del(&pds->node);
+> +			kfree(pds);
+> +		}
+> +	}
+> +}
+[..]
+> +int pdr_add_lookup(struct pdr_handle *pdr, const char *service_name,
+> +		   const char *service_path)
+> +{
+> +	struct pdr_service *pds, *pds_iter, *tmp;
+> +	struct pdr_list_node *servloc;
+> +	int ret;
+> +
+> +	if (!service_name || strlen(service_name) > (SERVREG_NAME_LENGTH + 1) ||
+> +	    !service_path || strlen(service_path) > (SERVREG_NAME_LENGTH + 1))
+
+When strlen(x) == SERVREG_NAME_LENGTH + 1 your strcpy below would write
+SERVREG_NAME_LENGTH + 2 bytes to service_name and service_path, so drop
+the + 1 from the comparisons.
+
+> +		return -EINVAL;
+> +
+> +	servloc = kzalloc(sizeof(*servloc), GFP_KERNEL);
+> +	if (!servloc)
+> +		return -ENOMEM;
+> +
+> +	pds = kzalloc(sizeof(*pds), GFP_KERNEL);
+> +	if (!pds) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	pds->service = SERVREG_NOTIFIER_SERVICE;
+> +	strcpy(pds->service_name, service_name);
+> +	strcpy(pds->service_path, service_path);
+[..]
+> +int pdr_restart_pd(struct pdr_handle *pdr, const char *service_path)
+> +{
+> +	struct servreg_restart_pd_req req;
+> +	struct servreg_restart_pd_resp resp;
+> +	struct pdr_service *pds = NULL, *pds_iter, *tmp;
+> +	struct qmi_txn txn;
+> +	int ret;
+> +
+> +	if (!service_path || strlen(service_path) > (SERVREG_NAME_LENGTH + 1))
+
+As above, drop the + 1
+
+> +		return -EINVAL;
+> +
+[..]
+> +int pdr_handle_init(struct pdr_handle *pdr,
+> +		    int (*status)(struct pdr_handle *pdr,
+> +				  struct pdr_service *pds))
+> +{
+[..]
+> +	pdr->servreg_wq = create_singlethread_workqueue("pdr_servreg_wq");
+> +	if (!pdr->servreg_wq)
+> +		return -ENOMEM;
+> +
+> +	pdr->indack_wq = alloc_ordered_workqueue("pdr_indack_wq", WQ_HIGHPRI);
+
+The two workqueues means that we should be able to call pdr->status()
+rom two concurrent contexts, I don't think our clients will expect that.
+
+> +	if (!pdr->indack_wq) {
+> +		ret = -ENOMEM;
+> +		goto destroy_servreg;
+> +	}
+> +
+
+Regards,
+Bjorn
