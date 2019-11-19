@@ -2,182 +2,108 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B45FC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01318C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002152230C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA2B222CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRTq1aw2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KF2yFhky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfKSPn6 (ORCPT
+        id S1728177AbfKSPqT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:43:58 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38981 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbfKSPn6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:43:58 -0500
-Received: by mail-io1-f66.google.com with SMTP id k1so23720748ioj.6;
-        Tue, 19 Nov 2019 07:43:57 -0800 (PST)
+        Tue, 19 Nov 2019 10:46:19 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40311 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbfKSPqT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:46:19 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z16so18206079qkg.7;
+        Tue, 19 Nov 2019 07:46:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vuax9dttw4kzq0yvrDA3+EcDha5MuMEK6ksSvHGWZ/Y=;
-        b=kRTq1aw2GWfg7mkmo+9GlcKsPuklqqbeI3d76GAGrD2aOQUq1qmhWrJQEtR8RfYsRl
-         BJcrS09hXqvxZ+hMR7e/72HlvOCi9S+eFLP3lUWpxQQvqGtCPrmKkB1twHpgF6enlmeS
-         fVMPok0aHher3UTkiDRlgTGhLjUllsV4Hblr7k/PpY9LLaPOrRnkbnH1SdU4uCMc3695
-         h6oEshILJnc3DYvteQyD2CYayQyvNVMdqX0t4r5oztin4Tc4c8i416EDhZL2Q0tuHnfV
-         8mlX+1VsAjYLzSRxoY/IPPbK5tAyS9laWIPjMGZQo6aktNur6dGAHIvt8OdYIjQD62te
-         jAFw==
+        h=from:to:cc:subject:date:message-id;
+        bh=zs0qtVqeQ3xQBYktSESGlP6UO3aKjJ10cQ/av650v4s=;
+        b=KF2yFhky8rbMOiX6sRjOdSvysjr6FPV/LibdqcdGEq+utA4XFoeXwl2RD2JlaxHO0G
+         ZBnOl7dNjKCFcFhrFDiGhHBDAWQ6x+XWEFwoPfjhfLHdOADHYf92lNiTGOkDUCPROs3S
+         Pa8K/6I/tiapKhxcMN2XSJEVze5nkGQNgv8mECTPzFgGogiIQgvCwfC2C+N1hLlEDlPh
+         0jMJkxmsAcMyRuc4TGInXm/Z8jMqhz7xjS0l/Yki3OUJepConoYwo/rogTijnB1xuJWm
+         WXTQ64uvTzzUixxctUz9lVqf7aNGZj+IFqiBy85/AHPceMfbBMpgx0zl4Jr1MckyIviP
+         vgyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vuax9dttw4kzq0yvrDA3+EcDha5MuMEK6ksSvHGWZ/Y=;
-        b=Fv5mDURXuEwVTJQAgcDg2+Y2w7zxFqYWQVNP8gH4Uqf3QEhS469/XwvQ2E+bDWNiUa
-         Z9LwZT7h8dZjlq5D7IQ11RYR+dfnlurKwncfGSQqKl997WMNtqgAyZKP1teA0ZAPwyff
-         0iulYqKr5WBh8VPiSwRZsOVFd3dBEL6TDMAKVerxpNbnWk0dZApzDnqnI2u64DZQlZ8u
-         hyj9HpusJpQGQ+F4FWafG9cUalIHMdjELj1CzWI6JxywCEdohSufVN2BBDwTwre8F9+b
-         kP+84kqmkkN8A71TerNojzn/OgmdS3q42dGmJuGg7u4nYnq8ywIlS+Fgp5aaOzqDjWAA
-         PKYA==
-X-Gm-Message-State: APjAAAXiIQFys/VCtJBhvxNS4rKBFe6XDMRkVpGa30ngg24axKYnlAsE
-        lJ7dkaIprdGIOyXNJntfsye+Oly8S9nQuiNoi6I=
-X-Google-Smtp-Source: APXvYqwNN8997lQCnWgGxSSAMfdaYkKc0mXB6oB/kFWVziig45hb5F78tZi8QP2XCiupJKmfYeq1DwErN4K90db8QUc=
-X-Received: by 2002:a5e:8a04:: with SMTP id d4mr6062052iok.42.1574178236758;
- Tue, 19 Nov 2019 07:43:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20191118214250.14002-1-sibis@codeaurora.org> <0101016e80782dd7-2617455b-7d73-4e68-8a9a-b63c29e9ad76-000000@us-west-2.amazonses.com>
- <CAOCk7Nou94bxk_48JArrXhQw2KR+3bKanLe+hb2=d7_j6y3VbQ@mail.gmail.com> <0101016e844504f1-d8bd27a5-c0bf-4b0b-8301-7bd8a890be80-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016e844504f1-d8bd27a5-c0bf-4b0b-8301-7bd8a890be80-000000@us-west-2.amazonses.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 19 Nov 2019 08:43:45 -0700
-Message-ID: <CAOCk7NpVDNRxkPUTHbsG_WC4MrjU8_JcdgiuyYbb36RPTMrOWQ@mail.gmail.com>
-Subject: Re: [PATCH 01/16] remoteproc: q6v5-mss: fixup MSM8998 MSS out of
- reset sequence
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mark Rutland <mark.rutland@arm.com>, p.zabel@pengutronix.de,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zs0qtVqeQ3xQBYktSESGlP6UO3aKjJ10cQ/av650v4s=;
+        b=Mf2syorBUQ9vuWu+hCeRrL9l5vVRh05G3aXRogeMMLA0bBXjcwUVBoAP6SQ5rI4wmT
+         bpO8aNgZTTGMdejNgQ0sx1hISFmVDrIGB78rFULdqkkqEkYnMuiUZgGnihERI3JG2ZfL
+         CnXpDcEsnXzLjctCwpU2lZNgfZTg+RIqz9HxZRBkZJtG0zcRehEsaLmI/woIvMfxTCur
+         bWrLBUEBQD9cuuz0DIS19FkjMhPMSi7B14KWTLSzpgXD8m/+XRrfLDAT/foY8nQm4O7k
+         o6j4z+v37I56TyLQQgH0Nlevp9ii7W8kON9fm4S3EW0+CAbfJNd8dz8Ta7YWLnVrPJ8t
+         gsVw==
+X-Gm-Message-State: APjAAAWJP0tOgadgJNdyoxRgW6Ky40KGOgjCGsOBGzNIu3IMyeAvbD+A
+        aNxH/fLwdwjDjEIOu78fT32CYOxQ
+X-Google-Smtp-Source: APXvYqwxJYMr9GDkoPi2ya3w2VSEr3Ardp8OON6AY639MSi6FIuRX4W5X1m5nBSS+cZqiE01lOiA8Q==
+X-Received: by 2002:ae9:e201:: with SMTP id c1mr29824966qkc.416.1574178377910;
+        Tue, 19 Nov 2019 07:46:17 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id 50sm12949919qtv.88.2019.11.19.07.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 07:46:17 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v2 0/4] tps6105x add devicetree and leds support
+Date:   Tue, 19 Nov 2019 10:46:07 -0500
+Message-Id: <20191119154611.29625-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 8:25 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Hey Jeff,
->
-> On 11/19/19 3:24 AM, Jeffrey Hugo wrote:
-> > On Mon, Nov 18, 2019 at 2:43 PM Sibi Sankar <sibis@codeaurora.org> wrote:
-> >>
-> >> Fixup the following in the MSS out of reset sequence on MSM8998:
-> >> * skip ACC override on MSM8998.
-> >> * wait for BHS_EN_REST_ACK to be set before setting the LDO to bypass.
-> >> * remove "mem" clock from the active pool.
-> >
-> > Why any of this is necessary isn't explained.
->
-> Honestly the above two fixes didn't seem to have any impact when I
-> tested it on MSM8998 MTP just making sure that we allign with the
-> out of reset sequence found on msm-4.4.
+v1 -> v2:
+	Select chip operational mode by looking at subnode name, _not_ its
+	compatible property. Suggested by Mark Brown.
 
-That should be mentioned in the commit text then.
+I needed led operation for this mfd chip, so I added a very simple
+driver for this.
 
->
-> > Seems like it should be 3 separate patches.
-> > Regarding the mem clock change, wouldn't it be an issue if we don't
-> > vote for that?
->
-> we already proxy vote for it though.
+My platform (arm imx6q) is devicetree-based, so I added optional
+devicetree support for this chip and its sub-drivers.
 
-Ah, so we do.  That should be mentioned in the commit text.
+Interestingly, the main mfd driver had a dt 'compatible' binding, but
+could not operate without platform data?
 
->
-> >
-> >>
-> >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> >> ---
-> >>   drivers/remoteproc/qcom_q6v5_mss.c | 23 ++++++++++++++++++++---
-> >>   1 file changed, 20 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> >> index 471128a2e7239..2becf6dade936 100644
-> >> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> >> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> >> @@ -100,6 +100,11 @@
-> >>   #define QDSP6SS_XO_CBCR                0x0038
-> >>   #define QDSP6SS_ACC_OVERRIDE_VAL               0x20
-> >>
-> >> +/* QDSP6v62 parameters */
-> >> +#define QDSP6SS_BHS_EN_REST_ACK                BIT(0)
-> >> +#define BHS_CHECK_MAX_LOOPS            200
-> >> +#define QDSP6SS_BHS_STATUS             0x0C4
-> >> +
-> >>   /* QDSP6v65 parameters */
-> >>   #define QDSP6SS_SLEEP                   0x3C
-> >>   #define QDSP6SS_BOOT_CORE_START         0x400
-> >> @@ -505,8 +510,9 @@ static int q6v5proc_reset(struct q6v5 *qproc)
-> >>                  int mem_pwr_ctl;
-> >>
-> >>                  /* Override the ACC value if required */
-> >> -               writel(QDSP6SS_ACC_OVERRIDE_VAL,
-> >> -                      qproc->reg_base + QDSP6SS_STRAP_ACC);
-> >> +               if (qproc->version == MSS_MSM8996)
-> >> +                       writel(QDSP6SS_ACC_OVERRIDE_VAL,
-> >> +                              qproc->reg_base + QDSP6SS_STRAP_ACC);
-> >>
-> >>                  /* Assert resets, stop core */
-> >>                  val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
-> >> @@ -534,6 +540,18 @@ static int q6v5proc_reset(struct q6v5 *qproc)
-> >>                  val |= readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> >>                  udelay(1);
-> >>
-> >> +               /* wait for BHS_EN_REST_ACK to be set */
-> >> +               if (qproc->version == MSS_MSM8998) {
-> >> +                       ret = readl_poll_timeout(qproc->reg_base + QDSP6SS_BHS_STATUS,
-> >> +                                                val, (val & QDSP6SS_BHS_EN_REST_ACK),
-> >> +                                                1, BHS_CHECK_MAX_LOOPS);
-> >> +                       if (ret) {
-> >> +                               dev_err(qproc->dev,
-> >> +                                       "QDSP6SS_BHS_EN_REST_ACK timedout\n");
-> >> +                               return -ETIMEDOUT;
-> >> +                       }
-> >> +               }
-> >> +
-> >>                  /* Put LDO in bypass mode */
-> >>                  val |= QDSP6v56_LDO_BYP;
-> >>                  writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
-> >> @@ -1594,7 +1612,6 @@ static const struct rproc_hexagon_res msm8998_mss = {
-> >>          .active_clk_names = (char*[]){
-> >>                          "iface",
-> >>                          "bus",
-> >> -                       "mem",
-> >>                          "gpll0_mss",
-> >>                          "mnoc_axi",
-> >>                          "snoc_axi",
-> >> --
-> >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> >> a Linux Foundation Collaborative Project
-> >>
-> >
->
-> --
-> Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Sven Van Asbroeck (4):
+  tps6105x: add optional devicetree support
+  regulator: tps6105x: add optional devicetree support
+  leds: tps6105x: add driver for mfd chip led mode
+  dt-bindings: mfd: update TI tps6105x chip bindings
+
+ .../devicetree/bindings/mfd/tps6105x.txt      | 42 ++++++++-
+ drivers/leds/Kconfig                          | 10 +++
+ drivers/leds/Makefile                         |  1 +
+ drivers/leds/leds-tps6105x.c                  | 87 +++++++++++++++++++
+ drivers/mfd/tps6105x.c                        | 34 +++++++-
+ drivers/regulator/tps6105x-regulator.c        |  2 +
+ include/linux/mfd/tps6105x.h                  |  1 +
+ 7 files changed, 173 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/leds/leds-tps6105x.c
+
+-- 
+2.17.1
+
