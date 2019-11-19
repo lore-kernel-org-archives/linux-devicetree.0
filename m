@@ -2,202 +2,144 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB82C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F17C43141
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812DF222A9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:34:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioz2oJK8"
+	by mail.kernel.org (Postfix) with ESMTP id 842A62240D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574192200;
+	bh=kvJYqnXWbuDZCk1PZJvqJ/+Khzqkdpbbzrj+7EoYLt0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RgUoQJ6j+jvoXeQ5YGSOznWYLzEpCN/ztJNGL60VkMerqnfEUduLLBJE9nlVET+P5
+	 92xXM08a06Lpub5LET5Y887xitQ99rduKwNoqMbtkGw/wNtTV6oRPu89hlsmmN94YK
+	 shcfN0Es+Xagqr0iMHCX4l5R/a2GVXpgMI8m/CVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfKSTeS (ORCPT
+        id S1727355AbfKSTgj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:34:18 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43270 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKSTeS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 14:34:18 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y23so24695782ljh.10;
-        Tue, 19 Nov 2019 11:34:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6i22jjuq6psYcmB4Qo1yClbc19oDCC98rypRJiM2kFc=;
-        b=ioz2oJK8zcEUkcjZrufuzn/BktEf/augSq5JnBtM3JNjj4q7ULsnv9Ql3VLReZy9ft
-         kYefzzT6NnQ8qu6er7uKAXYvjKfQD6dZ4Ps1N8rDKs8KePAZ857CEpN2eYpnAjffUrom
-         zKp3B70qfN1rPALkG9dlIPoWb+uQMFjjeyGevuvSSvIDVRJcyU42R10XiCEMy002g+sP
-         8Qb9jg9tGcMjVeWekWP/dVCnIiIwn3aii7xRcYxLaS36Y8vZQ6cFG5w6N236RfzrzOZ2
-         AXRttIB8KTGNhwSu/Yj/kC64KeGloDBe+knfhzhhk+4rohgHNl+jz78GqAIbNPYuf6c0
-         zAgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6i22jjuq6psYcmB4Qo1yClbc19oDCC98rypRJiM2kFc=;
-        b=EE71+3nQ2GTiytGUERBTq0emHTBRaKOD2rj2U6w7rk6oz8f9LYzsrof8fN5UwVsNAg
-         7D+0KqeDV5oE4dLNFXnIvNMnr02oG049nMb0SkBzK9qWlv3dM+i0ZxIyZ4b6JLc4qLzX
-         ncDWaXnnOXFsSboDwg258Z/C2ELyflJ+7wjjo40uHFeXbuS546b1ioRp3pn3BIqv1Kl5
-         9FEpvAzm7u0wasQAVBXfFnpmtEb3fKyHNOorVmxRnEiKvV3uDswn6+sJMMdvcpEOQ0In
-         46hbh5GU8FoADpWU7FAfqNXWmhmvR8at295Ec01JsGaGIRNNDlYkrQQqawSv4fVUks8i
-         GFvQ==
-X-Gm-Message-State: APjAAAU9D0L8sQYIpcUVd2VaAabTZKnXFKAsj5rPxU1Q9ou2Ef8o7aOJ
-        EH2kWXyWxm/z8ib1+OmgG9nyfb3E
-X-Google-Smtp-Source: APXvYqwjp40IzfQbKwCC+OP/Cob50iQyYhXBidVcOfzXPpNsqZTTw4syFIFbqbn4Of7tqJstF6dMwQ==
-X-Received: by 2002:a2e:87cf:: with SMTP id v15mr5309577ljj.79.1574192054580;
-        Tue, 19 Nov 2019 11:34:14 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p24sm11076087lfc.96.2019.11.19.11.34.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 11:34:14 -0800 (PST)
-Subject: Re: [PATCH v1 06/17] soc: pmc: Add blink output clock registration to
- Tegra PMC
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <95f3e928-3e08-abbd-5617-d3570a592c06@gmail.com>
-Date:   Tue, 19 Nov 2019 22:34:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 19 Nov 2019 14:36:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:57450 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726874AbfKSTgj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 Nov 2019 14:36:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B87931B;
+        Tue, 19 Nov 2019 11:36:38 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFB683F703;
+        Tue, 19 Nov 2019 11:36:37 -0800 (PST)
+Date:   Tue, 19 Nov 2019 19:36:36 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Message-ID: <20191119193636.GH3634@sirena.org.uk>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191118162502.GJ9761@sirena.org.uk>
+ <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
+ <20191119181325.GD3634@sirena.org.uk>
+ <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <1574146234-3871-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZPDwMsyfds7q4mrK"
+Content-Disposition: inline
+In-Reply-To: <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+X-Cookie: Beam me up, Scotty!  It ate my phaser!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-19.11.2019 09:50, Sowjanya Komatineni пишет:
-> Tegra PMC has blink control to output 32 Khz clock out to Tegra
-> blink pin. Blink pad DPD state and enable controls are part of
-> Tegra PMC register space.
-> 
-> Currently Tegra clock driver registers blink control by passing
-> PMC address and register offset to clk_register_gate which performs
-> direct PMC access during clk_ops and with this when PMC is in secure
-> mode, any access from non-secure world does not go through.
-> 
-> This patch adds blink control registration to the Tegra PMC driver
-> using PMC specific clock gate operations that use tegra_pmc_readl
-> and tegra_pmc_writel to support both secure mode and non-secure
-> mode PMC register access.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 790a6619ba32..095e89c7fa3f 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -61,12 +61,15 @@
->  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
->  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
->  #define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
-> +#define  PMC_CNTRL_BLINK_EN		BIT(7)
->  #define  PMC_CNTRL_MAIN_RST		BIT(4)
->  
->  #define PMC_WAKE_MASK			0x0c
->  #define PMC_WAKE_LEVEL			0x10
->  #define PMC_WAKE_STATUS			0x14
->  #define PMC_SW_WAKE_STATUS		0x18
-> +#define PMC_DPD_PADS_ORIDE		0x1c
-> +#define  PMC_DPD_PADS_ORIDE_BLINK	BIT(20)
->  
->  #define DPD_SAMPLE			0x020
->  #define  DPD_SAMPLE_ENABLE		BIT(0)
-> @@ -79,6 +82,7 @@
->  
->  #define PWRGATE_STATUS			0x38
->  
-> +#define TEGRA210_PMC_BLINK_TIMER	0x40
->  #define PMC_IMPL_E_33V_PWR		0x40
->  
->  #define PMC_PWR_DET			0x48
-> @@ -247,6 +251,9 @@ static struct pmc_clk_init_data tegra_pmc_clks_data[] = {
->  	PMC_CLK(3, 22, 18, 0, 0),
->  };
->  
-> +static struct pmc_clk_gate blink_override;
-> +static struct pmc_clk_gate blink;
-> +
->  struct tegra_powergate {
->  	struct generic_pm_domain genpd;
->  	struct tegra_pmc *pmc;
-> @@ -359,6 +366,7 @@ struct tegra_pmc_soc {
->  
->  	struct pmc_clk_init_data *pmc_clks_data;
->  	unsigned int num_pmc_clks;
-> +	bool has_blink_output;
->  };
->  
->  static const char * const tegra186_reset_sources[] = {
-> @@ -2530,6 +2538,9 @@ static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
->  	/* each pmc clock output has a mux and a gate */
->  	num_clks = pmc->soc->num_pmc_clks * 2;
->  
-> +	if (pmc->soc->has_blink_output)
-> +		num_clks += 1;
-> +
->  	if (!num_clks)
->  		return;
->  
-> @@ -2604,6 +2615,30 @@ static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
->  		}
->  	}
->  
-> +	if (pmc->soc->has_blink_output) {
-> +		tegra_pmc_writel(pmc, 0x0, TEGRA210_PMC_BLINK_TIMER);
-> +		clkgate = tegra_pmc_clk_gate_register("blink_override",
-> +						      "clk_32k",
-> +						      0, &blink_override,
-> +					      PMC_DPD_PADS_ORIDE,
-> +						      PMC_DPD_PADS_ORIDE_BLINK,
-> +						      NULL);
-> +		if (IS_ERR(clkgate))
-> +			goto free_clks;
-> +
-> +		clkgate = tegra_pmc_clk_gate_register("blink",
-> +						      "blink_override",
-> +						      0, &blink,
-> +						      PMC_CNTRL,
-> +						      PMC_CNTRL_BLINK_EN,
-> +						      NULL);
-> +		if (IS_ERR(clkgate))
-> +			goto free_clks;
-> +
-> +		clk_data->clks[TEGRA_PMC_CLK_BLINK] = clkgate;
-> +		clk_register_clkdev(clkgate, "blink", NULL);
 
-Tegra20 has pmc->soc->num_pmc_clks = 0 and thus num_clks = 1, while
-TEGRA_PMC_CLK_BLINK = 6.
+--ZPDwMsyfds7q4mrK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-BTW, Tegra30 doesn't boot. I'll try again v2.
+On Tue, Nov 19, 2019 at 06:51:37PM +0000, Vaittinen, Matti wrote:
+> On Tue, 2019-11-19 at 18:13 +0000, Mark Brown wrote:
 
-Please fix it all in v2. Compile-test all patches and make at least a
-boot-test where possible.
+> > Ah, OK.  I didn't even notice that patch when I scanned the series.
+> > I'll look out for this next time around but that sounds like it's
+> > generally going in the right direction, especially if it's integrated
+> > with the suspend mode regulator bindings that Chunyan did.
 
-[snip]
+> Probably it is not as I am not familiar with Chunyan's work. I'll try
+> looking what has been done on that front :) And I am pretty sure you
+> might not be happy with that patch - but perhaps you can give me a
+> nudge to better direction...
+
+The driver interface was added in "regulator: add PM suspend and resume
+hooks".
+
+> > Yes, I think this needs clarification as I completely failed to pick
+> > up
+> > on this and did indeed read this as referring to the
+> > modes.  "Voltages
+> > that can be set in RUN mode" or something?  I take it these voltages
+> > are
+> > fixed and the OS can't change them?
+
+> Unfortunately they are not. Voltages and enable/disable statuses for
+> each run-level (and individually for each run-level capable buck) can
+> be changed at runtime via I2C. And a customer requested me also to
+> support this - hence the in-kernel API - but I am sure you have some
+> nice words when you check the patch 12. :]
+
+Ah, that's actually better.  It opens up possiblities for making use of
+the feature without encoding voltages in DT.  For example, you can cache
+the last however many voltages that were set and jump quickly to them or
+do something like put the top of the constraints in to help with
+governors like ondemand.  I'd recommend trying for something like that
+rather than encoding in DT, it'll probably be more robust with things
+like cpufreq changing.
+
+--ZPDwMsyfds7q4mrK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3UREMACgkQJNaLcl1U
+h9B3OAf+Kth7jw+jGm3XPY/BVO90YB9fEnA/2D8PBMylpbiqhSemPrFLe0lFyarL
+HbdXnMrZ109/8kllbD3a4ACoFLArQquUb466iT4TEJZpmerdtrwnRzhEVPsHvy8W
+arYRTcgn9eeuTC7vUFN5kJ/l+5XJFmrIvi6FxsXe8yJYVizpwctdeVvSVP19Bpni
+bMDBcbeH2Dz8HNlA08H5m1TgkhVKhLmnpCuYbzr53ExNrTPcztOwSkBAIfdk2DTx
+vjMVkwMQdxUZi2Zk5s88qDvySsUFfve0bmJ1719z13eaGq/y1DpX4E6r7VuTy0N0
+xgJYHUswDWwBRwTr6qcaTLvEE45XYw==
+=b5/M
+-----END PGP SIGNATURE-----
+
+--ZPDwMsyfds7q4mrK--
