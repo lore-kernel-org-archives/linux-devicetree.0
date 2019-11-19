@@ -2,189 +2,246 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC40C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 10:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B94C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 10:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7F2222B3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 10:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07DC2230C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 10:17:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zak8ug59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfKSKHH (ORCPT
+        id S1727409AbfKSKRD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:07:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39546 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726510AbfKSKHH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:07:07 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 879F6AFBD;
-        Tue, 19 Nov 2019 10:07:04 +0000 (UTC)
-Message-ID: <e38de8daad5a2c9b03bda1aa2632844e3ed3d11e.camel@suse.de>
-Subject: Re: [PATCH v2 3/3] ARM: dts: bcm2711: Enable HWRNG support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stephen Brennan <stephen@brennan.io>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Scott Branden <sbranden@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
-        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-crypto@vger.kernel.org
-Date:   Tue, 19 Nov 2019 11:07:01 +0100
-In-Reply-To: <20191119061407.69911-4-stephen@brennan.io>
-References: <20191119061407.69911-1-stephen@brennan.io>
-         <20191119061407.69911-4-stephen@brennan.io>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-f4TrG9pLSfNSCk5pcMvM"
-User-Agent: Evolution 3.34.1 
+        Tue, 19 Nov 2019 05:17:03 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46110 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfKSKRD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 05:17:03 -0500
+Received: by mail-ed1-f66.google.com with SMTP id t11so10565650eds.13;
+        Tue, 19 Nov 2019 02:17:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9hbii1rvXe3OjAU+9EET7g3kuyKDkNC5l9tGGg3Rr0w=;
+        b=Zak8ug59k2O1p0roRgoyW1n9sY288ZxRAFM6l3LASPNE2bU1tEjWuX/tkz4flnMmAu
+         N0deW1GLG9hcW5axTEBU/FSyf5vpihs92jZkxdcOnP2Bs18i6UXzaVoL22WNrxgopVFh
+         /eCKelOOPTL7GpSotCpSbTckD9pen8uMfHdorYfpqLBBbUhtSk8DvuBqkAc6tEW713Jn
+         QIomHlDALijSRIvcJDh5PLwBesumZ8L9GG7AgVe0UObwBRt8Sb3VtH1Gd8ev3Z8X0uxU
+         ZLbm60b4pdgJw593iGuqzjlXul3EkyHy8SUUMD4LBbJnpmJ55onltqIei/mu27INlGOh
+         yy8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9hbii1rvXe3OjAU+9EET7g3kuyKDkNC5l9tGGg3Rr0w=;
+        b=ZVWt3tPE1MuLvA6JNneodKvZvH44+cu+YTkQowi6B1b21+3/TJr3EEMJMEz8a+4fXM
+         bMYd5IVuqtkkmGGge+mWIFalgdyM292cqaYjiQksCkk9HnvD5xNWCLMQgLxzmPa5lLKP
+         FGy10upRBXPh7VJZYdkoIDDWqqjhRxkkh162cw5+ZYaYQylC9ksbxK+HmXXoBews351Q
+         xCVTDYwYVvrhJqYcc4dpUwnHydFTTbSEeW0Ij6TtHCJTDW/HvZ0GaP3ENx0II2BhcqcV
+         5eOvmfdYnN/WpGTW9vwca6S8FjQRRQSPzRF0IHbxLKPodJQmiiUKyoQ46arDMaRH9FhM
+         fPjw==
+X-Gm-Message-State: APjAAAUy/L1Pfc+cOPzgerNm4v1CNkRTyh1OF+xu4HdzUySaJN/qKSAW
+        Go1PLGYjt3+dKa1mi5Qqg6FFtXVxR4IPTeFEZ8w=
+X-Google-Smtp-Source: APXvYqwkJxMqmg7ZsnrggMatLowQzCcmg0Qlbo3LHEuSiv/RFL5kc0e6TZc+eBNriQcNnlF72ydXy+R3Gn5WHvKUDNg=
+X-Received: by 2002:a17:906:6b01:: with SMTP id q1mr34046962ejr.162.1574158620629;
+ Tue, 19 Nov 2019 02:17:00 -0800 (PST)
 MIME-Version: 1.0
+References: <20191114051242.14651-1-helen.koike@collabora.com>
+ <20191114051242.14651-3-helen.koike@collabora.com> <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
+ <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com>
+In-Reply-To: <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com>
+From:   Jacob Chen <jacobchen110@gmail.com>
+Date:   Tue, 19 Nov 2019 18:16:49 +0800
+Message-ID: <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
+Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for rkisp1
+ meta buffer format
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        Eddie Cai <eddie.cai.linux@gmail.com>, kernel@collabora.com,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jacob Chen <jacob-chen@rock-chips.com>,
+        gregkh@linuxfoundation.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        robh+dt@kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Helen ,
 
---=-f4TrG9pLSfNSCk5pcMvM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Helen Koike <helen.koike@collabora.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8814=
+=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=886:59=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+>
+>
+> On 11/14/19 6:21 AM, Hans Verkuil wrote:
+> > On 11/14/19 6:12 AM, Helen Koike wrote:
+> >> From: Jacob Chen <jacob2.chen@rock-chips.com>
+> >>
+> >> This commit add document for rkisp1 meta buffer format
+> >>
+> >> Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
+> >> [refactored for upstream]
+> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >
+> > checkpatch gives me:
+> >
+> > WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob Che=
+n <jacob2.chen@rock-chips.com>'
+> >
+> > Looking at this series I see duplicate Signed-off-by entries for Jacob =
+Chen and a total
+> > of three different email addresses:
+> >
+> > jacob2.chen@rock-chips.com
+> > jacob-chen@rock-chips.com
+> > cc@rock-chips.com
+>
+> And I see a name in the Maintainers file as Jacob Chen <jacob-chen@iotwrt=
+.com>.
+> I was wondering if I could replace the email by jacob-chen@iotwrt.com, or=
+ if I should
+> keep the original ones.
+>
+> Helen
+>
 
-Hi Stephen, thanks for the follow-up.
+"jacob2.chen@rock-chips.com"/"jacob-chen@rock-chips.com" is me and
+"cc@rock-chips.com" is another one.
+' jacob-chen@rock-chips.com' is invalid now,  so you could replace the
+email by 'jacob-chen@iotwrt.com'.
 
-On Mon, 2019-11-18 at 22:14 -0800, Stephen Brennan wrote:
-> BCM2711 features a RNG200 hardware random number generator block, which i=
-s
-> different from the BCM283x from which it inherits. Move the rng block fro=
-m
-> BCM283x into a separate common file, and update the rng declaration of
-> BCM2711.
->=20
-> Signed-off-by: Stephen Brennan <stephen@brennan.io>
-> ---
-
-It's petty in this case but you should add a list of changes here too.
-
->  arch/arm/boot/dts/bcm2711.dtsi        |  6 +++---
->  arch/arm/boot/dts/bcm2835.dtsi        |  1 +
->  arch/arm/boot/dts/bcm2836.dtsi        |  1 +
->  arch/arm/boot/dts/bcm2837.dtsi        |  1 +
->  arch/arm/boot/dts/bcm283x-common.dtsi | 11 +++++++++++
->  arch/arm/boot/dts/bcm283x.dtsi        |  6 ------
->  6 files changed, 17 insertions(+), 9 deletions(-)
->  create mode 100644 arch/arm/boot/dts/bcm283x-common.dtsi
->=20
-> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.d=
-tsi
-> index ac83dac2e6ba..4975567e948e 100644
-> --- a/arch/arm/boot/dts/bcm2711.dtsi
-> +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> @@ -92,10 +92,10 @@ pm: watchdog@7e100000 {
->  		};
-> =20
->  		rng@7e104000 {
-> +			compatible =3D "brcm,bcm2711-rng200";
-> +			reg =3D <0x7e104000 0x28>;
->  			interrupts =3D <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
-> -
-> -			/* RNG is incompatible with brcm,bcm2835-rng */
-> -			status =3D "disabled";
-> +			status =3D "okay";
->  		};
-> =20
->  		uart2: serial@7e201400 {
-> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.d=
-tsi
-> index 53bf4579cc22..f7b2f46e307d 100644
-> --- a/arch/arm/boot/dts/bcm2835.dtsi
-> +++ b/arch/arm/boot/dts/bcm2835.dtsi
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include "bcm283x.dtsi"
-> +#include "bcm283x-common.dtsi"
->  #include "bcm2835-common.dtsi"
-> =20
->  / {
-> diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.d=
-tsi
-> index 82d6c4662ae4..a85374195796 100644
-> --- a/arch/arm/boot/dts/bcm2836.dtsi
-> +++ b/arch/arm/boot/dts/bcm2836.dtsi
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include "bcm283x.dtsi"
-> +#include "bcm283x-common.dtsi"
->  #include "bcm2835-common.dtsi"
-> =20
->  / {
-> diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.d=
-tsi
-> index 9e95fee78e19..045d78ffea08 100644
-> --- a/arch/arm/boot/dts/bcm2837.dtsi
-> +++ b/arch/arm/boot/dts/bcm2837.dtsi
-> @@ -1,4 +1,5 @@
->  #include "bcm283x.dtsi"
-> +#include "bcm283x-common.dtsi"
->  #include "bcm2835-common.dtsi"
-> =20
->  / {
-> diff --git a/arch/arm/boot/dts/bcm283x-common.dtsi
-> b/arch/arm/boot/dts/bcm283x-common.dtsi
-> new file mode 100644
-> index 000000000000..3c8834bee390
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm283x-common.dtsi
-> @@ -0,0 +1,11 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/ {
-> +	soc {
-> +		rng@7e104000 {
-> +			compatible =3D "brcm,bcm2835-rng";
-> +			reg =3D <0x7e104000 0x10>;
-> +			interrupts =3D <2 29>;
-> +		};
-> +	};
-> +};
-
-I think Stefan wrote bcm283x-common.dtsi by mistake, he really meant
-bcm2835-common.dtsi.
-
-See bcm2835-common.dtsi's header comment:
-
-/* This include file covers the common peripherals and configuration betwee=
-n
- * bcm2835, bcm2836 and bcm2837 implementations.
- */
-
-Regards,
-Nicolas
-
-
---=-f4TrG9pLSfNSCk5pcMvM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3TvsUACgkQlfZmHno8
-x/4BbAf+MpKR4ihlPDuftuddKUI/HC7nve3fsLHoczZfLRf0pj2/FnKvX3qgFytE
-xAYDpOXI1dprqHUPR1OavYQFO/UWFOSS3MRDIducwmDELc9gc5Z8iToD5ijYQiLM
-z6/NO8BxIQJFky/2inBcsx70fEM5VLLJHQOfkSuf5NxfDR/iETwuzE0EMEBLj3tz
-AnB31t86PHWGxFL2akCTFAdsbK8kJLiL0c6zrMb9xYct9S/9LC9ll0mU920HMUc9
-Rwu7je1CKU72Pik+GQOTt1fF5b/TOvVENxprfCoTcelH3QudGfqVIQcXkNJFOMrd
-oOhtvpofrtSfG1Dt9fsKdenSpi2gdg==
-=ikdQ
------END PGP SIGNATURE-----
-
---=-f4TrG9pLSfNSCk5pcMvM--
-
+> >
+> > It's confusing.
+> >
+> > Regards,
+> >
+> >       Hans
+> >
+> >>
+> >> ---
+> >>
+> >> Changes in v11: None
+> >> Changes in v10:
+> >> - unsquash
+> >>
+> >> Changes in v9:
+> >> - squash
+> >> - migrate to staging
+> >> - remove meta-formats.rst update
+> >>
+> >> Changes in v8:
+> >> - Add SPDX in the header
+> >> - Remove emacs configs
+> >> - Fix doc style
+> >>
+> >> Changes in v7:
+> >> - s/correspond/corresponding
+> >> - s/use/uses
+> >> - s/docuemnt/document
+> >>
+> >>  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 ++++++++++++++++++=
++
+> >>  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
+> >>  2 files changed, 45 insertions(+)
+> >>  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/u=
+api/v4l/pixfmt-meta-rkisp1-params.rst
+> >>  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/u=
+api/v4l/pixfmt-meta-rkisp1-stat.rst
+> >>
+> >> diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l=
+/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation=
+/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> >> new file mode 100644
+> >> index 000000000000..103b5cb79b7c
+> >> --- /dev/null
+> >> +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt=
+-meta-rkisp1-params.rst
+> >> @@ -0,0 +1,23 @@
+> >> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >> +
+> >> +.. _v4l2-meta-fmt-rkisp1-params:
+> >> +
+> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> >> +V4L2_META_FMT_RK_ISP1_PARAMS
+> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> >> +
+> >> +Rockchip ISP1 Parameters Data
+> >> +
+> >> +Description
+> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> +
+> >> +This format describes input parameters for the Rockchip ISP1.
+> >> +
+> >> +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
+> >> +the ``linux/rkisp1-config.h`` header file.
+> >> +
+> >> +The parameters consist of multiple modules.
+> >> +The module won't be updated if the corresponding bit was not set in m=
+odule_*_update.
+> >> +
+> >> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> >> +   :functions: rkisp1_isp_params_cfg
+> >> diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l=
+/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/m=
+edia/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> >> new file mode 100644
+> >> index 000000000000..4ad303f96421
+> >> --- /dev/null
+> >> +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt=
+-meta-rkisp1-stat.rst
+> >> @@ -0,0 +1,22 @@
+> >> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >> +
+> >> +.. _v4l2-meta-fmt-rkisp1-stat:
+> >> +
+> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> >> +V4L2_META_FMT_RK_ISP1_STAT_3A
+> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> >> +
+> >> +
+> >> +Rockchip ISP1 Statistics Data
+> >> +
+> >> +Description
+> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> +
+> >> +This format describes image color statistics information generated by=
+ the Rockchip
+> >> +ISP1.
+> >> +
+> >> +It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
+> >> +the ``linux/rkisp1-config.h`` header file.
+> >> +
+> >> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> >> +   :functions: rkisp1_stat_buffer
+> >>
+> >
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
