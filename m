@@ -2,108 +2,229 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01318C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA67C43141
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA2B222CD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2393E222CD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KF2yFhky"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DG/8NtC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbfKSPqT (ORCPT
+        id S1728230AbfKSPqk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:46:19 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40311 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbfKSPqT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:46:19 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z16so18206079qkg.7;
-        Tue, 19 Nov 2019 07:46:18 -0800 (PST)
+        Tue, 19 Nov 2019 10:46:40 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45707 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728442AbfKSPq2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:46:28 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so1563701lfa.12
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 07:46:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zs0qtVqeQ3xQBYktSESGlP6UO3aKjJ10cQ/av650v4s=;
-        b=KF2yFhky8rbMOiX6sRjOdSvysjr6FPV/LibdqcdGEq+utA4XFoeXwl2RD2JlaxHO0G
-         ZBnOl7dNjKCFcFhrFDiGhHBDAWQ6x+XWEFwoPfjhfLHdOADHYf92lNiTGOkDUCPROs3S
-         Pa8K/6I/tiapKhxcMN2XSJEVze5nkGQNgv8mECTPzFgGogiIQgvCwfC2C+N1hLlEDlPh
-         0jMJkxmsAcMyRuc4TGInXm/Z8jMqhz7xjS0l/Yki3OUJepConoYwo/rogTijnB1xuJWm
-         WXTQ64uvTzzUixxctUz9lVqf7aNGZj+IFqiBy85/AHPceMfbBMpgx0zl4Jr1MckyIviP
-         vgyg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=m7ifa4GadNMb+2byfdvLDxSqR7+zM2gWhgPAPeu92tc=;
+        b=DG/8NtC0hi0+3I00Qm6wjNor789XyXnyK4oaKz424MVTpwcgUZL7rVPxyiwBvt196C
+         vPoU6ZTDHQqgQTlGpQi7HZI9iQ9CKdrO2vinD4z/wLAv8SD7wf84EKgc7lDt4xHY+2Mu
+         lZoQ1H4X8/Xjv5mhoPuvEGEEcy6yM+qHT6qN7KhuBtGI6Npdsz4XhndJlZzc1NfGuIga
+         92P1Btup/es4Aod6zec+3/mX9mzySHYO9mqL7ZdveNLCBKMVArRBzXzMI6hLqmFx6fXH
+         eJ7DIq0+oAqQUeKEfIQ6kDZ5EQ9XDGJO9dbdERNrslmU0QJaWSa0d+b7khIZoIVcRzax
+         3b+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zs0qtVqeQ3xQBYktSESGlP6UO3aKjJ10cQ/av650v4s=;
-        b=Mf2syorBUQ9vuWu+hCeRrL9l5vVRh05G3aXRogeMMLA0bBXjcwUVBoAP6SQ5rI4wmT
-         bpO8aNgZTTGMdejNgQ0sx1hISFmVDrIGB78rFULdqkkqEkYnMuiUZgGnihERI3JG2ZfL
-         CnXpDcEsnXzLjctCwpU2lZNgfZTg+RIqz9HxZRBkZJtG0zcRehEsaLmI/woIvMfxTCur
-         bWrLBUEBQD9cuuz0DIS19FkjMhPMSi7B14KWTLSzpgXD8m/+XRrfLDAT/foY8nQm4O7k
-         o6j4z+v37I56TyLQQgH0Nlevp9ii7W8kON9fm4S3EW0+CAbfJNd8dz8Ta7YWLnVrPJ8t
-         gsVw==
-X-Gm-Message-State: APjAAAWJP0tOgadgJNdyoxRgW6Ky40KGOgjCGsOBGzNIu3IMyeAvbD+A
-        aNxH/fLwdwjDjEIOu78fT32CYOxQ
-X-Google-Smtp-Source: APXvYqwxJYMr9GDkoPi2ya3w2VSEr3Ardp8OON6AY639MSi6FIuRX4W5X1m5nBSS+cZqiE01lOiA8Q==
-X-Received: by 2002:ae9:e201:: with SMTP id c1mr29824966qkc.416.1574178377910;
-        Tue, 19 Nov 2019 07:46:17 -0800 (PST)
-Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id 50sm12949919qtv.88.2019.11.19.07.46.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=m7ifa4GadNMb+2byfdvLDxSqR7+zM2gWhgPAPeu92tc=;
+        b=iIWRtLljllKJ78f3yKWIGi4lzjKsKDh896T0BUI4nXq8gOEGukIsXU0AbU2IeYKLzf
+         Na3C/7tpa+4swlUQ/BWG40JzEBRWgb+0UhH+9GkY6IpjInnpuKvVB2BmBqCY/qBhnYsV
+         rzQ1zQL8VVtiNbHKrHpQT36Yqs3iZmu2UdLDJIzfZWTJOD52rYfJw/weiYlFrVcMg99u
+         1HMemJe4ZcXqWSun49MTUjyF+tB2rvEoIVH3UhXAFs/qNoQfkp72C9DqU8CAJtNg9L30
+         1zu0RI5yGgI2RQZPFydEdwJgWLUkijw6+GaAYClv/mnRqg1HIKmgyqNFN4UJPTZvN7N2
+         Wqww==
+X-Gm-Message-State: APjAAAU/9FL4EkZ7HFUfQDAsHlU1NCRoaEnZqcZ1LVd26JA24/yIaUoi
+        ydYuRxUeDDjYcX3aza5GJGIDYA==
+X-Google-Smtp-Source: APXvYqxK9IHjk8CGsSTT+jX6XS5SLjDe3LY4wDQaBzA9GQBGP5/Wcdk/Pd4xX9vU5dTIhB+SOdAy9g==
+X-Received: by 2002:a19:cc16:: with SMTP id c22mr4578097lfg.41.1574178385392;
+        Tue, 19 Nov 2019 07:46:25 -0800 (PST)
+Received: from centauri.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id v10sm9886281ljc.6.2019.11.19.07.46.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 07:46:17 -0800 (PST)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: [PATCH v2 0/4] tps6105x add devicetree and leds support
-Date:   Tue, 19 Nov 2019 10:46:07 -0500
-Message-Id: <20191119154611.29625-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 19 Nov 2019 07:46:24 -0800 (PST)
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/5] dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+Date:   Tue, 19 Nov 2019 16:46:16 +0100
+Message-Id: <20191119154621.55341-2-niklas.cassel@linaro.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191119154621.55341-1-niklas.cassel@linaro.org>
+References: <20191119154621.55341-1-niklas.cassel@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v1 -> v2:
-	Select chip operational mode by looking at subnode name, _not_ its
-	compatible property. Suggested by Mark Brown.
+Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
 
-I needed led operation for this mfd chip, so I added a very simple
-driver for this.
+Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes since v5:
+-None
 
-My platform (arm imx6q) is devicetree-based, so I added optional
-devicetree support for this chip and its sub-drivers.
+ .../bindings/power/avs/qcom,cpr.txt           | 130 ++++++++++++++++++
+ 1 file changed, 130 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
 
-Interestingly, the main mfd driver had a dt 'compatible' binding, but
-could not operate without platform data?
-
-Sven Van Asbroeck (4):
-  tps6105x: add optional devicetree support
-  regulator: tps6105x: add optional devicetree support
-  leds: tps6105x: add driver for mfd chip led mode
-  dt-bindings: mfd: update TI tps6105x chip bindings
-
- .../devicetree/bindings/mfd/tps6105x.txt      | 42 ++++++++-
- drivers/leds/Kconfig                          | 10 +++
- drivers/leds/Makefile                         |  1 +
- drivers/leds/leds-tps6105x.c                  | 87 +++++++++++++++++++
- drivers/mfd/tps6105x.c                        | 34 +++++++-
- drivers/regulator/tps6105x-regulator.c        |  2 +
- include/linux/mfd/tps6105x.h                  |  1 +
- 7 files changed, 173 insertions(+), 4 deletions(-)
- create mode 100644 drivers/leds/leds-tps6105x.c
-
+diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+new file mode 100644
+index 000000000000..ab0d5ebbad4e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+@@ -0,0 +1,130 @@
++QCOM CPR (Core Power Reduction)
++
++CPR (Core Power Reduction) is a technology to reduce core power on a CPU
++or other device. Each OPP of a device corresponds to a "corner" that has
++a range of valid voltages for a particular frequency. While the device is
++running at a particular frequency, CPR monitors dynamic factors such as
++temperature, etc. and suggests adjustments to the voltage to save power
++and meet silicon characteristic requirements.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: should be "qcom,qcs404-cpr", "qcom,cpr" for qcs404
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: base address and size of the rbcpr register region
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the CPR interrupt
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: phandle to the reference clock
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "ref"
++
++- vdd-apc-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: phandle to the vdd-apc-supply regulator
++
++- #power-domain-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: should be 0
++
++- operating-points-v2:
++	Usage: required
++	Value type: <phandle>
++	Definition: A phandle to the OPP table containing the
++		    performance states supported by the CPR
++		    power domain
++
++- acc-syscon:
++	Usage: optional
++	Value type: <phandle>
++	Definition: phandle to syscon for writing ACC settings
++
++- nvmem-cells:
++	Usage: required
++	Value type: <phandle>
++	Definition: phandle to nvmem cells containing the data
++		    that makes up a fuse corner, for each fuse corner.
++		    As well as the CPR fuse revision.
++
++- nvmem-cell-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: should be "cpr_quotient_offset1", "cpr_quotient_offset2",
++		    "cpr_quotient_offset3", "cpr_init_voltage1",
++		    "cpr_init_voltage2", "cpr_init_voltage3", "cpr_quotient1",
++		    "cpr_quotient2", "cpr_quotient3", "cpr_ring_osc1",
++		    "cpr_ring_osc2", "cpr_ring_osc3", "cpr_fuse_revision"
++		    for qcs404.
++
++Example:
++
++	cpr_opp_table: cpr-opp-table {
++		compatible = "operating-points-v2-qcom-level";
++
++		cpr_opp1: opp1 {
++			opp-level = <1>;
++			qcom,opp-fuse-level = <1>;
++		};
++		cpr_opp2: opp2 {
++			opp-level = <2>;
++			qcom,opp-fuse-level = <2>;
++		};
++		cpr_opp3: opp3 {
++			opp-level = <3>;
++			qcom,opp-fuse-level = <3>;
++		};
++	};
++
++	power-controller@b018000 {
++		compatible = "qcom,qcs404-cpr", "qcom,cpr";
++		reg = <0x0b018000 0x1000>;
++		interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&xo_board>;
++		clock-names = "ref";
++		vdd-apc-supply = <&pms405_s3>;
++		#power-domain-cells = <0>;
++		operating-points-v2 = <&cpr_opp_table>;
++		acc-syscon = <&tcsr>;
++
++		nvmem-cells = <&cpr_efuse_quot_offset1>,
++			<&cpr_efuse_quot_offset2>,
++			<&cpr_efuse_quot_offset3>,
++			<&cpr_efuse_init_voltage1>,
++			<&cpr_efuse_init_voltage2>,
++			<&cpr_efuse_init_voltage3>,
++			<&cpr_efuse_quot1>,
++			<&cpr_efuse_quot2>,
++			<&cpr_efuse_quot3>,
++			<&cpr_efuse_ring1>,
++			<&cpr_efuse_ring2>,
++			<&cpr_efuse_ring3>,
++			<&cpr_efuse_revision>;
++		nvmem-cell-names = "cpr_quotient_offset1",
++			"cpr_quotient_offset2",
++			"cpr_quotient_offset3",
++			"cpr_init_voltage1",
++			"cpr_init_voltage2",
++			"cpr_init_voltage3",
++			"cpr_quotient1",
++			"cpr_quotient2",
++			"cpr_quotient3",
++			"cpr_ring_osc1",
++			"cpr_ring_osc2",
++			"cpr_ring_osc3",
++			"cpr_fuse_revision";
++	};
 -- 
-2.17.1
+2.23.0
 
