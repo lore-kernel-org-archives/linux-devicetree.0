@@ -2,66 +2,66 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE07C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 23:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D580AC33CA8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 23:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C812245C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 23:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF412246B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 23:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yEmurrRP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="whICS7lb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfKSXTh (ORCPT
+        id S1727519AbfKSXTc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:19:37 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53844 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbfKSXTh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 18:19:37 -0500
-Received: by mail-wm1-f65.google.com with SMTP id u18so5094681wmc.3
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 15:19:33 -0800 (PST)
+        Tue, 19 Nov 2019 18:19:32 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41688 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727495AbfKSXTb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 18:19:31 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b18so24498979wrj.8
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 15:19:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+D37NIkKX+pRSTJ2wrFIBF9cOZPGjjvqmStorp3L1B0=;
-        b=yEmurrRPv/1tYtj5OVA+YGN/BGcwMSC87OkbwOCVrzfbfjRN0pUZpB8Z0dkaS6SaEu
-         uONfhB+twYfTn9cgStyWkBjjDuDSWgQSBmXpqK0swO5Fl0wQ24wMTcWYfWPnSdUAoDzi
-         rgRw6xT3VIrEFvPhA9BY4ag1Y/Gvno8UWAl3oAr0WltrVw4IEt7IgWao0tuDXcx6Sept
-         1rfxCURtXv9SLZVg1obnY+WOnSALli2nUtw91hwyiUBRmopviqX922ywAYmOkQ2Mc8OD
-         u2lIlRVCx36p5md5i3mzjicPRtGXEmi3HdUPJ9foqZuAAgXlYcQUXSaHaux98eUs7oW4
-         J4mg==
+        bh=CY9BzC4lO/psiiWDvfyoZ5PZxvDdzpF24ejbtK1oew8=;
+        b=whICS7lbVl4iQygx4TtWkKmLoxTN22cvmLgeTEL6i0Wk5kEJR5srSsIvGyO8Vffh7f
+         zWfGkuDM43I1mSSB4W7r9MEvitCrB6Lis5kGdwfTTvt586EjueWoTnMVLZ9g/gbiKnee
+         rlXbwBXefr0T3UkywMVmoZaThvQoKy7h5IT5anGG4CgND6KuX5dGIhzM3WUIhqpJWvpH
+         /8d5GAxJX7EHczVlCT3bBL0gRgpRS4wTL2c6jhFAT8IWTibax6CoVHUw0AtbumAKtxXj
+         E6t2CUzztNbrgzVg0FK9XrXcHrP5ROYhgELsCROYzp/OzXJJkiCLuMwNR+ejiaNMG7Fg
+         MGDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+D37NIkKX+pRSTJ2wrFIBF9cOZPGjjvqmStorp3L1B0=;
-        b=Dk7GgNAMesEzveMcN4cbHp/gg9zVB7qtEi4BhJ3EwRFXmF63509Lx+4TM3tna22MDv
-         N2lRfv2iEPnmCLWDmuKObqaU/PTcxr6tcigs6+VvD8K9VN1zNmMUd9qxR8V6MAOSpury
-         4u8I1QHk8/ypEnm8MgPr9xqX4qny4ef6gnGiVYKzmUt70bVMCyTxPjKiIgv0k1oDcro2
-         DDr6Y95ehXH/QCGHvdE4V8nxNVST+u+FPUGHrzQisefOAUeAWJdGmZsnZY8KuhX+F+VZ
-         qiHPLOPY/bfEx865Jq7cxW8EZd7J9dbglxoY2xtoq+OK0otFqaEzf7W/5KQDckGgXVTN
-         KlMg==
-X-Gm-Message-State: APjAAAVvvdxyRmPfCBA/80insUo7qtR23aHNq0lIePxL28Nfk7NcGOQq
-        NGT5Dk0XKiB9NpTmON2vQhJksA==
-X-Google-Smtp-Source: APXvYqxVa/mEa49iKuoo7zcBEv+FpSMDYmArq84MeKriZZo9LGZjuUFcbcewkYOCcisujvvQuZw8uA==
-X-Received: by 2002:a1c:a5c8:: with SMTP id o191mr356585wme.168.1574205573003;
-        Tue, 19 Nov 2019 15:19:33 -0800 (PST)
+        bh=CY9BzC4lO/psiiWDvfyoZ5PZxvDdzpF24ejbtK1oew8=;
+        b=mNxiZs2aI448n2AR84AyCwO/eq17r/r7+xk1AgZiaeBTXj9+mIJdpaiwiyPB9SypeP
+         vnrjZkGYVPRIkiRNz+TbtPlR3QpsQmxW1ytG/bR19W+jmSGD+zfCbzjWy1FB4c2r1v0K
+         gm7U2wGJhSNjsqJf/orDfFuaXBMYzLBrR13U6QPuqqMYBaPGqrFGISHz1I8vGczg0mXV
+         gN3EO2xsuNuT/p1jgIfo1oNcaO0RTDkxdlwPKaPL2tFzoJeKNgmpKwaq9oWKhFbueWDG
+         EtKwkIoMB5y5TRJluZc82dP1JzI5P6vlLAm/1VJRsB3UbQczWCbBID5fWg2rY38jSEOc
+         gxjQ==
+X-Gm-Message-State: APjAAAU/DK5ZtvbmQmKDBxA9ZQt7GKq/yk3foz+5Igt+5/pW4WXmMIUB
+        f5J4X/U8fz70E88xr+Hr1L5BhA==
+X-Google-Smtp-Source: APXvYqyNzLbvJ4OlsG32U7Lnk0xF5OdDAXiURRrNOmbEyBLWk7UCA6MQ2hD34Esh6BlQUv2sLWKTWg==
+X-Received: by 2002:adf:9d87:: with SMTP id p7mr39530588wre.11.1574205569880;
+        Tue, 19 Nov 2019 15:19:29 -0800 (PST)
 Received: from linaro.org ([2a00:23c5:6815:3901:a19d:4139:292b:19a0])
-        by smtp.gmail.com with ESMTPSA id m15sm15746717wrj.52.2019.11.19.15.19.31
+        by smtp.gmail.com with ESMTPSA id m15sm15746717wrj.52.2019.11.19.15.19.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 15:19:32 -0800 (PST)
+        Tue, 19 Nov 2019 15:19:29 -0800 (PST)
 From:   Mike Leach <mike.leach@linaro.org>
 To:     mike.leach@linaro.org, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-doc@vger.kernel.org
 Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com
-Subject: [PATCH v5 13/14] docs: coresight: Update documentation for CoreSight to cover CTI.
-Date:   Tue, 19 Nov 2019 23:19:11 +0000
-Message-Id: <20191119231912.12768-14-mike.leach@linaro.org>
+Subject: [PATCH v5 10/14] dt-bindings: qcom: Add CTI options for qcom msm8916
+Date:   Tue, 19 Nov 2019 23:19:08 +0000
+Message-Id: <20191119231912.12768-11-mike.leach@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191119231912.12768-1-mike.leach@linaro.org>
 References: <20191119231912.12768-1-mike.leach@linaro.org>
@@ -70,250 +70,146 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add new document covering CTI / CTM usage in CoreSight.
-
-Add section in coresight.rst introducing CTI and CTM modules with link
-to new document.
+Adds system and CPU bound CTI definitions for Qualcom msm8916 platform
+(Dragonboard DB410C).
+System CTIs 2-11 are omitted as no information available at present.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
 ---
- .../trace/coresight/coresight-ect.rst         | 200 ++++++++++++++++++
- Documentation/trace/coresight/coresight.rst   |  13 ++
- 2 files changed, 213 insertions(+)
- create mode 100644 Documentation/trace/coresight/coresight-ect.rst
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 85 +++++++++++++++++++++++++--
+ 1 file changed, 81 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/trace/coresight/coresight-ect.rst b/Documentation/trace/coresight/coresight-ect.rst
-new file mode 100644
-index 000000000000..6448cf910f20
---- /dev/null
-+++ b/Documentation/trace/coresight/coresight-ect.rst
-@@ -0,0 +1,200 @@
-+=============================================
-+CoreSight Embedded Cross Trigger (CTI & CTM).
-+=============================================
-+
-+    :Author:   Mike Leach <mike.leach@linaro.org>
-+    :Date:     November 2019
-+
-+Hardware Description
-+--------------------
-+
-+The CoreSight Cross Trigger Interface (CTI) is a hardware device that takes
-+individual input and output hardware signals known as triggers to and from
-+devices and interconnects them via the Cross Trigger Matrix (CTM) to other
-+devices via numbered channels, in order to propagate events between devices.
-+
-+e.g.::
-+
-+ 0000000  in_trigs  :::::::
-+ 0 C   0----------->:     :             +======>(other CTI channel IO)
-+ 0  P  0<-----------:     :             v
-+ 0   U 0  out_trigs :     : Channels  *****      :::::::
-+ 0000000            : CTI :<=========>*CTM*<====>: CTI :---+
-+ #######  in_trigs  :     : (id 0-3)  *****      :::::::   v
-+ # ETM #----------->:     :                         ^   #######
-+ #     #<-----------:     :                         +---# ETR #
-+ ####### out_trigs  :::::::                             #######
-+
-+The CTI driver enables the programming of the CTI to attach triggers to
-+channels. When an input trigger becomes active, the attached channel will
-+become active. Any output trigger attached to that channel will also
-+become active. The active channel is propagated to other CTIs via the CTM,
-+activiating connected output triggers there, unless filtered by the CTI
-+channel gate.
-+
-+It is also possible to activate a channel using system software directly
-+programming registers in the CTI.
-+
-+The CTIs are registered by the system to be associated with CPUs and/or other
-+CoreSight devices on the trace data path. When these devices are enabled the
-+attached CTIs will also be enabled. By default/on power up the CTIs have
-+no programmed trigger/channel attachments, so will not affect the system
-+until explicitly programmed.
-+
-+The hardware trigger connections between CTIs and devices is implementation
-+defined, unless the CPU/ETM combination is a v8 architecture, in which case
-+the connections have an architecturally defined standard layout.
-+
-+The hardware trigger signals can also be connected to non-CoreSight devices
-+(e.g. UART), or be propagated off chip as hardware IO lines.
-+
-+All the CTI devices are associated with a CTM. On many systems there will be a
-+single effective CTM (one CTM, or multiple CTMs all interconnected), but it is
-+possible that systems can have nets of CTIs+CTM that are not interconnected by
-+a CTM to each other. On these systems a CTM index is declared to associate
-+CTI devices that are interconnected via a given CTM.
-+
-+Sysfs files and directories
-+---------------------------
-+
-+The CTI devices appear on the existing CoreSight bus alongside the other
-+CoreSight devices::
-+
-+    >$ ls /sys/bus/coresight/devices
-+     cti_cpu0  cti_cpu2  cti_sys0  etm0  etm2  funnel0  replicator0  tmc_etr0
-+     cti_cpu1  cti_cpu3  cti_sys1  etm1  etm3  funnel1  tmc_etf0     tpiu0
-+
-+The ``cti_cpu<N>`` named CTIs are associated with a CPU, and any ETM used by
-+that core. the ``cti_sys<N>`` CTIs are general system infrastructure CTIs that
-+can be associated with other CoreSight devices, or other system hardware
-+capable of generating or using trigger signals.::
-+
-+  >$ ls /sys/bus/coresight/devices/etm0/cti_cpu0
-+  channels  ctmid  enable  nr_trigger_cons mgmt  power  regs  subsystem
-+  triggers0 triggers1  uevent
-+
-+*Key file items are:-*
-+   * ``enable``: enables/disables the CTI.
-+   * ``ctmid`` : associated CTM - only relevant if system has multiple CTI+CTM
-+     clusters that are not interconnected.
-+   * ``nr_trigger_cons`` : total connections - triggers<N> directories.
-+
-+*Sub-directories:-*
-+   * ``triggers<N>``: contains list of triggers for an individual connection.
-+   * ``channels``: Contains the channel API - CTI main programming interface.
-+   * ``regs``: Gives access to the raw programmable CTI regs.
-+   * ``mgmt``: the standard CoreSight management registers.
-+
-+
-+triggers<N> directories
-+~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Individual trigger connection information. This describes trigger signals for
-+CoreSight and non-CoreSight connections.
-+
-+Each triggers directory has a set of parameters describing the triggers for
-+the connection.
-+
-+   * ``name`` : name of connection
-+   * ``in_signals`` : input trigger signal indexes used in this connection.
-+   * ``in_types`` : functional types for in signals.
-+   * ``out_signals`` : output trigger signals for this connection.
-+   * ``out_types`` : functional types for out signals.
-+
-+e.g::
-+
-+    >$ ls ./cti_cpu0/triggers0/
-+    in_signals  in_types  name  out_signals  out_types
-+    >$ cat ./cti_cpu0/triggers0/name
-+    cpu0
-+    >$ cat ./cti_cpu0/triggers0/out_signals
-+    0-2
-+    >$ cat ./cti_cpu0/triggers0/out_types
-+    pe_edbgreq pe_dbgrestart pe_ctiirq
-+    >$ cat ./cti_cpu0/triggers0/in_signals
-+    0-1
-+    >$ cat ./cti_cpu0/triggers0/in_types
-+    pe_dbgtrigger pe_pmuirq
-+
-+If a connection has zero signals in either the 'in' or 'out' triggers then
-+those parameters will be omitted.
-+
-+Channels API Directory
-+~~~~~~~~~~~~~~~~~~~~~~
-+
-+This provides an easy way to attach triggers to channels, without needing
-+the multiple register operations that are required if manipluating the
-+'regs' sub-dir elements directly.
-+
-+A number of files provide this API::
-+
-+   >$ ls ./cti_sys0/channels/
-+   chan_clear         chan_inuse         chan_xtrigs_view      trigin_detach
-+   chan_free          chan_pulse         chan_xtrigs_view_sel  trigout_attach
-+   chan_gate_disable  chan_set           trig_filter_enable    trigout_detach
-+   chan_gate_enable   chan_xtrigs_reset  trigin_attach         trigout_filtered
-+
-+Most access to these elements take the form::
-+
-+  echo <chan> [<trigger>] > /<device_path>/<operation>
-+
-+where the optional <trigger> is only needed for trigXX_attach | detach
-+operations.
-+
-+e.g.::
-+
-+   >$ echo 0 1 > ./cti_sys0/channels/trigout_attach
-+   >$ echo 0 > ./cti_sys0/channels/chan_set
-+
-+Attaches trigout(1) to channel(0), then activates channel(0) generating a
-+set state on cti_sys0.trigout(1)
-+
-+
-+*API operations*
-+
-+   * ``trigin_attach, trigout_attach``: Attach a channel to a trigger signal.
-+   * ``trigin_detach, trigout_detach``: Detach a channel from a trigger signal.
-+   * ``chan_set``: Set the channel - the set state will be propogated around
-+     the CTM to other connected devices.
-+   * ``chan_clear``: Clear the channel.
-+   * ``chan_pulse``: Set the channel for a single CoreSight clock cycle.
-+   * ``chan_gate_enable``: Write operation sets the CTI gate to propagate
-+     (enable) the channel to other devices. This operation takes a channel
-+     number. CTI gate is enabled for all channels by default at power up. Read
-+     to list the currently enabled channels on the gate.
-+   * ``chan_gate_disable``: Write channel number to disable gate for that
-+     channel.
-+   * ``chan_inuse``: Show the current channels attached to any signal
-+   * ``chan_free``: Show channels with no attached signals.
-+   * ``chan_xtrig_view``: write a channel number to select a channel to view,
-+     read to show the cross triggers programmed for the selected channel.
-+   * ``trig_filter_enable``: Defaults to enabled, disable to allow potentially
-+     dangerous output signals to be set.
-+   * ``trigout_filtered``: Trigger out signals that are prevented from being
-+     set if filtering ``trig_filter_enable`` is enabled. One use is to prevent
-+     accidental ``EDBGREQ`` signals stopping a core.
-+   * ``chan_xtrigs_reset``: Write 1 to clear all channel / trigger programming.
-+     Resets device hardware to default state.
-+
-+e.g.::
-+
-+   .../cti_sys0/channels# echo 2 1 > trigin_attach
-+   .../cti_sys0/channels# echo 2 6 > trigout_attach
-+   .../cti_sys0/channels# cat chan_free
-+   0-1,3
-+   .../cti_sys0/channels# cat chan_inuse
-+   2
-+   .../cti_sys0/channels# echo 2 > chan_xtrigs_view
-+   .../cti_sys0/channels# cat chan_xtrigs_view
-+   [2] IN: 1 OUT: 6
-+   .../cti_sys0/# echo 1 > enable
-+   .../cti_sys0/channels# echo 2 > chan_set
-+   .../cti_sys0/channels# cat ../regs/choutstatus
-+   0x4
-+   .../cti_sys0/channels# cat ../regs/trigoutstatus
-+   0x40
-+   .../cti_sys0/channels# echo 2 > chan_clear
-+   .../cti_sys0/channels# cat ../regs/trigoutstatus
-+   0x0
-+   .../cti_sys0/channels# cat ../regs/trigoutstatus
-+   0x0
-diff --git a/Documentation/trace/coresight/coresight.rst b/Documentation/trace/coresight/coresight.rst
-index a566719f8e7e..108600ee1e12 100644
---- a/Documentation/trace/coresight/coresight.rst
-+++ b/Documentation/trace/coresight/coresight.rst
-@@ -491,8 +491,21 @@ interface provided for that purpose by the generic STM API::
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 5ea9fb8f2f87..9589fc2cba22 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/reset/qcom,gcc-msm8916.h>
+ #include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/thermal/thermal.h>
++#include <dt-bindings/arm/coresight-cti-dt.h>
  
- Details on how to use the generic STM API can be found here:- :doc:`../stm` [#second]_.
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -1357,7 +1358,7 @@
+ 			cpu = <&CPU3>;
+ 		};
  
-+The CTI & CTM Modules
-+---------------------
-+
-+The CTI (Cross Trigger Interface) provides a set of trigger signals between
-+individual CTIs and components, and can propagate these between all CTIs via
-+channels on the CTM (Cross Trigger Matrix).
-+
-+A separate documentation file is provided to explain the use of these devices.
-+(:doc:`coresight-ect`) [#fourth]_.
-+
-+
- .. [#first] Documentation/ABI/testing/sysfs-bus-coresight-devices-stm
+-		etm@85c000 {
++		etm0: etm@85c000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85c000 0x1000>;
  
- .. [#second] Documentation/trace/stm.rst
+@@ -1375,7 +1376,7 @@
+ 			};
+ 		};
  
- .. [#third] https://github.com/Linaro/perf-opencsd
+-		etm@85d000 {
++		etm1: etm@85d000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85d000 0x1000>;
+ 
+@@ -1393,7 +1394,7 @@
+ 			};
+ 		};
+ 
+-		etm@85e000 {
++		etm2: etm@85e000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85e000 0x1000>;
+ 
+@@ -1411,7 +1412,7 @@
+ 			};
+ 		};
+ 
+-		etm@85f000 {
++		etm3: etm@85f000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85f000 0x1000>;
+ 
+@@ -1429,6 +1430,82 @@
+ 			};
+ 		};
+ 
++		/* System CTIs */
++		/* CTI 0 - TMC connections */
++		cti@810000 {
++			compatible = "arm,coresight-cti", "arm,primecell";
++			reg = <0x810000 0x1000>;
 +
-+.. [#fourth] Documentation/trace/coresight/coresight-ect.rst
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++		};
++
++		/* CTI 1 - TPIU connections */
++		cti@811000 {
++			compatible = "arm,coresight-cti", "arm,primecell";
++			reg = <0x811000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++		};
++
++		/* CTIs 2-11 - no information - not instantiated */
++
++		/* Core CTIs; CTIs 12-15 */
++		/* CTI - CPU-0 */
++		cti@858000 {
++			compatible = "arm,coresight-cti", "arm,primecell";
++			reg = <0x858000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			arm,cti-v8-arch;
++			cpu = <&CPU0>;
++			arm,cs-dev-assoc = <&etm0>;
++
++		};
++
++		/* CTI - CPU-1 */
++		cti@859000 {
++			compatible = "arm,coresight-cti", "arm,primecell";
++			reg = <0x859000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			arm,cti-v8-arch;
++			cpu = <&CPU1>;
++			arm,cs-dev-assoc = <&etm1>;
++		};
++
++		/* CTI - CPU-2 */
++		cti@85a000 {
++			compatible = "arm,coresight-cti", "arm,primecell";
++			reg = <0x85a000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			arm,cti-v8-arch;
++			cpu = <&CPU2>;
++			arm,cs-dev-assoc = <&etm2>;
++		};
++
++		/* CTI - CPU-3 */
++		cti@85b000 {
++			compatible = "arm,coresight-cti", "arm,primecell";
++			reg = <0x85b000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			arm,cti-v8-arch;
++			cpu = <&CPU3>;
++			arm,cs-dev-assoc = <&etm3>;
++		};
++
++
+ 		venus: video-codec@1d00000 {
+ 			compatible = "qcom,msm8916-venus";
+ 			reg = <0x01d00000 0xff000>;
 -- 
 2.17.1
 
