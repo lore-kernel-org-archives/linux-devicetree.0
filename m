@@ -2,110 +2,115 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E818C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 05:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD395C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E1222318
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 05:18:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c7Kdgz48"
+	by mail.kernel.org (Postfix) with ESMTP id 99F3E208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfKSFSy (ORCPT
+        id S1730262AbfKSFjT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:18:54 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:37618 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKSFSw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 00:18:52 -0500
-Received: by mail-vk1-f193.google.com with SMTP id l5so4740591vkb.4
-        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 21:18:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jDmWyWEB6X6hwrCpbp9uiQYwQF5jG8Fol62ACoWdqew=;
-        b=c7Kdgz48g3DqmoLb5/0VghHmU09mTfosgKrO2YFfZPUvxt/RdRNli50PhjfWMgc4ne
-         uonk3fenlMZy18GUcL68KuWUqJPsoMMCbzpudzypbhBT6G7/5MjrqMYVVh3gDukcvMoZ
-         LbeoSYrtDWSK0Y9udIKVMAzyn/shXDgGetomc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jDmWyWEB6X6hwrCpbp9uiQYwQF5jG8Fol62ACoWdqew=;
-        b=lIVFTvo/s6Ox0gfA5IqzBNyFRVHZSAYA6XmXQAG1iosTPZxCjusoON9Jag7C4Uc6mt
-         iwe7d0xCadrbHVbSnyMnXXCWnTJoQ+yb27GsN0yRQicF9iD2A87r1eV6VZob3ea3MMgu
-         4a4MFCz3ze8lqWKYthogk2xCVEVJ07DJcAf9tAi8ePrBNZvS++u+Zssn6eccCg+ua/r5
-         /jhKW1kTPW65aCilKyXp1yZzXc5uCMg24Y/frReUwwgSF6Y2L5qFGnm8kkIxASiQbSUI
-         r+2SrDxYFlQ6e/Xx1gpsUq2jAKiy9A1GrNlf0Xa1ELwnvG7Futa1z7HDZ31E0rDEN1Y5
-         bVBg==
-X-Gm-Message-State: APjAAAUJMP9noO28g1i8AAQGoW2xSzgSasxWfLpA239ZZFNqqWlvEx2T
-        B8vs61reCnB6rzxwWhXNu0MTot5ChOUTKhjxvfgizA==
-X-Google-Smtp-Source: APXvYqzmN805E8eN41XyzvJqz/8UfDTMFSoZBSua6kbhailEbajnHsqg9CvbSCG2iONWHTyO5oZA5JWDZTSYdRVIGRE=
-X-Received: by 2002:a1f:2556:: with SMTP id l83mr18367851vkl.77.1574140729713;
- Mon, 18 Nov 2019 21:18:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20191117033149.259303-1-ikjn@chromium.org> <Pine.LNX.4.44L0.1911171043060.7716-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1911171043060.7716-100000@netrider.rowland.org>
-From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Tue, 19 Nov 2019 13:18:38 +0800
-Message-ID: <CAATdQgBPrk=obCOiMAe1zAoP1As21MuzGzn-ixU56EmSkdQr1w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] usb: override hub device bInterval with device node
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tue, 19 Nov 2019 00:39:19 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:35537 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730261AbfKSFjS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 00:39:18 -0500
+Received: from marcel-macbook.holtmann.net (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 3950ACECED;
+        Tue, 19 Nov 2019 06:48:23 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm
+ config
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+Date:   Tue, 19 Nov 2019 06:39:16 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
+        devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Suwan Kim <suwan.kim027@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Johan Hovold <johan@kernel.org>,
-        Nicolas Boitchat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Chen-Yu Tsai <wens@csie.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <079C85BE-FBC5-4A2B-9EBF-0CEDB6F30C18@holtmann.org>
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 11:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Sun, 17 Nov 2019, Ikjoon Jang wrote:
->
-> > This patchset enables hard wired hub device to use different bInterval
-> > from its descriptor when the hub has a combined device node.
-> >
-> > When we know the specific hard wired hub supports changing its polling
-> > interval, we can adjust hub's interval to reduce the time of waking up
-> > from autosuspend or connect detection of HIDs.
->
-> In fact, _all_ hubs support changing the polling interval.  The value
-> given in the USB spec is just an upper limit; any smaller value is
-> equally acceptable.
->
-> So why are you doing this only for hard-wired hubs?  Why not for all
-> hubs?
+Hi Abhishek,
 
-Because we only want to apply it to a specific device instance under
-our control.
-We apply autosuspend to built-in touchpad device for power savings,
+> Add documentation for pcm parameters.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> 
+> Changes in v6: None
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+> .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
+> include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
+> 2 files changed, 48 insertions(+)
+> create mode 100644 include/dt-bindings/bluetooth/brcm.h
+> 
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> index c749dc297624..8561e4684378 100644
+> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> @@ -29,10 +29,20 @@ Optional properties:
+>    - "lpo": external low power 32.768 kHz clock
+>  - vbat-supply: phandle to regulator supply for VBAT
+>  - vddio-supply: phandle to regulator supply for VDDIO
+> + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
+> + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
+> + - brcm,bt-pcm-frame-type: short, long
+> + - brcm,bt-pcm-sync-mode: slave, master
+> + - brcm,bt-pcm-clock-mode: slave, master
+> 
+> +See include/dt-bindings/bluetooth/brcm.h for SCO/PCM parameters. The default
+> +value for all these values are 0 (except for brcm,bt-sco-routing which requires
+> +a value) if you choose to leave it out.
+> 
+> Example:
+> 
+> +#include <dt-bindings/bluetooth/brcm.h>
+> +
+> &uart2 {
+>        pinctrl-names = "default";
+>        pinctrl-0 = <&uart2_pins>;
+> @@ -40,5 +50,11 @@ Example:
+>        bluetooth {
+>                compatible = "brcm,bcm43438-bt";
+>                max-speed = <921600>;
+> +
+> +               brcm,bt-sco-routing        = <BRCM_SCO_ROUTING_TRANSPORT>;
 
-Users can attach external hub devices with same VID:PID that we don't want to
-change the behavior. Maybe disabling autosuspend for external HIDs
-can be more reasonable for that case?
+in case you use transport which means HCI, you would not have values below. It is rather PCM here in the example.
 
->
-> And is 250 ms really too long to wait for remote wakeup or connect
-> detection?  What's the real motivation behind this change?
+> +               brcm,bt-pcm-interface-rate = <BRCM_PCM_IF_RATE_512KBPS>;
+> +               brcm,bt-pcm-frame-type     = <BRCM_PCM_FRAME_TYPE_SHORT>;
+> +               brcm,bt-pcm-sync-mode      = <BRCM_PCM_SYNC_MODE_MASTER>;
+> +               brcm,bt-pcm-clock-mode     = <BRCM_PCM_CLOCK_MODE_MASTER>;
+>        };
+> };
 
-When a user starts to move the cursor while touchpad is in autosuspend state,
-It takes more than >250ms (worst case can be >500ms) to wake up and response.
-That makes the cursor stuck for a while and warp to another location suddenly.
+And I am asking this again. Is this adding any value to use an extra include file? Inside the driver we are not really needing these values since they are handed to the hardware.
 
-Thanks.
->
-> Alan Stern
->
+Regards
+
+Marcel
+
