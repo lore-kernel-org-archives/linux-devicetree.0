@@ -2,180 +2,70 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD7BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 13:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815B3C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E58E21783
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 13:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F77222A5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b6eiXfq4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mrT2mpYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfKSNKw (ORCPT
+        id S1728331AbfKSORr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:10:52 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42700 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKSNKw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 08:10:52 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m13so16993185edv.9
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 05:10:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VEavlwL1+rDzs+L+hM6nx0dnrMPSn2yWoKd3exKBnKI=;
-        b=b6eiXfq4vDKE47zZ4PvxoN61Q1BY37X7wcxDr/SiVmRRP0VtNsmCMMkrX3qi2LrRtu
-         P92lSpOaIxSROrtWuDJJ0XrRgaTiZBAJJ6z6l46VSE06O0MjhbBzsnYdD72zjhau3pF3
-         WCNJR5qHibROyv1OB4bctwVa86YYWorAOoycA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VEavlwL1+rDzs+L+hM6nx0dnrMPSn2yWoKd3exKBnKI=;
-        b=mppiEHS6/G+8H7lJhDD3+/B3147ZEVCJeXdT6X2kfVsUFRMogUhmUI9O04Quw7tXOF
-         hK8YYvbm8j4sjMgeeEY2BVqeYG6QwupSPg7ODgcApP09NWpqJhGyUGDa68sTlyVb2Pon
-         DDW2WTq4LHi39m/uUHRPWopHhIgNBCW/y6e1+v5UHNf6+J1CM1dHF6BRXOU/5gjCoJG8
-         zwNqRXUnK+MJeF8gETBKOVg5E5Vo0uYhyZNwsGwdS1kmiBLOtbD4V0DPfIoJGaTRiYBa
-         pvwsJpAAjIvlqRZOKMeyfcawsViq/JEs24mGNF8MFVQyhus1ZTjbHpd3Lt+rrjR7DZtD
-         SRjw==
-X-Gm-Message-State: APjAAAUqKNl6B6OA+TpfKDjxCD7O6p4ZRBSJtauHtabOG7+YdASkCfib
-        0KdQaBIf0vFbkNHa/Dnd38zFsIofNkDpNQ==
-X-Google-Smtp-Source: APXvYqwWer/H0kbOlgc0tipd1MFHQK4chl3tMCDXA1tC3sVFRJlbNwKLK69Uo2JfZBNidZ9fBh/CYg==
-X-Received: by 2002:a17:906:bc9:: with SMTP id y9mr34793718ejg.64.1574169049999;
-        Tue, 19 Nov 2019 05:10:49 -0800 (PST)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id s7sm339121ejx.15.2019.11.19.05.10.49
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 05:10:49 -0800 (PST)
-Received: by mail-wr1-f42.google.com with SMTP id f2so23767538wrs.11
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 05:10:49 -0800 (PST)
-X-Received: by 2002:adf:e505:: with SMTP id j5mr33584239wrm.46.1574168650324;
- Tue, 19 Nov 2019 05:04:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20191114051242.14651-1-helen.koike@collabora.com>
- <20191114051242.14651-3-helen.koike@collabora.com> <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
- <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com> <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
- <4135d35cd581b31d08b547852ac43e959957abf5.camel@collabora.com>
-In-Reply-To: <4135d35cd581b31d08b547852ac43e959957abf5.camel@collabora.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 19 Nov 2019 22:03:59 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5BPwSnY51vJboCB6Hr2Yz4jMqt4VWLNNLTpiwenGo_Wew@mail.gmail.com>
-Message-ID: <CAAFQd5BPwSnY51vJboCB6Hr2Yz4jMqt4VWLNNLTpiwenGo_Wew@mail.gmail.com>
-Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for rkisp1
- meta buffer format
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Jacob Chen <jacobchen110@gmail.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Eddie Cai <eddie.cai.linux@gmail.com>, kernel@collabora.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jacob Chen <jacob-chen@rock-chips.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tue, 19 Nov 2019 09:17:47 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:49804 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728122AbfKSORr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 09:17:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574173064; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=GwQs/I34Gsxl3SkZJ9TndJzpKGHdtrRU8KhsXh5z6T4=;
+        b=mrT2mpYFDmFwKTDD8Mwz02JbRJsC+rlA44Wx0jWx/ZCxD8LzKabuLh4MZBcahZ6u36KNDr
+        4D8N75NLGhtHVfWL5A5y1HSHCs5e9xDnwNA5dc3fPzVd9ik5qVydB7ZlnN2fHX0NDF8rOJ
+        fs9NcFPmUx1lWMwqSdeTyViKojNa8Lc=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/6] dt-bindings: display/ingenic: Add compatible string for JZ4770
+Date:   Tue, 19 Nov 2019 15:17:31 +0100
+Message-Id: <20191119141736.74607-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 9:56 PM Ezequiel Garcia <ezequiel@collabora.com> wr=
-ote:
->
-> Hello Jacob,
->
-> Thanks for the insight.
->
-> On Tue, 2019-11-19 at 18:16 +0800, Jacob Chen wrote:
-> > Hi Helen ,
-> >
-> > Helen Koike <helen.koike@collabora.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=
-=8814=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=886:59=E5=86=99=E9=81=93=
-=EF=BC=9A
-> > >
-> > >
-> > > On 11/14/19 6:21 AM, Hans Verkuil wrote:
-> > > > On 11/14/19 6:12 AM, Helen Koike wrote:
-> > > > > From: Jacob Chen <jacob2.chen@rock-chips.com>
-> > > > >
-> > > > > This commit add document for rkisp1 meta buffer format
-> > > > >
-> > > > > Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
-> > > > > [refactored for upstream]
-> > > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > >
-> > > > checkpatch gives me:
-> > > >
-> > > > WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob=
- Chen <jacob2.chen@rock-chips.com>'
-> > > >
-> > > > Looking at this series I see duplicate Signed-off-by entries for Ja=
-cob Chen and a total
-> > > > of three different email addresses:
-> > > >
-> > > > jacob2.chen@rock-chips.com
-> > > > jacob-chen@rock-chips.com
-> > > > cc@rock-chips.com
-> > >
-> > > And I see a name in the Maintainers file as Jacob Chen <jacob-chen@io=
-twrt.com>.
-> > > I was wondering if I could replace the email by jacob-chen@iotwrt.com=
-, or if I should
-> > > keep the original ones.
-> > >
-> > > Helen
-> > >
-> >
-> > "jacob2.chen@rock-chips.com"/"jacob-chen@rock-chips.com" is me and
-> > "cc@rock-chips.com" is another one.
-> > ' jacob-chen@rock-chips.com' is invalid now,  so you could replace the
-> > email by 'jacob-chen@iotwrt.com'.
-> >
->
-> Authorship and SOB can't be changed freely, the original must be retained=
-,
-> because this gives proper credit to the company that sponsored the work.
->
-> I.e. if your mail used to be jacob2.chen at rock-chips.com, then I think
-> we can use that. And if cc at rock-chips.com is a different engineer,
-> also named Jacob Chen, perhaps we can mention that somewhere to reduce th=
-e
-> confusion.
+Add a compatible string for the LCD controller found in the JZ4770 SoC.
 
-Some patches have been developed by Jacob <jacob2.chen at
-rock-chips.com>, some by Jacob <cc at rock-chips.com> and some by
-both.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ Documentation/devicetree/bindings/display/ingenic,lcd.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Some patches have been also re-posted by Jacob after leaving Rockchip
-AFAIR, from the <jacob-chen at iotwrt.com> address. Those should have
-<jacob2.chen at rock-chips.com> as From: and include sign-offs from
-both <jacob2.chen at rock-chips.com> and <jacob-chen at iotwrt.com>.
+diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.txt b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
+index 7b536c8c6dde..01e3261defb6 100644
+--- a/Documentation/devicetree/bindings/display/ingenic,lcd.txt
++++ b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
+@@ -4,6 +4,7 @@ Required properties:
+ - compatible: one of:
+   * ingenic,jz4740-lcd
+   * ingenic,jz4725b-lcd
++  * ingenic,jz4770-lcd
+ - reg: LCD registers location and length
+ - clocks: LCD pixclock and device clock specifiers.
+ 	   The device clock is only required on the JZ4740.
+-- 
+2.24.0
 
-So the conclusion is that the original sign-offs should be retained
-+/- typos fixed.
-
-For typos, was <jacob-chen at rock-chips.com> a typo of <jacob2.chen
-at rock-chips.com> or a typo of <jacob-chen at iotwrt.com>?
-
-Best regards,
-Tomasz
