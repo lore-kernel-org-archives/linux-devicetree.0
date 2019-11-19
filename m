@@ -2,163 +2,102 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7362CC43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542A7C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441C9222AB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sWM8yhqa"
+	by mail.kernel.org (Postfix) with ESMTP id 31C292230F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfKSPqV (ORCPT
+        id S1727937AbfKSQA0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:46:21 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39406 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbfKSPqU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:46:20 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 15so18195912qkh.6;
-        Tue, 19 Nov 2019 07:46:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2zddixLIG407nblq8qKNkbMRSz9Vj+er4J47xlaoa6s=;
-        b=sWM8yhqarsXXdgRC3UamBKYPvXJ2ImKy01/+cId76FMPhdy3NJ0Jh8ZhBgJpSpxyAY
-         j4R7LhsgHFKWGmMjq88vtT/XwZf7fDFquz/wYLpPQpwHFPsPKcRzGGoj3nypkL4S2Mi2
-         u20dRmMsN89K1uP0OwaNRLgyYDEee2Z6G9fpmAVxSNxfZyIbgycuYhTisyXhIsuXJU1G
-         eQ3yeP2tKHf8Szu043TxuZ5AT6kAdyvePJW8EbZNzxQniLNjj5LawVL4IuhIUmWDfacb
-         qdscFThecVBfz4kxsu0mF8BCB30X8AlvQHeDrGR8AIRKWHw9WLencFL1U0pXOOGCUaeT
-         ik1w==
+        Tue, 19 Nov 2019 11:00:26 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46179 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbfKSQA0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 11:00:26 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n14so19350085oie.13;
+        Tue, 19 Nov 2019 08:00:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2zddixLIG407nblq8qKNkbMRSz9Vj+er4J47xlaoa6s=;
-        b=bh/FZ4aNNwznzoLImxel+UUR+5FvbWhnBZjbJynBdbcyiwQhYvmwOg9XpeDJRP1f4t
-         5GqRFGiKT9+ZHbcjimSysM5DP9p95j1a+pnSgHeI9VpqkxpA2hZwlfjc+9kZYUHXgWaT
-         Z3z6FYpikcDrtYhdySuOcw4pfgG3pwvTJw6Jp4fQvQ8E7CRFn4C/wF53lNllEazLDyLE
-         ansRZ06fcvQr0nN8qrtzPK7T2/5GBfsLHn40/uLnO9+wrt5aVdPO7iYJGpCd5FCbyV95
-         qTWKgdhbpKmam6tGlF/Ks8pkfhaQpwrqLe8IZtwe3QUZMlUEjL/whbL/oAJD9IZUulc+
-         UIqw==
-X-Gm-Message-State: APjAAAUaQQlsdVqyLOo+k0v0vpaSclnSdT3PcbT8E718Ivd5iE3cvYlU
-        m5pK5wSbsBs29cDvr1Iatpc=
-X-Google-Smtp-Source: APXvYqy8vwILNB4akBi0WDb3PQOnmeFNXiBzPCZWzHefMu+oYpB6aqtA5pK/D+KUGdNZE7OxpqP29Q==
-X-Received: by 2002:a37:7f02:: with SMTP id a2mr29510616qkd.111.1574178379311;
-        Tue, 19 Nov 2019 07:46:19 -0800 (PST)
-Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id 50sm12949919qtv.88.2019.11.19.07.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 07:46:18 -0800 (PST)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lOp09REXBJlIhxRQLG3yF3pkOzVMqVXKGYr5zOkYKTU=;
+        b=tvirj1n2/8raLM1mnIsqp2gtwTG5uKIyP1xLwQY0vY3qjRyRnMTQn215elCAXasSfy
+         WSyp8Uwl85PcYNgWjZwZCCdkqTskSJ7Rg1xm3satC2WKj3DCWtIcVjDP0SHl9JfadCE7
+         iQzb2KSMDGkLqXoZ4QACKQLtKY3Q7Mxtk0GCW53GI6ZE3T4ApWiG6V6gSuFNhNyUc/Zb
+         0a/IjQe5z6lDgHz8T0LrFt3P57rYJKyytp5fk+au0tF9Mz2CIDBpgZN0BPu/OZv7iZxX
+         Rt8K5H761gL0OeumSjzBiNg5XjPK7ROO/j9j68puMeduawUwkVi0Ii3t4994/lK3JRSY
+         QfEg==
+X-Gm-Message-State: APjAAAU8JKYPSL1ZgPixnZpQwmt6hecZN3aEXOBQkZEKuEurNgWD71f2
+        JpBl0Ntpex8oGGzdJhPHeyLiWU3wsUy5mfxGH/g=
+X-Google-Smtp-Source: APXvYqyFjVcr3DV/kDkPHFaPjGoNOAPUlx3qgBTMVdhzS/Ov2hib4acxOvn1dSc2R4bN1wN/M0QqvauTflblBxgZCm8=
+X-Received: by 2002:aca:fc92:: with SMTP id a140mr4573964oii.153.1574179223502;
+ Tue, 19 Nov 2019 08:00:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20191119144315.11261-1-krzk@kernel.org>
+In-Reply-To: <20191119144315.11261-1-krzk@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 Nov 2019 17:00:05 +0100
+Message-ID: <CAMuHMdUnn8uYyQ+D=6rp1+R1sE_W-SS1t+EuNHm=vWaKQ9Z6tQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: power: Fix path to power-domain.txt bindings
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: [PATCH v2 1/4] tps6105x: add optional devicetree support
-Date:   Tue, 19 Nov 2019 10:46:08 -0500
-Message-Id: <20191119154611.29625-2-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191119154611.29625-1-TheSven73@gmail.com>
-References: <20191119154611.29625-1-TheSven73@gmail.com>
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        etnaviv@lists.freedesktop.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno@lists.freedesktop.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This driver currently requires platform data to specify the
-operational mode and regulator init data (in case of regulator
-mode).
+Hi Krzysztof,
 
-Optionally specify the operational mode by looking at the name
-of the devicetree child node.
+On Tue, Nov 19, 2019 at 3:43 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> With split of power domain controller bindings to power-domain.yaml, the
+> consumer part was renamed to power-domain.txt.  Update the references in
+> other bindings.
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: abb4805e343a ("dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema")
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Example: put chip in regulator mode:
+Thanks for your patch!
 
-i2c0 {
-	tps61052@33 {
-		compatible = "ti,tps61052";
-		reg = <0x33>;
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-		regulator {
-                            regulator-min-microvolt = <5000000>;
-                            regulator-max-microvolt = <5000000>;
-                            regulator-always-on;
-		};
-	};
-};
+>  .../bindings/clock/renesas,rcar-gen2-cpg-clocks.txt           | 2 +-
 
-Tree: linux-next
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- drivers/mfd/tps6105x.c | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+Please note this file is no longer present in next.
+But robh/for-next still has it.
 
-diff --git a/drivers/mfd/tps6105x.c b/drivers/mfd/tps6105x.c
-index 6ac3607a79c2..c906324d293e 100644
---- a/drivers/mfd/tps6105x.c
-+++ b/drivers/mfd/tps6105x.c
-@@ -91,6 +91,32 @@ static int tps6105x_add_device(struct tps6105x *tps6105x,
- 			       PLATFORM_DEVID_AUTO, cell, 1, NULL, 0, NULL);
- }
- 
-+static struct tps6105x_platform_data *tps6105x_parse_dt(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct tps6105x_platform_data *pdata;
-+	struct device_node *child;
-+
-+	if (!np)
-+		return ERR_PTR(-EINVAL);
-+	if (of_get_available_child_count(np) > 1) {
-+		dev_err(dev, "cannot support multiple operational modes");
-+		return ERR_PTR(-EINVAL);
-+	}
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+	pdata->mode = TPS6105X_MODE_SHUTDOWN;
-+	for_each_available_child_of_node(np, child) {
-+		if (child->name && !of_node_cmp(child->name, "regulator"))
-+			pdata->mode = TPS6105X_MODE_VOLTAGE;
-+		else if (child->name && !of_node_cmp(child->name, "led"))
-+			pdata->mode = TPS6105X_MODE_TORCH;
-+	}
-+
-+	return pdata;
-+}
-+
- static int tps6105x_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -99,9 +125,11 @@ static int tps6105x_probe(struct i2c_client *client,
- 	int ret;
- 
- 	pdata = dev_get_platdata(&client->dev);
--	if (!pdata) {
--		dev_err(&client->dev, "missing platform data\n");
--		return -ENODEV;
-+	if (!pdata)
-+		pdata = tps6105x_parse_dt(&client->dev);
-+	if (IS_ERR(pdata)) {
-+		dev_err(&client->dev, "No platform data or DT found");
-+		return PTR_ERR(pdata);
- 	}
- 
- 	tps6105x = devm_kmalloc(&client->dev, sizeof(*tps6105x), GFP_KERNEL);
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
