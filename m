@@ -2,171 +2,111 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4008DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DC3C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1777520872
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A2820692
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T79AY6oC"
+	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="cwmy2wB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbfKSF6i (ORCPT
+        id S1727109AbfKSGOp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:58:38 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46885 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731164AbfKSFtF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 00:49:05 -0500
-Received: by mail-pg1-f193.google.com with SMTP id r18so10769194pgu.13
-        for <devicetree@vger.kernel.org>; Mon, 18 Nov 2019 21:49:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7OLkh5H/ucrzGh1Q5+S7PwZCVoMIrIc0kVwMB4oywiY=;
-        b=T79AY6oCrcY9WkARAR7g/vMcApkFufxFzSkYgKFVG58CkLC1gyMOK9RpUVuHOzLN9V
-         UuUQbtcRVeh0oZbSGc/N2TZubqVgmPQbg+73q//z1IclKQSvUgmkmJTT+uTLSgst3OxE
-         BKJEMKrHvTJW6p993n/SDnzcBFpFe+aZz0UoEos+Qu+kZNlJa+hJWqX3BDbI01vGZ/F4
-         ll1047nAJQBf7Q9/pk/72wMVV3EfsekmiW1t0VKX0UFmNNdmobNqXFY0WRC9YKvMrxfy
-         JG6PL0/QGnWypkuEXvbzHZ1YJxUtdLgPM8KcxuTgWKh8bPlRDh/ulakfOvfz11v0Re/9
-         OK1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7OLkh5H/ucrzGh1Q5+S7PwZCVoMIrIc0kVwMB4oywiY=;
-        b=grVoctezNIiXHtWXhRtcn1korhNhYOwNgoWVQYv8PiWOzkworZ46s/KtTYKSAbN/rv
-         B1CyE9iHvvce/79e0uJiXNKvTn3YkIuz4XuUn1zQVSM14cCK6FdPUdY7yCCKvKY2tJvK
-         LFB+diEiWl3ACxHRFoEYGMEGLJO901lrse1WbJHF0MVyO2x1HYkP3rgn1F6YqvgZOOqw
-         BWg8ZyDHZ+ymfzUx0bUjV4INhDV/zopAMEedE6uy8N1OFhewLUs6LmgYEHu0h+fXxb5a
-         8pMz0wgR559aUn9Bd6oHe/8d8qRRN5WYQqVsbtBAwDvK67fThmta1ymQAiBt2iOpEeEc
-         zzLg==
-X-Gm-Message-State: APjAAAWCcpDTp0hHcigRiTwS8rWmYiCwv1FpbGylqwPTzv4us15J5yeq
-        flMm6pXNV9diu5Bjz6u+ETdsVA==
-X-Google-Smtp-Source: APXvYqzSv72HWYX9/l0aZSvtiLQMSrYlS422iAg/YV7tQl3rYW8UQlPAgnqgdjjuFBx37ipGmPSzbw==
-X-Received: by 2002:a63:4961:: with SMTP id y33mr3649995pgk.264.1574142544341;
-        Mon, 18 Nov 2019 21:49:04 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x21sm22210789pfi.122.2019.11.18.21.49.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 21:49:03 -0800 (PST)
-Date:   Mon, 18 Nov 2019 21:49:00 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH 2/3] dt-bindings: soc: qcom: apr: Add protection domain
- bindings
-Message-ID: <20191119054900.GD18024@yoga>
-References: <20191118142728.30187-1-sibis@codeaurora.org>
- <0101016e7ee9c786-fcf80f4e-9b57-4d6b-8806-9ca408e21b55-000000@us-west-2.amazonses.com>
+        Tue, 19 Nov 2019 01:14:45 -0500
+Received: from sender4-of-o58.zoho.com ([136.143.188.58]:21825 "EHLO
+        sender4-of-o58.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfKSGOp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 01:14:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574144058; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=FDZb191bVzzsmEhPHuSDRaaVt7KFIt6KQmswEHW57HA+Cvb8V+jTzRidED3Tjz7Xm96HWmBJ7KUDXQFl/wjoCpoaPSqhcNZQRr+QI1U97jojCKx5XpR+c1FKu2C/BpuLbqkIk0+59jlaUXPiT8tqqwLVOT0XK8sQTd8miJsEwcc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574144058; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=c7L5ybwI41MQuUShcRtA57Ge+Ip1hk0Hb3ub23HMqaQ=; 
+        b=EVXnrACu/oK4Kz7ddwHdXs5N6VnpFcWRdQG9wf0BHjbCuxoDJM7S4BjU6QO8iYXtX681eQb1ErHkAvTEanYfEATZCIxq1Wkgi6i04HB+ajTd5RHK+VyHNi62Sfs6BEwZqyDs6yUQcFAUFTfV0iDJqtna60s3e/2DS9IpQH8AMpo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=brennan.io;
+        spf=pass  smtp.mailfrom=stephen@brennan.io;
+        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574144058;
+        s=selector01; d=brennan.io; i=stephen@brennan.io;
+        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        l=1186; bh=c7L5ybwI41MQuUShcRtA57Ge+Ip1hk0Hb3ub23HMqaQ=;
+        b=cwmy2wB55tgQXK/vQOWlD0swe4jSvp7d9+e6rK8Bvpfqq1lWyISr2Q+caX1K0uKJ
+        iN4iRAVa+khnM2t8o0YWkT58iS9CLOjGLSYm89a2+NqqcvA+if0BGcX+3P3U22kjJqV
+        gaYUl4LZ9JiVjTQYu9Gxf29gt7KjG/K0mdCxuxT0=
+Received: from localhost (195.173.24.136.in-addr.arpa [136.24.173.195]) by mx.zohomail.com
+        with SMTPS id 1574144058311185.86846931854632; Mon, 18 Nov 2019 22:14:18 -0800 (PST)
+From:   Stephen Brennan <stephen@brennan.io>
+To:     stephen@brennan.io
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+Message-ID: <20191119061407.69911-1-stephen@brennan.io>
+Subject: [PATCH v2 0/3] Raspberry Pi 4 HWRNG Support
+Date:   Mon, 18 Nov 2019 22:14:04 -0800
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016e7ee9c786-fcf80f4e-9b57-4d6b-8806-9ca408e21b55-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 18 Nov 06:28 PST 2019, Sibi Sankar wrote:
+This patch series enables support for the HWRNG included on the Raspberry
+Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
+tested this out on a Pi 4.  Prior to this patch series, attempting to use
+the hwrng gives:
 
-> Add optional "qcom,protection-domain" bindings for APR services. This
-> helps to capture the dependencies between APR services and the PD on
-> which each apr service run.
-> 
+    $ head -c 2 /dev/hwrng
+    head: /dev/hwrng: Input/output error
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+After this series, the same command gives two random bytes.
 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> index db501269f47b8..f87c0b2a48de4 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> @@ -45,6 +45,12 @@ by the individual bindings for the specific service
->  			12 - Ultrasound stream manager.
->  			13 - Listen stream manager.
->  
-> +- qcom,protection-domain
-> +	Usage: optional
-> +	Value type: <stringlist>
-> +	Definition: Must list the protection domain service name and path
-> +		    that the particular apr service has a dependency on.
-> +
->  = EXAMPLE
->  The following example represents a QDSP based sound card on a MSM8996 device
->  which uses apr as communication between Apps and QDSP.
-> @@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
->  			...
->  		};
->  	};
-> +
-> += EXAMPLE 2
-> +The following example represents a QDSP based sound card on SDM845 device.
-> +Here the apr services are dependent on "avs/audio" service running on AUDIO
-> +Protection Domain hosted on ADSP remote processor.
-> +
-> +	apr {
-> +		compatible = "qcom,apr-v2";
-> +		qcom,glink-channels = "apr_audio_svc";
-> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
-> +
-> +		q6core {
-> +			compatible = "qcom,q6core";
-> +			reg = <APR_SVC_ADSP_CORE>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +		};
-> +
-> +		q6afe: q6afe {
-> +			compatible = "qcom,q6afe";
-> +			reg = <APR_SVC_AFE>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6afedai: dais {
-> +				compatible = "qcom,q6afe-dais";
-> +				#sound-dai-cells = <1>;
-> +
-> +				qi2s@22 {
-> +					reg = <22>;
-> +					qcom,sd-lines = <3>;
-> +				};
-> +			};
-> +		};
-> +
-> +		q6asm: q6asm {
-> +			compatible = "qcom,q6asm";
-> +			reg = <APR_SVC_ASM>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6asmdai: dais {
-> +				compatible = "qcom,q6asm-dais";
-> +				#sound-dai-cells = <1>;
-> +				iommus = <&apps_smmu 0x1821 0x0>;
-> +			};
-> +		};
-> +
-> +		q6adm: q6adm {
-> +			compatible = "qcom,q6adm";
-> +			reg = <APR_SVC_ADM>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6routing: routing {
-> +				compatible = "qcom,q6adm-routing";
-> +				#sound-dai-cells = <0>;
-> +			};
-> +		};
-> +	};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Changes in v2:
+- specify the correct size for the region in the dts, refactor bcm283x rng
+
+---
+
+Stefan Wahren (2):
+  dt-bindings: rng: add BCM2711 RNG compatible
+  hwrng: iproc-rng200: Add support for BCM2711
+
+Stephen Brennan (1):
+  ARM: dts: bcm2711: Enable HWRNG support
+
+ .../devicetree/bindings/rng/brcm,iproc-rng200.txt     |  1 +
+ arch/arm/boot/dts/bcm2711.dtsi                        |  6 +++---
+ arch/arm/boot/dts/bcm2835.dtsi                        |  1 +
+ arch/arm/boot/dts/bcm2836.dtsi                        |  1 +
+ arch/arm/boot/dts/bcm2837.dtsi                        |  1 +
+ arch/arm/boot/dts/bcm283x-common.dtsi                 | 11 +++++++++++
+ arch/arm/boot/dts/bcm283x.dtsi                        |  6 ------
+ drivers/char/hw_random/Kconfig                        |  2 +-
+ drivers/char/hw_random/iproc-rng200.c                 |  1 +
+ 9 files changed, 20 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm/boot/dts/bcm283x-common.dtsi
+
+--=20
+2.24.0
+
+
+
