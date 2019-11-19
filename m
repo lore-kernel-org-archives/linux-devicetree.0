@@ -2,279 +2,139 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB93CC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 09:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1EEC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 09:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11F822304
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 09:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B77E222A0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 09:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfKSJfm (ORCPT
+        id S1726962AbfKSJ6Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:35:42 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48824 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfKSJfl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:35:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ACA38AED6;
-        Tue, 19 Nov 2019 09:35:38 +0000 (UTC)
-Message-ID: <6c34f6a1ced09da8e9c1df6347299820947adc0c.camel@suse.de>
-Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: Add bindings for brcmstb's
- PCIe device
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Tue, 19 Nov 2019 10:35:36 +0100
-In-Reply-To: <20191118212312.GA24969@bogus>
-References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
-         <20191112155926.16476-3-nsaenzjulienne@suse.de>
-         <20191118212312.GA24969@bogus>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-HfkeJ3NjhLZryLi7OGNK"
-User-Agent: Evolution 3.34.1 
+        Tue, 19 Nov 2019 04:58:24 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35928 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfKSJ6X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 04:58:23 -0500
+Received: by mail-ot1-f67.google.com with SMTP id f10so17342014oto.3;
+        Tue, 19 Nov 2019 01:58:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R2QfOLQ66mKJM4oqvv+8/7SnafH2D5zzrRD8WOBy5DA=;
+        b=L1Xf8EC5Q4JoXOCzw1uJNx7tPF6TYhUwg32F0prwdYlMC6vPLwRf4Vfwyc/YxXrB3J
+         JR+IRNPw5P4ij9RVyKUdAbWqdJxergZgvW0P1d7r+7X9YLXTN2jeYUr6C6vbH1Dq+Ttb
+         rP2G1BZx7oBnqjUf43a5NtK/665r9sD/cDnHlt1Ss1h+s4AZ24cVRPLvFu5UJ9hnncNq
+         lc+2/s1XEmqOTpjXvLot3fLuv/TAvoloOSKpCyHSdTCJ6FfY/XpwiNThNv5BNyo9snkk
+         mINqcGQPdgEjh4zgXRoDjLP5V4IJP/braHHKgUif9AlEZyRaMCyfSF+nnmTcRdZEd4Bo
+         Vpnw==
+X-Gm-Message-State: APjAAAVWIpmH1QPui5NFopgp44O49lwr2ExvBHLCFRNd0Kpu4p36Atr5
+        3H8KE4FbRx5a2fOzUKVvHBsIurpDwGNhhkWKCTE=
+X-Google-Smtp-Source: APXvYqzXEAB1RN2ztsSPnJrNlveKBRzWXzUVBsrYqaVf7OxCOQc193FoRkJyyExGk2AxheB0N+YhwRziF7J9QuWRKJQ=
+X-Received: by 2002:a9d:5511:: with SMTP id l17mr3048301oth.145.1574157502733;
+ Tue, 19 Nov 2019 01:58:22 -0800 (PST)
 MIME-Version: 1.0
+References: <20191030173216.5993-1-krzk@kernel.org> <20191105194257.GA16066@bogus>
+ <20191114125923.GA3084@kozik-lap> <CAL_JsqJCps_s1OGt2SvPa4uBj9EQp0ZqyeHVw8fMR+rSSVh9ow@mail.gmail.com>
+In-Reply-To: <CAL_JsqJCps_s1OGt2SvPa4uBj9EQp0ZqyeHVw8fMR+rSSVh9ow@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 Nov 2019 10:58:11 +0100
+Message-ID: <CAMuHMdXYg4u1SF+j=doJqaDFw+O61g2th8ppt+CBrez8QAgJRA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: power: Convert Generic Power Domain
+ bindings to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob, Krzysztof,
 
---=-HfkeJ3NjhLZryLi7OGNK
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Nov 14, 2019 at 5:42 PM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Nov 14, 2019 at 6:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > On Tue, Nov 05, 2019 at 01:42:58PM -0600, Rob Herring wrote:
+> > > On Wed, 30 Oct 2019 18:32:15 +0100, Krzysztof Kozlowski wrote:
+> > > > Convert Generic Power Domain bindings to DT schema format using
+> > > > json-schema.
+> > > >
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > > > Acked-by: Stephen Boyd <sboyd@kernel.org>
+> > > >
+> > > > ---
+> > > >
+> > > > Changes since v2:
+> > > > 1. Keep description of consumers in power-domain.txt,
+> > > > 2. Rename power_domain.txt to power-domain.txt,
+> > > > 3. Indent example with four spaces (more readable).
+> > > >
+> > > > Changes since v1:
+> > > > 1. Select all nodes for consumers,
+> > > > 2. Remove from consumers duplicated properties with dt-schema,
+> > > > 3. Fix power domain pattern,
+> > > > 4. Remove unneeded types.
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > > >  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
+> > > >  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
+> > > >  .../bindings/arm/freescale/fsl,scu.txt        |   2 +-
+> > > >  .../bindings/clock/renesas,cpg-mssr.txt       |   2 +-
+> > > >  .../bindings/clock/ti/davinci/psc.txt         |   2 +-
+> > > >  .../firmware/nvidia,tegra186-bpmp.txt         |   2 +-
+> > > >  .../bindings/power/amlogic,meson-gx-pwrc.txt  |   2 +-
+> > > >  .../devicetree/bindings/power/fsl,imx-gpc.txt |   2 +-
+> > > >  .../bindings/power/fsl,imx-gpcv2.txt          |   2 +-
+> > > >  .../{power_domain.txt => power-domain.txt}    |  95 +------------
+> > > >  .../bindings/power/power-domain.yaml          | 133 ++++++++++++++++++
+> > > >  .../bindings/power/renesas,sysc-rmobile.txt   |   2 +-
+> > > >  .../bindings/power/xlnx,zynqmp-genpd.txt      |   2 +-
+> > > >  .../bindings/soc/bcm/brcm,bcm2835-pm.txt      |   2 +-
+> > > >  .../bindings/soc/mediatek/scpsys.txt          |   2 +-
+> > > >  .../bindings/soc/ti/sci-pm-domain.txt         |   2 +-
+> > > >  MAINTAINERS                                   |   2 +-
+> > > >  17 files changed, 149 insertions(+), 109 deletions(-)
+> > > >  rename Documentation/devicetree/bindings/power/{power_domain.txt => power-domain.txt} (51%)
+> > > >  create mode 100644 Documentation/devicetree/bindings/power/power-domain.yaml
+> > > >
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > The patches should apply cleanly in top of your tree so maybe you can
+> > pick them up?
+>
+> I didn't on this one because it touches a lot of files. Though on
+> second thought, they are all across the tree, so I might as well apply
+> them.
 
-Hi Rob, thanks for the review.
-
-On Mon, 2019-11-18 at 15:23 -0600, Rob Herring wrote:
-> On Tue, Nov 12, 2019 at 04:59:21PM +0100, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
-> >=20
-> > The DT bindings description of the brcmstb PCIe device is described.
-> > This node can only be used for now on the Raspberry Pi 4.
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >=20
-> > ---
-> >=20
-> > Changes since v1:
-> >   - Fix commit Subject
-> >   - Remove linux,pci-domain
-> >=20
-> > This was based on Jim's original submission[1], converted to yaml and
-> > adapted to the RPi4 case.
-> >=20
-> > [1] https://patchwork.kernel.org/patch/10605937/
-> >=20
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 110 ++++++++++++++++++
-> >  1 file changed, 110 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
-.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > new file mode 100644
-> > index 000000000000..4cbb18821300
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -0,0 +1,110 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Brcmstb PCIe Host Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > +
->=20
-> I added a common PCI schema to dt-schema. You can reference it here:
->=20
-> allOf:
->   - $ref: /schemas/pci/pci-bus.yaml#
+There are still several leftover references to power_domain.txt.
+Krzysztof: Do you plan to convert these, too, or do you expect the
+individual maintainers to handle that?
 
 Thanks!
 
-> > +properties:
-> > +  compatible:
-> > +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - description: PCIe host controller
-> > +      - description: builtin MSI controller
-> > +
-> > +  interrupt-names:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    items:
-> > +      - const: pcie
-> > +      - const: msi
-> > +
-> > +  "#address-cells":
-> > +    const: 3
-> > +
-> > +  "#size-cells":
-> > +    const: 2
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 1
-> > +
-> > +  interrupt-map-mask: true
-> > +
-> > +  interrupt-map: true
->=20
-> Drop all these as the pci-bus.yaml will cover them.
+Gr{oetje,eeting}s,
 
-OK
+                        Geert
 
-> > +
-> > +  ranges: true
->=20
-> Do you know many entries, if not, you can drop it too?
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-As this is only aimed at the RPi4's controller we know. Only one for now, s=
-ame
-for dma-ranges.
-
-> > +
-> > +  dma-ranges: true
->=20
-> Do you know many entries, if not, you can drop it too?
->=20
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: sw_pcie
-> > +
-> > +  msi-controller:
-> > +    description: Identifies the node as an MSI controller.
-> > +    type: boolean
-> > +
-> > +  msi-parent:
-> > +    description: MSI controller the device is capable of using.
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
->=20
-> Assume these 2 have a type defined.
-
-Ok
-
-> > +
-> > +  brcm,enable-ssc:
-> > +    description: Indicates usage of spread-spectrum clocking.
-> > +    type: boolean
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - "#interrupt-cells"
-> > +  - interrupt-map-mask
-> > +  - interrupt-map
-> > +  - ranges
-> > +  - dma-ranges
->=20
-> You can drop ranges, #address-cells and #size-cells as they are required=
-=20
-> in pci-bus.yaml.
->=20
-> Shouldn't interrupts, interrupt-names, and msi-controller all be=20
-> required?
-
-Agree, I've have doubts with msi-controller, but I guess the HW is still a
-msi-controller regardless of whether you use it so it reasonable to require=
- it.
-
-> > +
-> > +additionalProperties: false
->=20
-> This won't work having the commmon binding, but=20
-> 'unevaluatedProperties: false' will (eventually when json-schema draft8=
-=20
-> is supported).=20
-
-I'll change it.
-
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    scb {
-> > +            #address-cells =3D <2>;
-> > +            #size-cells =3D <1>;
-> > +            pcie0: pcie@7d500000 {
-> > +                    compatible =3D "brcm,bcm2711-pcie";
-> > +                    reg =3D <0x0 0x7d500000 0x9310>;
-> > +                    #address-cells =3D <3>;
-> > +                    #size-cells =3D <2>;
-> > +                    #interrupt-cells =3D <1>;
-> > +                    interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> > +                    interrupt-names =3D "pcie", "msi";
-> > +                    interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
-> > +                    interrupt-map =3D <0 0 0 1 &gicv2 GIC_SPI 143
-> > IRQ_TYPE_LEVEL_HIGH
-> > +                                     0 0 0 2 &gicv2 GIC_SPI 144
-> > IRQ_TYPE_LEVEL_HIGH
-> > +                                     0 0 0 3 &gicv2 GIC_SPI 145
-> > IRQ_TYPE_LEVEL_HIGH
-> > +                                     0 0 0 4 &gicv2 GIC_SPI 146
-> > IRQ_TYPE_LEVEL_HIGH>;
->=20
-> Bracket each entry. The schema is making this stricter.
-
-Noted.
-
-Regards,
-Nicolas
-
-
---=-HfkeJ3NjhLZryLi7OGNK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3Tt2gACgkQlfZmHno8
-x/50EQgAmflpS28ePnEFFCis1DjTQmqx6Z2FULtBjfe+6Xvf7jlf1mGpi3PICER8
-6BliLBP0OHeUYiwTGbYKRyaiFP4YsiCnLtzCcI5Dq994a/1oE2/MiLWUzlCX8uFk
-DYgnneZq/kY1qNBOSLFWr9hofr2gUjG5FYsJK93hbzWNCV7xiMccDNtVRPT4TG3h
-17rpSNC8tGbwVf2F+7XNWJXu8cAQM0toRozYMaiQ8kaTWxJQisdDdQm4YQaaG8jP
-0qmyi0DIVIt8rzNPwvntvXcA90VmHg4ZOJxuao8q5sehD7FeHjy+nBFpt4i13dy0
-bGb/tpgkotPmfLtoAgMlE0wivTAmmQ==
-=AyEr
------END PGP SIGNATURE-----
-
---=-HfkeJ3NjhLZryLi7OGNK--
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
