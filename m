@@ -2,117 +2,117 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5160C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E53C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BE421D7B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:40:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mLOdS0dX";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="LBrMfl4h"
+	by mail.kernel.org (Postfix) with ESMTP id C8778208CC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfKSMk7 (ORCPT
+        id S1727884AbfKSM4F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:40:59 -0500
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:36250
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbfKSMk7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:40:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574167257;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=CEhdhlN+M1OpAxIH/yMj19nrltuBHW5P13jllfaEM2s=;
-        b=mLOdS0dXbzUa+uX0R/zereNz9q7MmiC6XbuSA4SDhW8YZfJ6tYJ5OB+o3xIvzskf
-        9jOOQ0mrBuZ83orFXlon1SuZ3ERwQQ8TZe3xN2KEKLs63O4M0DEjq4+2uAFJd7dUXVb
-        XPO+D71/lymMwfaUYGdlk4oLTUDHv9I8rbdQ/db8=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574167257;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=CEhdhlN+M1OpAxIH/yMj19nrltuBHW5P13jllfaEM2s=;
-        b=LBrMfl4hZtt/1kyZzzfdG/56L+NfPWasqDltYDL6JXxHCD4wEvq5KtVlqkdVz2XC
-        JDyV6ObB0Z+migTZEg4UC+PgLWxnqgR14k/+nZbtfgTI1ixIu+50Y8HK8u3H8E0sxnQ
-        qKEj4GJz4fo+4sLsNf9zZKl97v4kYzg4AVjujMDI=
+        Tue, 19 Nov 2019 07:56:05 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48626 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfKSM4F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 07:56:05 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id B8E32290BBA
+Message-ID: <4135d35cd581b31d08b547852ac43e959957abf5.camel@collabora.com>
+Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for
+ rkisp1 meta buffer format
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jacob Chen <jacobchen110@gmail.com>,
+        Helen Koike <helen.koike@collabora.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        Eddie Cai <eddie.cai.linux@gmail.com>, kernel@collabora.com,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jacob Chen <jacob-chen@rock-chips.com>,
+        gregkh@linuxfoundation.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        =?UTF-8?Q?=E9=92=9F=E4=BB=A5=E5=B4=87?= <zyc@rock-chips.com>,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        robh+dt@kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Date:   Tue, 19 Nov 2019 09:55:51 -0300
+In-Reply-To: <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
+References: <20191114051242.14651-1-helen.koike@collabora.com>
+         <20191114051242.14651-3-helen.koike@collabora.com>
+         <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
+         <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com>
+         <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 19 Nov 2019 12:40:57 +0000
-From:   dhar@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v2] msm: disp: dpu1: add support to access hw irqs regs
- depending on revision
-In-Reply-To: <5dcd8f05.1c69fb81.bdd4.2b0a@mx.google.com>
-References: <1573710976-27551-1-git-send-email-dhar@codeaurora.org>
- <5dcd8f05.1c69fb81.bdd4.2b0a@mx.google.com>
-Message-ID: <0101016e83ae22b5-7a05918b-c1c4-40f1-ae17-5dd36a003c36-000000@us-west-2.amazonses.com>
-X-Sender: dhar@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.19-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-14 22:59, Stephen Boyd wrote:
-> Quoting Shubhashree Dhar (2019-11-13 21:56:16)
->> Current code assumes that all the irqs registers offsets can be
->> accessed in all the hw revisions; this is not the case for some
->> targets that should not access some of the irq registers.
-> 
-> What happens if we read the irq registers that we "should not access"?
-> Does the system reset? It would be easier to make those registers 
-> return
-> 0 when read indicating no interrupt and ignore writes so that 
-> everything
-> keeps working without having to skip registers.
-> 
-In some of the hw revisions, the whole hw block is absent and trying to 
-access those
-registers causes system panic(bus noc error).
+Hello Jacob,
 
->> This change adds the support to selectively remove the irqs that
->> are not supported in some of the hw revisions.
->> 
->> Change-Id: I6052b8237b703a1a9edd53893e04f7bd72223da1
+Thanks for the insight.
+
+On Tue, 2019-11-19 at 18:16 +0800, Jacob Chen wrote:
+> Hi Helen ,
 > 
-> Please remove these before sending upstream.
+> Helen Koike <helen.koike@collabora.com> 于2019年11月14日周四 下午6:59写道：
+> > 
+> > 
+> > On 11/14/19 6:21 AM, Hans Verkuil wrote:
+> > > On 11/14/19 6:12 AM, Helen Koike wrote:
+> > > > From: Jacob Chen <jacob2.chen@rock-chips.com>
+> > > > 
+> > > > This commit add document for rkisp1 meta buffer format
+> > > > 
+> > > > Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
+> > > > [refactored for upstream]
+> > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > > 
+> > > checkpatch gives me:
+> > > 
+> > > WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob Chen <jacob2.chen@rock-chips.com>'
+> > > 
+> > > Looking at this series I see duplicate Signed-off-by entries for Jacob Chen and a total
+> > > of three different email addresses:
+> > > 
+> > > jacob2.chen@rock-chips.com
+> > > jacob-chen@rock-chips.com
+> > > cc@rock-chips.com
+> > 
+> > And I see a name in the Maintainers file as Jacob Chen <jacob-chen@iotwrt.com>.
+> > I was wondering if I could replace the email by jacob-chen@iotwrt.com, or if I should
+> > keep the original ones.
+> > 
+> > Helen
+> > 
 > 
->> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
->> ---
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    |  1 +
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |  3 +++
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c | 22 
->> +++++++++++++++++-----
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h |  1 +
->>  4 files changed, 22 insertions(+), 5 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h 
->> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
->> index ec76b868..def8a3f 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
->> @@ -646,6 +646,7 @@ struct dpu_perf_cfg {
->>   * @dma_formats        Supported formats for dma pipe
->>   * @cursor_formats     Supported formats for cursor pipe
->>   * @vig_formats        Supported formats for vig pipe
->> + * @mdss_irqs          Bitmap with the irqs supported by the target
+> "jacob2.chen@rock-chips.com"/"jacob-chen@rock-chips.com" is me and
+> "cc@rock-chips.com" is another one.
+> ' jacob-chen@rock-chips.com' is invalid now,  so you could replace the
+> email by 'jacob-chen@iotwrt.com'.
 > 
-> Hmm pretty sure there needs to be a colon so that kernel-doc can match
-> this but maybe I'm wrong.
-> 
->>   */
->>  struct dpu_mdss_cfg {
->>         u32 hwversion;
+
+Authorship and SOB can't be changed freely, the original must be retained,
+because this gives proper credit to the company that sponsored the work.
+
+I.e. if your mail used to be jacob2.chen at rock-chips.com, then I think
+we can use that. And if cc at rock-chips.com is a different engineer,
+also named Jacob Chen, perhaps we can mention that somewhere to reduce the
+confusion.
+
+Thanks,
+Ezequiel
+
