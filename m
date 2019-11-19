@@ -2,102 +2,137 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542A7C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8A2C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C292230F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38051223BF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:42:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rDYaNUkK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbfKSQA0 (ORCPT
+        id S1727299AbfKSQmD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:00:26 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46179 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbfKSQA0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 11:00:26 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n14so19350085oie.13;
-        Tue, 19 Nov 2019 08:00:23 -0800 (PST)
+        Tue, 19 Nov 2019 11:42:03 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34872 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfKSQmD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 11:42:03 -0500
+Received: by mail-oi1-f194.google.com with SMTP id n16so19548697oig.2
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 08:42:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=A85TSNGm7K+RaBadsnUIp68Z/l71MMMOUNnCgewKA6o=;
+        b=rDYaNUkKwdtjQmvpcam2qztShQlW76Pc8zjxt/wXQAa+sN+7wq1ibiMHNVLaCA5xiG
+         bDiZxs2feFBg8/bmAz8uQd79vrNhEtMpym5aj9KMJIMWiUbScrYVkXVn8Ko3wJHaevUC
+         57WQYZC7Y5g56OuhbCzkpK3MyK2eHC5PnsNsA5V4R//hrCitv/yC/2ovRGLZgO1jhw3g
+         lMw/+8NGpmZQ32Wf64BJ/vKH8kNESrNTR7OkUBdH/B13nEqEwy1lG84J/mz9w5T7ye8X
+         G+lk2Aro1GziU8QmVGglBsE3fXSg8HtAQoVoJhIhFy/gI+GCTaqffAOpAYTYFs5+otuf
+         Lb4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lOp09REXBJlIhxRQLG3yF3pkOzVMqVXKGYr5zOkYKTU=;
-        b=tvirj1n2/8raLM1mnIsqp2gtwTG5uKIyP1xLwQY0vY3qjRyRnMTQn215elCAXasSfy
-         WSyp8Uwl85PcYNgWjZwZCCdkqTskSJ7Rg1xm3satC2WKj3DCWtIcVjDP0SHl9JfadCE7
-         iQzb2KSMDGkLqXoZ4QACKQLtKY3Q7Mxtk0GCW53GI6ZE3T4ApWiG6V6gSuFNhNyUc/Zb
-         0a/IjQe5z6lDgHz8T0LrFt3P57rYJKyytp5fk+au0tF9Mz2CIDBpgZN0BPu/OZv7iZxX
-         Rt8K5H761gL0OeumSjzBiNg5XjPK7ROO/j9j68puMeduawUwkVi0Ii3t4994/lK3JRSY
-         QfEg==
-X-Gm-Message-State: APjAAAU8JKYPSL1ZgPixnZpQwmt6hecZN3aEXOBQkZEKuEurNgWD71f2
-        JpBl0Ntpex8oGGzdJhPHeyLiWU3wsUy5mfxGH/g=
-X-Google-Smtp-Source: APXvYqyFjVcr3DV/kDkPHFaPjGoNOAPUlx3qgBTMVdhzS/Ov2hib4acxOvn1dSc2R4bN1wN/M0QqvauTflblBxgZCm8=
-X-Received: by 2002:aca:fc92:: with SMTP id a140mr4573964oii.153.1574179223502;
- Tue, 19 Nov 2019 08:00:23 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=A85TSNGm7K+RaBadsnUIp68Z/l71MMMOUNnCgewKA6o=;
+        b=tTZrANamlFNmw/kRx+gj6ePBEhl8qOmRGY+xTLukrUHM/vKb1yeSmRXu/3AzDEeNuu
+         wsn4r68xq/gH82EnQQO3NtnyyfJ4/9UmAxt5b9OJja1y9COaQLRT67ZehuroqwNJh0Hg
+         qdbtK5GIGN2LHuPQKUvU5SXW4zGWtAvIOkmrY3UQRVyeLky4PbO0GFUaZCvIJDgFAoBf
+         Lsa4+Gx3btmQDcQMLxu3XflmMd/5SuFX4Ew6ey+YcDvuwpPr4VJ1pCJ9VmYzwfPD7ccw
+         TT9qfOzsQkmPQvwwNXegzMdh6PQwxWw5TvZTsWylLLKSBjuSwTCixdcv15GOb+eoHZP3
+         FnqA==
+X-Gm-Message-State: APjAAAWyuso+hVW9oWTroUq/7rFBuIO4mUzn4YPyZRxA5isQYs5hcSVJ
+        JjFUIxGBPrsSbKgMIq6yWEpgpt8YKWEjbax0KGVqzQ==
+X-Google-Smtp-Source: APXvYqx7cskxLkBBXBA7knh9DkcCJarVIobwkve0fLSrrww5YHLowJhAvBe1oJj6wFqp95kT/WCRIqkTRDLrTMPc5L0=
+X-Received: by 2002:a05:6808:9a1:: with SMTP id e1mr5012423oig.175.1574181722495;
+ Tue, 19 Nov 2019 08:42:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20191119144315.11261-1-krzk@kernel.org>
-In-Reply-To: <20191119144315.11261-1-krzk@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 19 Nov 2019 17:00:05 +0100
-Message-ID: <CAMuHMdUnn8uYyQ+D=6rp1+R1sE_W-SS1t+EuNHm=vWaKQ9Z6tQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: power: Fix path to power-domain.txt bindings
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        etnaviv@lists.freedesktop.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+ <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+ <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com> <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
+In-Reply-To: <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 19 Nov 2019 17:41:51 +0100
+Message-ID: <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Yash Shah <yash.shah@sifive.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-On Tue, Nov 19, 2019 at 3:43 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> With split of power domain controller bindings to power-domain.yaml, the
-> consumer part was renamed to power-domain.txt.  Update the references in
-> other bindings.
+wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
 >
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: abb4805e343a ("dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=82=
+(a):
+>
+> > > As suggested in the comments received on the RFC version of this patc=
+h[0], I am trying to use regmap MMIO by looking at gpio-mvebu.c. I got your=
+ point regarding the usage of own locks is not making any sense.
+> > > Here is what I will do in v2:
+> > > 1. drop the usage of own locks
+> > > 2. consistently use regmap_* apis for register access (replace all io=
+writes).
+> > > Does this make sense now?
+> >
+> > The thing is: the gpio-mmio code you're (correctly) reusing uses a
+> > different lock - namely: bgpio_lock in struct gpio_chip. If you want
+> > to use regmap for register operations, then you need to set
+> > disable_locking in regmap_config to true and then take this lock
+> > manually on every access.
+>
+> Is it really so? The bgpio_lock does protect the registers used
+> by regmap-mmio but unless the interrupt code is also using the
+> same registers it is fine to have a different lock for those.
+>
+> Is the interrupt code really poking into the very same registers
+> as passed to bgpio_init()?
+>
+> Of course it could be seen as a bit dirty to poke around in the
+> same memory space with regmap and the bgpio_* accessors
+> but in practice it's no problem if they never touch the same
+> things.
+>
+> Yours,
+> Linus Walleij
 
-Thanks for your patch!
+I'm wondering if it won't cause any inconsistencies when for example
+interrupts are being triggered on input lines while we're also reading
+their values? Seems to me it's just more clear to use a single lock
+for a register range. Most drivers using gpio-mmio do just that in
+their irq-related routines.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Anyway: even without using bgpio_lock this code is inconsistent: if
+we're using regmap for interrupt registers, we should either decide to
+rely on locking provided by regmap or disable it and use a locally
+defined lock. Also: if we're using regmap, then let's use it
+everywhere, not only when it's convenient for updating registers.
 
->  .../bindings/clock/renesas,rcar-gen2-cpg-clocks.txt           | 2 +-
-
-Please note this file is no longer present in next.
-But robh/for-next still has it.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bart
