@@ -2,120 +2,101 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6B4C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4960C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60401222A0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ghhb7CWn"
+	by mail.kernel.org (Postfix) with ESMTP id A67F820718
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfKSPDK (ORCPT
+        id S1727979AbfKSPO2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:03:10 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46183 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfKSPDJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:03:09 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e9so23681535ljp.13
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 07:03:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PbOCer/DbEIDkV9HM4Ua32e1t8DBngr+pDXysIFGRg8=;
-        b=ghhb7CWnwNxAbrzbSuXvrfTWrUaikmjOuxcxbZzhekhweUFV9we26m0KktjuUT12cy
-         DozWtpM03n61uITyiCInX3tY4YBxpKlEOG2nSGKyK5N9nZYuhQI7I8nlgr7v9u4WTAiC
-         azEp+p7C9AEL7DBegmAPPbrND76N9Jjf0OWzfEkUmTdIa55WHk3ybiz29nshZn4Gtits
-         Bc0GjA0BnNBYKZpWPx7MQIa9cxGUQeloQ3M7jYsv2LvZQFDeLGf0L2qUnJTskweJCjCu
-         156mBCrJ72nFj2G7luKBxfO5xwCFDuJ3NdbRLreV7CtFnrHx/itCksfMS1Fxmfo83llm
-         eq1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PbOCer/DbEIDkV9HM4Ua32e1t8DBngr+pDXysIFGRg8=;
-        b=uDfznCOVHjJ1wZvo/80F0G5PyiINZzD5Lo1/ieeFQkXsWctowFBwppJUJZ0W4SmegG
-         m5S45ZpPG1CYADZNZgkKQzL8pOzYLVGKX7n9W/osu8B46aZaJSloi/shUugkmBRVZ2cV
-         xL2AgUaUdEwmVRpogEdl2DPcNfTN6Id3rvyfGrjbuuad7Ku3toOuaB+GynWkpB/CnsLI
-         RpFe9/FxY8621NPOfNjwTmEu/CrujN6/DdowSvO3Pldc8X0Fvg/8QM5x4ipky6Wrdfdp
-         WAzKf8apUB2LKHM4+wPBOb1erTGZmidQMfhOHS70DOHWOsYUVcIqUZHoLhY3aEM2xyMb
-         mMoA==
-X-Gm-Message-State: APjAAAVl1AJE76osux2fmM0z2HRTLm3nly58wsjhaqDYTaB5Wv6Wbyo9
-        eo485f2T9Adh3XEpigy2hu5EtKKiMotxgG1BUlvj3Q==
-X-Google-Smtp-Source: APXvYqxK4BLaj4M+k3bwc7DPGWsPytu2MBOD+HBWoGml8EjxWn/fiVfiTHJU/tL8gTg0U5x+X6BHUCC0vamRMq4wY+M=
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr4384572lji.218.1574175787982;
- Tue, 19 Nov 2019 07:03:07 -0800 (PST)
+        Tue, 19 Nov 2019 10:14:28 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:46570 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727124AbfKSPO2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:14:28 -0500
+Received: (qmail 1559 invoked by uid 2102); 19 Nov 2019 10:14:27 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 19 Nov 2019 10:14:27 -0500
+Date:   Tue, 19 Nov 2019 10:14:27 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Ikjoon Jang <ikjn@chromium.org>
+cc:     linux-usb@vger.kernel.org, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Johan Hovold <johan@kernel.org>,
+        Nicolas Boitchat <drinkcat@chromium.org>
+Subject: Re: [PATCH 0/2] usb: override hub device bInterval with device node
+In-Reply-To: <CAATdQgBPrk=obCOiMAe1zAoP1As21MuzGzn-ixU56EmSkdQr1w@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1911191008440.1506-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
- <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
- <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
- <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Nov 2019 16:02:56 +0100
-Message-ID: <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
-Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=82(a=
-):
+On Tue, 19 Nov 2019, Ikjoon Jang wrote:
 
-> > As suggested in the comments received on the RFC version of this patch[=
-0], I am trying to use regmap MMIO by looking at gpio-mvebu.c. I got your p=
-oint regarding the usage of own locks is not making any sense.
-> > Here is what I will do in v2:
-> > 1. drop the usage of own locks
-> > 2. consistently use regmap_* apis for register access (replace all iowr=
-ites).
-> > Does this make sense now?
->
-> The thing is: the gpio-mmio code you're (correctly) reusing uses a
-> different lock - namely: bgpio_lock in struct gpio_chip. If you want
-> to use regmap for register operations, then you need to set
-> disable_locking in regmap_config to true and then take this lock
-> manually on every access.
+> On Sun, Nov 17, 2019 at 11:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Sun, 17 Nov 2019, Ikjoon Jang wrote:
+> >
+> > > This patchset enables hard wired hub device to use different bInterval
+> > > from its descriptor when the hub has a combined device node.
+> > >
+> > > When we know the specific hard wired hub supports changing its polling
+> > > interval, we can adjust hub's interval to reduce the time of waking up
+> > > from autosuspend or connect detection of HIDs.
+> >
+> > In fact, _all_ hubs support changing the polling interval.  The value
+> > given in the USB spec is just an upper limit; any smaller value is
+> > equally acceptable.
+> >
+> > So why are you doing this only for hard-wired hubs?  Why not for all
+> > hubs?
+> 
+> Because we only want to apply it to a specific device instance under
+> our control.
 
-Is it really so? The bgpio_lock does protect the registers used
-by regmap-mmio but unless the interrupt code is also using the
-same registers it is fine to have a different lock for those.
+Why?  What's so special about that device instance?
 
-Is the interrupt code really poking into the very same registers
-as passed to bgpio_init()?
+For example, why not instead have a poll_interval sysfs attribute for
+all hubs that can be written from userspace?  Then people could reduce
+the autoresume latency for any device they want.
 
-Of course it could be seen as a bit dirty to poke around in the
-same memory space with regmap and the bgpio_* accessors
-but in practice it's no problem if they never touch the same
-things.
+> We apply autosuspend to built-in touchpad device for power savings,
+> 
+> Users can attach external hub devices with same VID:PID that we don't want to
+> change the behavior.
 
-Yours,
-Linus Walleij
+Why don't you want to change the behavior?  Or allow the user to change 
+the behavior?
+
+>  Maybe disabling autosuspend for external HIDs
+> can be more reasonable for that case?
+
+If it makes sense to to save power for your built-in touchpad device, 
+why doesn't it also make sense to save power for other external HIDs?
+
+> > And is 250 ms really too long to wait for remote wakeup or connect
+> > detection?  What's the real motivation behind this change?
+> 
+> When a user starts to move the cursor while touchpad is in autosuspend state,
+> It takes more than >250ms (worst case can be >500ms) to wake up and response.
+> That makes the cursor stuck for a while and warp to another location suddenly.
+
+All right, that's a good reason.  But doesn't it apply just as well to 
+other devices, not only your built-in touchpad?
+
+Alan Stern
+
