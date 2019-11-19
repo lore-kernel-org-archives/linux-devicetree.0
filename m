@@ -2,182 +2,260 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B68C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EBEC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCDE2245B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:38:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aRQMODDB"
+	by mail.kernel.org (Postfix) with ESMTP id CA2C422448
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574192793;
+	bh=FILH7W2gmzNod8PLm5dsRdEMN4M/VDu3jcpc7dosLCM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VGBGBSU8OAHw0fGfERWtB/jGwWCKVehnGyGqzn8J8xz1l2du7Ahivdj3blPkfwKiB
+	 a1zyAnTPKjHdgWHLpQj5qw3CO1s7v7B47MGrgYfmPnXoMEaZyrGod4pH6qdLhu9rnA
+	 XFzd941CBhopyWtAt4skjJ12fpP6WiT8aSm3ooDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfKSTi6 (ORCPT
+        id S1726620AbfKSTq3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:38:58 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40680 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfKSTi6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 14:38:58 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f3so5169674wmc.5;
-        Tue, 19 Nov 2019 11:38:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zT8W6mEipXKG5axs8jeICTD+RYdN7nx347OTkDMwt4g=;
-        b=aRQMODDBA16W9kB7qk+ABeKTbcLLAJBWnUya5g/TpV813R+3o6uYDKIVi+NR6FW+g6
-         NDdhYLcgJpvi11q621cipft3zu/unfE3TSg8Qu9GwHCeGNphe5JQZn2PTPgCpdolyuka
-         t97IIumkGvytqNE28O+91/h9Op4bNFe3Rf87iMFwscYUdIQ7uChyh/57SDuqBSBeSGez
-         4NBBEABEQbsPGyzy06TFVsM8CHD5uOOdGzBaCnYUKkz5+qajSpiid3ZH+Qfk4/wC1hJE
-         YF56h2Qbj8L8dUrEc8zNYqE2IF8X3UXo1fIRyjSNo39NinDQ2mjMCpiytgj8RoQCHXsz
-         71uw==
+        Tue, 19 Nov 2019 14:46:29 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39133 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfKSTq1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 14:46:27 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v138so20158673oif.6;
+        Tue, 19 Nov 2019 11:46:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zT8W6mEipXKG5axs8jeICTD+RYdN7nx347OTkDMwt4g=;
-        b=Y9Hjesptgks1/acbFJ4bgRz7EbqMzCPm/kzkCVZDLN+E7fuwjlIqausgIWvyvYUMqj
-         btU+Jaau9Bh0F5U8Ms2n+wZ52NZgA5pkZd4byze/8rfegt6hwppYuPrkQX69oO8hylsJ
-         WD0CaT03VflE4xXOQUVNIlOg9623LTpgrF/F/Ir0vB0ufgc7GkaGtqsqiKpOxYd8NH2A
-         ihUdIuv1YtN0/tLW2/5lc0sJRJKsu+Ln818P5hNHnXL1OkWYa40dQ5VlaZpypsNNP6OE
-         /Rq/2erBjN6nLGF/723SVaTbYaJFc/EgFDW1U70rSH26RPp9cz8d1TCdxpweZnW5+lxr
-         lAWg==
-X-Gm-Message-State: APjAAAU+Wx/o7m06SygZpPkr5A3j26VCLOiVL4oA8c6A6YvC5PMiUb+M
-        uqXU3NKzaqeiTU/Kj+Z2+BVf0mQq
-X-Google-Smtp-Source: APXvYqzZUcmlh0zsxOs0q6Os9Fm4KB9xYJA7k2vyMDDqlnHWkOS0tkk8vD5ETwDvuwpqqFd4xHANYA==
-X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr7419492wmm.35.1574192334707;
-        Tue, 19 Nov 2019 11:38:54 -0800 (PST)
-Received: from [192.168.1.19] (chs184.neoplus.adsl.tpnet.pl. [83.31.16.184])
-        by smtp.gmail.com with ESMTPSA id w132sm4558068wma.6.2019.11.19.11.38.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 11:38:54 -0800 (PST)
-Subject: Re: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-References: <20191119154611.29625-1-TheSven73@gmail.com>
- <20191119154611.29625-5-TheSven73@gmail.com>
- <a37d098e-12ea-af2e-22cd-cb5ec2856b6d@ti.com>
- <CAGngYiU_8Obd6jKO9-fukK4K6hYYhFYVSjzxqVxVwwKeCmUkaw@mail.gmail.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b2ea6130-cfce-4d41-0b35-ba076f599402@gmail.com>
-Date:   Tue, 19 Nov 2019 20:38:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kTnf204e4/6v4ZQSg9LcgMx6NRHz1lPy82NiYqgJ+LM=;
+        b=L0Zj1gSQDzksIPb9KCg3jpSEMDKpN5Qo99yWrvrFBwnPq37g+tqhZos7sLvzvaRqAL
+         NwiOEE4c4c2130aXJSMLkRKJ0/gfYtSD28lGSwpom9aNFPC0FZel05XaIdcCuH2csa6C
+         6u0nSPcjvc1RQdmT/YDH1aVwVPe4hECNwzZU5qyfTzVy6DrzNY0ScQ50jwica9FavYQI
+         pEy5ZKDetXw6hOS3sDrdxeSpCw84uhdI0GYRmnzZaprfvYL8k9PkIaX51AE91191PWVS
+         oLw5OIOd5RsZt7uzSP5kA9fsFLF2Cu32AqnHpcBqfU17xyWyLkYZftVELhpjIEYcDHIr
+         ENUg==
+X-Gm-Message-State: APjAAAWFidWC/p9B/kWsiZmFtAqgki3JBGxcsc2ZDAA6/+zGIRLvg0YE
+        79gMLy/kBmGvTpjQ5YAmq3/0wXg=
+X-Google-Smtp-Source: APXvYqx/M0FGJTvZfwP0CyuXu2Or4obsBckJgfC44jHBbCCJ5abAxV1/gIR8RUQCVwNu3STBG8I0cA==
+X-Received: by 2002:a05:6808:9a2:: with SMTP id e2mr5315728oig.123.1574192786813;
+        Tue, 19 Nov 2019 11:46:26 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id j2sm7509614otn.20.2019.11.19.11.46.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 11:46:25 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     linux-leds@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 2/2] dt-bindings: leds: Convert gpio-leds to DT schema
+Date:   Tue, 19 Nov 2019 13:46:23 -0600
+Message-Id: <20191119194623.23854-2-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191119194623.23854-1-robh@kernel.org>
+References: <20191119194623.23854-1-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiU_8Obd6jKO9-fukK4K6hYYhFYVSjzxqVxVwwKeCmUkaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sven,
+Convert the gpio-leds binding to DT schema format.
 
-On 11/19/19 8:03 PM, Sven Van Asbroeck wrote:
-> On Tue, Nov 19, 2019 at 1:37 PM Dan Murphy <dmurphy@ti.com> wrote:
->>
->>> +
->>> +Example (GPIO + led operation):
->> What part of the example is GPIO? Is that the default function?
-> 
-> The gpio function is always available by default.
-> The mfd driver always adds the gpio mfd_cell.
-> But no-one has ever implemented a mfd sub-driver for gpio.
-> 
->>> +
->>> +i2c0 {
->>> +     tps61052@33 {
->>> +             compatible = "ti,tps61052";
->>> +             reg = <0x33>;
->>> +
->>> +             led {
->>> +                     label = "tps-torch";
->>
->> function and color examples?
-> 
-> No function, no colour. This is a simple led control with 8 intensity
-> steps. We use it as a led torch on an industrial device.
+Drop the last example as the node name collides when built, and it doesn't
+add much value.
 
-label DT property was recently deprecated. We now encourage using
-'function' and/or 'color'. Please refer to
-Documentation/devicetree/bindings/leds/common.txt.
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/leds/leds-gpio.txt    | 75 ----------------
+ .../devicetree/bindings/leds/leds-gpio.yaml   | 86 +++++++++++++++++++
+ 2 files changed, 86 insertions(+), 75 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-gpio.yaml
 
+diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Documentation/devicetree/bindings/leds/leds-gpio.txt
+deleted file mode 100644
+index d21281b63d38..000000000000
+--- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
++++ /dev/null
+@@ -1,75 +0,0 @@
+-LEDs connected to GPIO lines
+-
+-Required properties:
+-- compatible : should be "gpio-leds".
+-
+-Each LED is represented as a sub-node of the gpio-leds device.  Each
+-node's name represents the name of the corresponding LED.
+-
+-LED sub-node properties:
+-- gpios :  Should specify the LED's GPIO, see "gpios property" in
+-  Documentation/devicetree/bindings/gpio/gpio.txt.  Active low LEDs should be
+-  indicated using flags in the GPIO specifier.
+-- function :  (optional)
+-  see Documentation/devicetree/bindings/leds/common.txt
+-- color :  (optional)
+-  see Documentation/devicetree/bindings/leds/common.txt
+-- label :  (optional)
+-  see Documentation/devicetree/bindings/leds/common.txt (deprecated)
+-- linux,default-trigger :  (optional)
+-  see Documentation/devicetree/bindings/leds/common.txt
+-- default-state:  (optional) The initial state of the LED.
+-  see Documentation/devicetree/bindings/leds/common.txt
+-- retain-state-suspended: (optional) The suspend state can be retained.Such
+-  as charge-led gpio.
+-- retain-state-shutdown: (optional) Retain the state of the LED on shutdown.
+-  Useful in BMC systems, for example when the BMC is rebooted while the host
+-  remains up.
+-- panic-indicator : (optional)
+-  see Documentation/devicetree/bindings/leds/common.txt
+-
+-Examples:
+-
+-#include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/leds/common.h>
+-
+-leds {
+-	compatible = "gpio-leds";
+-	led0 {
+-		gpios = <&mcu_pio 0 GPIO_ACTIVE_LOW>;
+-		linux,default-trigger = "disk-activity";
+-		function = LED_FUNCTION_DISK;
+-	};
+-
+-	led1 {
+-		gpios = <&mcu_pio 1 GPIO_ACTIVE_HIGH>;
+-		/* Keep LED on if BIOS detected hardware fault */
+-		default-state = "keep";
+-		function = LED_FUNCTION_FAULT;
+-	};
+-};
+-
+-run-control {
+-	compatible = "gpio-leds";
+-	led0 {
+-		gpios = <&mpc8572 6 GPIO_ACTIVE_HIGH>;
+-		color = <LED_COLOR_ID_RED>;
+-		default-state = "off";
+-	};
+-	led1 {
+-		gpios = <&mpc8572 7 GPIO_ACTIVE_HIGH>;
+-		color = <LED_COLOR_ID_GREEN>;
+-		default-state = "on";
+-	};
+-};
+-
+-leds {
+-	compatible = "gpio-leds";
+-
+-	led0 {
+-		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+-		linux,default-trigger = "max8903-charger-charging";
+-		retain-state-suspended;
+-		function = LED_FUNCTION_CHARGE;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.yaml b/Documentation/devicetree/bindings/leds/leds-gpio.yaml
+new file mode 100644
+index 000000000000..0e75b185dd19
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-gpio.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LEDs connected to GPIO lines
++
++maintainers:
++  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
++  - Pavel Machek <pavel@ucw.cz>
++
++description:
++  Each LED is represented as a sub-node of the gpio-leds device.  Each
++  node's name represents the name of the corresponding LED.
++
++properties:
++  compatible:
++    const: gpio-leds
++
++patternProperties:
++  # The first form is preferred, but fall back to just 'led' anywhere in the
++  # node name to at least catch some child nodes.
++  "(^led-[0-9a-f]$|led)":
++    type: object
++
++    allOf:
++      - $ref: common.yaml#
++
++    properties:
++      gpios:
++        maxItems: 1
++
++      retain-state-suspended:
++        description:
++          The suspend state can be retained.Such as charge-led gpio.
++        type: boolean
++
++      retain-state-shutdown:
++        description:
++          Retain the state of the LED on shutdown. Useful in BMC systems, for
++          example when the BMC is rebooted while the host remains up.
++        type: boolean
++
++    required:
++      - gpios
++
++additionalProperties: false
++
++examples:
++  - |
++
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/leds/common.h>
++
++    leds {
++        compatible = "gpio-leds";
++        led-0 {
++            gpios = <&mcu_pio 0 GPIO_ACTIVE_LOW>;
++            linux,default-trigger = "disk-activity";
++            function = LED_FUNCTION_DISK;
++        };
++
++        led-1 {
++            gpios = <&mcu_pio 1 GPIO_ACTIVE_HIGH>;
++            /* Keep LED on if BIOS detected hardware fault */
++            default-state = "keep";
++            function = LED_FUNCTION_FAULT;
++        };
++    };
++
++    run-control {
++        compatible = "gpio-leds";
++        led-0 {
++            gpios = <&mpc8572 6 GPIO_ACTIVE_HIGH>;
++            color = <LED_COLOR_ID_RED>;
++            default-state = "off";
++        };
++        led-1 {
++            gpios = <&mpc8572 7 GPIO_ACTIVE_HIGH>;
++            color = <LED_COLOR_ID_GREEN>;
++            default-state = "on";
++        };
++    };
++
++...
 -- 
-Best regards,
-Jacek Anaszewski
+2.20.1
+
