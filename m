@@ -2,117 +2,127 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E53C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC8C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8778208CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B25222AB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfKSM4F (ORCPT
+        id S1727982AbfKSM5v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:56:05 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48626 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKSM4F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 07:56:05 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id B8E32290BBA
-Message-ID: <4135d35cd581b31d08b547852ac43e959957abf5.camel@collabora.com>
-Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for
- rkisp1 meta buffer format
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jacob Chen <jacobchen110@gmail.com>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        Eddie Cai <eddie.cai.linux@gmail.com>, kernel@collabora.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jacob Chen <jacob-chen@rock-chips.com>,
-        gregkh@linuxfoundation.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?UTF-8?Q?=E9=92=9F=E4=BB=A5=E5=B4=87?= <zyc@rock-chips.com>,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        robh+dt@kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tue, 19 Nov 2019 07:57:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53112 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727255AbfKSM5v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:57:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9B69FB1A0;
+        Tue, 19 Nov 2019 12:57:47 +0000 (UTC)
+Message-ID: <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de>
+Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-arm-kernel@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Date:   Tue, 19 Nov 2019 09:55:51 -0300
-In-Reply-To: <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
-References: <20191114051242.14651-1-helen.koike@collabora.com>
-         <20191114051242.14651-3-helen.koike@collabora.com>
-         <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
-         <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com>
-         <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 19 Nov 2019 13:57:43 +0100
+In-Reply-To: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-KZ1OEZ2plCMDP0ydmpq5"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Jacob,
 
-Thanks for the insight.
+--=-KZ1OEZ2plCMDP0ydmpq5
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-11-19 at 18:16 +0800, Jacob Chen wrote:
-> Hi Helen ,
-> 
-> Helen Koike <helen.koike@collabora.com> 于2019年11月14日周四 下午6:59写道：
-> > 
-> > 
-> > On 11/14/19 6:21 AM, Hans Verkuil wrote:
-> > > On 11/14/19 6:12 AM, Helen Koike wrote:
-> > > > From: Jacob Chen <jacob2.chen@rock-chips.com>
-> > > > 
-> > > > This commit add document for rkisp1 meta buffer format
-> > > > 
-> > > > Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
-> > > > [refactored for upstream]
-> > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > 
-> > > checkpatch gives me:
-> > > 
-> > > WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob Chen <jacob2.chen@rock-chips.com>'
-> > > 
-> > > Looking at this series I see duplicate Signed-off-by entries for Jacob Chen and a total
-> > > of three different email addresses:
-> > > 
-> > > jacob2.chen@rock-chips.com
-> > > jacob-chen@rock-chips.com
-> > > cc@rock-chips.com
-> > 
-> > And I see a name in the Maintainers file as Jacob Chen <jacob-chen@iotwrt.com>.
-> > I was wondering if I could replace the email by jacob-chen@iotwrt.com, or if I should
-> > keep the original ones.
-> > 
-> > Helen
-> > 
-> 
-> "jacob2.chen@rock-chips.com"/"jacob-chen@rock-chips.com" is me and
-> "cc@rock-chips.com" is another one.
-> ' jacob-chen@rock-chips.com' is invalid now,  so you could replace the
-> email by 'jacob-chen@iotwrt.com'.
-> 
+On Wed, 2019-11-13 at 17:13 +0100, Nicolas Saenz Julienne wrote:
+> Using a mask to represent bus DMA constraints has a set of limitations.
+> The biggest one being it can only hold a power of two (minus one). The
+> DMA mapping code is already aware of this and treats dev->bus_dma_mask
+> as a limit. This quirk is already used by some architectures although
+> still rare.
+>=20
+> With the introduction of the Raspberry Pi 4 we've found a new contender
+> for the use of bus DMA limits, as its PCIe bus can only address the
+> lower 3GB of memory (of a total of 4GB). This is impossible to represent
+> with a mask. To make things worse the device-tree code rounds non power
+> of two bus DMA limits to the next power of two, which is unacceptable in
+> this case.
+>=20
+> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
+> over the tree and treat it as such. Note that dev->bus_dma_limit is
+> meant to contain the higher accesible DMA address.
+>=20
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>=20
 
-Authorship and SOB can't be changed freely, the original must be retained,
-because this gives proper credit to the company that sponsored the work.
+Hi Rob & Christoph,
+do you mind if I append v2 of this into my upcoming v3 RPi4 PCIe support
+series, I didn't do it initially as I thought this was going to be a
+contentious patch.  But as it turned out better than expected, I think it
+should go into the PCIe series. In the end it's the first explicit user of =
+the
+bus DMA limit.
 
-I.e. if your mail used to be jacob2.chen at rock-chips.com, then I think
-we can use that. And if cc at rock-chips.com is a different engineer,
-also named Jacob Chen, perhaps we can mention that somewhere to reduce the
-confusion.
+Here's v2 in case you don't know what I'm talking about:
+https://www.spinics.net/lists/arm-kernel/msg768459.html
 
-Thanks,
-Ezequiel
+Regards,
+Nicolas
+
+
+--=-KZ1OEZ2plCMDP0ydmpq5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T5scACgkQlfZmHno8
+x/7FNgf/TPvrVamDNHipGFKFiSr22YaNYJU4aGZyFuJab0Z9dF35ZbNQqx3sXA83
+gyltGXByQ4c747nqq+LWQTaXLvI4NEMDu/ueQ6T4Vgs0ijtKvI9hVjrjlKU7UVsR
+/v+6HHolAP4q5zxgJbL3PRMlFeJlLs9xRbikBEmGDbc4INP8nBSUiQmk4lrgCAwH
+xV11EcSTA5eKJPS1jpsEP/vKwfu7LQ9ASExtpK5Oud7ZBD8zq1qKQBSVMGXQ1m9L
+l0ok+gqBZtMgwKtigs9mAr0Y09evU1GOVS0ttcncZ854J6/+hr9nuK8eXyhLEm0J
+l/jpo2vtZH0gMy68b+P8LkDtGJisYg==
+=9wOf
+-----END PGP SIGNATURE-----
+
+--=-KZ1OEZ2plCMDP0ydmpq5--
 
