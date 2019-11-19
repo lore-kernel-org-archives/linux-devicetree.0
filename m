@@ -2,186 +2,218 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95431C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B692C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F01E20692
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392D0222A7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 06:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="c8QTc0bX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KsGKUQ1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725787AbfKSGQB (ORCPT
+        id S1726846AbfKSGTj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:16:01 -0500
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21405 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727688AbfKSGQB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 01:16:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574144065; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=jYsQ/Ang1g/QV7bYQiF7N9psKdbFqIWI67awWl7sGQ5sUVq4pFa7DdVBs7hGmwTHz8e9JwIGnhBohnjFSxDR1UAhJdYNSHDb2Ia2YFT4AI0GecIrUmMdammD0jdjZZxl9wRxcns9vxN6SauBLDF6oGV/ri8OHGCG118Q6eBq0bM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574144065; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=IPoYpGPpQsih0UlY0KIRwlvTF5g15RLNEpbWU4+o53c=; 
-        b=JmauD1JpuJv5SlGgLaMJKAIZM+poM3PtTuyxq0enqgNMZ9vqofR628kLGgsi1d1uglvRid4KdT8MnM3qnUC+Fk+NxtmwOAZwI2J4YDBuF+xIwkApufX325uQPXyWx6wXTqtq9shVjmCN5eEaLZdC2SD3JPUXbQDio0XnvC45OkI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=brennan.io;
-        spf=pass  smtp.mailfrom=stephen@brennan.io;
-        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574144065;
-        s=selector01; d=brennan.io; i=stephen@brennan.io;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        l=3354; bh=IPoYpGPpQsih0UlY0KIRwlvTF5g15RLNEpbWU4+o53c=;
-        b=c8QTc0bXkXSsr9jbhaFvBMSJM+Wj9IzfOuuUVE42e+ZOLMQvBuNAoh9HZPFRWCDJ
-        TqsbrWzvMm1zWpNWqV+BBEIzqdQ99LsiK26cUp88uwmOuvaiTi+4/0wADf8uFkhOGB6
-        I2LtJvViCfsBkvWA7r3n/u+KFtHpDfhjYOwgCeTA=
-Received: from localhost (195.173.24.136.in-addr.arpa [136.24.173.195]) by mx.zohomail.com
-        with SMTPS id 1574144064042832.9788464647007; Mon, 18 Nov 2019 22:14:24 -0800 (PST)
-From:   Stephen Brennan <stephen@brennan.io>
-To:     stephen@brennan.io
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org
-Message-ID: <20191119061407.69911-4-stephen@brennan.io>
-Subject: [PATCH v2 3/3] ARM: dts: bcm2711: Enable HWRNG support
-Date:   Mon, 18 Nov 2019 22:14:07 -0800
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119061407.69911-1-stephen@brennan.io>
-References: <20191119061407.69911-1-stephen@brennan.io>
+        Tue, 19 Nov 2019 01:19:39 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35581 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfKSGTj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 01:19:39 -0500
+Received: by mail-wm1-f68.google.com with SMTP id 8so2056419wmo.0;
+        Mon, 18 Nov 2019 22:19:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5Y16BhLULcOtGMPtYQ52r24bj5/HpTJlzyrhWuM90EM=;
+        b=KsGKUQ1D6nqNBYAPEizVeiv/SW0HZoAEC6OwIqwYp09gsfDBJ0hIqe/KvPUuylYDTM
+         pwkUDq0bg8vVn5yc48rKQ6joqBEVT7VCLWlSg4LcL0FjT384Iq6fS08aCwg1+32aSM9b
+         pXkRZzG165p3h4EYRJB1bf0a9vo9v1Jv+bEs5wUKdyv49lMo44Igmc1P5bToRSdcyonN
+         hZSIFIXBAQ+FP6phldI7f0R+g/rrf/azI3SF/F2BwPaeCdPAG5NMh22DCdPvl5VgWBO9
+         zl3wDTbBqCR0fcKreKYqt7rPZ6q4Afzena8tYDahHqVCtbj+GX41HwlOVpYEYVDSeeJy
+         7VVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5Y16BhLULcOtGMPtYQ52r24bj5/HpTJlzyrhWuM90EM=;
+        b=DUI/xVaAjch5X2SP4yUxuNA5iZhB3+lwenkh7oIcG6oQUS/8Hs/6gtdxMekWZW3kPS
+         YhJu09HBuKNL7XeUYo+9TAc4gErY592UbNunuv0YvwhqDI7LSNDxWL0+DZYZI/1dM7nO
+         g2qxnJkpXuTGwuDOhFsMuDc2QdF3tNyBwzR8I2T0ZVEtuaBZTtkMHecRuifdYOMvA2OT
+         zsbcxl7WcmYwRHK4ajJ5e9rZjEnVyrZtQfGKiOM7pItcfad/ItgED338IOcxS38XayuR
+         YkLKVFLogvrrhcRprkRowPIIyDCv4mUhpH6XJ/7PXJtHXmMVwCRCJz+qEIAfAWfpG737
+         jkdw==
+X-Gm-Message-State: APjAAAUG+gMzdNcddYn5YFYYNhZoa6IQ5miptPyl5mlnQgDwSd993M9p
+        nBUAWA3yGaH3B7Wsv9i+Osk=
+X-Google-Smtp-Source: APXvYqx21sXQQ8g4ISoycByGsMvouGWkG4MQt8tz740Kt5vTF2TEAGgm3IY7xMv7p2WNWSjg68ObEg==
+X-Received: by 2002:a1c:9e58:: with SMTP id h85mr3558241wme.77.1574144374251;
+        Mon, 18 Nov 2019 22:19:34 -0800 (PST)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id 62sm29112172wre.38.2019.11.18.22.19.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 22:19:32 -0800 (PST)
+Date:   Tue, 19 Nov 2019 07:19:31 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 00/29] Introduce memory interconnect for NVIDIA Tegra
+ SoCs
+Message-ID: <20191119061931.GA2462695@ulmo>
+References: <20191118200247.3567-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Disposition: inline
+In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BCM2711 features a RNG200 hardware random number generator block, which is
-different from the BCM283x from which it inherits. Move the rng block from
-BCM283x into a separate common file, and update the rng declaration of
-BCM2711.
 
-Signed-off-by: Stephen Brennan <stephen@brennan.io>
----
- arch/arm/boot/dts/bcm2711.dtsi        |  6 +++---
- arch/arm/boot/dts/bcm2835.dtsi        |  1 +
- arch/arm/boot/dts/bcm2836.dtsi        |  1 +
- arch/arm/boot/dts/bcm2837.dtsi        |  1 +
- arch/arm/boot/dts/bcm283x-common.dtsi | 11 +++++++++++
- arch/arm/boot/dts/bcm283x.dtsi        |  6 ------
- 6 files changed, 17 insertions(+), 9 deletions(-)
- create mode 100644 arch/arm/boot/dts/bcm283x-common.dtsi
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dts=
-i
-index ac83dac2e6ba..4975567e948e 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -92,10 +92,10 @@ pm: watchdog@7e100000 {
- =09=09};
-=20
- =09=09rng@7e104000 {
-+=09=09=09compatible =3D "brcm,bcm2711-rng200";
-+=09=09=09reg =3D <0x7e104000 0x28>;
- =09=09=09interrupts =3D <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
--
--=09=09=09/* RNG is incompatible with brcm,bcm2835-rng */
--=09=09=09status =3D "disabled";
-+=09=09=09status =3D "okay";
- =09=09};
-=20
- =09=09uart2: serial@7e201400 {
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dts=
-i
-index 53bf4579cc22..f7b2f46e307d 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "bcm283x.dtsi"
-+#include "bcm283x-common.dtsi"
- #include "bcm2835-common.dtsi"
-=20
- / {
-diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dts=
-i
-index 82d6c4662ae4..a85374195796 100644
---- a/arch/arm/boot/dts/bcm2836.dtsi
-+++ b/arch/arm/boot/dts/bcm2836.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "bcm283x.dtsi"
-+#include "bcm283x-common.dtsi"
- #include "bcm2835-common.dtsi"
-=20
- / {
-diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dts=
-i
-index 9e95fee78e19..045d78ffea08 100644
---- a/arch/arm/boot/dts/bcm2837.dtsi
-+++ b/arch/arm/boot/dts/bcm2837.dtsi
-@@ -1,4 +1,5 @@
- #include "bcm283x.dtsi"
-+#include "bcm283x-common.dtsi"
- #include "bcm2835-common.dtsi"
-=20
- / {
-diff --git a/arch/arm/boot/dts/bcm283x-common.dtsi b/arch/arm/boot/dts/bcm2=
-83x-common.dtsi
-new file mode 100644
-index 000000000000..3c8834bee390
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-common.dtsi
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/ {
-+=09soc {
-+=09=09rng@7e104000 {
-+=09=09=09compatible =3D "brcm,bcm2835-rng";
-+=09=09=09reg =3D <0x7e104000 0x10>;
-+=09=09=09interrupts =3D <2 29>;
-+=09=09};
-+=09};
-+};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dts=
-i
-index 3caaa57eb6c8..5219339fc27c 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -84,12 +84,6 @@ clocks: cprman@7e101000 {
- =09=09=09=09<&dsi1 0>, <&dsi1 1>, <&dsi1 2>;
- =09=09};
-=20
--=09=09rng@7e104000 {
--=09=09=09compatible =3D "brcm,bcm2835-rng";
--=09=09=09reg =3D <0x7e104000 0x10>;
--=09=09=09interrupts =3D <2 29>;
--=09=09};
--
- =09=09mailbox: mailbox@7e00b880 {
- =09=09=09compatible =3D "brcm,bcm2835-mbox";
- =09=09=09reg =3D <0x7e00b880 0x40>;
---=20
-2.24.0
+On Mon, Nov 18, 2019 at 11:02:18PM +0300, Dmitry Osipenko wrote:
+> Hello,
+>=20
 
+I like this, thanks for looking into this.
 
+> This series brings initial support for memory interconnect to Tegra20,
+> Terga30 and Tegra124 SoCs. The interconnect provides are quite generic
+> and should be suitable for all Tegra SoCs, but currently upstream kernel
+> has EMC/MC drivers only for those three generations of Tegra SoCs.
 
+Tegra186 and Tegra194 should support this out of the box because the EMC
+frequency can be scaled via the BPMP. Tegra210 support for EMC scaling
+is in the works, so hopefully we'll be able to extend this in the near
+future.
+
+> For the start only display controllers are getting interconnect API
+> support, others could be supported later on. The display controllers
+> have the biggest demand for interconnect API right now because dynamic
+> memory frequency scaling can't be done safely without taking into account
+> bandwidth requirement from the displays.
+
+Agreed, display controllers are where we most immediately notice when
+there's not enough bandwidth. I think it's fair to start small and
+extend interconnect consumers as we progress.
+
+I've got a couple of comments regarding individual patches, but on the
+whole this looks pretty nice.
+
+Thierry
+
+> Dmitry Osipenko (29):
+>   dt-bindings: memory: tegra20: mc: Document new interconnect property
+>   dt-bindings: memory: tegra20: emc: Document new interconnect property
+>   dt-bindings: memory: tegra30: mc: Document new interconnect property
+>   dt-bindings: memory: tegra30: emc: Document new interconnect property
+>   dt-bindings: memory: tegra124: mc: Document new interconnect property
+>   dt-bindings: memory: tegra124: emc: Document new interconnect property
+>   dt-bindings: host1x: Document new interconnect properties
+>   dt-bindings: interconnect: tegra: Add initial IDs
+>   ARM: tegra: Add interconnect properties to Tegra20 device-tree
+>   ARM: tegra: Add interconnect properties to Tegra30 device-tree
+>   ARM: tegra: Add interconnect properties to Tegra124 device-tree
+>   interconnect: Add memory interconnection providers for NVIDIA Tegra
+>     SoCs
+>   memory: tegra: Register as interconnect provider
+>   memory: tegra: Add interconnect nodes for Terga20 display controllers
+>   memory: tegra: Add interconnect nodes for Terga30 display controllers
+>   memory: tegra: Add interconnect nodes for Terga124 display controllers
+>   memory: tegra20-emc: Use devm_platform_ioremap_resource
+>   memory: tegra20-emc: Continue probing if timings/IRQ are missing in
+>     device-tree
+>   memory: tegra20-emc: Register as interconnect provider
+>   memory: tegra30-emc: Continue probing if timings are missing in
+>     device-tree
+>   memory: tegra30-emc: Register as interconnect provider
+>   memory: tegra124-emc: Use devm_platform_ioremap_resource
+>   memory: tegra124-emc: Register as interconnect provider
+>   drm/tegra: dc: Use devm_platform_ioremap_resource
+>   drm/tegra: dc: Release PM and RGB output when client's registration
+>     fails
+>   drm/tegra: dc: Support memory bandwidth management
+>   ARM: tegra: Enable interconnect API in tegra_defconfig
+>   ARM: multi_v7_defconfig: Enable NVIDIA Tegra interconnect providers
+>   MAINTAINERS: Add maintainers for NVIDIA Tegra interconnect drivers
+>=20
+>  .../display/tegra/nvidia,tegra20-host1x.txt   |  67 +++++
+>  .../nvidia,tegra124-emc.txt                   |   3 +
+>  .../nvidia,tegra124-mc.yaml                   |   5 +
+>  .../memory-controllers/nvidia,tegra20-emc.txt |   4 +
+>  .../memory-controllers/nvidia,tegra20-mc.txt  |   4 +
+>  .../nvidia,tegra30-emc.yaml                   |   6 +
+>  .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
+>  MAINTAINERS                                   |   9 +
+>  arch/arm/boot/dts/tegra124.dtsi               |  10 +
+>  arch/arm/boot/dts/tegra20.dtsi                |  11 +-
+>  arch/arm/boot/dts/tegra30.dtsi                |  12 +-
+>  arch/arm/configs/multi_v7_defconfig           |   2 +
+>  arch/arm/configs/tegra_defconfig              |   2 +
+>  drivers/gpu/drm/tegra/dc.c                    | 252 +++++++++++++++++-
+>  drivers/gpu/drm/tegra/dc.h                    |   8 +
+>  drivers/gpu/drm/tegra/drm.c                   |  18 ++
+>  drivers/gpu/drm/tegra/plane.c                 |   1 +
+>  drivers/gpu/drm/tegra/plane.h                 |   4 +-
+>  drivers/interconnect/Kconfig                  |   1 +
+>  drivers/interconnect/Makefile                 |   1 +
+>  drivers/interconnect/tegra/Kconfig            |   6 +
+>  drivers/interconnect/tegra/Makefile           |   4 +
+>  drivers/interconnect/tegra/tegra-icc-emc.c    | 138 ++++++++++
+>  drivers/interconnect/tegra/tegra-icc-mc.c     | 130 +++++++++
+>  drivers/memory/tegra/mc.c                     |   4 +
+>  drivers/memory/tegra/tegra124-emc.c           |  28 +-
+>  drivers/memory/tegra/tegra124.c               |  16 ++
+>  drivers/memory/tegra/tegra20-emc.c            |  91 ++++---
+>  drivers/memory/tegra/tegra20.c                |  14 +
+>  drivers/memory/tegra/tegra30-emc.c            |  34 ++-
+>  drivers/memory/tegra/tegra30.c                |  14 +
+>  include/dt-bindings/interconnect/tegra-icc.h  |  11 +
+>  include/soc/tegra/mc.h                        |  26 ++
+>  33 files changed, 883 insertions(+), 58 deletions(-)
+>  create mode 100644 drivers/interconnect/tegra/Kconfig
+>  create mode 100644 drivers/interconnect/tegra/Makefile
+>  create mode 100644 drivers/interconnect/tegra/tegra-icc-emc.c
+>  create mode 100644 drivers/interconnect/tegra/tegra-icc-mc.c
+>  create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
+>=20
+> --=20
+> 2.23.0
+>=20
+
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3TiXAACgkQ3SOs138+
+s6EuaQ/+MUUOndULQxHywop4nsOWK9DRosUwostChC/0Wes+FgxTVYg8Ej8ljQuJ
+PXJOT0fNi4TC2LulaK31tbg5Rip1UjXXuNg83sDnapdhPxQ2hSKBjEz/QhrnFU+C
+CEQbmyDPcUnG9LiuF4wAyrBQ8z/WRw7WG5kG5VaglDpxKuBfjMJ+jJT3awYZe0kv
+Q+2iSWq/vU/T+lDyTvzNrYEAwYG497wCHWt06sREMxZ/udIMg7JNefwm1SxNL0sP
+ew9mcbx6fdgOt+tRD5CkKAf6gsEQ9imNIp1AsawQVeWWMPvhf5+8xNwho6YD932l
+7abgKgITlnuW5PU2GrktfygeYMP+agUlQ3ZoE/324vycZcrxEei5wDCHZuzMEACb
+1LlrLZAFBY0SsHQv/qO/i30IKnEbVGL5+taF0JVGBpx8nnWC46hVqYVQOOd+tFI6
+rAHYk5Bs45S/kS3UmJA06JUOfFUCODLW0AwcRHPuMJ19SP9esgTlkztAPNHRNbtc
+6h/uKv6RwYG29flTEx3hAnfZ/8xH4LMbQApfy/dlEhjkYfN9Sjwl7PhQsV0KYXFt
+1CJTvmhsnm8CexjGlyCZFVY+sD8hiOLeQyyhNucIhcEj4tGRk4Q9A7N0BqTY4MZv
+Dvjrn1VxJH/7K6XgtFmEUH4jAyypcGWgWKjVWgHuPhd+EiFMgEg=
+=XE+S
+-----END PGP SIGNATURE-----
+
+--opJtzjQTFsWo+cga--
