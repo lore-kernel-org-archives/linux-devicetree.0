@@ -2,285 +2,149 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4DCC43141
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F39C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C74E2230C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B14222AB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 15:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HYmIHL8A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyzAEu/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfKSPqq (ORCPT
+        id S1728434AbfKSPqZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:46:46 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37952 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbfKSPqq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:46:46 -0500
-Received: by mail-lj1-f194.google.com with SMTP id v8so23896234ljh.5
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 07:46:44 -0800 (PST)
+        Tue, 19 Nov 2019 10:46:25 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38104 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbfKSPqY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 10:46:24 -0500
+Received: by mail-qt1-f196.google.com with SMTP id p20so25106188qtq.5;
+        Tue, 19 Nov 2019 07:46:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GzXbFQkPrKMVsons+QpYWmVJ2fxp7Rx5snNgvCvieVY=;
-        b=HYmIHL8AbXjecRJqfLytR/mTFMP1mprK77S8qbs6pJZsuxTAoUqfXpSpaGLjyiQU7p
-         Gnar+7Msv8r/T5pz05x4WUPjUmvjBH4jAkrt9IVdKvawzyeFCuLApgbPMfB1NgTTmFYJ
-         cbkMTJeDQpImSBcDupLvseSWAbn6oYK+95bbcG+y1fA3FhwNCatzP8de1Iu1bXCaEKw2
-         I7BhmhX/SGXXj+eSqQU3VPFzSfHaOPEe+vSzCqxHpn+Xj7+vbxWIlVpBhLQmYFhdVmDZ
-         eWrEFrrO0hE1RH/GP9Lk7nnVp3EmV2wBujQZDhfieV//Qp+ZdJvmPu9IL03vRwX1IEpB
-         73+g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=M8plwUGqzRu7vrgV7/AsiHy4S0SxA51BEoVHYwcW5lA=;
+        b=JyzAEu/6ws9pxBMKgWcKSYsKAY6v1iDQlhimW0fo3mVWXhlxvJxvDXQo0xctEUWGSE
+         Pt8VVy5rEJGIoAxhEfUPch66BMCN211Z8O6rUnIxw0Ru61N+MLcxuHR20pATQexpV5tB
+         ThZmMlEXQa5whche9/AeeFgvZx8/KQ41RRQV8hkgr6yluEr6jQI+8sNNuO3ZlhONLq/8
+         8C0wh/aiatk86HowX7vOXUxLffdZz5ExA9uPJmCroJnD7UypLzsVDyA0m8JtCx8d1lD8
+         zB73fwsvVtItCnQt4qzBwXO/liKX/Ixq4Vz0ILVKY+14uoEk95UN2b1K6fafL3xmpui2
+         3nTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GzXbFQkPrKMVsons+QpYWmVJ2fxp7Rx5snNgvCvieVY=;
-        b=AlF/rXh2IXsxzJbTWhr3RtxaCmDibwpPaxNvQ3SSAG/8j7iItGu7tsdfIW0Zs3UaNw
-         LyNorM9pFc3tG4s99P5v/KYB07k6NqtUEu4a/gecIviLt55PXdskrrpSmc6AerAYuzBV
-         +a4gudWbyeNtyZoeskwG507tNhMn+PnRXtVlhB1lxCsaQMOGvMCNwnyeinnH/xHnIrW7
-         SFiZXh+YDhhCIzosueJvh9c5udLsyUQoUH1334jsEqYd8WY6XxaUgsm7/AJ7fwF+RrHi
-         SKAWypvnIzHzpxsOCrT6SZGBq6r8IKWqWj6ThGxOv/1iqMPZFLTDx8R/sb4iAoSQlBRn
-         /YOA==
-X-Gm-Message-State: APjAAAXXG1Fo2Vt9DuVkMTwH3KaNw4kvnHoyeHusA9CTQUlqbtXMDNlG
-        2SyUi8wGcKc0/bboqdwFaqWvUA==
-X-Google-Smtp-Source: APXvYqxreJXH586CBfoZXHSPYRUvjm/n1g+ta2NaurJx9Ghgg5FeWe2LqFFA1DnvzVSTDHNF0S8t2g==
-X-Received: by 2002:a2e:3311:: with SMTP id d17mr4592702ljc.237.1574178404108;
-        Tue, 19 Nov 2019 07:46:44 -0800 (PST)
-Received: from centauri.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id e14sm10128803ljb.75.2019.11.19.07.46.42
+         :references;
+        bh=M8plwUGqzRu7vrgV7/AsiHy4S0SxA51BEoVHYwcW5lA=;
+        b=tl+KwG+hSGKCdVpoiiOU2oglD0dYzyy2cIlLpYWxi1mHeRmeahsiORMaLsTG8XooTE
+         wBqDkkb7e/3dX25LHtW30WZW1tS/Ts02bzv2DnQCYfX0wkTK/VVBNPhVlsBwoQmtflOg
+         jWKW9JvaL2vWtcr4bd016x13q8cuXdy16NjNxC6/SrBeIHuM4NcOqLjwkY+yZUiOYEtm
+         JmHxNCLzmgWmaYC2/+vEGenz0/NBfHSJ5tV3tpd4/Qjx8aRkvAfYtje1xcSphTLoDY6e
+         U12OtcdSKEwPRiwGc4LUmHDlW/ShyOhddjFOMB5BcaxtQKWHGuVRSkFML0MypDi2IHaO
+         Bu7g==
+X-Gm-Message-State: APjAAAXc3DII/2JKDtQcf1jNM+U3I8yiWgBSrn0p9c/uGDkQwKx8wglh
+        sbdz2/24TzbezDBKcNNixMM=
+X-Google-Smtp-Source: APXvYqzTwS2JcKYsV+NK7gaJatS2f0ktlgeaG5oXB4W8nNqlmdDNWDRG8T4z6FvpvCEDV5SZJQDQBQ==
+X-Received: by 2002:ac8:44c3:: with SMTP id b3mr32324566qto.313.1574178383029;
+        Tue, 19 Nov 2019 07:46:23 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id 50sm12949919qtv.88.2019.11.19.07.46.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 07:46:43 -0800 (PST)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org, vireshk@kernel.org, ulf.hansson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 19 Nov 2019 07:46:22 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 3/5] arm64: dts: qcom: qcs404: Add CPR and populate OPP table
-Date:   Tue, 19 Nov 2019 16:46:18 +0100
-Message-Id: <20191119154621.55341-4-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191119154621.55341-1-niklas.cassel@linaro.org>
-References: <20191119154621.55341-1-niklas.cassel@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
+Date:   Tue, 19 Nov 2019 10:46:11 -0500
+Message-Id: <20191119154611.29625-5-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191119154611.29625-1-TheSven73@gmail.com>
+References: <20191119154611.29625-1-TheSven73@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add CPR and populate OPP table.
+The driver has been extended to optionally get its operational
+mode, regulator init data and led label from the devicetree.
 
-Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Tree: next-20191118
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 132 +++++++++++++++++++++++++--
- 1 file changed, 124 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/mfd/tps6105x.txt      | 42 ++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index d03782e7bc11..30b9c7f8f200 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -44,7 +44,8 @@
- 			#cooling-cells = <2>;
- 			clocks = <&apcs_glb>;
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&pms405_s3>;
-+			power-domains = <&cpr>;
-+			power-domain-names = "cpr";
- 		};
+diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+index 93602c7a19c8..ab5d4c52074f 100644
+--- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
++++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+@@ -7,11 +7,51 @@ Required properties:
+ - compatible:		"ti,tps61050" or "ti,tps61052"
+ - reg:			Specifies the I2C slave address
  
- 		CPU1: cpu@101 {
-@@ -57,7 +58,8 @@
- 			#cooling-cells = <2>;
- 			clocks = <&apcs_glb>;
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&pms405_s3>;
-+			power-domains = <&cpr>;
-+			power-domain-names = "cpr";
- 		};
+-Example:
++Optional sub-node:
++
++This subnode selects the chip's operational mode.
++There can be at most one single available subnode.
++
++- regulator: presence of this sub-node puts the chip in regulator mode.
++	see Documentation/devicetree/bindings/regulator/regulator.txt
++
++- led: presence of this sub-node puts the chip in led mode.
++	Optional properties:
++		- label: see Documentation/devicetree/bindings/leds/common.txt
++
++Example (GPIO operation only):
++
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++	};
++};
++
++Example (GPIO + regulator operation):
  
- 		CPU2: cpu@102 {
-@@ -70,7 +72,8 @@
- 			#cooling-cells = <2>;
- 			clocks = <&apcs_glb>;
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&pms405_s3>;
-+			power-domains = <&cpr>;
-+			power-domain-names = "cpr";
- 		};
- 
- 		CPU3: cpu@103 {
-@@ -83,7 +86,8 @@
- 			#cooling-cells = <2>;
- 			clocks = <&apcs_glb>;
- 			operating-points-v2 = <&cpu_opp_table>;
--			cpu-supply = <&pms405_s3>;
-+			power-domains = <&cpr>;
-+			power-domain-names = "cpr";
- 		};
- 
- 		L2_0: l2-cache {
-@@ -107,20 +111,37 @@
- 	};
- 
- 	cpu_opp_table: cpu-opp-table {
--		compatible = "operating-points-v2";
-+		compatible = "operating-points-v2-kryo-cpu";
- 		opp-shared;
- 
- 		opp-1094400000 {
- 			opp-hz = /bits/ 64 <1094400000>;
--			opp-microvolt = <1224000 1224000 1224000>;
-+			required-opps = <&cpr_opp1>;
- 		};
- 		opp-1248000000 {
- 			opp-hz = /bits/ 64 <1248000000>;
--			opp-microvolt = <1288000 1288000 1288000>;
-+			required-opps = <&cpr_opp2>;
- 		};
- 		opp-1401600000 {
- 			opp-hz = /bits/ 64 <1401600000>;
--			opp-microvolt = <1384000 1384000 1384000>;
-+			required-opps = <&cpr_opp3>;
+ i2c0 {
+ 	tps61052@33 {
+ 		compatible = "ti,tps61052";
+ 		reg = <0x33>;
++
++		regulator {
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
 +		};
 +	};
++};
 +
-+	cpr_opp_table: cpr-opp-table {
-+		compatible = "operating-points-v2-qcom-level";
++Example (GPIO + led operation):
 +
-+		cpr_opp1: opp1 {
-+			opp-level = <1>;
-+			qcom,opp-fuse-level = <1>;
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++
++		led {
++			label = "tps-torch";
 +		};
-+		cpr_opp2: opp2 {
-+			opp-level = <2>;
-+			qcom,opp-fuse-level = <2>;
-+		};
-+		cpr_opp3: opp3 {
-+			opp-level = <3>;
-+			qcom,opp-fuse-level = <3>;
- 		};
  	};
- 
-@@ -310,6 +331,62 @@
- 			tsens_caldata: caldata@d0 {
- 				reg = <0x1f8 0x14>;
- 			};
-+			cpr_efuse_speedbin: speedbin@13c {
-+				reg = <0x13c 0x4>;
-+				bits = <2 3>;
-+			};
-+			cpr_efuse_quot_offset1: qoffset1@231 {
-+				reg = <0x231 0x4>;
-+				bits = <4 7>;
-+			};
-+			cpr_efuse_quot_offset2: qoffset2@232 {
-+				reg = <0x232 0x4>;
-+				bits = <3 7>;
-+			};
-+			cpr_efuse_quot_offset3: qoffset3@233 {
-+				reg = <0x233 0x4>;
-+				bits = <2 7>;
-+			};
-+			cpr_efuse_init_voltage1: ivoltage1@229 {
-+				reg = <0x229 0x4>;
-+				bits = <4 6>;
-+			};
-+			cpr_efuse_init_voltage2: ivoltage2@22a {
-+				reg = <0x22a 0x4>;
-+				bits = <2 6>;
-+			};
-+			cpr_efuse_init_voltage3: ivoltage3@22b {
-+				reg = <0x22b 0x4>;
-+				bits = <0 6>;
-+			};
-+			cpr_efuse_quot1: quot1@22b {
-+				reg = <0x22b 0x4>;
-+				bits = <6 12>;
-+			};
-+			cpr_efuse_quot2: quot2@22d {
-+				reg = <0x22d 0x4>;
-+				bits = <2 12>;
-+			};
-+			cpr_efuse_quot3: quot3@230 {
-+				reg = <0x230 0x4>;
-+				bits = <0 12>;
-+			};
-+			cpr_efuse_ring1: ring1@228 {
-+				reg = <0x228 0x4>;
-+				bits = <0 3>;
-+			};
-+			cpr_efuse_ring2: ring2@228 {
-+				reg = <0x228 0x4>;
-+				bits = <4 3>;
-+			};
-+			cpr_efuse_ring3: ring3@229 {
-+				reg = <0x229 0x4>;
-+				bits = <0 3>;
-+			};
-+			cpr_efuse_revision: revision@218 {
-+				reg = <0x218 0x4>;
-+				bits = <3 3>;
-+			};
- 		};
- 
- 		rng: rng@e3000 {
-@@ -952,6 +1029,45 @@
- 			clocks = <&sleep_clk>;
- 		};
- 
-+		cpr: power-controller@b018000 {
-+			compatible = "qcom,qcs404-cpr", "qcom,cpr";
-+			reg = <0x0b018000 0x1000>;
-+			interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&xo_board>;
-+			clock-names = "ref";
-+			vdd-apc-supply = <&pms405_s3>;
-+			#power-domain-cells = <0>;
-+			operating-points-v2 = <&cpr_opp_table>;
-+			acc-syscon = <&tcsr>;
-+
-+			nvmem-cells = <&cpr_efuse_quot_offset1>,
-+				<&cpr_efuse_quot_offset2>,
-+				<&cpr_efuse_quot_offset3>,
-+				<&cpr_efuse_init_voltage1>,
-+				<&cpr_efuse_init_voltage2>,
-+				<&cpr_efuse_init_voltage3>,
-+				<&cpr_efuse_quot1>,
-+				<&cpr_efuse_quot2>,
-+				<&cpr_efuse_quot3>,
-+				<&cpr_efuse_ring1>,
-+				<&cpr_efuse_ring2>,
-+				<&cpr_efuse_ring3>,
-+				<&cpr_efuse_revision>;
-+			nvmem-cell-names = "cpr_quotient_offset1",
-+				"cpr_quotient_offset2",
-+				"cpr_quotient_offset3",
-+				"cpr_init_voltage1",
-+				"cpr_init_voltage2",
-+				"cpr_init_voltage3",
-+				"cpr_quotient1",
-+				"cpr_quotient2",
-+				"cpr_quotient3",
-+				"cpr_ring_osc1",
-+				"cpr_ring_osc2",
-+				"cpr_ring_osc3",
-+				"cpr_fuse_revision";
-+		};
-+
- 		timer@b120000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
+ };
 -- 
-2.23.0
+2.17.1
 
