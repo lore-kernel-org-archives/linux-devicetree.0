@@ -2,108 +2,221 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F24C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7355FC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1688222DC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE0F21850
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 12:28:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XlWppwGS";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bUGAhwd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfKSMQC (ORCPT
+        id S1727511AbfKSM2a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:16:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:51704 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbfKSMQC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:16:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 934E11FB;
-        Tue, 19 Nov 2019 04:16:01 -0800 (PST)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70F813F703;
-        Tue, 19 Nov 2019 04:16:01 -0800 (PST)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 15D23682956; Tue, 19 Nov 2019 12:16:00 +0000 (GMT)
-Date:   Tue, 19 Nov 2019 12:16:00 +0000
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: arm: juno: Fix UART frequency
-Message-ID: <20191119121559.7grzoz2yoxhg23nf@e110455-lin.cambridge.arm.com>
-References: <20191119120331.28243-1-andre.przywara@arm.com>
+        Tue, 19 Nov 2019 07:28:30 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:51942
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726351AbfKSM2a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:28:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574166509;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=xoQLRZCLDsBMqnDsNRCUgvBqNo28d18ZvpB3a0moVPk=;
+        b=XlWppwGSlVgsDXhMLFWelSGcZZqwH1eZVvLmNjOYn8GSRXHgssMMZqqBKjkf/m2V
+        aRHkpoK9a7cgvptGG9xGSSpqPiyraQClf2/wTjk9zksR7iKIo45c2SCxIjXjQqg96KS
+        wZ0/DcH1fS/np7x9GAmCRRvsw0MjZftQ9NQuY6Js=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574166509;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=xoQLRZCLDsBMqnDsNRCUgvBqNo28d18ZvpB3a0moVPk=;
+        b=bUGAhwd9fxN24fAxEZsp07uihoX6f2nlakFMkFA8ly6AEk717ruvEsOSvbwS0Gsg
+        5y8bJkfQVORK2YTR//hFvkLl8/r8rPtPUcaYtJuoK68K2Awtm9wNOXL5/Dqk0HyeB7o
+        asdqALf5DQ7brSas5exF1PZvLaY0q789Ga24f17o=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191119120331.28243-1-andre.przywara@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 Nov 2019 12:28:29 +0000
+From:   sibis@codeaurora.org
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mark Rutland <mark.rutland@arm.com>, p.zabel@pengutronix.de,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH 13/16] arm64: dts: qcom: msm8998: Update reserved memory
+ map
+In-Reply-To: <CAOCk7NogQY3Vjo+cL5_0anVO=K1LfTqG69b8AGi9HQsTMEsCug@mail.gmail.com>
+References: <20191118214250.14002-1-sibis@codeaurora.org>
+ <0101016e807915dc-5f8701fd-5c4a-45a5-a9ee-9e4d8700a3fa-000000@us-west-2.amazonses.com>
+ <CAOCk7NogQY3Vjo+cL5_0anVO=K1LfTqG69b8AGi9HQsTMEsCug@mail.gmail.com>
+Message-ID: <0101016e83a2b64f-7d9f9170-7720-4198-adae-7f39a846c432-000000@us-west-2.amazonses.com>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.19-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:03:31PM +0000, Andre Przywara wrote:
-> Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
-> source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
-> correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
-> our DT.
-> Doing a prime factorisation, a modulo divide by 115200 and trying
-> to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
-> that the old value was actually a typo. The actual UART clock is driven
-> by a PLL, configured via a parameter in some board.txt file in the
-> firmware, which reads 7.37 MHz (sic!).
-> 
-> Fix this to correct the baud rate divisor calculation on the Juno board.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> 
-> [1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
-> [2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
+Hey Jeff,
+Thanks for taking time to review
+the series.
 
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
-> ---
->  arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On 2019-11-19 03:34, Jeffrey Hugo wrote:
+> On Mon, Nov 18, 2019 at 2:45 PM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> Update existing and add missing regions to the reserved memory map, as
+>> described in version 7.1
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8998.dtsi | 62 
+>> ++++++++++++++++++++++++---
+>>  1 file changed, 55 insertions(+), 7 deletions(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi 
+>> b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+>> index fc7838ea9a010..707673e3cf28a 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+>> @@ -28,8 +28,13 @@
+>>                 #size-cells = <2>;
+>>                 ranges;
+>> 
+>> -               memory@85800000 {
+>> -                       reg = <0x0 0x85800000 0x0 0x800000>;
+>> +               hyp_mem: memory@85800000 {
+>> +                       reg = <0x0 0x85800000 0x0 0x600000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               xbl_mem: memory@85e00000 {
 > 
-> diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-> index e5e265dfa902..2870b5eeb198 100644
-> --- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-> @@ -8,10 +8,10 @@
->   */
->  / {
->  	/* SoC fixed clocks */
-> -	soc_uartclk: refclk7273800hz {
-> +	soc_uartclk: refclk7372800hz {
->  		compatible = "fixed-clock";
->  		#clock-cells = <0>;
-> -		clock-frequency = <7273800>;
-> +		clock-frequency = <7372800>;
->  		clock-output-names = "juno:uartclk";
->  	};
->  
-> -- 
-> 2.17.1
-> 
+> Are we ever going to use this label?
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+just leaving it here for info with the
+added benefit of being deleteable
+if MSM8998 uses a different boot chain
+where xbl_mem/tz_mem remains unused as
+in the case of Cheza
+
+> 
+>> +                       reg = <0x0 0x85e00000 0x0 0x100000>;
+>>                         no-map;
+>>                 };
+>> 
+>> @@ -38,21 +43,64 @@
+>>                         no-map;
+>>                 };
+>> 
+>> -               memory@86200000 {
+>> +               tz_mem: memory@86200000 {
+> 
+> Again, are we ever going to use this?
+
+ditto
+
+> 
+>>                         reg = <0x0 0x86200000 0x0 0x2d00000>;
+>>                         no-map;
+>>                 };
+>> 
+>> -               rmtfs {
+>> +               rmtfs_mem: memory@88f00000 {
+>>                         compatible = "qcom,rmtfs-mem";
+>> -
+>> -                       size = <0x0 0x200000>;
+>> -                       alloc-ranges = <0x0 0xa0000000 0x0 0x2000000>;
+>> +                       reg = <0x0 0x88f00000 0x0 0x200000>;
+> 
+> This seems to overlap with a defined region in the memory map.
+> 0x9fa00000 seems to be a better address.
+
+just following the what we did
+for SDM845 SoC 0x88f00000 should
+be safe to use.
+
+> 
+>>                         no-map;
+>> 
+>>                         qcom,client-id = <1>;
+>>                         qcom,vmid = <15>;
+>>                 };
+>> +
+>> +               spss_mem: memory@8ab00000 {
+>> +                       reg = <0x0 0x8ab00000 0x0 0x700000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               adsp_mem: memory@8b200000 {
+>> +                       reg = <0x0 0x8b200000 0x0 0x1a00000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               mpss_mem: memory@8cc00000 {
+>> +                       reg = <0x0 0x8cc00000 0x0 0x7000000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               venus_mem: memory@93c00000 {
+>> +                       reg = <0x0 0x93c00000 0x0 0x500000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               mba_mem: memory@94100000 {
+>> +                       reg = <0x0 0x94100000 0x0 0x200000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               slpi_mem: memory@94300000 {
+>> +                       reg = <0x0 0x94300000 0x0 0xf00000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               ipa_fw_mem: memory@95200000 {
+>> +                       reg = <0x0 0x95200000 0x0 0x10000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               ipa_gsi_mem: memory@95210000 {
+>> +                       reg = <0x0 0x95210000 0x0 0x5000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               gpu_mem: memory@95215000 {
+>> +                       reg = <0x0 0x95215000 0x0 0x1000>;
+> 
+> This is the wrong size for the zap region.
+
+double checked the memory maps,
+gpu mem size is mentioned as 4kb
+is that not the case?
+
+
+> 
+>> +                       no-map;
+>> +               };
+>>         };
+>> 
+>>         clocks {
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
