@@ -2,81 +2,192 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A87C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 18:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5216BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 18:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB9421D7F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 18:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574186706;
-	bh=uKTAzFD1mKs+XTRCyqONykLe/ffZgYw8vLohuqeZlGs=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=CV2QsY8QsfHQePTdkuislps4TIL1E86rfEgD/P0IyuT6NekMOlmY5Ip+qp7URJX+P
-	 pDhuh/neO7Nq1+fh+87yuM829KuAH4GBi+Ult6I9g7gi3XM8qENsG7Vetk6qfVONub
-	 u6m2ZUUx9tUOSlxrHPluAW4RnQoKe9K2r/j8H5Y4=
+	by mail.kernel.org (Postfix) with ESMTP id 29AD7222EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 18:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="H/5HfE1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfKSSFF (ORCPT
+        id S1727237AbfKSSHu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:05:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33160 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 13:07:50 -0500
+Received: from mail.z3ntu.xyz ([128.199.32.197]:41242 "EHLO mail.z3ntu.xyz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727450AbfKSSFF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:05:05 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01B4D21D7F;
-        Tue, 19 Nov 2019 18:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574186705;
-        bh=uKTAzFD1mKs+XTRCyqONykLe/ffZgYw8vLohuqeZlGs=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=vDYo9fHI8GWXyEtRT+bkWLWmPmg4iaUjmRHWcwVORt1w0WiCfrut9AApibr277xTa
-         wuloefH0EqdfXZrvEJ4QT22efnCknRxQ8RYEsiITGTpGrq3DEjf8UfihRf7bStwrIL
-         REp4jFDlG6/9TkK40bbiqVBaQLA9ZH1aSnNMJoXI=
-Content-Type: text/plain; charset="utf-8"
+        id S1726948AbfKSSHu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 Nov 2019 13:07:50 -0500
+Received: from localhost.localdomain (80-110-127-196.cgn.dynamic.surfer.at [80.110.127.196])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 066B3DE610;
+        Tue, 19 Nov 2019 18:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1574186867; bh=vX9Z3hazzpYKkIuT58NuZuER7WoMridQbUFkjy2mD+k=;
+        h=From:To:Cc:Subject:Date;
+        b=H/5HfE1BUYslvjr+YCbopGdzzuCGq15m6w4gQFwXAUv5Yw/dz58BUaGAyTFVfPTzJ
+         7lb2lOogpGGeFjM4TJ8N0BOeeoM7ZT/yTzOJWNXEeuf95K596rR1gqGNEn8vaaGBrR
+         yKMnNw2DxxqGiNBuk2wQhg4Uzo9FpJ0zpvJ9VcSA=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-input@vger.kernel.org
+Cc:     Luca Weiss <luca@z3ntu.xyz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marek Vasut <marex@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: ili210x - add ili2120 support
+Date:   Tue, 19 Nov 2019 19:05:43 +0100
+Message-Id: <20191119180543.120362-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1574074063-9222-1-git-send-email-kalyan_t@codeaurora.org>
-References: <1574074063-9222-1-git-send-email-kalyan_t@codeaurora.org>
-Subject: Re: [PATCH v1] msm:disp:dpu1: add support for display for SC7180 target
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
-        jsanka@codeaurora.org, chandanu@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-To:     Kalyan Thota <kalyan_t@codeaurora.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Tue, 19 Nov 2019 10:05:03 -0800
-Message-Id: <20191119180505.01B4D21D7F@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Kalyan Thota (2019-11-18 02:47:43)
-> Add display hw catalog changes for SC7180 target.
->=20
-> Changes in v1:
->=20
-> 1) Configure register offsets and capabilities for the
-> display hw blocks.
->=20
-> This patch has dependency on the below series
->=20
-> https://patchwork.kernel.org/patch/11243111/
->=20
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
-> Signed-off-by: Raviteja Tamatam <travitej@codeaurora.org>
+This adds support for the Ilitek ili2120 touchscreen found in the
+Fairphone 2 smartphone.
 
-Your signoff chain looks wrong. Probably should have some
-Co-developed-by tags here, and then your SoB should be last.
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+From some testing, the touchscreen works fine with this patch but I'm
+not sure it's 100% correct.
+I've uploaded the data the panel produces onto pastebin [1], maybe
+someone who knows more can take a look at the packets.
+
+Additionally, I know that the code in the driver for querying the
+firmware version doesn't work on this panel. The downstream driver
+uses some code which I don't really understand, see [2] ; but as the
+version string is only used for a dev_dbg statement, I didn't spend
+more time with that.
+
+If wanted, I can split out the dt-binding changes to a separate
+commit but looking at the git log, many patches are touching both
+dt-bindings and driver.
+
+[1] https://pastebin.com/raw/LPeAske5
+[2] https://github.com/FairphoneMirrors/android_kernel_fairphone_msm8974/blob/fp2-m-sibon/drivers/input/touchscreen/ilitek/ilitek_aim.c#L850-L861
+
+ .../bindings/input/ilitek,ili2xxx.txt         |  3 +-
+ drivers/input/touchscreen/ili210x.c           | 34 +++++++++++++++++--
+ 2 files changed, 34 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+index b2a76301e632..045d1587d17a 100644
+--- a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
++++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+@@ -1,8 +1,9 @@
+-Ilitek ILI210x/ILI251x touchscreen controller
++Ilitek ILI210x/ILI212x/ILI251x touchscreen controller
+ 
+ Required properties:
+ - compatible:
+     ilitek,ili210x for ILI210x
++    ilitek,ili212x for ILI212x
+     ilitek,ili251x for ILI251x
+ 
+ - reg: The I2C address of the device
+diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+index e9006407c9bc..8331286ac950 100644
+--- a/drivers/input/touchscreen/ili210x.c
++++ b/drivers/input/touchscreen/ili210x.c
+@@ -13,6 +13,7 @@
+ #include <asm/unaligned.h>
+ 
+ #define ILI210X_TOUCHES		2
++#define ILI212X_TOUCHES		10
+ #define ILI251X_TOUCHES		10
+ #define DEFAULT_POLL_PERIOD	20
+ 
+@@ -30,6 +31,7 @@ struct firmware_version {
+ 
+ enum ili2xxx_model {
+ 	MODEL_ILI210X,
++	MODEL_ILI212X,
+ 	MODEL_ILI251X,
+ };
+ 
+@@ -118,6 +120,23 @@ static bool ili210x_touchdata_to_coords(struct ili210x *priv, u8 *touchdata,
+ 	return true;
+ }
+ 
++static bool ili212x_touchdata_to_coords(struct ili210x *priv, u8 *touchdata,
++					unsigned int finger,
++					unsigned int *x, unsigned int *y)
++{
++	if (finger >= ILI212X_TOUCHES)
++		return false;
++
++	*x = get_unaligned_be16(touchdata + 3 + (finger * 5) + 0);
++	if (!(*x & BIT(15)))	/* Touch indication */
++		return false;
++
++	*x &= 0x3fff;
++	*y = get_unaligned_be16(touchdata + 3 + (finger * 5) + 2);
++
++	return true;
++}
++
+ static bool ili251x_touchdata_to_coords(struct ili210x *priv, u8 *touchdata,
+ 					unsigned int finger,
+ 					unsigned int *x, unsigned int *y)
+@@ -146,6 +165,12 @@ static bool ili210x_report_events(struct ili210x *priv, u8 *touchdata)
+ 		if (priv->model == MODEL_ILI210X) {
+ 			touch = ili210x_touchdata_to_coords(priv, touchdata,
+ 							    i, &x, &y);
++		} else if (priv->model == MODEL_ILI212X) {
++			touch = ili212x_touchdata_to_coords(priv, touchdata,
++							    i, &x, &y);
++
++			if (touch)
++				contact = true;
+ 		} else if (priv->model == MODEL_ILI251X) {
+ 			touch = ili251x_touchdata_to_coords(priv, touchdata,
+ 							    i, &x, &y);
+@@ -179,7 +204,8 @@ static void ili210x_work(struct work_struct *work)
+ 	bool touch;
+ 	int error = -EINVAL;
+ 
+-	if (priv->model == MODEL_ILI210X) {
++	if (priv->model == MODEL_ILI210X ||
++	    priv->model == MODEL_ILI212X) {
+ 		error = ili210x_read_reg(client, REG_TOUCHDATA,
+ 					 touchdata, sizeof(touchdata));
+ 	} else if (priv->model == MODEL_ILI251X) {
+@@ -311,7 +337,9 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ 	priv->model = model;
+ 	if (model == MODEL_ILI210X)
+ 		priv->max_touches = ILI210X_TOUCHES;
+-	if (model == MODEL_ILI251X)
++	else if (model == MODEL_ILI212X)
++		priv->max_touches = ILI212X_TOUCHES;
++	else if (model == MODEL_ILI251X)
+ 		priv->max_touches = ILI251X_TOUCHES;
+ 
+ 	i2c_set_clientdata(client, priv);
+@@ -395,6 +423,7 @@ static SIMPLE_DEV_PM_OPS(ili210x_i2c_pm,
+ 
+ static const struct i2c_device_id ili210x_i2c_id[] = {
+ 	{ "ili210x", MODEL_ILI210X },
++	{ "ili212x", MODEL_ILI212X },
+ 	{ "ili251x", MODEL_ILI251X },
+ 	{ }
+ };
+@@ -402,6 +431,7 @@ MODULE_DEVICE_TABLE(i2c, ili210x_i2c_id);
+ 
+ static const struct of_device_id ili210x_dt_ids[] = {
+ 	{ .compatible = "ilitek,ili210x", .data = (void *)MODEL_ILI210X },
++	{ .compatible = "ilitek,ili212x", .data = (void *)MODEL_ILI212X },
+ 	{ .compatible = "ilitek,ili251x", .data = (void *)MODEL_ILI251X },
+ 	{ },
+ };
+-- 
+2.24.0
 
