@@ -2,34 +2,34 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815B3C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0CDC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F77222A5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8D9222A5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mrT2mpYF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SiFDBZHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfKSORr (ORCPT
+        id S1728349AbfKSORy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:17:47 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:49804 "EHLO
+        Tue, 19 Nov 2019 09:17:54 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:50034 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbfKSORr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 09:17:47 -0500
+        with ESMTP id S1728122AbfKSORy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 09:17:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574173064; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1574173065; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=GwQs/I34Gsxl3SkZJ9TndJzpKGHdtrRU8KhsXh5z6T4=;
-        b=mrT2mpYFDmFwKTDD8Mwz02JbRJsC+rlA44Wx0jWx/ZCxD8LzKabuLh4MZBcahZ6u36KNDr
-        4D8N75NLGhtHVfWL5A5y1HSHCs5e9xDnwNA5dc3fPzVd9ik5qVydB7ZlnN2fHX0NDF8rOJ
-        fs9NcFPmUx1lWMwqSdeTyViKojNa8Lc=
+         in-reply-to:in-reply-to:references:references;
+        bh=MQ6ngIJWRLOuCG2cCCxYITwp5Aw0SISHe37jQ3RI/Pw=;
+        b=SiFDBZHxjXdT1eI0TcxM94DEsZd4E8+JXQ04hm8SG9wAVuYKPITQfTvTLM/zKWBI7YVXFw
+        dDlgmHlDctrIE2GsVuGcRPlU1x7rAZ3fOEq+H4SSJmfA31tnn/ue9ou5UBw4rxD6rhj4q6
+        ye6BlbGju0I/3eFJunLnjDm2N29zdMA=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,9 +37,11 @@ To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
 Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/6] dt-bindings: display/ingenic: Add compatible string for JZ4770
-Date:   Tue, 19 Nov 2019 15:17:31 +0100
-Message-Id: <20191119141736.74607-1-paul@crapouillou.net>
+Subject: [PATCH 2/6] gpu/drm: ingenic: Avoid null pointer deference in plane atomic update
+Date:   Tue, 19 Nov 2019 15:17:32 +0100
+Message-Id: <20191119141736.74607-2-paul@crapouillou.net>
+In-Reply-To: <20191119141736.74607-1-paul@crapouillou.net>
+References: <20191119141736.74607-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -47,25 +49,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a compatible string for the LCD controller found in the JZ4770 SoC.
+It is possible that there is no drm_framebuffer associated with a given
+plane state.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- Documentation/devicetree/bindings/display/ingenic,lcd.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.txt b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-index 7b536c8c6dde..01e3261defb6 100644
---- a/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-+++ b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: one of:
-   * ingenic,jz4740-lcd
-   * ingenic,jz4725b-lcd
-+  * ingenic,jz4770-lcd
- - reg: LCD registers location and length
- - clocks: LCD pixclock and device clock specifiers.
- 	   The device clock is only required on the JZ4740.
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index 2e2ed653e9c6..6dc4b06e7e68 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -371,14 +371,17 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+ 	struct ingenic_drm *priv = drm_plane_get_priv(plane);
+ 	struct drm_plane_state *state = plane->state;
+ 	unsigned int width, height, cpp;
++	struct drm_framebuffer *fb = state->fb;
+ 
+-	width = state->crtc->state->adjusted_mode.hdisplay;
+-	height = state->crtc->state->adjusted_mode.vdisplay;
+-	cpp = state->fb->format->cpp[plane->index];
++	if (fb) {
++		width = state->crtc->state->adjusted_mode.hdisplay;
++		height = state->crtc->state->adjusted_mode.vdisplay;
++		cpp = fb->format->cpp[plane->index];
+ 
+-	priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
+-	priv->dma_hwdesc->cmd = width * height * cpp / 4;
+-	priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
++		priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(fb, state, 0);
++		priv->dma_hwdesc->cmd = width * height * cpp / 4;
++		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
++	}
+ }
+ 
+ static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
 -- 
 2.24.0
 
