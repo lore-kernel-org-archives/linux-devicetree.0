@@ -2,137 +2,167 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8A2C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A941C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38051223BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F5622303
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 16:50:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rDYaNUkK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nDDU/6xB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfKSQmD (ORCPT
+        id S1728564AbfKSQu1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:42:03 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34872 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbfKSQmD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 11:42:03 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n16so19548697oig.2
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 08:42:03 -0800 (PST)
+        Tue, 19 Nov 2019 11:50:27 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:38162 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728483AbfKSQu1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 11:50:27 -0500
+Received: by mail-il1-f193.google.com with SMTP id u17so20301273ilq.5
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 08:50:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=A85TSNGm7K+RaBadsnUIp68Z/l71MMMOUNnCgewKA6o=;
-        b=rDYaNUkKwdtjQmvpcam2qztShQlW76Pc8zjxt/wXQAa+sN+7wq1ibiMHNVLaCA5xiG
-         bDiZxs2feFBg8/bmAz8uQd79vrNhEtMpym5aj9KMJIMWiUbScrYVkXVn8Ko3wJHaevUC
-         57WQYZC7Y5g56OuhbCzkpK3MyK2eHC5PnsNsA5V4R//hrCitv/yC/2ovRGLZgO1jhw3g
-         lMw/+8NGpmZQ32Wf64BJ/vKH8kNESrNTR7OkUBdH/B13nEqEwy1lG84J/mz9w5T7ye8X
-         G+lk2Aro1GziU8QmVGglBsE3fXSg8HtAQoVoJhIhFy/gI+GCTaqffAOpAYTYFs5+otuf
-         Lb4Q==
+         :cc;
+        bh=gJZxSWnOG8Gs2dy+Q5ughCz+Da0hQ1yJBJ+RDGbHpkw=;
+        b=nDDU/6xBhkkZKiUVL5Ocxj7cHCsYU4c0MefmZkqPYH0eKRB2JYB2UZt217GSyNryga
+         i0HmYl3s5H1A1Q62MU6oqERAk5Fn4PH/oL86+g4t4+AlS+MaRN/h6GJfSTST69GkI0G4
+         W5eu6cHoHNLVEfYFYA4fFqOuBbWxy2p78Vonc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A85TSNGm7K+RaBadsnUIp68Z/l71MMMOUNnCgewKA6o=;
-        b=tTZrANamlFNmw/kRx+gj6ePBEhl8qOmRGY+xTLukrUHM/vKb1yeSmRXu/3AzDEeNuu
-         wsn4r68xq/gH82EnQQO3NtnyyfJ4/9UmAxt5b9OJja1y9COaQLRT67ZehuroqwNJh0Hg
-         qdbtK5GIGN2LHuPQKUvU5SXW4zGWtAvIOkmrY3UQRVyeLky4PbO0GFUaZCvIJDgFAoBf
-         Lsa4+Gx3btmQDcQMLxu3XflmMd/5SuFX4Ew6ey+YcDvuwpPr4VJ1pCJ9VmYzwfPD7ccw
-         TT9qfOzsQkmPQvwwNXegzMdh6PQwxWw5TvZTsWylLLKSBjuSwTCixdcv15GOb+eoHZP3
-         FnqA==
-X-Gm-Message-State: APjAAAWyuso+hVW9oWTroUq/7rFBuIO4mUzn4YPyZRxA5isQYs5hcSVJ
-        JjFUIxGBPrsSbKgMIq6yWEpgpt8YKWEjbax0KGVqzQ==
-X-Google-Smtp-Source: APXvYqx7cskxLkBBXBA7knh9DkcCJarVIobwkve0fLSrrww5YHLowJhAvBe1oJj6wFqp95kT/WCRIqkTRDLrTMPc5L0=
-X-Received: by 2002:a05:6808:9a1:: with SMTP id e1mr5012423oig.175.1574181722495;
- Tue, 19 Nov 2019 08:42:02 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=gJZxSWnOG8Gs2dy+Q5ughCz+Da0hQ1yJBJ+RDGbHpkw=;
+        b=I2oFzOpJ5fXk9nr2krNYbntQ8zXZx8HUxNAjgjML+Rm2+SBbvbe1qYF7NmHI5rr1So
+         LwQM1mGa3QutsD8ajmg/Hc+iZJJD5ivpzWWQnz90oYg14mcfB3J1lEUlYlBjUFJ7gMqF
+         +J3b7qC4kiZ+bG0wvsxmG2blQDQRNF90pqwKma65oWKqvMQR3tSsQCDT112nr1AUknce
+         dEAi8cWjN+OQLSR7v/TWupGI3c0qTFC5slaittjXSx+GBEEzmVqdawC/Atm1sda3pTK6
+         XeM8ZbBkPKLX0d+07NOi4ilywZtSu7g8EJ6SlM3q1G8ZuWE7f5uDEJ90VD8zukr2d44I
+         +GdQ==
+X-Gm-Message-State: APjAAAWQjdj9QcBmexQhNosUhZ8kqXKQaN+KVcx3EZD5Qfj2pfZG7RZM
+        cpKFi6V8YJpZXd5vOoQIBtWZ9BY/1l0=
+X-Google-Smtp-Source: APXvYqwutRtngh6zZpcLjgEe+NanJaTkY22nuIMO3RYfneT+ImqnVQVvaF5YHFttbfnPtM8WcYTQhw==
+X-Received: by 2002:a92:d608:: with SMTP id w8mr22520368ilm.308.1574182225985;
+        Tue, 19 Nov 2019 08:50:25 -0800 (PST)
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com. [209.85.166.180])
+        by smtp.gmail.com with ESMTPSA id u8sm3436036iof.9.2019.11.19.08.50.24
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Nov 2019 08:50:25 -0800 (PST)
+Received: by mail-il1-f180.google.com with SMTP id d83so20256061ilk.7
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 08:50:24 -0800 (PST)
+X-Received: by 2002:a92:ca8d:: with SMTP id t13mr21900377ilo.58.1574182224501;
+ Tue, 19 Nov 2019 08:50:24 -0800 (PST)
 MIME-Version: 1.0
-References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
- <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
- <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
- <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com> <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
-In-Reply-To: <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 19 Nov 2019 17:41:51 +0100
-Message-ID: <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid> <079C85BE-FBC5-4A2B-9EBF-0CEDB6F30C18@holtmann.org>
+In-Reply-To: <079C85BE-FBC5-4A2B-9EBF-0CEDB6F30C18@holtmann.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 19 Nov 2019 08:50:11 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=U4qOyLWTg3w-AfF3o_0VBTxanpaa6of70viL2v9g3Xgg@mail.gmail.com>
+Message-ID: <CAD=FV=U4qOyLWTg3w-AfF3o_0VBTxanpaa6of70viL2v9g3Xgg@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
+Hi,
+
+On Mon, Nov 18, 2019 at 9:39 PM Marcel Holtmann <marcel@holtmann.org> wrote:
 >
-> On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=82=
-(a):
+> Hi Abhishek,
 >
-> > > As suggested in the comments received on the RFC version of this patc=
-h[0], I am trying to use regmap MMIO by looking at gpio-mvebu.c. I got your=
- point regarding the usage of own locks is not making any sense.
-> > > Here is what I will do in v2:
-> > > 1. drop the usage of own locks
-> > > 2. consistently use regmap_* apis for register access (replace all io=
-writes).
-> > > Does this make sense now?
+> > Add documentation for pcm parameters.
 > >
-> > The thing is: the gpio-mmio code you're (correctly) reusing uses a
-> > different lock - namely: bgpio_lock in struct gpio_chip. If you want
-> > to use regmap for register operations, then you need to set
-> > disable_locking in regmap_config to true and then take this lock
-> > manually on every access.
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > ---
+> >
+> > Changes in v6: None
+> > Changes in v5: None
+> > Changes in v4: None
+> > Changes in v3: None
+> > Changes in v2: None
+> >
+> > .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
+> > include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
+> > 2 files changed, 48 insertions(+)
+> > create mode 100644 include/dt-bindings/bluetooth/brcm.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > index c749dc297624..8561e4684378 100644
+> > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > @@ -29,10 +29,20 @@ Optional properties:
+> >    - "lpo": external low power 32.768 kHz clock
+> >  - vbat-supply: phandle to regulator supply for VBAT
+> >  - vddio-supply: phandle to regulator supply for VDDIO
+> > + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
+> > + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
+> > + - brcm,bt-pcm-frame-type: short, long
+> > + - brcm,bt-pcm-sync-mode: slave, master
+> > + - brcm,bt-pcm-clock-mode: slave, master
+> >
+> > +See include/dt-bindings/bluetooth/brcm.h for SCO/PCM parameters. The default
+> > +value for all these values are 0 (except for brcm,bt-sco-routing which requires
+> > +a value) if you choose to leave it out.
+> >
+> > Example:
+> >
+> > +#include <dt-bindings/bluetooth/brcm.h>
+> > +
+> > &uart2 {
+> >        pinctrl-names = "default";
+> >        pinctrl-0 = <&uart2_pins>;
+> > @@ -40,5 +50,11 @@ Example:
+> >        bluetooth {
+> >                compatible = "brcm,bcm43438-bt";
+> >                max-speed = <921600>;
+> > +
+> > +               brcm,bt-sco-routing        = <BRCM_SCO_ROUTING_TRANSPORT>;
 >
-> Is it really so? The bgpio_lock does protect the registers used
-> by regmap-mmio but unless the interrupt code is also using the
-> same registers it is fine to have a different lock for those.
+> in case you use transport which means HCI, you would not have values below. It is rather PCM here in the example.
 >
-> Is the interrupt code really poking into the very same registers
-> as passed to bgpio_init()?
+> > +               brcm,bt-pcm-interface-rate = <BRCM_PCM_IF_RATE_512KBPS>;
+> > +               brcm,bt-pcm-frame-type     = <BRCM_PCM_FRAME_TYPE_SHORT>;
+> > +               brcm,bt-pcm-sync-mode      = <BRCM_PCM_SYNC_MODE_MASTER>;
+> > +               brcm,bt-pcm-clock-mode     = <BRCM_PCM_CLOCK_MODE_MASTER>;
+> >        };
+> > };
 >
-> Of course it could be seen as a bit dirty to poke around in the
-> same memory space with regmap and the bgpio_* accessors
-> but in practice it's no problem if they never touch the same
-> things.
->
-> Yours,
-> Linus Walleij
+> And I am asking this again. Is this adding any value to use an extra include file? Inside the driver we are not really needing these values since they are handed to the hardware.
 
-I'm wondering if it won't cause any inconsistencies when for example
-interrupts are being triggered on input lines while we're also reading
-their values? Seems to me it's just more clear to use a single lock
-for a register range. Most drivers using gpio-mmio do just that in
-their irq-related routines.
+Personally I find that they add value in that it makes it easier for
+someone tweaking the device tree to know what the expected valid
+values are and what they mean.  I think Matthias also found value in
+them since he suggested them in:
 
-Anyway: even without using bgpio_lock this code is inconsistent: if
-we're using regmap for interrupt registers, we should either decide to
-rely on locking provided by regmap or disable it and use a locally
-defined lock. Also: if we're using regmap, then let's use it
-everywhere, not only when it's convenient for updating registers.
+https://lore.kernel.org/r/20191114175836.GI27773@google.com
 
-Bart
+There, he said:
+
+> I'd suggest to define constants in include/dt-bindings/bluetooth/brcm.h
+> and use them instead of literals, with this we wouldn't rely on (optional)
+> comments to make the configuration human readable.
+
+...which seems to make sense to me.
+
+-Doug
