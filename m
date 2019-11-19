@@ -2,112 +2,98 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40B1C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 07:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68566C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 07:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F6121850
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 07:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC212230E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 07:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEgICEq7"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PDT3vL3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfKSHj3 (ORCPT
+        id S1727139AbfKSH52 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 02:39:29 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39043 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfKSHj3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 02:39:29 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t26so2240745wmi.4;
-        Mon, 18 Nov 2019 23:39:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hh4VbnNsZd0cQjCcxR1lcKBnthPXIf0SZTjvhg2Wu+o=;
-        b=bEgICEq769u8g2rEZbD8dQT+znw/d/3WiyLyxRoRw2phf9OfSNgEj8y7rBFWslHOfR
-         CiDX77/A2ElzxR1iC6wn+xj3FwhUSO1TYld/LPBHJisQ26P/zTwkIc2faQKEab7S9K5B
-         HsH8dMCSHs/jsDlCzwdlZl8P42r0ysTzoTlKPEhcOd/U6WJ8NYaSCsSwPONBhtWibdVU
-         SaHbl7L/aToxU7ObEv/bZMg9vy9ctB82/goQrJvUIEM+ALSx/ebIDGYx97nXEBsoQ5WG
-         b3wj/0dg22lPqwiTsNcqSgc9D20S/yZXLdypRwgJ4EhsEqTuwdOdADXw1Nm8sCNBDoAQ
-         ySOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hh4VbnNsZd0cQjCcxR1lcKBnthPXIf0SZTjvhg2Wu+o=;
-        b=qsE8YujaLHU1tTa7hnLuScZ5jvQpKiJcEQ8C+XMVQCIWPCab7mxcMnCMuqyPAuFAkX
-         m7oyX5Vk/qi0NbVbKcnR3tkTChAOAa4jsSAZ8p0rS/WO3OF30vIL6YtcvQI0PGnqZRfU
-         eZ7tFGhzV4I9xVnBXPXDiN4QYDzg4+fX+SEPg9os2U54f/qaO7vAlFJIyCnM7OXpa23G
-         XR6q2jfDVtmsGRE9M1J/MGybRfmwYEWILpMoFR+v7AniTmpdsVqR26uUuUCxF3YKBJ/b
-         wAY+bT8HuTHzaqqXXSJLoweKoiOHpeM8/eMaH3sFqRNwRuw23U9sha3Bpj9gcxLm1Z/4
-         go0Q==
-X-Gm-Message-State: APjAAAUz5EGHvtok/Oz9gRVlYnQADcyusy2Rn+0HYLrggxLKmVTLARnF
-        ec43VyUfMlseUn4RhXeYmzOXY4HE
-X-Google-Smtp-Source: APXvYqz0gH537B8rU2w00QiT/qNEHBVmoinFUpSwuRNgUqOSFjcLDQplIaEzENzq42pnIhByD4QFUw==
-X-Received: by 2002:a05:600c:22c1:: with SMTP id 1mr3946744wmg.142.1574149166955;
-        Mon, 18 Nov 2019 23:39:26 -0800 (PST)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id k125sm2206895wmf.2.2019.11.18.23.39.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 23:39:26 -0800 (PST)
-Date:   Tue, 19 Nov 2019 08:39:24 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: a33: add the new SecuritySystem
- compatible
-Message-ID: <20191119073924.GA32060@Red>
-References: <20191114144812.22747-1-clabbe.montjoie@gmail.com>
- <20191114144812.22747-3-clabbe.montjoie@gmail.com>
- <20191118111143.GF4345@gilmour.lan>
+        Tue, 19 Nov 2019 02:57:28 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:9526 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727007AbfKSH52 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 02:57:28 -0500
+X-UUID: a7163a41c1394fa3b0f25bf86255122d-20191119
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=yBnu1NtPajEa00aUiIIxVlbDQ8eChoLCV7rmSdXtLH4=;
+        b=PDT3vL3EhKmVaDjFzp+2dEvjD54PpDO7kDG3B9MDJev5ur3npY9ZwcSTCtnxiKFKMA5UthNLEWgWtbILacQXvBHVftLSuitUIsefXCobp5KDTiYwhm57SkTqZC7od2q/tcEes1DyMM+U+lvbds7ABaRHhV9cSd7xRYzWqk+YlSs=;
+X-UUID: a7163a41c1394fa3b0f25bf86255122d-20191119
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1361509069; Tue, 19 Nov 2019 15:57:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 19 Nov
+ 2019 15:57:21 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas07.mediatek.inc
+ (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 19 Nov
+ 2019 15:57:08 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 19 Nov 2019 15:57:08 +0800
+Message-ID: <1574150240.19262.7.camel@mtksdccf07>
+Subject: Re: [RESEND, PATCH 1/1] arm: dts: mediatek: add mt7629 pwm support
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 19 Nov 2019 15:57:20 +0800
+In-Reply-To: <31fddc2b-65c7-02e8-dca2-b5d6dc050f87@gmail.com>
+References: <1571751001-28588-1-git-send-email-sam.shih@mediatek.com>
+         <1571751001-28588-2-git-send-email-sam.shih@mediatek.com>
+         <31fddc2b-65c7-02e8-dca2-b5d6dc050f87@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118111143.GF4345@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 12:11:43PM +0100, Maxime Ripard wrote:
-> Hi,
-> 
-> On Thu, Nov 14, 2019 at 03:48:11PM +0100, Corentin Labbe wrote:
-> > Add the new A33 SecuritySystem compatible to the crypto node.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/sun8i-a33.dtsi | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-> > index 1532a0e59af4..5680fa1de102 100644
-> > --- a/arch/arm/boot/dts/sun8i-a33.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-> > @@ -215,7 +215,8 @@
-> >  		};
-> >
-> >  		crypto: crypto-engine@1c15000 {
-> > -			compatible = "allwinner,sun4i-a10-crypto";
-> > +			compatible = "allwinner,sun8i-a33-crypto",
-> > +				     "allwinner,sun4i-a10-crypto";
-> 
-> If some algorithms aren't working properly, we can't really fall back
-> to it, we should just use the a33 compatible.
-> 
+T24gU3VuLCAyMDE5LTExLTEwIGF0IDIxOjUxICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMjIvMTAvMjAxOSAxNTozMCwgU2FtIFNoaWggd3JvdGU6DQo+ID4gVGhpcyBh
+ZGRzIHB3bSBzdXBwb3J0IGZvciBNVDc2MjkuDQo+ID4gVXNlZDoNCj4gPiBodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3BhdGNoLzExMTYwODUxLw0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
+IFNhbSBTaGloIDxzYW0uc2hpaEBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJt
+L2Jvb3QvZHRzL210NzYyOS5kdHNpIHwgMTUgKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL210NzYyOS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LmR0c2kNCj4g
+PiBpbmRleCA5NjA4YmMyY2NiM2YuLjI0Mzc1ZmM1ZjkzNiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNo
+L2FybS9ib290L2R0cy9tdDc2MjkuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL210
+NzYyOS5kdHNpDQo+ID4gQEAgLTI0MSw2ICsyNDEsMjEgQEANCj4gPiAgCQkJc3RhdHVzID0gImRp
+c2FibGVkIjsNCj4gPiAgCQl9Ow0KPiA+ICANCj4gPiArCQlwd206IHB3bUAxMTAwNjAwMCB7DQo+
+ID4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ3NjI5LXB3bSI7DQo+ID4gKwkJCXJlZyA9
+IDwweDExMDA2MDAwIDB4MTAwMD47DQo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3NyBJ
+UlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1Bf
+UFdNX1NFTD4sDQo+ID4gKwkJCQkgPCZwZXJpY2ZnIENMS19QRVJJX1BXTV9QRD4sDQo+ID4gKwkJ
+CQkgPCZwZXJpY2ZnIENMS19QRVJJX1BXTTFfUEQ+Ow0KPiA+ICsJCQljbG9jay1uYW1lcyA9ICJ0
+b3AiLCAibWFpbiIsICJwd20xIjsNCj4gPiArCQkJYXNzaWduZWQtY2xvY2tzID0gPCZ0b3Bja2dl
+biBDTEtfVE9QX1BXTV9TRUw+Ow0KPiA+ICsJCQlhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0NCj4g
+PiArCQkJCQk8JnRvcGNrZ2VuIENMS19UT1BfVU5JVlBMTDJfRDQ+Ow0KPiA+ICsJCQludW0tcHdt
+cyA9IDwxPjsNCj4gDQo+IG51bS1wd21zIGlzIG5vdCBkZWZpbmVkLiBEaWQgeW91IG1lYW4gcHdt
+LWNlbGxzPw0KPiANCj4gUmVnYXJkcywNCj4gTWF0dGhpYXMNCj4gDQo+ID4gKwkJCXN0YXR1cyA9
+ICJkaXNhYmxlZCI7DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gIAkJaTJjOiBpMmNAMTEwMDcwMDAg
+ew0KPiA+ICAJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NzYyOS1pMmMiLA0KPiA+ICAJCQkJ
+ICAgICAibWVkaWF0ZWssbXQyNzEyLWkyYyI7DQo+ID4gDQo+IA0KPiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBMaW51eC1tZWRpYXRlayBtYWlsaW5n
+IGxpc3QNCj4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQoNCg0KU29y
+cnkgZm9yIHRoZSBMYXRlIFJlcGx5LA0KVGhlIG51bS1wd21zIGZpZWxkIGlzIHJlZHVuZGFudCBh
+ZnRlciB3ZSBkZXJpdmUgaXQgZnJvbSB0aGUgY29tcGF0aWJsZQ0Kc3RyaW5nLiBJIGZvcmdvdCB0
+byByZW1vdmUgaXQgZnJvbSB0aGUgZGV2aWNlIHRyZWUuDQpJIHdpbGwgc2VuZCBhIG5ldyB2ZXJz
+aW9uLg0KDQpUaGFua3MsDQpCZXN0IFJlZ2FyZHMsDQpTYW0gU2hpaA0KDQo=
 
-Since crypto selftest detect the problem, the fallback could be used and SS will just be in degraded mode (no sha1).
-But since nobody reported this problem since 4 years (when SS was added in a33 dts), the absence of sha1 is clearly not an issue.
-
-Regards
