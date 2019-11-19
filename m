@@ -2,100 +2,135 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66719C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 21:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4527DC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 22:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3445A20730
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 21:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EBD022459
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 22:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkTGgkMX"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="Jfl/TeAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKSVwl (ORCPT
+        id S1727173AbfKSWAP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 16:52:41 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43282 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfKSVwl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 16:52:41 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l20so20471230oie.10;
-        Tue, 19 Nov 2019 13:52:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xM3EqgbuqqFTuFds9OXw93bcS82NPSO+DWIZagqqiLs=;
-        b=YkTGgkMXI89sxk3/u7tRBG3M7mmU9sCH0ke7b0Y5IBkjP9TWTdyAaldxKGoaILeakO
-         2Rh/WekqWEpSMRymaXo4m6vwncBPPqQas+ybA2EAoAhGFoZDj9w9NayQJGbn+XMFdnnk
-         r3A8dbPFUE9A6W1rdZqeRuS3ZwpqBb9ZXlHNDV2YwUttC4DVI7o2nA7FieOhkhRLv3Nv
-         k5PAB2q0sClXMZcrXWWPg2BavWlR9tr1vx3UeWiyPNC2RzeQJrEjPuIhsvZ2T6a5oE1f
-         u+GaEpnmRq1d/k5tOTR+xgFryztcSi+3NEii1nwbv9tRnk+GyNXnlqwpWpeBXEL9+zpF
-         VVdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xM3EqgbuqqFTuFds9OXw93bcS82NPSO+DWIZagqqiLs=;
-        b=cvkcaO1OLh3sSvcGBubQjCKPzV3SiyTuFq5T1lFLqiY6p0Y2+a4M+NHkaSNYLybqXN
-         3fLyDkLOoQLk8PmA3cFj1r+hO4CUm4FRg6zhdnWx2CkoKizIDTdfBzivOGtHNJWhpBis
-         Y7yexsGmhiyOdRcBsSdgL+/3bfF9N02MIXeLZuvbzn1RM7dHdbXh2AfLEyuGthdN4vkd
-         Ws5u11ToheVUpRNxgGR37rzNcx+j2L2zx2qoxrI4U1+/8hIe14jm/3xiw5ZboalxAqht
-         NIeuxaoToxrAeg4PVHjSDEVhF0CEgwgdlWMnvNrdtPzDGe803XReUuWoqjdJ04X/kUzZ
-         M4AQ==
-X-Gm-Message-State: APjAAAVAhtxn+4/83kx11xtxG5W5Vo2fTR0+KIxSS5t4VH0FpPgkjgYN
-        CsVD1ZU6H+Qw4fYtMdFz1W94TDfthGY6D7eL3vE=
-X-Google-Smtp-Source: APXvYqx3Y0smPJ5QwrudTtg09uEj0XidrI88Qy1PrTuOO30PuYTQPVaARl3wM9JjPFM7N6h1SXT9xS1Ko58ZZIW+qYs=
-X-Received: by 2002:a05:6808:3a1:: with SMTP id n1mr5973808oie.86.1574200359962;
- Tue, 19 Nov 2019 13:52:39 -0800 (PST)
+        Tue, 19 Nov 2019 17:00:15 -0500
+Received: from mail-eopbgr40108.outbound.protection.outlook.com ([40.107.4.108]:36195
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726911AbfKSWAP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 Nov 2019 17:00:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UwnfIZ0IClRAR9/LLyJTGV4tUZd/oqZtSmfVgkdJwRgG7w8BqWOtWYa8NfBe7GMfWNECj5mhNqU6oQW5kMHvvbm8DsKFOJFvqN7PKdh8vxdrZZfzKiUOXsAFh/TKoXFg+0bXKVqq6tPi9AVlquP1INIpcfrBdfMI1VulDHNPmsUbn3kQlnJlQqXxW5w05eotj4FmMJigaNqfFjIETky6CaCCDIG45b8Wecb8unohhcTdHvXbkCvRc6uqlWshJlEyfWqdiLhao6sFAQ07cUExCdbs0mK1W+i+zTl5XNfoboNhEKcXTw00qXhz0+AyOHqqco08m/D4qtmy0GNHpL3Wvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hA6qV8a6x7T8V3xSCAiXKEwEPX+fjqKbkxvgIzXwMZU=;
+ b=ULcggpiwNkaMyiqcjUbHde+ve184iKuUHxPjV0kn12TPDMGrLW2uORqDJyf2bBkRQHGLNXlx6ZQBLPzdphrijrNWXsxcmu6f99K2Ym9UaHK3snr1SSIFqdvXee+C9+pjRxnJy+CqlY/c/+NsQRcRnEe3AvUFFb9i0EtF58Mp32EYUGDzq5Yfh0Oh8UDSLca5p1MdUpPgGj5yOMf3lvim4ExGN2VjWbz49VTBgyC1AhsQpNUXWdrqQwfrEZfyOPpEy+93XxklPo4NxVbQCfT8E9DAktYu55gZZ6HOxpPZiq7eScFWERYw/mm9uVQjquwNmj9HVmZqoUaBE+tzQtHB8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hA6qV8a6x7T8V3xSCAiXKEwEPX+fjqKbkxvgIzXwMZU=;
+ b=Jfl/TeAt9i96iMKSRLHNkfiPk2dlK28FJ+OZXPTnrG1mv2ARPAwcbOMuvsoQviID7odLP4JpZ0Zz++IOKlXrzdk5iCJQF9blfQU7dHLEiIu1vbpd6f9HEi0nZuvvyOeLbDn+NtGMxmuxaxKpCzwPElsqR0ZXXOjpCBRt+t8Gb64=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3388.eurprd02.prod.outlook.com (52.134.67.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17; Tue, 19 Nov 2019 22:00:08 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::477:9510:3e3:f8ca]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::477:9510:3e3:f8ca%7]) with mapi id 15.20.2474.015; Tue, 19 Nov 2019
+ 22:00:08 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Biwen Li <biwen.li@nxp.com>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [v5,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata E-00013
+Thread-Topic: [v5,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata E-00013
+Thread-Index: AQHViJBmXxYwmZCtrEmu2fIWeaCEraeTOEWA
+Date:   Tue, 19 Nov 2019 22:00:08 +0000
+Message-ID: <e006f622-08b1-3ae4-ee50-b0af7db93a02@axentia.se>
+References: <20191022041152.3663-1-biwen.li@nxp.com>
+ <20191022041152.3663-3-biwen.li@nxp.com>
+In-Reply-To: <20191022041152.3663-3-biwen.li@nxp.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: AM0PR04CA0014.eurprd04.prod.outlook.com
+ (2603:10a6:208:122::27) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f9e95f3f-f314-4075-cb1a-08d76d3bd767
+x-ms-traffictypediagnostic: DB3PR0202MB3388:
+x-microsoft-antispam-prvs: <DB3PR0202MB33888213D54A3BF1315261D7BC4C0@DB3PR0202MB3388.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(39830400003)(366004)(376002)(136003)(189003)(199004)(3846002)(6116002)(4001150100001)(305945005)(66946007)(256004)(14444005)(446003)(110136005)(81156014)(6506007)(386003)(53546011)(81166006)(6512007)(36756003)(2906002)(54906003)(58126008)(14454004)(71190400001)(71200400001)(11346002)(6246003)(2501003)(316002)(7736002)(64756008)(66476007)(66446008)(66556008)(486006)(31686004)(476003)(2616005)(31696002)(99286004)(52116002)(26005)(508600001)(186003)(5660300002)(6486002)(86362001)(8936002)(76176011)(25786009)(6436002)(229853002)(4326008)(65806001)(66066001)(65956001)(102836004)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3388;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3JYaYkNKZbm0Esnsi6LHD7IBBALCOLNAZv8Fnjf2ZHMhKg0S5i9BIWSqWC3Lb7ZQjnZvIiOUMPqzyAqh1mrx74Z57wKLqbvYhplu894oe9nv0AQeGzmoLE0S+tsrWDGYI4uQL4knHPaClxvBCQ0ZKpJUh6P3oXgxC/Vg6utdL2KeCkZw2QmDiLAPnUZzfio8rLqhO9PxM/kSzZ9qKwv9842elCK5hRZZXVUE/3b8pLgY/NlShs5QNchwC04XP156fM0G5JhloiRGpWqi8V3M1XDgIFhK65p5G4xN4GuIM13c1aaIRQKz4djcJfUBgxnJ5ulbWRvbQq8ThHtPrOPBedgr/XQKNlslQxl90qtolMGEkThhjLrvCAG+eadfY7MXLKL+K3iBQxIy+1KQTaWrKieXensPsjS5iQZMyqlDbDM9qwU0XCjg8MtmDObMhDAH
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BE011C63B02E48478844162F976A82D6@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191119154611.29625-1-TheSven73@gmail.com> <20191119154611.29625-4-TheSven73@gmail.com>
- <23217b5b-90f4-748a-c008-9ae7ef82c6dd@ti.com>
-In-Reply-To: <23217b5b-90f4-748a-c008-9ae7ef82c6dd@ti.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 19 Nov 2019 16:52:29 -0500
-Message-ID: <CAGngYiXcpfkTyhJ4qRwD+tVVGODa6+e3cqQD8s9W9n8axuq_-g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] leds: tps6105x: add driver for mfd chip led mode
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9e95f3f-f314-4075-cb1a-08d76d3bd767
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 22:00:08.2495
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PoBD8ZCdxz5vol2H/G1EuqDlxTZ7ciWNX+S6pAe8EFiB3ztaFdFpfp2DATr7Ov/T
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3388
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dan / Jacek,
-
-On Tue, Nov 19, 2019 at 1:33 PM Dan Murphy <dmurphy@ti.com> wrote:
->
-> Prefer device_* calls as opposed to of_* calls.
-
-Ok, I see now how this is done on lp8860 and lm3692x.
-
-So for this led driver to be correct, it should:
-- use device_* calls
-- use led_init_data (i.e. devm_led_classdev_register_ext)
-- drop pdata support for the led subdriver (nice to have)
-
-Unfortunately I can't, because the required infrastructure isn't present in
-the 4.19 vendor kernel I'm using.
-
-I only have a single tps6105x chip in my target system, so I don't have
-a requirement for devicetree led naming.
-
-So for v3 I will hard-code the led name to 'tps6105x::torch' which should
-comply with the naming convention.
+SGkhDQoNClRoaXMgcGF0Y2ggbmVlZHMgYW4gYWNrIGZyb20gdGhlIGFybTY0IGR0cyBtYWludGFp
+bmVycy4gSSBjYW5ub3Qgc25lYWsgaXQNCmluICJiZWhpbmQgdGhlaXIgYmFja3MiLiBTbywgaXQg
+d2lsbCBoYXZlIHRvIHdhaXQuIFNvcnJ5IGZvciBub3Qgbm90aWNpbmcNCmVhcmxpZXIuDQoNCkNo
+ZWVycywNClBldGVyDQoNCk9uIDIwMTktMTAtMjIgMDY6MTEsIEJpd2VuIExpIHdyb3RlOg0KPiBT
+cGVjaWZ5IGEgY2hhbm5lbCB6ZXJvIGluIGlkbGUgc3RhdGUgdG8NCj4gYXZvaWQgZW50ZXJyaW5n
+IHRyaS1zdGF0ZWQgc3RhdGUgZm9yIFBDQTk1NDcuDQo+IEFib3V0IEUtMDAwMTM6DQo+IAktIERl
+c2NyaXB0aW9uOiBJMkMxIGFuZCBJMkMzIGJ1c2VzDQo+IAkgIGFyZSBtaXNzaW5nIHB1bGwtdXAu
+DQo+IAktIEltcGFjdDogV2hlbiB0aGUgUENBOTU0eCBkZXZpY2UgaXMgdHJpLXN0YXRlZCwgdGhl
+IEkyQyBidXMNCj4gCSAgd2lsbCBmbG9hdC4gVGhpcyBtYWtlcyB0aGUgSTJDIGJ1cyBhbmQgaXRz
+IGFzc29jaWF0ZWQNCj4gCSAgZG93bnN0cmVhbSBkZXZpY2VzIGluYWNjZXNzaWJsZS4NCj4gCS0g
+SGFyZHdhcmUgZml4OiBQb3B1bGF0ZSByZXNpc3RvcnMgUjE4OSBhbmQgUjE5MCBmb3IgSTJDMQ0K
+PiAJICBhbmQgcmVzaXN0b3JzIFIyMjggYW5kIFIyMjkgZm9yIEkyQzMuDQo+IAktIFNvZnR3YXJl
+IGZpeDogUmVtb3ZlIHRoZSB0cmktc3RhdGUgb3B0aW9uIGZyb20gdGhlIFBDQTk1NHgNCj4gCSAg
+ZHJpdmVyKFBDQTk1NHggYWx3YXlzIG9uIGVuYWJsZSBzdGF0dXMsIHNwZWNpZnkgYQ0KPiAJICBj
+aGFubmVsIHplcm8gaW4gZHRzIHRvIGZpeCB0aGUgZXJyYXRhIEUtMDAwMTMpLg0KPiANCj4gU2ln
+bmVkLW9mZi1ieTogQml3ZW4gTGkgPGJpd2VuLmxpQG54cC5jb20+DQo+IC0tLQ0KPiBDaGFuZ2Ug
+aW4gdjU6DQo+IAktIHNwZWNpZnkgYSBjaGFubmVsIHplcm8gd2hlbiBwY2E5NTQ3IGluIGlkbGUg
+c3RhdGUuDQo+IA0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4eGEt
+cmRiLmR0c2kgfCAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiANCj4g
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwOHhhLXJk
+Yi5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4eGEtcmRiLmR0
+c2kNCj4gaW5kZXggNmZkN2Y2MzA4NWM5Li40MTJmMWJjMGRiNWYgMTAwNjQ0DQo+IC0tLSBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwOHhhLXJkYi5kdHNpDQo+ICsrKyBi
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwOHhhLXJkYi5kdHNpDQo+IEBA
+IC00OSw2ICs0OSw3IEBADQo+ICAJCXJlZyA9IDwweDc1PjsNCj4gIAkJI2FkZHJlc3MtY2VsbHMg
+PSA8MT47DQo+ICAJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiArCQlpZGxlLXN0YXRlID0gPDA+Ow0K
+PiAgCQlpMmNAMSB7DQo+ICAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gIAkJCSNzaXplLWNl
+bGxzID0gPDA+Ow0KPiANCg0K
