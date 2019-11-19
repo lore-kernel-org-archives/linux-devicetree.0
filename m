@@ -2,62 +2,70 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CF2C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040DFC432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD0D223B0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574192795;
-	bh=htwhJ1j/typxZHTXIl07zBrh/ki6a5XWKP3Itarz+KU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mlERWECojNKjxe2T3UrGYKhpctu2ckyCKNWl+tQyU1fqUYO6f3MGq7NEpModd8uFa
-	 4F65A1DZBt9YW9DPY+d6lsqZG1vbkiKBcbQe1SjQeAb8IQ81NrlF0y40EytMMXbPhi
-	 YRP+fkCiXu8/TbzZCpNmpecqe4/aZ+7/Ntpr6EwE=
+	by mail.kernel.org (Postfix) with ESMTP id D09D5223B0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJ0sFL+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfKSTq1 (ORCPT
+        id S1726836AbfKSTqr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:46:27 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45759 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfKSTq1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 14:46:27 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 14so20110261oir.12;
-        Tue, 19 Nov 2019 11:46:26 -0800 (PST)
+        Tue, 19 Nov 2019 14:46:47 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51763 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfKSTqr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 14:46:47 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q70so4551957wme.1
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 11:46:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fKtUgPJi24FIzqrE0v4WnWjrv8ka1YzV4SVOi341LVQ=;
+        b=hJ0sFL+u5o5nqriZoZv5s9sZngNo4h9LHTKViWke2quZpvDSFw+PoxZ+jAOMPp12ES
+         v6U27TxnOVjJnSblg2hXMn2l3aY3wY+uKr7PEhRtl9KvZF6rNklBmjQE2sH1Umz1D61c
+         LNPITjgspXYkWkYW+S/zbOTrn+Fy5helHm/MtqezZmVI5U///KPBSd3gMh7Nlw5FZfPW
+         fq7LN1dzQ3ALiHo3BnkRmf3DHLh1WWRRn7dBZY3h1+bOojFXeyrgpOx4d5nOZM/tlb8M
+         tQPnHOebx8x5PcUssQwJ6SLJgrJQ2JUpSIQoBVRf43cvNnRMGBSdZjkUkymk5U1w+iVk
+         j56A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jN1kyumQBXTm1oq6OTh5Er7SJN3EVhmLMXH6hu04p9o=;
-        b=XnS7oJY961cElNf4qz01b9GtFMRD3crK1k4NREIYh0BL8WmNQJGpxRhAdbPwMScNsU
-         9G9XrR9YlvCP5vPvudmB0vFS7catucTodjywK13F/xvURqDsWM+p/S11gjyX+N5WquZg
-         YpekG5x2B3y+aoM5ns4QNhKIxgu0Pby9M5NBQYWYf8T0FyF7YlXOVLpircNkhxjJy0YB
-         Xcf5fuxFw+zl1WT3eLtY/kYVA72QmXrtNaH+dJr8gG18bsNrd09Nrctt7re1OAxMn2fp
-         iS/2feiZqV/2ib49dMkSFyJQUxvdkLSEHlVOrQtnAzotSur0W9G/2yx7zsxJlemNwmck
-         xVRg==
-X-Gm-Message-State: APjAAAWFEYGre9795RtTTLP8yZhNjS3vfkA0AK4si5Jiu+lUv2PrSXHX
-        /cz/6Be7moukr3YtMDakwQkGEZQ=
-X-Google-Smtp-Source: APXvYqy8wDMADUbDiWIHR1cjX6yPe3VcJRbYrZ0YPtyOz5EfbLD59feL9qsjiUmbcFcf1DTOXk/bmQ==
-X-Received: by 2002:aca:aa57:: with SMTP id t84mr5491819oie.43.1574192785110;
-        Tue, 19 Nov 2019 11:46:25 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id j2sm7509614otn.20.2019.11.19.11.46.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fKtUgPJi24FIzqrE0v4WnWjrv8ka1YzV4SVOi341LVQ=;
+        b=Y+tu0mFRQaw3+O0prlXWSJyvc5Kfo9W7vbZEViNnycOlkQ2MhB4VAdCVYSpMoV9LFD
+         rAZKfwwlpMHBqL6nPqlTadJvMp0r/Rix71dY01MT5PjCFMilF/vRkcuQ5QS6Jeoiq9mm
+         HkyA5ye8zIBeDT97F8FlGk59heIY5pWHOPar0JtFMPhy+S6fnHol3sjHHGRtUuxfB2c2
+         hKTZ88BuwVdToc4Vv6dwfkZpm2S6j0DiVKOK18vkrJkny66C3Yps5t40Wdl8/wHwrR7h
+         RMIIqbx8RxKOb2ggEru90EawyFMJTM1JmNVS9LXvt6Q8xFDlZE1nJ2QHwk8GqKrekfH/
+         1gnA==
+X-Gm-Message-State: APjAAAXo7ogaJz2lk1Ql25NbSOIJDUl7VhVuBx2XCzeoE0+dvHByFJBd
+        az2mrSfUfxEU1lk8bp2Ui5bhjgKNuyQ=
+X-Google-Smtp-Source: APXvYqzCfVD/+3BoAtld9Gm6HlDPgteBTpjkDPApJjaLbqLHkUZbTbJEzgGiGbCps+VQyziZBN7Rgg==
+X-Received: by 2002:a05:600c:212:: with SMTP id 18mr8218527wmi.93.1574192805137;
+        Tue, 19 Nov 2019 11:46:45 -0800 (PST)
+Received: from localhost ([37.238.189.2])
+        by smtp.gmail.com with ESMTPSA id m15sm15180718wrj.52.2019.11.19.11.46.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 11:46:24 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-leds@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 1/2] dt-bindings: leds: Convert common LED binding to schema
-Date:   Tue, 19 Nov 2019 13:46:22 -0600
-Message-Id: <20191119194623.23854-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 19 Nov 2019 11:46:44 -0800 (PST)
+From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
+To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>
+Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: net: Add compatible for BCM4335A0 bluetooth module
+Date:   Tue, 19 Nov 2019 22:46:37 +0300
+Message-Id: <20191119194638.4967-2-mohammad.rasim96@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119194638.4967-1-mohammad.rasim96@gmail.com>
+References: <20191119194638.4967-1-mohammad.rasim96@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -65,475 +73,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the common LEDs properties bindings to a schema. As trigger source
-providers are different nodes, we need to split trigger source properties
-to a separate file.
+Available in the Ampak AP6335 WiFi/Bluetooth combo
 
-Bindings for LED controllers can reference the common schema for the LED
-child nodes:
-
-patternProperties:
-  "^led@[0-4]":
-    type: object
-    allOf:
-      - $ref: common.yaml#
-
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Cc: linux-leds@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
 ---
- .../devicetree/bindings/leds/common.txt       | 174 +------------
- .../devicetree/bindings/leds/common.yaml      | 228 ++++++++++++++++++
- .../bindings/leds/trigger-source.yaml         |  24 ++
- 3 files changed, 253 insertions(+), 173 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/common.yaml
- create mode 100644 Documentation/devicetree/bindings/leds/trigger-source.yaml
+ Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 9fa6f9795d50..26d770ef3601 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -1,173 +1 @@
--* Common leds properties.
--
--LED and flash LED devices provide the same basic functionality as current
--regulators, but extended with LED and flash LED specific features like
--blinking patterns, flash timeout, flash faults and external flash strobe mode.
--
--Many LED devices expose more than one current output that can be connected
--to one or more discrete LED component. Since the arrangement of connections
--can influence the way of the LED device initialization, the LED components
--have to be tightly coupled with the LED device binding. They are represented
--by child nodes of the parent LED device binding.
--
--
--Optional properties for child nodes:
--- led-sources : List of device current outputs the LED is connected to. The
--		outputs are identified by the numbers that must be defined
--		in the LED device binding documentation.
--
--- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
--	    from the header include/dt-bindings/leds/common.h.
--	    If there is no matching LED_FUNCTION available, add a new one.
--
--- color : Color of the LED. Use one of the LED_COLOR_ID_* prefixed definitions
--	  from the header include/dt-bindings/leds/common.h.
--	  If there is no matching LED_COLOR_ID available, add a new one.
--
--- function-enumerator: Integer to be used when more than one instance
--                       of the same function is needed, differing only with
--		       an ordinal number.
--
--- label : The label for this LED. If omitted, the label is taken from the node
--	  name (excluding the unit address). It has to uniquely identify
--	  a device, i.e. no other LED class device can be assigned the same
--	  label. This property is deprecated - use 'function' and 'color'
--	  properties instead. function-enumerator has no effect when this
--	  property is present.
--
--- default-state : The initial state of the LED. Valid values are "on", "off",
--  and "keep". If the LED is already on or off and the default-state property is
--  set the to same value, then no glitch should be produced where the LED
--  momentarily turns off (or on). The "keep" setting will keep the LED at
--  whatever its current state is, without producing a glitch.  The default is
--  off if this property is not present.
--
--- linux,default-trigger :  This parameter, if present, is a
--    string defining the trigger assigned to the LED.  Current triggers are:
--     "backlight" - LED will act as a back-light, controlled by the framebuffer
--		   system
--     "default-on" - LED will turn on (but for leds-gpio see "default-state"
--		    property in Documentation/devicetree/bindings/leds/leds-gpio.txt)
--     "heartbeat" - LED "double" flashes at a load average based rate
--     "disk-activity" - LED indicates disk activity
--     "ide-disk" - LED indicates IDE disk activity (deprecated),
--                  in new implementations use "disk-activity"
--     "timer" - LED flashes at a fixed, configurable rate
--     "pattern" - LED alters the brightness for the specified duration with one
--                 software timer (requires "led-pattern" property)
--
--- led-pattern : Array of integers with default pattern for certain triggers.
--                Each trigger may parse this property differently:
--                - one-shot : two numbers specifying delay on and delay off (in ms),
--                - timer : two numbers specifying delay on and delay off (in ms),
--                - pattern : the pattern is given by a series of tuples, of
--                  brightness and duration (in ms).  The exact format is
--                  described in:
--                  Documentation/devicetree/bindings/leds/leds-trigger-pattern.txt
--
--
--- led-max-microamp : Maximum LED supply current in microamperes. This property
--                     can be made mandatory for the board configurations
--                     introducing a risk of hardware damage in case an excessive
--                     current is set.
--                     For flash LED controllers with configurable current this
--                     property is mandatory for the LEDs in the non-flash modes
--                     (e.g. torch or indicator).
--
--- panic-indicator : This property specifies that the LED should be used,
--		    if at all possible, as a panic indicator.
--
--- trigger-sources : List of devices which should be used as a source triggering
--		    this LED activity. Some LEDs can be related to a specific
--		    device and should somehow indicate its state. E.g. USB 2.0
--		    LED may react to device(s) in a USB 2.0 port(s).
--		    Another common example is switch or router with multiple
--		    Ethernet ports each of them having its own LED assigned
--		    (assuming they are not hardwired). In such cases this
--		    property should contain phandle(s) of related source
--		    device(s).
--		    In many cases LED can be related to more than one device
--		    (e.g. one USB LED vs. multiple USB ports). Each source
--		    should be represented by a node in the device tree and be
--		    referenced by a phandle and a set of phandle arguments. A
--		    length of arguments should be specified by the
--		    #trigger-source-cells property in the source node.
--
--Required properties for flash LED child nodes:
--- flash-max-microamp : Maximum flash LED supply current in microamperes.
--- flash-max-timeout-us : Maximum timeout in microseconds after which the flash
--                         LED is turned off.
--
--For controllers that have no configurable current the flash-max-microamp
--property can be omitted.
--For controllers that have no configurable timeout the flash-max-timeout-us
--property can be omitted.
--
--* Trigger source providers
--
--Each trigger source should be represented by a device tree node. It may be e.g.
--a USB port or an Ethernet device.
--
--Required properties for trigger source:
--- #trigger-source-cells : Number of cells in a source trigger. Typically 0 for
--			  nodes of simple trigger sources (e.g. a specific USB
--			  port).
--
--* Examples
--
--#include <dt-bindings/leds/common.h>
--
--led-controller@0 {
--	compatible = "gpio-leds";
--
--	led0 {
--		function = LED_FUNCTION_STATUS;
--		linux,default-trigger = "heartbeat";
--		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
--	};
--
--	led1 {
--		function = LED_FUNCTION_USB;
--		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
--		trigger-sources = <&ohci_port1>, <&ehci_port1>;
--	};
--};
--
--led-controller@0 {
--	compatible = "maxim,max77693-led";
--
--	led {
--		function = LED_FUNCTION_FLASH;
--		color = <LED_COLOR_ID_WHITE>;
--		led-sources = <0>, <1>;
--		led-max-microamp = <50000>;
--		flash-max-microamp = <320000>;
--		flash-max-timeout-us = <500000>;
--	};
--};
--
--led-controller@30 {
--        compatible = "panasonic,an30259a";
--        reg = <0x30>;
--        #address-cells = <1>;
--        #size-cells = <0>;
--
--        led@1 {
--		reg = <1>;
--		linux,default-trigger = "heartbeat";
--		function = LED_FUNCTION_INDICATOR;
--		function-enumerator = <1>;
--        };
--
--        led@2 {
--		reg = <2>;
--		function = LED_FUNCTION_INDICATOR;
--		function-enumerator = <2>;
--        };
--
--        led@3 {
--		reg = <3>;
--		function = LED_FUNCTION_INDICATOR;
--		function-enumerator = <3>;
--        };
--};
-+This file has moved to ./common.yaml.
-diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
-new file mode 100644
-index 000000000000..16f0983277c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/common.yaml
-@@ -0,0 +1,228 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/common.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common leds properties
-+
-+maintainers:
-+  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-+  - Pavel Machek <pavel@ucw.cz>
-+
-+description:
-+  LED and flash LED devices provide the same basic functionality as current
-+  regulators, but extended with LED and flash LED specific features like
-+  blinking patterns, flash timeout, flash faults and external flash strobe mode.
-+
-+  Many LED devices expose more than one current output that can be connected
-+  to one or more discrete LED component. Since the arrangement of connections
-+  can influence the way of the LED device initialization, the LED components
-+  have to be tightly coupled with the LED device binding. They are represented
-+  by child nodes of the parent LED device binding.
-+
-+properties:
-+  led-sources:
-+    description:
-+      List of device current outputs the LED is connected to. The outputs are
-+      identified by the numbers that must be defined in the LED device binding
-+      documentation.
-+    $ref: /schemas/types.yaml#definitions/uint32-array
-+
-+  function:
-+    description:
-+      LED functon. Use one of the LED_FUNCTION_* prefixed definitions from the
-+      header include/dt-bindings/leds/common.h. If there is no matching
-+      LED_FUNCTION available, add a new one.
-+    $ref: /schemas/types.yaml#definitions/string
-+
-+  color:
-+    description:
-+      Color of the LED. Use one of the LED_COLOR_ID_* prefixed definitions from
-+      the header include/dt-bindings/leds/common.h. If there is no matching
-+      LED_COLOR_ID available, add a new one.
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+    minimum: 0
-+    maximum: 8
-+
-+  function-enumerator:
-+    description:
-+      Integer to be used when more than one instance of the same function is
-+      needed, differing only with an ordinal number.
-+    $ref: /schemas/types.yaml#definitions/uint32
-+
-+  label:
-+    description:
-+      The label for this LED. If omitted, the label is taken from the node name
-+      (excluding the unit address). It has to uniquely identify a device, i.e.
-+      no other LED class device can be assigned the same label. This property is
-+      deprecated - use 'function' and 'color' properties instead.
-+      function-enumerator has no effect when this property is present.
-+
-+  default-state:
-+    description:
-+      The initial state of the LED. If the LED is already on or off and the
-+      default-state property is set the to same value, then no glitch should be
-+      produced where the LED momentarily turns off (or on). The "keep" setting
-+      will keep the LED at whatever its current state is, without producing a
-+      glitch.
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/string
-+    enum:
-+      - on
-+      - off
-+      - keep
-+    default: off
-+
-+  linux,default-trigger:
-+    description:
-+      This parameter, if present, is a string defining the trigger assigned to
-+      the LED.
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/string
-+    enum:
-+        # LED will act as a back-light, controlled by the framebuffer system
-+      - backlight
-+        # LED will turn on (but for leds-gpio see "default-state" property in
-+        # Documentation/devicetree/bindings/leds/leds-gpio.txt)
-+      - default-on
-+        # LED "double" flashes at a load average based rate
-+      - heartbeat
-+        # LED indicates disk activity
-+      - disk-activity
-+        # LED indicates IDE disk activity (deprecated), in new implementations
-+        # use "disk-activity"
-+      - ide-disk
-+        # LED flashes at a fixed, configurable rate
-+      - timer
-+        # LED alters the brightness for the specified duration with one software
-+        # timer (requires "led-pattern" property)
-+      - pattern
-+
-+  led-pattern:
-+    description: |
-+      Array of integers with default pattern for certain triggers.
-+
-+      Each trigger may parse this property differently:
-+        - one-shot : two numbers specifying delay on and delay off (in ms),
-+        - timer : two numbers specifying delay on and delay off (in ms),
-+        - pattern : the pattern is given by a series of tuples, of
-+          brightness and duration (in ms).  The exact format is
-+          described in:
-+          Documentation/devicetree/bindings/leds/leds-trigger-pattern.txt
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32-matrix
-+    items:
-+      minItems: 2
-+      maxItems: 2
-+
-+  led-max-microamp:
-+    description:
-+      Maximum LED supply current in microamperes. This property can be made
-+      mandatory for the board configurations introducing a risk of hardware
-+      damage in case an excessive current is set.
-+      For flash LED controllers with configurable current this property is
-+      mandatory for the LEDs in the non-flash modes (e.g. torch or indicator).
-+
-+  panic-indicator:
-+    description:
-+      This property specifies that the LED should be used, if at all possible,
-+      as a panic indicator.
-+    type: boolean
-+
-+  trigger-sources:
-+    description: |
-+      List of devices which should be used as a source triggering this LED
-+      activity. Some LEDs can be related to a specific device and should somehow
-+      indicate its state. E.g. USB 2.0 LED may react to device(s) in a USB 2.0
-+      port(s).
-+      Another common example is switch or router with multiple Ethernet ports
-+      each of them having its own LED assigned (assuming they are not
-+      hardwired). In such cases this property should contain phandle(s) of
-+      related source device(s).
-+      In many cases LED can be related to more than one device (e.g. one USB LED
-+      vs. multiple USB ports). Each source should be represented by a node in
-+      the device tree and be referenced by a phandle and a set of phandle
-+      arguments. A length of arguments should be specified by the
-+      #trigger-source-cells property in the source node.
-+    $ref: /schemas/types.yaml#definitions/phandle-array
-+
-+  # Required properties for flash LED child nodes:
-+  flash-max-microamp:
-+    description:
-+      Maximum flash LED supply current in microamperes. Required for flash LED
-+      nodes with configurable current.
-+
-+  flash-max-timeout-us:
-+    description:
-+      Maximum timeout in microseconds after which the flash LED is turned off.
-+      Required for flash LED nodes with configurable timeout.
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/leds/common.h>
-+
-+    led-controller {
-+        compatible = "gpio-leds";
-+
-+        led0 {
-+            function = LED_FUNCTION_STATUS;
-+            linux,default-trigger = "heartbeat";
-+            gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
-+        };
-+
-+        led1 {
-+            function = LED_FUNCTION_USB;
-+            gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
-+            trigger-sources = <&ohci_port1>, <&ehci_port1>;
-+        };
-+    };
-+
-+    led-controller@0 {
-+        compatible = "maxim,max77693-led";
-+        reg = <0 0x100>;
-+
-+        led {
-+            function = LED_FUNCTION_FLASH;
-+            color = <LED_COLOR_ID_WHITE>;
-+            led-sources = <0>, <1>;
-+            led-max-microamp = <50000>;
-+            flash-max-microamp = <320000>;
-+            flash-max-timeout-us = <500000>;
-+        };
-+    };
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led-controller@30 {
-+            compatible = "panasonic,an30259a";
-+            reg = <0x30>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            led@1 {
-+                reg = <1>;
-+                linux,default-trigger = "heartbeat";
-+                function = LED_FUNCTION_INDICATOR;
-+                function-enumerator = <1>;
-+            };
-+
-+            led@2 {
-+                reg = <2>;
-+                function = LED_FUNCTION_INDICATOR;
-+                function-enumerator = <2>;
-+            };
-+
-+            led@3 {
-+                reg = <3>;
-+                function = LED_FUNCTION_INDICATOR;
-+                function-enumerator = <3>;
-+            };
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/leds/trigger-source.yaml b/Documentation/devicetree/bindings/leds/trigger-source.yaml
-new file mode 100644
-index 000000000000..0618003e40bd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/trigger-source.yaml
-@@ -0,0 +1,24 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/trigger-source.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Trigger source providers
-+
-+maintainers:
-+  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-+  - Pavel Machek <pavel@ucw.cz>
-+
-+description:
-+  Each trigger source provider should be represented by a device tree node. It
-+  may be e.g. a USB port or an Ethernet device.
-+
-+properties:
-+  '#trigger-source-cells':
-+    description:
-+      Number of cells in a source trigger. Typically 0 for nodes of simple
-+      trigger sources (e.g. a specific USB port).
-+    enum: [ 0, 1 ]
-+
-+...
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+index 4fa00e2eafcf..0717399191a2 100644
+--- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -14,6 +14,7 @@ Required properties:
+    * "brcm,bcm4330-bt"
+    * "brcm,bcm43438-bt"
+    * "brcm,bcm4345c5"
++   * "brcm,bcm4335a0"
+ 
+ Optional properties:
+ 
 -- 
-2.20.1
+2.24.0
 
