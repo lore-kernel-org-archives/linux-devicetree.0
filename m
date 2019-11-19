@@ -2,115 +2,282 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD0CC33C8C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CD2C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 17:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E80208D4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574182956;
-	bh=9xlP6l6zc8LrRTuryqi4QOF5/Hg74NZf0SPlZK2mEU8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O1HpxehOM+vVp3sXYbjAn2fJ2lYLkgw80b58u3neSOS3rLeCm6mc4RFmfuo95g+2b
-	 AsFamNO5P6wqsQYeyr4Akwm/krAYkCNzjWjzaM4hwDPgDCJy+SfyCu4cUSmtFb436c
-	 flXagX7dBWkguAIxwR8QtKnvryqASE2UuRcHod4I=
+	by mail.kernel.org (Postfix) with ESMTP id F11322068F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 17:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="acKD7zvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfKSRC3 (ORCPT
+        id S1728071AbfKSRK2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:02:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbfKSRC3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:02:29 -0500
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 522C222384;
-        Tue, 19 Nov 2019 17:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574182943;
-        bh=9xlP6l6zc8LrRTuryqi4QOF5/Hg74NZf0SPlZK2mEU8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hHdDFqFWJkwOuMKZk0NzaOxgeAE6UqGlvZAVH+WTtjEaZ3CCkLs6cDI5yFhIl9SRE
-         54T4E31B4t+satNSKMSJ+416Ec7m0NKdD49RPHEpukOMZs6k0mxIRc9AHYb5zIBbTG
-         bNPOVvg5RSncACs08sPyTJmxe1NXOpvf8io01pqY=
-Received: by mail-qk1-f179.google.com with SMTP id z16so18462574qkg.7;
-        Tue, 19 Nov 2019 09:02:23 -0800 (PST)
-X-Gm-Message-State: APjAAAWDgqNzuLMJs8sFoNhCpmKJ/NCyiGWxa3+rUuO7R+v5e5LWatrG
-        AnMysVzyQOrrnIp3ZSRcxGlXeEucbJgpgLW1ZA==
-X-Google-Smtp-Source: APXvYqxucfdWSXPgW2vd8l9633HeMvIH864eMJ/p+Bk0FhDvh444Pum/yEC+Gs6buUxeu7x2jucgvrCcmOz57phmAkg=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr30290391qka.152.1574182942398;
- Tue, 19 Nov 2019 09:02:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20191119144315.11261-1-krzk@kernel.org>
-In-Reply-To: <20191119144315.11261-1-krzk@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 19 Nov 2019 11:02:11 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
-Message-ID: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: power: Fix path to power-domain.txt bindings
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Tue, 19 Nov 2019 12:10:28 -0500
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21459 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfKSRK2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 12:10:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574183396; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=XYPUAbgf5LIgblvM/PEfwK5c2qlDOv7KjOrZkDTAJkCpLe3aPNwVcEZxdetHrsCzAxQcE4OrAdVNFamYcvN7vqmzQWLg3Q2dIIRDnbCMqt8nnO+YWK/37ORQWdhFUmO5vYzv9Pt7JZHEx0DlDSg/NiuBdlOCEs6Mu2UWiRdq13U=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574183396; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:Message-ID:Subject:To; 
+        bh=hhl/eyaWl95DxKVbZbTd0hS6m1pSAzWQWE9upjbQJsc=; 
+        b=U8vHQYhf/pGufVqEy0wjBPDlvZT/bjUMJKvpR7jjmtL+HMJV+iT6iyVa+Q6mIkcD3YZ0oZJIBsbunGZVQ10s7CCE3/yFj1E//jLzCZSa7KDD1EgPUIUdSIp8FPq8MpSYlBO39AygjHddELYkWpVlItb7lZ46WOpZINIoF/bvZGc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=brennan.io;
+        spf=pass  smtp.mailfrom=stephen@brennan.io;
+        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574183396;
+        s=selector01; d=brennan.io; i=stephen@brennan.io;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:Date:To:Cc:Subject:From:Message-Id;
+        l=3868; bh=hhl/eyaWl95DxKVbZbTd0hS6m1pSAzWQWE9upjbQJsc=;
+        b=acKD7zvdIoQFRM/iZ37BOh23jIrYcub3FrIQkmnx3rTjnNLzv6gb0/0Br5oBcqBF
+        ZrjEDGNCe9omOsve4xOgT5Cpds+QjbSOwSV1tOCnyHDWp5scmmpPAKv2YxaRb/j/Hbo
+        QLkxHFQ7oIiE+u7uKXpBB/RsGrHzKnohjnbe4zQU=
+Received: from localhost (195.173.24.136.in-addr.arpa [136.24.173.195]) by mx.zohomail.com
+        with SMTPS id 1574183395000471.61621983311886; Tue, 19 Nov 2019 09:09:55 -0800 (PST)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Originaldate: Tue Nov 19, 2019 at 11:07 AM
+Originalfrom: "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+Original: =?utf-8?q?Hi_Stephen,_thanks_for_the_follow-up.
+ =0D=0A=0D=0AOn_Mon,_2019-1?=
+ =?utf-8?q?1-18_at_22:14_-0800,_Stephen_Brennan_wrote:=0D=0A>_BCM2711_feat?=
+ =?utf-8?q?ures_a_RNG200_hardware_random_number_generator_block,_which_i?=
+ =?utf-8?q?=3D=0D=0As=0D=0A>_different_from_the_BCM283x_from_which_it_inhe?=
+ =?utf-8?q?rits._Move_the_rng_block_fro=3D=0D=0Am=0D=0A>_BCM283x_into_a_se?=
+ =?utf-8?q?parate_common_file,_and_update_the_rng_declaration_of=0D=0A>_BC?=
+ =?utf-8?q?M2711.=0D=0A>=3D20=0D=0A>_Signed-off-by:_Stephen_Brennan_<steph?=
+ =?utf-8?q?en@brennan.io>=0D=0A>_---=0D=0A=0D=0AIt's_petty_in_this_case_bu?=
+ =?utf-8?q?t_you_should_add_a_list_of_changes_here_too.=0D=0A=0D=0A>__arch?=
+ =?utf-8?q?/arm/boot/dts/bcm2711.dtsi________|__6_+++---=0D=0A>__arch/arm/?=
+ =?utf-8?q?boot/dts/bcm2835.dtsi________|__1_+=0D=0A>__arch/arm/boot/dts/b?=
+ =?utf-8?q?cm2836.dtsi________|__1_+=0D=0A>__arch/arm/boot/dts/bcm2837.dts?=
+ =?utf-8?q?i________|__1_+=0D=0A>__arch/arm/boot/dts/bcm283x-common.dtsi_|?=
+ =?utf-8?q?_11_+++++++++++=0D=0A>__arch/arm/boot/dts/bcm283x.dtsi________|?=
+ =?utf-8?q?__6_------=0D=0A>__6_files_changed,_17_insertions(+),_9_deletio?=
+ =?utf-8?q?ns(-)=0D=0A>__create_mode_100644_arch/arm/boot/dts/bcm283x-comm?=
+ =?utf-8?q?on.dtsi=0D=0A>=3D20=0D=0A>_diff_--git_a/arch/arm/boot/dts/bcm27?=
+ =?utf-8?q?11.dtsi_b/arch/arm/boot/dts/bcm2711.d=3D=0D=0Atsi=0D=0A>_index_?=
+ =?utf-8?q?ac83dac2e6ba..4975567e948e_100644=0D=0A>_---_a/arch/arm/boot/dt?=
+ =?utf-8?q?s/bcm2711.dtsi=0D=0A>_+++_b/arch/arm/boot/dts/bcm2711.dtsi=0D?=
+ =?utf-8?q?=0A>_@@_-92,10_+92,10_@@_pm:_watchdog@7e100000_{=0D=0A>__=09=09?=
+ =?utf-8?q?};=0D=0A>_=3D20=0D=0A>__=09=09rng@7e104000_{=0D=0A>_+=09=09=09c?=
+ =?utf-8?q?ompatible_=3D3D_"brcm,bcm2711-rng200";=0D=0A>_+=09=09=09reg_=3D?=
+ =?utf-8?q?3D_<0x7e104000_0x28>;=0D=0A>__=09=09=09interrupts_=3D3D_<GIC=5F?=
+ =?utf-8?q?SPI_125_IRQ=5FTYPE=5FLEVEL=5FHIGH>;=0D=0A>_-=0D=0A>_-=09=09=09/?=
+ =?utf-8?q?*_RNG_is_incompatible_with_brcm,bcm2835-rng_*/=0D=0A>_-=09=09?=
+ =?utf-8?q?=09status_=3D3D_"disabled";=0D=0A>_+=09=09=09status_=3D3D_"okay?=
+ =?utf-8?q?";=0D=0A>__=09=09};=0D=0A>_=3D20=0D=0A>__=09=09uart2:_serial@7e?=
+ =?utf-8?q?201400_{=0D=0A>_diff_--git_a/arch/arm/boot/dts/bcm2835.dtsi_b/a?=
+ =?utf-8?q?rch/arm/boot/dts/bcm2835.d=3D=0D=0Atsi=0D=0A>_index_53bf4579cc2?=
+ =?utf-8?q?2..f7b2f46e307d_100644=0D=0A>_---_a/arch/arm/boot/dts/bcm2835.d?=
+ =?utf-8?q?tsi=0D=0A>_+++_b/arch/arm/boot/dts/bcm2835.dtsi=0D=0A>_@@_-1,5_?=
+ =?utf-8?q?+1,6_@@=0D=0A>__//_SPDX-License-Identifier:_GPL-2.0=0D=0A>__#in?=
+ =?utf-8?q?clude_"bcm283x.dtsi"=0D=0A>_+#include_"bcm283x-common.dtsi"=0D?=
+ =?utf-8?q?=0A>__#include_"bcm2835-common.dtsi"=0D=0A>_=3D20=0D=0A>__/_{?=
+ =?utf-8?q?=0D=0A>_diff_--git_a/arch/arm/boot/dts/bcm2836.dtsi_b/arch/arm/?=
+ =?utf-8?q?boot/dts/bcm2836.d=3D=0D=0Atsi=0D=0A>_index_82d6c4662ae4..a8537?=
+ =?utf-8?q?4195796_100644=0D=0A>_---_a/arch/arm/boot/dts/bcm2836.dtsi=0D?=
+ =?utf-8?q?=0A>_+++_b/arch/arm/boot/dts/bcm2836.dtsi=0D=0A>_@@_-1,5_+1,6_@?=
+ =?utf-8?q?@=0D=0A>__//_SPDX-License-Identifier:_GPL-2.0=0D=0A>__#include_?=
+ =?utf-8?q?"bcm283x.dtsi"=0D=0A>_+#include_"bcm283x-common.dtsi"=0D=0A>__#?=
+ =?utf-8?q?include_"bcm2835-common.dtsi"=0D=0A>_=3D20=0D=0A>__/_{=0D=0A>_d?=
+ =?utf-8?q?iff_--git_a/arch/arm/boot/dts/bcm2837.dtsi_b/arch/arm/boot/dts/?=
+ =?utf-8?q?bcm2837.d=3D=0D=0Atsi=0D=0A>_index_9e95fee78e19..045d78ffea08_1?=
+ =?utf-8?q?00644=0D=0A>_---_a/arch/arm/boot/dts/bcm2837.dtsi=0D=0A>_+++_b/?=
+ =?utf-8?q?arch/arm/boot/dts/bcm2837.dtsi=0D=0A>_@@_-1,4_+1,5_@@=0D=0A>__#?=
+ =?utf-8?q?include_"bcm283x.dtsi"=0D=0A>_+#include_"bcm283x-common.dtsi"?=
+ =?utf-8?q?=0D=0A>__#include_"bcm2835-common.dtsi"=0D=0A>_=3D20=0D=0A>__/_?=
+ =?utf-8?q?{=0D=0A>_diff_--git_a/arch/arm/boot/dts/bcm283x-common.dtsi=0D?=
+ =?utf-8?q?=0A>_b/arch/arm/boot/dts/bcm283x-common.dtsi=0D=0A>_new_file_mo?=
+ =?utf-8?q?de_100644=0D=0A>_index_000000000000..3c8834bee390=0D=0A>_---_/d?=
+ =?utf-8?q?ev/null=0D=0A>_+++_b/arch/arm/boot/dts/bcm283x-common.dtsi=0D?=
+ =?utf-8?q?=0A>_@@_-0,0_+1,11_@@=0D=0A>_+//_SPDX-License-Identifier:_GPL-2?=
+ =?utf-8?q?.0=0D=0A>_+=0D=0A>_+/_{=0D=0A>_+=09soc_{=0D=0A>_+=09=09rng@7e10?=
+ =?utf-8?q?4000_{=0D=0A>_+=09=09=09compatible_=3D3D_"brcm,bcm2835-rng";=0D?=
+ =?utf-8?q?=0A>_+=09=09=09reg_=3D3D_<0x7e104000_0x10>;=0D=0A>_+=09=09=09in?=
+ =?utf-8?q?terrupts_=3D3D_<2_29>;=0D=0A>_+=09=09};=0D=0A>_+=09};=0D=0A>_+}?=
+ =?utf-8?q?;=0D=0A=0D=0AI_think_Stefan_wrote_bcm283x-common.dtsi_by_mistak?=
+ =?utf-8?q?e,_he_really_meant=0D=0Abcm2835-common.dtsi.=0D=0A=0D=0ASee_bcm?=
+ =?utf-8?q?2835-common.dtsi's_header_comment:=0D=0A=0D=0A/*_This_include_f?=
+ =?utf-8?q?ile_covers_the_common_peripherals_and_configuration_betwee=3D?=
+ =?utf-8?q?=0D=0An=0D=0A_*_bcm2835,_bcm2836_and_bcm2837_implementations.?=
+ =?utf-8?q?=0D=0A_*/=0D=0A=0D=0ARegards,=0D=0ANicolas=0D=0A=0D=0A?=
+In-Reply-To: <e38de8daad5a2c9b03bda1aa2632844e3ed3d11e.camel@suse.de>
+Date:   Tue, 19 Nov 2019 09:09:53 -0800
+To:     "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+Cc:     "Mark Rutland" <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Scott Branden" <sbranden@broadcom.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        etnaviv@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Ray Jui" <rjui@broadcom.com>, <linux-kernel@vger.kernel.org>,
+        "Eric Anholt" <eric@anholt.net>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "Stefan Wahren" <wahrenst@gmx.net>,
+        "Matt Mackall" <mpm@selenic.com>, "Arnd Bergmann" <arnd@arndb.de>,
+        <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: bcm2711: Enable HWRNG support
+From:   "Stephen Brennan" <stephen@brennan.io>
+Message-Id: <BYK1FVFPTH7J.159A75JOGITR1@pride>
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 8:43 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> With split of power domain controller bindings to power-domain.yaml, the
-> consumer part was renamed to power-domain.txt.  Update the references in
-> other bindings.
->
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: abb4805e343a ("dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/clock/clk-exynos-audss.txt  | 2 +-
->  Documentation/devicetree/bindings/clock/exynos5433-clock.txt  | 2 +-
->  .../devicetree/bindings/clock/renesas,r8a7778-cpg-clocks.txt  | 2 +-
->  .../devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt  | 2 +-
->  .../bindings/clock/renesas,rcar-gen2-cpg-clocks.txt           | 2 +-
->  .../devicetree/bindings/clock/renesas,rz-cpg-clocks.txt       | 2 +-
->  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt       | 2 +-
->  Documentation/devicetree/bindings/display/msm/dpu.txt         | 2 +-
->  Documentation/devicetree/bindings/display/msm/mdp5.txt        | 2 +-
->  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml            | 2 +-
->  Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt    | 2 +-
->  .../devicetree/bindings/media/mediatek-jpeg-decoder.txt       | 2 +-
->  Documentation/devicetree/bindings/media/mediatek-mdp.txt      | 2 +-
->  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt  | 2 +-
->  Documentation/devicetree/bindings/pci/pci-keystone.txt        | 2 +-
->  Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt | 2 +-
->  Documentation/devicetree/bindings/power/qcom,rpmpd.txt        | 2 +-
->  Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt | 2 +-
->  .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++--
->  19 files changed, 20 insertions(+), 20 deletions(-)
+Hi Nicolas,
 
-Please no. Can you just undo the renaming back to power_domain.txt
+On Tue Nov 19, 2019 at 11:07 AM, Nicolas Saenz Julienne wrote:
+> Hi Stephen, thanks for the follow-up.
+>
+>=20
+> On Mon, 2019-11-18 at 22:14 -0800, Stephen Brennan wrote:
+> > BCM2711 features a RNG200 hardware random number generator block, which=
+ i=3D
+> s
+> > different from the BCM283x from which it inherits. Move the rng block f=
+ro=3D
+> m
+> > BCM283x into a separate common file, and update the rng declaration of
+> > BCM2711.
+> >=3D20
+> > Signed-off-by: Stephen Brennan <stephen@brennan.io>
+> > ---
+>
+>=20
+> It's petty in this case but you should add a list of changes here too.
 
-Rob
+To make sure I understand, you mean listing out the changes in each=20
+revision of the patch series?
+
+>
+>=20
+> >  arch/arm/boot/dts/bcm2711.dtsi        |  6 +++---
+> >  arch/arm/boot/dts/bcm2835.dtsi        |  1 +
+> >  arch/arm/boot/dts/bcm2836.dtsi        |  1 +
+> >  arch/arm/boot/dts/bcm2837.dtsi        |  1 +
+> >  arch/arm/boot/dts/bcm283x-common.dtsi | 11 +++++++++++
+> >  arch/arm/boot/dts/bcm283x.dtsi        |  6 ------
+> >  6 files changed, 17 insertions(+), 9 deletions(-)
+> >  create mode 100644 arch/arm/boot/dts/bcm283x-common.dtsi
+> >=3D20
+> > diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711=
+.d=3D
+> tsi
+> > index ac83dac2e6ba..4975567e948e 100644
+> > --- a/arch/arm/boot/dts/bcm2711.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> > @@ -92,10 +92,10 @@ pm: watchdog@7e100000 {
+> >  		};
+> > =3D20
+> >  		rng@7e104000 {
+> > +			compatible =3D3D "brcm,bcm2711-rng200";
+> > +			reg =3D3D <0x7e104000 0x28>;
+> >  			interrupts =3D3D <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+> > -
+> > -			/* RNG is incompatible with brcm,bcm2835-rng */
+> > -			status =3D3D "disabled";
+> > +			status =3D3D "okay";
+> >  		};
+> > =3D20
+> >  		uart2: serial@7e201400 {
+> > diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835=
+.d=3D
+> tsi
+> > index 53bf4579cc22..f7b2f46e307d 100644
+> > --- a/arch/arm/boot/dts/bcm2835.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> > @@ -1,5 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include "bcm283x.dtsi"
+> > +#include "bcm283x-common.dtsi"
+> >  #include "bcm2835-common.dtsi"
+> > =3D20
+> >  / {
+> > diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836=
+.d=3D
+> tsi
+> > index 82d6c4662ae4..a85374195796 100644
+> > --- a/arch/arm/boot/dts/bcm2836.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2836.dtsi
+> > @@ -1,5 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include "bcm283x.dtsi"
+> > +#include "bcm283x-common.dtsi"
+> >  #include "bcm2835-common.dtsi"
+> > =3D20
+> >  / {
+> > diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837=
+.d=3D
+> tsi
+> > index 9e95fee78e19..045d78ffea08 100644
+> > --- a/arch/arm/boot/dts/bcm2837.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2837.dtsi
+> > @@ -1,4 +1,5 @@
+> >  #include "bcm283x.dtsi"
+> > +#include "bcm283x-common.dtsi"
+> >  #include "bcm2835-common.dtsi"
+> > =3D20
+> >  / {
+> > diff --git a/arch/arm/boot/dts/bcm283x-common.dtsi
+> > b/arch/arm/boot/dts/bcm283x-common.dtsi
+> > new file mode 100644
+> > index 000000000000..3c8834bee390
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/bcm283x-common.dtsi
+> > @@ -0,0 +1,11 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +/ {
+> > +	soc {
+> > +		rng@7e104000 {
+> > +			compatible =3D3D "brcm,bcm2835-rng";
+> > +			reg =3D3D <0x7e104000 0x10>;
+> > +			interrupts =3D3D <2 29>;
+> > +		};
+> > +	};
+> > +};
+>
+>=20
+> I think Stefan wrote bcm283x-common.dtsi by mistake, he really meant
+> bcm2835-common.dtsi.
+>
+>=20
+> See bcm2835-common.dtsi's header comment:
+>
+>=20
+> /* This include file covers the common peripherals and configuration
+> betwee=3D
+> n
+> * bcm2835, bcm2836 and bcm2837 implementations.
+> */
+>
+
+Wow, thank you, that makes a lot more sense!
+
+Best,
+Stephen
+
+>=20
+> Regards,
+> Nicolas
+>
+>=20
+>
+>=20
+>
+>=20
+
+
