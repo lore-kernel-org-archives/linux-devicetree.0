@@ -2,96 +2,117 @@ Return-Path: <SRS0=CGHq=ZL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18361C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 22:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E908C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 23:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF826222DC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 22:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130EE2245B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 19 Nov 2019 23:12:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jE0yLV83"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Vjz8znJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbfKSWxV (ORCPT
+        id S1727316AbfKSXMm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:53:21 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:58588 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfKSWxV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 17:53:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0HyaIqYya6CA1uTTflYMH3tQcKHaSfwjbif8Y6O6VL0=; b=jE0yLV83/8kuXt8h0Grf1wN8AX
-        qz2MkdtLgK0ABNRC38s45VUMVC1zz1qnbaeGQGTS/wCJahNp9cUaGz0toZxllfZMnFN1Q3k3V/XyI
-        ilA/cZqqwS8s8Bs1lmf/+ya97GZsR8faMmNefGSqQJRdXZzq8WIPpXS2rc6YoxbuzukTtZSjgnJhC
-        I3M9hSF74EGKUFo5zPFzYorL7DxKff/5CiSx4McqMXzXQrGTbaljum08wh9PduCF1lyIydX99EFuF
-        VFkUieYyfITpWrjAZA41E/Pf2hDTGJkf1QyoJUcWR8Bi0IVQHhb54BUthhVvQg3EDWDBT5P/FW2cK
-        CUiZsk8A==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:39670 helo=rmk-PC.armlinux.org.uk)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1iXCMr-0004Ir-CI; Tue, 19 Nov 2019 22:53:05 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1iXCMq-00040q-Bm; Tue, 19 Nov 2019 22:53:04 +0000
-From:   Russell King <rmk+kernel@armlinux.org.uk>
-To:     Gregory Clement <gregory.clement@bootlin.com>,
-        Vladimir Vid <vladimir.vid@sartura.hr>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH] arm64: dts: uDPU: SFP cages support 3W modules
+        Tue, 19 Nov 2019 18:12:42 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35722 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727038AbfKSXMm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 18:12:42 -0500
+Received: by mail-lf1-f65.google.com with SMTP id q28so4607643lfp.2
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 15:12:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=J6djBZAZ4NKmoE5rDlXQqbYC4TEITCNxIlH5HQol9VI=;
+        b=Vjz8znJ6cb48JQjUqD6uTuZV0ePVCQHg2q8rjcLMUst/MwnYK5I8QKVAODVhtFGomV
+         Nc2qf1AXDeKZGyVudF42PKOCi42xtrwsdb9l6Gt2B2JBAxUt8ZQZCbPB7XPRyBZ8XRos
+         Cmu34UdrptldO+ncwB3Txz9DFyC4ZNmpBXK+iRmZ3V+R/wTj4aZ6NiRUgHwiepjkouFJ
+         iE3cC7RZudMqPTkXB/GWq6Ba6+EAC2vMqxvluLSRQZ93TZt39k8kq4/P2oMS8lc5pFG/
+         qylQEC6Vrz/MNPE/ic5RLYJldRFhSeDSkbb0wjV77HbUgUZwA7iUaVbV/1DgZRNMfje2
+         ebyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=J6djBZAZ4NKmoE5rDlXQqbYC4TEITCNxIlH5HQol9VI=;
+        b=KFdnnOntpIUQNF/67pf+74WFsrY0fNFRU7qBEjgoQO/Oacu5I2WpB7vKro+6hIqydb
+         /fyPq2TK4KXgl9x8woQpZouNIb5Z11CWy637Art36Aa0GHsxQGxSNuHMuu/1ZbGTYMYQ
+         w8OKnysd7nF9K/GJopKaHytlYW6XSbgoijgOQsrw8xvX5YcnBo0J4bhh/zQWsq+0niPE
+         UxTCC3bycL5JJxfYKygu3N7tUTfzz8JdhH9Vv7Lk8fBnsukVqcXCZuTEFL/e/hCHJKs/
+         0zQme1ZfiuP6R3JnxYu/WrTgd8fUq8fXgIJZag4VMdB/+jDKvaYVWxx74V9Dx9DLSOOJ
+         fMbQ==
+X-Gm-Message-State: APjAAAV1mhA92ty1kdYyGJCCIVfTAVPVoZIv9OT2WhaY2TCSyL72g0D+
+        Y2X3yN+muOwwQwrZySKY0WCxVw==
+X-Google-Smtp-Source: APXvYqzEPJDu2v7/BPSwTZzTsuB/P5qIDv0tkxu6tWkp9wShP1RJG9l88xRd/STrMH9vn7E9/djg9Q==
+X-Received: by 2002:ac2:53ba:: with SMTP id j26mr147420lfh.92.1574205160201;
+        Tue, 19 Nov 2019 15:12:40 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id p88sm11086298ljp.13.2019.11.19.15.12.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 15:12:39 -0800 (PST)
+Date:   Tue, 19 Nov 2019 15:12:21 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v7 net-next 07/13] net: ethernet: ti: introduce cpsw 
+ switchdev based driver part 1 - dual-emac
+Message-ID: <20191119151221.14ff2d28@cakuba.netronome.com>
+In-Reply-To: <20191119221925.28426-8-grygorii.strashko@ti.com>
+References: <20191119221925.28426-1-grygorii.strashko@ti.com>
+        <20191119221925.28426-8-grygorii.strashko@ti.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1iXCMq-00040q-Bm@rmk-PC.armlinux.org.uk>
-Date:   Tue, 19 Nov 2019 22:53:04 +0000
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SFP cages are designed to support up to 3W modules, such as G.hn,
-G.fast and MoCA modules. Although there is no way for such modules to
-declare to software that they consume 3W, we document in DT that this
-is the designed power level for these cages.
+On Wed, 20 Nov 2019 00:19:19 +0200, Grygorii Strashko wrote:
+> From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> 
+> Part 1:
+>  Introduce basic CPSW dual_mac driver (cpsw_new.c) which is operating in
+> dual-emac mode by default, thus working as 2 individual network interfaces.
+> Main differences from legacy CPSW driver are:
+> 
+>  - optimized promiscuous mode: The P0_UNI_FLOOD (both ports) is enabled in
+> addition to ALLMULTI (current port) instead of ALE_BYPASS. So, Ports in
+> promiscuous mode will keep possibility of mcast and vlan filtering, which
+> is provides significant benefits when ports are joined to the same bridge,
+> but without enabling "switch" mode, or to different bridges.
+>  - learning disabled on ports as it make not too much sense for
+>    segregated ports - no forwarding in HW.
+>  - enabled basic support for devlink.
+> 
+> 	devlink dev show
+> 		platform/48484000.switch
+> 
+> 	devlink dev param show
+> 	 platform/48484000.switch:
+> 	name ale_bypass type driver-specific
+> 	 values:
+> 		cmode runtime value false
+> 
+>  - "ale_bypass" devlink driver parameter allows to enable
+> ALE_CONTROL(4).BYPASS mode for debug purposes.
+>  - updated DT bindings.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-index 2ac1d9ae1e25..7eb6c1796cef 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-@@ -69,6 +69,7 @@
- 		mod-def0-gpio = <&gpiosb 3 GPIO_ACTIVE_LOW>;
- 		tx-disable-gpio = <&gpiosb 4 GPIO_ACTIVE_HIGH>;
- 		tx-fault-gpio = <&gpiosb 5 GPIO_ACTIVE_HIGH>;
-+		maximum-power-milliwatt = <3000>;
- 	};
- 
- 	sfp_eth1: sfp-eth1 {
-@@ -78,6 +79,7 @@
- 		mod-def0-gpio = <&gpiosb 8 GPIO_ACTIVE_LOW>;
- 		tx-disable-gpio = <&gpiosb 9 GPIO_ACTIVE_HIGH>;
- 		tx-fault-gpio = <&gpiosb 10 GPIO_ACTIVE_HIGH>;
-+		maximum-power-milliwatt = <3000>;
- 	};
- };
- 
--- 
-2.20.1
-
+Could you please add documentation for the devlink parameter under
+Documentation/networking/devlink-params-* ?
