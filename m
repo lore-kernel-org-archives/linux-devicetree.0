@@ -2,71 +2,70 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD65C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE2AC432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738E32230F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DB622463
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMQm2rrm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yDKsahxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfKTLCp (ORCPT
+        id S1727052AbfKTLOm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:02:45 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40452 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727374AbfKTLCo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 06:02:44 -0500
-Received: by mail-wm1-f66.google.com with SMTP id y5so1129857wmi.5
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 03:02:43 -0800 (PST)
+        Wed, 20 Nov 2019 06:14:42 -0500
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:46367 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729026AbfKTLOj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 06:14:39 -0500
+Received: by mail-wr1-f48.google.com with SMTP id b3so27648020wrs.13
+        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 03:14:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IOeGvqEPSRnHWJK9v9F0Le+azJhOAvlzGL7W3dTQlic=;
-        b=kMQm2rrmysXsEtZRsLtWhGKLog2gHmO7AWh5zHbe32ElY8LCea3Xf+9eFLoep8aMIf
-         INZ97vQ/bsBpejx60oirHSc65LYlCRsDLyGY89ljvILMC5pT5wcy59GYb3hekzBFEMTx
-         PKIvj4Q3d9NwCkgdzstOJoKKn7Unj0bRG6JUGZgUPDV0Z53A6P4q3to/xiphjd7SYTvQ
-         +2TVDX4mQcgCIHFShGlAJImCMB7HacS92G5x+xsMyjZF/bpPoPCnnlZaiFK2Vg8Z4gmC
-         5TOTX93rHrqOKJuZ14Cd6Q0cNFy7XApx6xwJ2ypoWmKs6R3ijuvKKntQtW1dAyoalnlu
-         dUUQ==
+        bh=Ja7kn8nM5rQg+IdSoiS0Hj6iA3DSp06ChG/PAIh+vCY=;
+        b=yDKsahxL4XEoVTSy9nI9vw6XP4e0ElslXK2PKtL1dSHo0DKVnDOCN7B+ptZDtjfvN/
+         RZdtvW9hYYy2wtEZmwnr0dqku1ywWgdHJTjgcmAOwuWWo1QQK98mEEYLDSb9dv5sWv+K
+         z9mDI9XIj1D5chjio5BHM3FirH67Ih7oucgqayFM4uxsHOqDoeurQWgaqMLeE3WUtvnl
+         9wEVug9zAW7upPRi5AiKDJ/NtLpr33gPro8NWKIJ03yQv8QNO05EuF+v3tKQKjTzRQbg
+         hYUiIdB2P/YSQZfEwIOqAhsXSLOP3Cy+tluNXV69i28MsNFb/HuHAtVNF4PKJptluxJV
+         t9jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IOeGvqEPSRnHWJK9v9F0Le+azJhOAvlzGL7W3dTQlic=;
-        b=W6y94b2nNrTCkkAMxSIjfrhk9DceHV2euzekf803zV+85Pun2CvtyFNWFJhLeJR66q
-         ktC/EtXJCqAG/ZYWY2eHXsNQkpOo+Z27F1V6VWPCR6A1cIhhrh2iq2qOXrrLGjMgr1Dm
-         pWxTozOpof/H9+ngaz84cLxZ4IOJPefLIksiKsVSVN+OpOde8s9rVPTar662PL7/Omy6
-         fC1XoifFa6s39IgTg7zKW8mw3CHoGiNY5CoVWv+0+uYoaWUnme366Wu/T1hA2QJ9cPcq
-         Bp/QrmGDQ8VWR1CXG6fWmaAqsg05EXYMYKqiVEv9t+ZXtMv36eaxh81T+OqVnAEtOeCZ
-         JqCQ==
-X-Gm-Message-State: APjAAAXnq7s5y0x2fQziOn5OkamXo0HKbYpLDgkorvaIufy5jlgpMDG8
-        umtlwltmvt/ClWWjZTBULnQZAaawFhM=
-X-Google-Smtp-Source: APXvYqxtwVK0T6hqJefUmPiH1r3EbF2/xB0ZSsyfcMC99NMYsHLOiUyqJFdyoviEBRZJhrQSBZXa4Q==
-X-Received: by 2002:a1c:7d95:: with SMTP id y143mr2514040wmc.143.1574247762372;
-        Wed, 20 Nov 2019 03:02:42 -0800 (PST)
-Received: from localhost ([37.238.189.2])
-        by smtp.gmail.com with ESMTPSA id b8sm29979574wrt.39.2019.11.20.03.02.40
+        bh=Ja7kn8nM5rQg+IdSoiS0Hj6iA3DSp06ChG/PAIh+vCY=;
+        b=TQQ8qAOOl7mopdNNG0XpJcXcucqfY0MTlh+aW6xfboOJsrZtKvHsK1pOUVBhYenQ09
+         tHQLibGhDxxBaxLJtnpFSQcDZWnzSjxpRwBkDfpoPUn+M1qxyLjbaPpnLV/eJ3jkI0M+
+         +EAOVe7Sr+jfoxg3fZB3QAzrKU0l3Tb8eVga/8Q71EWW3wvC+25qp+eky7Gn56452inK
+         FlTQBggUrs6LeSBx4CctzUYGhf4yRztp7FYfjb3Kp3PFnm7gGa6r32YHjvuj0BN/pVH9
+         KDR3uktqMUns67v00ecC81Qp7kqTEJao1yylL1/4P0u8HCim0FEBZvnruWcTBOjAkUPK
+         PDFQ==
+X-Gm-Message-State: APjAAAWBnfNTyQ+Wr0ZqfOzV6qdBq5u1HwTPDxKYKWa91WGs4Pp4mmkQ
+        kuZaZPgVzVZWlQzEWe2ULPdL5g==
+X-Google-Smtp-Source: APXvYqwH4aS6TrfN/psjDpRkojuL6BjXTzCTMYaIzigeYCPayBYWGt9XP2jw+vQf19vd5P/yzoZvcg==
+X-Received: by 2002:adf:ef8a:: with SMTP id d10mr2647778wro.314.1574248475978;
+        Wed, 20 Nov 2019 03:14:35 -0800 (PST)
+Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id u1sm6061748wmc.3.2019.11.20.03.14.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 03:02:41 -0800 (PST)
-From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
-To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-amlogic@lists.infradead.org
-Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>
-Subject: [PATCH v2 1/2] dt-bindings: net: Add compatible for BCM4335A0 bluetooth
-Date:   Wed, 20 Nov 2019 14:02:34 +0300
-Message-Id: <20191120110235.13987-2-mohammad.rasim96@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191120110235.13987-1-mohammad.rasim96@gmail.com>
-References: <20191120110235.13987-1-mohammad.rasim96@gmail.com>
+        Wed, 20 Nov 2019 03:14:35 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     mjourdan@baylibre.com, devicetree@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/4] dt-bindings: media: amlogic,gx-vdec: add bindings for G12A family
+Date:   Wed, 20 Nov 2019 12:14:28 +0100
+Message-Id: <20191120111430.29552-3-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191120111430.29552-1-narmstrong@baylibre.com>
+References: <20191120111430.29552-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -74,26 +73,101 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add bindings to support the Amlogic Video Decoder on the Amlogic G12A
+family.
 
-Available in the Ampak AP6335 WiFi/Bluetooth combo
+For the G12A family, a supplementary clock is needed to operate the
+HEVC/VP9 decoder.
 
-Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/media/amlogic,gx-vdec.yaml       | 57 +++++++++++++++----
+ 1 file changed, 46 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index c749dc297624..f16b99571af1 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -15,6 +15,7 @@ Required properties:
-    * "brcm,bcm43438-bt"
-    * "brcm,bcm4345c5"
-    * "brcm,bcm43540-bt"
-+   * "brcm,bcm4335a0"
+diff --git a/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
+index 878944867d6e..8ea979bb97e6 100644
+--- a/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
++++ b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
+@@ -27,12 +27,15 @@ description: |
  
- Optional properties:
+ properties:
+   compatible:
+-    items:
++    oneOf:
++      - items:
++        - enum:
++          - amlogic,gxbb-vdec # GXBB (S905)
++          - amlogic,gxl-vdec # GXL (S905X, S905D)
++          - amlogic,gxm-vdec # GXM (S912)
++        - const: amlogic,gx-vdec
+       - enum:
+-        - amlogic,gxbb-vdec # GXBB (S905)
+-        - amlogic,gxl-vdec # GXL (S905X, S905D)
+-        - amlogic,gxm-vdec # GXM (S912)
+-      - const: amlogic,gx-vdec
++        - amlogic,g12a-vdec # G12A (S905X2, S905D2)
  
+   interrupts:
+     minItems: 2
+@@ -59,13 +62,9 @@ properties:
+ 
+   clocks:
+     minItems: 4
++    maxItems: 5
+ 
+-  clock-names:
+-    items:
+-      - const: dos_parser
+-      - const: dos
+-      - const: vdec_1
+-      - const: vdec_hevc
++  clock-names: true
+ 
+   amlogic,ao-sysctrl:
+     description: should point to the AOBUS sysctrl node
+@@ -77,6 +76,42 @@ properties:
+     allOf:
+       - $ref: /schemas/types.yaml#/definitions/phandle
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - amlogic,gx-vdec
++
++    then:
++      properties:
++        clock-names:
++          minItems: 4
++          items:
++            - const: dos_parser
++            - const: dos
++            - const: vdec_1
++            - const: vdec_hevc
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - amlogic,g12a-vdec
++
++    then:
++      properties:
++        clock-names:
++          minItems: 5
++          items:
++            - const: dos_parser
++            - const: dos
++            - const: vdec_1
++            - const: vdec_hevc
++            - const: vdec_hevcf
++
+ required:
+   - compatible
+   - reg
 -- 
-2.17.1
+2.22.0
 
