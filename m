@@ -2,78 +2,149 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C8CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B85C43141
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662E62071F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574264189;
-	bh=P8EGesrpH/uImOrrL+/RdkGKOxCuNxZ78Yspbo+u+EI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IuOjQUcDB1I/A76a+hYFVOafT92zxCnFuUPiJ4CVPvTPM3KR1bEMVXkzSq065oG0e
-	 7sCBpEG3k+7k5xbstXh/oir+YUal9Qd2J0hk2dUh7SiBsY7XRfHVRhFnHHKU2tRCns
-	 0z2+DX7yW6d8eZ9XRZp4HWKCzOmFGrhlU6NdiuH4=
+	by mail.kernel.org (Postfix) with ESMTP id 680F520709
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="W8kQw5Ti";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="mwzIUaLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbfKTPg3 (ORCPT
+        id S1732066AbfKTPlP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:36:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 10:41:15 -0500
+Received: from node.akkea.ca ([192.155.83.177]:56262 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbfKTPg2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:36:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D1A20709;
-        Wed, 20 Nov 2019 15:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574264188;
-        bh=P8EGesrpH/uImOrrL+/RdkGKOxCuNxZ78Yspbo+u+EI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oQLu82mZ95uMEgE5WA6MYB0/YllLETrWr92sxgPg/hbJLuLM3s2y0vZtqPUR9ZLlR
-         Fg44tMvxARlO+7LGnxwdLXUVpEPXQSqFai0ffwvaj5wDEXkGXZqYMJVSPkbPBigKDH
-         fKTDKWRcOx3VTWp+Ou7y67z3/+W94YLO8/iiFzXo=
-Date:   Wed, 20 Nov 2019 16:36:25 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>, kernel-team@android.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: property: Fix the semantics of of_is_ancestor_of()
-Message-ID: <20191120153625.GA2981769@kroah.com>
-References: <20191120080230.16007-1-saravanak@google.com>
+        id S1731906AbfKTPlI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:41:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id A14614E200E;
+        Wed, 20 Nov 2019 15:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1574264467; bh=c1bwvGZ3DtvSeRPrVEI/eLrZgFbhGdVgFlrw3H+Ljmg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=W8kQw5TiUDaohToYRNY47L6bmIwZ1V9gB2GsTL8ZcnBCvzYIuFzBsu+ZWC1RTl495
+         tg8GMEM99IGqVzCmA4BeIqefw7g9e3VbBVJXEmkeJ/3TNBQcU7FPDLD6pd6c8ywVaH
+         KwtpqvqJvQZgB3SVwvpxgvnc2Nl3VhGbNm6NOG3g=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bzL7GrYHn4P7; Wed, 20 Nov 2019 15:41:06 +0000 (UTC)
+Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
+        by node.akkea.ca (Postfix) with ESMTPSA id 7E7C64E2003;
+        Wed, 20 Nov 2019 15:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1574264466; bh=c1bwvGZ3DtvSeRPrVEI/eLrZgFbhGdVgFlrw3H+Ljmg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=mwzIUaLoFOmzPRRwdy6cZm1S1cVC3dxyuglKyfH2imk2OPl2aFZgClNXZ2MoQsSd5
+         5zvMyZw2rWcC0Beme8vIYyQW/vw+JDYhY4bDgw/OMjbULDuW7HH1JjI/W6X0x/Rryn
+         S3ySlOmYGvbtcHZ+5OWyQotpdiB131AG7YWtTqDw=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120080230.16007-1-saravanak@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 20 Nov 2019 07:41:06 -0800
+From:   Angus Ainslie <angus@akkea.ca>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Jacky Bai <ping.bai@nxp.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?Q?Artur_=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-pm@vger.kernel.org, kernel@pengutronix.de,
+        dl-linux-imx <linux-imx@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-pm-owner@vger.kernel.org
+Subject: Re: [PATCH RFC v6 2/9] PM / devfreq: Add generic imx bus scaling
+ driver
+In-Reply-To: <VI1PR04MB70233920AC838AD88E1ECC26EE4F0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <cover.1573761527.git.leonard.crestez@nxp.com>
+ <f329e715898a6b9fd0cee707a93fb1e144e31bd4.1573761527.git.leonard.crestez@nxp.com>
+ <e311a376e6aec0c380686a7e307d2c07@akkea.ca>
+ <VI1PR04MB70233920AC838AD88E1ECC26EE4F0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Message-ID: <008f2fa973b23fc716d678c5bd35af54@akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.3.6
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:02:29AM -0800, Saravana Kannan wrote:
-> The of_is_ancestor_of() function was renamed from of_link_is_valid()
-> based on review feedback. The rename meant the semantics of the function
-> had to be inverted, but this was missed in the earlier patch.
+Hi Leonard,
+
+On 2019-11-20 07:04, Leonard Crestez wrote:
+> On 20.11.2019 16:08, Angus Ainslie wrote:
+>> Hi Leonard,
+>> 
+>> On 2019-11-14 12:09, Leonard Crestez wrote:
+>>> Add initial support for dynamic frequency switching on pieces of the
+>>> imx
+>>> interconnect fabric.
+>>> 
+>>> All this driver does is set a clk rate based on an opp table, it does
+>>> not map register areas.
+>>> 
+>> 
+>> Is this working with mainline ATF or does it still need to be used 
+>> with
+>> your modified ATF code ?
 > 
-> So, fix the semantics of of_is_ancestor_of() and invert the conditional
-> expressions where it is used.
+> This series doesn't perform SMC calls, that's done by the imx8m-ddrc
+> driver: https://patchwork.kernel.org/cover/11244283/
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/property.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> This particular patch allows switching NOC frequency but that's just
+> clk_set_rate.
+> 
+> DDRC frequency switching requires the imx branch of ATF (v2.0 + ~200
+> patches) otherwise you will get probe failures. Source for imx atf is
+> published here: https://source.codeaurora.org/external/imx/imx-atf/
 
-What git commit does this patch fix?
+Ok I was under the impression that the imx_2.0.y_busfreq branch below 
+was based on this. Shouldn't those patches be added to the imx ATF ?
 
-thanks,
+> 
+> For your particular 8mq B0 case slightly different setpoints are used
+> and the fix is not in any public release yet so you need this:
+> 
+> https://github.com/cdleonard/arm-trusted-firmware/commits/imx_2.0.y_busfreq
+> 
 
-greg k-h
+We also have 2n14w ( is that B1 ? ) imx8mq's that we are working with.
+
+> Is "mainline ATF" an important criteria for Purism?
+> 
+
+Yes we intend to bring all of our patches to mainline and were hoping 
+that NXP would be doing the same. Shouldn't a mainline kernel run on a 
+mainline ATF ?
+
+Thanks
+Angus
+
+> --
+> Regards,
+> Leonard
