@@ -2,230 +2,112 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5FBC432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88224C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE0F2088F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:45:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="X8k7SKga"
+	by mail.kernel.org (Postfix) with ESMTP id 6812620715
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKTTpJ (ORCPT
+        id S1727107AbfKTTpR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:45:09 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4268 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726440AbfKTTpJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:45:09 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAKJh0ha016754;
-        Wed, 20 Nov 2019 20:44:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=o+X8AS60Eijt7vdoaqRux4/FQnWUKnnAr6CTV+AlGXM=;
- b=X8k7SKgaUjmjxDgXAXQdxnmhpNMsaptUcPY7z1F3uJXc/0NuOMiuz0Cv6hyVhWeaLFFg
- vtTGtUo8g/PMQnWFX+qmqoDmqrmqo7NkcOKiGxWxejqdOIegNYdGI7t6R2tR0ZHeUQXe
- 49TnW9w6lDujkIAgLIlEUu9KpM0Ww8gL5LugaZ8faDWv62/K2CoJSSnBQEfmbrKWWhVO
- 9ILx6W7KzVtj2TiWF+anxVimp5nDmZKwD1xXawdN5V6ZcXG8F39GSZv9+g2zHv8zdU0E
- +o4dbF4qiweG9vYlJJgHcxw3HXeJ+x539KRTXOGxvFHDtwEEPHx7UD5XzQhCpqisIs1e uw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9usfca3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Nov 2019 20:44:51 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 88E39100034;
-        Wed, 20 Nov 2019 20:44:46 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6CD952C6151;
-        Wed, 20 Nov 2019 20:44:46 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 20 Nov 2019 20:44:45
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <broonie@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>
-CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2] dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
-Date:   Wed, 20 Nov 2019 20:44:44 +0100
-Message-ID: <20191120194444.10540-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Wed, 20 Nov 2019 14:45:17 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60970 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726440AbfKTTpR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:45:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 63673AFCB;
+        Wed, 20 Nov 2019 19:45:15 +0000 (UTC)
+Message-ID: <073219d4e46bab9fb6ba972ebc2ee2f3b55abf55.camel@suse.de>
+Subject: Re: [PATCH v3 4/4] ARM: dts: bcm2711: Enable HWRNG support
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stephen Brennan <stephen@brennan.io>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org
+Date:   Wed, 20 Nov 2019 20:45:12 +0100
+In-Reply-To: <20191120031622.88949-5-stephen@brennan.io>
+References: <20191120031622.88949-1-stephen@brennan.io>
+         <20191120031622.88949-5-stephen@brennan.io>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-EQFLnI4F4oDM522MqmL9"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-20_06:2019-11-20,2019-11-20 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 QSPI binding to DT schema format using json-schema
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-changes in version 2:
-- fix subject
-- remove useless minItems and maxItems
- .../devicetree/bindings/spi/spi-stm32-qspi.txt     | 47 ------------
- .../devicetree/bindings/spi/st,stm32-qspi.yaml     | 83 ++++++++++++++++++++++
- 2 files changed, 83 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+--=-EQFLnI4F4oDM522MqmL9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
-deleted file mode 100644
-index bfc038b9478d..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* STMicroelectronics Quad Serial Peripheral Interface(QSPI)
--
--Required properties:
--- compatible: should be "st,stm32f469-qspi"
--- reg: the first contains the register location and length.
--       the second contains the memory mapping address and length
--- reg-names: should contain the reg names "qspi" "qspi_mm"
--- interrupts: should contain the interrupt for the device
--- clocks: the phandle of the clock needed by the QSPI controller
--- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
--
--Optional properties:
--- resets: must contain the phandle to the reset controller.
--
--A spi flash (NOR/NAND) must be a child of spi node and could have some
--properties. Also see jedec,spi-nor.txt.
--
--Required properties:
--- reg: chip-Select number (QSPI controller may connect 2 flashes)
--- spi-max-frequency: max frequency of spi bus
--
--Optional properties:
--- spi-rx-bus-width: see ./spi-bus.txt for the description
--- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
--Documentation/devicetree/bindings/dma/dma.txt.
--- dma-names: DMA request names should include "tx" and "rx" if present.
--
--Example:
--
--qspi: spi@a0001000 {
--	compatible = "st,stm32f469-qspi";
--	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
--	reg-names = "qspi", "qspi_mm";
--	interrupts = <91>;
--	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
--	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_qspi0>;
--
--	flash@0 {
--		compatible = "jedec,spi-nor";
--		reg = <0>;
--		spi-rx-bus-width = <4>;
--		spi-max-frequency = <108000000>;
--		...
--	};
--};
-diff --git a/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
-new file mode 100644
-index 000000000000..3665a5fe6b7f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/st,stm32-qspi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 Quad Serial Peripheral Interface (QSPI) bindings
-+
-+maintainers:
-+  - Christophe Kerello <christophe.kerello@st.com>
-+  - Patrice Chotard <patrice.chotard@st.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: st,stm32f469-qspi
-+
-+  reg:
-+    items:
-+      - description: registers
-+      - description: memory mapping
-+
-+  reg-names:
-+    items:
-+     - const: qspi
-+     - const: qspi_mm
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: tx DMA channel
-+      - description: rx DMA channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    spi@58003000 {
-+      compatible = "st,stm32f469-qspi";
-+      reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
-+      reg-names = "qspi", "qspi_mm";
-+      interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-+      dmas = <&mdma1 22 0x10 0x100002 0x0 0x0>,
-+             <&mdma1 22 0x10 0x100008 0x0 0x0>;
-+      dma-names = "tx", "rx";
-+      clocks = <&rcc QSPI_K>;
-+      resets = <&rcc QSPI_R>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      flash@0 {
-+        compatible = "jedec,spi-nor";
-+        reg = <0>;
-+        spi-rx-bus-width = <4>;
-+        spi-max-frequency = <108000000>;
-+      };
-+    };
-+
-+...
--- 
-2.15.0
+On Tue, 2019-11-19 at 19:16 -0800, Stephen Brennan wrote:
+> This enables hardware random number generator support for the BCM2711
+> on the Raspberry Pi 4 board.
+>=20
+> Signed-off-by: Stephen Brennan <stephen@brennan.io>
+> ---
+>  arch/arm/boot/dts/bcm2711.dtsi | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.d=
+tsi
+> index ac83dac2e6ba..ed0877d5a1e9 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -92,10 +92,9 @@ pm: watchdog@7e100000 {
+>  		};
+> =20
+>  		rng@7e104000 {
+> -			interrupts =3D <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+> -
+> -			/* RNG is incompatible with brcm,bcm2835-rng */
+> -			status =3D "disabled";
+> +			compatible =3D "brcm,bcm2711-rng200";
+> +			reg =3D <0x7e104000 0x28>;
+> +			status =3D "okay";
+
+Small nitpick, the 'okay' status is set by default, so no need for this. Bu=
+t
+it's something we can edit out once we pick the patch.
+
+Regards,
+Nicolas
+
+
+--=-EQFLnI4F4oDM522MqmL9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3Vl8gACgkQlfZmHno8
+x/49PQf/Tah+83leeq/AYVqsmeAlWU9tVFZ6DV4o9XFtXocYffZlQtscjV5mLpXU
+4CfcjTwUdIn/Cfk70ZXXqD7EsQ9XUGN6pfNiP/rPffSSTKAUd7wektykwl9YQaAN
+DcJBMRbPy+TPZDYaLu7DtGMpLe9HYj1p1onNEoKfW8XBqOPRirBQv1KfYTFMQyq4
+ZCXnvMz6F4PxpUf/Ybgv3KB3twfd8c1vF9arPEh06PKfTozUbnUu0gEqjgLvwi6a
+NP+K9oMo/5HMnOARh9znTaRJu/jKSjoiyCM0Jsisd6z6TDEe8PezgkxpdjIm6k79
+p6f8JA13izZl3k2g8I5ZBnG+xuWyBQ==
+=gzPL
+-----END PGP SIGNATURE-----
+
+--=-EQFLnI4F4oDM522MqmL9--
 
