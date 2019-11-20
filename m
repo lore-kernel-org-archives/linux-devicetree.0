@@ -2,58 +2,106 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E16DC432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B60C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B14820715
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002D92071F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574278015;
+	bh=888qcNglt2aTTLwRLbfmkuf5RTUPH/vN/mvNViLPEiU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XrNFcxfb1AMyGJD9f2po6eZmgM/FwDW3RbbciwA0fiSkq1Jtk+QHOQFTkAbgC7s6h
+	 2g4TeA+N4e7nXSNYiZ9ODVJ2DIXeaw3F0krWcWX030tfVZPEBjI6Uu6xJFLotp3nj9
+	 etmX8nQc3hGnDWdNqKOTxDZeceWnSWf/OcApGBYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfKTTZs (ORCPT
+        id S1727415AbfKTT0v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:25:48 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:58498 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfKTTZs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 14:25:48 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0226914BF1AE1;
-        Wed, 20 Nov 2019 11:25:46 -0800 (PST)
-Date:   Wed, 20 Nov 2019 11:25:46 -0800 (PST)
-Message-Id: <20191120.112546.328555100014052910.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     netdev@vger.kernel.org, ilias.apalodimas@linaro.org,
-        andrew@lunn.ch, ivan.khoronzhuk@linaro.org, jiri@resnulli.us,
-        f.fainelli@gmail.com, nsekhar@ti.com, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, m-karicheri2@ti.com,
-        ivecera@redhat.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 net-next 00/13] net: ethernet: ti: introduce new
- cpsw switchdev based driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191119221925.28426-1-grygorii.strashko@ti.com>
-References: <20191119221925.28426-1-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 20 Nov 2019 11:25:47 -0800 (PST)
+        Wed, 20 Nov 2019 14:26:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727582AbfKTT0v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:26:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF3FC20715;
+        Wed, 20 Nov 2019 19:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574278010;
+        bh=888qcNglt2aTTLwRLbfmkuf5RTUPH/vN/mvNViLPEiU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qKUolow49rTYCuaqW/HzuQAs4Vg7WSbifWby4JjUoi0Or7N8DDNZkdmk4g9956COv
+         CpjE0MSqZK+GWUnI7iPlhI2DF+XaKdOsDIGdK7+T1+WcFtaiAaAVF0qi87dhpTvrWg
+         dz9CzAS+fK97+U2w6Gn5+TV720gK0+C77qDyjKqk=
+Date:   Wed, 20 Nov 2019 20:26:48 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
+Message-ID: <20191120192648.GA3087498@kroah.com>
+References: <20191023114634.13657-0-mholenko@antmicro.com>
+ <20191023114634.13657-2-mholenko@antmicro.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023114634.13657-2-mholenko@antmicro.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Wed, 20 Nov 2019 00:19:12 +0200
+On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
+> +#ifdef __LITTLE_ENDIAN
+> +# define LITEX_READ_REG(addr)                  ioread32(addr)
+> +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
+> +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
+> +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + off)
+> +#else
+> +# define LITEX_READ_REG(addr)                  ioread32be(addr)
+> +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
+> +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
+> +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr + off)
+> +#endif
 
-> Thank you All for review of v6.
-> 
-> There are no significant changes in this version, just fixed comments to v6.
- ...
+I just noticed this.
 
-Series applied, thank you.
+Ick, this is not good.  You will run into problems in the future with
+this, I can guarantee it.  What about systems where the CPU is one
+endian and the hardware in the other?  It will happen trust us.
+
+Make these real functions (inline is nice) and pass in the pointer to
+the device so you can test for it and call the correct function based on
+the cpu/hardware type.
+
+And what about bitfields?  What endian are they for your
+system/hardware?
+
+Almost no kernel code should EVER be testing __LITTLE_ENDIAN, don't add
+to it as it is not a good idea.
+
+thanks,
+
+greg k-h
