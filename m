@@ -2,142 +2,204 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D420C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC962C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 16:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473C320672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9787C2071B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 16:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574265748;
+	bh=fkai9iagblxVM80NF9jPjdkCT3Ll2l153n578/rJMQY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D17L4tE6FFbcc6wqZMtOZohCxw3CWEYNV7qLMyOacCE83TP+l8/UDkdIP9bLyAHuy
+	 3zx28A5prNDDlJH9+eZ1YchHY46bnPE1n61ofKY2ewPixJuzy5JdReGizVHvG54GDm
+	 pFIsLzCc+XbpuB2tHxZbuTi26muliLnZAcQSRh6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbfKTPxa convert rfc822-to-8bit (ORCPT
+        id S1729493AbfKTQC2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:53:30 -0500
-Received: from mx1.unisoc.com ([222.66.158.135]:32237 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728453AbfKTPx3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 10:53:29 -0500
-Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAKFplbr095330
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 20 Nov 2019 23:51:47 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from spreadtrum.com (10.0.74.112) by BJMBX02.spreadtrum.com
- (10.0.64.8) with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019
- 23:51:36 +0800
-Date:   Wed, 20 Nov 2019 23:49:28 +0800
-From:   Orson Zhai <orson.zhai@spreadtrum.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Orson Zhai <orson.zhai@unisoc.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <kevin.tang@unisoc.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add syscon-names support
-Message-ID: <20191120154928.GC6039@spreadtrum.com>
-References: <20191114114525.12675-1-orson.zhai@unisoc.com>
- <20191114114525.12675-2-orson.zhai@unisoc.com>
- <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
- <20191118083952.GB6039@spreadtrum.com>
- <CAK8P3a2d2=BejX=R0jmw0zt64mPF-rjKSi1Eh5Koz1cqku-nRA@mail.gmail.com>
+        Wed, 20 Nov 2019 11:02:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728520AbfKTQC1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:02:27 -0500
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF6F2071B;
+        Wed, 20 Nov 2019 16:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574265747;
+        bh=fkai9iagblxVM80NF9jPjdkCT3Ll2l153n578/rJMQY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TGkW6V5+gVyijrtS+kBTvCY8m31Mmmyb/h1F1O1OAZerHqSS1odhUATaI66Npwnpu
+         ozQGReuIyKVHiuQZrZOCqeYq+OLSoII+NmsYIBQGdWHFDX2HfxauSg1PW0TYKfcKh6
+         QPXBN8gbv8TKF8D+tQ/jS+U+xo6B8t3DQCqUhBKs=
+Received: by mail-qv1-f50.google.com with SMTP id n4so90495qvq.9;
+        Wed, 20 Nov 2019 08:02:26 -0800 (PST)
+X-Gm-Message-State: APjAAAX0LS+xSxuca0l6YIHgjA8d1aHjsKl/o7Qb2CGrz1Ze1V6h3fbc
+        oCpdtn4tZf1TEvl7CTE3riVoUTPvWl7hVgmzMg==
+X-Google-Smtp-Source: APXvYqwq5SAEBgw062GclbqqxIVUufSCPIi/U3DPvAif0XTbyFTcVbv7pvhxYJt8XQ2f7IL43GVlkAL9OgeMg9B2s0M=
+X-Received: by 2002:ad4:42b4:: with SMTP id e20mr3287388qvr.85.1574265745927;
+ Wed, 20 Nov 2019 08:02:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2d2=BejX=R0jmw0zt64mPF-rjKSi1Eh5Koz1cqku-nRA@mail.gmail.com>
-X-Mailer: git-send-email 2.18.0
-X-Originating-IP: [10.0.74.112]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xAKFplbr095330
+References: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
+ <20190910153409.111901-2-paul.kocialkowski@bootlin.com> <20190913143510.GA9504@bogus>
+ <20190913155815.GA1554@aptenodytes> <CAL_Jsq+dzT1xrfBy2QQHLx9MUNukWWq5eXyOecVV8h0z5ziC8g@mail.gmail.com>
+ <20190923153311.GE57525@aptenodytes> <CAL_JsqJLfAb0xhmBoX+GUcv5wsuHBOs8wZ=Hkw3x03kfsPgOqg@mail.gmail.com>
+ <20191120144957.GA167553@aptenodytes>
+In-Reply-To: <20191120144957.GA167553@aptenodytes>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 20 Nov 2019 10:02:14 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+n2HYz3BLm3Nad=Uv6qiJNM2=fQmCxzkXJZx-0=VQTFQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+n2HYz3BLm3Nad=Uv6qiJNM2=fQmCxzkXJZx-0=VQTFQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: Add xylon logicvc bindings documentation
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Tue, Nov 19, 2019 at 03:46:09PM +0100, Arnd Bergmann wrote:
-> On Mon, Nov 18, 2019 at 9:42 AM Orson Zhai <orson.zhai@spreadtrum.com> wrote:
-> >
-> > Hi Arnd,
-> >
-> > On Fri, Nov 15, 2019 at 10:33:30AM +0100, Arnd Bergmann wrote:
-> > > On Thu, Nov 14, 2019 at 12:48 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
+On Wed, Nov 20, 2019 at 8:50 AM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi,
+>
+> Circling back to this thread now, sorry for the delay.
+>
+> On Tue 24 Sep 19, 09:58, Rob Herring wrote:
+> > On Mon, Sep 23, 2019 at 10:33 AM Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Fri 13 Sep 19, 20:16, Rob Herring wrote:
+> > > > On Fri, Sep 13, 2019 at 4:58 PM Paul Kocialkowski
+> > > > <paul.kocialkowski@bootlin.com> wrote:
+> > > > >
+> > > > > Hi Rob and thanks for the review!
+> > > > >
+> > > > > On Fri 13 Sep 19, 15:35, Rob Herring wrote:
+> > > > > > On Tue, Sep 10, 2019 at 05:34:08PM +0200, Paul Kocialkowski wrote:
+> > > > > > > The Xylon LogiCVC is a display controller implemented as programmable
+> > > > > > > logic in Xilinx FPGAs.
+> > > > > > >
+> > > > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > > > ---
+> > > > > > >  .../bindings/display/xylon,logicvc.txt        | 188 ++++++++++++++++++
+> > > > > > >  1 file changed, 188 insertions(+)
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > > > >
+> > > > > > Consider converting this to DT schema format. See
+> > > > > > Documentation/devicetree/writing-schema.rst (.md in 5.3).
+> > > > >
+> > > > > Oh right, that would certainly be much more future-proof!
+> > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/display/xylon,logicvc.txt b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..eb4b1553888a
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > > > > > @@ -0,0 +1,188 @@
+> > > > > > > +Xylon LogiCVC display controller
+> > > > > > > +
+> > > > > > > +The Xylon LogiCVC is a display controller that supports multiple layers.
+> > > > > > > +It is usually implemented as programmable logic and was optimized for use
+> > > > > > > +with Xilinx Zynq-7000 SoCs and Xilinx FPGAs.
+> > > > > > > +
+> > > > > > > +Because the controller is intended for use in a FPGA, most of the configuration
+> > > > > > > +of the controller takes place at logic configuration bitstream synthesis time.
+> > > > > > > +As a result, many of the device-tree bindings are meant to reflect the
+> > > > > > > +synthesis configuration. These do not allow configuring the controller
+> > > > > > > +differently than synthesis configuration.
+> > > > > > > +
+> > > > > > > +Layers are declared in the "layers" sub-node and have dedicated configuration.
+> > > > > > > +In version 3 of the controller, each layer has fixed memory offset and address
+> > > > > > > +starting from the video memory base address for its framebuffer. With version 4,
+> > > > > > > +framebuffers are configured with a direct memory address instead.
+> > > > > > > +
+> > > > > > > +Matching synthesis parameters are provided when applicable.
+> > > > > > > +
+> > > > > > > +Required properties:
+> > > > > > > +- compatible: Should be one of:
+> > > > > > > +  "xylon,logicvc-3.02.a-display"
+> > > > > > > +  "xylon,logicvc-4.01.a-display"
+> > > > > > > +- reg: Physical base address and size for the controller registers.
+> > > > > > > +- clocks: List of phandle and clock-specifier pairs, one for each entry
+> > > > > > > +  in 'clock-names'
+> > > > > > > +- clock-names: List of clock names that should at least contain:
+> > > > > > > +  - "vclk": The VCLK video clock input.
+> > > > > > > +- interrupts: The interrupt to use for VBLANK signaling.
+> > > > > > > +- xylon,display-interface: Display interface in use, should be one of:
+> > > > > > > +  - "lvds-4bits": 4-bit LVDS interface (C_DISPLAY_INTERFACE == 4).
+> > > > > > > +- xylon,display-colorspace: Display output colorspace in use, should be one of:
+> > > > > > > +  - "rgb": RGB colorspace (C_DISPLAY_COLOR_SPACE == 0).
+> > > > > > > +- xylon,display-depth: Display output depth in use (C_PIXEL_DATA_WIDTH).
+> > > > > > > +- xylon,row-stride: Fixed number of pixels in a framebuffer row (C_ROW_STRIDE).
+> > > > > > > +- xylon,layers-count: The number of available layers (C_NUM_OF_LAYERS).
+> > > > > >
+> > > > > > Presumably some of this is determined by the display attached. Isn't it
+> > > > > > safe to assume the IP was configured correctly for the intended display
+> > > > > > and you can just get this from the panel?
+> > > > >
+> > > > > Layers are what corresponds to DRM planes, which are not actually indicated
+> > > > > by the panel but are a charasteristic of the display controller. In our case,
+> > > > > this is directly selected at bitstream synthesis time for the controller.
+> > > > >
+> > > > > So I'm afraid there is no way we can auto-detect this from the driver.
 > > > >
-> > > >
-> > > > Make life easier when syscon consumer want to access multiple syscon
-> > > > nodes.
-> > > > Add syscon-names and relative properties to help manage complicated
-> > > > cases when accessing more one syscon node.
-> > > >
-> > > > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> > > > Sorry, I referring to the set of properties above. In particular,
+> > > > xylon,display-interface and xylon,display-colorspace, though I don't
+> > > > know if the latter is talking in memory format or on the wire format.
 > > >
-> > > Hi Orson,
-> > >
-> > > Can you explain why the number of cells in this binding is specific
-> > > to the syscon node rather than the node referencing it?
+> > > Both of these are about the wire format, which is also "hardcoded" at synthesis
+> > > time with no way to be detected afterwards, as far as I know. Memory format is
+> > > described in the layer sub-nodes.
 > >
-> > The story is like this. I found there are too many global registers in
-> > Unisoc(former Spreadtrum) chips. Dozens of offset with dozens of modules
-> > were needed to be specified. So I thought the dts files would seem "horrible"
-> > with a big chunk of syscon-xxx (say more than 20 lines)
-> >
-> > I learned from reg-names way which might look clean to hold all these mess things.
-> > But to implement this, the users need to konw the cell-size if we add arguments to syscon node.
-> > I thought to add cell-size into every syscon consumer node is a duplicated work and
-> > I wanted to take advantage of of_parse_phandle_with_args.
-> > So the bindings were created then.
+> > You have to attach the controller to something at the other end of the
+> > wire. A panel is only going to support 1 or a few wire formats, so you
+> > do likely know because the panel knows. In the case that a panel
+> > supports multiple wire formats, we do have some standard properties
+> > there. See the LVDS panel binding.
 >
-> Ok, that makes sense.
+> Looking at the LVDS panel binding, I see that the LVDS types that I have
+> described as lvds-4bits and lvds-3bits are called jeida-24 and jeida-18.
 >
-> > > The way would otherwise handle the example from your binding
-> > > would be with two separate properties in the display node, like
-> > >
-> > > syscon-enable = <&ap_apb_regs 0x4 0xf00>;
-> > > syscon-power = <&aon_regs 0x8>;
-> >
-> > This is an option for consumers all the time.
-> > Acturally my patches are not going to replace this.
-> > I'd like to provide another option to save people like desperate engineers in Spreadtrum :)
-> >
-> > >
-> > > in which case, the syscon driver does not need to know anything
-> >
-> > Whould it be better if I add syscon-cells into consumer's node?
->
-> As I see it, there is no reason to put the syscon-cells property into any node,
-> as this is implied by the driver binding using the syscon reference.  I would
-> only use the #xyz-cells style property if there are multiple interpretations
-> that all make sense for the same binding.
->
-> > Then I could read the cell size and use "of_parse_phandle_with_fixed_args()" instead.
-> > This will not involve syscon node itself at all.
->
-> This sounds better to me, yes. I had not even remembered this function
-> exists, but I think this is a good idea.
->
-> I can also see a point in favor of adding more infrastructure around this,
-> possibly naming the entries in a syscon-names property as you suggested,
-> combining of_parse_phandle_with_fixed_args() with a name, or
-> combining with syscon_regmap_lookup_by_phandle() for convenience.
->
-> This should all be possible without adding complexity to the syscon
-> DT binding itself, and it would give more structure to the way it
-> is used by drivers.
+> Either way, the controller cannot be dynamically configured to use one or
+> another: it is configured to support one at synthesis time and this doesn't
+> change.
 
-V2 has been sent out per as you suggested.
+Understood, but I was assuming you need to know how it was configured
+for some reason?
 
-Free free to review please.
+> I'm not sure exactly what you implied here. Even if we can retreive the
+> wire format from the lvds-panel's data-mapping property, I don't think it shall
+> describe what the display controller was configured to. This information could
+> be used to make sure that both are compatible (in the driver), but that's about
+> it as far as I can see.
 
-Best Regards,
--Orson
->
->        Arnd
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+It's not the kernel's job to validate the DT is correct. Someone could
+just as easily define a panel that doesn't match with the configured
+format as they could having lvds-?bits set incorrectly.
+
+So get the wire format from the panel driver (either implied or by DT
+property) and assume that matches the configuration of the controller.
+Though, I guess if the model is each end of the wire should advertise
+what it supports and the core picks the best format, then that only
+works if you advertise both formats. Or we could allow jeida-{24,18}
+property at both ends of the graph.
+
+Rob
