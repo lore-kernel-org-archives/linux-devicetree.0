@@ -2,140 +2,99 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0E4C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 13:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62074C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1DD224DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 13:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5F122522
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574256803;
+	bh=fUd3tZx87qdnG6CwilRNMyUR8d2QluCbndXsUwHsrKo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=e19xAC/1YrDjj968NrFIMObAxjm3s11GjulNXXLdbn9WMSwJ3oApDjU7+KAUUCq60
+	 J6w3UqJkh9qP6b/gCZ5H9sx6gFJqyjt0P3vc/4EEn5nRxyCtWK5JRZwxDo/a+bDgeN
+	 Y6Cq+R9XULdrs0qyts9ehh+RdCys2veaUHQkbOKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbfKTN3B (ORCPT
+        id S1730663AbfKTNdT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:29:01 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:39182 "EHLO gloria.sntech.de"
+        Wed, 20 Nov 2019 08:33:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729530AbfKTN3B (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:29:01 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iXQ2M-0003QS-LP; Wed, 20 Nov 2019 14:28:50 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH 2/5] arm64: dts: rockchip: Add VMARC RK3399Pro SOM initial support
-Date:   Wed, 20 Nov 2019 14:28:50 +0100
-Message-ID: <1707486.7nrk6WTBgP@diego>
-In-Reply-To: <20191120113923.11685-3-jagan@amarulasolutions.com>
-References: <20191120113923.11685-1-jagan@amarulasolutions.com> <20191120113923.11685-3-jagan@amarulasolutions.com>
+        id S1730651AbfKTNdT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:33:19 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FA8022521;
+        Wed, 20 Nov 2019 13:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574256798;
+        bh=fUd3tZx87qdnG6CwilRNMyUR8d2QluCbndXsUwHsrKo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=n6zizZh2Ogrr7jK95g8XBlS4G/sFVvXPPu1bz5ZrWk5Csxwu/ysU31PfNzk6MLFxB
+         2xQ9VCyLVkHtrh6b+UsdQ7SkDo6EOh0xKPKC+oHcwRA0RiLHEW7QyZ5+fUSjfoRcMq
+         W/Yui2vNYyc5iCpIquvBd3FnhEXMWuvaPrzf/vKQ=
+Received: by mail-qv1-f45.google.com with SMTP id cv8so9538478qvb.3;
+        Wed, 20 Nov 2019 05:33:18 -0800 (PST)
+X-Gm-Message-State: APjAAAV49mLF18TiUKxP6vjkCGlKS0y/nKaexbcvUaZcZfswsNNFm+Tx
+        rroHtd0FjBCUVA7oYyCVMPgaixTMSbtz0h9HIQ==
+X-Google-Smtp-Source: APXvYqwbpzn2fJraSCYad28+nndI8XWhSNe0EYjVvJZpgDz4z7+/dr0W/0EkM+wEC57Uvdy13UVXGH7HREtILCij3Ig=
+X-Received: by 2002:a0c:ca06:: with SMTP id c6mr2416351qvk.136.1574256797274;
+ Wed, 20 Nov 2019 05:33:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20191120121720.72845-1-stephan@gerhold.net>
+In-Reply-To: <20191120121720.72845-1-stephan@gerhold.net>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 20 Nov 2019 07:33:05 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+a3zLhRpTYXOOoOt2Ct4SUeiYsPz=QvJXUm1w2aoMEGA@mail.gmail.com>
+Message-ID: <CAL_Jsq+a3zLhRpTYXOOoOt2Ct4SUeiYsPz=QvJXUm1w2aoMEGA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: vendor-prefixes: Add yet another for ST-Ericsson
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jagan,
-
-looks good in general, just some small things below:
-
-Am Mittwoch, 20. November 2019, 12:39:20 CET schrieb Jagan Teki:
-> VMARC RK3399Pro SOM is a standard SMARC SOM design with
-> Rockchip RK3399Pro SoC, which is designed by Vamrs.
-> 
-> Specification:
-> - Rockchip RK3399Pro
-> - PMIC: RK809-3
-> - SD slot, 16GiB eMMC
-> - 2xUSB-2.0, 1xUSB3.0
-> - USB-C for power supply
-> - Ethernet, PCIe
-> - HDMI, MIPI-DSI/CSI, eDP
-> 
-> Add initial support for VMARC RK3399Pro SOM, this would use
-> with associated carrier board.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+On Wed, Nov 20, 2019 at 6:19 AM Stephan Gerhold <stephan@gerhold.net> wrote:
+>
+> Unfortunately the vendor prefix for ST-Ericsson is used very
+> inconsistently. "ste," and "stericsson," are already documented,
+> but some things in the kernel use "st-ericsson," which is not
+> documented yet.
+>
+> st-ericsson,u8500 is documented in bindings/arm/ux500/boards.txt,
+> and is used to match the machine code and the generic DT cpufreq
+> driver.
+>
+> Add it to the list of vendor prefixes.
+>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 > ---
->  .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 339 ++++++++++++++++++
->  1 file changed, 339 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> new file mode 100644
-> index 000000000000..ddf6ebc9fbe3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> @@ -0,0 +1,339 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-> + * Copyright (c) 2019 Vamrs Limited
-> + * Copyright (c) 2019 Amarula Solutions(India)
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/rockchip.h>
-> +#include <dt-bindings/pwm/pwm.h>
-> +
-> +/ {
-> +	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
-> +
-> +	clkin_gmac: external-gmac-clock {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clkin_gmac";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	vcc5v0_sys: vcc5v0-sys-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc5v0_sys";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 967e78c5ec0a..c9b0bab8ed23 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -909,6 +909,8 @@ patternProperties:
+>      description: ST-Ericsson
+>    "^stericsson,.*":
+>      description: ST-Ericsson
+> +  "^st-ericsson,.*":
+> +    description: ST-Ericsson
 
-Is vcc5v0_sys really the topmost regulator getting the outside
-power-supply?
+Please add 'deprecated: true' to the 2 that are not preferred. Looks
+like 'stericsson' should be preferred as it is used the most.
 
-
-> +	};
-> +
-> +	vcc_lan: vcc3v3-phy-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_lan";
-
-vcc_lan / vcc_phy is mostly coming from the vendor bsp in some way
-and will be named differently in schematics ... also it should be connected
-to the regulator tree.
-
-[...]
-
-> +&tsadc {
-> +	status = "okay";
-> +
-> +	/* tshut mode 0:CRU 1:GPIO */
-
-I think we can live without the additional comments for properties :-)
-
-> +	rockchip,hw-tshut-mode = <1>;
-> +	/* tshut polarity 0:LOW 1:HIGH */
-> +	rockchip,hw-tshut-polarity = <1>;
-> +};
-
-Heiko
-
-
-
+Rob
