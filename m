@@ -2,55 +2,50 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5D9C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 14:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274F0C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25E1206DA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 14:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0880A20748
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbfKTOuC (ORCPT
+        id S1728049AbfKTOvT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:50:02 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:35839 "EHLO
+        Wed, 20 Nov 2019 09:51:19 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49271 "EHLO
         relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729932AbfKTOuC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 09:50:02 -0500
+        with ESMTP id S1731836AbfKTOvR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 09:51:17 -0500
 X-Originating-IP: 90.76.211.102
 Received: from aptenodytes (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 41C8540005;
-        Wed, 20 Nov 2019 14:49:58 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 15:49:57 +0100
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id ECDB740005;
+        Wed, 20 Nov 2019 14:51:14 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 15:51:14 +0100
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 1/2] dt-bindings: display: Add xylon logicvc bindings
- documentation
-Message-ID: <20191120144957.GA167553@aptenodytes>
-References: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
- <20190910153409.111901-2-paul.kocialkowski@bootlin.com>
- <20190913143510.GA9504@bogus>
- <20190913155815.GA1554@aptenodytes>
- <CAL_Jsq+dzT1xrfBy2QQHLx9MUNukWWq5eXyOecVV8h0z5ziC8g@mail.gmail.com>
- <20190923153311.GE57525@aptenodytes>
- <CAL_JsqJLfAb0xhmBoX+GUcv5wsuHBOs8wZ=Hkw3x03kfsPgOqg@mail.gmail.com>
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: Document the Xylon LogiCVC
+ display controller
+Message-ID: <20191120145114.GB4331@aptenodytes>
+References: <20190927100738.1863563-1-paul.kocialkowski@bootlin.com>
+ <20190927100738.1863563-2-paul.kocialkowski@bootlin.com>
+ <20190927222038.GA22180@bogus>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJLfAb0xhmBoX+GUcv5wsuHBOs8wZ=Hkw3x03kfsPgOqg@mail.gmail.com>
+In-Reply-To: <20190927222038.GA22180@bogus>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -58,250 +53,28 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---bg08WKrSYDhXBjb5
+--oC1+HKm2/end4ao3
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Circling back to this thread now, sorry for the delay.
-
-On Tue 24 Sep 19, 09:58, Rob Herring wrote:
-> On Mon, Sep 23, 2019 at 10:33 AM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
-> >
-> > Hi,
-> >
-> > On Fri 13 Sep 19, 20:16, Rob Herring wrote:
-> > > On Fri, Sep 13, 2019 at 4:58 PM Paul Kocialkowski
-> > > <paul.kocialkowski@bootlin.com> wrote:
-> > > >
-> > > > Hi Rob and thanks for the review!
-> > > >
-> > > > On Fri 13 Sep 19, 15:35, Rob Herring wrote:
-> > > > > On Tue, Sep 10, 2019 at 05:34:08PM +0200, Paul Kocialkowski wrote:
-> > > > > > The Xylon LogiCVC is a display controller implemented as progra=
-mmable
-> > > > > > logic in Xilinx FPGAs.
-> > > > > >
-> > > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > > > ---
-> > > > > >  .../bindings/display/xylon,logicvc.txt        | 188 ++++++++++=
-++++++++
-> > > > > >  1 file changed, 188 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/display/x=
-ylon,logicvc.txt
-> > > > >
-> > > > > Consider converting this to DT schema format. See
-> > > > > Documentation/devicetree/writing-schema.rst (.md in 5.3).
-> > > >
-> > > > Oh right, that would certainly be much more future-proof!
-> > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/display/xylon,lo=
-gicvc.txt b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..eb4b1553888a
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/display/xylon,logicvc.t=
-xt
-> > > > > > @@ -0,0 +1,188 @@
-> > > > > > +Xylon LogiCVC display controller
-> > > > > > +
-> > > > > > +The Xylon LogiCVC is a display controller that supports multip=
-le layers.
-> > > > > > +It is usually implemented as programmable logic and was optimi=
-zed for use
-> > > > > > +with Xilinx Zynq-7000 SoCs and Xilinx FPGAs.
-> > > > > > +
-> > > > > > +Because the controller is intended for use in a FPGA, most of =
-the configuration
-> > > > > > +of the controller takes place at logic configuration bitstream=
- synthesis time.
-> > > > > > +As a result, many of the device-tree bindings are meant to ref=
-lect the
-> > > > > > +synthesis configuration. These do not allow configuring the co=
-ntroller
-> > > > > > +differently than synthesis configuration.
-> > > > > > +
-> > > > > > +Layers are declared in the "layers" sub-node and have dedicate=
-d configuration.
-> > > > > > +In version 3 of the controller, each layer has fixed memory of=
-fset and address
-> > > > > > +starting from the video memory base address for its framebuffe=
-r. With version 4,
-> > > > > > +framebuffers are configured with a direct memory address inste=
-ad.
-> > > > > > +
-> > > > > > +Matching synthesis parameters are provided when applicable.
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +- compatible: Should be one of:
-> > > > > > +  "xylon,logicvc-3.02.a-display"
-> > > > > > +  "xylon,logicvc-4.01.a-display"
-> > > > > > +- reg: Physical base address and size for the controller regis=
-ters.
-> > > > > > +- clocks: List of phandle and clock-specifier pairs, one for e=
-ach entry
-> > > > > > +  in 'clock-names'
-> > > > > > +- clock-names: List of clock names that should at least contai=
-n:
-> > > > > > +  - "vclk": The VCLK video clock input.
-> > > > > > +- interrupts: The interrupt to use for VBLANK signaling.
-> > > > > > +- xylon,display-interface: Display interface in use, should be=
- one of:
-> > > > > > +  - "lvds-4bits": 4-bit LVDS interface (C_DISPLAY_INTERFACE =
-=3D=3D 4).
-> > > > > > +- xylon,display-colorspace: Display output colorspace in use, =
-should be one of:
-> > > > > > +  - "rgb": RGB colorspace (C_DISPLAY_COLOR_SPACE =3D=3D 0).
-> > > > > > +- xylon,display-depth: Display output depth in use (C_PIXEL_DA=
-TA_WIDTH).
-> > > > > > +- xylon,row-stride: Fixed number of pixels in a framebuffer ro=
-w (C_ROW_STRIDE).
-> > > > > > +- xylon,layers-count: The number of available layers (C_NUM_OF=
-_LAYERS).
-> > > > >
-> > > > > Presumably some of this is determined by the display attached. Is=
-n't it
-> > > > > safe to assume the IP was configured correctly for the intended d=
-isplay
-> > > > > and you can just get this from the panel?
-> > > >
-> > > > Layers are what corresponds to DRM planes, which are not actually i=
-ndicated
-> > > > by the panel but are a charasteristic of the display controller. In=
- our case,
-> > > > this is directly selected at bitstream synthesis time for the contr=
-oller.
-> > > >
-> > > > So I'm afraid there is no way we can auto-detect this from the driv=
-er.
-> > >
-> > > Sorry, I referring to the set of properties above. In particular,
-> > > xylon,display-interface and xylon,display-colorspace, though I don't
-> > > know if the latter is talking in memory format or on the wire format.
-> >
-> > Both of these are about the wire format, which is also "hardcoded" at s=
-ynthesis
-> > time with no way to be detected afterwards, as far as I know. Memory fo=
-rmat is
-> > described in the layer sub-nodes.
+On Fri 27 Sep 19, 17:20, Rob Herring wrote:
+> On Fri, Sep 27, 2019 at 12:07:37PM +0200, Paul Kocialkowski wrote:
+> > The Xylon LogiCVC is a display controller implemented as programmable
+> > logic in Xilinx FPGAs.
+> >=20
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  .../display/xylon,logicvc-display.yaml        | 313 ++++++++++++++++++
+> >  1 file changed, 313 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/xylon,log=
+icvc-display.yaml
 >=20
-> You have to attach the controller to something at the other end of the
-> wire. A panel is only going to support 1 or a few wire formats, so you
-> do likely know because the panel knows. In the case that a panel
-> supports multiple wire formats, we do have some standard properties
-> there. See the LVDS panel binding.
+> Any response to my last mail on v1?
 
-Looking at the LVDS panel binding, I see that the LVDS types that I have
-described as lvds-4bits and lvds-3bits are called jeida-24 and jeida-18.
-
-Either way, the controller cannot be dynamically configured to use one or
-another: it is configured to support one at synthesis time and this doesn't
-change.
-
-I'm not sure exactly what you implied here. Even if we can retreive the
-wire format from the lvds-panel's data-mapping property, I don't think it s=
-hall
-describe what the display controller was configured to. This information co=
-uld
-be used to make sure that both are compatible (in the driver), but that's a=
-bout
-it as far as I can see.
-
-> >
-> > > Actually for xylon,layers-count, You should just count the child nodes
-> > > of 'layers'.
-> >
-> > Oh that's a good point, thanks!
-> >
-> > > > > > +Optional properties:
-> > > > > > +- memory-region: phandle to a node describing memory, as speci=
-fied in:
-> > > > > > +  Documentation/devicetree/bindings/reserved-memory/reserved-m=
-emory.txt
-> > > > > > +- clock-names: List of clock names that can optionally contain:
-> > > > > > +  - "vclk2": The VCLK2 doubled-rate video clock input.
-> > > > > > +  - "lvdsclk": The LVDS clock.
-> > > > > > +  - "lvdsclkn": The LVDS clock inverted.
-> > > > >
-> > > > > How are these really optional?
-> > > >
-> > > > Well, the controller currently only supports LVDS, but more interfa=
-ces may be
-> > > > added later, so the lvdsclk clock will be optional when another int=
-erface
-> > > > is used instead. Maybe I'm mistaken about how to categorize them th=
-ough.
-> > > >
-> > > > My understanding is that the need for vclk2 and lvdsclkn depend on =
-the target
-> > > > FPGA family. I've developped the driver without the need for them, =
-but the
-> > > > datasheet states that they may be needed (but doesn't provide signi=
-ficant
-> > > > details about their role though).
-> > >
-> > > Not sure what to tell you then. You'll see it becomes a bit messy to
-> > > describe in schema. Ideally we define the exact number, order, and
-> > > values possible (or sets of those).
-> >
-> > I'll try to do my best.
-> >
-> > > > > > +- xylon,syscon: Syscon phandle representing the logicvc instan=
-ce.
-> > > > > > +- xylon,dithering: Dithering module is enabled (C_XCOLOR).
-> > > > > > +- xylon,background-layer: The last layer is used to display a =
-black background
-> > > > > > +  (C_USE_BACKGROUND). It must still be registered.
-> > > > > > +- xylon,layers-configurable: Configuration of layers' size, po=
-sition and offset
-> > > > > > +  is enabled (C_USE_SIZE_POSITION).
-> > > > >
-> > > > > I would think this will effectively have to be enabled to make th=
-is
-> > > > > usable with DRM. I'm not sure if a "standard" userspace would use=
- any of
-> > > > > the layers if all this is fixed.
-> > > >
-> > > > I was going with the same assumption, but drm_atomic_helper_check_p=
-lane_state
-> > > > has a can_position parameter, which will check that the plane cover=
-s the
-> > > > whole CRTC if set to false. So I guess it is somewhat expected that=
- this can
-> > > > be the case and some drivers (e.g. arm/hdlcd_crtc.c) also set this =
-to false.
-> > >
-> > > Certainly atomic can fail on anything not supported. My question is
-> > > more whether userspace has some minimum requirements. A cursor
-> > > couldn't deal with can_position=3Dfalse for example.
-> >
-> > Right, so I suppose that using an overlay plane as cursor wouldn't work
-> > in this situation. Well, I haven't found any formal definition of what =
-minimal
-> > requirements are expected from overlay planes. I would expect userspace=
- that
-> > tries to use an overlay plane as a cursor to have a software fallback a=
-s soon
-> > as something goes wrong. My feeling is that overlay planes are provided=
- on a
-> > "best-effort" basis, though contradiction is welcome here.
->=20
-> For sure, there's always a software fallback. While we shouldn't let a
-> specific OS's requirements dictate DT bindings, I just wonder if some
-> of the configuration ends up always having to be set a certain way.
-> Clearly, you could be writing the whole software stack and do a fixed
-> configuration, but would you still be using DT at that point?
-
-=46rom my understanding, all the possible combinations make sense here.
-The ability to position layers is of course quite welcome for a generic
-use case, but it certainly makes sense to reduce the controller's gate coun=
-t by
-removing the feature if the final use case doesn't need it. So I don't think
-some of these properties end having to be set in a specific way to make sen=
-se.
+Just answered on that thread, sorry for the delay.
 
 Cheers,
 
@@ -312,19 +85,19 @@ Paul Kocialkowski, Bootlin
 Embedded Linux and kernel engineering
 https://bootlin.com
 
---bg08WKrSYDhXBjb5
+--oC1+HKm2/end4ao3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3VUpUACgkQ3cLmz3+f
-v9H+PggAh21Ub4YH9twTROpVaY52bId6HiUHJMZL4Q8aC8fCaRoXkpQsWjxoIEZt
-6S480LFhx7wSIFZVGa9mjQ+yNW99fykvqjjiuhfxpcVoB2ihN5AbnPwy/jTRZotc
-8EQ6sHJXeg6HosIlf6B8AF1EwtbVVX9YAy8X82NOyNICQ5rkjUEgCvtoxDbwU9zv
-/azmMNqhGlwvi+UJKORlBRNG4o5AdW98iH9WSDl/pdAvu6Zrpp4D+gLclhdPLa0K
-piHnswOW+IWhbzgLsQ+TyT3oOIFZudp4lAu4FEE1410ASpyXeBNi0d/Dx6Rdx9WB
-dWW2kwmhKx/K+ce2yO4eg14qDEWOvA==
-=oNgS
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3VUuIACgkQ3cLmz3+f
+v9H6/QgAmZDcI/0gblSW95D8aMF2UP+4tUc1NYzzzlGmCGvAisyVWulup7L5PvSv
+uLxiM+7Kmq6KX9A0AOQ00+/d6noUI/sX9Zi6eY3EgyLQMnTNM87Z0SjSkO7oMkv2
+67GflREHdXIBr/jOI/tQ1Tqd04otcEN0iy7fzziWrK0gf33JTIhYE/v1k/3HKJyw
+jQjAU89SGWCTLrQUnWSXEkW7LyqX1XX/j5uVfeWJOBDdZYrHhpzRLvCRtbYKHqAk
+69VZQSm6NsoPtYGaZmuuTzegqphpJ/wG0BdOa8hIofGmGHsiwI//Ndx28cUELQCi
+rhXxUVq4zMUePbQId7kIskGuQjC3Kg==
+=oRfo
 -----END PGP SIGNATURE-----
 
---bg08WKrSYDhXBjb5--
+--oC1+HKm2/end4ao3--
