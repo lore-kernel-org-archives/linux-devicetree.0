@@ -2,100 +2,81 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61191C33C9A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 07:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE81C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 07:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4478920674
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 07:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3B920872
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 07:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfKTHnp (ORCPT
+        id S1727258AbfKTHp7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:43:45 -0500
-Received: from mga04.intel.com ([192.55.52.120]:58426 "EHLO mga04.intel.com"
+        Wed, 20 Nov 2019 02:45:59 -0500
+Received: from mga07.intel.com ([134.134.136.100]:21334 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbfKTHno (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:43:44 -0500
+        id S1727052AbfKTHp7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 02:45:59 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 23:43:44 -0800
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 23:45:58 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="381275147"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga005.jf.intel.com with ESMTP; 19 Nov 2019 23:43:40 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com
-Cc:     linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v8 3/3] PCI: artpec6: Configure FTS with dwc helper function
-Date:   Wed, 20 Nov 2019 15:43:02 +0800
-Message-Id: <49581e0bc143da17fd20074b1dec2126306f745f.1574158309.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1574158309.git.eswara.kota@linux.intel.com>
-References: <cover.1574158309.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1574158309.git.eswara.kota@linux.intel.com>
-References: <cover.1574158309.git.eswara.kota@linux.intel.com>
+   d="scan'208";a="204745189"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Nov 2019 23:45:54 -0800
+Subject: Re: [PATCH v3 2/3] mmc: sdhci-of-aspeed: enable
+ CONFIG_MMC_SDHCI_IO_ACCESSORS
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, openbmc@lists.ozlabs.org
+References: <20191118104646.3838-1-i.mikhaylov@yadro.com>
+ <20191118104646.3838-3-i.mikhaylov@yadro.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <e181d523-bc57-3eb4-cddc-92299e888f5f@intel.com>
+Date:   Wed, 20 Nov 2019 09:44:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191118104646.3838-3-i.mikhaylov@yadro.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use DesignWare helper functions to configure Fast Training
-Sequence. Drop the respective code in the driver.
+On 18/11/19 12:46 PM, Ivan Mikhaylov wrote:
+> Enable CONFIG_MMC_SDHCI_IO_ACCESSORS on the aspeed board. The read_l
+> callback is used for inverted card detection.
+> 
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
-Changes on v8:
-	No change
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Changes on v7:
-	No change
-
-Changes on v6:
-	Typo fix:s/DesugnWare/DesignWare
-	Update 'Utilize DesignWare' --> 'Use DesignWare'
-	Add Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
- drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index d00252bd8fae..02d93b8c7942 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
- #define ACK_N_FTS_MASK			GENMASK(15, 8)
- #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
- 
--#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
--#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
--
- /* ARTPEC-6 specific registers */
- #define PCIECFG				0x18
- #define  PCIECFG_DBG_OEN		BIT(24)
-@@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
- 	 * Set the Number of Fast Training Sequences that the core
- 	 * advertises as its N_FTS during Gen2 or Gen3 link training.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &= ~FAST_TRAINING_SEQ_MASK;
--	val |= FAST_TRAINING_SEQ(180);
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_link_set_n_fts(pci, 180);
- }
- 
- static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
--- 
-2.11.0
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 49ea02c467bf..c9c1bb722368 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -159,6 +159,7 @@ config MMC_SDHCI_OF_ASPEED
+>  	tristate "SDHCI OF support for the ASPEED SDHCI controller"
+>  	depends on MMC_SDHCI_PLTFM
+>  	depends on OF && OF_ADDRESS
+> +	select MMC_SDHCI_IO_ACCESSORS
+>  	help
+>  	  This selects the ASPEED Secure Digital Host Controller Interface.
+>  
+> 
 
