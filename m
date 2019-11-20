@@ -2,149 +2,95 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B85C43141
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EE7C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680F520709
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="W8kQw5Ti";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="mwzIUaLo"
+	by mail.kernel.org (Postfix) with ESMTP id 6E6C120692
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbfKTPlP (ORCPT
+        id S1730458AbfKTPph convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:41:15 -0500
-Received: from node.akkea.ca ([192.155.83.177]:56262 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731906AbfKTPlI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:41:08 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id A14614E200E;
-        Wed, 20 Nov 2019 15:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1574264467; bh=c1bwvGZ3DtvSeRPrVEI/eLrZgFbhGdVgFlrw3H+Ljmg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=W8kQw5TiUDaohToYRNY47L6bmIwZ1V9gB2GsTL8ZcnBCvzYIuFzBsu+ZWC1RTl495
-         tg8GMEM99IGqVzCmA4BeIqefw7g9e3VbBVJXEmkeJ/3TNBQcU7FPDLD6pd6c8ywVaH
-         KwtpqvqJvQZgB3SVwvpxgvnc2Nl3VhGbNm6NOG3g=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bzL7GrYHn4P7; Wed, 20 Nov 2019 15:41:06 +0000 (UTC)
-Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
-        by node.akkea.ca (Postfix) with ESMTPSA id 7E7C64E2003;
-        Wed, 20 Nov 2019 15:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1574264466; bh=c1bwvGZ3DtvSeRPrVEI/eLrZgFbhGdVgFlrw3H+Ljmg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=mwzIUaLoFOmzPRRwdy6cZm1S1cVC3dxyuglKyfH2imk2OPl2aFZgClNXZ2MoQsSd5
-         5zvMyZw2rWcC0Beme8vIYyQW/vw+JDYhY4bDgw/OMjbULDuW7HH1JjI/W6X0x/Rryn
-         S3ySlOmYGvbtcHZ+5OWyQotpdiB131AG7YWtTqDw=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Nov 2019 07:41:06 -0800
-From:   Angus Ainslie <angus@akkea.ca>
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Jacky Bai <ping.bai@nxp.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?Q?Artur_=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
+        Wed, 20 Nov 2019 10:45:37 -0500
+Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:21658 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732397AbfKTPpg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:45:36 -0500
+Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+        by SHSQR01.spreadtrum.com with ESMTPS id xAKFhcS0093125
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 20 Nov 2019 23:43:38 +0800 (CST)
+        (envelope-from Orson.Zhai@unisoc.com)
+Received: from localhost (10.0.74.112) by BJMBX02.spreadtrum.com (10.0.64.8)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019 23:43:45
+ +0800
+From:   Orson Zhai <orson.zhai@unisoc.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        linux-pm@vger.kernel.org, kernel@pengutronix.de,
-        dl-linux-imx <linux-imx@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-pm-owner@vger.kernel.org
-Subject: Re: [PATCH RFC v6 2/9] PM / devfreq: Add generic imx bus scaling
- driver
-In-Reply-To: <VI1PR04MB70233920AC838AD88E1ECC26EE4F0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1573761527.git.leonard.crestez@nxp.com>
- <f329e715898a6b9fd0cee707a93fb1e144e31bd4.1573761527.git.leonard.crestez@nxp.com>
- <e311a376e6aec0c380686a7e307d2c07@akkea.ca>
- <VI1PR04MB70233920AC838AD88E1ECC26EE4F0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Message-ID: <008f2fa973b23fc716d678c5bd35af54@akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.3.6
+        Arnd Bergmann <arnd@arndb.de>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kevin.tang@unisoc.com>, <baolin.wang@unisoc.com>,
+        <chunyan.zhang@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH V2 0/2] Add syscon name support
+Date:   Wed, 20 Nov 2019 23:41:46 +0800
+Message-ID: <20191120154148.22067-1-orson.zhai@unisoc.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Originating-IP: [10.0.74.112]
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+Content-Transfer-Encoding: 8BIT
+X-MAIL: SHSQR01.spreadtrum.com xAKFhcS0093125
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Leonard,
+Hi,
 
-On 2019-11-20 07:04, Leonard Crestez wrote:
-> On 20.11.2019 16:08, Angus Ainslie wrote:
->> Hi Leonard,
->> 
->> On 2019-11-14 12:09, Leonard Crestez wrote:
->>> Add initial support for dynamic frequency switching on pieces of the
->>> imx
->>> interconnect fabric.
->>> 
->>> All this driver does is set a clk rate based on an opp table, it does
->>> not map register areas.
->>> 
->> 
->> Is this working with mainline ATF or does it still need to be used 
->> with
->> your modified ATF code ?
-> 
-> This series doesn't perform SMC calls, that's done by the imx8m-ddrc
-> driver: https://patchwork.kernel.org/cover/11244283/
-> 
-> This particular patch allows switching NOC frequency but that's just
-> clk_set_rate.
-> 
-> DDRC frequency switching requires the imx branch of ATF (v2.0 + ~200
-> patches) otherwise you will get probe failures. Source for imx atf is
-> published here: https://source.codeaurora.org/external/imx/imx-atf/
+Our SoCs have a lot of glabal registers which is hard to be managed in
+current syscon structure.
 
-Ok I was under the impression that the imx_2.0.y_busfreq branch below 
-was based on this. Shouldn't those patches be added to the imx ATF ?
+Same register's offset is different in different SoCs. We used chip
+config macro to manage them which prevents driver from being compiled
+in all-in-one image.
 
-> 
-> For your particular 8mq B0 case slightly different setpoints are used
-> and the fix is not in any public release yet so you need this:
-> 
-> https://github.com/cdleonard/arm-trusted-firmware/commits/imx_2.0.y_busfreq
-> 
+So I add syscons, syscon-names and an optional #vendor-cells property
+as syscon consumer node's bindings. And implement coresponding helper
+functions.
 
-We also have 2n14w ( is that B1 ? ) imx8mq's that we are working with.
+They have no side effect to current syscon consumer.
 
-> Is "mainline ATF" an important criteria for Purism?
-> 
+Thanks,
+Orson
 
-Yes we intend to bring all of our patches to mainline and were hoping 
-that NXP would be doing the same. Shouldn't a mainline kernel run on a 
-mainline ATF ?
+Changes in V2:
 
-Thanks
-Angus
+As per suggestion from Arnd:
 
-> --
-> Regards,
-> Leonard
+* Remove #syscon-cells from syscon node.
+* Add "#vendor-cells" into consumer node not affecting referred syscon
+  itself.
+* Change helper funcions parameter accordingly.
+
+-----
+Orson Zhai (2):
+  dt-bindings: syscon: Add syscon-names to refer to syscon easily
+  mfd: syscon: Find syscon by names with arguments support
+
+ .../devicetree/bindings/mfd/syscon.txt        | 43 +++++++++++
+ drivers/mfd/syscon.c                          | 75 +++++++++++++++++++
+ include/linux/mfd/syscon.h                    | 26 +++++++
+ 3 files changed, 144 insertions(+)
+
+--
+2.18.0
+
+________________________________
+ This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
