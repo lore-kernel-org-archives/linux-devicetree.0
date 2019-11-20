@@ -2,148 +2,78 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9B0C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C8CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506AC206B6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:33:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="XhcSuygs"
+	by mail.kernel.org (Postfix) with ESMTP id 662E62071F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574264189;
+	bh=P8EGesrpH/uImOrrL+/RdkGKOxCuNxZ78Yspbo+u+EI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IuOjQUcDB1I/A76a+hYFVOafT92zxCnFuUPiJ4CVPvTPM3KR1bEMVXkzSq065oG0e
+	 7sCBpEG3k+7k5xbstXh/oir+YUal9Qd2J0hk2dUh7SiBsY7XRfHVRhFnHHKU2tRCns
+	 0z2+DX7yW6d8eZ9XRZp4HWKCzOmFGrhlU6NdiuH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbfKTPdt (ORCPT
+        id S1728593AbfKTPg3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:33:49 -0500
-Received: from mail-oi1-f180.google.com ([209.85.167.180]:36272 "EHLO
-        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbfKTPdt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 10:33:49 -0500
-Received: by mail-oi1-f180.google.com with SMTP id j7so133585oib.3
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 07:33:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XIz71A93vT2GZir/cbd6mjWyCS4Rwn+5UeGeUtq83rI=;
-        b=XhcSuygsIBwuCOL9xXeVVWfKx6OA4pTVpYUr5oiWXKDaiMqAXeLa0e4xJYBglzpgLi
-         /r50b5WVPxR45+xRT0n1oir0gfEkbzcVd2at+obobIM1v+1voNKef59puPe7oDc0pqZw
-         I1kaR9TPOL61ysviDLLLtf8BsXgRYZaBPZF0I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XIz71A93vT2GZir/cbd6mjWyCS4Rwn+5UeGeUtq83rI=;
-        b=bLKzc/WYk6YQlQfS6Vc4oIqFzjqzrlOUD/piJY7Lp116lWTwAmQDqxKqZAiRRoKDmA
-         D8pw9i4fnWS4M+ksPvmozMoYdlEt1bbw0axOjKgLw/GEgcvJy7YBiV0W2iYyG5dF1SRE
-         k/wP93xhIaYS/Sorw380qkNmCZNHMuDAA6rYSrFSYGrJHMKixlJRrupuOOVXP0hdzZMN
-         ygo0lzTcIdm60oygrB/S3uaPUnxjVVK+e7QT4BY1Ry/rL6pD3nnIoayzn2Zweon6nQQx
-         nmRD/9jh8FIMz4z4PWmsDQ/mAca6N38nwXTFkvtUQGFLkSj4YewIfp2kHvpazYeZ6eJZ
-         KIeQ==
-X-Gm-Message-State: APjAAAUspGuy44CyPdz1wO9OPrH/iS7aFWeZ+RKpMcGx5qOVg/gozf4x
-        YZ8UX+h7OZa52pFse9bLBQznojQroZxbbE3sb8mIbg==
-X-Google-Smtp-Source: APXvYqzFZ1Nv/DhX4G1ZPrfrmut25uY1BdnJKjyKvD6eMew7XmgYRuai2w90HTpHiKhhksOu8ivhmtv9cpmYUF09//4=
-X-Received: by 2002:aca:320a:: with SMTP id y10mr3250705oiy.152.1574264024897;
- Wed, 20 Nov 2019 07:33:44 -0800 (PST)
+        Wed, 20 Nov 2019 10:36:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbfKTPg2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:36:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3D1A20709;
+        Wed, 20 Nov 2019 15:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574264188;
+        bh=P8EGesrpH/uImOrrL+/RdkGKOxCuNxZ78Yspbo+u+EI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oQLu82mZ95uMEgE5WA6MYB0/YllLETrWr92sxgPg/hbJLuLM3s2y0vZtqPUR9ZLlR
+         Fg44tMvxARlO+7LGnxwdLXUVpEPXQSqFai0ffwvaj5wDEXkGXZqYMJVSPkbPBigKDH
+         fKTDKWRcOx3VTWp+Ou7y67z3/+W94YLO8/iiFzXo=
+Date:   Wed, 20 Nov 2019 16:36:25 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: property: Fix the semantics of of_is_ancestor_of()
+Message-ID: <20191120153625.GA2981769@kroah.com>
+References: <20191120080230.16007-1-saravanak@google.com>
 MIME-Version: 1.0
-References: <20191120113923.11685-1-jagan@amarulasolutions.com>
- <5644395.EDGZVd1YuU@diego> <CAMty3ZA+p2pWokLrwnkv6_q0G8d76AntE5Kar4JN8MN48O9VSw@mail.gmail.com>
- <12496011.EUIoF19S7S@diego>
-In-Reply-To: <12496011.EUIoF19S7S@diego>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Wed, 20 Nov 2019 21:03:33 +0530
-Message-ID: <CAMty3ZCLYQYvOuOzRXjxDmLsFbYBYOQjymsn+pCvctTaQG2Y0g@mail.gmail.com>
-Subject: Re: [PATCH 4/5] ARM: dts: rockchip: Add Radxa Carrier board
-To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Tom Cubie <tom@radxa.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Akash Gajjar <akash@openedev.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120080230.16007-1-saravanak@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Wed, Nov 20, 2019 at 12:02:29AM -0800, Saravana Kannan wrote:
+> The of_is_ancestor_of() function was renamed from of_link_is_valid()
+> based on review feedback. The rename meant the semantics of the function
+> had to be inverted, but this was missed in the earlier patch.
+> 
+> So, fix the semantics of of_is_ancestor_of() and invert the conditional
+> expressions where it is used.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/of/property.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-On Wed, Nov 20, 2019 at 7:23 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
->
-> Hi Jagan,
->
-> Am Mittwoch, 20. November 2019, 14:45:35 CET schrieb Jagan Teki:
-> > On Wed, Nov 20, 2019 at 6:55 PM Heiko St=C3=BCbner <heiko@sntech.de> wr=
-ote:
-> > > Am Mittwoch, 20. November 2019, 12:39:22 CET schrieb Jagan Teki:
-> > > > Carrier board often referred as baseboard. For making
-> > > > complete SBC, the associated SOM will mount on top of
-> > > > this carrier board.
-> > > >
-> > > > Radxa has a carrier board which supports on board
-> > > > peripherals, ports like USB-2.0, USB-3.0, HDMI, MIPI DSI/CSI,
-> > > > eDP, Ethernet, PCIe, USB-C, 40-Pin GPIO header and etc.
-> > > >
-> > > > Currently this carrier board can be used together with
-> > > > VMARC RK3399Por SOM for making Rock PI N10 SBC.
-> > > >
-> > > > So add this carrier board dtsi as a separate file in
-> > > > ARM directory, so-that the same can reuse it in both
-> > > > arm32 and arm64 variants of Rockchip SOMs.
-> > >
-> > > Do you really think someone will create an arm32 soc using that
-> > > carrier board?
-> >
-> > Yes, we have Rock Pi N8 which is using same carrier board design with
-> > (+ external codec) on top of RK3288 SOM. I didn't mentioned on the
-> > commit message since radxa doesn't officially announced on the
-> > website.
-> >
-> > >
-> > > Similarly so far I don't think we haven't even seen a lot of reuse
-> > > of existing carrier boards at all, other than their initial combinati=
-on.
-> > >
-> > > So maybe just having the content of your
-> > >         rockchip-radxa-carrierboard.dtsi
-> > > in
-> > >         rockchip/rk3399pro-rock-pi-n10.dts
-> > > from patch 5 might be a better start - at least until there is any
-> > > further usage - if at all?
-> >
-> > But, this particular design has proper use case.
-> > 1. rk3399pro SOM + carrier board (Rock Pi N10)
-> > 2. rk3288 SOM + carrier board (Rock Pi N8)
-> >
-> > >
-> > > Also rockchip-radxa-carrierboard might even be overly generic
-> > > as there may be multiple carrierboards from Radxa later on.
-> >
-> > I'm slightly disagree of having overlay here, since these are fixed
-> > design combinations. where SOM with respective carrier board is
-> > mandatory to make final board. Understand that we can have a
-> > maintenance over-ahead if we have multiple carrier boards, but right
-> > now radxa has only one carrier board with 2 sets of SOM's combinations
-> > that indeed fit like a dev board, so there is unused carrier board.
->
-> All is good ... with that information from above (rk3288) this definitly
-> makes more sense :-)
->
-> The naming of the file is still a tiny struggle though. Does this board
-> maybe have some actual product name or is it really just called
-> "carrierboard"? :-)
+What git commit does this patch fix?
 
-True, I felt the same. Just now Tom has named this as 'Dalang Carrier
-board' so we can have rockchip-radxa-dalang.dtsi or
-rockchip-radxa-dalang-carrier.dtsi as file names. or let me know if
-you have any suggestions on the file name?
+thanks,
 
-Jagan.
+greg k-h
