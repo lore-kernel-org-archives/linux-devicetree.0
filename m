@@ -2,31 +2,30 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EE7C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC58C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6C120692
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C638720709
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730458AbfKTPph convert rfc822-to-8bit (ORCPT
+        id S1732455AbfKTPpx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:45:37 -0500
-Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:21658 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732397AbfKTPpg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:45:36 -0500
+        Wed, 20 Nov 2019 10:45:53 -0500
+Received: from mx1.unisoc.com ([222.66.158.135]:21667 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732444AbfKTPpx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 10:45:53 -0500
 Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAKFhcS0093125
+        by SHSQR01.spreadtrum.com with ESMTPS id xAKFi1ml093237
         (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 20 Nov 2019 23:43:38 +0800 (CST)
+        Wed, 20 Nov 2019 23:44:01 +0800 (CST)
         (envelope-from Orson.Zhai@unisoc.com)
 Received: from localhost (10.0.74.112) by BJMBX02.spreadtrum.com (10.0.64.8)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019 23:43:45
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019 23:43:56
  +0800
 From:   Orson Zhai <orson.zhai@unisoc.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -35,59 +34,170 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <kevin.tang@unisoc.com>, <baolin.wang@unisoc.com>,
         <chunyan.zhang@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
-Subject: [PATCH V2 0/2] Add syscon name support
-Date:   Wed, 20 Nov 2019 23:41:46 +0800
-Message-ID: <20191120154148.22067-1-orson.zhai@unisoc.com>
+Subject: [PATCH V2 2/2] mfd: syscon: Find syscon by names with arguments support
+Date:   Wed, 20 Nov 2019 23:41:48 +0800
+Message-ID: <20191120154148.22067-3-orson.zhai@unisoc.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20191120154148.22067-1-orson.zhai@unisoc.com>
+References: <20191120154148.22067-1-orson.zhai@unisoc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Originating-IP: [10.0.74.112]
 X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
  BJMBX02.spreadtrum.com (10.0.64.8)
 Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xAKFhcS0093125
+X-MAIL: SHSQR01.spreadtrum.com xAKFi1ml093237
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+There are a lot of global registers used across multiple similar SoCs
+from Unisoc. It is not easy to manage all of them very well by current
+syscon helper functions.
 
-Our SoCs have a lot of glabal registers which is hard to be managed in
-current syscon structure.
+Add helper functions to get regmap and arguments by syscon-names all
+together.
 
-Same register's offset is different in different SoCs. We used chip
-config macro to manage them which prevents driver from being compiled
-in all-in-one image.
+This patch does not affect original syscon code and usage. It may help
+other SoC vendors if they have the same trouble as well.
 
-So I add syscons, syscon-names and an optional #vendor-cells property
-as syscon consumer node's bindings. And implement coresponding helper
-functions.
+Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+---
+ drivers/mfd/syscon.c       | 75 ++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/syscon.h | 26 +++++++++++++
+ 2 files changed, 101 insertions(+)
 
-They have no side effect to current syscon consumer.
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index 660723276481..e818decc7bf2 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -225,6 +225,81 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ }
+ EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
 
-Thanks,
-Orson
++struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
++                                       const char *list_name,
++                                       const char *cell_name)
++{
++       struct device_node *syscon_np;
++       struct of_phandle_args args;
++       struct regmap *regmap;
++       unsigned int index = 0, cell_count = 0;
++       int rc;
++
++       if (list_name)
++               index = of_property_match_string(np, "syscon-names", list_name);
++
++       if (index < 0)
++               return ERR_PTR(-EINVAL);
++
++
++       if (cell_name && of_property_read_u32(np, cell_name, &cell_count))
++               return ERR_PTR(-EINVAL);
++
++       rc = of_parse_phandle_with_fixed_args(np, "syscons", cell_count,
++                                                index, &args);
++       if (rc)
++               return ERR_PTR(rc);
++
++       syscon_np = args.np;
++
++       if (!syscon_np)
++               return ERR_PTR(-ENODEV);
++
++       regmap = syscon_node_to_regmap(syscon_np);
++
++       of_node_put(syscon_np);
++
++       return regmap;
++}
++EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_name);
++
++int syscon_get_args_by_name(struct device_node *np,
++                       const char *list_name,
++                       const char *cell_name,
++                       int arg_count,
++                       unsigned int *out_args)
++{
++       struct of_phandle_args args;
++       unsigned int index = 0, cell_count = 0;
++
++       int rc;
++
++       if (list_name)
++               index = of_property_match_string(np, "syscon-names", list_name);
++
++       if (index < 0)
++               return -EINVAL;
++
++       if (cell_name && of_property_read_u32(np, cell_name, &cell_count))
++               return -EINVAL;
++
++       rc = of_parse_phandle_with_fixed_args(np, "syscons", cell_count,
++                                               index, &args);
++       if (rc)
++               return rc;
++
++       if (arg_count > args.args_count)
++               arg_count = args.args_count;
++
++       for (index = 0; index < arg_count; index++)
++               out_args[index] = args.args[index];
++
++       of_node_put(args.np);
++
++       return arg_count;
++}
++EXPORT_SYMBOL_GPL(syscon_get_args_by_name);
++
+ static int syscon_probe(struct platform_device *pdev)
+ {
+        struct device *dev = &pdev->dev;
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index 112dc66262cc..96bdaf3e63fd 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -23,6 +23,15 @@ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+ extern struct regmap *syscon_regmap_lookup_by_phandle(
+                                        struct device_node *np,
+                                        const char *property);
++extern struct regmap *syscon_regmap_lookup_by_name(
++                                       struct device_node *np,
++                                       const char *list_name,
++                                       const char *cell_name);
++extern int syscon_get_args_by_name(struct device_node *np,
++                               const char *list_name,
++                               const char *cell_name,
++                               int arg_count,
++                               unsigned int *out_args);
+ #else
+ static inline struct regmap *device_node_to_regmap(struct device_node *np)
+ {
+@@ -45,6 +54,23 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
+ {
+        return ERR_PTR(-ENOTSUPP);
+ }
++
++static inline struct regmap *syscon_regmap_lookup_by_name(
++                                       struct device_node *np,
++                                       const char *list_name,
++                                       const char *cell_name)
++{
++       return ERR_PTR(-ENOTSUPP);
++}
++
++static int syscon_get_args_by_name(struct device_node *np,
++                               const char *list_name,
++                               const char *cell_name,
++                               int arg_count,
++                               unsigned int *out_args)
++{
++       return -ENOTSUPP;
++}
+ #endif
 
-Changes in V2:
-
-As per suggestion from Arnd:
-
-* Remove #syscon-cells from syscon node.
-* Add "#vendor-cells" into consumer node not affecting referred syscon
-  itself.
-* Change helper funcions parameter accordingly.
-
------
-Orson Zhai (2):
-  dt-bindings: syscon: Add syscon-names to refer to syscon easily
-  mfd: syscon: Find syscon by names with arguments support
-
- .../devicetree/bindings/mfd/syscon.txt        | 43 +++++++++++
- drivers/mfd/syscon.c                          | 75 +++++++++++++++++++
- include/linux/mfd/syscon.h                    | 26 +++++++
- 3 files changed, 144 insertions(+)
-
+ #endif /* __LINUX_MFD_SYSCON_H__ */
 --
 2.18.0
 
