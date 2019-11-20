@@ -2,500 +2,242 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EACC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0E8C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42FFE2068D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8E7206DA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 19:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pEc1x0Fj"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iF3geYjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfKTTGI (ORCPT
+        id S1727175AbfKTTKc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:06:08 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34698 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfKTTGI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 14:06:08 -0500
-Received: by mail-pj1-f66.google.com with SMTP id bo14so245437pjb.1
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 11:06:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qwR4Co8lks4LmUuTtS/YJva159JyBWXY4vIpJdbdmYA=;
-        b=pEc1x0Fj8sd1WC+KL3Y9if0NczV5SRGeag1DH7pKpWVjrAMVmk672UwUNUVTZCG5hA
-         GCMaPZzpMBr3HBuZsjBU3m1SSRigySRzHbrQmWvaCiQK7gkp1FKkTmvwcVneB1Z7q0n6
-         GnTD8nbNCOCTxBf1r09vEjY5l7/fdk9xgoKu9CUWyxCLtZKjRaSxcyz8/IWqiGpfuROz
-         0fnWFST7W4cM1rMjbnYHZVbRrzFFkMd0rPj3ruCAl8ycnumoIiLtsZ/H/igl2CZcwccb
-         WZxitwITYmyPmvaCQ7WQKWu9d2JpkYE9ms0f/KrLakX5eZQzjNM6OzxAoG9XZOJ+n2mi
-         obuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qwR4Co8lks4LmUuTtS/YJva159JyBWXY4vIpJdbdmYA=;
-        b=o1rzxWZhTkBcvZJ92Fvr6uRtdJoM1x8nIYYhsa9lH71XcnABhTqCFIBbcYbfPu06AH
-         o7wFGQd8qGBi4sqe7u7t7mw+5U57lnYn++fgcuqn/q8ojbqGF5RO29hbZ8q9hiGLkHcC
-         QoRVZjRGxVVEJ0a9PL+cbx7y9k2s1iX37yDX5UiLiQ3N3p5lHSzXoYym88YSOMR1QfPO
-         D19wUM/t4RbC++famaOwrv/PIykkHkxh/YJzqksqK7+OtUdK9hIHyRgysCkcsXj6X2X9
-         WUzTbnS2EdE2oQelBl284kbRNEuZhDYEDFVLKm521Xsm2lnjV/ZbBHKUXMnx54LDt5Hp
-         O4VQ==
-X-Gm-Message-State: APjAAAXjh4Epnts9zOcrxObQ2MUAvGH+noT58Gk1Y1nRmWJORbZoBwj+
-        oOH0Dnawo8jJRwNVPsPDpjsJfw==
-X-Google-Smtp-Source: APXvYqyEc+6De2q68uTlsPOsEUwaOjWAJ7PUsTcNg0xXyfeQceGV4aBErgivl0U/RNnwj6s9g1oJPA==
-X-Received: by 2002:a17:90a:bb82:: with SMTP id v2mr6145982pjr.62.1574276767298;
-        Wed, 20 Nov 2019 11:06:07 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id ay16sm7751700pjb.2.2019.11.20.11.06.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Nov 2019 11:06:06 -0800 (PST)
-Date:   Wed, 20 Nov 2019 12:06:04 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        suzuki.poulose@arm.com
-Subject: Re: [PATCH v5 05/14] dt-bindings: arm: Adds CoreSight CTI hardware
- definitions.
-Message-ID: <20191120190604.GA5641@xps15>
-References: <20191119231912.12768-1-mike.leach@linaro.org>
- <20191119231912.12768-6-mike.leach@linaro.org>
+        Wed, 20 Nov 2019 14:10:32 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17100 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfKTTKc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 14:10:32 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd58fa50001>; Wed, 20 Nov 2019 11:10:29 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 20 Nov 2019 11:10:28 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 20 Nov 2019 11:10:28 -0800
+Received: from [10.2.175.254] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Nov
+ 2019 19:10:27 +0000
+Subject: Re: [PATCH v1 04/17] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
+ <1574146234-3871-5-git-send-email-skomatineni@nvidia.com>
+ <d072bd37-9628-4eb2-1706-a1f640606b8d@gmail.com>
+ <d76f4689-5986-9239-9c67-9dd125f6547e@nvidia.com>
+ <a87a08c1-5104-a534-89c4-73463c08abba@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <eff0e0f5-a94d-cca5-3558-247d1d90d28d@nvidia.com>
+Date:   Wed, 20 Nov 2019 11:09:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119231912.12768-6-mike.leach@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a87a08c1-5104-a534-89c4-73463c08abba@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574277030; bh=JdVfNtDRnnw+p38nai+nOdloVWvXp+n5L6JxeOZT3s0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=iF3geYjUijLCuINOr33qQKiGBl0gemXxeOJ8Mp9+YYv7R5Sxn+ZQvE5KZTLs/bp6q
+         lj/26izjYfNNqFu/U8wTy+F7jcmy7M+/kaDoOj2+vwj3PHufokTCIp+uHsBXobta/X
+         tx54hFvXOaeU2aq+BPEUKwdH0SuWf51lh0aEhrGelLYXaWMzh6q0JADEfQfwJJm4G3
+         s0pNRB0Ynr7IEBzsbP2Cju6x7l5jB+rh8IYuPREQq020aj9NMwofu4/n4iliQem9yh
+         6gQAPE1468nc52gkYRLmUqTgdsxO9/YqD1OonNfXPRxhR4Gx1UA9QzRBEGDX4hoBcr
+         xOj3D+/dsu6nQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 11:19:03PM +0000, Mike Leach wrote:
-> Adds new coresight-cti.yaml file describing the bindings required to define
-> CTI in the device trees.
-> 
-> Adds an include file to dt-bindings/arm to define constants describing
-> common signal functionality used in CoreSight and generic usage.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> ---
->  .../bindings/arm/coresight-cti.yaml           | 303 ++++++++++++++++++
->  .../devicetree/bindings/arm/coresight.txt     |   7 +
->  MAINTAINERS                                   |   2 +
->  include/dt-bindings/arm/coresight-cti-dt.h    |  37 +++
->  4 files changed, 349 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/coresight-cti.yaml
->  create mode 100644 include/dt-bindings/arm/coresight-cti-dt.h
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight-cti.yaml b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
-> new file mode 100644
-> index 000000000000..882c72f1c798
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
-> @@ -0,0 +1,303 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright 2019 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/coresight-cti.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM Coresight Cross Trigger Interface (CTI) device.
-> +
-> +description: |
-> +  The CoreSight Embedded Cross Trigger (ECT) consists of CTI devices connected
-> +  to one or more CoreSight components and/or a CPU, with CTIs interconnected in
-> +  a star topology via the CTM (which is not programmable). The ECT components
-> +  are not part of the trace generation data path and are thus not part of the
-> +  CoreSight graph described in the general CoreSight bindings file
-> +  coresight.txt.
-> +
-> +  The CTI component properties define the connections between the individual
-> +  CTI and the components it is directly connected to, consisting of input and
-> +  output hardware trigger signals. CTIs can have a maximum number of input and
-> +  output hardware trigger signals (8 each for v1 CTI, 32 each for v2 CTI). The
-> +  number is defined at design time, the maximum of each defined in the DEVID
-> +  register.
-> +
-> +  CTIs are interconnected in a star topology via the CTM, using a number of
-> +  programmable channels usually 4, but again implementation defined and
-> +  described in the DEVID register. The star topology is not required to be
-> +  described in the bindings as the actual connections are software
-> +  programmable.
-> +
-> +  In general the connections between CTI and components via the trigger signals
-> +  are implementation defined, other than when v8 core and ETM is present.
-> +  The v8 architecture defines the required signal connections between CPU core
-> +  and CTI, and ETM and CTI, if the ETM if present.
-> +
-> +  When only minimal information is available for the CTI trigger connections,
-> +  then a minimal driver binding can be declare with no explicit trigger
-> +  signals. This will result in the using the DEVID register to set the
-> +  input and output triggers and channels in use. Any user / client
-> +  application will require additional information on the connections
-> +  between the CTI and other components for correct operation. This minimal
-> +  binding may be used when using the Integration Control registers to
-> +  discover connections between CTI and other CoreSight components,
-> +
-> +  Certain triggers between CoreSight devices and the CTI have specific types
-> +  and usages. These can be defined along with the signal indexes with the
-> +  constants defined in <dt-bindings/arm/coresight-cti-dt.h>
-> +
-> +  For example a CTI connected to a core will usually have a DBGREQ signal. This
-> +  is defined in the binding as type PE_EDBGREQ. These types will appear in an
-> +  optional array alongside the signal indexes. Omitting types will default all
-> +  signals to GEN_IO.
-> +
-> +  Note that some hardware trigger signals can be connected to non-CoreSight
-> +  components (e.g. UART etc) depending on hardware implementation.
-> +
-> +maintainers:
-> +  - Mike Leach <mike.leach@linaro.org>
-> +
-> +allOf:
-> +  - $ref: /schemas/arm/primecell.yaml#
-> +
-> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - arm,coresight-cti
-> +  required:
-> +    - compatible
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^cti(@[0-9a-f,]+)*$"
-> +  compatible:
-> +    items:
-> +      - const: arm,coresight-cti
-> +      - const: arm,primecell
-> +
-> +  reg:
-> +    items:
-> +      - description: device programming registers
-> +
-> +  arm,cti-v8-arch:
-> +    type: boolean
-> +    description:
-> +      This CTI follows the v8 architecturally mandated layout for a CTI.
-> +      Bindings declaring this must declare a cpu, and optionally a single
-> +      arm,cs-dev-assoc may be present to define an attached ETM. No additional
-> +      trig-conns nodes are permitted. The driver will build a connection model
-> +      according to architectural requirements. This will include a filter on
-> +      the CPU dbgreq signal as described above.
-> +
-> +  cpu:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Handle to cpu this device is associated with.
-> +
-> +  arm,cti-ctm-id:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Defines the CTM this CTI is connected to, in large systems with multiple
-> +      separate CTI/CTM nets. Typically multi-socket systems where the CTM is
-> +      propagated between sockets.
-> +
-> +  arm,cs-dev-assoc:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      defines a phandle reference to an associated CoreSight trace device.
-> +      When the associated trace device is enabled, then the respective CTI
-> +      will be enabled. Use in a trig-conns node, or in CTI base node when
-> +      arm,cti-v8-arch present. If the associated device has not been registered
-> +      then the node name will be stored as the connection name for later
-> +      resolution. If the associated device is not a CoreSight device or not
-> +      registered then the node name will remain the connection name and
-> +      automatic enabling will not occur.
-> +
-> +patternProperties:
-> +  '^trig_conns@[0-9]+$':
-> +    type: object
-> +    description:
-> +      A trigger connections child node which describes the trigger signals
-> +      between this CTI and another hardware device. This device may be a CPU,
-> +      CoreSight device, any other hardware device or simple external IO lines.
-> +      The connection may have both input and output triggers, or only one or the
-> +      other.
-> +
-> +    properties:
-> +
-> +      arm,trig-in-sigs:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        minItems: 1
-> +        maxItems: 32
-> +        description:
-> +          List of CTI trigger in signal numbers in use by a trig-conns node.
-> +
-> +      arm,trig-in-types:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        minItems: 1
-> +        maxItems: 32
-> +        description:
-> +          List of constants representing the types for the CTI trigger in
-> +          signals. Types in this array match to the corresponding signal in the
-> +          arm,trig-in-sigs array. If the -types array is smaller, or omitted
-> +          completely, then the types will default to GEN_IO.
-> +
-> +      arm,trig-out-sigs:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        minItems: 1
-> +        maxItems: 32
-> +        description:
-> +          List of CTI trigger out signal numbers in use by a trig-conns node.
-> +
-> +      arm,trig-out-types:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        minItems: 1
-> +        maxItems: 32
-> +        description:
-> +          List of constants representing the types for the CTI trigger out
-> +          signals. Types in this array match to the corresponding signal
-> +          in the arm,trig-out-sigs array. If the "-types" array is smaller,
-> +          or omitted completely, then the types will default to GEN_IO.
-> +
-> +      arm,trig-filters:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        minItems: 1
-> +        maxItems: 32
-> +        description:
-> +          List of CTI trigger out signals that will be blocked from becoming
-> +          active, unless filtering is disabled on the driver.
-> +
-> +      arm,trig-conn-name:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/string
-> +        description:
-> +          Defines a connection name that will be displayed, if the cpu or
-> +          arm,cs-dev-assoc properties are not being used in this connection.
-> +          Principle use for CTI that are connected to non-CoreSight devices, or
-> +          external IO.
-> +
-> +    anyOf:
-> +      - required:
-> +        - arm,trig-in-sigs
-> +      - required:
-> +        - arm,trig-out-sigs
-> +    oneOf:
-> +      - required:
-> +        - arm,trig-conn-name
-> +      - required:
-> +        - cpu
-> +      - required:
-> +        - arm,cs-dev-assoc
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  # minimum CTI definition. DEVID register used to set number of triggers.
-> +  - |
-> +    cti@20020000 {
-> +      compatible = "arm,coresight-cti", "arm,primecell";
-> +      reg = <0x20020000 0x1000>;
-> +
-> +      clocks = <&soc_smc50mhz>;
-> +      clock-names = "apb_pclk";
-> +    };
-> +  #  v8 architecturally defined CTI - CPU + ETM connections generated by the
-> +  #  driver according to the v8 architecture specification.
-> +  - |
-> +    cti@859000 {
-> +      compatible = "arm,coresight-cti", "arm,primecell";
-> +      reg = <0x859000 0x1000>;
-> +
-> +      clocks = <&soc_smc50mhz>;
-> +      clock-names = "apb_pclk";
-> +
-> +      arm,cti-v8-arch;
-> +      cpu = <&CPU1>;
-> +      arm,cs-dev-assoc = <&etm1>;
-> +    };
-> +  # Implementation defined CTI - CPU + ETM connections explicitly defined..
-> +  # Shows use of type constants from dt-bindings/arm/coresight-cti-dt.h
-> +  - |
-> +    #include <dt-bindings/arm/coresight-cti-dt.h>
-> +
-> +    cti@858000 {
-> +      compatible = "arm,coresight-cti", "arm,primecell";
-> +      reg = <0x858000 0x1000>;
-> +
-> +      clocks = <&soc_smc50mhz>;
-> +      clock-names = "apb_pclk";
-> +
-> +      arm,cti-ctm-id = <1>;
-> +
-> +      trig-conns@0 {
-> +            arm,trig-in-sigs = <4 5 6 7>;
-> +            arm,trig-in-types = <ETM_EXTOUT
-> +                                 ETM_EXTOUT
-> +                                 ETM_EXTOUT
-> +                                 ETM_EXTOUT>;
-> +            arm,trig-out-sigs = <4 5 6 7>;
-> +            arm,trig-out-types = <ETM_EXTIN
-> +                                  ETM_EXTIN
-> +                                  ETM_EXTIN
-> +                                  ETM_EXTIN>;
-> +            arm,cs-dev-assoc = <&etm0>;
-> +      };
-> +
-> +      trig-conns@1 {
-> +            cpu = <&CPU0>;
-> +            arm,trig-in-sigs = <0 1>;
-> +            arm,trig-in-types = <PE_DBGTRIGGER
-> +                                 PE_PMUIRQ>;
-> +            arm,trig-out-sigs=<0 1 2 >;
-> +            arm,trig-out-types = <PE_EDBGREQ
-> +                                  PE_DBGRESTART
-> +                                  PE_CTIIRQ>;
-> +
-> +            arm,trig-filters = <0>;
-> +      };
-> +    };
-> +  # Implementation defined CTI - none CoreSight component connections.
-> +  - |
-> +    cti@20110000 {
-> +      compatible = "arm,coresight-cti", "arm,primecell";
-> +      reg = <0 0x20110000 0 0x1000>;
-> +
-> +      clocks = <&soc_smc50mhz>;
-> +      clock-names = "apb_pclk";
-> +
-> +      trig-conns@0 {
-> +        arm,trig-in-sigs=<0>;
-> +        arm,trig-in-types=<GEN_INTREQ>;
-> +        arm,trig-out-sigs=<0>;
-> +        arm,trig-out-types=<GEN_HALTREQ>;
-> +        arm,trig-conn-name = "sys_profiler";
-> +      };
-> +
-> +      trig-conns@1 {
-> +        arm,trig-out-sigs=<2 3>;
-> +        arm,trig-out-types=<GEN_HALTREQ GEN_RESTARTREQ>;
-> +        arm,trig-conn-name = "watchdog";
-> +      };
-> +
-> +      trig-conns@2 {
-> +        arm,trig-in-sigs=<1 6>;
-> +        arm,trig-in-types=<GEN_HALTREQ GEN_RESTARTREQ>;
-> +        arm,trig-conn-name = "g_counter";
-> +      };
-> +    };
-> +
-> +...
 
-I'm not sure what the "..." is there for.  It is not present in the example
-schema[1] but I can find the patter in other .yaml files.  As such I will let
-Rob decide on that part.
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-[1]. Documentation/devicetree/bindings/example-schema.yaml
-
-> \ No newline at end of file
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index d02c42d21f2f..846f6daae71b 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -45,6 +45,10 @@ its hardware characteristcs.
->  		- Coresight Address Translation Unit (CATU)
->  			"arm,coresight-catu", "arm,primecell";
->  
-> +		- Coresight Cross Trigger Interface (CTI):
-> +			"arm,coresight-cti", "arm,primecell";
-> +			See coresight-cti.yaml for full CTI definitions.
-> +
->  	* reg: physical base address and length of the register
->  	  set(s) of the component.
->  
-> @@ -72,6 +76,9 @@ its hardware characteristcs.
->  	* reg-names: the only acceptable values are "stm-base" and
->  	  "stm-stimulus-base", each corresponding to the areas defined in "reg".
->  
-> +* Required properties for Coresight Cross Trigger Interface (CTI)
-> +	See coresight-cti.yaml for full CTI definitions.
-> +
->  * Required properties for devices that don't show up on the AMBA bus, such as
->    non-configurable replicators and non-configurable funnels:
->  
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9de89d75dbcc..8d01a74068f7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1608,9 +1608,11 @@ R:	Suzuki K Poulose <suzuki.poulose@arm.com>
->  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->  S:	Maintained
->  F:	drivers/hwtracing/coresight/*
-> +F:	include/dt-bindings/arm/coresight-cti-dt.h
->  F:	Documentation/trace/coresight/*
->  F:	Documentation/devicetree/bindings/arm/coresight.txt
->  F:	Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-> +F:	Documentation/devicetree/bindings/arm/coresight-cti.yaml
->  F:	Documentation/ABI/testing/sysfs-bus-coresight-devices-*
->  F:	tools/perf/arch/arm/util/pmu.c
->  F:	tools/perf/arch/arm/util/auxtrace.c
-> diff --git a/include/dt-bindings/arm/coresight-cti-dt.h b/include/dt-bindings/arm/coresight-cti-dt.h
-> new file mode 100644
-> index 000000000000..61e7bdf8ea6e
-> --- /dev/null
-> +++ b/include/dt-bindings/arm/coresight-cti-dt.h
-> @@ -0,0 +1,37 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides constants for the defined trigger signal
-> + * types on CoreSight CTI.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H
-> +#define _DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H
-> +
-> +#define GEN_IO		0
-> +#define GEN_INTREQ	1
-> +#define GEN_INTACK	2
-> +#define GEN_HALTREQ	3
-> +#define GEN_RESTARTREQ	4
-> +#define PE_EDBGREQ	5
-> +#define PE_DBGRESTART	6
-> +#define PE_CTIIRQ	7
-> +#define PE_PMUIRQ	8
-> +#define PE_DBGTRIGGER	9
-> +#define ETM_EXTOUT	10
-> +#define ETM_EXTIN	11
-> +#define SNK_FULL	12
-> +#define SNK_ACQCOMP	13
-> +#define SNK_FLUSHCOMP	14
-> +#define SNK_FLUSHIN	15
-> +#define SNK_TRIGIN	16
-> +#define STM_ASYNCOUT	17
-> +#define STM_TOUT_SPTE	18
-> +#define STM_TOUT_SW	19
-> +#define STM_TOUT_HETE	20
-> +#define STM_HWEVENT	21
-> +#define ELA_TSTART	22
-> +#define ELA_TSTOP	23
-> +#define ELA_DBGREQ	24
-> +#define CTI_TRIG_MAX	25
-> +
-> +#endif /*_DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H */
-> -- 
-> 2.17.1
-> 
+On 11/20/19 9:46 AM, Dmitry Osipenko wrote:
+> 19.11.2019 23:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 11/19/19 11:33 AM, Dmitry Osipenko wrote:
+>>> 19.11.2019 09:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 with mux and gate for
+>>>> each of these clocks.
+>>>>
+>>>> Currently these PMC clocks are registered by Tegra clock driver using
+>>>> clk_register_mux and clk_register_gate by passing PMC base address
+>>>> and register offsets and PMC programming for these clocks happens
+>>>> through direct PMC access by the clock driver.
+>>>>
+>>>> With this, when PMC is in secure mode any direct PMC access from the
+>>>> non-secure world does not go through and these clocks will not be
+>>>> functional.
+>>>>
+>>>> This patch adds these clocks registration with PMC as a clock provider
+>>>> for these clocks. clk_ops callback implementations for these clocks
+>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC programmi=
+ng
+>>>> in secure mode and non-secure mode.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 drivers/soc/tegra/pmc.c | 330
+>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>  =C2=A0 1 file changed, 330 insertions(+)
+>>>>
+>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>> index 7a5aab0b993b..790a6619ba32 100644
+>>>> --- a/drivers/soc/tegra/pmc.c
+>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>> @@ -13,6 +13,9 @@
+>>>>  =C2=A0 =C2=A0 #include <linux/arm-smccc.h>
+>>>>  =C2=A0 #include <linux/clk.h>
+>>>> +#include <linux/clk-provider.h>
+>>>> +#include <linux/clkdev.h>
+>>>> +#include <linux/clk/clk-conf.h>
+>>>>  =C2=A0 #include <linux/clk/tegra.h>
+>>>>  =C2=A0 #include <linux/debugfs.h>
+>>>>  =C2=A0 #include <linux/delay.h>
+>>>> @@ -48,6 +51,7 @@
+>>>>  =C2=A0 #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>>>>  =C2=A0 #include <dt-bindings/gpio/tegra186-gpio.h>
+>>>>  =C2=A0 #include <dt-bindings/gpio/tegra194-gpio.h>
+>>>> +#include <dt-bindings/soc/tegra-pmc.h>
+>>>>  =C2=A0 =C2=A0 #define PMC_CNTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0
+>>>>  =C2=A0 #define=C2=A0 PMC_CNTRL_INTR_POLARITY=C2=A0=C2=A0=C2=A0 BIT(17=
+) /* inverts INTR
+>>>> polarity */
+>>>> @@ -108,6 +112,7 @@
+>>>>  =C2=A0 #define PMC_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 0x168
+>>>>  =C2=A0 #define PMC_SW_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0x16c
+>>>>  =C2=A0 +#define PMC_CLK_OUT_CNTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 0x1a8
+>>>>  =C2=A0 #define PMC_SATA_PWRGT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1ac
+>>>>  =C2=A0 #define PMC_SATA_PWRGT_PLLE_IDDQ_VALUE BIT(5)
+>>>>  =C2=A0 #define PMC_SATA_PWRGT_PLLE_IDDQ_SWCTL BIT(4)
+>>>> @@ -170,6 +175,78 @@
+>>>>  =C2=A0 #define=C2=A0 TEGRA_SMC_PMC_READ=C2=A0=C2=A0=C2=A0 0xaa
+>>>>  =C2=A0 #define=C2=A0 TEGRA_SMC_PMC_WRITE=C2=A0=C2=A0=C2=A0 0xbb
+>>>>  =C2=A0 +struct pmc_clk_mux {
+>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
+>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mask=
+;
+>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shif=
+t;
+>>>> +=C2=A0=C2=A0=C2=A0 /* register lock */
+>>>> +=C2=A0=C2=A0=C2=A0 spinlock_t=C2=A0=C2=A0=C2=A0 *lock;
+>>>> +};
+>>>> +
+>>>> +#define to_pmc_clk_mux(_hw) container_of(_hw, struct pmc_clk_mux, hw)
+>>>> +
+>>>> +struct pmc_clk_gate {
+>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
+>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shif=
+t;
+>>>> +=C2=A0=C2=A0=C2=A0 /* register lock */
+>>>> +=C2=A0=C2=A0=C2=A0 spinlock_t=C2=A0=C2=A0=C2=A0 *lock;
+> Why clk_out_lock is needed at all? CCLK framework already takes care of
+> the clock's locking and then nothing else in PMC code uses that lock to
+> avoid races, thus that spinlock doesn't do anything useful and should be
+> removed from both mux and gate.
+Will remove spinlock in next version.
+>>>> +};
+>>>> +
+>>>> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct pmc_clk_gate, h=
+w)
+>>>> +
+>>>> +struct pmc_clk_init_data {
+>>>> +=C2=A0=C2=A0=C2=A0 char *mux_name;
+>>>> +=C2=A0=C2=A0=C2=A0 char *gate_name;
+>>>> +=C2=A0=C2=A0=C2=A0 const char **parents;
+>>>> +=C2=A0=C2=A0=C2=A0 int num_parents;
+>>>> +=C2=A0=C2=A0=C2=A0 int mux_id;
+>>>> +=C2=A0=C2=A0=C2=A0 int gate_id;
+>>>> +=C2=A0=C2=A0=C2=A0 char *dev_name;
+>>>> +=C2=A0=C2=A0=C2=A0 u8 mux_shift;
+>>>> +=C2=A0=C2=A0=C2=A0 u8 gate_shift;
+>>>> +=C2=A0=C2=A0=C2=A0 u8 init_parent;
+>>>> +=C2=A0=C2=A0=C2=A0 int init_state;
+>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux mux;
+>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate gate;
+>>>> +};
+>>>> +
+>>>> +#define PMC_CLK(_num, _mux_shift, _gate_shift, _init_parent,
+>>>> _init_state)\
+>>>> +=C2=A0=C2=A0=C2=A0 {\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_name =3D "clk_out_" #=
+_num "_mux",\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_name =3D "clk_out_" =
+#_num,\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out ##_nu=
+m ##_parents,\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRAY_SIZ=
+E(clk_out ##_num ##_parents),\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_id =3D TEGRA_PMC_CLK_=
+OUT_ ##_num ##_MUX,\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_id =3D TEGRA_PMC_CLK=
+_OUT_ ##_num,\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_name =3D "extern" #_n=
+um,\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D _mux_shift,=
+\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D _gate_shif=
+t,\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_parent =3D _init_par=
+ent,\
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_state =3D _init_stat=
+e,\
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>> +static DEFINE_SPINLOCK(clk_out_lock);
+>>>> +
+>>>> +static const char *clk_out1_parents[] =3D { "clk_m", "clk_m_div2",
+>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern1",
+>>>> +};
+>>>> +
+>>>> +static const char *clk_out2_parents[] =3D { "clk_m", "clk_m_div2",
+>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern2",
+>>>> +};
+>>>> +
+>>>> +static const char *clk_out3_parents[] =3D { "clk_m", "clk_m_div2",
+>>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern3",
+>>>> +};
+>>> Why these are unused?
+>> They are used in PMC_CLK macro
+> Looks like it will better to define those three structs directly,
+> without the PMC_CLK macro.
+>
+> [snip]
+ok, will define structs directly in next version.
