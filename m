@@ -7,43 +7,49 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3E1C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E02C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78A0214D9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F235720898
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574270295;
-	bh=Bbd8UMMg17AlESakh3vvE5yjDkRzqTzoujt9qIOWDm0=;
+	s=default; t=1574270326;
+	bh=/nvPoqr+O1UnrNlj1DYNJdSS66/1+AD18HCpXW54ozo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=yBYCxLkgTx9w2K+8m84J7Bw005TetPfeZfJ/oy2/7uhXl8oJgPD+o5+Dl2iXtPyRz
-	 WnIEcQGYMrknjrezW9pNK3PHckdiiq2eixIVdIUgpgw6hnyKb87g6LwhYncw/tmvE9
-	 75axwy19Ym/+q680Gs3JeeTW1JJAPsmjTQvSyjLM=
+	b=yIlIdqcZdp/RX7bC7AYscR3yzg6snS5L9gEL+lQ4MxzXibGKZZSE6ieI+nGaf9o7Y
+	 YGvNjlml8xngzI2b+OwLC47IsBzs8CLGuSTvTHnXf4Cekp8li1FoBNeh5jkSCxWy/f
+	 TApQk2jYE2Tam6Q/WGLD0iWfqGMoAJ3Ll1aIb3RI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbfKTRSK (ORCPT
+        id S1730687AbfKTRSf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:18:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:43308 "EHLO foss.arm.com"
+        Wed, 20 Nov 2019 12:18:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:43416 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730176AbfKTRSJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:18:09 -0500
+        id S1730674AbfKTRSf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:18:35 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C2AD1063;
-        Wed, 20 Nov 2019 09:18:09 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D969B12FC;
+        Wed, 20 Nov 2019 09:18:34 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF07A3F703;
-        Wed, 20 Nov 2019 09:18:08 -0800 (PST)
-Date:   Wed, 20 Nov 2019 17:18:07 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53F503F703;
+        Wed, 20 Nov 2019 09:18:34 -0800 (PST)
+Date:   Wed, 20 Nov 2019 17:18:32 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, kuninori.morimoto.gx@renesas.com,
-        lgirdwood@gmail.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        robh+dt@kernel.org
-Subject: Applied "ASoC: dt-bindings: pcm3168a: Update the optional RST gpio for clarity" to the asoc tree
-In-Reply-To: <20191120131753.6831-2-peter.ujfalusi@ti.com>
-Message-Id: <applied-20191120131753.6831-2-peter.ujfalusi@ti.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org, Grigoryev Denis <grigoryev@fastwel.ru>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Sven Van Asbroeck <TheSven73@gmail.com>
+Subject: Applied "tps6105x: add optional devicetree support" to the regulator tree
+In-Reply-To: <20191119154611.29625-2-TheSven73@gmail.com>
+Message-Id: <applied-20191119154611.29625-2-TheSven73@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -52,11 +58,11 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: dt-bindings: pcm3168a: Update the optional RST gpio for clarity
+   tps6105x: add optional devicetree support
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -77,51 +83,93 @@ to this mail.
 Thanks,
 Mark
 
-From 103e5d734ae28fc1ccd80d1df9d33f44536d74a4 Mon Sep 17 00:00:00 2001
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Wed, 20 Nov 2019 15:17:52 +0200
-Subject: [PATCH] ASoC: dt-bindings: pcm3168a: Update the optional RST gpio for
- clarity
+From 62f7f3eca4c30064ab37b42d97cef4292d75fdd0 Mon Sep 17 00:00:00 2001
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Date: Tue, 19 Nov 2019 10:46:08 -0500
+Subject: [PATCH] tps6105x: add optional devicetree support
 
-Use the standard name for the gpion in DT: reset-gpios
+This driver currently requires platform data to specify the
+operational mode and regulator init data (in case of regulator
+mode).
 
-Document that the RST line is low active and update the example
-accordingly.
+Optionally specify the operational mode by looking at the name
+of the devicetree child node.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20191120131753.6831-2-peter.ujfalusi@ti.com
+Example: put chip in regulator mode:
+
+i2c0 {
+	tps61052@33 {
+		compatible = "ti,tps61052";
+		reg = <0x33>;
+
+		regulator {
+                            regulator-min-microvolt = <5000000>;
+                            regulator-max-microvolt = <5000000>;
+                            regulator-always-on;
+		};
+	};
+};
+
+Tree: linux-next
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Link: https://lore.kernel.org/r/20191119154611.29625-2-TheSven73@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/ti,pcm3168a.txt | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/mfd/tps6105x.c | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-index f30aebc7603a..a02ecaab5183 100644
---- a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-+++ b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-@@ -27,9 +27,10 @@ For required properties on SPI/I2C, consult SPI/I2C device tree documentation
+diff --git a/drivers/mfd/tps6105x.c b/drivers/mfd/tps6105x.c
+index 6ac3607a79c2..c906324d293e 100644
+--- a/drivers/mfd/tps6105x.c
++++ b/drivers/mfd/tps6105x.c
+@@ -91,6 +91,32 @@ static int tps6105x_add_device(struct tps6105x *tps6105x,
+ 			       PLATFORM_DEVID_AUTO, cell, 1, NULL, 0, NULL);
+ }
  
- Optional properties:
++static struct tps6105x_platform_data *tps6105x_parse_dt(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct tps6105x_platform_data *pdata;
++	struct device_node *child;
++
++	if (!np)
++		return ERR_PTR(-EINVAL);
++	if (of_get_available_child_count(np) > 1) {
++		dev_err(dev, "cannot support multiple operational modes");
++		return ERR_PTR(-EINVAL);
++	}
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++	pdata->mode = TPS6105X_MODE_SHUTDOWN;
++	for_each_available_child_of_node(np, child) {
++		if (child->name && !of_node_cmp(child->name, "regulator"))
++			pdata->mode = TPS6105X_MODE_VOLTAGE;
++		else if (child->name && !of_node_cmp(child->name, "led"))
++			pdata->mode = TPS6105X_MODE_TORCH;
++	}
++
++	return pdata;
++}
++
+ static int tps6105x_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+@@ -99,9 +125,11 @@ static int tps6105x_probe(struct i2c_client *client,
+ 	int ret;
  
--  - rst-gpios : Optional RST gpio line for the codec
--		RST = low: device power-down
--		RST = high: device is enabled
-+  - reset-gpios : Optional reset gpio line connected to RST pin of the codec.
-+		  The RST line is low active:
-+		  RST = low: device power-down
-+		  RST = high: device is enabled
+ 	pdata = dev_get_platdata(&client->dev);
+-	if (!pdata) {
+-		dev_err(&client->dev, "missing platform data\n");
+-		return -ENODEV;
++	if (!pdata)
++		pdata = tps6105x_parse_dt(&client->dev);
++	if (IS_ERR(pdata)) {
++		dev_err(&client->dev, "No platform data or DT found");
++		return PTR_ERR(pdata);
+ 	}
  
- Examples:
- 
-@@ -40,7 +41,7 @@ i2c0: i2c0@0 {
- 	pcm3168a: audio-codec@44 {
- 		compatible = "ti,pcm3168a";
- 		reg = <0x44>;
--		rst-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
- 		clocks = <&clk_core CLK_AUDIO>;
- 		clock-names = "scki";
- 		VDD1-supply = <&supply3v3>;
+ 	tps6105x = devm_kmalloc(&client->dev, sizeof(*tps6105x), GFP_KERNEL);
 -- 
 2.20.1
 
