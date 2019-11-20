@@ -6,57 +6,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5582C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 20:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA21CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 20:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A5720726
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 20:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928FD2068F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 20:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g6z3K/E6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bg6mfY2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfKTUUu (ORCPT
+        id S1726297AbfKTUVW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 15:20:50 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40111 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfKTUUu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 15:20:50 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v24so600588lfi.7
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 12:20:48 -0800 (PST)
+        Wed, 20 Nov 2019 15:21:22 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44661 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfKTUVW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 15:21:22 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n186so579301lfd.11
+        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 12:21:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EaeubB9oup5HPqMiD5Vl71T+HPv8UFVWjeFHFcqOIRg=;
-        b=g6z3K/E68Ogd7jMI6ZONW7+DAdhxqpPKHIDEaoNSMtYue8XTJ/HvPPAXCzSxcQ9Myu
-         tKo0KxfliQKm/v2eXdO7SoooMtGHZNBg9sJGfWmqJRszcUhYyJ6q2zAw7qkYAuUbJ/1z
-         nz8h5YA2W7XQOvrRod7zoL9FoSiIkybl2X0BzoPlSs7mQ96rO/e38Tum1oHxvHjbNKrF
-         kVMHz8sS4IlV7PVQho2QUBLFlE7pzSZ4+U0bxv8vYB3yc3OdSHmATUEej2S7CEHwwQNb
-         Iz1SCfMdz8IB+vFT3qsYCb2SF3h6aOuTdCajPLIzmSlJ/7SC+Rlc4H90C3eNj/O1F6H0
-         QupA==
+        bh=caC3q0Im5rpn3jVBjSdb9pB4f6Xutg4Ojk0RRX7E3Ok=;
+        b=bg6mfY2zpiL/RfVmwZqFbQHz/Rgt3PXS6DXi0qCBphUJaLHDGQBguI6vIaNzt+9DYu
+         ZokEIAxWE+lQr57hhnp1G4Fri2750tAnxHK3aabWXBWU8SM7ElfI+A0k3RnQznb8w/df
+         Vs0JPiDxhlI2my6BeVn3xwVwCG9xA2mOXFTG/ZRgl4lHMEN6Eh5RSs9QT1fzfoavs1ln
+         665fDynlhkzVgTRCkgiR6aG/gT/vKDN0fj/Rkt9WGkNeQILCVxIXt8mv9eAlR8/WXvSZ
+         CmCMqO67FAB3U++aoY3tQQH5jRzVk1fSVjhuKIGlmyY9nFk2kHJIABK9VSwfeSvnsYCN
+         bz5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EaeubB9oup5HPqMiD5Vl71T+HPv8UFVWjeFHFcqOIRg=;
-        b=HrEN9xeheENJYTZWUHLoyF3tTaJ/v3CRiGyzjh9Wx/FBLkI3EzHH1hbNxet0sM788e
-         zHwGFRu9yINGYDbeLzL6emtehay02W01SLaja03qWWXOOjvLBU5GIUPkbpZgj1NS7BC0
-         zBYMLPxHQ8cZnjLqmxfIyRR4okPoUESON2RKbYoP87iFk01EevMSSCuGUBzQurOiLwpv
-         HRH4Z0eCLHRZpkOxj8vb+kQ9prY9lJS1cMpoI2zP8cqpXRrZmUvT68ZbyBHYVnf49ZEm
-         N+u5dnYmjFPUruN/kX1OaRss22aP1L2jfLUf0nIZcvwP+RIZiscZMnLkRWbeJMw3RNWI
-         mDaA==
-X-Gm-Message-State: APjAAAVUBPjRXnQ5dkembsvdnybvBHjH6+nEczDA35vkzfLHd7YxEgzG
-        tkF8A0JAL0eLJ7GCHxqJyofYxrVzV0X9/amPg3vuHQ==
-X-Google-Smtp-Source: APXvYqxhbKk0D/bHbd56rMIcDb7oudDKdTswz6YCWF2G7ykBMmGOeVyKBHsxVMNvRMkkTI0Q37OuJ+n8wDj2M9zOHLU=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr4212581lfi.93.1574281247289;
- Wed, 20 Nov 2019 12:20:47 -0800 (PST)
+        bh=caC3q0Im5rpn3jVBjSdb9pB4f6Xutg4Ojk0RRX7E3Ok=;
+        b=lSzLX8jL+WX5Ed6nJeMSZyXfHEnto4gimJkT+HnBVaYVJnnX6VFlwg43jZ5bvRNAqM
+         5R7QLH6fsjlcjHh6zYAkRBZBhybmjB5yLMNmsZpRxZ20ibxt24kECZIMddKgG7Fqw9E8
+         wPFlZxzqaoeM5xgBtv9VsNZAm2sb1Na2snEtodHV5J/iU3e+pOPjIszQS9JaCOAWRan+
+         2yyJ4h2p0FY3U/pyT3JoNdZgH59RbLV4KNQ5980ZjZQbZNRKvSBvgQn57zrPYZBmDimO
+         X8p6049Vl6Rif06gLCMAz1tgbewOVrIyMnQeWqir4mzp8KijedieU2RwxS2Qf/M3XFn0
+         4znw==
+X-Gm-Message-State: APjAAAUjksb920qNnwLMH7obwML1dEZKnIjOS5K65qsnlgxlGOjcJ+Ps
+        IxX2azmlOXjQfVMtgrEqrJzindCmUKQ12EMv9xHTIopEy2Q=
+X-Google-Smtp-Source: APXvYqxBuwInWxqkVn5H7A2OVGPx7wX8ODFx7j//AFHuRlDKHd1fd0fTnmOJMAEpYK3rqOamjhcnY7Nauq736y5nZOM=
+X-Received: by 2002:ac2:5b86:: with SMTP id o6mr4491477lfn.44.1574281279989;
+ Wed, 20 Nov 2019 12:21:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120181857.97174-1-stephan@gerhold.net> <20191120181857.97174-2-stephan@gerhold.net>
-In-Reply-To: <20191120181857.97174-2-stephan@gerhold.net>
+References: <20191120181857.97174-1-stephan@gerhold.net> <20191120181857.97174-3-stephan@gerhold.net>
+In-Reply-To: <20191120181857.97174-3-stephan@gerhold.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 20 Nov 2019 21:20:35 +0100
-Message-ID: <CACRpkda2UJB=dA+1ydBqSu_0D_+xoRX7jCCYEZDE-LPv67WxrA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: vendor-prefixes: Deprecate "ste" and "st-ericsson"
+Date:   Wed, 20 Nov 2019 21:21:08 +0100
+Message-ID: <CACRpkdZSwX6jdtE-e3v3BWb5-jicL=9uXnvNJVchjKHzStWg3w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: vendor-prefixes: Add "calaosystems"
+ for CALAO Systems SAS
 To:     Stephan Gerhold <stephan@gerhold.net>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -72,20 +73,14 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Wed, Nov 20, 2019 at 7:19 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-> Until now, device tree bindings for ST-Ericsson have been added
-> inconsistently with one of 3 possible vendor prefixes.
+> The Snowball SBC supported by arch/arm/boot/dts/ste-snowball.dts
+> was made by CALAO Systems and uses the "calaosystems,snowball-a9500"
+> compatible. Prepare for documenting the compatible by adding
+> "calaosystems" to the list of vendor prefixes.
 >
-> "stericsson" is the most commonly used vendor prefix,
-> so deprecate "ste" and "st-ericsson".
->
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
 > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-FWIW this is the byproduct of Ux500 being used as guinea pig
-and shooting practice target in the early days of Arm Device Tree
-support. I still think we got out pretty clean :D
 
 Yours,
 Linus Walleij
