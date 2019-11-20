@@ -2,230 +2,353 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5CDC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B13AC43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D6920872
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYPYGEsR"
+	by mail.kernel.org (Postfix) with ESMTP id 0390C208A3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574272436;
+	bh=vTFgFEUH3J5T3MWJsb0bX1nQeOIGDcdKEZjEQ1JTKJ4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=e7XoFhOGg6T2Fe5ZnFy+KsTgupA4sQ4W3doQfJ5aFypOg8kkC2n3Lw2LCl+t33nI4
+	 dsXzUiUGUEpg2BQaV/tTunIo9iV2LHbMrAuauJvep3KmdVOexXsai6ImRUPi/KVO8F
+	 3k+N7rtGh+m4vwT875e9rFIMklv8gu0/HkZqTQpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfKTRqJ (ORCPT
+        id S1727645AbfKTRxv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:46:09 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44728 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbfKTRqI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 12:46:08 -0500
-Received: by mail-lj1-f196.google.com with SMTP id g3so51025ljl.11;
-        Wed, 20 Nov 2019 09:46:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eXubl2Ww8hYmI5jI8u6b5ajpQpT9guM2OU2Sn6bPwZw=;
-        b=XYPYGEsRhnhotPNqKuiRQp4cD24+tZwh5P0743M3PeK7m1qhVOk5PNLCJdQMMiL//Z
-         4LjIlpVZt/3HGK0OURosHy4k8e0Zf26kgN8RyYi7ZgxpdLgi4SbCnNdjC+6E1Mg0I7mb
-         0Jdf0sI6u554XLG3n8uyZ1i89S1V05H6lf+l+PYV5yuk/JjrLN19mdCFi5+JroxUn5ht
-         B6wI+noLpVotzDNdPH15IkcajaXBFbdQ1ph5oDn6DhHAQ0Ko2BcfdE8NGWzjujl4Anbk
-         Ef8b6nNaqBOj3HT2RePG8dKkRAqtsXaihiTx+O43soJPJoD9MN354RKjI93lGMo92RhE
-         pQYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eXubl2Ww8hYmI5jI8u6b5ajpQpT9guM2OU2Sn6bPwZw=;
-        b=PFLLIY8+UwUy8QnlRIipRZZwNKwN37GprJmOKC5kbFhY+u+DtWtfdzkambvN6cF8Nn
-         ZV5bGN34KdtN6ddIe1KBvlpNdE0hL+vIG/Pd08kMgHd3KuV8fG1xF0RLPiT28PibeaA/
-         pL4MhmyUTOtSB/jQLIqCmW8wqdZKsAa4qAnaQh2fyC6430URJIarewiNLb822GdxchNn
-         voyNxBKiUMbKVDadIYviRQUf8oI8sQDx1yZUup5NO2eYZSgFUHm4tghL3d1a9oQNyBNH
-         kd+iSpvIz537RQt/hUaHt22gWuMfBcZ5V1vYScX7O3ocirxKM8ybOoK7AQd+NBckpyg/
-         rzmw==
-X-Gm-Message-State: APjAAAVSwzkej/JaryFv7Qyo44Bj5sVmIte39kHa9OIzfz2boNgzFws5
-        oVS1o3xIVkdP8El0Kq1IsXf9Muxj
-X-Google-Smtp-Source: APXvYqxDRrGRo1AOn5dQxGAfiWJrtQfHoVg51hHdaVbj+zViUs2CSzDOQCg9cmcCkyTvngYLiaZnGg==
-X-Received: by 2002:a2e:6c0c:: with SMTP id h12mr4030068ljc.24.1574271965303;
-        Wed, 20 Nov 2019 09:46:05 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u6sm5634906lfu.49.2019.11.20.09.46.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2019 09:46:04 -0800 (PST)
-Subject: Re: [PATCH v1 04/17] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-5-git-send-email-skomatineni@nvidia.com>
- <d072bd37-9628-4eb2-1706-a1f640606b8d@gmail.com>
- <d76f4689-5986-9239-9c67-9dd125f6547e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a87a08c1-5104-a534-89c4-73463c08abba@gmail.com>
-Date:   Wed, 20 Nov 2019 20:46:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 20 Nov 2019 12:53:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727468AbfKTRxv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:53:51 -0500
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B26A208C0;
+        Wed, 20 Nov 2019 17:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574272430;
+        bh=vTFgFEUH3J5T3MWJsb0bX1nQeOIGDcdKEZjEQ1JTKJ4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aKefBU3YwElaWPdEYRKoG5mj8XV6ocunvLSO86PiG0ppsJTjpPVa2tj+s509uoYGh
+         3hy0NzFXvVkIPsVjqsUDyyo4QvRhrntrqMD0YGVP4e5kUfMZUjXiOhvxnNTvaDZGfH
+         My9HmOD4k9PZgowERQCoRH5wZzYKC8HtAA8DdAug=
+Received: by mail-qt1-f172.google.com with SMTP id t20so441763qtn.9;
+        Wed, 20 Nov 2019 09:53:50 -0800 (PST)
+X-Gm-Message-State: APjAAAXaOdiDp2WoSf4BgfTZmFeVocGhSVedOnU/yos63YqZvHp/aNFo
+        LVNNjgj44sv1gB5xQ+aETFBCU8nalAW59eCYMA==
+X-Google-Smtp-Source: APXvYqxcBnubXdWFTB34ourRkaQWwkriG9fDbuZArgVLqVg6y0PsE/RaWX7IZWekSGnSC2/onL/T+1dVE2YhzWXa2+Y=
+X-Received: by 2002:ac8:7612:: with SMTP id t18mr3903697qtq.143.1574272429281;
+ Wed, 20 Nov 2019 09:53:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <d76f4689-5986-9239-9c67-9dd125f6547e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1574257423-26754-1-git-send-email-alain.volmat@st.com>
+In-Reply-To: <1574257423-26754-1-git-send-email-alain.volmat@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 20 Nov 2019 11:53:37 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+3GzLW7_hi56VFHT-V_LMv5g_K=x9ExGx0Xf6Hn_HR3Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+3GzLW7_hi56VFHT-V_LMv5g_K=x9ExGx0Xf6Hn_HR3Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: i2c: stm32: Migrate i2c-stm32 documentation
+ to yaml
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-19.11.2019 23:08, Sowjanya Komatineni пишет:
-> 
-> On 11/19/19 11:33 AM, Dmitry Osipenko wrote:
->> 19.11.2019 09:50, Sowjanya Komatineni пишет:
->>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 with mux and gate for
->>> each of these clocks.
->>>
->>> Currently these PMC clocks are registered by Tegra clock driver using
->>> clk_register_mux and clk_register_gate by passing PMC base address
->>> and register offsets and PMC programming for these clocks happens
->>> through direct PMC access by the clock driver.
->>>
->>> With this, when PMC is in secure mode any direct PMC access from the
->>> non-secure world does not go through and these clocks will not be
->>> functional.
->>>
->>> This patch adds these clocks registration with PMC as a clock provider
->>> for these clocks. clk_ops callback implementations for these clocks
->>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC programming
->>> in secure mode and non-secure mode.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/soc/tegra/pmc.c | 330
->>> ++++++++++++++++++++++++++++++++++++++++++++++++
->>>   1 file changed, 330 insertions(+)
->>>
->>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>> index 7a5aab0b993b..790a6619ba32 100644
->>> --- a/drivers/soc/tegra/pmc.c
->>> +++ b/drivers/soc/tegra/pmc.c
->>> @@ -13,6 +13,9 @@
->>>     #include <linux/arm-smccc.h>
->>>   #include <linux/clk.h>
->>> +#include <linux/clk-provider.h>
->>> +#include <linux/clkdev.h>
->>> +#include <linux/clk/clk-conf.h>
->>>   #include <linux/clk/tegra.h>
->>>   #include <linux/debugfs.h>
->>>   #include <linux/delay.h>
->>> @@ -48,6 +51,7 @@
->>>   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->>>   #include <dt-bindings/gpio/tegra186-gpio.h>
->>>   #include <dt-bindings/gpio/tegra194-gpio.h>
->>> +#include <dt-bindings/soc/tegra-pmc.h>
->>>     #define PMC_CNTRL            0x0
->>>   #define  PMC_CNTRL_INTR_POLARITY    BIT(17) /* inverts INTR
->>> polarity */
->>> @@ -108,6 +112,7 @@
->>>   #define PMC_WAKE2_STATUS        0x168
->>>   #define PMC_SW_WAKE2_STATUS        0x16c
->>>   +#define PMC_CLK_OUT_CNTRL        0x1a8
->>>   #define PMC_SATA_PWRGT            0x1ac
->>>   #define PMC_SATA_PWRGT_PLLE_IDDQ_VALUE BIT(5)
->>>   #define PMC_SATA_PWRGT_PLLE_IDDQ_SWCTL BIT(4)
->>> @@ -170,6 +175,78 @@
->>>   #define  TEGRA_SMC_PMC_READ    0xaa
->>>   #define  TEGRA_SMC_PMC_WRITE    0xbb
->>>   +struct pmc_clk_mux {
->>> +    struct clk_hw    hw;
->>> +    unsigned long    offs;
->>> +    u32        mask;
->>> +    u32        shift;
->>> +    /* register lock */
->>> +    spinlock_t    *lock;
->>> +};
->>> +
->>> +#define to_pmc_clk_mux(_hw) container_of(_hw, struct pmc_clk_mux, hw)
->>> +
->>> +struct pmc_clk_gate {
->>> +    struct clk_hw    hw;
->>> +    unsigned long    offs;
->>> +    u32        shift;
->>> +    /* register lock */
->>> +    spinlock_t    *lock;
+On Wed, Nov 20, 2019 at 7:43 AM Alain Volmat <alain.volmat@st.com> wrote:
+>
+> The document was migrated to Yaml format and renamed st,stm32-i2c.yaml
+>
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> ---
+>  .../devicetree/bindings/i2c/i2c-stm32.txt          |  65 ---------
+>  .../devicetree/bindings/i2c/st,stm32-i2c.yaml      | 157 +++++++++++++++++++++
+>  2 files changed, 157 insertions(+), 65 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+>  create mode 100644 Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+> deleted file mode 100644
+> index ce3df2fff6c8..000000000000
+> --- a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+> +++ /dev/null
+> @@ -1,65 +0,0 @@
+> -* I2C controller embedded in STMicroelectronics STM32 I2C platform
+> -
+> -Required properties:
+> -- compatible: Must be one of the following
+> -  - "st,stm32f4-i2c"
+> -  - "st,stm32f7-i2c"
+> -- reg: Offset and length of the register set for the device
+> -- interrupts: Must contain the interrupt id for I2C event and then the
+> -  interrupt id for I2C error.
+> -- resets: Must contain the phandle to the reset controller.
+> -- clocks: Must contain the input clock of the I2C instance.
+> -- A pinctrl state named "default" must be defined to set pins in mode of
+> -  operation for I2C transfer
+> -- #address-cells = <1>;
+> -- #size-cells = <0>;
+> -
+> -Optional properties:
+> -- clock-frequency: Desired I2C bus clock frequency in Hz. If not specified,
+> -  the default 100 kHz frequency will be used.
+> -  For STM32F4 SoC Standard-mode and Fast-mode are supported, possible values are
+> -  100000 and 400000.
+> -  For STM32F7, STM32H7 and STM32MP1 SoCs, Standard-mode, Fast-mode and Fast-mode
+> -  Plus are supported, possible values are 100000, 400000 and 1000000.
+> -- dmas: List of phandles to rx and tx DMA channels. Refer to stm32-dma.txt.
+> -- dma-names: List of dma names. Valid names are: "rx" and "tx".
+> -- i2c-scl-rising-time-ns: I2C SCL Rising time for the board (default: 25)
+> -  For STM32F7, STM32H7 and STM32MP1 only.
+> -- i2c-scl-falling-time-ns: I2C SCL Falling time for the board (default: 10)
+> -  For STM32F7, STM32H7 and STM32MP1 only.
+> -  I2C Timings are derived from these 2 values
+> -- st,syscfg-fmp: Use to set Fast Mode Plus bit within SYSCFG when Fast Mode
+> -  Plus speed is selected by slave.
+> -       1st cell: phandle to syscfg
+> -       2nd cell: register offset within SYSCFG
+> -       3rd cell: register bitmask for FMP bit
+> -  For STM32F7, STM32H7 and STM32MP1 only.
+> -
+> -Example:
+> -
+> -       i2c@40005400 {
+> -               compatible = "st,stm32f4-i2c";
+> -               #address-cells = <1>;
+> -               #size-cells = <0>;
+> -               reg = <0x40005400 0x400>;
+> -               interrupts = <31>,
+> -                            <32>;
+> -               resets = <&rcc 277>;
+> -               clocks = <&rcc 0 149>;
+> -               pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
+> -               pinctrl-names = "default";
+> -       };
+> -
+> -       i2c@40005400 {
+> -               compatible = "st,stm32f7-i2c";
+> -               #address-cells = <1>;
+> -               #size-cells = <0>;
+> -               reg = <0x40005400 0x400>;
+> -               interrupts = <31>,
+> -                            <32>;
+> -               resets = <&rcc STM32F7_APB1_RESET(I2C1)>;
+> -               clocks = <&rcc 1 CLK_I2C1>;
+> -               pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
+> -               pinctrl-names = "default";
+> -               st,syscfg-fmp = <&syscfg 0x4 0x1>;
+> -       };
+> diff --git a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+> new file mode 100644
+> index 000000000000..0f51a6ed0e9b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+> @@ -0,0 +1,157 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/i2c/st,stm32-i2c.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: I2C controller embedded in STMicroelectronics STM32 I2C platform
+> +
+> +maintainers:
+> +  - Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/i2c/i2c-controller.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - st,stm32f7-i2c
+> +    then:
+> +      properties:
+> +        i2c-scl-rising-time-ns:
+> +          description: I2C SCL Rising time for the board
+> +          $ref: /schemas/types.yaml#/definitions/uint32
+> +          default: 25
+> +
+> +        i2c-scl-falling-time-ns:
+> +          description: I2C SCL Falling time for the board
+> +          $ref: /schemas/types.yaml#/definitions/uint32
 
-Why clk_out_lock is needed at all? CCLK framework already takes care of
-the clock's locking and then nothing else in PMC code uses that lock to
-avoid races, thus that spinlock doesn't do anything useful and should be
-removed from both mux and gate.
+These 2 should be added to i2c-controller.yaml and just the default
+defined here.
 
->>> +};
->>> +
->>> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct pmc_clk_gate, hw)
->>> +
->>> +struct pmc_clk_init_data {
->>> +    char *mux_name;
->>> +    char *gate_name;
->>> +    const char **parents;
->>> +    int num_parents;
->>> +    int mux_id;
->>> +    int gate_id;
->>> +    char *dev_name;
->>> +    u8 mux_shift;
->>> +    u8 gate_shift;
->>> +    u8 init_parent;
->>> +    int init_state;
->>> +    struct pmc_clk_mux mux;
->>> +    struct pmc_clk_gate gate;
->>> +};
->>> +
->>> +#define PMC_CLK(_num, _mux_shift, _gate_shift, _init_parent,
->>> _init_state)\
->>> +    {\
->>> +        .mux_name = "clk_out_" #_num "_mux",\
->>> +        .gate_name = "clk_out_" #_num,\
->>> +        .parents = clk_out ##_num ##_parents,\
->>> +        .num_parents = ARRAY_SIZE(clk_out ##_num ##_parents),\
->>> +        .mux_id = TEGRA_PMC_CLK_OUT_ ##_num ##_MUX,\
->>> +        .gate_id = TEGRA_PMC_CLK_OUT_ ##_num,\
->>> +        .dev_name = "extern" #_num,\
->>> +        .mux_shift = _mux_shift,\
->>> +        .gate_shift = _gate_shift,\
->>> +        .init_parent = _init_parent,\
->>> +        .init_state = _init_state,\
->>> +    }
->>> +
->>> +static DEFINE_SPINLOCK(clk_out_lock);
->>> +
->>> +static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
->>> +    "clk_m_div4", "extern1",
->>> +};
->>> +
->>> +static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
->>> +    "clk_m_div4", "extern2",
->>> +};
->>> +
->>> +static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
->>> +    "clk_m_div4", "extern3",
->>> +};
->> Why these are unused?
-> They are used in PMC_CLK macro
+> +          default: 10
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - st,stm32f4-i2c
+> +    then:
+> +      properties:
+> +        clock-frequency:
+> +          description: Desired I2C bus clock frequency in Hz. If not specified,
+> +                       the default 100 kHz frequency will be used.
+> +                       For STM32F4 SoC Standard-mode and Fast-mode are
+> +                       supported, possible values are 100000 and 400000.
+> +          default: 100000
+> +          enum: [100000, 400000]
+> +    else:
+> +      properties:
+> +        clock-frequency:
+> +          description: Desired I2C bus clock frequency in Hz. If not specified,
+> +                       the default 100 kHz frequency will be used.
+> +                       For STM32F7, STM32H7 and STM32MP1 SoCs, Standard-mode,
+> +                       Fast-mode and Fast-mode Plus are supported, possible
+> +                       values are 100000, 400000 and 1000000.
+> +          default: 100000
+> +          enum: [100000, 400000, 1000000]
 
-Looks like it will better to define those three structs directly,
-without the PMC_CLK macro.
+Move this to main 'properties'. Then the one in the 'then' clause just
+needs the enum.
 
-[snip]
+> +
+> +        st,syscfg-fmp:
+> +          $ref: "/schemas/types.yaml#/definitions/phandle-array"
 
+Won't work. You have to do:
+
+allOf:
+  - $ref: ...
+
+> +          description: Use to set Fast Mode Plus bit within SYSCFG when
+> +                       Fast Mode Plus speed is selected by slave. Should be
+> +                       phandle/offset/mask
+> +          items:
+> +            - description: phandle to syscfg
+> +            - description: register offset within syscfg
+> +            - description: register bitmask for FMP bit
+
+Wouldn't this make more sense in the first if rather than the 'else' clause?
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - st,stm32f4-i2c
+> +      - st,stm32f7-i2c
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 2
+
+Implied by items length.
+
+> +    items:
+> +      - description: interrupt ID for I2C event
+> +      - description: interrupt ID for I2C error
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    items:
+> +      - description: RX DMA Channel phandle
+> +      - description: TX DMA Channel phandle
+> +    minItems: 2
+> +    maxItems: 2
+
+Implied by items length.
+
+> +
+> +  dma-names:
+> +    items:
+> +      - const: rx
+> +      - const: tx
+> +    minItems: 2
+> +    maxItems: 2
+
+Implied by items length.
+
+> +
+> +required:
+> +  - compatible
+
+> +  - '#address-cells'
+> +  - '#size-cells'
+
+Can drop. i2c-controller.yaml makes them required.
+
+> +  - reg
+> +  - interrupts
+> +  - resets
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/mfd/stm32f7-rcc.h>
+> +    #include <dt-bindings/clock/stm32fx-clock.h>
+> +    //Example 1 (with st,stm32f4-i2c compatible)
+> +      i2c@40005400 {
+> +          compatible = "st,stm32f4-i2c";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          reg = <0x40005400 0x400>;
+> +          interrupts = <31>,
+> +                       <32>;
+> +          resets = <&rcc 277>;
+> +          clocks = <&rcc 0 149>;
+> +      };
+> +
+> +    //Example 2 (with st,stm32f7-i2c compatible)
+> +      i2c@40005800 {
+> +          compatible = "st,stm32f7-i2c";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          reg = <0x40005800 0x400>;
+> +          interrupts = <31>,
+> +                       <32>;
+> +          resets = <&rcc STM32F7_APB1_RESET(I2C1)>;
+> +          clocks = <&rcc 1 CLK_I2C1>;
+> +      };
+> +
+> +    //Example 3 (with st,stm32f7-i2c compatible on stm32mp)
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    #include <dt-bindings/reset/stm32mp1-resets.h>
+> +      i2c@40013000 {
+> +          compatible = "st,stm32f7-i2c";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          reg = <0x40013000 0x400>;
+> +          interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
+> +                       <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +          clocks = <&rcc I2C2_K>;
+> +          resets = <&rcc I2C2_R>;
+> +          i2c-scl-rising-time-ns = <185>;
+> +          i2c-scl-falling-time-ns = <20>;
+> +          st,syscfg-fmp = <&syscfg 0x4 0x2>;
+> +      };
+> +...
+> --
+> 2.7.4
+>
