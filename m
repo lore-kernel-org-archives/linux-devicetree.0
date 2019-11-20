@@ -2,311 +2,103 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CF1C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 16:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7066C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 16:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80A420895
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 16:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94FB20885
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 16:49:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRN5xFCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732617AbfKTQpy (ORCPT
+        id S1729334AbfKTQtY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:45:54 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:60313 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729901AbfKTQpy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 11:45:54 -0500
-X-Originating-IP: 90.76.211.102
-Received: from aptenodytes (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 081036000B;
-        Wed, 20 Nov 2019 16:45:48 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 17:45:48 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 1/2] dt-bindings: display: Add xylon logicvc bindings
- documentation
-Message-ID: <20191120164548.GA168745@aptenodytes>
-References: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
- <20190910153409.111901-2-paul.kocialkowski@bootlin.com>
- <20190913143510.GA9504@bogus>
- <20190913155815.GA1554@aptenodytes>
- <CAL_Jsq+dzT1xrfBy2QQHLx9MUNukWWq5eXyOecVV8h0z5ziC8g@mail.gmail.com>
- <20190923153311.GE57525@aptenodytes>
- <CAL_JsqJLfAb0xhmBoX+GUcv5wsuHBOs8wZ=Hkw3x03kfsPgOqg@mail.gmail.com>
- <20191120144957.GA167553@aptenodytes>
- <CAL_Jsq+n2HYz3BLm3Nad=Uv6qiJNM2=fQmCxzkXJZx-0=VQTFQ@mail.gmail.com>
+        Wed, 20 Nov 2019 11:49:24 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41070 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbfKTQtY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 11:49:24 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b18so618119wrj.8
+        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 08:49:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/tfNmuMMwyQORb9MmSyqJxqNXHVoAVkzV3jsy1XM7mo=;
+        b=BRN5xFCTeldhvhmzSobTZawZRCXwUl4SMRKouHm315jXJg8aoic4Qfwp8AjzhvLKv0
+         VuAUzil2nDpggMs2JfXZYFDd++7BH9kHGsbdCK4uaZiBCMCVQWxbS/D7KkRI18v6v45s
+         iBuQ7IMZhu0n9MRxDSMopj3G5PG/z+4fItQYxK8HfG3XuecDm4PeCI8PqJ7IbhVEieqt
+         Ir548yW1xvP6sxTXEiCU/UZ00/OVzJtFqpLGFsTrbY2P2Tse6uTMujTIih87TI3nYZqS
+         AVqg3UzKMaK5pCuO0yjYY1RWc7c8CbET6aMlPGElb0Ob1Jjf1j+M3et2DxTsX4SJJISC
+         jjHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/tfNmuMMwyQORb9MmSyqJxqNXHVoAVkzV3jsy1XM7mo=;
+        b=gVF/OK1HpYBMEMXkX8+FIdwgmMQyhtW5Vxa0HaSFW8nE1xsocrcUxjscMcNKBsYlX/
+         F7WjLAxCsxkAbhMajG+utOEsgZ3JlRdaYG9L/ZFChnUcu09Jzt6vOZA6s1nm/i9Lrlcx
+         CgkUVygJ4nJlPOS4CUZGROOK0J8957LXV9wESyIKerWqp3Yzah81w1NVVU6jkR9ODl/v
+         lQOSG4t20AhfgKfIkCd+ATtG33xjc4b81xt0JG2Wy/0XxiTGgiqOpFrlHfQp32VigbzA
+         AsmlS6fEaXAb2KudO+GGn7V0dL1MrSntBvcCBcwsHrBGUH5VUUxLgMFT86E4pX4dBLJY
+         INyA==
+X-Gm-Message-State: APjAAAV5mQTAGHb7YrifJ5hyvDlu98jWNRe3YvhdQ/Xmr7dw6SbgGFjH
+        FUh72+/nDlreJ/aFyMSEkpo=
+X-Google-Smtp-Source: APXvYqwU5OvZpuB8HO7URS5VALwX3xIgNC29r6N4jPORB+576yjnLXrwHXsRbOBUUYFhNm+t3sW84A==
+X-Received: by 2002:adf:fe89:: with SMTP id l9mr4415174wrr.368.1574268562949;
+        Wed, 20 Nov 2019 08:49:22 -0800 (PST)
+Received: from localhost ([37.238.189.2])
+        by smtp.gmail.com with ESMTPSA id h15sm34858641wrb.44.2019.11.20.08.49.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 08:49:22 -0800 (PST)
+From:   Mohammad Rasim <mohammad.rasim96@gmail.com>
+To:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/2] dt-bindings: Add vendor prefix for Videostrong
+Date:   Wed, 20 Nov 2019 19:49:15 +0300
+Message-Id: <20191120164916.31698-2-mohammad.rasim96@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191120164916.31698-1-mohammad.rasim96@gmail.com>
+References: <20191120164916.31698-1-mohammad.rasim96@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+n2HYz3BLm3Nad=Uv6qiJNM2=fQmCxzkXJZx-0=VQTFQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Videostrong Technology Co., Ltd., A manufacturer of Android Players & STB
+(Android with DVB Hybrid box & DVB-T2/S2/C/ISDB-T/DTMB-TH/ATSC )as well as
+HD media players.
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Hi,
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 967e78c5ec0a..e4bd0a9fd4e5 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1006,6 +1006,8 @@ patternProperties:
+     description: Variscite Ltd.
+   "^via,.*":
+     description: VIA Technologies, Inc.
++  "^videostrong,.*":
++    description: Videostrong Technology Co., Ltd.
+   "^virtio,.*":
+     description: Virtual I/O Device Specification, developed by the OASIS consortium
+   "^vishay,.*":
+-- 
+2.24.0
 
-On Wed 20 Nov 19, 10:02, Rob Herring wrote:
-> On Wed, Nov 20, 2019 at 8:50 AM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
-> >
-> > Hi,
-> >
-> > Circling back to this thread now, sorry for the delay.
-> >
-> > On Tue 24 Sep 19, 09:58, Rob Herring wrote:
-> > > On Mon, Sep 23, 2019 at 10:33 AM Paul Kocialkowski
-> > > <paul.kocialkowski@bootlin.com> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Fri 13 Sep 19, 20:16, Rob Herring wrote:
-> > > > > On Fri, Sep 13, 2019 at 4:58 PM Paul Kocialkowski
-> > > > > <paul.kocialkowski@bootlin.com> wrote:
-> > > > > >
-> > > > > > Hi Rob and thanks for the review!
-> > > > > >
-> > > > > > On Fri 13 Sep 19, 15:35, Rob Herring wrote:
-> > > > > > > On Tue, Sep 10, 2019 at 05:34:08PM +0200, Paul Kocialkowski w=
-rote:
-> > > > > > > > The Xylon LogiCVC is a display controller implemented as pr=
-ogrammable
-> > > > > > > > logic in Xilinx FPGAs.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin=
-=2Ecom>
-> > > > > > > > ---
-> > > > > > > >  .../bindings/display/xylon,logicvc.txt        | 188 ++++++=
-++++++++++++
-> > > > > > > >  1 file changed, 188 insertions(+)
-> > > > > > > >  create mode 100644 Documentation/devicetree/bindings/displ=
-ay/xylon,logicvc.txt
-> > > > > > >
-> > > > > > > Consider converting this to DT schema format. See
-> > > > > > > Documentation/devicetree/writing-schema.rst (.md in 5.3).
-> > > > > >
-> > > > > > Oh right, that would certainly be much more future-proof!
-> > > > > >
-> > > > > > > > diff --git a/Documentation/devicetree/bindings/display/xylo=
-n,logicvc.txt b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
-> > > > > > > > new file mode 100644
-> > > > > > > > index 000000000000..eb4b1553888a
-> > > > > > > > --- /dev/null
-> > > > > > > > +++ b/Documentation/devicetree/bindings/display/xylon,logic=
-vc.txt
-> > > > > > > > @@ -0,0 +1,188 @@
-> > > > > > > > +Xylon LogiCVC display controller
-> > > > > > > > +
-> > > > > > > > +The Xylon LogiCVC is a display controller that supports mu=
-ltiple layers.
-> > > > > > > > +It is usually implemented as programmable logic and was op=
-timized for use
-> > > > > > > > +with Xilinx Zynq-7000 SoCs and Xilinx FPGAs.
-> > > > > > > > +
-> > > > > > > > +Because the controller is intended for use in a FPGA, most=
- of the configuration
-> > > > > > > > +of the controller takes place at logic configuration bitst=
-ream synthesis time.
-> > > > > > > > +As a result, many of the device-tree bindings are meant to=
- reflect the
-> > > > > > > > +synthesis configuration. These do not allow configuring th=
-e controller
-> > > > > > > > +differently than synthesis configuration.
-> > > > > > > > +
-> > > > > > > > +Layers are declared in the "layers" sub-node and have dedi=
-cated configuration.
-> > > > > > > > +In version 3 of the controller, each layer has fixed memor=
-y offset and address
-> > > > > > > > +starting from the video memory base address for its frameb=
-uffer. With version 4,
-> > > > > > > > +framebuffers are configured with a direct memory address i=
-nstead.
-> > > > > > > > +
-> > > > > > > > +Matching synthesis parameters are provided when applicable.
-> > > > > > > > +
-> > > > > > > > +Required properties:
-> > > > > > > > +- compatible: Should be one of:
-> > > > > > > > +  "xylon,logicvc-3.02.a-display"
-> > > > > > > > +  "xylon,logicvc-4.01.a-display"
-> > > > > > > > +- reg: Physical base address and size for the controller r=
-egisters.
-> > > > > > > > +- clocks: List of phandle and clock-specifier pairs, one f=
-or each entry
-> > > > > > > > +  in 'clock-names'
-> > > > > > > > +- clock-names: List of clock names that should at least co=
-ntain:
-> > > > > > > > +  - "vclk": The VCLK video clock input.
-> > > > > > > > +- interrupts: The interrupt to use for VBLANK signaling.
-> > > > > > > > +- xylon,display-interface: Display interface in use, shoul=
-d be one of:
-> > > > > > > > +  - "lvds-4bits": 4-bit LVDS interface (C_DISPLAY_INTERFAC=
-E =3D=3D 4).
-> > > > > > > > +- xylon,display-colorspace: Display output colorspace in u=
-se, should be one of:
-> > > > > > > > +  - "rgb": RGB colorspace (C_DISPLAY_COLOR_SPACE =3D=3D 0).
-> > > > > > > > +- xylon,display-depth: Display output depth in use (C_PIXE=
-L_DATA_WIDTH).
-> > > > > > > > +- xylon,row-stride: Fixed number of pixels in a framebuffe=
-r row (C_ROW_STRIDE).
-> > > > > > > > +- xylon,layers-count: The number of available layers (C_NU=
-M_OF_LAYERS).
-> > > > > > >
-> > > > > > > Presumably some of this is determined by the display attached=
-=2E Isn't it
-> > > > > > > safe to assume the IP was configured correctly for the intend=
-ed display
-> > > > > > > and you can just get this from the panel?
-> > > > > >
-> > > > > > Layers are what corresponds to DRM planes, which are not actual=
-ly indicated
-> > > > > > by the panel but are a charasteristic of the display controller=
-=2E In our case,
-> > > > > > this is directly selected at bitstream synthesis time for the c=
-ontroller.
-> > > > > >
-> > > > > > So I'm afraid there is no way we can auto-detect this from the =
-driver.
-> > > > >
-> > > > > Sorry, I referring to the set of properties above. In particular,
-> > > > > xylon,display-interface and xylon,display-colorspace, though I do=
-n't
-> > > > > know if the latter is talking in memory format or on the wire for=
-mat.
-> > > >
-> > > > Both of these are about the wire format, which is also "hardcoded" =
-at synthesis
-> > > > time with no way to be detected afterwards, as far as I know. Memor=
-y format is
-> > > > described in the layer sub-nodes.
-> > >
-> > > You have to attach the controller to something at the other end of the
-> > > wire. A panel is only going to support 1 or a few wire formats, so you
-> > > do likely know because the panel knows. In the case that a panel
-> > > supports multiple wire formats, we do have some standard properties
-> > > there. See the LVDS panel binding.
-> >
-> > Looking at the LVDS panel binding, I see that the LVDS types that I have
-> > described as lvds-4bits and lvds-3bits are called jeida-24 and jeida-18.
-> >
-> > Either way, the controller cannot be dynamically configured to use one =
-or
-> > another: it is configured to support one at synthesis time and this doe=
-sn't
-> > change.
->=20
-> Understood, but I was assuming you need to know how it was configured
-> for some reason?
-
-Well, the information that is really useful for the driver is whether it's
-configured as LVDS or something else. The detail of 3bit vs 4bit doesn't re=
-ally
-matter for Linux/DRM but I kept it to that precision to stick close to the
-hardware description. But yeah, having a single "lvds" choice in the
-display-interface property for these two cases would work too and I can do =
-that
-if you prefer.
-
-> > I'm not sure exactly what you implied here. Even if we can retreive the
-> > wire format from the lvds-panel's data-mapping property, I don't think =
-it shall
-> > describe what the display controller was configured to. This informatio=
-n could
-> > be used to make sure that both are compatible (in the driver), but that=
-'s about
-> > it as far as I can see.
->=20
-> It's not the kernel's job to validate the DT is correct. Someone could
-> just as easily define a panel that doesn't match with the configured
-> format as they could having lvds-?bits set incorrectly.
-
-So this is a situation that we are supposed to allow?
-I assumed it would be in everyone's best interest to detect that there is a
-mismatch, but I don't have any strong opinion about that.
-
-> So get the wire format from the panel driver (either implied or by DT
-> property) and assume that matches the configuration of the controller.
-
-To be honest, it feels a bit weird to depend on a panel being connected to =
-know
-what display interface the driver should register. It might work in practice
-since these media bus formats are specific to LVDS, so it can be correctly
-deduced, but I don't understand the advantage of doing that.
-
-It will probably also require parsing the panel remote endpoint's dt props =
-as
-I don't think we can get the bus format information from DRM before having
-registered an encoder/connector on the controller side (so that's a
-chicken-and-egg problem).
-
-More generally, I don't see the issue behind describing this in the control=
-ler's
-bindings: is it because of unwanted redundency or such?
-
-> Though, I guess if the model is each end of the wire should advertise
-> what it supports and the core picks the best format, then that only
-> works if you advertise both formats. Or we could allow jeida-{24,18}
-> property at both ends of the graph.
-
-I don't think there is such negotiation currently implemented in DRM
-(and many driver actually have a strong assumption that only one bus format
-is provided).
-
-If we want the DRM core to deal with that, we need drivers to report their =
-bus
-format abilities for each concerned encoder/connector. I'm not sure this co=
-uld
-be done in a generic way with a generic dt property since the of_graph to
-encoder/connector association seems to be quite driver-specific anyway.
-This would just be deporting a description of capabilities of the hardware =
-=66rom
-the driver to dt, with no particular gain as far as I can see.
-
-But maybe I'm missing the bigger picture here and describing hardware
-capabilities in device-tree is something we want to go towards. I must admit
-that I find the boundary quite blurry.
-
-Cheers,
-
-Paul
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3VbbwACgkQ3cLmz3+f
-v9HE5Af+NjaJizxPkgLR7nGRCau5YpFK4UQrReXr0C3+W39U8TozvwO48gHl2s6c
-+YzmFrzjmlHGCovaD+3+Dos3fhYmcmJ78+RikCHwe5Vo7k1oPNxSJQAFtouw/GeR
-xhcovRaufy1OTRz7/lJBKYIYc+uKCMxxeQwY28tH058qNg13Go9SG1cZoi1NmSAK
-hn2WC/l3ndDbjwGNOgVVCa1BuiGyHBQFGBUXjnqbhiLdwZGF2PmiQAO1sNPav00x
-qMrfO2P2h1iSLaqSk1wXWYXyxu+vzW4sRNeN046xplA62XIKusS9FQ3oxDFr4/9D
-63OeDPwHSP4IGizIwOlt8Oih8U+2zw==
-=9mgd
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
