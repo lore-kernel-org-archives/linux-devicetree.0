@@ -2,70 +2,101 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CCEC43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 09:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BF0C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 09:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E38E22244A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 09:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B9D223B0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 09:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="bcV3glNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725956AbfKTJfM (ORCPT
+        id S1728569AbfKTJ5k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:35:12 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55804 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728309AbfKTJfM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 04:35:12 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iXMO4-0003sK-AW; Wed, 20 Nov 2019 10:35:00 +0100
-Date:   Wed, 20 Nov 2019 10:34:59 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Yash Shah <yash.shah@sifive.com>
-cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Wed, 20 Nov 2019 04:57:40 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37820 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728567AbfKTJ5k (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 04:57:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=el6438nih4sfwVUUpa3K7cGTYMkZUt0pCE/MflmMSiA=; b=bcV3glNLOjIUujMfUEw4s7kT6
+        Z6OGWKZbmD0U635MtVAIlSU1ixudFfoksF22a7LTl1W20n/1fJdNsXuujM3+C1ZTKUoUumNB9aNOs
+        RYd13CFvhF4cDxk/34GB9IhDX+rdOqDeoiGBGD0nrEfxwip7rS0pNaRknuUJkcgFvqxExxT41yxpW
+        8PEtujQ51/SZdZW8JriCE6ikn3f7nsbUxydGpzA2n35/RP5oFpUtcrXMbFBO6AibcBqU+4KuUgB3a
+        35iKgzeq3jZ6/tOsoixKQz1oeB1QCsv6pvCEo3bwd+4bSE4EBX/WpAuLpJTlt+0kXqiV8Vxb8mAU5
+        yKENSjU9w==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58700)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iXMju-0007YX-7j; Wed, 20 Nov 2019 09:57:34 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iXMjp-0001cr-EL; Wed, 20 Nov 2019 09:57:29 +0000
+Date:   Wed, 20 Nov 2019 09:57:29 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Subject: Re: [PATCH v2 1/5] genirq: introduce irq_domain_translate_onecell
-In-Reply-To: <1574233128-28114-2-git-send-email-yash.shah@sifive.com>
-Message-ID: <alpine.DEB.2.21.1911201034240.6731@nanos.tec.linutronix.de>
-References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com> <1574233128-28114-2-git-send-email-yash.shah@sifive.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20191120095729.GJ25745@shell.armlinux.org.uk>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 20 Nov 2019, Yash Shah wrote:
+On Wed, Nov 20, 2019 at 03:45:17AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> This patch set is to recode the Mobiveil driver and add
+> PCIe support for NXP Layerscape series SoCs integrated
+> Mobiveil's PCIe Gen4 controller.
 
-> Add a new function irq_domain_translate_onecell() that is to be used as
-> the translate function in struct irq_domain_ops for the v2 IRQ API.
+How many PCIe cards have been tested to work/don't work with this?
 
-What is the V2 IRQ API?
- 
-Thanks,
+I need:
 
-	tglx
+PCI: mobiveil: ls_pcie_g4: fix SError when accessing config space
+PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
+PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
+
+to successfully boot with a Mellanox card plugged in with a previous
+revision of these patches.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
