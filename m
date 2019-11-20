@@ -2,201 +2,180 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8623C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834CEC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B082320898
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVk03sKh"
+	by mail.kernel.org (Postfix) with ESMTP id 5DFAF20730
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 17:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfKTRXG (ORCPT
+        id S1728584AbfKTRdv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:23:06 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45169 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbfKTRXF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 12:23:05 -0500
-Received: by mail-qk1-f196.google.com with SMTP id q70so440698qke.12;
-        Wed, 20 Nov 2019 09:23:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=a2MLfSrel+mRbxxitJdDU9cMLj6K94x+FsaIqj+3XoA=;
-        b=kVk03sKhpt3/+dqXQtuziwe4bJdEAf5+wrwdw/CxuHNquxkGvNbQedmk8WkwGaUKu0
-         pvGC62kzAfnBWQXONvd06bPTbn779MGgDSauYuXIl38eaMzh5Vmmi9cnOsi83/zhUTVc
-         evVyqeZqg92u4yYJWQMqM9XbHfkKiLBai8DgQHr4ywS9VIwObn2Dy7CppDQW8T9iHUe1
-         ZF2KSRyhNAkRvCIzsV/QCH+hNI9weKXmQ5br+FiPf8IiD/LUAJCb+oOa5H/XJd/lcraM
-         qvSkOidCT+nS7kUhRA3mIM5CJjJsyWk2N6qrtTLE1kuifybbAGfpIL93yPUNXa7P/qZ4
-         bjAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a2MLfSrel+mRbxxitJdDU9cMLj6K94x+FsaIqj+3XoA=;
-        b=izkwSkhaAZfPgdZTbZiMGzXfNny4OML8Hq08SemEqB4bbWLoWYpVLMZye/8x1h9huK
-         yKg/ZtQsC/uVJtTgGS4yOqlvysHELvXeUAksc2htJyXMCTg+EUFefK3xGp7tFmIHCVZY
-         bdCIg/gmkwUYu+XTYM8RmZFk4Yb7wLxpNyAPD9iaZTDxfc9P4YBP5sbuCkKPiFarnkZk
-         gaUtcQP+eRcq1Mk3Px37rpt+kV0u1fFNqf0Nm47xkTZ/+sUxMAzC0PgOjCv4mpHtB5yW
-         wV5hW7hohPQT9GF3CI9IsTFyf/zRS5FfhGvtrB3ivbMIGHOwYahfNPHBzcQM9BpW6xfS
-         aSyw==
-X-Gm-Message-State: APjAAAVn4nWKgdpdT/3Ao8VzCNl+m1gmn8vJkarWKmR3Xin8qIOBuP1V
-        QqMOVzfrbqg1XaEpagk4rvg=
-X-Google-Smtp-Source: APXvYqwb9wufFRBn5GO5lmPejLWii5Ic9r2KTSz1VDSv5ZsPXpV+JoOsPGzb+dpBJtOjPyA0w73ieQ==
-X-Received: by 2002:ae9:e00f:: with SMTP id m15mr3463410qkk.217.1574270584266;
-        Wed, 20 Nov 2019 09:23:04 -0800 (PST)
-Received: from hedwig.ini.cmu.edu (HEDWIG.INI.CMU.EDU. [128.2.16.51])
-        by smtp.gmail.com with ESMTPSA id b10sm11909098qkh.69.2019.11.20.09.23.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 09:23:03 -0800 (PST)
-Date:   Wed, 20 Nov 2019 12:23:00 -0500
-From:   "Gabriel L. Somlo" <gsomlo@gmail.com>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 20 Nov 2019 12:33:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54752 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728072AbfKTRdu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:33:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9951269CE0;
+        Wed, 20 Nov 2019 17:33:45 +0000 (UTC)
+Subject: Re: [PATCH v3 2/4] hwrng: iproc-rng200: Add support for BCM2711
+To:     Baruch Siach <baruch@tkos.co.il>,
+        Stephen Brennan <stephen@brennan.io>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
-Message-ID: <20191120172300.GA15391@hedwig.ini.cmu.edu>
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org
+References: <20191120031622.88949-1-stephen@brennan.io>
+ <20191120031622.88949-3-stephen@brennan.io> <87eey3gnds.fsf@tarshish>
+From:   Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <271a4b15-a35e-68f1-4857-2341a96af97d@suse.com>
+Date:   Wed, 20 Nov 2019 18:33:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023114634.13657-2-mholenko@antmicro.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <87eey3gnds.fsf@tarshish>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> It provides helper CSR access functions used by all
-> LiteX drivers.
+
+
+On 20/11/2019 05:52, Baruch Siach wrote:
+> Hi Stephen, Stefan,
 > 
-> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> ---
-> This commit has been introduced in v2 of the patchset.
+> On Wed, Nov 20 2019, Stephen Brennan wrote:
+>> From: Stefan Wahren <wahrenst@gmx.net>
+>>
+>> BCM2711 features a RNG200 hardware random number generator block.
+>> So make the driver available.
+>>
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> Signed-off-by: Stephen Brennan <stephen@brennan.io>
+>> Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+>> ---
+>>  drivers/char/hw_random/Kconfig        | 2 +-
+>>  drivers/char/hw_random/iproc-rng200.c | 1 +
+>>  2 files changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+>> index 7c7fecfa2fb2..77e848fca531 100644
+>> --- a/drivers/char/hw_random/Kconfig
+>> +++ b/drivers/char/hw_random/Kconfig
+>> @@ -90,7 +90,7 @@ config HW_RANDOM_BCM2835
+>>  
+>>  config HW_RANDOM_IPROC_RNG200
+>>  	tristate "Broadcom iProc/STB RNG200 support"
+>> -	depends on ARCH_BCM_IPROC || ARCH_BRCMSTB
+>> +	depends on ARCH_BCM_IPROC || ARCH_BCM2835 || ARCH_BRCMSTB
+>>  	default HW_RANDOM
+>>  	---help---
+>>  	  This driver provides kernel-side support for the RNG200
+>> diff --git a/drivers/char/hw_random/iproc-rng200.c b/drivers/char/hw_random/iproc-rng200.c
+>> index 899ff25f4f28..32d9fe61a225 100644
+>> --- a/drivers/char/hw_random/iproc-rng200.c
+>> +++ b/drivers/char/hw_random/iproc-rng200.c
+>> @@ -213,6 +213,7 @@ static int iproc_rng200_probe(struct platform_device *pdev)
+>>  }
+>>  
+>>  static const struct of_device_id iproc_rng200_of_match[] = {
+>> +	{ .compatible = "brcm,bcm2711-rng200", },
+>>  	{ .compatible = "brcm,bcm7211-rng200", },
 > 
->  MAINTAINERS           |  6 +++++
->  include/linux/litex.h | 59 +++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 65 insertions(+)
->  create mode 100644 include/linux/litex.h
+> Again, duplicate of commit 1fa6d053b2a5.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 296de2b51c83..eaa51209bfb2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9493,6 +9493,12 @@ F:	Documentation/misc-devices/lis3lv02d.rst
->  F:	drivers/misc/lis3lv02d/
->  F:	drivers/platform/x86/hp_accel.c
->  
-> +LITEX PLATFORM
-> +M:	Karol Gugala <kgugala@antmicro.com>
-> +M:	Mateusz Holenko <mholenko@antmicro.com>
-> +S:	Maintained
-> +F:	include/linux/litex.h
-> +
->  LIVE PATCHING
->  M:	Josh Poimboeuf <jpoimboe@redhat.com>
->  M:	Jiri Kosina <jikos@kernel.org>
-> diff --git a/include/linux/litex.h b/include/linux/litex.h
-> new file mode 100644
-> index 000000000000..e793d2d7c881
-> --- /dev/null
-> +++ b/include/linux/litex.h
-> @@ -0,0 +1,59 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Common LiteX header providing
-> + * helper functions for accessing CSRs.
-> + *
-> + * Copyright (C) 2019 Antmicro <www.antmicro.com>
-> + */
-> +
-> +#ifndef _LINUX_LITEX_H
-> +#define _LINUX_LITEX_H
-> +
-> +#include <linux/io.h>
-> +#include <linux/types.h>
-> +#include <linux/compiler_types.h>
-> +
-> +#define LITEX_REG_SIZE             0x4
-> +#define LITEX_SUBREG_SIZE          0x1
-> +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
 
-Please be aware that LiteX supports "LITEX_SUBREG_SIZE" of up to 4,
-and might go even as far as 8 in the near future. Hard coding this
-here might be short sighted.
+That commit adds 7211 compatible while this patch adds one for 2711.
 
-A good alternative might be to have "litex_subreg_size" or
-"mmio-dw-bytes" passed in via a DT property of the SoC node, as
-illustrated here:
-
-https://github.com/litex-hub/linux-on-litex-vexriscv/pull/60
-
-Thanks,
---Gabriel
-
-> +
-> +#ifdef __LITTLE_ENDIAN
-> +# define LITEX_READ_REG(addr)                  ioread32(addr)
-> +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
-> +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
-> +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + off)
-> +#else
-> +# define LITEX_READ_REG(addr)                  ioread32be(addr)
-> +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
-> +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
-> +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr + off)
-> +#endif
-> +
-> +/* Helper functions for manipulating LiteX registers */
-> +
-> +static inline void litex_set_reg(void __iomem *reg, u32 reg_size, u32 val)
-> +{
-> +	u32 shifted_data, shift, i;
-> +
-> +	for (i = 0; i < reg_size; ++i) {
-> +		shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
-> +		shifted_data = val >> shift;
-> +		LITEX_WRITE_REG(shifted_data, reg + (LITEX_REG_SIZE * i));
-> +	}
-> +}
-> +
-> +static inline u32 litex_get_reg(void __iomem *reg, u32 reg_size)
-> +{
-> +	u32 shifted_data, shift, i;
-> +	u32 result = 0;
-> +
-> +	for (i = 0; i < reg_size; ++i) {
-> +		shifted_data = LITEX_READ_REG(reg + (LITEX_REG_SIZE * i));
-> +		shift = ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
-> +		result |= (shifted_data << shift);
-> +	}
-> +
-> +	return result;
-> +}
-> +
-> +#endif /* _LINUX_LITEX_H */
+Regards,
+Matthias
