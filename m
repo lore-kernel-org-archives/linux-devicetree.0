@@ -2,240 +2,114 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EB3C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE84FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 03:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E8122460
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826172240E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 03:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMhW35CO"
+	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="ikgbbKBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKTCmi (ORCPT
+        id S1727487AbfKTDQz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 21:42:38 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:41358 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727243AbfKTCmi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 21:42:38 -0500
-Received: by mail-pj1-f68.google.com with SMTP id gc1so3499509pjb.8
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 18:42:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mggnajP13wzBYKAf4NRlJn7XcuAgzkajLKaALOK2EHg=;
-        b=RMhW35COKLndMxJnzbK/pB1itPT/g5K3UnnQge1Sb4ac5dPhQoG2Sr8wPZuv6idE9o
-         7UfVzHkxrkD7/b/+7dZ/fhxDHmR3s2cr56tKp309JnEXILFaZtJHwahznh1zfMJpS1Hn
-         n/ZJUBweA0l6aMk2+ElEv6C/PAAlP71vbuV2ABjfGTujE4fH8vWMdVZNXTVIbK6IGIpo
-         UzUhk6Dlvt3WwmrsK04C8QN15hl9mzckFLExXuFDvRjMigqJo9l848EtKuMoAeggCj/8
-         40R7cZS/36PhGIWBMxLahBUTpPk4XQsAkKaqVLZhqQDRYNFfHZ9RAAlWN9OFN63Za8B2
-         mAeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mggnajP13wzBYKAf4NRlJn7XcuAgzkajLKaALOK2EHg=;
-        b=PVhjjYODFKU8ntsVO4wgicw9+mULyuCkCWU09dEH5po3hz07/W+CAFAU4d6ymSY7iZ
-         IIfYIMPEEvSKHQsny4gsawoEyHYTbaf2rLudkB3Sz/6cA/oiN1Y6GmPvd4f9oRCbl+eT
-         jtm2hW7n+3kk4LAbcez6HHSnYoujhRw5/7wxzCU6tpb0TtNPa7fRaaSiutk0HjEsXl+T
-         v704HmE5xkUG0qcNfcqMci7wXLMoNvccEEuBMjly4j1cUu3fdMN0qnZKNbKGn6maFfhc
-         pKZf/AvsgwgSCvHlBJ1LuzJhaW1TZv+LwuVD2dBgSLWIsuECi/Y5Hgi+7hqM/gRPQzaK
-         1h0Q==
-X-Gm-Message-State: APjAAAVrMBfv3MEw1ceg5pXRrEr1cJTUSKrGSDDnORa44optK1Rfg8FE
-        w1T4lAJsmflMAW6iHjaKGnOo4w==
-X-Google-Smtp-Source: APXvYqzh+9xJhLTKFMGQB/YTDSs97B4ZDLhpNLpBLs1QomNcNl4KZ8TCvqacQTG2MWoHKABUH/aUrg==
-X-Received: by 2002:a17:90a:195e:: with SMTP id 30mr1015734pjh.60.1574217756947;
-        Tue, 19 Nov 2019 18:42:36 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f7sm29262566pfa.150.2019.11.19.18.42.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 18:42:36 -0800 (PST)
-Date:   Tue, 19 Nov 2019 18:42:33 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org, vireshk@kernel.org, ulf.hansson@linaro.org,
+        Tue, 19 Nov 2019 22:16:55 -0500
+Received: from sender4-of-o58.zoho.com ([136.143.188.58]:21891 "EHLO
+        sender4-of-o58.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfKTDQy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 22:16:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574219789; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=kvodae3voxGK6Uu7IIOwf4k3vzBXUGaLw0ro2sYcCYzMCP686XxxRA0kizxnb+sDTn9qW/Y7tUbG9/DaLbD/4nlMuHj70e8hUOVNFIFIvxHCwIG4DBucJP/Pv5vzNK9OyluTh6D4doviP1ytZes1qKcUDudHjfMyYqSTK+JH2Ko=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574219789; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=MPpuDfBJ/N2KT9uAgt79i/d1NoN4MZ/zhR/qcBRSnjI=; 
+        b=MZSkSIM2ovwFFbWRGoc2Vyt7ws8TU102/DL+4zt6ncWEXU2ddgiIBjlloT3fNzAm0frBfc6H6rK1K78jQKsfXgFi24FNqfO0xE2/uYtOVRsraRB/4wcxZoLum6rJtDgryvU6fC4sp3/VHjmutM6UPwL/6T0mHr7EXJMdJE7AhtQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=brennan.io;
+        spf=pass  smtp.mailfrom=stephen@brennan.io;
+        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574219789;
+        s=selector01; d=brennan.io; i=stephen@brennan.io;
+        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        l=1232; bh=MPpuDfBJ/N2KT9uAgt79i/d1NoN4MZ/zhR/qcBRSnjI=;
+        b=ikgbbKBNEeLrK+wDYYpKhrLMfCBww/wp4QLGF1GCV9pCgoMcCBkFUB7kLpOuXdmU
+        MoFGqV2y4gyzR78K1xt7IxSyRgQtJerUqcmembkcQjdd52iWeJ28Tpdl+BL/KBvWj6v
+        mycinkL+HIuACkofmUso9gJIc9CRTXmtq7U7ZddY=
+Received: from localhost (c-98-207-184-40.hsd1.ca.comcast.net [98.207.184.40]) by mx.zohomail.com
+        with SMTPS id 1574219788314308.2839920954864; Tue, 19 Nov 2019 19:16:28 -0800 (PST)
+From:   Stephen Brennan <stephen@brennan.io>
+To:     stephen@brennan.io
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] dt-bindings: power: avs: Add support for CPR
- (Core Power Reduction)
-Message-ID: <20191120024233.GQ18024@yoga>
-References: <20191119154621.55341-1-niklas.cassel@linaro.org>
- <20191119154621.55341-2-niklas.cassel@linaro.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+Message-ID: <20191120031622.88949-1-stephen@brennan.io>
+Subject: [PATCH v3 0/4] Raspberry Pi 4 HWRNG Support
+Date:   Tue, 19 Nov 2019 19:16:18 -0800
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119154621.55341-2-niklas.cassel@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 19 Nov 07:46 PST 2019, Niklas Cassel wrote:
+This patch series enables support for the HWRNG included on the Raspberry
+Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
+tested this out on a Pi 4.  Prior to this patch series, attempting to use
+the hwrng gives:
 
-> Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
-> 
-> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+    $ head -c 2 /dev/hwrng
+    head: /dev/hwrng: Input/output error
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+After this series, the same command gives two random bytes.
 
-Regards,
-Bjorn
+Changes in v3:
+- drop interrupts from bcm2711 rng node
+- move bcm283x rng into bcm2835-common.dtsi
+- add reviewed-by tag
+- separated out patch 3 into two parts
 
-> ---
-> Changes since v5:
-> -None
-> 
->  .../bindings/power/avs/qcom,cpr.txt           | 130 ++++++++++++++++++
->  1 file changed, 130 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> new file mode 100644
-> index 000000000000..ab0d5ebbad4e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> @@ -0,0 +1,130 @@
-> +QCOM CPR (Core Power Reduction)
-> +
-> +CPR (Core Power Reduction) is a technology to reduce core power on a CPU
-> +or other device. Each OPP of a device corresponds to a "corner" that has
-> +a range of valid voltages for a particular frequency. While the device is
-> +running at a particular frequency, CPR monitors dynamic factors such as
-> +temperature, etc. and suggests adjustments to the voltage to save power
-> +and meet silicon characteristic requirements.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: should be "qcom,qcs404-cpr", "qcom,cpr" for qcs404
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address and size of the rbcpr register region
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: should specify the CPR interrupt
-> +
-> +- clocks:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: phandle to the reference clock
-> +
-> +- clock-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "ref"
-> +
-> +- vdd-apc-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: phandle to the vdd-apc-supply regulator
-> +
-> +- #power-domain-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: should be 0
-> +
-> +- operating-points-v2:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: A phandle to the OPP table containing the
-> +		    performance states supported by the CPR
-> +		    power domain
-> +
-> +- acc-syscon:
-> +	Usage: optional
-> +	Value type: <phandle>
-> +	Definition: phandle to syscon for writing ACC settings
-> +
-> +- nvmem-cells:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: phandle to nvmem cells containing the data
-> +		    that makes up a fuse corner, for each fuse corner.
-> +		    As well as the CPR fuse revision.
-> +
-> +- nvmem-cell-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: should be "cpr_quotient_offset1", "cpr_quotient_offset2",
-> +		    "cpr_quotient_offset3", "cpr_init_voltage1",
-> +		    "cpr_init_voltage2", "cpr_init_voltage3", "cpr_quotient1",
-> +		    "cpr_quotient2", "cpr_quotient3", "cpr_ring_osc1",
-> +		    "cpr_ring_osc2", "cpr_ring_osc3", "cpr_fuse_revision"
-> +		    for qcs404.
-> +
-> +Example:
-> +
-> +	cpr_opp_table: cpr-opp-table {
-> +		compatible = "operating-points-v2-qcom-level";
-> +
-> +		cpr_opp1: opp1 {
-> +			opp-level = <1>;
-> +			qcom,opp-fuse-level = <1>;
-> +		};
-> +		cpr_opp2: opp2 {
-> +			opp-level = <2>;
-> +			qcom,opp-fuse-level = <2>;
-> +		};
-> +		cpr_opp3: opp3 {
-> +			opp-level = <3>;
-> +			qcom,opp-fuse-level = <3>;
-> +		};
-> +	};
-> +
-> +	power-controller@b018000 {
-> +		compatible = "qcom,qcs404-cpr", "qcom,cpr";
-> +		reg = <0x0b018000 0x1000>;
-> +		interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
-> +		clocks = <&xo_board>;
-> +		clock-names = "ref";
-> +		vdd-apc-supply = <&pms405_s3>;
-> +		#power-domain-cells = <0>;
-> +		operating-points-v2 = <&cpr_opp_table>;
-> +		acc-syscon = <&tcsr>;
-> +
-> +		nvmem-cells = <&cpr_efuse_quot_offset1>,
-> +			<&cpr_efuse_quot_offset2>,
-> +			<&cpr_efuse_quot_offset3>,
-> +			<&cpr_efuse_init_voltage1>,
-> +			<&cpr_efuse_init_voltage2>,
-> +			<&cpr_efuse_init_voltage3>,
-> +			<&cpr_efuse_quot1>,
-> +			<&cpr_efuse_quot2>,
-> +			<&cpr_efuse_quot3>,
-> +			<&cpr_efuse_ring1>,
-> +			<&cpr_efuse_ring2>,
-> +			<&cpr_efuse_ring3>,
-> +			<&cpr_efuse_revision>;
-> +		nvmem-cell-names = "cpr_quotient_offset1",
-> +			"cpr_quotient_offset2",
-> +			"cpr_quotient_offset3",
-> +			"cpr_init_voltage1",
-> +			"cpr_init_voltage2",
-> +			"cpr_init_voltage3",
-> +			"cpr_quotient1",
-> +			"cpr_quotient2",
-> +			"cpr_quotient3",
-> +			"cpr_ring_osc1",
-> +			"cpr_ring_osc2",
-> +			"cpr_ring_osc3",
-> +			"cpr_fuse_revision";
-> +	};
-> -- 
-> 2.23.0
-> 
+Changes in v2:
+- specify the correct size for the region in the dts, refactor bcm283x rng
+
+---
+
+Stefan Wahren (2):
+  dt-bindings: rng: add BCM2711 RNG compatible
+  hwrng: iproc-rng200: Add support for BCM2711
+
+Stephen Brennan (2):
+  ARM: dts: bcm2835: Move rng definition to common location
+  ARM: dts: bcm2711: Enable HWRNG support
+
+ .../devicetree/bindings/rng/brcm,iproc-rng200.txt          | 1 +
+ arch/arm/boot/dts/bcm2711.dtsi                             | 7 +++----
+ arch/arm/boot/dts/bcm2835-common.dtsi                      | 6 ++++++
+ arch/arm/boot/dts/bcm283x.dtsi                             | 6 ------
+ drivers/char/hw_random/Kconfig                             | 2 +-
+ drivers/char/hw_random/iproc-rng200.c                      | 1 +
+ 6 files changed, 12 insertions(+), 11 deletions(-)
+
+--=20
+2.24.0
+
+
+
