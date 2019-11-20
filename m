@@ -2,100 +2,111 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304EBC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 08:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C65BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 08:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04068218A3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 08:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574236816;
-	bh=QttJKRtC10VXWG+9qQ5nVIL+rG+zre/MBZV9fsi2lbY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=K+sXulANLR1h7pFACQ97+K1J0yE254cp0bdF+1j92mhhNE4MAiD+pOb0RcjYPasZp
-	 Ui99WqXfVlsdRkKkNm1jt+OWbzD9ZtQ2BbBuJ7AuzT5c6W6Ug0xSIfBMWlp5KG22Nc
-	 Tv4Wps/bGYHotxJ7v6P5SM+RHdjC6RdYLFvU9vjI=
+	by mail.kernel.org (Postfix) with ESMTP id 41B5A218A3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 08:02:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EVoDF4XQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfKTIAP (ORCPT
+        id S1727158AbfKTICg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:00:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726529AbfKTIAP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:00:15 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C26322461;
-        Wed, 20 Nov 2019 08:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574236814;
-        bh=QttJKRtC10VXWG+9qQ5nVIL+rG+zre/MBZV9fsi2lbY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IQzkyAJnQZwLxO4NwQEIleoqKwlSnpr5yhXCd+TkIe+wpeE722E00RgBgheuq9zzv
-         awssC7EhfOAn6nFB7G2ZONpj1Eu7iM+p0kXkA7mtgDD99C8XnJQAYXMl7g1NWye4Hy
-         XR+TSNysM3U4NVMmENeBfrUxzuxa6x+gjzuKpKm8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3] dt-bindings: power: Rename back power_domain.txt bindings to fix references
-Date:   Wed, 20 Nov 2019 08:59:56 +0100
-Message-Id: <1574236796-25016-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 20 Nov 2019 03:02:36 -0500
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:45671 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfKTICg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 03:02:36 -0500
+Received: by mail-vk1-f201.google.com with SMTP id c5so10979800vkm.12
+        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 00:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=v9SVguB34yFXQYQCtso1z5KQbnvYcbDvSh9zyizusBA=;
+        b=EVoDF4XQ6IM4O3VY1rlvZJ9NaU03JESeIBp1JhoEPnNAstop8a2Sg/TABnt1lUWUKv
+         uCaXxaaNnMslFUMqNcw4F1ViF8Fr6Dlj63FwShTfOAf9q8fM4xalLDtanLJNwhTgZBbO
+         1nL9suTv3ysFsBKwfJdN0GKAm5LyCiTy1fMhGxmAzU8AEewgUKunXZC/iRbKunERmXs/
+         Q60MA0VhhHWJjHScu2r2frQ6siyZH+xaOBPBZJxHnH/RbZxcqB9QLNjVSE0yHRn1hG2h
+         3ooScZRGKGEY0X7LjfAEoTkaqgeL1Ibl4CQihrBZwwVFc88hW0oGmJ+WYy9VPSV7cRhT
+         ZLBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=v9SVguB34yFXQYQCtso1z5KQbnvYcbDvSh9zyizusBA=;
+        b=S0CD0djwW7ZQpKsAXatk6xflfD069zueM5uVmJK2CgPFPQ8e2FWGcfhR+uz9DVciC6
+         KNtwu+N7RuPCrXpPoEKPDW6HUYziQvZFv8evO2n1I44ThbVFj1K8be2WBAGVWtQZmZJp
+         FAODw+/R+dRCtHeOOA/KVej3B3oBqQ3g2T08Xcxf6nmsMBTQBEkboD/fCCVcTdvwujlh
+         uvzCs3990RiBCol7fzoqkYj21WfuXIZrbeeYLLcxToYh381IYhNSPLfS2gfpSexvAa/z
+         N2wfnVKv6TfNs0O19v55PCA5CSPHxWmD0h8rw1Qaad0afNoKtyo6ONPYrdQD9a/pejzA
+         WZ2w==
+X-Gm-Message-State: APjAAAUMvXbaV6Wf2NdhYRER3PxC+56A2IdIpaOUl+iFEb2PtqI/CJOG
+        m0IgGNkE3FTrMZ47B3t+bsIk8Ht4mJbP7CM=
+X-Google-Smtp-Source: APXvYqyfpv66UxK7JIjpQqQY+CUFYdhkL+YN9jQN8pNakCS0UrbJZPCsgJyVRHGDqPcEszUbvOAbQRddqE0K8kM=
+X-Received: by 2002:ab0:765a:: with SMTP id s26mr805288uaq.17.1574236955402;
+ Wed, 20 Nov 2019 00:02:35 -0800 (PST)
+Date:   Wed, 20 Nov 2019 00:02:29 -0800
+Message-Id: <20191120080230.16007-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH] of: property: Fix the semantics of of_is_ancestor_of()
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With split of power domain controller bindings to power-domain.yaml,
-the consumer part was renamed to power-domain.txt breaking the
-references.  Undo the renaming.
+The of_is_ancestor_of() function was renamed from of_link_is_valid()
+based on review feedback. The rename meant the semantics of the function
+had to be inverted, but this was missed in the earlier patch.
 
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: ea312b90857d ("dt-bindings: power: Convert Generic Power Domain bindings to json-schema")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+So, fix the semantics of of_is_ancestor_of() and invert the conditional
+expressions where it is used.
 
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
+ drivers/of/property.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Changes since v2:
-1. Simplify pattern in Maintainers as Geert suggested,
-2. Add Reviewed-by.
-
-Changes since v1:
-1. Undo the renaming.
----
- .../devicetree/bindings/power/{power-domain.txt => power_domain.txt}    | 0
- MAINTAINERS                                                             | 2 +-
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/power/{power-domain.txt => power_domain.txt} (100%)
-
-diff --git a/Documentation/devicetree/bindings/power/power-domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/power/power-domain.txt
-rename to Documentation/devicetree/bindings/power/power_domain.txt
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7126d3e079a4..0aff4bebed78 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6953,7 +6953,7 @@ L:	linux-pm@vger.kernel.org
- S:	Supported
- F:	drivers/base/power/domain*.c
- F:	include/linux/pm_domain.h
--F:	Documentation/devicetree/bindings/power/power-domain*
-+F:	Documentation/devicetree/bindings/power/power?domain*
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index dedbf82da838..0de1e7e69b6e 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -993,11 +993,11 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+ 	while (child) {
+ 		if (child == test_ancestor) {
+ 			of_node_put(child);
+-			return false;
++			return true;
+ 		}
+ 		child = of_get_next_parent(child);
+ 	}
+-	return true;
++	return false;
+ }
  
- GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
- M:	Eugen Hristev <eugen.hristev@microchip.com>
+ /**
+@@ -1043,7 +1043,7 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+ 	 * descendant nodes. By definition, a child node can't be a functional
+ 	 * dependency for the parent node.
+ 	 */
+-	if (!of_is_ancestor_of(dev->of_node, sup_np)) {
++	if (of_is_ancestor_of(dev->of_node, sup_np)) {
+ 		dev_dbg(dev, "Not linking to %pOFP - is descendant\n", sup_np);
+ 		of_node_put(sup_np);
+ 		return -EINVAL;
 -- 
-2.7.4
+2.24.0.432.g9d3f5f5b63-goog
 
