@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC58C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B90C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C638720709
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C439920692
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732455AbfKTPpx convert rfc822-to-8bit (ORCPT
+        id S1732464AbfKTPqc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:45:53 -0500
-Received: from mx1.unisoc.com ([222.66.158.135]:21667 "EHLO
+        Wed, 20 Nov 2019 10:46:32 -0500
+Received: from mx1.unisoc.com ([222.66.158.135]:21657 "EHLO
         SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732444AbfKTPpx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 10:45:53 -0500
+        with ESMTP id S1732410AbfKTPph (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 10:45:37 -0500
 Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAKFi1ml093237
+        by SHSQR01.spreadtrum.com with ESMTPS id xAKFheDl093128
         (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 20 Nov 2019 23:44:01 +0800 (CST)
+        Wed, 20 Nov 2019 23:43:40 +0800 (CST)
         (envelope-from Orson.Zhai@unisoc.com)
 Received: from localhost (10.0.74.112) by BJMBX02.spreadtrum.com (10.0.64.8)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019 23:43:56
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019 23:43:47
  +0800
 From:   Orson Zhai <orson.zhai@unisoc.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -34,9 +34,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <kevin.tang@unisoc.com>, <baolin.wang@unisoc.com>,
         <chunyan.zhang@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
-Subject: [PATCH V2 2/2] mfd: syscon: Find syscon by names with arguments support
-Date:   Wed, 20 Nov 2019 23:41:48 +0800
-Message-ID: <20191120154148.22067-3-orson.zhai@unisoc.com>
+Subject: [PATCH V2 1/2] dt-bindings: syscon: Add syscon-names to refer to syscon easily
+Date:   Wed, 20 Nov 2019 23:41:47 +0800
+Message-ID: <20191120154148.22067-2-orson.zhai@unisoc.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20191120154148.22067-1-orson.zhai@unisoc.com>
 References: <20191120154148.22067-1-orson.zhai@unisoc.com>
@@ -46,158 +46,73 @@ X-Originating-IP: [10.0.74.112]
 X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
  BJMBX02.spreadtrum.com (10.0.64.8)
 Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xAKFi1ml093237
+X-MAIL: SHSQR01.spreadtrum.com xAKFheDl093128
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are a lot of global registers used across multiple similar SoCs
-from Unisoc. It is not easy to manage all of them very well by current
-syscon helper functions.
-
-Add helper functions to get regmap and arguments by syscon-names all
-together.
-
-This patch does not affect original syscon code and usage. It may help
-other SoC vendors if they have the same trouble as well.
+Make life easier when syscon consumer want to access multiple syscon
+nodes with dozens of items.
+Add syscon-names and relative properties to help to manage different
+cases when accessing more than one syscon node even with arguments.
 
 Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
 ---
- drivers/mfd/syscon.c       | 75 ++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/syscon.h | 26 +++++++++++++
- 2 files changed, 101 insertions(+)
+ .../devicetree/bindings/mfd/syscon.txt        | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 660723276481..e818decc7bf2 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -225,6 +225,81 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
- }
- EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
-
-+struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
-+                                       const char *list_name,
-+                                       const char *cell_name)
-+{
-+       struct device_node *syscon_np;
-+       struct of_phandle_args args;
-+       struct regmap *regmap;
-+       unsigned int index = 0, cell_count = 0;
-+       int rc;
-+
-+       if (list_name)
-+               index = of_property_match_string(np, "syscon-names", list_name);
-+
-+       if (index < 0)
-+               return ERR_PTR(-EINVAL);
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+index 25d9e9c2fd53..4c7bdb74bb0a 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.txt
++++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+@@ -30,3 +30,46 @@ hwlock1: hwspinlock@40500000 {
+        reg = <0x40500000 0x1000>;
+        #hwlock-cells = <1>;
+ };
 +
 +
-+       if (cell_name && of_property_read_u32(np, cell_name, &cell_count))
-+               return ERR_PTR(-EINVAL);
 +
-+       rc = of_parse_phandle_with_fixed_args(np, "syscons", cell_count,
-+                                                index, &args);
-+       if (rc)
-+               return ERR_PTR(rc);
++==Syscon Name==
 +
-+       syscon_np = args.np;
++Syscon name is a helper to be used in consumer nodes who refer to system
++controller node. It provides a way to refer to syscon node by names with
++phandle args in syscon consumer node. It will help people who have a lot
++of syscon references to be managed. It is not a must feature and has no
++effect to syscon node itself at all.
 +
-+       if (!syscon_np)
-+               return ERR_PTR(-ENODEV);
++Required properties:
++- syscons: List of phandles and any number of arguments if needed. Arguments
++  is specific to differnet vendors and its usage should be described at each
++  vendor's bindings. For example: In Unisoc SoCs, the 1st arg will be treated
++  as register address offset and the 2nd is bit mask.
 +
-+       regmap = syscon_node_to_regmap(syscon_np);
++- syscon-names:        List of syscon node name strings sorted in the same order as
++  what it represents in property syscons.
 +
-+       of_node_put(syscon_np);
++Optional property:
++- #.*-cells: Represents the number of arguments in single phandle in syscons
++  list. ".*" is vendor specific. If this property is not set, default value
++  will be 0.
 +
-+       return regmap;
-+}
-+EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_name);
++Examples:
 +
-+int syscon_get_args_by_name(struct device_node *np,
-+                       const char *list_name,
-+                       const char *cell_name,
-+                       int arg_count,
-+                       unsigned int *out_args)
-+{
-+       struct of_phandle_args args;
-+       unsigned int index = 0, cell_count = 0;
++apb_regs: syscon@20008000 {
++       compatible = "sprd,apb-glb", "syscon";
++       reg = <0x20008000 0x100>;
++};
 +
-+       int rc;
++aon_regs: syscon@40008000 {
++       compatible = "sprd,aon-glb", "syscon";
++       reg = <0x40008000 0x100>;
++};
 +
-+       if (list_name)
-+               index = of_property_match_string(np, "syscon-names", list_name);
-+
-+       if (index < 0)
-+               return -EINVAL;
-+
-+       if (cell_name && of_property_read_u32(np, cell_name, &cell_count))
-+               return -EINVAL;
-+
-+       rc = of_parse_phandle_with_fixed_args(np, "syscons", cell_count,
-+                                               index, &args);
-+       if (rc)
-+               return rc;
-+
-+       if (arg_count > args.args_count)
-+               arg_count = args.args_count;
-+
-+       for (index = 0; index < arg_count; index++)
-+               out_args[index] = args.args[index];
-+
-+       of_node_put(args.np);
-+
-+       return arg_count;
-+}
-+EXPORT_SYMBOL_GPL(syscon_get_args_by_name);
-+
- static int syscon_probe(struct platform_device *pdev)
- {
-        struct device *dev = &pdev->dev;
-diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-index 112dc66262cc..96bdaf3e63fd 100644
---- a/include/linux/mfd/syscon.h
-+++ b/include/linux/mfd/syscon.h
-@@ -23,6 +23,15 @@ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
- extern struct regmap *syscon_regmap_lookup_by_phandle(
-                                        struct device_node *np,
-                                        const char *property);
-+extern struct regmap *syscon_regmap_lookup_by_name(
-+                                       struct device_node *np,
-+                                       const char *list_name,
-+                                       const char *cell_name);
-+extern int syscon_get_args_by_name(struct device_node *np,
-+                               const char *list_name,
-+                               const char *cell_name,
-+                               int arg_count,
-+                               unsigned int *out_args);
- #else
- static inline struct regmap *device_node_to_regmap(struct device_node *np)
- {
-@@ -45,6 +54,23 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
- {
-        return ERR_PTR(-ENOTSUPP);
- }
-+
-+static inline struct regmap *syscon_regmap_lookup_by_name(
-+                                       struct device_node *np,
-+                                       const char *list_name,
-+                                       const char *cell_name)
-+{
-+       return ERR_PTR(-ENOTSUPP);
-+}
-+
-+static int syscon_get_args_by_name(struct device_node *np,
-+                               const char *list_name,
-+                               const char *cell_name,
-+                               int arg_count,
-+                               unsigned int *out_args)
-+{
-+       return -ENOTSUPP;
-+}
- #endif
-
- #endif /* __LINUX_MFD_SYSCON_H__ */
++display@40500000 {
++       ...
++       #syscon-disp-cells = <2>;
++       syscons = <&ap_apb_regs 0x4 0xf00>, <&aon_regs 0x8 0x7>;
++       syscon-names = "enable", "power";
++};
 --
 2.18.0
 
