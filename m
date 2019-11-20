@@ -2,120 +2,182 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B90C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B05C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C439920692
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37F420692
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DA3GASR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732464AbfKTPqc convert rfc822-to-8bit (ORCPT
+        id S1729591AbfKTPvW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:46:32 -0500
-Received: from mx1.unisoc.com ([222.66.158.135]:21657 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732410AbfKTPph (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 10:45:37 -0500
-Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAKFheDl093128
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 20 Nov 2019 23:43:40 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from localhost (10.0.74.112) by BJMBX02.spreadtrum.com (10.0.64.8)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019 23:43:47
- +0800
-From:   Orson Zhai <orson.zhai@unisoc.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kevin.tang@unisoc.com>, <baolin.wang@unisoc.com>,
-        <chunyan.zhang@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
-Subject: [PATCH V2 1/2] dt-bindings: syscon: Add syscon-names to refer to syscon easily
-Date:   Wed, 20 Nov 2019 23:41:47 +0800
-Message-ID: <20191120154148.22067-2-orson.zhai@unisoc.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191120154148.22067-1-orson.zhai@unisoc.com>
-References: <20191120154148.22067-1-orson.zhai@unisoc.com>
+        Wed, 20 Nov 2019 10:51:22 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41871 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728442AbfKTPvW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 10:51:22 -0500
+Received: by mail-il1-f193.google.com with SMTP id q15so56529ils.8
+        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 07:51:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=V9ocHos4mEPx/cXUTF0dJh2q+Dfua495g56A4DiYMvM=;
+        b=DA3GASR2Yz29peYkU/JxCycyhe0pntz2I8oB4TnZKHaznQQ/3dZagFl7mz/6uQHJW5
+         GrRIPKUtWuu9jAaJ2X5b0MVGuDe5OcswfXx1wbPb8m7uCfMIJmc9IPC5IS0lBPUTGROo
+         mDAdsl7e6tN7R+gpDhb9im2LWKYDM4jMwbQzQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V9ocHos4mEPx/cXUTF0dJh2q+Dfua495g56A4DiYMvM=;
+        b=K2XfQwKhRUSmM6lp/E6wqI4E92WrnwnJyz92AoG+BiKNvqqFcUifqbJkp/sF/6jEDC
+         R9lZDLh7LivhxrF4Ptfr8Mf/hd8+9PYSILbQhCOkZMy7I1CthE5Ve95/A3xeUBAwbrir
+         FzKdG7A/7GIzkLlKPIRYYcJuNRz+SL2YVHULhndQUgqURiFCPUDffh1bX3XtIF2cQtvW
+         MsdrckgkUMauGELeKQEkNorhqbjNgqKCDWo/wthiX2/JyTGd7fCvtYmZcAVzpqkMdHwW
+         ZbKw3B3rYaFXvL6G7fiFJ7Qe6l9MuKEeiqJZZ92iUG04qKqvx/4SDaUfny8QdEgd/tPF
+         ohKw==
+X-Gm-Message-State: APjAAAXofMsePa7PpjyAAN7xFS9cIBYjedEyTrpjS+vY/3wQOXffUHt9
+        ghBhhzrkPcu601u1wD3YEHP2jhg0r3rIUMGWGV7uEwolXz2zpg==
+X-Google-Smtp-Source: APXvYqxEiRL48js6ZDjxRjcSKNXQCeEpejajn5en3dkyccGBO7qEMLPuZspPilOntqUDYF2mK0Y10om7k0o+Lm+FniU=
+X-Received: by 2002:a92:5d8f:: with SMTP id e15mr4268209ilg.173.1574265079598;
+ Wed, 20 Nov 2019 07:51:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Originating-IP: [10.0.74.112]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xAKFheDl093128
+References: <20191120113923.11685-1-jagan@amarulasolutions.com>
+ <20191120113923.11685-3-jagan@amarulasolutions.com> <1707486.7nrk6WTBgP@diego>
+In-Reply-To: <1707486.7nrk6WTBgP@diego>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Wed, 20 Nov 2019 21:21:08 +0530
+Message-ID: <CAMty3ZC2NzTWq8YPbePRyPdixxMO7mrPZrzagwjrTkhGHGRR=g@mail.gmail.com>
+Subject: Re: [PATCH 2/5] arm64: dts: rockchip: Add VMARC RK3399Pro SOM initial support
+To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Make life easier when syscon consumer want to access multiple syscon
-nodes with dozens of items.
-Add syscon-names and relative properties to help to manage different
-cases when accessing more than one syscon node even with arguments.
+Hi Heiko,
 
-Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
----
- .../devicetree/bindings/mfd/syscon.txt        | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
+On Wed, Nov 20, 2019 at 6:59 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+>
+> Hi Jagan,
+>
+> looks good in general, just some small things below:
+>
+> Am Mittwoch, 20. November 2019, 12:39:20 CET schrieb Jagan Teki:
+> > VMARC RK3399Pro SOM is a standard SMARC SOM design with
+> > Rockchip RK3399Pro SoC, which is designed by Vamrs.
+> >
+> > Specification:
+> > - Rockchip RK3399Pro
+> > - PMIC: RK809-3
+> > - SD slot, 16GiB eMMC
+> > - 2xUSB-2.0, 1xUSB3.0
+> > - USB-C for power supply
+> > - Ethernet, PCIe
+> > - HDMI, MIPI-DSI/CSI, eDP
+> >
+> > Add initial support for VMARC RK3399Pro SOM, this would use
+> > with associated carrier board.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 339 ++++++++++++++++++
+> >  1 file changed, 339 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dt=
+si
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/ar=
+ch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> > new file mode 100644
+> > index 000000000000..ddf6ebc9fbe3
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> > @@ -0,0 +1,339 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
+> > + * Copyright (c) 2019 Vamrs Limited
+> > + * Copyright (c) 2019 Amarula Solutions(India)
+> > + */
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/pinctrl/rockchip.h>
+> > +#include <dt-bindings/pwm/pwm.h>
+> > +
+> > +/ {
+> > +     compatible =3D "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
+> > +
+> > +     clkin_gmac: external-gmac-clock {
+> > +             compatible =3D "fixed-clock";
+> > +             clock-frequency =3D <125000000>;
+> > +             clock-output-names =3D "clkin_gmac";
+> > +             #clock-cells =3D <0>;
+> > +     };
+> > +
+> > +     vcc5v0_sys: vcc5v0-sys-regulator {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "vcc5v0_sys";
+> > +             regulator-always-on;
+> > +             regulator-boot-on;
+> > +             regulator-min-microvolt =3D <5000000>;
+> > +             regulator-max-microvolt =3D <5000000>;
+>
+> Is vcc5v0_sys really the topmost regulator getting the outside
+> power-supply?
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index 25d9e9c2fd53..4c7bdb74bb0a 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -30,3 +30,46 @@ hwlock1: hwspinlock@40500000 {
-        reg = <0x40500000 0x1000>;
-        #hwlock-cells = <1>;
- };
-+
-+
-+
-+==Syscon Name==
-+
-+Syscon name is a helper to be used in consumer nodes who refer to system
-+controller node. It provides a way to refer to syscon node by names with
-+phandle args in syscon consumer node. It will help people who have a lot
-+of syscon references to be managed. It is not a must feature and has no
-+effect to syscon node itself at all.
-+
-+Required properties:
-+- syscons: List of phandles and any number of arguments if needed. Arguments
-+  is specific to differnet vendors and its usage should be described at each
-+  vendor's bindings. For example: In Unisoc SoCs, the 1st arg will be treated
-+  as register address offset and the 2nd is bit mask.
-+
-+- syscon-names:        List of syscon node name strings sorted in the same order as
-+  what it represents in property syscons.
-+
-+Optional property:
-+- #.*-cells: Represents the number of arguments in single phandle in syscons
-+  list. ".*" is vendor specific. If this property is not set, default value
-+  will be 0.
-+
-+Examples:
-+
-+apb_regs: syscon@20008000 {
-+       compatible = "sprd,apb-glb", "syscon";
-+       reg = <0x20008000 0x100>;
-+};
-+
-+aon_regs: syscon@40008000 {
-+       compatible = "sprd,aon-glb", "syscon";
-+       reg = <0x40008000 0x100>;
-+};
-+
-+display@40500000 {
-+       ...
-+       #syscon-disp-cells = <2>;
-+       syscons = <&ap_apb_regs 0x4 0xf00>, <&aon_regs 0x8 0x7>;
-+       syscon-names = "enable", "power";
-+};
---
-2.18.0
+Thanks for pointing this, I forgot to check the vin supply in carrier
+board schematics, yes it is VCC12V_DCIN (with 5V to 24V range) like
+rock-pi-4. Will update the same.
 
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+>
+>
+> > +     };
+> > +
+> > +     vcc_lan: vcc3v3-phy-regulator {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "vcc_lan";
+>
+> vcc_lan / vcc_phy is mostly coming from the vendor bsp in some way
+> and will be named differently in schematics ... also it should be connect=
+ed
+> to the regulator tree.
+
+Infact bsp named this as vcc_phy, I got the vcc_lan from schematics[1]
+page 16. Yes it is using VCCIO_3V3_S0 (SWOUT2 from regulator tree), I
+will mark this regulator.
+
+>
+> [...]
+>
+> > +&tsadc {
+> > +     status =3D "okay";
+> > +
+> > +     /* tshut mode 0:CRU 1:GPIO */
+>
+> I think we can live without the additional comments for properties :-)
+
+True, I have reused it from rock-pi-4 thought that it would compatible
+with old. will remove.
+
+[1] https://dl.radxa.com/rockpin10/docs/hw/VMARC_RK3399Pro_sch_V1.1_2019061=
+9.pdf
+
+Jagan.
