@@ -2,281 +2,425 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347C0C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6E0C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01B182245B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:15:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TwqwRr+z"
+	by mail.kernel.org (Postfix) with ESMTP id 0E26922444
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbfKTLPA (ORCPT
+        id S1727197AbfKTLUW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:15:00 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35252 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729010AbfKTLOi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 06:14:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 8so7386199wmo.0
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 03:14:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7OQW2DHYgmBIlXG6zmK9XIg6mefmFvu2tJV+rZvlPNo=;
-        b=TwqwRr+zepj15txJ0fs0OG/rGXM125OJhoTlBAUsZcKjdlA//X5OCOGSiEn2a3tOYg
-         P53qU9y+dIbTQPLV2Ap0RT8L32wV+8BEfV6W6qOAS5rp2TtWCh/IaUK/xSvwwlACBGar
-         5MPqyxE+fvHUufnpBOILhvWTphexPXwJloG/Ap9UrAo1mQWE3tzsscqzAN6F67eY8lsl
-         WnbsJxx3QEkjFrWEaBRF0ir9+upwfyzX5cpZhIDZHg6bMHz5/FwtzrQezgxG9kEXXfNf
-         qZ6At8e0wTQPEFDiIgDL242/fEW6t58C8QAyfy6gvLs2apd3kR7/AfTwZtIPzm/T/Aco
-         y0GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7OQW2DHYgmBIlXG6zmK9XIg6mefmFvu2tJV+rZvlPNo=;
-        b=mUGUP7NKn4RXkX4Sr/in7iszVzqtZI9z21m6P4sEdEPph1y8hx8/L+WVJ+mh9Mdtn7
-         44I5pjT8dNWAEjTzcpqwhcLuLW0m5CnzRHUIdvJLAcO/C0m8jK1yGftMJ7PCK+spRyKN
-         wFhxwpFzVG9oe8k+RS2o8zKlgZqkp7vEzlZlZ46GMSq0SETdbk+4T80F62AEGlOjeITo
-         BJhVfoup8JQHrqZWLzU6N8kalg5ws+I5a/PcBFit6A/Ap/SvzUsbh/IohXnFyxM/ZUz+
-         1Op6TzRCER3DuJAYdUdneinReUVoMWuz2ORv2AFF/Dkso61WJt3L6UnG+p8FpEt9BSLJ
-         SIMg==
-X-Gm-Message-State: APjAAAX6FM2mPH4jI+m1bB6Bc8auSwaRR0gYCb5NwZAluk20BznUjFkA
-        +6Z7NMsrXr5o0A0EoFm+tXWMT2dsbFPGZw==
-X-Google-Smtp-Source: APXvYqwFDyPMhX8v9E0rkiIozBRcvsgT5k1HZL0RhzlHO09Ao7gy4hXMq6JF8MlgV+FBDmeJxrHonA==
-X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr2546194wml.170.1574248475131;
-        Wed, 20 Nov 2019 03:14:35 -0800 (PST)
-Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id u1sm6061748wmc.3.2019.11.20.03.14.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 03:14:34 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     mjourdan@baylibre.com, devicetree@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] dt-bindings: media: amlogic,vdec: convert to yaml
-Date:   Wed, 20 Nov 2019 12:14:27 +0100
-Message-Id: <20191120111430.29552-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191120111430.29552-1-narmstrong@baylibre.com>
-References: <20191120111430.29552-1-narmstrong@baylibre.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 20 Nov 2019 06:20:22 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:47373 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726689AbfKTLUW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:20:22 -0500
+X-Greylist: delayed 368 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 06:20:19 EST
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Nov 2019 16:44:10 +0530
+IronPort-SDR: pn+R0V5Xz7YUQJm6myK8AB+Q6GrdHvnsam5vCD842OkTeVewAshWlUHlwP//hkd7PnkiyJ3c2B
+ igXx7kptD2VFmXBfqPo3bvhWSL7sStxzNt6nPWfyoYoE/6H2Us5me1MPbFeeYzOnN5ZXzU3Jom
+ fSyRxvKTXmlg60X3nu+Oqb/CsVgKGqm3hxJF02p+R37H/GEiM5nBgdoiwrs3eEj3BoS0SUcEGq
+ HFB1siXgMPks/VV6Q+/wBjImenYwNu91WfxpeMfIQqlHuVCY5ljGe+XXUYtxDphLTX4UEzBrs1
+ WC7dRh19EGSQqtCcVZzs+7dm
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 20 Nov 2019 16:43:43 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id 66BD94347; Wed, 20 Nov 2019 16:43:42 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
+        jsanka@codeaurora.org, chandanu@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org
+Subject: [PATCH v2] msm:disp:dpu1: setup display datapath for SC7180 target
+Date:   Wed, 20 Nov 2019 16:43:38 +0530
+Message-Id: <1574248418-20147-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic Video Controller over to YAML schemas.
+Add changes to setup display datapath on SC7180 target.
 
-This yaml bindings will then be extended to support new SoCs.
+Changes in v1:
+ - Add changes to support ctl_active on SC7180 target.
+ - While selecting the number of mixers in the topology
+   consider the interface width.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Changes in v2:
+ - Spawn topology mixer selection into seperate patch (Rob Clark).
+ - Add co-developed-by tags in the commit msg (Stephen Boyd).
+
+This patch has dependency on the below series
+
+https://patchwork.kernel.org/patch/11253539/
+
+Co-developed-by: Shubhashree Dhar <dhar@codeaurora.org>
+Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+Co-developed-by: Raviteja Tamatam <travitej@codeaurora.org>
+Signed-off-by: Raviteja Tamatam <travitej@codeaurora.org>
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 ---
- .../bindings/media/amlogic,gx-vdec.yaml       | 107 ++++++++++++++++++
- .../bindings/media/amlogic,vdec.txt           |  72 ------------
- 2 files changed, 107 insertions(+), 72 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   | 21 +++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  1 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         | 84 +++++++++++++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         | 24 +++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        | 28 ++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h        |  6 ++
+ 6 files changed, 159 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
-new file mode 100644
-index 000000000000..878944867d6e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
-@@ -0,0 +1,107 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 BayLibre, SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/media/amlogic,gx-vdec.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+index b9c84fb..8cc8ad12 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+@@ -280,6 +280,14 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
+ 	phys_enc->hw_intf->ops.setup_timing_gen(phys_enc->hw_intf,
+ 			&timing_params, fmt);
+ 	phys_enc->hw_ctl->ops.setup_intf_cfg(phys_enc->hw_ctl, &intf_cfg);
 +
-+title: Amlogic Video Decoder
++	/* setup which pp blk will connect to this intf */
++	if (phys_enc->hw_intf->ops.bind_pingpong_blk)
++		phys_enc->hw_intf->ops.bind_pingpong_blk(
++				phys_enc->hw_intf,
++				true,
++				phys_enc->hw_pp->idx);
 +
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+  - Maxime Jourdan <mjourdan@baylibre.com>
+ 	spin_unlock_irqrestore(phys_enc->enc_spinlock, lock_flags);
+ 
+ 	programmable_fetch_config(phys_enc, &timing_params);
+@@ -435,6 +443,7 @@ static void dpu_encoder_phys_vid_enable(struct dpu_encoder_phys *phys_enc)
+ {
+ 	struct dpu_hw_ctl *ctl;
+ 	u32 flush_mask = 0;
++	u32 intf_flush_mask = 0;
+ 
+ 	ctl = phys_enc->hw_ctl;
+ 
+@@ -459,10 +468,18 @@ static void dpu_encoder_phys_vid_enable(struct dpu_encoder_phys *phys_enc)
+ 	ctl->ops.get_bitmask_intf(ctl, &flush_mask, phys_enc->hw_intf->idx);
+ 	ctl->ops.update_pending_flush(ctl, flush_mask);
+ 
++	if (ctl->ops.get_bitmask_active_intf)
++		ctl->ops.get_bitmask_active_intf(ctl, &intf_flush_mask,
++			phys_enc->hw_intf->idx);
 +
-+description: |
-+  The video decoding IP lies within the DOS memory region,
-+  except for the hardware bitstream parser that makes use of an undocumented
-+  region.
++	if (ctl->ops.update_pending_intf_flush)
++		ctl->ops.update_pending_intf_flush(ctl, intf_flush_mask);
 +
-+  It makes use of the following blocks:
-+  - ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
-+    then feed from this VIFIFO.
-+  - VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, MJPEG, H.263, H.264, VC-1.
-+  - VDEC_HEVC can decode HEVC and VP9.
+ skip_flush:
+ 	DPU_DEBUG_VIDENC(phys_enc,
+-			 "update pending flush ctl %d flush_mask %x\n",
+-			 ctl->idx - CTL_0, flush_mask);
++		"update pending flush ctl %d flush_mask 0%x intf_mask 0x%x\n",
++		ctl->idx - CTL_0, flush_mask, intf_flush_mask);
 +
-+  Both VDEC_1 and VDEC_HEVC share the "vdec" IRQ and as such cannot run
-+  concurrently.
+ 
+ 	/* ctl_flush & timing engine enable will be triggered by framework */
+ 	if (phys_enc->enable_state == DPU_ENC_DISABLED)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 1cf4509..0ee2b6c 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -374,6 +374,7 @@
+ 	{\
+ 	.name = _name, .id = _id, \
+ 	.base = _base, .len = 0x280, \
++	.features = BIT(DPU_CTL_ACTIVE_CFG), \
+ 	.type = _type, \
+ 	.controller_id = _ctrl_id, \
+ 	.prog_fetch_lines_worst_case = 24 \
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+index 179e8d5..2ce4b5a 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+@@ -22,11 +22,15 @@
+ #define   CTL_PREPARE                   0x0d0
+ #define   CTL_SW_RESET                  0x030
+ #define   CTL_LAYER_EXTN_OFFSET         0x40
++#define   CTL_INTF_ACTIVE               0x0F4
++#define   CTL_INTF_FLUSH                0x110
++#define   CTL_INTF_MASTER               0x134
+ 
+ #define CTL_MIXER_BORDER_OUT            BIT(24)
+ #define CTL_FLUSH_MASK_CTL              BIT(17)
+ 
+ #define DPU_REG_RESET_TIMEOUT_US        2000
++#define  INTF_IDX       31
+ 
+ static struct dpu_ctl_cfg *_ctl_offset(enum dpu_ctl ctl,
+ 		struct dpu_mdss_cfg *m,
+@@ -100,11 +104,27 @@ static inline void dpu_hw_ctl_update_pending_flush(struct dpu_hw_ctl *ctx,
+ 	ctx->pending_flush_mask |= flushbits;
+ }
+ 
++static inline void dpu_hw_ctl_update_pending_intf_flush(struct dpu_hw_ctl *ctx,
++		u32 flushbits)
++{
++	ctx->pending_intf_flush_mask |= flushbits;
++}
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - amlogic,gxbb-vdec # GXBB (S905)
-+        - amlogic,gxl-vdec # GXL (S905X, S905D)
-+        - amlogic,gxm-vdec # GXM (S912)
-+      - const: amlogic,gx-vdec
+ static u32 dpu_hw_ctl_get_pending_flush(struct dpu_hw_ctl *ctx)
+ {
+ 	return ctx->pending_flush_mask;
+ }
+ 
++static inline void dpu_hw_ctl_trigger_flush_v1(struct dpu_hw_ctl *ctx)
++{
 +
-+  interrupts:
-+    minItems: 2
++	if (ctx->pending_flush_mask & BIT(INTF_IDX))
++		DPU_REG_WRITE(&ctx->hw, CTL_INTF_FLUSH,
++				ctx->pending_intf_flush_mask);
 +
-+  interrupt-names:
-+    items:
-+      - const: vdec
-+      - const: esparser
++	DPU_REG_WRITE(&ctx->hw, CTL_FLUSH, ctx->pending_flush_mask);
++}
 +
-+  reg:
-+    minItems: 2
+ static inline void dpu_hw_ctl_trigger_flush(struct dpu_hw_ctl *ctx)
+ {
+ 	trace_dpu_hw_ctl_trigger_pending_flush(ctx->pending_flush_mask,
+@@ -222,6 +242,36 @@ static int dpu_hw_ctl_get_bitmask_intf(struct dpu_hw_ctl *ctx,
+ 	return 0;
+ }
+ 
++static int dpu_hw_ctl_get_bitmask_intf_v1(struct dpu_hw_ctl *ctx,
++		u32 *flushbits, enum dpu_intf intf)
++{
++	switch (intf) {
++	case INTF_0:
++	case INTF_1:
++		*flushbits |= BIT(31);
++		break;
++	default:
++		return 0;
++	}
++	return 0;
++}
 +
-+  reg-names:
-+    items:
-+      - const: dos
-+      - const: esparser
++static int dpu_hw_ctl_active_get_bitmask_intf(struct dpu_hw_ctl *ctx,
++		u32 *flushbits, enum dpu_intf intf)
++{
++	switch (intf) {
++	case INTF_0:
++		*flushbits |= BIT(0);
++		break;
++	case INTF_1:
++		*flushbits |= BIT(1);
++		break;
++	default:
++		return 0;
++	}
++	return 0;
++}
 +
-+  resets:
-+    maxItems: 1
+ static u32 dpu_hw_ctl_poll_reset_status(struct dpu_hw_ctl *ctx, u32 timeout_us)
+ {
+ 	struct dpu_hw_blk_reg_map *c = &ctx->hw;
+@@ -422,6 +472,24 @@ static void dpu_hw_ctl_setup_blendstage(struct dpu_hw_ctl *ctx,
+ 	DPU_REG_WRITE(c, CTL_LAYER_EXT3(lm), mixercfg_ext3);
+ }
+ 
 +
-+  reset-names:
-+    items:
-+      - const: esparser
++static void dpu_hw_ctl_intf_cfg_v1(struct dpu_hw_ctl *ctx,
++		struct dpu_hw_intf_cfg *cfg)
++{
++	struct dpu_hw_blk_reg_map *c = &ctx->hw;
++	u32 intf_active = 0;
++	u32 mode_sel = 0;
 +
-+  clocks:
-+    minItems: 4
++	if (cfg->intf_mode_sel == DPU_CTL_MODE_SEL_CMD)
++		mode_sel |= BIT(17);
 +
-+  clock-names:
-+    items:
-+      - const: dos_parser
-+      - const: dos
-+      - const: vdec_1
-+      - const: vdec_hevc
++	intf_active = DPU_REG_READ(c, CTL_INTF_ACTIVE);
++	intf_active |= BIT(cfg->intf - INTF_0);
 +
-+  amlogic,ao-sysctrl:
-+    description: should point to the AOBUS sysctrl node
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
++	DPU_REG_WRITE(c, CTL_TOP, mode_sel);
++	DPU_REG_WRITE(c, CTL_INTF_ACTIVE, intf_active);
++}
 +
-+  amlogic,canvas:
-+    description: should point to a canvas provider node
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
+ static void dpu_hw_ctl_intf_cfg(struct dpu_hw_ctl *ctx,
+ 		struct dpu_hw_intf_cfg *cfg)
+ {
+@@ -455,21 +523,31 @@ static void dpu_hw_ctl_intf_cfg(struct dpu_hw_ctl *ctx,
+ static void _setup_ctl_ops(struct dpu_hw_ctl_ops *ops,
+ 		unsigned long cap)
+ {
++	if (cap & BIT(DPU_CTL_ACTIVE_CFG)) {
++		ops->trigger_flush = dpu_hw_ctl_trigger_flush_v1;
++		ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
++		ops->get_bitmask_intf = dpu_hw_ctl_get_bitmask_intf_v1;
++		ops->get_bitmask_active_intf =
++			dpu_hw_ctl_active_get_bitmask_intf;
++		ops->update_pending_intf_flush =
++			dpu_hw_ctl_update_pending_intf_flush;
++	} else {
++		ops->trigger_flush = dpu_hw_ctl_trigger_flush;
++		ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg;
++		ops->get_bitmask_intf = dpu_hw_ctl_get_bitmask_intf;
++	}
+ 	ops->clear_pending_flush = dpu_hw_ctl_clear_pending_flush;
+ 	ops->update_pending_flush = dpu_hw_ctl_update_pending_flush;
+ 	ops->get_pending_flush = dpu_hw_ctl_get_pending_flush;
+-	ops->trigger_flush = dpu_hw_ctl_trigger_flush;
+ 	ops->get_flush_register = dpu_hw_ctl_get_flush_register;
+ 	ops->trigger_start = dpu_hw_ctl_trigger_start;
+ 	ops->trigger_pending = dpu_hw_ctl_trigger_pending;
+-	ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg;
+ 	ops->reset = dpu_hw_ctl_reset_control;
+ 	ops->wait_reset_status = dpu_hw_ctl_wait_reset_status;
+ 	ops->clear_all_blendstages = dpu_hw_ctl_clear_all_blendstages;
+ 	ops->setup_blendstage = dpu_hw_ctl_setup_blendstage;
+ 	ops->get_bitmask_sspp = dpu_hw_ctl_get_bitmask_sspp;
+ 	ops->get_bitmask_mixer = dpu_hw_ctl_get_bitmask_mixer;
+-	ops->get_bitmask_intf = dpu_hw_ctl_get_bitmask_intf;
+ };
+ 
+ static struct dpu_hw_blk_ops dpu_hw_ops;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
+index d3ae939..1e3973c 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
+@@ -91,6 +91,15 @@ struct dpu_hw_ctl_ops {
+ 		u32 flushbits);
+ 
+ 	/**
++	 * OR in the given flushbits to the cached pending_intf_flush_mask
++	 * No effect on hardware
++	 * @ctx       : ctl path ctx pointer
++	 * @flushbits : module flushmask
++	 */
++	void (*update_pending_intf_flush)(struct dpu_hw_ctl *ctx,
++		u32 flushbits);
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - amlogic,ao-sysctrl
-+  - amlogic,canvas
++	/**
+ 	 * Write the value of the pending_flush_mask to hardware
+ 	 * @ctx       : ctl path ctx pointer
+ 	 */
+@@ -130,11 +139,24 @@ struct dpu_hw_ctl_ops {
+ 	uint32_t (*get_bitmask_mixer)(struct dpu_hw_ctl *ctx,
+ 		enum dpu_lm blk);
+ 
++	/**
++	 * Query the value of the intf flush mask
++	 * No effect on hardware
++	 * @ctx       : ctl path ctx pointer
++	 */
+ 	int (*get_bitmask_intf)(struct dpu_hw_ctl *ctx,
+ 		u32 *flushbits,
+ 		enum dpu_intf blk);
+ 
+ 	/**
++	 * Query the value of the intf active flush mask
++	 * No effect on hardware
++	 * @ctx       : ctl path ctx pointer
++	 */
++	int (*get_bitmask_active_intf)(struct dpu_hw_ctl *ctx,
++		u32 *flushbits, enum dpu_intf blk);
 +
-+examples:
-+  - |
-+    vdec: video-decoder@c8820000 {
-+          compatible = "amlogic,gxl-vdec", "amlogic,gx-vdec";
-+          reg = <0xc8820000 0x10000>, <0xc110a580 0xe4>;
-+          reg-names = "dos", "esparser";
-+          interrupts = <44>, <32>;
-+          interrupt-names = "vdec", "esparser";
-+          clocks = <&clk_dos_parser> ,<&clk_dos>, <&clk_vdec_1>, <&clk_vdec_hevc>;
-+          clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
-+          resets = <&reset_parser>;
-+          reset-names = "esparser";
-+          amlogic,ao-sysctrl = <&sysctrl_AO>;
-+          amlogic,canvas = <&canvas>;
-+    };
-diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-deleted file mode 100644
-index 9b6aace86ca7..000000000000
---- a/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-+++ /dev/null
-@@ -1,72 +0,0 @@
--Amlogic Video Decoder
--================================
--
--The video decoding IP lies within the DOS memory region,
--except for the hardware bitstream parser that makes use of an undocumented
--region.
--
--It makes use of the following blocks:
--
--- ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
--then feed from this VIFIFO.
--- VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, MJPEG, H.263, H.264, VC-1.
--- VDEC_HEVC can decode HEVC and VP9.
--
--Both VDEC_1 and VDEC_HEVC share the "vdec" IRQ and as such cannot run
--concurrently.
--
--Device Tree Bindings:
-----------------------
--
--VDEC: Video Decoder
----------------------------
--
--Required properties:
--- compatible: value should be different for each SoC family as :
--	- GXBB (S905) : "amlogic,gxbb-vdec"
--	- GXL (S905X, S905D) : "amlogic,gxl-vdec"
--	- GXM (S912) : "amlogic,gxm-vdec"
--	followed by the common "amlogic,gx-vdec"
--- reg: base address and size of he following memory-mapped regions :
--	- dos
--	- esparser
--- reg-names: should contain the names of the previous memory regions
--- interrupts: should contain the following IRQs:
--	- vdec
--	- esparser
--- interrupt-names: should contain the names of the previous interrupts
--- amlogic,ao-sysctrl: should point to the AOBUS sysctrl node
--- amlogic,canvas: should point to a canvas provider node
--- clocks: should contain the following clocks :
--	- dos_parser
--	- dos
--	- vdec_1
--	- vdec_hevc
--- clock-names: should contain the names of the previous clocks
--- resets: should contain the parser reset
--- reset-names: should be "esparser"
--
--Example:
--
--vdec: video-codec@c8820000 {
--	compatible = "amlogic,gxbb-vdec", "amlogic,gx-vdec";
--	reg = <0x0 0xc8820000 0x0 0x10000>,
--	      <0x0 0xc110a580 0x0 0xe4>;
--	reg-names = "dos", "esparser";
--
--	interrupts = <GIC_SPI 44 IRQ_TYPE_EDGE_RISING>,
--		     <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
--	interrupt-names = "vdec", "esparser";
--
--	amlogic,ao-sysctrl = <&sysctrl_AO>;
--	amlogic,canvas = <&canvas>;
--
--	clocks = <&clkc CLKID_DOS_PARSER>,
--		 <&clkc CLKID_DOS>,
--		 <&clkc CLKID_VDEC_1>,
--		 <&clkc CLKID_VDEC_HEVC>;
--	clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
--
--	resets = <&reset RESET_PARSER>;
--	reset-names = "esparser";
--};
++	/**
+ 	 * Set all blend stages to disabled
+ 	 * @ctx       : ctl path ctx pointer
+ 	 */
+@@ -159,6 +181,7 @@ struct dpu_hw_ctl_ops {
+  * @mixer_count: number of mixers
+  * @mixer_hw_caps: mixer hardware capabilities
+  * @pending_flush_mask: storage for pending ctl_flush managed via ops
++ * @pending_intf_flush_mask: pending INTF flush
+  * @ops: operation list
+  */
+ struct dpu_hw_ctl {
+@@ -171,6 +194,7 @@ struct dpu_hw_ctl {
+ 	int mixer_count;
+ 	const struct dpu_lm_cfg *mixer_hw_caps;
+ 	u32 pending_flush_mask;
++	u32 pending_intf_flush_mask;
+ 
+ 	/* ops */
+ 	struct dpu_hw_ctl_ops ops;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+index dcd87cd..eff5e6a 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+@@ -56,6 +56,8 @@
+ #define   INTF_FRAME_COUNT              0x0AC
+ #define   INTF_LINE_COUNT               0x0B0
+ 
++#define   INTF_MUX                      0x25C
++
+ static struct dpu_intf_cfg *_intf_offset(enum dpu_intf intf,
+ 		struct dpu_mdss_cfg *m,
+ 		void __iomem *addr,
+@@ -218,6 +220,30 @@ static void dpu_hw_intf_setup_prg_fetch(
+ 	DPU_REG_WRITE(c, INTF_CONFIG, fetch_enable);
+ }
+ 
++static void dpu_hw_intf_bind_pingpong_blk(
++		struct dpu_hw_intf *intf,
++		bool enable,
++		const enum dpu_pingpong pp)
++{
++	struct dpu_hw_blk_reg_map *c;
++	u32 mux_cfg;
++
++	if (!intf)
++		return;
++
++	c = &intf->hw;
++
++	mux_cfg = DPU_REG_READ(c, INTF_MUX);
++	mux_cfg &= ~0xf;
++
++	if (enable)
++		mux_cfg |= (pp - PINGPONG_0) & 0x7;
++	else
++		mux_cfg |= 0xf;
++
++	DPU_REG_WRITE(c, INTF_MUX, mux_cfg);
++}
++
+ static void dpu_hw_intf_get_status(
+ 		struct dpu_hw_intf *intf,
+ 		struct intf_status *s)
+@@ -254,6 +280,8 @@ static void _setup_intf_ops(struct dpu_hw_intf_ops *ops,
+ 	ops->get_status = dpu_hw_intf_get_status;
+ 	ops->enable_timing = dpu_hw_intf_enable_timing_engine;
+ 	ops->get_line_count = dpu_hw_intf_get_line_count;
++	if (cap & BIT(DPU_CTL_ACTIVE_CFG))
++		ops->bind_pingpong_blk = dpu_hw_intf_bind_pingpong_blk;
+ }
+ 
+ static struct dpu_hw_blk_ops dpu_hw_ops;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
+index b03acc2..a1e0ef3 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
+@@ -52,6 +52,8 @@ struct intf_status {
+  * @ enable_timing: enable/disable timing engine
+  * @ get_status: returns if timing engine is enabled or not
+  * @ get_line_count: reads current vertical line counter
++ * @bind_pingpong_blk: enable/disable the connection with pingpong which will
++ *                     feed pixels to this interface
+  */
+ struct dpu_hw_intf_ops {
+ 	void (*setup_timing_gen)(struct dpu_hw_intf *intf,
+@@ -68,6 +70,10 @@ struct dpu_hw_intf_ops {
+ 			struct intf_status *status);
+ 
+ 	u32 (*get_line_count)(struct dpu_hw_intf *intf);
++
++	void (*bind_pingpong_blk)(struct dpu_hw_intf *intf,
++			bool enable,
++			const enum dpu_pingpong pp);
+ };
+ 
+ struct dpu_hw_intf {
 -- 
-2.22.0
+1.9.1
 
