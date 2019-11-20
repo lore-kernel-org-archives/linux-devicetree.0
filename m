@@ -2,101 +2,95 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A49EC43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 18:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1261FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 18:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A56208A3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 18:09:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574273399;
-	bh=rJu9h82iouaK4ilpkyZWl4D75r/it7DmdM50YOaXa3g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LkbQ1MWzQrcu/HNNpudQtR9mRytT2CvdZUt5kWh4fJUFaeisdXy6hraZLTohjsSwi
-	 liDOpv3Bja7P+wqIOhoHcExTHBP1O5IKNwdwwaGiZIAK3IHtsLKRppnWWaQ70gjuZR
-	 got0XGHVTnZZ/mAU+wsHYDDw5l88OTt1gHJl0LVw=
+	by mail.kernel.org (Postfix) with ESMTP id 2D44A208A3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 18:19:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="Ir9CmDkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfKTSJ6 (ORCPT
+        id S1728048AbfKTSTu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 13:09:58 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40127 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbfKTSJ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 13:09:58 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d22so611161oic.7;
-        Wed, 20 Nov 2019 10:09:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YzyZQ4fEqLiui26PMcdzE5fiKafIuHsPZ+HchTRfUPQ=;
-        b=AmRkJnDyfodCdHEBNQxSQnCQVWcy4LzEpZOEBxA7fkkyOeU2vyYRXa8nyJGV4ycrCu
-         673spSZntW7NAOFczUnkLtvLW3z18GLGfZqzITUBcLnjP0HwEOmhBEVbNL7ADURF9ZMX
-         X3GV0gBKOvHdcP9fKTTZ1BPTHndscfQzgQ1N7/m3tooKhKraBbfp6aKEA7CTcSVbXmSi
-         XLTHH6JVQjSYIt6ntPv4vw7t+LK7K9iTGxTVv8Hmix7T5NwwJjNdoKTKzZVGEWTWLX2s
-         rmltvDCSdcmYlZJR7Of5ix/QsoxirM1zSRjzAs5mHtF6Psx9sozPEszTQlMFBm3Q5pXX
-         dZvw==
-X-Gm-Message-State: APjAAAV+KA3cCRjNZMpP7eO2f6oDUJbYM2KT5NHzBnENzNUt/w1UyEtv
-        nNhk7CpJz6u7XVQEpN3vkQ==
-X-Google-Smtp-Source: APXvYqzaDfbYrfeEjWY541EKHP6pgAPEWL5ptEcD1hGCgK+Un3JISnVZs/7iXribLlYOAxWgCIgp5w==
-X-Received: by 2002:aca:cfd8:: with SMTP id f207mr3990174oig.145.1574273397185;
-        Wed, 20 Nov 2019 10:09:57 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a10sm8305379otf.72.2019.11.20.10.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 10:09:56 -0800 (PST)
-Date:   Wed, 20 Nov 2019 12:09:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     fabrice.gasnier@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        alexandre.torgue@st.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v2] dt-bindings: mfd: Convert stm32 low power timers
- bindings to json-schema
-Message-ID: <20191120180955.GA22823@bogus>
-References: <20191118094842.20171-1-benjamin.gaignard@st.com>
+        Wed, 20 Nov 2019 13:19:50 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:11138 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbfKTSTu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 13:19:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574273988;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=B1t/R73PXBi/xcZmdsHyecP+fHfXT1zfLtf97yMLTVQ=;
+        b=Ir9CmDkzeLZCVeWkmtp4gqLUdEbmcT/zn5KuVG3xVtWP8HE5+l40QYQ7cRj9W+a1cg
+        hfGJ2d7Vy6j1fMkf+aCzGAyYqLH+UMh9R9mCuxO5JnIwUIpyg1mfS0g1J2NZxj1vDuEv
+        fqdv7GQZ3dbfJLDZvVB11EjyLBONBHWeA1j0PkLMQ9YGkJv5xF2zI25eDl6B+RJ7a8+h
+        gVlzRt10Zgoh5uBRvGFzPyxEdHjCFqHV1JeAzc5hhOe+vTvje82YSHriPVbNs6k5HTyl
+        pqKF/YS3/13iWG+fdDY67VqDFUrculERXr0So8XCWk6CkAc/7xucG4DQlfAZRDmquLCA
+        NPgQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXs8Lvtn4="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vAKIJlvAZ
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 20 Nov 2019 19:19:47 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH v2 2/4] dt-bindings: vendor-prefixes: Deprecate "ste" and "st-ericsson"
+Date:   Wed, 20 Nov 2019 19:18:55 +0100
+Message-Id: <20191120181857.97174-2-stephan@gerhold.net>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191120181857.97174-1-stephan@gerhold.net>
+References: <20191120181857.97174-1-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118094842.20171-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 18 Nov 2019 10:48:42 +0100, Benjamin Gaignard wrote:
-> Convert the STM32 low power timers binding to DT schema format using json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> changes in version 2:
-> - improve counter function description
-> - set reg maximum to 2 instead of 3
-> 
->  .../bindings/counter/stm32-lptimer-cnt.txt         |  29 -----
->  .../bindings/iio/timer/stm32-lptimer-trigger.txt   |  23 ----
->  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 120 +++++++++++++++++++++
->  .../devicetree/bindings/mfd/stm32-lptimer.txt      |  48 ---------
->  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  30 ------
->  5 files changed, 120 insertions(+), 130 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
->  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
-> 
+Until now, device tree bindings for ST-Ericsson have been added
+inconsistently with one of 3 possible vendor prefixes.
 
-Applied, thanks.
+"stericsson" is the most commonly used vendor prefix,
+so deprecate "ste" and "st-ericsson".
 
-Rob
+Suggested-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+Changes in v2: new patch
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index c9b0bab8ed23..490b5cc6b8e6 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -907,10 +907,12 @@ patternProperties:
+     description: Startek
+   "^ste,.*":
+     description: ST-Ericsson
++    deprecated: true
+   "^stericsson,.*":
+     description: ST-Ericsson
+   "^st-ericsson,.*":
+     description: ST-Ericsson
++    deprecated: true
+   "^summit,.*":
+     description: Summit microelectronics
+   "^sunchip,.*":
+-- 
+2.24.0
+
