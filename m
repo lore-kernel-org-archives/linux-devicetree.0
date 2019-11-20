@@ -7,69 +7,70 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAEEC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C32C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FFC2240D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C00F2245F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNMurbf0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ot6cwcHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfKTCfc (ORCPT
+        id S1727354AbfKTCjO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 21:35:32 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34797 "EHLO
+        Tue, 19 Nov 2019 21:39:14 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45321 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfKTCfc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 21:35:32 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z188so12572165pgb.1
-        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 18:35:31 -0800 (PST)
+        with ESMTP id S1726957AbfKTCjO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 21:39:14 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k1so11239085pgg.12
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 18:39:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=demOKi0KmBJXgMXKUxgMCHYSTMZ41kb+ilF6SbHTJuQ=;
-        b=XNMurbf0t4fehDU7BCwNIN75pA9gnfvEnIOOhcJ5UqJIhzvwZeakrQZ1XXip+zT4at
-         GBT+W4v1j3sDr3tJPcTiS1/hLFnUpZ50rfrQXwxJkffTxT/gQ9wLnM22zpocxJK/hKsX
-         TYTK3QWC3EpoJOOnuW4ql0gnrFj9cQDJKc3Rso9azUgcz9fMwxklo7lgvu0i18cIyrLY
-         k7RzKIxb5Dc5giyHIk9H1qcWzu8WRZ6gfdRN+DravYT2B34tI3MUTdWeWLzUZsIr7TvU
-         YbqlqId3Hsle8dVB9bkf4Rlie3WpHHxskTFmEGDbJyRkATTPSkzemXaKyKTU+cWardh7
-         7hBQ==
+        bh=rmGQj7/ER384qMpN2QkIRdax3FhW52fXgXuITnbFJUM=;
+        b=Ot6cwcHmPmdUnicAcrV8Q/blliaN/pObgVadHq4j2DW/ptCo8TOiHzfiwbBnzrehsZ
+         KbglRwE3/u5XBpxTaBBKV4947lHmmyJnnDQCxnSsJC2H5WHC+QFseaRh90Ja047iQ+KW
+         XDW6CA+Nx+LPjIEBUJjk+oq7Kwur15vHlUZXwQkH1aqIIp9GvrNSkPuE7ICPER0IUTBg
+         Ubc/Z/WbmniFszz/Vyl/OvmfgyOdZyx+xmVaAhvKu3s3CPtuQN3XDt6m8Yuf3B28TQ9p
+         2fF/RmRR07HjOUFQu5/lM/YNxLngyoKYnp/YXGVEBFLYywZlnTbKE/QQV0a6wxcyhwXH
+         pcBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=demOKi0KmBJXgMXKUxgMCHYSTMZ41kb+ilF6SbHTJuQ=;
-        b=CTVmAeEMMJs2AeFj4ygU+i+YOmA8CbIUYUD+mN2AuLFmZYSpE6YieTwns/P+5r1LvM
-         qHOUeYdqozHw6B8836xVzCVEaKzChIGcpfQUs8/MyCA6RhRS8JrtYcrBoK9SsN74H5uR
-         662tuSDXD4V4MYY2IWm8ZhOkkW740yrz1u2RHFoOav68el3XxuiqBXaowR6AjAaN1/D3
-         tHu2LEiWmpudcLYykyyPaCFghaFzeJpALwGqXa0zSFo0qXCBfBtIczyq0EAul4vqdV7e
-         wp7JSm+nE3ZGv+AhHyyLt3hl+bzuzjN5GdvzDf2XOLGXpv9oZOgUUWMRuX5Ky2BvFOur
-         evzA==
-X-Gm-Message-State: APjAAAVEvBfbBOq89aBXE9/BmbaBGN72frQZu2rxBCk519xDKDbhEIAZ
-        1PhIhuUqy/BzFTXXum212n8xqA==
-X-Google-Smtp-Source: APXvYqzplDwcuPhXEeFBVafJ6hd/Ct5IVvHGuZjFEf55wyIRINqbwLDg4aZ7LcJedX3pxFtStlJYNA==
-X-Received: by 2002:a65:47c1:: with SMTP id f1mr376719pgs.393.1574217330662;
-        Tue, 19 Nov 2019 18:35:30 -0800 (PST)
+        bh=rmGQj7/ER384qMpN2QkIRdax3FhW52fXgXuITnbFJUM=;
+        b=peqy/QoQEeStfP6LdG/eWIrfVNWbuT0QoqyX6AOdM9PDQdSE7PxbB3+HuuT/ac3fN/
+         DrfyTa2PMVwYJBCfgZ7pJmaye7gFhnkr2+1RkKqpseH8p90pd8lfh2SiQLzh+oRlMlHl
+         nrJ3LVlhjd8DeDHpkNrv6UaXQMnPtb6Cot0Pymt8UJGE35erXDszDyTAiZuD9YxRFP78
+         Eaph9KwPIRYQrJQyWY4AQtDZWPohEwgrB/b3NNRpJirswJ1GCdr3v/o/EA3qYu1BfAz6
+         0YzArH4iwlSDbxi9An7V3RdZk2Rk6xPmSQpcvnmdOjYkn6JXS6VyEnYQUR1GI4WcaaRE
+         PzYw==
+X-Gm-Message-State: APjAAAUXkG5pOlGh630YbXaRSOiETzb2SLuTMJWf/20ZDLHes11QCXI3
+        eUpLIia3eSsyOtgbmZmaAWFRHQ==
+X-Google-Smtp-Source: APXvYqxfYwc/XGbVrhZLuJG/tKj/6zmKdZQ2C34IbqxNk5A0bePNt2jVUiuUF/4l2wqesERiCPb7iw==
+X-Received: by 2002:a62:7dce:: with SMTP id y197mr1034777pfc.164.1574217551668;
+        Tue, 19 Nov 2019 18:39:11 -0800 (PST)
 Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d6sm26533702pfn.32.2019.11.19.18.35.29
+        by smtp.gmail.com with ESMTPSA id h3sm4724627pji.16.2019.11.19.18.39.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 18:35:30 -0800 (PST)
-Date:   Tue, 19 Nov 2019 18:35:27 -0800
+        Tue, 19 Nov 2019 18:39:11 -0800 (PST)
+Date:   Tue, 19 Nov 2019 18:39:08 -0800
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Sibi Sankar <sibis@codeaurora.org>
 Cc:     robh+dt@kernel.org, ulf.hansson@linaro.org, rnayak@codeaurora.org,
         agross@kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
-Subject: Re: [PATCH 6/6] arm64: dts: sm8150: Add rpmh power-domain node
-Message-ID: <20191120023527.GO18024@yoga>
+Subject: Re: [PATCH 1/6] soc: qcom: rpmhpd: Set 'active_only' for active only
+ power domains
+Message-ID: <20191120023908.GP18024@yoga>
 References: <20191118173944.27043-1-sibis@codeaurora.org>
- <0101016e7f99efe5-cee866e3-7031-4ecf-a8a6-4b247e9e69ff-000000@us-west-2.amazonses.com>
+ <0101016e7f9998d8-877e9166-8b6a-4530-ab66-3c88002e1db4-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0101016e7f99efe5-cee866e3-7031-4ecf-a8a6-4b247e9e69ff-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016e7f9998d8-877e9166-8b6a-4530-ab66-3c88002e1db4-000000@us-west-2.amazonses.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -78,89 +79,50 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Mon 18 Nov 09:40 PST 2019, Sibi Sankar wrote:
 
-> Add the DT node for the rpmhpd power controller.
+> From: Douglas Anderson <dianders@chromium.org>
 > 
+> The 'active_only' attribute was accidentally never set to true for any
+> power domains meaning that all the code handling this attribute was
+> dead.
+> 
+> NOTE that the RPM power domain code (as opposed to the RPMh one) gets
+> this right.
+> 
+> Fixes: 279b7e8a62cc ("soc: qcom: rpmhpd: Add RPMh power domain driver")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Acked-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+You should have added your S-o-b here to certify its origin.
+But I picked up this patch earlier today.
 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Thanks,
+Bjorn
+
 > ---
->  arch/arm64/boot/dts/qcom/sm8150.dtsi | 55 ++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
+>  drivers/soc/qcom/rpmhpd.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> index 8f23fcadecb89..0ac257637c2af 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -5,6 +5,7 @@
->   */
+> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+> index 5741ec3fa814c..51850cc68b701 100644
+> --- a/drivers/soc/qcom/rpmhpd.c
+> +++ b/drivers/soc/qcom/rpmhpd.c
+> @@ -93,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
 >  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/qcom-rpmpd.h>
->  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
+>  static struct rpmhpd sdm845_mx_ao = {
+>  	.pd = { .name = "mx_ao", },
+> +	.active_only = true,
+>  	.peer = &sdm845_mx,
+>  	.res_name = "mx.lvl",
+>  };
+> @@ -107,6 +108,7 @@ static struct rpmhpd sdm845_cx = {
 >  
-> @@ -469,6 +470,60 @@
->  				clock-names = "xo";
->  				clocks = <&xo_board>;
->  			};
-> +
-> +			rpmhpd: power-controller {
-> +				compatible = "qcom,sm8150-rpmhpd";
-> +				#power-domain-cells = <1>;
-> +				operating-points-v2 = <&rpmhpd_opp_table>;
-> +
-> +				rpmhpd_opp_table: opp-table {
-> +					compatible = "operating-points-v2";
-> +
-> +					rpmhpd_opp_ret: opp1 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> +					};
-> +
-> +					rpmhpd_opp_min_svs: opp2 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_low_svs: opp3 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs: opp4 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l1: opp5 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l2: opp6 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_nom: opp7 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l1: opp8 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l2: opp9 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo: opp10 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo_l1: opp11 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> +					};
-> +				};
-> +			};
->  		};
->  	};
->  
+>  static struct rpmhpd sdm845_cx_ao = {
+>  	.pd = { .name = "cx_ao", },
+> +	.active_only = true,
+>  	.peer = &sdm845_cx,
+>  	.parent = &sdm845_mx_ao.pd,
+>  	.res_name = "cx.lvl",
 > -- 
 > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 > a Linux Foundation Collaborative Project
