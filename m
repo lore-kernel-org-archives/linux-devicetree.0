@@ -2,219 +2,83 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988BFC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 08:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520C5C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 09:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630E922440
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 08:31:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mhOwiYOk"
+	by mail.kernel.org (Postfix) with ESMTP id 334362245F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 09:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfKTIbz (ORCPT
+        id S1727850AbfKTJOE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:31:55 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42985 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727872AbfKTIby (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 03:31:54 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a15so27026365wrf.9
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 00:31:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=38z6RyjMyXCUIeOwwLykSbeDE8sPTFCwnDO3EjCpWOA=;
-        b=mhOwiYOke8BRLMgtIyxZPbnidW28nPO4gCUBE0cIZL3O+K4vUilbkglAPxuXKXEBEL
-         YG/Un3TWx3XrCCO0Rd39GaDIn34GfSfMW9ETB41HKfLLkoYxx3nfGrRUsgvz5wzAkHNb
-         2nkMJWCw4H5LJ/AVLzUqynWYJg89ZbZiRXpcgiuV6nwCguK1oSdL7UVAoL5MV8Ay6GfZ
-         aB3AFGVdZa6L/0pgsnrWUQ/AJohW6fvbkDoFeQVSSqt7y/Jo5BEkIY8qtnrtZbbROg/Y
-         ieH0XYJmbJYGDCtZM+ah9eXHI4Ch1VNkhkX8fxf9biO77ryRMaclLxiPj779CcdH5dWd
-         7Lpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=38z6RyjMyXCUIeOwwLykSbeDE8sPTFCwnDO3EjCpWOA=;
-        b=uUvXSDlrcIS0aHEBMvnZ8UnNP9yeKOn2YALnLq9ETEjQyKLHJnQXlgQn2Ia5b6HnH4
-         wGMuD2kRBII86+mBK1FzjjpOQc4PktDCQ1g7m4n14lqdeRlJpun9emie0W+YLaV7bgDz
-         Sohlw+3Y5XHVS2IqKW3NNvVJns7VIC+t4ptixN+yAvxm5GZBCJypdk+BRTOJlFd82E7a
-         DqmscOCb3byAWQhWjhemQFA47YHThKLiHtQufOXuqrDT4wmBPmrKExLfJ+MWMVojDwsB
-         3namcDOxvhkLInRK5F48oXHpsGyec+dnrg0Rop6fVlOA7daBeC/HHGg9SM0vfTDmFNBg
-         fZlw==
-X-Gm-Message-State: APjAAAVUOJYkClESpfy82ldiWbH1ZKrnfGBkKNhdJAsPgHjTg9iIyofR
-        nkpzuMVYNMgKRsUo3fJjprQ8QQ==
-X-Google-Smtp-Source: APXvYqzkhtlhPBQtXB7GC0rslGbZ3YyeTfH9T+nKnWCBFlSSTNa8sH6AHhqdy9PppQPxS0gPUPoVJA==
-X-Received: by 2002:a5d:5687:: with SMTP id f7mr1682422wrv.384.1574238710636;
-        Wed, 20 Nov 2019 00:31:50 -0800 (PST)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id x205sm6414418wmb.5.2019.11.20.00.31.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Nov 2019 00:31:49 -0800 (PST)
-Subject: Re: [PATCH v3 4/4] dt-bindings: display: add IMX MIPI DSI host
- controller doc
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Martyn Welch <martyn.welch@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-imx@nxp.com, kernel@collabora.com
-References: <20191118152518.3374263-1-adrian.ratiu@collabora.com>
- <20191118152518.3374263-5-adrian.ratiu@collabora.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <e19aca1f-842d-a5b4-6fc1-02f7f6dd136d@baylibre.com>
-Date:   Wed, 20 Nov 2019 09:31:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 04:14:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36086 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727816AbfKTJOE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 04:14:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E22AEAEC2;
+        Wed, 20 Nov 2019 09:14:01 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "linus.walleij\@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski\@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt\@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
+        "palmer\@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley \( Sifive\)" <paul.walmsley@sifive.com>,
+        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "aou\@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "jason\@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-gpio\@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "atish.patra\@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "bmeng.cn\@gmail.com" <bmeng.cn@gmail.com>,
+        "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH v2 5/5] riscv: dts: Add DT support for SiFive FU540 GPIO driver
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+        <1574233128-28114-6-git-send-email-yash.shah@sifive.com>
+X-Yow:  It's NO USE..  I've gone to ``CLUB MED''!!
+Date:   Wed, 20 Nov 2019 10:14:00 +0100
+In-Reply-To: <1574233128-28114-6-git-send-email-yash.shah@sifive.com> (Yash
+        Shah's message of "Wed, 20 Nov 2019 06:59:54 +0000")
+Message-ID: <mvmlfsaoqp3.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20191118152518.3374263-5-adrian.ratiu@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Nov 20 2019, Yash Shah wrote:
 
-On 18/11/2019 16:25, Adrian Ratiu wrote:
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> index 88cfcb9..609198c 100644
+> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> @@ -94,3 +94,7 @@
+>  &pwm1 {
+>  	status = "okay";
+>  };
+> +
+> +&gpio {
+> +	status = "okay";
+> +};
 
-A small commit log would be welcome here.
+How about adding a gpio-restart?
 
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> ---
->  .../bindings/display/imx/mipi-dsi.txt         | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt b/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
-> new file mode 100644
-> index 000000000000..3f05c32ef963
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
+Andreas.
 
-New bindings should use the yaml dt-schema format, could you convert it ?
-
-Neil
-
-> @@ -0,0 +1,56 @@
-> +Freescale i.MX6 DW MIPI DSI Host Controller
-> +===========================================
-> +
-> +The DSI host controller is a Synopsys DesignWare MIPI DSI v1.01 IP
-> +with a companion PHY IP.
-> +
-> +These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
-> +Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
-> +the following device-specific properties.
-> +
-> +Required properties:
-> +
-> +- #address-cells: Should be <1>.
-> +- #size-cells: Should be <0>.
-> +- compatible: "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi".
-> +- reg: See dw_mipi_dsi.txt.
-> +- interrupts: The controller's CPU interrupt.
-> +- clocks, clock-names: Phandles to the controller's pll reference
-> +  clock(ref) and APB clock(pclk), as described in [1].
-> +- ports: a port node with endpoint definitions as defined in [2].
-> +- gpr: Should be <&gpr>.
-> +       Phandle to the iomuxc-gpr region containing the multiplexer
-> +       control register.
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	mipi_dsi: mipi@21e0000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
-> +		reg = <0x021e0000 0x4000>;
-> +		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
-> +		gpr = <&gpr>;
-> +		clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
-> +			 <&clks IMX6QDL_CLK_MIPI_IPG>;
-> +		clock-names = "ref", "pclk";
-> +		status = "okay";
-> +
-> +		ports {
-> +			port@0 {
-> +				reg = <0>;
-> +				mipi_mux_0: endpoint {
-> +					remote-endpoint = <&ipu1_di0_mipi>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				mipi_mux_1: endpoint {
-> +					remote-endpoint = <&ipu1_di1_mipi>;
-> +				};
-> +			};
-> +		};
-> +        };
-> 
-
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
