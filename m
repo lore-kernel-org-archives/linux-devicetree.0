@@ -2,62 +2,88 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92167C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 21:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51663C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 21:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AE120643
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 21:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130F52084D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 21:27:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRXRNY80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725956AbfKTVOJ (ORCPT
+        id S1725842AbfKTV1r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 16:14:09 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60093 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfKTVOJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 16:14:09 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1iXXIU-0001J2-Nq; Wed, 20 Nov 2019 22:13:58 +0100
-Received: from mgr by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mgr@pengutronix.de>)
-        id 1iXXIQ-0001XW-9i; Wed, 20 Nov 2019 22:13:54 +0100
-From:   Michael Grzeschik <m.grzeschik@pengutronix.de>
-To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        kernel@pengutronix.de, festevam@gmail.com
-Cc:     linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] ARM: dts: imx25: usbhost port1 improvemts
-Date:   Wed, 20 Nov 2019 22:13:32 +0100
-Message-Id: <20191120211334.5580-1-m.grzeschik@pengutronix.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191120082955.3ovsoziurntmv7by@pengutronix.de>
-References: <20191120082955.3ovsoziurntmv7by@pengutronix.de>
+        Wed, 20 Nov 2019 16:27:47 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45663 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfKTV1r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 16:27:47 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so719268lfa.12;
+        Wed, 20 Nov 2019 13:27:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4qp3wqZnERgahc4/j3UaMttRmXNfWZ10Hcph0ci1u6c=;
+        b=rRXRNY80I7ALa2kx4T0RfT2uUiBApG1viLOC7JlZkW+L2kbTqOZlkMLS/hXurbMo6v
+         4Iq8ZjTZ3hdLRjgscqK51Kc2sfiXwxMCaFHYscC0W9hOTmMgFx/Hvly1Xfu1HzQ+KELz
+         ahnkfzzy/wIF3SdKBefmsseYzwJSyqDtQQHd5mBVKXxdHu/ZMh/E1QAlP9LzBOo9DWYg
+         LUd0mOTZoC2xyoypO/dOhPaMeDjGGy8jrYTETUbJA+LRu2RB/1k9g4GuF1LT2LOL0YbK
+         eE5n4Jf9/0dw1/3QTwZ0JYmQf4dTdbF7MxzcQpCycB0hGfMVzpyNl5eLU5ORa0DpNs7i
+         ZXuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4qp3wqZnERgahc4/j3UaMttRmXNfWZ10Hcph0ci1u6c=;
+        b=p8V87j8yYuQaU8GgsYv4FElNgBo1gwrrbKbEc4dBOwDO6J4REOVMfa8q8c80xhYoIK
+         Cgd0u1rVxprIiJTMo8nUiS5PzA3PZipRdqhlr9ZLtgzgL7X3IA+dlw9M3SJaNlkrMqMi
+         PZO/EW5UF/ggjsDCmcoqP6uwHSVBdtfqP9i3htzQLaF7ofoBVYGuKkzAaWow0bNTGX38
+         XRpNL/Rl58V65FpK8vr6YD4rsl14yqznuoOXruUzG9gb7OysR5Nv0lHQjwQ+ngPJHa7l
+         6Z/o+74XLOiSESVOi1TB4x5Dtty64ug+7q9RwN58dX6zdt1zECBkIT083GfLLCd3z0l/
+         LoIQ==
+X-Gm-Message-State: APjAAAULO9K9f38a0GI/uNCWRGuB6ZoW+wwFfKH4hHN8RIgWcbGsl2ZM
+        kSNsTJufn/cNWfPmelConqZKR2PstHJkPHkPiWM=
+X-Google-Smtp-Source: APXvYqw1Mw2ql/sLIwwEbm33HOuERPGZBkNXPALJtaLRCm7RMoBF0wq9ZUM/gNNZJvvK54NtyY9exRM/sabQ9R8NhaU=
+X-Received: by 2002:a19:c143:: with SMTP id r64mr4656279lff.90.1574285265239;
+ Wed, 20 Nov 2019 13:27:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: mgr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191120082955.3ovsoziurntmv7by@pengutronix.de>
+ <20191120211334.5580-1-m.grzeschik@pengutronix.de> <20191120211334.5580-2-m.grzeschik@pengutronix.de>
+In-Reply-To: <20191120211334.5580-2-m.grzeschik@pengutronix.de>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 20 Nov 2019 18:27:45 -0300
+Message-ID: <CAOMZO5A9dhEBF-uC39nbg6E2hcd5LukNXK2V7TmPrfAbWJOCCw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] ARM: dts: imx25: consolidate properties of
+ usbhost1 in dtsi file
+To:     Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Michael Grzeschik (2):
-  ARM: dts: imx25: consolidate properties of usbhost1 in dtsi file
-  ARM: dts: imx25: describe maximum speed of internal usbhost port1 phy
+On Wed, Nov 20, 2019 at 6:14 PM Michael Grzeschik
+<m.grzeschik@pengutronix.de> wrote:
+>
+> The usb port represented by &usbhost1 uses an USB phy internal to the
+> SoC. We add the phy_type to the base dtsi so the board dts only have to
+> overwrite it if they use a different configuration. While at it we also
+> pin the usbhost port to host mode.
+>
+> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
- arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts | 2 --
- arch/arm/boot/dts/imx25-pdk.dts                        | 2 --
- arch/arm/boot/dts/imx25.dtsi                           | 3 +++
- 3 files changed, 3 insertions(+), 4 deletions(-)
-
--- 
-2.24.0
-
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
