@@ -2,167 +2,115 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B4CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 13:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5883C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 13:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EB3224FC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 13:50:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BzRe+u7s"
+	by mail.kernel.org (Postfix) with ESMTP id A1DDB219FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 13:53:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfKTNuH (ORCPT
+        id S1727952AbfKTNxo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:50:07 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37242 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729591AbfKTNuG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 08:50:06 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAKDntNk044995;
-        Wed, 20 Nov 2019 07:49:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574257795;
-        bh=igM4FKkHdrSc7hws60TYIUKdxK6fHbvh4VrbAU0B0qg=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=BzRe+u7s+vnkppJrguEj85EG3WqE4wAKog+ctPf92slMETrjH8ejv45M7RgYClLnm
-         7+/Rkl5lJ+HUltj2xwbh3Ab+rpZjsbgtw8449hJwH5uxI85vrAmog7ky2FCKxWw9UC
-         ylaQ2L3yk5qERQhTz/l0oCKpl5MADxkRn5VJ5Q6c=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAKDntBN009270
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Nov 2019 07:49:55 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 20
- Nov 2019 07:49:54 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 20 Nov 2019 07:49:54 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAKDnpEt093218;
-        Wed, 20 Nov 2019 07:49:52 -0600
-Subject: Re: [RFC 0/2] gpiolib: Initial, basic support for shared GPIO lines
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
-        <mripard@kernel.org>, <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com>
-Message-ID: <4c7eeb1c-12b6-9073-3755-8ce1ffc803e4@ti.com>
-Date:   Wed, 20 Nov 2019 15:49:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 08:53:44 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:39494 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727671AbfKTNxo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:53:44 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iXQQN-0003aZ-Vt; Wed, 20 Nov 2019 14:53:40 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Tom Cubie <tom@radxa.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Akash Gajjar <akash@openedev.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 4/5] ARM: dts: rockchip: Add Radxa Carrier board
+Date:   Wed, 20 Nov 2019 14:53:39 +0100
+Message-ID: <12496011.EUIoF19S7S@diego>
+In-Reply-To: <CAMty3ZA+p2pWokLrwnkv6_q0G8d76AntE5Kar4JN8MN48O9VSw@mail.gmail.com>
+References: <20191120113923.11685-1-jagan@amarulasolutions.com> <5644395.EDGZVd1YuU@diego> <CAMty3ZA+p2pWokLrwnkv6_q0G8d76AntE5Kar4JN8MN48O9VSw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191120133409.9217-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Jagan,
 
-On 20/11/2019 15.34, Peter Ujfalusi wrote:
-> Hi,
+Am Mittwoch, 20. November 2019, 14:45:35 CET schrieb Jagan Teki:
+> On Wed, Nov 20, 2019 at 6:55 PM Heiko Stübner <heiko@sntech.de> wrote:
+> > Am Mittwoch, 20. November 2019, 12:39:22 CET schrieb Jagan Teki:
+> > > Carrier board often referred as baseboard. For making
+> > > complete SBC, the associated SOM will mount on top of
+> > > this carrier board.
+> > >
+> > > Radxa has a carrier board which supports on board
+> > > peripherals, ports like USB-2.0, USB-3.0, HDMI, MIPI DSI/CSI,
+> > > eDP, Ethernet, PCIe, USB-C, 40-Pin GPIO header and etc.
+> > >
+> > > Currently this carrier board can be used together with
+> > > VMARC RK3399Por SOM for making Rock PI N10 SBC.
+> > >
+> > > So add this carrier board dtsi as a separate file in
+> > > ARM directory, so-that the same can reuse it in both
+> > > arm32 and arm64 variants of Rockchip SOMs.
+> >
+> > Do you really think someone will create an arm32 soc using that
+> > carrier board?
 > 
-> The initial support can replace all use of GPIOD_FLAGS_BIT_NONEXCLUSIVE if the
-> shared GPIO is configured to follow pass through 'strategy' for the shared GPIO
-> pin.
+> Yes, we have Rock Pi N8 which is using same carrier board design with
+> (+ external codec) on top of RK3288 SOM. I didn't mentioned on the
+> commit message since radxa doesn't officially announced on the
+> website.
 > 
-> I have only implemented DT support.
+> >
+> > Similarly so far I don't think we haven't even seen a lot of reuse
+> > of existing carrier boards at all, other than their initial combination.
+> >
+> > So maybe just having the content of your
+> >         rockchip-radxa-carrierboard.dtsi
+> > in
+> >         rockchip/rk3399pro-rock-pi-n10.dts
+> > from patch 5 might be a better start - at least until there is any
+> > further usage - if at all?
 > 
-> With the shared gpio support one can choose between three different strategy for
-> managing the shared gpio:
-> refcounted low: Keep the line low as long as there is at least one low
-> 		request is registered
-> refcounted high: Keep the line high as long as there is at least one high
-> 		request is registered
-> pass through: all requests are allowed to go through without refcounting.
+> But, this particular design has proper use case.
+> 1. rk3399pro SOM + carrier board (Rock Pi N10)
+> 2. rk3288 SOM + carrier board (Rock Pi N8)
 > 
-> Few shortcomings as of now:
-> - can not handle different GPIO_ACTIVE_ on the user side, both the root GPIO
->   (which is shared) and clients must have the same GPIO_ACTIVE_ mode.
->   We are using common gpio_desc.
->   Like with GPIOD_FLAGS_BIT_NONEXCLUSIVE
-> - refcounting counts _all_ 1/0 requests coming from the users of the shared
->   GPIO. This could cause issues if clients are using the gpiod API in unbalanced
->   way.
->   We would need to have separate tracking for each of the clients and agregate
->   the level they are asking for at any moment. Basically a new gpio-chip on top
->   of the real gpio pin can solve this.
-
-I forgot to add an example for DT.
-
-I have this for two pcm3168a codec, their RST pin is connected to
-tca6416's p0 pin.
-The codec's RST line is low active, so the gpio-shared is configured to
-refcounted high to make sure that a codec is not placed in reset when it
-does not want it.
-
-&main_i2c3 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-	audio_exp: gpio@21 {
-		compatible = "ti,tca6416";
-		reg = <0x21>;
-		gpio-controller;
-		#gpio-cells = <2>;
-
-		p00 {
-			gpio-shared;
-			gpios = <0 GPIO_ACTIVE_LOW>;
-			output-high;
-			refcounted-high;
-			line-name = "CODEC RESET";
-		};
-	};
-
-	pcm3168a_a: audio-codec@47 {
-		compatible = "ti,pcm3168a";
-		reg = <0x47>;
-		#sound-dai-cells = <1>;
-
-		reset-gpios = <&audio_exp 0 GPIO_ACTIVE_LOW>;
-	};
-
-	pcm3168a_b: audio-codec@46 {
-		compatible = "ti,pcm3168a";
-		reg = <0x46>;
-		#sound-dai-cells = <1>;
-
-		reset-gpios = <&audio_exp 0 GPIO_ACTIVE_LOW>;
-	};
-};
-
-
+> >
+> > Also rockchip-radxa-carrierboard might even be overly generic
+> > as there may be multiple carrierboards from Radxa later on.
 > 
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (2):
->   dt-bindings: gpio: Document shared GPIO line usage
->   gpiolib: Support for (output only) shared GPIO line
-> 
->  .../devicetree/bindings/gpio/gpio.txt         |  66 +++++++++
->  drivers/gpio/gpiolib-of.c                     |  28 +++-
->  drivers/gpio/gpiolib.c                        | 132 ++++++++++++++++--
->  drivers/gpio/gpiolib.h                        |  10 ++
->  4 files changed, 223 insertions(+), 13 deletions(-)
-> 
+> I'm slightly disagree of having overlay here, since these are fixed
+> design combinations. where SOM with respective carrier board is
+> mandatory to make final board. Understand that we can have a
+> maintenance over-ahead if we have multiple carrier boards, but right
+> now radxa has only one carrier board with 2 sets of SOM's combinations
+> that indeed fit like a dev board, so there is unused carrier board.
 
-- PÃ©ter
+All is good ... with that information from above (rk3288) this definitly
+makes more sense :-)
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The naming of the file is still a tiny struggle though. Does this board
+maybe have some actual product name or is it really just called
+"carrierboard"? :-)
+
+Thanks
+Heiko
+
+
