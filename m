@@ -2,188 +2,105 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5D8C33C9A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 12:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA394C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 12:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B7322523
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 12:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824AC22521
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 12:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I6Y1ofWc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dYP/0q1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbfKTM4v (ORCPT
+        id S1728173AbfKTM7c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:56:51 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:34174 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729971AbfKTM4v (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 07:56:51 -0500
-Received: by mail-qv1-f67.google.com with SMTP id n12so9644768qvt.1
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 04:56:50 -0800 (PST)
+        Wed, 20 Nov 2019 07:59:32 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:45628 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727674AbfKTM7c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 07:59:32 -0500
+Received: by mail-ua1-f65.google.com with SMTP id w10so5265542uar.12
+        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 04:59:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wtD/eNE9TAmXsnR2IF1O0WWLLWtlBArf0uI74fbpZrc=;
-        b=I6Y1ofWcZLyq/uKNmdCCl9/kv6h14tQOGMfF99XIcPBr2zXYHDnctewepPWDp45hWX
-         34HWqvhN/ZLdDC4eL2yFrqN4yMwpNuPs2gY325lwOdWhGvbVEWeInv79vO8V8BfpLlkX
-         9JEpTyJJiI9ai+op+ZgJtoCD6l2BW8uOj5m+SZi84oFxc+s1N36WSISTqqDbSR4SkY6a
-         tfA/Vovqqcwynhv5sqOdWM5nYh3U1PpHaSsYTvrcJq1FDcTgw41q2YDf8j/3KvRSqifa
-         WQPZ9h2Zo2akBqX6c5sZPSkQ1wzwlOGpsiC5eE8v458CijsaEqC1+rSHLeM+GfHVRbN1
-         vovg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nuqJ0vbClL23gGoYcppi0FrFy7e9Hz/yNcjMSMNBxqE=;
+        b=dYP/0q1UJs+hkupL0Ks33xZa/oPu9OOQ/1POhchabco+MYLW/OVqUGMujUfpI5uX/Z
+         guc95gIHgm0ENwks6ezoHMtNBDv5NpD4kZOt3rckVtc2TNrFfHdbtpCHIzg2WdJrYaXH
+         /xSfomvFi7E/T0tCpoUNe3K5d8eLKhwMpXTlLq8hD5ihVf1MmjEnX8Zrc+Q4dl9OF8vp
+         voHqwV0OwDc47bzLAoCx81iHGZpBIJjGrkq9aPtBI615OOd+WVm9zHE2PC2D1k+vGxR4
+         4PUF1/lLiew7UxLBcxzFkhUWuY57TX2Ka8I2YZ+NgeOlXACnlaJC6D7tFhA87pTU3x45
+         HmRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wtD/eNE9TAmXsnR2IF1O0WWLLWtlBArf0uI74fbpZrc=;
-        b=rqXxeo1Jn53985NCaubrDWrt7VIDpY4Dj8LvR7BTf0nIaxbyDVBpN+vUdeqe9LK5Tu
-         sivFMlXL7X9L/c7K7FKPkglg+tax4k8M0ypCeCgNAdIlBeeoiGxdRTwEYN2aeqWuQTpA
-         8ndTq/a4oW8jmvgt4Kb7bGAORW2Tp7pqv88W0OGlLSDTOM0GIBaNHE3Hm3fdDTpJtdvc
-         S8+ck97X+KN1npRcHvRCGhSExj6zUf0Tb5y4Sw/9jXsBhRdAT65FwrbmOKIaCxPZQEwc
-         jo54/y6RE9cvUQz/w6O1oHUBSknplVOr/rhKbfPgXgSduu+5JJvI57EYBYaTkd4Usw7H
-         xYPA==
-X-Gm-Message-State: APjAAAWgrbiOOqvxTSvg6IkfBx3aD/FHAo7nKQ0a6zap/3Ljj6H4743w
-        SXx6VDnNIflZUdtgWWqAir9zwg==
-X-Google-Smtp-Source: APXvYqw24dE4Bpb6W+86oKmxzS/1gF4C2jq50860GAtv08Qo7BSTHHHRkgr+WA3BAD0STf18ppHdfg==
-X-Received: by 2002:ad4:404e:: with SMTP id r14mr2428885qvp.4.1574254609837;
-        Wed, 20 Nov 2019 04:56:49 -0800 (PST)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id r2sm14109637qtc.28.2019.11.20.04.56.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 20 Nov 2019 04:56:48 -0800 (PST)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org
-Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [Patch v4 3/7] thermal: core: Allow cooling devices to register a parent.
-Date:   Wed, 20 Nov 2019 07:56:29 -0500
-Message-Id: <1574254593-16078-4-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
-References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nuqJ0vbClL23gGoYcppi0FrFy7e9Hz/yNcjMSMNBxqE=;
+        b=bVra8Hth6bKa6InV6rugx0ZnBVOt4DxdbunxRrBQ/NN7OQLm/eDoAN5NQT/Lg8yRSh
+         zHf1VUw4C7I33z2wj5ye1fye5p0mJ8QKT3YKaqHljZa9KasRlDlnBOQAm0M9koR/Jo9I
+         VFnoL4xvVg/NnpCcxmGy7ZqABasz1XKtd0tR8BBZs3cumUZDjksj5Lo0oCzfhC7Liv5h
+         P4/YSaeFPqcxl/Br3bOLBu0CCUSoO12wsET9C/lGOjnIRcPt1Mo/xKnEdwhv04zqoiYX
+         WR9UAehaDMhAOw3IBdRPyQLkFfGn4QTmYKAn9pl1uGAxDrWfGz5lyxM6TJ/PCxTf46U9
+         ihbw==
+X-Gm-Message-State: APjAAAX30DURPErJJlDl0olPF6Cb1ONE55+0E7TSOHI/YUVFtMxrONIj
+        5/wJwMb5eKl9m/PCiwvI42CsAQWjXS1/DzYL9nlpvw==
+X-Google-Smtp-Source: APXvYqzczwcqmzJh3GjUqnWFQGP/+Gp7RUJwV58YrFcSe+bfPCganPSc0GYA3NZbmUkPuarP338JjoXHT98NVoW0E1U=
+X-Received: by 2002:ab0:2042:: with SMTP id g2mr1511287ual.19.1574254771069;
+ Wed, 20 Nov 2019 04:59:31 -0800 (PST)
+MIME-Version: 1.0
+References: <20191118104646.3838-1-i.mikhaylov@yadro.com> <20191118104646.3838-3-i.mikhaylov@yadro.com>
+In-Reply-To: <20191118104646.3838-3-i.mikhaylov@yadro.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 20 Nov 2019 13:58:55 +0100
+Message-ID: <CAPDyKFoz3ipYBGR-6ubfqhtQVG9h16axoHNdSoo+OyNgKRs2Tw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] mmc: sdhci-of-aspeed: enable CONFIG_MMC_SDHCI_IO_ACCESSORS
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With introduction of power domain warming devices, devices that control the
-power domain are registered as the parent of the cooling device so that the
-device-genpd hierarchy in kernel is maintained intact. To enable this,
-introduce a new API thermal_of_cooling_device_parent_register that takes a
-parent device pointer as input. Also, modify
-__thermal_cooling_device_register to register parent of a newly created
-cooling device, if specified.
+On Mon, 18 Nov 2019 at 11:47, Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+>
+> Enable CONFIG_MMC_SDHCI_IO_ACCESSORS on the aspeed board. The read_l
+> callback is used for inverted card detection.
+>
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
- drivers/thermal/thermal_core.c | 22 +++++++++++++++++++---
- include/linux/thermal.h        | 15 +++++++++++++++
- 2 files changed, 34 insertions(+), 3 deletions(-)
+Applied for next, updating the changelog according to Andrew's comments, thanks!
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index d4481cc..912ba75 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -947,6 +947,7 @@ static void bind_cdev(struct thermal_cooling_device *cdev)
-  */
- static struct thermal_cooling_device *
- __thermal_cooling_device_register(struct device_node *np,
-+				  struct device *parent,
- 				  const char *type, void *devdata,
- 				  const struct thermal_cooling_device_ops *ops)
- {
-@@ -979,6 +980,8 @@ __thermal_cooling_device_register(struct device_node *np,
- 	cdev->ops = ops;
- 	cdev->updated = false;
- 	cdev->device.class = &thermal_class;
-+	if (parent)
-+		cdev->device.parent = parent;
- 	cdev->devdata = devdata;
- 	thermal_cooling_device_setup_sysfs(cdev);
- 	dev_set_name(&cdev->device, "cooling_device%d", cdev->id);
-@@ -1024,7 +1027,8 @@ struct thermal_cooling_device *
- thermal_cooling_device_register(const char *type, void *devdata,
- 				const struct thermal_cooling_device_ops *ops)
- {
--	return __thermal_cooling_device_register(NULL, type, devdata, ops);
-+	return __thermal_cooling_device_register(NULL, NULL, type,
-+						 devdata, ops);
- }
- EXPORT_SYMBOL_GPL(thermal_cooling_device_register);
- 
-@@ -1048,10 +1052,22 @@ thermal_of_cooling_device_register(struct device_node *np,
- 				   const char *type, void *devdata,
- 				   const struct thermal_cooling_device_ops *ops)
- {
--	return __thermal_cooling_device_register(np, type, devdata, ops);
-+	return __thermal_cooling_device_register(np, NULL, type, devdata, ops);
- }
- EXPORT_SYMBOL_GPL(thermal_of_cooling_device_register);
- 
-+struct thermal_cooling_device *
-+thermal_of_cooling_device_parent_register(struct device_node *np,
-+					  struct device *parent,
-+					  const char *type, void *devdata,
-+					  const struct
-+					  thermal_cooling_device_ops *ops)
-+{
-+	return __thermal_cooling_device_register(np, parent, type,
-+						 devdata, ops);
-+}
-+EXPORT_SYMBOL_GPL(thermal_of_cooling_device_parent_register);
-+
- static void thermal_cooling_device_release(struct device *dev, void *res)
- {
- 	thermal_cooling_device_unregister(
-@@ -1088,7 +1104,7 @@ devm_thermal_of_cooling_device_register(struct device *dev,
- 	if (!ptr)
- 		return ERR_PTR(-ENOMEM);
- 
--	tcd = __thermal_cooling_device_register(np, type, devdata, ops);
-+	tcd = __thermal_cooling_device_register(np, NULL, type, devdata, ops);
- 	if (IS_ERR(tcd)) {
- 		devres_free(ptr);
- 		return tcd;
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index e45659c..ac5f268 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -448,6 +448,11 @@ struct thermal_cooling_device *
- thermal_of_cooling_device_register(struct device_node *np, const char *, void *,
- 				   const struct thermal_cooling_device_ops *);
- struct thermal_cooling_device *
-+thermal_of_cooling_device_parent_register(struct device_node *np,
-+					  struct device *parent,
-+					  const char *, void *, const struct
-+					  thermal_cooling_device_ops *);
-+struct thermal_cooling_device *
- devm_thermal_of_cooling_device_register(struct device *dev,
- 				struct device_node *np,
- 				char *type, void *devdata,
-@@ -508,6 +513,16 @@ static inline struct thermal_cooling_device *
- thermal_of_cooling_device_register(struct device_node *np,
- 	char *type, void *devdata, const struct thermal_cooling_device_ops *ops)
- { return ERR_PTR(-ENODEV); }
-+
-+static inline struct thermal_cooling_device *
-+thermal_of_cooling_device_parent_register(struct device_node *np,
-+					  struct device *parent,
-+					  const char *, void *, const struct
-+					  thermal_cooling_device_ops *)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
- static inline struct thermal_cooling_device *
- devm_thermal_of_cooling_device_register(struct device *dev,
- 				struct device_node *np,
--- 
-2.1.4
+Kind regards
+Uffe
 
+
+>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 49ea02c467bf..c9c1bb722368 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -159,6 +159,7 @@ config MMC_SDHCI_OF_ASPEED
+>         tristate "SDHCI OF support for the ASPEED SDHCI controller"
+>         depends on MMC_SDHCI_PLTFM
+>         depends on OF && OF_ADDRESS
+> +       select MMC_SDHCI_IO_ACCESSORS
+>         help
+>           This selects the ASPEED Secure Digital Host Controller Interface.
+>
+> --
+> 2.20.1
+>
