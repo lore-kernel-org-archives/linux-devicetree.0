@@ -2,127 +2,139 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D08C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64CFC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 12:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3135E22419
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB20722444
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 12:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="IBafvk3n"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EqVhZA3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbfKTLlT (ORCPT
+        id S1728926AbfKTMAn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:41:19 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41758 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbfKTLlT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 06:41:19 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d29so13712556plj.8
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 03:41:19 -0800 (PST)
+        Wed, 20 Nov 2019 07:00:43 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:46510 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbfKTMAm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 07:00:42 -0500
+Received: by mail-ua1-f65.google.com with SMTP id i31so7669364uae.13
+        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 04:00:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XG3FqVuwcEK3cEEdmwlKOUvSjQLzYWodVEQZQZxdgGw=;
-        b=IBafvk3nhhoTcsHRx+LcFptem/D7w/nySgOpIqNTdynBSbozJ6gJW3N4d5echRt1Y6
-         rqZAnABzdwU3cKUigi+mvaFbMw3RMTDMZ1tZAiOkC3tChk9sECnN/o98UDtHYY4APYsH
-         vQfV8IJL3KN8+dWtPnrjWI3WtARRXUaEe6Q8k=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B0tsxj8KZGAT/o1qcGiW6HKsR+OIwQVXMM2ODuLvIpk=;
+        b=EqVhZA3XS/izMBNsikllPUdPo/A4jO0CJ2WlCc6sonVPI2GnfaVvbdDuNlHdyVmBWs
+         04nfUBbI06D35YPWUGTFpPWM+eHRl7KJqzvMQZ83STlGgvja0fblAtHeSfAFZaJtrKA1
+         zmFiNtK3ttF7B1Fj4bDCbrnfA1x2DjrISFT4bYrf4bnivgaf2hWaN/7r/wMso4uvtHqe
+         shcCcvg8GlTnd3B7NHCeEdi4N+JTWa5XVlWqJoGC8NG0l9O8cxzUQYX3uLaU9pld4Ptn
+         uKq5VO98MpAoB+6hx23bKtwlM4Kx3cxqoTlHoH7OXOjuf6SVEg0kUKz7XdpkTWoKVgaL
+         HNqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XG3FqVuwcEK3cEEdmwlKOUvSjQLzYWodVEQZQZxdgGw=;
-        b=RraTRg24b9gH3VFJtYndb8dUEBxPzNgN4LXB15E/h1rRe/R2TwYRG0JLSCUdK+TQ2J
-         aBLoMB/9ogUBJ8nyyQIMMqrldpNAURgWVWVo0QDppG3/W3hJ9h0Gb8t07h0m5BijOJ5O
-         06Is8wOYDaZPc+JC0nPqiim3b7zfM8UWLtaovqDXeWbs4a3mL95k9h/l+Rxq4Hdk9hpT
-         lV8VhU78OcPwv8ZQueThqn+3ABTxVnPmrAJgRiDEcQqrh4rIRfOooWt2jxyGkz02Y0JA
-         oNPAnchNsoW+tbRgotOLnLNL0kUqrzdDgFisYF0tnpF5GbuHJeRYXVQ9lwLvblMxXekH
-         955w==
-X-Gm-Message-State: APjAAAXRwdx9Gl980lfxDqyBms4L+kBC+PvPbpQlGGLUKj34vqc3QITk
-        SneCyo8JSk+wAyB8JYD2/mOsXg==
-X-Google-Smtp-Source: APXvYqxKa0jSG5czR1wxW5TZYm5l7Yz1+Q3BK+S6kuzHUAq2+gY5d3tie4YLeCiftc91wuh1LEOH7Q==
-X-Received: by 2002:a17:902:4a:: with SMTP id 68mr2526359pla.8.1574250078726;
-        Wed, 20 Nov 2019 03:41:18 -0800 (PST)
-Received: from localhost.localdomain ([115.97.180.31])
-        by smtp.gmail.com with ESMTPSA id h185sm13492850pgc.87.2019.11.20.03.41.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 03:41:18 -0800 (PST)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 5/5] arm64: dts: rockchip: Add Radxa Rock Pi N10 initial support
-Date:   Wed, 20 Nov 2019 17:09:23 +0530
-Message-Id: <20191120113923.11685-6-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20191120113923.11685-1-jagan@amarulasolutions.com>
-References: <20191120113923.11685-1-jagan@amarulasolutions.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B0tsxj8KZGAT/o1qcGiW6HKsR+OIwQVXMM2ODuLvIpk=;
+        b=klOuo5eYSZ0GIQJEiyPjbNYgCfxohKZSlFPmGLz8r2KF64H4IRmJrzIAG6tXnLiDJ/
+         hSqYbOKcZzWoKsBo7QjxHXMxc/oke368CeVSvsInMkYFCWbifxuiDsro+KtUg48DbYZL
+         mw8OQNsGEy7xRFS8Zao1aYG8jy253EZBvNKmFbYAAUsn5E92L4DOjACZbw1ByEydFaav
+         kAFxLc/GaNvAhTsViAnGeeY/SMhluseSGu7Bi8/1Qe+N8bzJmxF2Ney1BeGvfu6CrQYw
+         M31kQ4k0NBkJ1vCDXEhu4PHvcU26VWZ6m8Clz+9ML/zx06boR7zX+C1elpnH9xznnMl3
+         UVDg==
+X-Gm-Message-State: APjAAAW3N5+CdjD8ajg72VyygK/vFVVw59kzgfwxVPMYOQzO+8Q+0Gl9
+        b4e+fYIEqyQ3yd2uQDWnU1OduFj3RvOC9/mNLWdsyQ==
+X-Google-Smtp-Source: APXvYqyiLCF3MBQoSmzlqqxli2MvGV261pRD3zdGvysKb7s9Nit3G2b6p/dRiZmGs4K0UtVDM+P1vhy5Y89wBip3NWE=
+X-Received: by 2002:ab0:74cd:: with SMTP id f13mr1351834uaq.104.1574251241748;
+ Wed, 20 Nov 2019 04:00:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191119154621.55341-1-niklas.cassel@linaro.org>
+In-Reply-To: <20191119154621.55341-1-niklas.cassel@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 20 Nov 2019 13:00:05 +0100
+Message-ID: <CAPDyKFqjsJSRW7XvfUe2Ssewqxo5Xjk_3p_EywP_rTsvrdNDYQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/5] Add support for QCOM Core Power Reduction
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
-- VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+On Tue, 19 Nov 2019 at 16:46, Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> This series adds support for Core Power Reduction (CPR), a form of
+> Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
+>
+> This series is based on top of the qcs404 cpufreq patch series that
+> hasn't landed yet:
+> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=173423
+> as well as that series' matching device tree changes:
+> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=165457
+>
+> For testing purposes, this patch series, including the dependencies
+> listed above, is available on the following git tag:
+> https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-v6
+>
+> CPR is a technology that reduces core power on a CPU or on other device.
+> It reads voltage settings from efuses (that have been written in
+> production), it uses these voltage settings as initial values, for each
+> OPP.
+>
+> After moving to a certain OPP, CPR monitors dynamic factors such as
+> temperature, etc. and adjusts the voltage for that frequency accordingly
+> to save power and meet silicon characteristic requirements.
+>
+> This driver has been developed together with Jorge Ramirez-Ortiz, and
+> is based on an RFC by Stephen Boyd[1], which in turn is based on work
+> by others on codeaurora.org[2].
+>
+> [1] https://lkml.org/lkml/2015/9/18/833
+> [2] https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/regulator/cpr-regulator.c?h=msm-4.14
+>
+> Changes since v5:
+> -Removed pm_ops from platform_driver struct.
+>  (This was embarrassingly not properly removed in previous patch revision.)
+>
+> Niklas Cassel (5):
+>   dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+>   power: avs: Add support for CPR (Core Power Reduction)
+>   arm64: dts: qcom: qcs404: Add CPR and populate OPP table
+>   arm64: defconfig: enable CONFIG_QCOM_CPR
+>   arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
+>
+>  .../bindings/power/avs/qcom,cpr.txt           |  130 ++
+>  MAINTAINERS                                   |    8 +
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi          |  132 +-
+>  arch/arm64/configs/defconfig                  |    2 +
+>  drivers/power/avs/Kconfig                     |   15 +
+>  drivers/power/avs/Makefile                    |    1 +
+>  drivers/power/avs/qcom-cpr.c                  | 1754 +++++++++++++++++
+>  7 files changed, 2034 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+>  create mode 100644 drivers/power/avs/qcom-cpr.c
+>
+> --
+> 2.23.0
+>
 
-VAMRC RK3399Pro SOM need to mount on top of Radxa carrier
-board for making Rock Pi N10 SBC.
+For the series (except patch 2 that I provided some comment for), feel
+free to add:
 
-So, add initial support for Rock Pi N10 by including rk3399,
-rk3399pro vamrc-som and raxda carrier board dtsi files.
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- arch/arm64/boot/dts/rockchip/Makefile           |  1 +
- .../boot/dts/rockchip/rk3399pro-rock-pi-n10.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 48fb631d5451..433033b18170 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -36,3 +36,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399pro-rock-pi-n10.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-new file mode 100644
-index 000000000000..1f7fbaa92c38
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Radxa Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
-+
-+/dts-v1/;
-+#include "rk3399.dtsi"
-+#include "rk3399-opp.dtsi"
-+#include "rk3399pro-vmarc-som.dtsi"
-+#include <arm/rockchip-radxa-carrierboard.dtsi>
-+
-+/ {
-+	model = "Radxa ROCK Pi N10";
-+	compatible = "radxa,rockpi-n10", "rockchip,rk3399pro";
-+};
--- 
-2.18.0.321.gffc6fa0e3
-
+Kind regards
+Uffe
