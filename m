@@ -2,252 +2,138 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4385DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F4CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077E322409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6C32240D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 02:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z0GrXToO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AGS0r1kR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKTCK0 (ORCPT
+        id S1727295AbfKTC3u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 19 Nov 2019 21:10:26 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10518 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfKTCK0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 21:10:26 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd4a0930000>; Tue, 19 Nov 2019 18:10:27 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 19 Nov 2019 18:10:24 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 19 Nov 2019 18:10:24 -0800
-Received: from [10.2.175.254] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Nov
- 2019 02:10:22 +0000
-Subject: Re: [PATCH v1 06/17] soc: pmc: Add blink output clock registration to
- Tegra PMC
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-7-git-send-email-skomatineni@nvidia.com>
- <95f3e928-3e08-abbd-5617-d3570a592c06@gmail.com>
- <87dca259-1f3f-6e74-db45-411ed84afba7@nvidia.com>
-Message-ID: <53c70a0a-edf0-b806-1320-215affba4c28@nvidia.com>
-Date:   Tue, 19 Nov 2019 18:09:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 19 Nov 2019 21:29:50 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40331 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727243AbfKTC3u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Nov 2019 21:29:50 -0500
+Received: by mail-pf1-f194.google.com with SMTP id r4so13409322pfl.7
+        for <devicetree@vger.kernel.org>; Tue, 19 Nov 2019 18:29:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3izFBnbbEPZlNBqSY62YGlpGBQ6lEBGA76YUc2oWAbI=;
+        b=AGS0r1kRuXM0zTE9c/LCDSSkWzND1ZHuEL0QaejlsCqbzQtIWud+mntU+6EcdgADzS
+         475Pqc/esEVt4m0GvAizYR75CeN/x2eGQO1xzb8XsvnujuefvyURFbA00rvUHSAHZBd1
+         FtYeXOf+7bxZzDZ+PQfUSSTvHjf/u9j3d6b5JQRD1kyKY0sGJFC0YZRCair8JbINNAEB
+         NkbWWrvRJ29oXpD0iGxM2IuPPXvRicStPpC5a5yBeGqLfe7FgVD/Y70YnCDpzUyqRGWS
+         Oz+NXfYt6WG5WbD2H+resfoNXYL1ncT/IKyt6j9DFEi4dCIUiJMQgo6nyD17Jw5aHSR1
+         bH6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3izFBnbbEPZlNBqSY62YGlpGBQ6lEBGA76YUc2oWAbI=;
+        b=Bgo2NugJHFQ6cIcQPpg60jUrioVF6ZBc2cnf2B5M8tVLmlNM8JDUE9OrCKIfhJv5kh
+         aQm+7PRvPjYILkM4azGChUh6vkze5ioPU6Da1l+oKPYC079hnSloMxvLoL7KLIVNbY1E
+         6vhnyFPO/tWTqKhfWHjQ2BBU0hwG/kxkLrdMh2vvDwnPMBB+BXJoRKo8FoOomlvgqr4K
+         3jbYCNNWJLaFfGGVrRjmrRrQPcXPK5fNN/VkJF59LCXlSV6QuDmEPv13V8QWKtXTf+mp
+         3Vwr+V7xWEEszmTi5uPQqQKiEjG0faxGuk9Ov4XnThDukI8Ri+5WbhxbvSZ9VTt+VWup
+         aiQQ==
+X-Gm-Message-State: APjAAAXByDWMRXDdNhansom5Gdl/LjpxBl3Om3Mi3bEyaoUXiysRE0MV
+        P+QjxcbzbqUBTQGQ3AFMFVMXAQ==
+X-Google-Smtp-Source: APXvYqw3F9KheQlkCF24qoQyemaO11ra3UXS3JnsQXzkH7ZbOtXvWRGw6T8jQsN8GAIPJiKIT5vuFg==
+X-Received: by 2002:a63:de0b:: with SMTP id f11mr420349pgg.8.1574216987639;
+        Tue, 19 Nov 2019 18:29:47 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h3sm26175214pgr.81.2019.11.19.18.29.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 18:29:46 -0800 (PST)
+Date:   Tue, 19 Nov 2019 18:29:43 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     robh+dt@kernel.org, ulf.hansson@linaro.org, rnayak@codeaurora.org,
+        agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
+Subject: Re: [PATCH 2/6] dt-bindings: power: Add rpmh power-domain bindings
+ for SM8150
+Message-ID: <20191120022943.GK18024@yoga>
+References: <20191118173944.27043-1-sibis@codeaurora.org>
+ <0101016e7f99ad2b-2bce2fac-2f02-4b3f-ac64-09942f7251ea-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-In-Reply-To: <87dca259-1f3f-6e74-db45-411ed84afba7@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574215827; bh=Hh0GOH7eI+EM4yn3akfErP+WyL6jbWR7To3u3en8SIo=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Z0GrXToOU+Vy64rqC1jX65K2twoBOnObV/c2SJp14BVJtIyagbX5EME0bks8+k+Jb
-         I9cc+1GKzojlzO9/gspVpYyrpvhXVJ2aQRK6so56D6gK9Ecdr+WKggmDj2rQtrQjoB
-         vQbMZ86064Kl0mv/ztAjsbasmPP67Xd9w5DzrRuXesMrKiqJqvxHGd4BrlCstZonSC
-         X+HV3vucBvB+4KtUuTMXQcBtfUlKsHsrZFFyll74AUAMyHWGZgAwQyEoHSBwRLSQWh
-         Rm1ze6oZkAJCEUJ4CTutvOY+HGmCUrWnT9r+Jgod6QokDYMZTmczmOHOEtCU5drP/a
-         Yct8TTZhr4XcA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016e7f99ad2b-2bce2fac-2f02-4b3f-ac64-09942f7251ea-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon 18 Nov 09:40 PST 2019, Sibi Sankar wrote:
 
-On 11/19/19 2:13 PM, Sowjanya Komatineni wrote:
->
-> On 11/19/19 11:34 AM, Dmitry Osipenko wrote:
->> 19.11.2019 09:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> Tegra PMC has blink control to output 32 Khz clock out to Tegra
->>> blink pin. Blink pad DPD state and enable controls are part of
->>> Tegra PMC register space.
->>>
->>> Currently Tegra clock driver registers blink control by passing
->>> PMC address and register offset to clk_register_gate which performs
->>> direct PMC access during clk_ops and with this when PMC is in secure
->>> mode, any access from non-secure world does not go through.
->>>
->>> This patch adds blink control registration to the Tegra PMC driver
->>> using PMC specific clock gate operations that use tegra_pmc_readl
->>> and tegra_pmc_writel to support both secure mode and non-secure
->>> mode PMC register access.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>> =C2=A0 drivers/soc/tegra/pmc.c | 42=20
->>> ++++++++++++++++++++++++++++++++++++++++++
->>> =C2=A0 1 file changed, 42 insertions(+)
->>>
->>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>> index 790a6619ba32..095e89c7fa3f 100644
->>> --- a/drivers/soc/tegra/pmc.c
->>> +++ b/drivers/soc/tegra/pmc.c
->>> @@ -61,12 +61,15 @@
->>> =C2=A0 #define=C2=A0 PMC_CNTRL_SYSCLK_OE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(11) /* system clock enable */
->>> =C2=A0 #define=C2=A0 PMC_CNTRL_SYSCLK_POLARITY=C2=A0=C2=A0=C2=A0 BIT(10=
-) /* sys clk polarity */
->>> =C2=A0 #define=C2=A0 PMC_CNTRL_PWRREQ_POLARITY=C2=A0=C2=A0=C2=A0 BIT(8)
->>> +#define=C2=A0 PMC_CNTRL_BLINK_EN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 BIT(7)
->>> =C2=A0 #define=C2=A0 PMC_CNTRL_MAIN_RST=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(4)
->>> =C2=A0 =C2=A0 #define PMC_WAKE_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0c
->>> =C2=A0 #define PMC_WAKE_LEVEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 0x10
->>> =C2=A0 #define PMC_WAKE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x14
->>> =C2=A0 #define PMC_SW_WAKE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x18
->>> +#define PMC_DPD_PADS_ORIDE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=
-x1c
->>> +#define=C2=A0 PMC_DPD_PADS_ORIDE_BLINK=C2=A0=C2=A0=C2=A0 BIT(20)
->>> =C2=A0 =C2=A0 #define DPD_SAMPLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x020
->>> =C2=A0 #define=C2=A0 DPD_SAMPLE_ENABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 BIT(0)
->>> @@ -79,6 +82,7 @@
->>> =C2=A0 =C2=A0 #define PWRGATE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x38
->>> =C2=A0 +#define TEGRA210_PMC_BLINK_TIMER=C2=A0=C2=A0=C2=A0 0x40
->>> =C2=A0 #define PMC_IMPL_E_33V_PWR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x40
->>> =C2=A0 =C2=A0 #define PMC_PWR_DET=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x48
->>> @@ -247,6 +251,9 @@ static struct pmc_clk_init_data=20
->>> tegra_pmc_clks_data[] =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_CLK(3, 22, 18, 0, 0),
->>> =C2=A0 };
->>> =C2=A0 +static struct pmc_clk_gate blink_override;
->>> +static struct pmc_clk_gate blink;
->>> +
->>> =C2=A0 struct tegra_powergate {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct generic_pm_domain genpd;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc;
->>> @@ -359,6 +366,7 @@ struct tegra_pmc_soc {
->>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pmc_clk_init_data *pmc_clk=
-s_data;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int num_pmc_clks;
->>> +=C2=A0=C2=A0=C2=A0 bool has_blink_output;
->>> =C2=A0 };
->>> =C2=A0 =C2=A0 static const char * const tegra186_reset_sources[] =3D {
->>> @@ -2530,6 +2538,9 @@ static void tegra_pmc_clock_register(struct=20
->>> tegra_pmc *pmc,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* each pmc clock output has a mux and a=
- gate */
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num_clks =3D pmc->soc->num_pmc_clks * 2;
->>> =C2=A0 +=C2=A0=C2=A0=C2=A0 if (pmc->soc->has_blink_output)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num_clks +=3D 1;
->>> +
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!num_clks)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>> =C2=A0 @@ -2604,6 +2615,30 @@ static void tegra_pmc_clock_register(stru=
-ct=20
->>> tegra_pmc *pmc,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0 +=C2=A0=C2=A0=C2=A0 if (pmc->soc->has_blink_output) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0x0, =
-TEGRA210_PMC_BLINK_TIMER);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clkgate =3D tegra_pmc_clk_g=
-ate_register("blink_override",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "clk_32k",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0, &blink_override,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 PMC_DPD_PADS_ORIDE,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_DPD_PADS_ORIDE_BLINK,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clkgate))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 got=
-o free_clks;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clkgate =3D tegra_pmc_clk_g=
-ate_register("blink",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "blink_override",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0, &blink,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_CNTRL,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_CNTRL_BLINK_EN,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clkgate))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 got=
-o free_clks;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_data->clks[TEGRA_PMC_CL=
-K_BLINK] =3D clkgate;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_register_clkdev(clkgate=
-, "blink", NULL);
->> Tegra20 has pmc->soc->num_pmc_clks =3D 0 and thus num_clks =3D 1, while
->> TEGRA_PMC_CLK_BLINK =3D 6.
->>
->> BTW, Tegra30 doesn't boot. I'll try again v2.
->>
->> Please fix it all in v2. Compile-test all patches and make at least a
->> boot-test where possible.
->>
->> [snip]
->
-> looks like blink output should be enabled during boot for Tegra20 and=20
-> Tegra30 platforms.
->
-> Will add init state for blink output in V2. Will compile for old=20
-> Tegra's as well and will try boot-test.
->
-Hi Thierry,
+> Add RPMH power-domain bindings for the SM8150 family of SoCs.
+> 
 
-With implementation of PMC helper functions for PLLM overrides and PLLE=20
-IDDQ PMC programming to use in clock driver during registering PLLM,=20
-need tegra_pmc_early_init to happen prior to tegra_clk_init as all=20
-helper functions have to use tegra_pmc_soc for flags and pmc register=20
-offset.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Any suggestion?
-
-
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  .../devicetree/bindings/power/qcom,rpmpd.txt       |  1 +
+>  include/dt-bindings/power/qcom-rpmpd.h             | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> index bc75bf49cdaea..f3bbaa4aef297 100644
+> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> @@ -10,6 +10,7 @@ Required Properties:
+>  	* qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of SoC
+>  	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
+>  	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
+> +	* qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family of SoC
+>   - #power-domain-cells: number of cells in Power domain specifier
+>  	must be 1.
+>   - operating-points-v2: Phandle to the OPP table for the Power domain.
+> diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
+> index f05f8b1808ec9..7d43bafc0026b 100644
+> --- a/include/dt-bindings/power/qcom-rpmpd.h
+> +++ b/include/dt-bindings/power/qcom-rpmpd.h
+> @@ -15,12 +15,26 @@
+>  #define SDM845_GFX	7
+>  #define SDM845_MSS	8
+>  
+> +/* SM8150 Power Domain Indexes */
+> +#define SM8150_MSS	0
+> +#define SM8150_EBI	1
+> +#define SM8150_LMX	2
+> +#define SM8150_LCX	3
+> +#define SM8150_GFX	4
+> +#define SM8150_MX	5
+> +#define SM8150_MX_AO	6
+> +#define SM8150_CX	7
+> +#define SM8150_CX_AO	8
+> +#define SM8150_MMCX	9
+> +#define SM8150_MMCX_AO	10
+> +
+>  /* SDM845 Power Domain performance levels */
+>  #define RPMH_REGULATOR_LEVEL_RETENTION	16
+>  #define RPMH_REGULATOR_LEVEL_MIN_SVS	48
+>  #define RPMH_REGULATOR_LEVEL_LOW_SVS	64
+>  #define RPMH_REGULATOR_LEVEL_SVS	128
+>  #define RPMH_REGULATOR_LEVEL_SVS_L1	192
+> +#define RPMH_REGULATOR_LEVEL_SVS_L2	224
+>  #define RPMH_REGULATOR_LEVEL_NOM	256
+>  #define RPMH_REGULATOR_LEVEL_NOM_L1	320
+>  #define RPMH_REGULATOR_LEVEL_NOM_L2	336
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
