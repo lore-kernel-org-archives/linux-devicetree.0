@@ -2,167 +2,101 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E487C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4897C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0404F20885
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B88B2068F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fXFolFfT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPAKdeb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfKTPFL (ORCPT
+        id S1731221AbfKTP2o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:05:11 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16242 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728030AbfKTPFL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:05:11 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAKEv3XH012326;
-        Wed, 20 Nov 2019 16:04:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=B4eTGdmy9M6RCxNN9IMGP9gViNyeowzelSDgABH62j0=;
- b=fXFolFfTBnHvkrJczHAFOGhstYXWmPF1ic+/nyQXCPpTF9LJA4cGSmNYX59jMj1anpz3
- CVZuhz8WsM0kkVwpl2WaTHGYHQpSMP2ESQjyEaj6DgsPNF6Cc7or/cBrXWO7Ffprpz9X
- DgGQqHbP6ZWd1hpwzXcVeJwRVKNRCpmqt+NMO6qYsRVZKrj6+n3nx9CagynpAJasjWjg
- FUPNF7Of05JQ5Hx4zoJNv0OB76YPVKGeNmIeApVkvU/0FNvb89UyR15w4b8g4n0h73vx
- yind01xOACT4Uugyzo34/OF00K0A6hmSZrfnWeCAr5r9rxh7kk/hy2Gq6uUvCiPpKy6j 4Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wa9up6nbv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Nov 2019 16:04:56 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2A83510002A;
-        Wed, 20 Nov 2019 16:04:56 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E82D62B4F11;
-        Wed, 20 Nov 2019 16:04:55 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 20 Nov
- 2019 16:04:54 +0100
-Subject: Re: [PATCH 0/6] STM32 DT: Updates for SOC diversity
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>, <arnd@arndb.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-References: <20191120144109.25321-1-alexandre.torgue@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <29723f43-11cb-1e95-80a0-407c99a14208@st.com>
-Date:   Wed, 20 Nov 2019 16:04:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 10:28:44 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37838 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730428AbfKTP2m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 10:28:42 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t1so295405wrv.4;
+        Wed, 20 Nov 2019 07:28:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tB1mv0iagpasqt+ubXAygnT8VXICt+ouOxxy8t0xYvs=;
+        b=uPAKdeb/DWgZDZtC6f1PbTauQGenxGV5fSTMcND1isct3YzemSRgAdB0N7jA5+V38h
+         FhBHk3Tnhh1VFhkdWaArFcpR/RZrp2LZLBOhqIc1g/lXD+Tk7Coz5alp6WrhjPinO6eW
+         pzCkQBNl8uLpO9zS9oy6XSZPEPhPIlLZPOp4Sy7/kglTXhqpjsDLnyAiny1bQR/2T5LA
+         +/IzB2HPY4qOPar2lXMazEgUOads0pzUss8YpdjjM5sr43uAhV1olQeOBd5GG4md35KA
+         cu6Q0iEhewBs7u+M7oNmof+HM42XkgLLmaZ510VC79sVkXbnoBxi+ALe6DxCqKGlgEtK
+         yjyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tB1mv0iagpasqt+ubXAygnT8VXICt+ouOxxy8t0xYvs=;
+        b=TYxane9cgFA9kUcCJQ2X5vsS8ngfgZQsRkv8+LQ8vTTeDWUvGnGVGTkAhWFlB6x+TF
+         aQEwee4g0o7V1enoqwXIKLgOtObCxE4SvKq4P41D23L7pz0nQvxEFirMP4+dBrXZp9AR
+         XIYssFuuWXIvgmYXkdKPUGbDe5bGp70iIMH4u0PUOut5Ru+Qpy8sBXYkM96zmks2zmdb
+         qzgg8ayBOVfiH582B+3rgBZgxsCvPtGyic3U7v0BtAwp+0XwKf9aLZoh65Mf/k7IueKo
+         GfphFx8z+cDQRAFCUjwcBGJqNKNShs2oV7h7tEgZCUyn0IFDz+1sMkGEmo66C1DxbPOr
+         jXvQ==
+X-Gm-Message-State: APjAAAVIrUTFJiT91u9pGAEjznWblIANvJM/4YhlSiwGKGMjQ9dRxP5J
+        ManGIeVoIBEQZMGFAcfVEfQ=
+X-Google-Smtp-Source: APXvYqzRCrNiWv3WJ4S0PHDL3ahCsxIQu72pLjaCVPEGuCu8yR5dYNXuP35CTbFHByY0P1rBekgHEg==
+X-Received: by 2002:a5d:6cb0:: with SMTP id a16mr4316101wra.194.1574263719888;
+        Wed, 20 Nov 2019 07:28:39 -0800 (PST)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id w4sm31797881wrs.1.2019.11.20.07.28.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 07:28:39 -0800 (PST)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 2/3] ARM: dts: sun8i: a33: add the new SS compatible
+Date:   Wed, 20 Nov 2019 16:28:32 +0100
+Message-Id: <20191120152833.20443-3-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
+References: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191120144109.25321-1-alexandre.torgue@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-20_04:2019-11-15,2019-11-20 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add the new A33 SS compatible to the crypto node.
 
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ arch/arm/boot/dts/sun8i-a33.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 11/20/19 3:41 PM, Alexandre Torgue wrote:
-> This series updates stm32mp device tree files in order to handle the STM32MP15
-> part numbers diversity. STM32MP15 part numbers are built in this way:
-> 
-> -STM32MP15X: X = [1, 3, 7] for IPs diversity:
->   -STM32MP151 = basic part
->   -STM32MP153 = STM32MP153  + a second CPU A7 + MCAN(x2)
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index 1532a0e59af4..a2c37adacf77 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -215,7 +215,7 @@
+ 		};
+ 
+ 		crypto: crypto-engine@1c15000 {
+-			compatible = "allwinner,sun4i-a10-crypto";
++			compatible = "allwinner,sun8i-a33-crypto";
+ 			reg = <0x01c15000 0x1000>;
+ 			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_BUS_SS>, <&ccu CLK_SS>;
+-- 
+2.23.0
 
-Sorry for typo: -STM32MP153 = STM32MP151  + a second CPU A7 + MCAN(x2)
-
->   -STM32MP157 = STM32MP153 + DSI + GPU
-> 
-> -STMM32MP15xY: Y = [a, c] for security diversity:
->   -STM32MP15xA: basic part.
->   -STM32MP15xC: adds crypto IP.
-> 
-> -STM32MP15xxZZ: ZZ = [aa, ab, ac, ad] for packages (IO) diversity:
->   -STM32MP15xxAA: TFBGA448 18x18
->   -STM32MP15xxAB: LFBGA354 16x16
->   -STM32MP15xxAC: TFBGA361 12x12
->   -STM32MP15xxAD: TFBGA257 10x10
-> 
-> New device tree files are created and some existing are renamed to match with
-> this split.
-> 
-> In this way it is easy to assemble (by inclusion) those files to match with the
-> SOC partnumber used on board, and then it's simpler for users to create their
-> own device tree board file using the correct SOC.
-> 
-> For more details:
-> 
-> See STM32MP151 [1], STM32MP153 [2], STM32MP157 [3] reference manuals:
->   [1] https://www.st.com/resource/en/reference_manual/dm00366349.pdf
->   [2] https://www.st.com/resource/en/reference_manual/dm00366355.pdf
->   [3] https://www.st.com/resource/en/reference_manual/dm00327659.pdf
-> 
-> Product family:
->   https://www.st.com/en/microcontrollers-microprocessors/stm32-arm-cortex-mpus.html#products
-> 
-> regards
-> Alex
-> 
-> Alexandre Torgue (6):
->    ARM: dts: stm32: Adapt stm32mp157 pinctrl to manage STM32MP15xx SOCs
->      family
->    ARM: dts: stm32: Update stm32mp157 pinctrl files
->    ARM: dts: stm32: Introduce new STM32MP15 SOCs: STM32MP151 and
->      STM32MP153
->    ARM: dts: stm32: Manage security diversity for STM32M15x SOCs
->    ARM: dts: stm32: Adapt STM32MP157 DK boards to stm32 DT diversity
->    ARM: dts: stm32: Adapt STM32MP157C ED1 board to STM32 DT diversity
-> 
->   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 1087 +++++++++++++++
->   .../dts/{stm32mp157c.dtsi => stm32mp151.dtsi} |  218 ++-
->   arch/arm/boot/dts/stm32mp153.dtsi             |   45 +
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     | 1240 -----------------
->   arch/arm/boot/dts/stm32mp157.dtsi             |   31 +
->   arch/arm/boot/dts/stm32mp157a-avenger96.dts   |    5 +-
->   arch/arm/boot/dts/stm32mp157a-dk1.dts         |  604 +-------
->   arch/arm/boot/dts/stm32mp157c-dk2.dts         |    6 +-
->   arch/arm/boot/dts/stm32mp157c-ed1.dts         |    6 +-
->   arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi  |   90 --
->   arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi  |   62 -
->   arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi  |   78 --
->   arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi  |   62 -
->   arch/arm/boot/dts/stm32mp15xc.dtsi            |   18 +
->   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  606 ++++++++
->   arch/arm/boot/dts/stm32mp15xxaa-pinctrl.dtsi  |   85 ++
->   arch/arm/boot/dts/stm32mp15xxab-pinctrl.dtsi  |   57 +
->   arch/arm/boot/dts/stm32mp15xxac-pinctrl.dtsi  |   73 +
->   arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi  |   57 +
->   19 files changed, 2232 insertions(+), 2198 deletions(-)
->   create mode 100644 arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
->   rename arch/arm/boot/dts/{stm32mp157c.dtsi => stm32mp151.dtsi} (91%)
->   create mode 100644 arch/arm/boot/dts/stm32mp153.dtsi
->   delete mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp157.dtsi
->   delete mode 100644 arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi
->   delete mode 100644 arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi
->   delete mode 100644 arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi
->   delete mode 100644 arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp15xc.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp15xxaa-pinctrl.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp15xxab-pinctrl.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp15xxac-pinctrl.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi
-> 
