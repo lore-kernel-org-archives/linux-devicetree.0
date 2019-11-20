@@ -2,94 +2,107 @@ Return-Path: <SRS0=8557=ZM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B95C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 18:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC0EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 18:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE4B208A1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 18:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42056208A3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 20 Nov 2019 18:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="mHy2fsGV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SkynIjmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfKTSTu (ORCPT
+        id S1727783AbfKTSWK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 13:19:50 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:29032 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfKTSTu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 13:19:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574273988;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=6dWqLxdoQNqzAy0WaMslQR1kh9mHzQEQyVgDF/g0rPg=;
-        b=mHy2fsGVpvRkpr7aHsmlKHXzyR4EYwtyncdYB9n2lHbE4YvZ4UHTdVKIAgWGjrToHA
-        RfijoSGW1JhgEh9gFN4roFss6geirTg7kFytv4esZnbQJhVnjf33Ho8KMg7ha3HjzdW3
-        AxCu6hm0WRoB5Qb87ha2GuRUYfcGCs4ELUGpOYbg8fCP+r1P49HVfklzTb3zsBAFUEr3
-        /IaK6aqVjyITbUift/vQBK5q0zGU7vBtXuuqSV74G2EMPKCL2jvxJFvY/wov1u32wdHA
-        Kg0ZXeNqaYe7w/S3fI1KPhuqDLy1PJfzygPVLJ8ro80Z+VbfxdSkxfHVD+nYD/N6H+kE
-        +OIg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXs8Lvtn4="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vAKIJlvAY
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 20 Nov 2019 19:19:47 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add yet another for ST-Ericsson
-Date:   Wed, 20 Nov 2019 19:18:54 +0100
-Message-Id: <20191120181857.97174-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 20 Nov 2019 13:22:10 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42131 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727671AbfKTSWK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 13:22:10 -0500
+Received: by mail-wr1-f65.google.com with SMTP id a15so1017226wrf.9;
+        Wed, 20 Nov 2019 10:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eeX2JNGz9HgVPRGIoEvaZTiS7IkFyrAlD7or7JXr8vc=;
+        b=SkynIjmxsxkmxh/wPmUK8pd7PNaphXdyhEUIdnq3SblLrQkpRfaBQ95P7IllqxCE1Q
+         bYtNWuLYhAsujPXtTVtvu+Ec8gqz8k4KrLrcrzwzqBFTVDRLl5FCL5SSqpu9xJY/FUmO
+         OiQJyBw1pzVcqb+GeRYMTMEp5MwcYYc0qO2it/cLFXLExE3BkxBXB7NpxJ4s7eksSI4I
+         4ndtiez1cia0Mt6vB/KRO9T8K2+T6vk2/4YgN4pAGbK0oXClH+jWdvLsLmFMPWeymO01
+         f4Wo29TPkN1Jm5DVID+ZcebefoVYBCUR/jwfe5B+HxqIWB5Rx+iQSsK4V5nk5Df05eNi
+         klPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eeX2JNGz9HgVPRGIoEvaZTiS7IkFyrAlD7or7JXr8vc=;
+        b=oOCa3ABozCLoGxg56+g0wlpcTGWcT3LfyupDW42pQGjh9JjbFlNtd3T/Fl/nKjfL7B
+         +VVwuo/r+YKCErM/jsvQgqQcnSCs6lVq5Tty6tQAROnT7gITsM/MM0ZFwZx++Qo4rsRi
+         qpHqglQexRjp9fR7Ihkpy0XGgnLPGgr/nwq7C/Doka8SgaugAqsd7Scnxj1eXjML/O52
+         bWHxHsIOc6ufNLV7RNk/LXxU+cjoneY0lSab4gwit0tnHFtjSldiIgZxeuPSOQIM0ijU
+         xWwqYWyYJIZTIAlRKumkGdmvXfmC+irDWiRkWNvFyJnMQZkLq1CdM3n+I2chrHvFUEdC
+         OjBw==
+X-Gm-Message-State: APjAAAVJTRNFSThDx3ZpluGVI5J3gU7MuzGYY1Bkfc/pLmYJwmWCJGRV
+        tU72L8mWxwigAoNrVrCg+ZY=
+X-Google-Smtp-Source: APXvYqydFnhbveIbTOtqqNnEIOn1jk8I2Y9/1K8cL2fZdPqDactkdjK8DhnZY+GtVUCkWTFR9vhWuw==
+X-Received: by 2002:a5d:6746:: with SMTP id l6mr846246wrw.349.1574274127481;
+        Wed, 20 Nov 2019 10:22:07 -0800 (PST)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id x205sm151153wmb.5.2019.11.20.10.22.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 10:22:06 -0800 (PST)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH 1/3] dt: bindings: brcmnand: Add support for flash-edu
+Date:   Wed, 20 Nov 2019 13:20:57 -0500
+Message-Id: <20191120182153.29732-1-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Unfortunately the vendor prefix for ST-Ericsson is used very
-inconsistently. "ste," and "stericsson," are already documented,
-but some things in the kernel use "st-ericsson," which is not
-documented yet.
+Adding support for EBI DMA unit (EDU).
 
-st-ericsson,u8500 is documented in bindings/arm/ux500/boards.txt,
-and is used to match the machine code and the generic DT cpufreq
-driver.
-
-Add it to the list of vendor prefixes.
-
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
-Changes in v2: none, added new patch to deprecate other vendor prefixes
-v1: https://lore.kernel.org/linux-devicetree/20191120121720.72845-1-stephan@gerhold.net/
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/mtd/brcm,brcmnand.txt          | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 967e78c5ec0a..c9b0bab8ed23 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -909,6 +909,8 @@ patternProperties:
-     description: ST-Ericsson
-   "^stericsson,.*":
-     description: ST-Ericsson
-+  "^st-ericsson,.*":
-+    description: ST-Ericsson
-   "^summit,.*":
-     description: Summit microelectronics
-   "^sunchip,.*":
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 82156dc8f304..05651a654c66 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -35,11 +35,11 @@ Required properties:
+                      (optional) NAND flash cache range (if at non-standard offset)
+ - reg-names        : a list of the names corresponding to the previous register
+                      ranges. Should contain "nand" and (optionally)
+-                     "flash-dma" and/or "nand-cache".
+-- interrupts       : The NAND CTLRDY interrupt and (if Flash DMA is available)
+-                     FLASH_DMA_DONE
+-- interrupt-names  : May be "nand_ctlrdy" or "flash_dma_done", if broken out as
+-                     individual interrupts.
++                     "flash-dma" or "flash-edu" and/or "nand-cache".
++- interrupts       : The NAND CTLRDY interrupt, (if Flash DMA is available)
++                     FLASH_DMA_DONE and if EDU is avaialble and used FLASH_EDU_DONE
++- interrupt-names  : May be "nand_ctlrdy" or "flash_dma_done" or "flash_edu_done",
++                     if broken out as individual interrupts.
+                      May be "nand", if the SoC has the individual NAND
+                      interrupts multiplexed behind another custom piece of
+                      hardware
 -- 
-2.24.0
+2.17.1
 
