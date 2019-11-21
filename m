@@ -6,81 +6,86 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE35C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89C6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16314206D7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBC120672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574364499;
-	bh=foPwumbQUwfvMh25gp0+dKVf8JYUIgeQeb/r9rq9sFk=;
+	s=default; t=1574365066;
+	bh=SppgSTUGi2PlS4/0x2LLJC5RqPGVeNhzX8n+pmUFxrU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JycIUMeIXtRLUZ9/2ywavhP2r3q6/4JgZG+gHk3+joZaXrVoQKh82WV7vtxv+Wkz7
-	 r8TktpapWzAheInfaitnPjNjqvclvh8+klLFy03Ij6VyM6cRC90PX6v1C82fJyvdMR
-	 RH4rseBOJv0x+u176rWIwMi2gXNOjiweSDoyrxRM=
+	b=WIykzX2qpviq1ZwdUQrytDRaY3qJ4icmSr62NeLC7F3+alAy3qGi3fFU6yoLaEJUl
+	 uKY9ugUU5P3lZzAYy8iXv8C0l/HdbAGi7jyzy+LzMJVWJRMk43GslW7JXMtAQq8E5d
+	 saI4aAq2POJis+caWN0uBy6RjuRjG2q2a/m2FQvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfKUT2S (ORCPT
+        id S1726379AbfKUThq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 14:28:18 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33827 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUT2S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 14:28:18 -0500
-Received: by mail-ot1-f68.google.com with SMTP id w11so4035220ote.1;
-        Thu, 21 Nov 2019 11:28:17 -0800 (PST)
+        Thu, 21 Nov 2019 14:37:46 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38863 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUThq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 14:37:46 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a14so4310698oid.5;
+        Thu, 21 Nov 2019 11:37:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CHTfKDAdZLhL1Zm6CO6s2kP8nxK/JV3N7UW7tF4nQP4=;
-        b=WrwjpA9U7OiemGH4eYKo8N7n3uHifrrmMCswleR0zyUb1hO93Y35no4bTkFuGFXa39
-         7uvEl/kSbAxzv/L9ak9m4uWfXyxPxDxpw7H+iDcZlX1+jQhJlCoF22la9gFOev373W9n
-         TyljE5D1gfQbw9smY0ahOs81RUG/t4w5AbRCNMNGsN8oLszhIHy/KKuaE8Y6nIV+JNZp
-         Cemzhngv7BLmRY1bGMZzutENOUYD5NZK71tvlBV3OhUms7sv8sHwowDKDzeCFgh7MjoE
-         KSEIp/U8cNOqqzoKOL+TfLVGzcToTNut2vP7FlPswLtJjEuQiC5Vq/KreuFs98T9KqA0
-         rUhA==
-X-Gm-Message-State: APjAAAVqq50mRGKpKYAVrd+89LrYIADWAnHMm/2nTwZWeMLQHsG7yVD5
-        W+bZ7V6nHkKEv43rzUH5kQ==
-X-Google-Smtp-Source: APXvYqwSY+m1VVKP1lJWWFMDzjmXAD1VirqNMJL368kLdu7zD5Tqa73Qd9dLlvlXyGQDu+Uma4tvig==
-X-Received: by 2002:a9d:365:: with SMTP id 92mr8439326otv.9.1574364497464;
-        Thu, 21 Nov 2019 11:28:17 -0800 (PST)
+        bh=tMER4MOHixp2wY9ZjS4RrN2RrDNX7H+o1z/zXkM48ZU=;
+        b=Q6RCCcByjVSTwLs6zjTOIOogAiyLZ88aGbigw4CCXGdpEBXhshluevOsoZdVvdXezw
+         Nv4UHxtPTXHRBFmncvxRUMQiBqJaMzJFIwONlIt3uDBU2phtHHkXOjjV628nZegsXhYg
+         9DZNV+Jnj1n9DYALod4ddSmyypviR5CR+qlQnAvBSQumgu+rc6lJYeMJ0iG0BlMMGypL
+         WiV2EvM3HILbJT3D4CHtCvE/dk+pNQTOdBisWsxZDabDF0u6m20Wwzf/NWxs4t+sTRCy
+         +NG585cjEx70sHR5KmyebZVPVyNn4L+UIsRlDPbwx4onIsM8z2Qq3BOC9hwCfHNbNU7+
+         lKtg==
+X-Gm-Message-State: APjAAAVZNWmFdo625UEW9ywLD+jrw1S3R8qudJNSB3/3j1tEIzR17ztp
+        cK9Ro9yXOGSXJcG/yefSgw==
+X-Google-Smtp-Source: APXvYqxz3r1XfhG46Xqzohy//cfJAs84lDW7vsquvPUXB2FPHrRH/1ETgZRryOu7acvqdws+X02tgA==
+X-Received: by 2002:aca:4ac5:: with SMTP id x188mr8823046oia.148.1574365065094;
+        Thu, 21 Nov 2019 11:37:45 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u204sm1219085oig.35.2019.11.21.11.28.16
+        by smtp.gmail.com with ESMTPSA id e88sm1305777ote.39.2019.11.21.11.37.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 11:28:16 -0800 (PST)
-Date:   Thu, 21 Nov 2019 13:28:16 -0600
+        Thu, 21 Nov 2019 11:37:44 -0800 (PST)
+Date:   Thu, 21 Nov 2019 13:37:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        jianxin.pan@amlogic.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, yinxin_1989@aliyun.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: Document the Amlogic Meson SDHC
- MMC host controller
-Message-ID: <20191121192816.GA7377@bogus>
-References: <20191117142716.154764-1-martin.blumenstingl@googlemail.com>
- <20191117142716.154764-2-martin.blumenstingl@googlemail.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        alexandre.torgue@st.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: Re: [PATCH] dt-bindings: mtd: Convert stm32 fmc2-nand bindings to
+ json-schema
+Message-ID: <20191121193743.GA3627@bogus>
+References: <20191121130615.13007-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191117142716.154764-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20191121130615.13007-1-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 03:27:15PM +0100, Martin Blumenstingl wrote:
-> This documents the devicetree bindings for the SDHC MMC host controller
-> found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
-> bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
-> HS200 mode (up to 100MHz clock).
+On Thu, 21 Nov 2019 14:06:15 +0100, Benjamin Gaignard wrote:
+> Convert the STM32 fmc2-nand binding to DT schema format using json-schema
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> CC: Christophe Kerello <christophe.kerello@st.com>
 > ---
->  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+>  .../bindings/mtd/st,stm32-fmc2-nand.yaml           | 98 ++++++++++++++++++++++
+>  .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 --------------
+>  2 files changed, 98 insertions(+), 61 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
