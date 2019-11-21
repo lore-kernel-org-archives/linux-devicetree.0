@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AA6C43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6080FC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EDA6206DA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A3820714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="OU+GiCP1"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="J/G0CEgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfKUOPS (ORCPT
+        id S1727149AbfKUOPX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:15:18 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39369 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbfKUOPR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 09:15:17 -0500
-Received: by mail-pj1-f68.google.com with SMTP id t103so1526323pjb.6
-        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 06:15:17 -0800 (PST)
+        Thu, 21 Nov 2019 09:15:23 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46534 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbfKUOPW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 09:15:22 -0500
+Received: by mail-pl1-f193.google.com with SMTP id l4so1608467plt.13
+        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 06:15:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=I6yA6TdrKO0G1JGypZEAKYVfmifyHMcNDjr9W3hUK+E=;
-        b=OU+GiCP10q9PnP8bkEcFaAdutdza/iERr+D0OoLljK1MmkZMko724GceiauVEvI5Qy
-         i+jRkFfhJKSvUbE8cP0wU8IXLB28x6Cy2XOR2ZsqnhydicNZpRBcPrXBRxG9vQS8ZI0F
-         kUhIL72l450esX8mcjqodnluupinKQ49p/SiQ=
+        bh=28NKNs8dkxykNhTWIYrgk/H7+AdKWGipA1r9x9pF6H4=;
+        b=J/G0CEgF9pu6Q6u9K+4b5CMj2oIcyKeAgWEYWZ0KAnAY96q/ia7+hOU23ZCPcya8W9
+         5DVbOFfuzqcPZ1wF1T6MFehBWp+QDmEsXPUlYJxliXC9SoZXX7qy+zl/V5GB8TjasSzR
+         UPWAiqGvq8dXtx67JR2gb0mQTI1gU+bJp5pgI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=I6yA6TdrKO0G1JGypZEAKYVfmifyHMcNDjr9W3hUK+E=;
-        b=LbdB1vza7MCvP+R81Z9IWXNlY4uiUWT3EcR8mU/ZIgoy6QOUk660FbknMOB5+47yx2
-         cOncfQNtgs1SgltAtW0ZR2caGrEHoRVNbtfVbf0VlfTxs5fOI9WD+gAX56UxPX8U4d0y
-         YWAJFFT2b7+Mk9LUpjhoTN3EePdbzhQwRN0pP4qwXX8dJZfonEUZkT++2L+JhpHWSJjt
-         Zi1/ZcOVF59gW8gvNl2KyGC2RXOwf/5lFQWHlb8RK+LtcdTWBAWe91wEqNc/DYQul0ag
-         E2AMmAaWQ7ETydz8pFjuc8dgX0hJZW4TC/wyWmjv1F6MFNNIQIQclfTWme5ayd+p9ltN
-         Hr/A==
-X-Gm-Message-State: APjAAAWn14qsC4kP1qoc7uw38zPimb7KvNA4skRTUtPLqVopr8nRXfOz
-        sGhZaRiLzTRG+POAt1TmSzNxgg==
-X-Google-Smtp-Source: APXvYqzs2J4YhqGXlT0xDxYXUbauaCJnilI7GqLrXPtDGy4WsDd4PG5Ypm+uC16rNirt3o8Uj6Hwjg==
-X-Received: by 2002:a17:90a:33ce:: with SMTP id n72mr11931278pjb.17.1574345716897;
-        Thu, 21 Nov 2019 06:15:16 -0800 (PST)
+        bh=28NKNs8dkxykNhTWIYrgk/H7+AdKWGipA1r9x9pF6H4=;
+        b=P1U3x/+XGQC30V8q3LrBsIonuQak2FIgteSoqUTVhnELSu8d+REn3wAVNR0oQDeX1G
+         5MozhBGyyM385yybqgNAhc9ODCKSMFhYb+0Ob07dzPAcR8axEMns9GBDGc9REOywcnZC
+         bYkhlGuPOH+cOe9yJTEZwqO/bS6qT5Aba0v6Y31aGYYO+8yYthz+6SIhaP6axokehezR
+         52OZD9Tz5gqeWxa5UMIKggiRWZZgWXg68m0SleDYkmgf3RR+EKz2W12V8Nhsai9Djmgx
+         vfjJg/3bJkpXRoAmp5F6s7ZsrPAod8AwQWSAdGmBtLJrfUVS2g1My5twW+o9io41JC+m
+         nX7Q==
+X-Gm-Message-State: APjAAAVgwATZ8i6lZoFEsUFMJ038ilqMGTnUx8Qi6nE/prbCjM6jWIZb
+        GonOTGSBvhRXoJeSXAydH5TB+Q==
+X-Google-Smtp-Source: APXvYqwrzn/yAW5BCNIum3Ewx8sgniyuYqnWVlppsp/WOPJZ/C2fWYKta18r1cYdnI9p8rKvOjCuKA==
+X-Received: by 2002:a17:902:bb83:: with SMTP id m3mr8695155pls.94.1574345721637;
+        Thu, 21 Nov 2019 06:15:21 -0800 (PST)
 Received: from localhost.localdomain ([115.97.180.31])
-        by smtp.gmail.com with ESMTPSA id w138sm4072304pfc.68.2019.11.21.06.15.12
+        by smtp.gmail.com with ESMTPSA id w138sm4072304pfc.68.2019.11.21.06.15.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 06:15:16 -0800 (PST)
+        Thu, 21 Nov 2019 06:15:20 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -61,9 +61,9 @@ Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 3/5] dt-bindings: arm: rockchip: Add Rock Pi N10 binding
-Date:   Thu, 21 Nov 2019 19:44:43 +0530
-Message-Id: <20191121141445.28712-4-jagan@amarulasolutions.com>
+Subject: [PATCH v2 4/5] ARM: dts: rockchip: Add Radxa Dalang Carrier board
+Date:   Thu, 21 Nov 2019 19:44:44 +0530
+Message-Id: <20191121141445.28712-5-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191121141445.28712-1-jagan@amarulasolutions.com>
 References: <20191121141445.28712-1-jagan@amarulasolutions.com>
@@ -74,39 +74,120 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
-- VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+Carrier board often referred as baseboard. For making
+complete SBC or any other industrial boards, these
+carrier boards will used with associated SOMs.
 
-VMARC RK3399Pro SOM need to mount on top of dalang carrier
-board for making Rock PI N10 SBC.
+Radxa has Dalang carrier board which supports on board
+peripherals, ports like USB-2.0, USB-3.0, HDMI, MIPI DSI/CSI,
+eDP, Ethernet, WiFi, PCIe, USB-C, 40-Pin GPIO header and etc.
 
-Add dt-bindings for it.
+Right now Dalang carrier board is using with two variants
+SBC, like
+Rock Pi N10 => VMARC RK3399Por SOM + Dalang carrier board
+Rock Pi N8  => VMARC RK3288 SOM + Dalang carrier board(+codec)
+
+So add this carrier board dtsi as a separate file in
+ARM directory, so-that the same can reuse it in both
+rk3288, rk3399pro variants of Rockchip SOMs.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- none
+- use dalang carrier board as product name
+- s/rockchip-radxa-carrierboard.dtsi/rockchip-radxa-dalang-carrier.dtsi
 
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../dts/rockchip-radxa-dalang-carrier.dtsi    | 81 +++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 51aa458833a9..afa6b2e5aeed 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -423,6 +423,11 @@ properties:
-           - const: radxa,rockpi4
-           - const: rockchip,rk3399
- 
-+      - description: Radxa ROCK Pi N10
-+        items:
-+          - const: radxa,rockpi-n10
-+          - const: rockchip,rk3399pro
+diff --git a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
+new file mode 100644
+index 000000000000..df3712aedf8a
+--- /dev/null
++++ b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
+@@ -0,0 +1,81 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
++ * Copyright (c) 2019 Radxa Limited
++ * Copyright (c) 2019 Amarula Solutions(India)
++ */
 +
-       - description: Radxa Rock2 Square
-         items:
-           - const: radxa,rock2-square
++#include <dt-bindings/pwm/pwm.h>
++
++/ {
++	chosen {
++		stdout-path = "serial2:1500000n8";
++	};
++};
++
++&gmac {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
++	i2c-scl-rising-time-ns = <140>;
++	i2c-scl-falling-time-ns = <30>;
++};
++
++&i2c2 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hym8563: hym8563@51 {
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		clock-output-names = "hym8563";
++		pinctrl-names = "default";
++		pinctrl-0 = <&hym8563_int>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&pwm0 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++};
++
++&sdmmc {
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
++	disable-wp;
++	vqmmc-supply = <&vccio_sd>;
++	max-frequency = <150000000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_xfer &uart0_cts>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&pinctrl {
++	hym8563 {
++		hym8563_int: hym8563-int {
++			rockchip,pins =
++				<4 RK_PD6 0 &pcfg_pull_up>;
++		};
++	};
++};
 -- 
 2.18.0.321.gffc6fa0e3
 
