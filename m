@@ -2,216 +2,190 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B27C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 02:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADBFC432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 04:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFE12075A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 02:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778392075A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 04:10:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1dFxFN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfKUCmd (ORCPT
+        id S1726532AbfKUEKG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:42:33 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:40178 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfKUCmd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:42:33 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DB52F1A0C47;
-        Thu, 21 Nov 2019 03:42:30 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 428581A052B;
-        Thu, 21 Nov 2019 03:42:25 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 647D8402A9;
-        Thu, 21 Nov 2019 10:42:18 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+        Wed, 20 Nov 2019 23:10:06 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33376 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfKUEKG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Nov 2019 23:10:06 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t26so2736374wmi.0;
+        Wed, 20 Nov 2019 20:10:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KyVV9OtMYzuxUfKjDOoN9OjB6k595IRNlTVuhDMhC10=;
+        b=X1dFxFN0j+/WiJCSTbji/fhE29CoKE7C5ViqxKT72cn/BLDypzsr8dFyhngRM6K6FH
+         L+ucvR8AIEv6ZUn0Q6Pws2Tmng01E0mgpiPiZtiuEqRasL+mtVpMnkEc8Tm3lVZ2xD48
+         xoa7Ej1fqE8VEBTE7MtbHsZt3AqpEguD43PyZxdNPI41dLr/AQ3/COqOh0hEDBM9mfeL
+         8cnM6Gyj98xChINmfmVj88Zz3Gs1vAF21A8y1Ond9H2ubmPAN3xUadY0fztz2BmcYGHW
+         qX88ltZFAPlHLeMNnx+FEAvUI00aPKGWRDduQDvRGLl3m5h014R7CUqFJCn2N4C5XgAy
+         RFjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=KyVV9OtMYzuxUfKjDOoN9OjB6k595IRNlTVuhDMhC10=;
+        b=nwiLve64Q4CVnOazyOVaLqe+KZ7os+DJHzzhNj9FENp5jxIBkZ0VoYhCWlRmMGU6cJ
+         yeHqmtKnsYayDBIG83baNgX3sYAqvRT4SmquVMY7JTQvrz7YG6/YM9oVyNZeAf9bHg8e
+         EkpgDEmlqzQqu7/bCmzH56WyGA+jhx2/jFSuIkUDo07PB/D5cjCYNgCSxn4asqwlQMzt
+         VEfZtPbdj8LJ9at096yVHLeRIsiyZ5g8we6Jww4QwixFSLDXpgi/Is07FjGDetSd/cGc
+         5nZVALyXqMyYlRcYogAiKUAnrZCIyvXS5CdRUgemNk/T/bWeMBlB837u193gjrS4bioG
+         GLkg==
+X-Gm-Message-State: APjAAAVAPaQITUmvIBewL1rut0FRSUVT+AdIKL6qytmH9VC9QBY+VdyS
+        n9ljgx2uplRU6AIlHly9HuU=
+X-Google-Smtp-Source: APXvYqyxVfla0wEQcFAjsBVcwLaLBok/WxoGLngc9EgAWr+J6QCHtUciwq03DPeRHwz1Cj9mOyAeBQ==
+X-Received: by 2002:a1c:7fd8:: with SMTP id a207mr7399474wmd.10.1574309403248;
+        Wed, 20 Nov 2019 20:10:03 -0800 (PST)
+Received: from [10.230.29.119] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id m16sm1460809wml.47.2019.11.20.20.09.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Nov 2019 20:10:02 -0800 (PST)
+Subject: Re: [PATCH v3 0/4] Raspberry Pi 4 HWRNG Support
+To:     Stephen Brennan <stephen@brennan.io>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Chen <peter.chen@nxp.com>, Jun Li <jun.li@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v3 2/2] usb: dwc3: Add cache type configuration support
-Date:   Thu, 21 Nov 2019 10:42:06 +0800
-Message-Id: <20191121024206.32933-2-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191121024206.32933-1-ran.wang_1@nxp.com>
-References: <20191121024206.32933-1-ran.wang_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+References: <20191120031622.88949-1-stephen@brennan.io>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <3e78d01f-f7a4-b3c4-4d23-7be7d6ad764d@gmail.com>
+Date:   Wed, 20 Nov 2019 20:09:57 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191120031622.88949-1-stephen@brennan.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This feature is telling how to configure cache type on 4 different
-transfer types: Data Read, Desc Read, Data Write and Desc write. For each
-treasfer type, controller has a 4-bit register field to enable different
-cache type. Quoted from DWC3 data book Table 6-5 Cache Type Bit Assignments:
-----------------------------------------------------------------
-MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
-----------------------------------------------------------------
-AHB      |Cacheable     |Bufferable   |Privilegge |Data
-AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
-AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
-AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
-Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
-----------------------------------------------------------------
-Note: The AHB, AXI3, AXI4, and PCIe busses use different names for certain
-signals, which have the same meaning:
-  Bufferable = Posted
-  Cacheable = Modifiable = Snoop (negation of No Snoop)
+Hi Herbert,
 
-In most cases, driver support is not required unless the default values of
-registers are not correct *and* DWC3 node has enabled dma-coherent. So far we
-have observed USB device detect failure on some Layerscape platforms if this
-programming was not applied.
+On 11/19/2019 7:16 PM, Stephen Brennan wrote:
+> This patch series enables support for the HWRNG included on the Raspberry
+> Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
+> tested this out on a Pi 4.  Prior to this patch series, attempting to use
+> the hwrng gives:
+> 
+>     $ head -c 2 /dev/hwrng
+>     head: /dev/hwrng: Input/output error
+> 
+> After this series, the same command gives two random bytes.
 
-Related struct:
-struct dwc3_cache_type {
-	u8 transfer_type_datard;
-	u8 transfer_type_descrd;
-	u8 transfer_type_datawr;
-	u8 transfer_type_descwr;
-};
+When we get a review from Rob, you can take patches 1-2 through your
+tree and Stefan/Nicholas can queue patches 3-4 through the BCM2835 tree
+where the DTS files already exist. Does that work for you?
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Change in v3:
-	- Replace cache type sub-node parsing with chip-specifc data parsing.
+> 
+> Changes in v3:
+> - drop interrupts from bcm2711 rng node
+> - move bcm283x rng into bcm2835-common.dtsi
+> - add reviewed-by tag
+> - separated out patch 3 into two parts
+> 
+> Changes in v2:
+> - specify the correct size for the region in the dts, refactor bcm283x rng
+> 
+> ---
+> 
+> Stefan Wahren (2):
+>   dt-bindings: rng: add BCM2711 RNG compatible
+>   hwrng: iproc-rng200: Add support for BCM2711
+> 
+> Stephen Brennan (2):
+>   ARM: dts: bcm2835: Move rng definition to common location
+>   ARM: dts: bcm2711: Enable HWRNG support
+> 
+>  .../devicetree/bindings/rng/brcm,iproc-rng200.txt          | 1 +
+>  arch/arm/boot/dts/bcm2711.dtsi                             | 7 +++----
+>  arch/arm/boot/dts/bcm2835-common.dtsi                      | 6 ++++++
+>  arch/arm/boot/dts/bcm283x.dtsi                             | 6 ------
+>  drivers/char/hw_random/Kconfig                             | 2 +-
+>  drivers/char/hw_random/iproc-rng200.c                      | 1 +
+>  6 files changed, 12 insertions(+), 11 deletions(-)
+> 
 
-Change in v2:
-	- Change most program logic to meet new DTS property define.
-	- Rename related register address macros.
-	- Rename function  dwc3_enable_snooping() to dwc3_set_cache_type().
-
- drivers/usb/dwc3/core.c | 67 ++++++++++++++++++++++++++++++++++++++++++++-----
- drivers/usb/dwc3/core.h | 15 +++++++++++
- 2 files changed, 76 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 97d6ae3..0baa972 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -894,6 +894,53 @@ static void dwc3_set_incr_burst_type(struct dwc3 *dwc)
- 	dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, cfg);
- }
- 
-+#ifdef CONFIG_OF
-+struct dwc3_cache_type {
-+	u8 transfer_type_datard;
-+	u8 transfer_type_descrd;
-+	u8 transfer_type_datawr;
-+	u8 transfer_type_descwr;
-+};
-+
-+static const struct dwc3_cache_type ls1088a_dwc3_cache_type = {
-+	.transfer_type_datard = 2,
-+	.transfer_type_descrd = 2,
-+	.transfer_type_datawr = 2,
-+	.transfer_type_descwr = 2,
-+};
-+
-+/**
-+ * dwc3_set_cache_type - Configure cache type registers
-+ * @dwc: Pointer to our controller context structure
-+ */
-+static void dwc3_set_cache_type(struct dwc3 *dwc)
-+{
-+	u32 tmp, reg;
-+	const struct dwc3_cache_type *cache_type =
-+		device_get_match_data(dwc->dev);
-+
-+	if (cache_type) {
-+		reg = dwc3_readl(dwc->regs,  DWC3_GSBUSCFG0);
-+		tmp = reg;
-+
-+		reg &= ~DWC3_GSBUSCFG0_DATARD(~0);
-+		reg |= DWC3_GSBUSCFG0_DATARD(cache_type->transfer_type_datard);
-+
-+		reg &= ~DWC3_GSBUSCFG0_DESCRD(~0);
-+		reg |= DWC3_GSBUSCFG0_DESCRD(cache_type->transfer_type_descrd);
-+
-+		reg &= ~DWC3_GSBUSCFG0_DATAWR(~0);
-+		reg |= DWC3_GSBUSCFG0_DATAWR(cache_type->transfer_type_datawr);
-+
-+		reg &= ~DWC3_GSBUSCFG0_DESCWR(~0);
-+		reg |= DWC3_GSBUSCFG0_DESCWR(cache_type->transfer_type_descwr);
-+
-+		if (tmp != reg)
-+			dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, reg);
-+	}
-+}
-+#endif
-+
- /**
-  * dwc3_core_init - Low-level initialization of DWC3 Core
-  * @dwc: Pointer to our controller context structure
-@@ -952,6 +999,10 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 
- 	dwc3_set_incr_burst_type(dwc);
- 
-+#ifdef CONFIG_OF
-+	dwc3_set_cache_type(dwc);
-+#endif
-+
- 	usb_phy_set_suspend(dwc->usb2_phy, 0);
- 	usb_phy_set_suspend(dwc->usb3_phy, 0);
- 	ret = phy_power_on(dwc->usb2_generic_phy);
-@@ -1837,12 +1888,16 @@ static const struct dev_pm_ops dwc3_dev_pm_ops = {
- 
- #ifdef CONFIG_OF
- static const struct of_device_id of_dwc3_match[] = {
--	{
--		.compatible = "snps,dwc3"
--	},
--	{
--		.compatible = "synopsys,dwc3"
--	},
-+	{ .compatible = "fsl,ls1012a-dwc3", .data = &ls1088a_dwc3_cache_type, },
-+	{ .compatible = "fsl,ls1021a-dwc3", .data = &ls1088a_dwc3_cache_type, },
-+	{ .compatible = "fsl,ls1028a-dwc3", .data = &ls1088a_dwc3_cache_type, },
-+	{ .compatible = "fsl,ls1043a-dwc3", .data = &ls1088a_dwc3_cache_type, },
-+	{ .compatible = "fsl,ls1046a-dwc3", .data = &ls1088a_dwc3_cache_type, },
-+	{ .compatible = "fsl,ls1088a-dwc3", .data = &ls1088a_dwc3_cache_type, },
-+	{ .compatible = "fsl,ls2088a-dwc3", .data = &ls1088a_dwc3_cache_type, },
-+	{ .compatible = "fsl,lx2160a-dwc3", .data = &ls1088a_dwc3_cache_type, },
-+	{ .compatible = "snps,dwc3" },
-+	{ .compatible = "synopsys,dwc3"	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, of_dwc3_match);
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 1c8b3493..ac51dfe 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -165,6 +165,21 @@
- /* Bit fields */
- 
- /* Global SoC Bus Configuration INCRx Register 0 */
-+#ifdef CONFIG_OF
-+#define DWC3_GSBUSCFG0_DATARD_SHIFT	28
-+#define DWC3_GSBUSCFG0_DATARD(n)	(((n) & 0xf)		\
-+			<< DWC3_GSBUSCFG0_DATARD_SHIFT)
-+#define DWC3_GSBUSCFG0_DESCRD_SHIFT	24
-+#define DWC3_GSBUSCFG0_DESCRD(n)	(((n) & 0xf)		\
-+			<< DWC3_GSBUSCFG0_DESCRD_SHIFT)
-+#define DWC3_GSBUSCFG0_DATAWR_SHIFT	20
-+#define DWC3_GSBUSCFG0_DATAWR(n)	(((n) & 0xf)		\
-+			<< DWC3_GSBUSCFG0_DATAWR_SHIFT)
-+#define DWC3_GSBUSCFG0_DESCWR_SHIFT	16
-+#define DWC3_GSBUSCFG0_DESCWR(n)	(((n) & 0xf)		\
-+			<< DWC3_GSBUSCFG0_DESCWR_SHIFT)
-+#endif
-+
- #define DWC3_GSBUSCFG0_INCR256BRSTENA	(1 << 7) /* INCR256 burst */
- #define DWC3_GSBUSCFG0_INCR128BRSTENA	(1 << 6) /* INCR128 burst */
- #define DWC3_GSBUSCFG0_INCR64BRSTENA	(1 << 5) /* INCR64 burst */
 -- 
-2.7.4
-
+Florian
