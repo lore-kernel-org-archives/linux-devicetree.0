@@ -2,97 +2,112 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA77C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 18:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 500D6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C79D12067D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 18:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2380920672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zhr6f8EK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hw0tGGpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKUSWh (ORCPT
+        id S1726858AbfKUTB3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 13:22:37 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37188 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKUSWh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 13:22:37 -0500
-Received: by mail-lj1-f193.google.com with SMTP id d5so4349820ljl.4;
-        Thu, 21 Nov 2019 10:22:35 -0800 (PST)
+        Thu, 21 Nov 2019 14:01:29 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38152 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKUTB3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 14:01:29 -0500
+Received: by mail-ed1-f66.google.com with SMTP id s10so3754379edi.5;
+        Thu, 21 Nov 2019 11:01:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jRbXaossvgNQlopnRSIA2Yl2HFLcrBhDcNGtWuCOj50=;
-        b=Zhr6f8EK4Z2+uO3VRrAu49wH9Z1Ee1FaYAYIQlmfxntGL2vEO3ij0WE4bwpZBAgbwa
-         IVKPRtmfG1v+iL8lbrr+ONj97kMuTwZ6YzrMZwEppys4SWx3C8Bwrd74jdLlqK395CTM
-         8Wu6/zcjsnaPXZiz89w5CRjWDG2QQA0szG40gJ86nLx2Yxt8emOQVYGfpClQNPo0qX87
-         60RsMrs0Qc3PSZrVtRoOuq9OHqa90OySPob6VrX92Z7Oq1o6Oz81iQWEcG7XgSLRJwq/
-         Gt5i8HW8n+jjK2MeVGRBmZU6LM6MljrsAzYbhQ5jK5awgWxIU+ceEQalxlLfy5k++wSN
-         Sgeg==
+        bh=WGlv9N7emzPPMkGFW2suWUAOKKS+im2D/mbhQrUjPOw=;
+        b=hw0tGGpydIclVWzvfKyqExS+ky3mFe5zVFYzo8L/vE9QIsquY7DLXT3bxgRHCc913E
+         QPYswTjKLbcK2rh16yudPur9Safmg77tW/A/pa8QnF37XhIQ5u2H6l5XQnrqZ0aSXohF
+         y6vPt6lysOVpBO2kR2FnrJoNlGusPUTt7c8MvEYo4Ow7Xs5zpbwdCctguSfnT+blVgEB
+         Q4i301/C0VgEKQcp8OXyj0B4DEMiIH+KW8S+llH6hOmRla4aO4RRVQjT1xyHulgZf1VE
+         +VPAp76Wx4D/VNMQcC/VxE3KHRvxo2QJLj9rf50nPHnZVipfoaeoJSPhd6ml6WK1/f/3
+         nZ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jRbXaossvgNQlopnRSIA2Yl2HFLcrBhDcNGtWuCOj50=;
-        b=ssmiDbBN6hNa1Q9HnvmW8YQjn0Ya9gmsfZeWgboJSdZsCrP1iyAlctD0OSTzg5EXKM
-         gNsciVONwJc4TQrfw9Wr8/MiHkcOUW50zAN9cXpLJY6D1+yfGErjUnkknitGuEf66xLZ
-         0nJzpjH0EwgkdvWStF3jggVd1l0/UvO9K6jkHb1X20gJx7b9zD6GzthOpJaVjnTngDDA
-         61bSlNopyhmm33Zai+hGz9LksHuAp3noJRaBf1NrASFQgR3VWzLs8TGaIrN7Q79J/Q9g
-         lNEs63X9HkomzMOjSInXMKU9/OtZKXp0VjsP8pmBaIHbLdcWgOIZcjZLwgSkff/CNuzb
-         g9cA==
-X-Gm-Message-State: APjAAAXQQPN4z0w91lBMLkS+3VdNlxzmhJav9hFOb4JVuiMinvqv6FmF
-        k3R8ANJ+88ie2MImzyIQ5PT94HmEm/+gsw4cS4E=
-X-Google-Smtp-Source: APXvYqy33q+XRzz09cKmgzvK0eHNtVJV5yycdfRULgvmsv5bQhWkals2c0IdzhcxVervI3IIc5XNQaLA5auLBU2U0FI=
-X-Received: by 2002:a2e:6e15:: with SMTP id j21mr8902410ljc.17.1574360554504;
- Thu, 21 Nov 2019 10:22:34 -0800 (PST)
+        bh=WGlv9N7emzPPMkGFW2suWUAOKKS+im2D/mbhQrUjPOw=;
+        b=geFjy27muvt1MM06Qe8Pm0+7EIjbkjcgAY3n8YcKQkKrVV67OdF5EeHB1JhrgigUjU
+         7L+9duCpy1YYkV8Iy+5AvUi+1KhF+LHR4j3KpDnkgNYPIMRfwFrdpmhksBmOGMLtrudw
+         24yfbuZ/KCIfbEmYZvs5EUQo4GPmUQJlcrRqiuk3ka+UHu57EDUYSEeNQwjHoVuzRRwc
+         /+/MFI6RbHZ+VSHeJfGfj/8r+27iPpo1SbVkrHIIJ2G1xj91mqt/9f9ZlUq+Qm8HRJtr
+         s87sQneT52NZy40ecmTs0DkEl8ZWc2q9GLOaKEHYYLtQN0tH+/Gh977LGxHJrQWp/1XQ
+         8ACQ==
+X-Gm-Message-State: APjAAAWwTnSo7PqxS1SMTMD8DMlYFf41ToHJ9ICqf8ElvKSk0OPmEubn
+        nd2qvgr5wU/tAGgOByZCZeY+7B+lx38dcjzr+7fkAoFI
+X-Google-Smtp-Source: APXvYqw7XM4/ilKVdiKymLyfmxi48lasfzIxyiJ681Tf/Q+giqd2n8es7XgsJNBR5MISNx52NIpdSQew5FnTSv5teuU=
+X-Received: by 2002:a17:906:11cf:: with SMTP id o15mr16093149eja.208.1574362887584;
+ Thu, 21 Nov 2019 11:01:27 -0800 (PST)
 MIME-Version: 1.0
-References: <20191121162520.10120-1-marco.franchi@nxp.com> <20191121162520.10120-2-marco.franchi@nxp.com>
-In-Reply-To: <20191121162520.10120-2-marco.franchi@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 21 Nov 2019 15:22:36 -0300
-Message-ID: <CAOMZO5ByMkp1i=rMScgadT9_ucnsxqn_pnSP4bmLUPnxPdYHvw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: freescale: add initial support for
- Google i.MX 8MQ Phanbell
-To:     Marco Antonio Franchi <marco.franchi@nxp.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marcofrk@gmail.com" <marcofrk@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "atv@google.com" <atv@google.com>
+References: <1574232449-13570-1-git-send-email-manish.narani@xilinx.com> <1574232449-13570-5-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <1574232449-13570-5-git-send-email-manish.narani@xilinx.com>
+From:   Rob Herring <rob.e.herring@gmail.com>
+Date:   Thu, 21 Nov 2019 13:01:16 -0600
+Message-ID: <CAC=3edbHWA7gv-mTFVXXcMzN6hyzO4LPqkbcRZ-zDp5BAm8_Vw@mail.gmail.com>
+Subject: Re: [PATCH v6 4/8] dt-bindings: mmc: Add optional generic properties
+ for mmc
+To:     Manish Narani <manish.narani@xilinx.com>
+Cc:     ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, adrian.hunter@intel.com,
+        michal.simek@xilinx.com, jolly.shah@xilinx.com,
+        rajan.vaja@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org,
+        linux-mmc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        git@xilinx.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marco,
-
-On Thu, Nov 21, 2019 at 1:25 PM Marco Antonio Franchi
-<marco.franchi@nxp.com> wrote:
+On Wed, Nov 20, 2019 at 12:49 AM Manish Narani <manish.narani@xilinx.com> wrote:
 >
-> This patch adds the device tree to support Google Coral Edge TPU,
-> historicaly named as fsl-imx8mq-phanbell, a computer on module
-> which can be used for AI/ML propose.
+> Add optional properties for mmc hosts which are used to set clk delays
+> for different speed modes in the controller.
 >
-> It introduces a minimal enablement support for this module and
-> was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  .../devicetree/bindings/mmc/mmc-controller.yaml     | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> index 080754e0ef35..305b2016bc17 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> @@ -333,6 +333,18 @@ patternProperties:
+>      required:
+>        - reg
+>
+> +  "^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|uhs-(sdr(12|25|50|104)|ddr50))$":
+> +    minItems: 2
+> +    maxItems: 2
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 359
 
-Please remove the "totally based on the NXP i.MX 8MQ EVK board" as
-they are different boards.
+This is wrong. It can't be both minItems of 2 and a single uint32.
+What's needed is:
 
-> +       memory@40000000 {
-> +               device_type = "memory";
-> +               reg = <0x00000000 0x40000000 0 0xc0000000>;
-
-The memory size here does not match with the one used in the Google repo.
-
-With these changes you can add:
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+allOf:
+  - $ref: /schemas/types.yaml#/definitions/uint32-array
+minItems: 2
+maxItems: 2
+items:
+  minimum: 0
+  maximum: 359
