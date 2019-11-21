@@ -2,138 +2,75 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E34CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA79DC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5195206D7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXTQz/+H"
+	by mail.kernel.org (Postfix) with ESMTP id A38D9206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfKUROk (ORCPT
+        id S1726623AbfKURQx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:14:40 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34374 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfKUROk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 12:14:40 -0500
-Received: by mail-lf1-f65.google.com with SMTP id l28so3287250lfj.1;
-        Thu, 21 Nov 2019 09:14:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cAzhUxhbi0ipJJRlq7LEPrGywJG5HkdxE06SxVESVKU=;
-        b=PXTQz/+Hd1s0CfRFTJDfyk4lkxAwzEQmZwcZZUy9l91K9JI/XZfGPbFhBdnt5WVooS
-         df2ySPhZBMZoQsNlxicqFixYOg9eiDRQcpBqB0rDmPCDWwflyXiLf3kOJs37sGuoADnl
-         SxAF5+GVCBpludbWA/oTghn5Z0/D5IT+q5rEIraqu3CY7AIcUqkZFRkYHO096ViBly50
-         Ru4c/1mhi5dsBboNqrLLr5LyBMkY3ZT8pK1B90JtQCOr+kgNrtxENg+n3RWLUMmIRfGr
-         vFY9PwdyXdEqQ9agz0Rj7R0mQBfIGQ4wxznDrQKmvdqpSgLh+hT0FZKl/X5VfHHLdWZS
-         WXzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cAzhUxhbi0ipJJRlq7LEPrGywJG5HkdxE06SxVESVKU=;
-        b=Tck4EqklIx6OYyMO8Iv+00FhxZMM2BCUdJAdfLw0iJbHZ15p+P1dBdJxz2YZOtivfi
-         ThAfN7GqeDAh/Ebhe4KiFW3D3DR0X7nPQQGz5zoy1GkpdfS9i9oA9nMKo/dgE+8YdnAo
-         OGdZI74wvKtJa0t9YTQKJzdZvG7VKwaJUi1bRuH0A4b6qFmXPLArb6A0QD6i5DzdmiyR
-         ACiknQeM/uyH8eeQ3KYTPZBgt7mOzgXZUh92NlmRwSzQOSOP06cow0s8KP+tqRQwA8T5
-         fJSCaKjgR98doO7eCQvgfOXbiwhSJlTkfCaDHf889rILz4qSH9auxllzTrpTwLBEj94a
-         aC0A==
-X-Gm-Message-State: APjAAAU8COqpFSrcBIg8zTAoBV6PPsCYN2UVhOZsj346GDvtT0g1uJNe
-        OgrpHRNNgi7jJGMEaquZpoCxQ6W6
-X-Google-Smtp-Source: APXvYqwWYb4yZPpewD8z8jU6llJI5iWJWK6txjiQJN0ChqrVUrDu6k8kR6SO8R5t194m7diWfvyJjg==
-X-Received: by 2002:ac2:4c3b:: with SMTP id u27mr8918560lfq.131.1574356477219;
-        Thu, 21 Nov 2019 09:14:37 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id z19sm1583151ljk.66.2019.11.21.09.14.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 09:14:36 -0800 (PST)
-Subject: Re: [PATCH v1 08/29] dt-bindings: interconnect: tegra: Add initial
- IDs
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-9-digetx@gmail.com> <20191119062535.GC2462695@ulmo>
- <8cff3af3-42c7-3312-5f98-cd5eb98b7b7a@gmail.com>
-Message-ID: <f0f36176-8070-08a6-a61f-77221d916f04@gmail.com>
-Date:   Thu, 21 Nov 2019 20:14:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 21 Nov 2019 12:16:53 -0500
+Received: from verein.lst.de ([213.95.11.211]:47348 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfKURQx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:16:53 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7656368BFE; Thu, 21 Nov 2019 18:16:47 +0100 (CET)
+Date:   Thu, 21 Nov 2019 18:16:47 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Will Deacon <will@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+Message-ID: <20191121171647.GA2932@lst.de>
+References: <20191121092646.8449-1-nsaenzjulienne@suse.de> <20191121152457.GA525@lst.de> <20191121152650.GA651@lst.de> <70359d2a-10c6-09c7-a857-805085affb0a@arm.com> <20191121160217.GA1583@lst.de> <20191121165348.GC4905@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <8cff3af3-42c7-3312-5f98-cd5eb98b7b7a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121165348.GC4905@willie-the-truck>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-19.11.2019 19:56, Dmitry Osipenko пишет:
-> 19.11.2019 09:25, Thierry Reding пишет:
->> On Mon, Nov 18, 2019 at 11:02:26PM +0300, Dmitry Osipenko wrote:
->>> Define interconnect IDs for memory controller (MC), external memory
->>> controller (EMC), external memory (EMEM) and memory clients of display
->>> controllers (DC).
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  include/dt-bindings/interconnect/tegra-icc.h | 11 +++++++++++
->>>  1 file changed, 11 insertions(+)
->>>  create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
-> 
-> 
-> Hello Thierry,
-> 
->> There was a bit of discussion regarding this for a recent patch that I
->> was working on, see:
->>
->> 	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=140318
-> 
-> Thank you very much for the link.
-> 
->> I'd rather not use an additional set of definitions for this. The memory
->> controller already has a set of native IDs for memory clients that I
->> think we can reuse for this.
-> 
-> I missed that it's fine to have multiple ICC connections defined
-> per-path, at quick glance looks like indeed it should be fine to re-use
-> MC IDs.
+On Thu, Nov 21, 2019 at 04:53:48PM +0000, Will Deacon wrote:
+> Please go ahead and pull in our for-next/zone-dma branch if you need it.
+> We're not going to rebase it, and I suspect we won't even be queueing
+> anything else there at this stage in the game.
 
-Well, it is not quite correct to have multiple connections per-path.
-
-Please take look at interconnect's binding and core.c:
-
-  1. there should be one src->dst connection per-path
-  2. each connection should comprise of one source and one destination nodes
-
->> I've only added these client IDs for Tegra194 because that's where we
->> need it to actually describe a specific hardware quirk, but I can come
->> up with the equivalent for older chips as well.
-> 
-> Older Tegra SoCs have hardware units connected to MC through AHB bus,
-> like USB for example. These units do not have MC client IDs and there is
-> no MC ID defined for the AHB bus either, but probably it won't be a
-> problem to define IDs for them if will be necessary.
-> 
-
-Since interconnect binding requires to define both source and
-destination nodes for the path, then MC IDs are not enough in order to
-define interconnect path because these IDs represent only the source
-nodes. Destination node should be either EMC or EMEM.
+Ok.  I've pulled it in and will wait with sending the dma-mapping
+pull request until the arm64 one made it to Linus.
