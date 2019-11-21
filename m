@@ -2,277 +2,153 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7ACC432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1DBC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F38720898
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C4E20898
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="qNRFaL3O"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="GNQ+AUle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbfKUIe5 (ORCPT
+        id S1726655AbfKUIfv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:34:57 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40980 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfKUIe4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 03:34:56 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b18so3240108wrj.8
-        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 00:34:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=votofrh/+/gGsUE7H8nXfAJ6tszDofR+R2E30/25kWc=;
-        b=qNRFaL3OokrA1T2YLt0tRJuER3a6BevcwXBpSSJ8XlTCky28F80GsSmawZAyeDZNAA
-         s/rNEtKHKBo4lLUVf56DVpDjy9IIOz3UGeQvwXf0KBgxRmbc49G0F1U4J80K1u8ZEkX7
-         0z15I+f7DXT9WpuMhPQeUxWrWf1WEjh2/nOuWqdABFKob/Ex/HPY8jdu0IZBUKVA/5JY
-         yq4EB60Ap9AYcXmj3QjFe3/9n1whGI8uU76zqbuyzOdGmaNxTvln28BmuFWXGwdUj8Ny
-         x1ovG4+YRNE02pamXFm1oBbTWkMlf8UyHY/dJdu6oTvJTmDLOmacmxK4C2T41Emjo3xB
-         vaEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=votofrh/+/gGsUE7H8nXfAJ6tszDofR+R2E30/25kWc=;
-        b=I3Whp4SEyl0NtF+g5jWIZaiQ/CYa4FgRguO+XYzVMtvd1tDr5QRPN33ZAVC9Mpi6gr
-         rHY8CyxtgUeuJ9Q+STNtwFFp9GuuUO3bPe2uGjmL/I7cCUohf75tGFh4JVH645rQ8U8/
-         PnHTSZ5KZlfuG//mISVhAILLkICfzJyDJshKKerquXrRze3Hng+kVevo+d4tauzTWIq4
-         0IC0+xIR+qubbQeNpm2PAgEqmetz2dtfr5wAPPNW5gETi28c8ZLAV0UsOLIUrOkL00TI
-         BCPMGTlNPUTRW13cqpcMavW80BGd+4Xhe9vBUs9Q48ANzL/6PioY65W+OHa+vFe2wv/s
-         HaeQ==
-X-Gm-Message-State: APjAAAVpv5MF4/JBXVo7YQOx5200MPCGVji7yQbhNpn0KKJEoEnEjgQs
-        WID+pyXN7DFtN3BmVuLj2mLo630NerWwow==
-X-Google-Smtp-Source: APXvYqy9ILhh9XApf51EWGU5v4xplJaDRgUa5XXIBvZeALkPvNFWd1tJ0kqU3BcWk63u/3pO/1btJA==
-X-Received: by 2002:adf:f547:: with SMTP id j7mr9222744wrp.69.1574325292714;
-        Thu, 21 Nov 2019 00:34:52 -0800 (PST)
-Received: from [64.233.167.109] ([149.199.62.129])
-        by smtp.gmail.com with ESMTPSA id n17sm2260046wrp.40.2019.11.21.00.34.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 00:34:51 -0800 (PST)
-Subject: Re: [PATCH v3] arm64: zynqmp: Add ZynqMP SDHCI compatible string
-To:     Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, michal.simek@xilinx.com, arnd@arndb.de,
-        horms+renesas@verge.net.au, khilman@baylibre.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, git@xilinx.com
-References: <1571297331-99924-1-git-send-email-manish.narani@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Openpgp: preference=signencrypt
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
-Message-ID: <a0033b99-c58e-deb1-9313-f079c74775ae@monstr.eu>
-Date:   Thu, 21 Nov 2019 09:34:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 21 Nov 2019 03:35:51 -0500
+Received: from mail-eopbgr760087.outbound.protection.outlook.com ([40.107.76.87]:37614
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726546AbfKUIfu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:35:50 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TIdUGLVAHG57CKy4bSX0+pLFaeJRZq/yuASMJqwGeHNi/G4E2dG+Pbu2dkiu6QfIiFce8RFuc1pmBxABnIQYQtdaLXeTAyQi2ugX3KKXhu1BCedwQLG9LRQAYY2IG0Vy3T32ehT12dxknigLDz3UPNeNDjm3j+9taUVXoL7jecT3JKCBtnHtVHMbmi9SfeqP82liUblMcpsjlsBo+tScxouKPcv7ZOGQidIMB7wdo5EPMk1aSRAknyW4+knwjhDwBLA1IRfnRD1OLfK4bSSThu7qVn/YZI0FuePem1F1g0WT78w4YW0NvLDHbu2nBdleWGwyYwSrYSWwxAe39dwIfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Sn0OSbRmZMqOfWAigYtrtVnYBqlhloFuzpBZkCY7os=;
+ b=EI3TcoAdREbqyQzZ+reVLJbkAz6UrdRlZvMW3c77EVTPPg53JbirAThRg9GSqkdAHQEctJQC3wTcqasEv2zxMWcUdZsSAemrNGQ/0Ip2yOFm2yWXFUZ4puik55D8yutNhxK+YIsjemDZwEhAkVbxEFwjylcbqOjjwTbNOBh4Efd7ldY3+M7vlwPWjm56rM5cUQxKs4HZbycrsBcK1ksWNTisUUYqL/5DQrz4YPO2MmwG3hodR+KAjDwRSynpBTR31WpTVk1LTbc/Fhvs3trn1zsK793TugbLHi9StJG0XVgakgFIKzMkqKAEQXEv/v79s84FIK+eyNcWGP0R70xbaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Sn0OSbRmZMqOfWAigYtrtVnYBqlhloFuzpBZkCY7os=;
+ b=GNQ+AUled/o9fM5I7VfBKGjQt4S06aui+fc3m8qwOiXL+Uzst0noXKbPsBX+Jlgv/uZc5B7Muoozfy9RwFu4T8CJG16fbOZ8BmKEhAOyaBI66LQW9psNLB5uqPiVKTgf/2kMfl6NOjQYeKSs4C3Yr6AUj4EpE19KnCQE8SERTug=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3701.namprd13.prod.outlook.com (20.180.14.200) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.8; Thu, 21 Nov 2019 08:35:45 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.018; Thu, 21 Nov 2019
+ 08:35:45 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: RE: [PATCH v2 1/5] genirq: introduce irq_domain_translate_onecell
+Thread-Topic: [PATCH v2 1/5] genirq: introduce irq_domain_translate_onecell
+Thread-Index: AQHVn3AJHBiRD+wuIUSzxWzN0+e/fqeT3o6AgAFvDhA=
+Date:   Thu, 21 Nov 2019 08:35:44 +0000
+Message-ID: <CH2PR13MB33682B1E7B40DC5C2FD1094C8C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+ <1574233128-28114-2-git-send-email-yash.shah@sifive.com>
+ <5ec51559d8b4cd3b8e80943788b52926@www.loen.fr>
+In-Reply-To: <5ec51559d8b4cd3b8e80943788b52926@www.loen.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 401f03cb-132e-4d51-f171-08d76e5dcd35
+x-ms-traffictypediagnostic: CH2PR13MB3701:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB3701A082B564FE78E21731848C4E0@CH2PR13MB3701.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39840400004)(396003)(346002)(376002)(366004)(136003)(13464003)(189003)(199004)(446003)(76116006)(229853002)(52536014)(6116002)(256004)(14444005)(305945005)(186003)(7736002)(26005)(3846002)(74316002)(66066001)(8676002)(81166006)(11346002)(4326008)(76176011)(8936002)(86362001)(25786009)(53546011)(102836004)(81156014)(6506007)(7696005)(44832011)(71200400001)(4001150100001)(33656002)(54906003)(5660300002)(6246003)(107886003)(2906002)(478600001)(55016002)(64756008)(316002)(14454004)(9686003)(66476007)(66556008)(71190400001)(66446008)(99286004)(7416002)(6916009)(66946007)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3701;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /HcBd7ADO5gnTAHnfOjeQEtjACQtFbmNT+WE7w2P6nmQqNRLAkM/IQ00j7qX+WjIxZGysYL3joXGp5IgjRHC0W9ICCrPps6qoR51bTRyj5an0gtNHSYJududOCAYxBor9cw3UCACXY84batAZ0wunzEcCaLvXHZoHttpVuAX1r3vA8OFH23XckF5sqnv4mB8jYmHiFRo84XPcwOcWzKk4sYdcLXTo4XQEuvA4zNDY442cxDg8vP1u/jfRt7/HwdmdkenzVM8MLahrdOM+cIUD3XnNw99FUvZCMjrUV7nVTquKrndKT0FxsOBRRVE8mdHg2vKm9XfifXDIUT5/f7Meh7t6AsMlLk1OEhHw62CI8eIbX/5lSj/fXDvIP66SEX/mfySjqpNpEgIvM7vrE4Dyrv2hkdKQwcLZQDJuFSavgwDaEQvRyOGVU8jesAefcuc
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <1571297331-99924-1-git-send-email-manish.narani@xilinx.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="Zb9mmRJZrVTev7MrsNpq3ttJRgEGyOhq6"
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 401f03cb-132e-4d51-f171-08d76e5dcd35
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 08:35:44.8443
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: h46K2nORX+uV8wxgeIzakpLGfcIlOW2nKvbpYh0MpYOjVSaEZhsTe7JLwe4bVVQv6YeyzMtcZ0simxoQfVad7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3701
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Zb9mmRJZrVTev7MrsNpq3ttJRgEGyOhq6
-Content-Type: multipart/mixed; boundary="WMc5BKCY7YT6GMUr9TzWBOSSp0CCdbWH9";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-To: Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org,
- mark.rutland@arm.com, michal.simek@xilinx.com, arnd@arndb.de,
- horms+renesas@verge.net.au, khilman@baylibre.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, git@xilinx.com
-Message-ID: <a0033b99-c58e-deb1-9313-f079c74775ae@monstr.eu>
-Subject: Re: [PATCH v3] arm64: zynqmp: Add ZynqMP SDHCI compatible string
-References: <1571297331-99924-1-git-send-email-manish.narani@xilinx.com>
-In-Reply-To: <1571297331-99924-1-git-send-email-manish.narani@xilinx.com>
-
---WMc5BKCY7YT6GMUr9TzWBOSSp0CCdbWH9
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 17. 10. 19 9:28, Manish Narani wrote:
-> Add the new compatible string for ZynqMP SD Host Controller for its use=
-
-> in the Arasan SDHCI driver for some of the ZynqMP specific operations.
-> Add required properties for the same.
->=20
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
-> This patch depends on the below series of patches:
-> https://lkml.org/lkml/2019/10/17/37
->=20
-> Changes in v2:
-> 	- Added clock-names for SD card clocks for getting clocks in the drive=
-r
->=20
-> Changes in v3:
-> 	- Reverted "Added clock-names for SD card clocks for getting clocks in=
- the driver"
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/d=
-ts/xilinx/zynqmp.dtsi
-> index 9aa67340a4d8..c7b8c3c28aa7 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -494,20 +494,26 @@
-> =20
->  		sdhci0: mmc@ff160000 {
->  			compatible =3D "arasan,sdhci-8.9a";
-> +			compatible =3D "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
->  			status =3D "disabled";
->  			interrupt-parent =3D <&gic>;
->  			interrupts =3D <0 48 4>;
->  			reg =3D <0x0 0xff160000 0x0 0x1000>;
->  			clock-names =3D "clk_xin", "clk_ahb";
-> +			#clock-cells =3D <1>;
-> +			clock-output-names =3D "clk_out_sd0", "clk_in_sd0";
->  		};
-> =20
->  		sdhci1: mmc@ff170000 {
->  			compatible =3D "arasan,sdhci-8.9a";
-> +			compatible =3D "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
->  			status =3D "disabled";
->  			interrupt-parent =3D <&gic>;
->  			interrupts =3D <0 49 4>;
->  			reg =3D <0x0 0xff170000 0x0 0x1000>;
->  			clock-names =3D "clk_xin", "clk_ahb";
-> +			#clock-cells =3D <1>;
-> +			clock-output-names =3D "clk_out_sd1", "clk_in_sd1";
->  		};
-> =20
->  		smmu: smmu@fd800000 {
->=20
-
-Patches have been applied
-https://lkml.org/lkml/2019/11/20/366
-
-That's why I have applied this one to my tree.
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
-
-
---WMc5BKCY7YT6GMUr9TzWBOSSp0CCdbWH9--
-
---Zb9mmRJZrVTev7MrsNpq3ttJRgEGyOhq6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXdZMIQAKCRDKSWXLKUoM
-ISEXAJ9GAYBTLv8laTAJyI5sUZYuqdJ1BgCfRxVIIQwlbXAiZTrXG8V0e8AuaDQ=
-=VFkW
------END PGP SIGNATURE-----
-
---Zb9mmRJZrVTev7MrsNpq3ttJRgEGyOhq6--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJjIFp5bmdpZXIgPG1hekBr
+ZXJuZWwub3JnPg0KPiBTZW50OiAyMCBOb3ZlbWJlciAyMDE5IDE2OjA5DQo+IFRvOiBZYXNoIFNo
+YWggPHlhc2guc2hhaEBzaWZpdmUuY29tPg0KPiBDYzogbGludXMud2FsbGVpakBsaW5hcm8ub3Jn
+OyBiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsu
+cnV0bGFuZEBhcm0uY29tOyBwYWxtZXJAZGFiYmVsdC5jb207IFBhdWwNCj4gV2FsbXNsZXkgKCBT
+aWZpdmUpIDxwYXVsLndhbG1zbGV5QHNpZml2ZS5jb20+OyBhb3VAZWVjcy5iZXJrZWxleS5lZHU7
+DQo+IHRnbHhAbGludXRyb25peC5kZTsgamFzb25AbGFrZWRhZW1vbi5uZXQ7IGJtZW5nLmNuQGdt
+YWlsLmNvbTsNCj4gYXRpc2gucGF0cmFAd2RjLmNvbTsgU2FnYXIgS2FkYW0gPHNhZ2FyLmthZGFt
+QHNpZml2ZS5jb20+OyBsaW51eC0NCj4gZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gcmlzY3ZAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2FjaGluIEdoYWRpDQo+IDxzYWNoaW4uZ2hhZGlA
+c2lmaXZlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAxLzVdIGdlbmlycTogaW50cm9k
+dWNlIGlycV9kb21haW5fdHJhbnNsYXRlX29uZWNlbGwNCj4gDQo+IE9uIDIwMTktMTEtMjAgMDY6
+NTksIFlhc2ggU2hhaCB3cm90ZToNCj4gPiBBZGQgYSBuZXcgZnVuY3Rpb24gaXJxX2RvbWFpbl90
+cmFuc2xhdGVfb25lY2VsbCgpIHRoYXQgaXMgdG8gYmUgdXNlZA0KPiA+IGFzIHRoZSB0cmFuc2xh
+dGUgZnVuY3Rpb24gaW4gc3RydWN0IGlycV9kb21haW5fb3BzIGZvciB0aGUgdjIgSVJRIEFQSS4N
+Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlhc2ggU2hhaCA8eWFzaC5zaGFoQHNpZml2ZS5jb20+
+DQpbLi4uXQ0KPiA+DQo+ID4gIC8qKg0KPiA+ICsgKiBpcnFfZG9tYWluX3RyYW5zbGF0ZV9vbmVj
+ZWxsKCkgLSBHZW5lcmljIHRyYW5zbGF0ZSBmb3IgZGlyZWN0IG9uZQ0KPiA+IGNlbGwNCj4gPiAr
+ICogYmluZGluZ3MNCj4gPiArICoNCj4gPiArICogRGV2aWNlIFRyZWUgSVJRIHNwZWNpZmllciB0
+cmFuc2xhdGlvbiBmdW5jdGlvbiB3aGljaCB3b3JrcyB3aXRoDQo+ID4gb25lIGNlbGwNCj4gDQo+
+IG5pdDogdGhlIHdob2xlIHBvaW50IG9mIHRoZSAnbmV3JyB0cmFuc2xhdGUgZnVuY3Rpb24gaXMg
+dGhhdCB0aGV5IGFyZQ0KPiBmaXJtd2FyZS1hZ25vc3RpYy4gSnVzdCBkcm9wIHRoZSBEVCByZWZl
+cmVuY2UgaGVyZS4NCg0KT2sgc3VyZS4NCg0KPiANCj4gPiArICogYmluZGluZ3Mgd2hlcmUgdGhl
+IGNlbGwgdmFsdWVzIG1hcCBkaXJlY3RseSB0byB0aGUgaHdpcnEgbnVtYmVyLg0KPiA+ICsgKi8N
+Cj4gPiAraW50IGlycV9kb21haW5fdHJhbnNsYXRlX29uZWNlbGwoc3RydWN0IGlycV9kb21haW4g
+KmQsDQo+ID4gKwkJCQkgc3RydWN0IGlycV9md3NwZWMgKmZ3c3BlYywNCj4gPiArCQkJCSB1bnNp
+Z25lZCBsb25nICpvdXRfaHdpcnEsDQo+ID4gKwkJCQkgdW5zaWduZWQgaW50ICpvdXRfdHlwZSkN
+Cj4gPiArew0KPiA+ICsJaWYgKFdBUk5fT04oZndzcGVjLT5wYXJhbV9jb3VudCA8IDEpKQ0KPiA+
+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJKm91dF9od2lycSA9IGZ3c3BlYy0+cGFyYW1bMF07
+DQo+ID4gKwkqb3V0X3R5cGUgPSBJUlFfVFlQRV9OT05FOw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4g
+K30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwoaXJxX2RvbWFpbl90cmFuc2xhdGVfb25lY2VsbCk7
+DQo+ID4gKw0KPiA+ICsvKioNCj4gPiAgICogaXJxX2RvbWFpbl90cmFuc2xhdGVfdHdvY2VsbCgp
+IC0gR2VuZXJpYyB0cmFuc2xhdGUgZm9yIGRpcmVjdCB0d28NCj4gPiBjZWxsDQo+ID4gICAqIGJp
+bmRpbmdzDQo+ID4gICAqDQo+IA0KPiBDYW4geW91IHBsZWFzZSBhbHNvIHVwZGF0ZSAocG90ZW50
+aWFsbHkgaW4gYSBzZXBhcmF0ZSBwYXRjaCkgdGhlDQo+IHBvdGVudGlhbA0KPiB1c2VycyBvZiB0
+aGlzPyBJIG1lbnRpb25lZCB0aGUgbnZpYyBkcml2ZXIgbGFzdCB0aW1lLi4uDQo+IA0KDQpPaywg
+SSB3aWxsIHNlcGFyYXRlIG91dCB0aGlzIHBhdGNoIGZyb20gdGhlIHBhdGNoc2V0IGFuZCBzZW5k
+IGl0IGluZGl2aWR1YWxseSBhbG9uZyB3aXRoIHBvdGVudGlhbCB1c2VycyBvZiBpdC4NClRoYW5r
+cyBmb3IgeW91ciBjb21tZW50cw0KDQotIFlhc2gNCg0K
