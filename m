@@ -2,216 +2,383 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB28C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D91AC432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D459920679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8AB82075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rYm3g8vp"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RVAjiu9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfKUNTz (ORCPT
+        id S1726500AbfKUNZh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:19:55 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38562 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUNTy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 08:19:54 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xALDJjiG073035;
-        Thu, 21 Nov 2019 07:19:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574342385;
-        bh=psikJZvvqnwRexjytLKhngRm7GTd1V7SDTQoU6tJ2c8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rYm3g8vpuRE+0cCmJ3qtUR3lfFQjdOTZNXorvP7Oqrq/iNkhZiSmcTCdzq+jT5Fbd
-         g9CJ+LnSfJn9+JiN4BWYdHIQtwVeL1gp6HhYHCdbn1QL9v2J+EWPCjt7SsA0t/OLSk
-         9hCclpGzFlI31AVH6XcayOUsND8EzQgJFWFQFPgA=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xALDJjMp007881
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Nov 2019 07:19:45 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
- Nov 2019 07:19:44 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 21 Nov 2019 07:19:44 -0600
-Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xALDJhF1041633;
-        Thu, 21 Nov 2019 07:19:43 -0600
-Subject: Re: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
-To:     Caleb Robey <c-robey@ti.com>, <linux-omap@vger.kernel.org>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 21 Nov 2019 08:25:37 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54566 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726342AbfKUNZg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:25:36 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALDCOaQ028876;
+        Thu, 21 Nov 2019 14:25:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=DoNIRUtg9Ai4n2wMU0B5Cw16DDKiy+ePYSe96gK6rPY=;
+ b=RVAjiu9Uxqm29T4dYh+nBH63LRGUtc330x+RVjIaXpO+btCeXY7e0lPWroiClduZOjcK
+ lULTbeK7GSHRY12YB3h4xDXC5wl2jqXe6UA7gMwnL8sypw9Ai/GLhfAL9qHU+XfYO8IF
+ pHCnJcXfuLkvq1xbgy2cQUzjX5JGPY3Jo6LZk/fph2yhjAuQPWWg1Gg2nR9Cil33ZiWG
+ G5D/zbmTL8Vy3LraAXlw67u37IYKLq9ERcQDL/vMNuSl04ZRuw+Zp9OIMKaJ3kfNSR/P
+ NtRkKMd5NtwXctIQ852aDc6S5Af+MBKf+TqdcR8pC4Zc4PjBl01BzH7HaE3JtOpAuDW8 Rw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wa9uvkuyb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 14:25:23 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5164A100039;
+        Thu, 21 Nov 2019 14:25:22 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3300C2BF9BF;
+        Thu, 21 Nov 2019 14:25:22 +0100 (CET)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 21 Nov
+ 2019 14:25:21 +0100
+Date:   Thu, 21 Nov 2019 14:25:16 +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Wolfram Sang <wsa@the-dreams.de>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191119202850.18149-1-c-robey@ti.com>
- <20191119202850.18149-2-c-robey@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <0926767e-111b-22f5-e87d-51a7269307aa@ti.com>
-Date:   Thu, 21 Nov 2019 08:19:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: [PATCH] dt-bindings: i2c: stm32: Migrate i2c-stm32 documentation
+ to yaml
+Message-ID: <20191121132516.GA28157@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+References: <1574257423-26754-1-git-send-email-alain.volmat@st.com>
+ <CAL_Jsq+3GzLW7_hi56VFHT-V_LMv5g_K=x9ExGx0Xf6Hn_HR3Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191119202850.18149-2-c-robey@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+3GzLW7_hi56VFHT-V_LMv5g_K=x9ExGx0Xf6Hn_HR3Q@mail.gmail.com>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/19/19 3:28 PM, Caleb Robey wrote:
-> From: Jason Kridner <jdk@ti.com>
+On Wed, Nov 20, 2019 at 05:53:37PM +0000, Rob Herring wrote:
+> On Wed, Nov 20, 2019 at 7:43 AM Alain Volmat <alain.volmat@st.com> wrote:
+> >
+> > The document was migrated to Yaml format and renamed st,stm32-i2c.yaml
+> >
+> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> > ---
+> >  .../devicetree/bindings/i2c/i2c-stm32.txt          |  65 ---------
+> >  .../devicetree/bindings/i2c/st,stm32-i2c.yaml      | 157 +++++++++++++++++++++
+> >  2 files changed, 157 insertions(+), 65 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+> > deleted file mode 100644
+> > index ce3df2fff6c8..000000000000
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+> > +++ /dev/null
+> > @@ -1,65 +0,0 @@
+> > -* I2C controller embedded in STMicroelectronics STM32 I2C platform
+> > -
+> > -Required properties:
+> > -- compatible: Must be one of the following
+> > -  - "st,stm32f4-i2c"
+> > -  - "st,stm32f7-i2c"
+> > -- reg: Offset and length of the register set for the device
+> > -- interrupts: Must contain the interrupt id for I2C event and then the
+> > -  interrupt id for I2C error.
+> > -- resets: Must contain the phandle to the reset controller.
+> > -- clocks: Must contain the input clock of the I2C instance.
+> > -- A pinctrl state named "default" must be defined to set pins in mode of
+> > -  operation for I2C transfer
+> > -- #address-cells = <1>;
+> > -- #size-cells = <0>;
+> > -
+> > -Optional properties:
+> > -- clock-frequency: Desired I2C bus clock frequency in Hz. If not specified,
+> > -  the default 100 kHz frequency will be used.
+> > -  For STM32F4 SoC Standard-mode and Fast-mode are supported, possible values are
+> > -  100000 and 400000.
+> > -  For STM32F7, STM32H7 and STM32MP1 SoCs, Standard-mode, Fast-mode and Fast-mode
+> > -  Plus are supported, possible values are 100000, 400000 and 1000000.
+> > -- dmas: List of phandles to rx and tx DMA channels. Refer to stm32-dma.txt.
+> > -- dma-names: List of dma names. Valid names are: "rx" and "tx".
+> > -- i2c-scl-rising-time-ns: I2C SCL Rising time for the board (default: 25)
+> > -  For STM32F7, STM32H7 and STM32MP1 only.
+> > -- i2c-scl-falling-time-ns: I2C SCL Falling time for the board (default: 10)
+> > -  For STM32F7, STM32H7 and STM32MP1 only.
+> > -  I2C Timings are derived from these 2 values
+> > -- st,syscfg-fmp: Use to set Fast Mode Plus bit within SYSCFG when Fast Mode
+> > -  Plus speed is selected by slave.
+> > -       1st cell: phandle to syscfg
+> > -       2nd cell: register offset within SYSCFG
+> > -       3rd cell: register bitmask for FMP bit
+> > -  For STM32F7, STM32H7 and STM32MP1 only.
+> > -
+> > -Example:
+> > -
+> > -       i2c@40005400 {
+> > -               compatible = "st,stm32f4-i2c";
+> > -               #address-cells = <1>;
+> > -               #size-cells = <0>;
+> > -               reg = <0x40005400 0x400>;
+> > -               interrupts = <31>,
+> > -                            <32>;
+> > -               resets = <&rcc 277>;
+> > -               clocks = <&rcc 0 149>;
+> > -               pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
+> > -               pinctrl-names = "default";
+> > -       };
+> > -
+> > -       i2c@40005400 {
+> > -               compatible = "st,stm32f7-i2c";
+> > -               #address-cells = <1>;
+> > -               #size-cells = <0>;
+> > -               reg = <0x40005400 0x400>;
+> > -               interrupts = <31>,
+> > -                            <32>;
+> > -               resets = <&rcc STM32F7_APB1_RESET(I2C1)>;
+> > -               clocks = <&rcc 1 CLK_I2C1>;
+> > -               pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
+> > -               pinctrl-names = "default";
+> > -               st,syscfg-fmp = <&syscfg 0x4 0x1>;
+> > -       };
+> > diff --git a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+> > new file mode 100644
+> > index 000000000000..0f51a6ed0e9b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+> > @@ -0,0 +1,157 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/i2c/st,stm32-i2c.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: I2C controller embedded in STMicroelectronics STM32 I2C platform
+> > +
+> > +maintainers:
+> > +  - Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/i2c/i2c-controller.yaml#
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - st,stm32f7-i2c
+> > +    then:
+> > +      properties:
+> > +        i2c-scl-rising-time-ns:
+> > +          description: I2C SCL Rising time for the board
+> > +          $ref: /schemas/types.yaml#/definitions/uint32
+> > +          default: 25
+> > +
+> > +        i2c-scl-falling-time-ns:
+> > +          description: I2C SCL Falling time for the board
+> > +          $ref: /schemas/types.yaml#/definitions/uint32
 > 
-> BeagleBoard.org BeagleBone AI is an open source hardware single
-> board computer based on the Texas Instruments AM5729 SoC featuring
-> dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-> signal processor (DSP), quad-core embedded vision engine (EVE),
-> Arm Cortex-M4 processors, dual programmable realtime unit
-> industrial control subsystems and more. The board features 1GB
-> DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-> 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-> headers.
+> These 2 should be added to i2c-controller.yaml and just the default
+> defined here.
+
+Pull-request on the dt-schema git sent in order to add those two properties
+into the i2c-controller.yaml
+
+Patch v2 to come regarding other points.
+
 > 
-> For more information, refer to:
-> https://beaglebone.ai
+> > +          default: 10
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - st,stm32f4-i2c
+> > +    then:
+> > +      properties:
+> > +        clock-frequency:
+> > +          description: Desired I2C bus clock frequency in Hz. If not specified,
+> > +                       the default 100 kHz frequency will be used.
+> > +                       For STM32F4 SoC Standard-mode and Fast-mode are
+> > +                       supported, possible values are 100000 and 400000.
+> > +          default: 100000
+> > +          enum: [100000, 400000]
+> > +    else:
+> > +      properties:
+> > +        clock-frequency:
+> > +          description: Desired I2C bus clock frequency in Hz. If not specified,
+> > +                       the default 100 kHz frequency will be used.
+> > +                       For STM32F7, STM32H7 and STM32MP1 SoCs, Standard-mode,
+> > +                       Fast-mode and Fast-mode Plus are supported, possible
+> > +                       values are 100000, 400000 and 1000000.
+> > +          default: 100000
+> > +          enum: [100000, 400000, 1000000]
 > 
-> This patch introduces the BeagleBone AI device tree.
+> Move this to main 'properties'. Then the one in the 'then' clause just
+> needs the enum.
 > 
-> Note that the device use the "ti,tpd12s016" component which is
-> software compatible with "ti,tpd12s015". Thus we only use the
-> latter driver.
+> > +
+> > +        st,syscfg-fmp:
+> > +          $ref: "/schemas/types.yaml#/definitions/phandle-array"
 > 
-> Signed-off-by: Jason Kridner <jdk@ti.com>
-> Signed-off-by: Caleb Robey <c-robey@ti.com>
-> Cc: Robert Nelson <robertcnelson@gmail.com>
+> Won't work. You have to do:
 > 
-> ---
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/am5729-beagleboneai.dts | 782 ++++++++++++++++++++++
->  2 files changed, 783 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
+> allOf:
+>   - $ref: ...
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b21b3a64641a..b1154dbda73c 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -791,6 +791,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
->  	am57xx-beagle-x15.dtb \
->  	am57xx-beagle-x15-revb1.dtb \
->  	am57xx-beagle-x15-revc.dtb \
-> +	am5729-beagleboneai.dtb \
->  	am57xx-cl-som-am57x.dtb \
->  	am57xx-sbc-am57x.dtb \
->  	am572x-idk.dtb \
-> diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
-> new file mode 100644
-> index 000000000000..7d0e132e6a23
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-> @@ -0,0 +1,782 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2014-2019 Texas Instruments Incorporated - http://www.ti.com/
-
-
-I know this is mostly a copy/paste from other boards, but lets not claim
-copyright 5 years back on a file describing a device that was not even
-thought up then.
-
-
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "dra74x.dtsi"
-> +#include "am57xx-commercial-grade.dtsi"
-> +#include "dra74x-mmc-iodelay.dtsi"
-> +#include "dra74-ipu-dsp-common.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/pinctrl/dra.h>
-> +
-> +/ {
-> +	model = "BeagleBoard.org BeagleBone AI";
-> +	compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
-> +		     "ti,dra742", "ti,dra74", "ti,dra7";
-> +
-> +	aliases {
-> +		rtc0 = &tps659038_rtc;
-> +		rtc1 = &rtc;
-> +		display0 = &hdmi_conn;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000 0x0 0x40000000>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		ipu2_memory_region: ipu2-memory@95800000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x0 0x95800000 0x0 0x3800000>;
-> +			reusable;
-> +			status = "okay";
-> +		};
-
-
-Now these reserved memories are unused.
-
-Andrew
-
-
-> +
-> +		dsp1_memory_region: dsp1-memory@99000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x0 0x99000000 0x0 0x4000000>;
-> +			reusable;
-> +			status = "okay";
-> +		};
-> +
-> +		ipu1_memory_region: ipu1-memory@9d000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x0 0x9d000000 0x0 0x2000000>;
-> +			reusable;
-> +			status = "okay";
-> +		};
-> +
-> +		dsp2_memory_region: dsp2-memory@9f000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x0 0x9f000000 0x0 0x800000>;
-> +			reusable;
-> +			status = "okay";
-> +		};
-> +
-> +	};
-> +
+> > +          description: Use to set Fast Mode Plus bit within SYSCFG when
+> > +                       Fast Mode Plus speed is selected by slave. Should be
+> > +                       phandle/offset/mask
+> > +          items:
+> > +            - description: phandle to syscfg
+> > +            - description: register offset within syscfg
+> > +            - description: register bitmask for FMP bit
+> 
+> Wouldn't this make more sense in the first if rather than the 'else' clause?
+> 
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - st,stm32f4-i2c
+> > +      - st,stm32f7-i2c
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 2
+> 
+> Implied by items length.
+> 
+> > +    items:
+> > +      - description: interrupt ID for I2C event
+> > +      - description: interrupt ID for I2C error
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  dmas:
+> > +    items:
+> > +      - description: RX DMA Channel phandle
+> > +      - description: TX DMA Channel phandle
+> > +    minItems: 2
+> > +    maxItems: 2
+> 
+> Implied by items length.
+> 
+> > +
+> > +  dma-names:
+> > +    items:
+> > +      - const: rx
+> > +      - const: tx
+> > +    minItems: 2
+> > +    maxItems: 2
+> 
+> Implied by items length.
+> 
+> > +
+> > +required:
+> > +  - compatible
+> 
+> > +  - '#address-cells'
+> > +  - '#size-cells'
+> 
+> Can drop. i2c-controller.yaml makes them required.
+> 
+> > +  - reg
+> > +  - interrupts
+> > +  - resets
+> > +  - clocks
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/mfd/stm32f7-rcc.h>
+> > +    #include <dt-bindings/clock/stm32fx-clock.h>
+> > +    //Example 1 (with st,stm32f4-i2c compatible)
+> > +      i2c@40005400 {
+> > +          compatible = "st,stm32f4-i2c";
+> > +          #address-cells = <1>;
+> > +          #size-cells = <0>;
+> > +          reg = <0x40005400 0x400>;
+> > +          interrupts = <31>,
+> > +                       <32>;
+> > +          resets = <&rcc 277>;
+> > +          clocks = <&rcc 0 149>;
+> > +      };
+> > +
+> > +    //Example 2 (with st,stm32f7-i2c compatible)
+> > +      i2c@40005800 {
+> > +          compatible = "st,stm32f7-i2c";
+> > +          #address-cells = <1>;
+> > +          #size-cells = <0>;
+> > +          reg = <0x40005800 0x400>;
+> > +          interrupts = <31>,
+> > +                       <32>;
+> > +          resets = <&rcc STM32F7_APB1_RESET(I2C1)>;
+> > +          clocks = <&rcc 1 CLK_I2C1>;
+> > +      };
+> > +
+> > +    //Example 3 (with st,stm32f7-i2c compatible on stm32mp)
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> > +    #include <dt-bindings/reset/stm32mp1-resets.h>
+> > +      i2c@40013000 {
+> > +          compatible = "st,stm32f7-i2c";
+> > +          #address-cells = <1>;
+> > +          #size-cells = <0>;
+> > +          reg = <0x40013000 0x400>;
+> > +          interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
+> > +                       <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +          clocks = <&rcc I2C2_K>;
+> > +          resets = <&rcc I2C2_R>;
+> > +          i2c-scl-rising-time-ns = <185>;
+> > +          i2c-scl-falling-time-ns = <20>;
+> > +          st,syscfg-fmp = <&syscfg 0x4 0x2>;
+> > +      };
+> > +...
+> > --
+> > 2.7.4
+> >
