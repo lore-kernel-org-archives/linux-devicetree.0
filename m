@@ -4,86 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89C6C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153F9C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBC120672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A5920672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574365066;
-	bh=SppgSTUGi2PlS4/0x2LLJC5RqPGVeNhzX8n+pmUFxrU=;
+	s=default; t=1574365172;
+	bh=W4m0P+fJ5sCSl6dD6gMNJNsQTz/xpSEmD9wVzoR5ttk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WIykzX2qpviq1ZwdUQrytDRaY3qJ4icmSr62NeLC7F3+alAy3qGi3fFU6yoLaEJUl
-	 uKY9ugUU5P3lZzAYy8iXv8C0l/HdbAGi7jyzy+LzMJVWJRMk43GslW7JXMtAQq8E5d
-	 saI4aAq2POJis+caWN0uBy6RjuRjG2q2a/m2FQvs=
+	b=sAGDsB0bz39Lgo5QqocA9KSVtN0N2+c1LykNMSQ2MM0QhGMIxelIIsPIwIIesNQUT
+	 15bWMM0duAo2d9+5K844t+BAXKpDzdpOJDQ9ktWbKA3MJ9uhQVuYjB9Om4qZ4ULxbC
+	 KVvevLU56cgunuaKiDCAiAJ8M2V8IyAlnZDy4nNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfKUThq (ORCPT
+        id S1726554AbfKUTjc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 14:37:46 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38863 "EHLO
+        Thu, 21 Nov 2019 14:39:32 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36171 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUThq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 14:37:46 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a14so4310698oid.5;
-        Thu, 21 Nov 2019 11:37:45 -0800 (PST)
+        with ESMTP id S1726293AbfKUTjc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 14:39:32 -0500
+Received: by mail-oi1-f195.google.com with SMTP id j7so4330038oib.3;
+        Thu, 21 Nov 2019 11:39:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tMER4MOHixp2wY9ZjS4RrN2RrDNX7H+o1z/zXkM48ZU=;
-        b=Q6RCCcByjVSTwLs6zjTOIOogAiyLZ88aGbigw4CCXGdpEBXhshluevOsoZdVvdXezw
-         Nv4UHxtPTXHRBFmncvxRUMQiBqJaMzJFIwONlIt3uDBU2phtHHkXOjjV628nZegsXhYg
-         9DZNV+Jnj1n9DYALod4ddSmyypviR5CR+qlQnAvBSQumgu+rc6lJYeMJ0iG0BlMMGypL
-         WiV2EvM3HILbJT3D4CHtCvE/dk+pNQTOdBisWsxZDabDF0u6m20Wwzf/NWxs4t+sTRCy
-         +NG585cjEx70sHR5KmyebZVPVyNn4L+UIsRlDPbwx4onIsM8z2Qq3BOC9hwCfHNbNU7+
-         lKtg==
-X-Gm-Message-State: APjAAAVZNWmFdo625UEW9ywLD+jrw1S3R8qudJNSB3/3j1tEIzR17ztp
-        cK9Ro9yXOGSXJcG/yefSgw==
-X-Google-Smtp-Source: APXvYqxz3r1XfhG46Xqzohy//cfJAs84lDW7vsquvPUXB2FPHrRH/1ETgZRryOu7acvqdws+X02tgA==
-X-Received: by 2002:aca:4ac5:: with SMTP id x188mr8823046oia.148.1574365065094;
-        Thu, 21 Nov 2019 11:37:45 -0800 (PST)
+        bh=c4KjpD+ns0ACXFE5v6l81aoQVHuHJsxlS4JefMC5EMY=;
+        b=CE49zIfQ1Fq8wUnUj/AAwpB/UTdeb++Z1Ad1f8tWJGWazHg1369dTQ4I8ZXg3Jt4sd
+         bA4VUgkIQfyr01XMzjZxEpTYJ/khoRB6e0iiltPTf3YViG+m1oikNJSEGtubLG5Gq4Mx
+         ErI6ipMjg+KlEK9paGek6hdgB9eVwuIYO6RbLvCZrCHRcEs4qozuLhyGAwXzuF33TrTC
+         ga18j6Y8UmqO9uFjTRnU2pSSYNhCtrGSgs24vn2e+aKWs1NcoQhiVmY+nQZc1OLwxWCQ
+         4GaGvsgJaiogMNm7rPHq/xnoEMeT0lU1zcM0Y3qy+1dne0XIFL3P2HWT3YjldRxcCpgM
+         plAg==
+X-Gm-Message-State: APjAAAUboo/L8iiR5l0lMbXT8XIis5bFLm8pH4QidIXQqjAe4LJjEWjC
+        Eh4hkLXUCIm86JUeklYA6w==
+X-Google-Smtp-Source: APXvYqw+O/5gVYMGrcCumNOlMYDrrdD4XmwLhJA1mxJFW4xVlHhGW1dwTOU1ghWvK2UUGvx0UeKwSA==
+X-Received: by 2002:aca:1715:: with SMTP id j21mr8631035oii.6.1574365171174;
+        Thu, 21 Nov 2019 11:39:31 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e88sm1305777ote.39.2019.11.21.11.37.44
+        by smtp.gmail.com with ESMTPSA id u204sm1229289oig.35.2019.11.21.11.39.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 11:37:44 -0800 (PST)
-Date:   Thu, 21 Nov 2019 13:37:43 -0600
+        Thu, 21 Nov 2019 11:39:30 -0800 (PST)
+Date:   Thu, 21 Nov 2019 13:39:29 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     dwmw2@infradead.org, computersforpeace@gmail.com,
-        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        alexandre.torgue@st.com, linux-stm32@st-md-mailman.stormreply.com,
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: Re: [PATCH] dt-bindings: mtd: Convert stm32 fmc2-nand bindings to
- json-schema
-Message-ID: <20191121193743.GA3627@bogus>
-References: <20191121130615.13007-1-benjamin.gaignard@st.com>
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH v2] dt-bindings: i2c: stm32: Migrate i2c-stm32
+ documentation to yaml
+Message-ID: <20191121193929.GA6676@bogus>
+References: <1574342866-8348-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191121130615.13007-1-benjamin.gaignard@st.com>
+In-Reply-To: <1574342866-8348-1-git-send-email-alain.volmat@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 Nov 2019 14:06:15 +0100, Benjamin Gaignard wrote:
-> Convert the STM32 fmc2-nand binding to DT schema format using json-schema
+On Thu, 21 Nov 2019 14:27:46 +0100, Alain Volmat wrote:
+> The document was migrated to Yaml format and renamed st,stm32-i2c.yaml
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> CC: Christophe Kerello <christophe.kerello@st.com>
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 > ---
->  .../bindings/mtd/st,stm32-fmc2-nand.yaml           | 98 ++++++++++++++++++++++
->  .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 --------------
->  2 files changed, 98 insertions(+), 61 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> v2: remove i2c-scl.*time description, ref (moved into i2c-controller.yaml
+>     push the st,syscfg-fmt into the if compatible st,stm32f7 part
+>     fix the st,syscfg-fmt ref syntax and set minItems/maxItems to 3
+>     make the clock-frequency part common and only keep enum in the st,stm32f4 case
+>     remove unnecesary minItems/maxItems
+>     remove address-cells/size-cells from required fields
+> ---
+>  .../devicetree/bindings/i2c/i2c-stm32.txt          |  65 ----------
+>  .../devicetree/bindings/i2c/st,stm32-i2c.yaml      | 141 +++++++++++++++++++++
+>  2 files changed, 141 insertions(+), 65 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+>  create mode 100644 Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
 > 
 
 Applied, thanks.
