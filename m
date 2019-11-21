@@ -2,87 +2,107 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41224C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 23:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574E2C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 23:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA0A20709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 23:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B6B206CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 23:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574377766;
-	bh=aJ96Pu0TItbu0cExizL14b1Xpu2jLlpmp08Evn6sd8U=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=iHqlrp73HLqWQ9TO7LX1cKDi9iv0LoazA1sZu974guL88yuq9cwrJMZBNCnAIWYFs
-	 eBhDms/RV7uIzPvnbdVphnN+XJu2xOn72suZaSAj4NSUV30DX6YuKs6I5m0ysDtObm
-	 T7gWisEEKqGTqxroaF0umeXlKHB93iLIbTTnpIh0=
+	s=default; t=1574378230;
+	bh=2TdgKys+18eBd0yx06PVsa4uvvycUVEGoBi7ZYvSVgQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AJKE5u+lfOngorHm/YJpljFOgBmikz3C0n9TtA3PJM2gCTkLRXKVdqqlwco/7YF0q
+	 DKCZXEDAm8CdahUmdBURgWFdjDPk/TmMG4DDQg7vI90Bwb6aluxTi0mUI/JlYGvkWZ
+	 CUzIvAxe7aHK1/O9KeDiI0uoGnPt4Hg+FFpHLEf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfKUXJZ (ORCPT
+        id S1726270AbfKUXRJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 18:09:25 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36400 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfKUXJZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 18:09:25 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so4573179oto.3;
-        Thu, 21 Nov 2019 15:09:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PJG++O/7WyYCoHSioQk9zwnAb3uyZILPOLprzryEL3g=;
-        b=R0f40nI7cq2eKAAMYXmvkNGOdReglx240bolhulsmbFvo2seWRf8hMShf8TiixEh5w
-         chKZT3tKXBKWENUQrFEKkS27K2eqJjDKyki8gqFtg4563yvam6Pgt+eGstLFeFXDh3kd
-         L5vehj5WruwIxHFDtOlnPlgGGg23oT8PZGN10abHQ8CChFD24LqXZNAtp4nqRmpC4FVc
-         Sz+5mtM2vCSKmpZG70q7M2Jcl7KiYpgVbHbcHAUeZLUvq2BEdOfzhsmYkiQObj3Sv1J6
-         YUzDYbXCATrt8bEg506W1gjh02o+oDD3xGFZV4891fpKMLKtBqOUhX1NMPFD0VSfk2lQ
-         4mhQ==
-X-Gm-Message-State: APjAAAWR+1KQDc6s8HkipUsL3y6j8p595PpvmUgMPices4R7Y29dvoiG
-        CpIvUBV7Ofl4GaevuKxs8lz69CE=
-X-Google-Smtp-Source: APXvYqxKa4P+GuN1q5TxElqHyMR3QAgbYhYhCljHTzIlbMcN6MuWHWWQVlXURutyxBtvDWV2YrwOnA==
-X-Received: by 2002:a9d:62d2:: with SMTP id z18mr8427005otk.108.1574377763963;
-        Thu, 21 Nov 2019 15:09:23 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id s133sm1405942oia.58.2019.11.21.15.09.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 15:09:23 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: firmware: ixp4xx: Drop redundant minItems/maxItems
-Date:   Thu, 21 Nov 2019 17:09:23 -0600
-Message-Id: <20191121230923.4639-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 21 Nov 2019 18:17:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfKUXRJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 18:17:09 -0500
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D78206F4;
+        Thu, 21 Nov 2019 23:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574378229;
+        bh=2TdgKys+18eBd0yx06PVsa4uvvycUVEGoBi7ZYvSVgQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xxXmsSIpUd9vMfsf/PRW9c0fS+N73Cy/1BSDaa0e0wufLlKoXUjkmtum6HxSy0MhI
+         YerGBMWPuXTMD98TSjmsb1z+HlGRl0OKcEKK94rRfrT/6J5v0AtSLywQpRF0I+Tlhw
+         8psvKeN2y5gcDrGZTA+qk308BmPyDATMI+ZN45OE=
+Received: by mail-qk1-f169.google.com with SMTP id i19so4716520qki.2;
+        Thu, 21 Nov 2019 15:17:08 -0800 (PST)
+X-Gm-Message-State: APjAAAUsUwHjJDPGnxyeoWUdnDNLBqG8P0Sb4G15mESHGpY9+IB1VzFU
+        6lj3MWIanXBCsd041V4+JU8ngNifVaDYShi5zw==
+X-Google-Smtp-Source: APXvYqzdCnSu2pZqQVq5MbhOL/7Hy1JyTSLPkq53mY0rE1lgCOTMJNSU+hlwHHmM1PcgWTaymDDIZ1TCNyBYPqI8OKU=
+X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr5153029qkn.254.1574378228095;
+ Thu, 21 Nov 2019 15:17:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191121190124.1936-1-jdk@ti.com>
+In-Reply-To: <20191121190124.1936-1-jdk@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 21 Nov 2019 17:16:56 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJhWj1RoT9LWe5-gA91aAkCYrJ6S6vm1DEkqwx56WNEGQ@mail.gmail.com>
+Message-ID: <CAL_JsqJhWj1RoT9LWe5-gA91aAkCYrJ6S6vm1DEkqwx56WNEGQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Add vendor prefix for BeagleBoard.org
+To:     Jason Kridner <jkridner@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jason Kridner <jdk@ti.com>, Jyri Sarha <jsarha@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The minItems/maxItems default to the number of items in an 'items' list,
-so drop the redundant specifying of them here.
+On Thu, Nov 21, 2019 at 1:02 PM Jason Kridner <jkridner@gmail.com> wrote:
+>
+> Add vendor prefix for BeagleBoard.org Foundation
+>
+> Signed-off-by: Jason Kridner <jdk@ti.com>
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../firmware/intel,ixp4xx-network-processing-engine.yaml        | 2 --
- 1 file changed, 2 deletions(-)
+Author and Sob emails don't match.
 
-diff --git a/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml b/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-index 4f0db8ee226a..878a2079ebb6 100644
---- a/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-+++ b/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-@@ -25,8 +25,6 @@ properties:
-           - const: intel,ixp4xx-network-processing-engine
- 
-   reg:
--    minItems: 3
--    maxItems: 3
-     items:
-       - description: NPE0 register range
-       - description: NPE1 register range
--- 
-2.20.1
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 967e78c5ec0a..3e3d8e3c28d3 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -139,6 +139,8 @@ patternProperties:
+>      description: Shenzhen AZW Technology Co., Ltd.
+>    "^bananapi,.*":
+>      description: BIPAI KEJI LIMITED
+> +  "^beagleboard.org,.*":
 
+'.' would need need to be escaped as this is a regex.
+
+The '.' may cause some problems with schemas. We can adapt or just
+drop the '.org'.
+
+> +    description: BeagleBoard.org Foundation
+>    "^bhf,.*":
+>      description: Beckhoff Automation GmbH & Co. KG
+>    "^bitmain,.*":
+> --
+> 2.17.1
+>
