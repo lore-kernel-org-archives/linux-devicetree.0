@@ -7,84 +7,86 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6C6C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899E8C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808F520730
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E97D2071C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574347138;
-	bh=h1GRbks7EnBZQwQMp7D+aESnqrGn62t6a/Nn6SbqbaU=;
+	s=default; t=1574347190;
+	bh=+neLzFAvHQ3PkcnVC9iYmWSSop4VQM2zpfDUnBls/sE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aVZ1J0SdBA5H9G+ZAzbTB1RLdSSL2DNPaRq0dtOj3KeCKAAAGQTFo1pSAmskUo4W6
-	 xwTr3qPNgcaqOlBJFIxEX94AUq1hvBsirEhAs81sPM4tZZeexrl1lLoX5qWPe6WIzC
-	 xMczWl5f0vd4MaXkrWYXA7BbL1J5oIa1Fw8nyUK8=
+	b=iR/Phy+FDBkDEGg6MMQylZ/5IBYmUTqdPK98HNZmCcRB9P/chbyzutirKjIBUk5Mo
+	 JdND9zgKnQgRjVulqVKpK4n9Y6Nm5ggKA1m+t1DURwPPDHDFzaD0eMOZ9bwr90hcV1
+	 Idlx7dkz4I1+erINChgkOKkQGpV+VQHYOrSJnZmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfKUOi6 (ORCPT
+        id S1726358AbfKUOjt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:38:58 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44790 "EHLO
+        Thu, 21 Nov 2019 09:39:49 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44901 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfKUOi5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 09:38:57 -0500
-Received: by mail-ot1-f67.google.com with SMTP id c19so3066435otr.11;
-        Thu, 21 Nov 2019 06:38:57 -0800 (PST)
+        with ESMTP id S1726293AbfKUOjt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 09:39:49 -0500
+Received: by mail-ot1-f67.google.com with SMTP id c19so3069304otr.11;
+        Thu, 21 Nov 2019 06:39:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0blBAL3wZkz50HycghqiK2pciwvxeqAeMTt/kJRNm5g=;
-        b=qbz3JTU/Fm0TUnxowGxCiuSAU+NDoYoSMxXGSD1+YybXUE1vLhZ0EMZY+Fe0UXUuvw
-         UWj8Z/lBY20URlXdRcXUXC2C0GYxDsGOf8EPpVKBXtl8ZSefVC9uq3PuKLjvgyL88SEe
-         0Q1LZea0QZ+67AjozVVQf++mpE9AUmtyz4IL5IdAoWmFjl08BsZY90kGVOgQvgUxLUw5
-         +1HdfoeKCJ0Rv3PwTg2AVtNrXCkJrPuU8NRS9exfjscZrGv+VA6RISiso52A0c6L3Bcj
-         x3tuQ2t4S8i6Pa4Bj33RGmQSQuyuZ3WOFaT5L60pSw3lkywBaXwJKOK4OzKQGYHlt8fd
-         bt3A==
-X-Gm-Message-State: APjAAAUrKxCNHgnIthpSGJM4OUuJJtKsVhxvJnYuwovplVkxY/J9qWNL
-        qx5WkW0qIphwVg5Ya7eF6JgxO/0=
-X-Google-Smtp-Source: APXvYqwnaGGSvHw3eVxDSnMv1fQxO7SKEamfp9zxy8HwVAD1LSiD/kDoELucP/RnyFz5AWlq8jVXBQ==
-X-Received: by 2002:a9d:7a93:: with SMTP id l19mr6448599otn.314.1574347136596;
-        Thu, 21 Nov 2019 06:38:56 -0800 (PST)
+        bh=SYYqbOVycEdgZHO+SXnt+K02+QDnVzkJ47TaoH1kdjg=;
+        b=NWN+khUH0MexrV3NVPvl8hIickugu/e99ZmNsRY1zzEuR0PXbVJOnxHgJH8gu6HEMm
+         iEK2nzgS44RSkf7pT4+oBlG/+4azNinjlpZ8XIUN1cwQh0kGFAxorO26Q1lSLiyDPReq
+         TFCmWJNxzRnkgs9a//7fP/tXSyAoJDmTaUpxT3B4J33r8cZUJeCI9pcaI5we/KeHHgCs
+         aF/IA3hw1snczecYOtE7vGKp3lWnpTU1NJN9wSgu4ATpQuzAfxhTUECG/cnlH+kmosxP
+         Jrp0UiiaiT4QZi0OP519PRcHnyChUm5tYX4CZdUSFI1ltxo6FRbgVVW8aCm8tWFl+pt3
+         2QHQ==
+X-Gm-Message-State: APjAAAVi8C8mCUuHZpcfK0a/ULimwlFfwTeCVhOkXFzEuiQgUiYxQPyd
+        y2ZVXzjGHEjAAGCMPWrJrg==
+X-Google-Smtp-Source: APXvYqwUu/biujtjVLDWyb16pwLG4pruuYMM8CW4+uuGpATDphuBWh04Vk6lWGDYxf1mYwHiGV55vA==
+X-Received: by 2002:a9d:b83:: with SMTP id 3mr6529158oth.56.1574347188483;
+        Thu, 21 Nov 2019 06:39:48 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h39sm1055423oth.9.2019.11.21.06.38.55
+        by smtp.gmail.com with ESMTPSA id y145sm955719oia.21.2019.11.21.06.39.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 06:38:56 -0800 (PST)
-Date:   Thu, 21 Nov 2019 08:38:55 -0600
+        Thu, 21 Nov 2019 06:39:47 -0800 (PST)
+Date:   Thu, 21 Nov 2019 08:39:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
         devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v2] dt-bindings: spi: Convert stm32 QSPI bindings to
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v3] dt-bindings: mailbox: convert stm32-ipcc to
  json-schema
-Message-ID: <20191121143855.GA23685@bogus>
-References: <20191120194444.10540-1-benjamin.gaignard@st.com>
+Message-ID: <20191121143947.GA25003@bogus>
+References: <20191121095102.26693-1-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191120194444.10540-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191121095102.26693-1-arnaud.pouliquen@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 20 Nov 2019 20:44:44 +0100, Benjamin Gaignard wrote:
-> Convert the STM32 QSPI binding to DT schema format using json-schema
+On Thu, 21 Nov 2019 10:51:02 +0100, Arnaud Pouliquen wrote:
+> Convert the STM32 IPCC bindings to DT schema format using
+> json-schema
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 > ---
-> changes in version 2:
-> - fix subject
-> - remove useless minItems and maxItems
->  .../devicetree/bindings/spi/spi-stm32-qspi.txt     | 47 ------------
->  .../devicetree/bindings/spi/st,stm32-qspi.yaml     | 83 ++++++++++++++++++++++
->  2 files changed, 83 insertions(+), 47 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+>  .../bindings/mailbox/st,stm32-ipcc.yaml       | 84 +++++++++++++++++++
+>  .../bindings/mailbox/stm32-ipcc.txt           | 47 -----------
+>  2 files changed, 84 insertions(+), 47 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
