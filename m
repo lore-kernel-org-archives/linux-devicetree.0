@@ -2,88 +2,97 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837FCC432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 12:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53463C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 12:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5839A20872
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 12:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574337651;
-	bh=hPY3CX63GlCkHmgiEg/Xb1Y9IcZqdATjFaXqtWUPVIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W/vjFEytC2YmdyuggBlYDFRnXTa6FBGXC+LQi5Kl+ETgvomX0wS3Lotn/fPkAqkDv
-	 4qkgpYAaq11vgHVzbjxZ1exIcX+SHjS4mERu07XgwrOdDUBEEPIjEOKN4oqfTOBtOe
-	 8RLVr+Tsu2/dTSu2gt/sgVMkWQYdTMzzENcOPFWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2B14F2089D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 12:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfKUMAu (ORCPT
+        id S1726342AbfKUMSI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:00:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 07:18:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:55414 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfKUMAu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:00:50 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C05020855;
-        Thu, 21 Nov 2019 12:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574337649;
-        bh=hPY3CX63GlCkHmgiEg/Xb1Y9IcZqdATjFaXqtWUPVIg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MQE2Ls8f2jq/f28Qd8caaxiEhS+imwQRWG3lyp5yoiOhkcZ+IYWJvyRpys3k1QXYc
-         fI6jcYZZsHyf97/G8+CYiJ8GvXZcyDo/6wjxaC4/61TVoAu/fq8oRrF47J1Kt/JVgH
-         f8TK0BRoPdgDPbXQ3bjI0b1cgVm+PYOOu5J+qtOI=
-Date:   Thu, 21 Nov 2019 13:00:47 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] of: property: Fix the semantics of of_is_ancestor_of()
-Message-ID: <20191121120047.GA429384@kroah.com>
-References: <20191120080230.16007-1-saravanak@google.com>
- <20191120153625.GA2981769@kroah.com>
- <CAGETcx9eB0ZicHs=8jxwRxbKYHKxoV5u7otud_TAx2Z_DyTw0Q@mail.gmail.com>
+        id S1726197AbfKUMSI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 07:18:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 895F61045;
+        Thu, 21 Nov 2019 04:18:07 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF27B3F703;
+        Thu, 21 Nov 2019 04:18:06 -0800 (PST)
+Date:   Thu, 21 Nov 2019 12:18:05 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     devicetree@vger.kernel.org, f.fainelli@gmail.com,
+        linux-rdma@vger.kernel.org, maz@kernel.org, phil@raspberrypi.org,
+        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
+        linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org, mbrugger@suse.com,
+        bcm-kernel-feedback-list@broadcom.com, wahrenst@gmx.net,
+        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/6] Raspberry Pi 4 PCIe support
+Message-ID: <20191121121804.GY43905@e119886-lin.cambridge.arm.com>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+ <20191119111848.GR43905@e119886-lin.cambridge.arm.com>
+ <1b116fabe85a324e2d05a593d38811467f43fb91.camel@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGETcx9eB0ZicHs=8jxwRxbKYHKxoV5u7otud_TAx2Z_DyTw0Q@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1b116fabe85a324e2d05a593d38811467f43fb91.camel@suse.de>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 01:50:42PM -0800, Saravana Kannan wrote:
-> On Wed, Nov 20, 2019 at 7:36 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Nov 20, 2019 at 12:02:29AM -0800, Saravana Kannan wrote:
-> > > The of_is_ancestor_of() function was renamed from of_link_is_valid()
-> > > based on review feedback. The rename meant the semantics of the function
-> > > had to be inverted, but this was missed in the earlier patch.
-> > >
-> > > So, fix the semantics of of_is_ancestor_of() and invert the conditional
-> > > expressions where it is used.
-> > >
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/of/property.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > What git commit does this patch fix?
-> >
+On Tue, Nov 19, 2019 at 12:49:24PM +0100, Nicolas Saenz Julienne wrote:
+> On Tue, 2019-11-19 at 11:18 +0000, Andrew Murray wrote:
+> > On Tue, Nov 12, 2019 at 04:59:19PM +0100, Nicolas Saenz Julienne wrote:
+> > > This series aims at providing support for Raspberry Pi 4's PCIe
+> > > controller, which is also shared with the Broadcom STB family of
+> > > devices.
+> > > 
+> > > There was a previous attempt to upstream this some years ago[1] but was
+> > > blocked as most STB PCIe integrations have a sparse DMA mapping[2] which
+> > > is something currently not supported by the kernel.  Luckily this is not
+> > > the case for the Raspberry Pi 4.
+> > > 
+> > > Note that the driver code is to be based on top of Rob Herring's series
+> > > simplifying inbound and outbound range parsing.
+> > > 
+> > > [1] https://patchwork.kernel.org/cover/10605933/
+> > > [2] https://patchwork.kernel.org/patch/10605957/
+> > > 
+> > 
+> > What happened to patch 3? I can't see it on the list or in patchwork?
 > 
-> Fixes commit a3e1d1a7f5fcc. Let me know if you want me to send a v2 or
-> if you can fix up the commit text on your end.
+> For some reason the script I use to call get_maintainer.sh or git send-mail
+> failed to add linux-pci@vger.kernel.org and linux-kernel@vger.kernel.org as
+> recipients. I didn't do anything different between v1 and v2 as far as mailing
+> is concerned.
+> 
+> Nevertheless it's here: https://www.spinics.net/lists/arm-kernel/msg768461.html
+> and should be present in the linux-arm-kernel list.
+> 
+> I'll look in to it and make sure this doesn't happen in v3.
 
-I'll fix it up.
+No problem.
+
+Thanks,
+
+Andrew Murray
+
+> 
+> Regards,
+> Nicolas
+> 
+
+
