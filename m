@@ -2,76 +2,148 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E90C43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5997BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0965206D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2388E20692
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI7WavVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfKURRR (ORCPT
+        id S1726546AbfKUReF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:17:17 -0500
-Received: from verein.lst.de ([213.95.11.211]:47378 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbfKURRR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:17:17 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A77C768BFE; Thu, 21 Nov 2019 18:17:13 +0100 (CET)
-Date:   Thu, 21 Nov 2019 18:17:13 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-Message-ID: <20191121171713.GB2932@lst.de>
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de> <c407877d-a812-de85-5e8f-e0915f5a517f@arm.com>
+        Thu, 21 Nov 2019 12:34:05 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41238 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKUReF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 12:34:05 -0500
+Received: by mail-lf1-f65.google.com with SMTP id m30so1449151lfp.8;
+        Thu, 21 Nov 2019 09:34:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6J1piRgV0I8ZeSxFU2hLB+lhIu/EsMKbTjoUdKhBoh4=;
+        b=cI7WavVQXW6YTTsx24kyro2bKraJeez/5xvP+u/FCt+8IEeH++xRr7bppVVaMcdStl
+         VqYxOPhucE+noi9PVTucRx3xce0OO49s9ls3Rn0f9DRBFLG6X54uc7hLeS10i4nF8zW1
+         vuqLnHyIWSOvQTAvI4OJmhjUiY1gpB1znoS71dGYEKG5c26PdBdXjfB9+3tj8FSe1rlq
+         smug1wpdMdRqaG6e0+o44KHpGF9s9eBS5+SP7KBhUOEvIakX82SUDuzGwQOlKU2wAIuo
+         Tc4AiK8LReNqyA9rHaQQkFQxFrOOMP1aSH1H1iqDr3iROHhqGnFIYNZ6wnBnJV6FlKXk
+         Lb0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6J1piRgV0I8ZeSxFU2hLB+lhIu/EsMKbTjoUdKhBoh4=;
+        b=XHCnykBwKKHnIbnbZQ8vBM03/0psfRrMD4mdUp3wh6FBP1373W4m25d4nhqv6YtIa9
+         6CaKaitc1P8StcVgF4GCbJv3ebY6uRKm2E6UAsxp2gTXjd4FOR46zeVnYz89TbF0sL4F
+         4WtDZSG7cHaLogRIZhS/4E5wZF3kiTvmgqnzEIluxeWs/za6LXg8kw85pjfB4gPudlar
+         McLR+lufE4rUH6l0QztxeMc9GuZqcjTHXQBS9hUhFpSr2gQoCNlG7XgsXux22C6r9OyJ
+         T8OHACYCOtsreSCTJdbkhG4s+NEiv70jkmrKTIOC+uUKhLXRi9KFFBtElCqyMBSayHJ2
+         /8Gg==
+X-Gm-Message-State: APjAAAVpK83nPfTd7JTIYgO/dvFhstaLdEJESDxnCVgG9E1dLjJzLzxi
+        cULPYtDx1MeM8s2nVBVj8NUUpQ5+
+X-Google-Smtp-Source: APXvYqzI4efW+jpylCKcwwlKWAScScn1OR7oGncmwtojSpUNDIX2q6OMNOWDFnG0E3FBtdAKJO/UzA==
+X-Received: by 2002:ac2:5dcc:: with SMTP id x12mr8758634lfq.163.1574357640859;
+        Thu, 21 Nov 2019 09:34:00 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id y7sm1738852lfb.75.2019.11.21.09.33.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 09:34:00 -0800 (PST)
+Subject: Re: [PATCH v1 12/29] interconnect: Add memory interconnection
+ providers for NVIDIA Tegra SoCs
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+References: <20191118200247.3567-1-digetx@gmail.com>
+ <20191118200247.3567-13-digetx@gmail.com> <20191119063002.GE2462695@ulmo>
+ <a16b54bf-a881-84d0-4437-993dc275487c@gmail.com>
+Message-ID: <a9bbe36e-8082-8cab-7377-f71f2489fb30@gmail.com>
+Date:   Thu, 21 Nov 2019 20:33:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c407877d-a812-de85-5e8f-e0915f5a517f@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <a16b54bf-a881-84d0-4437-993dc275487c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 05:07:54PM +0000, Robin Murphy wrote:
-> ^^ super-nit only because I can't not see my editor currently highlighting 
-> the typo: "accessible"
->
-> Regardless of that though,
->
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+19.11.2019 19:58, Dmitry Osipenko пишет:
+> 19.11.2019 09:30, Thierry Reding пишет:
+>> On Mon, Nov 18, 2019 at 11:02:30PM +0300, Dmitry Osipenko wrote:
+>>> All NVIDIA Tegra SoCs have identical topology in regards to memory
+>>> interconnection between memory clients and memory controllers.
+>>> The memory controller (MC) and external memory controller (EMC) are
+>>> providing memory clients with required memory bandwidth. The memory
+>>> controller performs arbitration between memory clients, while the
+>>> external memory controller transfers data from/to DRAM and pipes that
+>>> data from/to memory controller. Memory controller interconnect provider
+>>> aggregates bandwidth requests from memory clients and sends the aggregated
+>>> request to EMC provider that scales DRAM frequency in order to satisfy the
+>>> bandwidth requirement. Memory controller provider could adjust hardware
+>>> configuration for a more optimal arbitration depending on bandwidth
+>>> requirements from memory clients, but this is unimplemented for now.
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/interconnect/Kconfig               |   1 +
+>>>  drivers/interconnect/Makefile              |   1 +
+>>>  drivers/interconnect/tegra/Kconfig         |   6 +
+>>>  drivers/interconnect/tegra/Makefile        |   4 +
+>>>  drivers/interconnect/tegra/tegra-icc-emc.c | 138 +++++++++++++++++++++
+>>>  drivers/interconnect/tegra/tegra-icc-mc.c  | 130 +++++++++++++++++++
+>>>  include/soc/tegra/mc.h                     |  26 ++++
+>>>  7 files changed, 306 insertions(+)
+>>>  create mode 100644 drivers/interconnect/tegra/Kconfig
+>>>  create mode 100644 drivers/interconnect/tegra/Makefile
+>>>  create mode 100644 drivers/interconnect/tegra/tegra-icc-emc.c
+>>>  create mode 100644 drivers/interconnect/tegra/tegra-icc-mc.c
+>>
+>> Why does this have to be separate from the memory controller driver in
+>> drivers/memory/tegra? It seems like this requires a bunch of boilerplate
+>> just so that this code can live in the drivers/interconnect directory.
+> 
+> It fits with the IOMMU separation. To me that it's a bit nicer to have
+> the separation for the ICC as well, but having ICC within memory
+> controller driver also will be fine.
+> 
+> Indeed it looks like there is not much in the MC's provider code right
+> now, but maybe more stuff will be added later on.
+> 
+>> If Georgi doesn't insist, I'd prefer if we carried this code directly in
+>> the drivers/memory/tegra directory so that we don't have so many
+>> indirections.
+>>
+>> Also, and I already briefly mentioned this in another reply, I think we
+>> don't need two providers here. The only one we're really interested in
+>> is the memory-client to memory-controller paths. The MC to EMC path is
+>> static.
+> 
+> Perhaps it is fine to drop EMC path, I'll revisit it.
+> 
+> [snip]
 
-Applied for real now with that typo fixed and on top of the pulled in
-arm64 branch.
+One advantage of having both MC and EMC as ICC providers is that there
+won't be a need to mess with a custom coupling of MC-EMC drivers
+together because interconnect API naturally takes care of the coupling
+for us by telling ICC users to defer until both providers are registered.
+
+I'll take another look at this over the weekend, but for now my v1
+variant looks appropriate in terms of a better hardware description and
+implementation in the code.
