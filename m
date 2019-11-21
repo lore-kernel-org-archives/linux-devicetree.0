@@ -2,109 +2,99 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F140C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 21:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6AFC432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 21:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D4A206F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 21:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9D4206CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 21:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574372015;
-	bh=thNOZMpFdcjN6h4Riq7S4a72+oY5JWel+zNUipl5vIc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ikGauso8GdsCKKPTUIiQSb66qK7edDowBXL8L+ie03nIQFRRuhdtC/7FG19/JbpFZ
-	 oRoH3OczhVQUfalr7rRBh8RXjVuRTADu+Cg3lTEuQiVCyp1IX7BoxeXo2wYmMG2EDx
-	 mCyBLApozzOrUoiK4E3aY2YcrJdZszgvlj85ZlY8=
+	s=default; t=1574372164;
+	bh=5wK6kZoSCFmbGS1jqU9aaTij7Els7KYt4I6xC5NqwUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TV3zrPGi5kHhw8wmoi3EYGFaw9kolOEhOXjOCpGmvyE5gCRymjrP4Jr94pCS9LLDT
+	 ZsJtKLQJ+r44INLN3bP06WpHsUvEU9K3kImjSJp0Fj679bOSazH+56EN6YWQW2pOCv
+	 cQBspMej1UEahzW2b6WB7r1XyyDET+6M+5S2Pq+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfKUVde (ORCPT
+        id S1726990AbfKUVgA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:33:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbfKUVde (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:33:34 -0500
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDD74206CB;
-        Thu, 21 Nov 2019 21:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574372013;
-        bh=thNOZMpFdcjN6h4Riq7S4a72+oY5JWel+zNUipl5vIc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KemRuK8B/wF7+Xk94pxtOdJJAQYwZAEvD7ZntXQRbbyXjAgcAuZWtAXAbiztPThMs
-         DA/TNZd9vmat7wV3/7ZuJ8bAXxpF5XwaHq6UR9buT4KxPFD5Qq3o+TK58zxb1PDXWl
-         1as2Fwc4/kX4LtFtc58GjueLo2mu32KHUsr3+5mo=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-stable <stable@vger.kernel.org>,
-        Meng Li <Meng.Li@windriver.com>
-Subject: [PATCH] arm64: dts: agilex/stratix10: fix pmu interrupt numbers
-Date:   Thu, 21 Nov 2019 15:33:13 -0600
-Message-Id: <20191121213313.25783-1-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        Thu, 21 Nov 2019 16:36:00 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41798 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfKUVgA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 16:36:00 -0500
+Received: by mail-oi1-f194.google.com with SMTP id e9so4604500oif.8;
+        Thu, 21 Nov 2019 13:35:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dMb39BgE3B1+H65j32pY6w10OTOxCkKB2EjgU6VAvkw=;
+        b=mRoNbv4Mq4/6nAiiq8m87E+1ka0MlxrGdgZSMtE927FDaEo+OCRtonx/mC/RvCOvIk
+         45pIBRjkQjzBo/zd0lxCfxyfvCoLVXXUpOmKWGcodwfFdnwi/tSnKaoVVr9KKUhLLuIx
+         irSZhyQmTfZfBfwE+WpvvqaCKLWTWWtidxDtAJv5sfjqEOPEkGCHWZdQigDQ9Bz+qehK
+         //nUSEs6Nf8bn0mg/mFciAU6uPsSJZL1whirCEtJ0xroRDJdiv0E4dJjPCMBDF4uKWo1
+         0IvaCYucE4gmK4/cBpfbVOK2xEIPa5wrwriytKMBM31005jk8laYIDaA99/rm11DVUDI
+         GqIQ==
+X-Gm-Message-State: APjAAAWq5TwcURehT33T6/fNkc3oJwzWhQ36PIrpZ8pjA4iHI8cYVuIC
+        wNVcxal+I3dbelZPNX5ggBlQ3ds=
+X-Google-Smtp-Source: APXvYqwhlPdMj6vzUcQ7JUSZXeyrQbByzSla/+as65TI+kaarPglDk675XBVqHu3a9zBwnjXBiDtRA==
+X-Received: by 2002:a05:6808:901:: with SMTP id w1mr9808800oih.57.1574372159366;
+        Thu, 21 Nov 2019 13:35:59 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c20sm1406082otm.80.2019.11.21.13.35.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 13:35:58 -0800 (PST)
+Date:   Thu, 21 Nov 2019 15:35:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v3] dt-bindings: power: Rename back power_domain.txt
+ bindings to fix references
+Message-ID: <20191121213558.GA14178@bogus>
+References: <1574236796-25016-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574236796-25016-1-git-send-email-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix up the correct interrupt numbers for the PMU unit on Agilex
-and Stratix10.
+On Wed, Nov 20, 2019 at 08:59:56AM +0100, Krzysztof Kozlowski wrote:
+> With split of power domain controller bindings to power-domain.yaml,
+> the consumer part was renamed to power-domain.txt breaking the
+> references.  Undo the renaming.
+> 
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: ea312b90857d ("dt-bindings: power: Convert Generic Power Domain bindings to json-schema")
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> ---
+> 
+> Changes since v2:
+> 1. Simplify pattern in Maintainers as Geert suggested,
+> 2. Add Reviewed-by.
+> 
+> Changes since v1:
+> 1. Undo the renaming.
+> ---
+>  .../devicetree/bindings/power/{power-domain.txt => power_domain.txt}    | 0
+>  MAINTAINERS                                                             | 2 +-
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+>  rename Documentation/devicetree/bindings/power/{power-domain.txt => power_domain.txt} (100%)
 
-Fixes: 78cd6a9d8e15 ("arm64: dts: Add base stratix 10 dtsi")
-Cc: linux-stable <stable@vger.kernel.org>
-Reported-by: Meng Li <Meng.Li@windriver.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi     | 8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+Applied, thanks.
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index 144a2c19ac02..d1fc9c2055f4 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -61,10 +61,10 @@
- 
- 	pmu {
- 		compatible = "arm,armv8-pmuv3";
--		interrupts = <0 120 8>,
--			     <0 121 8>,
--			     <0 122 8>,
--			     <0 123 8>;
-+		interrupts = <0 170 4>,
-+			     <0 171 4>,
-+			     <0 172 4>,
-+			     <0 173 4>;
- 		interrupt-affinity = <&cpu0>,
- 				     <&cpu1>,
- 				     <&cpu2>,
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-index ef66e90e2d7a..e1d357eaad7c 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-@@ -60,10 +60,10 @@
- 
- 	pmu {
- 		compatible = "arm,armv8-pmuv3";
--		interrupts = <0 120 8>,
--			     <0 121 8>,
--			     <0 122 8>,
--			     <0 123 8>;
-+		interrupts = <0 170 4>,
-+			     <0 171 4>,
-+			     <0 172 4>,
-+			     <0 173 4>;
- 		interrupt-affinity = <&cpu0>,
- 				     <&cpu1>,
- 				     <&cpu2>,
--- 
-2.24.0
-
+Rob
