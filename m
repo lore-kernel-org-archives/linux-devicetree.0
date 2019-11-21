@@ -2,151 +2,205 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EB6C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38723C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A94208C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07156208A1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="YqkOkqcm"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="OL5zYrCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfKUIww (ORCPT
+        id S1726698AbfKUIzg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:52:52 -0500
-Received: from mail-eopbgr1400139.outbound.protection.outlook.com ([40.107.140.139]:48180
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        Thu, 21 Nov 2019 03:55:36 -0500
+Received: from mail-eopbgr770080.outbound.protection.outlook.com ([40.107.77.80]:36110
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726132AbfKUIww (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:52:52 -0500
+        id S1726638AbfKUIzg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:55:36 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZBEmDhZEJKqyLXymPXzz3/NghaZCpKS1JfgfoMM+Hqsqgse2eFi08SW5h0DEQA6OIuhRbd0dXEUYLW+Pt+FWrKuZwS2SRLy4jg29TKrhGzYRreYAXFi+ItiSX7HZtGcjoJfR3nQethGrnFGDp9a3dxdRoEDt1yd4iD6HPoa09dKdE+q4HR+7SCT9WtGvRQXlVf/MnpMREYqcxTl809p4EklAIQkN0YONGuIyWZqVnFFpFiqomt7B+xo/7hIXkc8y/rzz+KxB+V2iw+gAAIcoIb1vQHBDCApgEMXc+ijd+YupvXWVnNtNyaCOLHRwD0hbyP1yBnFf0Cek/lvMxjz+IA==
+ b=ONPlZDWDRhq0jh9O7B/IVDkWUptaLDFHhdwls20ehNj+XgV/85+zRhuXBxnqrgFKOiY3yo8DJXW5qYL2VMU0/HXtUPAi5FHMWK+pxMrv9gnUVnIuaxuPHQEJwD7TA3jvot1pGdVw4JaWSkQwJSAn7x28l+bG12HfrdL1Xdzet8njNONM5cnNyn1Ov6dYZtFPzG7Wcy7JxYprSeKDcN7ATdnyg1H/wtI+Jjf/ebuXjJH3QHjFz8yTg44OHZy8i6tpfm82Re1vLiSuAoBrACvYZdIzp5I5yUQT29HKpcrdzb7wTTRiZ4i7vkQDUfXWWn2UOnBsYg0JH319LRdxRt9zeg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IA4X1eGUqLoYsSXLWtLz7XgV/C73/o60Xytn06OxyLk=;
- b=Blom2ZJybrY/BrpJ5uQiLqsH03+nZZ1+792IT7A5IVx2dbUPtn28snnj4IBLMmV5/QLTBUOz3qTro+/abE5xDljJsf3Z4Q9R3Sff5HC75G3+EyImPkqKncgEKLQI/jgFVXO1p1FKZC0AougCrTug6xtdoGN87IHG81L4cIEFmHyR8rIQ84fPWkyKvBsbrTWiXf4Kv0sUhazYw8BsgcEpHj7D6dCUS/YEfRW5N63GufDuThfU+j7TXE5Mn/uStRhQQYaw7GXj5ArvYd/Bt4gAdpygAggqZ54BSvRObuDQ21mo/fhtguQJG6X52w2kZ4m3QVxfpSuMj3QkwRA/q+FlPQ==
+ bh=iAVKa0zjBWZxFHFMZKBdKN8C/5ulBPIDPIObfCgrHJw=;
+ b=MvfmGDz83+LEoLA4YwTtSEonCfY4Ds753fmVFviJ37d2jzf/Abqsey9zExFmA9pjEwLZpShjiSK+38nKLO/MmIvHh3puh+BDGBDa2P8+5wkHVkeOZEPYRL54/cdcsYo++o0WVWTBRi9gEgb6TAOU4gt5qQm8C+0CGMAqyZfquO+S4q8tmcdn+bDTvglglIEomylgYkg6b5s+44WD75NxyW1ELvdLt7u+3K5aUO4pYviLmAmbvAijiA4BYCGExFJAVnupMLcb6+in0bRRO8nNOgbmSWcyvNw3SphfjgdM4L28h5VX1ZYzx3NuekWLCkpgBbODH85uXetXYMYkQASzfg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IA4X1eGUqLoYsSXLWtLz7XgV/C73/o60Xytn06OxyLk=;
- b=YqkOkqcm89gQ4DHgrmixvExoD2z2GZH23D+MsqnyOvoIZqpJhwYnJ0XBujorrVdZTmh0Z7JcP+dgfZKPXLjTG3tiEhQlniDobdczRM7urt9zxJLG8ri/ww/y+m0U5jOBYjKn+zDrCOwo8c2qoxXRH++mEV/+sl2INq+PKRmRRHs=
-Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com (52.134.242.17) by
- OSBPR01MB2839.jpnprd01.prod.outlook.com (52.134.254.15) with Microsoft SMTP
+ bh=iAVKa0zjBWZxFHFMZKBdKN8C/5ulBPIDPIObfCgrHJw=;
+ b=OL5zYrCNffk0NVbFCU+TpRWsvcV4f/o2X07zxFeVNQrcDlIW+ULtTtuOs8iQRggWt8tmrJCE7i8piPpzIeSL3Y5xIJdsm9uUrR2FUer9wVWdsLSEZGsHxY1ytsvuU27Cxg9QEeaDNCwxQqkMINkesmmkLlscGEyEa/IsadqkW3U=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3605.namprd13.prod.outlook.com (52.132.246.89) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.28; Thu, 21 Nov 2019 08:52:08 +0000
-Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com
- ([fe80::c9e7:5418:764e:69e3]) by OSBPR01MB2103.jpnprd01.prod.outlook.com
- ([fe80::c9e7:5418:764e:69e3%3]) with mapi id 15.20.2451.031; Thu, 21 Nov 2019
- 08:52:08 +0000
-From:   Biju Das <biju.das@bp.renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH] dt-bindings: timer: renesas: tmu: Document r8a774b1
- bindings
-Thread-Topic: [PATCH] dt-bindings: timer: renesas: tmu: Document r8a774b1
- bindings
-Thread-Index: AQHVchuIQNHun2Bo106a/51G2vHeg6dIXISAgAAs/oCATSPLEA==
-Date:   Thu, 21 Nov 2019 08:52:08 +0000
-Message-ID: <OSBPR01MB21035DCC73952DBC72C139B2B84E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1569249052-1037-1-git-send-email-biju.das@bp.renesas.com>
- <dd752192-8caf-39bf-5a91-27adb6a5f84b@linaro.org>
- <CAMuHMdVvgS17NW7srZ37x5QD3qtZkGQY9xE_97bvF8bwAcmLvg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVvgS17NW7srZ37x5QD3qtZkGQY9xE_97bvF8bwAcmLvg@mail.gmail.com>
-Accept-Language: en-GB, en-US
+ 15.20.2474.10; Thu, 21 Nov 2019 08:55:32 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.018; Thu, 21 Nov 2019
+ 08:55:32 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Yash Shah <yash.shah@sifive.com>, Marc Zyngier <maz@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: RE: [PATCH v2 1/5] genirq: introduce irq_domain_translate_onecell
+Thread-Topic: [PATCH v2 1/5] genirq: introduce irq_domain_translate_onecell
+Thread-Index: AQHVn3AJHBiRD+wuIUSzxWzN0+e/fqeT3o6AgAFvDhCAAAVZ4A==
+Date:   Thu, 21 Nov 2019 08:55:32 +0000
+Message-ID: <CH2PR13MB336857C8AAC4CD3EB48942BF8C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+ <1574233128-28114-2-git-send-email-yash.shah@sifive.com>
+ <5ec51559d8b4cd3b8e80943788b52926@www.loen.fr>
+ <CH2PR13MB33682B1E7B40DC5C2FD1094C8C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+In-Reply-To: <CH2PR13MB33682B1E7B40DC5C2FD1094C8C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biju.das@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3eaece3b-36f3-4c01-8dbd-08d76e60175b
-x-ms-traffictypediagnostic: OSBPR01MB2839:|OSBPR01MB2839:
-x-ms-exchange-purlcount: 1
+x-ms-office365-filtering-correlation-id: 8fff0939-69d7-4606-77a8-08d76e609130
+x-ms-traffictypediagnostic: CH2PR13MB3605:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSBPR01MB2839992B785A065D369AE9D5B84E0@OSBPR01MB2839.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-microsoft-antispam-prvs: <CH2PR13MB3605BEC9D615CA06DFA5AD5F8C4E0@CH2PR13MB3605.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(346002)(376002)(396003)(366004)(199004)(189003)(13464003)(54906003)(52536014)(66476007)(305945005)(102836004)(64756008)(86362001)(446003)(11346002)(316002)(229853002)(3846002)(33656002)(74316002)(4326008)(966005)(66066001)(44832011)(7736002)(7696005)(5660300002)(81156014)(81166006)(76176011)(478600001)(8676002)(256004)(66446008)(14444005)(6436002)(6246003)(25786009)(186003)(8936002)(26005)(14454004)(53546011)(55016002)(99286004)(66556008)(66946007)(110136005)(6116002)(6506007)(6306002)(76116006)(71190400001)(2906002)(71200400001)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB2839;H:OSBPR01MB2103.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39830400003)(136003)(346002)(376002)(396003)(189003)(199004)(13464003)(11346002)(478600001)(316002)(64756008)(4326008)(52536014)(186003)(7736002)(44832011)(53546011)(6506007)(54906003)(8936002)(66066001)(6116002)(76176011)(3846002)(71200400001)(71190400001)(7696005)(7416002)(229853002)(9686003)(6436002)(256004)(55016002)(2940100002)(14444005)(81166006)(446003)(33656002)(74316002)(66556008)(66446008)(26005)(305945005)(102836004)(86362001)(2906002)(66476007)(66946007)(14454004)(76116006)(81156014)(4001150100001)(5660300002)(25786009)(8676002)(110136005)(6246003)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3605;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Xeb+g3aPMke1ECO+IRI+Fs9uGrsDPs9hWRGOTGT96sEofIXyB2brkjS5+WiD9p6AAVEC0qwoA7x2g0g4NxQekmf3zj1D8F6IgWuZpLJiOQe2YrdAczxHoQ3Jo6BHpJej63rjJsuDUTBX7COPEuPXQYPtRfvanORHT+sePbHujeXmZFdW6/3otjfZ06HiKkJl8XVGuieEmqe11H3pBX8j2sAgnlNH+4Q6nASyzGh142Ejvx0J6MW20m68SizAjlMsrLLjbEOljvk/ivJtJjj/j6w2mXjrUT2GRWYmw2TsMP6DkzqAJQ4Xd3IvloyCyl0ahRzHzKXoSWJX6dHqWwt1JI1yaREMQkHOHvfDiJCh1PL8HhPN9vq5uL/6SbFWoB+RqP1j+00kiIUjVP/2I3KxZTox2LuZ8uKTn+eGFJlDijUdp+YjTU4l+h/Vsc5MKqNpqQ7R+TzWVEOk7E0GcwQUZf3ML28kWFH5THsotMvwA+c=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: PAdOZeeWIvWK8uJV+YBj0Z23NUBYQKkc7KJXQy1FNYwHRlNZlnbufB+RUTpCDW0n919OE9H2frwJtSLmSwWFc5ES1jH4YlByUGyCgH6Kl5UB9DBDKg/PrkNNvjWslz/iXZTC9RUVKIuwwRmFwM4KVj+ZubSnhImEPYGSJoDeBAE5nZiQTWfoZ+6BnzrGqqPFPFQXuaV5WDNJLVoVTNp+iV/YiWxEPNnTgEbXQIYfkW6ByauKkv+PNSgEg51jLHfawa5NfLNfRTRjKr6FcPw9sW4f9TRABfDOwl0TlqczlWY4HjPEyI3YC65IGzmzEX9HSk3UEqb/jRBc3qXmXXYaNLqSnK8zvCpx4CzUeeFmh4tR8sEqGEP87ao3BbE3YGSpCGIagvjPCFt1gw1IhFrcNV3Uvej8xn21nxy5GvlaO/qEzb2vQYcs/52cgwr1rpcz
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3eaece3b-36f3-4c01-8dbd-08d76e60175b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 08:52:08.2817
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fff0939-69d7-4606-77a8-08d76e609130
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 08:55:32.5824
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: i/t6MP99PanC2ODiEVDMenthyRrhXGx4tMNzqjQScAi7ycorIoaqW89hnptBxDiMpJ68TOfKqffhIysJRyL70Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2839
+X-MS-Exchange-CrossTenant-userprincipalname: 9zJ+5owdRPhXLZWVHaEyJVjB9jpijVI6gJQCMSir0hZLqzdSIdY+h2oOT+JFTIjoU4qH0DV84m9Xg+Uz94kCyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3605
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsIERhbmllbCwNCg0KQW55IHVwZGF0ZSBvbiB0aGUgYmVsb3cgYmluZGluZyBwYXRj
-aD8NCg0KUmVnYXJkcywNCkJpanUNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJv
-bTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogVGh1
-cnNkYXksIE9jdG9iZXIgMywgMjAxOSA3OjUxIEFNDQo+IFRvOiBEYW5pZWwgTGV6Y2FubyA8ZGFu
-aWVsLmxlemNhbm9AbGluYXJvLm9yZz4NCj4gQ2M6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5l
-c2FzLmNvbT47IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxh
-bmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgVGhvbWFzDQo+IEdsZWl4bmVyIDx0Z2x4QGxpbnV0
-cm9uaXguZGU+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEDQo+IERFVklD
-RSBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IEdlZXJ0IFV5dHRl
-cmhvZXZlbg0KPiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+OyBTaW1vbiBIb3JtYW4gPGhvcm1z
-QHZlcmdlLm5ldC5hdT47IENocmlzDQo+IFBhdGVyc29uIDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNh
-cy5jb20+OyBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNv
-bT47IExpbnV4LVJlbmVzYXMgPGxpbnV4LXJlbmVzYXMtDQo+IHNvY0B2Z2VyLmtlcm5lbC5vcmc+
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGR0LWJpbmRpbmdzOiB0aW1lcjogcmVuZXNhczogdG11
-OiBEb2N1bWVudCByOGE3NzRiMQ0KPiBiaW5kaW5ncw0KPiANCj4gSGkgRGFuaWVsLA0KPiANCj4g
-T24gVGh1LCBPY3QgMywgMjAxOSBhdCA2OjA5IEFNIERhbmllbCBMZXpjYW5vIDxkYW5pZWwubGV6
-Y2Fub0BsaW5hcm8ub3JnPg0KPiB3cm90ZToNCj4gPiBPbiAyMy8wOS8yMDE5IDE2OjMwLCBCaWp1
-IERhcyB3cm90ZToNCj4gPiA+IERvY3VtZW50IFJaL0cyTiAoUjhBNzc0QjEpIFNvQyBpbiB0aGUg
-UmVuZXNhcyBUTVUgYmluZGluZ3MuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBE
-YXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL3JlbmVzYXMsdG11LnR4dCB8IDEgKw0KPiA+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvcmVuZXNhcyx0bXUu
-dHh0DQo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9yZW5l
-c2FzLHRtdS50eHQNCj4gPiA+IGluZGV4IDlkZmY3ZTUuLjI5MTU5ZjQgMTAwNjQ0DQo+ID4gPiAt
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvcmVuZXNhcyx0bXUu
-dHh0DQo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIv
-cmVuZXNhcyx0bXUudHh0DQo+ID4gPiBAQCAtMTEsNiArMTEsNyBAQCBSZXF1aXJlZCBQcm9wZXJ0
-aWVzOg0KPiA+ID4gICAgLSBjb21wYXRpYmxlOiBtdXN0IGNvbnRhaW4gb25lIG9yIG1vcmUgb2Yg
-dGhlIGZvbGxvd2luZzoNCj4gPiA+ICAgICAgLSAicmVuZXNhcyx0bXUtcjhhNzc0MCIgZm9yIHRo
-ZSByOGE3NzQwIFRNVQ0KPiA+ID4gICAgICAtICJyZW5lc2FzLHRtdS1yOGE3NzRhMSIgZm9yIHRo
-ZSByOGE3NzRBMSBUTVUNCj4gPiA+ICsgICAgLSAicmVuZXNhcyx0bXUtcjhhNzc0YjEiIGZvciB0
-aGUgcjhhNzc0QjEgVE1VDQo+ID4gPiAgICAgIC0gInJlbmVzYXMsdG11LXI4YTc3NGMwIiBmb3Ig
-dGhlIHI4YTc3NEMwIFRNVQ0KPiA+ID4gICAgICAtICJyZW5lc2FzLHRtdS1yOGE3Nzc4IiBmb3Ig
-dGhlIHI4YTc3NzggVE1VDQo+ID4gPiAgICAgIC0gInJlbmVzYXMsdG11LXI4YTc3NzkiIGZvciB0
-aGUgcjhhNzc3OSBUTVUNCj4gPiA+DQo+ID4NCj4gPiBUaGUgcGF0Y2ggZG9lcyBub3QgYXBwbHkg
-b24gdGlwL3RpbWVycw0KPiANCj4gVGhhdCdzIGV4cGVjdGVkLCBhcyBJIHF1ZXVlZCB0aGUgcHJl
-dmlvdXMgY2hhbmdlIGluIHJlbmVzYXMtZHQtYmluZGluZ3MtZm9yLQ0KPiB2NS41LCBjZnIuDQo+
-IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXJlbmVzYXMtc29jLzI0NGNhN2FjLTU0ZDEt
-ZDA3ZC03NjJmLQ0KPiBlODMyYjBlMmEyNjdAbGluYXJvLm9yZy8NCj4gDQo+IERvIHlvdSB3YW50
-IG1lIHRvIGtub3cgdGhpcyBpbiByZW5lc2FzLWR0LWJpbmRpbmdzLWZvci12NS41Pw0KDQo=
+
+
+> -----Original Message-----
+> From: linux-riscv <linux-riscv-bounces@lists.infradead.org> On Behalf Of
+> Yash Shah
+> Sent: 21 November 2019 14:06
+> To: Marc Zyngier <maz@kernel.org>
+> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org;
+> aou@eecs.berkeley.edu; jason@lakedaemon.net; atish.patra@wdc.com;
+> Sachin Ghadi <sachin.ghadi@sifive.com>; linus.walleij@linaro.org; linux-
+> kernel@vger.kernel.org; bgolaszewski@baylibre.com; robh+dt@kernel.org;
+> palmer@dabbelt.com; Sagar Kadam <sagar.kadam@sifive.com>; linux-
+> gpio@vger.kernel.org; Paul Walmsley ( Sifive) <paul.walmsley@sifive.com>;
+> tglx@linutronix.de; bmeng.cn@gmail.com; linux-riscv@lists.infradead.org
+> Subject: RE: [PATCH v2 1/5] genirq: introduce irq_domain_translate_onecel=
+l
+>=20
+> > -----Original Message-----
+> > From: Marc Zyngier <maz@kernel.org>
+> > Sent: 20 November 2019 16:09
+> > To: Yash Shah <yash.shah@sifive.com>
+> > Cc: linus.walleij@linaro.org; bgolaszewski@baylibre.com;
+> > robh+dt@kernel.org; mark.rutland@arm.com; palmer@dabbelt.com; Paul
+> > Walmsley ( Sifive) <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu;
+> > tglx@linutronix.de; jason@lakedaemon.net; bmeng.cn@gmail.com;
+> > atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>; linux-
+> > gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Sachin Ghadi
+> > <sachin.ghadi@sifive.com>
+> > Subject: Re: [PATCH v2 1/5] genirq: introduce
+> > irq_domain_translate_onecell
+> >
+> > On 2019-11-20 06:59, Yash Shah wrote:
+> > > Add a new function irq_domain_translate_onecell() that is to be used
+> > > as the translate function in struct irq_domain_ops for the v2 IRQ API=
+.
+> > >
+> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> [...]
+> > >
+> > >  /**
+> > > + * irq_domain_translate_onecell() - Generic translate for direct
+> > > + one
+> > > cell
+> > > + * bindings
+> > > + *
+> > > + * Device Tree IRQ specifier translation function which works with
+> > > one cell
+> >
+> > nit: the whole point of the 'new' translate function is that they are
+> > firmware-agnostic. Just drop the DT reference here.
+>=20
+> Ok sure.
+>=20
+> >
+> > > + * bindings where the cell values map directly to the hwirq number.
+> > > + */
+> > > +int irq_domain_translate_onecell(struct irq_domain *d,
+> > > +				 struct irq_fwspec *fwspec,
+> > > +				 unsigned long *out_hwirq,
+> > > +				 unsigned int *out_type)
+> > > +{
+> > > +	if (WARN_ON(fwspec->param_count < 1))
+> > > +		return -EINVAL;
+> > > +	*out_hwirq =3D fwspec->param[0];
+> > > +	*out_type =3D IRQ_TYPE_NONE;
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(irq_domain_translate_onecell);
+> > > +
+> > > +/**
+> > >   * irq_domain_translate_twocell() - Generic translate for direct
+> > > two cell
+> > >   * bindings
+> > >   *
+> >
+> > Can you please also update (potentially in a separate patch) the
+> > potential users of this? I mentioned the nvic driver last time...
+> >
+>=20
+> Ok, I will separate out this patch from the patchset and send it individu=
+ally
+> along with potential users of it.
+> Thanks for your comments
+
+I am sorry, I think I misunderstood you.
+You want me to send a new separate patch in which the potential users will =
+be updated to this new function.
+Hope I got it right?
+
+- Yash=20
