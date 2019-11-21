@@ -2,389 +2,85 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57142C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE35C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1981B2068F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16314206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574364294;
-	bh=v8qwQtqO7+7IXbxNF6mpOp8cvKguvA76ua3zCs+gonk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DOB41xw4J7N8lvdUA2GNMaejUl2BKdcsvcpvw1IYCbZnxnG9aDPxD33GVYVaDYg0/
-	 OMkM4ZLA3NA21U2rSm7p3yn/J4JCyazJCh6iGSyxpOXRuGepDs2uxuuVadde+qfvhH
-	 0VQxyo3wP2MIrNqK7Z6f4u7rAbXNbl/se04zuH2I=
+	s=default; t=1574364499;
+	bh=foPwumbQUwfvMh25gp0+dKVf8JYUIgeQeb/r9rq9sFk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JycIUMeIXtRLUZ9/2ywavhP2r3q6/4JgZG+gHk3+joZaXrVoQKh82WV7vtxv+Wkz7
+	 r8TktpapWzAheInfaitnPjNjqvclvh8+klLFy03Ij6VyM6cRC90PX6v1C82fJyvdMR
+	 RH4rseBOJv0x+u176rWIwMi2gXNOjiweSDoyrxRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfKUTYx (ORCPT
+        id S1726840AbfKUT2S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 14:24:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUTYx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 14:24:53 -0500
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F82E206DA;
-        Thu, 21 Nov 2019 19:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574364291;
-        bh=v8qwQtqO7+7IXbxNF6mpOp8cvKguvA76ua3zCs+gonk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fUeRdg6h8COOSs/5Nkm9wBl5fm+v7gyjB8Y2x3CPtKQ/O3IlZGaFkq2/wpFItK0gJ
-         UOXDasy2HpPAPqor+OAy3nMDrP7ysE4YZy+OpB21jCJIgKlj9qXYb+GBqbAUphWtSq
-         hX92GJw++WnO4iFH57Ex+ml++wkJ8rbZHR3fbGoM=
-Received: by mail-qk1-f181.google.com with SMTP id i19so4133278qki.2;
-        Thu, 21 Nov 2019 11:24:51 -0800 (PST)
-X-Gm-Message-State: APjAAAUo5vQaLx+WOs+YkpweBOGNygkFaFc2HUUmtA8tWh2sY3/c5RAf
-        rM3iGjk5uSf4ADPSYCiQ8NBb9+qxjVknFXx5/g==
-X-Google-Smtp-Source: APXvYqzBsWNUu1nzTcj5u5+SkuECwizSqPemoqPhEa2uIgUAQSq3Vk/bIVg/iQeB116Ri4RGcaeCFiqA8mabOmm0WcA=
-X-Received: by 2002:a37:81c6:: with SMTP id c189mr2575110qkd.223.1574364290557;
- Thu, 21 Nov 2019 11:24:50 -0800 (PST)
+        Thu, 21 Nov 2019 14:28:18 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33827 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUT2S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 14:28:18 -0500
+Received: by mail-ot1-f68.google.com with SMTP id w11so4035220ote.1;
+        Thu, 21 Nov 2019 11:28:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CHTfKDAdZLhL1Zm6CO6s2kP8nxK/JV3N7UW7tF4nQP4=;
+        b=WrwjpA9U7OiemGH4eYKo8N7n3uHifrrmMCswleR0zyUb1hO93Y35no4bTkFuGFXa39
+         7uvEl/kSbAxzv/L9ak9m4uWfXyxPxDxpw7H+iDcZlX1+jQhJlCoF22la9gFOev373W9n
+         TyljE5D1gfQbw9smY0ahOs81RUG/t4w5AbRCNMNGsN8oLszhIHy/KKuaE8Y6nIV+JNZp
+         Cemzhngv7BLmRY1bGMZzutENOUYD5NZK71tvlBV3OhUms7sv8sHwowDKDzeCFgh7MjoE
+         KSEIp/U8cNOqqzoKOL+TfLVGzcToTNut2vP7FlPswLtJjEuQiC5Vq/KreuFs98T9KqA0
+         rUhA==
+X-Gm-Message-State: APjAAAVqq50mRGKpKYAVrd+89LrYIADWAnHMm/2nTwZWeMLQHsG7yVD5
+        W+bZ7V6nHkKEv43rzUH5kQ==
+X-Google-Smtp-Source: APXvYqwSY+m1VVKP1lJWWFMDzjmXAD1VirqNMJL368kLdu7zD5Tqa73Qd9dLlvlXyGQDu+Uma4tvig==
+X-Received: by 2002:a9d:365:: with SMTP id 92mr8439326otv.9.1574364497464;
+        Thu, 21 Nov 2019 11:28:17 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u204sm1219085oig.35.2019.11.21.11.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 11:28:16 -0800 (PST)
+Date:   Thu, 21 Nov 2019 13:28:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        jianxin.pan@amlogic.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lnykww@gmail.com, yinxin_1989@aliyun.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: Document the Amlogic Meson SDHC
+ MMC host controller
+Message-ID: <20191121192816.GA7377@bogus>
+References: <20191117142716.154764-1-martin.blumenstingl@googlemail.com>
+ <20191117142716.154764-2-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-References: <20191119221925.28426-1-grygorii.strashko@ti.com> <20191119221925.28426-7-grygorii.strashko@ti.com>
-In-Reply-To: <20191119221925.28426-7-grygorii.strashko@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 21 Nov 2019 13:24:39 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKfWOZeXXxqyKtH98cbccXUoV7djRtxzyoq0hA_qx-bpQ@mail.gmail.com>
-Message-ID: <CAL_JsqKfWOZeXXxqyKtH98cbccXUoV7djRtxzyoq0hA_qx-bpQ@mail.gmail.com>
-Subject: Re: [PATCH v7 net-next 06/13] dt-bindings: net: ti: add new cpsw
- switch driver bindings
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191117142716.154764-2-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 4:19 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
-> Add bindings for the new TI CPSW switch driver. Comparing to the legacy
-> bindings (net/cpsw.txt):
-> - ports definition follows DSA bindings (net/dsa/dsa.txt) and ports can be
-> marked as "disabled" if not physically wired.
-> - all deprecated properties dropped;
-> - all legacy propertiies dropped which represent constant HW cpapbilities
-> (cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
-> active_slave)
-> - TI CPTS DT properties are reused as is, but grouped in "cpts" sub-node
-> - TI Davinci MDIO DT bindings are reused as is, because Davinci MDIO is
-> reused.
->
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+On Sun, Nov 17, 2019 at 03:27:15PM +0100, Martin Blumenstingl wrote:
+> This documents the devicetree bindings for the SDHC MMC host controller
+> found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
+> bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
+> HS200 mode (up to 100MHz clock).
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../bindings/net/ti,cpsw-switch.yaml          | 240 ++++++++++++++++++
->  1 file changed, 240 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
+>  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 64 +++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
 
-I see David has applied this already, but it still has numerous
-problems. Please send a follow-up.
-
->
-> diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-> new file mode 100644
-> index 000000000000..81ae8cafabc1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-> @@ -0,0 +1,240 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-For new bindings, please dual license:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/ti,cpsw-switch.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI SoC Ethernet Switch Controller (CPSW) Device Tree Bindings
-> +
-> +maintainers:
-> +  - Grygorii Strashko <grygorii.strashko@ti.com>
-> +  - Sekhar Nori <nsekhar@ti.com>
-> +
-> +description:
-> +  The 3-port switch gigabit ethernet subsystem provides ethernet packet
-> +  communication and can be configured as an ethernet switch. It provides the
-> +  gigabit media independent interface (GMII),reduced gigabit media
-> +  independent interface (RGMII), reduced media independent interface (RMII),
-> +  the management data input output (MDIO) for physical layer device (PHY)
-> +  management.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: ti,cpsw-switch
-> +      - items:
-> +         - const: ti,am335x-cpsw-switch
-> +         - const: ti,cpsw-switch
-> +      - items:
-> +        - const: ti,am4372-cpsw-switch
-> +        - const: ti,cpsw-switch
-> +      - items:
-> +        - const: ti,dra7-cpsw-switch
-> +        - const: ti,cpsw-switch
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +       The physical base address and size of full the CPSW module IO range
-> +
-> +  ranges: true
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: CPSW functional clock
-> +
-> +  clock-names:
-> +    maxItems: 1
-> +    items:
-> +      - const: fck
-> +
-> +  interrupts:
-> +    items:
-> +      - description: RX_THRESH interrupt
-> +      - description: RX interrupt
-> +      - description: TX interrupt
-> +      - description: MISC interrupt
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: "rx_thresh"
-> +      - const: "rx"
-> +      - const: "tx"
-> +      - const: "misc"
-> +
-> +  pinctrl-names: true
-> +
-> +  syscon:
-> +    $ref: /schemas/types.yaml#definitions/phandle
-> +    description:
-> +      Phandle to the system control device node which provides access to
-> +      efuse IO range with MAC addresses
-
-Can't you use nvmem binding for this?
-
-> +
-> +
-
-Drop the extra blank line.
-
-> +  ethernet-ports:
-> +    type: object
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^port@[0-9]+$":
-> +          type: object
-
-> +          minItems: 1
-> +          maxItems: 2
-
-These apply to arrays and don't make sense here.
-
-> +          description: CPSW external ports
-> +
-> +          allOf:
-> +            - $ref: ethernet-controller.yaml#
-> +
-> +          properties:
-> +            reg:
-> +              maxItems: 1
-> +              enum: [1, 2]
-
-You're mixing array and scalar constraints. What you want is:
-
-reg:
-  items:
-    - enum: [1, 2]
-
-> +              description: CPSW port number
-> +
-> +            phys:
-> +              $ref: /schemas/types.yaml#definitions/phandle-array
-
-Drop this. 'phys' is standard and has a type definition already.
-
-> +              maxItems: 1
-> +              description:  phandle on phy-gmii-sel PHY
-> +
-> +            label:
-> +              $ref: /schemas/types.yaml#/definitions/string-array
-
-Same here.
-
-> +              maxItems: 1
-
-This too. 'label' should never be an array.
-
-> +              description: label associated with this port
-> +
-> +            ti,dual-emac-pvid:
-> +              $ref: /schemas/types.yaml#/definitions/uint32
-> +              maxItems: 1
-> +              minimum: 1
-> +              maximum: 1024
-
-allOf:
-  - $ref: /schemas/types.yaml#/definitions/uint32
-minimum: 1
-maximum: 1024
-
-> +              description:
-> +                Specifies default PORT VID to be used to segregate
-> +                ports. Default value - CPSW port number.
-> +
-> +          required:
-> +            - reg
-> +            - phys
-> +
-> +  mdio:
-> +    type: object
-> +    allOf:
-> +      - $ref: "ti,davinci-mdio.yaml#"
-> +    description:
-> +      CPSW MDIO bus.
-> +
-> +  cpts:
-> +    type: object
-> +    description:
-> +      The Common Platform Time Sync (CPTS) module
-> +
-> +    properties:
-> +      clocks:
-> +        maxItems: 1
-> +        description: CPTS reference clock
-> +
-> +      clock-names:
-> +        maxItems: 1
-
-Can drop this. Implied by 'items' list length.
-
-> +        items:
-> +          - const: cpts
-> +
-> +      cpts_clock_mult:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Numerator to convert input clock ticks into ns
-> +
-> +      cpts_clock_shift:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Denominator to convert input clock ticks into ns.
-> +          Mult and shift will be calculated basing on CPTS rftclk frequency if
-> +          both cpts_clock_shift and cpts_clock_mult properties are not provided.
-> +
-> +    required:
-> +      - clocks
-> +      - clock-names
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - ranges
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - interrupt-names
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/dra7.h>
-> +
-> +    mac_sw: switch@0 {
-> +        compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
-> +        reg = <0x0 0x4000>;
-> +        ranges = <0 0 0x4000>;
-> +        clocks = <&gmac_main_clk>;
-> +        clock-names = "fck";
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        syscon = <&scm_conf>;
-> +        inctrl-names = "default", "sleep";
-> +
-> +        interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-names = "rx_thresh", "rx", "tx", "misc";
-> +
-> +        ethernet-ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                cpsw_port1: port@1 {
-> +                        reg = <1>;
-> +                        label = "port1";
-> +                        mac-address = [ 00 00 00 00 00 00 ];
-> +                        phys = <&phy_gmii_sel 1>;
-> +                        phy-handle = <&ethphy0_sw>;
-> +                        phy-mode = "rgmii";
-> +                        ti,dual_emac_pvid = <1>;
-> +                };
-> +
-> +                cpsw_port2: port@2 {
-> +                        reg = <2>;
-> +                        label = "wan";
-> +                        mac-address = [ 00 00 00 00 00 00 ];
-> +                        phys = <&phy_gmii_sel 2>;
-> +                        phy-handle = <&ethphy1_sw>;
-> +                        phy-mode = "rgmii";
-> +                        ti,dual_emac_pvid = <2>;
-> +                };
-> +        };
-> +
-> +        davinci_mdio_sw: mdio@1000 {
-> +                compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-> +                reg = <0x1000 0x100>;
-> +                clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0>;
-> +                clock-names = "fck";
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +                bus_freq = <1000000>;
-> +
-> +                ethphy0_sw: ethernet-phy@0 {
-> +                        reg = <0>;
-> +                };
-> +
-> +                ethphy1_sw: ethernet-phy@1 {
-> +                        reg = <1>;
-> +                };
-> +        };
-> +
-> +        cpts {
-> +                clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
-> +                clock-names = "cpts";
-> +        };
-> +    };
-> --
-> 2.17.1
->
+Reviewed-by: Rob Herring <robh@kernel.org>
