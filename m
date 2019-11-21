@@ -2,223 +2,197 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED23C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990A6C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8794620855
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1962071C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="isFqjCoP"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aNjgpI2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfKUJGR (ORCPT
+        id S1727090AbfKUJNi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:06:17 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45573 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726014AbfKUJGQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:06:16 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAL92o3F028033;
-        Thu, 21 Nov 2019 10:05:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=X4UEF/oAolwYF/YR+6kYxpWAn7eU7vcEn3UoypO+JG0=;
- b=isFqjCoPRp7uBat+j6CYR/dWa1UNCWVfschlhEJZgZ0w9Vt0rqNlP0QrIW/Tu3aoBI8E
- Q5ofZpBXzNfR4sT0bvgGqO0gmciVFZ5SiDz5JrZ54Pw38+HBZJLgAmhcVpQyJjvhzAJQ
- M9aXvvKexcVW7ZUEHKczpCa/lXdb5tAtPKuOzyJEbTirnFNNz3ycIcUVGImHWacOhyh9
- 23OEk3DTYXASh0HRTNm4taYBqOzxzfdznqneolE5S3wk4BxSrVShcznsAFUjnW6kpnMm
- /ZYJk17zbrqi+eu0pLO+UAm9Aa02mAV4x5tgQt2+qKrCG7RjxuXivOXV6feAhmtqui9z ww== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9usj9ef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Nov 2019 10:05:54 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 465C8100034;
-        Thu, 21 Nov 2019 10:05:53 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 318C52B2376;
-        Thu, 21 Nov 2019 10:05:53 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.48) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
- 2019 10:05:52 +0100
-Subject: Re: [PATCH v2] dt-bindings: mailbox: convert stm32-ipcc to
- json-schema
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Thu, 21 Nov 2019 04:13:38 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:50193 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726980AbfKUJNh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 04:13:37 -0500
+X-UUID: 9b93a42be7444e4a8acb7a98e71da631-20191121
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UaRbG04JrKrpAl2F9kZheLA2Sj76pSiOufzB52Htjlg=;
+        b=aNjgpI2e7dEALuHYsesB03+A03Vk1S3ZFiJKV3P6TZUvCjLYLkTa9/JWcCY4cWyuFhK/P8MAn8N+yEE2yEemZFOiQKpUAu65avwJMzC63o9aqu0FdvJdND/IMSWxeQ5kv/+OoEgBspQyw7RDufVchvPWzmwbAn0It51VJjGfYNY=;
+X-UUID: 9b93a42be7444e4a8acb7a98e71da631-20191121
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1637504510; Thu, 21 Nov 2019 17:13:26 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Nov 2019 17:13:20 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Nov 2019 17:13:28 +0800
+From:   Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>
-References: <20191118101420.23610-1-arnaud.pouliquen@st.com>
- <CAL_Jsq+42wx1AJO=jXXBhmaKMkBq-RtoF+kxVjS2z9fSwhcaEQ@mail.gmail.com>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <9d3a1e61-4c75-fd5c-7142-111f08117530@st.com>
-Date:   Thu, 21 Nov 2019 10:05:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+Subject: [PATCH v1 02/12] mailbox: cmdq: variablize address shift in platform
+Date:   Thu, 21 Nov 2019 17:12:22 +0800
+Message-ID: <1574327552-11806-3-git-send-email-dennis-yc.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+42wx1AJO=jXXBhmaKMkBq-RtoF+kxVjS2z9fSwhcaEQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_01:2019-11-20,2019-11-21 signatures=0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+U29tZSBnY2UgaGFyZHdhcmUgc2hpZnQgcGMgYW5kIGVuZCBhZGRyZXNzIGluIHJlZ2lzdGVyIHRv
+IHN1cHBvcnQNCmxhcmdlIGRyYW0gYWRkcmVzc2luZy4NCkltcGxlbWVudCBnY2UgYWRkcmVzcyBz
+aGlmdCB3aGVuIHdyaXRlIG9yIHJlYWQgcGMgYW5kIGVuZCByZWdpc3Rlci4NCkFuZCBhZGQgc2hp
+ZnQgYml0IGluIHBsYXRmb3JtIGRlZmluaXRpb24uDQoNClNpZ25lZC1vZmYtYnk6IERlbm5pcyBZ
+QyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvbWFp
+bGJveC9tdGstY21kcS1tYWlsYm94LmMgICAgICAgfCAgIDU3ICsrKysrKysrKysrKysrKysrKysr
+KysrLS0tLS0tLQ0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jICAgfCAg
+ICAzICstDQogaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCB8ICAgIDIg
+KysNCiAzIGZpbGVzIGNoYW5nZWQsIDQ4IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQ0K
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYyBiL2RyaXZl
+cnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCmluZGV4IDlhNmNlOWYuLmQ1NTM2NTYgMTAw
+NjQ0DQotLS0gYS9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQorKysgYi9kcml2
+ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQpAQCAtNzYsOCArNzYsMjEgQEAgc3RydWN0
+IGNtZHEgew0KIAlzdHJ1Y3QgY21kcV90aHJlYWQJKnRocmVhZDsNCiAJc3RydWN0IGNsawkJKmNs
+b2NrOw0KIAlib29sCQkJc3VzcGVuZGVkOw0KKwl1OAkJCXNoaWZ0X3BhOw0KIH07DQogDQorc3Ry
+dWN0IGdjZV9wbGF0IHsNCisJdTMyIHRocmVhZF9ucjsNCisJdTggc2hpZnQ7DQorfTsNCisNCit1
+OCBjbWRxX21ib3hfc2hpZnQoc3RydWN0IG1ib3hfY2hhbiAqY2hhbikNCit7DQorCXN0cnVjdCBj
+bWRxICpjbWRxID0gY29udGFpbmVyX29mKGNoYW4tPm1ib3gsIHN0cnVjdCBjbWRxLCBtYm94KTsN
+CisNCisJcmV0dXJuIGNtZHEtPnNoaWZ0X3BhOw0KK30NCisNCiBzdGF0aWMgaW50IGNtZHFfdGhy
+ZWFkX3N1c3BlbmQoc3RydWN0IGNtZHEgKmNtZHEsIHN0cnVjdCBjbWRxX3RocmVhZCAqdGhyZWFk
+KQ0KIHsNCiAJdTMyIHN0YXR1czsNCkBAIC0xNzYsNiArMTg5LDcgQEAgc3RhdGljIHZvaWQgY21k
+cV90YXNrX3JlbW92ZV93ZmUoc3RydWN0IGNtZHFfdGFzayAqdGFzaykNCiB7DQogCXN0cnVjdCBk
+ZXZpY2UgKmRldiA9IHRhc2stPmNtZHEtPm1ib3guZGV2Ow0KIAl1NjQgKmJhc2UgPSB0YXNrLT5w
+a3QtPnZhX2Jhc2U7DQorCXN0cnVjdCBjbWRxICpjbWRxID0gdGFzay0+Y21kcTsNCiAJaW50IGk7
+DQogDQogCWRtYV9zeW5jX3NpbmdsZV9mb3JfY3B1KGRldiwgdGFzay0+cGFfYmFzZSwgdGFzay0+
+cGt0LT5jbWRfYnVmX3NpemUsDQpAQCAtMTgzLDcgKzE5Nyw3IEBAIHN0YXRpYyB2b2lkIGNtZHFf
+dGFza19yZW1vdmVfd2ZlKHN0cnVjdCBjbWRxX3Rhc2sgKnRhc2spDQogCWZvciAoaSA9IDA7IGkg
+PCBDTURRX05VTV9DTUQodGFzay0+cGt0KTsgaSsrKQ0KIAkJaWYgKGNtZHFfY29tbWFuZF9pc193
+ZmUoYmFzZVtpXSkpDQogCQkJYmFzZVtpXSA9ICh1NjQpQ01EUV9KVU1QX0JZX09GRlNFVCA8PCAz
+MiB8DQotCQkJCSAgQ01EUV9KVU1QX1BBU1M7DQorCQkJCSAgQ01EUV9KVU1QX1BBU1MgPj4gY21k
+cS0+c2hpZnRfcGE7DQogCWRtYV9zeW5jX3NpbmdsZV9mb3JfZGV2aWNlKGRldiwgdGFzay0+cGFf
+YmFzZSwgdGFzay0+cGt0LT5jbWRfYnVmX3NpemUsDQogCQkJCSAgIERNQV9UT19ERVZJQ0UpOw0K
+IH0NCkBAIC0yMjEsMTMgKzIzNSwxNSBAQCBzdGF0aWMgdm9pZCBjbWRxX3Rhc2tfaGFuZGxlX2Vy
+cm9yKHN0cnVjdCBjbWRxX3Rhc2sgKnRhc2spDQogew0KIAlzdHJ1Y3QgY21kcV90aHJlYWQgKnRo
+cmVhZCA9IHRhc2stPnRocmVhZDsNCiAJc3RydWN0IGNtZHFfdGFzayAqbmV4dF90YXNrOw0KKwlz
+dHJ1Y3QgY21kcSAqY21kcSA9IHRhc2stPmNtZHE7DQogDQogCWRldl9lcnIodGFzay0+Y21kcS0+
+bWJveC5kZXYsICJ0YXNrIDB4JXAgZXJyb3JcbiIsIHRhc2spOw0KIAlXQVJOX09OKGNtZHFfdGhy
+ZWFkX3N1c3BlbmQodGFzay0+Y21kcSwgdGhyZWFkKSA8IDApOw0KIAluZXh0X3Rhc2sgPSBsaXN0
+X2ZpcnN0X2VudHJ5X29yX251bGwoJnRocmVhZC0+dGFza19idXN5X2xpc3QsDQogCQkJc3RydWN0
+IGNtZHFfdGFzaywgbGlzdF9lbnRyeSk7DQogCWlmIChuZXh0X3Rhc2spDQotCQl3cml0ZWwobmV4
+dF90YXNrLT5wYV9iYXNlLCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0KKwkJ
+d3JpdGVsKG5leHRfdGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwNCisJCSAgICAgICB0
+aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0KIAljbWRxX3RocmVhZF9yZXN1bWUo
+dGhyZWFkKTsNCiB9DQogDQpAQCAtMjU3LDcgKzI3Myw3IEBAIHN0YXRpYyB2b2lkIGNtZHFfdGhy
+ZWFkX2lycV9oYW5kbGVyKHN0cnVjdCBjbWRxICpjbWRxLA0KIAllbHNlDQogCQlyZXR1cm47DQog
+DQotCWN1cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0K
+KwljdXJyX3BhID0gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKSA8PCBj
+bWRxLT5zaGlmdF9wYTsNCiANCiAJbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKHRhc2ssIHRtcCwg
+JnRocmVhZC0+dGFza19idXN5X2xpc3QsDQogCQkJCSBsaXN0X2VudHJ5KSB7DQpAQCAtMzczLDE2
+ICszODksMjAgQEAgc3RhdGljIGludCBjbWRxX21ib3hfc2VuZF9kYXRhKHN0cnVjdCBtYm94X2No
+YW4gKmNoYW4sIHZvaWQgKmRhdGEpDQogCQlXQVJOX09OKGNsa19lbmFibGUoY21kcS0+Y2xvY2sp
+IDwgMCk7DQogCQlXQVJOX09OKGNtZHFfdGhyZWFkX3Jlc2V0KGNtZHEsIHRocmVhZCkgPCAwKTsN
+CiANCi0JCXdyaXRlbCh0YXNrLT5wYV9iYXNlLCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJS
+X0FERFIpOw0KLQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSwNCisJ
+CXdyaXRlbCh0YXNrLT5wYV9iYXNlID4+IGNtZHEtPnNoaWZ0X3BhLA0KKwkJICAgICAgIHRocmVh
+ZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQorCQl3cml0ZWwoKHRhc2stPnBhX2Jhc2Ug
+KyBwa3QtPmNtZF9idWZfc2l6ZSkgPj4gY21kcS0+c2hpZnRfcGEsDQogCQkgICAgICAgdGhyZWFk
+LT5iYXNlICsgQ01EUV9USFJfRU5EX0FERFIpOw0KKw0KIAkJd3JpdGVsKHRocmVhZC0+cHJpb3Jp
+dHksIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX1BSSU9SSVRZKTsNCiAJCXdyaXRlbChDTURRX1RI
+Ul9JUlFfRU4sIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0lSUV9FTkFCTEUpOw0KIAkJd3JpdGVs
+KENNRFFfVEhSX0VOQUJMRUQsIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0VOQUJMRV9UQVNLKTsN
+CiAJfSBlbHNlIHsNCiAJCVdBUk5fT04oY21kcV90aHJlYWRfc3VzcGVuZChjbWRxLCB0aHJlYWQp
+IDwgMCk7DQotCQljdXJyX3BhID0gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9B
+RERSKTsNCi0JCWVuZF9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0VORF9BRERS
+KTsNCisJCWN1cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIp
+IDw8DQorCQkJY21kcS0+c2hpZnRfcGE7DQorCQllbmRfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2Ug
+KyBDTURRX1RIUl9FTkRfQUREUikgPDwNCisJCQljbWRxLT5zaGlmdF9wYTsNCiANCiAJCS8qDQog
+CQkgKiBBdG9taWMgZXhlY3V0aW9uIHNob3VsZCByZW1vdmUgdGhlIGZvbGxvd2luZyB3ZmUsIGku
+ZS4gb25seQ0KQEAgLTM5NSw3ICs0MTUsNyBAQCBzdGF0aWMgaW50IGNtZHFfbWJveF9zZW5kX2Rh
+dGEoc3RydWN0IG1ib3hfY2hhbiAqY2hhbiwgdm9pZCAqZGF0YSkNCiAJCQkJY21kcV90aHJlYWRf
+d2FpdF9lbmQodGhyZWFkLCBlbmRfcGEpOw0KIAkJCQlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3Bl
+bmQoY21kcSwgdGhyZWFkKSA8IDApOw0KIAkJCQkvKiBzZXQgdG8gdGhpcyB0YXNrIGRpcmVjdGx5
+ICovDQotCQkJCXdyaXRlbCh0YXNrLT5wYV9iYXNlLA0KKwkJCQl3cml0ZWwodGFzay0+cGFfYmFz
+ZSA+PiBjbWRxLT5zaGlmdF9wYSwNCiAJCQkJICAgICAgIHRocmVhZC0+YmFzZSArIENNRFFfVEhS
+X0NVUlJfQUREUik7DQogCQkJfSBlbHNlIHsNCiAJCQkJY21kcV90YXNrX2luc2VydF9pbnRvX3Ro
+cmVhZCh0YXNrKTsNCkBAIC00MDcsMTQgKzQyNywxNCBAQCBzdGF0aWMgaW50IGNtZHFfbWJveF9z
+ZW5kX2RhdGEoc3RydWN0IG1ib3hfY2hhbiAqY2hhbiwgdm9pZCAqZGF0YSkNCiAJCQlpZiAoY3Vy
+cl9wYSA9PSBlbmRfcGEgLSBDTURRX0lOU1RfU0laRSB8fA0KIAkJCSAgICBjdXJyX3BhID09IGVu
+ZF9wYSkgew0KIAkJCQkvKiBzZXQgdG8gdGhpcyB0YXNrIGRpcmVjdGx5ICovDQotCQkJCXdyaXRl
+bCh0YXNrLT5wYV9iYXNlLA0KKwkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlm
+dF9wYSwNCiAJCQkJICAgICAgIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQog
+CQkJfSBlbHNlIHsNCiAJCQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsNCiAJ
+CQkJc21wX21iKCk7IC8qIG1vZGlmeSBqdW1wIGJlZm9yZSBlbmFibGUgdGhyZWFkICovDQogCQkJ
+fQ0KIAkJfQ0KLQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSwNCisJ
+CXdyaXRlbCgodGFzay0+cGFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplKSA+PiBjbWRxLT5zaGlm
+dF9wYSwNCiAJCSAgICAgICB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9FTkRfQUREUik7DQogCQlj
+bWRxX3RocmVhZF9yZXN1bWUodGhyZWFkKTsNCiAJfQ0KQEAgLTQ2MSw2ICs0ODEsNyBAQCBzdGF0
+aWMgaW50IGNtZHFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJc3RydWN0
+IHJlc291cmNlICpyZXM7DQogCXN0cnVjdCBjbWRxICpjbWRxOw0KIAlpbnQgZXJyLCBpOw0KKwlz
+dHJ1Y3QgZ2NlX3BsYXQgKnBsYXRfZGF0YTsNCiANCiAJY21kcSA9IGRldm1fa3phbGxvYyhkZXYs
+IHNpemVvZigqY21kcSksIEdGUF9LRVJORUwpOw0KIAlpZiAoIWNtZHEpDQpAQCAtNDc5LDcgKzUw
+MCwxNCBAQCBzdGF0aWMgaW50IGNtZHFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+dikNCiAJCXJldHVybiAtRUlOVkFMOw0KIAl9DQogDQotCWNtZHEtPnRocmVhZF9uciA9ICh1MzIp
+KHVuc2lnbmVkIGxvbmcpb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRldik7DQorCXBsYXRfZGF0
+YSA9IChzdHJ1Y3QgZ2NlX3BsYXQgKilvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoZGV2KTsNCisJ
+aWYgKCFwbGF0X2RhdGEpIHsNCisJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBtYXRjaCBk
+YXRhXG4iKTsNCisJCXJldHVybiAtRUlOVkFMOw0KKwl9DQorDQorCWNtZHEtPnRocmVhZF9uciA9
+IHBsYXRfZGF0YS0+dGhyZWFkX25yOw0KKwljbWRxLT5zaGlmdF9wYSA9IHBsYXRfZGF0YS0+c2hp
+ZnQ7DQogCWNtZHEtPmlycV9tYXNrID0gR0VOTUFTSyhjbWRxLT50aHJlYWRfbnIgLSAxLCAwKTsN
+CiAJZXJyID0gZGV2bV9yZXF1ZXN0X2lycShkZXYsIGNtZHEtPmlycSwgY21kcV9pcnFfaGFuZGxl
+ciwgSVJRRl9TSEFSRUQsDQogCQkJICAgICAgICJtdGtfY21kcSIsIGNtZHEpOw0KQEAgLTU0Miw5
+ICs1NzAsMTIgQEAgc3RhdGljIGludCBjbWRxX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
+KnBkZXYpDQogCS5yZXN1bWUgPSBjbWRxX3Jlc3VtZSwNCiB9Ow0KIA0KK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjIgPSB7LnRocmVhZF9uciA9IDE2LCAuc2hpZnQgPSAw
+fTsNCitzdGF0aWMgY29uc3Qgc3RydWN0IGdjZV9wbGF0IGdjZV9wbGF0X3YzID0gey50aHJlYWRf
+bnIgPSAyNCwgLnNoaWZ0ID0gMH07DQorDQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
+aWQgY21kcV9vZl9pZHNbXSA9IHsNCi0Jey5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1n
+Y2UiLCAuZGF0YSA9ICh2b2lkICopMTZ9LA0KLQl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4
+MTgzLWdjZSIsIC5kYXRhID0gKHZvaWQgKikyNH0sDQorCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRl
+ayxtdDgxNzMtZ2NlIiwgLmRhdGEgPSAodm9pZCAqKSZnY2VfcGxhdF92Mn0sDQorCXsuY29tcGF0
+aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtZ2NlIiwgLmRhdGEgPSAodm9pZCAqKSZnY2VfcGxhdF92
+M30sDQogCXt9DQogfTsNCiANCmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGst
+Y21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQpp
+bmRleCA5YWRkMGZkLi4yNzRmNmYzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsv
+bXRrLWNtZHEtaGVscGVyLmMNCisrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhl
+bHBlci5jDQpAQCAtMjgxLDYgKzI4MSw3IEBAIGludCBjbWRxX3BrdF9wb2xsX21hc2soc3RydWN0
+IGNtZHFfcGt0ICpwa3QsIHU4IHN1YnN5cywNCiANCiBzdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFs
+aXplKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KIHsNCisJc3RydWN0IGNtZHFfY2xpZW50ICpjbCA9
+IHBrdC0+Y2w7DQogCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KIAlp
+bnQgZXJyOw0KIA0KQEAgLTI5Myw3ICsyOTQsNyBAQCBzdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFs
+aXplKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KIA0KIAkvKiBKVU1QIHRvIGVuZCAqLw0KIAlpbnN0
+Lm9wID0gQ01EUV9DT0RFX0pVTVA7DQotCWluc3QudmFsdWUgPSBDTURRX0pVTVBfUEFTUzsNCisJ
+aW5zdC52YWx1ZSA9IENNRFFfSlVNUF9QQVNTID4+IGNtZHFfbWJveF9zaGlmdChjbC0+Y2hhbik7
+DQogCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQogDQogCXJldHVy
+biBlcnI7DQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxi
+b3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCmluZGV4IGE0
+ZGM0NWYuLmRmZTViMmUgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNt
+ZHEtbWFpbGJveC5oDQorKysgYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJv
+eC5oDQpAQCAtODgsNCArODgsNiBAQCBzdHJ1Y3QgY21kcV9wa3Qgew0KIAl2b2lkCQkJKmNsOw0K
+IH07DQogDQordTggY21kcV9tYm94X3NoaWZ0KHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pOw0KKw0K
+ICNlbmRpZiAvKiBfX01US19DTURRX01BSUxCT1hfSF9fICovDQotLSANCjEuNy45LjUNCg==
 
-
-On 11/20/19 9:26 PM, Rob Herring wrote:
-> On Mon, Nov 18, 2019 at 4:15 AM Arnaud Pouliquen
-> <arnaud.pouliquen@st.com> wrote:
->>
->> Convert the STM32 IPCC bindings to DT schema format using
->> json-schema
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->>  .../bindings/mailbox/st,stm32-ipcc.yaml       | 91 +++++++++++++++++++
->>  .../bindings/mailbox/stm32-ipcc.txt           | 47 ----------
->>  2 files changed, 91 insertions(+), 47 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
->>  delete mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-> 
-> Thanks for helping me find 2 meta-schema errors. :) Please update
-> dt-schema and re-run 'make dt_binding_check'.
-> 
-it a privilege to help you to improve the scripts ;-)
-
-Thanks for the reviews, based on it i will also update the following patch
-dt-bindings: remoteproc: convert stm32-rproc to json-schema
-
-Regards
-Arnaud
-
->> diff --git a/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml b/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
->> new file mode 100644
->> index 000000000000..90157d4deac1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
->> @@ -0,0 +1,91 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/mailbox/st,stm32-ipcc.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: STMicroelectronics STM32 IPC controller bindings
->> +
->> +description:
->> +  The IPCC block provides a non blocking signaling mechanism to post and
->> +  retrieve messages in an atomic way between two processors.
->> +  It provides the signaling for N bidirectionnal channels. The number of
->> +  channels (N) can be read from a dedicated register.
->> +
->> +maintainers:
->> +  - Fabien Dessenne <fabien.dessenne@st.com>
->> +  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: st,stm32mp1-ipcc
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +     maxItems: 1
->> +
->> +  interrupts:
->> +    items:
->> +      - description: rx channel occupied
->> +      - description: tx channel free
->> +      - description: wakeup source
->> +    minItems: 2
->> +    maxItems: 3
->> +
->> +  interrupt-names:
->> +    items:
->> +      enums: [ rx, tx, wakeup ]
-> 
-> 'enums' is not a valid keyword. 'enum' is valid, but his should be in
-> a defined order (so a list of items).
-> 
->> +    minItems: 2
->> +    maxItems: 3
->> +
->> +  wakeup-source:
->> +    $ref: /schemas/types.yaml#/definitions/flag
->> +    description:
->> +      Enables wake up of host system on wakeup IRQ assertion.
-> 
-> Just 'true' is enough here. Assume we have a common definition.
-> 
->> +
->> +  "#mbox-cells":
->> +    const: 1
->> +
->> +  st,proc-id:
->> +    description: Processor id using the mailbox (0 or 1)
->> +    allOf:
->> +      - minimum: 0
->> +      - maximum: 1
-> 
-> 'enum: [ 0, 1 ]' is more concise.
-> 
-> Also, needs a $ref to the type.
-> 
->> +      - default: 0
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - st,proc-id
->> +  - clocks
->> +  - interrupt-names
->> +  - "#mbox-cells"
->> +
->> +oneOf:
->> +  - required:
->> +      - interrupts
->> +  - required:
->> +      - interrupts-extended
-> 
-> The tooling takes care of this for you. Just list 'interrupts' as required.
-> 
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/clock/stm32mp1-clks.h>
->> +    ipcc: mailbox@4c001000 {
->> +      compatible = "st,stm32mp1-ipcc";
->> +      #mbox-cells = <1>;
->> +      reg = <0x4c001000 0x400>;
->> +      st,proc-id = <0>;
->> +      interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
->> +                     <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
->> +                     <&aiec 62 1>;
->> +      interrupt-names = "rx", "tx", "wakeup";
->> +      clocks = <&rcc_clk IPCC>;
->> +      wakeup-source;
->> +    };
->> +
->> +...
