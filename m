@@ -2,82 +2,70 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7987C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 05:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EC7C43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 06:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5FEE20898
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 05:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B982089F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 06:20:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="W6LwwNZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfKUFbN (ORCPT
+        id S1726014AbfKUGUa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 00:31:13 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:34578 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfKUFbN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 00:31:13 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iXf3P-0000vj-W0; Thu, 21 Nov 2019 13:30:56 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iXf3G-0002bu-Mm; Thu, 21 Nov 2019 13:30:46 +0800
-Date:   Thu, 21 Nov 2019 13:30:46 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Stephen Brennan <stephen@brennan.io>,
-        Matt Mackall <mpm@selenic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/4] Raspberry Pi 4 HWRNG Support
-Message-ID: <20191121053046.coobocevp4uwwugb@gondor.apana.org.au>
-References: <20191120031622.88949-1-stephen@brennan.io>
- <3e78d01f-f7a4-b3c4-4d23-7be7d6ad764d@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e78d01f-f7a4-b3c4-4d23-7be7d6ad764d@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 21 Nov 2019 01:20:30 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25835 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfKUGUa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 01:20:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574317214; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=AOkv8j0EE7P/Zv/V2ChKHfPM12CDL3YuVF4r2zlx1UFXsRjfwD0IaoGGAlzIuwDFdwkPXzy9jgfLbetPFdxhUNrLs370OscjaBEURx3uqnS+KAClMPsKAhiBv0km36/nMY43Sny1XExbDnhGba+w5/37yzMih0Nc5fMIEFKH4Qc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574317214; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=FAy7jqquQAapheBDzp1cM7A9lHyJZLucFezdW+jrC04=; 
+        b=gr+7nFuhVHnMPewM270z6RTExhBRMjmVabNX23K5SjtNlUEGSUD9uMRc/Jthy9XcqKq6cvPofrcTZw4LaVXsBHsBU8BVD3FdOtknyzpEo4e0WFlrwwhAfQOuYM5p4RvL2jzOOoZTh3QazHw4b6dATknZg3IHeafzETefgX/MoBA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=MWFQ7/e1+yMJJC1BUNqt7wHm2xU3CgGoz/r8NR0zyibQF5Ab1nJ7pwwYUfvfdHqevh91y+3glnjH
+    EKxdeYp6c4rzeml5k42barXQArgadb+WLwLRH9FihUARHuV/y3uK  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574317214;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id; l=110;
+        bh=FAy7jqquQAapheBDzp1cM7A9lHyJZLucFezdW+jrC04=;
+        b=W6LwwNZ8OQvaYXV3Emv/Dy9lJq0iMsZMbDQHg/9v3CphVPDbhfJzejmsyCV9tCK8
+        x4NuBtDAeTCh8CV0Twz+K8CfC83sg1wW80BDO5duhaADm/8K/3mgBbdCtnBa8JU23AU
+        aN0ImIAiGswbcbNggG1gKAKNsoQPkiXROr4romHI=
+Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 157431721405347.50658671788722; Wed, 20 Nov 2019 22:20:14 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, paulburton@kernel.org,
+        paul.burton@mips.com, linus.walleij@linaro.org,
+        paul@crapouillou.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        syq@debian.org
+Subject: Fix bugs in X1000/X1500 and add X1830 pinctrl driver v3.
+Date:   Thu, 21 Nov 2019 14:19:39 +0800
+Message-Id: <1574317183-126374-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 08:09:57PM -0800, Florian Fainelli wrote:
-> Hi Herbert,
-> 
-> On 11/19/2019 7:16 PM, Stephen Brennan wrote:
-> > This patch series enables support for the HWRNG included on the Raspberry
-> > Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
-> > tested this out on a Pi 4.  Prior to this patch series, attempting to use
-> > the hwrng gives:
-> > 
-> >     $ head -c 2 /dev/hwrng
-> >     head: /dev/hwrng: Input/output error
-> > 
-> > After this series, the same command gives two random bytes.
-> 
-> When we get a review from Rob, you can take patches 1-2 through your
-> tree and Stefan/Nicholas can queue patches 3-4 through the BCM2835 tree
-> where the DTS files already exist. Does that work for you?
+v2->v3:
+1.Fix typo in "Add missing parts for X1000 and X1500."
+2.Add pinctrl drivers for the PWM of X1830.
 
-Yes sure.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
