@@ -2,148 +2,127 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5997BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44DBC432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2388E20692
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACAD1206CC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 17:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI7WavVQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8z2hgFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfKUReF (ORCPT
+        id S1726784AbfKURhT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:34:05 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41238 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfKUReF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 12:34:05 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so1449151lfp.8;
-        Thu, 21 Nov 2019 09:34:01 -0800 (PST)
+        Thu, 21 Nov 2019 12:37:19 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:47085 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfKURhT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 12:37:19 -0500
+Received: by mail-yb1-f195.google.com with SMTP id v15so1645592ybp.13;
+        Thu, 21 Nov 2019 09:37:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6J1piRgV0I8ZeSxFU2hLB+lhIu/EsMKbTjoUdKhBoh4=;
-        b=cI7WavVQXW6YTTsx24kyro2bKraJeez/5xvP+u/FCt+8IEeH++xRr7bppVVaMcdStl
-         VqYxOPhucE+noi9PVTucRx3xce0OO49s9ls3Rn0f9DRBFLG6X54uc7hLeS10i4nF8zW1
-         vuqLnHyIWSOvQTAvI4OJmhjUiY1gpB1znoS71dGYEKG5c26PdBdXjfB9+3tj8FSe1rlq
-         smug1wpdMdRqaG6e0+o44KHpGF9s9eBS5+SP7KBhUOEvIakX82SUDuzGwQOlKU2wAIuo
-         Tc4AiK8LReNqyA9rHaQQkFQxFrOOMP1aSH1H1iqDr3iROHhqGnFIYNZ6wnBnJV6FlKXk
-         Lb0A==
+        bh=4wBTKsuxv62YbRh7Tq2qblzfbjN9lJSjzh/rAD49oZk=;
+        b=j8z2hgFH1kcv2oYgVNGxEwQNTUADtFjiBTeRlA0MAv+YUgVPv7IIaXUg1TogA8WFiD
+         VfdHU9G9QhNs14/ErLqFbqEbZdsrT9kzmA/LsGXLA7FyQfIXNcqraPECj/ERrgEFqbr4
+         OCChd+Ti1C0VsnlIk286Fht2Q2Yw7KeNMhVh3JFqbOYYPRPQcI4Q8trmNqcm8dDPsmzb
+         cJJghEEcZm1CqJB9g5daQcqV0sv5cyhFpAh57WV0pfQSuEY+FejgRtVT7fU+Im2PJ4sW
+         VUPfUMJ4lHzMHsC1QE1ZPt9ztlqZGCAIN6mBW8lZb5dL23Wl1HTf7BSSsYqfQlvDZy1k
+         WorA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6J1piRgV0I8ZeSxFU2hLB+lhIu/EsMKbTjoUdKhBoh4=;
-        b=XHCnykBwKKHnIbnbZQ8vBM03/0psfRrMD4mdUp3wh6FBP1373W4m25d4nhqv6YtIa9
-         6CaKaitc1P8StcVgF4GCbJv3ebY6uRKm2E6UAsxp2gTXjd4FOR46zeVnYz89TbF0sL4F
-         4WtDZSG7cHaLogRIZhS/4E5wZF3kiTvmgqnzEIluxeWs/za6LXg8kw85pjfB4gPudlar
-         McLR+lufE4rUH6l0QztxeMc9GuZqcjTHXQBS9hUhFpSr2gQoCNlG7XgsXux22C6r9OyJ
-         T8OHACYCOtsreSCTJdbkhG4s+NEiv70jkmrKTIOC+uUKhLXRi9KFFBtElCqyMBSayHJ2
-         /8Gg==
-X-Gm-Message-State: APjAAAVpK83nPfTd7JTIYgO/dvFhstaLdEJESDxnCVgG9E1dLjJzLzxi
-        cULPYtDx1MeM8s2nVBVj8NUUpQ5+
-X-Google-Smtp-Source: APXvYqzI4efW+jpylCKcwwlKWAScScn1OR7oGncmwtojSpUNDIX2q6OMNOWDFnG0E3FBtdAKJO/UzA==
-X-Received: by 2002:ac2:5dcc:: with SMTP id x12mr8758634lfq.163.1574357640859;
-        Thu, 21 Nov 2019 09:34:00 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id y7sm1738852lfb.75.2019.11.21.09.33.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 09:34:00 -0800 (PST)
-Subject: Re: [PATCH v1 12/29] interconnect: Add memory interconnection
- providers for NVIDIA Tegra SoCs
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-13-digetx@gmail.com> <20191119063002.GE2462695@ulmo>
- <a16b54bf-a881-84d0-4437-993dc275487c@gmail.com>
-Message-ID: <a9bbe36e-8082-8cab-7377-f71f2489fb30@gmail.com>
-Date:   Thu, 21 Nov 2019 20:33:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        bh=4wBTKsuxv62YbRh7Tq2qblzfbjN9lJSjzh/rAD49oZk=;
+        b=AY7M4VJvk5ApHb188uQkJBQWURlRLMDQWLLjPiXzWHqUbgbvXYtQIomCWuAla4fRGx
+         S97ZgvN2WJGitq9cmxrJ8Vg5aArKxvzQOyy5rHXOUpmO2hQbwpmJKJCD4SwpTDtCOWJ0
+         7tLvPpSqkQAugnxJimOR/ChIfHaU+LOVOW1ROg4hoRDOSTKBTqIqx/khGXjP6jZ5cN+i
+         rxioSYZKxwAPlvR98kVeAn4d2nHSkSEtiXAwMwszpY+3ndqATPICttP4Z6HmqHV0zHxe
+         sfOF++M6jhpG1UESy9HblZArF3mFXZw3ap0nSE1e/+pGx2LbfXL0gf5OyjthvHOGiAeR
+         wXJg==
+X-Gm-Message-State: APjAAAVUGxqqytMF/Z9wRxtB1cD7pxPOJurYwOABqJf34D9jD/1303vp
+        hIPgqn0hRBzZ9OGslN+YITg=
+X-Google-Smtp-Source: APXvYqy38DeCfwF9DCOcYXPadggMRknvbkN/JuNv+0s2uLQt0dgHSnCHYoYkII5E4uRdFJNY2dCR8Q==
+X-Received: by 2002:a05:6902:4e7:: with SMTP id w7mr7040679ybs.409.1574357836660;
+        Thu, 21 Nov 2019 09:37:16 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id b199sm1088226ywh.23.2019.11.21.09.37.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 09:37:16 -0800 (PST)
+Subject: Re: [PATCH 2/2] of: overlay: fix target_path memory leak
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        pantelis.antoniou@konsulko.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vincent Whitchurch <rabinv@axis.com>
+References: <20191118132809.30127-1-vincent.whitchurch@axis.com>
+ <20191118132809.30127-2-vincent.whitchurch@axis.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <b916ab0e-bb60-1476-b321-e931645df688@gmail.com>
+Date:   Thu, 21 Nov 2019 11:37:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <a16b54bf-a881-84d0-4437-993dc275487c@gmail.com>
+In-Reply-To: <20191118132809.30127-2-vincent.whitchurch@axis.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-19.11.2019 19:58, Dmitry Osipenko пишет:
-> 19.11.2019 09:30, Thierry Reding пишет:
->> On Mon, Nov 18, 2019 at 11:02:30PM +0300, Dmitry Osipenko wrote:
->>> All NVIDIA Tegra SoCs have identical topology in regards to memory
->>> interconnection between memory clients and memory controllers.
->>> The memory controller (MC) and external memory controller (EMC) are
->>> providing memory clients with required memory bandwidth. The memory
->>> controller performs arbitration between memory clients, while the
->>> external memory controller transfers data from/to DRAM and pipes that
->>> data from/to memory controller. Memory controller interconnect provider
->>> aggregates bandwidth requests from memory clients and sends the aggregated
->>> request to EMC provider that scales DRAM frequency in order to satisfy the
->>> bandwidth requirement. Memory controller provider could adjust hardware
->>> configuration for a more optimal arbitration depending on bandwidth
->>> requirements from memory clients, but this is unimplemented for now.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/interconnect/Kconfig               |   1 +
->>>  drivers/interconnect/Makefile              |   1 +
->>>  drivers/interconnect/tegra/Kconfig         |   6 +
->>>  drivers/interconnect/tegra/Makefile        |   4 +
->>>  drivers/interconnect/tegra/tegra-icc-emc.c | 138 +++++++++++++++++++++
->>>  drivers/interconnect/tegra/tegra-icc-mc.c  | 130 +++++++++++++++++++
->>>  include/soc/tegra/mc.h                     |  26 ++++
->>>  7 files changed, 306 insertions(+)
->>>  create mode 100644 drivers/interconnect/tegra/Kconfig
->>>  create mode 100644 drivers/interconnect/tegra/Makefile
->>>  create mode 100644 drivers/interconnect/tegra/tegra-icc-emc.c
->>>  create mode 100644 drivers/interconnect/tegra/tegra-icc-mc.c
->>
->> Why does this have to be separate from the memory controller driver in
->> drivers/memory/tegra? It seems like this requires a bunch of boilerplate
->> just so that this code can live in the drivers/interconnect directory.
-> 
-> It fits with the IOMMU separation. To me that it's a bit nicer to have
-> the separation for the ICC as well, but having ICC within memory
-> controller driver also will be fine.
-> 
-> Indeed it looks like there is not much in the MC's provider code right
-> now, but maybe more stuff will be added later on.
-> 
->> If Georgi doesn't insist, I'd prefer if we carried this code directly in
->> the drivers/memory/tegra directory so that we don't have so many
->> indirections.
->>
->> Also, and I already briefly mentioned this in another reply, I think we
->> don't need two providers here. The only one we're really interested in
->> is the memory-client to memory-controller paths. The MC to EMC path is
->> static.
-> 
-> Perhaps it is fine to drop EMC path, I'll revisit it.
-> 
-> [snip]
+Hi Rob,
 
-One advantage of having both MC and EMC as ICC providers is that there
-won't be a need to mess with a custom coupling of MC-EMC drivers
-together because interconnect API naturally takes care of the coupling
-for us by telling ICC users to defer until both providers are registered.
+On 11/18/19 7:28 AM, Vincent Whitchurch wrote:
+> target_path is used as a temporary buffer in dup_and_fixup_symbol_prop()
+> and should be freed even in the success path.
+> 
+> This was detected by kmemleak.
+> 
+>  unreferenced object 0x8598f6c0 (size 64):
+>    backtrace:
+>      __kmalloc_track_caller+0x17d/0x228
+>      kvasprintf+0x2b/0x64
+>      kasprintf+0x15/0x20
+>      add_changeset_property+0x225/0x364
+>      of_overlay_fdt_apply+0x42d/0x6b4
+>      ...
+> 
+> Fixes: e0a58f3e08d4b7fa ("of: overlay: remove a dependency on device node full_name")
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+> ---
+>  drivers/of/overlay.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 5f8869e2a8b3..59455322a130 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -261,6 +261,8 @@ static struct property *dup_and_fixup_symbol_prop(
+>  
+>  	of_property_set_flag(new_prop, OF_DYNAMIC);
+>  
+> +	kfree(target_path);
+> +
+>  	return new_prop;
+>  
+>  err_free_new_prop:
+> 
 
-I'll take another look at this over the weekend, but for now my v1
-variant looks appropriate in terms of a better hardware description and
-implementation in the code.
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+
+I would suggest changing the subject to:
+
+   of: overlay: dup_and_fixup_symbol_prop() memory leak
+
+but I am also fine with you not changing the subject.
+
+-Frank
