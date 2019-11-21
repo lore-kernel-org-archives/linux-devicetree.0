@@ -2,119 +2,260 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365A5C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 12:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57912C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A81D208A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 12:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21BD320855
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:06:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ISqHh8hr"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="f81Mnilf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfKUM6l (ORCPT
+        id S1726502AbfKUNGx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:58:41 -0500
-Received: from mail-eopbgr30049.outbound.protection.outlook.com ([40.107.3.49]:9535
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726293AbfKUM6l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:58:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RHktlwDiKrLx/R4Ac6SBRMG2OwGyo5XM81WQITECoI9TWowEBWMc3F1dc/2GvOkxMALlOI5KvxIES4DWK2Df/rXjGk0+FRuAfaodzjvQfeFTBsgoAcimQoTRuu5g8WIsfRvfAFuJK1m+ciVHPT/ABx6TMJCUzox2KOAxc0TFULA4aSIh62qODdWQjAetpnBNXaMzIpIx616HRDnR77FjT3t6CmdqOKBt4926JWZOJHiFpykER7LilPnMPZcrhm75fcLmGI5cQrBj6PFYxJH9Uw4CrSc97w5FmstD+jR10qB6fuhHz06O6ZKT/bYPQH3qUznlWb8GZxsvdmRuVusXTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ClcAYLd4GgSuYVnliFsPHtJ3vEZCqcPMxy6yQxfvJQo=;
- b=UezZzjkiKck+6q9owVcQX2+HJBgtUiu5paK2vQHbq9p3L2PWIfewntHdDvio/yWHZfJ4pWbasaqgvD0UgS8VrK+9j22U+hql+fAhUuu4Gf8ECy12a0UWMPjdlRmICWAYZdNXmK5e8A3qGnaodLPLHQD/YhxL5DDqFIyMbkIwxYnZIX/XfUoI6zOT5RCcSB4bMIUxLgHKKzhFAlcE4FdPltiaako+NQLUxo0PpJkX+qaBTFfnDaH7Kj7fansJyxRSTNJ/iSNyY6veUDqPbfOWT2MGyLQBpVkIYyLCkkmNRXuNZmtvppVvAZexG5+/WtK4PV7NtHFbGJ3/jQ/jPw6MLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ClcAYLd4GgSuYVnliFsPHtJ3vEZCqcPMxy6yQxfvJQo=;
- b=ISqHh8hrHifC97V9Nr9Ykz98IsMm2XFyQA5akJfvdei9WgCjpqOSDBHWHmhzzgLLG5d6SF0h77Ve+CfAZ3IqW6cyZp5BEEFB4mZxflw2Q8WpBxlmhWq7++MvxMD6orqGdh+7x883iOk9OiwBckqVYKpO+dHu1tVu+ULhAZYQjVA=
-Received: from DB6PR0402MB2789.eurprd04.prod.outlook.com (10.172.245.7) by
- DB6PR0402MB2806.eurprd04.prod.outlook.com (10.172.246.142) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Thu, 21 Nov 2019 12:58:38 +0000
-Received: from DB6PR0402MB2789.eurprd04.prod.outlook.com
- ([fe80::d74:de31:c437:de23]) by DB6PR0402MB2789.eurprd04.prod.outlook.com
- ([fe80::d74:de31:c437:de23%8]) with mapi id 15.20.2474.019; Thu, 21 Nov 2019
- 12:58:38 +0000
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/2] arm64: dts: lx2160a: add EMDIO1 and phy nodes
-Thread-Topic: [PATCH 0/2] arm64: dts: lx2160a: add EMDIO1 and phy nodes
-Thread-Index: AQHVlLo+tMQz8IpuI0agMYPX0++eD6eVrMrw
-Date:   Thu, 21 Nov 2019 12:58:38 +0000
-Message-ID: <DB6PR0402MB27897CF7F5755E98340721FDE04E0@DB6PR0402MB2789.eurprd04.prod.outlook.com>
-References: <1573055536-21786-1-git-send-email-ioana.ciornei@nxp.com>
-In-Reply-To: <1573055536-21786-1-git-send-email-ioana.ciornei@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ioana.ciornei@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 77cfc662-0f40-4c73-ae27-08d76e8286e2
-x-ms-traffictypediagnostic: DB6PR0402MB2806:|DB6PR0402MB2806:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB2806FEAC5BB490ACEA6AF829E04E0@DB6PR0402MB2806.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(396003)(39860400002)(376002)(199004)(189003)(86362001)(66476007)(74316002)(66446008)(66946007)(7736002)(55016002)(76116006)(9686003)(3846002)(11346002)(26005)(8936002)(5660300002)(2906002)(110136005)(316002)(2501003)(54906003)(4326008)(6246003)(99286004)(229853002)(6116002)(66556008)(25786009)(305945005)(64756008)(7696005)(14454004)(4744005)(33656002)(6436002)(8676002)(186003)(81156014)(478600001)(81166006)(6506007)(102836004)(52536014)(71190400001)(76176011)(44832011)(256004)(446003)(66066001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0402MB2806;H:DB6PR0402MB2789.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Qbo908xevVupBNL8jkDLDzXatZ2yxyJ5hUpmL+oZfJwk17v694h6Jn1Q3ltZZOzqRLzX6M5MA5RG6X8dKzYatdJSIL55h/Q1Z2fg28YE1dEL5VMo+W78Gi3DbRTMfyT1RHS3tsnW8B5665yR6LvM0cOvFjuDyDjo6fxm09MkGMcMltLPp+Wd7pbTCUPdpp5CzWUpnKIBdXkggkK4DUAoTKRNUNTBkJCu8QIy8GEvU9llnFJ7DJcNmJPCSc8AuS+6gadVjA/jB+2RVRrLiJixRbfxFkfVDJ4/6GHjDC8fXv8gZwSLo0+jFHrwTRxaLKAAFDC01M8FB171yp2m3YM/vvJFKvzHGLuJZmj7L5ZuItWonbqGojtSye+0nPHR8ENxwe6J7pvpLERfuX5jNzDVEB3p+WErrPtlWP+GEpYhIM0z/cXy00ZO4qaobaHO0O9J
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Nov 2019 08:06:53 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28508 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbfKUNGx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:06:53 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALD2sic023372;
+        Thu, 21 Nov 2019 14:06:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=CZLchOtGzzjkcSU/Amhs8d3lsV5kVJY44jLWirDhTC0=;
+ b=f81Mnilf5iGhL2LVdhHNWiAXVKxuTj+fahFGZ0UGGF98dtC6xBdnPZ5VHJbLDz3yn+cy
+ RHyJ5BxJDsIBVzaIDnidRfHI4HBF4O9MKtavjH5uZeR/00DETFhqL5hnFdiKH77Z8DAq
+ Kl3O/VN9wZ9dZuIplkr47jsngG7jqv1/m+pquWGXP8KZ2TvTU7cskgJFLQZwx4Pr4QIq
+ zovQii3tRWUBj1lH/drLHLk1HsKaQLIrnJCnBNoNS1oL3FqD77F0w272F8R6K4YqtLPv
+ 876iSdjvLmYqMI/bfUWaFrZfh0kIXXk/pYSD7eRILyKuLF7n4/NT1hbfb8ujne9feRT4 9g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wa9uskdhk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 14:06:22 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 48B83100039;
+        Thu, 21 Nov 2019 14:06:17 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2E59C2BEC5B;
+        Thu, 21 Nov 2019 14:06:17 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 21 Nov 2019 14:06:16
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: [PATCH] dt-bindings: mtd: Convert stm32 fmc2-nand bindings to json-schema
+Date:   Thu, 21 Nov 2019 14:06:15 +0100
+Message-ID: <20191121130615.13007-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77cfc662-0f40-4c73-ae27-08d76e8286e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 12:58:38.3581
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Nm7cawzk7lmtvP+asIuAxBo1u37ajtiLiTvCMmfjIZtuc2gfdH7GRRpo1Kmm7t+YhsZjILwI5ZNq87RCJ3Ks2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2806
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the STM32 fmc2-nand binding to DT schema format using json-schema
 
-> Subject: [PATCH 0/2] arm64: dts: lx2160a: add EMDIO1 and phy nodes
->=20
-> This patch set adds the External MDIO1 node and the two RGMII PHYs
-> connected to it.
->=20
-> Ioana Ciornei (2):
->   arm64: dts: lx2160a: add emdio1 node
->   arm64: dts: lx2160a: add RGMII phy nodes
->=20
->  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 27
-> +++++++++++++++++++++++
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi    | 11 +++++++++
->  2 files changed, 38 insertions(+)
->=20
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+CC: Christophe Kerello <christophe.kerello@st.com>
+---
+ .../bindings/mtd/st,stm32-fmc2-nand.yaml           | 98 ++++++++++++++++++++++
+ .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 --------------
+ 2 files changed, 98 insertions(+), 61 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
 
-Hi Shawn,
-
-Could you please take a look at this patch set?
-
-Thanks,
-Ioana
-
+diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+new file mode 100644
+index 000000000000..b059267f6d20
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+@@ -0,0 +1,98 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mtd/st,stm32-fmc2-nand.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics Flexible Memory Controller 2 (FMC2) Bindings
++
++maintainers:
++  - Christophe Kerello <christophe.kerello@st.com>
++
++allOf:
++  - $ref: "nand-controller.yaml#"
++
++properties:
++  compatible:
++    const: st,stm32mp15-fmc2
++
++  reg:
++    items:
++      - description: Registers
++      - description: Chip select 0 data
++      - description: Chip select 0 command
++      - description: Chip select 0 address space
++      - description: Chip select 1 data
++      - description: Chip select 1 command
++      - description: Chip select 1 address space
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: tx DMA channel
++      - description: rx DMA channel
++      - description: ecc DMA channel
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
++      - const: ecc
++
++patternProperties:
++  "^nand@[a-f0-9]$":
++    type: object
++    properties:
++      nand-ecc-step-size:
++        const: 512
++
++      nand-ecc-strength:
++        enum: [1, 4 ,8 ]
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    nand-controller@58002000 {
++      compatible = "st,stm32mp15-fmc2";
++      reg = <0x58002000 0x1000>,
++            <0x80000000 0x1000>,
++            <0x88010000 0x1000>,
++            <0x88020000 0x1000>,
++            <0x81000000 0x1000>,
++            <0x89010000 0x1000>,
++            <0x89020000 0x1000>;
++            interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++            dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
++                   <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
++                   <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
++            dma-names = "tx", "rx", "ecc";
++            clocks = <&rcc FMC_K>;
++            resets = <&rcc FMC_R>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      nand@0 {
++        reg = <0>;
++        nand-on-flash-bbt;
++        #address-cells = <1>;
++        #size-cells = <1>;
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+deleted file mode 100644
+index e55895e8dae4..000000000000
+--- a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-STMicroelectronics Flexible Memory Controller 2 (FMC2)
+-NAND Interface
+-
+-Required properties:
+-- compatible: Should be one of:
+-              * st,stm32mp15-fmc2
+-- reg: NAND flash controller memory areas.
+-       First region contains the register location.
+-       Regions 2 to 4 respectively contain the data, command,
+-       and address space for CS0.
+-       Regions 5 to 7 contain the same areas for CS1.
+-- interrupts: The interrupt number
+-- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
+-- clocks: The clock needed by the NAND flash controller
+-
+-Optional properties:
+-- resets: Reference to a reset controller asserting the FMC controller
+-- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
+-- dma-names: Must be "tx", "rx" and "ecc"
+-
+-* NAND device bindings:
+-
+-Required properties:
+-- reg: describes the CS lines assigned to the NAND device.
+-
+-Optional properties:
+-- nand-on-flash-bbt: see nand-controller.yaml
+-- nand-ecc-strength: see nand-controller.yaml
+-- nand-ecc-step-size: see nand-controller.yaml
+-
+-The following ECC strength and step size are currently supported:
+- - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
+- - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+- - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
+-
+-Example:
+-
+-	fmc: nand-controller@58002000 {
+-		compatible = "st,stm32mp15-fmc2";
+-		reg = <0x58002000 0x1000>,
+-		      <0x80000000 0x1000>,
+-		      <0x88010000 0x1000>,
+-		      <0x88020000 0x1000>,
+-		      <0x81000000 0x1000>,
+-		      <0x89010000 0x1000>,
+-		      <0x89020000 0x1000>;
+-		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&rcc FMC_K>;
+-		resets = <&rcc FMC_R>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&fmc_pins_a>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		nand@0 {
+-			reg = <0>;
+-			nand-on-flash-bbt;
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-		};
+-	};
+-- 
+2.15.0
 
