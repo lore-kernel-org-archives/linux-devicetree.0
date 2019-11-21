@@ -2,122 +2,168 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9DBC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 07:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A6EC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 07:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969D82088F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 07:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21E220872
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 07:09:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SLYBtyri"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="A1whSk6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfKUHBB (ORCPT
+        id S1726714AbfKUHJF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:01:01 -0500
-Received: from mail-il1-f173.google.com ([209.85.166.173]:38026 "EHLO
-        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfKUHBA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 02:01:00 -0500
-Received: by mail-il1-f173.google.com with SMTP id u17so2256506ilq.5
-        for <devicetree@vger.kernel.org>; Wed, 20 Nov 2019 23:00:58 -0800 (PST)
+        Thu, 21 Nov 2019 02:09:05 -0500
+Received: from mail-eopbgr740059.outbound.protection.outlook.com ([40.107.74.59]:63488
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726454AbfKUHJF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 02:09:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kzvmrc9miFUA0DMroZFtI9kO5PMwcCKfDX9Q9FZgNEPxoBCkGH6rp+Z8IHN0uqidjU3B6t3mC3WYhemcWbOcE3fUdndwur5Vxuiq7ZqpDLRHNteWbJeG2t2FwSlpD2sdpKqyU6j9dw7vroyBDGQc4+4BOQh/kYqI+2SqJLSSSDq9qknh6xG4i3cfkm3z6HPhMeuOT5gwA+lz90ZY216js14j0KOq+Fx8JBzCLMkNFQjOdjwydVXCojhOuR+kGlHdJUi1kGXkj1O+Yn6MDNlhF1tYR8UvAvnS36PyWRLI5loFQZ5BVvKq4PagLIWJkh/mqISQlk1fl9Wg5k90RsdphQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y6WlEpUSXxY/bCqzlPa9lhjhx2jppTVScHnwCz/HOJA=;
+ b=TiSOhJVb4el6Duk4IjirFJktaa/7wQDCqrrBNnUIUQvA6QRH1QmKes5Jt9cI66oUy+9IImz+iuxBcaJXVHsUUItA+qYvkJT43K3M7QvsoiXU7S3+8g6rjI26UwsjrVnoGZe23z6ypr3Lbo7haXLRDjFQBb4aw4aQ18qCbOrwKqq8GoHOk9x/eNCOCYZgn9O0rajJ4SrIQ+Qp1Uh/k/y3rQAC0edum+TLxpndIgvpc/TnXt64IOuKEtlD1KJcxNxdRbqtgu6jpgQgvm1nX24NOOXxcXqOoYncE4hUNL1BQr6oY+/i/8O7ay5IHjha+VywkahKNg7CsOIxCF98//V8hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=70XhVJoIf0CSjHrTRztFdyaZcM5N+1vNz44dhwcRPXw=;
-        b=SLYBtyriQY7seuHEQlL2JSt3ilAFTLCs46gN0dKVPB6PjkBZRqNh7NltQlrIcE52WM
-         NS1NEPu5eptOkKJvpE2HSpv/lFbdetda9B7b5w8JK7jknek+pKEqkv06FYxZ3lzN0R6J
-         Cwg+Cbs8vlomam8/SjUZutICyodcTjUUrT+50=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=70XhVJoIf0CSjHrTRztFdyaZcM5N+1vNz44dhwcRPXw=;
-        b=TLXWcAm0CNmJjktahxtNQ6zqGPcwSKV+DMkK9CNhqmsJ3jlYVzxYkWMAnzQUzoKyk7
-         3rWZLtyrJj1tk9tTKIYrLdrZ4quqom0nGEztJ5QkzQTSL0p2LVIf4ff5aEyRXm3ddFLv
-         tOGV80VKYgl8XCstXNXqC0qmkRUZ+jnXzPFiDURyiKwxN7ZjDLZrWSpYRtx5QoSVzLCO
-         TfAuaMc9mFk13pLvMgptoeY7ajjH42BtHBU+yfo+N1NLtymRNq8RdRZDxlt4nuYkfz5m
-         ZW/bJtVVAt3bKhuEgae5D6py8qMvtCYXYGSoD9NYKO4hZNgIY84BUQ71U3/wA2WYqSZs
-         rztA==
-X-Gm-Message-State: APjAAAXZZVz3VmgUOdCY8Etkd2eXI2m57fWu39p0VJdXwVus3HogKRv9
-        lmCsXfzfC3XB0Ijhn+LD7qP6Ahe+/u2MO+5ghC4QfA==
-X-Google-Smtp-Source: APXvYqz3PHqe/dC8SrMLZ7oJb4SyckZc5EJzgX4VS4wAMnE4d3D2dWe3D5r10a6CIdA4f7qoQvzM2VsFlosI14iwemI=
-X-Received: by 2002:a92:5d08:: with SMTP id r8mr8154845ilb.283.1574319657713;
- Wed, 20 Nov 2019 23:00:57 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y6WlEpUSXxY/bCqzlPa9lhjhx2jppTVScHnwCz/HOJA=;
+ b=A1whSk6CWVTO1a6dhKXrm6I9TYeyqiZuWu/Y0TjdQ1hqL8HAM0lOxbcX8r7klUkVNMaz/kgpQ2c9By77G3D3e+b0D7y/t6KLfmiXHREDyAZyyGiE+7yz+KV2JxNyF9ESzh8M5flLdhGKWPuGKrJ0iWYBvNamWFL0aGX157bMYMk=
+Received: from MN2PR02MB6029.namprd02.prod.outlook.com (52.132.174.207) by
+ MN2PR02MB6144.namprd02.prod.outlook.com (52.132.175.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Thu, 21 Nov 2019 07:08:57 +0000
+Received: from MN2PR02MB6029.namprd02.prod.outlook.com
+ ([fe80::7c98:7d3:f15a:27f]) by MN2PR02MB6029.namprd02.prod.outlook.com
+ ([fe80::7c98:7d3:f15a:27f%3]) with mapi id 15.20.2451.032; Thu, 21 Nov 2019
+ 07:08:57 +0000
+From:   Manish Narani <MNARANI@xilinx.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michals@xilinx.com>,
+        Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>,
+        Nava kishore Manne <navam@xilinx.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        git <git@xilinx.com>
+Subject: RE: [PATCH v6 0/8] Arasan SDHCI enhancements and ZynqMP Tap Delays
+ Handling
+Thread-Topic: [PATCH v6 0/8] Arasan SDHCI enhancements and ZynqMP Tap Delays
+ Handling
+Thread-Index: AQHVn25tGCkl+xQ8X0m6HeJEn7Tt8qeUBb8AgAEuXKA=
+Date:   Thu, 21 Nov 2019 07:08:56 +0000
+Message-ID: <MN2PR02MB6029E25E0DC26BD79DA58A4EC14E0@MN2PR02MB6029.namprd02.prod.outlook.com>
+References: <1574232449-13570-1-git-send-email-manish.narani@xilinx.com>
+ <CAPDyKFprcjgrcbT3jpT7pyM+FFWL8RAm5AtFAjVLcPMDiDzUvA@mail.gmail.com>
+In-Reply-To: <CAPDyKFprcjgrcbT3jpT7pyM+FFWL8RAm5AtFAjVLcPMDiDzUvA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=MNARANI@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 02644b03-d4cd-429c-dd8b-08d76e51ad30
+x-ms-traffictypediagnostic: MN2PR02MB6144:|MN2PR02MB6144:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB61447645514E14D522B232C3C14E0@MN2PR02MB6144.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(136003)(346002)(376002)(199004)(189003)(13464003)(53546011)(3846002)(256004)(6116002)(14454004)(86362001)(478600001)(33656002)(5660300002)(99286004)(76116006)(110136005)(4326008)(316002)(2906002)(6436002)(54906003)(14444005)(6246003)(107886003)(55016002)(9686003)(6506007)(446003)(8936002)(25786009)(229853002)(71190400001)(76176011)(74316002)(102836004)(71200400001)(26005)(66066001)(7696005)(305945005)(8676002)(7416002)(52536014)(81166006)(81156014)(7736002)(66446008)(66476007)(66946007)(66556008)(64756008)(11346002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6144;H:MN2PR02MB6029.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +qshEcglT9BEgl2Lbt/KxBDbXDdXScNSHAIpQHgDQJg9hgTgXg3YfB56+qSY0xo1devVBOpYHndAI0ZRk8zXryJ2S1DWasU5ytXPsZ0+OqqgnpuiN5ltBi1Qc+VW69bS/zy4OIP4mgci+zTPUOSEshFaipGB7ULJIXIUq7y+ga2VRfvTnZ/lpCCU4TZJR4sSnTrr3pN9jJUoqEXYYzxJSqH0casLCR7XAq+K3IiIq+fa0iT/xl+yYkMqvUkOD1XPGs6HML2gqwl06v7/IVN1ENM8E48mBqo4UFSgCieAM2tWnng/EwljfkB8ox0ehq+BDLAsl1TY9Vx3JqcWh43N3vFE787X3GfHFugkhkuPG4G1lI/W0e2jyxV5YA8Z52RTFZZLjJd0944U/u2frGzXtYz+jeX/Hqm4uzSSYi9zu4PznswPKEavKIr53J2ObKAA
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com> <1557494826-6044-8-git-send-email-michael.kao@mediatek.com>
-In-Reply-To: <1557494826-6044-8-git-send-email-michael.kao@mediatek.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 21 Nov 2019 15:00:31 +0800
-Message-ID: <CAJMQK-ivho3T1hnD9axV2EMKT3Srs_5zAXLqwts8nojY15fBGg@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] thermal: mediatek: add another get_temp ops for
- thermal sensors
-To:     "michael.kao" <michael.kao@mediatek.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pm@vger.kernel.org,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02644b03-d4cd-429c-dd8b-08d76e51ad30
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 07:08:56.8994
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: esj90CV8cMt+IhuNufaw9cwAphvri1QVIl48V8aJ67A/9ashd7p+3vuLxF7YjtFUtb3xW5elwM+7MjNBNFLrJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6144
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 10, 2019 at 9:27 PM michael.kao <michael.kao@mediatek.com> wrote:
-
-> -       tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, mt,
-> -                                                    &mtk_thermal_ops);
-> -       if (IS_ERR(tzdev)) {
-> -               ret = PTR_ERR(tzdev);
-> -               goto err_disable_clk_peri_therm;
-> +       for (i = 0; i < mt->conf->num_sensors + 1; i++) {
-> +               tz = kmalloc(sizeof(*tz), GFP_KERNEL);
-> +               if (!tz)
-> +                       return -ENOMEM;
-> +
-> +               tz->mt = mt;
-> +               tz->id = i;
-> +
-> +               tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, i,
-> +                               tz, (i == 0) ?
-> +                               &mtk_thermal_ops : &mtk_thermal_sensor_ops);
-> +
-> +               if (IS_ERR(tzdev)) {
-> +                       if (IS_ERR(tzdev) != -EACCES) {
-                                PTR_ERR(tzdev)
-
-> +                               ret = PTR_ERR(tzdev);
-> +                               goto err_disable_clk_peri_therm;
-> +                       }
-> +               }
-
-This for loop adding thermal zone sensors will not work for mt8173. It
-assumes that thermal-zones in dts have subnodes (eg. cpu_thermal,
-tzts..) amount equal to num_sensors+1. Otherwise tzdev would be
--ENODEV and thermal failed to be probed.
-In mt8183 this is fine, since each thermal zone only has one sensor,
-but in mt8173, some sensor appears in multiple thermal zones.
-
-In order to let the change also works for 8173, I think if the error
-is -ENODEV, and the id is not 0 (0 is cpu_thermal), prompt a warning
-instead of failing. Eg.
-
-                if (IS_ERR(tzdev)) {
-+                       if (i > 0 && PTR_ERR(tzdev) == -ENODEV) {
-+                               dev_warn(&pdev->dev, "can't find
-thermal sensor %d\n", i);
-+                               continue;
-+                       }
-                        if (PTR_ERR(tzdev) != -EACCES) {
+SGkgVWZmZSwgUm9iIGFuZCBBZHJpYW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj4gRnJvbTogVWxmIEhhbnNzb24gPHVsZi5oYW5zc29uQGxpbmFyby5vcmc+DQo+IFNlbnQ6IFdl
+ZG5lc2RheSwgTm92ZW1iZXIgMjAsIDIwMTkgNjoyOSBQTQ0KPiBUbzogTWFuaXNoIE5hcmFuaSA8
+TU5BUkFOSUB4aWxpbnguY29tPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9y
+Zz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBBZHJpYW4gSHVudGVy
+IDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT47DQo+IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxp
+bnguY29tPjsgSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+OyBSYWphbg0KPiBWYWphIDxS
+QUpBTlZAeGlsaW54LmNvbT47IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT47
+DQo+IE1vcml0eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz47IGxpbnV4LW1tY0B2Z2VyLmtlcm5l
+bC5vcmc7IERUTUwNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggS2VybmVs
+IE1haWxpbmcgTGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBB
+Uk0gPGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBnaXQgPGdpdEB4
+aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDAvOF0gQXJhc2FuIFNESENJIGVu
+aGFuY2VtZW50cyBhbmQgWnlucU1QIFRhcA0KPiBEZWxheXMgSGFuZGxpbmcNCj4gDQo+IE9uIFdl
+ZCwgMjAgTm92IDIwMTkgYXQgMDc6NDcsIE1hbmlzaCBOYXJhbmkgPG1hbmlzaC5uYXJhbmlAeGls
+aW54LmNvbT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBUaGlzIHBhdGNoIHNlcmllcyBkb2VzIHRoZSBm
+b2xsb3dpbmc6DQo+ID4gIC0gUmVvcmdhbml6ZSB0aGUgQ2xvY2sgSGFuZGxpbmcgaW4gQXJhc2Fu
+IFNEIGRyaXZlcg0KPiA+ICAtIEFkZHMgbmV3IHNhbXBsaW5nIGNsb2NrIGluIEFyYXNhbiBTRCBk
+cml2ZXINCj4gPiAgLSBBZGRzIHN1cHBvcnQgdG8gc2V0IENsb2NrIERlbGF5cyBpbiBTRCBBcmFz
+YW4gRHJpdmVyDQo+ID4gIC0gQWRkIFNESU8gVGFwIERlbGF5IGhhbmRsaW5nIGluIFp5bnFNUCBm
+aXJtd2FyZSBkcml2ZXINCj4gPiAgLSBBZGQgc3VwcG9ydCBmb3IgWnlucU1QIFRhcCBEZWxheXMg
+c2V0dGluZyBpbiBBcmFzYW4gU0QgZHJpdmVyDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+
+ICAgICAgICAgLSBSZXBsYWNlZCB0aGUgZGVwcmVjYXRlZCBjYWxscyB0byBjbG9jayBmcmFtZXdv
+cmsgQVBJcw0KPiA+ICAgICAgICAgLSBBZGRlZCBzdXBwb3J0IGZvciBkZXZfY2xrX2dldCgpIGNh
+bGwgdG8gd29yayBmb3IgU0QgY2FyZCBjbG9jaw0KPiA+ICAgICAgICAgLSBTZXBhcmF0ZWQgdGhl
+IGNsb2NrIGRhdGEgc3RydWN0DQo+ID4gICAgICAgICAtIEZyYWdtZW50ZWQgdGhlIHBhdGNoIHNl
+cmllcyBpbiBzbWFsbGVyIHBhdGNoZXMgdG8gbWFrZSBpdCBtb3JlDQo+ID4gICAgICAgICAgIHJl
+YWRhYmxlDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+ICAgICAgICAgLSBSZXZlcnRlZCAi
+UmVwbGFjZWQgdGhlIGRlcHJlY2F0ZWQgY2FsbHMgdG8gY2xvY2sgZnJhbWV3b3JrIEFQSXMiDQo+
+ID4gICAgICAgICAtIFJlbW92ZWQgZGV2bV9jbGtfZ2V0KCkgY2FsbCB3aGljaCB3YXMgYWRkZWQg
+aW4gdjINCj4gPg0KPiA+IENoYW5nZXMgaW4gdjQ6DQo+ID4gICAgICAgICAtIE1hZGUgdGhlIFBo
+YXNlIERlbGF5IHByb3BlcnRpZXMgQXJhc2FuIHNwZWNpZmljDQo+ID4NCj4gPiBDaGFuZ2VzIGlu
+IHY1Og0KPiA+ICAgICAgICAgLSBNYWRlIENsb2NrIFBoYXNlIERlbGF5IHByb3BlcnRpZXMgY29t
+bW9uDQo+ID4gICAgICAgICAtIE1vdmVkIGRvY3VtZW50YXRpb24gb2YgdGhlbSB0byB0aGUgY29t
+bW9uIG1tYyBkb2N1bWVudGF0aW9uLg0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2NjoNCj4gPiAgICAg
+ICAgIC0gQ2x1YmJlZCBhbGwgQ2xrIFBoYXNlIERlbGF5IHByb3BlcnRpZXMnIGludG8gYSBwYXR0
+ZXJuDQo+ID4gICAgICAgICAgIFByb3BlcnR5DQo+ID4NCj4gPiBNYW5pc2ggTmFyYW5pICg4KToN
+Cj4gPiAgIG1tYzogc2RoY2ktb2YtYXJhc2FuOiBTZXBhcmF0ZSBvdXQgY2xrIHJlbGF0ZWQgZGF0
+YSB0byBhbm90aGVyDQo+ID4gICAgIHN0cnVjdHVyZQ0KPiA+ICAgZHQtYmluZGluZ3M6IG1tYzog
+YXJhc2FuOiBVcGRhdGUgRG9jdW1lbnRhdGlvbiBmb3IgdGhlIGlucHV0IGNsb2NrDQo+ID4gICBt
+bWM6IHNkaGNpLW9mLWFyYXNhbjogQWRkIHNhbXBsaW5nIGNsb2NrIGZvciBhIHBoeSB0byB1c2UN
+Cj4gPiAgIGR0LWJpbmRpbmdzOiBtbWM6IEFkZCBvcHRpb25hbCBnZW5lcmljIHByb3BlcnRpZXMg
+Zm9yIG1tYw0KPiA+ICAgbW1jOiBzZGhjaS1vZi1hcmFzYW46IEFkZCBzdXBwb3J0IHRvIHNldCBj
+bG9jayBwaGFzZSBkZWxheXMgZm9yIFNEDQo+ID4gICBmaXJtd2FyZTogeGlsaW54OiBBZGQgU0RJ
+TyBUYXAgRGVsYXkgbm9kZXMNCj4gPiAgIGR0LWJpbmRpbmdzOiBtbWM6IGFyYXNhbjogRG9jdW1l
+bnQgJ3hsbngsenlucW1wLTguOWEnIGNvbnRyb2xsZXINCj4gPiAgIG1tYzogc2RoY2ktb2YtYXJh
+c2FuOiBBZGQgc3VwcG9ydCBmb3IgWnlucU1QIFBsYXRmb3JtIFRhcCBEZWxheXMgU2V0dXANCj4g
+Pg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvYXJhc2FuLHNkaGNpLnR4dCAgfCAg
+MjUgKy0NCj4gPiAgLi4uL2JpbmRpbmdzL21tYy9tbWMtY29udHJvbGxlci55YW1sICAgICAgICAg
+IHwgIDEzICsNCj4gPiAgZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1hcmFzYW4uYyAgICAgICAg
+ICAgIHwgNDc4ICsrKysrKysrKysrKysrKysrLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L2Zpcm13YXJl
+L3hsbngtenlucW1wLmggICAgICAgICAgfCAgMTMgKy0NCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCA0
+OTcgaW5zZXJ0aW9ucygrKSwgMzIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiAtLQ0KPiA+IDIuMTcu
+MQ0KPiA+DQo+IA0KPiBBcHBsaWVkIGZvciBuZXh0LCBhc3N1bWluZyBSb2IgaXMgb2theSB3aXRo
+IHBhdGNoNCwgb3RoZXJ3aXNlIHlvdSBuZWVkDQo+IHRvIHNlbmQgYSBmaXggb24gdG9wLCB0aGFu
+a3MhDQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KDQpUaGFuayB5b3Ugc28gbXVjaCBmb3Ig
+eW91ciByZXZpZXdzIGFuZCBjb250aW51b3VzIHN1cHBvcnQhIDopDQpMb29raW5nIGZvcndhcmQg
+dG8gd29yayBtb3JlIHdpdGggeW91IG9uIHRoaXMuDQoNClJlZ2FyZHMsDQpNYW5pc2gNCg==
