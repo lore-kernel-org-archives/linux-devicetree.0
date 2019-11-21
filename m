@@ -2,99 +2,106 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6AFC432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 21:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8286C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 22:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9D4206CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 21:36:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574372164;
-	bh=5wK6kZoSCFmbGS1jqU9aaTij7Els7KYt4I6xC5NqwUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TV3zrPGi5kHhw8wmoi3EYGFaw9kolOEhOXjOCpGmvyE5gCRymjrP4Jr94pCS9LLDT
-	 ZsJtKLQJ+r44INLN3bP06WpHsUvEU9K3kImjSJp0Fj679bOSazH+56EN6YWQW2pOCv
-	 cQBspMej1UEahzW2b6WB7r1XyyDET+6M+5S2Pq+E=
+	by mail.kernel.org (Postfix) with ESMTP id 8BFBC20692
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 22:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ZH+/ClKx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PODPb8be"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKUVgA (ORCPT
+        id S1726563AbfKUWpQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:36:00 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41798 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfKUVgA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 16:36:00 -0500
-Received: by mail-oi1-f194.google.com with SMTP id e9so4604500oif.8;
-        Thu, 21 Nov 2019 13:35:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dMb39BgE3B1+H65j32pY6w10OTOxCkKB2EjgU6VAvkw=;
-        b=mRoNbv4Mq4/6nAiiq8m87E+1ka0MlxrGdgZSMtE927FDaEo+OCRtonx/mC/RvCOvIk
-         45pIBRjkQjzBo/zd0lxCfxyfvCoLVXXUpOmKWGcodwfFdnwi/tSnKaoVVr9KKUhLLuIx
-         irSZhyQmTfZfBfwE+WpvvqaCKLWTWWtidxDtAJv5sfjqEOPEkGCHWZdQigDQ9Bz+qehK
-         //nUSEs6Nf8bn0mg/mFciAU6uPsSJZL1whirCEtJ0xroRDJdiv0E4dJjPCMBDF4uKWo1
-         0IvaCYucE4gmK4/cBpfbVOK2xEIPa5wrwriytKMBM31005jk8laYIDaA99/rm11DVUDI
-         GqIQ==
-X-Gm-Message-State: APjAAAWq5TwcURehT33T6/fNkc3oJwzWhQ36PIrpZ8pjA4iHI8cYVuIC
-        wNVcxal+I3dbelZPNX5ggBlQ3ds=
-X-Google-Smtp-Source: APXvYqwhlPdMj6vzUcQ7JUSZXeyrQbByzSla/+as65TI+kaarPglDk675XBVqHu3a9zBwnjXBiDtRA==
-X-Received: by 2002:a05:6808:901:: with SMTP id w1mr9808800oih.57.1574372159366;
-        Thu, 21 Nov 2019 13:35:59 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c20sm1406082otm.80.2019.11.21.13.35.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 13:35:58 -0800 (PST)
-Date:   Thu, 21 Nov 2019 15:35:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v3] dt-bindings: power: Rename back power_domain.txt
- bindings to fix references
-Message-ID: <20191121213558.GA14178@bogus>
-References: <1574236796-25016-1-git-send-email-krzk@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574236796-25016-1-git-send-email-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 21 Nov 2019 17:45:16 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:45925 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbfKUWpQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 17:45:16 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id B147922C9D;
+        Thu, 21 Nov 2019 17:45:14 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 21 Nov 2019 17:45:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=dtxfG1NstJO0gZ3w3rZPANJZr2PPUHV
+        Erzd70gBGFhE=; b=ZH+/ClKxc2IJ3766JJ4Etfw/LlvWwEYV2j5Md6sQP2rKTvH
+        jNSywaGPikAJfhCzCWAXTrrpF51K6rwiI1o/19qJtnMTTbhUVB3s9UPkmSv2DZUm
+        iDcJLLv0/EzzlpxWpZnByRMgmoCBbpegEg2PpE3e8lUnyBEWSQ9Lz6uI5kmzZUT0
+        0K3XOpbSFpCV/N3vmcfyQ7gUJ75LYZZFWOCLYWoh/WI9aeUfyu0tGkUbwCc9gFn9
+        tYAKjxZFk+k7Q3t+UxwQT9jxpGsspEhWn8hvfrG3+pqaqn7BlWUuUpt1V69uuN/F
+        YnN4qgF6SuQbpsPevyyjzbRpe976p++26NrlZRw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=dtxfG1
+        NstJO0gZ3w3rZPANJZr2PPUHVErzd70gBGFhE=; b=PODPb8beQz48rVN07lqgzy
+        9NWnIwrrJjbgryblubT/MmPPfRdM3/tAtubpoOCWgSRjXZUD0Sjw8aqOdzE9Ea7R
+        FAwa4OQ/2AGwlfrxZayVEARSbTsI2+Fkii2Vn81FwAO3yfNfqpbBMQQ4Xw3qucU8
+        YioZfsXrthuCtNI5DBpxQ4LSoutGYFFgeoMz46izfhD6dp90y4USobL/myr9gDeI
+        4a6Dy27wL4Vh/gSVeuTQNNIdQ1Pv6edOSSxyikxnxpAB4ni6qFzUUOb1dpp+cfA2
+        Lu2qnmQxogMkOCacEYUc52RZxwEbl0/iQ5snky5jidN4ORkeuhdHaVGmkWxtl+2A
+        ==
+X-ME-Sender: <xms:eRPXXdE-Mw2ufJuK4b8r3148Xf9W78K2QfoHjCqVI6Agd2PagqHYmQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehfecutefuodetggdotefrodftvfcurf
+    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughrvgif
+    ucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhi
+    iigvpedt
+X-ME-Proxy: <xmx:eRPXXVmNawSsD6EQTugb0EdbWZyA9HYxNzSNxF3Lrm646vdt0QIgrQ>
+    <xmx:eRPXXYmon-eNmASI3UnMS9iGijDbuWchEH5aKBOixD7V5pt2AKojKA>
+    <xmx:eRPXXetTE6dJ57zza3usLFCGJ7ER_mOQK9M1lE5Hh06iAvEJPstByw>
+    <xmx:ehPXXbM8L_WFmZyTskLctbFhZxFIv6RfVnX-p7nIePAvKL-CS_kk7Q>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id BC162E00B1; Thu, 21 Nov 2019 17:45:13 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
+Mime-Version: 1.0
+Message-Id: <0fce7468-bb35-4d47-8d5d-abc228e99085@www.fastmail.com>
+In-Reply-To: <20191121074843.GA10607@cnn>
+References: <20191118123707.GA5560@cnn>
+ <b2f503f0-0f13-46bc-a1be-c82a42b85797@www.fastmail.com>
+ <D34D3A2F-9CD5-4924-8407-F6EB0A4C66B5@fb.com> <20191121074843.GA10607@cnn>
+Date:   Fri, 22 Nov 2019 09:16:39 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>,
+        "Vijay Khemka" <vijaykhemka@fb.com>
+Cc:     "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: Re: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 08:59:56AM +0100, Krzysztof Kozlowski wrote:
-> With split of power domain controller bindings to power-domain.yaml,
-> the consumer part was renamed to power-domain.txt breaking the
-> references.  Undo the renaming.
-> 
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Fixes: ea312b90857d ("dt-bindings: power: Convert Generic Power Domain bindings to json-schema")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> ---
-> 
-> Changes since v2:
-> 1. Simplify pattern in Maintainers as Geert suggested,
-> 2. Add Reviewed-by.
-> 
-> Changes since v1:
-> 1. Undo the renaming.
-> ---
->  .../devicetree/bindings/power/{power-domain.txt => power_domain.txt}    | 0
->  MAINTAINERS                                                             | 2 +-
->  2 files changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/power/{power-domain.txt => power_domain.txt} (100%)
 
-Applied, thanks.
 
-Rob
+On Thu, 21 Nov 2019, at 18:18, Manikandan wrote:
+> 
+> Hi Andrew/Vijay,
+> 
+> Thanks for the review .
+> 
+> The following changes done in dts and tested in Facebook Yosemite V2 
+> BMC platform,
+>   1. LPC feature removed as not supported .
+>   2. VUART feature removed as not supported.
+>   3. Host UART feature removed as not in the current scope.
+>   4. ADC pinctrl details added in dts.
+
+Can you please re-send the patch as a v2 and inline to the mail rather than
+as an attachment?
+
+Cheers,
+
+Andrew
