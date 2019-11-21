@@ -2,260 +2,216 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57912C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB28C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BD320855
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D459920679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 13:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="f81Mnilf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rYm3g8vp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbfKUNGx (ORCPT
+        id S1726379AbfKUNTz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:06:53 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28508 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbfKUNGx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:06:53 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALD2sic023372;
-        Thu, 21 Nov 2019 14:06:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=CZLchOtGzzjkcSU/Amhs8d3lsV5kVJY44jLWirDhTC0=;
- b=f81Mnilf5iGhL2LVdhHNWiAXVKxuTj+fahFGZ0UGGF98dtC6xBdnPZ5VHJbLDz3yn+cy
- RHyJ5BxJDsIBVzaIDnidRfHI4HBF4O9MKtavjH5uZeR/00DETFhqL5hnFdiKH77Z8DAq
- Kl3O/VN9wZ9dZuIplkr47jsngG7jqv1/m+pquWGXP8KZ2TvTU7cskgJFLQZwx4Pr4QIq
- zovQii3tRWUBj1lH/drLHLk1HsKaQLIrnJCnBNoNS1oL3FqD77F0w272F8R6K4YqtLPv
- 876iSdjvLmYqMI/bfUWaFrZfh0kIXXk/pYSD7eRILyKuLF7n4/NT1hbfb8ujne9feRT4 9g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9uskdhk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Nov 2019 14:06:22 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 48B83100039;
-        Thu, 21 Nov 2019 14:06:17 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2E59C2BEC5B;
-        Thu, 21 Nov 2019 14:06:17 +0100 (CET)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 21 Nov 2019 14:06:16
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
+        Thu, 21 Nov 2019 08:19:55 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38562 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUNTy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 08:19:54 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xALDJjiG073035;
+        Thu, 21 Nov 2019 07:19:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574342385;
+        bh=psikJZvvqnwRexjytLKhngRm7GTd1V7SDTQoU6tJ2c8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rYm3g8vpuRE+0cCmJ3qtUR3lfFQjdOTZNXorvP7Oqrq/iNkhZiSmcTCdzq+jT5Fbd
+         g9CJ+LnSfJn9+JiN4BWYdHIQtwVeL1gp6HhYHCdbn1QL9v2J+EWPCjt7SsA0t/OLSk
+         9hCclpGzFlI31AVH6XcayOUsND8EzQgJFWFQFPgA=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xALDJjMp007881
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 Nov 2019 07:19:45 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
+ Nov 2019 07:19:44 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 21 Nov 2019 07:19:44 -0600
+Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xALDJhF1041633;
+        Thu, 21 Nov 2019 07:19:43 -0600
+Subject: Re: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
+To:     Caleb Robey <c-robey@ti.com>, <linux-omap@vger.kernel.org>
+CC:     Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-CC:     <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH] dt-bindings: mtd: Convert stm32 fmc2-nand bindings to json-schema
-Date:   Thu, 21 Nov 2019 14:06:15 +0100
-Message-ID: <20191121130615.13007-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+References: <20191119202850.18149-1-c-robey@ti.com>
+ <20191119202850.18149-2-c-robey@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <0926767e-111b-22f5-e87d-51a7269307aa@ti.com>
+Date:   Thu, 21 Nov 2019 08:19:43 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
+In-Reply-To: <20191119202850.18149-2-c-robey@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 fmc2-nand binding to DT schema format using json-schema
+On 11/19/19 3:28 PM, Caleb Robey wrote:
+> From: Jason Kridner <jdk@ti.com>
+> 
+> BeagleBoard.org BeagleBone AI is an open source hardware single
+> board computer based on the Texas Instruments AM5729 SoC featuring
+> dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+> signal processor (DSP), quad-core embedded vision engine (EVE),
+> Arm Cortex-M4 processors, dual programmable realtime unit
+> industrial control subsystems and more. The board features 1GB
+> DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+> 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+> headers.
+> 
+> For more information, refer to:
+> https://beaglebone.ai
+> 
+> This patch introduces the BeagleBone AI device tree.
+> 
+> Note that the device use the "ti,tpd12s016" component which is
+> software compatible with "ti,tpd12s015". Thus we only use the
+> latter driver.
+> 
+> Signed-off-by: Jason Kridner <jdk@ti.com>
+> Signed-off-by: Caleb Robey <c-robey@ti.com>
+> Cc: Robert Nelson <robertcnelson@gmail.com>
+> 
+> ---
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/am5729-beagleboneai.dts | 782 ++++++++++++++++++++++
+>  2 files changed, 783 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b21b3a64641a..b1154dbda73c 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -791,6 +791,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
+>  	am57xx-beagle-x15.dtb \
+>  	am57xx-beagle-x15-revb1.dtb \
+>  	am57xx-beagle-x15-revc.dtb \
+> +	am5729-beagleboneai.dtb \
+>  	am57xx-cl-som-am57x.dtb \
+>  	am57xx-sbc-am57x.dtb \
+>  	am572x-idk.dtb \
+> diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> new file mode 100644
+> index 000000000000..7d0e132e6a23
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> @@ -0,0 +1,782 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2014-2019 Texas Instruments Incorporated - http://www.ti.com/
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-CC: Christophe Kerello <christophe.kerello@st.com>
----
- .../bindings/mtd/st,stm32-fmc2-nand.yaml           | 98 ++++++++++++++++++++++
- .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 --------------
- 2 files changed, 98 insertions(+), 61 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
- delete mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
 
-diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
-new file mode 100644
-index 000000000000..b059267f6d20
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/st,stm32-fmc2-nand.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics Flexible Memory Controller 2 (FMC2) Bindings
-+
-+maintainers:
-+  - Christophe Kerello <christophe.kerello@st.com>
-+
-+allOf:
-+  - $ref: "nand-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp15-fmc2
-+
-+  reg:
-+    items:
-+      - description: Registers
-+      - description: Chip select 0 data
-+      - description: Chip select 0 command
-+      - description: Chip select 0 address space
-+      - description: Chip select 1 data
-+      - description: Chip select 1 command
-+      - description: Chip select 1 address space
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: tx DMA channel
-+      - description: rx DMA channel
-+      - description: ecc DMA channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+      - const: ecc
-+
-+patternProperties:
-+  "^nand@[a-f0-9]$":
-+    type: object
-+    properties:
-+      nand-ecc-step-size:
-+        const: 512
-+
-+      nand-ecc-strength:
-+        enum: [1, 4 ,8 ]
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    nand-controller@58002000 {
-+      compatible = "st,stm32mp15-fmc2";
-+      reg = <0x58002000 0x1000>,
-+            <0x80000000 0x1000>,
-+            <0x88010000 0x1000>,
-+            <0x88020000 0x1000>,
-+            <0x81000000 0x1000>,
-+            <0x89010000 0x1000>,
-+            <0x89020000 0x1000>;
-+            interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+            dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
-+                   <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
-+                   <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
-+            dma-names = "tx", "rx", "ecc";
-+            clocks = <&rcc FMC_K>;
-+            resets = <&rcc FMC_R>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      nand@0 {
-+        reg = <0>;
-+        nand-on-flash-bbt;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-deleted file mode 100644
-index e55895e8dae4..000000000000
---- a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-+++ /dev/null
-@@ -1,61 +0,0 @@
--STMicroelectronics Flexible Memory Controller 2 (FMC2)
--NAND Interface
--
--Required properties:
--- compatible: Should be one of:
--              * st,stm32mp15-fmc2
--- reg: NAND flash controller memory areas.
--       First region contains the register location.
--       Regions 2 to 4 respectively contain the data, command,
--       and address space for CS0.
--       Regions 5 to 7 contain the same areas for CS1.
--- interrupts: The interrupt number
--- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
--- clocks: The clock needed by the NAND flash controller
--
--Optional properties:
--- resets: Reference to a reset controller asserting the FMC controller
--- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
--- dma-names: Must be "tx", "rx" and "ecc"
--
--* NAND device bindings:
--
--Required properties:
--- reg: describes the CS lines assigned to the NAND device.
--
--Optional properties:
--- nand-on-flash-bbt: see nand-controller.yaml
--- nand-ecc-strength: see nand-controller.yaml
--- nand-ecc-step-size: see nand-controller.yaml
--
--The following ECC strength and step size are currently supported:
-- - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
-- - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
-- - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
--
--Example:
--
--	fmc: nand-controller@58002000 {
--		compatible = "st,stm32mp15-fmc2";
--		reg = <0x58002000 0x1000>,
--		      <0x80000000 0x1000>,
--		      <0x88010000 0x1000>,
--		      <0x88020000 0x1000>,
--		      <0x81000000 0x1000>,
--		      <0x89010000 0x1000>,
--		      <0x89020000 0x1000>;
--		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&rcc FMC_K>;
--		resets = <&rcc FMC_R>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&fmc_pins_a>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		nand@0 {
--			reg = <0>;
--			nand-on-flash-bbt;
--			#address-cells = <1>;
--			#size-cells = <1>;
--		};
--	};
--- 
-2.15.0
+I know this is mostly a copy/paste from other boards, but lets not claim
+copyright 5 years back on a file describing a device that was not even
+thought up then.
 
+
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "dra74x.dtsi"
+> +#include "am57xx-commercial-grade.dtsi"
+> +#include "dra74x-mmc-iodelay.dtsi"
+> +#include "dra74-ipu-dsp-common.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pinctrl/dra.h>
+> +
+> +/ {
+> +	model = "BeagleBoard.org BeagleBone AI";
+> +	compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
+> +		     "ti,dra742", "ti,dra74", "ti,dra7";
+> +
+> +	aliases {
+> +		rtc0 = &tps659038_rtc;
+> +		rtc1 = &rtc;
+> +		display0 = &hdmi_conn;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &uart1;
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x80000000 0x0 0x40000000>;
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		ipu2_memory_region: ipu2-memory@95800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x0 0x95800000 0x0 0x3800000>;
+> +			reusable;
+> +			status = "okay";
+> +		};
+
+
+Now these reserved memories are unused.
+
+Andrew
+
+
+> +
+> +		dsp1_memory_region: dsp1-memory@99000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x0 0x99000000 0x0 0x4000000>;
+> +			reusable;
+> +			status = "okay";
+> +		};
+> +
+> +		ipu1_memory_region: ipu1-memory@9d000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x0 0x9d000000 0x0 0x2000000>;
+> +			reusable;
+> +			status = "okay";
+> +		};
+> +
+> +		dsp2_memory_region: dsp2-memory@9f000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x0 0x9f000000 0x0 0x800000>;
+> +			reusable;
+> +			status = "okay";
+> +		};
+> +
+> +	};
+> +
