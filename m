@@ -2,130 +2,89 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703BCC43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6C6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E49206CC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808F520730
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574347138;
+	bh=h1GRbks7EnBZQwQMp7D+aESnqrGn62t6a/Nn6SbqbaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aVZ1J0SdBA5H9G+ZAzbTB1RLdSSL2DNPaRq0dtOj3KeCKAAAGQTFo1pSAmskUo4W6
+	 xwTr3qPNgcaqOlBJFIxEX94AUq1hvBsirEhAs81sPM4tZZeexrl1lLoX5qWPe6WIzC
+	 xMczWl5f0vd4MaXkrWYXA7BbL1J5oIa1Fw8nyUK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKUOdh (ORCPT
+        id S1726690AbfKUOi6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:33:37 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45611 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfKUOdh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 09:33:37 -0500
-Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <m.tretter@pengutronix.de>)
-        id 1iXnWH-00030p-Ep; Thu, 21 Nov 2019 15:33:17 +0100
-Date:   Thu, 21 Nov 2019 15:33:16 +0100
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     Rajan Vaja <rajan.vaja@xilinx.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, michal.simek@xilinx.com,
-        jolly.shah@xilinx.com, dan.carpenter@oracle.com,
-        gustavo@embeddedor.com, tejas.patel@xilinx.com,
-        nava.manne@xilinx.com, ravi.patel@xilinx.com,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        m.tretter@pengutronix.de, kernel@pengutronix.de
-Subject: Re: [PATCH 4/7] clk: zynqmp: Add support for get max divider
-Message-ID: <20191121153316.39e551e5@litschi.hi.pengutronix.de>
-In-Reply-To: <1573564580-9006-5-git-send-email-rajan.vaja@xilinx.com>
-References: <1573564580-9006-1-git-send-email-rajan.vaja@xilinx.com>
-        <1573564580-9006-5-git-send-email-rajan.vaja@xilinx.com>
-Organization: Pengutronix
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Thu, 21 Nov 2019 09:38:58 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44790 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfKUOi5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 09:38:57 -0500
+Received: by mail-ot1-f67.google.com with SMTP id c19so3066435otr.11;
+        Thu, 21 Nov 2019 06:38:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0blBAL3wZkz50HycghqiK2pciwvxeqAeMTt/kJRNm5g=;
+        b=qbz3JTU/Fm0TUnxowGxCiuSAU+NDoYoSMxXGSD1+YybXUE1vLhZ0EMZY+Fe0UXUuvw
+         UWj8Z/lBY20URlXdRcXUXC2C0GYxDsGOf8EPpVKBXtl8ZSefVC9uq3PuKLjvgyL88SEe
+         0Q1LZea0QZ+67AjozVVQf++mpE9AUmtyz4IL5IdAoWmFjl08BsZY90kGVOgQvgUxLUw5
+         +1HdfoeKCJ0Rv3PwTg2AVtNrXCkJrPuU8NRS9exfjscZrGv+VA6RISiso52A0c6L3Bcj
+         x3tuQ2t4S8i6Pa4Bj33RGmQSQuyuZ3WOFaT5L60pSw3lkywBaXwJKOK4OzKQGYHlt8fd
+         bt3A==
+X-Gm-Message-State: APjAAAUrKxCNHgnIthpSGJM4OUuJJtKsVhxvJnYuwovplVkxY/J9qWNL
+        qx5WkW0qIphwVg5Ya7eF6JgxO/0=
+X-Google-Smtp-Source: APXvYqwnaGGSvHw3eVxDSnMv1fQxO7SKEamfp9zxy8HwVAD1LSiD/kDoELucP/RnyFz5AWlq8jVXBQ==
+X-Received: by 2002:a9d:7a93:: with SMTP id l19mr6448599otn.314.1574347136596;
+        Thu, 21 Nov 2019 06:38:56 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h39sm1055423oth.9.2019.11.21.06.38.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 06:38:56 -0800 (PST)
+Date:   Thu, 21 Nov 2019 08:38:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v2] dt-bindings: spi: Convert stm32 QSPI bindings to
+ json-schema
+Message-ID: <20191121143855.GA23685@bogus>
+References: <20191120194444.10540-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
-X-SA-Exim-Mail-From: m.tretter@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120194444.10540-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 12 Nov 2019 05:16:17 -0800, Rajan Vaja wrote:
-> To achieve best possible rate, maximum limit of divider is required
-> while computation. Get maximum supported divisor from firmware. To
-> maintain backward compatibility assign maximum possible value(0xFFFF)
-> if query for max divisor is not successful.
+On Wed, 20 Nov 2019 20:44:44 +0100, Benjamin Gaignard wrote:
+> Convert the STM32 QSPI binding to DT schema format using json-schema
 > 
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  drivers/clk/zynqmp/divider.c         | 19 +++++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h |  1 +
->  2 files changed, 20 insertions(+)
+> changes in version 2:
+> - fix subject
+> - remove useless minItems and maxItems
+>  .../devicetree/bindings/spi/spi-stm32-qspi.txt     | 47 ------------
+>  .../devicetree/bindings/spi/st,stm32-qspi.yaml     | 83 ++++++++++++++++++++++
+>  2 files changed, 83 insertions(+), 47 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
 > 
-> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-> index d8f5b70d..b79cd45 100644
-> --- a/drivers/clk/zynqmp/divider.c
-> +++ b/drivers/clk/zynqmp/divider.c
-> @@ -41,6 +41,7 @@ struct zynqmp_clk_divider {
->  	bool is_frac;
->  	u32 clk_id;
->  	u32 div_type;
-> +	u16 max_div;
->  };
->  
->  static inline int zynqmp_divider_get_val(unsigned long parent_rate,
-> @@ -195,6 +196,9 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
->  	struct clk_hw *hw;
->  	struct clk_init_data init;
->  	int ret;
-> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +	struct zynqmp_pm_query_data qdata = {0};
-> +	u32 ret_payload[PAYLOAD_ARG_CNT];
->  
->  	/* allocate the divider */
->  	div = kzalloc(sizeof(*div), GFP_KERNEL);
-> @@ -215,6 +219,21 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
->  	div->clk_id = clk_id;
->  	div->div_type = nodes->type;
->  
-> +	/*
-> +	 * To achieve best possible rate, maximum limit of divider is required
-> +	 * while computation. Get maximum supported divisor from firmware. To
-> +	 * maintain backward compatibility assign maximum possible value(0xFFFF)
-> +	 * if query for max divisor is not successful.
-> +	 */
-> +	qdata.qid = PM_QID_CLOCK_GET_MAX_DIVISOR;
-> +	qdata.arg1 = clk_id;
-> +	qdata.arg2 = nodes->type;
-> +	ret = eemi_ops->query_data(qdata, ret_payload);
-> +	if (ret)
-> +		div->max_div = U16_MAX;
-> +	else
-> +		div->max_div = ret_payload[1];
 
-Add a helper function for retrieving the max divisor. The clk_register
-function should really not be mixed with code to access the firmware.
-
-Michael
-
-> +
->  	hw = &div->hw;
->  	ret = clk_hw_register(NULL, hw);
->  	if (ret) {
-> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-> index f019d1c..f0d4558 100644
-> --- a/include/linux/firmware/xlnx-zynqmp.h
-> +++ b/include/linux/firmware/xlnx-zynqmp.h
-> @@ -114,6 +114,7 @@ enum pm_query_id {
->  	PM_QID_CLOCK_GET_PARENTS,
->  	PM_QID_CLOCK_GET_ATTRIBUTES,
->  	PM_QID_CLOCK_GET_NUM_CLOCKS = 12,
-> +	PM_QID_CLOCK_GET_MAX_DIVISOR,
->  };
->  
->  enum zynqmp_pm_reset_action {
+Reviewed-by: Rob Herring <robh@kernel.org>
