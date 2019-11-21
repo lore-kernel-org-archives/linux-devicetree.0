@@ -2,130 +2,215 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D6CC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE01C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E34206DA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4BF20714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 14:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ivx9GLTZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7zY2Dt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKUOP3 (ORCPT
+        id S1726690AbfKUO1f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:15:29 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42724 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfKUOP2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 09:15:28 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q17so1649434pgt.9
-        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 06:15:27 -0800 (PST)
+        Thu, 21 Nov 2019 09:27:35 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36093 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKUO1f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 09:27:35 -0500
+Received: by mail-qt1-f195.google.com with SMTP id y10so3880212qto.3;
+        Thu, 21 Nov 2019 06:27:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2iioeMs5Kx4BkL9HRR7jq3PGUJUORMiE/KMuumIIAJw=;
-        b=ivx9GLTZw4iYbg7Vfpk+DmHl2Jkhq/mSQkh43liGMP8PTOMHvdSlsKtWqiaDotsINd
-         JTyzp2He872Q3i6IKieMF4tmQXtP+MyWYeSdbVW3U5DCLFFpUekfihD8BgqbmHvvIarn
-         D7U/1ODz7nqUA3P+0Vg45/GAgGTgJkq30eRic=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qCFVIZu+9qwsSK6ZpbURT0WFtiz9LPTKiASRsEFWyS8=;
+        b=C7zY2Dt640Tz5tApLwfxDuVWsANzhyUtVUPxVXPq4R8gng3c/t/kI+++L7egB3gZox
+         NBNzXNRBeGY4FK2G4t+hOjvg8vyIeYGzCVYHoYTgNEYD7ytCKH5ABQ6l7i533ti96v6X
+         BDOjbKETRT+OcbBfS8M4Oc/NHo0EdTOIqwaRJ2OqADkKGUNCjngSXbU6bsvbOdjUHVE8
+         YAdV7/goTu8udWxnScbZAKTZCMOu/A0MA4RJ570XsiOD4EKiQCuN6yZ2bYeitDpZve+e
+         L+KeT/cczw6l1NvYYrYJqV0Gj/rLKk5pW4nMhDv7t/2Iv77ea2QkU3pM5iA7oyIagkpb
+         UTuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2iioeMs5Kx4BkL9HRR7jq3PGUJUORMiE/KMuumIIAJw=;
-        b=L3kr5YrHFC3CxMpXLQ+DfOxKYuKYE/UKYZX9fCPr2Q2Uf7C8sWBHNMIcb+emUGE5Ma
-         VfSNUlMucEHwgECLyuW8SZT8LR2s+RxkXrXlIe/8tW5Tok+qZSlduqCagaTJVNzVui8D
-         Ual4E3+z9CpCi0tVTp+iNjfrWTIs1MY/mVYDFvDtL4kdd7rpx9JIB6FIpJpXy4WkSPwe
-         TddsTJR62pk+7P/E3gGlmvx4WFDINxOKT0kXHfIykuy+dB9wQFxgT7JBikfUOztwnCo2
-         hDo56u3NMyQ+MF65n0bdZZ8sr4oP5d9ONyc/GKaklQ0c3xTIydtr5Z0Ett75+JA9xsaS
-         t4cw==
-X-Gm-Message-State: APjAAAVkwHjT1/F5pKTe9sEab/ANswHyCrcB6QNBE4giaZ1kxZDXHqtb
-        OQTLf3SRKe3Po6S5gjufmaealw==
-X-Google-Smtp-Source: APXvYqzbpColGFAP1phE+3x9ZVMevnKoOf2QQ9jnzx67KL0+t6Jb7Rj8dN6NxjJGFUOv5QOP4HIutw==
-X-Received: by 2002:a65:4506:: with SMTP id n6mr9867425pgq.105.1574345726878;
-        Thu, 21 Nov 2019 06:15:26 -0800 (PST)
-Received: from localhost.localdomain ([115.97.180.31])
-        by smtp.gmail.com with ESMTPSA id w138sm4072304pfc.68.2019.11.21.06.15.22
+         :references;
+        bh=qCFVIZu+9qwsSK6ZpbURT0WFtiz9LPTKiASRsEFWyS8=;
+        b=tvpBhF03wC0LcmMYQBTBoBDjnsvWPkIBsD+cRiz7H79rzeAb7M6dfxgG03ijvBz3hf
+         nE3plpgy8GMOaBZ4GOpyl9/ooWsj4Z1Epw3B6OJUbRNE/jCDvFcSgOue4tRAj67HGRi+
+         GUImG8zOsIiZrcGsZhg3W8FpqEK9nJ5lh68PwX0grMTlv5oLK3wDgA5yxn1d+noX2PbU
+         VNrFfbLXDj5LmENENIDxWhfz6IOOfM/DlXCND0X7yUpc29FT24am9HTO+xAXMXdJnLkM
+         Qw+EbTKgFDAvkoW+c5kp8FU8+EeIMg4VfTSasYfNjzO9ttCaZAI6SyII8CzoxDYXVFxj
+         GNOg==
+X-Gm-Message-State: APjAAAV0Fkwf7hkh68bbAyD7s4FdZtBv7bD1+qUSTnYxpnipMjKkURmt
+        jlq9PIz2LSkOGNcWaz6onxAK5AFf
+X-Google-Smtp-Source: APXvYqyO0hjhiUhYWEigVHC06GapdoAtTzXbclEQJSvK4IpmJZn21wj5AbNMmlqO0Ky+gSsei7awvA==
+X-Received: by 2002:aed:2ec6:: with SMTP id k64mr8838452qtd.61.1574346453480;
+        Thu, 21 Nov 2019 06:27:33 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id l198sm1442931qke.70.2019.11.21.06.27.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 06:15:26 -0800 (PST)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 5/5] arm64: dts: rockchip: Add Radxa Rock Pi N10 initial support
-Date:   Thu, 21 Nov 2019 19:44:45 +0530
-Message-Id: <20191121141445.28712-6-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20191121141445.28712-1-jagan@amarulasolutions.com>
-References: <20191121141445.28712-1-jagan@amarulasolutions.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 21 Nov 2019 06:27:33 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v4 1/2] leds: tps6105x: add driver for mfd chip led mode
+Date:   Thu, 21 Nov 2019 09:27:25 -0500
+Message-Id: <20191121142726.22856-2-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191121142726.22856-1-TheSven73@gmail.com>
+References: <20191121142726.22856-1-TheSven73@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
-- VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+This driver adds support for the led operational mode of the
+tps6105x mfd device.
 
-VAMRC RK3399Pro SOM need to mount on top of radxa dalang
-carrier board for making Rock Pi N10 SBC.
-
-So, add initial support for Rock Pi N10 by including rk3399,
-rk3399pro vamrc-som and raxda dalang carrier board dtsi files.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Tree: next-20191118
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
-Changes for v2:
-- s/rockchip-radxa-carrierboard.dtsi/rockchip-radxa-dalang-carrier.dtsi
+ drivers/leds/Kconfig         | 10 +++++
+ drivers/leds/Makefile        |  1 +
+ drivers/leds/leds-tps6105x.c | 83 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 94 insertions(+)
+ create mode 100644 drivers/leds/leds-tps6105x.c
 
- arch/arm64/boot/dts/rockchip/Makefile           |  1 +
- .../boot/dts/rockchip/rk3399pro-rock-pi-n10.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 48fb631d5451..433033b18170 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -36,3 +36,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399pro-rock-pi-n10.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 4b68520ac251..7c7ceaa824a2 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -836,6 +836,16 @@ config LEDS_LM36274
+ 	  Say Y to enable the LM36274 LED driver for TI LMU devices.
+ 	  This supports the LED device LM36274.
+ 
++config LEDS_TPS6105X
++	tristate "LED support for TI TPS6105X"
++	depends on LEDS_CLASS
++	depends on TPS6105X
++	default y if TPS6105X
++	help
++	  This driver supports TPS61050/TPS61052 led chips.
++	  It is a single boost converter primarily for white LEDs and
++	  audio amplifiers.
++
+ comment "LED Triggers"
+ source "drivers/leds/trigger/Kconfig"
+ 
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 2da39e896ce8..d7e1107753fb 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
+ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+ obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
+ obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
++obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
+ 
+ # LED SPI Drivers
+ obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+diff --git a/drivers/leds/leds-tps6105x.c b/drivers/leds/leds-tps6105x.c
 new file mode 100644
-index 000000000000..b42f94179538
+index 000000000000..ea2afaa3e3f0
 --- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Radxa Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
++++ b/drivers/leds/leds-tps6105x.c
+@@ -0,0 +1,83 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+/dts-v1/;
-+#include "rk3399.dtsi"
-+#include "rk3399-opp.dtsi"
-+#include "rk3399pro-vmarc-som.dtsi"
-+#include <arm/rockchip-radxa-dalang-carrier.dtsi>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/tps6105x.h>
++#include <linux/regmap.h>
 +
-+/ {
-+	model = "Radxa ROCK Pi N10";
-+	compatible = "radxa,rockpi-n10", "rockchip,rk3399pro";
++struct tps6105x_priv {
++	struct regmap *regmap;
++	struct led_classdev cdev;
++	struct fwnode_handle *fwnode;
 +};
++
++static void tps6105x_handle_put(void *data)
++{
++	struct tps6105x_priv *priv = data;
++
++	fwnode_handle_put(priv->fwnode);
++}
++
++static int tps6105x_brightness_set(struct led_classdev *cdev,
++				  enum led_brightness brightness)
++{
++	struct tps6105x_priv *priv = container_of(cdev, struct tps6105x_priv,
++							cdev);
++
++	return regmap_update_bits(priv->regmap, TPS6105X_REG_0,
++		TPS6105X_REG0_TORCHC_MASK,
++		brightness << TPS6105X_REG0_TORCHC_SHIFT);
++}
++
++static int tps6105x_led_probe(struct platform_device *pdev)
++{
++	struct tps6105x *tps6105x = dev_get_platdata(&pdev->dev);
++	struct tps6105x_platform_data *pdata = tps6105x->pdata;
++	struct led_init_data init_data = { };
++	struct tps6105x_priv *priv;
++	int ret;
++
++	/* This instance is not set for torch mode so bail out */
++	if (pdata->mode != TPS6105X_MODE_TORCH) {
++		dev_info(&pdev->dev,
++			"chip not in torch mode, exit probe");
++		return -EINVAL;
++	}
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	priv->fwnode = device_get_next_child_node(pdev->dev.parent, NULL);
++	ret = devm_add_action_or_reset(&pdev->dev, tps6105x_handle_put, priv);
++	if (ret)
++		return ret;
++	priv->regmap = tps6105x->regmap;
++	priv->cdev.brightness_set_blocking = tps6105x_brightness_set;
++	priv->cdev.max_brightness = 7;
++	init_data.devicename = "tps6105x";
++	init_data.default_label = ":torch";
++	init_data.fwnode = priv->fwnode;
++
++	ret = regmap_update_bits(tps6105x->regmap, TPS6105X_REG_0,
++		TPS6105X_REG0_MODE_MASK | TPS6105X_REG0_TORCHC_MASK,
++		TPS6105X_REG0_MODE_TORCH << TPS6105X_REG0_MODE_SHIFT);
++	if (ret)
++		return ret;
++
++	return devm_led_classdev_register_ext(&pdev->dev, &priv->cdev,
++					      &init_data);
++}
++
++static struct platform_driver led_driver = {
++	.probe = tps6105x_led_probe,
++	.driver = {
++		.name = "tps6105x-leds",
++	},
++};
++
++module_platform_driver(led_driver);
++
++MODULE_DESCRIPTION("TPS6105x led driver");
++MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@gmail.com>");
++MODULE_LICENSE("GPL v2");
 -- 
-2.18.0.321.gffc6fa0e3
+2.17.1
 
