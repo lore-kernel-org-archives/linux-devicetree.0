@@ -2,284 +2,236 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348E9C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 11:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE439C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 11:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F091720898
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 11:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC8720855
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 11:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJ6+E/4m"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="pwE8Hqyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfKULiS (ORCPT
+        id S1726536AbfKULzD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:38:18 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40526 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfKULiS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 06:38:18 -0500
-Received: by mail-wm1-f67.google.com with SMTP id y5so3285856wmi.5;
-        Thu, 21 Nov 2019 03:38:15 -0800 (PST)
+        Thu, 21 Nov 2019 06:55:03 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33100 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfKULzD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 06:55:03 -0500
+Received: by mail-il1-f194.google.com with SMTP id m5so3012600ilq.0
+        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 03:54:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=amarulasolutions.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ymYVwgS3u3Is3vut5facTUt0ewbtP1AkLC3XruiyyFw=;
-        b=OJ6+E/4mIpJrfVzL/CzFsbRw9we7mEYlDp7DNWT6XbKCr1OrAw8g8vkoD6Zs3L6d8R
-         hFeiCRE2bXcNKEx3SQ90HrjFvdsXhWvMLEA7FVszTd/tmVlXQO1/2/3WJztfGHejQgTE
-         WkdYVkpVof2pqJKS4FIm4spQpy+ApI2GQrGbcWnv/TG+Wd/zda3fYSCiV/DrJBGNfcaN
-         Qa7hf0RMxxsUcNWy9dpER6xwRV8EVUvOq33j0V4M1c4CwKJVcmbM53K2QQtDUFtd4jq9
-         rlmman9bZojiY3ADvfPfD+x20y1L1m2pbHD+y+1UQ5T6clpXW2zDmEZDepGYU5ULxFGE
-         +1xQ==
+         :cc;
+        bh=OASxd9sL3P/EAyFnEHWqDD5LpfqZZMnAsfvorrhUyyg=;
+        b=pwE8Hqyyt9JggoFN9jl5bxSbMElKMXFsPnZeJyh3roSkWGRiPz6qnu1SvgDOJ3Hw6i
+         UaAeZvMNr2kYe4IsFb6a2uhjOyO9sujSvCApwbh+oXGNBtkdjike5of1kVIQFsBK+8EE
+         btJumOPBgYOevLDsXDFlEIrsPC76sE6BH4JhE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ymYVwgS3u3Is3vut5facTUt0ewbtP1AkLC3XruiyyFw=;
-        b=CQCeLXAdMFvAxsrKf6aIIfuU4xiIO0Fhp90rL2bQx3UXg+f5kiPPy7FkQMyODMwNSw
-         ItsPZYlxgqcmgAr0oLWGjJ0NNwL5R2S3fwm41viYVAU4uDBvSh8vTusZglgsmavC/dSt
-         gIirNU2y7Qjyn8d23WlDuy/8CI3OBiutDYzD3ZYiiQAcZi9OLSmya0ILKCnWHESrq6EM
-         07ZuwngGEXX86EGI/BHTSvoe4dGmvCAfrdvtKDxskhhI0/y382KEb7l1fepyhVQHI+RD
-         l6rEn9JYELqDwMICXEojOOCIlJTR/2/gPrYHulT5XaJTnRwE9vLjzkDlIp2k1TsIxspl
-         SwsQ==
-X-Gm-Message-State: APjAAAVmD4PeiK4NWltdAoGghsce7mHI11bP8Lr0gPK41FWrzxdJrmRw
-        si0s7lgaDioQLUOHYAZRVOc8Yxb+Q3vUrqjx8Dw=
-X-Google-Smtp-Source: APXvYqyR9LDxGzxU1MMCH+7C5pWOo65/JRU9WwJr6HTbFIdaYXl6lkFahCsi/SxbBT63istEhq66gV2+uvSK+1/4UPs=
-X-Received: by 2002:a7b:c934:: with SMTP id h20mr2550286wml.56.1574336294490;
- Thu, 21 Nov 2019 03:38:14 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=OASxd9sL3P/EAyFnEHWqDD5LpfqZZMnAsfvorrhUyyg=;
+        b=carUtKBKaVrAwyu52bB4TVK1BfOuBE97SmWs7uVNvFq8bvFqFXB/DMFaPZiWPWQGIo
+         6aLxfIys8Mm6QtdvDQvhHe+ENZz76DGylTG1ur8CB+ZO08OgAXXWiAAQomuGhQFp8YW6
+         V9E+xU8QedjReYFx+AlSLJOZQIMfEPJFFSHi4Az4ROSVQMhJZlm6pEGEL1T99xN6MLlZ
+         jyWqcPDTFCFMxa2LhFYZFWJCS2r3F+k5i3xGOFLwzl3S4DFRhimY6OP8birO8JQomHcC
+         swIvIyvercrR7/3GDQnlhWr/jMU17XtIYVpNpopqO+kL2l2o9ZHB5bdQW88krtLxdNai
+         ra1A==
+X-Gm-Message-State: APjAAAV+F5/yL/SF2qGl67FddU2iPNk0goAzI7fcpO6PvP+z0JBcLyc3
+        klDbGDsuLJvjMsqkH18YmwQm9y/F8PD+RZ+Q0ymJTg==
+X-Google-Smtp-Source: APXvYqxfumqpEZg771COtbxon7u4bR0X9QYm3AdjlbTzg0aqVValkgGD39VvNZ52KOhtkplgn0JszB4c2khzBZn3bTg=
+X-Received: by 2002:a92:5d8f:: with SMTP id e15mr9728918ilg.173.1574337299234;
+ Thu, 21 Nov 2019 03:54:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20191119175319.16561-1-peron.clem@gmail.com> <20191119175319.16561-6-peron.clem@gmail.com>
- <20191121073647.phutknyb3tzp44ye@pengutronix.de>
-In-Reply-To: <20191121073647.phutknyb3tzp44ye@pengutronix.de>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 21 Nov 2019 12:38:03 +0100
-Message-ID: <CAJiuCcd3p-=G9TEadARPmCs6cS7gi61M4CaxX17=NOHwo9onzA@mail.gmail.com>
-Subject: Re: [PATCH v7 5/8] pwm: sun4i: Add support to output source clock directly
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+References: <20191025175625.8011-1-jagan@amarulasolutions.com>
+ <20191025175625.8011-5-jagan@amarulasolutions.com> <20191028153427.pc3tnoz2d23filhx@hendrix>
+ <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
+ <20191029085401.gvqpwmmpyml75vis@hendrix> <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
+ <20191103173227.GF7001@gilmour>
+In-Reply-To: <20191103173227.GF7001@gilmour>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 21 Nov 2019 17:24:47 +0530
+Message-ID: <CAMty3ZD5uxU=xb0z7PWaXzodYbWRJkP9HjGX-HZYFT4bwk0GOg@mail.gmail.com>
+Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
         linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Icenowy Zheng <icenowy@aosc.io>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Uwe,
+Hi Maxime,
 
-On Thu, 21 Nov 2019 at 08:36, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Sun, Nov 3, 2019 at 11:02 PM Maxime Ripard <mripard@kernel.org> wrote:
 >
-> Hello Cl=C3=A9ment,
+> On Fri, Nov 01, 2019 at 07:42:55PM +0530, Jagan Teki wrote:
+> > Hi Maxime,
+> >
+> > On Tue, Oct 29, 2019 at 2:24 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
+> > > > > > explicit handling of common clock would require since the A64
+> > > > > > doesn't need to mention the clock-names explicitly in dts since it
+> > > > > > support only one bus clock.
+> > > > > >
+> > > > > > Also pass clk_id NULL instead "bus" to regmap clock init function
+> > > > > > since the single clock variants no need to mention clock-names
+> > > > > > explicitly.
+> > > > >
+> > > > > You don't need explicit clock handling. Passing NULL as the argument
+> > > > > in regmap_init_mmio_clk will make it use the first clock, which is the
+> > > > > bus clock.
+> > > >
+> > > > Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
+> > > > during regmap_mmio_gen_context code, passing NULL triggering vblank
+> > > > timeout.
+> > >
+> > > There's a bunch of users of NULL in tree, so finding out why NULL
+> > > doesn't work is the way forward.
+> >
+> > I'd have looked the some of the users before checking the code as
+> > well. As I said passing NULL clk_id to devm_regmap_init_mmio_clk =>
+> > __devm_regmap_init_mmio_clk would return before processing the clock.
+> >
+> > Here is the code snippet on the tree just to make sure I'm on the same
+> > page or not.
+> >
+> > static struct regmap_mmio_context *regmap_mmio_gen_context(struct device *dev,
+> >                                         const char *clk_id,
+> >                                         void __iomem *regs,
+> >                                         const struct regmap_config *config)
+> > {
+> >         -----------------------
+> >         --------------
+> >         if (clk_id == NULL)
+> >                 return ctx;
+> >
+> >         ctx->clk = clk_get(dev, clk_id);
+> >         if (IS_ERR(ctx->clk)) {
+> >                 ret = PTR_ERR(ctx->clk);
+> >                 goto err_free;
+> >         }
+> >
+> >         ret = clk_prepare(ctx->clk);
+> >         if (ret < 0) {
+> >                 clk_put(ctx->clk);
+> >                 goto err_free;
+> >         }
+> >         -------------
+> >         ---------------
+> > }
+> >
+> > Yes, I did check on the driver in the tree before committing explicit
+> > clock handle, which make similar requirements like us in [1]. this
+> > imx2 wdt driver is handling the explicit clock as well. I'm sure this
+> > driver is updated as I have seen few changes related to this driver in
+> > ML.
 >
-> On Tue, Nov 19, 2019 at 06:53:16PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > PWM core has an option to bypass whole logic and output unchanged sourc=
-e
-> > clock as PWM output. This is achieved by enabling bypass bit.
-> >
-> > Note that when bypass is enabled, no other setting has any meaning, not
-> > even enable bit.
-> >
-> > This mode of operation is needed to achieve high enough frequency to
-> > serve as clock source for AC200 chip which is integrated into same
-> > package as H6 SoC.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-sun4i.c | 92 ++++++++++++++++++++++++++++-------------
-> >  1 file changed, 64 insertions(+), 28 deletions(-)
-> >
-> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > index ce83d479ba0e..a1d8851b18f0 100644
-> > --- a/drivers/pwm/pwm-sun4i.c
-> > +++ b/drivers/pwm/pwm-sun4i.c
-> > @@ -3,6 +3,10 @@
-> >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
-> >   *
-> >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electr=
-ons.com>
-> > + *
-> > + * Limitations:
-> > + * - When outputing the source clock directly, the PWM logic will be b=
-ypassed
-> > + *   and the currently running period is not guaranteed to be complete=
-d
-> >   */
-> >
-> >  #include <linux/bitops.h>
-> > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
-> >
-> >  struct sun4i_pwm_data {
-> >       bool has_prescaler_bypass;
-> > +     bool has_direct_mod_clk_output;
-> >       unsigned int npwm;
-> >  };
-> >
-> > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *c=
-hip,
-> >
-> >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> >
-> > +     /*
-> > +      * PWM chapter in H6 manual has a diagram which explains that if =
-bypass
-> > +      * bit is set, no other setting has any meaning. Even more, exper=
-iment
-> > +      * proved that also enable bit is ignored in this case.
-> > +      */
-> > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> > +         sun4i_pwm->data->has_direct_mod_clk_output) {
-> > +             state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate=
-);
-> > +             state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period, 2);
-> > +             state->polarity =3D PWM_POLARITY_NORMAL;
-> > +             state->enabled =3D true;
-> > +             return;
-> > +     }
-> > +
-> >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
-> >           sun4i_pwm->data->has_prescaler_bypass)
-> >               prescaler =3D 1;
-> > @@ -149,13 +168,23 @@ static void sun4i_pwm_get_state(struct pwm_chip *=
-chip,
-> >
-> >  static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
-> >                              const struct pwm_state *state,
-> > -                            u32 *dty, u32 *prd, unsigned int *prsclr)
-> > +                            u32 *dty, u32 *prd, unsigned int *prsclr,
-> > +                            bool *bypass)
-> >  {
-> >       u64 clk_rate, div =3D 0;
-> >       unsigned int pval, prescaler =3D 0;
-> >
-> >       clk_rate =3D clk_get_rate(sun4i_pwm->clk);
-> >
-> > +     *bypass =3D state->enabled &&
-> > +               (state->period * clk_rate >=3D NSEC_PER_SEC) &&
-> > +               (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
-> > +               (state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_SEC);
-> > +
-> > +     /* Skip calculation of other parameters if we bypass them */
-> > +     if (*bypass && sun4i_pwm->data->has_direct_mod_clk_output)
-> > +             return 0;
-> > +
+> I guess we have two ways to go at this then.
 >
-> Hmm, so if my PWM doesn't support the bypass bit *bypass might still be
-> true on return of sun4i_pwm_calculate. It doesn't hurt because the value
-> is only used after another check of has_direct_mod_clk_output, but still
-> this is a bit confusing.
+> Either we remove the return, but it might have a few side-effects, or
+> we call clk_get with NULL or bus depending on the case, and then call
+> regmap_mmio_attach_clk.
 
-Ok will change this
+Thanks for the inputs.
 
->
-> >       if (sun4i_pwm->data->has_prescaler_bypass) {
-> >               /* First, test without any prescaler when available */
-> >               prescaler =3D PWM_PRESCAL_MASK;
-> > @@ -202,10 +231,11 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,=
- struct pwm_device *pwm,
-> >  {
-> >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
-> >       struct pwm_state cstate;
-> > -     u32 ctrl;
-> > +     u32 ctrl, period, duty, val;
-> >       int ret;
-> > -     unsigned int delay_us;
-> > +     unsigned int delay_us, prescaler;
-> >       unsigned long now;
-> > +     bool bypass;
-> >
-> >       pwm_get_state(pwm, &cstate);
-> >
-> > @@ -220,43 +250,48 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,=
- struct pwm_device *pwm,
-> >       spin_lock(&sun4i_pwm->ctrl_lock);
-> >       ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
-> >
-> > -     if ((cstate.period !=3D state->period) ||
-> > -         (cstate.duty_cycle !=3D state->duty_cycle)) {
-> > -             u32 period, duty, val;
-> > -             unsigned int prescaler;n write the register and return
-But
-> > +     ret =3D sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &pr=
-escaler,
-> > +                               &bypass);
-> > +     if (ret) {
-> > +             dev_err(chip->dev, "period exceeds the maximum value\n");
-> > +             spin_unlock(&sun4i_pwm->ctrl_lock);
-> > +             if (!cstate.enabled)
-> > +                     clk_disable_unprepare(sun4i_pwm->clk);
-> > +             return ret;
-> > +     }
-> >
-> > -             ret =3D sun4i_pwm_calculate(sun4i_pwm, state,
-> > -                                       &duty, &period, &prescaler);
-> > -             if (ret) {
-> > -                     dev_err(chip->dev, "period exceeds the maximum va=
-lue\n");
-> > -                     spin_unlock(&sun4i_pwm->ctrl_lock);
-> > -                     if (!cstate.enabled)
-> > -                             clk_disable_unprepare(sun4i_pwm->clk);
-> > -                     return ret;
->
-> This would be a bit easier to review if this commit was split into two
-> patches. One that drops the check for cstate.period !=3D state->period et=
-c
-> (which otherwise is nearly empty when ignoring whitespace changes), and
-> a second that then adds bypass support.
+Please have a look at this snippet, I have used your second
+suggestions. let me know if you have any comments?
 
-Ok
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 8fa90cfc2ac8..91c95e56d870 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -1109,24 +1109,36 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+         return PTR_ERR(dsi->regulator);
+     }
 
->
->
-> > +     if (sun4i_pwm->data->has_direct_mod_clk_output) {
-> > +             if (bypass) {
-> > +                     ctrl |=3D BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> > +                     /* We can skip apply of other parameters */
-> > +                     goto bypass_mode;
->
-> I would prefer to use goto only for error handling. Not sure if there is
-> a nice way to do that.
+-    dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
+-                          &sun6i_dsi_regmap_config);
+-    if (IS_ERR(dsi->regs)) {
+-        dev_err(dev, "Couldn't create the DSI encoder regmap\n");
+-        return PTR_ERR(dsi->regs);
+-    }
+-
+     dsi->reset = devm_reset_control_get_shared(dev, NULL);
+     if (IS_ERR(dsi->reset)) {
+         dev_err(dev, "Couldn't get our reset line\n");
+         return PTR_ERR(dsi->reset);
+     }
 
-As the PWM is necessarily enabled we can write the register and return
-but not sure it's more proper.
++    dsi->regs = regmap_init_mmio(dev, base, &sun6i_dsi_regmap_config);
++    if (IS_ERR(dsi->regs)) {
++        dev_err(dev, "Couldn't init regmap\n");
++        return PTR_ERR(dsi->regs);
++    }
++
++    dsi->bus_clk = devm_clk_get(dev, NULL);
++    if (IS_ERR(dsi->bus_clk)) {
++        dev_err(dev, "Couldn't get the DSI bus clock\n");
++        ret = PTR_ERR(dsi->bus_clk);
++        goto err_regmap;
++    } else {
++        printk("Jagan.. Got the BUS clock\n");
++        ret = regmap_mmio_attach_clk(dsi->regs, dsi->bus_clk);
++        if (ret)
++            goto err_bus_clk;
++    }
++
+     if (dsi->variant->has_mod_clk) {
+         dsi->mod_clk = devm_clk_get(dev, "mod");
+         if (IS_ERR(dsi->mod_clk)) {
+             dev_err(dev, "Couldn't get the DSI mod clock\n");
+-            return PTR_ERR(dsi->mod_clk);
++            ret = PTR_ERR(dsi->mod_clk);
++            goto err_attach_clk;
+         }
+     }
 
-sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
-spin_unlock(&sun4i_pwm->ctrl_lock);
-return 0;
+@@ -1167,6 +1179,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ err_unprotect_clk:
+     if (dsi->variant->has_mod_clk)
+         clk_rate_exclusive_put(dsi->mod_clk);
++err_attach_clk:
++    if (!IS_ERR(dsi->bus_clk))
++        regmap_mmio_detach_clk(dsi->regs);
++err_bus_clk:
++    if (!IS_ERR(dsi->bus_clk))
++        clk_put(dsi->bus_clk);
++err_regmap:
++    regmap_exit(dsi->regs);
+     return ret;
+ }
 
-Regards,
-Cl=C3=A9ment
+@@ -1181,6 +1201,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+     if (dsi->variant->has_mod_clk)
+         clk_rate_exclusive_put(dsi->mod_clk);
 
->
-> > +             } else {
-> > +                     ctrl &=3D ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> >               }
-> > +     }
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
++    if (!IS_ERR(dsi->bus_clk)) {
++        regmap_mmio_detach_clk(dsi->regs);
++        clk_put(dsi->bus_clk);
++    }
++
++    regmap_exit(dsi->regs);
++
+     return 0;
+ }
+
+
+Jagan.
