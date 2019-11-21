@@ -2,138 +2,170 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F40AC432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003DBC432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2569320855
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 08:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B985B2071C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="fjuN63NO"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="mXq1aH2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfKUI5B (ORCPT
+        id S1726014AbfKUJEm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:57:01 -0500
-Received: from mail-eopbgr1400105.outbound.protection.outlook.com ([40.107.140.105]:26943
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        Thu, 21 Nov 2019 04:04:42 -0500
+Received: from mail-eopbgr740048.outbound.protection.outlook.com ([40.107.74.48]:50176
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726165AbfKUI5B (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:57:01 -0500
+        id S1726132AbfKUJEm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 21 Nov 2019 04:04:42 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jLxTSQMpCkrNLR90RAd/hEm54W5MaR9dHagvKqxk3KtvZPc108iSY4LDn7yhlb6m/CFoFCDyBwIQ9WImzJYZ8Aq1ekpoEMgx/l4tRa/emaMipc/VyKdTGh/ajTSjEO5S8fVqBFDurK5hpT2o44Q5LnUuJCjxTVZ5jeLCfUvbhgQfi+h4nIpfAjRszJ1yO/Ebrxkrl+XdDUuOPdyuy2wFJbV5BzArCcTcl+lDw0bl6ilvuOIz022e0X8zIEs4B9HvN1rR8sB+OwwFE9kzwrz6l6NpzG8y/CfkjDBAhoZl0UupxZ0Qy42vMH/0njUvi4zH+t2TAATikgziVUI/kzvG/g==
+ b=Gn+vP5DZDlJo2PuwMyJ6W5ED0OQoWv2L5f0W1Dvf9FI4/mLSrdKBvdwVKeLUyTEy5LPmFVTDx/6NrgRnY0Ue7kAWbgDfoLnyQqSC4UJa3yuQQXsg57BJ9QCayRfkGbif1Hbf9Cbce4XfGUetN/x2zqwnoCXu3a9PTu64ocCMTWEtldPl9kggPynngR9Trok2VQMdwceFWUd21r00LFjNRxyhdH8txX9yH92vFL+4weng0J3T2mHF5s01ynjy1Qj+7GE/GzvXiaxIdCJylgKyma/1ZrDzRYRxAs25RL/gyYSBM0OgYu0aF0H/h/oTzIGpOL+vTgBHJAt5+pSGNIM2QQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L8UHQDoSPn5O7jaq/d5AV/V7ZBIVy4AfUo+EreqzqtM=;
- b=Jq0acTOFhl+p49iUgD7C9zPn5Y+B/a9vpIds4evTQ9TbFiVVDo6MpyQxTkL09Bp/KMVdtKoI71/TRQjt9xL6cfde2ZjjEcxO9EqJKCEG67kYauoiiJkM+/BJ5LTEiQ38xrbutvErI7BudOj3iqkt2DczULkpUHV+5DERiLLqJ5Q5xpDQnR/9G3L3KlKjWbi53wpDXONvKips2FZ505WNNNt+xJTQosbPmCccSWKZgORFwUOA0WqgGEBm5gR3wE6CP0iM+MMVx0CgCsX8TCjXI9f2NY+GJOl3NOclV6LAr3GeKpFQZ5W0jeOyA4kkpNB6uJU68dSjwIUqmjWNnh0QFw==
+ bh=x3DulbXL9J15u61yWz56lXH9lvQFGc7NOxYb6mRJxfw=;
+ b=U8VetMlbyENyeYcoYkgty5G2HPcp/7IXlir0U1Rum6eCT/+kLbAyN+XTarCl+hVAOuK3BlO3AgkF82hI+mKsOlXgipzZOCGa9lGELT/+9FwOMiKR3fNhXRtsNGQVavuLJ4+ZQoPTTbPxs+EPiG+TT99NWcjhnGloAe5jyXRVm7d0BcA4So18iw7QW4LaRb/cBYMLsdJEe9ueQXXhIHt5mU1kNcvKY1Z3rCf8ADSC9M/kiYYeYJvNmkGOYM3g1J6KZhvVIHpygr4oH/531NBsWMR4SZSPK6d9jGKtuwFS57MyKQlpnkfLiks+/QGlygyHUEXbdS0oeANUsSVm619rGA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L8UHQDoSPn5O7jaq/d5AV/V7ZBIVy4AfUo+EreqzqtM=;
- b=fjuN63NO6nQitH7RYQjeaAFoYLXCE8aw5pSmoVD47eab0531tek/iH8PXZboBMLE2yO6fDId5+u3CYI7OiO3KZ/S1tvWuNXm/Q2DM/y4zhFLm1Tek+dhR3YR82Q12oCrWZHhvuPpkLR0bW79khH6Ju2rKxYOaQd6N26Zc+wYcvc=
-Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com (52.134.242.17) by
- OSBPR01MB3830.jpnprd01.prod.outlook.com (20.178.99.74) with Microsoft SMTP
+ bh=x3DulbXL9J15u61yWz56lXH9lvQFGc7NOxYb6mRJxfw=;
+ b=mXq1aH2gh16jFvrQuzqdwJ851ZzKPFEG9rZdb5T20kdXlvvE1DZWR+f6H7b2RPzAksim0Jli0HeN6m/y5sotve7RwEahjiFv1A7reLau9/0RxIhn2uRh4lQedd8JfttFftmeejDxmlVsLjRHv0depAxZI5w34QF9g71WoCc6rxw=
+Received: from MN2PR02MB6094.namprd02.prod.outlook.com (52.132.172.151) by
+ MN2PR02MB6398.namprd02.prod.outlook.com (52.132.172.30) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.19; Thu, 21 Nov 2019 08:56:56 +0000
-Received: from OSBPR01MB2103.jpnprd01.prod.outlook.com
- ([fe80::c9e7:5418:764e:69e3]) by OSBPR01MB2103.jpnprd01.prod.outlook.com
- ([fe80::c9e7:5418:764e:69e3%3]) with mapi id 15.20.2451.031; Thu, 21 Nov 2019
- 08:56:56 +0000
-From:   Biju Das <biju.das@bp.renesas.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+ 15.20.2451.29; Thu, 21 Nov 2019 09:04:39 +0000
+Received: from MN2PR02MB6094.namprd02.prod.outlook.com
+ ([fe80::319d:d506:2faf:a4a2]) by MN2PR02MB6094.namprd02.prod.outlook.com
+ ([fe80::319d:d506:2faf:a4a2%7]) with mapi id 15.20.2474.018; Thu, 21 Nov 2019
+ 09:04:39 +0000
+From:   Shubhrajyoti Datta <shubhraj@xilinx.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh@kernel.org>
-Subject: RE: [PATCH v2] dt-bindings: timer: renesas, cmt: Document r8a774b1
- CMT support
-Thread-Topic: [PATCH v2] dt-bindings: timer: renesas, cmt: Document r8a774b1
- CMT support
-Thread-Index: AQHVeeKz4e6naGbfXkibt3sMCaEg3KdVbgMAgEAxFnA=
-Date:   Thu, 21 Nov 2019 08:56:56 +0000
-Message-ID: <OSBPR01MB2103A566B540F87FA4493C05B84E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1570104229-59144-1-git-send-email-biju.das@bp.renesas.com>
- <20191011123916.GA13450@bogus>
-In-Reply-To: <20191011123916.GA13450@bogus>
-Accept-Language: en-GB, en-US
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Michal Simek <michals@xilinx.com>
+Subject: RE: [RFC PATCHv2 1/3] dt-bindings: misc: Add dt bindings for flex noc
+ Performance Monitor
+Thread-Topic: [RFC PATCHv2 1/3] dt-bindings: misc: Add dt bindings for flex
+ noc Performance Monitor
+Thread-Index: AQHVdCmZoFI17g0Ymkq7XWhFdff3yqdUgJwAgEEqGnA=
+Date:   Thu, 21 Nov 2019 09:04:38 +0000
+Message-ID: <MN2PR02MB60943664B80D3028F8422175AA4E0@MN2PR02MB6094.namprd02.prod.outlook.com>
+References: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
+ <20191010214835.GA4523@bogus>
+In-Reply-To: <20191010214835.GA4523@bogus>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biju.das@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
+ smtp.mailfrom=shubhraj@xilinx.com; 
+x-originating-ip: [149.199.50.133]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 81622124-cc06-4921-5c75-08d76e60c2f3
-x-ms-traffictypediagnostic: OSBPR01MB3830:|OSBPR01MB3830:
+x-ms-office365-filtering-correlation-id: cf6c2898-cba2-45d2-3edc-08d76e61d6d7
+x-ms-traffictypediagnostic: MN2PR02MB6398:|MN2PR02MB6398:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSBPR01MB3830AF76BD0E88F0E966B9A9B84E0@OSBPR01MB3830.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-microsoft-antispam-prvs: <MN2PR02MB6398D596ED3BB0D86F80E012AA4E0@MN2PR02MB6398.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
 x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(346002)(136003)(39860400002)(396003)(13464003)(189003)(199004)(33656002)(9686003)(55016002)(81156014)(81166006)(8676002)(6116002)(8936002)(6436002)(102836004)(44832011)(229853002)(6506007)(3846002)(11346002)(53546011)(26005)(66476007)(66556008)(76176011)(7696005)(5660300002)(66946007)(446003)(4744005)(186003)(76116006)(64756008)(66446008)(25786009)(256004)(2906002)(14454004)(71200400001)(478600001)(305945005)(52536014)(316002)(54906003)(7736002)(71190400001)(74316002)(4326008)(6916009)(86362001)(99286004)(66066001)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB3830;H:OSBPR01MB2103.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(189003)(199004)(13464003)(64756008)(229853002)(7696005)(86362001)(74316002)(305945005)(76176011)(55016002)(7736002)(52536014)(256004)(54906003)(71200400001)(71190400001)(316002)(6916009)(76116006)(4326008)(14454004)(99286004)(25786009)(5660300002)(6116002)(11346002)(3846002)(6436002)(446003)(81166006)(478600001)(6246003)(107886003)(33656002)(102836004)(9686003)(26005)(6506007)(66066001)(186003)(66556008)(66946007)(66476007)(8676002)(81156014)(8936002)(53546011)(2906002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6398;H:MN2PR02MB6094.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5lTnMy+Yl71RlX113VBNCKGOjznPz+iypqxyQSYT6ocWmfFLt1/HhnPH4dBFl49OcEWj0ThH7lZo4L+6Qi9B4WZLXda2rbU500FKXH7EvzmgMSidz5BjygpiHcfKwdUmJkedtamAzIEwC1Ik3QWG+72MGGXTHhnOjam2/ag0QWAtysmzBsutvJsiuVN0gE7FHnRqa6dnsUnoWVCZaf1wBuEaKMOwcCIwKBdepciYnKqXZA/tjGaxSRVxjmJKuhf7FV3syfzQr9j3WhFyUMKevjIZUwmdixdiN9wVDE4WnIzuA7E330ZpJ0/7s8j2TfZkwpt68mVfZfvZmfE4KsRTjLKBV3WN7Qgq6sbRfl7LKecgdqSLR3IITo6HUNzwtR0Hw/DkrnRSWHhWnNHwj8x32XjPPILQHICxuO4AlenHfu0CSitfwukWRcuYzjrWvshD
+x-microsoft-antispam-message-info: te+sYE2MSaP+XjmP9swNAe7X7erTE0Fa2krWTNUxbvOVE3lMWVuFCDAi828WqXbqS0cKi2QdKsb1jxmaNWTZ6GUV0UfxFJzNOm9I6kAabdmp8PLUj5Yc4x6TnkKXZs3VXc86xD/pzThcLXKqQhmWo6ppkH3wF920E3cetgA4O2nl8vWpA89DpfNWMhWibMvciu75zoisnaU9VMrt6Ooa0Am4BdwhmxzWdtH0ZhlRFCZTtzd2r8B0Dakefq2ScGe0e7wuzR8ZaKRYwnUK5KElQtpaWb1AimoLihZWeQyF0kjguzLtUTrdUHnD/kl2SCwty2RwrO7dDO+v6rppcPPltDAQ5k7nsAdmSk3FlEv1KkkAmWKUoTLSM2/o/RV3cbxf7dtS0unSU06ck3+7D0QNdWQipp1RsJq7J811Bo8P+IILqJyfA6zJHtiITHyZr8n9
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81622124-cc06-4921-5c75-08d76e60c2f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 08:56:56.0670
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf6c2898-cba2-45d2-3edc-08d76e61d6d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 09:04:38.9659
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3UnbX43iP++Z0vsrnvZdQkWmOKtUTyuYjzAJ4NhtqI4G+N7ZFllfzF5zialDG+apSkoM9YcOApZLS2zM8Eco2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB3830
+X-MS-Exchange-CrossTenant-userprincipalname: YbfSKlMGQOOHoSw5IT7XlljKal00oJN53jV+MZSpFMW9+Q0GnBap+uoaxJktR10Q6GvW79ISx1r1ihUiyufcOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6398
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Daniel,
 
-Are you happy with this patch? Please let me know.
-
-Regards,
-Biju
+Hi,
 
 > -----Original Message-----
 > From: Rob Herring <robh@kernel.org>
-> Sent: Friday, October 11, 2019 1:39 PM
-> To: Biju Das <biju.das@bp.renesas.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>; Daniel Lezcano
-> <daniel.lezcano@linaro.org>; Thomas Gleixner <tglx@linutronix.de>;
-> devicetree@vger.kernel.org; Geert Uytterhoeven
-> <geert+renesas@glider.be>; Simon Horman <horms@verge.net.au>; Chris
-> Paterson <Chris.Paterson2@renesas.com>; Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com>; linux-renesas-soc@vger.kernel.org
-> Subject: Re: [PATCH v2] dt-bindings: timer: renesas, cmt: Document r8a774=
-b1
-> CMT support
+> Sent: Friday, October 11, 2019 3:19 AM
+> To: Shubhrajyoti Datta <shubhraj@xilinx.com>
+> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
+> arnd@arndb.de; gregkh@linuxfoundation.org; Michal Simek
+> <michals@xilinx.com>
+> Subject: Re: [RFC PATCHv2 1/3] dt-bindings: misc: Add dt bindings for fle=
+x noc
+> Performance Monitor
 >=20
-> On Thu, Oct 03, 2019 at 01:03:49PM +0100, Biju Das wrote:
-> > Document SoC specific bindings for RZ/G2N (r8a774b1) SoC.
+> On Thu, Sep 26, 2019 at 10:46:24AM +0530, Shubhrajyoti Datta wrote:
+> > Add dt bindings for flexnoc Performance Monitor.
+> > The flexnoc counters for read and write response and requests are
+> > supported.
 > >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > > ---
-> > V1-->V2
-> >  * Rebased to tip/timers
-> > ---
-> >  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
+> >  .../devicetree/bindings/misc/xlnx,flexnoc.txt      | 24
+> ++++++++++++++++++++++
 >=20
-> Acked-by: Rob Herring <robh@kernel.org>
+> bindings/perf/
+>=20
+> Please convert this to a schema. See
+> Documentation/devicetree/writing-schema.rst.
+Ok=20
+>=20
+> >  1 file changed, 24 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> > b/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> > new file mode 100644
+> > index 0000000..6b533bc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> > @@ -0,0 +1,24 @@
+> > +* Xilinx Flexnoc Performance Monitor driver
+>=20
+> Bindings are for h/w blocks, not drivers.
+Wil change
+>=20
+> > +
+> > +The FlexNoc Performance Monitor has counters for monitoring the read
+> > +and the write transaction counter.
+> > +
+> > +Required properties:
+> > +- compatible: "xlnx,flexnoc-pm-2.7"
+> > +- reg : Address and length of register sets for each device in
+> > +       "reg-names"
+> > +- reg-names : The names of the register addresses corresponding to the
+> > +               registers filled in "reg"
+> > +               - funnel: base address of the funnel registers
+> > +               - baselpd: base address of the LPD PM registers
+> > +               - basefpd: base address FPD PM registers
+>=20
+> Is this really all one h/w block.
+>=20
+> FlexNoC is an interconnect, right? Is there more to it than just perfmon?
+Yes , however the driver only uses the monitoring  part.
+
+>=20
+> > +
