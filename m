@@ -4,94 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153F9C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD89C43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 20:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A5920672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 19:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD31206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 20:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574365172;
-	bh=W4m0P+fJ5sCSl6dD6gMNJNsQTz/xpSEmD9wVzoR5ttk=;
+	s=default; t=1574367605;
+	bh=tLTI+rrMTmofvOGL7fPngNOUF+n7CrK8+TfuJYXHWWU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sAGDsB0bz39Lgo5QqocA9KSVtN0N2+c1LykNMSQ2MM0QhGMIxelIIsPIwIIesNQUT
-	 15bWMM0duAo2d9+5K844t+BAXKpDzdpOJDQ9ktWbKA3MJ9uhQVuYjB9Om4qZ4ULxbC
-	 KVvevLU56cgunuaKiDCAiAJ8M2V8IyAlnZDy4nNA=
+	b=T1LPVezlGmurk4vSTOUb5tfhmMu1jYhnFlFF/w7tbymmCD+UKbmsElTYlUHIy9trf
+	 KFuAOCsi4Gf+a0VnlvNdDfv2DSeR5G26J93Wta9GW+5Dk2UHPEYdIerkOKHxfXA3Fk
+	 rWdDx5EjXW+xDjVsVRLebctpGUtxovI8upKukazw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfKUTjc (ORCPT
+        id S1726379AbfKUUUE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 14:39:32 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36171 "EHLO
+        Thu, 21 Nov 2019 15:20:04 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32966 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUTjc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 14:39:32 -0500
-Received: by mail-oi1-f195.google.com with SMTP id j7so4330038oib.3;
-        Thu, 21 Nov 2019 11:39:31 -0800 (PST)
+        with ESMTP id S1726293AbfKUUUE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 15:20:04 -0500
+Received: by mail-oi1-f195.google.com with SMTP id m193so4459564oig.0;
+        Thu, 21 Nov 2019 12:20:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c4KjpD+ns0ACXFE5v6l81aoQVHuHJsxlS4JefMC5EMY=;
-        b=CE49zIfQ1Fq8wUnUj/AAwpB/UTdeb++Z1Ad1f8tWJGWazHg1369dTQ4I8ZXg3Jt4sd
-         bA4VUgkIQfyr01XMzjZxEpTYJ/khoRB6e0iiltPTf3YViG+m1oikNJSEGtubLG5Gq4Mx
-         ErI6ipMjg+KlEK9paGek6hdgB9eVwuIYO6RbLvCZrCHRcEs4qozuLhyGAwXzuF33TrTC
-         ga18j6Y8UmqO9uFjTRnU2pSSYNhCtrGSgs24vn2e+aKWs1NcoQhiVmY+nQZc1OLwxWCQ
-         4GaGvsgJaiogMNm7rPHq/xnoEMeT0lU1zcM0Y3qy+1dne0XIFL3P2HWT3YjldRxcCpgM
-         plAg==
-X-Gm-Message-State: APjAAAUboo/L8iiR5l0lMbXT8XIis5bFLm8pH4QidIXQqjAe4LJjEWjC
-        Eh4hkLXUCIm86JUeklYA6w==
-X-Google-Smtp-Source: APXvYqw+O/5gVYMGrcCumNOlMYDrrdD4XmwLhJA1mxJFW4xVlHhGW1dwTOU1ghWvK2UUGvx0UeKwSA==
-X-Received: by 2002:aca:1715:: with SMTP id j21mr8631035oii.6.1574365171174;
-        Thu, 21 Nov 2019 11:39:31 -0800 (PST)
+        bh=ctEbvEF+D3upIcOL5VXM4n468EvW3StUvGyLExGsOyc=;
+        b=TxR6rwohsnIVpmpfmd6k+cMZ7qFf6mPk0C60hSW3OUSw+w992KFwbk0cSKaC8/HcbK
+         UN6f+Ep1zESf9cz2YYEO02j0pCDy1dQaJdw6CU3h7DeFIFvvN28Eiil0t73tGPtPWNNw
+         xxsL1ElQxQwZ7BfJHqhq89lVviYAuRNUlBdZmHUEVT1oKeSV1JxmvFHTR5NVkt7o4gMr
+         ock0g7GUsQxg4spCz8v3DxMvkC0N79vry0Q86ja6D7ygH2nbW5KEAHKn7/GN5TzqCdfw
+         etB8bVgBo/+M/14bY8w3l/O7B5lQobmsE88Ce58NdnMwVDZBJGq7BcVCvzJUoEyDTxir
+         KneA==
+X-Gm-Message-State: APjAAAUJIrzeinkdJH5F9y4DM4q6UEsyuyr71Y4BKmdUrFhyrMoPom7y
+        PKQtZ3a3UqAy/jBcKa4NMA==
+X-Google-Smtp-Source: APXvYqxt9oXGFEJN7MoDV16iEhPuS0xuVhs0yYo1/QRqf/rvK8UqBXM9F42AdY5F2UufMMuGLxwOcw==
+X-Received: by 2002:a05:6808:8ce:: with SMTP id k14mr9093989oij.76.1574367603254;
+        Thu, 21 Nov 2019 12:20:03 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u204sm1229289oig.35.2019.11.21.11.39.29
+        by smtp.gmail.com with ESMTPSA id l18sm1341155oti.11.2019.11.21.12.20.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 11:39:30 -0800 (PST)
-Date:   Thu, 21 Nov 2019 13:39:29 -0600
+        Thu, 21 Nov 2019 12:20:02 -0800 (PST)
+Date:   Thu, 21 Nov 2019 14:20:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH v2] dt-bindings: i2c: stm32: Migrate i2c-stm32
- documentation to yaml
-Message-ID: <20191121193929.GA6676@bogus>
-References: <1574342866-8348-1-git-send-email-alain.volmat@st.com>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v10 2/4] dt-bindings: clock: Convert qcom,mmcc to DT
+ schema
+Message-ID: <20191121202001.GA19935@bogus>
+References: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
+ <0101016e7b4311fe-8edd7849-df65-47dd-98fa-1e2063c83178-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574342866-8348-1-git-send-email-alain.volmat@st.com>
+In-Reply-To: <0101016e7b4311fe-8edd7849-df65-47dd-98fa-1e2063c83178-000000@us-west-2.amazonses.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 Nov 2019 14:27:46 +0100, Alain Volmat wrote:
-> The document was migrated to Yaml format and renamed st,stm32-i2c.yaml
+On Sun, 17 Nov 2019 21:27:03 +0000, Jeffrey Hugo wrote:
+> Convert the qcom,mmcc-X clock controller binding to DT schema.  Add the
+> protected-clocks property to the schema to show that is it explicitly
+> allowed, instead of relying on the generic, pre-schema binding.
 > 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 > ---
-> v2: remove i2c-scl.*time description, ref (moved into i2c-controller.yaml
->     push the st,syscfg-fmt into the if compatible st,stm32f7 part
->     fix the st,syscfg-fmt ref syntax and set minItems/maxItems to 3
->     make the clock-frequency part common and only keep enum in the st,stm32f4 case
->     remove unnecesary minItems/maxItems
->     remove address-cells/size-cells from required fields
-> ---
->  .../devicetree/bindings/i2c/i2c-stm32.txt          |  65 ----------
->  .../devicetree/bindings/i2c/st,stm32-i2c.yaml      | 141 +++++++++++++++++++++
->  2 files changed, 141 insertions(+), 65 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-stm32.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
+>  .../devicetree/bindings/clock/qcom,mmcc.txt        | 28 ----------
+>  .../devicetree/bindings/clock/qcom,mmcc.yaml       | 60 ++++++++++++++++++++++
+>  2 files changed, 60 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
