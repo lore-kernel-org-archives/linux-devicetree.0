@@ -2,104 +2,99 @@ Return-Path: <SRS0=OHRJ=ZN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D960DC43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D418C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F3A208C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2216D20718
+	for <linux-devicetree@archiver.kernel.org>; Thu, 21 Nov 2019 09:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3t2CYkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKUJcG (ORCPT
+        id S1726170AbfKUJqo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:32:06 -0500
-Received: from mga06.intel.com ([134.134.136.31]:32215 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbfKUJcG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:32:06 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 01:32:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
-   d="scan'208";a="381674462"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga005.jf.intel.com with ESMTP; 21 Nov 2019 01:32:01 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com
-Cc:     linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v9 3/3] PCI: artpec6: Configure FTS with dwc helper function
-Date:   Thu, 21 Nov 2019 17:31:20 +0800
-Message-Id: <32e7c8363a8016224490b2246eb859c9039fd6e4.1574314547.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1574314547.git.eswara.kota@linux.intel.com>
-References: <cover.1574314547.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1574314547.git.eswara.kota@linux.intel.com>
-References: <cover.1574314547.git.eswara.kota@linux.intel.com>
+        Thu, 21 Nov 2019 04:46:44 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36109 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfKUJqo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 04:46:44 -0500
+Received: by mail-qt1-f195.google.com with SMTP id y10so3005390qto.3;
+        Thu, 21 Nov 2019 01:46:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FRfqoR3D1Sv4wDhO7DSIhI3w3vZXZBxgc60xTbqdsxY=;
+        b=X3t2CYkkZUaeaOQCVKiD90VrNN+uF1V3yWfQ0ph4KLKp+fv7PuXqs2CIpnOVpTnR7M
+         9t0u76IQmgQUsdfauacp5DnN01TgCZnf+UetNVnsCUcMSoB4+8hCWyx0Xmcq9r4Exgra
+         /r4k/Le0pbZlc3xyap/+otfwyUZjZ8iZ+ORruZLSbf5Yfif/OiK4HSR4elY8QZ6lYbzd
+         Wjw9m6gSKsqupC4ICx7z9lpLuGUhjpiD86JjJ1C3d+a60Xn5X8FH0kHqNGjdikNIY8dk
+         5PvhbPbcZTGZk9MaCFK0UNRT4+p7P+rPHENs4OqtnCJFDFwO1yKn1WJwRtBVWlvFklVh
+         9vYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FRfqoR3D1Sv4wDhO7DSIhI3w3vZXZBxgc60xTbqdsxY=;
+        b=j6sbpPdB49JHyPdfe2shaNY2I9XRvjUHWy28SlUyuJjCPFZcxgyiXTsVOMFnDJTjyE
+         02/AHlSWFdOKIim9G9S5tVJNP7wcIfpEjmRCiEh1sA8Ifu3pWaMXbCoOzeXuKdxfzZfm
+         6/g2qSp921JKG4ekMC/ttfn/AcCOzxxtZSdvtgMhQOc2KUmjDgTa/O5UfZKJI5b9e+Qw
+         k8g4M86CwqHM8GAGklJ58qrDr/LGtPbvsuBPPEWqhJeswp+UacQrhJjiwIryjmKrldYC
+         KtZDnIX16B6AbCdI9UFnz6Xa8QySwhtdwEdg6hDogys6to+n7cFcyIGgNHjuXg2f2vz7
+         BkjQ==
+X-Gm-Message-State: APjAAAXh5MbijeRnN70Qpy39RRrkTxpNIz1zWXdflqajLQHyaakFSjAe
+        /VZdF8xEl00SkZpVXeFLilxMqQL4C6rxFuxKWJ8=
+X-Google-Smtp-Source: APXvYqwHDM7gnSQ1Zkv2iezgoGH8WwNvDlYZq1yaIeipIdjlmbZThfLF8JhLPHiRc+6qC9dQV3lAccNpQmyuYhH+I+s=
+X-Received: by 2002:ac8:6d31:: with SMTP id r17mr7447476qtu.28.1574329601933;
+ Thu, 21 Nov 2019 01:46:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20190808173028.1930-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190808173028.1930-1-yamada.masahiro@socionext.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Thu, 21 Nov 2019 17:46:05 +0800
+Message-ID: <CAEbi=3cZ29rmO55DcZSi8PmELay08HByabPETu_UOgXKZPk0cw@mail.gmail.com>
+Subject: Re: [PATCH] nds32: remove unneeded clean-files for DTB
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nickhu <nickhu@andestech.com>
+Cc:     Vincent Chen <deanbo422@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use DesignWare helper functions to configure Fast Training
-Sequence. Drop the respective code in the driver.
+Masahiro Yamada <yamada.masahiro@socionext.com> =E6=96=BC 2019=E5=B9=B48=E6=
+=9C=889=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:31=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+> These patterns are cleaned-up by the top-level Makefile
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  arch/nds32/boot/dts/Makefile | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/nds32/boot/dts/Makefile b/arch/nds32/boot/dts/Makefile
+> index fff8ade7a84f..f84bd529b6fd 100644
+> --- a/arch/nds32/boot/dts/Makefile
+> +++ b/arch/nds32/boot/dts/Makefile
+> @@ -5,5 +5,3 @@ else
+>  BUILTIN_DTB :=3D
+>  endif
+>  obj-$(CONFIG_OF) +=3D $(BUILTIN_DTB)
+> -
+> -clean-files :=3D *.dtb *.dtb.S
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
-Changes on v9:
-	No change
-
-Changes on v8:
-	No change
-
-Changes on v7:
-	No change
-
-Changes on v6:
-	Typo fix:s/DesugnWare/DesignWare
-	Update 'Utilize DesignWare' --> 'Use DesignWare'
-	Add Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
- drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index d00252bd8fae..02d93b8c7942 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
- #define ACK_N_FTS_MASK			GENMASK(15, 8)
- #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
- 
--#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
--#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
--
- /* ARTPEC-6 specific registers */
- #define PCIECFG				0x18
- #define  PCIECFG_DBG_OEN		BIT(24)
-@@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
- 	 * Set the Number of Fast Training Sequences that the core
- 	 * advertises as its N_FTS during Gen2 or Gen3 link training.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &= ~FAST_TRAINING_SEQ_MASK;
--	val |= FAST_TRAINING_SEQ(180);
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_link_set_n_fts(pci, 180);
- }
- 
- static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
--- 
-2.11.0
-
+Thanks, Masahiro.
+Acked-by: Greentime Hu <green.hu@gmail.com>
