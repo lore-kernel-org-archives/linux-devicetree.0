@@ -2,134 +2,228 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038A7C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BC6C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D532070E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E4320708
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="VoQdgPFa"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yEDyOG7p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfKVIpj (ORCPT
+        id S1725999AbfKVIwX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:45:39 -0500
-Received: from mail-eopbgr800049.outbound.protection.outlook.com ([40.107.80.49]:35072
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726539AbfKVIpi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 03:45:38 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WO5hyWgiVIZpmOl1Vtyp9/+E/aucxly3aRG0+Jvu9umBgDeI9UevrO5XqeKNO/N74u2MtVmuAo34f1A4TBEXtMbguBPTRDcDPZBVCVmxexNLQ/109txCYrymEkRjJJe7Vj4VN08zeRtSowHZBCzsLjK51e6aGCixZMk6OIzzBX73djuEtMDrBL++WQuQ4ezAaK4FdvO8Y9WhFCsH2YPRbNTqLRGriyFHoi7QK2U2sSveswkYDt4OGkOXhqRxRvguwHWKcH3E0MQSe4Uj7UIh/LNFzuhOG7LftSbAXkWk2I9KisOLnqP+9TE8Z2oPXbgn4TpiJthKwZzywvD7gV2mtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UkKXvpjjYp+f2ZO+5gxL7nNc70EiSBvI5DDUclb54JE=;
- b=JezbMPc7TA/qfIPQC2pHAfgBX37IqGXOcoPBJUI8uhZFLTfyxC30DhDcl43YrbdAB0EFcidJmucrBtooJB7z2cwlUKOpd1r3ny+Ej0oJIJgako0gccIowDeohMe6w3LmOHjeV7SJbmRAuJK7GlqwMADfoJVP0bvE+g0JZweLttXsWjjXffLAig5h6RVEodW6fG1tBE1rE10Yj/YIF4S/7QqDymGJ8E200YFkF6heACzdGLnkAmBS4slAzVbr+5nHerxHUANRKKh8Z5EVQ607aXAAQd9DQOPBI+RjuGdc0Kin7QLqWl1fHM/6J6eoJS3ZOaUBfWzLB+Ui8m/TgB/jjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 22 Nov 2019 03:52:23 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36124 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfKVIwX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 03:52:23 -0500
+Received: by mail-wm1-f65.google.com with SMTP id n188so4699596wme.1
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 00:52:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UkKXvpjjYp+f2ZO+5gxL7nNc70EiSBvI5DDUclb54JE=;
- b=VoQdgPFaHiM0K+7gi9UhwSa1KjSeBvAuqCWk0EAFiJmnx6eXnnNIxX2oKQW7d7mgeKhxqIJ7lbOxlGhuf2sWwQIJ/XpqtihgDckCuRCQZutsC4ZnY+olSH50Ma2D7AxJsC4s4DtTW5YfRQ3fv6UYQsiAWS7w5+zH27fPkUvEdrY=
-Received: from BYAPR02CA0052.namprd02.prod.outlook.com (2603:10b6:a03:54::29)
- by DM6PR02MB4444.namprd02.prod.outlook.com (2603:10b6:5:2a::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.29; Fri, 22 Nov
- 2019 08:45:35 +0000
-Received: from BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::209) by BYAPR02CA0052.outlook.office365.com
- (2603:10b6:a03:54::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.30 via Frontend
- Transport; Fri, 22 Nov 2019 08:45:34 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT036.mail.protection.outlook.com (10.152.77.154) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Fri, 22 Nov 2019 08:45:33 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iY4ZI-0006UV-Uz; Fri, 22 Nov 2019 00:45:32 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iY4ZD-00053U-SI; Fri, 22 Nov 2019 00:45:27 -0800
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAM8jIrj019355;
-        Fri, 22 Nov 2019 00:45:19 -0800
-Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1iY4Z4-00052Z-Ph; Fri, 22 Nov 2019 00:45:18 -0800
-From:   Rajan Vaja <rajan.vaja@xilinx.com>
-To:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        michal.simek@xilinx.com, jollys@xilinx.com, tejas.patel@xilinx.com
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rajan Vaja <rajan.vaja@xilinx.com>
-Subject: [PATCH v2 0/2] drivers: soc: xilinx: Add support for init suspend
-Date:   Fri, 22 Nov 2019 00:44:16 -0800
-Message-Id: <1574412258-17988-1-git-send-email-rajan.vaja@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573564851-9275-1-git-send-email-rajan.vaja@xilinx.com>
-References: <1573564851-9275-1-git-send-email-rajan.vaja@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(39860400002)(346002)(189003)(199004)(51416003)(8936002)(14444005)(107886003)(50226002)(16586007)(36756003)(70206006)(106002)(305945005)(4744005)(446003)(478600001)(2616005)(11346002)(356004)(36386004)(44832011)(48376002)(50466002)(4326008)(186003)(316002)(47776003)(76176011)(8676002)(2906002)(7696005)(336012)(426003)(26005)(9786002)(6636002)(5660300002)(81156014)(81166006)(70586007)(15650500001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4444;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VLujAY+88BSOb76CMcCgkVoqi9J6jk/Juu0sTNbfFrc=;
+        b=yEDyOG7p9b1boQO+yPx7T/orbtvdzS9mIWpquOyfMJ9T+E7hiwrWie93xwU1xvSViD
+         bvudjI7Eq1xbenQ+82Ev17QXB9xQsOV0S8u0Aktao9baaIhS8eMQk3FktAdFybHCd3Bu
+         kt+xSebTl/zAzI2oOpjKDxVRIt8+2qbzsYLewFCQaFi9/+hHk08CRmkI9kaLx/wDrxFv
+         4h7GLulDtIIaaklXc93q6fwcm2eHriSRXc+ynHAMm3oEUEP3b0Ut6mmHKw2gEacTXmTO
+         3K0EGm/AsE5DR5uS0b4ffNpnmx+FTzepNUVTUX8iTg7F0V4JrTGeCQSlYxu9K9ZtP2u1
+         X6pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VLujAY+88BSOb76CMcCgkVoqi9J6jk/Juu0sTNbfFrc=;
+        b=XsBAcP5bi979yZV4SeaFg/IYrYSxnSL774ZuvQHYMO/Kd3LcqN7Gz2qw0qRXzBLXbE
+         8q5PrzZY5Y6JGPl7/C67jECDNCijgTAzKxFoSuOjqAkHmxKYhIZc6+Gcr82RFFJ6BePi
+         fjl0GD6tFO4G9+zZiyBDW5BKSQ2GFyBYdNhOfzDPmFs1JW32iqKNQC09Ww+JZXZdUO3a
+         UsafA6UJU0czE1zB0TA8/QDyaO+0H4Pl0bXDNO5bnbw4pG23NGz3Z5AnhPLFZXesxSBk
+         wq5rFfTDLCoCEiNeR97rMTqy0cVBH53HtV5jq7uyDnc0OSWM3o0YmTCa/TNZbWN+Xw0C
+         lv8A==
+X-Gm-Message-State: APjAAAX6uJ0IGFdR2ZTHcbNUDIxZpBVNVuep5/UHwoVdxAHe3152jycF
+        X1lbdvo+6kSQoOfdLYKz0QEOuQ==
+X-Google-Smtp-Source: APXvYqwwlH0gGZvD3X21WS+3zwwM2jmNykWqZjk3TmIFC2gjpoeu8T5W97x0a8ioyXpmeVYWqCEblg==
+X-Received: by 2002:a1c:200f:: with SMTP id g15mr15378140wmg.96.1574412739032;
+        Fri, 22 Nov 2019 00:52:19 -0800 (PST)
+Received: from [192.168.1.68] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id v6sm6946456wrt.13.2019.11.22.00.52.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Nov 2019 00:52:18 -0800 (PST)
+Subject: Re: [PATCH 2/6] dt-bindings: usb: dwc3: Add the Amlogic A1 Family
+ DWC3 Glue Bindings
+To:     Hanjie Lin <hanjie.lin@amlogic.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Yue Wang <yue.wang@amlogic.com>, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com>
+ <1574405757-76184-3-git-send-email-hanjie.lin@amlogic.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <462c13a6-a2ea-44c7-d43d-46ac82d43bf7@baylibre.com>
+Date:   Fri, 22 Nov 2019 09:52:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 90db285d-8cc4-46c2-f384-08d76f2856bb
-X-MS-TrafficTypeDiagnostic: DM6PR02MB4444:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB4444B84E94194D3BF5DC462BB7490@DM6PR02MB4444.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-Forefront-PRVS: 02296943FF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kWCdQC+CHiSXJ/qLmLoEqDIg4d6Dpn2s+AC279FuxFVeS9t1F2Y31Weh0s8qQstTCb3H0mcNuZL1UZcmBpE4pyT2IG3f8FwIY9Qn4rq8rYAVW0mR8O41coyrPNiu4W4/8CFcUpv5zE+pEREkxElJ5dSC4kS7sm4kyC1AuZTvY0cnGaRKDxt9l4K1wo9PMBBTEwafdc1oqxXjiXNZVWNlsiGUCDw9mQfO1pIWD7TxD/LDr+t6NDvsUnBEnrZOng38SbA3nq/86CMxP5fkg5FFzjmGRGl8t+v/Y8Q3O56eGt8keknQMqdZmERrR+GMZK9thhCfo5hHxL/PEpGhmZ8AqO3GvICLG+/CwjzKomARiqjubInJg+NoqybuF86h+FjoYBwIrHT+QEbP8W2pmao1638mWvQ04m7raayMGkVI/hu+HPmjj3vuhTZ3YMq2nCtH
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2019 08:45:33.9016
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90db285d-8cc4-46c2-f384-08d76f2856bb
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4444
+In-Reply-To: <1574405757-76184-3-git-send-email-hanjie.lin@amlogic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for init suspend in xilinx soc driver. Also update
-documentation of zynqmp-power with IPI mailbox property.
+Hi,
 
-Rajan Vaja (1):
-  dt-bindings: power: reset: xilinx: Add bindings for ipi mailbox
 
-Tejas Patel (1):
-  drivers: soc: xilinx: Use mailbox IPI callback
+On 22/11/2019 07:55, Hanjie Lin wrote:
+> The Amlogic A1 SoC Family embeds 1 USB Controllers:
+>  - a DWC3 IP configured as Host for USB2 and USB3
+> 
+> A glue connects the controllers to the USB2 PHY of A1 SoC.
+> 
+> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+> ---
+>  .../devicetree/bindings/usb/amlogic,dwc3.txt       | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+> index 6ffb09b..63dc60b 100644
+> --- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+> @@ -128,3 +128,56 @@ Example device nodes:
+>  				snps,quirk-frame-length-adjustment;
+>  			};
+>  	};
+> +
+> +Amlogic Meson A1 DWC3 USB SoC Controller Glue
+> +
+> +The Amlogic A1 embeds a DWC3 USB IP Core configured for USB2 in
+> +host-only mode.
+> +
+> +Required properties:
+> +- compatible:	Should be "amlogic,meson-a1-usb-ctrl"
+> +- clocks:       The clocks needed by the usb controller
+> +- clock-names:  Should contain the name of the clocks: "usb_ctrl", "usb_bus",
+> +                "xtal_usb_phy", "xtal_usb_ctrl"
+> +- resets:	a handle for the shared "USB" reset line
+> +- reg:		The base address and length of the registers
+> +- phys: 	handle to used PHYs on the system
+> +	- a <0> phandle can be used if a PHY is not used
+> +- phy-names:	names of the used PHYs on the system :
+> +	- "usb2-phy0" for USB2 PHY if USBHOST port is used
+> +
+> +Required child nodes:
+> +
+> +A child node must exist to represent the core DWC3 IP block. The name of
+> +the node is not important. The content of the node is defined in dwc3.txt.
+> +
+> +PHY documentation is provided in the following places:
+> +- Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+> +
+> +Example device nodes:
+> +	usb: usb@ffe09000 {
+> +			status = "okay";
+> +			compatible = "amlogic,meson-a1-usb-ctrl";
+> +			reg = <0x0 0xffe09000 0x0 0xa0>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +
+> +			clocks = <&clkc_periphs CLKID_USB_CTRL>,
+> +				 <&clkc_periphs CLKID_USB_BUS>,
+> +				 <&clkc_periphs CLKID_XTAL_USB_PHY>,
+> +				 <&clkc_periphs CLKID_XTAL_USB_CTRL>;
+> +			clock-names = "usb_ctrl", "usb_bus", "xtal_usb_phy", "xtal_usb_ctrl";
+> +			resets = <&reset RESET_USBCTRL>;
+> +			phys = <&usb2_phy0>;
+> +			phy-names = "usb2-phy0";
+> +
+> +			dwc3: usb@ff400000 {
+> +					compatible = "snps,dwc3";
+> +					reg = <0x0 0xff400000 0x0 0x100000>;
+> +					interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> +					dr_mode = "host";
+> +					snps,dis_u2_susphy_quirk;
+> +					snps,quirk-frame-length-adjustment = <0x20>;
+> +			};
+> +	};
+> 
 
- .../bindings/power/reset/xlnx,zynqmp-power.txt     |  43 +++++++-
- drivers/soc/xilinx/zynqmp_power.c                  | 119 ++++++++++++++++++---
- 2 files changed, 146 insertions(+), 16 deletions(-)
+This seems very similar to the g12a bindings, seems you could update the yaml g12a bindings
+with specific clocks and required for amlogic,meson-a1-usb-ctrl.
 
--- 
-2.7.4
-
+Neil
