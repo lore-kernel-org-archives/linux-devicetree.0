@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1B5C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9BCC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 500FB20715
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1AB20707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574400624;
-	bh=//48Y0e+TnSjcWbypK13uBxiX7dydB+93cLmWpdG+a8=;
+	s=default; t=1574400633;
+	bh=S/UYcjtquDy0CcPqAHpXYiJOsV3eqyYvXDEKlXM21iE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0b8Tn+YoZBW7V6bVF9pcLzXbIIo6ZNXr2O0/5VcqiIzLCEXpSru/oLpjjTGc+L9PZ
-	 WayjoyvZNrOp4+js7Or91Fv1AD46LB0w0x36/aAjYK3FXy+OOOHebFFv9VBRfIn0CP
-	 BukzHE2pfadhDwlNRYpKmsjKrMiKX3zAOtL6FawI=
+	b=mFcbDDdWmRtKGJ9uyUZ7AgejOOxLLHe8KrxzG4LBmtWQDf9ZcKg33/TtXR3d50bZr
+	 7V2ZnVO9svlVEWyX3VLO81OpMwIPFlKkxlnEyAKdoX/diCwdUwrOpc/jc8m7G0ThO6
+	 TpKCWFJKOrrRhQjb5W5RmSU/Jdr2zVieI+2x2uMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfKVFaX (ORCPT
+        id S1727309AbfKVFa2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:30:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47990 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:30:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfKVFaU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:30:20 -0500
+        id S1727270AbfKVFa0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:30:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D33CA2070B;
-        Fri, 22 Nov 2019 05:30:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E1E20707;
+        Fri, 22 Nov 2019 05:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574400619;
-        bh=//48Y0e+TnSjcWbypK13uBxiX7dydB+93cLmWpdG+a8=;
+        s=default; t=1574400625;
+        bh=S/UYcjtquDy0CcPqAHpXYiJOsV3eqyYvXDEKlXM21iE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IkJskqzNH4LWKISp06n70WO5DgV9ykaOis3Hbxc4NG/EcNXRBNTj+1LWXPcc/NYRa
-         19LQ0gHu9RAyFzAnx6Wp66AYMpazpOv0BUjf6eouP2ZPIFgBbpdZ+V8wGayuw/4Wk9
-         0PkczSuLS9YXbygF0+vkX+5MwJ9Wzu303ljW41RM=
+        b=wetmbc8s8B0XKboCas9JwX6zcWMaX8nrpesCJfXWDWg5ZwbKrhuul9S5Y2L+uaegy
+         ZMDed3zV1y3C3WrmoNZMqNG7+0ox2ieu6zyvzk1lagCUioVNfkBr8c+ytHo7Zqfx/D
+         LwJKCs/KNe8YeGiyICnaK8hHr8F1JvLS0ydP6b4k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 019/219] ARM: dts: imx27: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:26:41 -0500
-Message-Id: <20191122053001.752-12-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 024/219] ARM: dts: Fix hsi gdd range for omap4
+Date:   Fri, 22 Nov 2019 00:26:46 -0500
+Message-Id: <20191122053001.752-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122053001.752-1-sashal@kernel.org>
 References: <20191122053001.752-1-sashal@kernel.org>
@@ -60,107 +60,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 38715dcd49b4430ac5b6bc1293278d91a4d32bd5 ]
+[ Upstream commit e9e685480b74aef3f3d0967dadb52eea3ff625d2 ]
 
-Boards based on imx27 have duplicate memory nodes:
+While reviewing the missing mcasp ranges I noticed omap4 hsi range
+for gdd is wrong so let's fix it.
 
-- One coming from the board dts file: memory@
+I'm not aware of any omap4 devices in mainline kernel though that use
+hsi though.
 
-- One coming from the imx27.dtsi file.
-
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
-
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
+them with ti-sysc")
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx27-apf27.dts                 | 1 +
- arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi      | 1 +
- arch/arm/boot/dts/imx27-pdk.dts                   | 1 +
- arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi | 1 +
- arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi   | 1 +
- arch/arm/boot/dts/imx27.dtsi                      | 2 --
- 6 files changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/omap4-l4.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx27-apf27.dts b/arch/arm/boot/dts/imx27-apf27.dts
-index 3eddd805a793a..f635d5c5029c4 100644
---- a/arch/arm/boot/dts/imx27-apf27.dts
-+++ b/arch/arm/boot/dts/imx27-apf27.dts
-@@ -20,6 +20,7 @@
- 	compatible = "armadeus,imx27-apf27", "fsl,imx27";
+diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
+index 6eb26b837446c..5059ecac44787 100644
+--- a/arch/arm/boot/dts/omap4-l4.dtsi
++++ b/arch/arm/boot/dts/omap4-l4.dtsi
+@@ -196,12 +196,12 @@
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges = <0x0 0x58000 0x4000>;
++			ranges = <0x0 0x58000 0x5000>;
  
- 	memory@a0000000 {
-+		device_type = "memory";
- 		reg = <0xa0000000 0x04000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi b/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
-index 9c455dcbe6ebf..c85f9d01768a1 100644
---- a/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
-+++ b/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
-@@ -17,6 +17,7 @@
- 	compatible = "eukrea,cpuimx27", "fsl,imx27";
+ 			hsi: hsi@0 {
+ 				compatible = "ti,omap4-hsi";
+ 				reg = <0x0 0x4000>,
+-				      <0x4a05c000 0x1000>;
++				      <0x5000 0x1000>;
+ 				reg-names = "sys", "gdd";
  
- 	memory@a0000000 {
-+		device_type = "memory";
- 		reg = <0xa0000000 0x04000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx27-pdk.dts b/arch/arm/boot/dts/imx27-pdk.dts
-index f9a882d991329..35123b7cb6b3e 100644
---- a/arch/arm/boot/dts/imx27-pdk.dts
-+++ b/arch/arm/boot/dts/imx27-pdk.dts
-@@ -10,6 +10,7 @@
- 	compatible = "fsl,imx27-pdk", "fsl,imx27";
- 
- 	memory@a0000000 {
-+		device_type = "memory";
- 		reg = <0xa0000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
-index cbad7c88c58cc..b0b4f7c00246d 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
-+++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
-@@ -18,6 +18,7 @@
- 	compatible = "phytec,imx27-pca100", "fsl,imx27";
- 
- 	memory@a0000000 {
-+		device_type = "memory";
- 		reg = <0xa0000000 0x08000000>; /* 128MB */
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
-index ec466b4bfd410..0935e1400e5d2 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
-@@ -17,6 +17,7 @@
- 	compatible = "phytec,imx27-pcm038", "fsl,imx27";
- 
- 	memory@a0000000 {
-+		device_type = "memory";
- 		reg = <0xa0000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-index 753d88df16274..39e75b997bdc8 100644
---- a/arch/arm/boot/dts/imx27.dtsi
-+++ b/arch/arm/boot/dts/imx27.dtsi
-@@ -16,10 +16,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		ethernet0 = &fec;
+ 				clocks = <&l3_init_clkctrl OMAP4_HSI_CLKCTRL 0>;
 -- 
 2.20.1
 
