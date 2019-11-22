@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ACFC43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5C3C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161D920715
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BCD20674
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404182;
-	bh=hRQeDkByL8QEKVXoXktXKnPJwQx473J1hBcnIlZEy3k=;
+	s=default; t=1574404236;
+	bh=zfH7E1dQ0QMkwOWmVhltnebB7TPcOcSQTtCRkRBoYr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wjEIjWJy3yoD3UY9igRb0yqokzcgb7aWzfDSmgnbHSvBCVChD0AvlxnF98f9/cfnR
-	 MmEGm8Skb732igFXNHA4+ylPv8IU1CygK779s4VSnHxqwB5g+yKCndgTshDWWQjYId
-	 cRCHi45HCuaWhD1L0ycPH2F6Yh2gA4H7V9HC24HA=
+	b=ZYHUUe/wH545RdGooR7d82kF1H+TWq7e8SBYrzZ5w2UqBtPI3S6gvH2nsNvD8sxde
+	 NJzdPKrdEOt011WH1xjiRREgS/ufliJF1w4711JIBSM9uwKkKUSc/h4vz6dYngW5rv
+	 lljxgf6BJqHaHwY9MlWXh+Ps0GBRcRNRMiIQh2Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfKVG3h (ORCPT
+        id S1727088AbfKVFtc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:29:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54302 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:49:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfKVFt5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:57 -0500
+        id S1727071AbfKVFtb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 893E82070B;
-        Fri, 22 Nov 2019 05:49:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E8082068F;
+        Fri, 22 Nov 2019 05:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401796;
-        bh=hRQeDkByL8QEKVXoXktXKnPJwQx473J1hBcnIlZEy3k=;
+        s=default; t=1574401771;
+        bh=zfH7E1dQ0QMkwOWmVhltnebB7TPcOcSQTtCRkRBoYr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l5567OOMi2HSqclILq58Q5cIb6CZeh3LJv9ABLD3KHsja1Mm2JyIZjc/PC9uhVPJM
-         ZCMA8leDHLzoV8QCpyFAXfi/b8wammknZ12Ofzbt4hPzLQGt+k0AxT5OX6nQ1yLoSj
-         su6zgTVsJBLyt9MMx/70piwmQ4j5PlPI6nDLEosY=
+        b=mtmvHCf5DPy5iMwKue2/+woJ2/VJOEVw2wuMYMQFPVOXfKeLpcE8hXEpjF46NN+cB
+         xKyvvnirPUx5XaUwk8sb3+aCRGzL16RTOlhK9VABu2zeMZq/iRbi8DQYgI7baADJRd
+         kwNedyIXQwVGLcgQ65jKAjkZpEPofIHi1vELPyp8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 043/219] arm64: dts: renesas: draak: Fix CVBS input
-Date:   Fri, 22 Nov 2019 00:46:15 -0500
-Message-Id: <20191122054911.1750-36-sashal@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 021/219] ARM: dts: imx53-voipac-dmm-668: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:45:53 -0500
+Message-Id: <20191122054911.1750-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
 References: <20191122054911.1750-1-sashal@kernel.org>
@@ -61,35 +61,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 6f61a2c8f1f6163c7e08c77c5f71df0427e4d2f6 ]
+[ Upstream commit 998a84c27a7f3f9133d32af64e19c05cec161a1a ]
 
-A typo in the adv7180 DT node prevents successful probing of the VIN.
-Fix it.
+imx53-voipac-dmm-668 has two memory nodes, but the correct representation
+would be to use a single one with two reg entries - one for each RAM chip
+select, so fix it accordingly.
 
-Fixes: 6a0942c20f5c ("arm64: dts: renesas: draak: Describe CVBS input")
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Acked-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Reported-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index a8e8f2669d4c5..1b8f19ee257f0 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -188,7 +188,7 @@
- 		compatible = "adi,adv7180cp";
- 		reg = <0x20>;
+diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+index f83a8c62ea531..d595034f3f1bf 100644
+--- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
++++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+@@ -17,12 +17,8 @@
  
--		port {
-+		ports {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ 	memory@70000000 {
+ 		device_type = "memory";
+-		reg = <0x70000000 0x20000000>;
+-	};
+-
+-	memory@b0000000 {
+-		device_type = "memory";
+-		reg = <0xb0000000 0x20000000>;
++		reg = <0x70000000 0x20000000>,
++		      <0xb0000000 0x20000000>;
+ 	};
  
+ 	regulators {
 -- 
 2.20.1
 
