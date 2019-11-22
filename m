@@ -2,342 +2,132 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69985C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 04:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567CBC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C80A2068F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 04:39:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fp5JWwTD"
+	by mail.kernel.org (Postfix) with ESMTP id 2DA2220708
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574399957;
+	bh=qxxjYPnh4PQsTATEX/9F4QwWxNBeIk0vs4XPtZpHA2E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=W9AukWzw9Plv20iO0lIl3gOb67zWrFHRB0UCRgX+jQ63znlavH5CmMhIXWovWsNXl
+	 FlYoSF1+rBhTR8Gq+AH+m27NI6/4LiivyD2Qd91ExoPoU73shZsciRN8Qa6GHt1wHO
+	 2h7B/yoBwaIHe67O2PZNMCYFBVvbndfetdrvh4vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfKVEjL (ORCPT
+        id S1726939AbfKVFTN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 23:39:11 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43630 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfKVEjL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 23:39:11 -0500
-Received: by mail-ed1-f65.google.com with SMTP id w6so4790226edx.10;
-        Thu, 21 Nov 2019 20:39:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oVbtyTf0O21olBXtoVa67tn52x/gau87u57+ZUKiFCw=;
-        b=Fp5JWwTDey1hM7mH2XB8MuD6VR0KDOTg0cLbRUM35zpzhaaNX44fwGDaNKeJn/hx1/
-         L1vtZfPZCetcMTtqnjzjVHlluwg5qsPfkmQGseVLVd0JQ/RcpcF2d2ASLmzSXG6kT8WJ
-         Cd+kx0ylYFFMpt4vCFQUaiJS7Q6Oyh/QxEdzNeGz0Hh1k92d7mjZKmi6RtdQOFJQj25K
-         shP2TrGmr5/Zh969AmsONmDaEwtStfC7FErI/IFX6PzDim+/XrLOc7/j4+9Ao+IJHbcS
-         AUwgUxhrL/q8IEtt7jy6LOGl297/m6eUFDUBbXEXU9J+rezI7kyFrg554GSDvA8z5cWc
-         SKFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oVbtyTf0O21olBXtoVa67tn52x/gau87u57+ZUKiFCw=;
-        b=X+i4vJOk0xtmtrcz6xnl34O0qcSYvS/r2KmSBWbJpkFAClR9gDJyrDhCiHpSdCBPsl
-         fTuBPvSa3BwCcEZ4Nhe+xaCdeMStzEH8KrCVixVR1fqO22AAM4wa3VKd6xM0mfgps9F4
-         im4Yg1MFMmk+glye1xc4qpz7zW/ZlfbFSyKaeAzVXMxu7L7oI7BIwQh5VssZqEKAp/lv
-         F3mrtAKbKaCGfmRst6IyrJXgtvk37zwHHNyY4o5d1uS6aRuFexM28l6zkpU83A+OXi5P
-         GoqVmlke5tynEEsU966fe5sQyyRDp1w09jdXE7q6SZIGvMofA0VBSaADNyhWRUT5WdJg
-         2F6g==
-X-Gm-Message-State: APjAAAVvtwCCwMrkgdEcNYSHDYmWTIk8In3t8vZvthLhIxvXweeJqLqy
-        EagfyZWg1gbFmfZgKofDzX8/x6T3JPJiPipWEP7ppg==
-X-Google-Smtp-Source: APXvYqwRCdlfSFWp8fgaVDv7u2vny5wMSbJYBbFmyvw3LmPibX8n8t12SQw67TzKwoFw1NDLh5BDs/DCwq7IBS6pMQE=
-X-Received: by 2002:a17:906:f0c9:: with SMTP id dk9mr19349100ejb.56.1574397548207;
- Thu, 21 Nov 2019 20:39:08 -0800 (PST)
+        Fri, 22 Nov 2019 00:19:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbfKVFTM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:19:12 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4566F20708;
+        Fri, 22 Nov 2019 05:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574399952;
+        bh=qxxjYPnh4PQsTATEX/9F4QwWxNBeIk0vs4XPtZpHA2E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OdaBuIzkSPmGxwz1BpnXssafeyUB+vGMDb7Cy6AtY57qh1BnEawui/5VWVAjjYne+
+         Mfw+RlpAm/F6AOhy8kZKubaZ0N7++O9cSolFTvfx7OU6sgZUeyYPQAAbolhgPqRbgS
+         i5hhgkNaSXSh5rXBQIOFgvJVStvt+Y3UbLkNmm7k=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 005/219] ARM: dts: Fix up SQ201 flash access
+Date:   Fri, 22 Nov 2019 00:15:29 -0500
+Message-Id: <20191122051903.31749-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122051903.31749-1-sashal@kernel.org>
+References: <20191122051903.31749-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1573719422-7414-1-git-send-email-shubhrajyoti.datta@gmail.com>
- <6d135b8a-cdba-e6a6-7738-cbc94cdb7ec0@axentia.se> <CAKfKVtE=ufzc=_EjPR2WKt4qf0sdOB=a7f-BRP-ZffMaemxGBw@mail.gmail.com>
- <b9eaaba2-dcfd-0c97-f088-21acf269a92f@axentia.se>
-In-Reply-To: <b9eaaba2-dcfd-0c97-f088-21acf269a92f@axentia.se>
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Date:   Fri, 22 Nov 2019 10:08:56 +0530
-Message-ID: <CAKfKVtHuzWqH4Su1vC2oMMxvUPiGjvZsBJtYSXxx+rG7Ub1pSQ@mail.gmail.com>
-Subject: Re: [PATCH] i2c: mux: pca954x: Disable cacheing of the last channel
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 6:23 AM Peter Rosin <peda@axentia.se> wrote:
->
-> On 2019-11-20 10:21, Shubhrajyoti Datta wrote:
-> > Hi Peter ,
-> > thanks for the review,
-> >
-> > On Tue, Nov 19, 2019 at 4:35 AM Peter Rosin <peda@axentia.se> wrote:
-> >>
-> >> On 2019-11-14 09:17, shubhrajyoti.datta@gmail.com wrote:
-> >>> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> >>>
-> >>> In case of multimaster configuration the last channel cached value is
-> >>> not reliable. Basically the first processor/master does a write to the
-> >>> mux and then to the intended slave, it caches the value.
-> >>> Now the second processor/processor does a write to mux on another
-> >>> channel and writes to another slave.
-> >>> The first processor/master when it attempts to write the slave
-> >>> skips the mux as it relies on the mux channel being the same as the
-> >>> intended. This causes an issue.
-> >>>
-> >>> To fix that write always to the mux address.
-> >>
-> >> Thanks for your patch.
-> >>
-> >> However, I don't really see how this fixes anything. If you have
-> >> multiple masters competing for the same mux, all bets are off and any
-> >> solution not involving an out-of-band channel where the masters can
-> >> coordinate will be racy, broken and dangerous.
-> >> And since you need that
-> >> extra channel anyway, it might as well also be used to coordinate when
-> >> the cache needs to be invalidated.
-> >>
-> >> At the very least, all limitations needs to be carefully documented,
-> >> but that does not mean that I will ever like it. In short, I'm extremely
-> >> reluctant to add a glgllike this.
-> >>
-> >> Cheers,
-> >> Peter
-> >
-> > I agree does the below patch make sense.
->
-> This patch is severely white-space damaged and I have a hard time reading
-> the details so please fix your setup. However, I gather the idea is to
-> rely on having all masters configured to idle the mux when they don't use
-> it. That's also racy since multiple masters can all read the zero, and
-> deduce that the mux is free, then all of them write their thing to the
-> mux, and proceed as if they own it. That spells disaster.
-However since the bus is locked when the master is transacting others
-will get bus
-busy or an arbitration lost if they start together.
+From: Linus Walleij <linus.walleij@linaro.org>
 
-> Also, I'm not
-> sure the 1 second timeout is OK since the the root adapter (along with
-> the mux) are potentially locked for this duration, thus blocking all other
-> I2C traffic.
-We are checking if the mux value is non-zero this will happen when
-someone else is
-transacting on the bus.
+[ Upstream commit d88b11ef91b15d0af9c0676cbf4f441a0dff0c56 ]
 
->
-> Also, if you are relying on the mux being idle when unused, then you will
-> effectively not have a cache regardless of this patch, and the driver will
-> set the desired value on each transaction, which mean that the naming of
-> this new feature is wrong. Maybe name it something with "coordination" (a
-> bit long) or "arbitration" or something such instead?
+This sets the partition information on the SQ201 to be read
+out from the RedBoot partition table, removes the static
+partition table and sets our boot options to mount root from
+/dev/mtdblock2 where the squashfs+JFFS2 resides.
 
-I agree.
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/gemini-sq201.dts | 37 ++++--------------------------
+ 1 file changed, 5 insertions(+), 32 deletions(-)
 
->
-> It seems your hardware designers didn't think things through properly,
-> because I can't see a sane way to fix the race. Not without a separate
-> communications channel where the masters can coordinate. But I bet that
-> channel, if it even exists, is pretty damn hard to use if it wasn't
-> designed in from the start.
->
-> I think the traditional way to solve your problem is to have the masters
-> coordinate via some i2c arbitrator such as the i2c-arb-gpio-challenge
-> driver or a pca9541 chip or something. Then the muxing transactions,
-> which consist of multiple I2C transfers, can be handled as a unit.
->
-> I.e. with i2c-arb-gpio-challenge, you have two gpio lines where two
-> masters can coordinate, and even if they are both on the same I2C bus,
-> they can actually use the mux if and only if it is known to be free.
->
->                                .-------.
->         master 1  ------.      |       |----->
->          |  ^           |      |       |----->
->          |  |           |----->|  mux  |  .
->          V  |           |      |       |  .
->         master 2  ------'      |       |----->
->                                '-------'
->
-I would explore that.
+diff --git a/arch/arm/boot/dts/gemini-sq201.dts b/arch/arm/boot/dts/gemini-sq201.dts
+index 3787cf3763c41..e9e4a8a02600b 100644
+--- a/arch/arm/boot/dts/gemini-sq201.dts
++++ b/arch/arm/boot/dts/gemini-sq201.dts
+@@ -20,7 +20,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200n8";
++		bootargs = "console=ttyS0,115200n8 root=/dev/mtdblock2 rw rootfstype=squashfs,jffs2 rootwait";
+ 		stdout-path = &uart0;
+ 	};
+ 
+@@ -138,37 +138,10 @@
+ 			/* 16MB of flash */
+ 			reg = <0x30000000 0x01000000>;
+ 
+-			partition@0 {
+-				label = "RedBoot";
+-				reg = <0x00000000 0x00120000>;
+-				read-only;
+-			};
+-			partition@120000 {
+-				label = "Kernel";
+-				reg = <0x00120000 0x00200000>;
+-			};
+-			partition@320000 {
+-				label = "Ramdisk";
+-				reg = <0x00320000 0x00600000>;
+-			};
+-			partition@920000 {
+-				label = "Application";
+-				reg = <0x00920000 0x00600000>;
+-			};
+-			partition@f20000 {
+-				label = "VCTL";
+-				reg = <0x00f20000 0x00020000>;
+-				read-only;
+-			};
+-			partition@f40000 {
+-				label = "CurConf";
+-				reg = <0x00f40000 0x000a0000>;
+-				read-only;
+-			};
+-			partition@fe0000 {
+-				label = "FIS directory";
+-				reg = <0x00fe0000 0x00020000>;
+-				read-only;
++			partitions {
++				compatible = "redboot-fis";
++				/* Eraseblock at 0xfe0000 */
++				fis-index-block = <0x1fc>;
+ 			};
+ 		};
+ 
+-- 
+2.20.1
 
-> The pca9541 can also handle two masters, but in that case the masters are
-> not really on the same I2C bus, at least not at the same time.
->
->                         .-----------.      .-------.
->         master 1  ----->|           |      |       |----->
->                         |           |      |       |----->
->                         |  pca9541  |----->|  mux  |  .
->                         |           |      |       |  .
->         master 2  ----->|           |      |       |----->
->                         '-----------'      '-------'
->
-> If you don't have something like that in your schematics, I think you
-> are just SOL, and anything you try will be broken in one way or another.
->
-> Trying to use the register in the mux for the needed coordination seems
-> very difficult. Maybe if there was a pair of unused registers in some
-> other device on the bus, or a couple of memory locations in an eeprom or
-> something, then that could perhaps be used as the i2c-arb-gpio-challenge
-> uses the gpios. I.e. write a new i2c-arb-reg-challenge driver or
-> something, if you see what I mean. Hmm, on second thought, eeproms might
-> not be so good if you expect to mux frequently...
->
-> Finally, I noticed a couple of spelling mistakes below.
->
-> > From 0ca65420b65514594a8252d1e9eeba64bea01da6 Mon Sep 17 00:00:00 2001
-> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> > Date: Fri, 30 Aug 2019 11:15:25 +0530
-> > Subject: [PATCH] i2c: mux: pca954x: Disable cacheing of the last channel
->
-> "caching", as someone else already mentioned.
-will fix.
-
->
-> >
-> > In case of multimaster configuration the last channel cached value is
-> > not reliable. To fix that write always to the mux address.
-> > Also use the 0 channel disable to arbitrate. If disabled only then write.
-> > Else wait for it to be disabled.
-> >
-> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> > ---
-> >
-> >  .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |  1 +
-> >  drivers/i2c/muxes/i2c-mux-pca954x.c                | 49 +++++++++++++++++++---
-> >  2 files changed, 45 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> > b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> > index 923aa3a..a7e3aa9 100644
-> > --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> > +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> > @@ -42,6 +42,7 @@
-> >  #include <linux/i2c-mux.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/irq.h>
-> > +#include <linux/jiffies.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_device.h>
-> > @@ -55,6 +56,8 @@
-> >
-> >  #define PCA954X_IRQ_OFFSET 4
-> >
-> > +#define MUX_CHAN_TIMEOUT_US 1000000
-> > +
-> >  enum pca_type {
-> >   pca_9540,
-> >   pca_9542,
-> > @@ -85,6 +88,8 @@ struct pca954x {
-> >   const struct chip_desc *chip;
-> >
-> >   u8 last_chan; /* last register value */
-> > + u8 last_chan_unchached; /* write channel register always */
->
-> ..._uncached
->
-> But, since a rename might be in order, I don't know how relevant that
-> is...
->
-Will consider renaming.
-
-> Cheers,
-> Peter
->
-> > + bool channel_sel;
-> >   /* MUX_IDLE_AS_IS, MUX_IDLE_DISCONNECT or >= 0 for channel */
-> >   s8 idle_state;
-> >
-> > @@ -229,6 +234,23 @@ static int pca954x_reg_write(struct i2c_adapter *adap,
-> >   I2C_SMBUS_BYTE, &dummy);
-> >  }
-> >
-> > +/*
-> > + * Read from chip register. Don't use i2c_transfer()/i2c_smbus_xfer()
-> > + * as they will try to lock adapter a second time.
-> > + */
-> > +static int pca954x_reg_read(struct i2c_adapter *adap,
-> > +     struct i2c_client *client, u8 val)
-> > +{
-> > + union i2c_smbus_data data;
-> > + int ret;
-> > +
-> > + ret = __i2c_smbus_xfer(adap, client->addr, client->flags,
-> > +        I2C_SMBUS_READ, val,
-> > +        I2C_SMBUS_BYTE, &data);
-> > +
-> > + return ret ? ret :  data.byte;
-> > +}
-> > +
-> >  static int pca954x_select_chan(struct i2c_mux_core *muxc, u32 chan)
-> >  {
-> >   struct pca954x *data = i2c_mux_priv(muxc);
-> > @@ -236,6 +258,7 @@ static int pca954x_select_chan(struct i2c_mux_core
-> > *muxc, u32 chan)
-> >   const struct chip_desc *chip = data->chip;
-> >   u8 regval;
-> >   int ret = 0;
-> > + unsigned long timeout = jiffies + usecs_to_jiffies(MUX_CHAN_TIMEOUT_US);
-> >
-> >   /* we make switches look like muxes, not sure how to be smarter */
-> >   if (chip->muxtype == pca954x_ismux)
-> > @@ -243,13 +266,26 @@ static int pca954x_select_chan(struct
-> > i2c_mux_core *muxc, u32 chan)
-> >   else
-> >   regval = 1 << chan;
-> >
-> > + if (!data->last_chan_unchached) {
-> >   /* Only select the channel if its different from the last channel */
-> > - if (data->last_chan != regval) {
-> > - ret = pca954x_reg_write(muxc->parent, client, regval);
-> > - data->last_chan = ret < 0 ? 0 : regval;
-> > + if (data->last_chan != regval) {
-> > + ret = pca954x_reg_write(muxc->parent, client, regval);
-> > + data->last_chan = ret < 0 ? 0 : regval;
-> > + }
-> > + return ret;
-> >   }
-> >
-> > - return ret;
-> > + do {
-> > + ret = pca954x_reg_read(muxc->parent, client, 0);
-> > + if (ret == 0) {
-> > + ret = pca954x_reg_write(muxc->parent, client, regval);
-> > + data->channel_sel = true;
-> > + return ret;
-> > + }
-> > + msleep(20);
-> > + } while (time_is_after_eq_jiffies(timeout));
-> > + data->channel_sel = false;
-> > + return -ETIMEDOUT;
-> >  }
-> >
-> >  static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
-> > @@ -259,7 +295,7 @@ static int pca954x_deselect_mux(struct
-> > i2c_mux_core *muxc, u32 chan)
-> >   s8 idle_state;
-> >
-> >   idle_state = READ_ONCE(data->idle_state);
-> > - if (idle_state >= 0)
-> > + if (idle_state >= 0 &&  data->channel_sel)
-> >   /* Set the mux back to a predetermined channel */
-> >   return pca954x_select_chan(muxc, idle_state);
-> >
-> > @@ -479,6 +515,9 @@ static int pca954x_probe(struct i2c_client *client,
-> >   if (idle_disconnect_dt)
-> >   data->idle_state = MUX_IDLE_DISCONNECT;
-> >
-> > + data->last_chan_unchached = np &&
-> > + of_property_read_bool(np, "no-channel-cache");
-> > +
-> >   ret = pca954x_irq_setup(muxc);
-> >   if (ret)
-> >   goto fail_cleanup;
-> >
->
