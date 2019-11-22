@@ -2,675 +2,604 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F871C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 18:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B75BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 18:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C293020707
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 18:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C64520707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 18:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IGk0VyYb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="LYO/iixq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfKVSlA (ORCPT
+        id S1726695AbfKVSnO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 13:41:00 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33676 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfKVSlA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 13:41:00 -0500
-Received: by mail-pf1-f194.google.com with SMTP id c184so3890499pfb.0
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 10:40:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wo5ibYR/jmzeVb+M6LZK7ExxWr9YCNmlRHQmrYzh6zE=;
-        b=IGk0VyYbJ8KpsLBvRkzGBYaeS7Tw0H9ZJyQTOxePasJTwvRDqEsrk/Gvd/8XefDUib
-         O7nOZJgVJj8ZrkNxC25BQWumNOaV71O9SHVApvk+sYYQFyHkMr5HQuWzK8u9tGMzw9z8
-         RJj9WSP/LevCEdlZMKjmM1wk/XvcfQccmB+6BJM1utPpY3ds+hMiF1YjKiEaUhLIyUm/
-         x98JDmoYcsGj/Wqlg3OFOJv2vld851mVHMs3N6lMsMYsqNBuAf0RId2ZrghwDHK4z53A
-         XhLpajMgxUZLGNAHVSDdkiL/3xlY+kWXxiMfJM85N85oD+Sg/DOO9u/1toaxLqDzulAJ
-         gp/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wo5ibYR/jmzeVb+M6LZK7ExxWr9YCNmlRHQmrYzh6zE=;
-        b=TIOL0YNBLMO+XZz/0wfMRM6z9+nnRgsxXLautLq3KP1soJ9LWgAm3rpuxmWNZ8+WD/
-         3JBljewCRwQoPo/J6Fge4n86qYHT/fcKL/rXzci4iHu1POWOi6OcGLAEvN85cspSi/IL
-         jgnKXM382HGgcHwVEA7b437gyxtVqd+mJXq/3pJaFk9UDzeXXG5vY8aCQXSKZV3M5csu
-         1Ljp7cBJbiVXF0nr8ifmL34cgbDeHydODuaUlX7eoZSCDX/4aSUQLCvw7zCasKHOKMKW
-         BjVe24DLgIJrva66BwnpTEUZYcNbMDYq0PsVEIgr9RstjH8JmJNOg2czqOtlbeD6k2HT
-         71UQ==
-X-Gm-Message-State: APjAAAXW/y8Yib5wclUtMlyKBtoZ5j4oZYkZIF51+ve7VpuA5DBYhk00
-        M+FEd0Kq4aAzrdk+OuyrqyEUkQ==
-X-Google-Smtp-Source: APXvYqzyNaRls404Elve1Ifv+CDEigw5WzICjbmCM8GI9edRfJ/JAqimbTaO+ilGuGdN0+xUY927OQ==
-X-Received: by 2002:a63:5163:: with SMTP id r35mr17270073pgl.201.1574448058804;
-        Fri, 22 Nov 2019 10:40:58 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u7sm8275698pfh.84.2019.11.22.10.40.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Nov 2019 10:40:58 -0800 (PST)
-Date:   Fri, 22 Nov 2019 11:40:56 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        suzuki.poulose@arm.com
-Subject: Re: [PATCH v5 04/14] coresight: cti: Add sysfs trigger / channel
- programming API
-Message-ID: <20191122184056.GB23396@xps15>
-References: <20191119231912.12768-1-mike.leach@linaro.org>
- <20191119231912.12768-5-mike.leach@linaro.org>
+        Fri, 22 Nov 2019 13:43:14 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:43442 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfKVSnO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 13:43:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574448191; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0lOyMa6Ex3sfPKlng36cRvTG1B0X0Ys4I1LnkFH+hig=;
+        b=LYO/iixqA/CmGSCCTJ9FqCvCiPl2eD2B3po8y2PBhkyHRW6jB9rwGN01D+0jvu2dI/YCQW
+        z9Om1E+pI9s35Sp6e9FbLw+5Q881cr/fp0WE2mSjrSFc7qDgVCs8pm2K8tcHxC/8KfKSSk
+        acrIfjPTplMWwpZD+G/vAE4a0HpGGls=
+Date:   Fri, 22 Nov 2019 19:43:03 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 4/4] pinctrl: Ingenic: Add pinctrl driver for X1830.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        paulburton@kernel.org, paul.burton@mips.com,
+        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        syq@debian.org
+Message-Id: <1574448183.3.2@crapouillou.net>
+In-Reply-To: <1574317183-126374-5-git-send-email-zhouyanjie@zoho.com>
+References: <1574317183-126374-1-git-send-email-zhouyanjie@zoho.com>
+        <1574317183-126374-5-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119231912.12768-5-mike.leach@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 11:19:02PM +0000, Mike Leach wrote:
-> Adds a user API to allow programming of CTI by trigger ID and
-> channel number. This will take the channel and trigger ID supplied
-> by the user and program the appropriate register values.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+Hi Zhou,
+
+
+Le jeu., nov. 21, 2019 at 14:19, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> Add support for probing the pinctrl-ingenic driver on the
+> X1830 Soc from Ingenic.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 > ---
->  .../hwtracing/coresight/coresight-cti-sysfs.c | 349 ++++++++++++++++++
->  drivers/hwtracing/coresight/coresight-cti.c   | 147 ++++++++
->  drivers/hwtracing/coresight/coresight-cti.h   |  32 ++
->  3 files changed, 528 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> index 02d3ee0c1278..98de8a4768fc 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> @@ -464,6 +464,349 @@ static struct attribute *coresight_cti_regs_attrs[] = {
->  	NULL,
+>=20
+> Notes:
+>     v2:
+>     New patch.
+>=20
+>     v2->v3:
+>     Add pinctrl drivers for the PWM of X1830.
+>=20
+>  drivers/pinctrl/pinctrl-ingenic.c | 327=20
+> +++++++++++++++++++++++++++++++++++---
+>  1 file changed, 309 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
+> b/drivers/pinctrl/pinctrl-ingenic.c
+> index 1a99715..fa581b7 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -28,6 +28,10 @@
+>  #define GPIO_PIN	0x00
+>  #define GPIO_MSK	0x20
+>=20
+> +#define GPIO_HIZ		0x00
+> +#define GPIO_PULLUP		0x01
+> +#define GPIO_PULLDOWN	0x10
+> +
+>  #define JZ4740_GPIO_DATA	0x10
+>  #define JZ4740_GPIO_PULL_DIS	0x30
+>  #define JZ4740_GPIO_FUNC	0x40
+> @@ -45,6 +49,11 @@
+>  #define X1000_GPIO_PZ_BASE		0x700
+>  #define X1000_GPIO_PZ_GID2LD	0x7f0
+>=20
+> +#define X1830_GPIO_PEL0			0x110
+> +#define X1830_GPIO_PEL1			0x120
+> +#define X1830_GPIO_PZ_BASE		0x7000
+> +#define X1830_GPIO_PZ_GID2LD	0x70f0
+> +
+>  #define REG_SET(x) ((x) + 0x4)
+>  #define REG_CLEAR(x) ((x) + 0x8)
+>=20
+> @@ -60,6 +69,7 @@ enum jz_version {
+>  	ID_X1000,
+>  	ID_X1000E,
+>  	ID_X1500,
+> +	ID_X1830,
 >  };
->  
-> +/* CTI channel x-trigger programming */
-> +static int
-> +cti_trig_op_parse(struct device *dev, enum cti_chan_op op,
-> +		  enum cti_trig_dir dir, const char *buf, size_t size)
-> +{
-> +	u32 chan_idx;
-> +	u32 trig_idx;
-> +	int items, err = -EINVAL;
-> +
-> +	/* extract chan idx and trigger idx */
-> +	items = sscanf(buf, "%d %d", &chan_idx, &trig_idx);
-> +	if (items == 2) {
-> +		err = cti_channel_trig_op(dev, op, dir, chan_idx, trig_idx);
-> +		if (!err)
-> +			err = size;
-> +	}
-> +	return err;
-> +}
-> +
-> +static ssize_t trigin_attach_store(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   const char *buf, size_t size)
-> +{
-> +	return cti_trig_op_parse(dev, CTI_CHAN_ATTACH, CTI_TRIG_IN,
-> +				 buf, size);
-> +}
-> +static DEVICE_ATTR_WO(trigin_attach);
-> +
-> +static ssize_t trigin_detach_store(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   const char *buf, size_t size)
-> +{
-> +	return cti_trig_op_parse(dev, CTI_CHAN_DETACH, CTI_TRIG_IN,
-> +				 buf, size);
-> +}
-> +static DEVICE_ATTR_WO(trigin_detach);
-> +
-> +static ssize_t trigout_attach_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t size)
-> +{
-> +	return cti_trig_op_parse(dev, CTI_CHAN_ATTACH, CTI_TRIG_OUT,
-> +				 buf, size);
-> +}
-> +static DEVICE_ATTR_WO(trigout_attach);
-> +
-> +static ssize_t trigout_detach_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t size)
-> +{
-> +	return cti_trig_op_parse(dev, CTI_CHAN_DETACH, CTI_TRIG_OUT,
-> +				 buf, size);
-> +}
-> +static DEVICE_ATTR_WO(trigout_detach);
-> +
-> +
-> +static ssize_t chan_gate_enable_store(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf, size_t size)
-> +{
-> +	int err = 0, channel = 0;
-> +
-> +	if (kstrtoint(buf, 0, &channel))
-> +		return -EINVAL;
-> +
-> +	err = cti_channel_gate_op(dev, CTI_GATE_CHAN_ENABLE, channel);
-> +	return err ? err : size;
-> +}
-> +
-> +static ssize_t chan_gate_enable_show(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     char *buf)
-> +{
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	struct cti_config *cfg = &drvdata->config;
-> +	unsigned long ctigate_bitmask = cfg->ctigate;
-> +	int size = 0;
-> +
-> +	if (cfg->ctigate == 0)
-> +		size = scnprintf(buf, PAGE_SIZE, "\n");
-> +	else
-> +		size = bitmap_print_to_pagebuf(true, buf, &ctigate_bitmask,
-> +					       cfg->nr_ctm_channels);
-> +	return size;
-> +}
-> +static DEVICE_ATTR_RW(chan_gate_enable);
-> +
-> +static ssize_t chan_gate_disable_store(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       const char *buf, size_t size)
-> +{
-> +	int err = 0, channel = 0;
-> +
-> +	if (kstrtoint(buf, 0, &channel))
-> +		return -EINVAL;
-> +
-> +	err = cti_channel_gate_op(dev, CTI_GATE_CHAN_DISABLE, channel);
-> +	return err ? err : size;
-> +}
-> +static DEVICE_ATTR_WO(chan_gate_disable);
-> +
-> +static int
-> +chan_op_parse(struct device *dev, enum cti_chan_set_op op, const char *buf)
-> +{
-> +	int err = 0, channel = 0;
-> +
-> +	if (kstrtoint(buf, 0, &channel))
-> +		return -EINVAL;
-> +
-> +	err = cti_channel_setop(dev, op, channel);
-> +	return err;
-> +
-> +}
-> +
-> +static ssize_t chan_set_store(struct device *dev,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t size)
-> +{
-> +	int err = chan_op_parse(dev, CTI_CHAN_SET, buf);
-> +
-> +	return err ? err : size;
-> +}
-> +static DEVICE_ATTR_WO(chan_set);
-> +
-> +static ssize_t chan_clear_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t size)
-> +{
-> +	int err = chan_op_parse(dev, CTI_CHAN_CLR, buf);
-> +
-> +	return err ? err : size;
-> +}
-> +static DEVICE_ATTR_WO(chan_clear);
-> +
-> +static ssize_t chan_pulse_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t size)
-> +{
-> +	int err = chan_op_parse(dev, CTI_CHAN_PULSE, buf);
-> +
-> +	return err ? err : size;
-> +}
-> +static DEVICE_ATTR_WO(chan_pulse);
-> +
-> +static ssize_t trig_filter_enable_show(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       char *buf)
-> +{
-> +	u32 val;
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +
-> +	spin_lock(&drvdata->spinlock);
-> +	val = drvdata->config.trig_filter_enable;
-> +	spin_unlock(&drvdata->spinlock);
-> +	return scnprintf(buf, PAGE_SIZE, "%d\n", val);
-> +}
-> +
-> +static ssize_t trig_filter_enable_store(struct device *dev,
-> +					struct device_attribute *attr,
-> +					const char *buf, size_t size)
-> +{
-> +	unsigned long val;
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +
-> +	if (kstrtoul(buf, 0, &val))
-> +		return -EINVAL;
-> +
-> +	spin_lock(&drvdata->spinlock);
-> +	drvdata->config.trig_filter_enable = !!val;
-> +	spin_unlock(&drvdata->spinlock);
-> +	return size;
-> +}
-> +static DEVICE_ATTR_RW(trig_filter_enable);
-> +
-> +static ssize_t trigout_filtered_show(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     char *buf)
-> +{
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	struct cti_config *cfg = &drvdata->config;
-> +	int size = 0, nr_trig_max = cfg->nr_trig_max;
-> +	unsigned long mask = cfg->trig_out_filter;
-> +
-> +	if (mask)
-> +		size = bitmap_print_to_pagebuf(true, buf, &mask, nr_trig_max);
-> +	return size;
-> +}
-> +static DEVICE_ATTR_RO(trigout_filtered);
-> +
-> +/* clear all xtrigger / channel programming */
-> +static ssize_t chan_xtrigs_reset_store(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       const char *buf, size_t size)
-> +{
-> +	int i;
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	struct cti_config *config = &drvdata->config;
-> +
-> +	spin_lock(&drvdata->spinlock);
-> +
-> +	/* clear the CTI trigger / channel programming registers */
-> +	for (i = 0; i < config->nr_trig_max; i++) {
-> +		config->ctiinen[i] = 0;
-> +		config->ctiouten[i] = 0;
-> +	}
-> +
-> +	/* clear the other regs */
-> +	config->ctigate = GENMASK(config->nr_ctm_channels - 1, 0);
-> +	config->asicctl = 0;
-> +	config->ctiappset = 0;
-> +	config->ctiinout_sel = 0;
-> +	config->xtrig_rchan_sel = 0;
-> +
-> +	/* if enabled then write through */
-> +	if (CTI_PWR_ENA(config))
-> +		cti_write_all_hw_regs(drvdata);
-> +
-> +	spin_unlock(&drvdata->spinlock);
-> +	return size;
-> +}
-> +static DEVICE_ATTR_WO(chan_xtrigs_reset);
-> +
-> +/*
-> + * Write to select a channel to view, read to display the
-> + * cross triggers for the selected channel.
-> + */
-> +static ssize_t chan_xtrigs_view_store(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf, size_t size)
-> +{
-> +	unsigned long val;
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +
-> +	if (kstrtoul(buf, 0, &val))
-> +		return -EINVAL;
-> +	if (val > (drvdata->config.nr_ctm_channels - 1))
-> +		return -EINVAL;
-> +
-> +	spin_lock(&drvdata->spinlock);
-> +	drvdata->config.xtrig_rchan_sel = val;
-> +	spin_unlock(&drvdata->spinlock);
-> +	return size;
-> +}
-> +
-> +static ssize_t chan_xtrigs_view_show(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     char *buf)
-> +{
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	struct cti_config *cfg = &drvdata->config;
-> +	int used = 0, reg_idx;
-> +	int buf_sz = PAGE_SIZE;
-> +	u32 chan_mask = BIT(cfg->xtrig_rchan_sel);
-> +
-> +	used += scnprintf(buf, buf_sz, "[%d] IN: ", cfg->xtrig_rchan_sel);
-> +	for (reg_idx = 0;
-> +	     reg_idx < drvdata->config.nr_trig_max;
-> +	     reg_idx++) {
-> +		if (chan_mask & cfg->ctiinen[reg_idx]) {
-> +			used += scnprintf(buf + used, buf_sz - used, "%d ",
-> +					  reg_idx);
-> +		}
-> +	}
-> +
-> +	used += scnprintf(buf + used, buf_sz - used, "OUT: ");
-> +	for (reg_idx = 0;
-> +	     reg_idx < drvdata->config.nr_trig_max;
-> +	     reg_idx++) {
-> +		if (chan_mask & cfg->ctiouten[reg_idx]) {
-> +			used += scnprintf(buf + used, buf_sz - used, "%d ",
-> +					  reg_idx);
-> +		}
-> +	}
-> +	used += scnprintf(buf + used, buf_sz - used, "\n");
-> +	return used;
-> +}
-> +static DEVICE_ATTR_RW(chan_xtrigs_view);
-> +
-> +static ssize_t print_chan_list(struct device *dev,
-> +			       char *buf, bool inuse)
-> +{
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	struct cti_config *config = &drvdata->config;
-> +	int size, i;
-> +	unsigned long inuse_bits = 0, chan_mask;
-> +
-> +	/* scan regs to get bitmap of channels in use. */
-> +	spin_lock(&drvdata->spinlock);
-> +	for (i = 0; i < config->nr_trig_max; i++) {
-> +		inuse_bits |= config->ctiinen[i];
-> +		inuse_bits |= config->ctiouten[i];
-> +	}
-> +	spin_unlock(&drvdata->spinlock);
-> +
-> +	/* inverse bits if printing free channels */
-> +	if (!inuse)
-> +		inuse_bits = ~inuse_bits;
-> +
-> +	/* list of channels, or 'none' */
-> +	chan_mask = GENMASK(config->nr_ctm_channels - 1, 0);
-> +	if (inuse_bits & chan_mask)
-> +		size = bitmap_print_to_pagebuf(true, buf, &inuse_bits,
-> +					       config->nr_ctm_channels);
-> +	else
-> +		size = scnprintf(buf, PAGE_SIZE, "\n");
-> +	return size;
-> +}
-> +
-> +static ssize_t chan_inuse_show(struct device *dev,
-> +			       struct device_attribute *attr,
-> +			       char *buf)
-> +{
-> +	return print_chan_list(dev, buf, true);
-> +}
-> +static DEVICE_ATTR_RO(chan_inuse);
-> +
-> +static ssize_t chan_free_show(struct device *dev,
-> +			      struct device_attribute *attr,
-> +			      char *buf)
-> +{
-> +	return print_chan_list(dev, buf, false);
-> +}
-> +static DEVICE_ATTR_RO(chan_free);
-> +
-> +static struct attribute *coresight_cti_channel_attrs[] = {
-> +	&dev_attr_trigin_attach.attr,
-> +	&dev_attr_trigin_detach.attr,
-> +	&dev_attr_trigout_attach.attr,
-> +	&dev_attr_trigout_detach.attr,
-> +	&dev_attr_trig_filter_enable.attr,
-> +	&dev_attr_trigout_filtered.attr,
-> +	&dev_attr_chan_gate_enable.attr,
-> +	&dev_attr_chan_gate_disable.attr,
-> +	&dev_attr_chan_set.attr,
-> +	&dev_attr_chan_clear.attr,
-> +	&dev_attr_chan_pulse.attr,
-> +	&dev_attr_chan_inuse.attr,
-> +	&dev_attr_chan_free.attr,
-> +	&dev_attr_chan_xtrigs_view.attr,
-> +	&dev_attr_chan_xtrigs_reset.attr,
-> +	NULL,
+>=20
+>  struct ingenic_chip_info {
+> @@ -1394,6 +1404,220 @@ static const struct ingenic_chip_info=20
+> x1500_chip_info =3D {
+>  	.pull_downs =3D x1000_pull_downs,
+>  };
+>=20
+> +static const u32 x1830_pull_ups[4] =3D {
+> +	0x5fdfffc0, 0xffffefff, 0x1ffffbff, 0x0fcff3fc,
 > +};
 > +
->  /* sysfs groups */
->  static const struct attribute_group coresight_cti_group = {
->  	.attrs = coresight_cti_attrs,
-> @@ -479,9 +822,15 @@ static const struct attribute_group coresight_cti_regs_group = {
->  	.name = "regs",
->  };
->  
-> +static const struct attribute_group coresight_cti_channels_group = {
-> +	.attrs = coresight_cti_channel_attrs,
-> +	.name = "channels",
+> +static const u32 x1830_pull_downs[4] =3D {
+> +	0x5fdfffc0, 0xffffefff, 0x1ffffbff, 0x0fcff3fc,
 > +};
 > +
->  const struct attribute_group *coresight_cti_groups[] = {
->  	&coresight_cti_group,
->  	&coresight_cti_mgmt_group,
->  	&coresight_cti_regs_group,
-> +	&coresight_cti_channels_group,
->  	NULL,
->  };
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> index b016b1e67fb1..369488dd7b8e 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> @@ -293,6 +293,153 @@ int cti_add_default_connection(struct device *dev, struct cti_drvdata *drvdata)
->  	return ret;
->  }
->  
-> +/** cti channel api **/
-> +/* attach/detach channel from trigger - write through if enabled. */
-> +int cti_channel_trig_op(struct device *dev, enum cti_chan_op op,
-> +			enum cti_trig_dir direction, u32 channel_idx,
-> +			u32 trigger_idx)
-> +{
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	struct cti_config *config = &drvdata->config;
-> +	u32 trig_bitmask;
-> +	u32 chan_bitmask;
-> +	u32 reg_value;
-> +	int reg_offset;
+> +static int x1830_uart0_data_pins[] =3D { 0x33, 0x36, };
+> +static int x1830_uart0_hwflow_pins[] =3D { 0x34, 0x35, };
+> +static int x1830_uart1_data_pins[] =3D { 0x38, 0x37, };
+> +static int x1830_sfc_pins[] =3D { 0x17, 0x18, 0x1a, 0x19, 0x1b, 0x1c,=20
+> };
+> +static int x1830_ssi0_dt_pins[] =3D { 0x4c, };
+> +static int x1830_ssi0_dr_pins[] =3D { 0x4b, };
+> +static int x1830_ssi0_clk_pins[] =3D { 0x4f, };
+> +static int x1830_ssi0_gpc_pins[] =3D { 0x4d, };
+> +static int x1830_ssi0_ce0_pins[] =3D { 0x50, };
+> +static int x1830_ssi0_ce1_pins[] =3D { 0x4e, };
+> +static int x1830_ssi1_dt_c_pins[] =3D { 0x53, };
+> +static int x1830_ssi1_dr_c_pins[] =3D { 0x54, };
+> +static int x1830_ssi1_clk_c_pins[] =3D { 0x57, };
+> +static int x1830_ssi1_gpc_c_pins[] =3D { 0x55, };
+> +static int x1830_ssi1_ce0_c_pins[] =3D { 0x58, };
+> +static int x1830_ssi1_ce1_c_pins[] =3D { 0x56, };
+> +static int x1830_ssi1_dt_d_pins[] =3D { 0x62, };
+> +static int x1830_ssi1_dr_d_pins[] =3D { 0x63, };
+> +static int x1830_ssi1_clk_d_pins[] =3D { 0x66, };
+> +static int x1830_ssi1_gpc_d_pins[] =3D { 0x64, };
+> +static int x1830_ssi1_ce0_d_pins[] =3D { 0x67, };
+> +static int x1830_ssi1_ce1_d_pins[] =3D { 0x65, };
+> +static int x1830_mmc0_1bit_pins[] =3D { 0x24, 0x25, 0x20, };
+> +static int x1830_mmc0_4bit_pins[] =3D { 0x21, 0x22, 0x23, };
+> +static int x1830_mmc1_1bit_pins[] =3D { 0x42, 0x43, 0x44, };
+> +static int x1830_mmc1_4bit_pins[] =3D { 0x45, 0x46, 0x47, };
+> +static int x1830_i2c0_pins[] =3D { 0x0c, 0x0d, };
+> +static int x1830_i2c1_pins[] =3D { 0x39, 0x3a, };
+> +static int x1830_i2c2_pins[] =3D { 0x5b, 0x5c, };
+> +static int x1830_pwm_pwm0_b_pins[] =3D { 0x31, };
+> +static int x1830_pwm_pwm0_c_pins[] =3D { 0x4b, };
+> +static int x1830_pwm_pwm1_b_pins[] =3D { 0x32, };
+> +static int x1830_pwm_pwm1_c_pins[] =3D { 0x4c, };
+> +static int x1830_pwm_pwm2_c_8_pins[] =3D { 0x48, };
+> +static int x1830_pwm_pwm2_c_13_pins[] =3D { 0x4d, };
+> +static int x1830_pwm_pwm3_c_9_pins[] =3D { 0x49, };
+> +static int x1830_pwm_pwm3_c_14_pins[] =3D { 0x4e, };
+> +static int x1830_pwm_pwm4_c_15_pins[] =3D { 0x4f, };
+> +static int x1830_pwm_pwm4_c_25_pins[] =3D { 0x59, };
+> +static int x1830_pwm_pwm5_c_16_pins[] =3D { 0x50, };
+> +static int x1830_pwm_pwm5_c_26_pins[] =3D { 0x5a, };
+> +static int x1830_pwm_pwm6_c_17_pins[] =3D { 0x51, };
+> +static int x1830_pwm_pwm6_c_27_pins[] =3D { 0x5b, };
+> +static int x1830_pwm_pwm7_c_18_pins[] =3D { 0x52, };
+> +static int x1830_pwm_pwm7_c_28_pins[] =3D { 0x5c, };
+> +static int x1830_mac_pins[] =3D {
+> +	0x29, 0x30, 0x2f, 0x28, 0x2e, 0x2d, 0x2a, 0x2b, 0x26, 0x27,
+> +};
 > +
-> +	/* ensure indexes in range */
-> +	if ((channel_idx >= config->nr_ctm_channels) ||
-> +	   (trigger_idx >= config->nr_trig_max))
-> +		return -EINVAL;
+> +static int x1830_uart0_data_funcs[] =3D { 0, 0, };
+> +static int x1830_uart0_hwflow_funcs[] =3D { 0, 0, };
+> +static int x1830_uart1_data_funcs[] =3D { 0, 0, };
+> +static int x1830_sfc_funcs[] =3D { 1, 1, 1, 1, 1, 1, };
+> +static int x1830_ssi0_dt_funcs[] =3D { 0, };
+> +static int x1830_ssi0_dr_funcs[] =3D { 0, };
+> +static int x1830_ssi0_clk_funcs[] =3D { 0, };
+> +static int x1830_ssi0_gpc_funcs[] =3D { 0, };
+> +static int x1830_ssi0_ce0_funcs[] =3D { 0, };
+> +static int x1830_ssi0_ce1_funcs[] =3D { 0, };
+> +static int x1830_ssi1_dt_c_funcs[] =3D { 1, };
+> +static int x1830_ssi1_dr_c_funcs[] =3D { 1, };
+> +static int x1830_ssi1_clk_c_funcs[] =3D { 1, };
+> +static int x1830_ssi1_gpc_c_funcs[] =3D { 1, };
+> +static int x1830_ssi1_ce0_c_funcs[] =3D { 1, };
+> +static int x1830_ssi1_ce1_c_funcs[] =3D { 1, };
+> +static int x1830_ssi1_dt_d_funcs[] =3D { 2, };
+> +static int x1830_ssi1_dr_d_funcs[] =3D { 2, };
+> +static int x1830_ssi1_clk_d_funcs[] =3D { 2, };
+> +static int x1830_ssi1_gpc_d_funcs[] =3D { 2, };
+> +static int x1830_ssi1_ce0_d_funcs[] =3D { 2, };
+> +static int x1830_ssi1_ce1_d_funcs[] =3D { 2, };
+> +static int x1830_mmc0_1bit_funcs[] =3D { 0, 0, 0, };
+> +static int x1830_mmc0_4bit_funcs[] =3D { 0, 0, 0, };
+> +static int x1830_mmc1_1bit_funcs[] =3D { 0, 0, 0, };
+> +static int x1830_mmc1_4bit_funcs[] =3D { 0, 0, 0, };
+> +static int x1830_i2c0_funcs[] =3D { 1, 1, };
+> +static int x1830_i2c1_funcs[] =3D { 0, 0, };
+> +static int x1830_i2c2_funcs[] =3D { 1, 1, };
+> +static int x1830_pwm_pwm0_b_funcs[] =3D { 0, };
+> +static int x1830_pwm_pwm0_c_funcs[] =3D { 1, };
+> +static int x1830_pwm_pwm1_b_funcs[] =3D { 0, };
+> +static int x1830_pwm_pwm1_c_funcs[] =3D { 1, };
+> +static int x1830_pwm_pwm2_c_8_funcs[] =3D { 0, };
+> +static int x1830_pwm_pwm2_c_13_funcs[] =3D { 1, };
+> +static int x1830_pwm_pwm3_c_9_funcs[] =3D { 0, };
+> +static int x1830_pwm_pwm3_c_14_funcs[] =3D { 1, };
+> +static int x1830_pwm_pwm4_c_15_funcs[] =3D { 1, };
+> +static int x1830_pwm_pwm4_c_25_funcs[] =3D { 0, };
+> +static int x1830_pwm_pwm5_c_16_funcs[] =3D { 1, };
+> +static int x1830_pwm_pwm5_c_26_funcs[] =3D { 0, };
+> +static int x1830_pwm_pwm6_c_17_funcs[] =3D { 1, };
+> +static int x1830_pwm_pwm6_c_27_funcs[] =3D { 0, };
+> +static int x1830_pwm_pwm7_c_18_funcs[] =3D { 1, };
+> +static int x1830_pwm_pwm7_c_28_funcs[] =3D { 0, };
+> +static int x1830_mac_funcs[] =3D { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
 > +
-> +	trig_bitmask = BIT(trigger_idx);
+> +static const struct group_desc x1830_groups[] =3D {
+> +	INGENIC_PIN_GROUP("uart0-data", x1830_uart0_data),
+> +	INGENIC_PIN_GROUP("uart0-hwflow", x1830_uart0_hwflow),
+> +	INGENIC_PIN_GROUP("uart1-data", x1830_uart1_data),
+> +	INGENIC_PIN_GROUP("sfc", x1830_sfc),
+> +	INGENIC_PIN_GROUP("ssi0-dt", x1830_ssi0_dt),
+> +	INGENIC_PIN_GROUP("ssi0-dr", x1830_ssi0_dr),
+> +	INGENIC_PIN_GROUP("ssi0-clk", x1830_ssi0_clk),
+> +	INGENIC_PIN_GROUP("ssi0-gpc", x1830_ssi0_gpc),
+> +	INGENIC_PIN_GROUP("ssi0-ce0", x1830_ssi0_ce0),
+> +	INGENIC_PIN_GROUP("ssi0-ce1", x1830_ssi0_ce1),
+> +	INGENIC_PIN_GROUP("ssi1-dt-c", x1830_ssi1_dt_c),
+> +	INGENIC_PIN_GROUP("ssi1-dr-c", x1830_ssi1_dr_c),
+> +	INGENIC_PIN_GROUP("ssi1-clk-c", x1830_ssi1_clk_c),
+> +	INGENIC_PIN_GROUP("ssi1-gpc-c", x1830_ssi1_gpc_c),
+> +	INGENIC_PIN_GROUP("ssi1-ce0-c", x1830_ssi1_ce0_c),
+> +	INGENIC_PIN_GROUP("ssi1-ce1-c", x1830_ssi1_ce1_c),
+> +	INGENIC_PIN_GROUP("ssi1-dt-d", x1830_ssi1_dt_d),
+> +	INGENIC_PIN_GROUP("ssi1-dr-d", x1830_ssi1_dr_d),
+> +	INGENIC_PIN_GROUP("ssi1-clk-d", x1830_ssi1_clk_d),
+> +	INGENIC_PIN_GROUP("ssi1-gpc-d", x1830_ssi1_gpc_d),
+> +	INGENIC_PIN_GROUP("ssi1-ce0-d", x1830_ssi1_ce0_d),
+> +	INGENIC_PIN_GROUP("ssi1-ce1-d", x1830_ssi1_ce1_d),
+> +	INGENIC_PIN_GROUP("mmc0-1bit", x1830_mmc0_1bit),
+> +	INGENIC_PIN_GROUP("mmc0-4bit", x1830_mmc0_4bit),
+> +	INGENIC_PIN_GROUP("mmc1-1bit", x1830_mmc1_1bit),
+> +	INGENIC_PIN_GROUP("mmc1-4bit", x1830_mmc1_4bit),
+> +	INGENIC_PIN_GROUP("i2c0-data", x1830_i2c0),
+> +	INGENIC_PIN_GROUP("i2c1-data", x1830_i2c1),
+> +	INGENIC_PIN_GROUP("i2c2-data", x1830_i2c2),
+> +	INGENIC_PIN_GROUP("pwm0-b", x1830_pwm_pwm0_b),
+> +	INGENIC_PIN_GROUP("pwm0-c", x1830_pwm_pwm0_c),
+> +	INGENIC_PIN_GROUP("pwm1-b", x1830_pwm_pwm1_b),
+> +	INGENIC_PIN_GROUP("pwm1-c", x1830_pwm_pwm1_c),
+> +	INGENIC_PIN_GROUP("pwm2-c-8", x1830_pwm_pwm2_c_8),
+> +	INGENIC_PIN_GROUP("pwm2-c-13", x1830_pwm_pwm2_c_13),
+> +	INGENIC_PIN_GROUP("pwm3-c-9", x1830_pwm_pwm3_c_9),
+> +	INGENIC_PIN_GROUP("pwm3-c-14", x1830_pwm_pwm3_c_14),
+> +	INGENIC_PIN_GROUP("pwm4-c-15", x1830_pwm_pwm4_c_15),
+> +	INGENIC_PIN_GROUP("pwm4-c-25", x1830_pwm_pwm4_c_25),
+> +	INGENIC_PIN_GROUP("pwm5-c-16", x1830_pwm_pwm5_c_16),
+> +	INGENIC_PIN_GROUP("pwm5-c-26", x1830_pwm_pwm5_c_26),
+> +	INGENIC_PIN_GROUP("pwm6-c-17", x1830_pwm_pwm6_c_17),
+> +	INGENIC_PIN_GROUP("pwm6-c-27", x1830_pwm_pwm6_c_27),
+> +	INGENIC_PIN_GROUP("pwm7-c-18", x1830_pwm_pwm7_c_18),
+> +	INGENIC_PIN_GROUP("pwm7-c-28", x1830_pwm_pwm7_c_28),
+> +	INGENIC_PIN_GROUP("mac", x1830_mac),
+> +};
 > +
-> +	/* ensure registered triggers and not out filtered */
-> +	if (direction == CTI_TRIG_IN)	{
-> +		if (!(trig_bitmask & config->trig_in_use))
-> +			return -EINVAL;
-> +	} else {
-> +		if (!(trig_bitmask & config->trig_out_use))
-> +			return -EINVAL;
+> +static const char *x1830_uart0_groups[] =3D { "uart0-data",=20
+> "uart0-hwflow", };
+> +static const char *x1830_uart1_groups[] =3D { "uart1-data", };
+> +static const char *x1830_sfc_groups[] =3D { "sfc", };
+> +static const char *x1830_ssi0_groups[] =3D {
+> +	"ssi0-dt", "ssi0-dr", "ssi0-clk", "ssi0-gpc", "ssi0-ce0",=20
+> "ssi0-ce1",
+> +};
+> +static const char *x1830_ssi1_groups[] =3D {
+> +	"ssi1-dt-c", "ssi1-dt-d",
+> +	"ssi1-dr-c", "ssi1-dr-d",
+> +	"ssi1-clk-c", "ssi1-clk-d",
+> +	"ssi1-gpc-c", "ssi1-gpc-d",
+> +	"ssi1-ce0-c", "ssi1-ce0-d",
+> +	"ssi1-ce1-c", "ssi1-ce1-d",
+> +};
+> +static const char *x1830_mmc0_groups[] =3D { "mmc0-1bit", "mmc0-4bit",=20
+> };
+> +static const char *x1830_mmc1_groups[] =3D { "mmc1-1bit", "mmc1-4bit",=20
+> };
+> +static const char *x1830_i2c0_groups[] =3D { "i2c0-data", };
+> +static const char *x1830_i2c1_groups[] =3D { "i2c1-data", };
+> +static const char *x1830_i2c2_groups[] =3D { "i2c2-data", };
+> +static const char *x1830_pwm0_groups[] =3D { "pwm0-b", "pwm0-c", };
+> +static const char *x1830_pwm1_groups[] =3D { "pwm1-b", "pwm1-c", };
+> +static const char *x1830_pwm2_groups[] =3D { "pwm2-c-8", "pwm2-c-13",=20
+> };
+> +static const char *x1830_pwm3_groups[] =3D { "pwm3-c-9", "pwm3-c-14",=20
+> };
+> +static const char *x1830_pwm4_groups[] =3D { "pwm4-c-15", "pwm4-c-25",=20
+> };
+> +static const char *x1830_pwm5_groups[] =3D { "pwm5-c-16", "pwm5-c-26",=20
+> };
+> +static const char *x1830_pwm6_groups[] =3D { "pwm6-c-17", "pwm6-c-27",=20
+> };
+> +static const char *x1830_pwm7_groups[] =3D { "pwm7-c-18", "pwm7-c-28",=20
+> };
+> +static const char *x1830_mac_groups[] =3D { "mac", };
 > +
-> +		if ((config->trig_filter_enable) &&
-> +		    (config->trig_out_filter & trig_bitmask))
-> +			return -EINVAL;
-> +	}
+> +static const struct function_desc x1830_functions[] =3D {
+> +	{ "uart0", x1830_uart0_groups, ARRAY_SIZE(x1830_uart0_groups), },
+> +	{ "uart1", x1830_uart1_groups, ARRAY_SIZE(x1830_uart1_groups), },
+> +	{ "sfc", x1830_sfc_groups, ARRAY_SIZE(x1830_sfc_groups), },
+> +	{ "ssi0", x1830_ssi0_groups, ARRAY_SIZE(x1830_ssi0_groups), },
+> +	{ "ssi1", x1830_ssi1_groups, ARRAY_SIZE(x1830_ssi1_groups), },
+> +	{ "mmc0", x1830_mmc0_groups, ARRAY_SIZE(x1830_mmc0_groups), },
+> +	{ "mmc1", x1830_mmc1_groups, ARRAY_SIZE(x1830_mmc1_groups), },
+> +	{ "i2c0", x1830_i2c0_groups, ARRAY_SIZE(x1830_i2c0_groups), },
+> +	{ "i2c1", x1830_i2c1_groups, ARRAY_SIZE(x1830_i2c1_groups), },
+> +	{ "i2c2", x1830_i2c2_groups, ARRAY_SIZE(x1830_i2c2_groups), },
+> +	{ "pwm0", x1830_pwm0_groups, ARRAY_SIZE(x1830_pwm0_groups), },
+> +	{ "pwm1", x1830_pwm1_groups, ARRAY_SIZE(x1830_pwm1_groups), },
+> +	{ "pwm2", x1830_pwm2_groups, ARRAY_SIZE(x1830_pwm2_groups), },
+> +	{ "pwm3", x1830_pwm3_groups, ARRAY_SIZE(x1830_pwm3_groups), },
+> +	{ "pwm4", x1830_pwm4_groups, ARRAY_SIZE(x1830_pwm4_groups), },
+> +	{ "pwm5", x1830_pwm5_groups, ARRAY_SIZE(x1830_pwm4_groups), },
+> +	{ "pwm6", x1830_pwm6_groups, ARRAY_SIZE(x1830_pwm4_groups), },
+> +	{ "pwm7", x1830_pwm7_groups, ARRAY_SIZE(x1830_pwm4_groups), },
+> +	{ "mac", x1830_mac_groups, ARRAY_SIZE(x1830_mac_groups), },
+> +};
 > +
-> +	/* update the local register values */
-> +	chan_bitmask = BIT(channel_idx);
-> +	reg_offset = (direction == CTI_TRIG_IN ? CTIINEN(trigger_idx) :
-> +		      CTIOUTEN(trigger_idx));
+> +static const struct ingenic_chip_info x1830_chip_info =3D {
+> +	.num_chips =3D 4,
+> +	.groups =3D x1830_groups,
+> +	.num_groups =3D ARRAY_SIZE(x1830_groups),
+> +	.functions =3D x1830_functions,
+> +	.num_functions =3D ARRAY_SIZE(x1830_functions),
+> +	.pull_ups =3D x1830_pull_ups,
+> +	.pull_downs =3D x1830_pull_downs,
+> +};
 > +
-> +	spin_lock(&drvdata->spinlock);
-> +
-> +	/* read - modify write - the trigger / channel enable value */
-> +	reg_value = direction == CTI_TRIG_IN ? config->ctiinen[trigger_idx] :
-> +		     config->ctiouten[trigger_idx];
-> +	if (op == CTI_CHAN_ATTACH)
-> +		reg_value |= chan_bitmask;
-> +	else
-> +		reg_value &= ~chan_bitmask;
-> +
-> +	/* write local copy */
-> +	if (direction == CTI_TRIG_IN)
-> +		config->ctiinen[trigger_idx] = reg_value;
-> +	else
-> +		config->ctiouten[trigger_idx] = reg_value;
-> +
-> +	/* write through if enabled */
-> +	if (CTI_PWR_ENA(config))
-> +		cti_write_single_reg(drvdata, reg_offset, reg_value);
-> +	spin_unlock(&drvdata->spinlock);
-> +	return 0;
-> +}
-> +
-> +int cti_channel_gate_op(struct device *dev, enum cti_chan_gate_op op,
-> +			u32 channel_idx)
-> +{
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	struct cti_config *config = &drvdata->config;
-> +	u32 chan_bitmask;
-> +	u32 reg_value;
-> +	int err = 0;
-> +
-> +	if (channel_idx >= config->nr_ctm_channels)
-> +		return -EINVAL;
-> +
-> +	chan_bitmask = BIT(channel_idx);
-> +
-> +	spin_lock(&drvdata->spinlock);
-> +	reg_value = config->ctigate;
-> +	switch (op) {
-> +	case CTI_GATE_CHAN_ENABLE:
-> +		reg_value |= chan_bitmask;
-> +		break;
-> +
-> +	case CTI_GATE_CHAN_DISABLE:
-> +		reg_value &= ~chan_bitmask;
-> +		break;
-> +
-> +	default:
-> +		err = -EINVAL;
-> +		break;
-> +	}
-> +	if (err == 0) {
-> +		config->ctigate = reg_value;
-> +		if (CTI_PWR_ENA(config))
-> +			cti_write_single_reg(drvdata, CTIGATE, reg_value);
-> +	}
-> +	spin_unlock(&drvdata->spinlock);
-> +	return err;
-> +}
-> +
-> +int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
-> +		      u32 channel_idx)
-> +{
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	struct cti_config *config = &drvdata->config;
-> +	u32 chan_bitmask;
-> +	u32 reg_value;
-> +	u32 reg_offset;
-> +	int err = 0;
-> +
-> +	if (channel_idx >= config->nr_ctm_channels)
-> +		return -EINVAL;
-> +
-> +	chan_bitmask = BIT(channel_idx);
-> +
-> +	spin_lock(&drvdata->spinlock);
-> +	reg_value = config->ctiappset;
-> +	switch (op) {
-> +	case CTI_CHAN_SET:
-> +		config->ctiappset |= chan_bitmask;
-> +		reg_value  = config->ctiappset;
-> +		reg_offset = CTIAPPSET;
-> +		break;
-> +
-> +	case CTI_CHAN_CLR:
-> +		config->ctiappset &= ~chan_bitmask;
-> +		reg_value = chan_bitmask;
-> +		reg_offset = CTIAPPCLEAR;
-> +		break;
-> +
-> +	case CTI_CHAN_PULSE:
-> +		config->ctiappset &= ~chan_bitmask;
-> +		reg_value = chan_bitmask;
-> +		reg_offset = CTIAPPPULSE;
-> +		break;
-> +
-> +	default:
-> +		err = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	if ((err == 0) && CTI_PWR_ENA(config))
-> +		cti_write_single_reg(drvdata, reg_offset, reg_value);
-> +	spin_unlock(&drvdata->spinlock);
-> +
-> +	return err;
-> +}
-> +
->  /** cti ect operations **/
->  int cti_enable(struct coresight_device *csdev)
+>  static u32 ingenic_gpio_read_reg(struct ingenic_gpio_chip *jzgc, u8=20
+> reg)
 >  {
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
-> index 73869fa8b313..9a22f6fcad65 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.h
-> +++ b/drivers/hwtracing/coresight/coresight-cti.h
-> @@ -168,6 +168,30 @@ struct cti_drvdata {
->  	void (*csdev_release)(struct device *dev);
+>  	unsigned int val;
+> @@ -1422,13 +1646,20 @@ static void=20
+> ingenic_gpio_shadow_set_bit(struct ingenic_gpio_chip *jzgc,
+>  	else
+>  		reg =3D REG_CLEAR(reg);
+>=20
+> -	regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_BASE + reg,=20
+> BIT(offset));
+> +	if (jzgc->jzpc->version >=3D ID_X1830)
+> +		regmap_write(jzgc->jzpc->map, X1830_GPIO_PZ_BASE + reg,=20
+> BIT(offset));
+> +	else
+> +		regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_BASE + reg,=20
+> BIT(offset));
+>  }
+>=20
+>  static void ingenic_gpio_shadow_set_bit_load(struct=20
+> ingenic_gpio_chip *jzgc)
+>  {
+> -	regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_GID2LD,
+> -			jzgc->gc.base / PINS_PER_GPIO_CHIP);
+> +	if (jzgc->jzpc->version >=3D ID_X1830)
+> +		regmap_write(jzgc->jzpc->map, X1830_GPIO_PZ_GID2LD,
+> +				jzgc->gc.base / PINS_PER_GPIO_CHIP);
+> +	else
+> +		regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_GID2LD,
+> +				jzgc->gc.base / PINS_PER_GPIO_CHIP);
+
+Consider using a local variable to store the value here.
+
+>  }
+>=20
+>  static inline bool ingenic_gpio_get_value(struct ingenic_gpio_chip=20
+> *jzgc,
+> @@ -1670,8 +1901,12 @@ static inline void ingenic_config_pin(struct=20
+> ingenic_pinctrl *jzpc,
+>  	unsigned int idx =3D pin % PINS_PER_GPIO_CHIP;
+>  	unsigned int offt =3D pin / PINS_PER_GPIO_CHIP;
+>=20
+> -	regmap_write(jzpc->map, offt * 0x100 +
+> -			(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
+> +	if (jzpc->version >=3D ID_X1830)
+> +		regmap_write(jzpc->map, offt * 0x1000 +
+> +				(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
+> +	else
+> +		regmap_write(jzpc->map, offt * 0x100 +
+> +				(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
+
+Same here.
+
+>  }
+>=20
+>  static inline void ingenic_shadow_config_pin(struct ingenic_pinctrl=20
+> *jzpc,
+> @@ -1679,14 +1914,23 @@ static inline void=20
+> ingenic_shadow_config_pin(struct ingenic_pinctrl *jzpc,
+>  {
+>  	unsigned int idx =3D pin % PINS_PER_GPIO_CHIP;
+>=20
+> -	regmap_write(jzpc->map, X1000_GPIO_PZ_BASE +
+> -			(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
+> +	if (jzpc->version >=3D ID_X1830)
+> +		regmap_write(jzpc->map, X1830_GPIO_PZ_BASE +
+> +				(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
+> +	else
+> +		regmap_write(jzpc->map, X1000_GPIO_PZ_BASE +
+> +				(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
+
+Same here.
+
+>  }
+>=20
+>  static inline void ingenic_shadow_config_pin_load(struct=20
+> ingenic_pinctrl *jzpc,
+>  		unsigned int pin)
+>  {
+> -	regmap_write(jzpc->map, X1000_GPIO_PZ_GID2LD, pin /=20
+> PINS_PER_GPIO_CHIP);
+> +	if (jzpc->version >=3D ID_X1830)
+> +		regmap_write(jzpc->map, X1830_GPIO_PZ_GID2LD,
+> +				pin / PINS_PER_GPIO_CHIP);
+> +	else
+> +		regmap_write(jzpc->map, X1000_GPIO_PZ_GID2LD,
+> +				pin / PINS_PER_GPIO_CHIP);
+
+Same here...
+
+>  }
+>=20
+>  static inline bool ingenic_get_pin_config(struct ingenic_pinctrl=20
+> *jzpc,
+> @@ -1696,7 +1940,10 @@ static inline bool=20
+> ingenic_get_pin_config(struct ingenic_pinctrl *jzpc,
+>  	unsigned int offt =3D pin / PINS_PER_GPIO_CHIP;
+>  	unsigned int val;
+>=20
+> -	regmap_read(jzpc->map, offt * 0x100 + reg, &val);
+> +	if (jzpc->version >=3D ID_X1830)
+> +		regmap_read(jzpc->map, offt * 0x1000 + reg, &val);
+> +	else
+> +		regmap_read(jzpc->map, offt * 0x100 + reg, &val);
+>=20
+>  	return val & BIT(idx);
+>  }
+> @@ -1857,12 +2104,48 @@ static int ingenic_pinconf_get(struct=20
+> pinctrl_dev *pctldev,
+>  }
+>=20
+>  static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
+> -		unsigned int pin, bool enabled)
+> +		unsigned int pin, unsigned int bias)
+>  {
+> -	if (jzpc->version >=3D ID_JZ4760)
+> -		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PEN, !enabled);
+> +	if (jzpc->version >=3D ID_X1830) {
+> +		unsigned int idx =3D pin % PINS_PER_GPIO_CHIP;
+> +		unsigned int offt =3D pin / PINS_PER_GPIO_CHIP;
+> +
+> +		if (bias =3D=3D GPIO_HIZ) {
+> +			if (idx < (PINS_PER_GPIO_CHIP / 2))
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_CLEAR(X1830_GPIO_PEL0), BIT(idx * 2) * 3);
+> +			else
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_CLEAR(X1830_GPIO_PEL1), BIT(idx % 16 * 2) * 3);
+> +		} else if (bias =3D=3D GPIO_PULLUP) {
+> +			if (idx < (PINS_PER_GPIO_CHIP / 2)) {
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_SET(X1830_GPIO_PEL0), BIT(idx * 2));
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_CLEAR(X1830_GPIO_PEL0), BIT(idx * 2) * 2);
+> +			} else {
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_SET(X1830_GPIO_PEL1), BIT(idx % 16 * 2));
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_CLEAR(X1830_GPIO_PEL1), BIT(idx % 16 * 2) * 2);
+> +			}
+> +		} else {
+> +			if (idx < (PINS_PER_GPIO_CHIP / 2)) {
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_CLEAR(X1830_GPIO_PEL0), BIT(idx * 2));
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_SET(X1830_GPIO_PEL0), BIT(idx * 2) * 2);
+> +			} else {
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_CLEAR(X1830_GPIO_PEL1), BIT(idx % 16 * 2));
+> +				regmap_write(jzpc->map, offt * 0x1000 +
+> +						REG_SET(X1830_GPIO_PEL1), BIT(idx % 16 * 2) * 2);
+> +			}
+> +		}
+> +	} else if (jzpc->version >=3D ID_JZ4760)
+> +		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PEN, !bias);
+
+This is wrong. If "bias" is GPIO_HIZ but the SoC does not support it,=20
+it should not succeed.
+
+Also you should use braces after the "else if" since the first "if" had=20
+them.
+
+>  	else
+> -		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
+> +		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !bias);
+>  }
+>=20
+>  static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned=20
+> int pin,
+> @@ -1889,7 +2172,7 @@ static int ingenic_pinconf_set(struct=20
+> pinctrl_dev *pctldev, unsigned int pin,
+>  		case PIN_CONFIG_BIAS_DISABLE:
+>  			dev_dbg(jzpc->dev, "disable pull-over for pin P%c%u\n",
+>  					'A' + offt, idx);
+> -			ingenic_set_bias(jzpc, pin, false);
+> +			ingenic_set_bias(jzpc, pin, GPIO_HIZ);
+>  			break;
+>=20
+>  		case PIN_CONFIG_BIAS_PULL_UP:
+> @@ -1897,7 +2180,7 @@ static int ingenic_pinconf_set(struct=20
+> pinctrl_dev *pctldev, unsigned int pin,
+>  				return -EINVAL;
+>  			dev_dbg(jzpc->dev, "set pull-up for pin P%c%u\n",
+>  					'A' + offt, idx);
+> -			ingenic_set_bias(jzpc, pin, true);
+> +			ingenic_set_bias(jzpc, pin, GPIO_PULLUP);
+>  			break;
+>=20
+>  		case PIN_CONFIG_BIAS_PULL_DOWN:
+> @@ -1905,7 +2188,7 @@ static int ingenic_pinconf_set(struct=20
+> pinctrl_dev *pctldev, unsigned int pin,
+>  				return -EINVAL;
+>  			dev_dbg(jzpc->dev, "set pull-down for pin P%c%u\n",
+>  					'A' + offt, idx);
+> -			ingenic_set_bias(jzpc, pin, true);
+> +			ingenic_set_bias(jzpc, pin, GPIO_PULLDOWN);
+>  			break;
+>=20
+>  		default:
+> @@ -1987,6 +2270,7 @@ static const struct of_device_id=20
+> ingenic_pinctrl_of_match[] =3D {
+>  	{ .compatible =3D "ingenic,x1000-pinctrl", .data =3D (void *) ID_X1000=20
+> },
+>  	{ .compatible =3D "ingenic,x1000e-pinctrl", .data =3D (void *)=20
+> ID_X1000E },
+>  	{ .compatible =3D "ingenic,x1500-pinctrl", .data =3D (void *) ID_X1500=20
+> },
+> +	{ .compatible =3D "ingenic,x1830-pinctrl", .data =3D (void *) ID_X1830=20
+> },
+>  	{},
 >  };
->  
-> +/*
-> + * Channel operation types.
-> + */
-> +enum cti_chan_op {
-> +	CTI_CHAN_ATTACH,
-> +	CTI_CHAN_DETACH,
-> +};
-> +
-> +enum cti_trig_dir {
-> +	CTI_TRIG_IN,
-> +	CTI_TRIG_OUT,
-> +};
-> +
-> +enum cti_chan_gate_op {
-> +	CTI_GATE_CHAN_ENABLE,
-> +	CTI_GATE_CHAN_DISABLE,
-> +};
-> +
-> +enum cti_chan_set_op {
-> +	CTI_CHAN_SET,
-> +	CTI_CHAN_CLR,
-> +	CTI_CHAN_PULSE,
-> +};
-> +
->  /* private cti driver fns & vars */
->  extern const struct attribute_group *coresight_cti_groups[];
->  int cti_add_default_connection(struct device *dev,
-> @@ -180,8 +204,16 @@ struct cti_trig_con *cti_allocate_trig_con(struct device *dev, int in_sigs,
->  					   int out_sigs);
->  int cti_enable(struct coresight_device *csdev);
->  int cti_disable(struct coresight_device *csdev);
-> +void cti_write_all_hw_regs(struct cti_drvdata *drvdata);
->  void cti_write_intack(struct device *dev, u32 ackval);
->  void cti_write_single_reg(struct cti_drvdata *drvdata, int offset, u32 value);
-> +int cti_channel_trig_op(struct device *dev, enum cti_chan_op op,
-> +			enum cti_trig_dir direction, u32 channel_idx,
-> +			u32 trigger_idx);
-> +int cti_channel_gate_op(struct device *dev, enum cti_chan_gate_op op,
-> +			u32 channel_idx);
-> +int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
-> +		      u32 channel_idx);
->  struct coresight_platform_data *
->  coresight_cti_get_platform_data(struct device *dev);
+>=20
+> @@ -1996,6 +2280,7 @@ static const struct of_device_id=20
+> ingenic_gpio_of_match[] __initconst =3D {
+>  	{ .compatible =3D "ingenic,jz4770-gpio", },
+>  	{ .compatible =3D "ingenic,jz4780-gpio", },
+>  	{ .compatible =3D "ingenic,x1000-gpio", },
+> +	{ .compatible =3D "ingenic,x1830-gpio", },
+>  	{},
+>  };
+>=20
+> @@ -2018,7 +2303,10 @@ static int __init ingenic_gpio_probe(struct=20
+> ingenic_pinctrl *jzpc,
+>  		return -ENOMEM;
+>=20
+>  	jzgc->jzpc =3D jzpc;
+> -	jzgc->reg_base =3D bank * 0x100;
+> +	if (jzpc->version >=3D ID_X1830)
+> +		jzgc->reg_base =3D bank * 0x1000;
+> +	else
+> +		jzgc->reg_base =3D bank * 0x100;
+>=20
+>  	jzgc->gc.label =3D devm_kasprintf(dev, GFP_KERNEL, "GPIO%c", 'A' +=20
+> bank);
+>  	if (!jzgc->gc.label)
+> @@ -2111,7 +2399,9 @@ static int __init ingenic_pinctrl_probe(struct=20
+> platform_device *pdev)
+>  	else
+>  		jzpc->version =3D (enum jz_version)id->driver_data;
+>=20
+> -	if (jzpc->version >=3D ID_X1500)
+> +	if (jzpc->version >=3D ID_X1830)
+> +		chip_info =3D &x1830_chip_info;
+> +	else if (jzpc->version >=3D ID_X1500)
+>  		chip_info =3D &x1500_chip_info;
+>  	else if (jzpc->version >=3D ID_X1000E)
+>  		chip_info =3D &x1000e_chip_info;
+> @@ -2208,6 +2498,7 @@ static const struct platform_device_id=20
+> ingenic_pinctrl_ids[] =3D {
+>  	{ "x1000-pinctrl", ID_X1000 },
+>  	{ "x1000e-pinctrl", ID_X1000E },
+>  	{ "x1500-pinctrl", ID_X1500 },
+> +	{ "x1830-pinctrl", ID_X1830 },
+>  	{},
+>  };
+>=20
+> --
+> 2.7.4
+>=20
+>=20
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+=
 
->  
-> -- 
-> 2.17.1
-> 
