@@ -2,129 +2,135 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83255C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 16:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09514C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 16:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAA020721
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 16:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BE02071C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 16:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYyWEbnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKVQOz convert rfc822-to-8bit (ORCPT
+        id S1726784AbfKVQWK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 11:14:55 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:45539 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKVQOz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 11:14:55 -0500
-Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id BE461CED23;
-        Fri, 22 Nov 2019 17:24:00 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm
- config
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CAL_JsqKso2Us5VW-Qp8mENAkMmoEh7YDT+HfhRMD1BKi7q=qAw@mail.gmail.com>
-Date:   Fri, 22 Nov 2019 17:14:53 +0100
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ondrej Jirman <megous@megous.com>,
+        Fri, 22 Nov 2019 11:22:10 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41856 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfKVQWK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 11:22:10 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m4so8019301ljj.8;
+        Fri, 22 Nov 2019 08:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ykwPMbHIRKgLrVpSpWF8yIw4jd/QEDDbiLYlnpgiqSI=;
+        b=aYyWEbnDZW6Y3pbQjaivmMd8tp9cF7ULcfzumRtyQReRZXek4w0sbzD4eUBdg0JE3b
+         sUVwwSqB/FOV7j7TQ7Tkww7sjnIRZTTUh6vVPHkg3cKfTA3o9EhkxYJQub+Tla0Tx/6G
+         UI2nzfTzxrKMd+8KSEyORBtenIqbFwcSU0pDEhNjB8UwxuKBnyvLkQd2/OLnGk7o4Vgp
+         5GRNg7DttdKOkEBDVhLDKN6SJ6Ap3Pd6M2hBo7WnaSPy6L1Dhwk84+1/LJcvHx96+KA9
+         ze+6MMe4hgXwpKpGv7Z+4GBNvST7X36o7+HtxNaC3fuA3oo9aC0rY4/KwmAtmRmtvegK
+         Yx6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ykwPMbHIRKgLrVpSpWF8yIw4jd/QEDDbiLYlnpgiqSI=;
+        b=bWqfdtpuXtXU8MJxj8TUhkzQeBQZC9OOiOJCPeZwvZd5JGDAC+wY2f42WrTcJfQ9T2
+         bxou6DpD2CRTLrynuV3gJvQCqMRbicQCTDwj7sfSQkGaDntNYzznfYuujfeMFP/NPehT
+         i6T+okhO4pq8cs9k7OkOdXIo4if6hZrpPfy1slM0AxTBkx9KjpYRLGwZIDTWYRrlZtjS
+         uFS9E6204J71AwkwsHiSzjnEuFOYCQUjefgUxZCc3LXrVyj2qndCmSf1EshQ+O8Ze3VF
+         rWwz+y+TEvf8Ne3iTwBs1EPAxJtGNwV0EU11Xk11TCk01Pfw2Jsu9J4z3RNGfUJgBhVp
+         fRSw==
+X-Gm-Message-State: APjAAAXIFrFFsRIe+KKw8EBhwniDAGIdGrh8z0Crqlc08xyZRXcdC7i2
+        lIQyYTSq33xyI8bYKjmGzYWwqwJOAHIfwH1VPBA=
+X-Google-Smtp-Source: APXvYqxx1GyP5F+ZOvgpKTjMKTAnsDhbPnJsEFf7YDLg/RvrkoqvPDe/pDx2fHxwvW0O1wDgiuNIFRu+JFSthZOpKiQ=
+X-Received: by 2002:a2e:9016:: with SMTP id h22mr12761538ljg.137.1574439727760;
+ Fri, 22 Nov 2019 08:22:07 -0800 (PST)
+MIME-Version: 1.0
+References: <20191120154148.22067-1-orson.zhai@unisoc.com> <20191120154148.22067-3-orson.zhai@unisoc.com>
+ <CAK8P3a0x83ueAiCjLg30csc9t7VtZLEbvTp1SsbNDnwCXmWRGA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0x83ueAiCjLg30csc9t7VtZLEbvTp1SsbNDnwCXmWRGA@mail.gmail.com>
+From:   Orson Zhai <orsonzhai@gmail.com>
+Date:   Sat, 23 Nov 2019 00:21:55 +0800
+Message-ID: <CA+H2tpHtb8HHkBoaN0jsifq0oP2H=Mi8JcFwE0g6CaOLnD9aqQ@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] mfd: syscon: Find syscon by names with arguments support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Orson Zhai <orson.zhai@unisoc.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <FBAB12FA-8EAD-424C-9DF3-770E7D172AFD@holtmann.org>
-References: <20191118192123.82430-1-abhishekpandit@chromium.org>
- <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
- <20191121212923.GA24437@bogus>
- <06AE1B9D-F048-4AF1-9826-E8CAFA44DD58@holtmann.org>
- <CAL_JsqKso2Us5VW-Qp8mENAkMmoEh7YDT+HfhRMD1BKi7q=qAw@mail.gmail.com>
-To:     Rob Herring <robh@kernel.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kevin Tang <kevin.tang@unisoc.com>, baolin.wang@unisoc.com,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Nov 21, 2019 at 11:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Nov 20, 2019 at 4:44 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
+> >
+> > There are a lot of global registers used across multiple similar SoCs
+> > from Unisoc. It is not easy to manage all of them very well by current
+> > syscon helper functions.
+> >
+> > Add helper functions to get regmap and arguments by syscon-names all
+> > together.
+> >
+> > This patch does not affect original syscon code and usage. It may help
+> > other SoC vendors if they have the same trouble as well.
+> >
+> > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> > ---
+> >  drivers/mfd/syscon.c       | 75 ++++++++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/syscon.h | 26 +++++++++++++
+> >  2 files changed, 101 insertions(+)
+> >
+> > diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> > index 660723276481..e818decc7bf2 100644
+> > --- a/drivers/mfd/syscon.c
+> > +++ b/drivers/mfd/syscon.c
+> > @@ -225,6 +225,81 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+> >  }
+> >  EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
+> >
+> > +struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
+> > +                                       const char *list_name,
+> > +                                       const char *cell_name)
+> > +{
+>
+> According to the binding change I suggested, this would not take a 'cell_name'
+> argument, but instead a an arg_count.
 
->>>> Add documentation for pcm parameters.
->>>> 
->>>> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
->>>> ---
->>>> 
->>>> Changes in v6: None
->>>> Changes in v5: None
->>>> Changes in v4: None
->>>> Changes in v3: None
->>>> Changes in v2: None
->>> 
->>> Really? I'm staring at v2 that looks a bit different.
->>> 
->>>> .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
->>>> include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
->>>> 2 files changed, 48 insertions(+)
->>>> create mode 100644 include/dt-bindings/bluetooth/brcm.h
->>>> 
->>>> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
->>>> index c749dc297624..8561e4684378 100644
->>>> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
->>>> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
->>>> @@ -29,10 +29,20 @@ Optional properties:
->>>>   - "lpo": external low power 32.768 kHz clock
->>>> - vbat-supply: phandle to regulator supply for VBAT
->>>> - vddio-supply: phandle to regulator supply for VDDIO
->>>> + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
->>>> + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
->>>> + - brcm,bt-pcm-frame-type: short, long
->>>> + - brcm,bt-pcm-sync-mode: slave, master
->>>> + - brcm,bt-pcm-clock-mode: slave, master
->>> 
->>> Little of this seems unique to Broadcom. We already have some standard
->>> audio related properties for audio interfaces such as 'format',
->>> 'frame-master' and 'bitclock-master'. Ultimately, this would be tied
->>> into the audio complex of SoCs and need to work with the audio
->>> bindings. We also have HDMI audio bindings.
->>> 
->>> Maybe sco-routing is unique to BT and still needed in some form though
->>> if you describe the connection to the SoC audio complex, then maybe
->>> not? I'd assume every BT chip has some audio routing configuration.
->> 
->> so we tried to generalize this some time before and failed to get a proper consensus.
->> 
->> In general I am with you that we should just expose generic properties from the attached audio codec, but nobody has come up with anything like that. And I think aligning all chip manufacturers will take some time.
->> 
-> 
-> That shouldn't be hard. It's a solved problem for codecs and HDMI. I
-> don't think BT is any more complicated (ignoring phones). I suspect
-> it's not solved simply because no one wants to do the work beyond
-> their 1 BT device they care about ATM.
+Got it. This is much convenient for caller.
 
-we tried, but nobody can agree on these right now. I would be happy if others come forward and tell us how they wired up their hardware, but it hasn’t happened yet.
+>
+> > +
+> > +int syscon_get_args_by_name(struct device_node *np,
+> > +                       const char *list_name,
+> > +                       const char *cell_name,
+> > +                       int arg_count,
+> > +                       unsigned int *out_args)
+> > +{
+>
+> and I think this could be combined with it, like
+>
+> struct regmap *syscon_regmap_lookup_by_name(struct device_node *np,
+>                                        const char *name, int
+> arg_count, __u32 *out_args)
 
->> Maybe in the interim we just use brcm,bt-pcm-int-params = [00 00 ..] as initially proposed.
-> 
-> What's the device using this? Some chromebook I suppose. I think it
-> would be better to first see how this fits in with the rest of the
-> audio subsystem. Until then, the driver should probably just default
-> to "transport" mode which I assume is audio routed over the UART
-> interface. That should work on any platform at least, but may not be
-> optimal.
+Ok, I'll send V3 next week.
 
-SCO over UART doesn’t really work. Long time ago, some car kits might have done it, but in the Chromebook cases this will just not work. We need to configure the PCM settings of the Bluetooth chip.
-
-If we don’t do it via DT, then this gets hardcoded in the driver source and that is not helping either. So until we get anything better, lets use brcm,bt-pcm-int-params = [00 00 ..] and get this supported upstream.
-
-Regards
-
-Marcel
-
+Best,
+-Orson
+>
+>     Arnd
