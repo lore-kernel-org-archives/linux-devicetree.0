@@ -2,162 +2,193 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10429C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BE9C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B5120708
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389BF20708
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zRs3IQ0s"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S6KxUIm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbfKVKpw (ORCPT
+        id S1727593AbfKVKpr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:52 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13414 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729099AbfKVKpv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 05:45:51 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMAekVL019532;
-        Fri, 22 Nov 2019 11:45:39 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=N39mr9JiTRKAZ1G00aMZSsPpF8DNn4u3LtchSa7kshc=;
- b=zRs3IQ0sYnHGLbdAp8Qcbs1LPVM6hiseuU2EaV81OLdu1orRFdFdGek7lyu+4XLnT6VF
- pfqaWIdK4o4D4ixeub7XGVgBUhyHYZc8DXazRNjNY7oYGBmb5cBjDPGr1ChxxIAyN9TX
- ti3SkPxBbHTW0hw4ZinMEmjuTTfuMClWLVsLbrtfZz7pNXs26UUqqiEzL/fYCUlNKi2r
- 9DPW6wB9hr/Y1NMKtrfggCGjRLMsRBf2Hx+EFJ3vLJ6Nca18ybwm50K1cgkD6CK5jI7A
- x7KW5NoMMW8z+rmw2rdZ41pAHjnk8oY6w9q+vSj/ziCrjQHsS2C6pzD8+zyyRVWYDcOi 4A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wa9upgtrt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Nov 2019 11:45:39 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4C4C4100038;
-        Fri, 22 Nov 2019 11:45:39 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 32BE02B56BD;
-        Fri, 22 Nov 2019 11:45:39 +0100 (CET)
-Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 22 Nov 2019 11:45:38
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <alexandre.torgue@st.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH] dt-bindings: regulator: Convert stm32 booster bindings to json-schema
-Date:   Fri, 22 Nov 2019 11:45:35 +0100
-Message-ID: <20191122104536.20283-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 22 Nov 2019 05:45:47 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12079 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729529AbfKVKpq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 05:45:46 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd7bc550000>; Fri, 22 Nov 2019 02:45:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 22 Nov 2019 02:45:45 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 22 Nov 2019 02:45:45 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
+ 2019 10:45:45 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 22 Nov 2019 10:45:45 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd7bc540000>; Fri, 22 Nov 2019 02:45:44 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
+CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH 4/6] arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+Date:   Fri, 22 Nov 2019 16:15:03 +0530
+Message-ID: <20191122104505.8986-5-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191122104505.8986-1-vidyas@nvidia.com>
+References: <20191122104505.8986-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-22_02:2019-11-21,2019-11-22 signatures=0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574419541; bh=5VF/mylt9BCtTjOJA7naf2OoyO1y34WYMwM19taHYwk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=S6KxUIm5LRZBcQR8NiHOAbXTX9wmrisbKIiigSd07fjvzdvbjBhNGRmSKLB07raPl
+         GFL709GgD3UtFCfXDfeux0BnEmaLc6lc6sxdWsN+ynp44p+M9dIVlhPxxSkJqioCHf
+         v+p7RSzsw6qzl8/qlH3WGsttmaRGaFrWKxBdCaAeI95pysC4VqGxKdqkth4w/9fw0s
+         f5FxJYTJIAH28melNO9GEGTwrirxBDGUYu04iT0t0gXoC5i4qK4UYA2vsSIfXnkdcx
+         kqtPc7pLLKxA9NUO4EtEGT2QjykkkVD+rnY8IISK5bW8yhIDy18E1HpuhcIzQBNnMz
+         dAgY0peO1KwCA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 regulator booster binding to DT schema format using json-schema
+Add endpoint mode controllers nodes for the dual mode PCIe controllers
+present in Tegra194 SoC.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-CC: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- .../bindings/regulator/st,stm32-booster.txt        | 18 ---------
- .../bindings/regulator/st,stm32-booster.yaml       | 46 ++++++++++++++++++++++
- 2 files changed, 46 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-booster.yaml
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 99 ++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt b/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
-deleted file mode 100644
-index 479ad4c8758e..000000000000
---- a/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--STM32 BOOSTER - Booster for ADC analog input switches
--
--Some STM32 devices embed a 3.3V booster supplied by Vdda, that can be used
--to supply ADC analog input switches.
--
--Required properties:
--- compatible: Should be one of:
--  "st,stm32h7-booster"
--  "st,stm32mp1-booster"
--- st,syscfg: Phandle to system configuration controller.
--- vdda-supply: Phandle to the vdda input analog voltage.
--
--Example:
--	booster: regulator-booster {
--		compatible = "st,stm32mp1-booster";
--		st,syscfg = <&syscfg>;
--		vdda-supply = <&vdda>;
--	};
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32-booster.yaml b/Documentation/devicetree/bindings/regulator/st,stm32-booster.yaml
-new file mode 100644
-index 000000000000..64f1183ce841
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32-booster.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/st,stm32-booster.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 11220d97adb8..2c8fae854a23 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1425,6 +1425,105 @@
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
++	pcie_ep@14160000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
++		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x36040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x36080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x14 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
 +
-+title: STMicroelectronics STM32 booster for ADC analog input switches bindings
++		status = "disabled";
 +
-+maintainers:
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
++		num-lanes = <4>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
 +
-+description: |
-+  Some STM32 devices embed a 3.3V booster supplied by Vdda, that can be used
-+  to supply ADC analog input switches.
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_4>;
++		clock-names = "core";
 +
-+allOf:
-+  - $ref: "regulator.yaml#"
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_4_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_4>;
++		reset-names = "apb", "core";
 +
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32h7-booster
-+      - st,stm32mp1-booster
++		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
 +
-+  st,syscfg:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description: phandle to system configuration controller.
++		nvidia,bpmp = <&bpmp 4>;
 +
-+  vdda-supply:
-+    description: phandle to the vdda input analog voltage.
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
 +
-+required:
-+  - compatible
-+  - st,syscfg
-+  - vdda-supply
++	pcie_ep@14180000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
++		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x38040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x38080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x18 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
 +
-+examples:
-+  - |
-+    regulator-booster {
-+      compatible = "st,stm32mp1-booster";
-+      st,syscfg = <&syscfg>;
-+      vdda-supply = <&vdda>;
-+    };
++		status = "disabled";
 +
-+...
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 0>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@141a0000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
++		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&clkreq_c5_bi_dir_state>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
++			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 5>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
+ 	sysram@40000000 {
+ 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
+ 		reg = <0x0 0x40000000 0x0 0x50000>;
 -- 
-2.15.0
+2.17.1
 
