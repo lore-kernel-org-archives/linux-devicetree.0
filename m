@@ -2,144 +2,106 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C235C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CC2C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3429F2071C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEr2jjn9"
+	by mail.kernel.org (Postfix) with ESMTP id 94ECA20714
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfKVM22 (ORCPT
+        id S1726846AbfKVMeK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:28:28 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41134 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727824AbfKVM20 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 07:28:26 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m4so7144487ljj.8
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 04:28:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Sb0l5wZZ4x3uEUBJJPu8/Qg1fPjfMYDDa2uRl9Za+6g=;
-        b=dEr2jjn9fgOjdiaDJE2cZkZfXprKxiCesiH6JGQ81KlVLsOAGLk2zI3vm3VTxAW/Dt
-         ZAWD9BggBEV7m9WWyDmoJLJQLBLAb655y6NgNk/WDLD6uEI/O8S08ynaATwcY9j91g/X
-         oz6jR2QHAF05zYR4+HVWmCa5e4flLcECiB+55HYKL/QYKAUVUIgkRwnch+WdQq8HQQeX
-         wKKBM4IOSVLQf4ztqRZ0MjhDejiodCApagsb6m9creQc3gJ83j5p+55dvpS01vvlXDsE
-         /HJ54qBLHQD9VnBEpRVhFG/r3OLcZpVj7BTpKPDCMJV9fuFmPgFiiNrbj/+bvDGzfw1v
-         ZjwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Sb0l5wZZ4x3uEUBJJPu8/Qg1fPjfMYDDa2uRl9Za+6g=;
-        b=QQ6t4Ix8dsIqxfXW/w2jeEw3gfj4+RieHUVE1OrbGN/FXEU1bkixQRn6GCzf/YR6EA
-         ywPYtnZc+P18eSY7iVVMYfnoxkKriOaiuw1lnRkDbr1fIANC6lSz+9rcdUk1mmMjPYbu
-         IHwfSkT2qIqAsQ1okukpaJIPvMmk5gUqAd+ftp5GJTSvxu3Af0+eECYMLN2etpHpvNST
-         SdH2meu7qiiyQZ9YtIBLJ2LvI3H7zbwNAvmaT9MsySoltBDErOJJdbOK0DecBSLOPNjl
-         DiADfxCUnj4IYgf95vGhMYjcc0Ehx0T9fCgsQ/gwrqnRGWnl4XBqF416L+0HYaX6SO2t
-         liiw==
-X-Gm-Message-State: APjAAAWN7G0uxrlMATz0UKtonOJknbd5gkF3it4OzO4PfpDL/zLE3Mb2
-        MD433I3Obz83I2Zfq+M/zDOdg8In3Hn1H/sNIY24Dw==
-X-Google-Smtp-Source: APXvYqyEr875KK6+Z3AoTFLNHg9GG1Nc70IgJCEP8t2ZeLuj4RGoP4v/mkCP2LZsVpBsQMxyu52/73Y3stYR9or4KTU=
-X-Received: by 2002:a2e:9699:: with SMTP id q25mr12078801lji.251.1574425704107;
- Fri, 22 Nov 2019 04:28:24 -0800 (PST)
-MIME-Version: 1.0
-References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
- <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
- <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
- <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
- <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com> <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 13:28:12 +0100
-Message-ID: <CACRpkdaDmd+0809wmiNwSRbsdHaDNzpbOaxCcx6bEfYuyzPNQg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 22 Nov 2019 07:34:10 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:44710 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKVMeJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 07:34:09 -0500
+Received: from marcel-macbook.holtmann.net (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id B2E17CED1F;
+        Fri, 22 Nov 2019 13:43:14 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm
+ config
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191121212923.GA24437@bogus>
+Date:   Fri, 22 Nov 2019 13:34:06 +0100
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <06AE1B9D-F048-4AF1-9826-E8CAFA44DD58@holtmann.org>
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+ <20191121212923.GA24437@bogus>
+To:     Rob Herring <robh@kernel.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 5:42 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-> > On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
+Hi Rob,
 
-> > > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=
-=82(a):
-> > Is it really so? The bgpio_lock does protect the registers used
-> > by regmap-mmio but unless the interrupt code is also using the
-> > same registers it is fine to have a different lock for those.
-> >
-> > Is the interrupt code really poking into the very same registers
-> > as passed to bgpio_init()?
-> >
-> > Of course it could be seen as a bit dirty to poke around in the
-> > same memory space with regmap and the bgpio_* accessors
-> > but in practice it's no problem if they never touch the same
-> > things.
-> >
-> > Yours,
-> > Linus Walleij
->
-> I'm wondering if it won't cause any inconsistencies when for example
-> interrupts are being triggered on input lines while we're also reading
-> their values? Seems to me it's just more clear to use a single lock
-> for a register range. Most drivers using gpio-mmio do just that in
-> their irq-related routines.
+>> Add documentation for pcm parameters.
+>> 
+>> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>> ---
+>> 
+>> Changes in v6: None
+>> Changes in v5: None
+>> Changes in v4: None
+>> Changes in v3: None
+>> Changes in v2: None
+> 
+> Really? I'm staring at v2 that looks a bit different.
+> 
+>> .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
+>> include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
+>> 2 files changed, 48 insertions(+)
+>> create mode 100644 include/dt-bindings/bluetooth/brcm.h
+>> 
+>> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>> index c749dc297624..8561e4684378 100644
+>> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>> @@ -29,10 +29,20 @@ Optional properties:
+>>    - "lpo": external low power 32.768 kHz clock
+>>  - vbat-supply: phandle to regulator supply for VBAT
+>>  - vddio-supply: phandle to regulator supply for VDDIO
+>> + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
+>> + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
+>> + - brcm,bt-pcm-frame-type: short, long
+>> + - brcm,bt-pcm-sync-mode: slave, master
+>> + - brcm,bt-pcm-clock-mode: slave, master
+> 
+> Little of this seems unique to Broadcom. We already have some standard 
+> audio related properties for audio interfaces such as 'format', 
+> 'frame-master' and 'bitclock-master'. Ultimately, this would be tied 
+> into the audio complex of SoCs and need to work with the audio 
+> bindings. We also have HDMI audio bindings. 
+> 
+> Maybe sco-routing is unique to BT and still needed in some form though 
+> if you describe the connection to the SoC audio complex, then maybe 
+> not? I'd assume every BT chip has some audio routing configuration.
 
-OK good point. Just one lock for the whole thing is likely
-more maintainable even if it works with two different locks.
+so we tried to generalize this some time before and failed to get a proper consensus.
 
-> Anyway: even without using bgpio_lock this code is inconsistent: if
-> we're using regmap for interrupt registers, we should either decide to
-> rely on locking provided by regmap or disable it and use a locally
-> defined lock.
+In general I am with you that we should just expose generic properties from the attached audio codec, but nobody has come up with anything like that. And I think aligning all chip manufacturers will take some time.
 
-OK makes sense, let's say we use the bgpio_lock everywhere
-for this.
+Maybe in the interim we just use brcm,bt-pcm-int-params = [00 00 ..] as initially proposed.
 
-Yash: are you OK with this? (Haven't read the new patch set
-yet, maybe it is already fixed...)
+Regards
 
-> Also: if we're using regmap, then let's use it
-> everywhere, not only when it's convenient for updating registers.
+Marcel
 
-I think what you are saying is that we should extend gpio-mmio.c
-with some optional regmap API (or create a separate MMIO library
-for regmap consumers) which makes sense, but it feels a bit
-heavy task to toss at contributors.
-
-We could add it to the TODO file, where I already have some
-item like this for port-mapped I/O.
-
-Yours,
-Linus Walleij
