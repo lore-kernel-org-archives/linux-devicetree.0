@@ -2,91 +2,110 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99B0C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 23:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9850C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 23:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7380F20706
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 23:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891B420704
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 23:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574465659;
-	bh=Y6zX/cwYbzCLQNxrzkJlJzdrwoBoSrA+eGpzMLc5IT0=;
+	s=default; t=1574466752;
+	bh=aTvmzeoDpBxYogmzi7ZPOzcUjrCa76xNLs8IvlLBSQ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m3/EU68zXWjGFr/vKT0+LOR3u9YF+xV/oZ3yWCOICIkUN+DCAMkBQwcwrkW7Rf/1Z
-	 xoAZkEryeo1HkFUe4VeqwqnLfL3TDAoGBuaeDV+hhcXSsr7LW1pJSvAmKDxpncongR
-	 q8bkTFZbwd/eSP3sdW5JqB1wl06UOdTd50y9vwjA=
+	b=pi6ld91pUvHc9f2u9Fg/bzh9mkJV4pJZgaiA1OC5ZeNmSzVgoHfC6fC/7bVNnooqj
+	 EXZ8P6F524MHQTVgXjS/wFe1MdNmlhdasGCfynjvILXV7UYo65BwalNyQUUkTOBPJg
+	 r2EN3CFPZuLsjzPGCgWVJ+Q3be+ADbg1jJ5UQNM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKVXeT (ORCPT
+        id S1726705AbfKVXwc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 18:34:19 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:32814 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfKVXeS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 18:34:18 -0500
-Received: by mail-oi1-f194.google.com with SMTP id x21so965762oic.0;
-        Fri, 22 Nov 2019 15:34:18 -0800 (PST)
+        Fri, 22 Nov 2019 18:52:32 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37652 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfKVXwc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 18:52:32 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 128so25431oih.4;
+        Fri, 22 Nov 2019 15:52:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=/H8wXNOfbxRLTqZKj7EYkjG03fC3qM1eJrt+WodnPxI=;
-        b=BZoek13BLxRU7EpdCCCq13KKK6lAvUiE7JF4WzFwvga1+wr6cmeLGNV+hai2L+mt6P
-         XrT7nMlIL/2C1AWCIDiAUOxdVCjKX5mc/obn2FjGKoVb5aT5YDn58EuJF6oywkZ6DNfx
-         UJDMnAdPgJhIvvU8f8nK/hnyrgeQ7sU0y7HEPaZ21wEGGQE5ilOswGY9AG2UoqXKktzH
-         Nz3NI2gp3OWF9Xt7Xsc9zgarnO8HOYEQUNN+kcwwzblQGaYQ0SV5o3OPOx4lgNbEsLjz
-         JS6QxC1erViAo2M1nAhL8XgA0CZIN8LHgmfR4JR7u8B8ASswgTNy0TN9A0GbmWyBETEL
-         1dmA==
-X-Gm-Message-State: APjAAAWOvujwQucQUEjGDDvN7GbynU8K/Er/M8LlRbxEoJccnzZLsmXR
-        NgET4/SGRIbnbXp1ooLaDQ==
-X-Google-Smtp-Source: APXvYqyFReQGWCWQQxNW++0gPrv20BWVgrq1Wd2zA1GjcAqvNRudJZmfSpKFl6IBnj6PRV4R9P7w9A==
-X-Received: by 2002:aca:d483:: with SMTP id l125mr359885oig.124.1574465657879;
-        Fri, 22 Nov 2019 15:34:17 -0800 (PST)
-Received: from localhost ([2607:fb90:bde:716a:c9ec:246b:67b7:9768])
-        by smtp.gmail.com with ESMTPSA id e93sm2729544otb.60.2019.11.22.15.34.16
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NIv0AP1JTSUxfnvgBVyjKeTWUuL1peOwjaFWykNE7iA=;
+        b=mxalFyAy83L1LsEBBA3JOYlOqmmCEGUR7/4bJZHQy9MSkwUnJpjcFEqn1/WBJOSs+e
+         CCHkw+OWl4WL1DNw9Zt9XzppgcGkx7jOIje0KzCnW+hX3U3M5beqj8SdaEoLTAL8AyuY
+         gB3PA5GSon9FjcfVitJ42m6qSkgYmbd2xsfUpMVFf5csOFYkLtqRyD67DxJ4R8otBoRg
+         ZIsd5L77t/Us9DccYQB+Z52XwgoPa7awr9pv8RonwG28xecsjhsXl8WtKMxnAbxMvssn
+         60cUvC7AUm/YS2/j91Lcau+KwchIM6n6Lvwe51gFIjwgPTad+clh0cxT7prFvLPC5/vG
+         YVVQ==
+X-Gm-Message-State: APjAAAVFcN0yMDFgo0YYEOHIsblfNl/KKsmKgYRuZ/0ldEcz+bEQW1zS
+        l0U0Je4v9ctzttVB+R9j0g==
+X-Google-Smtp-Source: APXvYqyLwRnx+Xo7nbUb1L8qZT5IZ45QUOP+KUGZYQXdJQZMSvZtE8QAvSSeSdJm6fP20R3Oyo69Dw==
+X-Received: by 2002:a05:6808:6c3:: with SMTP id m3mr15234183oih.56.1574466750932;
+        Fri, 22 Nov 2019 15:52:30 -0800 (PST)
+Received: from localhost ([2607:fb90:bd7:3743:c9ec:246b:67b7:9768])
+        by smtp.gmail.com with ESMTPSA id l32sm2757861otl.74.2019.11.22.15.52.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 15:34:17 -0800 (PST)
-Date:   Fri, 22 Nov 2019 17:34:14 -0600
+        Fri, 22 Nov 2019 15:52:30 -0800 (PST)
+Date:   Fri, 22 Nov 2019 17:52:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 7/9] dt-bindings: interrupt-controller: rtd1195-mux:
- Add RTD1395
-Message-ID: <20191122233414.GA6762@bogus>
-References: <20191121050208.11324-1-afaerber@suse.de>
- <20191121050208.11324-8-afaerber@suse.de>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: Add vendor prefix for ITE Tech. Inc.
+Message-ID: <20191122235226.GA7738@bogus>
+References: <1573811564-320-1-git-send-email-allen.chen@ite.com.tw>
+ <1573811564-320-2-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191121050208.11324-8-afaerber@suse.de>
+In-Reply-To: <1573811564-320-2-git-send-email-allen.chen@ite.com.tw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 Nov 2019 06:02:06 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Add compatible strings for Realtek RTD1395 SoC.
+On Fri, Nov 15, 2019 at 05:52:17PM +0800, allen wrote:
+> ITE Tech. Inc. (abbreviated as ITE ) is a professional fabless IC
+> design house. ITE's core technology includes PC and NB Controller chips,
+> Super I/O, High Speed Serial Interface, Video Codec, Touch Sensing,
+> Surveillance, OFDM, Sensor Fusion, and so on.
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> more information on: http://www.ite.com.tw/
+> 
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+
+Please fix up your author name to match here.
+
 > ---
->  v4 -> v5: Unchanged
->  
->  v4: New
->  
->  .../devicetree/bindings/interrupt-controller/realtek,rtd1195-mux.yaml   | 2 ++
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
 >  1 file changed, 2 insertions(+)
 > 
-
-Acked-by: Rob Herring <robh@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 6046f45..552f5ef 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -463,6 +463,8 @@ patternProperties:
+>      description: Intersil
+>    "^issi,.*":
+>      description: Integrated Silicon Solutions Inc.
+> +  "^ite,.*":
+> +    description: ITE Tech. Inc.
+>    "^itead,.*":
+>      description: ITEAD Intelligent Systems Co.Ltd
+>    "^iwave,.*":
+> -- 
+> 1.9.1
+> 
