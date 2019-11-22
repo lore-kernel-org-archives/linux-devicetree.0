@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9875CC43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E3DC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5792073B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05C620715
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q9GzTlqV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cmkuqhGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfKVP3A (ORCPT
+        id S1726046AbfKVPcL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:29:00 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46416 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfKVP3A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 10:29:00 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so5682601wrl.13
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 07:28:59 -0800 (PST)
+        Fri, 22 Nov 2019 10:32:11 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52423 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfKVPcL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 10:32:11 -0500
+Received: by mail-wm1-f68.google.com with SMTP id l1so7891524wme.2
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 07:32:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=bulVco3x5RbtgZKCmOeZiFAb5Gkkb3vLwxv8AF+VAkY=;
-        b=Q9GzTlqVYlBDZzMNegrITDii27IgR3IK5WfFZHntNMd+fNndRTZvnF0Y9JXBAp02j4
-         Q3utWX2LIc6T71HyM443zyXV0xcbCnl+7tukYnqFwJc40A9d02yrOs1la2NUbRKNCzHc
-         IoAjBkwePqj9yyEES+NAqG4qSs4BbjDNH0lJH5BxANRbRJaZc6M9jxWOfwf7FAMgGZqa
-         IY/IfM2G+F4zOvbk1MFrxQzo4GdIgvSZStHTXJ6+8FpSzNlFpmCsO6KzRp9YXbjUGGsk
-         Ech/tSuTMEFaXw+1Hv0u5F0mEbnjnjC0uk2C+xWaC7ZQ4JPuvhOun/zz9+4v8SAroEss
-         72Cg==
+        bh=o0Nf3geLcg9Iv2VN5DaVX7zHaQKSf02VaMj3Oj40g7s=;
+        b=cmkuqhGjOwfdSwkZ3ss+85BQf54k5DwK5drxsgJ59aUf6B/dAvLhdQ3svBWsyNuhOR
+         t2lOL5vWRytQrNu3oBk9S+q/yVsjrSNyFPIvcSDyEH0XASpUvwUBRwMKkEC1LAZxJK8Z
+         /jLp+8jON45HOASnNIf9x/9YrfeFqw4v+CfizFYbWJl38eWeYg4fKmj/JSRzGxPqARQI
+         C3t1Tm6A/E8EBhc2zA6gmdoNjPZ6fky+ZGuvqVqW6QoSuHMZ5BwEcLEnmAIVWkFHxzhj
+         L8t4ZzVHn/mU77X5BkPc7byb8I4PVtKasmkxJwwzQs+FjoJ6wEfFg584rN3oNW7pyahH
+         8igA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bulVco3x5RbtgZKCmOeZiFAb5Gkkb3vLwxv8AF+VAkY=;
-        b=deaaV6qGwJJZIL7u7F97Gd2sNcQZgE3W8Tlb8TMBZm9MAoScJdGcAessm6WTSz0nqO
-         yibBh3afV7zXH5xx5QFXC0ghp7O9JcFtQ7OyeBawGuV4vAVr+BcS2MRhXxQbmdO1bsyn
-         jScsXZgOchjGlYNiVhTYFzC11YcEH0vQPh+9gJ8x0Sg2FOfAASP14IfNcBpBwCtkr6Gi
-         IJ7lsO7KuYZLSG6OCo0VlTc8s5c10Zb2HQBzFj2xlEkz3BUVr1KNpd/KQTnksmTCe3l4
-         HNaPG8zghWnd8Q8p1T/Xt2ORUK9CbFJ27PwCBxDocxOvh+t0Cup5aNxZB9qTtGk8Jgid
-         MpBw==
-X-Gm-Message-State: APjAAAXWbdkW2zvAGS046n2HBfuhslxnC4/v4SNKFsuHNJ4SAODoEiUI
-        aLurfFkEHDIXWDBTApD0zMQe3Q==
-X-Google-Smtp-Source: APXvYqwOX0Dilhgc/nDjGbOaBj9FTyzevqPcc87fg5C6SHcB5UJa1/dVicXnsRQ/Z3QR3D9DkVOWGQ==
-X-Received: by 2002:a5d:5308:: with SMTP id e8mr10812570wrv.77.1574436538287;
-        Fri, 22 Nov 2019 07:28:58 -0800 (PST)
+        bh=o0Nf3geLcg9Iv2VN5DaVX7zHaQKSf02VaMj3Oj40g7s=;
+        b=NGjKKh80nkDwizCTVjv68I26V4xTYFkA2baJW9Lx4EqO4Epx7fWTHkr0fqZf2xKOvn
+         kYAJKvN3S7O7Y3DldmuGXFVbmFcd+ygZhuA1stYH+RJywdWjyxHJbS2TGvGSi4DSBbAp
+         GVeauap5OK+iOMB991X5y1uRNreH89CILgOwU7CwIXHUzTaTH0TsKvpZ9svNXrsyFv8G
+         p/4OXegnby2XLwmWZ0ccP9OlUiLoW4pmxQPn/k6HE0R66bHH7jAdpIuReE7ep+xeSLdb
+         ErpBaiuk6MJi2X8fX7nSSfFv8flbt5Z09oFHb4/+bj5RFIU4UOtIE1jZML2nKMnFgmyN
+         ukug==
+X-Gm-Message-State: APjAAAXzfBSPnWZlAdbg4IywJK1uIUXEHyo1cY122UkDR/EpEfg61sUF
+        BEQLgJiEf+/hLOI1YH/WoePEvg==
+X-Google-Smtp-Source: APXvYqxY6pHuhUWCVcZneY2M7eICkz+5eYgu7XtNfAm4R2SBBRGwg3zyF3DJRrQll9z97xbxElVU6Q==
+X-Received: by 2002:a1c:6485:: with SMTP id y127mr3164184wmb.19.1574436726287;
+        Fri, 22 Nov 2019 07:32:06 -0800 (PST)
 Received: from lophozonia (xdsl-188-155-204-106.adslplus.ch. [188.155.204.106])
-        by smtp.gmail.com with ESMTPSA id o21sm3789117wmc.17.2019.11.22.07.28.57
+        by smtp.gmail.com with ESMTPSA id o7sm6578349wrv.63.2019.11.22.07.32.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 07:28:57 -0800 (PST)
-Date:   Fri, 22 Nov 2019 16:28:55 +0100
+        Fri, 22 Nov 2019 07:32:05 -0800 (PST)
+Date:   Fri, 22 Nov 2019 16:32:03 +0100
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     Jonathan Cameron <jonathan.cameron@huawei.com>
 Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
@@ -64,51 +64,110 @@ Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
         will@kernel.org, robin.murphy@arm.com, zhangfei.gao@linaro.org,
         eric.auger@redhat.com
-Subject: Re: [PATCH v2 4/8] iommu/arm-smmu-v3: Prepare for SSID support
-Message-ID: <20191122152855.GA810215@lophozonia>
+Subject: Re: [PATCH v2 6/8] iommu/arm-smmu-v3: Add second level of context
+ descriptor table
+Message-ID: <20191122153203.GB810215@lophozonia>
 References: <20191108152508.4039168-1-jean-philippe@linaro.org>
- <20191108152508.4039168-5-jean-philippe@linaro.org>
- <20191111143811.000006cc@huawei.com>
+ <20191108152508.4039168-7-jean-philippe@linaro.org>
+ <20191111155007.00002021@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191111143811.000006cc@huawei.com>
+In-Reply-To: <20191111155007.00002021@huawei.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 02:38:11PM +0000, Jonathan Cameron wrote:
-> Hmm. There are several different refactors in here alongside a few new
-> bits.  Would be nice to break it up more to make life even easier for
-> reviewers.   It's not 'so' complex that it's really a problem though
-> so could leave it as is if you really want to.
-
-Sure, I'll see if I can split it more in next version.
-
-> > +	table->ptr = dmam_alloc_coherent(smmu->dev, size, &table->ptr_dma,
-> > +					 GFP_KERNEL | __GFP_ZERO);
+On Mon, Nov 11, 2019 at 03:50:07PM +0000, Jonathan Cameron wrote:
+> > +		cfg->l1ptr = dmam_alloc_coherent(smmu->dev, size,
+> > +						 &cfg->l1ptr_dma,
+> > +						 GFP_KERNEL | __GFP_ZERO);
 > 
-> We dropped dma_zalloc_coherent because we now zero in dma_alloc_coherent
-> anyway.  Hence I'm fairly sure that __GFP_ZERO should have no effect.
-> 
-> https://lore.kernel.org/patchwork/patch/1031536/
-> 
-> Am I missing some special corner case here?
+> As before.  Fairly sure __GFP_ZERO doesn't give you anything extra.
 
-Here I just copied the GFP flags already in use. But removing all
-__GFP_ZERO from the driver would make a good cleanup patch.
+Indeed
 
-> > -	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1)
-> > -		arm_smmu_write_ctx_desc(smmu, &smmu_domain->s1_cfg);
-> > -
+> > +		if (!cfg->l1ptr) {
+> > +			dev_warn(smmu->dev, "failed to allocate L1 context table\n");
+> > +			return -ENOMEM;
+> > +		}
+> > +	}
+> > +
+> > +	cfg->tables = devm_kzalloc(smmu->dev, sizeof(struct arm_smmu_cd_table) *
+> > +				   cfg->num_tables, GFP_KERNEL);
+> > +	if (!cfg->tables) {
+> > +		ret = -ENOMEM;
+> > +		goto err_free_l1;
+> > +	}
+> > +
+> > +	/* With two levels, leaf tables are allocated lazily */
+> This comment is a kind of odd one.  It is actually talking about what
+> 'doesn't' happen here I think..
 > 
-> Whilst it seems fine, perhaps a note on the 'why' of moving this into
-> finalise_s1 would be good in the patch description.
+> Perhaps /*
+>          * Only allocate a leaf table for linear case.
+>          * With two levels, the leaf tables are allocated lazily.
+> 	 */
 
-Ok. Since it's only to simplify the handling of allocation failure in a
-subsequent patch, I think I'll move that part over there.
+Yes, that's clearer
+
+> > +	if (!cfg->l1ptr) {
+> > +		ret = arm_smmu_alloc_cd_leaf_table(smmu, &cfg->tables[0],
+> > +						   max_contexts);
+> > +		if (ret)
+> > +			goto err_free_tables;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err_free_tables:
+> > +	devm_kfree(smmu->dev, cfg->tables);
+> > +err_free_l1:
+> > +	if (cfg->l1ptr)
+> > +		dmam_free_coherent(smmu->dev, size, cfg->l1ptr, cfg->l1ptr_dma);
+> 
+> This cleanup only occurs if we have had an error.
+> Is there potential for this to rerun at some point later?  If so we should
+> be careful to also reset relevant pointers - e.g. cfg->l1ptr = NULL as
+> they are used to control the flow above.
+
+Yes we should definitely clear l1ptr. The domain may be managed by a
+device driver, and if attach_dev() fails they will call domain_free(),
+which checks this pointer. Plus nothing prevents them from calling
+attach_dev() again with the same domain.
+
+> If there is no chance of a rerun why bother cleaning them up at all?  Something
+> has gone horribly wrong so let the eventual smmu cleanup deal with them.
+
+The domain is much shorter-lived than the SMMU device, so we need this
+cleanup.
+
+> > +	return ret;
+> >  }
+> >  
+> >  static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
+> >  {
+> > +	int i;
+> >  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> >  	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+> > +	size_t num_leaf_entries = 1 << cfg->s1cdmax;
+> > +	struct arm_smmu_cd_table *table = cfg->tables;
+> >  
+> > -	arm_smmu_free_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
+> > +	if (cfg->l1ptr) {
+> > +		size_t size = cfg->num_tables * (CTXDESC_L1_DESC_DWORDS << 3);
+> > +
+> > +		dmam_free_coherent(smmu->dev, size, cfg->l1ptr, cfg->l1ptr_dma);
+> 
+> 		As above, if we can call this in a fashion that makes sense
+> 		other than in eventual smmu tear down, then we need to be
+> 		careful to reset the pointers.   If not, then why are we clearing
+> 		managed resourced by hand anyway?
+
+Yes, we call this on the error cleanup path (not only domain_free()), so
+it needs to leave the domain in a usable state.
 
 Thanks,
 Jean
