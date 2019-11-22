@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6936C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69291C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7325C20714
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD742070A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574399964;
-	bh=WszExPIIwxHba7R4ODtPaqd+zT5cyG2VdXTU71sfmK8=;
+	s=default; t=1574400031;
+	bh=JpUGC9nWCZCTQes37a4qys2DDjrsol2d6dZ4/1Ex844=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OvyPcVl69Lb8XpO0m9wvmnHpQJwLqSSZAhmAf/cAFU/Y3YnOvRwdSRF3orvcTb6FU
-	 acuvrX9BbXt/Gi4qngs+WDJRQ7Pyg/1P+GN/3E6gr0oXwoDqy39HoQjo+nTLS0JTSn
-	 NFYAqfFNElIqfv8Pc8D8fw1/fpP+e5gxMxD5D76I=
+	b=FAbZdFqiGppxKK92h5IK844mhpKUyA48HFBBOosnUi6azZiVqDPIrTp7B2lwUPFJT
+	 vvetLF9fSKCs45TEQupt0MEu2JzU7MlyvF1abwQDmwBNpQIAoopf9YLNGSFlHMt9+u
+	 45lXppjQlBCGdHOCY1oXirD0rr8Bij8oiDHghy60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfKVFTM (ORCPT
+        id S1727091AbfKVFUa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:19:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:20:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbfKVFTL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:19:11 -0500
+        id S1726391AbfKVFU0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:20:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3D9F2070E;
-        Fri, 22 Nov 2019 05:19:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 658552070B;
+        Fri, 22 Nov 2019 05:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574399950;
-        bh=WszExPIIwxHba7R4ODtPaqd+zT5cyG2VdXTU71sfmK8=;
+        s=default; t=1574400026;
+        bh=JpUGC9nWCZCTQes37a4qys2DDjrsol2d6dZ4/1Ex844=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MgfB+JKlqxd8cuzwjFKQkc5EFUrZGh0nO9laUkh+K1eHgRw/6IVikelMWnfzItqnB
-         BTINs6rACd+qXDccDKPz0c3FdFzPrrvVuZ8zxQs476UXDvirRRZm4q3P0Ynd1pBlTZ
-         a2YlQEqcCzovnOYaGKNxAN3jrstpjLqU9jXD1uRc=
+        b=oUOMAxeS8tx10N4MT8XMlqnIAmo78PHTr7KUR2I5QrK5t1967Qe9NUhzzK7tka+Pc
+         jPk8+WEPfEhEP4RnhtNAApszml02SYLtYcabGj/1XCYOHkDtTkNewCIOz8PFen3+0H
+         f0/RKHpNgJ1JQc6GF2r63eQokdEqnt0yeWosdQD4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ding Tao <miyatsu@qq.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 004/219] arm64: dts: marvell: armada-37xx: Enable emmc on espressobin
-Date:   Fri, 22 Nov 2019 00:15:28 -0500
-Message-Id: <20191122051903.31749-4-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 003/127] ARM: dts: Fix up SQ201 flash access
+Date:   Fri, 22 Nov 2019 00:18:17 -0500
+Message-Id: <20191122052021.32062-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122051903.31749-1-sashal@kernel.org>
-References: <20191122051903.31749-1-sashal@kernel.org>
+In-Reply-To: <20191122052021.32062-1-sashal@kernel.org>
+References: <20191122052021.32062-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,56 +58,75 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ding Tao <miyatsu@qq.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 43ebc7c1b3ed8198b9acf3019eca16e722f7331c ]
+[ Upstream commit d88b11ef91b15d0af9c0676cbf4f441a0dff0c56 ]
 
-The ESPRESSObin board has a emmc interface available on U11: declare it
-and let the bootloader enable it if the emmc is present.
+This sets the partition information on the SQ201 to be read
+out from the RedBoot partition table, removes the static
+partition table and sets our boot options to mount root from
+/dev/mtdblock2 where the squashfs+JFFS2 resides.
 
-[gregory.clement@bootlin.com: disable the emmc by default]
-Signed-off-by: Ding Tao <miyatsu@qq.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/marvell/armada-3720-espressobin.dts   | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/gemini-sq201.dts | 37 ++++--------------------------
+ 1 file changed, 5 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-index 3ab25ad402b90..846003bb480cd 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-@@ -60,9 +60,31 @@
- 	cd-gpios = <&gpionb 3 GPIO_ACTIVE_LOW>;
- 	marvell,pad-type = "sd";
- 	vqmmc-supply = <&vcc_sd_reg1>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio_pins>;
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/gemini-sq201.dts b/arch/arm/boot/dts/gemini-sq201.dts
+index 63c02ca9513c4..e9e2f6ff0c583 100644
+--- a/arch/arm/boot/dts/gemini-sq201.dts
++++ b/arch/arm/boot/dts/gemini-sq201.dts
+@@ -20,7 +20,7 @@
+ 	};
  
-+/* U11 */
-+&sdhci0 {
-+	non-removable;
-+	bus-width = <8>;
-+	mmc-ddr-1_8v;
-+	mmc-hs400-1_8v;
-+	marvell,xenon-emmc;
-+	marvell,xenon-tun-count = <9>;
-+	marvell,pad-type = "fixed-1-8v";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc_pins>;
-+/*
-+ * This eMMC is not populated on all boards, so disable it by
-+ * default and let the bootloader enable it, if it is present
-+ */
-+	status = "disabled";
-+};
-+
- &spi0 {
- 	status = "okay";
+ 	chosen {
+-		bootargs = "console=ttyS0,115200n8";
++		bootargs = "console=ttyS0,115200n8 root=/dev/mtdblock2 rw rootfstype=squashfs,jffs2 rootwait";
+ 		stdout-path = &uart0;
+ 	};
+ 
+@@ -71,37 +71,10 @@
+ 			/* 16MB of flash */
+ 			reg = <0x30000000 0x01000000>;
+ 
+-			partition@0 {
+-				label = "RedBoot";
+-				reg = <0x00000000 0x00120000>;
+-				read-only;
+-			};
+-			partition@120000 {
+-				label = "Kernel";
+-				reg = <0x00120000 0x00200000>;
+-			};
+-			partition@320000 {
+-				label = "Ramdisk";
+-				reg = <0x00320000 0x00600000>;
+-			};
+-			partition@920000 {
+-				label = "Application";
+-				reg = <0x00920000 0x00600000>;
+-			};
+-			partition@f20000 {
+-				label = "VCTL";
+-				reg = <0x00f20000 0x00020000>;
+-				read-only;
+-			};
+-			partition@f40000 {
+-				label = "CurConf";
+-				reg = <0x00f40000 0x000a0000>;
+-				read-only;
+-			};
+-			partition@fe0000 {
+-				label = "FIS directory";
+-				reg = <0x00fe0000 0x00020000>;
+-				read-only;
++			partitions {
++				compatible = "redboot-fis";
++				/* Eraseblock at 0xfe0000 */
++				fis-index-block = <0x1fc>;
+ 			};
+ 		};
  
 -- 
 2.20.1
