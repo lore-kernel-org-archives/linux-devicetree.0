@@ -2,109 +2,311 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DF0C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E315C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4FE2071F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574434532;
-	bh=XOsOV9WkivuaeQlatqG9K65/WMEeHRXOyL4xo8IcPpg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BcYx5lNh8Y0WXkB9i/TO0CIDLQLLngBUJgQHp0NuaP5v6WpIaIdB+dJeinpSPxCcF
-	 s5nAQagyyNuyXoyWIvsvgVKXHwmFx5LbXlCez8da7Rkhvddh24h6Wb6JgBP9eldRfJ
-	 KkcGbrPVKOVjy+erfk7T/ibNaS3B1MmUAJl4Ctjk=
+	by mail.kernel.org (Postfix) with ESMTP id 554AF2071F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:11:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="aR9QcJAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfKVOzc (ORCPT
+        id S1727327AbfKVPLH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:55:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfKVOzc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 09:55:32 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE37B20706;
-        Fri, 22 Nov 2019 14:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574434531;
-        bh=XOsOV9WkivuaeQlatqG9K65/WMEeHRXOyL4xo8IcPpg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UUV4P74DMtdUhh5dLo+8J6XDQrkFbgWnHgGVI8Qh0lqhVyZhUhIE2KDoFKzp9Te/V
-         00SB/F9IO80kPR00/dI6pWe1by5Ffl8v3/99P6KUDshmetNxVH7ySsMxi54MnhiBBg
-         J7VFwSyYhVFmpFIYdUMS/pfI4kvoZbrKa8DZGxM0=
-Date:   Fri, 22 Nov 2019 14:55:25 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, iommu@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Robin Murphy <robin.murphy@arm.com>, ard.biesheuvel@linaro.org
-Subject: Re: [PATCH] of: property: Add device link support for "iommu-map"
-Message-ID: <20191122145525.GA14153@willie-the-truck>
-References: <20191120190028.4722-1-will@kernel.org>
- <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
+        Fri, 22 Nov 2019 10:11:07 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25885 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfKVPLH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 10:11:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574435431; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=F/UeNzZZIxxbeqSsXkX8t5pKeG3cpx0L+XjbMfJnBgZbQ0X6r/JUHpHaRRXIooYiVjvKEpzxt+HfO36TufGdPAykdaKQmlLE1kYYnID0XnHeDB75u3mdSgsK+tAbbyD45j1BHFDvJnjlInF3AXQm6cJM0UUsCCZZXHAqivi8k+k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574435431; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=nESsLvhzaQb1NGJ+1u9ZSjHrT1AthJvXPz55nH0Q2OQ=; 
+        b=aJE+kn42jl78ZHNnp5Mh5bQFKArdLGpbNuJ/+fmazUCvg7wDXLaAKOyXJ0whg/2X3dWaG3YDbrVjGKTKDVzF1NeV6f+LyS5kvpiIvpMf3s8puXFnScucrhwj/3fhF/HnsaHPS0NmB+rsNmIddYnzQgCDuMuH0DYlVDfM1aaQnZU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=tOpBGigrJUdJPA+iI6mAC3HsCgDZ4QsCnHz8akkwg7bmEyvKymB+ODIPaZVzYvnoBjVXYF3ZYv9P
+    wdEbe1MiWy2aVuSJQRl04ncv/kKmD2vS4lY/NeJwGsja9hGBmrtG  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574435431;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=nESsLvhzaQb1NGJ+1u9ZSjHrT1AthJvXPz55nH0Q2OQ=;
+        b=aR9QcJAtBZsmDoGuOOWS7WczN7aUJhhmQNvboAGIoKAc7X7ZFzGAcSKNJofMpglP
+        vUxZHDjro57ylyXE37QS7ov3KfuIxNk2CFLyT1PQWa9giTmbO1EoXf19IB62fDdoevS
+        kJez+dmFYQAjzY/jn/+7wCmCIhnOI+iPbGfES91w=
+Received: from [192.168.88.130] (171.221.113.177 [171.221.113.177]) by mx.zohomail.com
+        with SMTPS id 1574435431336248.96638470349205; Fri, 22 Nov 2019 07:10:31 -0800 (PST)
+Subject: Re: [PATCH 1/4] MIPS: Ingenic: initial X1000 support.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1574428289-21764-1-git-send-email-zhouyanjie@zoho.com>
+ <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
+ <1574433409.3.0@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DD7FA57.7070209@zoho.com>
+Date:   Fri, 22 Nov 2019 23:10:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1574433409.3.0@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[+Ard]
+Hi Paul,
 
-Hi Rob,
+On 2019=E5=B9=B411=E6=9C=8822=E6=97=A5 22:36, Paul Cercueil wrote:
+> Hi Zhou,
+>
+>
+> Le ven., nov. 22, 2019 at 21:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+> =C3=A9crit :
+>> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
+>> This is left unselectable in Kconfig until a X1000 based board is
+>> added in a later commit.
+>>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>  arch/mips/boot/dts/ingenic/x1000.dtsi | 161=20
+>> ++++++++++++++++++++++++++++++++++
+>>  arch/mips/jz4740/Kconfig              |   6 ++
+>>  arch/mips/jz4740/time.c               |   4 +-
+>>  3 files changed, 170 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
+>>
+>> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
+>> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> new file mode 100644
+>> index 0000000..b8658a6
+>> --- /dev/null
+>> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> @@ -0,0 +1,161 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +#include <dt-bindings/clock/x1000-cgu.h>
+>> +
+>> +/ {
+>> +    #address-cells =3D <1>;
+>> +    #size-cells =3D <1>;
+>> +    compatible =3D "ingenic,x1000", "ingenic,x1000e";
+>> +
+>> +    cpuintc: interrupt-controller {
+>> +        #address-cells =3D <0>;
+>> +        #interrupt-cells =3D <1>;
+>> +        interrupt-controller;
+>> +        compatible =3D "mti,cpu-interrupt-controller";
+>> +    };
+>> +
+>> +    intc: interrupt-controller@10001000 {
+>> +        compatible =3D "ingenic,x1000-intc", "ingenic,jz4780-intc";
+>> +        reg =3D <0x10001000 0x50>;
+>> +
+>> +        interrupt-controller;
+>> +        #interrupt-cells =3D <1>;
+>> +
+>> +        interrupt-parent =3D <&cpuintc>;
+>> +        interrupts =3D <2>;
+>> +    };
+>> +
+>> +    exclk: ext {
+>> +        compatible =3D "fixed-clock";
+>> +        #clock-cells =3D <0>;
+>> +    };
+>> +
+>> +    rtclk: rtc {
+>> +        compatible =3D "fixed-clock";
+>> +        #clock-cells =3D <0>;
+>> +        clock-frequency =3D <32768>;
+>> +    };
+>> +
+>> +    cgu: x1000-cgu@10000000 {
+>> +        compatible =3D "ingenic,x1000-cgu";
+>> +        reg =3D <0x10000000 0x100>;
+>> +
+>> +        clocks =3D <&exclk>, <&rtclk>;
+>> +        clock-names =3D "ext", "rtc";
+>> +
+>> +        #clock-cells =3D <1>;
+>> +    };
+>> +
+>> +    apb {
+>> +        compatible =3D "simple-bus";
+>> +        #address-cells =3D <1>;
+>> +        #size-cells =3D <1>;
+>> +        ranges =3D <>;
+>> +
+>> +        uart0: serial@10030000 {
+>> +            compatible =3D "ingenic,x1000-uart";
+>> +            reg =3D <0x10030000 0x100>;
+>> +
+>> +            interrupt-parent =3D <&intc>;
+>> +            interrupts =3D <51>;
+>> +
+>> +            clocks =3D <&exclk>, <&cgu X1000_CLK_UART0>;
+>> +            clock-names =3D "baud", "module";
+>> +
+>> +            status =3D "disabled";
+>> +        };
+>> +
+>> +        uart1: serial@10031000 {
+>> +            compatible =3D "ingenic,x1000-uart";
+>> +            reg =3D <0x10031000 0x100>;
+>> +
+>> +            interrupt-parent =3D <&intc>;
+>> +            interrupts =3D <50>;
+>> +
+>> +            clocks =3D <&exclk>, <&cgu X1000_CLK_UART1>;
+>> +            clock-names =3D "baud", "module";
+>> +
+>> +            status =3D "disabled";
+>> +        };
+>> +
+>> +        uart2: serial@10032000 {
+>> +            compatible =3D "ingenic,x1000-uart";
+>> +            reg =3D <0x10032000 0x100>;
+>> +
+>> +            interrupt-parent =3D <&intc>;
+>> +            interrupts =3D <49>;
+>> +
+>> +            clocks =3D <&exclk>, <&cgu X1000_CLK_UART2>;
+>> +            clock-names =3D "baud", "module";
+>> +
+>> +            status =3D "disabled";
+>> +        };
+>> +
+>> +        pinctrl: pin-controller@10010000 {
+>> +            compatible =3D "ingenic,x1000-pinctrl";
+>> +            reg =3D <0x10010000 0x800>;
+>> +
+>> +            #address-cells =3D <1>;
+>> +            #size-cells =3D <0>;
+>> +
+>> +            gpa: gpio@0 {
+>> +                compatible =3D "ingenic,x1000-gpio";
+>> +                reg =3D <0>;
+>> +
+>> +                gpio-controller;
+>> +                gpio-ranges =3D <&pinctrl 0 0 32>;
+>> +                #gpio-cells =3D <2>;
+>> +
+>> +                interrupt-controller;
+>> +                #interrupt-cells =3D <2>;
+>> +
+>> +                interrupt-parent =3D <&intc>;
+>> +                interrupts =3D <17>;
+>> +            };
+>> +
+>> +            gpb: gpio@1 {
+>> +                compatible =3D "ingenic,x1000-gpio";
+>> +                reg =3D <1>;
+>> +
+>> +                gpio-controller;
+>> +                gpio-ranges =3D <&pinctrl 0 32 32>;
+>> +                #gpio-cells =3D <2>;
+>> +
+>> +                interrupt-controller;
+>> +                #interrupt-cells =3D <2>;
+>> +
+>> +                interrupt-parent =3D <&intc>;
+>> +                interrupts =3D <16>;
+>> +            };
+>> +
+>> +            gpc: gpio@2 {
+>> +                compatible =3D "ingenic,x1000-gpio";
+>> +                reg =3D <2>;
+>> +
+>> +                gpio-controller;
+>> +                gpio-ranges =3D <&pinctrl 0 64 32>;
+>> +                #gpio-cells =3D <2>;
+>> +
+>> +                interrupt-controller;
+>> +                #interrupt-cells =3D <2>;
+>> +
+>> +                interrupt-parent =3D <&intc>;
+>> +                interrupts =3D <15>;
+>> +            };
+>> +
+>> +            gpd: gpio@3 {
+>> +                compatible =3D "ingenic,x1000-gpio";
+>> +                reg =3D <3>;
+>> +
+>> +                gpio-controller;
+>> +                gpio-ranges =3D <&pinctrl 0 96 32>;
+>> +                #gpio-cells =3D <2>;
+>> +
+>> +                interrupt-controller;
+>> +                #interrupt-cells =3D <2>;
+>> +
+>> +                interrupt-parent =3D <&intc>;
+>> +                interrupts =3D <14>;
+>> +            };
+>> +        };
+>> +    };
+>> +};
+>> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+>> index 4dd0c44..6b96844 100644
+>> --- a/arch/mips/jz4740/Kconfig
+>> +++ b/arch/mips/jz4740/Kconfig
+>> @@ -33,3 +33,9 @@ config MACH_JZ4780
+>>      select MIPS_CPU_SCACHE
+>>      select SYS_HAS_CPU_MIPS32_R2
+>>      select SYS_SUPPORTS_HIGHMEM
+>> +
+>> +config MACH_X1000
+>> +    bool
+>> +    select MIPS_CPU_SCACHE
+>> +    select SYS_HAS_CPU_MIPS32_R2
+>> +    select SYS_SUPPORTS_HIGHMEM
+>> diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
+>> index cb768e5..3af6538 100644
+>> --- a/arch/mips/jz4740/time.c
+>> +++ b/arch/mips/jz4740/time.c
+>> @@ -101,7 +101,9 @@ static struct clock_event_device=20
+>> jz4740_clockevent =3D {
+>>  #ifdef CONFIG_MACH_JZ4740
+>>      .irq =3D JZ4740_IRQ_TCU0,
+>>  #endif
+>> -#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
+>> +#if defined(CONFIG_MACH_JZ4770) || \
+>> +    defined(CONFIG_MACH_JZ4780) || \
+>> +    defined(CONFIG_MACH_X1000)
+>
+> That code was removed in the TCU patchset that was merged in time for=20
+> 5.4-rc1.
+> Please rebase your patchset on top mips-next.
+>
 
-On Fri, Nov 22, 2019 at 08:47:46AM -0600, Rob Herring wrote:
-> On Wed, Nov 20, 2019 at 1:00 PM Will Deacon <will@kernel.org> wrote:
-> >
-> > Commit 8e12257dead7 ("of: property: Add device link support for iommus,
-> > mboxes and io-channels") added device link support for IOMMU linkages
-> > described using the "iommus" property. For PCI devices, this property
-> > is not present and instead the "iommu-map" property is used on the host
-> > bridge node to map the endpoint RequesterIDs to their corresponding
-> > IOMMU instance.
-> >
-> > Add support for "iommu-map" to the device link supplier bindings so that
-> > probing of PCI devices can be deferred until after the IOMMU is
-> > available.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Saravana Kannan <saravanak@google.com>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > ---
-> >
-> > Applies against driver-core/driver-core-next.
-> > Tested on AMD Seattle (arm64).
-> 
-> Guess that answers my question whether anyone uses Seattle with DT.
-> Seattle uses the old SMMU binding, and there's not even an IOMMU
-> associated with the PCI host. I raise this mainly because the dts
-> files for Seattle either need some love or perhaps should be removed.
+Thank you for your reminder, I will do it in v2.
 
-I'm using the new DT bindings on my Seattle, thanks to the firmware fairy
-(Ard) visiting my flat with a dediprog. The patches I've posted to enable
-modular builds of the arm-smmu driver require that the old binding is
-disabled [1].
+Thanks and best regards=EF=BC=81
 
-> No issues with the patch itself though. I'll queue it after rc1.
+> Cheers,
+> -Paul
+>
+>
 
-Thanks, although I think Greg has already queued it [2] due to the
-dependencies on other patches in his tree.
 
-Will
 
-[1] https://lore.kernel.org/lkml/20191121114918.2293-14-will@kernel.org/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=e149573b2f84d0517648dafc0db625afa681ed54
