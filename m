@@ -2,169 +2,144 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B994C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C235C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E61C2071C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3429F2071C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ldxD3IhY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEr2jjn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfKVMWh (ORCPT
+        id S1727868AbfKVM22 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:22:37 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:32876 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfKVMWg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 07:22:36 -0500
-Received: by mail-lj1-f196.google.com with SMTP id t5so7175356ljk.0
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 04:22:35 -0800 (PST)
+        Fri, 22 Nov 2019 07:28:28 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41134 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727824AbfKVM20 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 07:28:26 -0500
+Received: by mail-lj1-f193.google.com with SMTP id m4so7144487ljj.8
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 04:28:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nmv33MELYtHNW1JfSh62V5xviPKhtu29GeC7rSDHuak=;
-        b=ldxD3IhYiBpXt0HtDqPy+vLU768rI80wemhHlXIxuozaMFv5BDMGXKOwBdiTtG9qrR
-         K7zRO7F/VgnMzk8I8ViyED5oc2rFQNjKTHMCKLQzSVexza+EwBbDstq+EFImT/WDe/zG
-         503aY643zXLckIPlmPcnJgLOZJdjVCE1nglK67MKhx6dB+GbBLtRnybiR8UXj6qrbp9x
-         dqZlKECSFxFo0Hoi4CrvCufy4IpzUbDbldl2pNTGpKSx5NJLQo5vB78ttUb88d8B/gwV
-         ogwPci75B5adEZt65PD+NaL85SKKIgd2iVepO5qxnX7cs08JeYbvg5nc8A2VuhY8jRZr
-         KH+Q==
+         :cc:content-transfer-encoding;
+        bh=Sb0l5wZZ4x3uEUBJJPu8/Qg1fPjfMYDDa2uRl9Za+6g=;
+        b=dEr2jjn9fgOjdiaDJE2cZkZfXprKxiCesiH6JGQ81KlVLsOAGLk2zI3vm3VTxAW/Dt
+         ZAWD9BggBEV7m9WWyDmoJLJQLBLAb655y6NgNk/WDLD6uEI/O8S08ynaATwcY9j91g/X
+         oz6jR2QHAF05zYR4+HVWmCa5e4flLcECiB+55HYKL/QYKAUVUIgkRwnch+WdQq8HQQeX
+         wKKBM4IOSVLQf4ztqRZ0MjhDejiodCApagsb6m9creQc3gJ83j5p+55dvpS01vvlXDsE
+         /HJ54qBLHQD9VnBEpRVhFG/r3OLcZpVj7BTpKPDCMJV9fuFmPgFiiNrbj/+bvDGzfw1v
+         ZjwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nmv33MELYtHNW1JfSh62V5xviPKhtu29GeC7rSDHuak=;
-        b=n9T3V4OVNxSyXPBeFLmDRQHDnoW+0u51vfSEGFjjq43q9N90Gx96USkZ1wQ6w9FuOA
-         /S+q1XWYFJhJhAXmjML9J1uWphSV8ztdhmWRRW5mrN2EquxjGkHZMPtrsRKVYYPKisqs
-         g3jNVgOY4uYfQIJjM61NUud5CtBFocPedqJ6tqGvKHWpEJbfhfQXtshtEeTMgZw0xMPg
-         sTD+iLyBmhtYbaJWC1lPtL53nt2rC1ub5HVh5xEAAic97TIiEdY6mwSiiR0hBnsgpsNm
-         bD/kYREo0PNKUefRN8kEXA3s0nKMGsLDyb255Z/xX1N+i9YI+8A7ZmgV0ka+g2bFV6SO
-         N2Ng==
-X-Gm-Message-State: APjAAAW5t7ienMR0GU04IU+Us2YBqZ1xXFsjNLM6zVEbv4NSoP0IWtSo
-        XSaacSYwhz/j1kAEqZDRlm8LEM02PsOCEkTNutCiKA==
-X-Google-Smtp-Source: APXvYqyuibo8EMRCgLutCbJAKbmXaQdrAZ0ALQbk7n8Lv+v95MQiTUFmPlM0+aEEhGrw1vBXS7BDDJdva4A7Rhaxntk=
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr12114009lji.218.1574425354454;
- Fri, 22 Nov 2019 04:22:34 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Sb0l5wZZ4x3uEUBJJPu8/Qg1fPjfMYDDa2uRl9Za+6g=;
+        b=QQ6t4Ix8dsIqxfXW/w2jeEw3gfj4+RieHUVE1OrbGN/FXEU1bkixQRn6GCzf/YR6EA
+         ywPYtnZc+P18eSY7iVVMYfnoxkKriOaiuw1lnRkDbr1fIANC6lSz+9rcdUk1mmMjPYbu
+         IHwfSkT2qIqAsQ1okukpaJIPvMmk5gUqAd+ftp5GJTSvxu3Af0+eECYMLN2etpHpvNST
+         SdH2meu7qiiyQZ9YtIBLJ2LvI3H7zbwNAvmaT9MsySoltBDErOJJdbOK0DecBSLOPNjl
+         DiADfxCUnj4IYgf95vGhMYjcc0Ehx0T9fCgsQ/gwrqnRGWnl4XBqF416L+0HYaX6SO2t
+         liiw==
+X-Gm-Message-State: APjAAAWN7G0uxrlMATz0UKtonOJknbd5gkF3it4OzO4PfpDL/zLE3Mb2
+        MD433I3Obz83I2Zfq+M/zDOdg8In3Hn1H/sNIY24Dw==
+X-Google-Smtp-Source: APXvYqyEr875KK6+Z3AoTFLNHg9GG1Nc70IgJCEP8t2ZeLuj4RGoP4v/mkCP2LZsVpBsQMxyu52/73Y3stYR9or4KTU=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr12078801lji.251.1574425704107;
+ Fri, 22 Nov 2019 04:28:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-3-peter.ujfalusi@ti.com>
-In-Reply-To: <20191120133409.9217-3-peter.ujfalusi@ti.com>
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+ <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+ <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
+ <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com> <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
+In-Reply-To: <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 13:22:23 +0100
-Message-ID: <CACRpkdYt5P=GNc3EgHb-ry9fxMbXfpZd4FC=tuLqonNJKUM2wg@mail.gmail.com>
-Subject: Re: [RFC 2/2] gpiolib: Support for (output only) shared GPIO line
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Fri, 22 Nov 2019 13:28:12 +0100
+Message-ID: <CACRpkdaDmd+0809wmiNwSRbsdHaDNzpbOaxCcx6bEfYuyzPNQg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Yash Shah <yash.shah@sifive.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Sachin Ghadi <sachin.ghadi@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+On Tue, Nov 19, 2019 at 5:42 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+> > On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
 
-> This patch adds basic support for handling shared GPIO lines in the core.
-> The line must be configured with a child node in DT.
-> Based on the configuration the core will use different strategy to manage
-> the shared line:
-> refcounted low: Keep the line low as long as there is at least one low
->                 request is registered
-> refcounted high: Keep the line high as long as there is at least one high
->                 request is registered
-> pass through: all requests are allowed to go through without refcounting.
+> > > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=
+=82(a):
+> > Is it really so? The bgpio_lock does protect the registers used
+> > by regmap-mmio but unless the interrupt code is also using the
+> > same registers it is fine to have a different lock for those.
+> >
+> > Is the interrupt code really poking into the very same registers
+> > as passed to bgpio_init()?
+> >
+> > Of course it could be seen as a bit dirty to poke around in the
+> > same memory space with regmap and the bgpio_* accessors
+> > but in practice it's no problem if they never touch the same
+> > things.
+> >
+> > Yours,
+> > Linus Walleij
 >
-> The pass through mode is equivalent to how currently the
-> GPIOD_FLAGS_BIT_NONEXCLUSIVE is handled.
->
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> I'm wondering if it won't cause any inconsistencies when for example
+> interrupts are being triggered on input lines while we're also reading
+> their values? Seems to me it's just more clear to use a single lock
+> for a register range. Most drivers using gpio-mmio do just that in
+> their irq-related routines.
 
-This is a good start! Some ideas on how I'd like this to develop.
+OK good point. Just one lock for the whole thing is likely
+more maintainable even if it works with two different locks.
 
->  drivers/gpio/gpiolib-of.c |  28 ++++++--
->  drivers/gpio/gpiolib.c    | 132 +++++++++++++++++++++++++++++++++++---
+> Anyway: even without using bgpio_lock this code is inconsistent: if
+> we're using regmap for interrupt registers, we should either decide to
+> rely on locking provided by regmap or disable it and use a locally
+> defined lock.
 
-Please put this API under its own Kconfig option
-and in its own file in
-drivers/gpio/gpiolib-refcounted.c
-local header in
-drivers/gpio/gpiolib-refcounted.h
-only built in if the appropriate Kconfig is selected.
+OK makes sense, let's say we use the bgpio_lock everywhere
+for this.
 
-Consumer header in
-include/linux/gpio/reference-counted.h
-And add external driver API to this last file.
+Yash: are you OK with this? (Haven't read the new patch set
+yet, maybe it is already fixed...)
 
-> --- a/drivers/gpio/gpiolib-of.c
+> Also: if we're using regmap, then let's use it
+> everywhere, not only when it's convenient for updating registers.
 
-No commenting on this because as pointed out in the binding
-patch I want this done by simply detecting the same GPIO
-being referenced by several <&gpio N> phandles.
+I think what you are saying is that we should extend gpio-mmio.c
+with some optional regmap API (or create a separate MMIO library
+for regmap consumers) which makes sense, but it feels a bit
+heavy task to toss at contributors.
 
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index ca9bc1e4803c..0eec0857e3a8 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -111,11 +111,18 @@ struct gpio_desc {
->  #define FLAG_PULL_UP    13     /* GPIO has pull up enabled */
->  #define FLAG_PULL_DOWN  14     /* GPIO has pull down enabled */
->  #define FLAG_BIAS_DISABLE    15        /* GPIO has pull disabled */
-> +#define FLAG_IS_SHARED 16      /* GPIO is shared */
-
-This is a good way of flagging that this is a refcounted GPIO
-I would call it FLAG_IS_REFERENCE_COUNTED as it is
-more precise to what it means.
-
-> +#define FLAG_REFCOUNT_LOW 17   /* Shared GPIO is refcounted for raw low */
-> +#define FLAG_REFCOUNT_HIGH 18  /* Shared GPIO is refcounted for raw high */
-
-Do not put this here, keep it in the local refcounted GPIO
-struct gpio_refcount_desc.
-
->         /* Connection label */
->         const char              *label;
->         /* Name of the GPIO */
->         const char              *name;
-> +       /* Number of users of a shared GPIO */
-> +       int                     shared_users;
-> +       /* Reference counter for shared GPIO (low or high level) */
-> +       int                     level_refcount;
-
-We can't expand this struct for everyone on the planet like this.
-
-In the local header
-
-drivers/gpio/gpiolib-refcount.h create something like:
-
-struct gpio_refcount_desc {
-    struct gpio_desc *gd;
-    int shared_users;
-    int level_refcount;
-};
-
-This should be the opaque cookie returned to consumers of this new
-refcounted API.
-
-It defines the reference counted API as separate and optional from
-the non-reference counted API, also using its own API.
-
-The only effect on the core
-gpiolib will be the single flag in struct gpio_desc; and some
-calls into the shared code with stubs if the support for systems
-that do not enable the reference counting API.
+We could add it to the TODO file, where I already have some
+item like this for port-mapped I/O.
 
 Yours,
 Linus Walleij
