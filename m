@@ -2,126 +2,125 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCEDC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E5DC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74789204FD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574404272;
-	bh=J41T5dDACX6mMdDwcHJ66tJM39TIQDMBCyI3Q1j6VLM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kW6mfaGon8Zu5TxSPjLdZ+wpm4Kqn/yxsygUHRP0Oz/MC0IdeeCJcl8EnQrJWxatk
-	 6GPt7VzA4wNCjRwJyz0TWp+SCUEQsGg8MrJ0WKa1hmByExwcaQhYmmY1V+O9PVaRXo
-	 TwaeTEkuYSgKtnhBOb/yfDTa1ZrgrLQzrbMeuO4c=
+	by mail.kernel.org (Postfix) with ESMTP id 496A42068F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:53:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QG3cF8pd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKVFtS (ORCPT
+        id S1726822AbfKVGxo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:49:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfKVFtS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:49:18 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A96552068F;
-        Fri, 22 Nov 2019 05:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401757;
-        bh=J41T5dDACX6mMdDwcHJ66tJM39TIQDMBCyI3Q1j6VLM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S6VKzuh92DaiKDQtcRkJu2X2FbGEkX6pjGyjfcmTCB6QtkG1W60JkRhbvEclNGPF+
-         B1uvZmtRML+Lu6V2Xirv2POMkhx6Wt45s69DTh116+13AFvdU8IfcWLpbzvEs5C5yL
-         S+TSoHAWVHpv9x5iqHsMKmrdGUB5ChPlbq3uCM1Y=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 011/219] ARM: dts: imx35: Fix memory node duplication
-Date:   Fri, 22 Nov 2019 00:45:43 -0500
-Message-Id: <20191122054911.1750-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
-References: <20191122054911.1750-1-sashal@kernel.org>
+        Fri, 22 Nov 2019 01:53:44 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:42041 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfKVGxo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 01:53:44 -0500
+Received: by mail-ua1-f68.google.com with SMTP id 31so1832670uas.9
+        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 22:53:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1YU9k9XpRr942/Ij03AkmdwfF1xW9f8cWmfS5A3XY0k=;
+        b=QG3cF8pdSIL28X1eGzKqnGvTG84F3Ufrrvrc8SL1ku6vQwPYz/ZYUsZpu040Y27DJW
+         L4VBXn057/NW7NJlATWTc6kcsgzfQILeq8kGDkpAJ/wNdnWF6S++4ZeRLrGnJxl9HBgq
+         xkb413yOgTl5mrGqih/vn7f5AZJMoe1RGLo5v1LYiNyqM9A8Q1S0HQd62Pcn7VAK7AYS
+         2+TIuyreiwtCByxwQBdy4QWiKXcJiQ2G/mFAyqgUILQ/P8wYxbmZoYE72OJFYQLkXXxB
+         VMiMV9XRGwzFdh3shltnRsQq9EFe7sRrf2Nlp0z1T0cC+teVA/YJPjg3fZO9/MKgjYjj
+         w2qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1YU9k9XpRr942/Ij03AkmdwfF1xW9f8cWmfS5A3XY0k=;
+        b=sR8fYSbwn1GZiRgNyfW9JcoVNFRJdeqP3aY8/rTLx29SNStcOFYPWpp4l9YvoM1JdU
+         nIs5aPsjGKe561mdtaqZjFA/+oF67RHxRqYovSLLWKHCvUTCX0PKn3DHbzBZ0XBHv4TQ
+         wcffyO2gCOzMyG/XdGkR6+iMcsIWT6Ilmt6hJaD4uIfevsq2XNPkK8QZZ1DXuGM6Tnef
+         fFQBIqARlxu4qEM7HrDoiJ6kjDi9Hp8i9raXidTYQBE88D2XNt3kj1HuAClG1otwPesh
+         jBTBAad+tFHGCqQSexlBQyn5SyezN7BY1SyxF16E6LNtU9SJye0JKzWT/tSVUIossNfl
+         4Csg==
+X-Gm-Message-State: APjAAAUOjzoDF1Gn0SvytZ+Pm/D+/h0eLiA16/P2X1XbEnkLElkfnD/X
+        CvuDuk0f2Hbe1OjgfKhgLU5Ytj/OJgbrBJAET0X9rw==
+X-Google-Smtp-Source: APXvYqxA4KymHfYVZJp+513DppW1RweHZkY7FevlDR8l2jLOXOk+nmSeISVuvQpjenrUnIKpX/cDOUf9dilFT9SRZZ0=
+X-Received: by 2002:ab0:24ce:: with SMTP id k14mr8961736uan.15.1574405623268;
+ Thu, 21 Nov 2019 22:53:43 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1574232449-13570-1-git-send-email-manish.narani@xilinx.com>
+ <1574232449-13570-5-git-send-email-manish.narani@xilinx.com> <CAC=3edbHWA7gv-mTFVXXcMzN6hyzO4LPqkbcRZ-zDp5BAm8_Vw@mail.gmail.com>
+In-Reply-To: <CAC=3edbHWA7gv-mTFVXXcMzN6hyzO4LPqkbcRZ-zDp5BAm8_Vw@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 22 Nov 2019 07:53:06 +0100
+Message-ID: <CAPDyKFrgC1nxe7NqmNHHibYmDfrdx6ubTpOE41bW2Ge796+N8w@mail.gmail.com>
+Subject: Re: [PATCH v6 4/8] dt-bindings: mmc: Add optional generic properties
+ for mmc
+To:     Rob Herring <rob.e.herring@gmail.com>,
+        Manish Narani <manish.narani@xilinx.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>, jolly.shah@xilinx.com,
+        rajan.vaja@xilinx.com, nava.manne@xilinx.com,
+        Moritz Fischer <mdf@kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        git@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+On Thu, 21 Nov 2019 at 20:01, Rob Herring <rob.e.herring@gmail.com> wrote:
+>
+> On Wed, Nov 20, 2019 at 12:49 AM Manish Narani <manish.narani@xilinx.com> wrote:
+> >
+> > Add optional properties for mmc hosts which are used to set clk delays
+> > for different speed modes in the controller.
+> >
+> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > ---
+> >  .../devicetree/bindings/mmc/mmc-controller.yaml     | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> > index 080754e0ef35..305b2016bc17 100644
+> > --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> > +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> > @@ -333,6 +333,18 @@ patternProperties:
+> >      required:
+> >        - reg
+> >
+> > +  "^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|uhs-(sdr(12|25|50|104)|ddr50))$":
+> > +    minItems: 2
+> > +    maxItems: 2
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > +      - minimum: 0
+> > +        maximum: 359
+>
+> This is wrong. It can't be both minItems of 2 and a single uint32.
+> What's needed is:
+>
+> allOf:
+>   - $ref: /schemas/types.yaml#/definitions/uint32-array
+> minItems: 2
+> maxItems: 2
+> items:
+>   minimum: 0
+>   maximum: 359
 
-[ Upstream commit 8721610a6c2b8c42fc57819d8c3bfbb9166f95a3 ]
+Thanks Rob for clarifying!
 
-Boards based on imx35 have duplicate memory nodes:
+Manish, can you please send a fixup on top?
 
-- One coming from the board dts file: memory@
-
-- One coming from the imx35.dtsi file.
-
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
-
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi | 1 +
- arch/arm/boot/dts/imx35-pdk.dts              | 1 +
- arch/arm/boot/dts/imx35.dtsi                 | 2 --
- 3 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-index ba39d938f2891..5f8a47a9fcd40 100644
---- a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-+++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-@@ -18,6 +18,7 @@
- 	compatible = "eukrea,cpuimx35", "fsl,imx35";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x8000000>; /* 128M */
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx35-pdk.dts b/arch/arm/boot/dts/imx35-pdk.dts
-index df613e88fd2c1..ddce0a844758b 100644
---- a/arch/arm/boot/dts/imx35-pdk.dts
-+++ b/arch/arm/boot/dts/imx35-pdk.dts
-@@ -11,6 +11,7 @@
- 	compatible = "fsl,imx35-pdk", "fsl,imx35";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x8000000>,
- 		      <0x90000000 0x8000000>;
- 	};
-diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
-index 1c50b785cad47..b36b97b655dda 100644
---- a/arch/arm/boot/dts/imx35.dtsi
-+++ b/arch/arm/boot/dts/imx35.dtsi
-@@ -13,10 +13,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		ethernet0 = &fec;
--- 
-2.20.1
-
+Kind regards
+Uffe
