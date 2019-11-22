@@ -2,105 +2,109 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56551C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A704C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6FD20730
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E8C20718
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KqQDAnml"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQ7yrdfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbfKVKpP (ORCPT
+        id S1726739AbfKVL4f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 05:45:15 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:12042 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728963AbfKVKpO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 05:45:14 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd7bc350000>; Fri, 22 Nov 2019 02:45:09 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 22 Nov 2019 02:45:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 22 Nov 2019 02:45:13 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
- 2019 10:45:13 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov
- 2019 10:45:12 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 22 Nov 2019 10:45:12 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dd7bc340001>; Fri, 22 Nov 2019 02:45:12 -0800
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
-CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH 0/6] Add support for PCIe endpoint mode in Tegra194
-Date:   Fri, 22 Nov 2019 16:14:59 +0530
-Message-ID: <20191122104505.8986-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        Fri, 22 Nov 2019 06:56:35 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36271 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbfKVL4f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 06:56:35 -0500
+Received: by mail-ed1-f66.google.com with SMTP id f7so5778421edq.3;
+        Fri, 22 Nov 2019 03:56:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=myV3lKf8LP8zgt7/x2kHqtOs6MwOjmNsOxknrMDY0ng=;
+        b=VQ7yrdfJ+b8iOC+zpO0ugY7dMTPSCsYa7A2gTPvEWMTPUFp+kltiZXnVeTpQrMRTTV
+         sUFNKD9SJFA0zurJvqWjUvgty76PVzvoHHH5aEsWJD4Kl5eMgu9wjScwCd2ITaa8b/vK
+         MzLM5yaDrDz6IdGpOdQ29yArA0YM9wWefREL2XGTbTSIqeRj0K4vQlM+2T1ARxlkSenl
+         THt5NeDxfNxxPyEsKY3GIDN5k/sfsiHvcpNhI9N3f14JPs6WmCpVef8aOtPzNHnAoD2J
+         9Fm+YRhj05y4FJvytds4mlL7D9IK9Ig0wwPBbCiZg8LAIOtaB+03OdBXXtwDohdS6VWC
+         ontw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=myV3lKf8LP8zgt7/x2kHqtOs6MwOjmNsOxknrMDY0ng=;
+        b=YuzlOyZfTIukVarXCneJOBWDqhPz2URxy3wDM1sP6ipQqTdegusqWe+WwvQBNE2l3H
+         Nt9WvLhILXEePNPXBvfYo2hCxQuPhVhHbZxTUbMpMic5ccvE6Vika1ZINxJi4X7FUhhv
+         0o0bkZ7H/o09yF+zb0AXSahBM1g5oi7R4UP1U4UzsayBXceYsbXvXjKT8DstKs3F8hGI
+         PhmvfDb75Mhp2rLN9sjZSvE5fzXEY8WJMtpqO/oBbRD8WzTOgUlWgd9kMIEVJYVMfK9x
+         8HlT7ilNnztSPho8P5T+BpWpbq5qIxQOHgRfgo/0U1VpHbR5IcvyIFaWQjrv1GLF46ba
+         ArAg==
+X-Gm-Message-State: APjAAAVypWpEFgHafCh0Mvzv9TWGbAKHO39njZODUdxqanngvKWUXYKW
+        njSUAVCtk9mrAYP2l9NGmKZjEeD4hOwgV54ksIU=
+X-Google-Smtp-Source: APXvYqxYvHXQjj3nxnwa8FYn66nKlRY69aGEXxyFBuEfXNzyt7zIFpEnsN09uAqv+7c0vjuzjmibcFvkSNUtCulAfYs=
+X-Received: by 2002:a17:906:4dd5:: with SMTP id f21mr21480540ejw.203.1574423793266;
+ Fri, 22 Nov 2019 03:56:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574419509; bh=vATyB0+qpRWIt2ybVc4KqLiFa7LEkPRGlbViOEQbviw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=KqQDAnmlYAl+sJswyU11Z4ld8H/PkEOizunUfmeq2krHgNHVIFw2ZffRQkM1Qq3gE
-         rd6ibZCzjQLDwpiYVY8tNdiPvw4Ml5StGxLGXw0oGVScbC7N0IoVbbiEMLdBAiNRH2
-         OZgUnAmh8imkitAomhGQkh7YqQeQlujCHxm6OdYAb7OUppy+k1brkmLJB1NphPBke1
-         g06oQdCEdy/aOrxQTn39Yi/dwBP4uqkOZTmXmGptNI3RTyFqyxLTimSXpLjpq7RPZY
-         7+8dAJ4s5cCun7COd99n0mEphqVZhOqJt45JAsbonDBQKOjCH75aNwC9i0z45Qc/kE
-         OxaGzsow64WBQ==
+References: <20191121162520.10120-1-marco.franchi@nxp.com> <20191121162520.10120-2-marco.franchi@nxp.com>
+ <CAOMZO5ByMkp1i=rMScgadT9_ucnsxqn_pnSP4bmLUPnxPdYHvw@mail.gmail.com>
+In-Reply-To: <CAOMZO5ByMkp1i=rMScgadT9_ucnsxqn_pnSP4bmLUPnxPdYHvw@mail.gmail.com>
+From:   Marco Franchi <marcofrk@gmail.com>
+Date:   Fri, 22 Nov 2019 08:56:22 -0300
+Message-ID: <CAM4PwSWJYrN=xSWNiwxHYS9XMWJFmnpAByVhsOV75kBBF4M3Xg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: freescale: add initial support for
+ Google i.MX 8MQ Phanbell
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Marco Antonio Franchi <marco.franchi@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "atv@google.com" <atv@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
-either in root port mode or in end point mode but only in one mode at a time.
-Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
-patch series adds support for PCIe endpoint mode in both the driver as well as
-in DT.
-This patch series depends on the changes made for Synopsys DesignWare endpoint
-mode subsystem that are currently under review
-@ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
-which in turn depends on the patch made by Kishon
-@ https://patchwork.kernel.org/patch/10975123/
-which is also under review.
+Hi Fabio,
 
-Vidya Sagar (6):
-  soc/tegra: bpmp: Update ABI header
-  dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
-  PCI: tegra: Add support for PCIe endpoint mode in Tegra194
-  arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
-  arm64: tegra: Enable GPIO controllers nodes for P2972-0000 platform
-  arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
-    platform
+Em qui., 21 de nov. de 2019 =C3=A0s 15:22, Fabio Estevam
+<festevam@gmail.com> escreveu:
+>
+> Hi Marco,
+>
+> On Thu, Nov 21, 2019 at 1:25 PM Marco Antonio Franchi
+> <marco.franchi@nxp.com> wrote:
+> >
+> > This patch adds the device tree to support Google Coral Edge TPU,
+> > historicaly named as fsl-imx8mq-phanbell, a computer on module
+> > which can be used for AI/ML propose.
+> >
+> > It introduces a minimal enablement support for this module and
+> > was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
+>
+> Please remove the "totally based on the NXP i.MX 8MQ EVK board" as
+> they are different boards.
+>
+> > +       memory@40000000 {
+> > +               device_type =3D "memory";
+> > +               reg =3D <0x00000000 0x40000000 0 0xc0000000>;
+>
+> The memory size here does not match with the one used in the Google repo.
+Thanks.
+>
+> With these changes you can add:
+>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Ok, I will add it at the v3.
 
- .../bindings/pci/nvidia,tegra194-pcie-ep.txt  | 138 ++++
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  37 +
- arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
- drivers/pci/controller/dwc/Kconfig            |  30 +-
- drivers/pci/controller/dwc/pcie-tegra194.c    | 751 +++++++++++++++++-
- include/soc/tegra/bpmp-abi.h                  |  10 +-
- 6 files changed, 1048 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.txt
-
--- 
-2.17.1
-
+Best regards,
+Marco
