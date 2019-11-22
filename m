@@ -2,121 +2,97 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C29EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB7C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651142071B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/uPRRve"
+	by mail.kernel.org (Postfix) with ESMTP id B023E20715
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574434079;
+	bh=EQc/LaSz4eRaJByoiZb2ipCt0IaDpCp3+GhULDtcYWI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fayKLw9ee5t9NAGx7ua1vuOGu/ioZip4RFVZlyJMpetQ/2UsVK723eL997mKxKbWp
+	 AAndm75+tTxjOTiF4OyKyXW7gi3HFvrzbdEjRSHJYI8Qp4VpOf3mi3OCjE77FxOxhb
+	 x/366n1/Wbg3PhzybAZoJ5lf+C5aPIqqr3sF4EjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfKVOm7 (ORCPT
+        id S1726638AbfKVOr7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:42:59 -0500
-Received: from mail-wr1-f53.google.com ([209.85.221.53]:36432 "EHLO
-        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKVOm6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 09:42:58 -0500
-Received: by mail-wr1-f53.google.com with SMTP id z3so8925772wru.3
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 06:42:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hoPOh21olR4yR3etjFWcnoa60If5IZiVlNptNDVpa9k=;
-        b=R/uPRRve+D/36PrlFAZ+v7bEL0KnZpRHUQRPrFtPz8oZOzUsIOjaQ9yQYv6eGzg9nw
-         uJ8lyxFEdbtuEcTNhIETeI4HbgdD/QERHRUlJJ8bZ0L1aeCyldAfjGjJV5+NwzDF7NaE
-         ki59OAOP+ELGJfKQfETK+07+BwtYryjoNP8VqOceIciUMYGPAGkkguJEYA9v+oGrmd1E
-         71bxgO8mJeH4cyV6iE7whBUk57QFxlPjDVkT13cHh0pJgdcxUbq680E11fhTq/cUqJfS
-         Hx5RfO1Ohym9OojcH665NUw0vnc3Mh+t1BY1Ab+0HokguaRTzweqTURzRvudwf9OEUh2
-         1QPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=hoPOh21olR4yR3etjFWcnoa60If5IZiVlNptNDVpa9k=;
-        b=PrI8Uuz6rfrCID4ip8Uu7x5yX1GGPRWuIxYwwWl2vIDiGQTJ5jA3ve4oniEq0+nISp
-         kjF/TwnHP5rcNwCw1aFIkAwlJ3aSqTdy0h3Z6hBF/R97Xtr0GgztsfGQ0Gsdprl9zLD6
-         GPQzal95+mZg66ms93lqBXOk2nZKKH07jvC4lKDYUja83GOQzPundLnmfKiLKQEjN0LV
-         WcqYLMD5jE2jjGMianjB51nhl1571x5JMlc6pXj2TAaji4YEtsIyy32j0JqFR8mehcNk
-         mlsjiT/K0Es8DUyq8RGG7JnivmarR0/a4IUKACDWXOYy5nTfDONLaUxHNm3015Mu54nD
-         ptGQ==
-X-Gm-Message-State: APjAAAVMXRAbs2dGNQg5mLFlhBOU7MdYcvukfUA2AKd7pTo2I3i0z+s6
-        MdHBQ+U3kz+n4GNiUdGvES5TfA==
-X-Google-Smtp-Source: APXvYqzCgWGaqbE51BQAnG37UGDGNxfx4IR3oun03T6T1DOkP8efGl42cNn/p6X4rDaRkRFwSEAO4Q==
-X-Received: by 2002:adf:e944:: with SMTP id m4mr18600080wrn.49.1574433774712;
-        Fri, 22 Nov 2019 06:42:54 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id x2sm2032469wmc.3.2019.11.22.06.42.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 06:42:54 -0800 (PST)
-Date:   Fri, 22 Nov 2019 14:42:35 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        devicetree@vger.kernel.org, Grigoryev Denis <grigoryev@fastwel.ru>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Subject: Re: Applied "tps6105x: add optional devicetree support" to the
- regulator tree
-Message-ID: <20191122144235.GD3296@dell>
-References: <20191119154611.29625-2-TheSven73@gmail.com>
- <applied-20191119154611.29625-2-TheSven73@gmail.com>
- <20191122073124.GA3296@dell>
- <20191122133230.GD6849@sirena.org.uk>
+        Fri, 22 Nov 2019 09:47:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfKVOr7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 09:47:59 -0500
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 155422071B;
+        Fri, 22 Nov 2019 14:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574434078;
+        bh=EQc/LaSz4eRaJByoiZb2ipCt0IaDpCp3+GhULDtcYWI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FY9hIt7gHlIrXLiJjfTrngT1JuA8auWUoxGefy3wnjz1lUJagg58qQeJDqVu35C5T
+         RlXgqOKuIyqzm0XEHPf9wSSS8MfVuP5kY+MEUPElkfNP9bHHk48ESyfcj+mP6Bf/9N
+         IxNivswgdnD6gb8XdyvVnW+izOhnPrAqvI1QqlOE=
+Received: by mail-qv1-f46.google.com with SMTP id s18so2971565qvr.4;
+        Fri, 22 Nov 2019 06:47:58 -0800 (PST)
+X-Gm-Message-State: APjAAAX1kTNLScWxt2EsDLviaKdy+N+j/jeIR4c8KiFyHSIsj1aMaW7S
+        pcVC04mMH7hdDvlVu0EaJNFPE7rIyeM0kZaeZw==
+X-Google-Smtp-Source: APXvYqyhWIT3yYojkaDSRZHcglQ9AlPu/F+glNafGG7BMM/cuqSID3+8L1W2SEkE6TxBfitLGOKJZjTbCwxWZfeti28=
+X-Received: by 2002:ad4:42b4:: with SMTP id e20mr3174130qvr.85.1574434077237;
+ Fri, 22 Nov 2019 06:47:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191122133230.GD6849@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191120190028.4722-1-will@kernel.org>
+In-Reply-To: <20191120190028.4722-1-will@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 22 Nov 2019 08:47:46 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
+Message-ID: <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
+Subject: Re: [PATCH] of: property: Add device link support for "iommu-map"
+To:     Will Deacon <will@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, iommu@lists.linuxfoundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 22 Nov 2019, Mark Brown wrote:
+On Wed, Nov 20, 2019 at 1:00 PM Will Deacon <will@kernel.org> wrote:
+>
+> Commit 8e12257dead7 ("of: property: Add device link support for iommus,
+> mboxes and io-channels") added device link support for IOMMU linkages
+> described using the "iommus" property. For PCI devices, this property
+> is not present and instead the "iommu-map" property is used on the host
+> bridge node to map the endpoint RequesterIDs to their corresponding
+> IOMMU instance.
+>
+> Add support for "iommu-map" to the device link supplier bindings so that
+> probing of PCI devices can be deferred until after the IOMMU is
+> available.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>
+> Applies against driver-core/driver-core-next.
+> Tested on AMD Seattle (arm64).
 
-> On Fri, Nov 22, 2019 at 07:31:24AM +0000, Lee Jones wrote:
-> > On Wed, 20 Nov 2019, Mark Brown wrote:
-> 
-> > > Example: put chip in regulator mode:
-> 
-> > > i2c0 {
-> > > 	tps61052@33 {
-> > > 		compatible = "ti,tps61052";
-> > > 		reg = <0x33>;
-> > > 
-> > > 		regulator {
-> > >                             regulator-min-microvolt = <5000000>;
-> > >                             regulator-max-microvolt = <5000000>;
-> > >                             regulator-always-on;
-> > > 		};
-> > > 	};
-> > > };
-> 
-> > ?
-> 
-> Sorry, I completely missed that this was adding a MFD file - the binding
-> only mentioned regulator stuff and I clearly didn't look at the
-> filename.  Do you want me to drop it?
+Guess that answers my question whether anyone uses Seattle with DT.
+Seattle uses the old SMMU binding, and there's not even an IOMMU
+associated with the PCI host. I raise this mainly because the dts
+files for Seattle either need some love or perhaps should be removed.
 
-It's okay. Probably won't cause too much chaos. Keep it applied.
+No issues with the patch itself though. I'll queue it after rc1.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Rob
