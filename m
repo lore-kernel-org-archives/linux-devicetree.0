@@ -2,92 +2,280 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2EDC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACA2C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0AD20706
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90792071B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="IagYogM3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WIgf9LcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfKVOKa (ORCPT
+        id S1726613AbfKVOhJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:10:30 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.163]:15519 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVOK3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 09:10:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574431824;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=EJSl3iRJcanzg159K/qfpdsrnAGlP/ValPtgHthr2To=;
-        b=IagYogM3d820iB2L+gXfiZBOm8r19xQ1Jcx0afMNzzl0DIa++kngCrB87VBp16nOY5
-        dWeOhJBA9P1f2SqTO6ETXRDcGypATfWf/t402Dt1+UR+E9GYSkS/c+m3nNJ9LclFwekd
-        9Q7H8bHdA0fS39BTMBquAboxvTY95D5DD4cTI828Uf7jUveVwDNDojur8jn510AeUoMe
-        z1Gr3xH/sqtyMgS+1aEUYuQeENZxTdAd0XRQY09zL/Vf4ehW0hMjtE33Q94cf+i0BnZr
-        422LCMWG6rKVgZsEw6qTzR3OsdwpiuEC6/DPgzGzAuiubRGzxpNWsGW96D9vmH1XFnn+
-        XXVw==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8fxIc6p"
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id e07688vAMEAN4rh
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 22 Nov 2019 15:10:23 +0100 (CET)
-Date:   Fri, 22 Nov 2019 15:10:09 +0100
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] dt-bindings: arm: Document compatibles for Ux500
- boards
-Message-ID: <20191122140944.GA2872@gerhold.net>
-References: <20191120181857.97174-1-stephan@gerhold.net>
- <20191120181857.97174-4-stephan@gerhold.net>
- <CACRpkda-rm=1hz_p2YCqBVgxsM9cmKYJVUg+T91MyBrgmtDP-w@mail.gmail.com>
+        Fri, 22 Nov 2019 09:37:09 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:56954 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVOhJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 09:37:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574433422; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YpCE21+fHqnut680I3BLvFteO+uKZOg8KIh9pmfWWCs=;
+        b=WIgf9LcGZAwH1nAv5NPuNb/rjgRpVt+3Pv6gg/hScEEBrn1FPFWQNi0DGcwNwQzaottkh3
+        BTRPRMZsU+owErj1h33Wz8DRFgJBSDroi+PesXxC444jKapSkuRtfQR3fae3S0qnUgEsEx
+        ZnlRdAZiysVO49Ygyh3DQqHgqFxdSPg=
+Date:   Fri, 22 Nov 2019 15:36:49 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/4] MIPS: Ingenic: initial X1000 support.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com
+Message-Id: <1574433409.3.0@crapouillou.net>
+In-Reply-To: <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
+References: <1574428289-21764-1-git-send-email-zhouyanjie@zoho.com>
+        <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkda-rm=1hz_p2YCqBVgxsM9cmKYJVUg+T91MyBrgmtDP-w@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 09:22:19PM +0100, Linus Walleij wrote:
-> On Wed, Nov 20, 2019 at 7:20 PM Stephan Gerhold <stephan@gerhold.net> wrote:
-> 
-> > The device-specific compatible values used by the Ux500 boards
-> > were not documented so far. Add a new simple schema to document them.
-> >
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> 
-> Nice, thanks!
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> I expect Rob to merge these patches as they are bindings-only,
-> alternatively I can take them in the Ux500 DTS pull request
-> for the next kernel cycle.
-> 
+Hi Zhou,
 
-For this patch it would be easier if you take it through the Ux500 tree,
-as I have another patch series that adds a new board to it.
 
-The vendor-prefix patches are independent, so Rob can merge them if that
-is easier?
+Le ven., nov. 22, 2019 at 21:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
+> This is left unselectable in Kconfig until a X1000 based board is
+> added in a later commit.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> ---
+>  arch/mips/boot/dts/ingenic/x1000.dtsi | 161=20
+> ++++++++++++++++++++++++++++++++++
+>  arch/mips/jz4740/Kconfig              |   6 ++
+>  arch/mips/jz4740/time.c               |   4 +-
+>  3 files changed, 170 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
+> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> new file mode 100644
+> index 0000000..b8658a6
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> @@ -0,0 +1,161 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <dt-bindings/clock/x1000-cgu.h>
+> +
+> +/ {
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <1>;
+> +	compatible =3D "ingenic,x1000", "ingenic,x1000e";
+> +
+> +	cpuintc: interrupt-controller {
+> +		#address-cells =3D <0>;
+> +		#interrupt-cells =3D <1>;
+> +		interrupt-controller;
+> +		compatible =3D "mti,cpu-interrupt-controller";
+> +	};
+> +
+> +	intc: interrupt-controller@10001000 {
+> +		compatible =3D "ingenic,x1000-intc", "ingenic,jz4780-intc";
+> +		reg =3D <0x10001000 0x50>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells =3D <1>;
+> +
+> +		interrupt-parent =3D <&cpuintc>;
+> +		interrupts =3D <2>;
+> +	};
+> +
+> +	exclk: ext {
+> +		compatible =3D "fixed-clock";
+> +		#clock-cells =3D <0>;
+> +	};
+> +
+> +	rtclk: rtc {
+> +		compatible =3D "fixed-clock";
+> +		#clock-cells =3D <0>;
+> +		clock-frequency =3D <32768>;
+> +	};
+> +
+> +	cgu: x1000-cgu@10000000 {
+> +		compatible =3D "ingenic,x1000-cgu";
+> +		reg =3D <0x10000000 0x100>;
+> +
+> +		clocks =3D <&exclk>, <&rtclk>;
+> +		clock-names =3D "ext", "rtc";
+> +
+> +		#clock-cells =3D <1>;
+> +	};
+> +
+> +	apb {
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		ranges =3D <>;
+> +
+> +		uart0: serial@10030000 {
+> +			compatible =3D "ingenic,x1000-uart";
+> +			reg =3D <0x10030000 0x100>;
+> +
+> +			interrupt-parent =3D <&intc>;
+> +			interrupts =3D <51>;
+> +
+> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART0>;
+> +			clock-names =3D "baud", "module";
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart1: serial@10031000 {
+> +			compatible =3D "ingenic,x1000-uart";
+> +			reg =3D <0x10031000 0x100>;
+> +
+> +			interrupt-parent =3D <&intc>;
+> +			interrupts =3D <50>;
+> +
+> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART1>;
+> +			clock-names =3D "baud", "module";
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart2: serial@10032000 {
+> +			compatible =3D "ingenic,x1000-uart";
+> +			reg =3D <0x10032000 0x100>;
+> +
+> +			interrupt-parent =3D <&intc>;
+> +			interrupts =3D <49>;
+> +
+> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART2>;
+> +			clock-names =3D "baud", "module";
+> +
+> +			status =3D "disabled";
+> +		};
+> +
+> +		pinctrl: pin-controller@10010000 {
+> +			compatible =3D "ingenic,x1000-pinctrl";
+> +			reg =3D <0x10010000 0x800>;
+> +
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			gpa: gpio@0 {
+> +				compatible =3D "ingenic,x1000-gpio";
+> +				reg =3D <0>;
+> +
+> +				gpio-controller;
+> +				gpio-ranges =3D <&pinctrl 0 0 32>;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +
+> +				interrupt-parent =3D <&intc>;
+> +				interrupts =3D <17>;
+> +			};
+> +
+> +			gpb: gpio@1 {
+> +				compatible =3D "ingenic,x1000-gpio";
+> +				reg =3D <1>;
+> +
+> +				gpio-controller;
+> +				gpio-ranges =3D <&pinctrl 0 32 32>;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +
+> +				interrupt-parent =3D <&intc>;
+> +				interrupts =3D <16>;
+> +			};
+> +
+> +			gpc: gpio@2 {
+> +				compatible =3D "ingenic,x1000-gpio";
+> +				reg =3D <2>;
+> +
+> +				gpio-controller;
+> +				gpio-ranges =3D <&pinctrl 0 64 32>;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +
+> +				interrupt-parent =3D <&intc>;
+> +				interrupts =3D <15>;
+> +			};
+> +
+> +			gpd: gpio@3 {
+> +				compatible =3D "ingenic,x1000-gpio";
+> +				reg =3D <3>;
+> +
+> +				gpio-controller;
+> +				gpio-ranges =3D <&pinctrl 0 96 32>;
+> +				#gpio-cells =3D <2>;
+> +
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +
+> +				interrupt-parent =3D <&intc>;
+> +				interrupts =3D <14>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+> index 4dd0c44..6b96844 100644
+> --- a/arch/mips/jz4740/Kconfig
+> +++ b/arch/mips/jz4740/Kconfig
+> @@ -33,3 +33,9 @@ config MACH_JZ4780
+>  	select MIPS_CPU_SCACHE
+>  	select SYS_HAS_CPU_MIPS32_R2
+>  	select SYS_SUPPORTS_HIGHMEM
+> +
+> +config MACH_X1000
+> +	bool
+> +	select MIPS_CPU_SCACHE
+> +	select SYS_HAS_CPU_MIPS32_R2
+> +	select SYS_SUPPORTS_HIGHMEM
+> diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
+> index cb768e5..3af6538 100644
+> --- a/arch/mips/jz4740/time.c
+> +++ b/arch/mips/jz4740/time.c
+> @@ -101,7 +101,9 @@ static struct clock_event_device=20
+> jz4740_clockevent =3D {
+>  #ifdef CONFIG_MACH_JZ4740
+>  	.irq =3D JZ4740_IRQ_TCU0,
+>  #endif
+> -#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
+> +#if defined(CONFIG_MACH_JZ4770) || \
+> +    defined(CONFIG_MACH_JZ4780) || \
+> +    defined(CONFIG_MACH_X1000)
 
-Thanks,
-Stephan
+That code was removed in the TCU patchset that was merged in time for=20
+5.4-rc1.
+Please rebase your patchset on top mips-next.
+
+Cheers,
+-Paul
+
+=
+
