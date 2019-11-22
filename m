@@ -2,122 +2,101 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98041C43141
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12528C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F46F20707
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bm7hmo71"
+	by mail.kernel.org (Postfix) with ESMTP id D4B5B2070A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 05:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574400643;
+	bh=zfH7E1dQ0QMkwOWmVhltnebB7TPcOcSQTtCRkRBoYr0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=H4EgHXTJd0+ADokVEOKCOUXxLJgrJwd0BqIDo1NS8kano4KC2aqMYsPZ/34mUfUrL
+	 4FOEBQeSe5AdCfhhlypiQrkFAI1v/cbZLJshSjCGCwoAuH4+5glFrnErVAv7opoddr
+	 FYK4YJGyLlnmoDgzBgojT/xDDnmrujlvkoW+zatM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfKVFaZ (ORCPT
+        id S1727262AbfKVFan (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:30:25 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41150 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbfKVFaY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 00:30:24 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 94so5151820oty.8
-        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 21:30:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kx1yQ2ubEiohF95o6dJ/xu7jQhtpeqgqKSgECbFNwQM=;
-        b=Bm7hmo71iYwmnJK1S95rLm/DlUT2s5zRbjXugto1xyu21uN6cEztDamJ1W4uxy7EJN
-         7p5IsY0HFCXR+mCEfjTjwAGy3Wb8EArljOPhx3rZrxx/2kuz8dgWwOcAiNaLZQM/iVIG
-         JV9V735o1BNC+4JWknKAgGyPfvOpTFZ56Xdk7k3TgDSjVyzgqOvMTdp0VUSE+mZfnwLV
-         dqtjF/RYzEJVIlYV2tQvEA2Sy0Jh91Vnec0PALPc1F8rK3FGNE65Du6HtheDWI/C0ibQ
-         DmjIbaqMICw3mVfvPY3i/PKF7A3lA3CDEl3FImxJKzggG9dRQe7zKtrlCrYo6nK2k3Sq
-         NMOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kx1yQ2ubEiohF95o6dJ/xu7jQhtpeqgqKSgECbFNwQM=;
-        b=Rimew1F7+EBMViZovqQPRS/eBC7OK4vXxI1B3KtwcDobUr+jwCwl/F52goWu8Zk2sv
-         7XvYhbqz+9X7Ot4tPEnNGond9feqb6xfXvQ/s9bUxtAfz3yrL4cmAWPFhWr6GiNn5Pm1
-         9oTrqdy3kx+bFkHm2NywgmS4kSPy4IH6MSK4vg4ImWOnkS7GqalWSD7r2JP1qfc87vmr
-         Mdzk1jzsZZQtqDESCA5EFUhihRxcjIa51wMbis1EUSxaTRXxFPAvQVE9jolOdMLUUiaG
-         Dt1ITogQ1HPsq0vcyoSqe5q3sR+8PjyvbpM+kZeXF9n2Wpo9BDZvVId/nd8og1zSrNCp
-         +ktA==
-X-Gm-Message-State: APjAAAXUg9dcfsT50Yme6iPgNv+kjOJBQonwuPHOuGI8m7PFth+tg1Tr
-        2645AiZi49s46mMqYEbUamoncKTyvy8OTzWYDumufw==
-X-Google-Smtp-Source: APXvYqx6q9oWnlWD1uY/CpDpWnp4391UeWY5xQCBv1zgj50yTa5h+EB0wqoeFL6KWA4G6ysM9K4vNZXTuW5bka/SzUI=
-X-Received: by 2002:a9d:5d1a:: with SMTP id b26mr9518420oti.139.1574400623580;
- Thu, 21 Nov 2019 21:30:23 -0800 (PST)
+        Fri, 22 Nov 2019 00:30:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726792AbfKVFaW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:30:22 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E6C120707;
+        Fri, 22 Nov 2019 05:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574400622;
+        bh=zfH7E1dQ0QMkwOWmVhltnebB7TPcOcSQTtCRkRBoYr0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a8b4LXilkL8YMiErjTrbJluWnZVW7o5PQhmW746h+AlCN7rG0yNfAR9Q3mDfUiB9S
+         XH5ORpA/dasEzkupNgkSCAr9S6x7H0OuMhyzq4aFj1UFwC5sJ+OOpCw0327tDXGt8U
+         lwd7lmKjsFvLBH0flfzg25nx/aAN3nDbTEAdORk0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 021/219] ARM: dts: imx53-voipac-dmm-668: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 00:26:43 -0500
+Message-Id: <20191122053001.752-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122053001.752-1-sashal@kernel.org>
+References: <20191122053001.752-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191120071302.227777-1-saravanak@google.com>
-In-Reply-To: <20191120071302.227777-1-saravanak@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 21 Nov 2019 21:29:47 -0800
-Message-ID: <CAGETcx8cRnWuye_paUhHGu_rmWcLnFxN=kW7WJ-_0D2Q0KtDmg@mail.gmail.com>
-Subject: Re: [PATCH] of: property: Add device link support for
- interrupt-parent, dmas and -gpio(s)
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 11:13 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Add support for creating device links out of more DT properties.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/property.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 0fa04692e3cc..dedbf82da838 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1188,7 +1188,11 @@ DEFINE_SIMPLE_PROP(interconnects, "interconnects", "#interconnect-cells")
->  DEFINE_SIMPLE_PROP(iommus, "iommus", "#iommu-cells")
->  DEFINE_SIMPLE_PROP(mboxes, "mboxes", "#mbox-cells")
->  DEFINE_SIMPLE_PROP(io_channels, "io-channel", "#io-channel-cells")
-> +DEFINE_SIMPLE_PROP(interrupt_parent, "interrupt-parent", NULL)
-> +DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-cells")
->  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
-> +DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
-> +DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
->
->  static const struct supplier_bindings of_supplier_bindings[] = {
->         { .parse_prop = parse_clocks, },
-> @@ -1196,7 +1200,11 @@ static const struct supplier_bindings of_supplier_bindings[] = {
->         { .parse_prop = parse_iommus, },
->         { .parse_prop = parse_mboxes, },
->         { .parse_prop = parse_io_channels, },
-> +       { .parse_prop = parse_interrupt_parent, },
-> +       { .parse_prop = parse_dmas, },
->         { .parse_prop = parse_regulators, },
-> +       { .parse_prop = parse_gpio, },
-> +       { .parse_prop = parse_gpios, },
->         {}
->  };
->
+From: Fabio Estevam <festevam@gmail.com>
 
-Rob,
+[ Upstream commit 998a84c27a7f3f9133d32af64e19c05cec161a1a ]
 
-Any chance I get an Ack/Review please?
+imx53-voipac-dmm-668 has two memory nodes, but the correct representation
+would be to use a single one with two reg entries - one for each RAM chip
+select, so fix it accordingly.
 
--Saravana
+Reported-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+index f83a8c62ea531..d595034f3f1bf 100644
+--- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
++++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+@@ -17,12 +17,8 @@
+ 
+ 	memory@70000000 {
+ 		device_type = "memory";
+-		reg = <0x70000000 0x20000000>;
+-	};
+-
+-	memory@b0000000 {
+-		device_type = "memory";
+-		reg = <0xb0000000 0x20000000>;
++		reg = <0x70000000 0x20000000>,
++		      <0xb0000000 0x20000000>;
+ 	};
+ 
+ 	regulators {
+-- 
+2.20.1
+
