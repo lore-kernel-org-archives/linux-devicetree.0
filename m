@@ -2,108 +2,103 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF733C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B0FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875D220715
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 993602072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:43:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AgTSYuNm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAGbQgf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfKVPdH (ORCPT
+        id S1726655AbfKVPnZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:33:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41679 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVPdH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 10:33:07 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b18so9097259wrj.8
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 07:33:05 -0800 (PST)
+        Fri, 22 Nov 2019 10:43:25 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40121 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbfKVPnW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 10:43:22 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q2so7901030ljg.7
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 07:43:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LQ0qY4Da80FqTT8SCe/q1MMW5kmKX6FKTTmrD9FMwQA=;
-        b=AgTSYuNm6XEfw9a1bin5Mb4/xCbTQ+NinMuVrvghSeEv3dFsAecF1XJPbn2iv1M6hY
-         p0cpqzbGPXGEzyjwmISfMojE0LxhDCyXfa7O2GrFOBPRPXKuA+np+l5lv+sd9iltRTGl
-         40ixAedr0XBP0RObe/d0u6Kl85Lo7q6+M9uiiTyuCvGh/7qkjHt2Zq4kMpQER1oGToOy
-         rUOFCo4z9GDEZTsAvXfugh8vyqyedf0J0SPQLCi87POM0biTYvmX+sFQlV/zavO9a9u0
-         P8VMOSvA9vHtkz3cLbYbYkxR93aPdU1+xJbHJ1IsxNrJ+8+Zdneft3cnMtP6yGDS/0pX
-         XQWA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GQzy1iQq7/UigF4z8t1UMdfHuT9DigedXPRNYTx8QBY=;
+        b=XAGbQgf1cU8rD/kywGu8E//J0deKp6oSzrY4nW/7iQnOC7Z85qIiCXWxldnCOmfQM0
+         5rD4pSqDLOxxYiQ22XtpA+ZQtIqNcfUSFvLURlIPtJQVgPu6ai8DLyrFL71pg9GiQ9pG
+         J3lCWTccy2Ay+ptCBd2t+/YVxqaTPHmAVMWaO+1JJ8kbJonQBCsyOGxhUYGEl3GzmSzI
+         ho5z7STf9Rfad2+G+J/cpfc9GQGp4z9GERHGxEaTUbyQm6+2MI6V46dhpZKOLPjpFlk3
+         RbOEvF5G831FamUvktmD2bDhXniv+mEfiO+c9474NZJJF1jmAgNlIrUF58CkzGAeBa0J
+         jdeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LQ0qY4Da80FqTT8SCe/q1MMW5kmKX6FKTTmrD9FMwQA=;
-        b=ck/sZerEmn/1xQqEhvBnOzzzGd3tbLk+urOIrzpv9A6/UuJildtdYnWk2KkrIU9qu4
-         IhVXorOjsttQGRXie3bP7gsf6cWJbM0/s53AnyIqULU1vrEyy62jG5ZH8ZOi+3H/pRb/
-         1yWC1bUePb5vgJglSKlRQ87CMF0hH6b5m687YgZZgG/S5vJVdTQAAEsqAYntfNA8kOvq
-         xaFM5muA1/Dox+tGybm2z1L8HwGp4stGLkmNnsZ6iY4me7BMKSr6rgsRYO3jzfXhDNAu
-         2hnGhbRS4tSJ9pLLgyMq2doqYrArgFxpDbRViY9N+lu4sV53w92Ft/kqIBGtIuatEf2o
-         1OPQ==
-X-Gm-Message-State: APjAAAWqXpTIbwKvMViLuuyY8rD3PNNd3hsmOoH3XcaVv1jolAQ4tbtY
-        JeJ0reNs8bDw14KuDyBZQRdvMw==
-X-Google-Smtp-Source: APXvYqzX6JrW+q24Zk8k1hZ/pOgzDIL1U2YSPMN1DIk72zz9G9tgaPGNFMdZipoYaSd2Rw5YaSO23g==
-X-Received: by 2002:adf:f20d:: with SMTP id p13mr17340480wro.325.1574436784658;
-        Fri, 22 Nov 2019 07:33:04 -0800 (PST)
-Received: from lophozonia (xdsl-188-155-204-106.adslplus.ch. [188.155.204.106])
-        by smtp.gmail.com with ESMTPSA id y6sm8172846wrw.6.2019.11.22.07.33.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 07:33:03 -0800 (PST)
-Date:   Fri, 22 Nov 2019 16:33:01 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        will@kernel.org, robin.murphy@arm.com, zhangfei.gao@linaro.org,
-        eric.auger@redhat.com
-Subject: Re: [PATCH v2 8/8] iommu/arm-smmu-v3: Add support for PCI PASID
-Message-ID: <20191122153301.GC810215@lophozonia>
-References: <20191108152508.4039168-1-jean-philippe@linaro.org>
- <20191108152508.4039168-9-jean-philippe@linaro.org>
- <20191111160529.00006dcd@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GQzy1iQq7/UigF4z8t1UMdfHuT9DigedXPRNYTx8QBY=;
+        b=UsKxVlCquW91gpUJK+Lnzm8BHC0hcBbnJX4/P98v3NA3aXpt8P+C7kpzUTD0ajFGK1
+         kO1srRx+FgHPwPCi5EvNMft5mDvls1Yl3e92MitxmFNpHFf3vFMalAVvnMai4xrFcev/
+         T8bgrfDODGKEeztBSsqUGV1Evj9JQHVmiZx0ng1pdSg1YJN1HEHxFPyjgQ6dAKbaj/uw
+         9Egc93XY7d4VuXOUArTbXQqf0MBI4A5VsgXXEi1B5U+76oW07eh/xGLBqPdeCAvQ9hxt
+         pwqgOWA3rBp9dpg6MjbQidJkIV6WAet55GPSnbXG4bqZbH7dvp6inW/V5AJdhYlrMbc5
+         3BbA==
+X-Gm-Message-State: APjAAAXnerVpifPVxSFIVg0G5dIVMi79TedfFXi/SpRMi1+07itNcEk9
+        SzxK8w0203wgNY93cShVFeUVMogcF3RF5DE2jSHksA==
+X-Google-Smtp-Source: APXvYqwcugeW4edWhYbow6P3IthY8AWt+/SiEG9o6A9ekVZjqmWysrxtVlxvnwXZwUzSHLS/mgbF3SgO93jwQdxuQ3k=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr536136ljm.233.1574437400356;
+ Fri, 22 Nov 2019 07:43:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111160529.00006dcd@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191120181857.97174-1-stephan@gerhold.net> <20191120181857.97174-4-stephan@gerhold.net>
+ <CACRpkda-rm=1hz_p2YCqBVgxsM9cmKYJVUg+T91MyBrgmtDP-w@mail.gmail.com> <20191122140944.GA2872@gerhold.net>
+In-Reply-To: <20191122140944.GA2872@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 16:43:08 +0100
+Message-ID: <CACRpkdYfUikKaB-9HO_heLZrGC346XZVKxvifMPJizeYSPjShg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] dt-bindings: arm: Document compatibles for Ux500 boards
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jonathan,
+On Fri, Nov 22, 2019 at 3:10 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> On Wed, Nov 20, 2019 at 09:22:19PM +0100, Linus Walleij wrote:
+> > On Wed, Nov 20, 2019 at 7:20 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> >
+> > > The device-specific compatible values used by the Ux500 boards
+> > > were not documented so far. Add a new simple schema to document them.
+> > >
+> > > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> >
+> > Nice, thanks!
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > I expect Rob to merge these patches as they are bindings-only,
+> > alternatively I can take them in the Ux500 DTS pull request
+> > for the next kernel cycle.
+> >
+>
+> For this patch it would be easier if you take it through the Ux500 tree,
+> as I have another patch series that adds a new board to it.
 
-On Mon, Nov 11, 2019 at 04:05:29PM +0000, Jonathan Cameron wrote:
-> On Fri, 8 Nov 2019 16:25:08 +0100
-> Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
-> 
-> > Enable PASID for PCI devices that support it. Since the SSID tables are
-> > allocated by arm_smmu_attach_dev(), PASID has to be enabled early enough.
-> > arm_smmu_dev_feature_enable() would be too late, since by that time the
-> > main DMA domain has already been attached. Do it in add_device() instead.
-> > 
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Seems straightforward.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> Thanks for working on this stuff.  I hope we an move to get the rest of the
-> SVA elements lined up behind it so everything moves quickly in the next
-> cycle (or two).
+OK I applied it for v5.6 on my ux500-dts branch.
 
-Thanks a lot for the thorough review. I'm aiming for v5.6 for the PASID
-series, and then realistically v5.7 for the rest of SVA, but I'll try to
-send it sooner.
+> The vendor-prefix patches are independent, so Rob can merge them if that
+> is easier?
 
-Thanks,
-Jean
+Let's see if Rob wants to take them, else I will merge them as well.
 
+Yours,
+Linus Walleij
