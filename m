@@ -2,160 +2,119 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D4EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2472AC43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3742072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1CA20706
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wPFNW57z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EgwPiUU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfKVMjc (ORCPT
+        id S1727677AbfKVMlW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:39:32 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32874 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfKVMjc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 07:39:32 -0500
-Received: by mail-ot1-f68.google.com with SMTP id q23so186663otn.0
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 04:39:31 -0800 (PST)
+        Fri, 22 Nov 2019 07:41:22 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38532 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKVMlW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 07:41:22 -0500
+Received: by mail-lf1-f68.google.com with SMTP id q28so5410154lfa.5
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 04:41:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pIaE2t8kEhzDVYCOk21I3VO5ugELTHI5U7MvhDfP+Bw=;
-        b=wPFNW57zKwWO86/8XbUcXJJRoWhRtgaz8SFbCVb3kzCZs5NoKJ5NAi5XITr/5axrWF
-         7t/bmKwgoI/qdkwMUMKfuO+JQl+KF3HA6koatw564ZgsHkf3LTN617naBAfhOMLIk1jZ
-         UHtrysleLqU2AQjrR/Qy+bepkiaXKqSBtTLbQlDmapNYB9kdfzlMSB4DFre/jEwUF15D
-         P4ChWAELcH4Fly7afKA1+MiGJLmLKPBjBPpU+ZSFXBtlLmgYQEerSeMbL04k3cDXdeYH
-         u658C2PbUnrGIPJl+JsiWXXiN0wUe5kS+NfcvxGIKAHHshIVt2KylgTsXH3ib1SkOmx6
-         Rosg==
+         :cc;
+        bh=aeL6ENOX7pztigFjtd4aneRHXGdD9m/NqUguyQGTLcQ=;
+        b=EgwPiUU0I/zOww52gVjxSaKx2o+qXH3R59PK7hE2xL8TZS/MFwbq43t+EcPen0Lkrj
+         FyFN/fz5tJw0MPZnF1XhtfxfoHVfOaDV9WYgggpKAStLFk4MxL9P90sSiXmlJw2kqiIa
+         yuZy/SZlYwXTlmTOYGBELJncgXjOd9oDYrTlDv/O7sifK4TyuZ+onndlwoI1iXVxRtyE
+         jzUhMtSafH2S/KqPuImf5kNeNRrkYuxhLq592lw38BbnZfICR7G6VdKsO1ZvXkU+B8Ok
+         UjOn4RjZ8g3J8Wj2QTotoZpaBD+/soPDWcAkdu9NhOPymBkH9KDWK5rgDCa4fcGchd9p
+         YD4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pIaE2t8kEhzDVYCOk21I3VO5ugELTHI5U7MvhDfP+Bw=;
-        b=HHzKZJETEp5mGm7/wDBu+XbArs5KdldtcraZ2UDnBkcC28xM8pvDojpN7q92BhY/gq
-         Pj0sc2cNVBbc2i1uF3LcPyW1OjlB/+pN5k7C0zBzhd5M8SDJe2SrWPiNrUiqfmsjrDUu
-         O1qL7+blqeWvYbw9YPXHJRxw5qrNlOCLeLQYyDJkrsE6pMzgnxEDBxOdaItSCPzlsiK1
-         SA9CdJvGQwmU4C9+uSdyHH0ed34rbO6ZTXL6yzprfNj3qJ9ej+WKFOW0fNyjlhPykfrF
-         1+Bgg3rTKrM+Wk7yQMc5ArokkbkpItBF6SvTuBJfOainhiPwRC1d7HUhCDdRWZ2cQEj+
-         5sTw==
-X-Gm-Message-State: APjAAAXfsQtRKnLABFVzMfmeKgphXzgO9jkD1abYqv+0Pw0D1M26GYWM
-        u7oU7ZJ5vBsIs+UvHwu8CRrjDhbEyjKs5J5ZeM6OOg==
-X-Google-Smtp-Source: APXvYqxKHhBekxA9nnYnqjLUFq+26q+Pt7iPthEshyRausyypcoh9ry3D5ayg7l4W/Vg0xxTE7p87Rqo7hkmAImYaDM=
-X-Received: by 2002:a9d:17ca:: with SMTP id j68mr10551757otj.250.1574426371219;
- Fri, 22 Nov 2019 04:39:31 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=aeL6ENOX7pztigFjtd4aneRHXGdD9m/NqUguyQGTLcQ=;
+        b=QbGbMTGnrmkEWHXWHbBA6riFmmOAe2G2XLnwLJWTuhY4kkuzhlR279kOrzkJXKUnnk
+         EhoDxRs9njLWbMVnBGtKsP/uUXySkcV4FSgYZegxKbRZ3BuFJlm53or0W7MOBDj9rqFt
+         gy9hUtHQ3yUce/teSBW7fqV2hplyeaOd8cUYZIoyX30ADDixVvACU4kSV57JO+kfatWy
+         B0utX/zQINOn8TkNP+DpMBwR3SRSQlHviIg/HR1wG8V34ETXcdmP6GTnTeOPKV0/y9gf
+         VA1M1ZRA/Z+omYX8u2cFV/v2gDEBGD4LChi1ViWryma5hmJ79xa4t0AqYqi9t2bL7Sb3
+         8ZQA==
+X-Gm-Message-State: APjAAAU8YRJgFxlpIOmbuMLuiQgpxlRdWGPvL9zIK1nFV6v+CXEXikaX
+        9z96cgjcCpuWyXYBEWJcuMBDJNh17rqZ0s5xYsvKIQ==
+X-Google-Smtp-Source: APXvYqwvM+HnA70kweiJuZD0yljMT/J2ZM51jcDKpzNDzzMPs/EFYAFU7+ydsL9uBxG2Gra1GlWlFlip8EGFflf7FVg=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr11533443lfi.93.1574426480231;
+ Fri, 22 Nov 2019 04:41:20 -0800 (PST)
 MIME-Version: 1.0
-References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
- <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
- <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
- <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
- <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
- <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com> <CACRpkdaDmd+0809wmiNwSRbsdHaDNzpbOaxCcx6bEfYuyzPNQg@mail.gmail.com>
-In-Reply-To: <CACRpkdaDmd+0809wmiNwSRbsdHaDNzpbOaxCcx6bEfYuyzPNQg@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 22 Nov 2019 13:39:20 +0100
-Message-ID: <CAMpxmJUq_YLU4ha1hTzDUKYMxD36Yb-6C3SraMHgZywx=bm=eA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Yash Shah <yash.shah@sifive.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
+In-Reply-To: <20191120142038.30746-2-ktouil@baylibre.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 13:41:08 +0100
+Message-ID: <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
+To:     Khouloud Touil <ktouil@baylibre.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pt., 22 lis 2019 o 13:28 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
->
-> On Tue, Nov 19, 2019 at 5:42 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napis=
-a=C5=82(a):
-> > > On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
-> > > <bgolaszewski@baylibre.com> wrote:
->
-> > > > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=
-=C5=82(a):
-> > > Is it really so? The bgpio_lock does protect the registers used
-> > > by regmap-mmio but unless the interrupt code is also using the
-> > > same registers it is fine to have a different lock for those.
-> > >
-> > > Is the interrupt code really poking into the very same registers
-> > > as passed to bgpio_init()?
-> > >
-> > > Of course it could be seen as a bit dirty to poke around in the
-> > > same memory space with regmap and the bgpio_* accessors
-> > > but in practice it's no problem if they never touch the same
-> > > things.
-> > >
-> > > Yours,
-> > > Linus Walleij
-> >
-> > I'm wondering if it won't cause any inconsistencies when for example
-> > interrupts are being triggered on input lines while we're also reading
-> > their values? Seems to me it's just more clear to use a single lock
-> > for a register range. Most drivers using gpio-mmio do just that in
-> > their irq-related routines.
->
-> OK good point. Just one lock for the whole thing is likely
-> more maintainable even if it works with two different locks.
->
-> > Anyway: even without using bgpio_lock this code is inconsistent: if
-> > we're using regmap for interrupt registers, we should either decide to
-> > rely on locking provided by regmap or disable it and use a locally
-> > defined lock.
->
-> OK makes sense, let's say we use the bgpio_lock everywhere
-> for this.
->
-> Yash: are you OK with this? (Haven't read the new patch set
-> yet, maybe it is already fixed...)
->
-> > Also: if we're using regmap, then let's use it
-> > everywhere, not only when it's convenient for updating registers.
->
-> I think what you are saying is that we should extend gpio-mmio.c
-> with some optional regmap API (or create a separate MMIO library
-> for regmap consumers) which makes sense, but it feels a bit
-> heavy task to toss at contributors.
->
-> We could add it to the TODO file, where I already have some
-> item like this for port-mapped I/O.
->
+Hi Khouloud,
 
-It's been on my personal TODO list too for some time as it seems it
-could benefit some i2c drivers too. Also: I think such a helper could
-eventually completely replace the generic drivers such as gpio-mmio
-and gpio-reg.
+thanks for your patch!
 
-In other words: good idea to put it into the TODO. If there are no
-objections I was thinking about starting the work soon aiming at v5.6,
-as soon as we get the recent changes in uAPI out of the way.
+I just have a semantic comment:
 
-Bart
+On Wed, Nov 20, 2019 at 3:21 PM Khouloud Touil <ktouil@baylibre.com> wrote:
 
-> Yours,
-> Linus Walleij
+> Instead of modifying all the memory drivers to check this pin, make
+> the NVMEM subsystem check if the write-protect GPIO being passed
+> through the nvmem_config or defined in the device tree and pull it
+> low whenever writing to the memory.
+
+It is claimed that this should be pulled low to assert it so by
+definition it is active low.
+
+> +  wp-gpios:
+> +    description:
+> +      GPIO to which the write-protect pin of the chip is connected.
+> +    maxItems: 1
+
+Mandate that the flag in the second cell should be GPIO_ACTIVE_LOW
+
+>  patternProperties:
+>    "^.*@[0-9a-f]+$":
+>      type: object
+> @@ -66,6 +71,7 @@ examples:
+>        qfprom: eeprom@700000 {
+>            #address-cells = <1>;
+>            #size-cells = <1>;
+> +          wp-gpios = <&gpio1 3 0>;
+
+#include <dt-bindings/gpio/gpio.h>
+wp-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
+
+This will in Linux have the semantic effect that you need to
+set the output high with gpio_set_val(d, 1) to assert it
+(drive it low) but that really doesn't matter to the device tree
+bindings, those are OS-agnostic: if the line is active low then
+it should use this flag.
+
+It has the upside that the day you need a write-protect that
+is active high, it is simple to support that use case too.
+
+Yours,
+Linus Walleij
