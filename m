@@ -2,178 +2,100 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63D9C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0921C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FA420706
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86022073F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOil050e"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IDL7ob5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfKVNZj (ORCPT
+        id S1726858AbfKVN3x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:25:39 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38084 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKVNZi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 08:25:38 -0500
-Received: by mail-wr1-f66.google.com with SMTP id i12so8614562wro.5;
-        Fri, 22 Nov 2019 05:25:36 -0800 (PST)
+        Fri, 22 Nov 2019 08:29:53 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39223 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfKVN3w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 08:29:52 -0500
+Received: by mail-lj1-f195.google.com with SMTP id p18so7376961ljc.6
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 05:29:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0NHwgBSUws38Es7Xi/rZX05Xqj++OpNble994Q4twz8=;
-        b=nOil050ebumEVh6B4CMpHHxn/QX9acBxM3S9OLut6akRaRuTuBPBe5v+ETuUb0xLBk
-         6S93YBoJ8ZjLEfTcsfAQDWNhbmhGOJ8ReZDwL+gWlIfb0dJrt4DghYC7C84CbJwYmENQ
-         dBeSioVD4jg/Rsah2pbJNu4W08WN8+pkJ4bZyBMRGcSTfDCqCNyzegFTPQ4LR0+9XfR5
-         RSMLNr4S5tdnmPAXBTDWBoweI2frennUR3IycN4Ga6wFah55fmDbWRFbazA60VbVwSm4
-         8Ir6SxYLMs/lulTCQ4VenlRkOc3/HenQDMs3gyYqF8Paq82JaADF8T0olsWuBDSIH82g
-         RBRA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W+Zc7Z97fvvNYHZnL1c1JIxGRQj+2WpocWRa+cXonDE=;
+        b=IDL7ob5nX7sNC8DySqXW3eLlpoXTzpVE6NPwX6QSGY0Zw60mX9pYqxDVlaPXAyKEwG
+         69iCabqzuza5RvNull7xO5wQV9fWZAEGL36eSd+mtLC8C9dWRl9E5venP912P4VCzJCT
+         17gi9A7QnWGqmTGjAjqzCjsUqFJwhvZCfT7Fx8N2Zw3wSgzefAJ4+CLMsCdwGPDjgEPf
+         jtsXQgeayqTAzGIl15ujsKAqD3gPDjevVAc7YnpRWuXnZm0SpMMsp316u9g1ox9yAkFM
+         079HvOm5xazduN5QVrea3FZLjpznvlXJfqxe6xH8OsCJCoC7JbyCmAr5kSG+UePwvzsp
+         96pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0NHwgBSUws38Es7Xi/rZX05Xqj++OpNble994Q4twz8=;
-        b=ZyEl0yV1hiG1AGGN27UkuhLnQ0+ju+tRliUDHrp05Ay+TUVmQM6X/GDZPcWTiXlkGm
-         i9JZ1kUGexlb8SuEvfoIXTMcGqukq1eiafCQz9/K1qsFjKz1a/wBmwmroYLiDFL81nr1
-         UtegWoNcyseoxelYf0Rv9zPGBPMgXOJUsJJdIUo/e/HiECA5lYi/DogOZinGKgqY9l5T
-         QTSv+Ym/fmsUEN6oh9Y+YGpybzujszapjN9yQYl/fTUnfBSV2m72am1JX9/QrolKyjo8
-         t8HPVszEAFtlbrqE39+tJE32kohRmTlbOThfc7pIgRbpITdJTFkwweA6KcRo3gqXXYiI
-         vHmQ==
-X-Gm-Message-State: APjAAAXu558n4CGs0zua3JgKhg5ouc0xklstHQRVJrXbt7jFZujhcFv0
-        o0uM+A1RWA6UaDldOkUoOZs=
-X-Google-Smtp-Source: APXvYqy6agudNWkX1IVOAditiOZUSDYrvFhjkwzj3/rM6+m7on3EEcqbwap2TkpnfGhY2DRwUzliEA==
-X-Received: by 2002:adf:fbc1:: with SMTP id d1mr18273847wrs.267.1574429135841;
-        Fri, 22 Nov 2019 05:25:35 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id g74sm3414148wme.5.2019.11.22.05.25.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 05:25:34 -0800 (PST)
-Date:   Fri, 22 Nov 2019 14:25:33 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 6/6] arm64: tegra: Add support for PCIe endpoint mode in
- P2972-0000 platform
-Message-ID: <20191122132533.GD1315704@ulmo>
-References: <20191122104505.8986-1-vidyas@nvidia.com>
- <20191122104505.8986-7-vidyas@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W+Zc7Z97fvvNYHZnL1c1JIxGRQj+2WpocWRa+cXonDE=;
+        b=Iwyu39qu7Df+mVmYVue8Dx8iH1uEofXJKfSdyF+1KfoorQ8H5+yVR9jIEL4nQwRGem
+         lCKHl9yrJZ5p8CNjcuOSpsHE57ridydMtchrTTtSz5iGasC2CbFGLxVF6v+WjUqzSXpQ
+         QeYKkq/X1MRsgqJaPb9B6WeVWTTbUqfkxORc7bMQvAGcvRQeGLQzXGynTxQiQGGseW/b
+         L2W5xBh5zsPiL95ZIQGSSn0beZtbR5CUWavF8X7T+peb2pAdwvs9GX3KQILiFgLtspxp
+         jl+0oZB/rA2cqdfhNxDtG/EnDO3XMsE5NTD5qC+RK1wZ7kKrv8N4CXcpa6lsG1E5AfAZ
+         9opg==
+X-Gm-Message-State: APjAAAUFLXPIVRWCPNr6y/X3rRnqG3VkZXiG3wlcRCnEtMI9ZjttMmcV
+        ERExsrDWoQl7OsPpz95X0ZfsQb4iJBinDkgRgqJwaQ==
+X-Google-Smtp-Source: APXvYqwmSSOtVmBtX/HzWWq55yxz03Q3CaAmSGcHqiRIokiCHZLjK6quI6vEVqsvu5R0BpiQvgrlF6raTPg3lPC0DXg=
+X-Received: by 2002:a2e:5c46:: with SMTP id q67mr12014078ljb.42.1574429390771;
+ Fri, 22 Nov 2019 05:29:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mJm6k4Vb/yFcL9ZU"
-Content-Disposition: inline
-In-Reply-To: <20191122104505.8986-7-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <CACRpkdYhLoGdGQt_jzj5aFa-EY_kMimoVShi7QFLG3sZbC436w@mail.gmail.com>
+ <563f2fdf0c32103d95a53fc1e7fd84c0@walle.cc>
+In-Reply-To: <563f2fdf0c32103d95a53fc1e7fd84c0@walle.cc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 14:29:39 +0100
+Message-ID: <CACRpkdZWP0CSDGPjkUOTuEkDSvBpoW0tN3ia+B74s1dfFGNinw@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio : mpc8xxx : ls1088a/ls1028a edge detection mode
+ bug fixs.
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hui Song <hui.song_1@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Nov 22, 2019 at 2:08 PM Michael Walle <michael@walle.cc> wrote:
 
---mJm6k4Vb/yFcL9ZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> From: Song Hui <hui.song_1@nxp.com>
+> >>
+> >> On these boards, the irq_set_type must point one valid function
+> >> pointer
+> >> that can correctly set both edge and falling edge.
+> >>
+> >> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> >
+> > Patch applied!
+> >
+> > Yours,
+> > Linus Walleij
+>
+> mhh.. this bug should already be fixed in a better way with [1]:
+>    gpio: mpc8xxx: Don't overwrite default irq_set_type callback
 
-On Fri, Nov 22, 2019 at 04:15:05PM +0530, Vidya Sagar wrote:
-> Add endpoint mode support for PCIe C5 controller in P2972-0000 platform
-> with information about supplies, PHY, PERST GPIO and GPIO that controls
-> PCIe reference clock coming from the host system.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/ar=
-m64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> index 7eb64b816e08..58c3a9677bc8 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> @@ -43,6 +43,19 @@
-> =20
->  		gpio@c2f0000 {
->  			status =3D "okay";
-> +			/*
-> +			 * Change the below node's status to 'okay' when
-> +			 * PCIe C5 controller is enabled to operate in endpoint
-> +			 * to allow REFCLK from the host system to flow into
-> +			 * the controller.
-> +			 */
-> +			pex-refclk-sel-high {
-> +				gpio-hog;
-> +				output-high;
-> +				gpios =3D <TEGRA194_AON_GPIO(AA, 5) 0>;
-> +				label =3D "pex_refclk_sel_high";
-> +				status =3D "disabled";
-> +			};
+OK I drop this patch.
 
-Why don't we put this into the PCIe controller's node as a reference to
-that GPIO? Seems like the controller would know exactly when this pin
-needs to go high or low, so why does it have to be a hog?
-
-Thierry
-
->  		};
-> =20
->  		pwm@c340000 {
-> @@ -144,6 +157,22 @@
->  			    "p2u-5", "p2u-6", "p2u-7";
->  	};
-> =20
-> +	pcie_ep@141a0000 {
-> +		status =3D "disabled";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		nvidia,pex-rst-gpio =3D <&gpio TEGRA194_MAIN_GPIO(GG, 1)
-> +					GPIO_ACTIVE_LOW>;
-> +
-> +		phys =3D <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
-> +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
-> +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
-> +
-> +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
-> +			    "p2u-5", "p2u-6", "p2u-7";
-> +	};
-> +
->  	fan: fan {
->  		compatible =3D "pwm-fan";
->  		pwms =3D <&pwm4 0 45334>;
-> --=20
-> 2.17.1
->=20
-
---mJm6k4Vb/yFcL9ZU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3X4c0ACgkQ3SOs138+
-s6ExNQ//WK62BmgmHIoNRd5DoXDTiVMFPJTXYrKK2KEpJs39EqwfkZAYEPlfb5Si
-4vAm7OchTFGLzcRQRxYlVS5ZHo9eDkHAE7pKUKkgm3Li6QTvGXlt7oRsiVv1luJx
-AoqNX99LtHkgEBSLFnVIgpsstcX1Jx3DDkwjO+IINkJf+Et2GLU0Y1ez932QXf6r
-eN343fUsKg5+bcIqk2hLnWCCaPe3YR9sYpRJF6psoHPOHgb4o3k7lGKUqwRHCPAB
-qAq3iOral1OmZ+GQ06d3/OZHI33QG2UOqOhTTw+Xw67QernnguTI+jBAiTAZD62Y
-jdIJ3X6M2t93o7yTwczq4IaTy46lktLeEXWoIWOPQiIuFWQhylfDGjVPv8Qin9JG
-Ru9qCZXi1WWIDZGo99ZPB7iIyPPCB4T0cGR+nNH5i+PC4N5/6EfCXjg9gL33HB9n
-brPkgl21YRmVt6JU04pKxCjcrajsR570CwfS5VMa4y6pImJiYP6cdfxdJ9Om0hei
-sEmduQY1iRmoYthWXBgb3VIpZdd38nhaId4LbWhFHHObI5VZWvI1rgtkf7eq3mUV
-tQEqkdpr7cLPdqjvEMf/0rffGC6UVeyeA2y7jSyHkKjrwMADSTysQz2YPtQenUhn
-RRey8lUXMdiZ0XueNYIxYxijYYd1JhnVidJEfEK+FVR+59j0UHA=
-=aw/J
------END PGP SIGNATURE-----
-
---mJm6k4Vb/yFcL9ZU--
+Yours,
+Linus Walleij
