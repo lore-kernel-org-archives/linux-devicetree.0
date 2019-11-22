@@ -6,19 +6,19 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E5C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41FDC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A142068F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62D02068F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfKVHLQ (ORCPT
+        id S1726100AbfKVHLS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 02:11:16 -0500
+        Fri, 22 Nov 2019 02:11:18 -0500
 Received: from mail-sh.amlogic.com ([58.32.228.43]:61411 "EHLO
         mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbfKVHLP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 02:11:15 -0500
+        with ESMTP id S1726676AbfKVHLS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 02:11:18 -0500
 X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Nov 2019 02:11:01 EST
 Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
  (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 22 Nov 2019
@@ -45,9 +45,9 @@ CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
         Jian Hu <jian.hu@amlogic.com>,
         Victor Wan <victor.wan@amlogic.com>,
         Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH 5/6] arm64: dts: meson: a1: Enable USB2 PHY
-Date:   Fri, 22 Nov 2019 14:55:56 +0800
-Message-ID: <1574405757-76184-6-git-send-email-hanjie.lin@amlogic.com>
+Subject: [PATCH 6/6] arm64: dts: meson: a1: Enable DWC3 controller
+Date:   Fri, 22 Nov 2019 14:55:57 +0800
+Message-ID: <1574405757-76184-7-git-send-email-hanjie.lin@amlogic.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com>
 References: <1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com>
@@ -59,35 +59,64 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable USB2 PHY for Meson A1 SoC.
+Enable DWC3 controller for Meson A1 SoC.
 
+Change-Id: Ibbbfb44fc211f926adf91a548776bc6bca6fa35c
 Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
 Signed-off-by: Yue Wang <yue.wang@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index eaeae80..3b61717 100644
+index 3b61717..f3d93cd 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -106,6 +106,16 @@
- 				#power-domain-cells = <1>;
- 				status = "okay";
- 			};
-+
-+			usb2_phy0: phy@40000 {
-+				status = "okay";
-+				compatible = "amlogic,a1-usb2-phy";
-+				reg = <0x0 0x40000 0x0 0x2000>;
-+				resets = <&reset RESET_USBPHY>;
-+				reset-names = "phy";
-+				#phy-cells = <0>;
-+				power-domains = <&pwrc PWRC_USB_ID>;
-+			};
- 		};
+@@ -6,6 +6,9 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/power/meson-a1-power.h>
++#include <dt-bindings/clock/a1-clkc.h>
++#include <dt-bindings/reset/amlogic,meson-a1-reset.h>
++#include <dt-bindings/clock/a1-pll-clkc.h>
  
- 		gic: interrupt-controller@ff901000 {
+ / {
+ 	compatible = "amlogic,a1";
+@@ -130,6 +133,34 @@
+ 			#interrupt-cells = <3>;
+ 			#address-cells = <0>;
+ 		};
++
++		usb: usb@ffe09000 {
++			status = "okay";
++			compatible = "amlogic,meson-a1-usb-ctrl";
++			reg = <0x0 0xffe09000 0x0 0xa0>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&clkc_periphs CLKID_USB_CTRL>,
++				 <&clkc_periphs CLKID_USB_BUS>,
++				 <&clkc_periphs CLKID_XTAL_USB_PHY>,
++				 <&clkc_periphs CLKID_XTAL_USB_CTRL>;
++			clock-names = "usb_ctrl", "usb_bus", "xtal_usb_phy",
++				      "xtal_usb_ctrl";
++			resets = <&reset RESET_USBCTRL>;
++			phys = <&usb2_phy0>;
++			phy-names = "usb2-phy0";
++
++			dwc3: usb@ff400000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0xff400000 0x0 0x100000>;
++				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++				dr_mode = "host";
++				snps,dis_u2_susphy_quirk;
++				snps,quirk-frame-length-adjustment = <0x20>;
++			};
++		};
+ 	};
+ 
+ 	timer {
 -- 
 2.7.4
 
