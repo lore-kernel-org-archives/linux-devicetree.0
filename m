@@ -2,159 +2,175 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC23C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 09:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B182C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 09:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1257620674
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 09:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C622070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 09:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjDEp/Nd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P3F2cemZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfKVJKZ (ORCPT
+        id S1726500AbfKVJaH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 04:10:25 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34888 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVJKZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 04:10:25 -0500
-Received: by mail-ed1-f65.google.com with SMTP id r16so5348530edq.2;
-        Fri, 22 Nov 2019 01:10:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xJF8jXeg6xvlTusMZZszgFmib3HFwE1D3cegxFqQ0JU=;
-        b=WjDEp/NdqbL/aK7NWSKTsFWoaBkW9t2+kFeqjbWn3wnzJsb4AgY6XDAFn2cDZdcQrQ
-         HlQO5Ta2E1ZQOyuh2N24tocZTEE87wdHHKW7KDoTZARsiG2XN2cNz6cW9ngLmuOIIZnW
-         tF2Uw7wYGIiBLlVMp1U1wfstnEWssmtXLARFb8K3u58zexVHSSABpCbzUYL4VyX48Ao0
-         KGyzs+ZHBq3eAdS0RO0Wap48y0hXo5+uvLWh95imJWykIDWizSqh2FCJf0bBUsNbYxe5
-         SSC32tS0JXqoKuzZr0EohqZV86hQKtGGtXaSohgyzR6nzL3D9/8UaVUOBSx5YixWMMO6
-         X5jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xJF8jXeg6xvlTusMZZszgFmib3HFwE1D3cegxFqQ0JU=;
-        b=nlcngwRSAdgRUF1vwE8jLvX80r0dt03EGKOuP/T//4THqHVLZ751oQodmVSOOChyOa
-         8dbmQRAuKw9/3QUG+7GcKBr2T5UZLAdtI8yLNZafgGQW8mNvCIeW6P+4caYmkSO0Jw+l
-         ZdBn1Nq67rXnx5TFLhOu+wbXEFogRbnUbGteXJNRC9gqiioZ7z0g+bUcyAOoAP5KZecV
-         8GXS1qeYHH3Og0/G9oSWfM3g/SF3mZ/dbREZbfexQjwRrbHMKP+y50MmxNx1h1XbgIHI
-         oRSh4U1Z3Y+nJh70hY6SACvuxZTvtODVnJ/HgHDhJ7sWpHXiVo/D3LrpGqs/eYhRwb00
-         taKw==
-X-Gm-Message-State: APjAAAVoIztylibngQMyIr3VWM0yYv+zAk//3fji1ym4Hu/6E64Lp2ou
-        eWhg/LMFPFfNwccz74DeXbPCl+eft/HLtvuBtWVBGg==
-X-Google-Smtp-Source: APXvYqxwyuOc14aMFvMq0SVA6m5mbpFCLy5mif6Nx2xn+USp4UQDt1qTnW7pdA9rReGLSxKVsGoHIlFv+iKx5O7Fcgs=
-X-Received: by 2002:a17:906:698b:: with SMTP id i11mr20495989ejr.97.1574413822609;
- Fri, 22 Nov 2019 01:10:22 -0800 (PST)
-MIME-Version: 1.0
-References: <1573719422-7414-1-git-send-email-shubhrajyoti.datta@gmail.com>
- <6d135b8a-cdba-e6a6-7738-cbc94cdb7ec0@axentia.se> <CAKfKVtE=ufzc=_EjPR2WKt4qf0sdOB=a7f-BRP-ZffMaemxGBw@mail.gmail.com>
- <b9eaaba2-dcfd-0c97-f088-21acf269a92f@axentia.se> <CAKfKVtHuzWqH4Su1vC2oMMxvUPiGjvZsBJtYSXxx+rG7Ub1pSQ@mail.gmail.com>
- <9408fca3-8673-0a1d-0ba7-8bfca0c028be@axentia.se>
-In-Reply-To: <9408fca3-8673-0a1d-0ba7-8bfca0c028be@axentia.se>
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Date:   Fri, 22 Nov 2019 14:40:11 +0530
-Message-ID: <CAKfKVtHCuJEpd2JnqTREt-AR91C8UEi7UY9-hadgEO+eWNH6Cw@mail.gmail.com>
-Subject: Re: [PATCH] i2c: mux: pca954x: Disable cacheing of the last channel
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Fri, 22 Nov 2019 04:30:07 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49454 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfKVJaH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 04:30:07 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAM9TvN4113974;
+        Fri, 22 Nov 2019 03:29:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574414997;
+        bh=xX8liYsX0VdU7UbDFFdmYxW/QRc0esFBTcTeyfAaf/Q=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=P3F2cemZy8prOUSQ+UocifYvHE6rFXxrk1FsUUVIHva+YoMvD1ZSLT3roJzOG9qOY
+         78HBTfVCsfqEehMiIXAV6jPrs1OM/5HHNdZSdkP3fXMutMbL9HDBN9dus404g3wT8C
+         DWjZj7iRA31pUYaiuC1s4htNtmQ6l7Pc+eBECvt8=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAM9TvZu119213;
+        Fri, 22 Nov 2019 03:29:57 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 22
+ Nov 2019 03:29:57 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 22 Nov 2019 03:29:57 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAM9TqqM096217;
+        Fri, 22 Nov 2019 03:29:53 -0600
+Subject: Re: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
+To:     "Robey, Caleb" <c-robey@ti.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+CC:     Jason Kridner <jkridner@gmail.com>,
+        "Vutla, Lokesh" <lokeshvutla@ti.com>,
+        "Kridner, Jason" <jdk@ti.com>,
+        "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>,
+        "Dannenberg, Andreas" <dannenberg@ti.com>,
+        "Hiblot, Jean-Jacques" <jjhiblot@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>,
+        "Davis, Andrew" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191119202850.18149-1-c-robey@ti.com>
+ <20191119202850.18149-2-c-robey@ti.com>
+ <8465b8c3-db4b-31fd-a299-3d5251ec99cf@ti.com>
+ <12acbc1a96754fe68d7447b6ee99efd3@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <a02ff0ca-f061-4d9e-977b-f41b52bbf18a@ti.com>
+Date:   Fri, 22 Nov 2019 11:29:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <12acbc1a96754fe68d7447b6ee99efd3@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 2:13 PM Peter Rosin <peda@axentia.se> wrote:
->
-> On 2019-11-22 05:38, Shubhrajyoti Datta wrote:
-> > On Fri, Nov 22, 2019 at 6:23 AM Peter Rosin <peda@axentia.se> wrote:
-> >>
-> >> On 2019-11-20 10:21, Shubhrajyoti Datta wrote:
-> >>> Hi Peter ,
-> >>> thanks for the review,
-> >>>
-> >>> On Tue, Nov 19, 2019 at 4:35 AM Peter Rosin <peda@axentia.se> wrote:
-> >>>>
-> >>>> On 2019-11-14 09:17, shubhrajyoti.datta@gmail.com wrote:
-> >>>>> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> >>>>>
-> >>>>> In case of multimaster configuration the last channel cached value is
-> >>>>> not reliable. Basically the first processor/master does a write to the
-> >>>>> mux and then to the intended slave, it caches the value.
-> >>>>> Now the second processor/processor does a write to mux on another
-> >>>>> channel and writes to another slave.
-> >>>>> The first processor/master when it attempts to write the slave
-> >>>>> skips the mux as it relies on the mux channel being the same as the
-> >>>>> intended. This causes an issue.
-> >>>>>
-> >>>>> To fix that write always to the mux address.
-> >>>>
-> >>>> Thanks for your patch.
-> >>>>
-> >>>> However, I don't really see how this fixes anything. If you have
-> >>>> multiple masters competing for the same mux, all bets are off and any
-> >>>> solution not involving an out-of-band channel where the masters can
-> >>>> coordinate will be racy, broken and dangerous.
-> >>>> And since you need that
-> >>>> extra channel anyway, it might as well also be used to coordinate when
-> >>>> the cache needs to be invalidated.
-> >>>>
-> >>>> At the very least, all limitations needs to be carefully documented,
-> >>>> but that does not mean that I will ever like it. In short, I'm extremely
-> >>>> reluctant to add a glgllike this.
-> >>>>
-> >>>> Cheers,
-> >>>> Peter
-> >>>
-> >>> I agree does the below patch make sense.
-> >>
-> >> This patch is severely white-space damaged and I have a hard time reading
-> >> the details so please fix your setup. However, I gather the idea is to
-> >> rely on having all masters configured to idle the mux when they don't use
-> >> it. That's also racy since multiple masters can all read the zero, and
-> >> deduce that the mux is free, then all of them write their thing to the
-> >> mux, and proceed as if they own it. That spells disaster.
-> > However since the bus is locked when the master is transacting others
-> > will get bus
-> > busy or an arbitration lost if they start together.
->
-> Not necessarily, since a muxed transaction with some slave on the other
-> side of the mux will consist of (at least) four independent transfers (with
-> this patch).
->
-> 1. check that the mux state is idle
-> 2. set the mux to the intended child bus
-> 3. do the "useful" transfer to the slave on the child bus
-> 4. reset the mux to idle
->
-> Two masters might very well get past 1 without noticing each other, which
-> is the big fail in your patch. They might also very well get past 2 without
-> running into arbitration. You cannot be sure that a master is able to put
-> these four transactions on the bus back-to-back, at least not in the Linux
-> case (there might e.g. be a reschedule to some totally unrelated work). And
-> even if you could, two masters could in theory be completely in sync so that
-> both masters think they have succeeded right until they want to set some bit
-> in the mux register differently. So, it's just fragile. And even if they do
-> run into each other on 1 or 2 on the I2C bus level, you have no code for
-> handling that so they will probably just retry a bit later. In other words,
-> the race is on, and getting more than one master past 1 before any of them
-> hit 2 is enough to get into trouble.
->
-> The problem is that, without coordination, the other masters do not see
-> these four transactions as a unit. You *need* arbitration on a higher
-> level than individual transfers.
-I agree will get back once I check some arbitration mechanism like
-hardware spinlock
-or gpio stuff thanks.
 
->
-> Cheers,
-> Peter
+
+On 21/11/2019 16:41, Robey, Caleb wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Strashko, Grygorii
+>> Sent: Thursday, November 21, 2019 5:05 AM
+>> To: Robey, Caleb; linux-omap@vger.kernel.org
+>> Cc: Jason Kridner; Vutla, Lokesh; Kridner, Jason; Rizvi, Mohammad Faiz
+>> Abbas; Dannenberg, Andreas; Hiblot, Jean-Jacques; Bajjuri, Praneeth; Davis,
+>> Andrew; Tom Rini; Robert Nelson; Rob Herring; Mark Rutland; Benoît
+>> Cousson; Tony Lindgren; devicetree@vger.kernel.org; linux-
+>> kernel@vger.kernel.org
+>> Subject: Re: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device
+>> tree
+>>
+>>
+>>
+>> On 19/11/2019 22:28, Caleb Robey wrote:
+>>> From: Jason Kridner <jdk@ti.com>
+>>>
+>>> BeagleBoard.org BeagleBone AI is an open source hardware single
+>>> board computer based on the Texas Instruments AM5729 SoC featuring
+>>> dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+>>> signal processor (DSP), quad-core embedded vision engine (EVE),
+>>> Arm Cortex-M4 processors, dual programmable realtime unit
+>>> industrial control subsystems and more. The board features 1GB
+>>> DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+>>> 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+>>> headers.
+>>>
+>>> For more information, refer to:
+>>> https://beaglebone.ai
+>>
+>>
+>>>
+>>> This patch introduces the BeagleBone AI device tree.
+>>>
+>>> Note that the device use the "ti,tpd12s016" component which is
+>>> software compatible with "ti,tpd12s015". Thus we only use the
+>>> latter driver.
+>>>
+>>> Signed-off-by: Jason Kridner <jdk@ti.com>
+>>> Signed-off-by: Caleb Robey <c-robey@ti.com>
+>>> Cc: Robert Nelson <robertcnelson@gmail.com>
+>>>
+>>> ---
+>>>    arch/arm/boot/dts/Makefile                |   1 +
+>>>    arch/arm/boot/dts/am5729-beagleboneai.dts | 782
+>> ++++++++++++++++++++++
+>>>    2 files changed, 783 insertions(+)
+>>>    create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
+>>>
+>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>> index b21b3a64641a..b1154dbda73c 100644
+>>> --- a/arch/arm/boot/dts/Makefile
+>>> +++ b/arch/arm/boot/dts/Makefile
+>>
+>> [..]
+>>
+>>> +
+>>> +&uart1 {
+>>> +	status = "okay";
+>>> +};
+>>> +
+>>> +&davinci_mdio {
+>>> +	reset-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
+>>> +	reset-delay-us = <2>;
+>>> +
+>>> +	phy0: ethernet-phy@1 {
+>>> +		reg = <4>;
+>>> +		compatible = "ethernet-phy-id004d.d072",
+>>> +			"ethernet-phy-ieee802.3-c22";
+>>
+>> Pls, do not ignore my comments.
+>>
+>> Above compatible should not be required.
+> 
+> Grygori, I am so sorry about this - I had deleted this,
+> but must have made a mistake in the resubmission. I
+> will fix it immediately.
+> 
+
+Yep. thanks and sorry.
+I saw you fixed it in next version.
+
+-- 
+Best regards,
+grygorii
