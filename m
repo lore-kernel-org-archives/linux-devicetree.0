@@ -2,280 +2,121 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACA2C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C29EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90792071B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651142071B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 14:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WIgf9LcG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/uPRRve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKVOhJ (ORCPT
+        id S1726100AbfKVOm7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 09:37:09 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:56954 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKVOhJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 09:37:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574433422; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YpCE21+fHqnut680I3BLvFteO+uKZOg8KIh9pmfWWCs=;
-        b=WIgf9LcGZAwH1nAv5NPuNb/rjgRpVt+3Pv6gg/hScEEBrn1FPFWQNi0DGcwNwQzaottkh3
-        BTRPRMZsU+owErj1h33Wz8DRFgJBSDroi+PesXxC444jKapSkuRtfQR3fae3S0qnUgEsEx
-        ZnlRdAZiysVO49Ygyh3DQqHgqFxdSPg=
-Date:   Fri, 22 Nov 2019 15:36:49 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/4] MIPS: Ingenic: initial X1000 support.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com
-Message-Id: <1574433409.3.0@crapouillou.net>
-In-Reply-To: <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
-References: <1574428289-21764-1-git-send-email-zhouyanjie@zoho.com>
-        <1574428289-21764-2-git-send-email-zhouyanjie@zoho.com>
+        Fri, 22 Nov 2019 09:42:59 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:36432 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKVOm6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 09:42:58 -0500
+Received: by mail-wr1-f53.google.com with SMTP id z3so8925772wru.3
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 06:42:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hoPOh21olR4yR3etjFWcnoa60If5IZiVlNptNDVpa9k=;
+        b=R/uPRRve+D/36PrlFAZ+v7bEL0KnZpRHUQRPrFtPz8oZOzUsIOjaQ9yQYv6eGzg9nw
+         uJ8lyxFEdbtuEcTNhIETeI4HbgdD/QERHRUlJJ8bZ0L1aeCyldAfjGjJV5+NwzDF7NaE
+         ki59OAOP+ELGJfKQfETK+07+BwtYryjoNP8VqOceIciUMYGPAGkkguJEYA9v+oGrmd1E
+         71bxgO8mJeH4cyV6iE7whBUk57QFxlPjDVkT13cHh0pJgdcxUbq680E11fhTq/cUqJfS
+         Hx5RfO1Ohym9OojcH665NUw0vnc3Mh+t1BY1Ab+0HokguaRTzweqTURzRvudwf9OEUh2
+         1QPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hoPOh21olR4yR3etjFWcnoa60If5IZiVlNptNDVpa9k=;
+        b=PrI8Uuz6rfrCID4ip8Uu7x5yX1GGPRWuIxYwwWl2vIDiGQTJ5jA3ve4oniEq0+nISp
+         kjF/TwnHP5rcNwCw1aFIkAwlJ3aSqTdy0h3Z6hBF/R97Xtr0GgztsfGQ0Gsdprl9zLD6
+         GPQzal95+mZg66ms93lqBXOk2nZKKH07jvC4lKDYUja83GOQzPundLnmfKiLKQEjN0LV
+         WcqYLMD5jE2jjGMianjB51nhl1571x5JMlc6pXj2TAaji4YEtsIyy32j0JqFR8mehcNk
+         mlsjiT/K0Es8DUyq8RGG7JnivmarR0/a4IUKACDWXOYy5nTfDONLaUxHNm3015Mu54nD
+         ptGQ==
+X-Gm-Message-State: APjAAAVMXRAbs2dGNQg5mLFlhBOU7MdYcvukfUA2AKd7pTo2I3i0z+s6
+        MdHBQ+U3kz+n4GNiUdGvES5TfA==
+X-Google-Smtp-Source: APXvYqzCgWGaqbE51BQAnG37UGDGNxfx4IR3oun03T6T1DOkP8efGl42cNn/p6X4rDaRkRFwSEAO4Q==
+X-Received: by 2002:adf:e944:: with SMTP id m4mr18600080wrn.49.1574433774712;
+        Fri, 22 Nov 2019 06:42:54 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id x2sm2032469wmc.3.2019.11.22.06.42.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2019 06:42:54 -0800 (PST)
+Date:   Fri, 22 Nov 2019 14:42:35 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org, Grigoryev Denis <grigoryev@fastwel.ru>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Subject: Re: Applied "tps6105x: add optional devicetree support" to the
+ regulator tree
+Message-ID: <20191122144235.GD3296@dell>
+References: <20191119154611.29625-2-TheSven73@gmail.com>
+ <applied-20191119154611.29625-2-TheSven73@gmail.com>
+ <20191122073124.GA3296@dell>
+ <20191122133230.GD6849@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191122133230.GD6849@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+On Fri, 22 Nov 2019, Mark Brown wrote:
 
+> On Fri, Nov 22, 2019 at 07:31:24AM +0000, Lee Jones wrote:
+> > On Wed, 20 Nov 2019, Mark Brown wrote:
+> 
+> > > Example: put chip in regulator mode:
+> 
+> > > i2c0 {
+> > > 	tps61052@33 {
+> > > 		compatible = "ti,tps61052";
+> > > 		reg = <0x33>;
+> > > 
+> > > 		regulator {
+> > >                             regulator-min-microvolt = <5000000>;
+> > >                             regulator-max-microvolt = <5000000>;
+> > >                             regulator-always-on;
+> > > 		};
+> > > 	};
+> > > };
+> 
+> > ?
+> 
+> Sorry, I completely missed that this was adding a MFD file - the binding
+> only mentioned regulator stuff and I clearly didn't look at the
+> filename.  Do you want me to drop it?
 
-Le ven., nov. 22, 2019 at 21:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
-> This is left unselectable in Kconfig until a X1000 based board is
-> added in a later commit.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  arch/mips/boot/dts/ingenic/x1000.dtsi | 161=20
-> ++++++++++++++++++++++++++++++++++
->  arch/mips/jz4740/Kconfig              |   6 ++
->  arch/mips/jz4740/time.c               |   4 +-
->  3 files changed, 170 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
-> b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> new file mode 100644
-> index 0000000..b8658a6
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> @@ -0,0 +1,161 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <dt-bindings/clock/x1000-cgu.h>
-> +
-> +/ {
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +	compatible =3D "ingenic,x1000", "ingenic,x1000e";
-> +
-> +	cpuintc: interrupt-controller {
-> +		#address-cells =3D <0>;
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-controller;
-> +		compatible =3D "mti,cpu-interrupt-controller";
-> +	};
-> +
-> +	intc: interrupt-controller@10001000 {
-> +		compatible =3D "ingenic,x1000-intc", "ingenic,jz4780-intc";
-> +		reg =3D <0x10001000 0x50>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +
-> +		interrupt-parent =3D <&cpuintc>;
-> +		interrupts =3D <2>;
-> +	};
-> +
-> +	exclk: ext {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +	};
-> +
-> +	rtclk: rtc {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <32768>;
-> +	};
-> +
-> +	cgu: x1000-cgu@10000000 {
-> +		compatible =3D "ingenic,x1000-cgu";
-> +		reg =3D <0x10000000 0x100>;
-> +
-> +		clocks =3D <&exclk>, <&rtclk>;
-> +		clock-names =3D "ext", "rtc";
-> +
-> +		#clock-cells =3D <1>;
-> +	};
-> +
-> +	apb {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges =3D <>;
-> +
-> +		uart0: serial@10030000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10030000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <51>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART0>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		uart1: serial@10031000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10031000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <50>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART1>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		uart2: serial@10032000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10032000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <49>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART2>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		pinctrl: pin-controller@10010000 {
-> +			compatible =3D "ingenic,x1000-pinctrl";
-> +			reg =3D <0x10010000 0x800>;
-> +
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			gpa: gpio@0 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <0>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 0 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <17>;
-> +			};
-> +
-> +			gpb: gpio@1 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <1>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 32 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <16>;
-> +			};
-> +
-> +			gpc: gpio@2 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <2>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 64 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <15>;
-> +			};
-> +
-> +			gpd: gpio@3 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <3>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 96 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <14>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-> index 4dd0c44..6b96844 100644
-> --- a/arch/mips/jz4740/Kconfig
-> +++ b/arch/mips/jz4740/Kconfig
-> @@ -33,3 +33,9 @@ config MACH_JZ4780
->  	select MIPS_CPU_SCACHE
->  	select SYS_HAS_CPU_MIPS32_R2
->  	select SYS_SUPPORTS_HIGHMEM
-> +
-> +config MACH_X1000
-> +	bool
-> +	select MIPS_CPU_SCACHE
-> +	select SYS_HAS_CPU_MIPS32_R2
-> +	select SYS_SUPPORTS_HIGHMEM
-> diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
-> index cb768e5..3af6538 100644
-> --- a/arch/mips/jz4740/time.c
-> +++ b/arch/mips/jz4740/time.c
-> @@ -101,7 +101,9 @@ static struct clock_event_device=20
-> jz4740_clockevent =3D {
->  #ifdef CONFIG_MACH_JZ4740
->  	.irq =3D JZ4740_IRQ_TCU0,
->  #endif
-> -#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
-> +#if defined(CONFIG_MACH_JZ4770) || \
-> +    defined(CONFIG_MACH_JZ4780) || \
-> +    defined(CONFIG_MACH_X1000)
+It's okay. Probably won't cause too much chaos. Keep it applied.
 
-That code was removed in the TCU patchset that was merged in time for=20
-5.4-rc1.
-Please rebase your patchset on top mips-next.
-
-Cheers,
--Paul
-
-=
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
