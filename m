@@ -2,125 +2,111 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E5DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91221C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 496A42068F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QG3cF8pd"
+	by mail.kernel.org (Postfix) with ESMTP id 73217205C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKVGxo (ORCPT
+        id S1726500AbfKVHLD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:53:44 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:42041 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfKVGxo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 01:53:44 -0500
-Received: by mail-ua1-f68.google.com with SMTP id 31so1832670uas.9
-        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 22:53:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1YU9k9XpRr942/Ij03AkmdwfF1xW9f8cWmfS5A3XY0k=;
-        b=QG3cF8pdSIL28X1eGzKqnGvTG84F3Ufrrvrc8SL1ku6vQwPYz/ZYUsZpu040Y27DJW
-         L4VBXn057/NW7NJlATWTc6kcsgzfQILeq8kGDkpAJ/wNdnWF6S++4ZeRLrGnJxl9HBgq
-         xkb413yOgTl5mrGqih/vn7f5AZJMoe1RGLo5v1LYiNyqM9A8Q1S0HQd62Pcn7VAK7AYS
-         2+TIuyreiwtCByxwQBdy4QWiKXcJiQ2G/mFAyqgUILQ/P8wYxbmZoYE72OJFYQLkXXxB
-         VMiMV9XRGwzFdh3shltnRsQq9EFe7sRrf2Nlp0z1T0cC+teVA/YJPjg3fZO9/MKgjYjj
-         w2qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1YU9k9XpRr942/Ij03AkmdwfF1xW9f8cWmfS5A3XY0k=;
-        b=sR8fYSbwn1GZiRgNyfW9JcoVNFRJdeqP3aY8/rTLx29SNStcOFYPWpp4l9YvoM1JdU
-         nIs5aPsjGKe561mdtaqZjFA/+oF67RHxRqYovSLLWKHCvUTCX0PKn3DHbzBZ0XBHv4TQ
-         wcffyO2gCOzMyG/XdGkR6+iMcsIWT6Ilmt6hJaD4uIfevsq2XNPkK8QZZ1DXuGM6Tnef
-         fFQBIqARlxu4qEM7HrDoiJ6kjDi9Hp8i9raXidTYQBE88D2XNt3kj1HuAClG1otwPesh
-         jBTBAad+tFHGCqQSexlBQyn5SyezN7BY1SyxF16E6LNtU9SJye0JKzWT/tSVUIossNfl
-         4Csg==
-X-Gm-Message-State: APjAAAUOjzoDF1Gn0SvytZ+Pm/D+/h0eLiA16/P2X1XbEnkLElkfnD/X
-        CvuDuk0f2Hbe1OjgfKhgLU5Ytj/OJgbrBJAET0X9rw==
-X-Google-Smtp-Source: APXvYqxA4KymHfYVZJp+513DppW1RweHZkY7FevlDR8l2jLOXOk+nmSeISVuvQpjenrUnIKpX/cDOUf9dilFT9SRZZ0=
-X-Received: by 2002:ab0:24ce:: with SMTP id k14mr8961736uan.15.1574405623268;
- Thu, 21 Nov 2019 22:53:43 -0800 (PST)
+        Fri, 22 Nov 2019 02:11:03 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:61411 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKVHLC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 02:11:02 -0500
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Nov 2019 02:11:01 EST
+Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 22 Nov 2019
+ 14:56:24 +0800
+From:   Hanjie Lin <hanjie.lin@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Kevin Hilman <khilman@baylibre.com>
+CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH 0/6] arm64: meson: Add support for USB on Amlogic A1
+Date:   Fri, 22 Nov 2019 14:55:51 +0800
+Message-ID: <1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1574232449-13570-1-git-send-email-manish.narani@xilinx.com>
- <1574232449-13570-5-git-send-email-manish.narani@xilinx.com> <CAC=3edbHWA7gv-mTFVXXcMzN6hyzO4LPqkbcRZ-zDp5BAm8_Vw@mail.gmail.com>
-In-Reply-To: <CAC=3edbHWA7gv-mTFVXXcMzN6hyzO4LPqkbcRZ-zDp5BAm8_Vw@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 22 Nov 2019 07:53:06 +0100
-Message-ID: <CAPDyKFrgC1nxe7NqmNHHibYmDfrdx6ubTpOE41bW2Ge796+N8w@mail.gmail.com>
-Subject: Re: [PATCH v6 4/8] dt-bindings: mmc: Add optional generic properties
- for mmc
-To:     Rob Herring <rob.e.herring@gmail.com>,
-        Manish Narani <manish.narani@xilinx.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>, jolly.shah@xilinx.com,
-        rajan.vaja@xilinx.com, nava.manne@xilinx.com,
-        Moritz Fischer <mdf@kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.18.11.213]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 21 Nov 2019 at 20:01, Rob Herring <rob.e.herring@gmail.com> wrote:
->
-> On Wed, Nov 20, 2019 at 12:49 AM Manish Narani <manish.narani@xilinx.com> wrote:
-> >
-> > Add optional properties for mmc hosts which are used to set clk delays
-> > for different speed modes in the controller.
-> >
-> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/mmc/mmc-controller.yaml     | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> > index 080754e0ef35..305b2016bc17 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> > +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> > @@ -333,6 +333,18 @@ patternProperties:
-> >      required:
-> >        - reg
-> >
-> > +  "^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|uhs-(sdr(12|25|50|104)|ddr50))$":
-> > +    minItems: 2
-> > +    maxItems: 2
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - minimum: 0
-> > +        maximum: 359
->
-> This is wrong. It can't be both minItems of 2 and a single uint32.
-> What's needed is:
->
-> allOf:
->   - $ref: /schemas/types.yaml#/definitions/uint32-array
-> minItems: 2
-> maxItems: 2
-> items:
->   minimum: 0
->   maximum: 359
+This patchset adds support for USB on Amlogic A1 SoCs.
 
-Thanks Rob for clarifying!
+This patchset is composed with :
+- bindings of the PHY
+- bindings of the USB Control Glue
+- PHY Driver
+- USB Control Glue driver
+- dts of the PHY
+- dts of the USB Controller
 
-Manish, can you please send a fixup on top?
+The Amlogic A1 USB Complex is composed of :
+- 1 DWC3 USB controller for USB2 Host functionality
+- 1 USB2 PHY for USB2 Host functionality
 
-Kind regards
-Uffe
+The USB Control Glue setups the clocks and the reset about DWC3 USB
+controller, and binds to the USB2 PHY. It also configures the 8bit
+UTMI interfaces for the USB2 PHY, including setting USB2 phy mode.
+
+The USB2 PHY driver initializes the phy analog settings, phy PLL 
+setup and phy tuning.
+
+This patchset is based on A1 clock/power domain/reset series at [0].
+
+[0]
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=185477
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=180055
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=189643
+
+Hanjie Lin (6):
+  dt-bindings: phy: Add Amlogic G12A USB2 PHY Bindings
+  dt-bindings: usb: dwc3: Add the Amlogic A1 Family DWC3 Glue Bindings
+  phy: amlogic: Add Amlogic A1 USB2 PHY Driver
+  usb: dwc3: Add Amlogic A1 DWC3 glue
+  arm64: dts: meson: a1: Enable USB2 PHY
+  arm64: dts: meson: a1: Enable DWC3 controller
+
+ .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    |  55 +++
+ .../devicetree/bindings/usb/amlogic,dwc3.txt       |  53 +++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  41 +++
+ drivers/phy/amlogic/Kconfig                        |  13 +
+ drivers/phy/amlogic/Makefile                       |   1 +
+ drivers/phy/amlogic/phy-meson-a1-usb2.c            | 327 +++++++++++++++++
+ drivers/usb/dwc3/Kconfig                           |  11 +
+ drivers/usb/dwc3/Makefile                          |   1 +
+ drivers/usb/dwc3/dwc3-meson-a1.c                   | 397 +++++++++++++++++++++
+ 9 files changed, 899 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+ create mode 100644 drivers/phy/amlogic/phy-meson-a1-usb2.c
+ create mode 100644 drivers/usb/dwc3/dwc3-meson-a1.c
+
+-- 
+2.7.4
+
