@@ -2,89 +2,118 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8B5C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE472C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0032068E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5CA20715
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T3iDSlAs"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Cznat/dV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfKVNBt (ORCPT
+        id S1727209AbfKVNEP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:01:49 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44801 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727834AbfKVNBt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 08:01:49 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v201so4403744lfa.11
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 05:01:48 -0800 (PST)
+        Fri, 22 Nov 2019 08:04:15 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37347 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfKVNEP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 08:04:15 -0500
+Received: by mail-oi1-f195.google.com with SMTP id y194so6418349oie.4
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 05:04:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dn2Q+lxc2hD365R8dpx/qDcvh0SW6iReRcimhdnvJVs=;
-        b=T3iDSlAsyuLG+UJUCmoncxR1Bu/bnkXL+KTq5dtWsOPEk5RpZ8edNc98Onwl6slav+
-         /6e8hX+pTkWaSIXGqEuy9X9rZyNwmY4TERtxiAfEDekog4Gkz38xdZQ0RSgGTrgjfXWm
-         Owq4J8pZTVADQ/t5uY4imCraJJ2dIrTT2uwE0EY2E3x+Uro8T1zF0BkVxkc8pF0FsqBl
-         y6GKP5K6axb8BQ38YAG8H8sPZiX4W7XuFOsvWqrZ1MviJOCm684lRjpNZpMzH8na0jOx
-         wqdeYsaHigtxhdjowwJZrUBM8VUa8C/SZB2DM3PbahSmncXpmbcvjBgy4Xy+mo3eR0h4
-         1WBg==
+         :cc:content-transfer-encoding;
+        bh=fzPqklm51f4d+04Hk2lQiF3YOc8XKDMT60XYkopdcUs=;
+        b=Cznat/dVZPw9vqZe2bd3oZfkQzZl0vWz5bWzsmdOpvJGNKn6qNI+C+eCevnHvOdQEw
+         DiPcgzw6YvU/vJNRB2xRSWiu8zLiN0QZ1ZWNZ0Mva9iIRMOUFAbrgyq8Kgoglke8mih3
+         Q8o62l9vxugKLHAeIcsfUPPWNJlQgTAhy5Jbs6Rwpi+e71pn0yUePkWQYidiviCtLMFz
+         pgSHbflxkymTl5MGW24kHzVVL6qtYC8t5j5/Q3MKfneH0geutsfd6SqpEtskcb7Rts0o
+         JcoVwKa+z5jQEUk5ln3MY7xKHUbQAtRi+hQsU3DnsvplJtPOTC/6edITOayA5o7fWlba
+         VqHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dn2Q+lxc2hD365R8dpx/qDcvh0SW6iReRcimhdnvJVs=;
-        b=KapqUYpJ9e40K6+84+kkLVSLbeiMIR/VXIUx+QfwUCpwUE9OH3JWkujZuPOe2Yg90E
-         vSiMhLtitYD6GA/iVNKULuiPJL4U/NCfoKubr+xF/oopBLouGjGPBC3teLQ9XsgHbbo5
-         WcVU0zls7BdwLg60A+cz0RYyzYQfIpMe6bkKY1asVxmIKENOWFpuzH5m3KwUDRoLSOTM
-         5vOrc0bpvdGBPYaY6Oa0dzPm6yyRk0XF+apUcSk2RB5Ep4Ifsi6HdQQmll5z1rW9uqB+
-         sbmKqIL347vrg/25Wr3rg6D/lI4LC9daqQWoHJ2yPkLAKipFfIIGFqAfzxvRa7LH7Fh6
-         Pgeg==
-X-Gm-Message-State: APjAAAUtOAerKSbLc0LSoqelBFHOvdOcrcjJHwZ8oAlMbWkbnntw4zXn
-        PQLffHbF2e72PcwD314wn/sMCC0UpR4/GL5YgAFqFg==
-X-Google-Smtp-Source: APXvYqzo/k0rIsJGGL399pE+GzotZ33QW/YQlNt/JpZVm7SU204RwrS3/eFE+xu+DFtDva5eWFhzGzqC/njjDmo3YqM=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr11596350lfi.93.1574427707515;
- Fri, 22 Nov 2019 05:01:47 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fzPqklm51f4d+04Hk2lQiF3YOc8XKDMT60XYkopdcUs=;
+        b=IJec5MFCxZBZ1LUzrFmlP3LHX6V9OCjqO94yvyQJ7n6K2uP3GYE5DZSfjHHOWDdLgR
+         9NHYo9H1ucmLjvISnpvIIH9vpTFXcIUVMXGcDfQpGwuvbUEIdIoWnjrXfVIvFp8TFp60
+         nFp8Q1bnqrQkLF0g5y9Bmazto9Bw4pb85ljqGW4b9uo8uLkZVZIb3W4eGMwzsf06KTo9
+         TlshO/9Up8V+SN/yohqINm7M3wvhUQl40jEEch0KtDumZxt8cmKGQk4YgUtU8PJVSrOG
+         vuJ1OAMwqSZIw4dFarLsTT7cBMo0vc+eaKtIPWl2hzlJiJOVsRUcK3D9oGmGb5SxAEoN
+         AW/A==
+X-Gm-Message-State: APjAAAUh5kNlgTFG3CSITiTeJ+UULGQhBMRwpxwrBUHKu1dOGRbA4hu4
+        hGau6vt1zdUYIGfDhItCZiJj5N35E9ZU5j9lblMNuQ==
+X-Google-Smtp-Source: APXvYqy2JE5Ni1hucVa+uC4X3b7zH+41DjbxZJ2O7HjBDpIvPEzKv2S1eu0QvaHdn8sa03AeYVlSy23xr8VmtmUiRPM=
+X-Received: by 2002:a05:6808:498:: with SMTP id z24mr12274927oid.114.1574427854113;
+ Fri, 22 Nov 2019 05:04:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20191122061839.24904-1-hui.song_1@nxp.com>
-In-Reply-To: <20191122061839.24904-1-hui.song_1@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 14:01:35 +0100
-Message-ID: <CACRpkdYhLoGdGQt_jzj5aFa-EY_kMimoVShi7QFLG3sZbC436w@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio : mpc8xxx : ls1088a/ls1028a edge detection mode
- bug fixs.
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
+ <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com>
+ <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com> <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
+In-Reply-To: <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 22 Nov 2019 14:04:03 +0100
+Message-ID: <CAMpxmJU_0MzroyD_ZF5WOxpZz3dkADLOmW7aKpWdJ7GCvo-RnA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Khouloud Touil <ktouil@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 7:18 AM Hui Song <hui.song_1@nxp.com> wrote:
-
-> From: Song Hui <hui.song_1@nxp.com>
+pt., 22 lis 2019 o 13:53 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
 >
-> On these boards, the irq_set_type must point one valid function pointer
-> that can correctly set both edge and falling edge.
+> On Fri, Nov 22, 2019 at 1:47 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
 >
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> > what about the existing bindings for at24 that don't mandate the
+> > active-low flag? I'm afraid this would break the support for this
+> > specific chip or lead to code duplication if we had this in both nvmem
+> > and at24 with different logic.
+>
+> Hm yeah I realized this when I read patches 3 & 4.
+>
+> I would to like this:
+>
+> 1. Add a new generic property
+>    writeprotect-gpios that mandates to use GPIO_ACTIVE_LOW
+>    and use this in the new example
+>
+> 2. Deprecate wp-gpios in the binding, keep it around but deprecated.
 
-Patch applied!
+This is a pretty standard property though - for instance it is
+documented in the main mmc binding and doesn't mandate GPIO_ACTIVE_LOW
+either. I think this is because nobody says that the write-protect
+line must always be driver low to be asserted - this is highly
+implementation-specific.
 
-Yours,
-Linus Walleij
+Bartosz
+
+>
+> 3. Add a quirk to gpiolib-of in the manner of the other quirks there
+>    (like for SPI) so that if we are dealing with some EEPROM node
+>    like at24 and the flag is zero, tag on GPIO_ACTIVE_LOW on
+>    the descriptor.
+>
+> The driver will now handle the semantic of both cases
+> with gpiolib-of providing a quirk for the old binding.
+>
+> This is how we solved this type of problem before.
+>
+> Yours,
+> Linus Walleij
