@@ -2,161 +2,157 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F3AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98097C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA87820659
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6824520708
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="KpaVAc3b"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HVx/6pO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfKVHRB (ORCPT
+        id S1726018AbfKVHbl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 02:17:01 -0500
-Received: from mail-eopbgr820047.outbound.protection.outlook.com ([40.107.82.47]:2417
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726018AbfKVHRA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 02:17:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bMAGEUiU8AmA+uCdo4Au0MCdsMN5hzNPP8qP+kcjG5b5leJaip1lrV0LqjO8/K1mvG8DigLOLqMQfBo1DcVGlcIaPJgPKWwO15heY5/uiyYs8UzXLzUPt3CTjwzgxdXbymLjilm7+zW5jP2k1/l+EXrvb0nw67c8B4OJ7CdgdKXwC1BGa+rzy+uv/HDqXYXVUCsju5mAhWXn8szUd4Iotqfnm28i1SG07yNGnp5urwWpJvnoombftAkthLPWi5Lz3wUsSPlLnFDN5JjKo3iHl2Gu2oXdufqCxSM+9aY0jxDawcMDgEBJzvCPyOGjfuXCgOtCe1yy+TGQO0Wq1L63uA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zZp+A7ELKFeZgY9socOS9iVOzilU4skxwLpoogmFyIU=;
- b=OjqoSolKzcgxu1Kiiz1DNj7Lf+NTUACwVtmbeqcMyZCe+RM8FE8FVaZ+gWDcCvMbM5mEasGvPG7r6V2dkL2WcJDsD7yl/Wjmx90MrZuFfX0JDnQ+9uol9WwBwMzjDmEIyTvrtuGEgyaoBVE/+e9w4LY4yxS0wuv8N5d/wQl6SyKjLZaEbU4eYUkd2jqPhhqekHX9pc9UCxu9dTpMmp5NUUDS90mtr3Pfr/Ze95cknGhM10xRVzsF0yyTsDWh3sfit3a5oKG9Hsf+iJEvgWfT1zKJmrRQE+AKlclrhiJFGqMXGMERNxLvyEu6VbBnOg6lo7ZgLwd8IFh2O512UgfVhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 22 Nov 2019 02:31:41 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37845 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfKVHbl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 02:31:41 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t1so7380687wrv.4
+        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 23:31:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zZp+A7ELKFeZgY9socOS9iVOzilU4skxwLpoogmFyIU=;
- b=KpaVAc3b1bVRCnPzZf2L0i7Q+8Ab1MOvCfoDJSubUihhQapIjcukzo+RcoT3bw5+LvL9cujUBrK63MyJk/yWGiuSzc0NN2xIYa0qLK6NdB4W4IH18YsTPycCsxlsc4Gn/13yewQ6pp2bCNaCd9xiWFewdc0tZ6XL/kdDe7C0U8U=
-Received: from BN6PR02CA0043.namprd02.prod.outlook.com (2603:10b6:404:5f::29)
- by SN6PR02MB5216.namprd02.prod.outlook.com (2603:10b6:805:70::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.19; Fri, 22 Nov
- 2019 07:16:07 +0000
-Received: from BL2NAM02FT006.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::208) by BN6PR02CA0043.outlook.office365.com
- (2603:10b6:404:5f::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.17 via Frontend
- Transport; Fri, 22 Nov 2019 07:16:07 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT006.mail.protection.outlook.com (10.152.76.239) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Fri, 22 Nov 2019 07:16:07 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1iY3Ak-0003F3-Ov; Thu, 21 Nov 2019 23:16:06 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1iY3Af-00057D-IE; Thu, 21 Nov 2019 23:16:01 -0800
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAM7G0w0029390;
-        Thu, 21 Nov 2019 23:16:00 -0800
-Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <mnarani@xilinx.com>)
-        id 1iY3Ad-000574-UO; Thu, 21 Nov 2019 23:16:00 -0800
-Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 3C301121387; Fri, 22 Nov 2019 12:45:59 +0530 (IST)
-From:   Manish Narani <manish.narani@xilinx.com>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com,
-        Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH] dt-bindings: mmc: Correct the type of the clk phase properties
-Date:   Fri, 22 Nov 2019 12:45:57 +0530
-Message-Id: <1574406957-85248-1-git-send-email-manish.narani@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(396003)(39860400002)(199004)(189003)(186003)(70206006)(70586007)(8936002)(48376002)(106002)(2616005)(44832011)(50466002)(50226002)(36386004)(6266002)(81156014)(81166006)(107886003)(8676002)(103686004)(47776003)(305945005)(356004)(478600001)(2906002)(51416003)(4326008)(316002)(426003)(36756003)(26005)(16586007)(42186006)(5660300002)(336012);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5216;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=+sAO6BARi9nh6Xk/KHCfUyEO35XUSRjOifLynmlQiDE=;
+        b=HVx/6pO5h4567D8hjH/yuda0DHmEfrIy3KwJRAMUgQnJpMtEjiO10f0to3AgQi6jKl
+         uI0JNCNWfiVFi4+LjM/alLflRMt85ggNnISXKhfI6HgU4Oi/80HcceDAJbuBh4qSkmy/
+         tFuaiCt9IehZSDylgPocF/7oaHOUYEMpYcSoxESO/YPs30DcOo/yVHyfPELiXpX9+rbd
+         6xdEPygv9bp6lSzT51SDPt5A/xd87f+5k4mQPF0tHZbP0iZr91NoW/FsoiGdvqitBTk9
+         mgL4gacKXEOc5ihfnAqmpv1vriRoFJPIq/cYR6Ku07g9/ecSsN4DB7CR0mK7V/qPhyJp
+         +m8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=+sAO6BARi9nh6Xk/KHCfUyEO35XUSRjOifLynmlQiDE=;
+        b=WMYxby2yoOw87AVdZx/vhOIMhVn+9zM9nesBNsaJ8AGfJhcGJ3pmIRhBux+lxCjra1
+         Tt+OY1fw0aC7if2tQnTF6k4U6yUXwTscxsLLkmmNdJFZMvMkMRP7eeP0XtJoVLlNLKwo
+         ebRBAXJHeAEJ4KI165PwjuNhwAOewFbLFiC6eQMtmiJTt9eE+eoOykTJHeODxwd0gH6Q
+         Ou8X64RIv+dqHxo3lXqXUSK867pbm/FkhwREi14tfa03k0Qm6OoT6KRpNuB8KJBf0cuC
+         WeevBk6uq9EgytjAoaUbfYMxL9aJxnExfL17aqMtFjgTnjHYvIgSgwqqPqg9j04MQcJ2
+         /LdQ==
+X-Gm-Message-State: APjAAAUaAF3ET6CIA82p2GBzAJfjWnVPFxPONOxiIJXaeRBDt8Ne5i7d
+        sLFrsFKEjoTI6qqqnJVBOAqV7w==
+X-Google-Smtp-Source: APXvYqwmW0dHTIlMP+PqU32cRM7vod5yAs1/BX5jdgQJ3kTCd2Ik5H0UkoGKz7MJ00stV1bxRKW5Uw==
+X-Received: by 2002:a5d:558e:: with SMTP id i14mr15807519wrv.140.1574407898736;
+        Thu, 21 Nov 2019 23:31:38 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id w17sm6784989wrt.45.2019.11.21.23.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 23:31:38 -0800 (PST)
+Date:   Fri, 22 Nov 2019 07:31:24 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org, Grigoryev Denis <grigoryev@fastwel.ru>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Subject: Re: Applied "tps6105x: add optional devicetree support" to the
+ regulator tree
+Message-ID: <20191122073124.GA3296@dell>
+References: <20191119154611.29625-2-TheSven73@gmail.com>
+ <applied-20191119154611.29625-2-TheSven73@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0b981a66-bca0-4513-13b3-08d76f1bd809
-X-MS-TrafficTypeDiagnostic: SN6PR02MB5216:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB52168FD28B6923A260DC0C1EC1490@SN6PR02MB5216.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 02296943FF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: phyDmrxCE0qzzzHGiPJcUELYw/T+4XaT4HfphWoLFITCR5iZDRc0Be/VJqqP2Q254uEFf9Mlr69C14RhEIHMF62gfvcKxEESlwcaz+cYZT3f2alOXEGxWmBnqMa6rBZpq70SGD1P2IuxouN5iPiIW2eWGE18hmZFQV70vKBHlmXeOAy8FR4lLVCK5ddSJPsMJ77XjlKb1kE/2c8GTMBUGipb8gL6sTG2CgtnmnbhaStGuUxISpgufvN2Zp1eyQClNuwHfKVNgu4PKR9NkOtWd+Mvaa1pu0+zrMKhy4LVgoK4v+12xZD7mHapkIuI9O3aKRjcneO93bpXA7NblVGr9Yj3llIxddmmD4L83P6WjDzX2ue1bVOKLCqg03sPgDri7cWTC+Jk3wceICzl4Q0nUaAa3XJwS4rliepEPCQC9faMJCzNs8sZu/3y1g0Q5aJu
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2019 07:16:07.3756
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b981a66-bca0-4513-13b3-08d76f1bd809
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5216
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <applied-20191119154611.29625-2-TheSven73@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The clock phase properties are having two uint32 values. The minItems
-and maxItems are set to 2 for the same. So the property type should be
-'uint32-array' and not 'uint32'. Modify it to correct the same.
+On Wed, 20 Nov 2019, Mark Brown wrote:
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- .../devicetree/bindings/mmc/mmc-controller.yaml | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+> The patch
+> 
+>    tps6105x: add optional devicetree support
+> 
+> has been applied to the regulator tree at
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+> 
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.  
+> 
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+> 
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+> 
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+> 
+> Thanks,
+> Mark
+> 
+> From 62f7f3eca4c30064ab37b42d97cef4292d75fdd0 Mon Sep 17 00:00:00 2001
+> From: Sven Van Asbroeck <thesven73@gmail.com>
+> Date: Tue, 19 Nov 2019 10:46:08 -0500
+> Subject: [PATCH] tps6105x: add optional devicetree support
+> 
+> This driver currently requires platform data to specify the
+> operational mode and regulator init data (in case of regulator
+> mode).
+> 
+> Optionally specify the operational mode by looking at the name
+> of the devicetree child node.
+> 
+> Example: put chip in regulator mode:
+> 
+> i2c0 {
+> 	tps61052@33 {
+> 		compatible = "ti,tps61052";
+> 		reg = <0x33>;
+> 
+> 		regulator {
+>                             regulator-min-microvolt = <5000000>;
+>                             regulator-max-microvolt = <5000000>;
+>                             regulator-always-on;
+> 		};
+> 	};
+> };
+> 
+> Tree: linux-next
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> Link: https://lore.kernel.org/r/20191119154611.29625-2-TheSven73@gmail.com
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  drivers/mfd/tps6105x.c | 34 +++++++++++++++++++++++++++++++---
+>  1 file changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-index 305b2016bc17..b130450c3b34 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-+++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-@@ -334,16 +334,17 @@ patternProperties:
-       - reg
- 
-   "^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|uhs-(sdr(12|25|50|104)|ddr50))$":
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-     minItems: 2
-     maxItems: 2
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/uint32
--      - minimum: 0
--        maximum: 359
--    description:
--      Set the clock (phase) delays which are to be configured in the
--      controller while switching to particular speed mode. These values
--      are in pair of degrees.
-+    items:
-+      minimum: 0
-+      maximum: 359
-+      description:
-+        Set the clock (phase) delays which are to be configured in the
-+        controller while switching to particular speed mode. These values
-+        are in pair of degrees.
- 
- dependencies:
-   cd-debounce-delay-ms: [ cd-gpios ]
+?
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
