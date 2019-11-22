@@ -2,108 +2,161 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D7CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 00:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB441C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 00:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9CA20674
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 00:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6792067D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 00:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRiOk0L6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CogzIq+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfKVAJo (ORCPT
+        id S1726510AbfKVAvU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 21 Nov 2019 19:09:44 -0500
-Received: from mail-io1-f54.google.com ([209.85.166.54]:45327 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfKVAJo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 19:09:44 -0500
-Received: by mail-io1-f54.google.com with SMTP id v17so5810763iol.12;
-        Thu, 21 Nov 2019 16:09:42 -0800 (PST)
+        Thu, 21 Nov 2019 19:51:20 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37731 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfKVAvU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 21 Nov 2019 19:51:20 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b10so2507781pgd.4
+        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 16:51:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EqXFR4oe2v0yUDAdGyEFCfnnL8/GnQC/j+RehHrO9cc=;
-        b=LRiOk0L6EDLOJZ6Df0c95tQr3vVhNEIl3T34fTzaugVH2fHs++y0MhfU9BYD7lRzts
-         HQwDvOWRBo9NUUouKIDybXNn+eEWEzq85p4rMYZ9MttUP4Dci0AyB1iLe6EY4JSsvqPX
-         zrYiJrIhoXg9M3gloXBvNcWmxY/z/khJYwgEIdxPGtjEMgaeM6ufcnbuJ0l5zSlrE7SU
-         ZgkRhn8iHIK2tjVONVe59mznrYfScTBxHU2HZWe1ccdZAOx9eQ9CQS1aD7GHf2o8ByO0
-         JMt+Prpuw2kcfozLKaXySE3bhij4ndlhBv/dP2RWEm2ZhW8hvvNOOxV5HLju1mynj/UQ
-         U27g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F7N97syywZm5UtcsrgWnowpokxLoj9aunLFsYL+WSTs=;
+        b=CogzIq+wFBM2jxtDHj5Txm6K3QcBKkvZ4jPMbK0ZKYCJFs9SyqIBRSU5VO9ypETUMh
+         LX4VmFW9ktP4UthWhTRbAPyRd/xdSBcdo/Tmgk9EqNP2ZaJ/Ew5/KHSJGYWArFJtYzLX
+         sqVdSoAcKrciJePGz+z1BbiLWblExMjwFgNJo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EqXFR4oe2v0yUDAdGyEFCfnnL8/GnQC/j+RehHrO9cc=;
-        b=TXw08/MrUYiv1WlkUsNJCZkLHW3unaFSCT74XMHxH3aRigthyTFYwtkYZ+Gv93mEMX
-         qvogGe+J7RXpLIRrlhAwI4TcvwEe/YLg4zW6F6AJk3eWJAZBoEt7qlt6kPpCrWsTQnDu
-         r0qOA3Ya7vSjWVaUz+N7EH5EJPOqMdsTAEPV6uiuqQeRqSooKzctyXzO79fklnQ+t5Tv
-         oUyfIUosdO903rrY07gbIJT22/LNvv8gOjuEq35XVrODxPuE8AjXw3G9bCEId5E5jWVC
-         EF7Y229NywAo2aPp4izG8PfBqTY13BM6+nsW1jWLq0RBXJF7j1HjB57Rhl8ViwHvZCYN
-         mnvg==
-X-Gm-Message-State: APjAAAVc9jm4yav/kZBqh7+2Etnh9th0RBfrBZb3hNxRjSn8x5isixBo
-        qwQlIS4/ItOfbfCw3ALIWAdFabEd
-X-Google-Smtp-Source: APXvYqx2ZlN0bP8EYCW9aGBGd6wGw3g04GF+708E3bMC0I4OfMiFVzTJYVmw6XqNr0CKTG7ztR4U3g==
-X-Received: by 2002:a02:8793:: with SMTP id t19mr4693128jai.90.1574381381407;
-        Thu, 21 Nov 2019 16:09:41 -0800 (PST)
-Received: from localhost.localdomain (c-68-55-68-202.hsd1.mi.comcast.net. [68.55.68.202])
-        by smtp.gmail.com with ESMTPSA id c21sm2024349ilg.31.2019.11.21.16.09.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 16:09:40 -0800 (PST)
-From:   Jason Kridner <jkridner@gmail.com>
-X-Google-Original-From: Jason Kridner <jdk@ti.com>
-To:     devicetree@vger.kernel.org
-Cc:     Jason Kridner <jkridner@gmail.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F7N97syywZm5UtcsrgWnowpokxLoj9aunLFsYL+WSTs=;
+        b=dv0wfsY+Go0bdQN6IF8SD1hslkSHUlF8GDnyise788zM9cJ0mSzbbY5FN7q86aaVQ8
+         iUv/dBUlpOJ0TPLrOYKWXgmS+/2GFDomE0kPZRz9K/wVL70Mj5vdSoyIFLV7SOwv9VKd
+         b1XAb+AktLL6kIAsulA+0ec1MKYEd1DCMTPpFXpVTE1Xhp8N/jsca0pUst0Lol1bxNFK
+         R0b4Bt9iHEmITmcA5hbQHDlGV7R0RjktluuWqTkLMjr9USAmZ7tKfGunjV2tyMOYbFEF
+         dZrInhR+yt2HiSLJ8iTfjpQxMH+OMTLN5s9OXv5ojOZIn6Sf3m+Nil++u7VpBzHFBhFI
+         np7g==
+X-Gm-Message-State: APjAAAXAjt41RgCNEIBaE/rIN3ouQVx1+IQXjNau3UaHlprzviFhXwgc
+        iG1KcMmoSOaNqPwyANOqgzxIPg==
+X-Google-Smtp-Source: APXvYqzRFzT70+8WTJ0V8pjwhy9ummb6K+OSh8qH+aj/aFjr9zXVCtvPqVkUI6ozTNu+aC2LaXC79A==
+X-Received: by 2002:a62:6404:: with SMTP id y4mr13859910pfb.170.1574383879283;
+        Thu, 21 Nov 2019 16:51:19 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id l10sm702279pjw.6.2019.11.21.16.51.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 16:51:18 -0800 (PST)
+Date:   Thu, 21 Nov 2019 16:51:17 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
-        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
-Subject: [PATCH v2] dt-bindings: Add vendor prefix for BeagleBoard.org
-Date:   Thu, 21 Nov 2019 19:09:26 -0500
-Message-Id: <20191122000926.19408-1-jdk@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: sc7180: Add USB related nodes
+Message-ID: <20191122005117.GM27773@google.com>
+References: <1573795421-13989-1-git-send-email-sanm@codeaurora.org>
+ <1573795421-13989-2-git-send-email-sanm@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1573795421-13989-2-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add vendor prefix for BeagleBoard.org Foundation
+Hi Sandeep,
 
-Signed-off-by: Jason Kridner <jdk@ti.com>
----
-Changes in v2:
-  - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
-    needing to quote within a yaml regular expression.
-  - Assign 'from' to author e-mail address.
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+On Fri, Nov 15, 2019 at 10:53:41AM +0530, Sandeep Maheswaram wrote:
+> Add nodes for DWC3 USB controller, QMP and QUSB PHYs.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  25 ++++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 105 ++++++++++++++++++++++++++++++++
+>  2 files changed, 130 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 666e9b9..2c7dbdc 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>
+> ...
+>
+> +		usb_1: usb@a6f8800 {
+> +			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
+> +			reg = <0 0x0a6f8800 0 0x400>;
+> +			status = "disabled";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +			dma-ranges;
+> +
+> +			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+> +				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
+> +			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
+> +				      "sleep";
+> +
+> +			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+> +					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+> +			assigned-clock-rates = <19200000>, <150000000>;
+> +
+> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hs_phy_irq", "ss_phy_irq",
+> +					  "dm_hs_phy_irq", "dp_hs_phy_irq";
+> +
+> +			power-domains = <&gcc USB30_PRIM_GDSC>;
+> +
+> +			resets = <&gcc GCC_USB30_PRIM_BCR>;
+> +
+> +			usb_1_dwc3: dwc3@a600000 {
+> +				compatible = "snps,dwc3";
+> +				reg = <0 0x0a600000 0 0xe000>;
+> +				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> +				iommus = <&apps_smmu 0x540 0>;
+> +				snps,dis_u2_susphy_quirk;
+> +				snps,dis_enblslpm_quirk;
+> +				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+> +				phy-names = "usb2-phy", "usb3-phy";
+> +			};
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 967e78c5ec0a..1cce6641b21b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -139,6 +139,8 @@ patternProperties:
-     description: Shenzhen AZW Technology Co., Ltd.
-   "^bananapi,.*":
-     description: BIPAI KEJI LIMITED
-+  "^beagle,.*":
-+    description: BeagleBoard.org Foundation
-   "^bhf,.*":
-     description: Beckhoff Automation GmbH & Co. KG
-   "^bitmain,.*":
--- 
-2.17.1
+I see the following message at boot:
 
+[    4.248436] dwc3 a600000.dwc3: Failed to get clk 'ref': -2
+
+Apparently the driver is operational regardless, however the binding lists
+the clocks as required:
+
+  Required properties:
+   ...
+   - clock-names: should contain "ref", "bus_early", "suspend"
+   - clocks: list of phandle and clock specifier pairs corresponding to
+             entries in the clock-names property.
+
+  [Documentation/devicetree/bindings/usb/dwc3.txt]
+
+The driver code also has a comment stating that the clocks should be
+specified:
+
+  /*
+   * Clocks are optional, but new DT platforms should support all
+   * clocks as required by the DT-binding.
+   */
+
+  [drivers/usb/dwc3/core.txt]
