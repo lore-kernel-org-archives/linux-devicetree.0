@@ -2,144 +2,159 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3A1C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC23C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 09:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDD820708
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1257620674
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 09:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YBAWnere"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjDEp/Nd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfKVI4p (ORCPT
+        id S1726364AbfKVJKZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:56:45 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:11017 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725999AbfKVI4p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 03:56:45 -0500
-X-UUID: 3d3d335242b84d54b958f1dddb1c4b78-20191122
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=AMnabSznLaiYa+5DKF19iaqOPkdafm0Q3E/3KuPjx64=;
-        b=YBAWneretwLCisikVHiaj01mPKaubYi0VwK1ptq7txy0R/yDtimxlSy/67PDlySJCNgIEURnpR1GQCDPoFxL5YxXiJsQRFQ5Dn9d8wv5h25GSB5kgwoh/032X8gK62Cq4AXoUgKuGGDMLe2c4WnSugd6SHrjCLrpQ7IA4C0jKdU=;
-X-UUID: 3d3d335242b84d54b958f1dddb1c4b78-20191122
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 461520431; Fri, 22 Nov 2019 16:56:39 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 22 Nov 2019 16:56:15 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 22 Nov 2019 16:56:28 +0800
-Message-ID: <1574412997.19450.16.camel@mtksdaap41>
-Subject: Re: [PATCH v1 07/12] soc: mediatek: cmdq: add write_s function
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 22 Nov 2019 16:56:37 +0800
-In-Reply-To: <1574327552-11806-8-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574327552-11806-8-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 22 Nov 2019 04:10:25 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34888 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKVJKZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 04:10:25 -0500
+Received: by mail-ed1-f65.google.com with SMTP id r16so5348530edq.2;
+        Fri, 22 Nov 2019 01:10:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xJF8jXeg6xvlTusMZZszgFmib3HFwE1D3cegxFqQ0JU=;
+        b=WjDEp/NdqbL/aK7NWSKTsFWoaBkW9t2+kFeqjbWn3wnzJsb4AgY6XDAFn2cDZdcQrQ
+         HlQO5Ta2E1ZQOyuh2N24tocZTEE87wdHHKW7KDoTZARsiG2XN2cNz6cW9ngLmuOIIZnW
+         tF2Uw7wYGIiBLlVMp1U1wfstnEWssmtXLARFb8K3u58zexVHSSABpCbzUYL4VyX48Ao0
+         KGyzs+ZHBq3eAdS0RO0Wap48y0hXo5+uvLWh95imJWykIDWizSqh2FCJf0bBUsNbYxe5
+         SSC32tS0JXqoKuzZr0EohqZV86hQKtGGtXaSohgyzR6nzL3D9/8UaVUOBSx5YixWMMO6
+         X5jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xJF8jXeg6xvlTusMZZszgFmib3HFwE1D3cegxFqQ0JU=;
+        b=nlcngwRSAdgRUF1vwE8jLvX80r0dt03EGKOuP/T//4THqHVLZ751oQodmVSOOChyOa
+         8dbmQRAuKw9/3QUG+7GcKBr2T5UZLAdtI8yLNZafgGQW8mNvCIeW6P+4caYmkSO0Jw+l
+         ZdBn1Nq67rXnx5TFLhOu+wbXEFogRbnUbGteXJNRC9gqiioZ7z0g+bUcyAOoAP5KZecV
+         8GXS1qeYHH3Og0/G9oSWfM3g/SF3mZ/dbREZbfexQjwRrbHMKP+y50MmxNx1h1XbgIHI
+         oRSh4U1Z3Y+nJh70hY6SACvuxZTvtODVnJ/HgHDhJ7sWpHXiVo/D3LrpGqs/eYhRwb00
+         taKw==
+X-Gm-Message-State: APjAAAVoIztylibngQMyIr3VWM0yYv+zAk//3fji1ym4Hu/6E64Lp2ou
+        eWhg/LMFPFfNwccz74DeXbPCl+eft/HLtvuBtWVBGg==
+X-Google-Smtp-Source: APXvYqxwyuOc14aMFvMq0SVA6m5mbpFCLy5mif6Nx2xn+USp4UQDt1qTnW7pdA9rReGLSxKVsGoHIlFv+iKx5O7Fcgs=
+X-Received: by 2002:a17:906:698b:: with SMTP id i11mr20495989ejr.97.1574413822609;
+ Fri, 22 Nov 2019 01:10:22 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1573719422-7414-1-git-send-email-shubhrajyoti.datta@gmail.com>
+ <6d135b8a-cdba-e6a6-7738-cbc94cdb7ec0@axentia.se> <CAKfKVtE=ufzc=_EjPR2WKt4qf0sdOB=a7f-BRP-ZffMaemxGBw@mail.gmail.com>
+ <b9eaaba2-dcfd-0c97-f088-21acf269a92f@axentia.se> <CAKfKVtHuzWqH4Su1vC2oMMxvUPiGjvZsBJtYSXxx+rG7Ub1pSQ@mail.gmail.com>
+ <9408fca3-8673-0a1d-0ba7-8bfca0c028be@axentia.se>
+In-Reply-To: <9408fca3-8673-0a1d-0ba7-8bfca0c028be@axentia.se>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Fri, 22 Nov 2019 14:40:11 +0530
+Message-ID: <CAKfKVtHCuJEpd2JnqTREt-AR91C8UEi7UY9-hadgEO+eWNH6Cw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: mux: pca954x: Disable cacheing of the last channel
+To:     Peter Rosin <peda@axentia.se>
+Cc:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gVGh1LCAyMDE5LTExLTIxIGF0IDE3OjEyICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1
-bmN0aW9ucyB3aGljaA0KPiBzdXBwb3J0IGxhcmdlIGRtYSBhY2Nlc3MuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+
-IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgICB8ICAgMzQg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L21haWxib3gv
-bXRrLWNtZHEtbWFpbGJveC5oIHwgICAgMiArKw0KPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0
-ZWsvbXRrLWNtZHEuaCAgICB8ICAgMTMgKysrKysrKysrKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQs
-IDQ5IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRl
-ay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBl
-ci5jDQo+IGluZGV4IGQ0MTllOTkuLjFiMDc0YTkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29j
-L21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVr
-L210ay1jbWRxLWhlbHBlci5jDQo+IEBAIC0xNSw2ICsxNSw5IEBADQo+ICAjZGVmaW5lIENNRFFf
-RU9DX0NNRAkJKCh1NjQpKChDTURRX0NPREVfRU9DIDw8IENNRFFfT1BfQ09ERV9TSElGVCkpIFwN
-Cj4gIAkJCQk8PCAzMiB8IENNRFFfRU9DX0lSUV9FTikNCj4gICNkZWZpbmUgQ01EUV9SRUdfVFlQ
-RQkJMQ0KPiArI2RlZmluZSBDTURRX0FERFJfSElHSChhZGRyKQkoKHUzMikoKChhZGRyKSA+PiAx
-NikgJiBHRU5NQVNLKDMxLCAwKSkpDQo+ICsjZGVmaW5lIENNRFFfQUREUl9MT1dfQklUCUJJVCgx
-KQ0KPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRyKSB8IENNRFFfQURE
-Ul9MT1dfQklUKQ0KPiAgDQo+ICBzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiB7DQo+ICAJdW5pb24g
-ew0KPiBAQCAtMjI0LDYgKzIyNywzNyBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3Qg
-Y21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChjbWRxX3Br
-dF93cml0ZV9tYXNrKTsNCj4gIA0KPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFf
-cGt0ICpwa3QsIGRtYV9hZGRyX3QgYWRkciwNCj4gKwkJICAgICB1MzIgdmFsdWUsIHUzMiBtYXNr
-KQ0KPiArew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiAr
-CWludCBlcnI7DQo+ICsJY29uc3QgdTE2IGRzdF9yZWdfaWR4ID0gQ01EUV9TUFJfVEVNUDsNCj4g
-Kw0KPiArCWVyciA9IGNtZHFfcGt0X2Fzc2lnbihwa3QsIGRzdF9yZWdfaWR4LCBDTURRX0FERFJf
-SElHSChhZGRyKSk7DQo+ICsJaWYgKGVyciA8IDApDQo+ICsJCXJldHVybiBlcnI7DQo+ICsNCj4g
-KwlpZiAobWFzayAhPSBVMzJfTUFYKSB7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfTUFTSzsN
-Cj4gKwkJaW5zdC5tYXNrID0gfm1hc2s7DQo+ICsJCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21t
-YW5kKHBrdCwgaW5zdCk7DQo+ICsJCWlmIChlcnIgPCAwKQ0KPiArCQkJcmV0dXJuIGVycjsNCj4g
-Kw0KPiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gKwl9IGVsc2Ugew0K
-PiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1M7DQo+ICsJfQ0KPiArDQo+ICsJaW5zdC5z
-b3AgPSBkc3RfcmVnX2lkeDsNCj4gKwlpbnN0Lm9mZnNldCA9IENNRFFfQUREUl9MT1coYWRkcik7
-DQo+ICsJaW5zdC52YWx1ZSA9IHZhbHVlOw0KPiArDQo+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVu
-ZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X3dy
-aXRlX3MpOw0KPiArDQo+ICBpbnQgY21kcV9wa3Rfd2ZlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1
-MTYgZXZlbnQpDQo+ICB7DQo+ICAJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9
-IH07DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJv
-eC5oIGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBpbmRleCAx
-MjFjM2JiLi44ZWY4N2UxIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRr
-LWNtZHEtbWFpbGJveC5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1t
-YWlsYm94LmgNCj4gQEAgLTU5LDYgKzU5LDggQEAgZW51bSBjbWRxX2NvZGUgew0KPiAgCUNNRFFf
-Q09ERV9KVU1QID0gMHgxMCwNCj4gIAlDTURRX0NPREVfV0ZFID0gMHgyMCwNCj4gIAlDTURRX0NP
-REVfRU9DID0gMHg0MCwNCj4gKwlDTURRX0NPREVfV1JJVEVfUyA9IDB4OTAsDQo+ICsJQ01EUV9D
-T0RFX1dSSVRFX1NfTUFTSyA9IDB4OTEsDQo+ICAJQ01EUV9DT0RFX0xPR0lDID0gMHhhMCwNCj4g
-IH07DQo+ICANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
-bWRxLmggYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+IGluZGV4IDgz
-MzQwMjEuLjhkYmQwNDYgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVr
-L210ay1jbWRxLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEu
-aA0KPiBAQCAtMTIsNiArMTIsNyBAQA0KPiAgI2luY2x1ZGUgPGxpbnV4L3RpbWVyLmg+DQo+ICAN
-Cj4gICNkZWZpbmUgQ01EUV9OT19USU1FT1VUCQkweGZmZmZmZmZmdQ0KPiArI2RlZmluZSBDTURR
-X1NQUl9URU1QCQkwDQo+ICANCj4gIHN0cnVjdCBjbWRxX3BrdDsNCj4gIA0KPiBAQCAtMTAzLDYg
-KzEwNCwxOCBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwg
-dTggc3Vic3lzLA0KPiAgCQkJdTE2IG9mZnNldCwgdTMyIHZhbHVlLCB1MzIgbWFzayk7DQo+ICAN
-Cj4gIC8qKg0KPiArICogY21kcV9wa3Rfd3JpdGVfcygpIC0gYXBwZW5kIHdyaXRlX3MgY29tbWFu
-ZCB3aXRoIG1hc2sgdG8gdGhlIENNRFEgcGFja2V0DQo+ICsgKiBAcGt0Ogl0aGUgQ01EUSBwYWNr
-ZXQNCj4gKyAqIEBhZGRyOgl0aGUgcGh5c2ljYWwgYWRkcmVzcyBvZiByZWdpc3RlciBvciBkbWEN
-Cj4gKyAqIEB2YWx1ZToJdGhlIHNwZWNpZmllZCB0YXJnZXQgdmFsdWUNCj4gKyAqIEBtYXNrOgl0
-aGUgc3BlY2lmaWVkIHRhcmdldCBtYXNrDQo+ICsgKg0KPiArICogUmV0dXJuOiAwIGZvciBzdWNj
-ZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+ICsgKi8NCj4gK2ludCBjbWRx
-X3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCBkbWFfYWRkcl90IGFkZHIsDQo+ICsJ
-CSAgICAgdTMyIHZhbHVlLCB1MzIgbWFzayk7DQoNCllvdSBoYXZlIGFuIEFQSSBjbWRxX3BrdF9y
-ZWFkX3MoKSB3aGljaCByZWFkIGRhdGEgaW50byBnY2UgaW50ZXJuYWwNCnJlZ2lzdGVyLCBzbyBJ
-IGV4cGVjdCB0aGF0IGNtZHFfcGt0X3dyaXRlX3MoKSBpcyBhbiBBUEkgd2hpY2ggd3JpdGUgZGF0
-YQ0KZnJvbSBnY2UgaW50ZXJuYWwgcmVnaXN0ZXIsIHRoZSBleHBlY3RlZCBwcm90b3R5cGUgaXMN
-Cg0KaW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIHBoeXNfYWRkcl90
-IGFkZHIsIHUxNg0KcmVnX2lkeCk7DQoNCllvdXIgdmVyc2lvbiB3b3VsZCBjb25mdXNlIHRoZSB1
-c2VyIGJlY2F1c2UgeW91IGhpZGUgdGhlIGludGVybmFsDQpyZWdpc3RlciBwYXJhbWV0ZXIuIElm
-IHlvdSB3YW50IHRvIHByb3ZpZGUgdGhpcyBzZXJ2aWNlLCBJIHdvdWxkIGxpa2UNCnlvdSB0byBj
-aGFuZ2UgdGhlIGZ1bmN0aW9uIG5hbWUgc28gdGhhdCB1c2VyIHdvdWxkIG5vdCBiZSBjb25mdXNl
-ZCBhbmQNCmVhc2lseSB0byB1bmRlcnN0YW5kIHdoYXQgeW91IHdhbnQgdG8gZG8gaW4gdGhpcyBm
-dW5jdGlvbi4NCg0KQW5vdGhlciBjaG9pY2UgaXM6IGNtZHFfcGt0X3dyaXRlX3MoKSBpcyBpbXBs
-ZW1lbnRlZCBpbiBteSBkZWZpbml0aW9uLA0KYW5kIHVzZXIgY291bGQgY2FsbCBjbWRxX3BrdF9h
-c3NpZ24oKSBhbmQgY21kcV9wa3Rfd3JpdGVfcygpIHRvIGFjaGlldmUNCnRoaXMgZnVuY3Rpb24u
-DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsNCj4gKy8qKg0KPiAgICogY21kcV9wa3Rfd2ZlKCkgLSBh
-cHBlbmQgd2FpdCBmb3IgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gICAqIEBw
-a3Q6CXRoZSBDTURRIHBhY2tldA0KPiAgICogQGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0eXBl
-IHRvICJ3YWl0IGFuZCBDTEVBUiINCg0K
+On Fri, Nov 22, 2019 at 2:13 PM Peter Rosin <peda@axentia.se> wrote:
+>
+> On 2019-11-22 05:38, Shubhrajyoti Datta wrote:
+> > On Fri, Nov 22, 2019 at 6:23 AM Peter Rosin <peda@axentia.se> wrote:
+> >>
+> >> On 2019-11-20 10:21, Shubhrajyoti Datta wrote:
+> >>> Hi Peter ,
+> >>> thanks for the review,
+> >>>
+> >>> On Tue, Nov 19, 2019 at 4:35 AM Peter Rosin <peda@axentia.se> wrote:
+> >>>>
+> >>>> On 2019-11-14 09:17, shubhrajyoti.datta@gmail.com wrote:
+> >>>>> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> >>>>>
+> >>>>> In case of multimaster configuration the last channel cached value is
+> >>>>> not reliable. Basically the first processor/master does a write to the
+> >>>>> mux and then to the intended slave, it caches the value.
+> >>>>> Now the second processor/processor does a write to mux on another
+> >>>>> channel and writes to another slave.
+> >>>>> The first processor/master when it attempts to write the slave
+> >>>>> skips the mux as it relies on the mux channel being the same as the
+> >>>>> intended. This causes an issue.
+> >>>>>
+> >>>>> To fix that write always to the mux address.
+> >>>>
+> >>>> Thanks for your patch.
+> >>>>
+> >>>> However, I don't really see how this fixes anything. If you have
+> >>>> multiple masters competing for the same mux, all bets are off and any
+> >>>> solution not involving an out-of-band channel where the masters can
+> >>>> coordinate will be racy, broken and dangerous.
+> >>>> And since you need that
+> >>>> extra channel anyway, it might as well also be used to coordinate when
+> >>>> the cache needs to be invalidated.
+> >>>>
+> >>>> At the very least, all limitations needs to be carefully documented,
+> >>>> but that does not mean that I will ever like it. In short, I'm extremely
+> >>>> reluctant to add a glgllike this.
+> >>>>
+> >>>> Cheers,
+> >>>> Peter
+> >>>
+> >>> I agree does the below patch make sense.
+> >>
+> >> This patch is severely white-space damaged and I have a hard time reading
+> >> the details so please fix your setup. However, I gather the idea is to
+> >> rely on having all masters configured to idle the mux when they don't use
+> >> it. That's also racy since multiple masters can all read the zero, and
+> >> deduce that the mux is free, then all of them write their thing to the
+> >> mux, and proceed as if they own it. That spells disaster.
+> > However since the bus is locked when the master is transacting others
+> > will get bus
+> > busy or an arbitration lost if they start together.
+>
+> Not necessarily, since a muxed transaction with some slave on the other
+> side of the mux will consist of (at least) four independent transfers (with
+> this patch).
+>
+> 1. check that the mux state is idle
+> 2. set the mux to the intended child bus
+> 3. do the "useful" transfer to the slave on the child bus
+> 4. reset the mux to idle
+>
+> Two masters might very well get past 1 without noticing each other, which
+> is the big fail in your patch. They might also very well get past 2 without
+> running into arbitration. You cannot be sure that a master is able to put
+> these four transactions on the bus back-to-back, at least not in the Linux
+> case (there might e.g. be a reschedule to some totally unrelated work). And
+> even if you could, two masters could in theory be completely in sync so that
+> both masters think they have succeeded right until they want to set some bit
+> in the mux register differently. So, it's just fragile. And even if they do
+> run into each other on 1 or 2 on the I2C bus level, you have no code for
+> handling that so they will probably just retry a bit later. In other words,
+> the race is on, and getting more than one master past 1 before any of them
+> hit 2 is enough to get into trouble.
+>
+> The problem is that, without coordination, the other masters do not see
+> these four transactions as a unit. You *need* arbitration on a higher
+> level than individual transfers.
+I agree will get back once I check some arbitration mechanism like
+hardware spinlock
+or gpio stuff thanks.
 
+>
+> Cheers,
+> Peter
