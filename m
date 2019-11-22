@@ -2,74 +2,132 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB58C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4145C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9655C20637
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821DA20637
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574403584;
+	bh=JpUGC9nWCZCTQes37a4qys2DDjrsol2d6dZ4/1Ex844=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u1DSKd1Rp5W/xkinganNzcTlM3MThPC2cx61hXwemN1uy7etJWNgaYjGzDT0yRV2a
+	 k26tS2/LLompEX9NYTFXmWdIrhwxwBVTFAdgSaFzAPtp2OYHycWrxriuLeXlBgrS0T
+	 mErje30456hnnYY+DSZQQU3Ag4hvJybrehmmE4H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbfKVGTB (ORCPT
+        id S1728928AbfKVFzt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:19:01 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:57604 "EHLO inva021.nxp.com"
+        Fri, 22 Nov 2019 00:55:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729691AbfKVGTA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:19:00 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6BD8D2006C5;
-        Fri, 22 Nov 2019 07:18:58 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3B0FF200AEA;
-        Fri, 22 Nov 2019 07:18:53 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id ECA14402B3;
-        Fri, 22 Nov 2019 14:18:46 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v1] gpio : mpc8xxx :  ls1088a/ls1028a edge detection mode bug fixs.
-Date:   Fri, 22 Nov 2019 14:18:39 +0800
-Message-Id: <20191122061839.24904-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728924AbfKVFzs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:55:48 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBC4720659;
+        Fri, 22 Nov 2019 05:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574402148;
+        bh=JpUGC9nWCZCTQes37a4qys2DDjrsol2d6dZ4/1Ex844=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YLyOcHvXgUABV+Pqm28+qciCTzqmUrcnCcUTdozkotepYLNk3nQ5GFHHLMpXgSyRG
+         /sJ/RQ33jjkihtLXdgqp6eVuDdJdCZpoo0EnBNlO+ZymvGFQ4G5/Jm8D9j/AAnCWA4
+         TfXQZE1agPtB/XAfpKksBcKk/GOSwHAL5+IWPE4k=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 003/127] ARM: dts: Fix up SQ201 flash access
+Date:   Fri, 22 Nov 2019 00:53:42 -0500
+Message-Id: <20191122055544.3299-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
+References: <20191122055544.3299-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-On these boards, the irq_set_type must point one valid function pointer
-that can correctly set both edge and falling edge.
+[ Upstream commit d88b11ef91b15d0af9c0676cbf4f441a0dff0c56 ]
 
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
+This sets the partition information on the SQ201 to be read
+out from the RedBoot partition table, removes the static
+partition table and sets our boot options to mount root from
+/dev/mtdblock2 where the squashfs+JFFS2 resides.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mpc8xxx.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/gemini-sq201.dts | 37 ++++--------------------------
+ 1 file changed, 5 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 81f0f31..8ddb23b 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -296,6 +296,7 @@ static const struct mpc8xxx_gpio_devtype mpc512x_gpio_devtype = {
+diff --git a/arch/arm/boot/dts/gemini-sq201.dts b/arch/arm/boot/dts/gemini-sq201.dts
+index 63c02ca9513c4..e9e2f6ff0c583 100644
+--- a/arch/arm/boot/dts/gemini-sq201.dts
++++ b/arch/arm/boot/dts/gemini-sq201.dts
+@@ -20,7 +20,7 @@
+ 	};
  
- static const struct mpc8xxx_gpio_devtype ls1028a_gpio_devtype = {
- 	.gpio_dir_in_init = ls1028a_gpio_dir_in_init,
-+	.irq_set_type = mpc8xxx_irq_set_type,
- };
+ 	chosen {
+-		bootargs = "console=ttyS0,115200n8";
++		bootargs = "console=ttyS0,115200n8 root=/dev/mtdblock2 rw rootfstype=squashfs,jffs2 rootwait";
+ 		stdout-path = &uart0;
+ 	};
  
- static const struct mpc8xxx_gpio_devtype mpc5125_gpio_devtype = {
+@@ -71,37 +71,10 @@
+ 			/* 16MB of flash */
+ 			reg = <0x30000000 0x01000000>;
+ 
+-			partition@0 {
+-				label = "RedBoot";
+-				reg = <0x00000000 0x00120000>;
+-				read-only;
+-			};
+-			partition@120000 {
+-				label = "Kernel";
+-				reg = <0x00120000 0x00200000>;
+-			};
+-			partition@320000 {
+-				label = "Ramdisk";
+-				reg = <0x00320000 0x00600000>;
+-			};
+-			partition@920000 {
+-				label = "Application";
+-				reg = <0x00920000 0x00600000>;
+-			};
+-			partition@f20000 {
+-				label = "VCTL";
+-				reg = <0x00f20000 0x00020000>;
+-				read-only;
+-			};
+-			partition@f40000 {
+-				label = "CurConf";
+-				reg = <0x00f40000 0x000a0000>;
+-				read-only;
+-			};
+-			partition@fe0000 {
+-				label = "FIS directory";
+-				reg = <0x00fe0000 0x00020000>;
+-				read-only;
++			partitions {
++				compatible = "redboot-fis";
++				/* Eraseblock at 0xfe0000 */
++				fis-index-block = <0x1fc>;
+ 			};
+ 		};
+ 
 -- 
-2.9.5
+2.20.1
 
