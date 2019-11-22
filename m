@@ -2,242 +2,126 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF4BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BBEC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 20:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355B02072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42E52070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 20:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574452545;
-	bh=Nv/n3brY2CWRc86fq5lS7SV4fTgPvSZAfDCEWuQaBdw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=wpovewT5PhTnF6cc5mLHH1fbE1gYzOcbrET4EjWqliLJ6jtb4HVQaroGoy/p7p02m
-	 GwfyDAT+jKJHvaVLboutqGmBDCqZqVtfbZ871oscwTMTP3s8Vj8yxHSYHUcaKj5+n6
-	 nwbpG7K2kqtGv+vJb/K26b0C5dbBbbEd0wTmQHRQ=
+	s=default; t=1574453805;
+	bh=67A8j0jZAs+8jyR/QDV+aimpNpJvsoUGnuCtm2D/BiY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=n16jo/b6bADqRxkqoHi7xsGq4NBDnxYhucc7aOKYJbzCY1s42bKyQZlLWrHfUhmv+
+	 DUHM0J/FgYtLt20XFyxTPzvVjWSx58C9XGONgghtePyelukRwANkIQVFIBNjIUOyDe
+	 2KRa85Dkw0RCUId1aASPYwUoZbNddE7E0aPYbaJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKVTzo (ORCPT
+        id S1726774AbfKVUQp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:55:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:52174 "EHLO foss.arm.com"
+        Fri, 22 Nov 2019 15:16:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfKVTzo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:55:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CE56113E;
-        Fri, 22 Nov 2019 11:55:43 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A5BF3F6C4;
-        Fri, 22 Nov 2019 11:55:42 -0800 (PST)
-Date:   Fri, 22 Nov 2019 19:55:41 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     alexandre.torgue@st.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Applied "dt-bindings: spi: Convert stm32 QSPI bindings to json-schema" to the spi tree
-In-Reply-To: <20191120194444.10540-1-benjamin.gaignard@st.com>
-Message-Id: <applied-20191120194444.10540-1-benjamin.gaignard@st.com>
-X-Patchwork-Hint: ignore
+        id S1726721AbfKVUQp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 15:16:45 -0500
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F252070E;
+        Fri, 22 Nov 2019 20:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574453803;
+        bh=67A8j0jZAs+8jyR/QDV+aimpNpJvsoUGnuCtm2D/BiY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eui+xKimRueCHxz7rOXYhdKB9qgSncPLjzG6BmAYw1jRSJM5GfF0DCxI9Xw7/Wd4J
+         QMoVI1i5MmY7x0U0ruhPStk6lN72r1ArXtJySkZDdveF1KukoaIFF4pLTfAUvYkje6
+         dSmprRjR8JAuCF4nI42QRLS0z7+ubg5GtFf3yC3k=
+Received: by mail-qv1-f53.google.com with SMTP id i3so3416086qvv.7;
+        Fri, 22 Nov 2019 12:16:43 -0800 (PST)
+X-Gm-Message-State: APjAAAUP/xLsUt7+milubkX1oUoaaa/xXwIxrYiUwPQ1tyQUua3oS5Vt
+        XMuV2MCdEQSSqj3DF8wC+54NedMlljzekdhCxg==
+X-Google-Smtp-Source: APXvYqxaY+WJDuS4dkyBgjEJBjl1ZArY1TNHbOoXgn58PPmvdcHkxqDLwSJ/uEHer9BJUR3W47CqLimTdLShQ7xW/CI=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr263322qvu.136.1574453802820;
+ Fri, 22 Nov 2019 12:16:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20191120190028.4722-1-will@kernel.org> <CAL_JsqJm+6Cg4JfG1EzRMJ2hyPV1O8WbitjGC=XMvZRDD+=OGw@mail.gmail.com>
+ <20191122145525.GA14153@willie-the-truck> <CAL_JsqJvhP2YqQwAZg=GecpVNMbHN9OcZxTO8LrvH_jphFJw=A@mail.gmail.com>
+ <CAKv+Gu8HjzpDfh2=gUXuV-OLWbePVEPJU369V4_S6=Q7e4_bzg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8HjzpDfh2=gUXuV-OLWbePVEPJU369V4_S6=Q7e4_bzg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 22 Nov 2019 14:16:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLVN2pZGU054cdUskghEb8_DJ_zNfzrOdgR_DvLA5YG=A@mail.gmail.com>
+Message-ID: <CAL_JsqLVN2pZGU054cdUskghEb8_DJ_zNfzrOdgR_DvLA5YG=A@mail.gmail.com>
+Subject: Re: [PATCH] of: property: Add device link support for "iommu-map"
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        iommu@lists.linuxfoundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+On Fri, Nov 22, 2019 at 10:13 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+>
+> On Fri, 22 Nov 2019 at 17:01, Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Nov 22, 2019 at 8:55 AM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > [+Ard]
+> > >
+> > > Hi Rob,
+> > >
+> > > On Fri, Nov 22, 2019 at 08:47:46AM -0600, Rob Herring wrote:
+> > > > On Wed, Nov 20, 2019 at 1:00 PM Will Deacon <will@kernel.org> wrote:
+> > > > >
+> > > > > Commit 8e12257dead7 ("of: property: Add device link support for iommus,
+> > > > > mboxes and io-channels") added device link support for IOMMU linkages
+> > > > > described using the "iommus" property. For PCI devices, this property
+> > > > > is not present and instead the "iommu-map" property is used on the host
+> > > > > bridge node to map the endpoint RequesterIDs to their corresponding
+> > > > > IOMMU instance.
+> > > > >
+> > > > > Add support for "iommu-map" to the device link supplier bindings so that
+> > > > > probing of PCI devices can be deferred until after the IOMMU is
+> > > > > available.
+> > > > >
+> > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > Cc: Rob Herring <robh@kernel.org>
+> > > > > Cc: Saravana Kannan <saravanak@google.com>
+> > > > > Cc: Robin Murphy <robin.murphy@arm.com>
+> > > > > Signed-off-by: Will Deacon <will@kernel.org>
+> > > > > ---
+> > > > >
+> > > > > Applies against driver-core/driver-core-next.
+> > > > > Tested on AMD Seattle (arm64).
+> > > >
+> > > > Guess that answers my question whether anyone uses Seattle with DT.
+> > > > Seattle uses the old SMMU binding, and there's not even an IOMMU
+> > > > associated with the PCI host. I raise this mainly because the dts
+> > > > files for Seattle either need some love or perhaps should be removed.
+> > >
+> > > I'm using the new DT bindings on my Seattle, thanks to the firmware fairy
+> > > (Ard) visiting my flat with a dediprog. The patches I've posted to enable
+> > > modular builds of the arm-smmu driver require that the old binding is
+> > > disabled [1].
+> >
+> > Going to post those dts changes?
+> >
+>
+> Last time I tried upstreaming seattle DT changes I got zero response,
+> so I didn't bother since.
 
-   dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
+I leave most dts reviews up to sub-arch maintainers and I'm pretty
+sure AMD doesn't care about it anymore, so we need a new maintainer or
+just send a pull request to Arnd/Olof.
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From ffa119f7c42d29be2dd759bb18cc4d1f45804c6b Mon Sep 17 00:00:00 2001
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
-Date: Wed, 20 Nov 2019 20:44:44 +0100
-Subject: [PATCH] dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
-
-Convert the STM32 QSPI binding to DT schema format using json-schema
-
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191120194444.10540-1-benjamin.gaignard@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/spi/spi-stm32-qspi.txt           | 47 -----------
- .../bindings/spi/st,stm32-qspi.yaml           | 83 +++++++++++++++++++
- 2 files changed, 83 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
-deleted file mode 100644
-index bfc038b9478d..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* STMicroelectronics Quad Serial Peripheral Interface(QSPI)
--
--Required properties:
--- compatible: should be "st,stm32f469-qspi"
--- reg: the first contains the register location and length.
--       the second contains the memory mapping address and length
--- reg-names: should contain the reg names "qspi" "qspi_mm"
--- interrupts: should contain the interrupt for the device
--- clocks: the phandle of the clock needed by the QSPI controller
--- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
--
--Optional properties:
--- resets: must contain the phandle to the reset controller.
--
--A spi flash (NOR/NAND) must be a child of spi node and could have some
--properties. Also see jedec,spi-nor.txt.
--
--Required properties:
--- reg: chip-Select number (QSPI controller may connect 2 flashes)
--- spi-max-frequency: max frequency of spi bus
--
--Optional properties:
--- spi-rx-bus-width: see ./spi-bus.txt for the description
--- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
--Documentation/devicetree/bindings/dma/dma.txt.
--- dma-names: DMA request names should include "tx" and "rx" if present.
--
--Example:
--
--qspi: spi@a0001000 {
--	compatible = "st,stm32f469-qspi";
--	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
--	reg-names = "qspi", "qspi_mm";
--	interrupts = <91>;
--	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
--	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_qspi0>;
--
--	flash@0 {
--		compatible = "jedec,spi-nor";
--		reg = <0>;
--		spi-rx-bus-width = <4>;
--		spi-max-frequency = <108000000>;
--		...
--	};
--};
-diff --git a/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
-new file mode 100644
-index 000000000000..3665a5fe6b7f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/st,stm32-qspi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 Quad Serial Peripheral Interface (QSPI) bindings
-+
-+maintainers:
-+  - Christophe Kerello <christophe.kerello@st.com>
-+  - Patrice Chotard <patrice.chotard@st.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: st,stm32f469-qspi
-+
-+  reg:
-+    items:
-+      - description: registers
-+      - description: memory mapping
-+
-+  reg-names:
-+    items:
-+     - const: qspi
-+     - const: qspi_mm
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: tx DMA channel
-+      - description: rx DMA channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    spi@58003000 {
-+      compatible = "st,stm32f469-qspi";
-+      reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
-+      reg-names = "qspi", "qspi_mm";
-+      interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-+      dmas = <&mdma1 22 0x10 0x100002 0x0 0x0>,
-+             <&mdma1 22 0x10 0x100008 0x0 0x0>;
-+      dma-names = "tx", "rx";
-+      clocks = <&rcc QSPI_K>;
-+      resets = <&rcc QSPI_R>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      flash@0 {
-+        compatible = "jedec,spi-nor";
-+        reg = <0>;
-+        spi-rx-bus-width = <4>;
-+        spi-max-frequency = <108000000>;
-+      };
-+    };
-+
-+...
--- 
-2.20.1
-
+Rob
