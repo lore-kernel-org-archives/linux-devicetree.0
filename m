@@ -2,109 +2,141 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A704C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF61C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E8C20718
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 11:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C1F2072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:10:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQ7yrdfJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRhLjYM0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfKVL4f (ORCPT
+        id S1727312AbfKVMKp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 06:56:35 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36271 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfKVL4f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 06:56:35 -0500
-Received: by mail-ed1-f66.google.com with SMTP id f7so5778421edq.3;
-        Fri, 22 Nov 2019 03:56:34 -0800 (PST)
+        Fri, 22 Nov 2019 07:10:45 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39351 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727599AbfKVMKo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 07:10:44 -0500
+Received: by mail-lj1-f196.google.com with SMTP id p18so7100756ljc.6
+        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 04:10:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=myV3lKf8LP8zgt7/x2kHqtOs6MwOjmNsOxknrMDY0ng=;
-        b=VQ7yrdfJ+b8iOC+zpO0ugY7dMTPSCsYa7A2gTPvEWMTPUFp+kltiZXnVeTpQrMRTTV
-         sUFNKD9SJFA0zurJvqWjUvgty76PVzvoHHH5aEsWJD4Kl5eMgu9wjScwCd2ITaa8b/vK
-         MzLM5yaDrDz6IdGpOdQ29yArA0YM9wWefREL2XGTbTSIqeRj0K4vQlM+2T1ARxlkSenl
-         THt5NeDxfNxxPyEsKY3GIDN5k/sfsiHvcpNhI9N3f14JPs6WmCpVef8aOtPzNHnAoD2J
-         9Fm+YRhj05y4FJvytds4mlL7D9IK9Ig0wwPBbCiZg8LAIOtaB+03OdBXXtwDohdS6VWC
-         ontw==
+         :cc;
+        bh=wlDWTRSDtzcsrS/LzPR3YwO7p6W49eS5hMAX/W8yQE0=;
+        b=pRhLjYM0wx/YizczTitjIGOaQJ3d7C3HKug/L0+xWBQiV0c0Nk9AKah2Tcvn321RB3
+         64UTqFpyIj5U2Ub+uUJK230TnnmsIC0mrbFcrSmcxEIUxGLmWyVS7j5EsqUE8B+GChJo
+         lgeNS4EfhmVVmA559xgRF4VUIAPfwtS7U2APxgfRXw89iaTSfvKyb9t5ejHGo6AaRITK
+         fCbEqJTC/0ae3U9y3iHN54/jQrdvW0XfE8xUf22m+gmlCdaMwCJ6ROoOu4ROGxijXKuZ
+         vtmU2XXCvOaF4G3M1IsTO7THcDosvQdEjs+XpakwnqGfgryu+C3GHNuU6zcYnFW8J813
+         B9gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=myV3lKf8LP8zgt7/x2kHqtOs6MwOjmNsOxknrMDY0ng=;
-        b=YuzlOyZfTIukVarXCneJOBWDqhPz2URxy3wDM1sP6ipQqTdegusqWe+WwvQBNE2l3H
-         Nt9WvLhILXEePNPXBvfYo2hCxQuPhVhHbZxTUbMpMic5ccvE6Vika1ZINxJi4X7FUhhv
-         0o0bkZ7H/o09yF+zb0AXSahBM1g5oi7R4UP1U4UzsayBXceYsbXvXjKT8DstKs3F8hGI
-         PhmvfDb75Mhp2rLN9sjZSvE5fzXEY8WJMtpqO/oBbRD8WzTOgUlWgd9kMIEVJYVMfK9x
-         8HlT7ilNnztSPho8P5T+BpWpbq5qIxQOHgRfgo/0U1VpHbR5IcvyIFaWQjrv1GLF46ba
-         ArAg==
-X-Gm-Message-State: APjAAAVypWpEFgHafCh0Mvzv9TWGbAKHO39njZODUdxqanngvKWUXYKW
-        njSUAVCtk9mrAYP2l9NGmKZjEeD4hOwgV54ksIU=
-X-Google-Smtp-Source: APXvYqxYvHXQjj3nxnwa8FYn66nKlRY69aGEXxyFBuEfXNzyt7zIFpEnsN09uAqv+7c0vjuzjmibcFvkSNUtCulAfYs=
-X-Received: by 2002:a17:906:4dd5:: with SMTP id f21mr21480540ejw.203.1574423793266;
- Fri, 22 Nov 2019 03:56:33 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=wlDWTRSDtzcsrS/LzPR3YwO7p6W49eS5hMAX/W8yQE0=;
+        b=XGVCTe+btt/fNdi6ZigmsMUPUZg95jD70mZRfIPcw8Htu8e741D/e9ojbOfBWe56Qf
+         zVX4+kB4KIcaLbjfg8EMg1hmkpH/EUWtSAj98ueKr5NTx4CacqypsPVptGXYZqrmsN+M
+         bpz/XofOQckOXXnSUSaanwmR8GSWK8ioukkyqzBOwwpe9KI8Vn8XFggjAxfwi8bzlsRd
+         svTN2pIhfwPZ87OpyKxewuLwDG+xTvCrhOiGAmjYMCiwW2smy3rRQ3vs6LoingYBoRsu
+         fiWxd9eUqdO0tz7EvFzHktWQ8fws+J6J+TLeHyk5Hhd/lkTFydMLnATz9BT6nBnGmYGA
+         6R7A==
+X-Gm-Message-State: APjAAAVcvLioFyJie4j+c2bkrAt9azthzOlpET3yz3h0AhPZgDCXkJKE
+        yNMzvnSZSnXEeSwXnvC3YMkWobx8/PZGKVkT8MXyxA==
+X-Google-Smtp-Source: APXvYqyqKXD0yVNT+urjoUi2GUYSWy9M9yz+lnGATBdyiLh4EoHM658sZ5KV3XTNbO32a5Dg4fjfdP6zwcFqrraCeP4=
+X-Received: by 2002:a2e:161b:: with SMTP id w27mr12053927ljd.183.1574424641250;
+ Fri, 22 Nov 2019 04:10:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20191121162520.10120-1-marco.franchi@nxp.com> <20191121162520.10120-2-marco.franchi@nxp.com>
- <CAOMZO5ByMkp1i=rMScgadT9_ucnsxqn_pnSP4bmLUPnxPdYHvw@mail.gmail.com>
-In-Reply-To: <CAOMZO5ByMkp1i=rMScgadT9_ucnsxqn_pnSP4bmLUPnxPdYHvw@mail.gmail.com>
-From:   Marco Franchi <marcofrk@gmail.com>
-Date:   Fri, 22 Nov 2019 08:56:22 -0300
-Message-ID: <CAM4PwSWJYrN=xSWNiwxHYS9XMWJFmnpAByVhsOV75kBBF4M3Xg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: freescale: add initial support for
- Google i.MX 8MQ Phanbell
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Marco Antonio Franchi <marco.franchi@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
+In-Reply-To: <20191120133409.9217-2-peter.ujfalusi@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 13:10:29 +0100
+Message-ID: <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
+Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "atv@google.com" <atv@google.com>
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabio,
+On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-Em qui., 21 de nov. de 2019 =C3=A0s 15:22, Fabio Estevam
-<festevam@gmail.com> escreveu:
+> Boards might use the same GPIO line to control several external devices.
+> Add section to document on how a shared GPIO pin can be described.
 >
-> Hi Marco,
->
-> On Thu, Nov 21, 2019 at 1:25 PM Marco Antonio Franchi
-> <marco.franchi@nxp.com> wrote:
-> >
-> > This patch adds the device tree to support Google Coral Edge TPU,
-> > historicaly named as fsl-imx8mq-phanbell, a computer on module
-> > which can be used for AI/ML propose.
-> >
-> > It introduces a minimal enablement support for this module and
-> > was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
->
-> Please remove the "totally based on the NXP i.MX 8MQ EVK board" as
-> they are different boards.
->
-> > +       memory@40000000 {
-> > +               device_type =3D "memory";
-> > +               reg =3D <0x00000000 0x40000000 0 0xc0000000>;
->
-> The memory size here does not match with the one used in the Google repo.
-Thanks.
->
-> With these changes you can add:
->
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Ok, I will add it at the v3.
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Best regards,
-Marco
+As I've stated earlier I think this information is surplus.
+If two devices have a phandle to the same GPIO line
+then it is by definition shared.
+
+> +               line_a {
+> +                       gpio-shared;
+
+So this is unnecessary: if the same line is referenced
+by phandle from two places it is shared, simple as that.
+It is up to code in the operating system (like Linux) to
+detect if they are shared in practice (both consumer
+nodes are enabled) and then deal with the outcome.
+
+> +                       gpios = <5 0>;
+> +                       output-low;
+
+This is overlapping with the use case to define initial
+state values for GPIOs, something that has been
+brought up repeatedly and I've collected links for
+previous discussions several times.
+
+I guess if need be I have to look them up again.
+
+The DT maintainers don't like the hog syntax so
+something else is desired for this.
+
+> +                       refcounted-high;
+(snip)
+> +The shared GPIO line management strategy can be selected with either of the
+> +following properties:
+> +- refcounted-low: The line must be kept low as long as there is at least one
+> +               request asking it to be low.
+> +- refcounted-high: The line must be kept high as long as there is at least one
+> +               request asking it to be high.
+
+Is this really needed? Isn't it more appropriate to just define the
+semantics such that as soon as some consumer requests the line
+high it will be refcounted high, and as soon as it is requested
+low by any consumer it will be refcounted low.
+
+> +If neither of the refcounting strategy was selected then the shared GPIO is
+> +handled as pass through. In this mode all user requests will be forwarded to the
+> +shared GPIO pin without refcounting.
+
+Why should this even be allowed? If we are defining a special semantic
+for refcounted GPIOs (even defining a separate API in the Linux
+OS, though it is beside the point) why do we have to have a fallback
+to the old behaviour at all?
+
+I think you can do this by just detecting multiple phandles to the
+same GPIO and implicit refcounting for > 1 consumers.
+
+I.e. no new bindings at all, maybe some patches explaining the
+semantic effect of using the same GPIO from two consumer
+nodes.
+
+Yours,
+Linus Walleij
