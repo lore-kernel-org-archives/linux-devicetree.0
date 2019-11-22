@@ -2,270 +2,103 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009FDC43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 22:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A1FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 22:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2492071F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 22:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCC62070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 22:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574462920;
-	bh=aTdpbWIv4z1ec1ALq4vRhVrT1bVqRYPz0/FrdftPPS4=;
+	s=default; t=1574463130;
+	bh=Tkh1+Z3SfAu/e43ffSdZleJpHzGrktzmj8NTwYbsaac=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VE4KiygEJK5NTuF6a22lpZ209oxSLLJUQPzEqCK7F3zDiL7MpQOFaKZOQSNO/QYZ7
-	 759mqCGfCTPjPFLfE4+mDqJQcqthsCUqpzoXRaGBGYpj93XyU++ECwpI4Y6BtioA0Q
-	 7ozI1HtlyZXbZ6DmxtZBxFO05+n11JP+0Nj+mm+g=
+	b=Jjh1wSS54IdByygAEduPkx8wnTs/jrFgi5JAbHFmjO2UXZvuWOy1Z9OrMnKiqk+OE
+	 woKvayNBPJsZ4RS39NcIKd4vzBiLsu8rGRt9D/2ELeuJ2n+Vut1AmRfCkmjW51tOAC
+	 V5UtAxkNm1NjX5V1VRQPwdXN31nug7JdSHjy9fts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfKVWsk (ORCPT
+        id S1726747AbfKVWwJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 17:48:40 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39657 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfKVWsj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 17:48:39 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v138so7975609oif.6;
-        Fri, 22 Nov 2019 14:48:38 -0800 (PST)
+        Fri, 22 Nov 2019 17:52:09 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45556 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKVWwJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 17:52:09 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r24so7570515otk.12;
+        Fri, 22 Nov 2019 14:52:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rN+xXlHiqtwE2I732mBe4YEtOdoVVWt0shahQQ1i45E=;
-        b=nvP07f099V0+hP3fXH6zVK/mOSKBBJLgfTadVnJlsiBeRbjosOOjaer8+pYZRm+SDc
-         ZBjiNvpSpUGTlZko4lxD9FrthGYTpkvxvWG72WQA39j3bWTmtA0nrAZ0HWW1e/0VYCuP
-         PviO7EQBT7iB4j7qG5h9ACEk0zCB5skMa0km1clbsrHFU+N2t16N9Z0QYK1WXis4T+s1
-         eJO0YCsvKkxDw9DAfmW50JGhwdoFU0LydaMOraR+XWzJPULs6DJh9iq23qVAeldNLTbs
-         YNaT8fcKZ1UQFMYWcti4Ig0m3Vj5j7DpY2d1vC9rRkOIbYAwgAIc7kABfz6nE4Ou417p
-         aFow==
-X-Gm-Message-State: APjAAAUma2TtgRmMWjQ2OP46EPkekrT9BpbeReldV1eX9uMiZlyWiuaS
-        S/t3VvHOTLCKRFr4ykdnog==
-X-Google-Smtp-Source: APXvYqwqXhlYdVOA8XmvWt0YO3nV0XXcoxh6FqvqjrFA1/yoNOu5VtpLAI7i/HQFdZ5mkGPvM/Umjw==
-X-Received: by 2002:aca:b10a:: with SMTP id a10mr14438745oif.26.1574462918016;
-        Fri, 22 Nov 2019 14:48:38 -0800 (PST)
+        bh=e2Kuj3HGhGYNdxls8aJwodarz1qpw5npM7OevFhBVqw=;
+        b=Fys34CfhsNSZtfhuyksoSgYFzadoGrJ1ElRj0Iyfwiw85486d4UXT7sdD2kB7pA7i2
+         pumFWyePfh1bHgFWzAELElCxzgKfdie4ByIqIbpBkvXnN7eYZlT5v/cddhhDcv3GTpC6
+         xslSDOiRkFfIxizz0iW9hKdQ0FvWMZDzuLuj2258eCsa8ACrX7hQKyewpsX7szy+dlFU
+         9XJmF3ZbIsqGJVWFRGbJ61ov6mtbLipoJ8Akj895ptTBTmQxFuCmZeN/5xtGx/kMTjkZ
+         SJ/tZ6V/yHy0Tfpuid4BrAbpP1nI7jBOVH7OPfy60UhQMGrhwnYe0AlTsPWfG+esYfu2
+         uf4Q==
+X-Gm-Message-State: APjAAAXzlaoiw9dJGHAn30imQVhzg23mKyaXuB1B3Y0w02/liIU70XKg
+        XlvWjeFkvNKHFcSx+nk8oQ==
+X-Google-Smtp-Source: APXvYqy41erDboq1N+XYxLBZ5aQeIaFuH8UOLZ30Ly5N0IQ6wjAkUtlFPxVF1kLjthKhQz/+regFng==
+X-Received: by 2002:a9d:6b0e:: with SMTP id g14mr12869372otp.128.1574463128725;
+        Fri, 22 Nov 2019 14:52:08 -0800 (PST)
 Received: from localhost ([2607:fb90:bde:716a:c9ec:246b:67b7:9768])
-        by smtp.gmail.com with ESMTPSA id 4sm2676245otc.77.2019.11.22.14.48.36
+        by smtp.gmail.com with ESMTPSA id 202sm2533064oii.39.2019.11.22.14.52.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 14:48:36 -0800 (PST)
-Date:   Fri, 22 Nov 2019 16:48:34 -0600
+        Fri, 22 Nov 2019 14:52:07 -0800 (PST)
+Date:   Fri, 22 Nov 2019 16:52:05 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
+To:     Hanjie Lin <hanjie.lin@amlogic.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191122224834.GA9158@bogus>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-usb@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Carlo Caione <carlo@caione.org>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH 1/6] dt-bindings: phy: Add Amlogic G12A USB2 PHY Bindings
+Message-ID: <20191122225205.GA14311@bogus>
+References: <1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com>
+ <1574405757-76184-2-git-send-email-hanjie.lin@amlogic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <1574405757-76184-2-git-send-email-hanjie.lin@amlogic.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 08:53:57AM +0200, Matti Vaittinen wrote:
-> Document ROHM BD71828 PMIC regulator device tree bindings.
+On Fri, 22 Nov 2019 14:55:52 +0800, Hanjie Lin wrote:
+> Add the Amlogic A1 Family USB2 PHY Bindings
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> It supports Host mode only.
+> 
+> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
 > ---
+>  .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
 > 
-> No changes from v4
-> 
->  .../regulator/rohm,bd71828-regulator.yaml     | 122 ++++++++++++++++++
->  1 file changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
-> new file mode 100644
-> index 000000000000..c23ec4d8584b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
-> @@ -0,0 +1,122 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
 
-Please dual license new bindings:
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/rohm,bd71828-regulator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ROHM BD71828 Power Management Integrated Circuit regulators
-> +
-> +maintainers:
-> +  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> +
-> +description: |
-> +  This module is part of the ROHM BD71828 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
-> +
-> +  The regulator controller is represented as a sub-node of the PMIC node
-> +  on the device tree.
-> +
-> +  Regulator nodes should be named to BUCK_<number> and LDO_<number>.
-> +  The valid names for BD71828 regulator nodes are
-> +  BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7
-> +  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
-> +
-> +patternProperties:
-> +  "^LDO[1-7]$":
-> +    type: object
-> +    allOf:
-> +      - $ref: regulator.yaml#
-> +    description:
-> +      Properties for single LDO regulator.
-> +
-> +    properties:
-> +      #Is there a nice way to check the name is same as node name but lower case
-
-Nope.
-
-Why not make the node names lower case? That's the preference though 
-the regulator binding is special.
-
-> +      regulator-name:
-> +        pattern: "^ldo[1-7]$"
-> +        description:
-> +          should be "ldo1", ..., "ldo7"
-> +
-> +  "^BUCK[1-7]$":
-> +    type: object
-> +    allOf:
-> +      - $ref: regulator.yaml#
-> +    description:
-> +      Properties for single BUCK regulator.
-> +
-> +    properties:
-> +      #Is there a nice way to check the name is same as node name but lower case
-> +      regulator-name:
-> +        pattern: "^buck[1-7]$"
-> +        description:
-> +          should be "buck1", ..., "buck7"
-> +
-> +      rohm,dvs-run-voltage:
-> +        allOf:
-> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +          - minimum: 0
-> +            maximum: 3300000
-> +        description:
-> +          PMIC default "RUN" state voltage in uV. See below table for
-> +          bucks which support this. 0 means disabled.
-> +
-> +      rohm,dvs-idle-voltage:
-> +        allOf:
-> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +          - minimum: 0
-> +            maximum: 3300000
-> +        description:
-> +          PMIC default "IDLE" state voltage in uV. See below table for
-> +          bucks which support this. 0 means disabled.
-> +
-> +      rohm,dvs-suspend-voltage:
-> +        allOf:
-> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +          - minimum: 0
-> +            maximum: 3300000
-> +        description:
-> +          PMIC default "SUSPEND" state voltage in uV. See below table for
-> +          bucks which support this. 0 means disabled.
-> +
-> +      rohm,dvs-lpsr-voltage:
-> +        allOf:
-> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +          - minimum: 0
-> +            maximum: 3300000
-> +        description:
-> +          PMIC default "LPSR" state voltage in uV. See below table for
-> +          bucks which support this. 0 means disabled.
-> +
-> +#Supported default DVS states:
-> +#buck		| run		| idle		| suspend	| lpsr
-> +#----------------------------------------------------------------------------
-> +#1, 2, 6, and 7	| supported	| supported	| 	supported (*)
-> +#----------------------------------------------------------------------------
-> +#3, 4, and 5	| 			supported (**)
-> +#----------------------------------------------------------------------------
-> +#(*)  LPSR and SUSPEND states use same voltage but both states have own enable /
-> +#     disable settings. Voltage 0 can be specified for a state to make regulator
-> +#     disabled on that state.
-> +#(**) All states use same voltage but have own enable / disable settings.
-> +#     Voltage 0 can be specified for a state to make regulator disabled on that
-> +#     state.
-
-Would be nicer if indented to the same level.
-
-> +
-> +      rohm,dvs-runlvl-ctrl:
-> +        description: |
-> +          buck control is done based on run-level. Regulator is not
-> +          individually controllable. See ../mfd/rohm,bd71828-pmic.yaml for
-> +          how to specify run-level control mechanism. Only bucks 1, 2, 6
-> +          and 7 support this.
-> +        type: boolean
-> +
-> +      rohm,dvs-runlevel-microvolts:
-> +        minimum: 0
-> +        maximum: 2000000
-> +        maxItems: 4
-
-Mixing array and scalar constraints.
-
-maxItems: 4
-items:
-  minimum: 0
-  maximum: 2000000
-
-
-> +        description:
-> +          Array of voltages for run-levels. First value is for run-level 0,
-> +          second for run-level 1 etc. Microvolts.
-> +
-> +    required:
-> +      - regulator-name
-> +  additionalProperties: false
-> +additionalProperties: false
-> -- 
-> 2.21.0
-> 
-> 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
+If a tag was not added on purpose, please state why and what changed.
