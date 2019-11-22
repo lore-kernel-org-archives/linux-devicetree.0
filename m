@@ -2,103 +2,141 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B0FC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFDEC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993602072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:43:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAGbQgf1"
+	by mail.kernel.org (Postfix) with ESMTP id 86B6120714
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 15:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574437851;
+	bh=YyVgvQ275e3tv6kQYPq05Cdmt5/g44Jwrrc70QXxg0Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jjK/NHkOJjxkvRJTY0izPXbqdRMyEfjf1BjnN3gCVS1O67Livn9yFT2XDHZFmzbtb
+	 /dbqh0dzP8/2rwx378Ks60XyYwHsIM75WwzbpCPP7xYQbRYvoTZHoDqsGrjiEe794p
+	 xp1XGgCkWuS8SVi2eNJS6UbIiaOK7RVPAQtKT9ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKVPnZ (ORCPT
+        id S1727216AbfKVPuq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 10:43:25 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40121 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfKVPnW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 10:43:22 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q2so7901030ljg.7
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 07:43:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GQzy1iQq7/UigF4z8t1UMdfHuT9DigedXPRNYTx8QBY=;
-        b=XAGbQgf1cU8rD/kywGu8E//J0deKp6oSzrY4nW/7iQnOC7Z85qIiCXWxldnCOmfQM0
-         5rD4pSqDLOxxYiQ22XtpA+ZQtIqNcfUSFvLURlIPtJQVgPu6ai8DLyrFL71pg9GiQ9pG
-         J3lCWTccy2Ay+ptCBd2t+/YVxqaTPHmAVMWaO+1JJ8kbJonQBCsyOGxhUYGEl3GzmSzI
-         ho5z7STf9Rfad2+G+J/cpfc9GQGp4z9GERHGxEaTUbyQm6+2MI6V46dhpZKOLPjpFlk3
-         RbOEvF5G831FamUvktmD2bDhXniv+mEfiO+c9474NZJJF1jmAgNlIrUF58CkzGAeBa0J
-         jdeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GQzy1iQq7/UigF4z8t1UMdfHuT9DigedXPRNYTx8QBY=;
-        b=UsKxVlCquW91gpUJK+Lnzm8BHC0hcBbnJX4/P98v3NA3aXpt8P+C7kpzUTD0ajFGK1
-         kO1srRx+FgHPwPCi5EvNMft5mDvls1Yl3e92MitxmFNpHFf3vFMalAVvnMai4xrFcev/
-         T8bgrfDODGKEeztBSsqUGV1Evj9JQHVmiZx0ng1pdSg1YJN1HEHxFPyjgQ6dAKbaj/uw
-         9Egc93XY7d4VuXOUArTbXQqf0MBI4A5VsgXXEi1B5U+76oW07eh/xGLBqPdeCAvQ9hxt
-         pwqgOWA3rBp9dpg6MjbQidJkIV6WAet55GPSnbXG4bqZbH7dvp6inW/V5AJdhYlrMbc5
-         3BbA==
-X-Gm-Message-State: APjAAAXnerVpifPVxSFIVg0G5dIVMi79TedfFXi/SpRMi1+07itNcEk9
-        SzxK8w0203wgNY93cShVFeUVMogcF3RF5DE2jSHksA==
-X-Google-Smtp-Source: APXvYqwcugeW4edWhYbow6P3IthY8AWt+/SiEG9o6A9ekVZjqmWysrxtVlxvnwXZwUzSHLS/mgbF3SgO93jwQdxuQ3k=
-X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr536136ljm.233.1574437400356;
- Fri, 22 Nov 2019 07:43:20 -0800 (PST)
+        Fri, 22 Nov 2019 10:50:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbfKVPuq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 10:50:46 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B087D20721;
+        Fri, 22 Nov 2019 15:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574437844;
+        bh=YyVgvQ275e3tv6kQYPq05Cdmt5/g44Jwrrc70QXxg0Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lCh/GGuFABRGLpa77QaxVyOzcPZwPwcBWn8bzNYXZuu7I9azFITQRJLxRNAn8NT7C
+         qpns74d3vbTGjo+5q1X6cQ4qmI/n18DAZzXx5IqtC7z1lwfMBN75k0eMBkkwY2PVK5
+         0o5GnnfzVGg58itoNZNcH6zgJykSMZnC+DTa7IuA=
+Received: by mail-qv1-f45.google.com with SMTP id x14so3075721qvu.0;
+        Fri, 22 Nov 2019 07:50:44 -0800 (PST)
+X-Gm-Message-State: APjAAAU+NFInupP4/DZfXasBerLu27ZLeuRQybMEvNOR/eSOr9UB9ioA
+        yVbsvxbubvZAJtwbKDM13/ofxSmSdV0d5Yxe/g==
+X-Google-Smtp-Source: APXvYqwGGJblDyLrod013TGs3RdLWg22H1HuGkGQ1TL0T/oqtvU6mgVVePtuiNDWsbDa/2MkKnaLB0nx29hNdiuDJeE=
+X-Received: by 2002:a0c:aee1:: with SMTP id n33mr5260909qvd.135.1574437843805;
+ Fri, 22 Nov 2019 07:50:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120181857.97174-1-stephan@gerhold.net> <20191120181857.97174-4-stephan@gerhold.net>
- <CACRpkda-rm=1hz_p2YCqBVgxsM9cmKYJVUg+T91MyBrgmtDP-w@mail.gmail.com> <20191122140944.GA2872@gerhold.net>
-In-Reply-To: <20191122140944.GA2872@gerhold.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 16:43:08 +0100
-Message-ID: <CACRpkdYfUikKaB-9HO_heLZrGC346XZVKxvifMPJizeYSPjShg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] dt-bindings: arm: Document compatibles for Ux500 boards
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
+ <20191121212923.GA24437@bogus> <06AE1B9D-F048-4AF1-9826-E8CAFA44DD58@holtmann.org>
+In-Reply-To: <06AE1B9D-F048-4AF1-9826-E8CAFA44DD58@holtmann.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 22 Nov 2019 09:50:32 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKso2Us5VW-Qp8mENAkMmoEh7YDT+HfhRMD1BKi7q=qAw@mail.gmail.com>
+Message-ID: <CAL_JsqKso2Us5VW-Qp8mENAkMmoEh7YDT+HfhRMD1BKi7q=qAw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Chen-Yu Tsai <wens@csie.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 3:10 PM Stephan Gerhold <stephan@gerhold.net> wrote:
-> On Wed, Nov 20, 2019 at 09:22:19PM +0100, Linus Walleij wrote:
-> > On Wed, Nov 20, 2019 at 7:20 PM Stephan Gerhold <stephan@gerhold.net> wrote:
-> >
-> > > The device-specific compatible values used by the Ux500 boards
-> > > were not documented so far. Add a new simple schema to document them.
-> > >
-> > > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> >
-> > Nice, thanks!
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > I expect Rob to merge these patches as they are bindings-only,
-> > alternatively I can take them in the Ux500 DTS pull request
-> > for the next kernel cycle.
-> >
+On Fri, Nov 22, 2019 at 6:34 AM Marcel Holtmann <marcel@holtmann.org> wrote:
 >
-> For this patch it would be easier if you take it through the Ux500 tree,
-> as I have another patch series that adds a new board to it.
+> Hi Rob,
+>
+> >> Add documentation for pcm parameters.
+> >>
+> >> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> >> ---
+> >>
+> >> Changes in v6: None
+> >> Changes in v5: None
+> >> Changes in v4: None
+> >> Changes in v3: None
+> >> Changes in v2: None
+> >
+> > Really? I'm staring at v2 that looks a bit different.
+> >
+> >> .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
+> >> include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
+> >> 2 files changed, 48 insertions(+)
+> >> create mode 100644 include/dt-bindings/bluetooth/brcm.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> index c749dc297624..8561e4684378 100644
+> >> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> @@ -29,10 +29,20 @@ Optional properties:
+> >>    - "lpo": external low power 32.768 kHz clock
+> >>  - vbat-supply: phandle to regulator supply for VBAT
+> >>  - vddio-supply: phandle to regulator supply for VDDIO
+> >> + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
+> >> + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
+> >> + - brcm,bt-pcm-frame-type: short, long
+> >> + - brcm,bt-pcm-sync-mode: slave, master
+> >> + - brcm,bt-pcm-clock-mode: slave, master
+> >
+> > Little of this seems unique to Broadcom. We already have some standard
+> > audio related properties for audio interfaces such as 'format',
+> > 'frame-master' and 'bitclock-master'. Ultimately, this would be tied
+> > into the audio complex of SoCs and need to work with the audio
+> > bindings. We also have HDMI audio bindings.
+> >
+> > Maybe sco-routing is unique to BT and still needed in some form though
+> > if you describe the connection to the SoC audio complex, then maybe
+> > not? I'd assume every BT chip has some audio routing configuration.
+>
+> so we tried to generalize this some time before and failed to get a proper consensus.
+>
+> In general I am with you that we should just expose generic properties from the attached audio codec, but nobody has come up with anything like that. And I think aligning all chip manufacturers will take some time.
+>
 
-OK I applied it for v5.6 on my ux500-dts branch.
+That shouldn't be hard. It's a solved problem for codecs and HDMI. I
+don't think BT is any more complicated (ignoring phones). I suspect
+it's not solved simply because no one wants to do the work beyond
+their 1 BT device they care about ATM.
 
-> The vendor-prefix patches are independent, so Rob can merge them if that
-> is easier?
+> Maybe in the interim we just use brcm,bt-pcm-int-params = [00 00 ..] as initially proposed.
 
-Let's see if Rob wants to take them, else I will merge them as well.
+What's the device using this? Some chromebook I suppose. I think it
+would be better to first see how this fits in with the rest of the
+audio subsystem. Until then, the driver should probably just default
+to "transport" mode which I assume is audio routed over the UART
+interface. That should work on any platform at least, but may not be
+optimal.
 
-Yours,
-Linus Walleij
+Rob
