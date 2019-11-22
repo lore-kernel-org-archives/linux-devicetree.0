@@ -2,104 +2,101 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D130EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C9BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A5520715
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CC92068E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 12:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aUmmmSwS"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HK7+USps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKVMxW (ORCPT
+        id S1727741AbfKVMzG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 07:53:22 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45693 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKVMxV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 07:53:21 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so5399450lfa.12
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 04:53:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C8R7NEDueibHtXFqup1VmL6iM+bPcC4QfocIAUJQOdI=;
-        b=aUmmmSwS2BYNFlhTaRJt05gbgpUdl9bPc4u0dViAnMhe+39FKwYcZ5ZbeMtu0YMR1h
-         IMtow+JySIg9ZfoOQcJsSD/0nbQjROkqD6bY4pZTUS3tDkGvX6a01RAXLscAvxSzD0nA
-         QSwbypkiAWDMoz1jmGm5iQLWssZx0ubVG0s79UqJYD4tV/dLycPSBlAe2pOFK1fOICeb
-         9M95KnzCyYm10ONh5r8//OSi9ZBVIVnqYEKeCycfswYit/q0p8sEk1NafChgug73axNQ
-         iJJITbdBMZAhgOUSLghwYkJFa37E99WBLRwet4NYoBaWRLBNqWoXFbu2MaVgLIcX2UbL
-         RVhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C8R7NEDueibHtXFqup1VmL6iM+bPcC4QfocIAUJQOdI=;
-        b=WX86dBR/8hhHtG26az3p2I2jbT8/OeQZibCMQFGQ7UPC8f8YqIH4MlzcOetJ/MLn0G
-         x6KbXFifH1RrfUkifpIg+/9yQEMJPXAEoN9sdJePMttRhI4NA7me6DHsUe6HXmZq1xg2
-         NGI7ikjltsY7Se9TU9shLKn4v416ztcKq/9Ew/MLWLBNMvkg4ed7zMkavZv7Iv8yn8Kj
-         oWtij+p9DGX+i43Ga/a8d9ifG18O9zzB+A+BUqKDh7sAThoJE8iLPi9+MbikLy/3JGLo
-         c/mx+r4o/GvR/mG6v4keDLF0FFjw+tfFHe70SVgqgVoaOR0N1henxcMa4/Egm4qarCpn
-         IiOQ==
-X-Gm-Message-State: APjAAAVsu8olm+iSdFAS8j2aLenKbQo22x9ttieRmTq48NjvyZzj0FoU
-        yH1QDAcxWHQfpanZLt75jdnfXMkDdFWyKCFxBSXlu+nhOt4=
-X-Google-Smtp-Source: APXvYqzhVgwHKTyzMPjQyHHyWrIQkpIHO0Ex+y6b1ZbPxxQDU2ZwtOXL6oUU6aMJgcHt3uty1B7pTB2/1uRI8XbC7yM=
-X-Received: by 2002:a19:f701:: with SMTP id z1mr6862942lfe.133.1574427198426;
- Fri, 22 Nov 2019 04:53:18 -0800 (PST)
+        Fri, 22 Nov 2019 07:55:06 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4666 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726526AbfKVMzG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 07:55:06 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMCkwcB028665;
+        Fri, 22 Nov 2019 13:54:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=bxiuTK+x3oPhnDKBKfKRJ01+VjbhWxaGagP881Oi19M=;
+ b=HK7+USpsxZtqvR/TzymAPqh+iPDWPjX/+6rVTEImlPygNpUxuKwqo78AErKac93eyX1w
+ T7zAUyTazpQG53YjdL4mN+aRCLv+tXu9G1vIFOPe18+VHI5CzOB1ssGH7bD2si4W1899
+ A5eq/oFIL1QCW0mcouyDbja1yUfzAmj1SOjiHwFp2cbf07kYQO0PanywDdem6NQTh0e+
+ CEV0tXdVRhU/dUk5jAyDDJ1naaORANUDwLAKCw/WAPS8Z480WkQV/z0w/N9F3vqp1Kno
+ Jep5OJod/jXS5RaHF/QAIJfn61DwF5uCQqXoxKVmYUm9MxzEs8l4kr48kUVGpXoGDdqK ig== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wa9usrue0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 Nov 2019 13:54:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C67E110002A;
+        Fri, 22 Nov 2019 13:54:34 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 99C1E2BD314;
+        Fri, 22 Nov 2019 13:54:34 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Nov 2019 13:54:34
+ +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH] dt-bindings: remoteproc: stm32: add wakeup-source property
+Date:   Fri, 22 Nov 2019 13:54:02 +0100
+Message-ID: <20191122125402.14730-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191120142038.30746-1-ktouil@baylibre.com> <20191120142038.30746-2-ktouil@baylibre.com>
- <CACRpkdaZrvPObjyN4kasARzKZ9=PiAcvTzXzWkmC7R+Ay5tU8w@mail.gmail.com> <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
-In-Reply-To: <CAMpxmJWSgYjcGdR7Zrj-=nA+H8cYfZUriHQPxN=8zgPDvD-wTA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 22 Nov 2019 13:53:07 +0100
-Message-ID: <CACRpkdaW82pgQivc0VVgqqVv4fgXxMyGD3Lo8YHcMK7aGPDKaw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Khouloud Touil <ktouil@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-22_02:2019-11-21,2019-11-22 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 1:47 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
+If the optional wdg interrupt is defined, then this property
+may be defined.
 
-> what about the existing bindings for at24 that don't mandate the
-> active-low flag? I'm afraid this would break the support for this
-> specific chip or lead to code duplication if we had this in both nvmem
-> and at24 with different logic.
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+This commit is related to the merge conflict issue reported by
+Stephen Rothwell: https://lkml.org/lkml/2019/11/21/1168
+---
+ .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml          | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Hm yeah I realized this when I read patches 3 & 4.
+diff --git a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
+index acf18d170352..c0d83865e933 100644
+--- a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
++++ b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
+@@ -50,6 +50,8 @@ properties:
+     description: Should contain the WWDG1 watchdog reset interrupt
+     maxItems: 1
+ 
++  wakeup-source: true
++
+   mboxes:
+     description:
+       This property is required only if the rpmsg/virtio functionality is used.
+-- 
+2.17.1
 
-I would to like this:
-
-1. Add a new generic property
-   writeprotect-gpios that mandates to use GPIO_ACTIVE_LOW
-   and use this in the new example
-
-2. Deprecate wp-gpios in the binding, keep it around but deprecated.
-
-3. Add a quirk to gpiolib-of in the manner of the other quirks there
-   (like for SPI) so that if we are dealing with some EEPROM node
-   like at24 and the flag is zero, tag on GPIO_ACTIVE_LOW on
-   the descriptor.
-
-The driver will now handle the semantic of both cases
-with gpiolib-of providing a quirk for the old binding.
-
-This is how we solved this type of problem before.
-
-Yours,
-Linus Walleij
