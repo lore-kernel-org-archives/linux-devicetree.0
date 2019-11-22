@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F304EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67590C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5CD2068F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3167F2053B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 06:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574403394;
-	bh=ZhJ+AoQEj/5MiznVVd92YNDSv6J7kOWoIuf5m+J3hN0=;
+	s=default; t=1574403526;
+	bh=TOV0UK0piw0Hanyoyx8YpCbQcv2tT6LiX7Adeaopczg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1xXZS2ekQ6DfHZFptXmgJg4P7sLiY3PAYIxUlOQjnNYl182RkhLbD62nh+QAZrn9z
-	 jb5ZMdBW3e24XeAas+oSNTGf9fEkCL8aoEf4s3dFMcvJLZA7b76vPboyAqWfrBrCA5
-	 CVXZb2uL7UYkJswbIo6EABnIZ8VkJgKsgOwcgNbs=
+	b=TNQLmTiqEQU+Lj9Vf55y4XphvxriHsYU3rQfaaTqSiNJ4hfaND/bE75UDGoz22KAd
+	 S2tPCohW9XPUnAZkr11XH+8tMHaQc39w8jP947KwBIwJksdVC4bnArTI/0N5Gxa4jp
+	 gyBTVL/GPZfcwOlFA+Hf7U5bLB8zdUkdTMlCcKh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbfKVGNu (ORCPT
+        id S1729543AbfKVGSo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 01:13:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51268 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 01:18:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729481AbfKVGNu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:13:50 -0500
+        id S1726666AbfKVGNF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 316F72068F;
-        Fri, 22 Nov 2019 06:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51CF62070E;
+        Fri, 22 Nov 2019 06:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574403228;
-        bh=ZhJ+AoQEj/5MiznVVd92YNDSv6J7kOWoIuf5m+J3hN0=;
+        s=default; t=1574403185;
+        bh=TOV0UK0piw0Hanyoyx8YpCbQcv2tT6LiX7Adeaopczg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XKqT4MSk3QKG9I1LXVU80VhnU2O3fP45eYiicPjnnky65YQsz7WbKcx1W9EDC86hK
-         sJSe8VMKf8izYephjbVAA7/i2v0of5CHaimF4esx36646nAEAnOFTzcVXzqH26xKSW
-         yQV1nNnqksdFnWfXCSNXLXxdAVsSOLMU3hYF+Xa0=
+        b=RNNwaRWZaliGouEPrAFxGI/5fmPHmAteYjzKqB3E4kTd8uL9/R+vujcz7LR6iuT7t
+         tT/s6fMuixdos8fSgrAFyd86zYVLAVPYqQFu49C39G0R3sKN4+HX5rgXQ1EWVL94Gv
+         1g7BnzI3xwJXcLFX8a7hCQkbLeXNtYsBDQm4FAGY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 42/68] powerpc/44x/bamboo: Fix PCI range
-Date:   Fri, 22 Nov 2019 01:12:35 -0500
-Message-Id: <20191122061301.4947-41-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 03/68] ARM: dts: imx53-voipac-dmm-668: Fix memory node duplication
+Date:   Fri, 22 Nov 2019 01:11:56 -0500
+Message-Id: <20191122061301.4947-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
 References: <20191122061301.4947-1-sashal@kernel.org>
@@ -60,42 +61,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 3cfb9ebe906b51f2942b1e251009bb251efd2ba6 ]
+[ Upstream commit 998a84c27a7f3f9133d32af64e19c05cec161a1a ]
 
-The bamboo dts has a bug: it uses a non-naturally aligned range
-for PCI memory space. This isnt' supported by the code, thus
-causing PCI to break on this system.
+imx53-voipac-dmm-668 has two memory nodes, but the correct representation
+would be to use a single one with two reg entries - one for each RAM chip
+select, so fix it accordingly.
 
-This is due to the fact that while the chip memory map has 1G
-reserved for PCI memory, it's only 512M aligned. The code doesn't
-know how to split that into 2 different PMMs and fails, so limit
-the region to 512M.
-
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reported-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/dts/bamboo.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/bamboo.dts b/arch/powerpc/boot/dts/bamboo.dts
-index aa68911f6560a..084b82ba74933 100644
---- a/arch/powerpc/boot/dts/bamboo.dts
-+++ b/arch/powerpc/boot/dts/bamboo.dts
-@@ -268,8 +268,10 @@
- 			/* Outbound ranges, one memory and one IO,
- 			 * later cannot be changed. Chip supports a second
- 			 * IO range but we don't use it for now
-+			 * The chip also supports a larger memory range but
-+			 * it's not naturally aligned, so our code will break
- 			 */
--			ranges = <0x02000000 0x00000000 0xa0000000 0x00000000 0xa0000000 0x00000000 0x40000000
-+			ranges = <0x02000000 0x00000000 0xa0000000 0x00000000 0xa0000000 0x00000000 0x20000000
- 				  0x02000000 0x00000000 0x00000000 0x00000000 0xe0000000 0x00000000 0x00100000
- 				  0x01000000 0x00000000 0x00000000 0x00000000 0xe8000000 0x00000000 0x00010000>;
+diff --git a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+index ba689fbd0e413..301cf8d45947f 100644
+--- a/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
++++ b/arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
+@@ -17,12 +17,8 @@
  
+ 	memory@70000000 {
+ 		device_type = "memory";
+-		reg = <0x70000000 0x20000000>;
+-	};
+-
+-	memory@b0000000 {
+-		device_type = "memory";
+-		reg = <0xb0000000 0x20000000>;
++		reg = <0x70000000 0x20000000>,
++		      <0xb0000000 0x20000000>;
+ 	};
+ 
+ 	regulators {
 -- 
 2.20.1
 
