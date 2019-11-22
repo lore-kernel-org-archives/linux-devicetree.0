@@ -2,157 +2,107 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98097C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DFFC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6824520708
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47DEC20637
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 07:35:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HVx/6pO5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ApxNRYnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726018AbfKVHbl (ORCPT
+        id S1726529AbfKVHfc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 02:31:41 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37845 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfKVHbl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 02:31:41 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t1so7380687wrv.4
-        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 23:31:39 -0800 (PST)
+        Fri, 22 Nov 2019 02:35:32 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33738 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfKVHfc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 02:35:32 -0500
+Received: by mail-lj1-f196.google.com with SMTP id t5so6230034ljk.0
+        for <devicetree@vger.kernel.org>; Thu, 21 Nov 2019 23:35:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+sAO6BARi9nh6Xk/KHCfUyEO35XUSRjOifLynmlQiDE=;
-        b=HVx/6pO5h4567D8hjH/yuda0DHmEfrIy3KwJRAMUgQnJpMtEjiO10f0to3AgQi6jKl
-         uI0JNCNWfiVFi4+LjM/alLflRMt85ggNnISXKhfI6HgU4Oi/80HcceDAJbuBh4qSkmy/
-         tFuaiCt9IehZSDylgPocF/7oaHOUYEMpYcSoxESO/YPs30DcOo/yVHyfPELiXpX9+rbd
-         6xdEPygv9bp6lSzT51SDPt5A/xd87f+5k4mQPF0tHZbP0iZr91NoW/FsoiGdvqitBTk9
-         mgL4gacKXEOc5ihfnAqmpv1vriRoFJPIq/cYR6Ku07g9/ecSsN4DB7CR0mK7V/qPhyJp
-         +m8Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tDdbFgRZ/DftFdgsbV1nBG702kIvVQNLzAtOboImYho=;
+        b=ApxNRYnw7RNF7PQvsGNN/DGujlE3iWNW2XQcseTQC8u0Pd8ru6z/ihzMNEJkIcm/re
+         /LgurCblgfHcKgzlyNijDGy8esKo60XlrWoZ1jP96DaMcmnyTswzH1mSc50dWs1F1v6p
+         DChNeXGO+KcAUNpmKRxK9PTjk3FytEiEkwFrTKUtmQOIPaecR9udfRrtBYCHvKOSuLG2
+         ZI3L5jQyEbN/4DIT8GQGcITW7ZNT+bz3gtGpbhDn5CMS9SpsMJeQ4hkPudMH7bjIeYzi
+         HG4QPdag6HJhjC3hXPzqpN3FoxrF8xrV+AgQDeJZvIllNJxedvTfZkEGoIf64zWC6KMQ
+         2lmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+sAO6BARi9nh6Xk/KHCfUyEO35XUSRjOifLynmlQiDE=;
-        b=WMYxby2yoOw87AVdZx/vhOIMhVn+9zM9nesBNsaJ8AGfJhcGJ3pmIRhBux+lxCjra1
-         Tt+OY1fw0aC7if2tQnTF6k4U6yUXwTscxsLLkmmNdJFZMvMkMRP7eeP0XtJoVLlNLKwo
-         ebRBAXJHeAEJ4KI165PwjuNhwAOewFbLFiC6eQMtmiJTt9eE+eoOykTJHeODxwd0gH6Q
-         Ou8X64RIv+dqHxo3lXqXUSK867pbm/FkhwREi14tfa03k0Qm6OoT6KRpNuB8KJBf0cuC
-         WeevBk6uq9EgytjAoaUbfYMxL9aJxnExfL17aqMtFjgTnjHYvIgSgwqqPqg9j04MQcJ2
-         /LdQ==
-X-Gm-Message-State: APjAAAUaAF3ET6CIA82p2GBzAJfjWnVPFxPONOxiIJXaeRBDt8Ne5i7d
-        sLFrsFKEjoTI6qqqnJVBOAqV7w==
-X-Google-Smtp-Source: APXvYqwmW0dHTIlMP+PqU32cRM7vod5yAs1/BX5jdgQJ3kTCd2Ik5H0UkoGKz7MJ00stV1bxRKW5Uw==
-X-Received: by 2002:a5d:558e:: with SMTP id i14mr15807519wrv.140.1574407898736;
-        Thu, 21 Nov 2019 23:31:38 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id w17sm6784989wrt.45.2019.11.21.23.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 23:31:38 -0800 (PST)
-Date:   Fri, 22 Nov 2019 07:31:24 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        devicetree@vger.kernel.org, Grigoryev Denis <grigoryev@fastwel.ru>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Subject: Re: Applied "tps6105x: add optional devicetree support" to the
- regulator tree
-Message-ID: <20191122073124.GA3296@dell>
-References: <20191119154611.29625-2-TheSven73@gmail.com>
- <applied-20191119154611.29625-2-TheSven73@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tDdbFgRZ/DftFdgsbV1nBG702kIvVQNLzAtOboImYho=;
+        b=FIC7B2QLpPJ7YZX/yJ73y38f6dx+lw9K6k4gOqn8JgqZ25ZuaFNL7fzi0PQ7CMx1JE
+         fLawVZv046azJgt8OAmo5GU3E5QAXqnBJwapWTo3xvpEoFl7n44TOWmovFrGAPHiAgEn
+         NbSELa6z9l4pl41rcrqlRTWuvWqhHD7FtvOwpx9il1bS+e0trt2x8poC6nbAW9KmpXT/
+         Fk+HJ4j7isbtNNPDPoIF+0GtWnGrmmTo4sqhwL4mfBW2cOaQKeJjPuBEFYzd1W/7v+/L
+         fzwkF8c6Nfrj1OZ5AG+7nnuff1LFIaQV0gFHJv9TbbE+0NJT3qwfrPZ6225rE4SMLUmk
+         igmA==
+X-Gm-Message-State: APjAAAWMqiwtHu9S/52TIrqILFOJseL5aSF5dLRdK7KZxV/dlHP5DsXM
+        ZG4byoZnCN+I9Su33IkcgyrEPsFh4zl8SX7TvNcIeQ==
+X-Google-Smtp-Source: APXvYqzL2vp/KKseaTOghvkAWrY9JxbNs0Ofv2U7rE+Ia0IND/xSVGjjfDmSUff7cjBMwjzExoBAvD7ZWm0tIyzIfVs=
+X-Received: by 2002:a2e:9784:: with SMTP id y4mr11128660lji.77.1574408130240;
+ Thu, 21 Nov 2019 23:35:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <applied-20191119154611.29625-2-TheSven73@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
+ <b59afc497e41404fea06aa48d633cba183ee944d.1573797249.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdYZi-0LRjih8+2cgWZ6u-eFN5+3sW1eV2ujYRd0UBoEKQ@mail.gmail.com> <bf8396af-3ace-7463-0fef-890b2f5cc487@linux.intel.com>
+In-Reply-To: <bf8396af-3ace-7463-0fef-890b2f5cc487@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 22 Nov 2019 08:35:17 +0100
+Message-ID: <CACRpkdafN-NjGNqqu_6-Qz6qWkZ4VGuBz_iyGirgUscz-Qk6VA@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 20 Nov 2019, Mark Brown wrote:
+On Fri, Nov 22, 2019 at 3:24 AM Tanwar, Rahul
+<rahul.tanwar@linux.intel.com> wrote:
 
-> The patch
-> 
->    tps6105x: add optional devicetree support
-> 
-> has been applied to the regulator tree at
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
-> 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.  
-> 
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
-> 
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
-> 
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
-> 
-> Thanks,
-> Mark
-> 
-> From 62f7f3eca4c30064ab37b42d97cef4292d75fdd0 Mon Sep 17 00:00:00 2001
-> From: Sven Van Asbroeck <thesven73@gmail.com>
-> Date: Tue, 19 Nov 2019 10:46:08 -0500
-> Subject: [PATCH] tps6105x: add optional devicetree support
-> 
-> This driver currently requires platform data to specify the
-> operational mode and regulator init data (in case of regulator
-> mode).
-> 
-> Optionally specify the operational mode by looking at the name
-> of the devicetree child node.
-> 
-> Example: put chip in regulator mode:
-> 
-> i2c0 {
-> 	tps61052@33 {
-> 		compatible = "ti,tps61052";
-> 		reg = <0x33>;
-> 
-> 		regulator {
->                             regulator-min-microvolt = <5000000>;
->                             regulator-max-microvolt = <5000000>;
->                             regulator-always-on;
-> 		};
-> 	};
-> };
-> 
-> Tree: linux-next
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> Link: https://lore.kernel.org/r/20191119154611.29625-2-TheSven73@gmail.com
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  drivers/mfd/tps6105x.c | 34 +++++++++++++++++++++++++++++++---
->  1 file changed, 31 insertions(+), 3 deletions(-)
+> Thanks. Yes, i have gone through Rob's generic pinctrl bindings patch
+> seriesand i was double minded if you should still proceed with this
+> patch or waitfor generic bindings patch to get merged.
 
-?
+It's a compromise actually.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+It's a bit of struggle and tough sometimes since I care both
+about the kernel and the autonomy of the DT bindings
+communities.
+
+We are in a transition phase to YAML bindings, and what is important
+for me as maintainer is to have developer buy-in, and
+it is more motivating for developers to work on this in-tree
+than having patches held back. I personally know how
+important it is to feel that things move forward in
+development.
+
+Now it should be a separate task on top of what we have,
+which is less stressful and gives the feeling of a bit of
+accomplishment.
+
+When the new generic YAML bindings are proven to work
+on two drivers or so I will be more demanding that people
+use them in their bindings from day 1. But we need to make
+sure it works first and that is a separate task.
+
+Yours,
+Linus Walleij
