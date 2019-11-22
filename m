@@ -2,606 +2,144 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DF9C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3A1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C169620717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDD820708
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 08:56:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oTw5sGMS"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YBAWnere"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfKVIxi (ORCPT
+        id S1726364AbfKVI4p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 03:53:38 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51119 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfKVIxh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 03:53:37 -0500
-Received: by mail-wm1-f66.google.com with SMTP id l17so6562685wmh.0
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 00:53:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/s4JZuFFNAzrE5UZcQkgO/Qk4eJi/XeiLoxEUKg8zgI=;
-        b=oTw5sGMSvOBuT/qeN01UXC1tk0K0EgNnAfgiOH31VyNABvVP43s7v79cl7glHdJOap
-         xsMST5vH6cVygvztm1YT6+HKuGVkyWUWBMvoOQTQ32lFIYvtrIsp0MoECGhv3AIz4x3l
-         bQkFHeDhR4JIFR23WN6t/8CaoWAjAUAJ/TSD/2jHjzq379bWgGu1N7UQswoqRVSzXO+U
-         OZTFnZsBa1BAPHNy65gEw4UP6ZXBl9EES6HLzQLtacSHGYc5LDKhL0u104yfYth8goIi
-         37PRFWVyWrrbpRHbDGaO+KkhMrny9IfYbC0cc4sMdkw3hjvsRKW6fFRbmiIW285kQOn+
-         8Wxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/s4JZuFFNAzrE5UZcQkgO/Qk4eJi/XeiLoxEUKg8zgI=;
-        b=fi/DZ9ZAIDSO59hfGhW48O6kasFVNgMf+h5xSNnd0/8ng1x7ohbi2hWbtN6gqglh4H
-         pGo7WrNgNtyMONDyl+BkmDmQM81Yzi7Z6KDqtwwa+W/Szon7kBM7uoTaqbRBcNMzXrkh
-         GlNsnzIV3J4jrZlCaBy7fo5qFmu9VRcQHRbDu716kxNYOXecO9BkdApYD0KWKN60oEuK
-         Vt338Oyjfczk81Tn8/jc6lUsn1ZcSpWewArhfc8XgmnPwU4TeskJGdpkjiF5fyTNrOIC
-         y82rIeUYhNVOnN1I3k2ndYePn/i50fmXukH82V1M03ZWhU7XW7QzW6gEpoSyVQLBeSdD
-         nV0w==
-X-Gm-Message-State: APjAAAVWXPkLFI/YwcfSOTE0SVpknw2HDYQrGSKrWgrGbHjPagxvRaTG
-        hvYYgIwoBiwt6AmhqqM7u+5uwQ==
-X-Google-Smtp-Source: APXvYqxOuLdOsNLHTVJvka/qzbGSMK2B+ALt7IBEOm/OuhWKi2V0vwBMBKCYbJXulkLDXTj9F0NNVQ==
-X-Received: by 2002:a7b:c858:: with SMTP id c24mr15813967wml.174.1574412813793;
-        Fri, 22 Nov 2019 00:53:33 -0800 (PST)
-Received: from [192.168.1.68] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id g74sm2646250wme.5.2019.11.22.00.53.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Nov 2019 00:53:33 -0800 (PST)
-Subject: Re: [PATCH 4/6] usb: dwc3: Add Amlogic A1 DWC3 glue
-To:     Hanjie Lin <hanjie.lin@amlogic.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Yue Wang <yue.wang@amlogic.com>, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com>
- <1574405757-76184-5-git-send-email-hanjie.lin@amlogic.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <b1781a06-1b8a-2fad-f49c-ac7e940a8798@baylibre.com>
-Date:   Fri, 22 Nov 2019 09:53:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 22 Nov 2019 03:56:45 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:11017 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725999AbfKVI4p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 03:56:45 -0500
+X-UUID: 3d3d335242b84d54b958f1dddb1c4b78-20191122
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=AMnabSznLaiYa+5DKF19iaqOPkdafm0Q3E/3KuPjx64=;
+        b=YBAWneretwLCisikVHiaj01mPKaubYi0VwK1ptq7txy0R/yDtimxlSy/67PDlySJCNgIEURnpR1GQCDPoFxL5YxXiJsQRFQ5Dn9d8wv5h25GSB5kgwoh/032X8gK62Cq4AXoUgKuGGDMLe2c4WnSugd6SHrjCLrpQ7IA4C0jKdU=;
+X-UUID: 3d3d335242b84d54b958f1dddb1c4b78-20191122
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 461520431; Fri, 22 Nov 2019 16:56:39 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 22 Nov 2019 16:56:15 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 22 Nov 2019 16:56:28 +0800
+Message-ID: <1574412997.19450.16.camel@mtksdaap41>
+Subject: Re: [PATCH v1 07/12] soc: mediatek: cmdq: add write_s function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 22 Nov 2019 16:56:37 +0800
+In-Reply-To: <1574327552-11806-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574327552-11806-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <1574405757-76184-5-git-send-email-hanjie.lin@amlogic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+SGksIERlbm5pczoNCg0KT24gVGh1LCAyMDE5LTExLTIxIGF0IDE3OjEyICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1
+bmN0aW9ucyB3aGljaA0KPiBzdXBwb3J0IGxhcmdlIGRtYSBhY2Nlc3MuDQo+IA0KPiBTaWduZWQt
+b2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+
+IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgICB8ICAgMzQg
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L21haWxib3gv
+bXRrLWNtZHEtbWFpbGJveC5oIHwgICAgMiArKw0KPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0
+ZWsvbXRrLWNtZHEuaCAgICB8ICAgMTMgKysrKysrKysrKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQs
+IDQ5IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRl
+ay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBl
+ci5jDQo+IGluZGV4IGQ0MTllOTkuLjFiMDc0YTkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29j
+L21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVr
+L210ay1jbWRxLWhlbHBlci5jDQo+IEBAIC0xNSw2ICsxNSw5IEBADQo+ICAjZGVmaW5lIENNRFFf
+RU9DX0NNRAkJKCh1NjQpKChDTURRX0NPREVfRU9DIDw8IENNRFFfT1BfQ09ERV9TSElGVCkpIFwN
+Cj4gIAkJCQk8PCAzMiB8IENNRFFfRU9DX0lSUV9FTikNCj4gICNkZWZpbmUgQ01EUV9SRUdfVFlQ
+RQkJMQ0KPiArI2RlZmluZSBDTURRX0FERFJfSElHSChhZGRyKQkoKHUzMikoKChhZGRyKSA+PiAx
+NikgJiBHRU5NQVNLKDMxLCAwKSkpDQo+ICsjZGVmaW5lIENNRFFfQUREUl9MT1dfQklUCUJJVCgx
+KQ0KPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRyKSB8IENNRFFfQURE
+Ul9MT1dfQklUKQ0KPiAgDQo+ICBzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiB7DQo+ICAJdW5pb24g
+ew0KPiBAQCAtMjI0LDYgKzIyNywzNyBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3Qg
+Y21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChjbWRxX3Br
+dF93cml0ZV9tYXNrKTsNCj4gIA0KPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFf
+cGt0ICpwa3QsIGRtYV9hZGRyX3QgYWRkciwNCj4gKwkJICAgICB1MzIgdmFsdWUsIHUzMiBtYXNr
+KQ0KPiArew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiAr
+CWludCBlcnI7DQo+ICsJY29uc3QgdTE2IGRzdF9yZWdfaWR4ID0gQ01EUV9TUFJfVEVNUDsNCj4g
+Kw0KPiArCWVyciA9IGNtZHFfcGt0X2Fzc2lnbihwa3QsIGRzdF9yZWdfaWR4LCBDTURRX0FERFJf
+SElHSChhZGRyKSk7DQo+ICsJaWYgKGVyciA8IDApDQo+ICsJCXJldHVybiBlcnI7DQo+ICsNCj4g
+KwlpZiAobWFzayAhPSBVMzJfTUFYKSB7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfTUFTSzsN
+Cj4gKwkJaW5zdC5tYXNrID0gfm1hc2s7DQo+ICsJCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21t
+YW5kKHBrdCwgaW5zdCk7DQo+ICsJCWlmIChlcnIgPCAwKQ0KPiArCQkJcmV0dXJuIGVycjsNCj4g
+Kw0KPiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gKwl9IGVsc2Ugew0K
+PiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1M7DQo+ICsJfQ0KPiArDQo+ICsJaW5zdC5z
+b3AgPSBkc3RfcmVnX2lkeDsNCj4gKwlpbnN0Lm9mZnNldCA9IENNRFFfQUREUl9MT1coYWRkcik7
+DQo+ICsJaW5zdC52YWx1ZSA9IHZhbHVlOw0KPiArDQo+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVu
+ZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X3dy
+aXRlX3MpOw0KPiArDQo+ICBpbnQgY21kcV9wa3Rfd2ZlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1
+MTYgZXZlbnQpDQo+ICB7DQo+ICAJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9
+IH07DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJv
+eC5oIGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBpbmRleCAx
+MjFjM2JiLi44ZWY4N2UxIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRr
+LWNtZHEtbWFpbGJveC5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1t
+YWlsYm94LmgNCj4gQEAgLTU5LDYgKzU5LDggQEAgZW51bSBjbWRxX2NvZGUgew0KPiAgCUNNRFFf
+Q09ERV9KVU1QID0gMHgxMCwNCj4gIAlDTURRX0NPREVfV0ZFID0gMHgyMCwNCj4gIAlDTURRX0NP
+REVfRU9DID0gMHg0MCwNCj4gKwlDTURRX0NPREVfV1JJVEVfUyA9IDB4OTAsDQo+ICsJQ01EUV9D
+T0RFX1dSSVRFX1NfTUFTSyA9IDB4OTEsDQo+ICAJQ01EUV9DT0RFX0xPR0lDID0gMHhhMCwNCj4g
+IH07DQo+ICANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
+bWRxLmggYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+IGluZGV4IDgz
+MzQwMjEuLjhkYmQwNDYgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVr
+L210ay1jbWRxLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEu
+aA0KPiBAQCAtMTIsNiArMTIsNyBAQA0KPiAgI2luY2x1ZGUgPGxpbnV4L3RpbWVyLmg+DQo+ICAN
+Cj4gICNkZWZpbmUgQ01EUV9OT19USU1FT1VUCQkweGZmZmZmZmZmdQ0KPiArI2RlZmluZSBDTURR
+X1NQUl9URU1QCQkwDQo+ICANCj4gIHN0cnVjdCBjbWRxX3BrdDsNCj4gIA0KPiBAQCAtMTAzLDYg
+KzEwNCwxOCBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwg
+dTggc3Vic3lzLA0KPiAgCQkJdTE2IG9mZnNldCwgdTMyIHZhbHVlLCB1MzIgbWFzayk7DQo+ICAN
+Cj4gIC8qKg0KPiArICogY21kcV9wa3Rfd3JpdGVfcygpIC0gYXBwZW5kIHdyaXRlX3MgY29tbWFu
+ZCB3aXRoIG1hc2sgdG8gdGhlIENNRFEgcGFja2V0DQo+ICsgKiBAcGt0Ogl0aGUgQ01EUSBwYWNr
+ZXQNCj4gKyAqIEBhZGRyOgl0aGUgcGh5c2ljYWwgYWRkcmVzcyBvZiByZWdpc3RlciBvciBkbWEN
+Cj4gKyAqIEB2YWx1ZToJdGhlIHNwZWNpZmllZCB0YXJnZXQgdmFsdWUNCj4gKyAqIEBtYXNrOgl0
+aGUgc3BlY2lmaWVkIHRhcmdldCBtYXNrDQo+ICsgKg0KPiArICogUmV0dXJuOiAwIGZvciBzdWNj
+ZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+ICsgKi8NCj4gK2ludCBjbWRx
+X3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCBkbWFfYWRkcl90IGFkZHIsDQo+ICsJ
+CSAgICAgdTMyIHZhbHVlLCB1MzIgbWFzayk7DQoNCllvdSBoYXZlIGFuIEFQSSBjbWRxX3BrdF9y
+ZWFkX3MoKSB3aGljaCByZWFkIGRhdGEgaW50byBnY2UgaW50ZXJuYWwNCnJlZ2lzdGVyLCBzbyBJ
+IGV4cGVjdCB0aGF0IGNtZHFfcGt0X3dyaXRlX3MoKSBpcyBhbiBBUEkgd2hpY2ggd3JpdGUgZGF0
+YQ0KZnJvbSBnY2UgaW50ZXJuYWwgcmVnaXN0ZXIsIHRoZSBleHBlY3RlZCBwcm90b3R5cGUgaXMN
+Cg0KaW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIHBoeXNfYWRkcl90
+IGFkZHIsIHUxNg0KcmVnX2lkeCk7DQoNCllvdXIgdmVyc2lvbiB3b3VsZCBjb25mdXNlIHRoZSB1
+c2VyIGJlY2F1c2UgeW91IGhpZGUgdGhlIGludGVybmFsDQpyZWdpc3RlciBwYXJhbWV0ZXIuIElm
+IHlvdSB3YW50IHRvIHByb3ZpZGUgdGhpcyBzZXJ2aWNlLCBJIHdvdWxkIGxpa2UNCnlvdSB0byBj
+aGFuZ2UgdGhlIGZ1bmN0aW9uIG5hbWUgc28gdGhhdCB1c2VyIHdvdWxkIG5vdCBiZSBjb25mdXNl
+ZCBhbmQNCmVhc2lseSB0byB1bmRlcnN0YW5kIHdoYXQgeW91IHdhbnQgdG8gZG8gaW4gdGhpcyBm
+dW5jdGlvbi4NCg0KQW5vdGhlciBjaG9pY2UgaXM6IGNtZHFfcGt0X3dyaXRlX3MoKSBpcyBpbXBs
+ZW1lbnRlZCBpbiBteSBkZWZpbml0aW9uLA0KYW5kIHVzZXIgY291bGQgY2FsbCBjbWRxX3BrdF9h
+c3NpZ24oKSBhbmQgY21kcV9wa3Rfd3JpdGVfcygpIHRvIGFjaGlldmUNCnRoaXMgZnVuY3Rpb24u
+DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsNCj4gKy8qKg0KPiAgICogY21kcV9wa3Rfd2ZlKCkgLSBh
+cHBlbmQgd2FpdCBmb3IgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gICAqIEBw
+a3Q6CXRoZSBDTURRIHBhY2tldA0KPiAgICogQGV2ZW50Ogl0aGUgZGVzaXJlZCBldmVudCB0eXBl
+IHRvICJ3YWl0IGFuZCBDTEVBUiINCg0K
 
-On 22/11/2019 07:55, Hanjie Lin wrote:
-> Adds support for Amlogic A1 USB Control Glue HW.
-> 
-> The Amlogic A1 SoC Family embeds 1 USB Controllers:
-> - a DWC3 IP configured as Host for USB2 and USB3
-> 
-> A glue connects the controllers to the USB2 PHY of A1 SoC.
-> 
-> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> ---
->  drivers/usb/dwc3/Kconfig         |  11 ++
->  drivers/usb/dwc3/Makefile        |   1 +
->  drivers/usb/dwc3/dwc3-meson-a1.c | 397 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 409 insertions(+)
->  create mode 100644 drivers/usb/dwc3/dwc3-meson-a1.c
-> 
-> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-> index 556a876..9bfb159 100644
-> --- a/drivers/usb/dwc3/Kconfig
-> +++ b/drivers/usb/dwc3/Kconfig
-> @@ -96,6 +96,17 @@ config USB_DWC3_KEYSTONE
->  	  Support of USB2/3 functionality in TI Keystone2 and AM654 platforms.
->  	  Say 'Y' or 'M' here if you have one such device
->  
-> +config USB_DWC3_MESON_A1
-> +	tristate "Amlogic Meson A1 Platforms"
-> +	depends on OF && COMMON_CLK
-> +	depends on ARCH_MESON || COMPILE_TEST
-> +	default USB_DWC3
-> +	help
-> +	  Support USB2 functionality in MESON A1 platforms.
-> +	  The MESON A1 USB2 support a DWC3 USB IP Core configured for USB2 in
-> +	  host-only mode.
-> +	  Say 'Y' or 'M' if you have one such device.
-> +
->  config USB_DWC3_MESON_G12A
->         tristate "Amlogic Meson G12A Platforms"
->         depends on OF && COMMON_CLK
-> diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
-> index ae86da0..a3fc655 100644
-> --- a/drivers/usb/dwc3/Makefile
-> +++ b/drivers/usb/dwc3/Makefile
-> @@ -47,6 +47,7 @@ obj-$(CONFIG_USB_DWC3_EXYNOS)		+= dwc3-exynos.o
->  obj-$(CONFIG_USB_DWC3_PCI)		+= dwc3-pci.o
->  obj-$(CONFIG_USB_DWC3_HAPS)		+= dwc3-haps.o
->  obj-$(CONFIG_USB_DWC3_KEYSTONE)		+= dwc3-keystone.o
-> +obj-$(CONFIG_USB_DWC3_MESON_A1)		+= dwc3-meson-a1.o
->  obj-$(CONFIG_USB_DWC3_MESON_G12A)	+= dwc3-meson-g12a.o
->  obj-$(CONFIG_USB_DWC3_OF_SIMPLE)	+= dwc3-of-simple.o
->  obj-$(CONFIG_USB_DWC3_ST)		+= dwc3-st.o
-> diff --git a/drivers/usb/dwc3/dwc3-meson-a1.c b/drivers/usb/dwc3/dwc3-meson-a1.c
-> new file mode 100644
-> index 00000000..db2b99a
-> --- /dev/null
-> +++ b/drivers/usb/dwc3/dwc3-meson-a1.c
-> @@ -0,0 +1,397 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * USB Glue for Amlogic A1 SoCs
-> + *
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved
-> + * Author: Yue Wang <yue.wang@amlogic.com>
-> + */
-> +
-> +/*
-> + * The USB is organized with a glue around the DWC3 Controller IP as :
-> + * - Control registers for each USB2 Ports
-> + * - Control registers for the USB PHY layer
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/reset.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/usb/otg.h>
-> +#include <linux/usb/role.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +/* USB2 Ports Control Registers */
-> +#define U2P_R0							0x20
-> +	#define U2P_R0_HOST_DEVICE				BIT(0)
-> +	#define U2P_R0_POWER_OK					BIT(1)
-> +	#define U2P_R0_HAST_MODE				BIT(2)
-> +	#define U2P_R0_POWER_ON_RESET				BIT(3)
-> +	#define U2P_R0_ID_PULLUP				BIT(4)
-> +	#define U2P_R0_DRV_VBUS					BIT(5)
-> +
-> +#define U2P_R1							0x24
-> +	#define U2P_R1_PHY_READY				BIT(0)
-> +	#define U2P_R1_ID_DIG					BIT(1)
-> +	#define U2P_R1_OTG_SESSION_VALID			BIT(2)
-> +	#define U2P_R1_VBUS_VALID				BIT(3)
-> +
-> +/* USB Glue Control Registers */
-> +
-> +#define USB_R0							0x80
-> +	#define USB_R0_P30_LANE0_TX2RX_LOOPBACK			BIT(17)
-> +	#define USB_R0_P30_LANE0_EXT_PCLK_REQ			BIT(18)
-> +	#define USB_R0_P30_PCS_RX_LOS_MASK_VAL_MASK		GENMASK(28, 19)
-> +	#define USB_R0_U2D_SS_SCALEDOWN_MODE_MASK		GENMASK(30, 29)
-> +	#define USB_R0_U2D_ACT					BIT(31)
-> +
-> +#define USB_R1							0x84
-> +	#define USB_R1_U3H_BIGENDIAN_GS				BIT(0)
-> +	#define USB_R1_U3H_PME_ENABLE				BIT(1)
-> +	#define USB_R1_U3H_HUB_PORT_OVERCURRENT_MASK		GENMASK(4, 2)
-> +	#define USB_R1_U3H_HUB_PORT_PERM_ATTACH_MASK		GENMASK(9, 7)
-> +	#define USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK		GENMASK(13, 12)
-> +	#define USB_R1_U3H_HOST_U3_PORT_DISABLE			BIT(16)
-> +	#define USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT	BIT(17)
-> +	#define USB_R1_U3H_HOST_MSI_ENABLE			BIT(18)
-> +	#define USB_R1_U3H_FLADJ_30MHZ_REG_MASK			GENMASK(24, 19)
-> +	#define USB_R1_P30_PCS_TX_SWING_FULL_MASK		GENMASK(31, 25)
-> +
-> +#define USB_R2							0x88
-> +	#define USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK		GENMASK(25, 20)
-> +	#define USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK		GENMASK(31, 26)
-> +
-> +#define USB_R3							0x8c
-> +	#define USB_R3_P30_SSC_ENABLE				BIT(0)
-> +	#define USB_R3_P30_SSC_RANGE_MASK			GENMASK(3, 1)
-> +	#define USB_R3_P30_SSC_REF_CLK_SEL_MASK			GENMASK(12, 4)
-> +	#define USB_R3_P30_REF_SSP_EN				BIT(13)
-> +
-> +#define USB_R4							0x90
-> +	#define USB_R4_P21_PORT_RESET_0				BIT(0)
-> +	#define USB_R4_P21_SLEEP_M0				BIT(1)
-> +	#define USB_R4_MEM_PD_MASK				GENMASK(3, 2)
-> +	#define USB_R4_P21_ONLY					BIT(4)
-> +
-> +#define USB_R5							0x94
-> +	#define USB_R5_ID_DIG_SYNC				BIT(0)
-> +	#define USB_R5_ID_DIG_REG				BIT(1)
-> +	#define USB_R5_ID_DIG_CFG_MASK				GENMASK(3, 2)
-> +	#define USB_R5_ID_DIG_EN_0				BIT(4)
-> +	#define USB_R5_ID_DIG_EN_1				BIT(5)
-> +	#define USB_R5_ID_DIG_CURR				BIT(6)
-> +	#define USB_R5_ID_DIG_IRQ				BIT(7)
-> +	#define USB_R5_ID_DIG_TH_MASK				GENMASK(15, 8)
-> +	#define USB_R5_ID_DIG_CNT_MASK				GENMASK(23, 16)
-> +
-> +static const char *phy_names = {
-> +	"usb2-phy0",
-> +};
-> +
-> +struct dwc3_meson_a1 {
-> +	struct device		*dev;
-> +	struct regmap		*regmap;
-> +	struct clk		*clk_usb_ctrl;
-> +	struct clk		*clk_usb_bus;
-> +	struct clk		*clk_xtal_usb_phy;
-> +	struct clk		*clk_xtal_usb_ctrl;
-> +	struct reset_control	*reset;
-> +	struct phy		*phys;
-> +	unsigned int		usb2_ports;
-> +};
-> +
-> +static void dwc3_meson_a1_usb_init(struct dwc3_meson_a1 *priv)
-> +{
-> +	regmap_update_bits(priv->regmap, U2P_R0,
-> +			   U2P_R0_POWER_ON_RESET,
-> +			   U2P_R0_POWER_ON_RESET);
-> +
-> +	regmap_update_bits(priv->regmap, U2P_R0,
-> +			   U2P_R0_HOST_DEVICE,
-> +			   U2P_R0_HOST_DEVICE);
-> +
-> +	regmap_update_bits(priv->regmap, U2P_R0,
-> +			   U2P_R0_POWER_ON_RESET, 0);
-> +
-> +	regmap_update_bits(priv->regmap, USB_R1,
-> +			   USB_R1_U3H_FLADJ_30MHZ_REG_MASK,
-> +			   FIELD_PREP(USB_R1_U3H_FLADJ_30MHZ_REG_MASK, 0x20));
-> +
-> +	regmap_update_bits(priv->regmap, USB_R0,
-> +			   USB_R0_U2D_ACT, 0);
-> +
-> +	regmap_update_bits(priv->regmap, USB_R4,
-> +			   USB_R4_P21_SLEEP_M0, 0);
-> +}
-> +
-> +static const struct regmap_config phy_meson_a1_usb_regmap_conf = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.max_register = USB_R5,
-> +};
-> +
-> +static int dwc3_meson_a1_get_phys(struct dwc3_meson_a1 *priv)
-> +{
-> +	priv->phys = devm_phy_optional_get(priv->dev, phy_names);
-> +	if (IS_ERR(priv->phys))
-> +		return PTR_ERR(priv->phys);
-> +
-> +	priv->usb2_ports++;
-> +
-> +	dev_info(priv->dev, "USB2 ports: %d\n", priv->usb2_ports);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dwc3_meson_a1_enable_clk(struct dwc3_meson_a1 *priv)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(priv->clk_usb_ctrl);
-> +	if (ret < 0) {
-> +		dev_err(priv->dev, "can't enable usb_ctrl clock.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->clk_usb_bus);
-> +	if (ret < 0) {
-> +		dev_err(priv->dev, "can't enable usb_bus clock.\n");
-> +		goto disable_clk_usb_ctrl;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->clk_xtal_usb_phy);
-> +	if (ret < 0) {
-> +		dev_err(priv->dev, "can't enable xtal_usb_phy clock.\n");
-> +		goto disable_clk_usb_bus;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->clk_xtal_usb_ctrl);
-> +	if (ret < 0) {
-> +		dev_err(priv->dev, "can't enable xtal_usb_ctrl clock.\n");
-> +		goto disable_clk_xtal_usb_phy;
-> +	}
-> +
-> +	return 0;
-> +
-> +disable_clk_xtal_usb_phy:
-> +	clk_disable_unprepare(priv->clk_xtal_usb_phy);
-> +disable_clk_usb_bus:
-> +	clk_disable_unprepare(priv->clk_usb_bus);
-> +disable_clk_usb_ctrl:
-> +	clk_disable_unprepare(priv->clk_usb_ctrl);
-> +
-> +	return ret;
-> +}
-> +
-> +static void dwc3_meson_a1_disable_clk(struct dwc3_meson_a1 *priv)
-> +{
-> +	clk_disable_unprepare(priv->clk_usb_ctrl);
-> +	clk_disable_unprepare(priv->clk_usb_bus);
-> +	clk_disable_unprepare(priv->clk_xtal_usb_phy);
-> +	clk_disable_unprepare(priv->clk_xtal_usb_ctrl);
-> +}
-> +
-> +static int dwc3_meson_a1_setup_clk(struct dwc3_meson_a1 *priv)
-> +{
-> +	int ret;
-> +
-> +	priv->clk_usb_ctrl = devm_clk_get(priv->dev, "usb_ctrl");
-> +	if (IS_ERR(priv->clk_usb_ctrl)) {
-> +		dev_err(priv->dev, "can't get usb_ctrl clock.\n");
-> +		return PTR_ERR(priv->clk_usb_ctrl);
-> +	}
-> +
-> +	priv->clk_usb_bus = devm_clk_get(priv->dev, "usb_bus");
-> +	if (IS_ERR(priv->clk_usb_bus)) {
-> +		dev_err(priv->dev, "can't get usb_bus clock.\n");
-> +		return PTR_ERR(priv->clk_usb_bus);
-> +	}
-> +
-> +	priv->clk_xtal_usb_phy = devm_clk_get(priv->dev, "xtal_usb_phy");
-> +	if (IS_ERR(priv->clk_xtal_usb_phy)) {
-> +		dev_err(priv->dev, "can't get xtal_usb_phy clock.\n");
-> +		return PTR_ERR(priv->clk_xtal_usb_phy);
-> +	}
-> +
-> +	priv->clk_xtal_usb_ctrl = devm_clk_get(priv->dev, "xtal_usb_ctrl");
-> +	if (IS_ERR(priv->clk_xtal_usb_ctrl)) {
-> +		dev_err(priv->dev, "can't get xtal_usb_ctrl clock.\n");
-> +		return PTR_ERR(priv->clk_xtal_usb_ctrl);
-> +	}
-> +
-> +	ret = dwc3_meson_a1_enable_clk(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	devm_add_action_or_reset(priv->dev,
-> +				 (void(*)(void *))clk_disable_unprepare,
-> +				 priv->clk_usb_ctrl);
-> +	devm_add_action_or_reset(priv->dev,
-> +				 (void(*)(void *))clk_disable_unprepare,
-> +				 priv->clk_usb_bus);
-> +	devm_add_action_or_reset(priv->dev,
-> +				 (void(*)(void *))clk_disable_unprepare,
-> +				 priv->clk_xtal_usb_phy);
-> +	devm_add_action_or_reset(priv->dev,
-> +				 (void(*)(void *))clk_disable_unprepare,
-> +				 priv->clk_xtal_usb_ctrl);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dwc3_meson_a1_probe(struct platform_device *pdev)
-> +{
-> +	struct dwc3_meson_a1	*priv;
-> +	struct device		*dev = &pdev->dev;
-> +	struct device_node	*np = dev->of_node;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +	priv->dev = dev;
-> +
-> +	base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	priv->regmap = devm_regmap_init_mmio(dev, base,
-> +					     &phy_meson_a1_usb_regmap_conf);
-> +	if (IS_ERR(priv->regmap))
-> +		return PTR_ERR(priv->regmap);
-> +
-> +	ret = dwc3_meson_a1_setup_clk(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->reset = devm_reset_control_get(dev, NULL);
-> +	if (IS_ERR(priv->reset)) {
-> +		ret = PTR_ERR(priv->reset);
-> +		dev_err(dev, "failed to get device reset, err=%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = reset_control_reset(priv->reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = dwc3_meson_a1_get_phys(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dwc3_meson_a1_usb_init(priv);
-> +
-> +	/* Init PHYs */
-> +	ret = phy_init(priv->phys);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set PHY Power */
-> +	ret = phy_power_on(priv->phys);
-> +	if (ret)
-> +		goto err_phys_exit;
-> +
-> +	ret = of_platform_populate(np, NULL, NULL, dev);
-> +	if (ret)
-> +		goto err_phys_power;
-> +
-> +	return 0;
-> +
-> +err_phys_power:
-> +	phy_power_off(priv->phys);
-> +
-> +err_phys_exit:
-> +	phy_exit(priv->phys);
-> +
-> +	return ret;
-> +}
-> +
-> +static int dwc3_meson_a1_remove(struct platform_device *pdev)
-> +{
-> +	struct dwc3_meson_a1 *priv = platform_get_drvdata(pdev);
-> +	struct device *dev = &pdev->dev;
-> +
-> +	of_platform_depopulate(dev);
-> +
-> +	phy_power_off(priv->phys);
-> +	phy_exit(priv->phys);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused dwc3_meson_a1_suspend(struct device *dev)
-> +{
-> +	struct dwc3_meson_a1 *priv = dev_get_drvdata(dev);
-> +
-> +	phy_power_off(priv->phys);
-> +	phy_exit(priv->phys);
-> +
-> +	reset_control_assert(priv->reset);
-> +
-> +	dwc3_meson_a1_disable_clk(priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused dwc3_meson_a1_resume(struct device *dev)
-> +{
-> +	struct dwc3_meson_a1 *priv = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = dwc3_meson_a1_enable_clk(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	reset_control_deassert(priv->reset);
-> +
-> +	dwc3_meson_a1_usb_init(priv);
-> +
-> +	/* Init PHYs */
-> +	ret = phy_init(priv->phys);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set PHY Power */
-> +	ret = phy_power_on(priv->phys);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops dwc3_meson_a1_dev_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(dwc3_meson_a1_suspend, dwc3_meson_a1_resume)
-> +};
-> +
-> +static const struct of_device_id dwc3_meson_a1_match[] = {
-> +	{ .compatible = "amlogic,meson-a1-usb-ctrl" },
-> +	{ /* Sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, dwc3_meson_a1_match);
-> +
-> +static struct platform_driver dwc3_meson_a1_driver = {
-> +	.probe		= dwc3_meson_a1_probe,
-> +	.remove		= dwc3_meson_a1_remove,
-> +	.driver		= {
-> +		.name	= "dwc3-meson-a1",
-> +		.of_match_table = dwc3_meson_a1_match,
-> +		.pm	= &dwc3_meson_a1_dev_pm_ops,
-> +	},
-> +};
-> +
-> +module_platform_driver(dwc3_meson_a1_driver);
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Amlogic Meson A1 USB Glue Layer");
-> +MODULE_AUTHOR("Yue Wang <yue.wang@amlogic.com>");
-> 
-
-This driver looks very close to the g12a glue driver, could you reuse the g12a driver instead ?
-
-Neil
