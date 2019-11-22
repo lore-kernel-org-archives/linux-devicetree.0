@@ -2,266 +2,242 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCBAC43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 19:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF4BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749AB2072E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 19:50:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="OA+RUDJe"
+	by mail.kernel.org (Postfix) with ESMTP id 355B02072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 19:55:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574452545;
+	bh=Nv/n3brY2CWRc86fq5lS7SV4fTgPvSZAfDCEWuQaBdw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wpovewT5PhTnF6cc5mLHH1fbE1gYzOcbrET4EjWqliLJ6jtb4HVQaroGoy/p7p02m
+	 GwfyDAT+jKJHvaVLboutqGmBDCqZqVtfbZ871oscwTMTP3s8Vj8yxHSYHUcaKj5+n6
+	 nwbpG7K2kqtGv+vJb/K26b0C5dbBbbEd0wTmQHRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKVTuj (ORCPT
+        id S1727008AbfKVTzo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 14:50:39 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43085 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbfKVTui (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 14:50:38 -0500
-Received: by mail-il1-f196.google.com with SMTP id r9so8015600ilq.10
-        for <devicetree@vger.kernel.org>; Fri, 22 Nov 2019 11:50:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GyRnrvFbKUOfWzI19gExh12vx/PZLGimga2bs60+0rg=;
-        b=OA+RUDJec1zbsPLoLU0dCoxx6xbx0tsBB62Qm4SHZcHVeR/2ATi57wl31NeQzd4tg1
-         /xCVNLQWLAp6RLqp30D/SZ9jZ5rl3zICIBDZ6y5p3oJ7Te5UxO4u3e5KMwC6A11Suy0z
-         JgXa6o+CQDEiWqlK5jIUBc/SE/P3FIpMp59Dk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GyRnrvFbKUOfWzI19gExh12vx/PZLGimga2bs60+0rg=;
-        b=Q1kd/z6CJgwS5DWxRBFwQO3/mUO4TwsCVBYXX4Jp1ec2z5nZLstFkCAHZupu9+p5cf
-         pY/xEZnufAYJvIT07Njj9nDEbs+4weR19b8kayt2B4V0PwAIcgpMmmIu7eTZ29L4ASBc
-         kfVe48FzSZmdjk1ceuyKhbvyJgfbfrvqnuqrmHIEqYhUDfj2/IwABL699CwzwXvM88U2
-         vo4awtt3QQRCN81ra90v07byZdp8/BP6CksgZ28gZ2AMuim4Fhu82x6OVbOgDOkpyZpg
-         Ym6nJpZFbIYVgyKMsBC2KZqWBcHZCHo0ryhGhFZ9BkddtFCrhsLrqKhA1avANTAfixN2
-         0OCw==
-X-Gm-Message-State: APjAAAX/dYOo54sDPrJKl2ocimyEsdi5GeUcffEPzsOe4DqwGvVjmLlg
-        Qhpq0vUMEXiL+0o0+5V9a1TrIV3BlyUxE+Hj8iwDHg==
-X-Google-Smtp-Source: APXvYqy2MjzP9e0pqftYQIuPVxsJXa/qxJt+NKqaiGIYIamnMQIqEiJIqrVzZTadWbqFnULsiOnsnWWWxVkXQIGhDQg=
-X-Received: by 2002:a92:3ac5:: with SMTP id i66mr19019865ilf.28.1574452233184;
- Fri, 22 Nov 2019 11:50:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-5-jagan@amarulasolutions.com> <20191028153427.pc3tnoz2d23filhx@hendrix>
- <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
- <20191029085401.gvqpwmmpyml75vis@hendrix> <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
- <20191103173227.GF7001@gilmour> <CAMty3ZD5uxU=xb0z7PWaXzodYbWRJkP9HjGX-HZYFT4bwk0GOg@mail.gmail.com>
- <20191122181820.GQ4345@gilmour.lan>
-In-Reply-To: <20191122181820.GQ4345@gilmour.lan>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Sat, 23 Nov 2019 01:20:21 +0530
-Message-ID: <CAMty3ZDePC=B-DgfCcjRhJTeciwZmSEU-c4u1=sN_Hs0RgbC7Q@mail.gmail.com>
-Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 22 Nov 2019 14:55:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:52174 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726546AbfKVTzo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Nov 2019 14:55:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CE56113E;
+        Fri, 22 Nov 2019 11:55:43 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A5BF3F6C4;
+        Fri, 22 Nov 2019 11:55:42 -0800 (PST)
+Date:   Fri, 22 Nov 2019 19:55:41 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     alexandre.torgue@st.com, broonie@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: Applied "dt-bindings: spi: Convert stm32 QSPI bindings to json-schema" to the spi tree
+In-Reply-To: <20191120194444.10540-1-benjamin.gaignard@st.com>
+Message-Id: <applied-20191120194444.10540-1-benjamin.gaignard@st.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+The patch
 
-On Fri, Nov 22, 2019 at 11:48 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Thu, Nov 21, 2019 at 05:24:47PM +0530, Jagan Teki wrote:
-> > On Sun, Nov 3, 2019 at 11:02 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > On Fri, Nov 01, 2019 at 07:42:55PM +0530, Jagan Teki wrote:
-> > > > Hi Maxime,
-> > > >
-> > > > On Tue, Oct 29, 2019 at 2:24 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
-> > > > > > > > explicit handling of common clock would require since the A64
-> > > > > > > > doesn't need to mention the clock-names explicitly in dts since it
-> > > > > > > > support only one bus clock.
-> > > > > > > >
-> > > > > > > > Also pass clk_id NULL instead "bus" to regmap clock init function
-> > > > > > > > since the single clock variants no need to mention clock-names
-> > > > > > > > explicitly.
-> > > > > > >
-> > > > > > > You don't need explicit clock handling. Passing NULL as the argument
-> > > > > > > in regmap_init_mmio_clk will make it use the first clock, which is the
-> > > > > > > bus clock.
-> > > > > >
-> > > > > > Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
-> > > > > > during regmap_mmio_gen_context code, passing NULL triggering vblank
-> > > > > > timeout.
-> > > > >
-> > > > > There's a bunch of users of NULL in tree, so finding out why NULL
-> > > > > doesn't work is the way forward.
-> > > >
-> > > > I'd have looked the some of the users before checking the code as
-> > > > well. As I said passing NULL clk_id to devm_regmap_init_mmio_clk =>
-> > > > __devm_regmap_init_mmio_clk would return before processing the clock.
-> > > >
-> > > > Here is the code snippet on the tree just to make sure I'm on the same
-> > > > page or not.
-> > > >
-> > > > static struct regmap_mmio_context *regmap_mmio_gen_context(struct device *dev,
-> > > >                                         const char *clk_id,
-> > > >                                         void __iomem *regs,
-> > > >                                         const struct regmap_config *config)
-> > > > {
-> > > >         -----------------------
-> > > >         --------------
-> > > >         if (clk_id == NULL)
-> > > >                 return ctx;
-> > > >
-> > > >         ctx->clk = clk_get(dev, clk_id);
-> > > >         if (IS_ERR(ctx->clk)) {
-> > > >                 ret = PTR_ERR(ctx->clk);
-> > > >                 goto err_free;
-> > > >         }
-> > > >
-> > > >         ret = clk_prepare(ctx->clk);
-> > > >         if (ret < 0) {
-> > > >                 clk_put(ctx->clk);
-> > > >                 goto err_free;
-> > > >         }
-> > > >         -------------
-> > > >         ---------------
-> > > > }
-> > > >
-> > > > Yes, I did check on the driver in the tree before committing explicit
-> > > > clock handle, which make similar requirements like us in [1]. this
-> > > > imx2 wdt driver is handling the explicit clock as well. I'm sure this
-> > > > driver is updated as I have seen few changes related to this driver in
-> > > > ML.
-> > >
-> > > I guess we have two ways to go at this then.
-> > >
-> > > Either we remove the return, but it might have a few side-effects, or
-> > > we call clk_get with NULL or bus depending on the case, and then call
-> > > regmap_mmio_attach_clk.
-> >
-> > Thanks for the inputs.
-> >
-> > Please have a look at this snippet, I have used your second
-> > suggestions. let me know if you have any comments?
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > index 8fa90cfc2ac8..91c95e56d870 100644
-> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > @@ -1109,24 +1109,36 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
-> >          return PTR_ERR(dsi->regulator);
-> >      }
-> >
-> > -    dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
-> > -                          &sun6i_dsi_regmap_config);
-> > -    if (IS_ERR(dsi->regs)) {
-> > -        dev_err(dev, "Couldn't create the DSI encoder regmap\n");
-> > -        return PTR_ERR(dsi->regs);
-> > -    }
-> > -
-> >      dsi->reset = devm_reset_control_get_shared(dev, NULL);
-> >      if (IS_ERR(dsi->reset)) {
-> >          dev_err(dev, "Couldn't get our reset line\n");
-> >          return PTR_ERR(dsi->reset);
-> >      }
-> >
-> > +    dsi->regs = regmap_init_mmio(dev, base, &sun6i_dsi_regmap_config);
->
-> You should use the devm variant here
+   dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
 
-Sure.
+has been applied to the spi tree at
 
->
-> > +    if (IS_ERR(dsi->regs)) {
-> > +        dev_err(dev, "Couldn't init regmap\n");
-> > +        return PTR_ERR(dsi->regs);
-> > +    }
-> > +
-> > +    dsi->bus_clk = devm_clk_get(dev, NULL);
->
-> I guess you still need to pass 'bus' here?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
-But the idea here is not to specify clock name explicitly to support
-A64. otherwise A64 would fail as we are not specifying the clock-names
-explicitly on dsi node.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-dsi: dsi@1ca0000 {
-       compatible = "allwinner,sun50i-a64-mipi-dsi";
-       reg = <0x01ca0000 0x1000>;
-       interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-       clocks = <&ccu CLK_BUS_MIPI_DSI>;
-       resets = <&ccu RST_BUS_MIPI_DSI>;
-      phys = <&dphy>;
-      phy-names = "dphy";
-.....
-};
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
->
-> > +    if (IS_ERR(dsi->bus_clk)) {
-> > +        dev_err(dev, "Couldn't get the DSI bus clock\n");
-> > +        ret = PTR_ERR(dsi->bus_clk);
-> > +        goto err_regmap;
-> > +    } else {
-> > +        printk("Jagan.. Got the BUS clock\n");
-> > +        ret = regmap_mmio_attach_clk(dsi->regs, dsi->bus_clk);
-> > +        if (ret)
-> > +            goto err_bus_clk;
-> > +    }
-> > +
-> >      if (dsi->variant->has_mod_clk) {
-> >          dsi->mod_clk = devm_clk_get(dev, "mod");
-> >          if (IS_ERR(dsi->mod_clk)) {
-> >              dev_err(dev, "Couldn't get the DSI mod clock\n");
-> > -            return PTR_ERR(dsi->mod_clk);
-> > +            ret = PTR_ERR(dsi->mod_clk);
-> > +            goto err_attach_clk;
-> >          }
-> >      }
-> >
-> > @@ -1167,6 +1179,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
-> >  err_unprotect_clk:
-> >      if (dsi->variant->has_mod_clk)
-> >          clk_rate_exclusive_put(dsi->mod_clk);
-> > +err_attach_clk:
-> > +    if (!IS_ERR(dsi->bus_clk))
-> > +        regmap_mmio_detach_clk(dsi->regs);
-> > +err_bus_clk:
-> > +    if (!IS_ERR(dsi->bus_clk))
-> > +        clk_put(dsi->bus_clk);
-> > +err_regmap:
-> > +    regmap_exit(dsi->regs);
-> >      return ret;
-> >  }
-> >
-> > @@ -1181,6 +1201,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
-> >      if (dsi->variant->has_mod_clk)
-> >          clk_rate_exclusive_put(dsi->mod_clk);
-> >
-> > +    if (!IS_ERR(dsi->bus_clk)) {
-> > +        regmap_mmio_detach_clk(dsi->regs);
-> > +        clk_put(dsi->bus_clk);
->
-> This will trigger a warning, you put down the reference twice
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-You mean regmap_mmio_detach_clk will put the clk?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Jagan.
+Thanks,
+Mark
+
+From ffa119f7c42d29be2dd759bb18cc4d1f45804c6b Mon Sep 17 00:00:00 2001
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Date: Wed, 20 Nov 2019 20:44:44 +0100
+Subject: [PATCH] dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
+
+Convert the STM32 QSPI binding to DT schema format using json-schema
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20191120194444.10540-1-benjamin.gaignard@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/spi/spi-stm32-qspi.txt           | 47 -----------
+ .../bindings/spi/st,stm32-qspi.yaml           | 83 +++++++++++++++++++
+ 2 files changed, 83 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+deleted file mode 100644
+index bfc038b9478d..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* STMicroelectronics Quad Serial Peripheral Interface(QSPI)
+-
+-Required properties:
+-- compatible: should be "st,stm32f469-qspi"
+-- reg: the first contains the register location and length.
+-       the second contains the memory mapping address and length
+-- reg-names: should contain the reg names "qspi" "qspi_mm"
+-- interrupts: should contain the interrupt for the device
+-- clocks: the phandle of the clock needed by the QSPI controller
+-- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
+-
+-Optional properties:
+-- resets: must contain the phandle to the reset controller.
+-
+-A spi flash (NOR/NAND) must be a child of spi node and could have some
+-properties. Also see jedec,spi-nor.txt.
+-
+-Required properties:
+-- reg: chip-Select number (QSPI controller may connect 2 flashes)
+-- spi-max-frequency: max frequency of spi bus
+-
+-Optional properties:
+-- spi-rx-bus-width: see ./spi-bus.txt for the description
+-- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+-Documentation/devicetree/bindings/dma/dma.txt.
+-- dma-names: DMA request names should include "tx" and "rx" if present.
+-
+-Example:
+-
+-qspi: spi@a0001000 {
+-	compatible = "st,stm32f469-qspi";
+-	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
+-	reg-names = "qspi", "qspi_mm";
+-	interrupts = <91>;
+-	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
+-	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_qspi0>;
+-
+-	flash@0 {
+-		compatible = "jedec,spi-nor";
+-		reg = <0>;
+-		spi-rx-bus-width = <4>;
+-		spi-max-frequency = <108000000>;
+-		...
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+new file mode 100644
+index 000000000000..3665a5fe6b7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/st,stm32-qspi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Quad Serial Peripheral Interface (QSPI) bindings
++
++maintainers:
++  - Christophe Kerello <christophe.kerello@st.com>
++  - Patrice Chotard <patrice.chotard@st.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++
++properties:
++  compatible:
++    const: st,stm32f469-qspi
++
++  reg:
++    items:
++      - description: registers
++      - description: memory mapping
++
++  reg-names:
++    items:
++     - const: qspi
++     - const: qspi_mm
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: tx DMA channel
++      - description: rx DMA channel
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    spi@58003000 {
++      compatible = "st,stm32f469-qspi";
++      reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
++      reg-names = "qspi", "qspi_mm";
++      interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
++      dmas = <&mdma1 22 0x10 0x100002 0x0 0x0>,
++             <&mdma1 22 0x10 0x100008 0x0 0x0>;
++      dma-names = "tx", "rx";
++      clocks = <&rcc QSPI_K>;
++      resets = <&rcc QSPI_R>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      flash@0 {
++        compatible = "jedec,spi-nor";
++        reg = <0>;
++        spi-rx-bus-width = <4>;
++        spi-max-frequency = <108000000>;
++      };
++    };
++
++...
+-- 
+2.20.1
+
