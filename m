@@ -2,124 +2,230 @@ Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3708C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7183CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24E22073F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574429706;
-	bh=Xc8NEhUH7x1Ru0D5hE6DS/61EqvwOoHXnghK6Qnxolg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=urOOVaIobWChYByFz43IgeVoO030Wt1REe8zs3dgmOXK7KrPCmS90AfC8xMObmPVQ
-	 0oejRtCv0jpfhF+9bWphyJppl2V53+7SVWGajYs2ffW0PYeBGwji65d2oUp2Lyb9Bz
-	 7YagdQkqDYr1MLDxZ2jrzJ7I0PxX7Rqr4sjXBGvw=
+	by mail.kernel.org (Postfix) with ESMTP id 3D59820707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 13:37:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w5ReVDww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfKVNfG (ORCPT
+        id S1727802AbfKVNhG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 08:35:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfKVNfF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 22 Nov 2019 08:35:05 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F9F2077B;
-        Fri, 22 Nov 2019 13:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574429705;
-        bh=Xc8NEhUH7x1Ru0D5hE6DS/61EqvwOoHXnghK6Qnxolg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dpbMT4Xw98yDPO1nvqRYpcpH2lGk+6hOAUBQbwZNtohXzMR5SwP0c2wMxu9jC8LF4
-         E1GO/L9BRDCbTqGJ860Rq9w23C5lG7N8QUTQhEwWIGGvRJz+Sq/II0Km1U24I9hG+w
-         wW5wzCJKW0ZjceFRSzBD5XLu92320Q6QETL422DE=
-Received: by mail-qk1-f173.google.com with SMTP id z65so1465163qka.6;
-        Fri, 22 Nov 2019 05:35:04 -0800 (PST)
-X-Gm-Message-State: APjAAAVAG0UnsZex8tr7Yak7YMu3chi5HIdAkRoC6MiSkVElS7ddM2Z7
-        uacYp3m8hWBthu64niV71S3Bukyc214+LjN9Eg==
-X-Google-Smtp-Source: APXvYqwQSwjxM5BHEVn5dZVK5SNNRkjxNzrcBxYKps9iwyn6mBOFDz8HEZmqFgKuJgRFzCvT68VZifGsfq/jhc0nItA=
-X-Received: by 2002:a05:620a:226:: with SMTP id u6mr13116027qkm.393.1574429703879;
- Fri, 22 Nov 2019 05:35:03 -0800 (PST)
+        Fri, 22 Nov 2019 08:37:06 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53034 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfKVNhG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 08:37:06 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAMDas63078389;
+        Fri, 22 Nov 2019 07:36:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574429814;
+        bh=Wi6ZgZI4r6IS9bms8nXC10YWQfy3n++xOx+J8yqDN7c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=w5ReVDww8V4Nfd1yP8V/lPs17pwBkSEHTSVVgG5kMYIvWsrXSMVEogFSJe0/ick3W
+         Iiv8ZYStBToJZpshsa93ZiK4QWghiEBg5XPRIOdHt8CSVsuyhHDzIU002JbAXzpK/+
+         0Y8QTQ+CGLy3krx1/G9UTngrpIcNqi4Dr0R5970M=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAMDas92072643
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Nov 2019 07:36:54 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 22
+ Nov 2019 07:36:53 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 22 Nov 2019 07:36:53 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAMDaoTH018858;
+        Fri, 22 Nov 2019 07:36:51 -0600
+Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com>
+ <20191120133409.9217-2-peter.ujfalusi@ti.com>
+ <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com>
+Date:   Fri, 22 Nov 2019 15:36:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191120071302.227777-1-saravanak@google.com>
-In-Reply-To: <20191120071302.227777-1-saravanak@google.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 22 Nov 2019 07:34:51 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+f1+xRv36z0o--u4SskTG-WxUdssJ-CP32RUZbtVuQ3w@mail.gmail.com>
-Message-ID: <CAL_Jsq+f1+xRv36z0o--u4SskTG-WxUdssJ-CP32RUZbtVuQ3w@mail.gmail.com>
-Subject: Re: [PATCH] of: property: Add device link support for
- interrupt-parent, dmas and -gpio(s)
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 1:13 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> Add support for creating device links out of more DT properties.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/property.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 0fa04692e3cc..dedbf82da838 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1188,7 +1188,11 @@ DEFINE_SIMPLE_PROP(interconnects, "interconnects", "#interconnect-cells")
->  DEFINE_SIMPLE_PROP(iommus, "iommus", "#iommu-cells")
->  DEFINE_SIMPLE_PROP(mboxes, "mboxes", "#mbox-cells")
->  DEFINE_SIMPLE_PROP(io_channels, "io-channel", "#io-channel-cells")
-> +DEFINE_SIMPLE_PROP(interrupt_parent, "interrupt-parent", NULL)
 
-This one is not going to work most of the time (ignoring the fact that
-the primary controller doesn't have a struct device) because the
-interrupt-parent is typically in a parent node. You could make it work
-by specifying 'interrupt-parent' in every node, but that's not a
-pattern I want to encourage. There's also all the other ways the
-parent can be determined. Any parent node with 'interrupt-controller'
-or 'interrupt-map' property is the parent. And there's
-'interrupts-extended' too.
 
-> +DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-cells")
->  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
-> +DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
-> +DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
->
->  static const struct supplier_bindings of_supplier_bindings[] = {
->         { .parse_prop = parse_clocks, },
-> @@ -1196,7 +1200,11 @@ static const struct supplier_bindings of_supplier_bindings[] = {
->         { .parse_prop = parse_iommus, },
->         { .parse_prop = parse_mboxes, },
->         { .parse_prop = parse_io_channels, },
-> +       { .parse_prop = parse_interrupt_parent, },
-> +       { .parse_prop = parse_dmas, },
->         { .parse_prop = parse_regulators, },
-> +       { .parse_prop = parse_gpio, },
-> +       { .parse_prop = parse_gpios, },
->         {}
->  };
->
-> --
-> 2.24.0.432.g9d3f5f5b63-goog
->
+On 22/11/2019 14.10, Linus Walleij wrote:
+> On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> 
+>> Boards might use the same GPIO line to control several external devices.
+>> Add section to document on how a shared GPIO pin can be described.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> As I've stated earlier I think this information is surplus.
+> If two devices have a phandle to the same GPIO line
+> then it is by definition shared.
+
+Well, phandle + line number to be precise. There might be a way to grep
+the whole DT and figure out if really we have multiple users for the
+same line behind of the phandle.
+
+> 
+>> +               line_a {
+>> +                       gpio-shared;
+> 
+> So this is unnecessary: if the same line is referenced
+> by phandle from two places it is shared, simple as that.
+
+phandle is pointing to the gpio controller, not to the line.
+
+> It is up to code in the operating system (like Linux) to
+> detect if they are shared in practice (both consumer
+> nodes are enabled) and then deal with the outcome.
+
+Ideally yes.
+
+>> +                       gpios = <5 0>;
+>> +                       output-low;
+> 
+> This is overlapping with the use case to define initial
+> state values for GPIOs, something that has been
+> brought up repeatedly and I've collected links for
+> previous discussions several times.
+
+I don't mind this to go away and the first set would configure the level.
+Kept it here so I can reuse the gpio-hog code from gpiolib-of ;)
+
+> I guess if need be I have to look them up again.
+> 
+> The DT maintainers don't like the hog syntax so
+> something else is desired for this.
+
+I see, so the gpio-hog might change?
+
+>> +                       refcounted-high;
+> (snip)
+>> +The shared GPIO line management strategy can be selected with either of the
+>> +following properties:
+>> +- refcounted-low: The line must be kept low as long as there is at least one
+>> +               request asking it to be low.
+>> +- refcounted-high: The line must be kept high as long as there is at least one
+>> +               request asking it to be high.
+> 
+> Is this really needed? Isn't it more appropriate to just define the
+> semantics such that as soon as some consumer requests the line
+> high it will be refcounted high, and as soon as it is requested
+> low by any consumer it will be refcounted low.
+
+Well. How do we decide which level is the one that should be preserved?
+
+How would the core decide what to in a simplest case:
+two device, they are the same part.
+ENABLE pin which needs to be high to enable the device.
+When the driver probes it asks for initial deasserted GPIO as the device
+is not in active use.
+
+We are refcouting low?
+
+Then one device is enabled, it asks for assert for the line.
+
+We are now refcounting high?
+
+Then the other device is also enabled, it also asserts the line.
+
+We are still refcounting high?
+
+_one_ of the device is no longer in use, the driver asks for deassert.
+
+We are switching to refcount low and set the line low?
+That would break the other device as it still want the line high.
+
+and no, we can not refcount for the asserted state as if the pin is
+RESET and active low, then assert will disable the devices.
+
+Now if you throw in a third device to the mix, the whole global
+refcounting will be off even more.
+
+Furthermore:
+If you have two different devices one with ENABLE (low=reset,
+high=enabled) the other with RESET (low=reset, high=enabled) pin and
+they are described in DT correctly and the driver is written correctly
+for assert/deassert, then this dummy shared implementation will just
+fail as we are sharing the same gpio_desc between them, but they want to
+use it with different GPIO_ACTIVE_* level.
+
+>> +If neither of the refcounting strategy was selected then the shared GPIO is
+>> +handled as pass through. In this mode all user requests will be forwarded to the
+>> +shared GPIO pin without refcounting.
+> 
+> Why should this even be allowed? If we are defining a special semantic
+> for refcounted GPIOs (even defining a separate API in the Linux
+> OS, though it is beside the point) why do we have to have a fallback
+> to the old behaviour at all?
+
+I kept it because there were comments for the gpio-shared driver
+indicating that in some cases pass-through shared line might be needed
+for some setups.
+
+> I think you can do this by just detecting multiple phandles to the
+> same GPIO and implicit refcounting for > 1 consumers.
+
+You mean that at every gpio request we would parse the DT to see if
+there is another gpio binding pointing to the same gpio pin?
+Or want to do a parse for all gpio pins during boot and mark the pins
+which have multiple gpio binding pointing to them?
+
+> I.e. no new bindings at all, maybe some patches explaining the
+> semantic effect of using the same GPIO from two consumer
+> nodes.
+
+The level that needs to be preserved need to be communicated somehow imho.
+
+If you plan to have separate API for this as I believe you do, then probably
+
+struct gpio_refcount_desc *gpiod_refcounted_get(struct device *dev,
+					const char *con_id,
+					enum gpiod_flags flags,
+					bool i_care_for_asserted_state);
+
+If the device have ENABLE with active high, the driver would:
+gpiod_refcounted_get(dev, "enable", GPIOD_OUT_DEASSERTED, true);
+
+if it has RESET with active low, the driver would:
+gpiod_refcounted_get(dev, "reset", GPIOD_OUT_ASSERTED, false);
+
+if it is desired that the device would be placed in reset/power-down
+when the driver probes.
+
+Then the core would need to figure out what these actually mean at the end.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
