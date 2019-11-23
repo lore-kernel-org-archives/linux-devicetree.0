@@ -1,93 +1,89 @@
-Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=2F7s=ZP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B32DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 23:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6504C43215
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 00:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52F420708
-	for <linux-devicetree@archiver.kernel.org>; Fri, 22 Nov 2019 23:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B922071F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 00:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574467167;
-	bh=tPJMS+0iDU7o1+blbyGgn/15DfK+XqP1S9GHBpi2Nks=;
+	s=default; t=1574467326;
+	bh=EaGeOGIT3n7QWMSJcdDNYxnMTc3DwsyaZi6kOR+7z0Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fqXON+Scqq4p4t4XWVxJ2jdvliluNGDo3TaCb2r/AjeLcqpqhpAE/4HVPA2v9S5PP
-	 sSeol+Hymv5pJLNxRK6LizXUoJxW1r0a/S8MkTCtATPdATxz/4THQ51TS3OQE2aP6y
-	 U1GGuU9ijUwodXo2zL2A5tzXnr+tOftYe8TegMNQ=
+	b=Zf9hgY1rQ2FjmVAL6RldVpMvZiBvv1SlwzpTJ7KZGoJ2lTgVAFjM4pNap8LoAxZXl
+	 DpaCqPgJnBRjVFksi0ULXm9NB8L9Aue+tGRnT109mzk0TUkPfiKcBnytq51499kRm3
+	 xwOLE87e+toCVfyPeFgSPt6TiZUwyouvkbZsJ9PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKVX7Y (ORCPT
+        id S1726729AbfKWACG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 18:59:24 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:38744 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKVX7X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 18:59:23 -0500
-Received: by mail-ot1-f44.google.com with SMTP id z25so7720850oti.5;
-        Fri, 22 Nov 2019 15:59:23 -0800 (PST)
+        Fri, 22 Nov 2019 19:02:06 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36595 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfKWACG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 19:02:06 -0500
+Received: by mail-ot1-f65.google.com with SMTP id f10so7745827oto.3;
+        Fri, 22 Nov 2019 16:02:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qMG5QPIKoP6GuVB63cWLcg46xGdDzVZ+xRKqB7niit4=;
-        b=kWKyb3F3du89pYMjUzomLqHuDy3pE0xlCVfc9mKxEKQPYEAeZ+W+Ikjmg5jJXwhnWX
-         4BGzp7wSYWAKftutg/3BGeD1e1mGgsw+N8QxWplo2dssWBbABZZ10kpgsZgIuKIwFBnE
-         20TVIw+BohTt1w/yolvCnObyxIUFM7TBQA3R/JWlf6QgIcCUNFbeEZ2qE5sl23KoIXiw
-         5iuBeFHO44tH5jh6vHOj0y+2F9bM7PvQYyAlGIw2ub99SP51GhyuU47M9NGsqENB3jMC
-         uZuq7BisKgRLIf2q1/DsZxh0GxyItYi1XWjIfr2nP0OJYZ+NadStV9eo8Gjn/UPE1yc+
-         HYZQ==
-X-Gm-Message-State: APjAAAWuicxYXG9OsU7kwHXMICu67YS4afhDfaCfMra8p/lCdufeFTfj
-        DuVp8YhbySLMwSBZ9pS9iA==
-X-Google-Smtp-Source: APXvYqyt4hfUhy5ovK7LAKjCGgbL1e4QU5oRi5+hn+zYLKRkKg8qST6m7B2MX/1qFaGvzaDvsjcf6Q==
-X-Received: by 2002:a05:6830:1f12:: with SMTP id u18mr13050782otg.58.1574467162830;
-        Fri, 22 Nov 2019 15:59:22 -0800 (PST)
+        bh=UYRop2h5oq/V7Zd/ECRh55ucEaP6cWcggnLJFjyrjyc=;
+        b=gRgEORhrVXKVtvzn3lcUIxsKpap7J8VwQ4mJYbi2gOpRiu3iIL4T4IYkWCSBzObc/E
+         axLAsOa5CZaxIO9GaUoAEeF2205ysWhwuBT+8uFoQlRv2KwLF+hpZkthDJ11vw9562zk
+         oKCdp1fiMtBmqf/BmEA27z2JXQpGDTXQMFvgYWF2EJwbxElRK7pTwVrxCqS8SLS8QVq0
+         DsmpZvh7h1Tu8cFt7P9hYMFKggpV2IC4L8ufhGgNUlfJIU/eeUj2fdK4Nt2/qjKeYY7w
+         xK9GLW0tzeY0umDyiJiSb4F9s53obqhmhZ3WhAvJvthjaf4hxIVzMPivT1cU+2m1yPSO
+         0RuA==
+X-Gm-Message-State: APjAAAXvq75VHnGSfBnRCYAex783aBaeQbAfAoCndeAUrsR8dm0Yalu7
+        QxUS2gy/lbytSxoMa7Jung==
+X-Google-Smtp-Source: APXvYqz183lykh/6KKbgXxLpzmHDXXs9QM/I350iV1R7oLP6tD7QwiCYU2T6vzcZTRlz89Al56YpMw==
+X-Received: by 2002:a9d:4003:: with SMTP id m3mr13219180ote.50.1574467325133;
+        Fri, 22 Nov 2019 16:02:05 -0800 (PST)
 Received: from localhost ([2607:fb90:bd7:3743:c9ec:246b:67b7:9768])
-        by smtp.gmail.com with ESMTPSA id i15sm2716967otl.69.2019.11.22.15.59.21
+        by smtp.gmail.com with ESMTPSA id 94sm2741749otg.70.2019.11.22.16.02.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 15:59:21 -0800 (PST)
-Date:   Fri, 22 Nov 2019 17:59:21 -0600
+        Fri, 22 Nov 2019 16:02:03 -0800 (PST)
+Date:   Fri, 22 Nov 2019 18:02:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, amit.kucheria@verdurent.com,
-        mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v4 6/7] dt-bindings: soc: qcom: Extend RPMh power
- controller binding to describe thermal warming device
-Message-ID: <20191122235921.GA23550@bogus>
-References: <1574254593-16078-1-git-send-email-thara.gopinath@linaro.org>
- <1574254593-16078-7-git-send-email-thara.gopinath@linaro.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
+Message-ID: <20191123000202.GA27127@bogus>
+References: <20191121142726.22856-1-TheSven73@gmail.com>
+ <20191121142726.22856-3-TheSven73@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574254593-16078-7-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <20191121142726.22856-3-TheSven73@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 20 Nov 2019 07:56:32 -0500, Thara Gopinath wrote:
-> RPMh power controller hosts mx domain that can be used as thermal warming
-> device. Add #cooling-cells property to the power domain provider node to
-> indicate this.
+On Thu, 21 Nov 2019 09:27:26 -0500, Sven Van Asbroeck wrote:
+> The driver has been extended to optionally get its operational
+> mode, regulator init data and led naming from the devicetree.
 > 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> Tree: next-20191118
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 > ---
-> v3->v4:
-> 	- Removed subnode to indicate that mx power domain is a warming
-> 	  device. Instead #cooling-cells is used as a power domain
-> 	  provider property to indicate if the provider hosts a power
-> 	  domain that can be used as a warming device.
-> 
->  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++++++++++-
+>  1 file changed, 46 insertions(+), 1 deletion(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
