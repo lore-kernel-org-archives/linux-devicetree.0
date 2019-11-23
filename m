@@ -2,73 +2,150 @@ Return-Path: <SRS0=2F7s=ZP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60A0C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 10:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA057C432C0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 11:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B036520714
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 10:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A1820719
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 11:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574509285;
+	bh=ngMp7fsUkEM35vFeaBws4aMpe9K1puuD9DJWsdHYSTk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fLQeYLK/QyoOcRjTW+Jyd9KYUztunT25Ailfsl6d0hR3uvUVY5WD3oEQBafigEpno
+	 Kg8Y1WS6a+iqaybYBtfjGJFIyDgrjr/bJKmjXZOuhsiFbOMTT3nvq4uA1fX5nqo16U
+	 YHLvcI37h6MlbstIqk77tjIGgA7hHBvBl2flABqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfKWKEn convert rfc822-to-8bit (ORCPT
+        id S1726487AbfKWLlZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 Nov 2019 05:04:43 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:55063 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbfKWKEn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 Nov 2019 05:04:43 -0500
-Received: from marcel-macbook.holtmann.net (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 8BD31CECBE;
-        Sat, 23 Nov 2019 11:13:48 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v6 0/4] Bluetooth: hci_bcm: Additional changes for BCM4354
- support
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191118192123.82430-1-abhishekpandit@chromium.org>
-Date:   Sat, 23 Nov 2019 11:04:40 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <1CEDCBDC-221C-4E5F-90E9-898B02304562@holtmann.org>
-References: <20191118192123.82430-1-abhishekpandit@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Sat, 23 Nov 2019 06:41:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbfKWLlZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 23 Nov 2019 06:41:25 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AB9220714;
+        Sat, 23 Nov 2019 11:41:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574509284;
+        bh=ngMp7fsUkEM35vFeaBws4aMpe9K1puuD9DJWsdHYSTk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oVI/DT6Qj5t3jg8aa0j25qR5uWr3gk08Y7DPmHTDRp8kZGAhSC7De+EaxgDY/f3ur
+         +A1VM3Pd2spUdbh0DTRy06mLEC2OnTajsK4tcJHQ1WLAaZovlz7TbPWsJ/QRP4pcLR
+         neZUnwcvrlJf5glZVbevRWJblF+CLHKHVk+CXVLo=
+Date:   Sat, 23 Nov 2019 11:41:19 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rodrigo Carvalho <rodrigorsdc@gmail.com>
+Cc:     alexandru.ardelean@analog.com,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v4] dt-bindings: iio: accel: add binding documentation
+ for ADIS16240
+Message-ID: <20191123114119.7b0c3447@archlinux>
+In-Reply-To: <20191123051927.5016-1-rodrigorsdc@gmail.com>
+References: <20191123051927.5016-1-rodrigorsdc@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Abhishek,
+On Sat, 23 Nov 2019 02:19:27 -0300
+Rodrigo Carvalho <rodrigorsdc@gmail.com> wrote:
 
-> While adding support for the BCM4354, I discovered a few more things
-> that weren't working as they should have.
+> This patch add device tree binding documentation for ADIS16240.
 > 
-> First, we disallow serdev from setting the baudrate on BCM4354. Serdev
-> sets the oper_speed first before calling hu->setup() in
-> hci_uart_setup(). On the BCM4354, this results in bcm_setup() failing
-> when the hci reset times out.
+> Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+No problem with this patch, but I definitely want to see an accompanying
+one enforcing the SPI mode in the driver.
+
+Right now the driver doesn't set it and so I'm fairly sure not putting
+it in the binding will leave you with a non working device.
+
+The right option if only one option is supported is for the driver
+to call spi_setup with the relevant options.
+
+Thanks,
+
+Jonathan
+
+> ---
+> V4:
+>    - Remove spi-cpha and spi-cpol in binding example, since this driver
+> supports only one timing mode.
+>  .../bindings/iio/accel/adi,adis16240.yaml     | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
 > 
-> Next, we add support for setting the PCM parameters, which consists of
-> a pair of vendor specific opcodes to set the pcm parameters. The
-> documentation for these params are available in the brcm_patchram_plus
-> package (i.e. https://github.com/balena-os/brcm_patchram_plus). This is
-> necessary for PCM to work properly.
-> 
-> All changes were tested with rk3288-veyron-minnie.dts.
-
-so I have re-factored your patch set now to apply to latest bluetooth-next tree and posted it to the mailing list. Please have a look at it if this works for you. If it does, then we might just apply it this way and focus on getting detailed PCM codec configuration for all vendors in once we have a second vendor to unify it.
-
-Regards
-
-Marcel
+> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> new file mode 100644
+> index 000000000000..8e902f7c49e6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ADIS16240 Programmable Impact Sensor and Recorder driver
+> +
+> +maintainers:
+> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> +
+> +description: |
+> +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
+> +  SPI interface.
+> +    https://www.analog.com/en/products/adis16240.html
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adis16240
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* Example for a SPI device node */
+> +        accelerometer@0 {
+> +            compatible = "adi,adis16240";
+> +            reg = <0>;
+> +            spi-max-frequency = <2500000>;
+> +            interrupt-parent = <&gpio0>;
+> +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
 
