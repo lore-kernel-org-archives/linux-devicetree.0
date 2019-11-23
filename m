@@ -4,80 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C140AC432C0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 00:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F2CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 00:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EFD2070E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 00:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AACB2070E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 00:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574468589;
-	bh=N2AVbPvxueOk93XHmMK/F0zYyTV+L8gXoHEvirViIpY=;
+	s=default; t=1574469002;
+	bh=gkSH+NVla7yvZl+ootdJK+DnOSLN6Zmhfg0ZW8l4DfI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jBEdyzsy3qdsIm7LmRm0aEzUP8Kx0BI7QZFfQ/d02Qel0WrE/VDmsWrWenHn6wthu
-	 OXjXqTzJvKr0hY9PcNNSxmseERq9pgwSdnOBAa87zQ/AEQsQPy6YoVcoPj2Ce8sCGI
-	 ncXFlEbubnx3UHqKjjFMEzolu4GYpEwTWdAkXeqM=
+	b=cxefAknL4kONjX+6Nxr9JbLl148JjVgmft9skzNSdAomSNCoYUlcsGbfszJPwkmW1
+	 xmchcjHl9rK8/TUCUz/JhGQCabdpOJezFzdGvA4+Vvg5lEr8/c+Z7ASi90Dc9eG8E4
+	 eJbOCC6rpjc31fMd16psVdghh1ROiSn2sEKJffbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfKWAXJ (ORCPT
+        id S1726705AbfKWA36 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 22 Nov 2019 19:23:09 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33903 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKWAXJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 19:23:09 -0500
-Received: by mail-pj1-f66.google.com with SMTP id bo14so3768135pjb.1;
-        Fri, 22 Nov 2019 16:23:08 -0800 (PST)
+        Fri, 22 Nov 2019 19:29:58 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43184 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfKWA36 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 22 Nov 2019 19:29:58 -0500
+Received: by mail-pl1-f194.google.com with SMTP id a18so3804121plm.10;
+        Fri, 22 Nov 2019 16:29:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lxLJiYCoNL4i7qjSa7Ir92NEE6tE0glZGS31je6RfW0=;
-        b=cIFTyKDs//vQUUXeMmH9rC1VkDlRc3OYhNNjGFbgN4i5byLT+t3sX8XFrfHDGqqzYa
-         27USZQ2ysAR8o+OZwCiWKVEJpzV4Msqyr8NReReeqlF0ihnW3SbuA08bnHq6MK9pGq4S
-         0vv4X5OOK3gp+C9Q1UaFt7HHIZ5GAQNI2mdsHlr7einn9gXg1mxzHSdT03T9wvQpOgR6
-         51rgbA4dSpvATIScRLzbfMjsfTEKGF6U7AQflF2OOjVbdTxTrN43+GEHko2+2QzOc4Ao
-         8HuL3+4oyP4a0o3zXNh/rPMuJDccAVxNBitA/FPDtzitMS/mUpaboJgRNOHP0coIX+sL
-         ZZ/g==
-X-Gm-Message-State: APjAAAWex82sNhtIXA45ftYRAgjG39ysMNzkjKVfLEORmbme9Ge/u2hJ
-        K8YmSkXSyyQg3DCtLBQ6eg==
-X-Google-Smtp-Source: APXvYqwIxJT29FFU7zIhNQuLQfIDEJQuTdTfpWOzNcB5v2WaCAqz4wqoAtu2sebipwOcgxXsn4bZiQ==
-X-Received: by 2002:a17:90a:68cc:: with SMTP id q12mr23009357pjj.118.1574468588250;
-        Fri, 22 Nov 2019 16:23:08 -0800 (PST)
+        bh=+AQZeDv5UqOHpZMTCf27vGknoqjGXNsTqXSKl1b2Ejk=;
+        b=CqCXk07bdA0p1KvwPHwwKUCddEDulmKTreDlMAGE1BlnipvMYoTkpzbqWAvKZvppDP
+         rV6p+adMWAlIGfuXc+/GRid0tGQWUv2Hq8Q4LbsBCH9jbLuuYmDkRPjYsguQ11J3Bkz3
+         HKPBg7EYWzhslf5J3jEy1+zRtWupIQhwD43sqOY0+5GX6z59DuRStU5Xy+Ufmw6YEhhP
+         HOMxsQNC++t2cTnkAUA2QJIiiKfr3PjW1jrk2FnqvPYZoz8qbpq+aNZcXafk/rl+/B/+
+         47TbsTAbBqzpJODJed7CMTAIYI0uLx5FgqUAWcYNiTT3FY2QlCCORFanzPrzDya2QSFF
+         0FnA==
+X-Gm-Message-State: APjAAAWVttafJVCHm6d1hAWeGRJBd9FJrUYbqNYjb/xjt2jN13FbRldR
+        ZCoiHfV58XvxLSquVIlk7Q==
+X-Google-Smtp-Source: APXvYqzchwD1cusjG/lqJ4ZnXQsbhG6GBfQ2tAvLCsPH56xzATlT6s2p/1xcDlc/4JpQkrNtUfiEpA==
+X-Received: by 2002:a17:902:8341:: with SMTP id z1mr17267199pln.222.1574468997207;
+        Fri, 22 Nov 2019 16:29:57 -0800 (PST)
 Received: from localhost ([172.58.139.180])
-        by smtp.gmail.com with ESMTPSA id o125sm8329925pfg.118.2019.11.22.16.23.06
+        by smtp.gmail.com with ESMTPSA id e24sm59656pjt.18.2019.11.22.16.29.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2019 16:23:07 -0800 (PST)
-Date:   Fri, 22 Nov 2019 18:23:03 -0600
+        Fri, 22 Nov 2019 16:29:56 -0800 (PST)
+Date:   Fri, 22 Nov 2019 18:29:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 01/49] dt: bindings: net: add qcom,ath11k.yaml
-Message-ID: <20191123002303.GA23259@bogus>
-References: <1573810153-29623-1-git-send-email-kvalo@codeaurora.org>
- <1573810153-29623-2-git-send-email-kvalo@codeaurora.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 1/4] dt-bindings: Document JZ47xx VPU auxiliary
+ processor
+Message-ID: <20191123002510.GA26022@bogus>
+References: <20191116170846.67220-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573810153-29623-2-git-send-email-kvalo@codeaurora.org>
+In-Reply-To: <20191116170846.67220-1-paul@crapouillou.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 15 Nov 2019 11:28:25 +0200, Kalle Valo wrote:
-> ath11k is a driver for Qualcomm IEEE 802.11ax devices. Add a
-> bindings document for the driver, first documenting IPQ8074 which is the
-> only device ath11k currently supports.
+On Sat, 16 Nov 2019 18:08:43 +0100, Paul Cercueil wrote:
+> Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+> Ingenic is a second Xburst MIPS CPU very similar to the main core.
+> This document describes the devicetree bindings for this auxiliary
+> processor.
 > 
-> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  .../bindings/net/wireless/qcom,ath11k.yaml         | 273 +++++++++++++++++++++
->  1 file changed, 273 insertions(+)
+> 
+> Notes:
+>     v2: Update TCSM0 address in example
+>     v3: Change node name to 'video-decoder'
+> 
+>  .../bindings/remoteproc/ingenic,vpu.txt       | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
