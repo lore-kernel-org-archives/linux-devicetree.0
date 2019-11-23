@@ -2,173 +2,166 @@ Return-Path: <SRS0=2F7s=ZP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2EFC432C0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 16:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04179C43215
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 16:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9F82070E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 16:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD362070E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 16:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sq1JMV0A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4EoZznN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfKWQqe (ORCPT
+        id S1726967AbfKWQvM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 Nov 2019 11:46:34 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33906 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfKWQqe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 Nov 2019 11:46:34 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j18so12619915wmk.1;
-        Sat, 23 Nov 2019 08:46:32 -0800 (PST)
+        Sat, 23 Nov 2019 11:51:12 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35710 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfKWQvM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 Nov 2019 11:51:12 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 23so7188109otf.2;
+        Sat, 23 Nov 2019 08:51:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1+q/J91QZrUyW+cDfomaZxv5uUd4cutQuN/eWd3tTuc=;
-        b=Sq1JMV0AKFlSoyWR5Isz9bfqLqXog/lzYBzsLwS7xe6dbIJnh9aSd0SWGKFHQLCBCU
-         32t997IqKauYFwDd1F1T3xKV24Ej0I8+BLdO8dZyi12C1M4mgCRtoho6bclnEOdDg1va
-         kg85KiUiGzWrynldRgx//qqN3d9ZM6XS6s0RyEu+asjDhyiXhngnrI3FYzPYCfK0xcEN
-         9F5H43Md0uPQ6iHPBm5OFELBiNX2FA6WaG1XH2gqgEO12okVstedwhcRXyswPhuaA10I
-         5NR2YDtZZ1HGQ5/ggJ/v0ubhvGe9lAYi8yN1zbK2yNt+gGAp+42orzXhsuvd3uh4bwLt
-         8LSQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Upjd5FUUY2gldqhTrP6G3VfXwkiVp2ftazHWWknqWA4=;
+        b=f4EoZznNRknE5+5KvGz4gn6nVLdgpGkAnfbkGyUIqGaP+UAxcV/BrOLd2UxApPRrEY
+         GK5bvfrDftwMSeSG2J5qWQsQbZKNzEWE1UscURDcyZ/Mf2IozhUK2hD7H7Wk6P+fr+Lj
+         vYt3DfrNbNBDK2yymxFGV/wFQn08Y+ugjt/BabLIUwHrZDgdzC99OIHCsK3JPAOKI3Fl
+         E0wzoBe1QNhnGqHxm235gEr3NX3lPvqWuX5gUSiK5gp+50CKyLWdeQC3cHqdNJ1vHc0O
+         Pu1CfHPZkXkBFCovetMk4xuIxH7tOZ0Zyl87WOiEm3Q62Gxg8qmKNTjf1qf5qKp1IeyI
+         ugIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1+q/J91QZrUyW+cDfomaZxv5uUd4cutQuN/eWd3tTuc=;
-        b=efS63LgGaOVzO6sEW82+OrKpsGyjT38yGHxUeyIHrLqYI+O8IHZaZ0JyudbFkHcj0u
-         cC/km8zD3qqaZa/7iZ4dos36kSm23emkr+202ycg35UYi9TwerPrU7MV7ncMnBZDpPbn
-         QN/FsQtZdztj+BZTtZGZQkC7N0e+SCX6lWVknUp1Hul24my3r7P2eoL36xrXML8YD5U0
-         rblWX6mqdqYr7+j15HOSu08RYC/86XVo1rNC/u61phrKFkHKpym2hTXSVTYGt1ZLN23s
-         xenZmib72Kal1bJ+ES7RlShnYIVWyCF10wZTzwI7SVM1D4I42WWYQXjrtaIpyvH+gnTd
-         8FfA==
-X-Gm-Message-State: APjAAAWMGrTxx3Ff9rm2hloyqEw7bx8wJY5JWgZ/98ym2gIRPxrVDIhn
-        fmXFnlTkGaXLTxtXAUcNuT8=
-X-Google-Smtp-Source: APXvYqzX6wP6S7RkRwlqLFWWULenrCVt+da3DqKcftGhXy01CltOS/YdDB3bz+o4edsgOrM1BFwAVw==
-X-Received: by 2002:a1c:6885:: with SMTP id d127mr21062007wmc.64.1574527591588;
-        Sat, 23 Nov 2019 08:46:31 -0800 (PST)
-Received: from [192.168.1.19] (bkp184.neoplus.adsl.tpnet.pl. [83.28.183.184])
-        by smtp.gmail.com with ESMTPSA id t12sm2607218wrx.93.2019.11.23.08.46.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Nov 2019 08:46:31 -0800 (PST)
-Subject: Re: [PATCH 1/2] dt-bindings: leds: Convert common LED binding to
- schema
-To:     Rob Herring <robh@kernel.org>, linux-leds@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-References: <20191119194623.23854-1-robh@kernel.org>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <46d7e474-d2b0-10e4-d9dc-f7783c49e699@gmail.com>
-Date:   Sat, 23 Nov 2019 17:46:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Upjd5FUUY2gldqhTrP6G3VfXwkiVp2ftazHWWknqWA4=;
+        b=lV1OOhOx6mTrp0h6VAeyGX94uoAVikfnib2J1JOyJGUA6THZasdy4t//ZqCb58crYA
+         cayougm6bGPybiKAYBA52JO+u4KqrfUcZzNUPHcOn1bE2tsj3bREcBvdkOVa2CqSzU3t
+         yZYq8fcFqoNuUb0E9AllUSbIMmqEhzCYmNTV5ZDvpE0MdP2mqWRLdn2lDDqs6Y7sg5Wv
+         O03azfqZc9I4uii6E1dDoPrZYef/ofqp1LSpdNTfn3y2V+GCvUcEzdLJD08D0gRmOhRp
+         WoTeFB40abF4q4lpPucsx7y9RlhLJSiuKZyjQifd+zB1/dqWH+7fg4/aqq1zO5GyVuVr
+         pk3Q==
+X-Gm-Message-State: APjAAAUN/jTY37W352O1BRnlfa6xQbUHW7+unwXnprld0dGbaCBm4rU2
+        e7XtEuXKFCicTacJ+CL6wfI=
+X-Google-Smtp-Source: APXvYqy/FuuHH8tC1YjzsbuxoICI/PjIU8E8OEmgejzSAAA40pPWUGyBa/f/fjeP66p0eSxGD/kxCw==
+X-Received: by 2002:a9d:7399:: with SMTP id j25mr5600107otk.155.1574527870570;
+        Sat, 23 Nov 2019 08:51:10 -0800 (PST)
+Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::7])
+        by smtp.gmail.com with ESMTPSA id n5sm609133oie.16.2019.11.23.08.51.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 23 Nov 2019 08:51:09 -0800 (PST)
+Date:   Sat, 23 Nov 2019 09:51:08 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+Message-ID: <20191123165108.GA15306@ubuntu-x2-xlarge-x86>
+References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20191119194623.23854-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121092646.8449-1-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 11/19/19 8:46 PM, Rob Herring wrote:
-> Convert the common LEDs properties bindings to a schema. As trigger source
-> providers are different nodes, we need to split trigger source properties
-> to a separate file.
+On Thu, Nov 21, 2019 at 10:26:44AM +0100, Nicolas Saenz Julienne wrote:
+> Using a mask to represent bus DMA constraints has a set of limitations.
+> The biggest one being it can only hold a power of two (minus one). The
+> DMA mapping code is already aware of this and treats dev->bus_dma_mask
+> as a limit. This quirk is already used by some architectures although
+> still rare.
 > 
-> Bindings for LED controllers can reference the common schema for the LED
-> child nodes:
+> With the introduction of the Raspberry Pi 4 we've found a new contender
+> for the use of bus DMA limits, as its PCIe bus can only address the
+> lower 3GB of memory (of a total of 4GB). This is impossible to represent
+> with a mask. To make things worse the device-tree code rounds non power
+> of two bus DMA limits to the next power of two, which is unacceptable in
+> this case.
 > 
-> patternProperties:
->   "^led@[0-4]":
->     type: object
->     allOf:
->       - $ref: common.yaml#
+> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
+> over the tree and treat it as such. Note that dev->bus_dma_limit should
+> contain the higher accesible DMA address.
 > 
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: linux-leds@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/leds/common.txt       | 174 +------------
->  .../devicetree/bindings/leds/common.yaml      | 228 ++++++++++++++++++
->  .../bindings/leds/trigger-source.yaml         |  24 ++
->  3 files changed, 253 insertions(+), 173 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/common.yaml
->  create mode 100644 Documentation/devicetree/bindings/leds/trigger-source.yaml
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+<snip>
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 041066f3ec99..0cc702a70a96 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -421,8 +421,7 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
+>  	if (iova_len < (1 << (IOVA_RANGE_CACHE_MAX_SIZE - 1)))
+>  		iova_len = roundup_pow_of_two(iova_len);
+>  
+> -	if (dev->bus_dma_mask)
+> -		dma_limit &= dev->bus_dma_mask;
+> +	dma_limit = min_not_zero(dma_limit, dev->bus_dma_limit);
+>  
+>  	if (domain->geometry.force_aperture)
+>  		dma_limit = min(dma_limit, domain->geometry.aperture_end);
 
-For both 1/2 an 2/2:
+Just as an FYI, this introduces a warning on arm32 allyesconfig for me:
 
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+In file included from ../include/linux/list.h:9,
+                 from ../include/linux/kobject.h:19,
+                 from ../include/linux/of.h:17,
+                 from ../include/linux/irqdomain.h:35,
+                 from ../include/linux/acpi.h:13,
+                 from ../include/linux/acpi_iort.h:10,
+                 from ../drivers/iommu/dma-iommu.c:11:
+../drivers/iommu/dma-iommu.c: In function 'iommu_dma_alloc_iova':
+../include/linux/kernel.h:851:29: warning: comparison of distinct pointer types lacks a cast
+  851 |   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+      |                             ^~
+../include/linux/kernel.h:865:4: note: in expansion of macro '__typecheck'
+  865 |   (__typecheck(x, y) && __no_side_effects(x, y))
+      |    ^~~~~~~~~~~
+../include/linux/kernel.h:875:24: note: in expansion of macro '__safe_cmp'
+  875 |  __builtin_choose_expr(__safe_cmp(x, y), \
+      |                        ^~~~~~~~~~
+../include/linux/kernel.h:884:19: note: in expansion of macro '__careful_cmp'
+  884 | #define min(x, y) __careful_cmp(x, y, <)
+      |                   ^~~~~~~~~~~~~
+../include/linux/kernel.h:917:39: note: in expansion of macro 'min'
+  917 |  __x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
+      |                                       ^~~
+../drivers/iommu/dma-iommu.c:424:14: note: in expansion of macro 'min_not_zero'
+  424 |  dma_limit = min_not_zero(dma_limit, dev->bus_dma_limit);
+      |              ^~~~~~~~~~~~
 
--- 
-Best regards,
-Jacek Anaszewski
+Cheers,
+Nathan
