@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB64BC432C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 15:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD04FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 15:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7C920706
-	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 15:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A5020679
+	for <linux-devicetree@archiver.kernel.org>; Sat, 23 Nov 2019 15:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKWPdy (ORCPT
+        id S1726757AbfKWPiz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 23 Nov 2019 10:33:54 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:55052 "EHLO
+        Sat, 23 Nov 2019 10:38:55 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:55288 "EHLO
         asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfKWPdy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 23 Nov 2019 10:33:54 -0500
+        with ESMTP id S1726736AbfKWPiy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 23 Nov 2019 10:38:54 -0500
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id E99EB2008A;
-        Sat, 23 Nov 2019 16:27:39 +0100 (CET)
-Date:   Sat, 23 Nov 2019 16:27:38 +0100
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 5595C2008C;
+        Sat, 23 Nov 2019 16:29:37 +0100 (CET)
+Date:   Sat, 23 Nov 2019 16:29:36 +0100
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -35,22 +34,22 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: vendor-prefixes: Add Shenzhen Frida LCD
- Co., Ltd.
-Message-ID: <20191123152738.GA27045@ravnborg.org>
+Subject: Re: [PATCH 3/3] drm/panel: simple: Add support for the Frida
+ FRD350H54004 panel
+Message-ID: <20191123152936.GC27045@ravnborg.org>
 References: <20191120171027.1102250-1-paul@crapouillou.net>
+ <20191120171027.1102250-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191120171027.1102250-1-paul@crapouillou.net>
+In-Reply-To: <20191120171027.1102250-3-paul@crapouillou.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
         a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=7gkXJVJtAAAA:8 a=qIjRjsPfdrvINvMtCKIA:9 a=CjuIK1q_8ugA:10
-        a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=bWyr8ysk75zN3GCy5bjg:22
+        a=ynqdyZ908_tY_8WrgD8A:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
+        a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -58,33 +57,63 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Paul.
 
-On Wed, Nov 20, 2019 at 06:10:25PM +0100, Paul Cercueil wrote:
-> Add an entry for Shenzhen Frida LCD Co., Ltd.
+On Wed, Nov 20, 2019 at 06:10:27PM +0100, Paul Cercueil wrote:
+> The FRD350H54004 is a simple 3.5" 320x240 24-bit TFT panel, found for
+> instance inside the Anbernic RG-350 handheld gaming console.
 > 
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 967e78c5ec0a..9c6e1b42435b 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -337,6 +337,8 @@ patternProperties:
->      description: Firefly
->    "^focaltech,.*":
->      description: FocalTech Systems Co.,Ltd
-> +  "^frida,.*":
-> +    description: Shenzhen Frida LCD Co., Ltd.
-Random note:
-Some descriptions end with a '.,', others not.
-So both works.
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 28fa6ba7b767..8c03f7fe461c 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -1378,6 +1378,32 @@ static const struct panel_desc evervision_vgg804821 = {
+>  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
+>  };
+>  
+> +static const struct drm_display_mode frida_frd350h54004_mode = {
+> +	.clock = 6777,
+> +	.hdisplay = 320,
+> +	.hsync_start = 320 + 70,
+> +	.hsync_end = 320 + 70 + 50,
+> +	.htotal = 320 + 70 + 50 + 10,
+> +	.vdisplay = 240,
+> +	.vsync_start = 240 + 5,
+> +	.vsync_end = 240 + 5 + 1,
+> +	.vtotal = 240 + 5 + 1 + 5,
+> +	.vrefresh = 60,
+> +	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+> +};
+> +
+> +static const struct panel_desc frida_frd350h54004 = {
+> +	.modes = &frida_frd350h54004_mode,
+> +	.num_modes = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 77,
+> +		.height = 64,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
+> +};
+> +
+>  static const struct drm_display_mode foxlink_fl500wvr00_a0t_mode = {
+>  	.clock = 32260,
+>  	.hdisplay = 800,
+> @@ -3186,6 +3212,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "evervision,vgg804821",
+>  		.data = &evervision_vgg804821,
+> +	}, {
+> +		.compatible = "frida,frd350h54004",
+> +		.data = &frida_frd350h54004,
+>  	}, {
+>  		.compatible = "foxlink,fl500wvr00-a0t",
+>  		.data = &foxlink_fl500wvr00_a0t,
 
+In alphabetic order. frida comes after fox.
 
->    "^friendlyarm,.*":
->      description: Guangzhou FriendlyARM Computer Tech Co., Ltd
->    "^fsl,.*":
-> -- 
-> 2.24.0
+	Sam
