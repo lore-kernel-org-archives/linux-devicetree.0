@@ -2,180 +2,115 @@ Return-Path: <SRS0=+Vg9=ZQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CB0C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 11:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC29C432C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 12:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7062075E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 11:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED85D2067D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 12:57:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="C8EUi4QX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="RTmLlG47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfKXLlQ (ORCPT
+        id S1726740AbfKXM5p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 Nov 2019 06:41:16 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:22791 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfKXLkl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 06:40:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574595638;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=p1M6fkuAe26I/SlshzldxXtzQYOaMabxzYNQKoP0en4=;
-        b=C8EUi4QXr6eMod7h8eR6YjpUH6fC8KqRvZGjClm8dwQBAsEFSfPARJsJUcnlNS0vdC
-        EZb/1vX1sWy1+hBhHgOJ2ONm/5ZiMojrHwyibA3CqCon4ujgLXYAkkxZ2hYvb/onicql
-        uDbnGcSmaRE55rRl2IQmEzFiQV3STuC4MjOuCjtBf0b4BjxO2PKNWzNfgQ0XYNGPY8ky
-        faLUnqGYXrq5zuRqa5vSc+CFiDbLC/dWIxY10TMNcxSmJlnxbsS93EZkdBWJkN1YsAtb
-        oX4AR10EhxOTnBATcezA+9Y5V32m08vesu7JhmG++M3rNqcnqyAIyyH2DERSBEMhwBWE
-        Ep2Q==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH4HEaKeuIV"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3vAOBeTwER
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 24 Nov 2019 12:40:29 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Sun, 24 Nov 2019 07:57:45 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:55330 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfKXM5o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 07:57:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574600256; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eB/LD07EzRmsuGpIzh39d3UMiNMxk6mHLnDiEe/ssLc=;
+        b=RTmLlG47A3S6kbPnIBIe7NBB8tBfySmc8DFNLpb3oBf3DRfID7C9iXEZT7Iv3pi6Z4Fqo7
+        7tzP6M2RV59ImZiSVFCCpJ+3ZIDKEeCKP13KxThOdg3Gtz+ujaaTSI2L/4VyI86+Sb2x4p
+        92iUAkNIHsPORo95QlVgtT+scNtBMjU=
+Date:   Sun, 24 Nov 2019 13:57:26 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 8/8] MIPS: DTS: jz4780: add sgx gpu node
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        =?iso-8859-1?q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
         Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
         openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
-Date:   Sun, 24 Nov 2019 12:40:21 +0100
-Message-Id: <c93eff41b4a85ec01fa01819af8a380b7465e01c.1574595627.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1574595627.git.hns@goldelico.com>
+        Paul Boddie <paul@boddie.org.uk>
+Message-Id: <1574600246.3.0@crapouillou.net>
+In-Reply-To: <c73e2cee4f818654f264b0b7b5458bfaa0ac6a7a.1574595627.git.hns@goldelico.com>
 References: <cover.1574595627.git.hns@goldelico.com>
+        <c73e2cee4f818654f264b0b7b5458bfaa0ac6a7a.1574595627.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Imagination PVR/SGX GPU is part of several SoC from
-multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
-and others.
+Hi Nikolaus,
 
-With this binding, we describe how the SGX processor is
-interfaced to the SoC (registers, interrupt etc.).
 
-In most cases, Clock, Reset and power management is handled
-by a parent node or elsewhere.
+Le dim., nov. 24, 2019 at 12:40, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> and add interrupt and clocks.
+>=20
+> Tested to build for CI20 board and load a (non-working) driver.
+>=20
+> Suggested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index c54bd7cfec55..21ea5f4a405b 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -46,6 +46,17 @@
+>  		#clock-cells =3D <1>;
+>  	};
+>=20
+> +	gpu: gpu@13040000 {
 
-Tested by make dt_binding_check dtbs_check
+We try to keep the nodes ordered by address, could you move this node=20
+where it belongs?
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 83 +++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+Thanks,
+-Paul
 
-diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-new file mode 100644
-index 000000000000..fe206a53cbe1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Imagination PVR/SGX GPU
-+
-+maintainers:
-+  - H. Nikolaus Schaller <hns@goldelico.com>
-+
-+description: |+
-+  This binding describes the Imagination SGX5 series of 3D accelerators which
-+  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
-+  Allwinner A83, and Intel Poulsbo and CedarView and more.
-+
-+  For an almost complete list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
-+  
-+  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by
-+  this binding but the extension of the pattern is straightforward.
-+  
-+  The SGX node is usually a child node of some DT node belonging to the SoC
-+  which handles clocks, reset and general address space mapping of the SGX
-+  register area.
-+
-+properties:
-+  compatible:
-+    enum:
-+    # BeagleBoard ABC, OpenPandora 600MHz
-+      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530, img,sgx5
-+    # BeagleBoard XM, GTA04, OpenPandora 1GHz
-+      - ti,omap3-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-+    # BeagleBone Black
-+      - ti,am3352-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-+    # Pandaboard, Pandaboard ES
-+      - ti,omap4-sgx540-120, img,sgx540-120, img,sgx540, img,sgx5
-+      - ti,omap4-sgx544-112, img,sgx544-112, img,sgx544, img,sgx5
-+    # OMAP5 UEVM, Pyra Handheld
-+      - ti,omap5-sgx544-116, img,sgx544-116, img,sgx544, img,sgx5
-+      - ti,dra7-sgx544-116, img,sgx544-116, img,sgx544, img,sgx5
-+    # CI20
-+      - ingenic,jz4780-sgx540-120, img,sgx540-120, img,sgx540, img,sgx5
-+    # the following entries are not validated with real hardware
-+    # more TI
-+      - ti,am3517-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-+      - ti,am4-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-+      - ti,ti81xx-sgx530-125, img,sgx530-125, img,sgx530, img,sgx5
-+    # Banana-Pi-M3 (Allwinner A83T)
-+      - allwinner,sun8i-a83t-sgx544-116, img,sgx544-116, img,sgx544, img,sgx5
-+    # Atom Z5xx
-+      - intel,poulsbo-gma500-sgx535, img,sgx535-116, img,sgx535, img,sgx5
-+    # Atom Z24xx
-+      - intel,medfield-gma-sgx540, img,sgx540-116, img,sgx540, img,sgx5
-+    # Atom N2600, D2500
-+      - intel,cedarview-gma3600-sgx545, img,sgx545-116, img,sgx545, img,sgx5
-+
-+  reg:
-+    maxItems: 1
-+    description: physical base address and length of the register area
-+
-+  interrupts:
-+    maxItems: 1
-+    description: interrupt line from SGX subsystem to core processor
-+
-+  clocks:
-+    description: optional clocks
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |+
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    gpu@fe00 {
-+      compatible = "ti,omap-omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
-+      reg = <0xfe00 0x200>;
-+      interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+
-+...
--- 
-2.23.0
+
+> +		compatible =3D "ingenic,jz4780-sgx540-120", "img,sgx540-120",=20
+> "img,sgx540", "img,sgx5";
+> +		reg =3D <0x13040000 0x4000>;
+> +
+> +		clocks =3D <&cgu JZ4780_CLK_GPU>;
+> +		clock-names =3D "gpu";
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <63>;
+> +	};
+> +
+>  	tcu: timer@10002000 {
+>  		compatible =3D "ingenic,jz4780-tcu",
+>  			     "ingenic,jz4770-tcu",
+> --
+> 2.23.0
+>=20
+
+=
 
