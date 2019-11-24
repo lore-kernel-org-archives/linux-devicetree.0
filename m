@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728B4C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 10:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D1BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 10:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5E02071A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 10:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474C120748
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 10:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tCq502fJ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PjhfSVbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfKXKBq (ORCPT
+        id S1726090AbfKXKYq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 Nov 2019 05:01:46 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36002 "EHLO
+        Sun, 24 Nov 2019 05:24:46 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36120 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKXKBq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 05:01:46 -0500
+        with ESMTP id S1725980AbfKXKYq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 05:24:46 -0500
 Received: from pendragon.ideasonboard.com (fs96f9c64d.tkyc509.ap.nuro.jp [150.249.198.77])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C4F33A38;
-        Sun, 24 Nov 2019 11:01:40 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B18F7A38;
+        Sun, 24 Nov 2019 11:24:41 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1574589701;
-        bh=NGvV6M9cP6llPHN7LU5hBJ+hY/p6RIWDb6nX2obiw0s=;
+        s=mail; t=1574591082;
+        bh=fZLEqB6edoT6m4Sy2FIpsRDrARqeeMQHYKMiococpS8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tCq502fJHiTRnbrP8nOgCwmYFNUNZX0TlnulKRUf14O3dfUoKqOppVbRGJ+yQcc84
-         bLQD1G0nQUs1L8MhyREjqu7qvNy8rX2gsY3KoCqJbiVFzCNRXWLJhKMOuGZa1JODBS
-         f4wBVFhCwHzbWbEQrlWrZm3k5i+pFexd3AGjkf7w=
-Date:   Sun, 24 Nov 2019 12:01:30 +0200
+        b=PjhfSVbRA4tB8bC1OhY12Pi6SwRHOfkb0g0KqfxZKI3/fLhM/PehSi9vPC7T6CQ0E
+         /EO5RnRsv54cYSGHwK99fOo9b3s9IAiwFkrpbnxvuvXS5YhAE/HNB4snOXY0pV2BsJ
+         vkKsErVwlBvemyjzSC92bxhwnNgxO2MAM6SKb6rE=
+Date:   Sun, 24 Nov 2019 12:24:33 +0200
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Boris Brezillon <boris.brezillon@collabora.com>
 Cc:     dri-devel@lists.freedesktop.org,
@@ -55,15 +55,15 @@ Cc:     dri-devel@lists.freedesktop.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 01/21] drm/vc4: Declare the DSI encoder as a bridge
+Subject: Re: [PATCH v3 03/21] drm/exynos: Declare the DSI encoder as a bridge
  element
-Message-ID: <20191124100130.GC4727@pendragon.ideasonboard.com>
+Message-ID: <20191124102433.GD4727@pendragon.ideasonboard.com>
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-2-boris.brezillon@collabora.com>
+ <20191023154512.9762-4-boris.brezillon@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191023154512.9762-2-boris.brezillon@collabora.com>
+In-Reply-To: <20191023154512.9762-4-boris.brezillon@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -74,245 +74,259 @@ Hi Boris,
 
 Thank you for the patch.
 
-On Wed, Oct 23, 2019 at 05:44:52PM +0200, Boris Brezillon wrote:
+On Wed, Oct 23, 2019 at 05:44:54PM +0200, Boris Brezillon wrote:
 > Encoder drivers will progressively transition to the drm_bridge
 > interface in place of the drm_encoder one.
 > 
-> Let's start with the VC4 driver, and use the ->pre_{enable,disable}()
-> hooks to get rid of the hack resetting encoder->bridge.next (which was
-> needed to control the encoder/bridge enable/disable sequence).
+> Converting the Exynos DSI encoder driver to this approach allows us to
+> use the ->pre_{enable,disable}()  hooks and get rid of the hack
+> resetting encoder->bridge.next (which was needed to control the
+> encoder/bridge enable/disable sequence).
 > 
 > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 > ---
 > Changes in v3:
-> * Embed a drm_bridge object in vc4_dsi since drm_encoder no longer has
->   a dummy bridge
+> * Embed a drm_bridge object in exynos_dsi since drm_encoder no longer
+>   has a dummy bridge
 > 
 > Changes in v2:
-> * New patch (replaces "drm/vc4: Get rid of the dsi->bridge field")
+> * New patch (replacement for "drm/exynos: Get rid of exynos_dsi->out_bridge")
 > ---
->  drivers/gpu/drm/vc4/vc4_dsi.c | 88 +++++++++++++++++++++--------------
->  1 file changed, 52 insertions(+), 36 deletions(-)
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 89 +++++++++++++++----------
+>  1 file changed, 55 insertions(+), 34 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-> index c9ba83ed49b9..49f8a313e759 100644
-> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> @@ -498,7 +498,11 @@ struct vc4_dsi {
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index 72726f2c7a9f..3915f50b005e 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -252,10 +252,10 @@ struct exynos_dsi_driver_data {
 >  
->  	struct mipi_dsi_host dsi_host;
->  	struct drm_encoder *encoder;
-> -	struct drm_bridge *bridge;
-> +
-> +	/* Embed a bridge object so we can implement bridge funcs instead of
-> +	 * encoder ones.
-> +	 */
+>  struct exynos_dsi {
+>  	struct drm_encoder encoder;
 > +	struct drm_bridge bridge;
->  
->  	void __iomem *regs;
->  
-> @@ -543,6 +547,11 @@ struct vc4_dsi {
->  	struct debugfs_regset32 regset;
->  };
->  
-> +static inline struct vc4_dsi *bridge_to_vc4_dsi(struct drm_bridge *bridge)
-> +{
-> +	return container_of(bridge, struct vc4_dsi, bridge);
-> +}
-> +
->  #define host_to_dsi(host) container_of(host, struct vc4_dsi, dsi_host)
->  
->  static inline void
-> @@ -747,16 +756,11 @@ dsi_esc_timing(u32 ns)
->  	return DIV_ROUND_UP(ns, ESC_TIME_NS);
->  }
->  
-> -static void vc4_dsi_encoder_disable(struct drm_encoder *encoder)
-> +static void vc4_dsi_bridge_post_disable(struct drm_bridge *bridge)
->  {
-> -	struct vc4_dsi_encoder *vc4_encoder = to_vc4_dsi_encoder(encoder);
-> -	struct vc4_dsi *dsi = vc4_encoder->dsi;
-> +	struct vc4_dsi *dsi = bridge_to_vc4_dsi(bridge);
->  	struct device *dev = &dsi->pdev->dev;
->  
-> -	drm_bridge_disable(dsi->bridge);
-> -	vc4_dsi_ulps(dsi, true);
-> -	drm_bridge_post_disable(dsi->bridge);
-> -
->  	clk_disable_unprepare(dsi->pll_phy_clock);
->  	clk_disable_unprepare(dsi->escape_clock);
->  	clk_disable_unprepare(dsi->pixel_clock);
-> @@ -764,6 +768,13 @@ static void vc4_dsi_encoder_disable(struct drm_encoder *encoder)
->  	pm_runtime_put(dev);
->  }
->  
-> +static void vc4_dsi_bridge_disable(struct drm_bridge *bridge)
-> +{
-> +	struct vc4_dsi *dsi = bridge_to_vc4_dsi(bridge);
-> +
-> +	vc4_dsi_ulps(dsi, true);
-> +}
-> +
->  /* Extends the mode's blank intervals to handle BCM2835's integer-only
->   * DSI PLL divider.
->   *
-> @@ -777,12 +788,11 @@ static void vc4_dsi_encoder_disable(struct drm_encoder *encoder)
->   * higher-than-expected clock rate to the panel, but that's what the
->   * firmware does too.
->   */
-> -static bool vc4_dsi_encoder_mode_fixup(struct drm_encoder *encoder,
-> -				       const struct drm_display_mode *mode,
-> -				       struct drm_display_mode *adjusted_mode)
-> +static bool vc4_dsi_bridge_mode_fixup(struct drm_bridge *bridge,
-> +				      const struct drm_display_mode *mode,
-> +				      struct drm_display_mode *adjusted_mode)
->  {
-> -	struct vc4_dsi_encoder *vc4_encoder = to_vc4_dsi_encoder(encoder);
-> -	struct vc4_dsi *dsi = vc4_encoder->dsi;
-> +	struct vc4_dsi *dsi = bridge_to_vc4_dsi(bridge);
->  	struct clk *phy_parent = clk_get_parent(dsi->pll_phy_clock);
->  	unsigned long parent_rate = clk_get_rate(phy_parent);
->  	unsigned long pixel_clock_hz = mode->clock * 1000;
-> @@ -816,11 +826,11 @@ static bool vc4_dsi_encoder_mode_fixup(struct drm_encoder *encoder,
->  	return true;
->  }
->  
-> -static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
-> +static void vc4_dsi_bridge_pre_enable(struct drm_bridge *bridge)
->  {
-> +	struct drm_encoder *encoder = bridge->encoder;
->  	struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
-> -	struct vc4_dsi_encoder *vc4_encoder = to_vc4_dsi_encoder(encoder);
-> -	struct vc4_dsi *dsi = vc4_encoder->dsi;
-> +	struct vc4_dsi *dsi = bridge_to_vc4_dsi(bridge);
->  	struct device *dev = &dsi->pdev->dev;
->  	bool debug_dump_regs = false;
->  	unsigned long hs_clock;
-> @@ -1054,8 +1064,12 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
->  	}
->  
->  	vc4_dsi_ulps(dsi, false);
-> +}
->  
-> -	drm_bridge_pre_enable(dsi->bridge);
-
-If I'm not mistaken this switches the order of the DSI's encoder
-pre-enable and the next bridge's pre-enable. I think it's true for
-post-disable too. It may not be a problem, but have this been tested ?
-
-> +static void vc4_dsi_bridge_enable(struct drm_bridge *bridge)
-> +{
-> +	struct vc4_dsi *dsi = bridge_to_vc4_dsi(bridge);
-> +	bool debug_dump_regs = false;
->  
->  	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO) {
->  		DSI_PORT_WRITE(DISP0_CTRL,
-> @@ -1072,8 +1086,6 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
->  			       DSI_DISP0_ENABLE);
->  	}
->  
-> -	drm_bridge_enable(dsi->bridge);
-> -
->  	if (debug_dump_regs) {
->  		struct drm_printer p = drm_info_printer(&dsi->pdev->dev);
->  		dev_info(&dsi->pdev->dev, "DSI regs after:\n");
-> @@ -1290,10 +1302,12 @@ static const struct mipi_dsi_host_ops vc4_dsi_host_ops = {
->  	.transfer = vc4_dsi_host_transfer,
->  };
->  
-> -static const struct drm_encoder_helper_funcs vc4_dsi_encoder_helper_funcs = {
-> -	.disable = vc4_dsi_encoder_disable,
-> -	.enable = vc4_dsi_encoder_enable,
-> -	.mode_fixup = vc4_dsi_encoder_mode_fixup,
-> +static const struct drm_bridge_funcs vc4_dsi_bridge_funcs = {
-> +	.pre_enable = vc4_dsi_bridge_pre_enable,
-> +	.enable = vc4_dsi_bridge_enable,
-> +	.disable = vc4_dsi_bridge_disable,
-> +	.post_disable = vc4_dsi_bridge_post_disable,
-> +	.mode_fixup = vc4_dsi_bridge_mode_fixup,
->  };
->  
->  static const struct of_device_id vc4_dsi_dt_match[] = {
-> @@ -1445,6 +1459,7 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
->  	struct vc4_dev *vc4 = to_vc4_dev(drm);
->  	struct vc4_dsi *dsi = dev_get_drvdata(dev);
->  	struct vc4_dsi_encoder *vc4_dsi_encoder;
-> +	struct drm_bridge *next_bridge;
+>  	struct mipi_dsi_host dsi_host;
+>  	struct drm_connector connector;
 >  	struct drm_panel *panel;
->  	const struct of_device_id *match;
->  	dma_cap_mask_t dma_mask;
-> @@ -1561,7 +1576,7 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
->  	}
+> -	struct drm_bridge *out_bridge;
+>  	struct device *dev;
 >  
->  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
-> -					  &panel, &dsi->bridge);
-> +					  &panel, &next_bridge);
->  	if (ret) {
->  		/* If the bridge or panel pointed by dev->of_node is not
->  		 * enabled, just return 0 here so that we don't prevent the DRM
-> @@ -1576,10 +1591,10 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
->  	}
+>  	void __iomem *reg_base;
+> @@ -291,6 +291,11 @@ static inline struct exynos_dsi *encoder_to_dsi(struct drm_encoder *e)
+>  	return container_of(e, struct exynos_dsi, encoder);
+>  }
 >  
->  	if (panel) {
-> -		dsi->bridge = devm_drm_panel_bridge_add_typed(dev, panel,
-> +		next_bridge = devm_drm_panel_bridge_add_typed(dev, panel,
->  							      DRM_MODE_CONNECTOR_DSI);
-> -		if (IS_ERR(dsi->bridge))
-> -			return PTR_ERR(dsi->bridge);
-> +		if (IS_ERR(next_bridge))
-> +			return PTR_ERR(next_bridge);
->  	}
->  
->  	/* The esc clock rate is supposed to always be 100Mhz. */
-> @@ -1598,19 +1613,20 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
->  
->  	drm_encoder_init(drm, dsi->encoder, &vc4_dsi_encoder_funcs,
->  			 DRM_MODE_ENCODER_DSI, NULL);
-> -	drm_encoder_helper_add(dsi->encoder, &vc4_dsi_encoder_helper_funcs);
->  
-> -	ret = drm_bridge_attach(dsi->encoder, dsi->bridge, NULL);
-> +	/* Declare ourself as the first bridge element. */
-> +	dsi->bridge.funcs = &vc4_dsi_bridge_funcs;
-> +	ret = drm_bridge_attach(dsi->encoder, &dsi->bridge, NULL);
-> +	if (ret) {
-> +		dev_err(dev, "bridge attach failed: %d\n", ret);
-> +		return ret;
-> +	}
+> +static inline struct exynos_dsi *bridge_to_dsi(struct drm_bridge *b)
+> +{
+> +	return container_of(b, struct exynos_dsi, bridge);
+> +}
 > +
-> +	ret = drm_bridge_attach(dsi->encoder, next_bridge, &dsi->bridge);
->  	if (ret) {
->  		dev_err(dev, "bridge attach failed: %d\n", ret);
->  		return ret;
+>  enum reg_idx {
+>  	DSIM_STATUS_REG,	/* Status register */
+>  	DSIM_SWRST_REG,		/* Software reset register */
+> @@ -1374,25 +1379,38 @@ static void exynos_dsi_unregister_te_irq(struct exynos_dsi *dsi)
+>  	}
+>  }
+>  
+> -static void exynos_dsi_enable(struct drm_encoder *encoder)
+> +static void exynos_dsi_pre_enable(struct drm_bridge *bridge)
+>  {
+> -	struct exynos_dsi *dsi = encoder_to_dsi(encoder);
+> +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+>  	int ret;
+>  
+>  	if (dsi->state & DSIM_STATE_ENABLED)
+>  		return;
+
+This can probably be removed now as the core should ensure that
+double-enable or double-disable never occurs, but it can be done in a
+separate patch.
+
+>  
+>  	pm_runtime_get_sync(dsi->dev);
+> -	dsi->state |= DSIM_STATE_ENABLED;
+>  
+>  	if (dsi->panel) {
+>  		ret = drm_panel_prepare(dsi->panel);
+>  		if (ret < 0)
+>  			goto err_put_sync;
+> -	} else {
+> -		drm_bridge_pre_enable(dsi->out_bridge);
 >  	}
 
-This is usually done in the bridge attach operation. As we're in control
-we can attach the next bridge here, but I think the driver would look
-more standard if you moved the second attach call to this bridge's
-attach operation.
+It would be nice to switch to the drm panel bridge, but that can also be
+done on top of this series.
 
-With this fixed, and if the driver has been tested and the
-enable/disable order change doesn't cause issues,
+>  
+> +	dsi->state |= DSIM_STATE_ENABLED;
+> +	return;
+> +
+> +err_put_sync:
+> +	pm_runtime_put(dsi->dev);
+> +}
+> +
+> +static void exynos_dsi_enable(struct drm_bridge *bridge)
+> +{
+> +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> +	int ret;
+> +
+> +	if (!(dsi->state & DSIM_STATE_ENABLED) ||
+> +	    (dsi->state & DSIM_STATE_VIDOUT_AVAILABLE))
+> +		return;
+> +
+>  	exynos_dsi_set_display_mode(dsi);
+>  	exynos_dsi_set_display_enable(dsi, true);
+>  
+> @@ -1400,8 +1418,6 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+>  		ret = drm_panel_enable(dsi->panel);
+>  		if (ret < 0)
+>  			goto err_display_disable;
+> -	} else {
+> -		drm_bridge_enable(dsi->out_bridge);
+>  	}
+>  
+>  	dsi->state |= DSIM_STATE_VIDOUT_AVAILABLE;
+> @@ -1410,28 +1426,30 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+>  err_display_disable:
+>  	exynos_dsi_set_display_enable(dsi, false);
+>  	drm_panel_unprepare(dsi->panel);
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Does this belong here, as drm_panel_prepare() was called in
+exynos_dsi_pre_enable() ?
 
-> -	/* Disable the atomic helper calls into the bridge.  We
-> -	 * manually call the bridge pre_enable / enable / etc. calls
-> -	 * from our driver, since we need to sequence them within the
-> -	 * encoder's enable/disable paths.
-> -	 */
-> -	dsi->encoder->bridge = NULL;
+> -
+> -err_put_sync:
+> -	dsi->state &= ~DSIM_STATE_ENABLED;
+> -	pm_runtime_put(dsi->dev);
+>  }
 >  
->  	if (dsi->port == 0)
->  		vc4_debugfs_add_regset32(drm, "dsi0_regs", &dsi->regset);
-> @@ -1629,7 +1645,7 @@ static void vc4_dsi_unbind(struct device *dev, struct device *master,
->  	struct vc4_dev *vc4 = to_vc4_dev(drm);
->  	struct vc4_dsi *dsi = dev_get_drvdata(dev);
+> -static void exynos_dsi_disable(struct drm_encoder *encoder)
+> +static void exynos_dsi_disable(struct drm_bridge *bridge)
+>  {
+> -	struct exynos_dsi *dsi = encoder_to_dsi(encoder);
+> +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> +
+> +	if (!(dsi->state & DSIM_STATE_VIDOUT_AVAILABLE))
+> +		return;
+> +
+> +	drm_panel_disable(dsi->panel);
+> +	exynos_dsi_set_display_enable(dsi, false);
+> +	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
+> +}
+> +
+> +static void exynos_dsi_post_disable(struct drm_bridge *bridge)
+> +{
+> +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
 >  
-> -	if (dsi->bridge)
-> +	if (dsi->bridge.next)
->  		pm_runtime_disable(dev);
+>  	if (!(dsi->state & DSIM_STATE_ENABLED))
+>  		return;
 >  
->  	vc4_dsi_encoder_destroy(dsi->encoder);
+> -	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
+> -
+> -	drm_panel_disable(dsi->panel);
+> -	drm_bridge_disable(dsi->out_bridge);
+> -	exynos_dsi_set_display_enable(dsi, false);
+>  	drm_panel_unprepare(dsi->panel);
+> -	drm_bridge_post_disable(dsi->out_bridge);
+> -	dsi->state &= ~DSIM_STATE_ENABLED;
+>  	pm_runtime_put_sync(dsi->dev);
+> +	dsi->state &= ~DSIM_STATE_ENABLED;
+>  }
+>  
+>  static enum drm_connector_status
+> @@ -1499,9 +1517,11 @@ static int exynos_dsi_create_connector(struct drm_encoder *encoder)
+>  	return 0;
+>  }
+>  
+> -static const struct drm_encoder_helper_funcs exynos_dsi_encoder_helper_funcs = {
+> +static const struct drm_bridge_funcs exynos_dsi_bridge_funcs = {
+> +	.pre_enable = exynos_dsi_pre_enable,
+>  	.enable = exynos_dsi_enable,
+>  	.disable = exynos_dsi_disable,
+> +	.post_disable = exynos_dsi_post_disable,
+>  };
+>  
+>  static const struct drm_encoder_funcs exynos_dsi_encoder_funcs = {
+> @@ -1520,9 +1540,7 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
+>  
+>  	out_bridge  = of_drm_find_bridge(device->dev.of_node);
+>  	if (out_bridge) {
+> -		drm_bridge_attach(encoder, out_bridge, NULL);
+> -		dsi->out_bridge = out_bridge;
+> -		encoder->bridge = NULL;
+> +		drm_bridge_attach(encoder, out_bridge, &dsi->bridge);
+>  	} else {
+>  		int ret = exynos_dsi_create_connector(encoder);
+>  
+> @@ -1575,19 +1593,19 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
+>  				  struct mipi_dsi_device *device)
+>  {
+>  	struct exynos_dsi *dsi = host_to_dsi(host);
+> +	struct drm_bridge *out_bridge = dsi->bridge.next;
+>  	struct drm_device *drm = dsi->encoder.dev;
+>  
+>  	if (dsi->panel) {
+>  		mutex_lock(&drm->mode_config.mutex);
+> -		exynos_dsi_disable(&dsi->encoder);
+> +		exynos_dsi_disable(&dsi->bridge);
+> +		exynos_dsi_post_disable(&dsi->bridge);
+>  		drm_panel_detach(dsi->panel);
+>  		dsi->panel = NULL;
+>  		dsi->connector.status = connector_status_disconnected;
+>  		mutex_unlock(&drm->mode_config.mutex);
+> -	} else {
+> -		if (dsi->out_bridge->funcs->detach)
+> -			dsi->out_bridge->funcs->detach(dsi->out_bridge);
+> -		dsi->out_bridge = NULL;
+> +	} else if (out_bridge && out_bridge->funcs->detach) {
+> +		out_bridge->funcs->detach(out_bridge);
+
+Maybe drm_bridge_detach() ?
+
+>  	}
+>  
+>  	if (drm->mode_config.poll_enabled)
+> @@ -1687,16 +1705,18 @@ static int exynos_dsi_bind(struct device *dev, struct device *master,
+>  	drm_encoder_init(drm_dev, encoder, &exynos_dsi_encoder_funcs,
+>  			 DRM_MODE_ENCODER_TMDS, NULL);
+>  
+> -	drm_encoder_helper_add(encoder, &exynos_dsi_encoder_helper_funcs);
+> -
+>  	ret = exynos_drm_set_possible_crtcs(encoder, EXYNOS_DISPLAY_TYPE_LCD);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	/* Declare ourself as the first bridge element. */
+> +	dsi->bridge.funcs = &exynos_dsi_bridge_funcs;
+> +	drm_bridge_attach(encoder, &dsi->bridge, NULL);
+> +
+>  	if (dsi->in_bridge_node) {
+>  		in_bridge = of_drm_find_bridge(dsi->in_bridge_node);
+>  		if (in_bridge)
+> -			drm_bridge_attach(encoder, in_bridge, NULL);
+> +			drm_bridge_attach(encoder, in_bridge, &dsi->bridge);
+>  	}
+
+Same as for patch 01/21, maybe this could be moved to this bridge's
+attach operation ? Actually, now that I've read the code, this in_bridge
+part looks weird. Why would the DSI encoder have an input bridge that is
+has to manage itself ?
+
+I don't feel confident enough to ack this patch. It goes in the right
+direction as far as the API evolution is concerned, so if you get an ack
+from the Exynos maintainers, I'm happy enough to see it merged.
+
+>  
+>  	return mipi_dsi_host_register(&dsi->dsi_host);
+> @@ -1708,7 +1728,8 @@ static void exynos_dsi_unbind(struct device *dev, struct device *master,
+>  	struct drm_encoder *encoder = dev_get_drvdata(dev);
+>  	struct exynos_dsi *dsi = encoder_to_dsi(encoder);
+>  
+> -	exynos_dsi_disable(encoder);
+> +	exynos_dsi_disable(&dsi->bridge);
+> +	exynos_dsi_post_disable(&dsi->bridge);
+>  
+>  	mipi_dsi_host_unregister(&dsi->dsi_host);
+>  }
 
 -- 
 Regards,
