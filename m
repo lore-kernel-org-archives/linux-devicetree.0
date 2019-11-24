@@ -2,238 +2,188 @@ Return-Path: <SRS0=+Vg9=ZQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F79C432C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 10:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1F6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 11:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E932073F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 10:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71852071A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 11:18:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhwE+UJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfKXK4X (ORCPT
+        id S1726705AbfKXLSD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 Nov 2019 05:56:23 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39106 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfKXK4W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 05:56:22 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C87FE28F222;
-        Sun, 24 Nov 2019 10:56:18 +0000 (GMT)
-Date:   Sun, 24 Nov 2019 11:56:16 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Clark <robdclark@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 05/21] drm/bridge: Introduce
- drm_bridge_chain_get_next_bridge()
-Message-ID: <20191124115616.1491ae6d@collabora.com>
-In-Reply-To: <20191124103335.GF4727@pendragon.ideasonboard.com>
-References: <20191023154512.9762-1-boris.brezillon@collabora.com>
-        <20191023154512.9762-6-boris.brezillon@collabora.com>
-        <20191124103335.GF4727@pendragon.ideasonboard.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sun, 24 Nov 2019 06:18:03 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44998 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfKXLSC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 06:18:02 -0500
+Received: by mail-il1-f193.google.com with SMTP id z12so2084807iln.11;
+        Sun, 24 Nov 2019 03:18:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CrNkG5BlcOhjrLe97GUeq39ypxkKbi212efaOAD4P2s=;
+        b=HhwE+UJHsvX//yMR2M2WT3iVd6mbLRewPdBO4vT6Zo2hlD3s/TnCCBtk0dWcuTax4/
+         2bNHqPVpMmUunoW44l8CMnj96Y9BAV/9kVePFUDmU6megNrbdzeKhKXq27wEP71z/X2H
+         UwA1FCYh3VXyOiQpt7M9tPXF/YYkLNuD8W+RxrLIn2ql2c2xs2VKg9oKXqXLNbsfYVo8
+         pTqGJE4g3nImEzKHLBK1WwqCBKha/0x8EFWMdi2wAqNuwFGgR6TwMgNXc3duLOnhXYnF
+         0y62BvycRtAgmMezN3BP7OyFVwZE+W5pLbUBEW+Rf+711y8KKxConBU7iXO6W+SEYSwJ
+         hWaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CrNkG5BlcOhjrLe97GUeq39ypxkKbi212efaOAD4P2s=;
+        b=QyYjd4zdzCeFrqLq605dLniW5TAfzEaK2zEnsDkWgQRGIzp9JiJVzAFBEgvzi1jrTr
+         Mx5i8rjGJ3dlB8dR8oGFIuqUklt1NKZlM3uJisz4K80LgFtGJPwlLJmZEwv7Pwolw4Rc
+         B1SSepj07n1Pnx56/dN3+Jnzws2CbK0xKWofCBCmxWswYdZHxfnaSlr31g3bzn+v+k92
+         ib1DaLqWvE09tqqD0Cj9yh3w56TLk+TTprWIW0d6kO5H1PxFGYBLipu3tJOQK4kjuPoq
+         /kPpE/oaWFKLtb5rcv4HhkBG4MCLStOQoQCibF3/FmtAFzKm37XVQgfb5zWqxNxsgSWv
+         MdIQ==
+X-Gm-Message-State: APjAAAWJaPyglKTsAZN2DkSakLAttFfKzMSYXa9SRb7EIilX+s9xgrW8
+        Hp8voi7URyHZ4j/BeIZzuzD3/4xbW04ijuGQxQc=
+X-Google-Smtp-Source: APXvYqyU6nAtmiR0JZrfSjQwWEHpTNwTOG7h4Efvp2GafGmDmtAQ2LNU6yK6AFqN6zLH8r/olIsnVPjP4i9DBn/9NJE=
+X-Received: by 2002:a92:7e18:: with SMTP id z24mr26707570ilc.276.1574594280835;
+ Sun, 24 Nov 2019 03:18:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191016135147.7743-1-aford173@gmail.com> <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
+ <20191101075726.GB6209@pendragon.ideasonboard.com> <CAHCN7x+cCyQ=kp30Z9Vu6-feU2Yp6b=kui-h6G8t67abhYXpCw@mail.gmail.com>
+In-Reply-To: <CAHCN7x+cCyQ=kp30Z9Vu6-feU2Yp6b=kui-h6G8t67abhYXpCw@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Sun, 24 Nov 2019 05:17:49 -0600
+Message-ID: <CAHCN7xK7vLufvEs1pgQoaJXO2yL4_9t12M2L67WJgTn9CWsBNQ@mail.gmail.com>
+Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 24 Nov 2019 12:33:35 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+On Mon, Nov 11, 2019 at 7:19 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> On Fri, Nov 1, 2019 at 2:57 AM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > On Wed, Oct 30, 2019 at 09:44:20AM -0500, Adam Ford wrote:
+> > > On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
+> > > >
+> > > > Previously, there was an omap panel-dpi driver that would
+> > > > read generic timings from the device tree and set the display
+> > > > timing accordingly.  This driver was removed so the screen
+> > > > no longer functions.  This patch modifies the panel-simple
+> > > > file to setup the timings to the same values previously used.
+> > > >
+> > > > Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+> > >
+> > > Will this be able to make it into linux-next for the 5.5 merge window?
+> > > I believe Tony has picked up the device tree portion in his omap
+> > > tree, but I haven't seen any notifications on this series on whether
+> > > or not it's being applied.  I also don't know which tree I need to
+> > > look if it's already been applied.
+> > >
+> > > This fixes a regression introduced a while ago where the driver I was
+> > > using for the display was removed.
+> >
+> > Sam, would you be able to pick this up ?
+>
+Sam,
 
-> Hi Boris,
-> 
-> Thank you for the patch.
-> 
-> On Wed, Oct 23, 2019 at 05:44:56PM +0200, Boris Brezillon wrote:
-> > And use it in drivers accessing the bridge->next field directly.
-> > This is part of our attempt to make the bridge chain a double-linked list
-> > based on the generic list helpers.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > ---
-> > Changes in v3:
-> > * Inline drm_bridge_chain_get_next_bridge() (Suggested by Laurent)
-> > 
-> > Changes in v2:
-> > * Kill the last/first helpers (they're not really needed)
-> > * Drop the !bridge || !bridge->encoder test
-> > ---
-> >  drivers/gpu/drm/exynos/exynos_drm_dsi.c |  3 ++-
-> >  drivers/gpu/drm/mediatek/mtk_hdmi.c     |  6 ++++--
-> >  drivers/gpu/drm/omapdrm/omap_drv.c      |  4 ++--
-> >  drivers/gpu/drm/omapdrm/omap_encoder.c  |  3 ++-
-> >  drivers/gpu/drm/vc4/vc4_dsi.c           |  4 +++-
-> >  include/drm/drm_bridge.h                | 13 +++++++++++++
-> >  6 files changed, 26 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> > index 3915f50b005e..005c67894b78 100644
-> > --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> > +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> > @@ -1593,9 +1593,10 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
-> >  				  struct mipi_dsi_device *device)
-> >  {
-> >  	struct exynos_dsi *dsi = host_to_dsi(host);
-> > -	struct drm_bridge *out_bridge = dsi->bridge.next;
-> >  	struct drm_device *drm = dsi->encoder.dev;
-> > +	struct drm_bridge *out_bridge;
-> >  
-> > +	out_bridge = drm_bridge_chain_get_next_bridge(&dsi->bridge);  
-> 
-> You may want to store this in the exynos_dsi structure in the previous
-> patch where you rework this driver.
+> Gentle nudge with the merge window approaching.
 
-Do we really need to store it there, since we already have a simple way
-to retrieve the next bridge in the chain?
+Is it too late for 5.5?  :-(
 
-> 
-> >  	if (dsi->panel) {
-> >  		mutex_lock(&drm->mode_config.mutex);
-> >  		exynos_dsi_disable(&dsi->bridge);
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> > index ea68b5adccbe..cfaa5aab8876 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> > @@ -1238,16 +1238,18 @@ static int mtk_hdmi_conn_mode_valid(struct drm_connector *conn,
-> >  				    struct drm_display_mode *mode)
-> >  {
-> >  	struct mtk_hdmi *hdmi = hdmi_ctx_from_conn(conn);
-> > +	struct drm_bridge *next_bridge;
-> >  
-> >  	dev_dbg(hdmi->dev, "xres=%d, yres=%d, refresh=%d, intl=%d clock=%d\n",
-> >  		mode->hdisplay, mode->vdisplay, mode->vrefresh,
-> >  		!!(mode->flags & DRM_MODE_FLAG_INTERLACE), mode->clock * 1000);
-> >  
-> > -	if (hdmi->bridge.next) {
-> > +	next_bridge = drm_bridge_chain_get_next_bridge(&hdmi->bridge);
-> > +	if (next_bridge) {
-> >  		struct drm_display_mode adjusted_mode;
-> >  
-> >  		drm_mode_copy(&adjusted_mode, mode);
-> > -		if (!drm_bridge_chain_mode_fixup(hdmi->bridge.next, mode,
-> > +		if (!drm_bridge_chain_mode_fixup(next_bridge, mode,
-> >  						 &adjusted_mode))
-> >  			return MODE_BAD;
-> >  	}
-> > diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
-> > index b3e22c890c51..865164fe28dc 100644
-> > --- a/drivers/gpu/drm/omapdrm/omap_drv.c
-> > +++ b/drivers/gpu/drm/omapdrm/omap_drv.c
-> > @@ -217,8 +217,8 @@ static int omap_display_id(struct omap_dss_device *output)
-> >  	} else if (output->bridge) {
-> >  		struct drm_bridge *bridge = output->bridge;
-> >  
-> > -		while (bridge->next)
-> > -			bridge = bridge->next;
-> > +		while (drm_bridge_chain_get_next_bridge(bridge))
-> > +			bridge = drm_bridge_chain_get_next_bridge(bridge);
-> >  
-> >  		node = bridge->of_node;
-> >  	} else if (output->panel) {
-> > diff --git a/drivers/gpu/drm/omapdrm/omap_encoder.c b/drivers/gpu/drm/omapdrm/omap_encoder.c
-> > index 24bbe9f2a32e..8ca54081997e 100644
-> > --- a/drivers/gpu/drm/omapdrm/omap_encoder.c
-> > +++ b/drivers/gpu/drm/omapdrm/omap_encoder.c
-> > @@ -126,7 +126,8 @@ static void omap_encoder_mode_set(struct drm_encoder *encoder,
-> >  	for (dssdev = output; dssdev; dssdev = dssdev->next)
-> >  		omap_encoder_update_videomode_flags(&vm, dssdev->bus_flags);
-> >  
-> > -	for (bridge = output->bridge; bridge; bridge = bridge->next) {
-> > +	for (bridge = output->bridge; bridge;
-> > +	     bridge = drm_bridge_chain_get_next_bridge(bridge)) {  
-> 
-> A for_each_bridge() macro would be nice (in a separate patch). It could
-> be used in omap_drv.c above too.
-
-It's coming later in the series (patch 8).
-
-> 
-> >  		if (!bridge->timings)
-> >  			continue;
-> >  
-> > diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-> > index 49f8a313e759..49c47185aff0 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> > @@ -1644,8 +1644,10 @@ static void vc4_dsi_unbind(struct device *dev, struct device *master,
-> >  	struct drm_device *drm = dev_get_drvdata(master);
-> >  	struct vc4_dev *vc4 = to_vc4_dev(drm);
-> >  	struct vc4_dsi *dsi = dev_get_drvdata(dev);
-> > +	struct drm_bridge *bridge;
-> >  
-> > -	if (dsi->bridge.next)
-> > +	bridge = drm_bridge_chain_get_next_bridge(&dsi->bridge);
-> > +	if (bridge)
-> >  		pm_runtime_disable(dev);
-> >  
-> >  	vc4_dsi_encoder_destroy(dsi->encoder);
-> > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> > index 726435baf4ad..8aeba83fcf31 100644
-> > --- a/include/drm/drm_bridge.h
-> > +++ b/include/drm/drm_bridge.h
-> > @@ -409,6 +409,19 @@ struct drm_bridge *of_drm_find_bridge(struct device_node *np);
-> >  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
-> >  		      struct drm_bridge *previous);
-> >  
-> > +/**
-> > + * drm_bridge_chain_get_next_bridge() - Get the next bridge in the chain
-> > + * @bridge: bridge object
-> > + *
-> > + * RETURNS:
-> > + * the next bridge in the chain, or NULL if @bridge is the last.  
-> 
-> Maybe "the next bridge in the chain after @bridge, ..." ?
-
-Agreed.
-
-> 
-> > + */
-> > +static inline struct drm_bridge *
-> > +drm_bridge_chain_get_next_bridge(struct drm_bridge *bridge)  
-> 
-> Technically speaking this doesn't operate on a chain but on a bridge, so
-> I'd name is drm_bridge_get_next_bridge(). I will not insist to the way
-> of nacking the series for this, so with the rename, but also without,
-
-You're absolutely right, I'll rename the function as suggested.
-
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> > +{
-> > +	return bridge->next;
-> > +}
-> > +
-> >  bool drm_bridge_chain_mode_fixup(struct drm_bridge *bridge,
-> >  				 const struct drm_display_mode *mode,
-> >  				 struct drm_display_mode *adjusted_mode);  
-> 
-
+adam
+>
+> Thank you,
+>
+> adam
+>
+> >
+> > > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > > > ---
+> > > > V5:  No Change
+> > > > V4:  No Change
+> > > > V3:  No Change
+> > > > V2:  No Change
+> > > >
+> > > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > > > index 5d487686d25c..72f69709f349 100644
+> > > > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > > > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > > > @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+> > > >         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> > > >  };
+> > > >
+> > > > +static const struct drm_display_mode logicpd_type_28_mode = {
+> > > > +       .clock = 9000,
+> > > > +       .hdisplay = 480,
+> > > > +       .hsync_start = 480 + 3,
+> > > > +       .hsync_end = 480 + 3 + 42,
+> > > > +       .htotal = 480 + 3 + 42 + 2,
+> > > > +
+> > > > +       .vdisplay = 272,
+> > > > +       .vsync_start = 272 + 2,
+> > > > +       .vsync_end = 272 + 2 + 11,
+> > > > +       .vtotal = 272 + 2 + 11 + 3,
+> > > > +       .vrefresh = 60,
+> > > > +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+> > > > +};
+> > > > +
+> > > > +static const struct panel_desc logicpd_type_28 = {
+> > > > +       .modes = &logicpd_type_28_mode,
+> > > > +       .num_modes = 1,
+> > > > +       .bpc = 8,
+> > > > +       .size = {
+> > > > +               .width = 105,
+> > > > +               .height = 67,
+> > > > +       },
+> > > > +       .delay = {
+> > > > +               .prepare = 200,
+> > > > +               .enable = 200,
+> > > > +               .unprepare = 200,
+> > > > +               .disable = 200,
+> > > > +       },
+> > > > +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> > > > +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
+> > > > +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
+> > > > +};
+> > > > +
+> > > >  static const struct panel_desc mitsubishi_aa070mc01 = {
+> > > >         .modes = &mitsubishi_aa070mc01_mode,
+> > > >         .num_modes = 1,
+> > > > @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
+> > > >         }, {
+> > > >                 .compatible = "lg,lp129qe",
+> > > >                 .data = &lg_lp129qe,
+> > > > +       }, {
+> > > > +               .compatible = "logicpd,type28",
+> > > > +               .data = &logicpd_type_28,
+> > > >         }, {
+> > > >                 .compatible = "mitsubishi,aa070mc01-ca1",
+> > > >                 .data = &mitsubishi_aa070mc01,
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
