@@ -2,227 +2,323 @@ Return-Path: <SRS0=+Vg9=ZQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB641C432C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 23:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00A0C432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 23:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A2B20659
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 23:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD78207FD
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 23:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Cz/oz5DA"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Nmm60HL8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YZtioize"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfKXXx6 (ORCPT
+        id S1726887AbfKXX56 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 Nov 2019 18:53:58 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:30687 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfKXXx6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 18:53:58 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191124235353epoutp03d713d2827fb119499e0023152ec1b5b0~aPmd1pcHY0613206132epoutp03k
-        for <devicetree@vger.kernel.org>; Sun, 24 Nov 2019 23:53:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191124235353epoutp03d713d2827fb119499e0023152ec1b5b0~aPmd1pcHY0613206132epoutp03k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574639633;
-        bh=AVvdCtMY//59JkfT+HX/3Kx1Dzwu9AgzcPoN1Jdpdt8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Cz/oz5DAAUC2aZ8t+UcwtXzs95cjBc1hP7+2mvnw4jFhrerHyCS3RLb5rCPltOpCH
-         jufLCbhRzZxprdSiFIHBILNV3fhe0WejA1BYhdtRmJbX9Ki5HS1ZXz8I/wPs36qi1r
-         L8TUYUTp3436XjYlnfwiKDDFjFwa16tFn6f9JhLg=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191124235352epcas1p3fed83ed00327ba1521f2b91b5819fdfe~aPmc9ok1a1532315323epcas1p3l;
-        Sun, 24 Nov 2019 23:53:52 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47Ln7J23CczMqYkZ; Sun, 24 Nov
-        2019 23:53:48 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DC.DE.48498.C081BDD5; Mon, 25 Nov 2019 08:53:48 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191124235347epcas1p28508f778af78e31484ff54490986f2fe~aPmXrHABF0205002050epcas1p2k;
-        Sun, 24 Nov 2019 23:53:47 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191124235347epsmtrp1c1294cb0c214ff9bcda9b225b2d1ed49~aPmXp1pT32074420744epsmtrp1g;
-        Sun, 24 Nov 2019 23:53:47 +0000 (GMT)
-X-AuditID: b6c32a36-a55ff7000001bd72-90-5ddb180cb625
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AD.9F.10238.B081BDD5; Mon, 25 Nov 2019 08:53:47 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191124235346epsmtip2b7ab829c6bf0a17771700d4bc29825ce~aPmXRJ2Sq1614516145epsmtip2t;
-        Sun, 24 Nov 2019 23:53:46 +0000 (GMT)
-Subject: Re: [PATCH v7 4/5] PM / devfreq: Add dynamic scaling for imx8m ddr
- controller
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <f8838bc8-44db-551f-3199-eeea91e493f7@samsung.com>
-Date:   Mon, 25 Nov 2019 08:59:53 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <c0b332b85560e39d7dbb5e88b99bbed1d1b32373.1574458460.git.leonard.crestez@nxp.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxbVRj29N7eXnB1l0LHESMtdzFxKNDCwIOBuQibN2xm+BFjFhnewE0h
-        9MvednNuTvxgMGQbZOJC1a3pxlIQhX6wwQSRUtkY0AnyFRA1A5NNHTgrC2Gitr0s8u95n/d5
-        zpvnPXlJTNYriSNL9WbOpGe1NBGJX+zbkpK0Ac4UqOxDDyJvf7sELQ1eA+jC6LcA/VV/GUNz
-        P80AdKmhCJ31+cXI6Z7B0eluF4Ga6ztxdP16mwQNv/e7BDlm74iRa25CjO7U/ChG1StNGAoc
-        9wHUODkiQhOOOjEKtM0BNHJtB5p510Ggz/29BBoaHBWjim6fBFV7Vwn0z4QTRzc9sajx3ASG
-        nEvM9nimvtoBmJYzLYBZnKqQMJ+Uj+CMzWVhXM3HCOaHiS6CcZ9/h3EudIiY3oUuEXNyVcWs
-        9MkZz3glzpzwNAMm4IrP37i3LKuEY4s5k5LTFxmKS/WabHrXS4U5hekZKnWSOhM9RSv1rI7L
-        pnN35yftLNUGd0Qr97NaS5DKZ3meTtmWZTJYzJyyxMCbs2nOWKw1ZhqTeVbHW/Sa5CKD7mm1
-        SpWaHhS+XlZyymoXGS/ANxevDGHlwB1VDSJISG2F9slOSTWIJGVUB4BjK35MKP4E8PhHYyKh
-        uAugq+8Wft8yfqMLFxrdADaN3V0rFgFsr5gEIVU09Sp0fPV1sEGSMZQJ1gwkhjQY9a8EXrRd
-        xUIagkqEPTeniBDeSCXA8eW5sFdKbYP+yvawBqceg60VgfA78uCbg0usIImCAw3zYTqC2gfd
-        tsMhGqNi4fT8WZGAFfDS7U/DaSA1RkLf1dNrAXJh4MMmIOBo+OsVj0TAcfDWyaNr+BBsGvAR
-        grkKQE/Pd2KhkQZ7Gk+JQoMxagtsvZwi0Amw895nQBj8EFxYqhGHJJCSwqqjMkGyGX7/86xI
-        wA/Dc5XHiFpAW9elsa6LYF0Xwfr/MBvAm8EmzsjrNByvNqau/2wXCJ9PYkYHsPt3ewFFAnqD
-        tO2L6QKZmN3PH9R5ASQxOka6c3iqQCYtZg++xZkMhSaLluO9ID246zosTl5kCB6j3lyoTk9N
-        S0tDW9UZ6Wo1HSsll0cKZJSGNXNlHGfkTPd9IjIirhy03XO27sk57M8se+WNB55UTD0hVbXk
-        2fe1K5Q5uc+ye5JHFXV7uTwgtcp/0XSuyp97OSEmev7R3gOv7TqwcGjghVyNLfnMcKYrMq+/
-        9vm+F0WVJvdv/VWzmmeORO+48YHy7/c3NQSmHy//g3qktbGWzPvmy+3nfW8rso5INy9/HM9H
-        1d6mcb6EVSdiJp79Dxo3fjBUBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHefZe9rpavs7GHg2UFlEZZVIfnsCkD11eCCIwuoHZ0Bc1t7n2
-        ql0hK0RaF+2ywnWzvLSWkts0zVu0qZWW4WpzqZW6UhN12CrEW7mtYN/+nPP7nXM+HAoTVRDh
-        VJoyk1UrZXIpKcCfWqWRaxbAnoR1tj4MWVqr+ehXextAZbYWgH5q6zDk+tIDUE1hErrX3EEg
-        o7kHRzcbTSQyaJ/h6N27Sj56e3aUj/SfJghkcjkINHHxM4E0U48w5LnUDFBpVycPOfRXCOSp
-        dAHU2bYV9ZzRk+hxxwsSvWm3ESi3sZmPNJZZEs05jDgarpKg0mIHhoy/mM0RjFajB0z53XLA
-        uJ25fOZWTifOFJmyGJPhPMn0OhpIxlxymjGO1/KYF+MNPCZ/dh0zZRUzVfY8nLlcZQCMxxSx
-        K/iAIDaZladls+rouEOC1Gu6BzxVGTzmfvkGywHmEA0IoiC9AdoHGnANEFAiuh7A56/vA38j
-        DN7obME0gJrPodBq5fzMGIADvX2Ylwml90F9fRPuzYtpNawry+d7IYzOpWBFeyHfbwwAWDBr
-        Ir0USUfB58NOXw6ml0L7pMu3TUjHwY68at9UnF4On+R6fFPF8xuGapz/mBD4uvAr7r0oiD4I
-        zUWnvGWMXgFn7towf5bA7q/3eP4cCWvGbmMFIFQXYOsCFF2AogtQigBuAGGsilOkKLgYVYyS
-        PbqWkym4LGXK2qQMhQn4nihqVS14X5JoATQFpAuFlRXdCSJCls0dV1gApDDpYuG2t84EkTBZ
-        dvwEq85IVGfJWc4CllC4VCL8pmzdL6JTZJlsOsuqWPX/Lo8KCs8Bmxxq0+Ca4PqrDdf3pKsG
-        5uj4I67IHys/9ldsKdYe3nvglfwz4dg4dw4MDU7vjKPLuz6FFeRETO8Xu8fnsusWfIgWx+5Y
-        5D54Z9nqskeb02NGtpfG936Xrb95bTp+h32vvWlUIjd3W2ZGJg27LdV/7giswt8TJ3UXjP01
-        u1uVcQ9HpDiXKouJwtSc7C+oqkdRQAMAAA==
-X-CMS-MailID: 20191124235347epcas1p28508f778af78e31484ff54490986f2fe
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191122214539epcas1p34d4ca24634642e8a79c33d7a7c9291ba
-References: <cover.1574458460.git.leonard.crestez@nxp.com>
-        <CGME20191122214539epcas1p34d4ca24634642e8a79c33d7a7c9291ba@epcas1p3.samsung.com>
-        <c0b332b85560e39d7dbb5e88b99bbed1d1b32373.1574458460.git.leonard.crestez@nxp.com>
+        Sun, 24 Nov 2019 18:57:58 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:46937 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726803AbfKXX56 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 24 Nov 2019 18:57:58 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id B67882296C;
+        Sun, 24 Nov 2019 18:57:56 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 24 Nov 2019 18:57:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=yrN1+EIl721/kAQDrnl9Ff0O9lkipUL
+        lArAA6BTNrEU=; b=Nmm60HL87MoHkyRmvwv6JTC8M8DOW78/DY1jwuSZWa+EynL
+        KiLLWN28F6cjW6MjBA29OPAIFZeJ3QUyGbPc7IRg36KiqnbFMm8G7GfDxhJJ/JUn
+        xXexHUW3RHGhaja0ICrno6HgzrBpSJr9pIjSibfOd6htrtRgA6KINRqHysk4cZtT
+        AEcHd94sXqOGrDsyzYcJkTisrTuFcOyQzsimHhWbjyqdCtivs2PIT4ZOhCJa3Hbq
+        yFNg5nqXQT1M51kATXAgohFW5UPfV26TwcYB9h58yTXlyV1xFcYdZh65g5UmH0t5
+        JveLYQitiLOOL7zSJXc4eJ99Mf2jjGWKfZXVJGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=yrN1+E
+        Il721/kAQDrnl9Ff0O9lkipULlArAA6BTNrEU=; b=YZtioizebjrKz2o4ZMUvgj
+        Bgg5gt8ecjH/4ZgGNE2J2CllZQwYA75x4XwiU9CiHBkYNIXuzTitAxHUfRpjUKWw
+        S/cnO1yFTwSe3ADi4dHQRnRPEAdOClPE7/E8WtsydCAv0v2kB+ZERt2FmcGBlpEt
+        c2o+joRZ3NnRBrD+PkXafI9F+bPtTPvEtMXYXgOHx/4vkREYuTVoiIEONuO2vGOM
+        mmAtU15u+zqExBpW6Z2XEbXFMHgbJBIylDErdxi7X/LnPv1PRtEtrQW+GtuqSIqD
+        ZwSo4WRO6HdZlLzi1dCRQgRbcQN2QpvaqbyaVCE0GavjtGQ0a/apHNAeYp9sB0Pw
+        ==
+X-ME-Sender: <xms:AxnbXRMl-eZwDnCDBR_3OYj5NNVpXyQJpFJeCIkUnumUKRC3eTVJeA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehledgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:AxnbXQTIkpgXP9IO9XHqgqoM6l7-M0qmOA0VqyW1oVlsNFeQVmNVJA>
+    <xmx:AxnbXTDL4cCSuONMvoVLCWe06cgj4wp6ojR5_6zX6n2MT04jHTzHXQ>
+    <xmx:AxnbXfhChMW9CGPnqEHNfZ_h8UqZf-gAS-0KmypW985kTuNdtawYXA>
+    <xmx:BBnbXcK0U1ZVw5U3dd3gbtBpLmJBpB4veHoYwTjchJSEzxqToZhaSg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 8AB67E00A2; Sun, 24 Nov 2019 18:57:55 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
+Mime-Version: 1.0
+Message-Id: <3de1107b-59e6-48a6-90a0-704f0ebf70da@www.fastmail.com>
+In-Reply-To: <1573244313-9190-8-git-send-email-eajames@linux.ibm.com>
+References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
+ <1573244313-9190-8-git-send-email-eajames@linux.ibm.com>
+Date:   Mon, 25 Nov 2019 10:29:24 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     linux-aspeed@lists.ozlabs.org, "Joel Stanley" <joel@jms.id.au>,
+        maz@kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
+        tglx@linutronix.de, "Rob Herring" <robh+dt@kernel.org>,
+        mark.rutland@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH 07/12] drivers/soc: xdma: Add user interface
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Leonard,
 
-On 11/23/19 6:45 AM, Leonard Crestez wrote:
-> Add driver for dynamic scaling the DDR Controller on imx8m chips. Actual
-> frequency switching is implemented inside TF-A, this driver wraps the
-> SMC calls and synchronizes the clk tree.
+
+On Sat, 9 Nov 2019, at 06:48, Eddie James wrote:
+> This commits adds a miscdevice to provide a user interface to the XDMA
+> engine. The interface provides the write operation to start DMA
+> operations. The DMA parameters are passed as the data to the write call.
+> The actual data to transfer is NOT passed through write. Note that both
+> directions of DMA operation are accomplished through the write command;
+> BMC to host and host to BMC.
 > 
-> The DRAM clocks on imx8m have the following structure (abridged):
+> The XDMA engine is restricted to only accessing the reserved memory
+> space on the AST2500, typically used by the VGA. For this reason, the
+> VGA memory space is pooled and allocated with genalloc. Users calling
+> mmap allocate pages from this pool for their usage. The space allocated
+> by a client will be the space used in the DMA operation. For an
+> "upstream" (BMC to host) operation, the data in the client's area will
+> be transferred to the host. For a "downstream" (host to BMC) operation,
+> the host data will be placed in the client's memory area.
 > 
->  +----------+       |\            +------+
->  | dram_pll |-------|M| dram_core |      |
->  +----------+       |U|---------->| D    |
->                  /--|X|           |  D   |
->    dram_alt_root |  |/            |   R  |
->                  |                |    C |
->             +---------+           |      |
->             |FIX DIV/4|           |      |
->             +---------+           |      |
->   composite:     |                |      |
->  +----------+    |                |      |
->  | dram_alt |----/                |      |
->  +----------+                     |      |
->  | dram_apb |-------------------->|      |
->  +----------+                     +------+
+> Poll is also provided in order to determine when the DMA operation is
+> complete for non-blocking IO.
 > 
-> The dram_pll is used for higher rates and dram_alt is used for lower
-> rates. The dram_alt and dram_apb clocks are "imx composite" and their
-> parent can also be modified.
-> 
-> This driver will prepare/enable the new parents ahead of switching (so
-> that the expected roots are enabled) and afterwards it will call
-> clk_set_parent to ensure the parents in clock framework are up-to-date.
-> 
-> The driver relies on dram_pll dram_alt and dram_apb being marked with
-> CLK_GET_RATE_NOCACHE for rate updates.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 > ---
->  drivers/devfreq/Kconfig      |   9 +
->  drivers/devfreq/Makefile     |   1 +
->  drivers/devfreq/imx8m-ddrc.c | 465 +++++++++++++++++++++++++++++++++++
->  3 files changed, 475 insertions(+)
->  create mode 100644 drivers/devfreq/imx8m-ddrc.c
+>  drivers/soc/aspeed/aspeed-xdma.c | 223 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 223 insertions(+)
 > 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index 59027d7ddf2a..5eac479dd05f 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -89,10 +89,19 @@ config ARM_EXYNOS_BUS_DEVFREQ
->  	  Each memory bus group could contain many memoby bus block. It reads
->  	  PPMU counters of memory controllers by using DEVFREQ-event device
->  	  and adjusts the operating frequencies and voltages with OPP support.
->  	  This does not yet operate with optimal voltages.
+> diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
+> index 99041a6..3d37582 100644
+> --- a/drivers/soc/aspeed/aspeed-xdma.c
+> +++ b/drivers/soc/aspeed/aspeed-xdma.c
+> @@ -64,6 +64,9 @@
+>  #define XDMA_CMDQ_SIZE				PAGE_SIZE
+>  #define XDMA_NUM_CMDS				\
+>  	(XDMA_CMDQ_SIZE / sizeof(struct aspeed_xdma_cmd))
+> +#define XDMA_OP_SIZE_MAX			sizeof(struct aspeed_xdma_op)
+> +#define XDMA_OP_SIZE_MIN			\
+> +	(sizeof(struct aspeed_xdma_op) - sizeof(u64))
 >  
-> +config ARM_IMX8M_DDRC_DEVFREQ
-> +	tristate "i.MX8M DDRC DEVFREQ Driver"
-> +	depends on ARCH_MXC && HAVE_ARM_SMCCC
+>  /* Aspeed specification requires 10ms after switching the reset line */
+>  #define XDMA_RESET_TIME_MS			10
+> @@ -216,6 +219,7 @@ struct aspeed_xdma {
+>  	bool in_reset;
+>  	bool upstream;
+>  	unsigned int cmd_idx;
+> +	struct mutex file_lock;
 
-I'll edit it as following and applied it.
+Please add documentation about what data file_lock is protecting.
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 5eac479dd05f..38a94df749a2 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -93,7 +93,8 @@ config ARM_EXYNOS_BUS_DEVFREQ
- 
- config ARM_IMX8M_DDRC_DEVFREQ
-        tristate "i.MX8M DDRC DEVFREQ Driver"
--       depends on ARCH_MXC && HAVE_ARM_SMCCC
-+       depends on (ARCH_MXC && HAVE_ARM_SMCCC) || \
-+               (COMPILE_TEST && HAVE_ARM_SMCCC)
+>  	struct mutex start_lock;
+>  	struct delayed_work reset_work;
+>  	spinlock_t client_lock;
+> @@ -230,6 +234,8 @@ struct aspeed_xdma {
+>  	dma_addr_t cmdq_vga_phys;
+>  	void *cmdq_vga_virt;
+>  	struct gen_pool *vga_pool;
+> +
+> +	struct miscdevice misc;
+>  };
+>  
+>  struct aspeed_xdma_client {
+> @@ -557,6 +563,204 @@ static irqreturn_t aspeed_xdma_pcie_irq(int irq, 
+> void *arg)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static ssize_t aspeed_xdma_write(struct file *file, const char __user *buf,
+> +				 size_t len, loff_t *offset)
+> +{
+> +	int rc;
+> +	struct aspeed_xdma_op op;
+> +	struct aspeed_xdma_client *client = file->private_data;
+> +	struct aspeed_xdma *ctx = client->ctx;
+> +	u32 offs = client->phys ? (client->phys - ctx->vga_phys) :
+> +		XDMA_CMDQ_SIZE;
+> +
+> +	if (len < XDMA_OP_SIZE_MIN)
+> +		return -EINVAL;
+> +
+> +	if (len > XDMA_OP_SIZE_MAX)
+> +		len = XDMA_OP_SIZE_MAX;
 
-(snip)
+Isn't this an EINVAL case as well?
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> +
+> +	rc = copy_from_user(&op, buf, len);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (op.direction == ASPEED_XDMA_DIRECTION_RESET) {
+
+Seems a bit abusive to use the direction field to issue a reset.
+
+> +		mutex_lock(&ctx->start_lock);
+> +
+> +		if (aspeed_xdma_reset_start(ctx)) {
+> +			msleep(XDMA_RESET_TIME_MS);
+> +
+> +			aspeed_xdma_reset_finish(ctx);
+> +		}
+> +
+> +		mutex_unlock(&ctx->start_lock);
+> +
+> +		return len;
+> +	} else if (op.direction > ASPEED_XDMA_DIRECTION_RESET) {
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (op.len > ctx->vga_size - offs)
+> +		return -EINVAL;
+> +
+> +	if (file->f_flags & O_NONBLOCK) {
+> +		if (!mutex_trylock(&ctx->file_lock))
+> +			return -EAGAIN;
+> +
+> +		if (ctx->in_progress || ctx->in_reset) {
+
+ctx->in_progress was protected by a lock that isn't file_lock, so this looks wrong.
+
+> +			mutex_unlock(&ctx->file_lock);
+> +			return -EAGAIN;
+> +		}
+> +	} else {
+> +		mutex_lock(&ctx->file_lock);
+> +
+> +		rc = wait_event_interruptible(ctx->wait, !ctx->in_progress &&
+> +					      !ctx->in_reset);
+
+As above.
+
+> +		if (rc) {
+> +			mutex_unlock(&ctx->file_lock);
+> +			return -EINTR;
+> +		}
+> +	}
+> +
+> +	aspeed_xdma_start(ctx, &op, ctx->vga_phys + offs, client);
+> +
+> +	mutex_unlock(&ctx->file_lock);
+> +
+> +	if (!(file->f_flags & O_NONBLOCK)) {
+> +		rc = wait_event_interruptible(ctx->wait, !ctx->in_progress);
+> +		if (rc)
+> +			return -EINTR;
+> +
+> +		if (client->error)
+> +			return -EIO;
+
+What's the client->error value? Can it be more informative?
+
+> +	}
+> +
+> +	return len;
+
+We've potentially truncated len above (in the len >  XDMA_OP_SIZE_MAX),
+which leads to some ambiguity with the write() syscall given that it can
+potentially return less than the requested length. This is one such case, but
+the caller probably shouldn't attempt a follow-up write.
+
+This would go away if we make the len > XDMA_OP_SIZE_MAX an EINVAL
+case as suggested agove.
+
+> +}
+> +
+> +static __poll_t aspeed_xdma_poll(struct file *file,
+> +				 struct poll_table_struct *wait)
+> +{
+> +	__poll_t mask = 0;
+> +	__poll_t req = poll_requested_events(wait);
+> +	struct aspeed_xdma_client *client = file->private_data;
+> +	struct aspeed_xdma *ctx = client->ctx;
+> +
+> +	if (req & (EPOLLIN | EPOLLRDNORM)) {
+> +		if (client->in_progress)
+> +			poll_wait(file, &ctx->wait, wait);
+> +
+> +		if (!client->in_progress) {
+> +			if (client->error)
+> +				mask |= EPOLLERR;
+> +			else
+> +				mask |= EPOLLIN | EPOLLRDNORM;
+> +		}
+> +	}
+> +
+> +	if (req & (EPOLLOUT | EPOLLWRNORM)) {
+> +		if (ctx->in_progress)
+> +			poll_wait(file, &ctx->wait, wait);
+> +
+> +		if (!ctx->in_progress)
+> +			mask |= EPOLLOUT | EPOLLWRNORM;
+> +	}
+> +
+> +	return mask;
+> +}
+> +
+> +static void aspeed_xdma_vma_close(struct vm_area_struct *vma)
+> +{
+> +	struct aspeed_xdma_client *client = vma->vm_private_data;
+> +
+> +	gen_pool_free(client->ctx->vga_pool, (unsigned long)client->virt,
+> +		      client->size);
+> +
+> +	client->virt = NULL;
+> +	client->phys = 0;
+> +	client->size = 0;
+> +}
+> +
+> +static const struct vm_operations_struct aspeed_xdma_vm_ops = {
+> +	.close =	aspeed_xdma_vma_close,
+> +};
+> +
+> +static int aspeed_xdma_mmap(struct file *file, struct vm_area_struct *vma)
+> +{
+> +	int rc;
+> +	struct aspeed_xdma_client *client = file->private_data;
+> +	struct aspeed_xdma *ctx = client->ctx;
+> +
+> +	/* restrict file to one mapping */
+> +	if (client->size)
+> +		return -ENOMEM;
+
+Can we do better with the error code here?
+
+> +
+> +	client->size = vma->vm_end - vma->vm_start;
+> +	client->virt = gen_pool_dma_alloc(ctx->vga_pool, client->size,
+> +					  &client->phys);
+> +	if (!client->virt) {
+> +		client->phys = 0;
+> +		client->size = 0;
+> +		return -ENOMEM;
+> +	}
+> +
+> +	vma->vm_pgoff = (client->phys - ctx->vga_phys) >> PAGE_SHIFT;
+
+Where does client->phys get set?
+
+Andrew
