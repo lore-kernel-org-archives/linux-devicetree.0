@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20918C432C3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 13:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E578C432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 14:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19D720748
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 13:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3AC2075E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 14:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mIfdPJGq"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XuSTDY3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfKXN6E (ORCPT
+        id S1726779AbfKXODD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 Nov 2019 08:58:04 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42650 "EHLO
+        Sun, 24 Nov 2019 09:03:03 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42718 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfKXN6D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 08:58:03 -0500
+        with ESMTP id S1726744AbfKXODD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 09:03:03 -0500
 Received: from pendragon.ideasonboard.com (fs96f9c64d.tkyc509.ap.nuro.jp [150.249.198.77])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E54ADD4B;
-        Sun, 24 Nov 2019 14:57:57 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DAA41D4B;
+        Sun, 24 Nov 2019 15:02:58 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1574603878;
-        bh=T65IYwS0CouJyX+FDACVteAClrdDP3GCAgQksUyvPao=;
+        s=mail; t=1574604179;
+        bh=JgmHHeGu1exjlVg7487BMTSsBTL2Ro7ALzf3QcBcEvE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mIfdPJGqW6OHdU9IvOshVinNxPeCFhv2gxqnoTjbqoHxMmDokB2lY5GOAU2KluauH
-         bI6cXHKxHIS7euY26KxnT58xWt52SeuICI0C4HVpzACAlhuzMhBJScnEjgdDWNWWy6
-         nJLg7gTI+0qCTHpMMVd/LXsuqDeQL2f8o42s4/JQ=
-Date:   Sun, 24 Nov 2019 15:57:49 +0200
+        b=XuSTDY3WP5297aQEu8mJ0uWPTQaDjzNDwVzwTJCNS9g6J8Xd2+2xD9QPfHYtZ62NF
+         NyE48k6qAgXtKW8jb4vfSCvqKSm4KcAx6fhdVwE8I7oY0mJwSbeRTbdKLwfeE1nsE9
+         d9R+rzJ7/bYGNOOqeCnQcPj/O21AGaYkSAkhuiL0=
+Date:   Sun, 24 Nov 2019 16:02:50 +0200
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Boris Brezillon <boris.brezillon@collabora.com>
 Cc:     dri-devel@lists.freedesktop.org,
@@ -55,15 +55,17 @@ Cc:     dri-devel@lists.freedesktop.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 07/21] drm/bridge: Make the bridge chain a
- double-linked list
-Message-ID: <20191124135749.GH4727@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v3 03/21] drm/exynos: Declare the DSI encoder as a bridge
+ element
+Message-ID: <20191124140250.GI4727@pendragon.ideasonboard.com>
 References: <20191023154512.9762-1-boris.brezillon@collabora.com>
- <20191023154512.9762-8-boris.brezillon@collabora.com>
+ <20191023154512.9762-4-boris.brezillon@collabora.com>
+ <20191124102433.GD4727@pendragon.ideasonboard.com>
+ <20191124141727.45597a6e@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191023154512.9762-8-boris.brezillon@collabora.com>
+In-Reply-To: <20191124141727.45597a6e@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -72,493 +74,281 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Boris,
 
-Thank you for the patch.
-
-On Wed, Oct 23, 2019 at 05:44:58PM +0200, Boris Brezillon wrote:
-> So that each element in the chain can easily access its predecessor.
-> This will be needed to support bus format negotiation between elements
-> of the bridge chain.
+On Sun, Nov 24, 2019 at 02:17:27PM +0100, Boris Brezillon wrote:
+> On Sun, 24 Nov 2019 12:24:33 +0200 Laurent Pinchart wrote:
+> > On Wed, Oct 23, 2019 at 05:44:54PM +0200, Boris Brezillon wrote:
+> > > Encoder drivers will progressively transition to the drm_bridge
+> > > interface in place of the drm_encoder one.
+> > > 
+> > > Converting the Exynos DSI encoder driver to this approach allows us to
+> > > use the ->pre_{enable,disable}()  hooks and get rid of the hack
+> > > resetting encoder->bridge.next (which was needed to control the
+> > > encoder/bridge enable/disable sequence).
+> > > 
+> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > ---
+> > > Changes in v3:
+> > > * Embed a drm_bridge object in exynos_dsi since drm_encoder no longer
+> > >   has a dummy bridge
+> > > 
+> > > Changes in v2:
+> > > * New patch (replacement for "drm/exynos: Get rid of exynos_dsi->out_bridge")
+> > > ---
+> > >  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 89 +++++++++++++++----------
+> > >  1 file changed, 55 insertions(+), 34 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > > index 72726f2c7a9f..3915f50b005e 100644
+> > > --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > > +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > > @@ -252,10 +252,10 @@ struct exynos_dsi_driver_data {
+> > >  
+> > >  struct exynos_dsi {
+> > >  	struct drm_encoder encoder;
+> > > +	struct drm_bridge bridge;
+> > >  	struct mipi_dsi_host dsi_host;
+> > >  	struct drm_connector connector;
+> > >  	struct drm_panel *panel;
+> > > -	struct drm_bridge *out_bridge;
+> > >  	struct device *dev;
+> > >  
+> > >  	void __iomem *reg_base;
+> > > @@ -291,6 +291,11 @@ static inline struct exynos_dsi *encoder_to_dsi(struct drm_encoder *e)
+> > >  	return container_of(e, struct exynos_dsi, encoder);
+> > >  }
+> > >  
+> > > +static inline struct exynos_dsi *bridge_to_dsi(struct drm_bridge *b)
+> > > +{
+> > > +	return container_of(b, struct exynos_dsi, bridge);
+> > > +}
+> > > +
+> > >  enum reg_idx {
+> > >  	DSIM_STATUS_REG,	/* Status register */
+> > >  	DSIM_SWRST_REG,		/* Software reset register */
+> > > @@ -1374,25 +1379,38 @@ static void exynos_dsi_unregister_te_irq(struct exynos_dsi *dsi)
+> > >  	}
+> > >  }
+> > >  
+> > > -static void exynos_dsi_enable(struct drm_encoder *encoder)
+> > > +static void exynos_dsi_pre_enable(struct drm_bridge *bridge)
+> > >  {
+> > > -	struct exynos_dsi *dsi = encoder_to_dsi(encoder);
+> > > +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> > >  	int ret;
+> > >  
+> > >  	if (dsi->state & DSIM_STATE_ENABLED)
+> > >  		return;  
+> > 
+> > This can probably be removed now as the core should ensure that
+> > double-enable or double-disable never occurs, but it can be done in a
+> > separate patch.
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> ---
-> Changes in v3:
-> * None
+> Except the enable/disable() implementations handle failures (the
+> framework does not expect those to fails BTW), and I guess it's
+> important to know the actual HW state in order to keep runtime PM
+> get/put calls balanced.
 > 
-> Changes in v2:
-> * Adjust things to the "dummy encoder bridge" change (patch 2 in this
->   series)
-> ---
->  drivers/gpu/drm/drm_bridge.c  | 171 ++++++++++++++++++++++------------
->  drivers/gpu/drm/drm_encoder.c |  16 +---
->  include/drm/drm_bridge.h      |  12 ++-
->  include/drm/drm_encoder.h     |   9 +-
->  4 files changed, 135 insertions(+), 73 deletions(-)
+> > >  
+> > >  	pm_runtime_get_sync(dsi->dev);
+> > > -	dsi->state |= DSIM_STATE_ENABLED;
+> > >  
+> > >  	if (dsi->panel) {
+> > >  		ret = drm_panel_prepare(dsi->panel);
+> > >  		if (ret < 0)
+> > >  			goto err_put_sync;
+> > > -	} else {
+> > > -		drm_bridge_pre_enable(dsi->out_bridge);
+> > >  	}  
+> > 
+> > It would be nice to switch to the drm panel bridge, but that can also be
+> > done on top of this series.
 > 
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index 54c874493c57..c5cf8a9c4237 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -55,7 +55,7 @@
->   * just provide additional hooks to get the desired output at the end of the
->   * encoder chain.
->   *
-> - * Bridges can also be chained up using the &drm_bridge.next pointer.
-> + * Bridges can also be chained up using the &drm_bridge.chain_node field.
->   *
->   * Both legacy CRTC helpers and the new atomic modeset helpers support bridges.
->   */
-> @@ -114,6 +114,7 @@ EXPORT_SYMBOL(drm_bridge_remove);
->  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  		      struct drm_bridge *previous)
->  {
-> +	LIST_HEAD(tmp_list);
->  	int ret;
->  
->  	if (!encoder || !bridge)
-> @@ -127,6 +128,7 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  
->  	bridge->dev = encoder->dev;
->  	bridge->encoder = encoder;
-> +	list_add_tail(&bridge->chain_node, &tmp_list);
+> I agree, just didn't want to add more stuff to this series.
+> 
+> > >  
+> > > +	dsi->state |= DSIM_STATE_ENABLED;
+> > > +	return;
+> > > +
+> > > +err_put_sync:
+> > > +	pm_runtime_put(dsi->dev);
+> > > +}
+> > > +
+> > > +static void exynos_dsi_enable(struct drm_bridge *bridge)
+> > > +{
+> > > +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> > > +	int ret;
+> > > +
+> > > +	if (!(dsi->state & DSIM_STATE_ENABLED) ||
+> > > +	    (dsi->state & DSIM_STATE_VIDOUT_AVAILABLE))
+> > > +		return;
+> > > +
+> > >  	exynos_dsi_set_display_mode(dsi);
+> > >  	exynos_dsi_set_display_enable(dsi, true);
+> > >  
+> > > @@ -1400,8 +1418,6 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+> > >  		ret = drm_panel_enable(dsi->panel);
+> > >  		if (ret < 0)
+> > >  			goto err_display_disable;
+> > > -	} else {
+> > > -		drm_bridge_enable(dsi->out_bridge);
+> > >  	}
+> > >  
+> > >  	dsi->state |= DSIM_STATE_VIDOUT_AVAILABLE;
+> > > @@ -1410,28 +1426,30 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+> > >  err_display_disable:
+> > >  	exynos_dsi_set_display_enable(dsi, false);
+> > >  	drm_panel_unprepare(dsi->panel);  
+> > 
+> > Does this belong here, as drm_panel_prepare() was called in
+> > exynos_dsi_pre_enable() ?
+> 
+> Nope, this one should be dropped.
+> 
+> > > -
+> > > -err_put_sync:
+> > > -	dsi->state &= ~DSIM_STATE_ENABLED;
+> > > -	pm_runtime_put(dsi->dev);
+> > >  }
+> > >  
+> > > -static void exynos_dsi_disable(struct drm_encoder *encoder)
+> > > +static void exynos_dsi_disable(struct drm_bridge *bridge)
+> > >  {
+> > > -	struct exynos_dsi *dsi = encoder_to_dsi(encoder);
+> > > +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> > > +
+> > > +	if (!(dsi->state & DSIM_STATE_VIDOUT_AVAILABLE))
+> > > +		return;
+> > > +
+> > > +	drm_panel_disable(dsi->panel);
+> > > +	exynos_dsi_set_display_enable(dsi, false);
+> > > +	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
+> > > +}
+> > > +
+> > > +static void exynos_dsi_post_disable(struct drm_bridge *bridge)
+> > > +{
+> > > +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> > >  
+> > >  	if (!(dsi->state & DSIM_STATE_ENABLED))
+> > >  		return;
+> > >  
+> > > -	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
+> > > -
+> > > -	drm_panel_disable(dsi->panel);
+> > > -	drm_bridge_disable(dsi->out_bridge);
+> > > -	exynos_dsi_set_display_enable(dsi, false);
+> > >  	drm_panel_unprepare(dsi->panel);
+> > > -	drm_bridge_post_disable(dsi->out_bridge);
+> > > -	dsi->state &= ~DSIM_STATE_ENABLED;
+> > >  	pm_runtime_put_sync(dsi->dev);
+> > > +	dsi->state &= ~DSIM_STATE_ENABLED;
+> > >  }
+> > >  
+> > >  static enum drm_connector_status
+> > > @@ -1499,9 +1517,11 @@ static int exynos_dsi_create_connector(struct drm_encoder *encoder)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -static const struct drm_encoder_helper_funcs exynos_dsi_encoder_helper_funcs = {
+> > > +static const struct drm_bridge_funcs exynos_dsi_bridge_funcs = {
+> > > +	.pre_enable = exynos_dsi_pre_enable,
+> > >  	.enable = exynos_dsi_enable,
+> > >  	.disable = exynos_dsi_disable,
+> > > +	.post_disable = exynos_dsi_post_disable,
+> > >  };
+> > >  
+> > >  static const struct drm_encoder_funcs exynos_dsi_encoder_funcs = {
+> > > @@ -1520,9 +1540,7 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
+> > >  
+> > >  	out_bridge  = of_drm_find_bridge(device->dev.of_node);
+> > >  	if (out_bridge) {
+> > > -		drm_bridge_attach(encoder, out_bridge, NULL);
+> > > -		dsi->out_bridge = out_bridge;
+> > > -		encoder->bridge = NULL;
+> > > +		drm_bridge_attach(encoder, out_bridge, &dsi->bridge);
+> > >  	} else {
+> > >  		int ret = exynos_dsi_create_connector(encoder);
+> > >  
+> > > @@ -1575,19 +1593,19 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
+> > >  				  struct mipi_dsi_device *device)
+> > >  {
+> > >  	struct exynos_dsi *dsi = host_to_dsi(host);
+> > > +	struct drm_bridge *out_bridge = dsi->bridge.next;
+> > >  	struct drm_device *drm = dsi->encoder.dev;
+> > >  
+> > >  	if (dsi->panel) {
+> > >  		mutex_lock(&drm->mode_config.mutex);
+> > > -		exynos_dsi_disable(&dsi->encoder);
+> > > +		exynos_dsi_disable(&dsi->bridge);
+> > > +		exynos_dsi_post_disable(&dsi->bridge);
+> > >  		drm_panel_detach(dsi->panel);
+> > >  		dsi->panel = NULL;
+> > >  		dsi->connector.status = connector_status_disconnected;
+> > >  		mutex_unlock(&drm->mode_config.mutex);
+> > > -	} else {
+> > > -		if (dsi->out_bridge->funcs->detach)
+> > > -			dsi->out_bridge->funcs->detach(dsi->out_bridge);
+> > > -		dsi->out_bridge = NULL;
+> > > +	} else if (out_bridge && out_bridge->funcs->detach) {
+> > > +		out_bridge->funcs->detach(out_bridge);  
+> > 
+> > Maybe drm_bridge_detach() ?
+> 
+> This function is not exported, and I suppose that's why they used the
+> function pointer in this driver. I bet there's a good reason for not
+> exposing this function...
 
-Couldn't we simplify this by adding the bridge to the list here ? We
-would need to remove it in the error path of the attach operation
-though, but wouldn't it make the code easier to read, and more efficient
-in the most likely path ?
+Indeed, my bad. It's called by drm_encoder_cleanup(), I assume it's not
+enough ? If there's a good use case for exporting it, then I think it
+should be exported.
 
->  
->  	if (bridge->funcs->attach) {
->  		ret = bridge->funcs->attach(bridge);
-> @@ -138,9 +140,9 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  	}
->  
->  	if (previous)
-> -		previous->next = bridge;
-> +		list_splice(&tmp_list, &previous->chain_node);
->  	else
-> -		encoder->bridge = bridge;
-> +		list_splice(&tmp_list, &encoder->bridge_chain);
->  
->  	return 0;
->  }
-> @@ -157,6 +159,7 @@ void drm_bridge_detach(struct drm_bridge *bridge)
->  	if (bridge->funcs->detach)
->  		bridge->funcs->detach(bridge);
->  
-> +	list_del(&bridge->chain_node);
->  	bridge->dev = NULL;
->  }
->  
-> @@ -190,18 +193,22 @@ bool drm_bridge_chain_mode_fixup(struct drm_bridge *bridge,
->  				 const struct drm_display_mode *mode,
->  				 struct drm_display_mode *adjusted_mode)
->  {
-> -	bool ret = true;
-> +	struct drm_encoder *encoder;
->  
->  	if (!bridge)
->  		return true;
->  
-> -	if (bridge->funcs->mode_fixup)
-> -		ret = bridge->funcs->mode_fixup(bridge, mode, adjusted_mode);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain,
-> +				 chain_node) {
-> +		if (!bridge->funcs->mode_fixup)
-> +			continue;
->  
-> -	ret = ret && drm_bridge_chain_mode_fixup(bridge->next, mode,
-> -						 adjusted_mode);
-> +		if (!bridge->funcs->mode_fixup(bridge, mode, adjusted_mode))
-> +			return false;
-> +	}
->  
-> -	return ret;
-> +	return true;
->  }
->  EXPORT_SYMBOL(drm_bridge_chain_mode_fixup);
->  
-> @@ -224,18 +231,24 @@ enum drm_mode_status
->  drm_bridge_chain_mode_valid(struct drm_bridge *bridge,
->  			    const struct drm_display_mode *mode)
->  {
-> -	enum drm_mode_status ret = MODE_OK;
-> +	struct drm_encoder *encoder;
->  
->  	if (!bridge)
-> -		return ret;
-> +		return MODE_OK;
-> +
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		enum drm_mode_status ret;
-> +
-> +		if (!bridge->funcs->mode_valid)
-> +			continue;
->  
-> -	if (bridge->funcs->mode_valid)
->  		ret = bridge->funcs->mode_valid(bridge, mode);
-> +		if (ret != MODE_OK)
-> +			return ret;
-> +	}
->  
-> -	if (ret != MODE_OK)
-> -		return ret;
-> -
-> -	return drm_bridge_chain_mode_valid(bridge->next, mode);
-> +	return MODE_OK;
->  }
->  EXPORT_SYMBOL(drm_bridge_chain_mode_valid);
->  
-> @@ -251,13 +264,20 @@ EXPORT_SYMBOL(drm_bridge_chain_mode_valid);
->   */
->  void drm_bridge_chain_disable(struct drm_bridge *bridge)
->  {
-> +	struct drm_encoder *encoder;
-> +	struct drm_bridge *iter;
-> +
->  	if (!bridge)
->  		return;
->  
-> -	drm_bridge_chain_disable(bridge->next);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-> +		if (iter->funcs->disable)
-> +			iter->funcs->disable(iter);
->  
-> -	if (bridge->funcs->disable)
-> -		bridge->funcs->disable(bridge);
-> +		if (iter == bridge)
-> +			break;
-> +	}
->  }
->  EXPORT_SYMBOL(drm_bridge_chain_disable);
->  
-> @@ -274,13 +294,16 @@ EXPORT_SYMBOL(drm_bridge_chain_disable);
->   */
->  void drm_bridge_chain_post_disable(struct drm_bridge *bridge)
->  {
-> +	struct drm_encoder *encoder;
-> +
->  	if (!bridge)
->  		return;
->  
-> -	if (bridge->funcs->post_disable)
-> -		bridge->funcs->post_disable(bridge);
-> -
-> -	drm_bridge_chain_post_disable(bridge->next);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (bridge->funcs->post_disable)
-> +			bridge->funcs->post_disable(bridge);
-> +	}
->  }
->  EXPORT_SYMBOL(drm_bridge_chain_post_disable);
->  
-> @@ -300,13 +323,16 @@ void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
->  			       const struct drm_display_mode *mode,
->  			       const struct drm_display_mode *adjusted_mode)
->  {
-> +	struct drm_encoder *encoder;
-> +
->  	if (!bridge)
->  		return;
->  
-> -	if (bridge->funcs->mode_set)
-> -		bridge->funcs->mode_set(bridge, mode, adjusted_mode);
-> -
-> -	drm_bridge_chain_mode_set(bridge->next, mode, adjusted_mode);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (bridge->funcs->mode_set)
-> +			bridge->funcs->mode_set(bridge, mode, adjusted_mode);
-> +	}
->  }
->  EXPORT_SYMBOL(drm_bridge_chain_mode_set);
->  
-> @@ -323,13 +349,17 @@ EXPORT_SYMBOL(drm_bridge_chain_mode_set);
->   */
->  void drm_bridge_chain_pre_enable(struct drm_bridge *bridge)
->  {
-> +	struct drm_encoder *encoder;
-> +	struct drm_bridge *iter;
+> > >  	}
+> > >  
+> > >  	if (drm->mode_config.poll_enabled)
+> > > @@ -1687,16 +1705,18 @@ static int exynos_dsi_bind(struct device *dev, struct device *master,
+> > >  	drm_encoder_init(drm_dev, encoder, &exynos_dsi_encoder_funcs,
+> > >  			 DRM_MODE_ENCODER_TMDS, NULL);
+> > >  
+> > > -	drm_encoder_helper_add(encoder, &exynos_dsi_encoder_helper_funcs);
+> > > -
+> > >  	ret = exynos_drm_set_possible_crtcs(encoder, EXYNOS_DISPLAY_TYPE_LCD);
+> > >  	if (ret < 0)
+> > >  		return ret;
+> > >  
+> > > +	/* Declare ourself as the first bridge element. */
+> > > +	dsi->bridge.funcs = &exynos_dsi_bridge_funcs;
+> > > +	drm_bridge_attach(encoder, &dsi->bridge, NULL);
+> > > +
+> > >  	if (dsi->in_bridge_node) {
+> > >  		in_bridge = of_drm_find_bridge(dsi->in_bridge_node);
+> > >  		if (in_bridge)
+> > > -			drm_bridge_attach(encoder, in_bridge, NULL);
+> > > +			drm_bridge_attach(encoder, in_bridge, &dsi->bridge);
+> > >  	}  
+> > 
+> > Same as for patch 01/21, maybe this could be moved to this bridge's
+> > attach operation ? Actually, now that I've read the code, this in_bridge
+> > part looks weird. Why would the DSI encoder have an input bridge that is
+> > has to manage itself ?
+> 
+> Yes, I know, it doesn't make any sense. Either we're dealing with a
+> bridge which can be chained to other bridges (can be placed in the
+> middle of a chain as well), or we're dealing with an encoder which
+> precedes any bridges. In the latter case (which is how exynos_dsi is
+> implemented) in_bridge doesn't have any meaning, and that's even worse
+> since we're placing the so-called input bridge (AKA previous bridge)
+> after our encoder (that's what drm_bridge_attach(encoder, in_bridge,
+> NULL) does).
 
-You could reuse the bridge parameter instead of declaring a local
-variable, the same way you do in drm_atomic_bridge_chain_enable().
+Can we get input from the exynos maintainers ? Or is the driver not
+actively maintained anymore ?
 
-> +
->  	if (!bridge)
->  		return;
->  
-> -	drm_bridge_chain_pre_enable(bridge->next);
-> -
-> -	if (bridge->funcs->pre_enable)
-> -		bridge->funcs->pre_enable(bridge);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_reverse(iter, &encoder->bridge_chain, chain_node) {
-> +		if (iter->funcs->pre_enable)
-> +			iter->funcs->pre_enable(iter);
+> TBH, I didn't want to go that far and fix existing drivers when I
+> started this series, so I think I'll rework the patchset to get rid of
+> the VC4 and exynos patches, even if that means having 2 drivers that
+> mess up with the encoder->bridge_chain list.
 
-Or are you missing the iter == bridge check ?
-
-> +	}
->  }
->  EXPORT_SYMBOL(drm_bridge_chain_pre_enable);
->  
-> @@ -345,13 +375,16 @@ EXPORT_SYMBOL(drm_bridge_chain_pre_enable);
->   */
->  void drm_bridge_chain_enable(struct drm_bridge *bridge)
->  {
-> +	struct drm_encoder *encoder;
-> +
->  	if (!bridge)
->  		return;
->  
-> -	if (bridge->funcs->enable)
-> -		bridge->funcs->enable(bridge);
-> -
-> -	drm_bridge_chain_enable(bridge->next);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain, chain_node) {
-> +		if (bridge->funcs->enable)
-> +			bridge->funcs->enable(bridge);
-> +	}
->  }
->  EXPORT_SYMBOL(drm_bridge_chain_enable);
->  
-> @@ -370,15 +403,23 @@ EXPORT_SYMBOL(drm_bridge_chain_enable);
->  void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
->  				     struct drm_atomic_state *state)
->  {
-> +	struct drm_encoder *encoder;
-> +	struct drm_bridge *iter;
-> +
->  	if (!bridge)
->  		return;
->  
-> -	drm_atomic_bridge_chain_disable(bridge->next, state);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_reverse(iter, &encoder->bridge_chain,
-> +				    chain_node) {
-
-This can hold on a single line.
-
-> +		if (iter->funcs->atomic_disable)
-> +			iter->funcs->atomic_disable(iter, state);
-> +		else if (iter->funcs->disable)
-> +			iter->funcs->disable(iter);
->  
-> -	if (bridge->funcs->atomic_disable)
-> -		bridge->funcs->atomic_disable(bridge, state);
-> -	else if (bridge->funcs->disable)
-> -		bridge->funcs->disable(bridge);
-> +		if (iter == bridge)
-> +			break;
-> +	}
->  }
->  EXPORT_SYMBOL(drm_atomic_bridge_chain_disable);
->  
-> @@ -398,15 +439,19 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_disable);
->  void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
->  					  struct drm_atomic_state *state)
->  {
-> +	struct drm_encoder *encoder;
-> +
->  	if (!bridge)
->  		return;
->  
-> -	if (bridge->funcs->atomic_post_disable)
-> -		bridge->funcs->atomic_post_disable(bridge, state);
-> -	else if (bridge->funcs->post_disable)
-> -		bridge->funcs->post_disable(bridge);
-> -
-> -	drm_atomic_bridge_chain_post_disable(bridge->next, state);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &encoder->bridge_chain,
-> +				 chain_node) {
-
-This too can hold on a single line.
-
-> +		if (bridge->funcs->atomic_post_disable)
-> +			bridge->funcs->atomic_post_disable(bridge, state);
-> +		else if (bridge->funcs->post_disable)
-> +			bridge->funcs->post_disable(bridge);
-> +	}
->  }
->  EXPORT_SYMBOL(drm_atomic_bridge_chain_post_disable);
->  
-> @@ -426,15 +471,23 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_post_disable);
->  void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
->  					struct drm_atomic_state *state)
->  {
-> +	struct drm_encoder *encoder;
-> +	struct drm_bridge *iter;
-> +
->  	if (!bridge)
->  		return;
->  
-> -	drm_atomic_bridge_chain_pre_enable(bridge->next, state);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_reverse(iter, &bridge->encoder->bridge_chain,
-> +				    chain_node) {
-
-As Neil pointed out, &encoder->bridge_chain.
-
-> +		if (iter->funcs->atomic_pre_enable)
-> +			iter->funcs->atomic_pre_enable(iter, state);
-> +		else if (iter->funcs->pre_enable)
-> +			iter->funcs->pre_enable(iter);
->  
-> -	if (bridge->funcs->atomic_pre_enable)
-> -		bridge->funcs->atomic_pre_enable(bridge, state);
-> -	else if (bridge->funcs->pre_enable)
-> -		bridge->funcs->pre_enable(bridge);
-> +		if (iter == bridge)
-> +			break;
-> +	}
->  }
->  EXPORT_SYMBOL(drm_atomic_bridge_chain_pre_enable);
->  
-> @@ -453,15 +506,19 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_pre_enable);
->  void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
->  				    struct drm_atomic_state *state)
->  {
-> +	struct drm_encoder *encoder;
-> +
->  	if (!bridge)
->  		return;
->  
-> -	if (bridge->funcs->atomic_enable)
-> -		bridge->funcs->atomic_enable(bridge, state);
-> -	else if (bridge->funcs->enable)
-> -		bridge->funcs->enable(bridge);
-> -
-> -	drm_atomic_bridge_chain_enable(bridge->next, state);
-> +	encoder = bridge->encoder;
-> +	list_for_each_entry_from(bridge, &bridge->encoder->bridge_chain,
-
-Here too.
-
-By the way, should these bridge chain functions take an encoder instead
-of a bridge (in a separate patch series probably) ?
-
-> +				 chain_node) {
-> +		if (bridge->funcs->atomic_enable)
-> +			bridge->funcs->atomic_enable(bridge, state);
-> +		else if (bridge->funcs->enable)
-> +			bridge->funcs->enable(bridge);
-> +	}
->  }
->  EXPORT_SYMBOL(drm_atomic_bridge_chain_enable);
->  
-> diff --git a/drivers/gpu/drm/drm_encoder.c b/drivers/gpu/drm/drm_encoder.c
-> index 4fe9e723e227..e555281f43d4 100644
-> --- a/drivers/gpu/drm/drm_encoder.c
-> +++ b/drivers/gpu/drm/drm_encoder.c
-> @@ -140,6 +140,7 @@ int drm_encoder_init(struct drm_device *dev,
->  		goto out_put;
->  	}
->  
-> +	INIT_LIST_HEAD(&encoder->bridge_chain);
->  	list_add_tail(&encoder->head, &dev->mode_config.encoder_list);
->  	encoder->index = dev->mode_config.num_encoder++;
->  
-> @@ -160,23 +161,16 @@ EXPORT_SYMBOL(drm_encoder_init);
->  void drm_encoder_cleanup(struct drm_encoder *encoder)
->  {
->  	struct drm_device *dev = encoder->dev;
-> +	struct drm_bridge *bridge, *next;
->  
->  	/* Note that the encoder_list is considered to be static; should we
->  	 * remove the drm_encoder at runtime we would have to decrement all
->  	 * the indices on the drm_encoder after us in the encoder_list.
->  	 */
->  
-> -	if (encoder->bridge) {
-> -		struct drm_bridge *bridge;
-> -		struct drm_bridge *next;
-> -
-> -		bridge = drm_bridge_chain_get_first_bridge(encoder);
-> -		while (bridge) {
-> -			next = bridge->next;
-> -			drm_bridge_detach(bridge);
-> -			bridge = next;
-> -		}
-> -	}
-> +	list_for_each_entry_safe(bridge, next, &encoder->bridge_chain,
-> +				 chain_node)
-> +		drm_bridge_detach(bridge);
->  
->  	drm_mode_object_unregister(dev, &encoder->base);
->  	kfree(encoder->name);
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index 27eef63ce0ff..3ab16c95e59e 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -384,8 +384,8 @@ struct drm_bridge {
->  	struct drm_device *dev;
->  	/** @encoder: encoder to which this bridge is connected */
->  	struct drm_encoder *encoder;
-> -	/** @next: the next bridge in the encoder chain */
-> -	struct drm_bridge *next;
-> +	/** @chain_node: used to form a bridge chain */
-> +	struct list_head chain_node;
->  #ifdef CONFIG_OF
->  	/** @of_node: device node pointer to the bridge */
->  	struct device_node *of_node;
-> @@ -420,7 +420,10 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
->  static inline struct drm_bridge *
->  drm_bridge_chain_get_next_bridge(struct drm_bridge *bridge)
->  {
-> -	return bridge->next;
-> +	if (list_is_last(&bridge->chain_node, &bridge->encoder->bridge_chain))
-> +		return NULL;
-> +
-> +	return list_next_entry(bridge, chain_node);
-
-A list_next_entry_or_null() would be useful in list.h I think (of course
-not as a mandatory part of this series :-)).
-
->  }
->  
->  /**
-> @@ -434,7 +437,8 @@ drm_bridge_chain_get_next_bridge(struct drm_bridge *bridge)
->  static inline struct drm_bridge *
->  drm_bridge_chain_get_first_bridge(struct drm_encoder *encoder)
->  {
-> -	return encoder->bridge;
-> +	return list_first_entry_or_null(&encoder->bridge_chain,
-> +					struct drm_bridge, chain_node);
->  }
->  
->  bool drm_bridge_chain_mode_fixup(struct drm_bridge *bridge,
-> diff --git a/include/drm/drm_encoder.h b/include/drm/drm_encoder.h
-> index f06164f44efe..9b3dde177c81 100644
-> --- a/include/drm/drm_encoder.h
-> +++ b/include/drm/drm_encoder.h
-> @@ -172,7 +172,14 @@ struct drm_encoder {
->  	 * &drm_connector_state.crtc.
->  	 */
->  	struct drm_crtc *crtc;
-> -	struct drm_bridge *bridge;
-> +
-> +	/**
-> +	 * @bridge_chain: Bridges attached to this encoder. The first entry of
-> +	 * this list is always &drm_encoder.bridge. It may be followed by other
-
-There's no &drm_encoder.bridge anymore :-)
-
-With all those small issues fixed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +	 * bridge entities.
-> +	 */
-> +	struct list_head bridge_chain;
-> +
->  	const struct drm_encoder_funcs *funcs;
->  	const struct drm_encoder_helper_funcs *helper_private;
->  };
+I don't mind the above changes really (and the one for VC4 seems pretty
+fine so far).
 
 -- 
 Regards,
