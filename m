@@ -2,111 +2,89 @@ Return-Path: <SRS0=+Vg9=ZQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B07C432C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 22:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D3EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 22:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A47D2080D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 22:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MsezpdM/"
+	by mail.kernel.org (Postfix) with ESMTP id 983F52075E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 22:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfKXWK0 (ORCPT
+        id S1726942AbfKXWw7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 Nov 2019 17:10:26 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38060 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfKXWK0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 17:10:26 -0500
-Received: by mail-lj1-f196.google.com with SMTP id k8so2923184ljh.5;
-        Sun, 24 Nov 2019 14:10:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZIvimmxh61dh33akQLRBV+SVzQv3ghkQ1Q6FQN6YS14=;
-        b=MsezpdM/SL8BGidO6m96mQyZq3dgBheFqqSMSkoG4YaIeDNuSYA6AeFyyBk6zeHl3V
-         NJSrxbdSM4NdqK5rSO7pBoJzLexnpfZxJVOK2S5hr96jwiOzOzu/b7TvExUDB8GxJ+oT
-         NGqPpfbToHv/Ue5gqhP7Q9DmE0ObQfG0amvwJIDMfBDMjruqQP87X087xf7tSsFb3+uM
-         73UGOUaqCTqJ/HFEzqd6BApM89Zdsl9lG9POtnWHKRUxJHjYxbY1Uq6DFWMHXBzPUXAg
-         kSpkLn0YNMFhsKxeV4DpUOvKSYs3lf+casYTlwCbUfW+mkFJowM8GByk7mwPxIbBYKla
-         xFMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZIvimmxh61dh33akQLRBV+SVzQv3ghkQ1Q6FQN6YS14=;
-        b=WBM/2OaTecAGWotepjJW4uEyoc3odSPZkTfbJGpmarRQfpDHo6rXoc0dIGLwTBXEF3
-         wF8erVxDg4laBidgu63ivRZ8SJCC3bZJUzGYUf7OFCY16dMwkC9t7fh2EY6/M7p2XPDQ
-         HwcwzUZ+KLWlycLUb/togGMaPMQ4TlFhFDyhZDPjltd8P4dnexLqKN4Ty+G8ZfoSvTGj
-         cSfnGjYCJDyJLoxSJ2wxYl1/7pyBgSoKz5b0loywg3f3MMecyG9nzi++ggBAoYdp4BGB
-         SEGW60daYHZokdaXGB4N/AJb/W0KFytkYA4fzE2+9F7VgPW1WDjHb5tDvOkqWB8rJJMW
-         yqbg==
-X-Gm-Message-State: APjAAAVydjb7LCSrjdkbF7olJ4o4boEX1E+DFB5Ip5jnxVKFDCCAjJdD
-        vlFNkHynnTyFXSCM6SqHAwY=
-X-Google-Smtp-Source: APXvYqxFCft8hR8zRGvNRTTQX6k36aIdaD7aUsAXdVvrlmDU9JMDkWZ6LlEGDnzokv3GWCC6lpcI3A==
-X-Received: by 2002:a2e:894b:: with SMTP id b11mr20099211ljk.118.1574633424128;
-        Sun, 24 Nov 2019 14:10:24 -0800 (PST)
-Received: from rikard (h-158-174-187-196.NA.cust.bahnhof.se. [158.174.187.196])
-        by smtp.gmail.com with ESMTPSA id m18sm2868238ljg.3.2019.11.24.14.10.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 14:10:23 -0800 (PST)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
-Date:   Sun, 24 Nov 2019 23:10:19 +0100
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     megous@megous.com, arnd@arndb.de, devicetree@vger.kernel.org,
-        gregkh@linuxfoundation.org, icenowy@aosc.io, kishon@ti.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, mark.rutland@arm.com,
-        mripard@kernel.org, paul.kocialkowski@bootlin.com,
-        robh+dt@kernel.org, tglx@linutronix.de, wens@csie.org
-Subject: Re: [PATCH v2] phy: allwinner: Fix GENMASK misuse
-Message-ID: <20191124221019.GA1186@rikard>
-References: <20191020134229.1216351-3-megous@megous.com>
- <20191110124355.1569-1-rikard.falkeborn@gmail.com>
+        Sun, 24 Nov 2019 17:52:59 -0500
+Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17478 "EHLO
+        sender4-op-o14.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbfKXWw7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 17:52:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574635958; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=nkhEXIzF9+0eSVEWhcQyoV6RJb7cH7U8Gr2gkLFCjEeuJUg2huMqkHX0csaHlKyVgttBtlmDlKmWemY0aVu/zthNq2k2KSD+DscGEN05VjaeiZ11vK7T5saX6/nN7xxYjPFNNrByvVz3HcsxcsCB6lL+rDvDFh2aEdoqoFfBLCM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574635958; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=VBlCIOBlmhYT1nXzZeusUrp2ZE5E5KFbCpOclqk1oRI=; 
+        b=H9LIerKIxFLVX+a3CgdMu5BaAD8LkvS1IfTDtU6XBlJ4JhB/Ve3h8gklOB/hfWRDtUAJb9qdkBJOPSTTLVegEd5k5y/ffGTLwnlkWiUVFkDnLjLmFmxuOc7sgFNdTxiYP+cIQzzj6yyU8q8xgptetWnCe8uBeJ8shM+4enZtpTc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
+        with SMTPS id 1574635957113882.9905876044394; Sun, 24 Nov 2019 14:52:37 -0800 (PST)
+Date:   Sun, 24 Nov 2019 22:37:34 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v4 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191124223734.GA13261@nessie>
+References: <20191018031848.18538-1-dan@dlrobertson.com>
+ <20191018031848.18538-3-dan@dlrobertson.com>
+ <CAHp75VfMW0fvmO9jGTnQumJ9Sm-SgNL0ohjSR4qRQY365aeMBw@mail.gmail.com>
+ <20191019024351.GB8593@nessie>
+ <20191021162016.531e6a2e@archlinux>
+ <20191118002504.GA29469@nessie>
+ <20191123125135.4c7efcb0@archlinux>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191110124355.1569-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20191123125135.4c7efcb0@archlinux>
 User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 10, 2019 at 01:43:55PM +0100, Rikard Falkeborn wrote:
-> Arguments are supposed to be ordered high then low.
-> 
-> Fixes: a228890f9458 ("phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC")
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> Tested-by: Ondrej Jirman <megous@megous.com>
-> ---
-> v1->v2: Add fixes tax. Add Ondrejs Tested-by. No functional change.
-> 
->  drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> index 1169f3e83a6f..b1c04f71a31d 100644
-> --- a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> @@ -49,7 +49,7 @@
->  #define SUNXI_LOS_BIAS(n)		((n) << 3)
->  #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
->  #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
-> -#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
-> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
->  
->  struct sun50i_usb3_phy {
->  	struct phy *phy;
-> -- 
-> 2.24.0
-> 
+On Sat, Nov 23, 2019 at 12:51:35PM +0000, Jonathan Cameron wrote:
+> If a function is your preferred route you could also just use it to compute
+> the values for the available table at startup?
 
-Ping
+Yeah that makes sense. I'll add that in the next patchset version.
+
+> > The sampling ratio, frequency, etc code seems to be the most complicated part
+> > of the driver. Is it typically recommended to upstream a more minimal driver
+> > that might assume the defaults?
+> 
+> Often people upstream a first version that just uses defaults, then follow
+> up (if they care) with later series adding the more fiddly elements.
+> 
+> Sometimes those more fiddly bits never come as a particular author
+> never needed them.  That's absolutely fine.  It's a rare driver
+> that supports all the features on a non trivial device!
+
+Makes sense. I'll likely add some extra bits in a follow-up patchset, so I can
+learn a bit more.
+
+Cheers,
+
+ - Dan
+
