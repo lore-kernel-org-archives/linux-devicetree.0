@@ -2,301 +2,346 @@ Return-Path: <SRS0=+Vg9=ZQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6979BC43215
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 13:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5717C432C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 13:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F81207FC
-	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 13:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DCKy8v9m"
+	by mail.kernel.org (Postfix) with ESMTP id 7824C2073F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 24 Nov 2019 13:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfKXNKG (ORCPT
+        id S1726740AbfKXNRe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 24 Nov 2019 08:10:06 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:57994 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfKXNKG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 08:10:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574601003; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=79HzHF5v67YtVF80wImOkyHJ+v9Uc7YdeoLCCM0LuYs=;
-        b=DCKy8v9mUnk9rQTkHl94wLJJbM2bfJkipRe+g6bwpf4CVwU5q3vvcILn+uwqD49+BAg1T7
-        8HPxPLmmIeivRRdSb4xLgdI+hEYvJ9DBiidIz/SE1JXnFLaK55D035fhjozO9XgR5C4vSO
-        xLztukPhsMyRA4X8aBU55dlV8WwRhuY=
-Date:   Sun, 24 Nov 2019 14:09:54 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/4] MIPS: Ingenic: initial X1000 support.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Message-Id: <1574600994.3.2@crapouillou.net>
-In-Reply-To: <1574476344-62631-2-git-send-email-zhouyanjie@zoho.com>
-References: <1574476344-62631-1-git-send-email-zhouyanjie@zoho.com>
-        <1574476344-62631-2-git-send-email-zhouyanjie@zoho.com>
+        Sun, 24 Nov 2019 08:17:34 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40848 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfKXNRe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 24 Nov 2019 08:17:34 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7B04128FF80;
+        Sun, 24 Nov 2019 13:17:31 +0000 (GMT)
+Date:   Sun, 24 Nov 2019 14:17:27 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        kernel@collabora.com, Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Clark <robdclark@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 03/21] drm/exynos: Declare the DSI encoder as a
+ bridge element
+Message-ID: <20191124141727.45597a6e@collabora.com>
+In-Reply-To: <20191124102433.GD4727@pendragon.ideasonboard.com>
+References: <20191023154512.9762-1-boris.brezillon@collabora.com>
+        <20191023154512.9762-4-boris.brezillon@collabora.com>
+        <20191124102433.GD4727@pendragon.ideasonboard.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+Hi Laurent,
 
+On Sun, 24 Nov 2019 12:24:33 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
-Le sam., nov. 23, 2019 at 10:32, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
-> This is left unselectable in Kconfig until a X1000 based board is
-> added in a later commit.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->=20
-> Notes:
->     v1->v2:
->     Rebase on top of mips-next, use ingenic-timer driver
->     for system timer and clocksource.
->=20
->  arch/mips/boot/dts/ingenic/x1000.dtsi | 183=20
-> ++++++++++++++++++++++++++++++++++
->  arch/mips/jz4740/Kconfig              |   6 ++
->  2 files changed, 189 insertions(+)
->  create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
-> b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> new file mode 100644
-> index 00000000..02a9b2a
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> @@ -0,0 +1,183 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <dt-bindings/clock/x1000-cgu.h>
-> +
-> +/ {
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +	compatible =3D "ingenic,x1000", "ingenic,x1000e";
-> +
-> +	cpuintc: interrupt-controller {
-> +		#address-cells =3D <0>;
-> +		#interrupt-cells =3D <1>;
-> +		interrupt-controller;
-> +		compatible =3D "mti,cpu-interrupt-controller";
-> +	};
-> +
-> +	intc: interrupt-controller@10001000 {
-> +		compatible =3D "ingenic,x1000-intc", "ingenic,jz4780-intc";
-> +		reg =3D <0x10001000 0x50>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +
-> +		interrupt-parent =3D <&cpuintc>;
-> +		interrupts =3D <2>;
-> +	};
-> +
-> +	exclk: ext {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +	};
-> +
-> +	rtclk: rtc {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <32768>;
-> +	};
-> +
-> +	cgu: x1000-cgu@10000000 {
-> +		compatible =3D "ingenic,x1000-cgu";
-> +		reg =3D <0x10000000 0x100>;
-> +
-> +		#clock-cells =3D <1>;
-> +
-> +		clocks =3D <&exclk>, <&rtclk>;
-> +		clock-names =3D "ext", "rtc";
-> +	};
-> +
-> +	apb {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges =3D <>;
+> Hi Boris,
+> 
+> Thank you for the patch.
+> 
+> On Wed, Oct 23, 2019 at 05:44:54PM +0200, Boris Brezillon wrote:
+> > Encoder drivers will progressively transition to the drm_bridge
+> > interface in place of the drm_encoder one.
+> > 
+> > Converting the Exynos DSI encoder driver to this approach allows us to
+> > use the ->pre_{enable,disable}()  hooks and get rid of the hack
+> > resetting encoder->bridge.next (which was needed to control the
+> > encoder/bridge enable/disable sequence).
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > ---
+> > Changes in v3:
+> > * Embed a drm_bridge object in exynos_dsi since drm_encoder no longer
+> >   has a dummy bridge
+> > 
+> > Changes in v2:
+> > * New patch (replacement for "drm/exynos: Get rid of exynos_dsi->out_bridge")
+> > ---
+> >  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 89 +++++++++++++++----------
+> >  1 file changed, 55 insertions(+), 34 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > index 72726f2c7a9f..3915f50b005e 100644
+> > --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> > @@ -252,10 +252,10 @@ struct exynos_dsi_driver_data {
+> >  
+> >  struct exynos_dsi {
+> >  	struct drm_encoder encoder;
+> > +	struct drm_bridge bridge;
+> >  	struct mipi_dsi_host dsi_host;
+> >  	struct drm_connector connector;
+> >  	struct drm_panel *panel;
+> > -	struct drm_bridge *out_bridge;
+> >  	struct device *dev;
+> >  
+> >  	void __iomem *reg_base;
+> > @@ -291,6 +291,11 @@ static inline struct exynos_dsi *encoder_to_dsi(struct drm_encoder *e)
+> >  	return container_of(e, struct exynos_dsi, encoder);
+> >  }
+> >  
+> > +static inline struct exynos_dsi *bridge_to_dsi(struct drm_bridge *b)
+> > +{
+> > +	return container_of(b, struct exynos_dsi, bridge);
+> > +}
+> > +
+> >  enum reg_idx {
+> >  	DSIM_STATUS_REG,	/* Status register */
+> >  	DSIM_SWRST_REG,		/* Software reset register */
+> > @@ -1374,25 +1379,38 @@ static void exynos_dsi_unregister_te_irq(struct exynos_dsi *dsi)
+> >  	}
+> >  }
+> >  
+> > -static void exynos_dsi_enable(struct drm_encoder *encoder)
+> > +static void exynos_dsi_pre_enable(struct drm_bridge *bridge)
+> >  {
+> > -	struct exynos_dsi *dsi = encoder_to_dsi(encoder);
+> > +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> >  	int ret;
+> >  
+> >  	if (dsi->state & DSIM_STATE_ENABLED)
+> >  		return;  
+> 
+> This can probably be removed now as the core should ensure that
+> double-enable or double-disable never occurs, but it can be done in a
+> separate patch.
 
-You can drop the 'apb' node and list the children in the top node=20
-directly. That's what we do in the devicetree for the other Ingenic=20
-SoCs.
+Except the enable/disable() implementations handle failures (the
+framework does not expect those to fails BTW), and I guess it's
+important to know the actual HW state in order to keep runtime PM
+get/put calls balanced.
 
-Cheers,
--Paul
+> 
+> >  
+> >  	pm_runtime_get_sync(dsi->dev);
+> > -	dsi->state |= DSIM_STATE_ENABLED;
+> >  
+> >  	if (dsi->panel) {
+> >  		ret = drm_panel_prepare(dsi->panel);
+> >  		if (ret < 0)
+> >  			goto err_put_sync;
+> > -	} else {
+> > -		drm_bridge_pre_enable(dsi->out_bridge);
+> >  	}  
+> 
+> It would be nice to switch to the drm panel bridge, but that can also be
+> done on top of this series.
 
+I agree, just didn't want to add more stuff to this series.
 
-> +
-> +		tcu: timer@10002000 {
-> +			compatible =3D "ingenic,x1000-tcu",
-> +					 "ingenic,jz4770-tcu",
-> +					 "simple-mfd";
-> +			reg =3D <0x10002000 0x1000>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <1>;
-> +			ranges =3D <0x0 0x10002000 0x1000>;
-> +
-> +			#clock-cells =3D <1>;
-> +
-> +			clocks =3D <&cgu X1000_CLK_RTCLK
-> +				  &cgu X1000_CLK_EXCLK
-> +				  &cgu X1000_CLK_PCLK>;
-> +			clock-names =3D "rtc", "ext", "pclk";
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells =3D <1>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <27 26 25>;
-> +		};
-> +
-> +		uart0: serial@10030000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10030000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <51>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART0>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		uart1: serial@10031000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10031000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <50>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART1>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		uart2: serial@10032000 {
-> +			compatible =3D "ingenic,x1000-uart";
-> +			reg =3D <0x10032000 0x100>;
-> +
-> +			interrupt-parent =3D <&intc>;
-> +			interrupts =3D <49>;
-> +
-> +			clocks =3D <&exclk>, <&cgu X1000_CLK_UART2>;
-> +			clock-names =3D "baud", "module";
-> +
-> +			status =3D "disabled";
-> +		};
-> +
-> +		pinctrl: pin-controller@10010000 {
-> +			compatible =3D "ingenic,x1000-pinctrl";
-> +			reg =3D <0x10010000 0x800>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			gpa: gpio@0 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <0>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 0 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <17>;
-> +			};
-> +
-> +			gpb: gpio@1 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <1>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 32 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <16>;
-> +			};
-> +
-> +			gpc: gpio@2 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <2>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 64 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <15>;
-> +			};
-> +
-> +			gpd: gpio@3 {
-> +				compatible =3D "ingenic,x1000-gpio";
-> +				reg =3D <3>;
-> +
-> +				gpio-controller;
-> +				gpio-ranges =3D <&pinctrl 0 96 32>;
-> +				#gpio-cells =3D <2>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <2>;
-> +
-> +				interrupt-parent =3D <&intc>;
-> +				interrupts =3D <14>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-> index 4dd0c44..6b96844 100644
-> --- a/arch/mips/jz4740/Kconfig
-> +++ b/arch/mips/jz4740/Kconfig
-> @@ -33,3 +33,9 @@ config MACH_JZ4780
->  	select MIPS_CPU_SCACHE
->  	select SYS_HAS_CPU_MIPS32_R2
->  	select SYS_SUPPORTS_HIGHMEM
-> +
-> +config MACH_X1000
-> +	bool
-> +	select MIPS_CPU_SCACHE
-> +	select SYS_HAS_CPU_MIPS32_R2
-> +	select SYS_SUPPORTS_HIGHMEM
-> --
-> 2.7.4
->=20
->=20
+> 
+> >  
+> > +	dsi->state |= DSIM_STATE_ENABLED;
+> > +	return;
+> > +
+> > +err_put_sync:
+> > +	pm_runtime_put(dsi->dev);
+> > +}
+> > +
+> > +static void exynos_dsi_enable(struct drm_bridge *bridge)
+> > +{
+> > +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> > +	int ret;
+> > +
+> > +	if (!(dsi->state & DSIM_STATE_ENABLED) ||
+> > +	    (dsi->state & DSIM_STATE_VIDOUT_AVAILABLE))
+> > +		return;
+> > +
+> >  	exynos_dsi_set_display_mode(dsi);
+> >  	exynos_dsi_set_display_enable(dsi, true);
+> >  
+> > @@ -1400,8 +1418,6 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+> >  		ret = drm_panel_enable(dsi->panel);
+> >  		if (ret < 0)
+> >  			goto err_display_disable;
+> > -	} else {
+> > -		drm_bridge_enable(dsi->out_bridge);
+> >  	}
+> >  
+> >  	dsi->state |= DSIM_STATE_VIDOUT_AVAILABLE;
+> > @@ -1410,28 +1426,30 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+> >  err_display_disable:
+> >  	exynos_dsi_set_display_enable(dsi, false);
+> >  	drm_panel_unprepare(dsi->panel);  
+> 
+> Does this belong here, as drm_panel_prepare() was called in
+> exynos_dsi_pre_enable() ?
 
-=
+Nope, this one should be dropped.
 
+> 
+> > -
+> > -err_put_sync:
+> > -	dsi->state &= ~DSIM_STATE_ENABLED;
+> > -	pm_runtime_put(dsi->dev);
+> >  }
+> >  
+> > -static void exynos_dsi_disable(struct drm_encoder *encoder)
+> > +static void exynos_dsi_disable(struct drm_bridge *bridge)
+> >  {
+> > -	struct exynos_dsi *dsi = encoder_to_dsi(encoder);
+> > +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> > +
+> > +	if (!(dsi->state & DSIM_STATE_VIDOUT_AVAILABLE))
+> > +		return;
+> > +
+> > +	drm_panel_disable(dsi->panel);
+> > +	exynos_dsi_set_display_enable(dsi, false);
+> > +	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
+> > +}
+> > +
+> > +static void exynos_dsi_post_disable(struct drm_bridge *bridge)
+> > +{
+> > +	struct exynos_dsi *dsi = bridge_to_dsi(bridge);
+> >  
+> >  	if (!(dsi->state & DSIM_STATE_ENABLED))
+> >  		return;
+> >  
+> > -	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
+> > -
+> > -	drm_panel_disable(dsi->panel);
+> > -	drm_bridge_disable(dsi->out_bridge);
+> > -	exynos_dsi_set_display_enable(dsi, false);
+> >  	drm_panel_unprepare(dsi->panel);
+> > -	drm_bridge_post_disable(dsi->out_bridge);
+> > -	dsi->state &= ~DSIM_STATE_ENABLED;
+> >  	pm_runtime_put_sync(dsi->dev);
+> > +	dsi->state &= ~DSIM_STATE_ENABLED;
+> >  }
+> >  
+> >  static enum drm_connector_status
+> > @@ -1499,9 +1517,11 @@ static int exynos_dsi_create_connector(struct drm_encoder *encoder)
+> >  	return 0;
+> >  }
+> >  
+> > -static const struct drm_encoder_helper_funcs exynos_dsi_encoder_helper_funcs = {
+> > +static const struct drm_bridge_funcs exynos_dsi_bridge_funcs = {
+> > +	.pre_enable = exynos_dsi_pre_enable,
+> >  	.enable = exynos_dsi_enable,
+> >  	.disable = exynos_dsi_disable,
+> > +	.post_disable = exynos_dsi_post_disable,
+> >  };
+> >  
+> >  static const struct drm_encoder_funcs exynos_dsi_encoder_funcs = {
+> > @@ -1520,9 +1540,7 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
+> >  
+> >  	out_bridge  = of_drm_find_bridge(device->dev.of_node);
+> >  	if (out_bridge) {
+> > -		drm_bridge_attach(encoder, out_bridge, NULL);
+> > -		dsi->out_bridge = out_bridge;
+> > -		encoder->bridge = NULL;
+> > +		drm_bridge_attach(encoder, out_bridge, &dsi->bridge);
+> >  	} else {
+> >  		int ret = exynos_dsi_create_connector(encoder);
+> >  
+> > @@ -1575,19 +1593,19 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
+> >  				  struct mipi_dsi_device *device)
+> >  {
+> >  	struct exynos_dsi *dsi = host_to_dsi(host);
+> > +	struct drm_bridge *out_bridge = dsi->bridge.next;
+> >  	struct drm_device *drm = dsi->encoder.dev;
+> >  
+> >  	if (dsi->panel) {
+> >  		mutex_lock(&drm->mode_config.mutex);
+> > -		exynos_dsi_disable(&dsi->encoder);
+> > +		exynos_dsi_disable(&dsi->bridge);
+> > +		exynos_dsi_post_disable(&dsi->bridge);
+> >  		drm_panel_detach(dsi->panel);
+> >  		dsi->panel = NULL;
+> >  		dsi->connector.status = connector_status_disconnected;
+> >  		mutex_unlock(&drm->mode_config.mutex);
+> > -	} else {
+> > -		if (dsi->out_bridge->funcs->detach)
+> > -			dsi->out_bridge->funcs->detach(dsi->out_bridge);
+> > -		dsi->out_bridge = NULL;
+> > +	} else if (out_bridge && out_bridge->funcs->detach) {
+> > +		out_bridge->funcs->detach(out_bridge);  
+> 
+> Maybe drm_bridge_detach() ?
+
+This function is not exported, and I suppose that's why they used the
+function pointer in this driver. I bet there's a good reason for not
+exposing this function...
+
+> 
+> >  	}
+> >  
+> >  	if (drm->mode_config.poll_enabled)
+> > @@ -1687,16 +1705,18 @@ static int exynos_dsi_bind(struct device *dev, struct device *master,
+> >  	drm_encoder_init(drm_dev, encoder, &exynos_dsi_encoder_funcs,
+> >  			 DRM_MODE_ENCODER_TMDS, NULL);
+> >  
+> > -	drm_encoder_helper_add(encoder, &exynos_dsi_encoder_helper_funcs);
+> > -
+> >  	ret = exynos_drm_set_possible_crtcs(encoder, EXYNOS_DISPLAY_TYPE_LCD);
+> >  	if (ret < 0)
+> >  		return ret;
+> >  
+> > +	/* Declare ourself as the first bridge element. */
+> > +	dsi->bridge.funcs = &exynos_dsi_bridge_funcs;
+> > +	drm_bridge_attach(encoder, &dsi->bridge, NULL);
+> > +
+> >  	if (dsi->in_bridge_node) {
+> >  		in_bridge = of_drm_find_bridge(dsi->in_bridge_node);
+> >  		if (in_bridge)
+> > -			drm_bridge_attach(encoder, in_bridge, NULL);
+> > +			drm_bridge_attach(encoder, in_bridge, &dsi->bridge);
+> >  	}  
+> 
+> Same as for patch 01/21, maybe this could be moved to this bridge's
+> attach operation ? Actually, now that I've read the code, this in_bridge
+> part looks weird. Why would the DSI encoder have an input bridge that is
+> has to manage itself ?
+
+Yes, I know, it doesn't make any sense. Either we're dealing with a
+bridge which can be chained to other bridges (can be placed in the
+middle of a chain as well), or we're dealing with an encoder which
+precedes any bridges. In the latter case (which is how exynos_dsi is
+implemented) in_bridge doesn't have any meaning, and that's even worse
+since we're placing the so-called input bridge (AKA previous bridge)
+after our encoder (that's what drm_bridge_attach(encoder, in_bridge,
+NULL) does).
+
+TBH, I didn't want to go that far and fix existing drivers when I
+started this series, so I think I'll rework the patchset to get rid of
+the VC4 and exynos patches, even if that means having 2 drivers that
+mess up with the encoder->bridge_chain list.
+
+Regards,
+
+Boris
