@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22A4C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 05:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF468C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 05:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B188520722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 05:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF6A20722
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 05:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="ICa0IoOO"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="S8CwjsO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfKYF6T (ORCPT
+        id S1727109AbfKYF6L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 00:58:19 -0500
-Received: from mail-eopbgr690065.outbound.protection.outlook.com ([40.107.69.65]:47961
+        Mon, 25 Nov 2019 00:58:11 -0500
+Received: from mail-eopbgr690051.outbound.protection.outlook.com ([40.107.69.51]:8004
         "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727120AbfKYF6S (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 00:58:18 -0500
+        id S1727085AbfKYF6K (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Nov 2019 00:58:10 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JYFq5JbTDCHyis+9wSSaZJy4ZU/zAOwK/I7QLZcrdiQo9H2k0IDaanM0FMOVYEgs6hzdP/vaHvnNO2ZA+/eQ8GX25DcRPlaMRun2aRO5URJFyFZ7kynXv0pjFIWMu3tn3YC8Ow4nRTdc9Y107RQilLSLxCqw3kn+96s1wDU9eHNCFVd4spL+OaFLd9+OPgrBQP81zmol69JW7vvW+CgvaB+uFzJXZD5KlsZPCAGOlL4LGtc9uRyZ/nqI9lia27OJlWmBYr97K63II+E5tTRDyBVgcPkcIcL7d8XjvnGyTDTvsFz6M6MG5csEb6wUOz7kzWQbRh8WczQ8ovyRzl4o0g==
+ b=gqksa4KbsK2KwTdjmJef9Ic7enMfjLtG2u6ZeEpCvr03oU68IUt4zfyKslv+yKe9Fxice0lF+FC/oRxluC/lhZlHZ9AtwRWsYKSzG4UxI+cHY/Xeb56NPdkpJuvQqm69h30cjWDf6M1RNlPyjHEjNvplpb4L7AOeWE0/o323ohoewJNxBscvBXuC9MWFu1/v/MXzlBdvoU0yKcKRh5+Caw0ugM1k5tP9psgjBp1AaUOyjKXOZQf8VTgPCaX/I666Oaern8BwF8SuuLzP3poySpg6UVtWWcUx7AdsxO8u+XZaA6iPc9QwR6utOWtLicwkJRDnmDXXQXjmEM81EUqfyg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eZtNaULOgo5BlFOvij4pkR5P0UvZDV4dwCoW0GuDIds=;
- b=VA6lJDylLgva3+3wd+ut4VO0KJphy6UlZm/T0vS79R4uKdggL6xLUYRD2Qokjnj4TMFpNlExBX4bUGt3J3TvbQbVH7XOSE9Pe4ArBgKXFy1FFilRY82E4npdkYvD6MuG0Gav9s4Of69U+xqHvLme8tAXk1kaIKeAGKub4c9CSYUig790LcQsI52Eh9fPEZ2y/A72eHCtl5qUQ5yzHghAI3W+2V5YbWfDC6j0cABur9veFE9fVRG0+84ZKcdW0EcUMX6K3AO4ImTywAndG2hVgsnT4UZf/BBPbiRSVEVJHMZ0irZucBwzcN7cZ5zYioF1N7OkF8RMx93SACQlGp5YBw==
+ bh=IOOah1TvueSfyqsytPOgIXbJSpfUJF94Jx72tziVDQI=;
+ b=TyJFQv4+nlY8YdIo3oaA5S0asQL1QKbs2iQuh2bynmC4CXVSA/g1crp//eorloRJ8/riXmJDLi/xYDJ/xcvjaTz1aTiWLW1FHj9TmZPLF/jHiOH3aFLK5OlFboTBBcby9YZOjzIFLdo7DMK9oj3ZaMUA3GHp3CSYkE7kZWNqUJ1ft6ZkHe2XIpFiMM05HDXgcFFr38LbisZVM1LnrMHiz2+kq5Sx1Vx0n3ewwPGVHo5/9rJM25VE1i5NcGmOnF1djw4VDX83npW1404BI/J05tBbezx/negOn8fTuaOmm0Ehi5CWqK68BMlgoLCIRM5IspUN8toh6NANRJMWLLzRqA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
  dkim=pass header.d=sifive.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eZtNaULOgo5BlFOvij4pkR5P0UvZDV4dwCoW0GuDIds=;
- b=ICa0IoOOyyh6H4M2VPDqhPw6RHHGUGtVCyoDe1/EJQ9WVgQ3gIBhP1LhoVNQUpyAAy/FKaduY6Mx/FKOSH9FwPyyAJ+vMQGgHv09BHLgDLDhAyiAlyVVyPh56ShHODkrbLiBp82OJiG4ozIdAqEG+gR8fmeAm4EMPhRZ9Y/n538=
+ bh=IOOah1TvueSfyqsytPOgIXbJSpfUJF94Jx72tziVDQI=;
+ b=S8CwjsO4CEgVUigeEVtY52m0d0pIJD9cdYZUfVrOyGzS0Z3EUlbeDVIY1jmnah+otZ+EO5bmA8NefGiBzfe/ELQrtlFoLVC0RGZoTL2H90/Ha25J7hTpvp6GojnCmJAFg5O1tmYf/oTcN0Nqq6sl6dYN0EHc/hdmmEeqlwpRZHg=
 Received: from MN2PR13MB3374.namprd13.prod.outlook.com (10.255.236.83) by
  MN2PR13MB2622.namprd13.prod.outlook.com (20.178.254.157) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.10; Mon, 25 Nov 2019 05:58:15 +0000
+ 15.20.2495.10; Mon, 25 Nov 2019 05:58:03 +0000
 Received: from MN2PR13MB3374.namprd13.prod.outlook.com
  ([fe80::4481:4560:7083:e4c6]) by MN2PR13MB3374.namprd13.prod.outlook.com
  ([fe80::4481:4560:7083:e4c6%7]) with mapi id 15.20.2495.014; Mon, 25 Nov 2019
- 05:58:15 +0000
+ 05:58:03 +0000
 From:   Yash Shah <yash.shah@sifive.com>
 To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
         "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
@@ -66,13 +66,12 @@ CC:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Sachin Ghadi <sachin.ghadi@sifive.com>,
         Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v3 6/6] riscv: dts: Add DT support for SiFive FU540 GPIO
- driver
-Thread-Topic: [PATCH v3 6/6] riscv: dts: Add DT support for SiFive FU540 GPIO
- driver
-Thread-Index: AQHVo1VTXl3rxbuniEimR8aPOgQ+5g==
-Date:   Mon, 25 Nov 2019 05:58:14 +0000
-Message-ID: <1574661437-28486-7-git-send-email-yash.shah@sifive.com>
+Subject: [PATCH v3 4/6] gpio: sifive: Add DT documentation for SiFive GPIO
+Thread-Topic: [PATCH v3 4/6] gpio: sifive: Add DT documentation for SiFive
+ GPIO
+Thread-Index: AQHVo1VNE222DuqgTUu1+xO+APnzeA==
+Date:   Mon, 25 Nov 2019 05:58:03 +0000
+Message-ID: <1574661437-28486-5-git-send-email-yash.shah@sifive.com>
 References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
 In-Reply-To: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
 Accept-Language: en-US
@@ -88,83 +87,124 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.7.4
 x-originating-ip: [114.143.65.226]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e81c5664-0656-47a0-4686-08d7716c760b
+x-ms-office365-filtering-correlation-id: aaf55ab0-2e0a-4088-0754-08d7716c6f4e
 x-ms-traffictypediagnostic: MN2PR13MB2622:
 x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR13MB2622121C16B8DB7EC6EE66E18C4A0@MN2PR13MB2622.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-microsoft-antispam-prvs: <MN2PR13MB2622E087648DD28B1D2A0F158C4A0@MN2PR13MB2622.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1079;
 x-forefront-prvs: 0232B30BBC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(136003)(376002)(346002)(366004)(396003)(39840400004)(189003)(199004)(186003)(6436002)(2906002)(316002)(14454004)(7416002)(54906003)(4326008)(11346002)(71190400001)(2616005)(50226002)(8936002)(110136005)(478600001)(6512007)(446003)(6116002)(8676002)(36756003)(3846002)(25786009)(81156014)(44832011)(305945005)(5660300002)(52116002)(14444005)(76176011)(256004)(26005)(81166006)(71200400001)(6506007)(386003)(2501003)(6636002)(66446008)(66556008)(86362001)(66946007)(102836004)(99286004)(6486002)(7736002)(107886003)(64756008)(66476007)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR13MB2622;H:MN2PR13MB3374.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(136003)(376002)(346002)(366004)(396003)(39840400004)(189003)(199004)(186003)(966005)(6436002)(2906002)(316002)(14454004)(7416002)(54906003)(4326008)(6306002)(11346002)(71190400001)(2616005)(50226002)(8936002)(110136005)(478600001)(6512007)(446003)(6116002)(8676002)(36756003)(3846002)(25786009)(81156014)(44832011)(305945005)(5660300002)(52116002)(14444005)(76176011)(256004)(26005)(81166006)(71200400001)(6506007)(386003)(2501003)(6636002)(66446008)(66556008)(86362001)(66946007)(102836004)(99286004)(6486002)(7736002)(107886003)(64756008)(66476007)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR13MB2622;H:MN2PR13MB3374.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: sifive.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UiuWTCshWODqjTORFHwC+pjEh7oTKFg7XnOZXXukgKT1mFXvBrg9IPq0977T3CHDZahqSU91U7OuIYWBjiVLEl0AmBMaQsqQ8zsoS2xjseKTsy9G24Mlr63dyZXoiLbqqWDCLa+GGrNQobwZS9Xh7l0YiWJQxA1/xQDuvxCEkpyNT2BsL/DZS5IcOAm2MWD2VIylSoGBtEOyQ4mo7uIBNth+iobMvQJrR/dm/4IXR2x0zGXmfGs3sb4oVsWR9LA8Q6d2omBTcjydgyK0jf0ylmiK6yoZSOxKMZpWy/pBU+DE58CFVKB4Ju9LXuQDj7fgCzHWF8A+zh69iy+ub4Fk+ATSh+j6FTRQjJ68cQMA0TzkshvAxsTroisxV54E/TxBiaq+r2jWsNMjIw58NBIO6EGniuCQRuoqQNrGFGF+XsnGV0mbQgnAiMVz5n+3eTDG
+x-microsoft-antispam-message-info: VJCIiFLgsD0fDQFbjQA5kcV/36Ceu6gbSGHAYo5uRmtICM4h7rBtW9QnjgYZUb1SclrCJMLkAMgEmEt/fDIErkTBubLt2kmLCHYRjJDuDyq/DLx+JomijvN10URxTol2UBSxUlBWpEqT/7jmx8igE2m5k9XlAQHFEd8wX3TRUTsMB6AoLITFAYXN2tozbdtlE2EjFYKsX8UtPlLmotRFL4F2nTcuzwRasTiCfqHrmZWjbrPpZWhPMurcef3h8UzlHDII6bQ8QkpluPZjPWme+tgMpJpewo9HBwWRM+BrhurB6m7zOgnvtBsyyaNH6N5pVaKgUh5escSZatcNCSCdsoZEdu5j4frGYM1pesTQArFgaE4uUzL4ep/acevKG3B2ndusDhfPHJm/pcShhGnLNAzmLi01D1m8bU6DjHb31XDtIYtiKckEmCOmrQkvC+gak5qvcaDnthTbZO5VSpGOgf/S10seNNrt4BUrl/b7Ppk=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e81c5664-0656-47a0-4686-08d7716c760b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 05:58:14.9440
+X-MS-Exchange-CrossTenant-Network-Message-Id: aaf55ab0-2e0a-4088-0754-08d7716c6f4e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 05:58:03.7953
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TAuDYyuBcQ+z5C+g7GBROhuvGQTBhNPjtiz1XcnOWQ9PPQHpcriuehgIUUjBqf340ptR6mijKuUrEa/26tF3+g==
+X-MS-Exchange-CrossTenant-userprincipalname: doKMFAT9KX3wT9i6xexqeWL4NVpSUDFeJ72UmZKARd8pR0EFfrQ1A+l5iWM8K4sicOvzOLz2hWr27qXpqx0/7g==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB2622
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the gpio DT node in SiFive FU540 soc-specific DT file.
-Enable the gpio node in HiFive Unleashed board-specific DT file.
+DT json-schema for GPIO controller added.
 
+Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+[Atish: Compatible string update]
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
 Signed-off-by: Yash Shah <yash.shah@sifive.com>
 ---
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 14 +++++++++++++-
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  4 ++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/gpio/gpio-sifive.yaml      | 69 ++++++++++++++++++=
+++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sifive.yaml
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/d=
-ts/sifive/fu540-c000.dtsi
-index afa43c7..2d7c284 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -246,6 +246,18 @@
- 			#pwm-cells =3D <3>;
- 			status =3D "disabled";
- 		};
--
-+		gpio: gpio@10060000 {
-+			compatible =3D "sifive,fu540-c000-gpio", "sifive,gpio0";
-+			interrupt-parent =3D <&plic0>;
-+			interrupts =3D <7 8 9 10 11 12 13 14 15
-+				      16 17 18 19 20 21 22>;
-+			reg =3D <0x0 0x10060000 0x0 0x1000>;
-+			gpio-controller;
-+			#gpio-cells =3D <2>;
-+			interrupt-controller;
-+			#interrupt-cells =3D <2>;
-+			clocks =3D <&prci PRCI_CLK_TLCLK>;
-+			status =3D "disabled";
-+		};
- 	};
- };
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/ris=
-cv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 88cfcb9..609198c 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -94,3 +94,7 @@
- &pwm1 {
- 	status =3D "okay";
- };
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-sifive.yaml b/Docu=
+mentation/devicetree/bindings/gpio/gpio-sifive.yaml
+new file mode 100644
+index 0000000..49214bb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-sifive.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-sifive.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+&gpio {
-+	status =3D "okay";
-+};
++title: SiFive GPIO controller
++
++maintainers:
++  - Yash Shah <yash.shah@sifive.com>
++  - Paul Walmsley <paul.walmsley@sifive.com>
++
++properties:
++  compatible:
++    items:
++      - const: sifive,fu540-c000-gpio
++      - const: sifive,gpio0
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      interrupt mapping one per GPIO. Maximum 16 GPIOs.
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  clock-names: true
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++  - clocks
++  - "#gpio-cells"
++  - gpio-controller
++
++additionalProperties: false
++
++examples:
++  - |
++      #include <dt-bindings/clock/sifive-fu540-prci.h>
++      gpio@10060000 {
++        compatible =3D "sifive,fu540-c000-gpio", "sifive,gpio0";
++        interrupt-parent =3D <&plic>;
++        interrupts =3D <7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22>;
++        reg =3D <0x0 0x10060000 0x0 0x1000>;
++        clocks =3D <&tlclk PRCI_CLK_TLCLK>;
++        gpio-controller;
++        #gpio-cells =3D <2>;
++        interrupt-controller;
++        #interrupt-cells =3D <2>;
++      };
++
++...
 --=20
 2.7.4
 
