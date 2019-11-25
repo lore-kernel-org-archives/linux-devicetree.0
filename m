@@ -2,115 +2,80 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E4DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 16:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DEEC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 17:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B87220835
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 16:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574699726;
-	bh=djhyZJDtxB70JBGj3o4DS80jcr7ceSVnPnc8G1l/Mrk=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=QUv8Z3D1OLsRDMWtjXAHvoC0ZwXjJnXAz7KgYV9a+GOXVF1gwNI2WU3DLTZzrboOT
-	 GAEStxSafl8qUQkX2EKAYqXQv0UcBmdMvN7dfv6+zhXpMuxsZpDRHXGFyWjrvii+PD
-	 3Q5se0jYb8If7zE/k4xlrAC/gw3OtI3dW3gu7Qng=
+	by mail.kernel.org (Postfix) with ESMTP id 5D55B20674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 17:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfKYQfW (ORCPT
+        id S1729006AbfKYRDt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 11:35:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49546 "EHLO mail.kernel.org"
+        Mon, 25 Nov 2019 12:03:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:52950 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfKYQfW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 11:35:22 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9F1920740;
-        Mon, 25 Nov 2019 16:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574699722;
-        bh=djhyZJDtxB70JBGj3o4DS80jcr7ceSVnPnc8G1l/Mrk=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ApvQiZNesjcWJJDV0zN9Wjny9kGpbkQVYxD5zT+gHd8VYKOON1UigLALXqh7WEqUi
-         ZR55Mj03230H0OrhDIQu5Nl7JVn2aJABxrVv10sBQGLwqGbUGz9ZFaM+sFXpw/VLDX
-         QZCBTuUlAwqTSmn0zzaNOIaPfM6eeULQuWqPO/qY=
-Content-Type: text/plain; charset="utf-8"
+        id S1728889AbfKYRDt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Nov 2019 12:03:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D59331B;
+        Mon, 25 Nov 2019 09:03:49 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 567403F68E;
+        Mon, 25 Nov 2019 09:03:47 -0800 (PST)
+Date:   Mon, 25 Nov 2019 17:03:45 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
+        helgaas@kernel.org, jingoohan1@gmail.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v9 0/3] PCI: Add Intel PCIe Driver and respective
+  dt-binding yaml file
+Message-ID: <20191125170345.GB30891@e121166-lin.cambridge.arm.com>
+References: <cover.1574314547.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAAfSe-uwOvQSWUkOEw1m0C5wnKH1z0gSdjzAMTayKS3cphXMtA@mail.gmail.com>
-References: <20191025111338.27324-1-chunyan.zhang@unisoc.com> <20191025111338.27324-6-chunyan.zhang@unisoc.com> <20191113221952.AD925206E3@mail.kernel.org> <CAAfSe-twxx4PyERHXuYcoehPoNYiVaOS4hZEK0KndoM2sL_5gQ@mail.gmail.com> <20191125013312.ACC2E2071A@mail.kernel.org> <CAAfSe-uwOvQSWUkOEw1m0C5wnKH1z0gSdjzAMTayKS3cphXMtA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] clk: sprd: add clocks support for SC9863A
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-User-Agent: alot/0.8.1
-Date:   Mon, 25 Nov 2019 08:35:21 -0800
-Message-Id: <20191125163521.D9F1920740@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1574314547.git.eswara.kota@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Chunyan Zhang (2019-11-24 18:10:58)
-> On Mon, 25 Nov 2019 at 09:33, Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Chunyan Zhang (2019-11-17 03:27:15)
-> > >
-> > > Not sure if I understand correctly - do you mean that switch to use a
-> > > reference to clk_parent_data.hw in the driver instead?
-> > > like:
-> > > https://elixir.bootlin.com/linux/v5.4-rc7/source/drivers/clk/qcom/gcc=
--sm8150.c#L136
-> > >
-> >
-> > Yes something like that.
-> >
-> > > Since if I have to define many clk_parent_data.fw_name strings
-> > > instead, it seems not able to reduce the code size, right?
-> >
-> > Ideally there are some internal only clks that can be linked to their
->=20
-> If the *internal* clks should be in the same base address, then we
-> have many external clks as parents, since most of our clks are not
-> located according to modules which clks serve, but according to clk
-> type.
->=20
-> > parent with a single clk_hw pointer. That will hopefully keep the size
->=20
-> Since all clks used for a chip are defined in the same driver file, I
-> actually can use clk_hw pointer directly, that will cut down the size
-> of this driver code, and also easier for users to look for parents for
-> one clk (only need to look at driver file).
->=20
-> But not sure if you aggree this way?
+On Thu, Nov 21, 2019 at 05:31:17PM +0800, Dilip Kota wrote:
+> Intel PCIe is Synopsys based controller. Intel PCIe driver uses
+> DesignWare PCIe framework for host initialization and register
+> configurations.
+> 
+> Dilip Kota (3):
+>   dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+>   dwc: PCI: intel: PCIe RC controller driver
 
-If all clks are in the same file then it sounds fine to just use clk_hw
-pointers everywhere.
+"PCI: dwc: ..."
 
->=20
-> > down somewhat. And if there are any external clks, they can be described
-> > in DT and then only the .fw_name field can be used and the fallback
-> > field .name can be left assigned to NULL.
->=20
-> Yes, I noticed that. But I still need to add many .fw_name, that will
-> not be a small count.
->=20
+You should follow other commit logs in history as a general
+rule to make them uniform, I reordered it.
 
-Sure. The plan is to get rid of the array of string names to specify
-parents. We can debate the size and cost associated with moving away
-from that, but it won't change the overall message here that I'd like to
-see new drivers use the new way of specifying parents instead of using
-strings for topology description.
+>   PCI: artpec6: Configure FTS with dwc helper function
+> 
+>  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 ++++++
+>  drivers/pci/controller/dwc/Kconfig                 |  10 +
+>  drivers/pci/controller/dwc/Makefile                |   1 +
+>  drivers/pci/controller/dwc/pcie-artpec6.c          |   8 +-
+>  drivers/pci/controller/dwc/pcie-designware.c       |  57 +++
+>  drivers/pci/controller/dwc/pcie-designware.h       |  12 +
+>  drivers/pci/controller/dwc/pcie-intel-gw.c         | 545 +++++++++++++++++++++
+>  include/uapi/linux/pci_regs.h                      |   1 +
+>  8 files changed, 765 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>  create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
 
+Applied to pci/dwc, we should be able to merge it for v5.5.
+
+Lorenzo
