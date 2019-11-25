@@ -2,140 +2,212 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4607CC33CA1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 12:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72229C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 12:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2972E2085B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 12:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E9120836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 12:13:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uzqYsfKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfKYMAD (ORCPT
+        id S1726926AbfKYMNB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:00:03 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:11529 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725906AbfKYMAB (ORCPT
+        Mon, 25 Nov 2019 07:13:01 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10808 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725862AbfKYMNB (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:00:01 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 25 Nov 2019 17:29:59 +0530
-IronPort-SDR: dIZVpYKMubnPx89RpbGCZddgRJQFGAdkUk33un/axipKANfWlOY6SnO7uv6FJqOao7dgNDGfx1
- xWgZ0cmUXBs/KKuu6qeqka4D8YWVxEeAQVeve8Zh9jPEeLlGS3/SMwO33JicWtm2mB4dIAM+Im
- ENRyznQoqhmxNXN+/hW2vHtOntTiWNesYfJHYqZS93/UqfaGH9XvYYcDY7MRDECHn3H7u2myjm
- diXGTFSJ+THdFGuvXiLlqIe+1lfF56ZbPXi5uKCi6eNy7L4NCndns5jbp2jPvIH3hXiq83rWBF
- 7+VhF/33SgHL4HtTZ1brfMls
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 25 Nov 2019 17:29:43 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id AC0D7432B; Mon, 25 Nov 2019 17:29:42 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
-        jsanka@codeaurora.org, chandanu@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: [PATCH 4/4] msm:disp:dpu1: add mixer selection for display topology
-Date:   Mon, 25 Nov 2019 17:29:29 +0530
-Message-Id: <1574683169-19342-5-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
-References: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
+        Mon, 25 Nov 2019 07:13:01 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAPC70Pg009034;
+        Mon, 25 Nov 2019 13:12:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=sWG896Au3NOdFn4sqwKmFJD5XhVt5rs6AeaV5Mi4ANQ=;
+ b=uzqYsfKcxiIa/sNurkG81LI/OQUQra6RKJCN6+a/SkAVDkF7NfDDeCpWcR8AOmts3ER9
+ rZQ+dZPU5WQeOesidV/nzQQrMuZcSnmHsvZoBdzthX8sm2nKyyW5ymXtTyZHrXMZEaBm
+ CZ1Me0/6r+spIPx+fGzIDIsMnqbnxSDU724p6XMuMNQubftwUFyOjLQ4Nvovb3cWCchN
+ acgcPlQcQuulz0obIBqv6Wy8jChVW4UG9X6qY3AD8EeXrYQg4mCzNbDmqjUZCU56++Jk
+ vhUp5pgXQD+sbeF6JVNl4D4NiAE+61huD9c2ElW8ns+DhebiI8wRuuaH4M1boTFca6oc hA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wets9h0r3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 Nov 2019 13:12:48 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CC984100034;
+        Mon, 25 Nov 2019 13:12:47 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BED6F2BE238;
+        Mon, 25 Nov 2019 13:12:47 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 25 Nov 2019 13:12:47
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <alexandre.torgue@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] ARM: dts: stm32: remove "@" from stm32f4 pinmux groups
+Date:   Mon, 25 Nov 2019 13:12:44 +0100
+Message-ID: <20191125121244.19591-2-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20191125121244.19591-1-benjamin.gaignard@st.com>
+References: <20191125121244.19591-1-benjamin.gaignard@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-25_03:2019-11-21,2019-11-25 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-mixer selection in the display topology is based on multiple
-factors
-1) mixers available in the hw
-2) interfaces to be enabled
-3) merge capability
+Replace all "@" by "_" in pinmux groups for stm32f4 family.
+This avoid errors when using yaml to check the bindings.
 
-change will pickup mixer as per the topology need.
-
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c    | 21 ++++++++++++++++++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |  1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |  2 ++
- 3 files changed, 21 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index d82ea99..067ef0b 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -58,7 +58,7 @@
+diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+index 35202896c093..722598cdf3b7 100644
+--- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+@@ -163,7 +163,7 @@
+ 				st,bank-name = "GPIOK";
+ 			};
  
- #define IDLE_SHORT_TIMEOUT	1
+-			usart1_pins_a: usart1@0 {
++			usart1_pins_a: usart1_0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+ 					bias-disable;
+@@ -176,7 +176,7 @@
+ 				};
+ 			};
  
--#define MAX_VDISPLAY_SPLIT 1080
-+#define MAX_HDISPLAY_SPLIT 1080
+-			usart3_pins_a: usart3@0 {
++			usart3_pins_a: usart3_0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('B', 10, AF7)>; /* USART3_TX */
+ 					bias-disable;
+@@ -189,7 +189,7 @@
+ 				};
+ 			};
  
- /* timeout in frames waiting for frame done */
- #define DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES 5
-@@ -534,8 +534,23 @@ static struct msm_display_topology dpu_encoder_get_topology(
- 		if (dpu_enc->phys_encs[i])
- 			intf_count++;
+-			usbotg_fs_pins_a: usbotg_fs@0 {
++			usbotg_fs_pins_a: usbotg_fs_0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 10, AF10)>, /* OTG_FS_ID */
+ 						 <STM32_PINMUX('A', 11, AF10)>, /* OTG_FS_DM */
+@@ -200,7 +200,7 @@
+ 				};
+ 			};
  
--	/* User split topology for width > 1080 */
--	topology.num_lm = (mode->vdisplay > MAX_VDISPLAY_SPLIT) ? 2 : 1;
-+	/* Datapath topology selection
-+	 *
-+	 * Dual display
-+	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
-+	 *
-+	 * Single display
-+	 * 1 LM, 1 INTF
-+	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
-+	 *
-+	 */
-+	if (intf_count == 2)
-+		topology.num_lm = 2;
-+	else if (!dpu_kms->catalog->caps->has_3d_merge)
-+		topology.num_lm = 1;
-+	else
-+		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
-+
- 	topology.num_enc = 0;
- 	topology.num_intf = intf_count;
+-			usbotg_fs_pins_b: usbotg_fs@1 {
++			usbotg_fs_pins_b: usbotg_fs_1 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('B', 12, AF12)>, /* OTG_HS_ID */
+ 						 <STM32_PINMUX('B', 14, AF12)>, /* OTG_HS_DM */
+@@ -211,7 +211,7 @@
+ 				};
+ 			};
  
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 0ee2b6c..de69f71 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -67,6 +67,7 @@
- 	.has_src_split = true,
- 	.has_dim_layer = true,
- 	.has_idle_pc = true,
-+	.has_3d_merge = true,
- };
+-			usbotg_hs_pins_a: usbotg_hs@0 {
++			usbotg_hs_pins_a: usbotg_hs_0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT*/
+ 						 <STM32_PINMUX('I', 11, AF10)>, /* OTG_HS_ULPI_DIR */
+@@ -231,7 +231,7 @@
+ 				};
+ 			};
  
- static const struct dpu_caps sc7180_dpu_caps = {
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 2607ef3..d0cb41c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -287,6 +287,7 @@ struct dpu_qos_lut_tbl {
-  * @has_src_split      source split feature status
-  * @has_dim_layer      dim layer feature status
-  * @has_idle_pc        indicate if idle power collapse feature is supported
-+ * @has_3d_merge       indicate if 3D merge is supported
-  */
- struct dpu_caps {
- 	u32 max_mixer_width;
-@@ -297,6 +298,7 @@ struct dpu_caps {
- 	bool has_src_split;
- 	bool has_dim_layer;
- 	bool has_idle_pc;
-+	bool has_3d_merge;
- };
+-			ethernet_mii: mii@0 {
++			ethernet_mii: mii_0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('G', 13, AF11)>, /* ETH_MII_TXD0_ETH_RMII_TXD0 */
+ 						 <STM32_PINMUX('G', 14, AF11)>, /* ETH_MII_TXD1_ETH_RMII_TXD1 */
+@@ -251,13 +251,13 @@
+ 				};
+ 			};
  
- /**
+-			adc3_in8_pin: adc@200 {
++			adc3_in8_pin: adc_200 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('F', 10, ANALOG)>;
+ 				};
+ 			};
+ 
+-			pwm1_pins: pwm@1 {
++			pwm1_pins: pwm_1 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 8, AF1)>, /* TIM1_CH1 */
+ 						 <STM32_PINMUX('B', 13, AF1)>, /* TIM1_CH1N */
+@@ -265,14 +265,14 @@
+ 				};
+ 			};
+ 
+-			pwm3_pins: pwm@3 {
++			pwm3_pins: pwm_3 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('B', 4, AF2)>, /* TIM3_CH1 */
+ 						 <STM32_PINMUX('B', 5, AF2)>; /* TIM3_CH2 */
+ 				};
+ 			};
+ 
+-			i2c1_pins: i2c1@0 {
++			i2c1_pins: i2c1_0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('B', 9, AF4)>, /* I2C1_SDA */
+ 						 <STM32_PINMUX('B', 6, AF4)>; /* I2C1_SCL */
+@@ -282,7 +282,7 @@
+ 				};
+ 			};
+ 
+-			ltdc_pins: ltdc@0 {
++			ltdc_pins: ltdc_0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('I', 12, AF14)>, /* LCD_HSYNC */
+ 						 <STM32_PINMUX('I', 13, AF14)>, /* LCD_VSYNC */
+@@ -316,7 +316,7 @@
+ 				};
+ 			};
+ 
+-			dcmi_pins: dcmi@0 {
++			dcmi_pins: dcmi_0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 4, AF13)>, /* DCMI_HSYNC */
+ 						 <STM32_PINMUX('B', 7, AF13)>, /* DCMI_VSYNC */
+@@ -339,7 +339,7 @@
+ 				};
+ 			};
+ 
+-			sdio_pins: sdio_pins@0 {
++			sdio_pins: sdio_pins_0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDIO_D0 */
+ 						 <STM32_PINMUX('C', 9, AF12)>, /* SDIO_D1 */
+@@ -352,7 +352,7 @@
+ 				};
+ 			};
+ 
+-			sdio_pins_od: sdio_pins_od@0 {
++			sdio_pins_od: sdio_pins_od_0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDIO_D0 */
+ 						 <STM32_PINMUX('C', 9, AF12)>, /* SDIO_D1 */
 -- 
-1.9.1
+2.15.0
 
