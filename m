@@ -2,35 +2,35 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50C3C33C9E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4607CC33CA1
 	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 12:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73DB2075C
+	by mail.kernel.org (Postfix) with ESMTP id 2972E2085B
 	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 12:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbfKYMAA (ORCPT
+        id S1727225AbfKYMAD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:00:00 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:1231 "EHLO
+        Mon, 25 Nov 2019 07:00:03 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:11529 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725851AbfKYMAA (ORCPT
+        by vger.kernel.org with ESMTP id S1725906AbfKYMAB (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:00:00 -0500
+        Mon, 25 Nov 2019 07:00:01 -0500
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 25 Nov 2019 17:29:59 +0530
-IronPort-SDR: fGVvEbj3FbHStOiD96Mom5gthGHa8KO1XYyHL8KQT4lSK5jDoYhy9GFDdyNRMiCfXnWSAAGJ75
- +/dIjDLw5Nj1o1vpbO+k6vIHuXwJzLbSxdpRsKyPnGTJHmyPqcAwDo5SfHx2gqM5gzNLmD42tY
- gCh607ITCmTatSPKQqp4hDYIAh9e0xNJ8yp4ZgQWQaX6wmk4KseFT33Ml8UfV1TbZBsqUKV5KN
- GwPhaRPLNEyQkDanxd5ow47ksSvulK3qIl6YunVQtYt4y5ZlKhWVRjRzVNBFwDXKTF6ZIr0Z/O
- 2RuPJ5STTqrkswm+/lv4ZpjQ
+IronPort-SDR: dIZVpYKMubnPx89RpbGCZddgRJQFGAdkUk33un/axipKANfWlOY6SnO7uv6FJqOao7dgNDGfx1
+ xWgZ0cmUXBs/KKuu6qeqka4D8YWVxEeAQVeve8Zh9jPEeLlGS3/SMwO33JicWtm2mB4dIAM+Im
+ ENRyznQoqhmxNXN+/hW2vHtOntTiWNesYfJHYqZS93/UqfaGH9XvYYcDY7MRDECHn3H7u2myjm
+ diXGTFSJ+THdFGuvXiLlqIe+1lfF56ZbPXi5uKCi6eNy7L4NCndns5jbp2jPvIH3hXiq83rWBF
+ 7+VhF/33SgHL4HtTZ1brfMls
 Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 25 Nov 2019 17:29:32 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 25 Nov 2019 17:29:43 +0530
 Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 1241C432B; Mon, 25 Nov 2019 17:29:32 +0530 (IST)
+        id AC0D7432B; Mon, 25 Nov 2019 17:29:42 +0530 (IST)
 From:   Kalyan Thota <kalyan_t@codeaurora.org>
 To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
@@ -39,45 +39,103 @@ Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
         seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
         jsanka@codeaurora.org, chandanu@codeaurora.org,
         travitej@codeaurora.org, nganji@codeaurora.org
-Subject: [PATCH 0/4] Add support for SC7180 display 
-Date:   Mon, 25 Nov 2019 17:29:25 +0530
-Message-Id: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
+Subject: [PATCH 4/4] msm:disp:dpu1: add mixer selection for display topology
+Date:   Mon, 25 Nov 2019 17:29:29 +0530
+Message-Id: <1574683169-19342-5-git-send-email-kalyan_t@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
+References: <1574683169-19342-1-git-send-email-kalyan_t@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SC7180 follows a newer architecture where in some flush controls have been re-organized to simplify programming and provide for future expandability.
-Specifically:
-1) The TIMING_<j> bits that control flush of INTF_<j> have been replaced with a common INTF flush bit which flushes the programming in the MDP_CTL_<id>_INTF_ACTIVE register
-2) Individual flush bits for MERGE_3D, DSC and CDWN have been added which flush the programming in the MDP_CTL_<id>_MERGE_3D_ACTIVE, ... etc respectively
-3) PERIPH flush bit has been added to flush DSP packets for DisplayPort
+mixer selection in the display topology is based on multiple
+factors
+1) mixers available in the hw
+2) interfaces to be enabled
+3) merge capability
 
-The complete datapath is described using the MDP_CTL_<id>_TOP and newly added ACTIVE registers to handle other sub blocks
-such as interface (INTF) resources, PingPong buffer / Layer Mixer, Display Stream Compression (DSC) resources, writeback (WB) and 3D Merge
-selections that are part of the datapath.
+change will pickup mixer as per the topology need.
 
-Kalyan Thota (4):
-  dt-bindings: msm:disp: add sc7180 DPU variant
-  msm:disp:dpu1: add support for display for SC7180 target
-  msm:disp:dpu1: setup display datapath for SC7180 target
-  msm:disp:dpu1: add mixer selection for display topology
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c    | 21 ++++++++++++++++++---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |  1 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |  2 ++
+ 3 files changed, 21 insertions(+), 3 deletions(-)
 
- .../devicetree/bindings/display/msm/dpu.txt        |   4 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  21 ++-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   |  21 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     | 191 +++++++++++++++++++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     |   6 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         |  84 ++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |  24 +++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        |  28 +++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h        |   6 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          |   3 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   1 +
- drivers/gpu/drm/msm/msm_drv.c                      |   4 +-
- 12 files changed, 370 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index d82ea99..067ef0b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -58,7 +58,7 @@
+ 
+ #define IDLE_SHORT_TIMEOUT	1
+ 
+-#define MAX_VDISPLAY_SPLIT 1080
++#define MAX_HDISPLAY_SPLIT 1080
+ 
+ /* timeout in frames waiting for frame done */
+ #define DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES 5
+@@ -534,8 +534,23 @@ static struct msm_display_topology dpu_encoder_get_topology(
+ 		if (dpu_enc->phys_encs[i])
+ 			intf_count++;
+ 
+-	/* User split topology for width > 1080 */
+-	topology.num_lm = (mode->vdisplay > MAX_VDISPLAY_SPLIT) ? 2 : 1;
++	/* Datapath topology selection
++	 *
++	 * Dual display
++	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
++	 *
++	 * Single display
++	 * 1 LM, 1 INTF
++	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
++	 *
++	 */
++	if (intf_count == 2)
++		topology.num_lm = 2;
++	else if (!dpu_kms->catalog->caps->has_3d_merge)
++		topology.num_lm = 1;
++	else
++		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
++
+ 	topology.num_enc = 0;
+ 	topology.num_intf = intf_count;
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 0ee2b6c..de69f71 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -67,6 +67,7 @@
+ 	.has_src_split = true,
+ 	.has_dim_layer = true,
+ 	.has_idle_pc = true,
++	.has_3d_merge = true,
+ };
+ 
+ static const struct dpu_caps sc7180_dpu_caps = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index 2607ef3..d0cb41c 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -287,6 +287,7 @@ struct dpu_qos_lut_tbl {
+  * @has_src_split      source split feature status
+  * @has_dim_layer      dim layer feature status
+  * @has_idle_pc        indicate if idle power collapse feature is supported
++ * @has_3d_merge       indicate if 3D merge is supported
+  */
+ struct dpu_caps {
+ 	u32 max_mixer_width;
+@@ -297,6 +298,7 @@ struct dpu_caps {
+ 	bool has_src_split;
+ 	bool has_dim_layer;
+ 	bool has_idle_pc;
++	bool has_3d_merge;
+ };
+ 
+ /**
 -- 
 1.9.1
 
