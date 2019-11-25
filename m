@@ -2,99 +2,102 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77CAC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE837C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F06A2068F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14582082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbfKYOvD (ORCPT
+        id S1728422AbfKYPQW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:51:03 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:39240 "EHLO honk.sigxcpu.org"
+        Mon, 25 Nov 2019 10:16:22 -0500
+Received: from sauhun.de ([88.99.104.3]:55242 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728078AbfKYOut (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:50:49 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 226D7FB07;
-        Mon, 25 Nov 2019 15:50:45 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aBEq2K-xOEii; Mon, 25 Nov 2019 15:50:42 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id E128E4928D; Mon, 25 Nov 2019 15:50:07 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S1728172AbfKYPQV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Nov 2019 10:16:21 -0500
+Received: from localhost (x4e37056e.dyn.telefonica.de [78.55.5.110])
+        by pokefinder.org (Postfix) with ESMTPSA id 596772C0456;
+        Mon, 25 Nov 2019 16:16:19 +0100 (CET)
+Date:   Mon, 25 Nov 2019 16:16:18 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com,
+        venture@google.com, benjaminfair@google.com,
+        avifishman70@gmail.com, joel@jms.id.au, tmaimon77@gmail.com,
+        syniurge@gmail.com, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64: dts: imx8mq: Add eLCDIF controller
-Date:   Mon, 25 Nov 2019 15:50:07 +0100
-Message-Id: <742d9ef4a98a5cf771d9763e6d68be3bd7cb7461.1574693313.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1574693313.git.agx@sigxcpu.org>
-References: <cover.1574693313.git.agx@sigxcpu.org>
+Subject: Re: [PATCH v7 2/2] i2c: npcm: Add Nuvoton NPCM I2C controller driver
+Message-ID: <20191125151618.GE2412@kunai>
+References: <20191121095350.158689-1-tali.perry1@gmail.com>
+ <20191121095350.158689-3-tali.perry1@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Lb0e7rgc7IsuDeGj"
+Content-Disposition: inline
+In-Reply-To: <20191121095350.158689-3-tali.perry1@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a node for the eLCDIF controller, "disabled" by default.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+--Lb0e7rgc7IsuDeGj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 7f9319452b58..1fadd2b126a9 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -448,6 +448,23 @@
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
- 			};
- 
-+			lcdif: lcd-controller@30320000 {
-+				compatible = "fsl,imx8mq-lcdif", "fsl,imx28-lcdif";
-+				reg = <0x30320000 0x10000>;
-+				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
-+				clock-names = "pix";
-+				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
-+						  <&clk IMX8MQ_VIDEO_PLL1_BYPASS>,
-+						  <&clk IMX8MQ_CLK_LCDIF_PIXEL>,
-+						  <&clk IMX8MQ_VIDEO_PLL1>;
-+				assigned-clock-parents = <&clk IMX8MQ_CLK_25M>,
-+						  <&clk IMX8MQ_VIDEO_PLL1>,
-+						  <&clk IMX8MQ_VIDEO_PLL1_OUT>;
-+				assigned-clock-rates = <0>, <0>, <0>, <594000000>;
-+				status = "disabled";
-+			};
-+
- 			iomuxc: iomuxc@30330000 {
- 				compatible = "fsl,imx8mq-iomuxc";
- 				reg = <0x30330000 0x10000>;
--- 
-2.23.0
+On Thu, Nov 21, 2019 at 11:53:50AM +0200, Tali Perry wrote:
+> Add Nuvoton NPCM BMC i2c controller driver.
+>=20
+> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
 
+Looking at all this SMB_* naming of the registers and also the quirks,
+this looks more like an SMBUS controller to me?
+
+> +	// currently I2C slave IF only supports single byte operations.
+> +	// in order to utilyze the npcm HW FIFO, the driver will ask for 16bytes
+> +	// at a time, pack them in buffer, and then transmit them all together
+> +	// to the FIFO and onward to the bus .
+> +	// NACK on read will be once reached to bus->adap->quirks->max_read_len
+> +	// sending a NACK whever the backend requests for it is not supported.
+
+This for example...
+
+> +static const struct i2c_adapter_quirks npcm_i2c_quirks =3D {
+> +	.max_read_len =3D 32768,
+> +	.max_write_len =3D 32768,
+> +	.max_num_msgs =3D 2,
+> +	.flags =3D I2C_AQ_COMB_WRITE_THEN_READ
+> +};
+
+=2E.. and this. Like SMBus with the only exception of being able to send
+32K in a row. Or?
+
+
+--Lb0e7rgc7IsuDeGj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3b8EIACgkQFA3kzBSg
+Kbabdg//Vlk6yGrJ9uPwF66dwUUKyE2M66t+W5miyttrphuZsLZXK7MGI2sQlF0D
+0ZTP0+fskh6L8uFpIK2eplGzHCyNHxz9yiGlluRMCohfL0HYVZw0TtLz08cKbg9p
+35Mqs8JhklbBQ6EaO+FCd3WBAUA244fmekZa4ltRs66A7EZ+40kB8JEGJ9UF4yZl
+AUop8BPaVGEJ9lw4x3n6DvsiNrGSuxbMJmmm2FU8HY2I31A2cUAv1B26xkjJ4NBW
+We7ts4jy4tJv6Uo0KxvBbvCgaxle/zwPkl7s2dPvajxLbMEXfq/yOrCWEAX7mg/u
+3ENhA7SETaZFcn4Yj3J0uVlbv/DIzPUcsGP499PW0DIsRY6i7dFl0JypETEceu8W
+/QQJO62nl3vh13bLcv1Nl6HtQjOX5EtVmUBwakasELQ+HMWp3zt7dHu7FgKtPaIJ
+eAL9AjrgCymz1v0kAzlXRx7KTi+285oWNUUVBtRedc76A60ONDmim7nsSkx+lmem
+djPX2bSGT0v1gp16CAMe07ZOmCB7Wu8S6pIK9Yo639bi9MnhblsXYRlF7unpO4RX
+8+xUos0Y2tLw28tU7g/pELYyBoKWoEDNCQrWy/3FHh41PFKGPRfOme0ZudIFgcPM
+Vu12YjeAhb1fqMqRyEMs8uwjx+4PBqJS7dzJvobQSgZyc9tjW+k=
+=Yu4F
+-----END PGP SIGNATURE-----
+
+--Lb0e7rgc7IsuDeGj--
