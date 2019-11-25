@@ -2,359 +2,426 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9FFC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 19:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E484C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 21:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14A72071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 19:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C8D20727
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 21:23:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L/8ePBkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbfKYTou (ORCPT
+        id S1725916AbfKYVXC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 14:44:50 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59632 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725818AbfKYTou (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 14:44:50 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAPJcBk9081118;
-        Mon, 25 Nov 2019 14:44:31 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wfk9b107h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 Nov 2019 14:44:30 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAPJhLZR011626;
-        Mon, 25 Nov 2019 19:44:30 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03wdc.us.ibm.com with ESMTP id 2wevd64ska-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 Nov 2019 19:44:30 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAPJiQZD44958144
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Nov 2019 19:44:26 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B368EAC059;
-        Mon, 25 Nov 2019 19:44:26 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDAF2AC05B;
-        Mon, 25 Nov 2019 19:44:25 +0000 (GMT)
-Received: from [9.41.103.158] (unknown [9.41.103.158])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Nov 2019 19:44:25 +0000 (GMT)
-Subject: Re: [PATCH 07/12] drivers/soc: xdma: Add user interface
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>,
-        maz@kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        tglx@linutronix.de, Rob Herring <robh+dt@kernel.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org
-References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
- <1573244313-9190-8-git-send-email-eajames@linux.ibm.com>
- <3de1107b-59e6-48a6-90a0-704f0ebf70da@www.fastmail.com>
-From:   Eddie James <eajames@linux.vnet.ibm.com>
-Message-ID: <d096ccaa-1ee5-24f2-d510-04339c131ad8@linux.vnet.ibm.com>
-Date:   Mon, 25 Nov 2019 13:44:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 25 Nov 2019 16:23:02 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42700 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfKYVXC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 16:23:02 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q17so7810799pgt.9
+        for <devicetree@vger.kernel.org>; Mon, 25 Nov 2019 13:23:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MRWbzEgUDmf3m7DHTyD54EPb8B/zhp4opLc7il/4TZ0=;
+        b=L/8ePBkLez3+K02qqWuXHzwk2aoe/X/csJkxSiZ9yqGB073CgKBSnV0NCVAddtYhRA
+         Y50OFSl9bR9JRWyHZuQ1HQPQA5jaboTM+KdNzZs9oomThyM9ZFXL+OdGojGpwRRH3QX8
+         JaNM1Su0TjHE/31LckH9YGeeTpbN5P60ANE+3XINq9ZxfnEkVW9X8XIGxd0FgM+VgxLH
+         a3VDqpQMsloYUsXPX2Kj1nqH7EWHFPfJUE4a8sHJRQ8xGN0pV2DSaW/AfcODj7iLAlBm
+         lh7bXb6bZUXcsbi7IiO6LIYM3FHbf8pZNAzFDfW90SYsAvLrviPYQgU8A2fRdybWGgBT
+         Q2Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MRWbzEgUDmf3m7DHTyD54EPb8B/zhp4opLc7il/4TZ0=;
+        b=EK0xAG9qMBGSPikwZNiGuCSykbCde3wuKqpDoJnLUrjGzXSZg/ECnZZGELIDWmvugJ
+         fAM0ZBepqRH4505K6odAOBtCfKB5we0vVUHUM9ZjAf5HImjuxMRpnB2vSm3EH1qJDsAC
+         vRF3hGZT1aTSFOfAcnD0UFo8KiCnoersPgUrWzPKtWhMONnXmzNY78sMUWzEnGOmOvV4
+         SqHdacLYSwOpieI8WSjeUruzR+e8lmqONB4zwTfJyrt1ygm6osKFmlDebwMXwq+8oWT3
+         IfYaJiSh0prEmz/H806aYeiA38Hh4q9dgi6dHXyGhs+glD8szWtX1IXOnHfiwHfJmgaH
+         ISew==
+X-Gm-Message-State: APjAAAWIE9tLcIXXthxP5zd6FabsgAkZV2cAHz1IesLzde8lag3roVhV
+        KDgz9w52TKt2S1RUOzM8dj5fTQ==
+X-Google-Smtp-Source: APXvYqzXRkrduILON+fC++84B2cdz7oCejyphDRUULYpI5GMxiVkhrcykpwAmPM/u71w01QGoLxnDQ==
+X-Received: by 2002:a63:354e:: with SMTP id c75mr35774576pga.325.1574716980757;
+        Mon, 25 Nov 2019 13:23:00 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id d139sm10304228pfd.162.2019.11.25.13.22.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Nov 2019 13:23:00 -0800 (PST)
+Date:   Mon, 25 Nov 2019 14:22:58 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        suzuki.poulose@arm.com
+Subject: Re: [PATCH v5 07/14] coresight: cti: Add device tree support for
+ custom CTI.
+Message-ID: <20191125212258.GB18542@xps15>
+References: <20191119231912.12768-1-mike.leach@linaro.org>
+ <20191119231912.12768-8-mike.leach@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <3de1107b-59e6-48a6-90a0-704f0ebf70da@www.fastmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-25_04:2019-11-21,2019-11-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2
- impostorscore=0 clxscore=1015 mlxscore=0 priorityscore=1501
- mlxlogscore=999 phishscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
- adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911250161
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119231912.12768-8-mike.leach@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Nov 19, 2019 at 11:19:05PM +0000, Mike Leach wrote:
+> Adds support for CTIs whose connections are implementation defined at
+> hardware design time, and not constrained by v8 architecture.
+> 
+> These CTIs have no standard connection setup, all the settings have to
+> be defined in the device tree files. The patch creates a set of connections
+> and trigger signals based on the information provided.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
+>  .../coresight/coresight-cti-platform.c        | 250 +++++++++++++++++-
+>  .../hwtracing/coresight/coresight-cti-sysfs.c |  11 +
+>  2 files changed, 257 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> index 790dd30b85f5..9c1ff432b487 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> @@ -13,9 +13,19 @@
+>  #define NR_V8PE_OUT_SIGS	3
+>  #define NR_V8ETM_INOUT_SIGS	4
+>  
+> +/* CTI device tree trigger connection node keyword */
+> +#define CTI_DT_CONNS		"trig-conns"
+> +
+>  /* CTI device tree connection property keywords */
+>  #define CTI_DT_V8ARCH		"arm,cti-v8-arch"
+>  #define CTI_DT_CSDEV_ASSOC	"arm,cs-dev-assoc"
+> +#define CTI_DT_TRIGIN_SIGS	"arm,trig-in-sigs"
+> +#define CTI_DT_TRIGOUT_SIGS	"arm,trig-out-sigs"
+> +#define CTI_DT_TRIGIN_TYPES	"arm,trig-in-types"
+> +#define CTI_DT_TRIGOUT_TYPES	"arm,trig-out-types"
+> +#define CTI_DT_FILTER_OUT_SIGS	"arm,trig-filters"
+> +#define CTI_DT_CONN_NAME	"arm,trig-conn-name"
+> +#define CTI_DT_CTM_ID		"arm,cti-ctm-id"
+>  
+>  /*
+>   * Find a registered coresight device from a device fwnode.
+> @@ -68,6 +78,12 @@ static const char *of_cti_get_node_name(const struct device_node *node)
+>  		return node->full_name;
+>  	return "unknown";
+>  }
+> +
+> +static bool of_cti_node_name_eq(const struct device_node *node,
+> +				const char *name)
+> +{
+> +	return of_node_name_eq(node, name);
+> +}
+>  #else
+>  static int of_cti_get_cpu_at_node(const struct device_node *node)
+>  {
+> @@ -78,6 +94,12 @@ static const char *of_cti_get_node_name(const struct device_node *node)
+>  {
+>  	return "unknown";
+>  }
+> +
+> +static bool of_cti_node_name_eq(const struct device_node *node,
+> +				const char *name)
+> +{
+> +	return false;
+> +}
+>  #endif
+>  
+>  static int cti_plat_get_cpu_at_node(struct fwnode_handle *fwnode)
+> @@ -94,6 +116,14 @@ static const char *cti_plat_get_node_name(struct fwnode_handle *fwnode)
+>  	return "unknown";
+>  }
+>  
+> +static bool cti_plat_node_name_eq(struct fwnode_handle *fwnode,
+> +				  const char *name)
+> +{
+> +	if (is_of_node(fwnode))
+> +		return of_cti_node_name_eq(to_of_node(fwnode), name);
+> +	return false;
+> +}
+> +
+>  static int cti_plat_create_v8_etm_connection(struct device *dev,
+>  					     struct cti_drvdata *drvdata)
+>  {
+> @@ -205,6 +235,214 @@ static int cti_plat_create_v8_connections(struct device *dev,
+>  	return ret;
+>  }
+>  
+> +static int cti_plat_count_sig_elements(const struct fwnode_handle *fwnode,
+> +				       const char *name)
+> +{
+> +	int nr_elem = fwnode_property_count_u32(fwnode, name);
+> +
+> +	return (nr_elem < 0 ? 0 : nr_elem);
+> +}
+> +
+> +static int cti_plat_read_trig_group(struct cti_trig_grp *tgrp,
+> +				    const struct fwnode_handle *fwnode,
+> +				    const char *grp_name)
+> +{
+> +	int idx, err = 0;
+> +	u32 *values;
+> +
+> +	if (!tgrp->nr_sigs)
+> +		return 0;
+> +
+> +	values = kcalloc(tgrp->nr_sigs, sizeof(u32), GFP_KERNEL);
+> +	if (!values)
+> +		return -ENOMEM;
+> +
+> +	err = fwnode_property_read_u32_array(fwnode, grp_name,
+> +					     values, tgrp->nr_sigs);
+> +
+> +	if (!err) {
+> +		/* set the signal usage mask */
+> +		for (idx = 0; idx < tgrp->nr_sigs; idx++)
+> +			tgrp->used_mask |= BIT(values[idx]);
+> +	}
+> +
+> +	kfree(values);
+> +	return err;
+> +}
+> +
+> +static int cti_plat_read_trig_types(struct cti_trig_grp *tgrp,
+> +				    const struct fwnode_handle *fwnode,
+> +				    const char *type_name)
+> +{
+> +	int items, used = 0, err = 0, nr_sigs;
+> +	u32 *values = NULL, i;
+> +
+> +	/* allocate an array according to number of signals in connection */
+> +	nr_sigs = tgrp->nr_sigs;
+> +	if (!nr_sigs)
+> +		return 0;
+> +
+> +	/* see if any types have been included in the device description */
+> +	items = cti_plat_count_sig_elements(fwnode, type_name);
+> +	if (items > nr_sigs)
+> +		return -EINVAL;
+> +
+> +	/* need an array to store the values iff there are any */
+> +	if (items) {
+> +		values = kcalloc(items, sizeof(u32), GFP_KERNEL);
+> +		if (!values)
+> +			return -ENOMEM;
+> +
+> +		err = fwnode_property_read_u32_array(fwnode, type_name,
+> +						     values, items);
+> +		if (err)
+> +			goto read_trig_types_out;
+> +	}
+> +
+> +	/*
+> +	 * Match type id to signal index, 1st type to 1st index etc.
+> +	 * If fewer types than signals default remainder to GEN_IO.
+> +	 */
+> +	for (i = 0; i < nr_sigs; i++) {
+> +		if (used < items) {
+> +			tgrp->sig_types[i] =
+> +				values[i] < CTI_TRIG_MAX ? values[i] : GEN_IO;
+> +			used++;
+> +		} else {
+> +			tgrp->sig_types[i] = GEN_IO;
+> +		}
+> +	}
+> +
+> +read_trig_types_out:
+> +	kfree(values);
+> +	return err;
+> +}
+> +
+> +static int cti_plat_process_filter_sigs(struct cti_drvdata *drvdata,
+> +					const struct fwnode_handle *fwnode)
+> +{
+> +	struct cti_trig_grp *tg = NULL;
+> +	int err = 0, nr_filter_sigs;
+> +
+> +	nr_filter_sigs = cti_plat_count_sig_elements(fwnode,
+> +						     CTI_DT_FILTER_OUT_SIGS);
+> +	if (nr_filter_sigs == 0)
+> +		return 0;
+> +
+> +	if (nr_filter_sigs > drvdata->config.nr_trig_max)
+> +		return -EINVAL;
+> +
+> +	tg = kzalloc(sizeof(*tg), GFP_KERNEL);
+> +	if (!tg)
+> +		return -ENOMEM;
+> +
+> +	err = cti_plat_read_trig_group(tg, fwnode, CTI_DT_FILTER_OUT_SIGS);
+> +	if (!err)
+> +		drvdata->config.trig_out_filter |= tg->used_mask;
+> +
+> +	kfree(tg);
+> +	return err;
+> +}
+> +
+> +static int cti_plat_create_connection(struct device *dev,
+> +				      struct cti_drvdata *drvdata,
+> +				      struct fwnode_handle *fwnode)
+> +{
+> +	struct cti_trig_con *tc = NULL;
+> +	int cpuid = -1, err = 0;
+> +	struct fwnode_handle *cs_fwnode = NULL;
+> +	struct coresight_device *csdev = NULL;
+> +	const char *assoc_name = "unknown";
+> +	char cpu_name_str[16];
+> +	int nr_sigs_in, nr_sigs_out;
+> +
+> +	/* look to see how many in and out signals we have */
+> +	nr_sigs_in = cti_plat_count_sig_elements(fwnode, CTI_DT_TRIGIN_SIGS);
+> +	nr_sigs_out = cti_plat_count_sig_elements(fwnode, CTI_DT_TRIGOUT_SIGS);
+> +
+> +	if ((nr_sigs_in > drvdata->config.nr_trig_max) ||
+> +	    (nr_sigs_out > drvdata->config.nr_trig_max))
+> +		return -EINVAL;
+> +
+> +	tc = cti_allocate_trig_con(dev, nr_sigs_in, nr_sigs_out);
+> +	if (!tc)
+> +		return -ENOMEM;
+> +
+> +	/* look for the signals properties. */
+> +	err = cti_plat_read_trig_group(tc->con_in, fwnode,
+> +				       CTI_DT_TRIGIN_SIGS);
+> +	if (err)
+> +		goto create_con_err;
+> +
+> +	err = cti_plat_read_trig_types(tc->con_in, fwnode,
+> +				       CTI_DT_TRIGIN_TYPES);
+> +	if (err)
+> +		goto create_con_err;
+> +
+> +	err = cti_plat_read_trig_group(tc->con_out, fwnode,
+> +				       CTI_DT_TRIGOUT_SIGS);
+> +	if (err)
+> +		goto create_con_err;
+> +
+> +	err = cti_plat_read_trig_types(tc->con_out, fwnode,
+> +				       CTI_DT_TRIGOUT_TYPES);
+> +	if (err)
+> +		goto create_con_err;
+> +
+> +	err = cti_plat_process_filter_sigs(drvdata, fwnode);
+> +	if (err)
+> +		goto create_con_err;
+> +
+> +	/* read the connection name if set - may be overridden by later */
+> +	fwnode_property_read_string(fwnode, CTI_DT_CONN_NAME, &assoc_name);
+> +
+> +	/* associated cpu ? */
+> +	cpuid = cti_plat_get_cpu_at_node(fwnode);
+> +	if (cpuid >= 0) {
+> +		drvdata->ctidev.cpu = cpuid;
+> +		scnprintf(cpu_name_str, sizeof(cpu_name_str), "cpu%d", cpuid);
+> +		assoc_name = cpu_name_str;
+> +	} else {
+> +		/* associated device ? */
+> +		cs_fwnode = fwnode_find_reference(fwnode,
+> +						  CTI_DT_CSDEV_ASSOC, 0);
+> +		if (!IS_ERR_OR_NULL(cs_fwnode)) {
+> +			csdev = cti_get_assoc_csdev_by_fwnode(cs_fwnode);
+> +			if (csdev) /* use device name if csdev found */
+> +				assoc_name = dev_name(&csdev->dev);
+> +			else  /* otherwise node name for later association */
+> +				assoc_name = cti_plat_get_node_name(cs_fwnode);
+> +			fwnode_handle_put(cs_fwnode);
+> +		}
+> +	}
+> +	/* set up a connection */
+> +	err = cti_add_connection_entry(dev, drvdata, tc, csdev, assoc_name);
+> +
+> +create_con_err:
+> +	return err;
+> +}
+> +
+> +static int cti_plat_create_impdef_connections(struct device *dev,
+> +					      struct cti_drvdata *drvdata)
+> +{
+> +	int rc = 0;
+> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> +	struct fwnode_handle *child = NULL;
+> +
+> +	if (IS_ERR_OR_NULL(fwnode))
+> +		return -EINVAL;
+> +
+> +	fwnode_for_each_child_node(fwnode, child) {
+> +		if (cti_plat_node_name_eq(child, CTI_DT_CONNS))
+> +			rc = cti_plat_create_connection(dev, drvdata, child);
+> +		if (rc != 0)
+> +			break;
+> +	}
+> +	fwnode_handle_put(child);
 
-On 11/24/19 5:59 PM, Andrew Jeffery wrote:
->
-> On Sat, 9 Nov 2019, at 06:48, Eddie James wrote:
->> This commits adds a miscdevice to provide a user interface to the XDMA
->> engine. The interface provides the write operation to start DMA
->> operations. The DMA parameters are passed as the data to the write call.
->> The actual data to transfer is NOT passed through write. Note that both
->> directions of DMA operation are accomplished through the write command;
->> BMC to host and host to BMC.
->>
->> The XDMA engine is restricted to only accessing the reserved memory
->> space on the AST2500, typically used by the VGA. For this reason, the
->> VGA memory space is pooled and allocated with genalloc. Users calling
->> mmap allocate pages from this pool for their usage. The space allocated
->> by a client will be the space used in the DMA operation. For an
->> "upstream" (BMC to host) operation, the data in the client's area will
->> be transferred to the host. For a "downstream" (host to BMC) operation,
->> the host data will be placed in the client's memory area.
->>
->> Poll is also provided in order to determine when the DMA operation is
->> complete for non-blocking IO.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> ---
->>   drivers/soc/aspeed/aspeed-xdma.c | 223 +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 223 insertions(+)
->>
->> diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
->> index 99041a6..3d37582 100644
->> --- a/drivers/soc/aspeed/aspeed-xdma.c
->> +++ b/drivers/soc/aspeed/aspeed-xdma.c
->> @@ -64,6 +64,9 @@
->>   #define XDMA_CMDQ_SIZE				PAGE_SIZE
->>   #define XDMA_NUM_CMDS				\
->>   	(XDMA_CMDQ_SIZE / sizeof(struct aspeed_xdma_cmd))
->> +#define XDMA_OP_SIZE_MAX			sizeof(struct aspeed_xdma_op)
->> +#define XDMA_OP_SIZE_MIN			\
->> +	(sizeof(struct aspeed_xdma_op) - sizeof(u64))
->>   
->>   /* Aspeed specification requires 10ms after switching the reset line */
->>   #define XDMA_RESET_TIME_MS			10
->> @@ -216,6 +219,7 @@ struct aspeed_xdma {
->>   	bool in_reset;
->>   	bool upstream;
->>   	unsigned int cmd_idx;
->> +	struct mutex file_lock;
-> Please add documentation about what data file_lock is protecting.
->
->>   	struct mutex start_lock;
->>   	struct delayed_work reset_work;
->>   	spinlock_t client_lock;
->> @@ -230,6 +234,8 @@ struct aspeed_xdma {
->>   	dma_addr_t cmdq_vga_phys;
->>   	void *cmdq_vga_virt;
->>   	struct gen_pool *vga_pool;
->> +
->> +	struct miscdevice misc;
->>   };
->>   
->>   struct aspeed_xdma_client {
->> @@ -557,6 +563,204 @@ static irqreturn_t aspeed_xdma_pcie_irq(int irq,
->> void *arg)
->>   	return IRQ_HANDLED;
->>   }
->>   
->> +static ssize_t aspeed_xdma_write(struct file *file, const char __user *buf,
->> +				 size_t len, loff_t *offset)
->> +{
->> +	int rc;
->> +	struct aspeed_xdma_op op;
->> +	struct aspeed_xdma_client *client = file->private_data;
->> +	struct aspeed_xdma *ctx = client->ctx;
->> +	u32 offs = client->phys ? (client->phys - ctx->vga_phys) :
->> +		XDMA_CMDQ_SIZE;
->> +
->> +	if (len < XDMA_OP_SIZE_MIN)
->> +		return -EINVAL;
->> +
->> +	if (len > XDMA_OP_SIZE_MAX)
->> +		len = XDMA_OP_SIZE_MAX;
-> Isn't this an EINVAL case as well?
+As far as I can tell we don't need to call fwnode_handle_put()?
 
+With the above:
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Perhaps so.
-
-
->
->> +
->> +	rc = copy_from_user(&op, buf, len);
->> +	if (rc)
->> +		return rc;
->> +
->> +	if (op.direction == ASPEED_XDMA_DIRECTION_RESET) {
-> Seems a bit abusive to use the direction field to issue a reset.
-
-
-What would you recommend instead?
-
-
->
->> +		mutex_lock(&ctx->start_lock);
->> +
->> +		if (aspeed_xdma_reset_start(ctx)) {
->> +			msleep(XDMA_RESET_TIME_MS);
->> +
->> +			aspeed_xdma_reset_finish(ctx);
->> +		}
->> +
->> +		mutex_unlock(&ctx->start_lock);
->> +
->> +		return len;
->> +	} else if (op.direction > ASPEED_XDMA_DIRECTION_RESET) {
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (op.len > ctx->vga_size - offs)
->> +		return -EINVAL;
->> +
->> +	if (file->f_flags & O_NONBLOCK) {
->> +		if (!mutex_trylock(&ctx->file_lock))
->> +			return -EAGAIN;
->> +
->> +		if (ctx->in_progress || ctx->in_reset) {
-> ctx->in_progress was protected by a lock that isn't file_lock, so this looks wrong.
-
-
-file_lock isn't protecting in_progress. It's protecting access to the 
-whole engine while a transfer is in progress. in_progress isn't 
-protected at all, it's just better to lock before waiting for 
-in_progress so that multiple clients don't all see in_progress go false 
-and have to wait for a mutex (particularly in the nonblocking case).
-
-
->
->> +			mutex_unlock(&ctx->file_lock);
->> +			return -EAGAIN;
->> +		}
->> +	} else {
->> +		mutex_lock(&ctx->file_lock);
->> +
->> +		rc = wait_event_interruptible(ctx->wait, !ctx->in_progress &&
->> +					      !ctx->in_reset);
-> As above.
->
->> +		if (rc) {
->> +			mutex_unlock(&ctx->file_lock);
->> +			return -EINTR;
->> +		}
->> +	}
->> +
->> +	aspeed_xdma_start(ctx, &op, ctx->vga_phys + offs, client);
->> +
->> +	mutex_unlock(&ctx->file_lock);
->> +
->> +	if (!(file->f_flags & O_NONBLOCK)) {
->> +		rc = wait_event_interruptible(ctx->wait, !ctx->in_progress);
->> +		if (rc)
->> +			return -EINTR;
->> +
->> +		if (client->error)
->> +			return -EIO;
-> What's the client->error value? Can it be more informative?
-
-
-Not really. There isn't much error information available. Basically the 
-only way to get an error is if the engine is reset (user or PCIE 
-initiated) while the transfer is on-going.
-
-
->
->> +	}
->> +
->> +	return len;
-> We've potentially truncated len above (in the len >  XDMA_OP_SIZE_MAX),
-> which leads to some ambiguity with the write() syscall given that it can
-> potentially return less than the requested length. This is one such case, but
-> the caller probably shouldn't attempt a follow-up write.
->
-> This would go away if we make the len > XDMA_OP_SIZE_MAX an EINVAL
-> case as suggested agove.
-
-
-Sure.
-
-
->
->> +}
->> +
->> +static __poll_t aspeed_xdma_poll(struct file *file,
->> +				 struct poll_table_struct *wait)
->> +{
->> +	__poll_t mask = 0;
->> +	__poll_t req = poll_requested_events(wait);
->> +	struct aspeed_xdma_client *client = file->private_data;
->> +	struct aspeed_xdma *ctx = client->ctx;
->> +
->> +	if (req & (EPOLLIN | EPOLLRDNORM)) {
->> +		if (client->in_progress)
->> +			poll_wait(file, &ctx->wait, wait);
->> +
->> +		if (!client->in_progress) {
->> +			if (client->error)
->> +				mask |= EPOLLERR;
->> +			else
->> +				mask |= EPOLLIN | EPOLLRDNORM;
->> +		}
->> +	}
->> +
->> +	if (req & (EPOLLOUT | EPOLLWRNORM)) {
->> +		if (ctx->in_progress)
->> +			poll_wait(file, &ctx->wait, wait);
->> +
->> +		if (!ctx->in_progress)
->> +			mask |= EPOLLOUT | EPOLLWRNORM;
->> +	}
->> +
->> +	return mask;
->> +}
->> +
->> +static void aspeed_xdma_vma_close(struct vm_area_struct *vma)
->> +{
->> +	struct aspeed_xdma_client *client = vma->vm_private_data;
->> +
->> +	gen_pool_free(client->ctx->vga_pool, (unsigned long)client->virt,
->> +		      client->size);
->> +
->> +	client->virt = NULL;
->> +	client->phys = 0;
->> +	client->size = 0;
->> +}
->> +
->> +static const struct vm_operations_struct aspeed_xdma_vm_ops = {
->> +	.close =	aspeed_xdma_vma_close,
->> +};
->> +
->> +static int aspeed_xdma_mmap(struct file *file, struct vm_area_struct *vma)
->> +{
->> +	int rc;
->> +	struct aspeed_xdma_client *client = file->private_data;
->> +	struct aspeed_xdma *ctx = client->ctx;
->> +
->> +	/* restrict file to one mapping */
->> +	if (client->size)
->> +		return -ENOMEM;
-> Can we do better with the error code here?
-
-
-Maybe? I'm open to suggestions...
-
-
->
->> +
->> +	client->size = vma->vm_end - vma->vm_start;
->> +	client->virt = gen_pool_dma_alloc(ctx->vga_pool, client->size,
->> +					  &client->phys);
->> +	if (!client->virt) {
->> +		client->phys = 0;
->> +		client->size = 0;
->> +		return -ENOMEM;
->> +	}
->> +
->> +	vma->vm_pgoff = (client->phys - ctx->vga_phys) >> PAGE_SHIFT;
-> Where does client->phys get set?
-
-
-gen_pool_dma_alloc sets it.
-
-
-Thanks for the review!
-
-Eddie
-
-
-
->
-> Andrew
+> +
+> +	return rc;
+> +}
+> +
+>  /* get the hardware configuration & connection data. */
+>  int cti_plat_get_hw_data(struct device *dev,
+>  			 struct cti_drvdata *drvdata)
+> @@ -212,12 +450,16 @@ int cti_plat_get_hw_data(struct device *dev,
+>  	int rc = 0;
+>  	struct cti_device *cti_dev = &drvdata->ctidev;
+>  
+> +	/* get any CTM ID - defaults to 0 */
+> +	device_property_read_u32(dev, CTI_DT_CTM_ID, &cti_dev->ctm_id);
+> +
+>  	/* check for a v8 architectural CTI device */
+> -	if (device_property_read_bool(dev, CTI_DT_V8ARCH)) {
+> +	if (device_property_read_bool(dev, CTI_DT_V8ARCH))
+>  		rc = cti_plat_create_v8_connections(dev, drvdata);
+> -		if (rc)
+> -			return rc;
+> -	}
+> +	else
+> +		rc = cti_plat_create_impdef_connections(dev, drvdata);
+> +	if (rc)
+> +		return rc;
+>  
+>  	/* if no connections, just add a single default based on max IN-OUT */
+>  	if (cti_dev->nr_trig_con == 0)
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> index 98de8a4768fc..f800402f73da 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> @@ -56,9 +56,20 @@ static ssize_t enable_store(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RW(enable);
+>  
+> +static ssize_t ctmid_show(struct device *dev,
+> +			  struct device_attribute *attr,
+> +			  char *buf)
+> +{
+> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +
+> +	return scnprintf(buf, PAGE_SIZE, "%d\n", drvdata->ctidev.ctm_id);
+> +}
+> +static DEVICE_ATTR_RO(ctmid);
+> +
+>  /* attribute and group sysfs tables. */
+>  static struct attribute *coresight_cti_attrs[] = {
+>  	&dev_attr_enable.attr,
+> +	&dev_attr_ctmid.attr,
+>  	NULL,
+>  };
+>  
+> -- 
+> 2.17.1
+> 
