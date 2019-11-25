@@ -2,235 +2,193 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA4CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 07:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8A0C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A3620748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 07:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E90B20748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 07:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlDyDy1b"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="AUHRyzZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbfKYHhf (ORCPT
+        id S1725763AbfKYHjo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 02:37:35 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55177 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfKYHhe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 02:37:34 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so4798214wmj.4;
-        Sun, 24 Nov 2019 23:37:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=spOYPQyDQtuNEGLCHEbAJ7anyJ/giN6OPQ7cjoFVqtw=;
-        b=nlDyDy1bfjSORe36KRrKoxyh1jVH/ihgGW13qb9uCsWsbbcz19LRcGrtkT9W5ZrMGC
-         +tKS9Dfp38yKpBPgACnInVIxacpfJ7ZE/BeKArG7aP+efZgl4tVNCEr/vw5QIHCilJyl
-         7dKaEmFVTIHK8+7GxoTp+kL2/c1aFO2UnhzCIOAifWtWdiQdeGC4X3CnVwqs53D9QZY+
-         wjeaL2PUSLmyB1yGV2lXD60kolNTN/488gYgpjI+wSpZpYPrmCifNZezI5wdp+36jLwJ
-         BBqQgu7uqTyZkW/TsFZRdd3V2IfGabSOnVOIyzH++cmlhDBLzGbmSZjfPkl17jbpOfyu
-         NXtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=spOYPQyDQtuNEGLCHEbAJ7anyJ/giN6OPQ7cjoFVqtw=;
-        b=VTSvXpsihvUpw6HZlvV38Sgg2CIKf3V9O0Vt5Kpy9qyEPdUiNiDSEhLiA7YghzBl4Q
-         J4WwOqiTaF5ZzjUhkCWgF1VRSFDKPkmWy+Py4SzFrpvr2Bjxd/DG4TrSTQh6dSBbULTk
-         L+9xsSAmZlkG/t4jAaS+J+cmcSNhYooMBupE/rOF3ARFIsnW92owk1Q81icQTUJILMcj
-         cK2DgwOWwA99IxmYKnk3agBnJTJ2tADGARzssYCDK5kO8+pH4rrLYRuE71R5d0R5wu5/
-         yqeWxG6LvKbBMtO/L2nJ5SRbWyxqVcwPGdqxax0B+DM/FijQfVZ6M3WffVkXZoWnQey7
-         I47Q==
-X-Gm-Message-State: APjAAAXXDtazwYjSeGGx0gn+12GYZ3SmgoiopEH4rkX4hOyEflU2VUHD
-        L/KSAzFVIXQ+rERKH2cyMp8=
-X-Google-Smtp-Source: APXvYqxZwJODIeVnoLPKFmWYnHWUGAjusnjwrz98gdEmEHkkGT+LRb5niD1I0kDACqZ48rhUBncHpQ==
-X-Received: by 2002:a1c:c906:: with SMTP id f6mr15652550wmb.14.1574667450845;
-        Sun, 24 Nov 2019 23:37:30 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id b8sm9130086wrt.39.2019.11.24.23.37.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2019 23:37:29 -0800 (PST)
-Date:   Mon, 25 Nov 2019 08:37:28 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 6/6] arm64: tegra: Add support for PCIe endpoint mode in
- P2972-0000 platform
-Message-ID: <20191125073728.GE1409040@ulmo>
-References: <20191122104505.8986-1-vidyas@nvidia.com>
- <20191122104505.8986-7-vidyas@nvidia.com>
- <20191122132533.GD1315704@ulmo>
- <e1e44c1c-c1ab-27dd-b3ac-a9ed878411a2@nvidia.com>
- <20191125072542.GC1409040@ulmo>
- <4f92c07a-ea0f-a632-f5c5-b87666f8ecdd@nvidia.com>
+        Mon, 25 Nov 2019 02:39:44 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23062 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725535AbfKYHjo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 02:39:44 -0500
+X-UUID: a7f8c4951e594b3491593be5caa19473-20191125
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Xonewz7MZl6qXBBtwf96bK209oNV+emC1DroLdN2dlg=;
+        b=AUHRyzZJnrWnHnf6EinjG0QPl4pVx25U9jLWI22N1I42eSS1dtaByszWJ0qKGN9UtqSYhRNmZSNoqedexRiTczzN1FBz0h6GgwzGn6D7+97DoxxkHdiGW0duo9fGpVQRWYeNNPI2T0OqyfMJpFWFcKENaXd6Fv+g7erbrF7YE2w=;
+X-UUID: a7f8c4951e594b3491593be5caa19473-20191125
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2012890805; Mon, 25 Nov 2019 15:39:35 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 25 Nov 2019 15:39:26 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 25 Nov 2019 15:38:52 +0800
+Message-ID: <1574667574.9851.3.camel@mtkswgap22>
+Subject: Re: [PATCH v1 07/12] soc: mediatek: cmdq: add write_s function
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 25 Nov 2019 15:39:34 +0800
+In-Reply-To: <1574647703.4712.16.camel@mtksdaap41>
+References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574327552-11806-8-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574412997.19450.16.camel@mtksdaap41>
+         <1574417507.11977.14.camel@mtkswgap22>
+         <1574647703.4712.16.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CGDBiGfvSTbxKZlW"
-Content-Disposition: inline
-In-Reply-To: <4f92c07a-ea0f-a632-f5c5-b87666f8ecdd@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+SGkgQ0ssDQoNCk9uIE1vbiwgMjAxOS0xMS0yNSBhdCAxMDowOCArMDgwMCwgQ0sgSHUgd3JvdGU6
+DQo+IEhpLCBEZW5uaXM6DQo+IA0KPiBPbiBGcmksIDIwMTktMTEtMjIgYXQgMTg6MTEgKzA4MDAs
+IERlbm5pcy1ZQyBIc2llaCB3cm90ZToNCj4gPiBIaSBDSywNCj4gPiANCj4gPiBPbiBGcmksIDIw
+MTktMTEtMjIgYXQgMTY6NTYgKzA4MDAsIENLIEh1IHdyb3RlOg0KPiA+ID4gSGksIERlbm5pczoN
+Cj4gPiA+IA0KPiA+ID4gT24gVGh1LCAyMDE5LTExLTIxIGF0IDE3OjEyICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+ID4gPiA+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVs
+cGVyIGZ1bmN0aW9ucyB3aGljaA0KPiA+ID4gPiBzdXBwb3J0IGxhcmdlIGRtYSBhY2Nlc3MuDQo+
+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15
+Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZHJpdmVycy9zb2Mv
+bWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgICB8ICAgMzQgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrDQo+ID4gPiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJv
+eC5oIHwgICAgMiArKw0KPiA+ID4gPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNt
+ZHEuaCAgICB8ICAgMTMgKysrKysrKysrKysrDQo+ID4gPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQ5
+IGluc2VydGlvbnMoKykNCj4gPiA+ID4gDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Nv
+Yy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1j
+bWRxLWhlbHBlci5jDQo+ID4gPiA+IGluZGV4IGQ0MTllOTkuLjFiMDc0YTkgMTAwNjQ0DQo+ID4g
+PiA+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gPiA+
+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gPiA+IEBA
+IC0xNSw2ICsxNSw5IEBADQo+ID4gPiA+ICAjZGVmaW5lIENNRFFfRU9DX0NNRAkJKCh1NjQpKChD
+TURRX0NPREVfRU9DIDw8IENNRFFfT1BfQ09ERV9TSElGVCkpIFwNCj4gPiA+ID4gIAkJCQk8PCAz
+MiB8IENNRFFfRU9DX0lSUV9FTikNCj4gPiA+ID4gICNkZWZpbmUgQ01EUV9SRUdfVFlQRQkJMQ0K
+PiA+ID4gPiArI2RlZmluZSBDTURRX0FERFJfSElHSChhZGRyKQkoKHUzMikoKChhZGRyKSA+PiAx
+NikgJiBHRU5NQVNLKDMxLCAwKSkpDQo+ID4gPiA+ICsjZGVmaW5lIENNRFFfQUREUl9MT1dfQklU
+CUJJVCgxKQ0KPiA+ID4gPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRy
+KSB8IENNRFFfQUREUl9MT1dfQklUKQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICBzdHJ1Y3QgY21kcV9p
+bnN0cnVjdGlvbiB7DQo+ID4gPiA+ICAJdW5pb24gew0KPiA+ID4gPiBAQCAtMjI0LDYgKzIyNywz
+NyBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vi
+c3lzLA0KPiA+ID4gPiAgfQ0KPiA+ID4gPiAgRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9t
+YXNrKTsNCj4gPiA+ID4gIA0KPiA+ID4gPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNt
+ZHFfcGt0ICpwa3QsIGRtYV9hZGRyX3QgYWRkciwNCj4gPiA+ID4gKwkJICAgICB1MzIgdmFsdWUs
+IHUzMiBtYXNrKQ0KPiA+ID4gPiArew0KPiA+ID4gPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9u
+IGluc3QgPSB7IHswfSB9Ow0KPiA+ID4gPiArCWludCBlcnI7DQo+ID4gPiA+ICsJY29uc3QgdTE2
+IGRzdF9yZWdfaWR4ID0gQ01EUV9TUFJfVEVNUDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWVyciA9
+IGNtZHFfcGt0X2Fzc2lnbihwa3QsIGRzdF9yZWdfaWR4LCBDTURRX0FERFJfSElHSChhZGRyKSk7
+DQo+ID4gPiA+ICsJaWYgKGVyciA8IDApDQo+ID4gPiA+ICsJCXJldHVybiBlcnI7DQo+ID4gPiA+
+ICsNCj4gPiA+ID4gKwlpZiAobWFzayAhPSBVMzJfTUFYKSB7DQo+ID4gPiA+ICsJCWluc3Qub3Ag
+PSBDTURRX0NPREVfTUFTSzsNCj4gPiA+ID4gKwkJaW5zdC5tYXNrID0gfm1hc2s7DQo+ID4gPiA+
+ICsJCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ID4gPiA+ICsJ
+CWlmIChlcnIgPCAwKQ0KPiA+ID4gPiArCQkJcmV0dXJuIGVycjsNCj4gPiA+ID4gKw0KPiA+ID4g
+PiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gPiA+ID4gKwl9IGVsc2Ug
+ew0KPiA+ID4gPiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1M7DQo+ID4gPiA+ICsJfQ0K
+PiA+ID4gPiArDQo+ID4gPiA+ICsJaW5zdC5zb3AgPSBkc3RfcmVnX2lkeDsNCj4gPiA+ID4gKwlp
+bnN0Lm9mZnNldCA9IENNRFFfQUREUl9MT1coYWRkcik7DQo+ID4gPiA+ICsJaW5zdC52YWx1ZSA9
+IHZhbHVlOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21t
+YW5kKHBrdCwgaW5zdCk7DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICtFWFBPUlRfU1lNQk9MKGNtZHFf
+cGt0X3dyaXRlX3MpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICBpbnQgY21kcV9wa3Rfd2ZlKHN0cnVj
+dCBjbWRxX3BrdCAqcGt0LCB1MTYgZXZlbnQpDQo+ID4gPiA+ICB7DQo+ID4gPiA+ICAJc3RydWN0
+IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIGIvaW5jbHVkZS9saW51eC9t
+YWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+ID4gPiBpbmRleCAxMjFjM2JiLi44ZWY4N2Ux
+IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFp
+bGJveC5oDQo+ID4gPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWls
+Ym94LmgNCj4gPiA+ID4gQEAgLTU5LDYgKzU5LDggQEAgZW51bSBjbWRxX2NvZGUgew0KPiA+ID4g
+PiAgCUNNRFFfQ09ERV9KVU1QID0gMHgxMCwNCj4gPiA+ID4gIAlDTURRX0NPREVfV0ZFID0gMHgy
+MCwNCj4gPiA+ID4gIAlDTURRX0NPREVfRU9DID0gMHg0MCwNCj4gPiA+ID4gKwlDTURRX0NPREVf
+V1JJVEVfUyA9IDB4OTAsDQo+ID4gPiA+ICsJQ01EUV9DT0RFX1dSSVRFX1NfTUFTSyA9IDB4OTEs
+DQo+ID4gPiA+ICAJQ01EUV9DT0RFX0xPR0lDID0gMHhhMCwNCj4gPiA+ID4gIH07DQo+ID4gPiA+
+ICANCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
+bWRxLmggYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gPiA+IGlu
+ZGV4IDgzMzQwMjEuLjhkYmQwNDYgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2luY2x1ZGUvbGludXgv
+c29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9zb2Mv
+bWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+ID4gPiBAQCAtMTIsNiArMTIsNyBAQA0KPiA+ID4gPiAg
+I2luY2x1ZGUgPGxpbnV4L3RpbWVyLmg+DQo+ID4gPiA+ICANCj4gPiA+ID4gICNkZWZpbmUgQ01E
+UV9OT19USU1FT1VUCQkweGZmZmZmZmZmdQ0KPiA+ID4gPiArI2RlZmluZSBDTURRX1NQUl9URU1Q
+CQkwDQo+ID4gPiA+ICANCj4gPiA+ID4gIHN0cnVjdCBjbWRxX3BrdDsNCj4gPiA+ID4gIA0KPiA+
+ID4gPiBAQCAtMTAzLDYgKzEwNCwxOCBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3Qg
+Y21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiA+ID4gPiAgCQkJdTE2IG9mZnNldCwgdTMyIHZh
+bHVlLCB1MzIgbWFzayk7DQo+ID4gPiA+ICANCj4gPiA+ID4gIC8qKg0KPiA+ID4gPiArICogY21k
+cV9wa3Rfd3JpdGVfcygpIC0gYXBwZW5kIHdyaXRlX3MgY29tbWFuZCB3aXRoIG1hc2sgdG8gdGhl
+IENNRFEgcGFja2V0DQo+ID4gPiA+ICsgKiBAcGt0Ogl0aGUgQ01EUSBwYWNrZXQNCj4gPiA+ID4g
+KyAqIEBhZGRyOgl0aGUgcGh5c2ljYWwgYWRkcmVzcyBvZiByZWdpc3RlciBvciBkbWENCj4gPiA+
+ID4gKyAqIEB2YWx1ZToJdGhlIHNwZWNpZmllZCB0YXJnZXQgdmFsdWUNCj4gPiA+ID4gKyAqIEBt
+YXNrOgl0aGUgc3BlY2lmaWVkIHRhcmdldCBtYXNrDQo+ID4gPiA+ICsgKg0KPiA+ID4gPiArICog
+UmV0dXJuOiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+
+ID4gPiA+ICsgKi8NCj4gPiA+ID4gK2ludCBjbWRxX3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3Br
+dCAqcGt0LCBkbWFfYWRkcl90IGFkZHIsDQo+ID4gPiA+ICsJCSAgICAgdTMyIHZhbHVlLCB1MzIg
+bWFzayk7DQo+ID4gPiANCj4gPiA+IFlvdSBoYXZlIGFuIEFQSSBjbWRxX3BrdF9yZWFkX3MoKSB3
+aGljaCByZWFkIGRhdGEgaW50byBnY2UgaW50ZXJuYWwNCj4gPiA+IHJlZ2lzdGVyLCBzbyBJIGV4
+cGVjdCB0aGF0IGNtZHFfcGt0X3dyaXRlX3MoKSBpcyBhbiBBUEkgd2hpY2ggd3JpdGUgZGF0YQ0K
+PiA+ID4gZnJvbSBnY2UgaW50ZXJuYWwgcmVnaXN0ZXIsIHRoZSBleHBlY3RlZCBwcm90b3R5cGUg
+aXMNCj4gPiA+IA0KPiA+ID4gaW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpw
+a3QsIHBoeXNfYWRkcl90IGFkZHIsIHUxNg0KPiA+ID4gcmVnX2lkeCk7DQo+ID4gPiANCj4gPiA+
+IFlvdXIgdmVyc2lvbiB3b3VsZCBjb25mdXNlIHRoZSB1c2VyIGJlY2F1c2UgeW91IGhpZGUgdGhl
+IGludGVybmFsDQo+ID4gPiByZWdpc3RlciBwYXJhbWV0ZXIuIElmIHlvdSB3YW50IHRvIHByb3Zp
+ZGUgdGhpcyBzZXJ2aWNlLCBJIHdvdWxkIGxpa2UNCj4gPiA+IHlvdSB0byBjaGFuZ2UgdGhlIGZ1
+bmN0aW9uIG5hbWUgc28gdGhhdCB1c2VyIHdvdWxkIG5vdCBiZSBjb25mdXNlZCBhbmQNCj4gPiA+
+IGVhc2lseSB0byB1bmRlcnN0YW5kIHdoYXQgeW91IHdhbnQgdG8gZG8gaW4gdGhpcyBmdW5jdGlv
+bi4NCj4gPiA+IA0KPiA+ID4gQW5vdGhlciBjaG9pY2UgaXM6IGNtZHFfcGt0X3dyaXRlX3MoKSBp
+cyBpbXBsZW1lbnRlZCBpbiBteSBkZWZpbml0aW9uLA0KPiA+ID4gYW5kIHVzZXIgY291bGQgY2Fs
+bCBjbWRxX3BrdF9hc3NpZ24oKSBhbmQgY21kcV9wa3Rfd3JpdGVfcygpIHRvIGFjaGlldmUNCj4g
+PiA+IHRoaXMgZnVuY3Rpb24uDQo+ID4gPiANCj4gPiA+IFJlZ2FyZHMsDQo+ID4gPiBDSw0KPiA+
+ID4gDQo+ID4gDQo+ID4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnQuDQo+ID4gDQo+ID4gT2ssIHdl
+IGhhdmUgdG8gcHJvdmlkZSB3cml0ZSBjb25zdGFudCB2YWx1ZSBzZXJ2aWNlIHRvIGNsaWVudCwg
+c28gSSB3aWxsDQo+ID4gY2hhbmdlIHRoZSBmdW5jdGlvbiBuYW1lIHRvIGNtZHFfcGt0X3dyaXRl
+X3NfdmFsdWUoKSBpbiB0aGlzIHBhdGNoLg0KPiA+IA0KPiA+IEFuZCBzaW5jZSBpdCBpcyBiZXR0
+ZXIgdG8gcHJvdmlkZSBjb25zaXN0ZW50IEFQSSBzbyBJIHdpbGwgZGVzaWduDQo+ID4gYW5vdGhl
+ciBmdW5jdGlvbiB3aXRoIGludGVyZmFjZSBhcyB5b3VyIHN1Z2dlc3Rpb246DQo+ID4gaW50IGNt
+ZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIHBoeXNfYWRkcl90IGFkZHIsIHUx
+Ng0KPiA+IHJlZ19pZHgpOw0KPiA+IA0KPiA+IEluIGFub3RoZXIgcGF0Y2ggSSBwcm92aWRlIGNt
+ZHFfcGt0X21lbV9tb3ZlKCkuIEkgd2lsbCBtb3ZlIHBhcnQgb2YNCj4gPiBpbXBsZW1lbnRhdGlv
+biB0byBjbWRxX3BrdF93cml0ZV9zKCksIHNvIHRoYXQgY21kcV9wa3RfbWVtX21vdmUoKSBjYW4g
+YmUNCj4gPiBjb21iaW5hdGlvbiBvZiBjbWRxX3BrdF9yZWFkX3MoKSBhbmQgY21kcV9wa3Rfd3Jp
+dGVfcygpLg0KPiA+IA0KPiA+IEhvdyBkbyB5b3UgdGhpbms/DQo+IA0KPiBTbyBjbWRxX3BrdF9y
+ZWFkX3MoKS9jbWRxX3BrdF93cml0ZV9zKCkgYXJlIHRoZSBiYXNpYyBmdW5jdGlvbiBhbmQNCj4g
+Y21kcV9wa3Rfd3JpdGVfc192YWx1ZSgpL2NtZHFfcGt0X21lbV9tb3ZlKCkgYXJlIGNvbWJpbmF0
+aW9uIGZ1bmN0aW9uLiBJDQo+IHdvdWxkIGxpa2UgdG8ga2VlcCB0aGUgYmFzaWMgZnVuY3Rpb24g
+YW5kIGRyb3AgdGhlIGNvbWJpbmF0aW9uIGZ1bmN0aW9uDQo+IGF0IGZpcnN0LiBJIHRoaW5rIHdo
+YXQgd2UgcGxhY2UgaW4gaGVscGVyIGlzIHVzZWQgYnkgdHdvIG9yIG1vcmUNCj4gY2xpZW50cy4g
+SXQncyBzdHJvbmcgYmVsaWV2ZWQgdGhhdCBiYXNpYyBmdW5jdGlvbiBjb3VsZCBiZSB1c2VkIGJ5
+IHR3bw0KPiBvciBtb3JlIGNsaWVudCwgYnV0IGl0J3MgZG91YnQgdGhhdCBjb21iaW5hdGlvbiB3
+b3VsZCBiZS4gSWYgb25seSBvbmUNCj4gY2xpZW50IHVzZSB0aGlzIGNvbWJpbmF0aW9uLCBqdXN0
+IHBsYWNlIHRoZSBjb21iaW5hdGlvbiBpbiB0aGF0IGNsaWVudC4NCj4gSWYgbGF0ZXIgc2Vjb25k
+IGNsaWVudCB1c2UgdGhpcyBjb21iaW5hdGlvbiwgd2UgdGhlbiBtb3ZlIHRoZSBjb21tb24NCj4g
+Y29kZSBpbiBoZWxwZXIgYW5kIGJvdGggY2xpZW50IGNhbGwgdGhlIGhlbHBlciBmdW5jdGlvbi4g
+SWYgeW91IGNvdWxkDQo+IHByb3ZlIHRoYXQgdGhpcyBjb21iaW5hdGlvbiBpcyB1c2VkIGJ5IHR3
+byBvciBtb3JlIGNsaWVudHMgbm93LCBqdXN0DQo+IHNob3cgbWUuDQo+IA0KPiBSZWdhcmRzLA0K
+PiBDSw0KPiANCg0KT2ssIEknbGwgcmVtb3ZlIGNvbWJpbmF0aW9uIGZ1bmN0aW9uIGluIG5leHQg
+dmVyc2lvbi4NClRoYW5rcyBmb3IgeW91IGNvbW1lbnQuDQoNCg0KUmVnYXJkcywNCkRlbm5pcw0K
+DQo+ID4gDQo+ID4gDQo+ID4gUmVnYXJkcywNCj4gPiBEZW5uaXMNCj4gPiANCj4gPiA+ID4gKw0K
+PiA+ID4gPiArLyoqDQo+ID4gPiA+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZv
+ciBldmVudCBjb21tYW5kIHRvIHRoZSBDTURRIHBhY2tldA0KPiA+ID4gPiAgICogQHBrdDoJdGhl
+IENNRFEgcGFja2V0DQo+ID4gPiA+ICAgKiBAZXZlbnQ6CXRoZSBkZXNpcmVkIGV2ZW50IHR5cGUg
+dG8gIndhaXQgYW5kIENMRUFSIg0KPiA+ID4gDQo+ID4gPiANCj4gPiANCj4gPiANCj4gDQo+IA0K
+DQo=
 
---CGDBiGfvSTbxKZlW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 25, 2019 at 01:03:27PM +0530, Vidya Sagar wrote:
-> On 11/25/2019 12:55 PM, Thierry Reding wrote:
-> > On Mon, Nov 25, 2019 at 12:30:53PM +0530, Vidya Sagar wrote:
-> > > On 11/22/2019 6:55 PM, Thierry Reding wrote:
-> > > > On Fri, Nov 22, 2019 at 04:15:05PM +0530, Vidya Sagar wrote:
-> > > > > Add endpoint mode support for PCIe C5 controller in P2972-0000 pl=
-atform
-> > > > > with information about supplies, PHY, PERST GPIO and GPIO that co=
-ntrols
-> > > > > PCIe reference clock coming from the host system.
-> > > > >=20
-> > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > ---
-> > > > >    .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 29 +++++++++++=
-++++++++
-> > > > >    1 file changed, 29 insertions(+)
-> > > > >=20
-> > > > > diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b=
-/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > > > index 7eb64b816e08..58c3a9677bc8 100644
-> > > > > --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > > > +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > > > @@ -43,6 +43,19 @@
-> > > > >    		gpio@c2f0000 {
-> > > > >    			status =3D "okay";
-> > > > > +			/*
-> > > > > +			 * Change the below node's status to 'okay' when
-> > > > > +			 * PCIe C5 controller is enabled to operate in endpoint
-> > > > > +			 * to allow REFCLK from the host system to flow into
-> > > > > +			 * the controller.
-> > > > > +			 */
-> > > > > +			pex-refclk-sel-high {
-> > > > > +				gpio-hog;
-> > > > > +				output-high;
-> > > > > +				gpios =3D <TEGRA194_AON_GPIO(AA, 5) 0>;
-> > > > > +				label =3D "pex_refclk_sel_high";
-> > > > > +				status =3D "disabled";
-> > > > > +			};
-> > > >=20
-> > > > Why don't we put this into the PCIe controller's node as a referenc=
-e to
-> > > > that GPIO? Seems like the controller would know exactly when this p=
-in
-> > > > needs to go high or low, so why does it have to be a hog?
-> > > >=20
-> > > > Thierry
-> > > Are you saying something like 'nvidia,enable-refclk-in'?
-> > > I was thinking, since this is like a board level configuration specif=
-ic to Jetson-Xavier,
-> > > it would suffice to just hog it according to the mode of operation of=
- PCIe controller.
-> > > But, I see one advantage of referencing it in the PCIe node (so that =
-the driver can configure
-> > > it as and when needed) is that one has to be careful just to enable e=
-ither PCIe RP or EP
-> > > node and not worry about other thing (like this).
-> > > Let me know if I got this right.
-> >=20
-> > Yeah, that's exactly why I think referencing this from the controller
-> > and controlling it in the driver is preferable.
-> >=20
-> > If this is some sort of select signal I think it makes sense to name it
-> > "nvidia,refclk-select-gpios" or something. Does this appear in the
-> > schematic somewhere? Or does the IP have a name for this? Those are
-> > usually good places to look for inspiration on the name because it's
-> > what hardware designers will be familiar with and they are technically
-> > the ones who should write the DT, even if that's rarely the case.
-> Schematic has "PEX_REFCLK_SEL" name.
-> I would go with 'nvidia,refclk-select-gpios' and make the change.
-
-It might be worth checking the interface definition of the IP if you
-have access to that, since it may be using a different name from the
-one that we have in the schematics.
-
-Also, given that other instantiations don't have this, I'm beginning
-to wonder if this is perhaps somehow specific to how this is used in
-this particular board design. If it is, then I think the nvidia,
-prefix would be appropriate. But if this is something that is part of
-the IP interface then we can probably drop the prefix since it would
-be applicable to non-NVIDIA instantiations as well.
-
-Thierry
-
->=20
-> - Vidya Sagar
-> >=20
-> > Thierry
-> >=20
-> > >=20
-> > > - Vidya Sagar
-> > >=20
-> > > >=20
-> > > > >    		};
-> > > > >    		pwm@c340000 {
-> > > > > @@ -144,6 +157,22 @@
-> > > > >    			    "p2u-5", "p2u-6", "p2u-7";
-> > > > >    	};
-> > > > > +	pcie_ep@141a0000 {
-> > > > > +		status =3D "disabled";
-> > > > > +
-> > > > > +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> > > > > +
-> > > > > +		nvidia,pex-rst-gpio =3D <&gpio TEGRA194_MAIN_GPIO(GG, 1)
-> > > > > +					GPIO_ACTIVE_LOW>;
-> > > > > +
-> > > > > +		phys =3D <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
-> > > > > +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
-> > > > > +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
-> > > > > +
-> > > > > +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
-> > > > > +			    "p2u-5", "p2u-6", "p2u-7";
-> > > > > +	};
-> > > > > +
-> > > > >    	fan: fan {
-> > > > >    		compatible =3D "pwm-fan";
-> > > > >    		pwms =3D <&pwm4 0 45334>;
-> > > > > --=20
-> > > > > 2.17.1
-> > > > >=20
-> > >=20
->=20
-
---CGDBiGfvSTbxKZlW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3bhLgACgkQ3SOs138+
-s6HApQ//e75Pd2TTuRk8Ulcx+orM6hsy/Qq8oquSg3Y2HV/NLxPyy7RnpDOhpDT2
-wdR6nr3z4f/90SLR4gyyqmDBqTOlms/sULvoDK79MyBT8aTDVQrvCtAKXONxc9O0
-fCYYXz5IMWRSpjRT4EDrZ2Gj7LZcQGJDTRfrqVoauP2VuWQK7FKv/on6k420cA2v
-mlgkoI7VwwJNuhNXjZj8EM2NLgfSjmR9HJM/fvJl6J3eO3EGiMorY2PBFAfT0j4H
-YFPM0O/lKRH0MiOiOCP/dxtIG17jpr4F1/2yQterNtAEV+o58ERpNT0b8SeSHXMr
-yN84gFWN4Fw3CniylVoASwp3xBJAPPBIFUjckLLMf5GJ2r3hZzMj8pGYyav5EwOI
-xYOrR1WyMV57D50rLA4Fy0dolQazQETy4OXahwI7T0s0JIgH2gDkh+6fUT3o+5eG
-PyFqczNXV2oVoCWrnnqpo1GrHSUwUh3RUoUFvRH0xjKGfaXDGqdRlcP40kktiP9V
-tDvv70n6J4+s1uk6Bac1FwTtFz0ecLXG8Ktj2p7oVGKHhEY5kfkdrwJ3p/c7cGlf
-JrmseXbCM1CZUsQphVDml+7z5tedqKk/pdTZ6hqClqnyznW9qIR4qNA6IsQOECCB
-jSqZ9evt0ALz2r9ndRc/BLxBt2+gcspZ/gFV0c37L0D+HBCE5EQ=
-=04cV
------END PGP SIGNATURE-----
-
---CGDBiGfvSTbxKZlW--
