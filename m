@@ -2,122 +2,114 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6484C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C88C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF86C20740
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F045F20869
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="AP9CdUHy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e9zr5cFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfKYORw (ORCPT
+        id S1728035AbfKYOZR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:17:52 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:15530 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfKYORw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 09:17:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574691470;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=r/C4z8eqmf4EqK6PYy8WsArzStWXQ+mb5cSxKvoTl4Q=;
-        b=AP9CdUHyBSFSe2UT87PwY1eREKGTGKaYgZ+bVxcnXUYGb/y3AVx+JK5CGbNYu1hv7l
-        Q4SJ1fqChqo2xzZuWmCDvY8upa+XNb+fSYmcLmt1u5jGHGsNFxwRVqSy+6xd4AtZGKpV
-        eyZ1E5fr8Py+pGnnq8LWq8g/h4++RrqjEVJ/9x4STZcU29BowrZBASFtzlIbunHZZMbG
-        SDLcFVyLR5O4uSV/SeQXUVRtwl88wOeTW5JFUgKn12AQoWW4pfRO+CWZuR21IKz0sRLy
-        wGmyvMBM6z+0ro003JarnwHU6bLjdB8w5argiQJMvB7vSMBP61/a0fL22bJOGro2jt/U
-        STQA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266HpF+ORJDYrryYBhveg=="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
-        with ESMTPSA id 304194vAPEHn0tU
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 25 Nov 2019 15:17:49 +0100 (CET)
-Date:   Mon, 25 Nov 2019 15:17:40 +0100
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 25 Nov 2019 09:25:17 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41444 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbfKYOZQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 09:25:16 -0500
+Received: by mail-lj1-f195.google.com with SMTP id m4so16071881ljj.8
+        for <devicetree@vger.kernel.org>; Mon, 25 Nov 2019 06:25:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sLculURoH3BCV7hyS93RpcUM9UKZHxxj8yiEZMlzgFI=;
+        b=e9zr5cFEFsYtz8NXh6wk3vUJiorgv8HQAamT1XM5/Vk90Irw61nDfa5wPaYmVwMzqk
+         Zud3SpzpmI0iGzF04+2AZv60HTwH4SR1gjdxeDGc2B2BL7ONVj8HgsFJJ85xFeB9Uy3i
+         SIBriFaViu/kJ2n5cvhCuu3GnC5cV+Mss1EtXmX2wP1ByKUha9tTCHOmwTiaqs0xZ7EX
+         WBRkPnnC6nOtQPYt9OgxSA+DTh1WIcWpotuxit2u6jM2bWGnof3coMDEVy1+ose+1age
+         Brx4DclEo7Umjh4JU8Ave451L3cOgdaZr4yTZaZ+PwZ9WyWBaVj9bRresnpboJmK0NTT
+         Z7Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sLculURoH3BCV7hyS93RpcUM9UKZHxxj8yiEZMlzgFI=;
+        b=oJr+xhC1Vd8rRTdrFmLAeKSTTDCKbDFblwbtRfTaKfeDDZzMaZPuAdjJg7FRZTPYQA
+         InOF8zIEaSUSOsrt742XgLbOqQapOWmrGA9EFWKLVxAOgjVufeoZPAHGyjPBfOtmLEDW
+         t4LlF/WIPgjryr4NHw4innkU51TZI2F2dSrztGYdFBjGBRZgZ0tru+NGBS32l9eSbvlb
+         9FKQ8A7NCYAl5AuYQLLOOauH20awqadcXCJYaN4IpilrlvCH5H0nQfIuE/PmUXDXnowO
+         T01aD7V+wYE1zpUDxLhnn3ZNQTYwe5vtQAryVRpsa9HluxJzgcaCOCq9oV/u1HqJFqXl
+         9xpA==
+X-Gm-Message-State: APjAAAWeyjnFRjL0R7HDfNCfNsw8cPiycyRuZnb/tob8AxSTkcmTDgxi
+        /BIAr33ZKo5ScOdOk7md171dGw==
+X-Google-Smtp-Source: APXvYqxzruuMyNSCsHenp3VVyLy99hYliqQex3TauCdVPMev/vQosO5w0vBVcQdHh1R5S2l9zyaGPw==
+X-Received: by 2002:a2e:8e27:: with SMTP id r7mr23143728ljk.101.1574691914559;
+        Mon, 25 Nov 2019 06:25:14 -0800 (PST)
+Received: from centauri.lan (ua-84-217-220-205.bbcust.telenor.se. [84.217.220.205])
+        by smtp.gmail.com with ESMTPSA id b28sm4595260ljp.9.2019.11.25.06.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Nov 2019 06:25:14 -0800 (PST)
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] ARM: dts: ux500: Add pin configs for UART1 CTS/RTS
- pins
-Message-ID: <20191125141740.GA55734@gerhold.net>
-References: <20191125122256.53482-1-stephan@gerhold.net>
- <20191125122256.53482-4-stephan@gerhold.net>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/5] arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
+Date:   Mon, 25 Nov 2019 15:25:06 +0100
+Message-Id: <20191125142511.681149-2-niklas.cassel@linaro.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191125142511.681149-1-niklas.cassel@linaro.org>
+References: <20191125142511.681149-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191125122256.53482-4-stephan@gerhold.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 01:22:55PM +0100, Stephan Gerhold wrote:
-> UART1 an be optionally used with additional CTS/RTS pins.
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-s/an/can, duh.
-I will fix this if a v2 is needed for some reason; otherwise,
-can you fix this when applying the patch?
+Specify the clocks that feed the APCS mux/divider instead of using
+default hardcoded values in the source code.
 
-Thanks!
+The driver still supports the previous bindings; however with this
+update it we allow the msm8916 to access the parent clock names
+required by the driver operation using the device tree node.
 
-> The pinctrl driver has an extra "u1ctsrts_a_1" pin group for them.
-> 
-> Add a new pin configuration to configure them correctly if needed.
-> 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
->  arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi | 26 +++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi b/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-> index b6d0a60e9aed..e85a08ad2ea7 100644
-> --- a/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
-> @@ -65,6 +65,32 @@
->  				ste,config = <&slpm_out_wkup_pdis>;
->  			};
->  		};
-> +
-> +		u1ctsrts_a_1_default: u1ctsrts_a_1_default {
-> +			default_mux {
-> +				function = "u1";
-> +				groups = "u1ctsrts_a_1";
-> +			};
-> +			default_cfg1 {
-> +				pins = "GPIO6_AF6"; /* CTS */
-> +				ste,config = <&in_pu>;
-> +			};
-> +			default_cfg2 {
-> +				pins = "GPIO7_AG5"; /* RTS */
-> +				ste,config = <&out_hi>;
-> +			};
-> +		};
-> +
-> +		u1ctsrts_a_1_sleep: u1ctsrts_a_1_sleep {
-> +			sleep_cfg1 {
-> +				pins = "GPIO6_AF6"; /* CTS */
-> +				ste,config = <&slpm_in_wkup_pdis>;
-> +			};
-> +			sleep_cfg2 {
-> +				pins = "GPIO7_AG5"; /* RTS */
-> +				ste,config = <&slpm_out_hi_wkup_pdis>;
-> +			};
-> +		};
->  	};
->  
->  	uart2 {
-> -- 
-> 2.24.0
-> 
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+Changes since v1:
+-Swapped order of "pll" and "aux" clocks, in order to not break DT
+backwards compatibility. (In case no clock-names are given, "pll" still
+has to be the first clock).
+
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 8686e101905c..9ec41b24a51f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -429,7 +429,8 @@
+ 			compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
+ 			reg = <0xb011000 0x1000>;
+ 			#mbox-cells = <1>;
+-			clocks = <&a53pll>;
++			clocks = <&a53pll>, <&gcc GPLL0_VOTE>;
++			clock-names = "pll", "aux";
+ 			#clock-cells = <0>;
+ 		};
+ 
+-- 
+2.23.0
+
