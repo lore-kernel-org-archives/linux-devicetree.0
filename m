@@ -2,129 +2,122 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BF7C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6484C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154CB20740
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF86C20740
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:17:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="AP9CdUHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfKYOP2 convert rfc822-to-8bit (ORCPT
+        id S1728004AbfKYORw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:15:28 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37333 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfKYOP2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 09:15:28 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 992E44000D;
-        Mon, 25 Nov 2019 14:15:24 +0000 (UTC)
-Date:   Mon, 25 Nov 2019 15:15:23 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        linux-mtd@lists.infradead.org, Mark Brown <broonie@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Mon, 25 Nov 2019 09:17:52 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:15530 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbfKYORw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 09:17:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574691470;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=r/C4z8eqmf4EqK6PYy8WsArzStWXQ+mb5cSxKvoTl4Q=;
+        b=AP9CdUHyBSFSe2UT87PwY1eREKGTGKaYgZ+bVxcnXUYGb/y3AVx+JK5CGbNYu1hv7l
+        Q4SJ1fqChqo2xzZuWmCDvY8upa+XNb+fSYmcLmt1u5jGHGsNFxwRVqSy+6xd4AtZGKpV
+        eyZ1E5fr8Py+pGnnq8LWq8g/h4++RrqjEVJ/9x4STZcU29BowrZBASFtzlIbunHZZMbG
+        SDLcFVyLR5O4uSV/SeQXUVRtwl88wOeTW5JFUgKn12AQoWW4pfRO+CWZuR21IKz0sRLy
+        wGmyvMBM6z+0ro003JarnwHU6bLjdB8w5argiQJMvB7vSMBP61/a0fL22bJOGro2jt/U
+        STQA==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266HpF+ORJDYrryYBhveg=="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
+        with ESMTPSA id 304194vAPEHn0tU
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 25 Nov 2019 15:17:49 +0100 (CET)
+Date:   Mon, 25 Nov 2019 15:17:40 +0100
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Subject: Re: [PATCH v4 3/4] dt-bindings: mtd: Describe mtd-concat devices
-Message-ID: <20191125151523.0766b3b7@xps13>
-In-Reply-To: <20191118221341.GA30937@bogus>
-References: <20191113171505.26128-1-miquel.raynal@bootlin.com>
-        <20191113171505.26128-4-miquel.raynal@bootlin.com>
-        <20191118221341.GA30937@bogus>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] ARM: dts: ux500: Add pin configs for UART1 CTS/RTS
+ pins
+Message-ID: <20191125141740.GA55734@gerhold.net>
+References: <20191125122256.53482-1-stephan@gerhold.net>
+ <20191125122256.53482-4-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191125122256.53482-4-stephan@gerhold.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Nov 25, 2019 at 01:22:55PM +0100, Stephan Gerhold wrote:
+> UART1 an be optionally used with additional CTS/RTS pins.
 
-Rob Herring <robh@kernel.org> wrote on Mon, 18 Nov 2019 16:13:41 -0600:
+s/an/can, duh.
+I will fix this if a v2 is needed for some reason; otherwise,
+can you fix this when applying the patch?
 
-> On Wed, Nov 13, 2019 at 06:15:04PM +0100, Miquel Raynal wrote:
-> > From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
-> > 
-> > The main use case to concatenate MTD devices is probably SPI-NOR
-> > flashes where the number of address bits is limited to 24, which can
-> > access a range of 16MiB. Board manufacturers might want to double the
-> > SPI storage size by adding a second flash asserted thanks to a second
-> > chip selects which enhances the addressing capabilities to 25 bits,
-> > 32MiB. Having two devices for twice the size is great but without more
-> > glue, we cannot define partition boundaries spread across the two
-> > devices. This is the gap mtd-concat intends to address.
-> > 
-> > There are two options to describe concatenated devices:
-> > 1/ One flash chip is described in the DT with two CS;
-> > 2/ Two flash chips are described in the DT with one CS each, a virtual
-> > device is also created to describe the concatenation.
-> > 
-> > Solution 1/ presents at least 3 issues:
-> > * The hardware description is abused;
-> > * The concatenation only works for SPI devices (while it could be
-> >   helpful for any MTD);
-> > * It would require a lot of rework in the SPI core as most of the
-> >   logic assumes there is and there always will be only one CS per
-> >   chip.  
+Thanks!
+
+> The pinctrl driver has an extra "u1ctsrts_a_1" pin group for them.
 > 
-> This seems ok if all the devices are identical.
-
-This is not an option for Mark and I agree with him as we are faking
-the reality: the two devices we want to virtually concatenate may be
-two physically different devices. Binding them as one is lying.
-
-> > Solution 2/ also has caveats:
-> > * The virtual device has no hardware reality;
-> > * Possible optimizations at the hardware level will be hard to enable
-> >   efficiently (ie. a common direct mapping abstracted by a SPI
-> >   memories oriented controller).  
+> Add a new pin configuration to configure them correctly if needed.
 > 
-> Something like this may be necessary if data is interleaved rather than 
-> concatinated.
-
-This is something that is gonna happen too, it is called "dual
-parallel".
-
-> Solution 3
-> Describe each device and partition separately and add link(s) from one 
-> partition to the next 
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> ---
+>  arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi | 26 +++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> flash0 {
->   partitions {
->     compatible = "fixed-partitions";
->     concat-partition = <&flash1_partitions>;
->     ...
->   };
-> };
+> diff --git a/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi b/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
+> index b6d0a60e9aed..e85a08ad2ea7 100644
+> --- a/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/ste-dbx5x0-pinctrl.dtsi
+> @@ -65,6 +65,32 @@
+>  				ste,config = <&slpm_out_wkup_pdis>;
+>  			};
+>  		};
+> +
+> +		u1ctsrts_a_1_default: u1ctsrts_a_1_default {
+> +			default_mux {
+> +				function = "u1";
+> +				groups = "u1ctsrts_a_1";
+> +			};
+> +			default_cfg1 {
+> +				pins = "GPIO6_AF6"; /* CTS */
+> +				ste,config = <&in_pu>;
+> +			};
+> +			default_cfg2 {
+> +				pins = "GPIO7_AG5"; /* RTS */
+> +				ste,config = <&out_hi>;
+> +			};
+> +		};
+> +
+> +		u1ctsrts_a_1_sleep: u1ctsrts_a_1_sleep {
+> +			sleep_cfg1 {
+> +				pins = "GPIO6_AF6"; /* CTS */
+> +				ste,config = <&slpm_in_wkup_pdis>;
+> +			};
+> +			sleep_cfg2 {
+> +				pins = "GPIO7_AG5"; /* RTS */
+> +				ste,config = <&slpm_out_hi_wkup_pdis>;
+> +			};
+> +		};
+>  	};
+>  
+>  	uart2 {
+> -- 
+> 2.24.0
 > 
-> flash1 {
->   flash1_partition: partitions {
->     compatible = "fixed-partitions";
->     ...
->   };
-> };
-
-I honestly don't see how this is different as solution 2/? In one case
-we describe the partition concatenation in one subnode as a "link", in
-the other we create a separate node to describe the link. Are you
-strongly opposed as solution 2/? From a pure conceptual point of view,
-is it really different than 3/?
- 
-
-Thanks,
-Miquèl
