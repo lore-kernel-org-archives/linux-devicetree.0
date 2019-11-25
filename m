@@ -2,127 +2,184 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9469CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 05:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA1AC43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 05:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DC020674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 05:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E4520748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 05:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XzUfiHpV"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="a71NqHFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKYFf1 (ORCPT
+        id S1725912AbfKYF6C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 00:35:27 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:10542 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725497AbfKYFf1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 00:35:27 -0500
-X-UUID: ad322afed21944719a577c32324ae135-20191125
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=R/fHdMtlVUsGDVLO9pKCFuPa6QvJ5ONRYikmv2XpPww=;
-        b=XzUfiHpV04o09GdqLnmCJmT+yP5tPEeToOXYsAKgjgDNapu9L+5BebnaxQypXZ95CgGR4lLFn98Gm6ExXJJJ109V8HzJagvGpQWlMfeBDWj98QsVlFq9Mx7jLKyFYvMQsPp4G1RFBCzm3Ty6hEfdJyhd/zhrL2eviOE9fPF/+YE=;
-X-UUID: ad322afed21944719a577c32324ae135-20191125
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1258170309; Mon, 25 Nov 2019 13:35:22 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 25 Nov 2019 13:34:49 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 25 Nov 2019 13:34:40 +0800
-Message-ID: <1574660121.26500.1.camel@mtksdaap41>
-Subject: Re: [PATCH v1 06/12] soc: mediatek: cmdq: add assign function
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 25 Nov 2019 13:35:21 +0800
-In-Reply-To: <1574327552-11806-7-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1574327552-11806-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574327552-11806-7-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 25 Nov 2019 00:58:02 -0500
+Received: from mail-eopbgr690051.outbound.protection.outlook.com ([40.107.69.51]:8004
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbfKYF6C (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Nov 2019 00:58:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KN+R9+mxIZYpsA7T3MQf+TRQSppMQtvcvb0r8kyurrXqdwMaDpF4+ZcRGRQwqRA/e/oPHdZuw9ZyzaI/lA8Du1QKJCxBcGvfMgjPl73jAn0SjxbzitZ63nMF60uvw1oweTCqbEMzYhAwW6SIwJ4oeLPD+7jKAeGdVVEe6Kne9x/eaiaOXWupyb2OkDMMYPSv6i1+HkFvWPqQ9Nr1WZKjCiz0U7vrdn/RRghCsmhZaNLWnCe8bOJBk3O7QMDUQLUZIz7vgRyHttW89YbjJZsInxncHxcwC9CTuBkc1NUhPjPXvzd4F3GR5qVcFw3Tu8v5X0nwt/A4Vdj+TXPT5jtpqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/oGUqIma0DRISkcM1XRPGcZzb/uCEiVF+OqbnloLsiE=;
+ b=BOV5wvC34R3nucOUOABg10X66/AfSqqJ3AgkE37CzOiiES/SPJY9gtc8g8ngOptOPvxRFI1Ri3MJJJGrB/zAZBjHXmdLEC0PLtGWl8eUjD8i2dzGKaz/0xXbFJQI6nm72PJYUyWmsDYLbP2qMuKHCM5FiW6UDxooqOVUY4VfkDsum36zPmGCduHC5CpHIAlmN+s2CzQk6JOZhzQgzr84qwDmBJFCyUbbPAk701BnONgsRW5zQJ3o5iBcN8Gq9g9wXOoBYVEf5/0T+LxJhY7XrG8zlIUZNginEwA1C01tVOxSFvHb1MlbWJMohWhxVOxPBbZJzNs7hWBfhDIESDlk7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/oGUqIma0DRISkcM1XRPGcZzb/uCEiVF+OqbnloLsiE=;
+ b=a71NqHFZNtbPk3dsnguT92cn4j4OySsEDo+Na4lFZ76PbJUyiwrGuLywXZUJazl2Zn+qwN9x1rzwMVpg+Ve4rwft3DUmFIJui/GCjLlMA/Y4GIDg0KtIuW/PBqpAKhsKk7bI+YStWmt6K1gVex/1O7sErVxFP4XlgOM7MPYah1A=
+Received: from MN2PR13MB3374.namprd13.prod.outlook.com (10.255.236.83) by
+ MN2PR13MB2622.namprd13.prod.outlook.com (20.178.254.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.10; Mon, 25 Nov 2019 05:57:41 +0000
+Received: from MN2PR13MB3374.namprd13.prod.outlook.com
+ ([fe80::4481:4560:7083:e4c6]) by MN2PR13MB3374.namprd13.prod.outlook.com
+ ([fe80::4481:4560:7083:e4c6%7]) with mapi id 15.20.2495.014; Mon, 25 Nov 2019
+ 05:57:41 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>
+CC:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v3 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+Thread-Topic: [PATCH v3 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+Thread-Index: AQHVo1U/2ljv661YTECJb4nJUTETbQ==
+Date:   Mon, 25 Nov 2019 05:57:41 +0000
+Message-ID: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BMXPR01CA0053.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:2c::17) To MN2PR13MB3374.namprd13.prod.outlook.com
+ (2603:10b6:208:162::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3bb8af75-4b7f-4f7c-997a-08d7716c621a
+x-ms-traffictypediagnostic: MN2PR13MB2622:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR13MB2622B893A1649A98EB3774A48C4A0@MN2PR13MB2622.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0232B30BBC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(136003)(376002)(346002)(366004)(396003)(39840400004)(189003)(199004)(186003)(966005)(6436002)(2906002)(316002)(14454004)(7416002)(54906003)(4326008)(6306002)(71190400001)(2616005)(50226002)(8936002)(110136005)(478600001)(6512007)(6116002)(8676002)(36756003)(3846002)(25786009)(81156014)(44832011)(305945005)(5660300002)(52116002)(14444005)(256004)(26005)(81166006)(71200400001)(6506007)(386003)(2501003)(6636002)(66446008)(66556008)(86362001)(66946007)(102836004)(99286004)(6486002)(7736002)(107886003)(64756008)(66476007)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR13MB2622;H:MN2PR13MB3374.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:3;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ibNjMQFMNrY8ZAbHle0+Yup9NsDK6TNtww5Xjo+avVxpmyA8tIuf6THRrQnLmiJxkmqH86Ribwk3NIDXYFLtqFhXidBOnxElLCIyZd328dYdSOFviIJfA7i+YJ8u15c0+IWBqYrOugnwhBzCpMO/TecccEHPsz8TCZM0+DZLBKlZVR0SXq0V/NsNgjgJOqMTp7aWpd8BUM+QikrgOJAVX9N9wHdkXpCMMIlBgTrscyg8g1Dk4me34ft61w3OOjPatVSwL2qgWnmfhB7nWvJPOk0yo0rr5q8+ld7+tkSSLuzNxWJBngoH27jK7ehDrhN8WrJ0JVXsU8wtARcB2M0sXza7OxGRfkB3nLOmcLxUXgGFH27bTWDVowYw5yMuBKLyd2tcY5k7qX06kClNtMtWyRdHCDehl/ZP9ooTk130WknT8lrlavqYpgtfVLWGTmJ3COYuZ2zFPRvGzAGv4BN20sFQd5OJ7/ubDMXWtqxPj4U=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bb8af75-4b7f-4f7c-997a-08d7716c621a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2019 05:57:41.5489
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a1FANDnilxOFDVGbC2X/bWYpIxpmV9vWDmGD7hOwk+lEqYvFDp0KZMb8M851QY9Hf1bTq+qkTUQtftjTbiw2Mg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB2622
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gVGh1LCAyMDE5LTExLTIxIGF0IDE3OjEyICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBhc3NpZ24gZnVuY3Rpb24gaW4gY21kcSBoZWxwZXIgd2hp
-Y2ggYXNzaWduIGNvbnN0YW50IHZhbHVlIGludG8NCj4gaW50ZXJuYWwgcmVnaXN0ZXIgYnkgaW5k
-ZXguDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2ll
-aEBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEt
-aGVscGVyLmMgICB8ICAgMjQgKysrKysrKysrKysrKysrKysrKysrKystDQo+ICBpbmNsdWRlL2xp
-bnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIHwgICAgMSArDQo+ICBpbmNsdWRlL2xpbnV4
-L3NvYy9tZWRpYXRlay9tdGstY21kcS5oICAgIHwgICAxNCArKysrKysrKysrKysrKw0KPiAgMyBm
-aWxlcyBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2ZXJz
-L3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiBpbmRleCAyNzRmNmYzLi5kNDE5ZTk5
-IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0K
-PiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiBAQCAtMTQs
-NiArMTQsNyBAQA0KPiAgI2RlZmluZSBDTURRX0VPQ19JUlFfRU4JCUJJVCgwKQ0KPiAgI2RlZmlu
-ZSBDTURRX0VPQ19DTUQJCSgodTY0KSgoQ01EUV9DT0RFX0VPQyA8PCBDTURRX09QX0NPREVfU0hJ
-RlQpKSBcDQo+ICAJCQkJPDwgMzIgfCBDTURRX0VPQ19JUlFfRU4pDQo+ICsjZGVmaW5lIENNRFFf
-UkVHX1RZUEUJCTENCj4gIA0KPiAgc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gew0KPiAgCXVuaW9u
-IHsNCj4gQEAgLTIzLDggKzI0LDE3IEBAIHN0cnVjdCBjbWRxX2luc3RydWN0aW9uIHsNCj4gIAl1
-bmlvbiB7DQo+ICAJCXUxNiBvZmZzZXQ7DQo+ICAJCXUxNiBldmVudDsNCj4gKwkJdTE2IHJlZ19k
-c3Q7DQo+ICsJfTsNCj4gKwl1bmlvbiB7DQo+ICsJCXU4IHN1YnN5czsNCj4gKwkJc3RydWN0IHsN
-Cj4gKwkJCXU4IHNvcDo1Ow0KPiArCQkJdTggYXJnX2NfdDoxOw0KPiArCQkJdTggYXJnX2JfdDox
-Ow0KPiArCQkJdTggYXJnX2FfdDoxOw0KPiArCQl9Ow0KPiAgCX07DQo+IC0JdTggc3Vic3lzOw0K
-PiAgCXU4IG9wOw0KPiAgfTsNCj4gIA0KPiBAQCAtMjc5LDYgKzI4OSwxOCBAQCBpbnQgY21kcV9w
-a3RfcG9sbF9tYXNrKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ICB9DQo+ICBF
-WFBPUlRfU1lNQk9MKGNtZHFfcGt0X3BvbGxfbWFzayk7DQo+ICANCj4gK2ludCBjbWRxX3BrdF9h
-c3NpZ24oc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiByZWdfaWR4LCB1MzIgdmFsdWUpDQo+ICt7
-DQo+ICsJc3RydWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ICsNCj4gKwlp
-bnN0Lm9wID0gQ01EUV9DT0RFX0xPR0lDOw0KPiArCWluc3QuYXJnX2FfdCA9IENNRFFfUkVHX1RZ
-UEU7DQoNCkl0IGxvb2tzIGxpa2UgdGhhdCBhcmdfYV90IGNvdWxkIGhhdmUgYSBtZWFuaW5nZnVs
-IG5hbWUuDQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsJaW5zdC5yZWdfZHN0ID0gcmVnX2lkeDsNCj4g
-KwlpbnN0LnZhbHVlID0gdmFsdWU7DQo+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5k
-KHBrdCwgaW5zdCk7DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X2Fzc2lnbik7DQo+
-ICsNCj4gIHN0YXRpYyBpbnQgY21kcV9wa3RfZmluYWxpemUoc3RydWN0IGNtZHFfcGt0ICpwa3Qp
-DQo+ICB7DQo+ICAJc3RydWN0IGNtZHFfY2xpZW50ICpjbCA9IHBrdC0+Y2w7DQo+IGRpZmYgLS1n
-aXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIGIvaW5jbHVkZS9s
-aW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBpbmRleCBkZmU1YjJlLi4xMjFjM2Ji
-IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5o
-DQo+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gQEAg
-LTU5LDYgKzU5LDcgQEAgZW51bSBjbWRxX2NvZGUgew0KPiAgCUNNRFFfQ09ERV9KVU1QID0gMHgx
-MCwNCj4gIAlDTURRX0NPREVfV0ZFID0gMHgyMCwNCj4gIAlDTURRX0NPREVfRU9DID0gMHg0MCwN
-Cj4gKwlDTURRX0NPREVfTE9HSUMgPSAweGEwLA0KPiAgfTsNCj4gIA0KPiAgZW51bSBjbWRxX2Ni
-X3N0YXR1cyB7DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGst
-Y21kcS5oIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBpbmRleCBh
-NzRjMWQ1Li44MzM0MDIxIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRl
-ay9tdGstY21kcS5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRx
-LmgNCj4gQEAgLTE1Miw2ICsxNTIsMjAgQEAgaW50IGNtZHFfcGt0X3BvbGwoc3RydWN0IGNtZHFf
-cGt0ICpwa3QsIHU4IHN1YnN5cywNCj4gICAqLw0KPiAgaW50IGNtZHFfcGt0X3BvbGxfbWFzayhz
-dHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiAgCQkgICAgICAgdTE2IG9mZnNldCwg
-dTMyIHZhbHVlLCB1MzIgbWFzayk7DQo+ICsNCj4gKy8qKg0KPiArICogY21kcV9wa3RfYXNzaWdu
-KCkgLSBBcHBlbmQgbG9naWMgYXNzaWduIGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0LCBhc2sg
-R0NFDQo+ICsgKgkJICAgICAgIHRvIGV4ZWN1dGUgYW4gaW5zdHJ1Y3Rpb24gdGhhdCBzZXQgYSBj
-b25zdGFudCB2YWx1ZSBpbnRvDQo+ICsgKgkJICAgICAgIGludGVybmFsIHJlZ2lzdGVyIGFuZCB1
-c2UgYXMgdmFsdWUsIG1hc2sgb3IgYWRkcmVzcyBpbg0KPiArICoJCSAgICAgICByZWFkL3dyaXRl
-IGluc3RydWN0aW9uLg0KPiArICogQHBrdDoJdGhlIENNRFEgcGFja2V0DQo+ICsgKiBAcmVnX2lk
-eDoJdGhlIENNRFEgaW50ZXJuYWwgcmVnaXN0ZXIgSUQNCj4gKyAqIEB2YWx1ZToJdGhlIHNwZWNp
-ZmllZCB2YWx1ZQ0KPiArICoNCj4gKyAqIFJldHVybjogMCBmb3Igc3VjY2VzczsgZWxzZSB0aGUg
-ZXJyb3IgY29kZSBpcyByZXR1cm5lZA0KPiArICovDQo+ICtpbnQgY21kcV9wa3RfYXNzaWduKHN0
-cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgcmVnX2lkeCwgdTMyIHZhbHVlKTsNCj4gKw0KPiAgLyoq
-DQo+ICAgKiBjbWRxX3BrdF9mbHVzaF9hc3luYygpIC0gdHJpZ2dlciBDTURRIHRvIGFzeW5jaHJv
-bm91c2x5IGV4ZWN1dGUgdGhlIENNRFENCj4gICAqICAgICAgICAgICAgICAgICAgICAgICAgICBw
-YWNrZXQgYW5kIGNhbGwgYmFjayBhdCB0aGUgZW5kIG9mIGRvbmUgcGFja2V0DQoNCg==
+This patch series adds GPIO drivers, DT documentation and DT nodes for
+HiFive Unleashed board. The gpio patches are mostly based on Wesley's patch=
+.
+The patchset also adds hierarchy irq domain support as it is required by th=
+is
+gpio driver. It also includes the irqdomain patch to introduce
+irq_domain_translate_onecell() and irq-nvic driver patch to use this newly
+introduced function.
+
+This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed boar=
+d
+
+Changes:
+v3 vs v2:
+- Include patch for irq-nvic driver to use irq_domain_translate_onecell
+- Remove unnecessary inclusion of header files
+- Use a single prefix for all symbols in this driver
+- Rename the "enabled" field of struct sifive_gpio to "irq_state"
+- Remove unused variables and locking from probe()
+- Other minor changes
+
+v2 vs v1:
+- Add patch to introduce irq_domain_translate_onecell() and use it in
+  the sifive PLIC driver
+- Drop the usage of own locks, instead use internal bgpio_locks
+- Consistently use regmap for register access throughout the gpio code
+- Convert the GPIO DT documentation into a json schema
+- Other minor changes based upon feedback received on v1
+
+v1 vs RFC:
+Incorporated below changes as suggested by Linus Walleij on RFC version of =
+this
+patchset[0]
+- Dropped PWM patches as they are already merged.
+- Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
+- Remove unwanted inclusion of header files
+- Use regmap MMIO instead of customised sifive_assign_bit()
+- Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
+- Use hierarchical irqdomain
+
+[0] https://lore.kernel.org/linux-riscv/20181010123519.RVexDppaPFpIWl7QU_hp=
+P8tc5qqWPJgeuLYn0FaGbeQ@z/
+
+Yash Shah (6):
+  genirq: introduce irq_domain_translate_onecell
+  irqchip: nvic: Use irq_domain_translate_onecell instead of custom func
+  irqchip: sifive: Support hierarchy irq domain
+  gpio: sifive: Add DT documentation for SiFive GPIO
+  gpio: sifive: Add GPIO driver for SiFive SoCs
+  riscv: dts: Add DT support for SiFive FU540 GPIO driver
+
+ .../devicetree/bindings/gpio/gpio-sifive.yaml      |  69 ++++++
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi         |  14 +-
+ .../riscv/boot/dts/sifive/hifive-unleashed-a00.dts |   4 +
+ drivers/gpio/Kconfig                               |   9 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-sifive.c                         | 252 +++++++++++++++++=
+++++
+ drivers/irqchip/Kconfig                            |   1 +
+ drivers/irqchip/irq-nvic.c                         |  15 +-
+ drivers/irqchip/irq-sifive-plic.c                  |  30 ++-
+ include/linux/irqdomain.h                          |   5 +
+ kernel/irq/irqdomain.c                             |  17 ++
+ 11 files changed, 399 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sifive.yaml
+ create mode 100644 drivers/gpio/gpio-sifive.c
+
+--=20
+2.7.4
 
