@@ -2,72 +2,115 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78F5C432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 17:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4197C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 18:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDD020740
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 17:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C309B2082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 18:20:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ERy+HFLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfKYRnj (ORCPT
+        id S1729275AbfKYSUN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 12:43:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:53364 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfKYRnj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 12:43:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52EDC31B;
-        Mon, 25 Nov 2019 09:43:38 -0800 (PST)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DED83F68E;
-        Mon, 25 Nov 2019 09:43:37 -0800 (PST)
-Date:   Mon, 25 Nov 2019 17:43:30 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] arm64: dts: arm: juno: Fix UART frequency
-Message-ID: <20191125174329.GA10102@bogus>
-References: <20191119120331.28243-1-andre.przywara@arm.com>
+        Mon, 25 Nov 2019 13:20:13 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32995 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727339AbfKYSUM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 13:20:12 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c124so9221986qkg.0
+        for <devicetree@vger.kernel.org>; Mon, 25 Nov 2019 10:20:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=W09lgIqIKvECTOE849gv8T7YDNLO2Wc4fhvJ0YJldxk=;
+        b=ERy+HFLCmw98rZ+6jHEb6CK3h+hzq2Xd1fFuuD5w5bfjxs7aw6AgNsqMmhI3QlbWoC
+         y0EfJHErAyaz5xlU7Jv89vsAFHpCFp5adnNr6SmEtm7k5JicUESHRlKQftaWhofNPGO/
+         2k6Bym+4k9FYiNEA40m6ydBprmxzen/r0nvrM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W09lgIqIKvECTOE849gv8T7YDNLO2Wc4fhvJ0YJldxk=;
+        b=AEr1SxAZpdgO8shNIyHA2K5iz9PjX/mWLvjGO6p8VsLoxUazYCs/yh5G994BubqeRD
+         ehpw8jSlDcnApw1uWC0bbHT3tN9pPQzcbDdbTJMVPQbXDfW2apuRa3bCIL2GnX8OpW16
+         QBLtrla1ygGht8mFTe4YpVn9Q7JUddkiu+oIYiPfCT+vZsEEmHFCDH6VRdFIuiD97GyY
+         n6Us7nN1AAVUPpI7hKWep0k1ntlZiJjzjYGow7t9z3PKZUt+IU5kjHDZi7F3piqrW17D
+         xx8L48lPd9fAsBcWPIsD6s8h/8/RUT8wlDNDgdYUxk3bIAQpZUIUl6Ephs/a4WB/QKfp
+         ukeg==
+X-Gm-Message-State: APjAAAVL311eTP2OPsWouXd7zIDlzOkzXCLyfiYzPssJ0LGRuZIbh5K5
+        CMY8anwfK7WdaN5OdMH8EMxiF77u+/DhnFHMnZgoeHhS
+X-Google-Smtp-Source: APXvYqyViSiFgUBvDzO1mVVyfrDrv1aJlHc6bYxT/J8Hw5dcdeuarzA4nQsAObckQJK0CIoKANHAPwHuY9MKcyA5yUo=
+X-Received: by 2002:a37:5b02:: with SMTP id p2mr27051982qkb.419.1574706011770;
+ Mon, 25 Nov 2019 10:20:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119120331.28243-1-andre.przywara@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191118192123.82430-1-abhishekpandit@chromium.org> <1CEDCBDC-221C-4E5F-90E9-898B02304562@holtmann.org>
+In-Reply-To: <1CEDCBDC-221C-4E5F-90E9-898B02304562@holtmann.org>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Mon, 25 Nov 2019 10:20:00 -0800
+Message-ID: <CANFp7mXNPsmfC_dDcxP1N9weiEFdogOvgSjuBLJSd+4-ONsoOQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Bluetooth: hci_bcm: Additional changes for BCM4354 support
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:03:31PM +0000, Andre Przywara wrote:
-> Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
-> source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
-> correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
-> our DT.
-> Doing a prime factorisation, a modulo divide by 115200 and trying
-> to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
-> that the old value was actually a typo. The actual UART clock is driven
-> by a PLL, configured via a parameter in some board.txt file in the
-> firmware, which reads 7.37 MHz (sic!).
-> 
-> Fix this to correct the baud rate divisor calculation on the Juno board.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> 
+Hey,
 
-Do we need fixes tag here ? Unless someone objects I will add and apply
-this patch:
+It looks about the same as one of my earlier patch series. Outside a
+few nitpicks, I'm ok with merging this.
 
-Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
+Thanks
+Abhishek
 
---
-Regards,
-Sudeep
+On Sat, Nov 23, 2019 at 2:04 AM Marcel Holtmann <marcel@holtmann.org> wrote=
+:
+>
+> Hi Abhishek,
+>
+> > While adding support for the BCM4354, I discovered a few more things
+> > that weren't working as they should have.
+> >
+> > First, we disallow serdev from setting the baudrate on BCM4354. Serdev
+> > sets the oper_speed first before calling hu->setup() in
+> > hci_uart_setup(). On the BCM4354, this results in bcm_setup() failing
+> > when the hci reset times out.
+> >
+> > Next, we add support for setting the PCM parameters, which consists of
+> > a pair of vendor specific opcodes to set the pcm parameters. The
+> > documentation for these params are available in the brcm_patchram_plus
+> > package (i.e. https://github.com/balena-os/brcm_patchram_plus). This is
+> > necessary for PCM to work properly.
+> >
+> > All changes were tested with rk3288-veyron-minnie.dts.
+>
+> so I have re-factored your patch set now to apply to latest bluetooth-nex=
+t tree and posted it to the mailing list. Please have a look at it if this =
+works for you. If it does, then we might just apply it this way and focus o=
+n getting detailed PCM codec configuration for all vendors in once we have =
+a second vendor to unify it.
+>
+> Regards
+>
+> Marcel
+>
