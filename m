@@ -6,98 +6,115 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE837C432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D930C43215
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D14582082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F0820836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfKYPQW (ORCPT
+        id S1728297AbfKYPRE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:16:22 -0500
-Received: from sauhun.de ([88.99.104.3]:55242 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbfKYPQV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 10:16:21 -0500
-Received: from localhost (x4e37056e.dyn.telefonica.de [78.55.5.110])
-        by pokefinder.org (Postfix) with ESMTPSA id 596772C0456;
-        Mon, 25 Nov 2019 16:16:19 +0100 (CET)
-Date:   Mon, 25 Nov 2019 16:16:18 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com,
-        venture@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au, tmaimon77@gmail.com,
-        syniurge@gmail.com, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] i2c: npcm: Add Nuvoton NPCM I2C controller driver
-Message-ID: <20191125151618.GE2412@kunai>
-References: <20191121095350.158689-1-tali.perry1@gmail.com>
- <20191121095350.158689-3-tali.perry1@gmail.com>
+        Mon, 25 Nov 2019 10:17:04 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54402 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbfKYPRE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 10:17:04 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7CD081C2007; Mon, 25 Nov 2019 16:17:02 +0100 (CET)
+Date:   Mon, 25 Nov 2019 16:17:01 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-leds@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>, dtor@google.com,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dan Murphy <dmurphy@ti.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+Subject: Re: [PATCH v5 03/26] dt-bindings: leds: Add LED_FUNCTION definitions
+Message-ID: <20191125151701.GB3816@amd>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-4-jacek.anaszewski@gmail.com>
+ <CAMuHMdXkQCVXdsbS1Tf+7wkafJ4JxhxXeh4R7OWOz5uGs-jL5Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Lb0e7rgc7IsuDeGj"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
 Content-Disposition: inline
-In-Reply-To: <20191121095350.158689-3-tali.perry1@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdXkQCVXdsbS1Tf+7wkafJ4JxhxXeh4R7OWOz5uGs-jL5Q@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---Lb0e7rgc7IsuDeGj
+--1LKvkjL3sHcu1TtY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 21, 2019 at 11:53:50AM +0200, Tali Perry wrote:
-> Add Nuvoton NPCM BMC i2c controller driver.
+On Fri 2019-11-15 14:01:50, Geert Uytterhoeven wrote:
+> Hi Jacek,
 >=20
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> On Sun, Jun 9, 2019 at 9:09 PM Jacek Anaszewski
+> <jacek.anaszewski@gmail.com> wrote:
+> > Add initial set of common LED function definitions.
+> >
+> > Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>=20
+> > --- a/include/dt-bindings/leds/common.h
+> > +++ b/include/dt-bindings/leds/common.h
+> > @@ -30,4 +31,45 @@
+> >  #define LED_COLOR_ID_IR                7
+> >  #define LED_COLOR_ID_MAX       8
+> >
+> > +/* Standard LED functions */
+> > +#define LED_FUNCTION_ACTIVITY "activity"
+>=20
+> What's the appropriate function for "general purpose" or "user" LEDs on
+> development boards, where the LEDs don't have fixed functions, unlike
+> on real products?
+> Perhaps just LED_FUNCTION_INDICATOR?
 
-Looking at all this SMB_* naming of the registers and also the quirks,
-this looks more like an SMBUS controller to me?
+I'd prefer such LEDs to not exist :-).
 
-> +	// currently I2C slave IF only supports single byte operations.
-> +	// in order to utilyze the npcm HW FIFO, the driver will ask for 16bytes
-> +	// at a time, pack them in buffer, and then transmit them all together
-> +	// to the FIFO and onward to the bus .
-> +	// NACK on read will be once reached to bus->adap->quirks->max_read_len
-> +	// sending a NACK whever the backend requests for it is not supported.
+> I noticed your very initial submission defined LED_FUNCTION_USER "user".
+> I couldn't find an explanation for the rationale behind its removal in la=
+ter
+> revisions, or any discussion asking for that.
 
-This for example...
+There are "user" leds even on non-development boads... one is labeled
+"scroll lock".
 
-> +static const struct i2c_adapter_quirks npcm_i2c_quirks =3D {
-> +	.max_read_len =3D 32768,
-> +	.max_write_len =3D 32768,
-> +	.max_num_msgs =3D 2,
-> +	.flags =3D I2C_AQ_COMB_WRITE_THEN_READ
-> +};
+For the development board, I'd actually prefer to assign some
+reasonable functions. If vendor BSP uses the LEDs for disk and network
+indicators (for example) I'd just mark it as a disk and network
+LEDs...
 
-=2E.. and this. Like SMBus with the only exception of being able to send
-32K in a row. Or?
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-
---Lb0e7rgc7IsuDeGj
+--1LKvkjL3sHcu1TtY
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3b8EIACgkQFA3kzBSg
-Kbabdg//Vlk6yGrJ9uPwF66dwUUKyE2M66t+W5miyttrphuZsLZXK7MGI2sQlF0D
-0ZTP0+fskh6L8uFpIK2eplGzHCyNHxz9yiGlluRMCohfL0HYVZw0TtLz08cKbg9p
-35Mqs8JhklbBQ6EaO+FCd3WBAUA244fmekZa4ltRs66A7EZ+40kB8JEGJ9UF4yZl
-AUop8BPaVGEJ9lw4x3n6DvsiNrGSuxbMJmmm2FU8HY2I31A2cUAv1B26xkjJ4NBW
-We7ts4jy4tJv6Uo0KxvBbvCgaxle/zwPkl7s2dPvajxLbMEXfq/yOrCWEAX7mg/u
-3ENhA7SETaZFcn4Yj3J0uVlbv/DIzPUcsGP499PW0DIsRY6i7dFl0JypETEceu8W
-/QQJO62nl3vh13bLcv1Nl6HtQjOX5EtVmUBwakasELQ+HMWp3zt7dHu7FgKtPaIJ
-eAL9AjrgCymz1v0kAzlXRx7KTi+285oWNUUVBtRedc76A60ONDmim7nsSkx+lmem
-djPX2bSGT0v1gp16CAMe07ZOmCB7Wu8S6pIK9Yo639bi9MnhblsXYRlF7unpO4RX
-8+xUos0Y2tLw28tU7g/pELYyBoKWoEDNCQrWy/3FHh41PFKGPRfOme0ZudIFgcPM
-Vu12YjeAhb1fqMqRyEMs8uwjx+4PBqJS7dzJvobQSgZyc9tjW+k=
-=Yu4F
+iEYEARECAAYFAl3b8GwACgkQMOfwapXb+vKOngCeMPIGUI5sLmxz2QWwUEawrSyU
+Wu4An2/gtTGMzwzqq4R6aHay3jUaFgBo
+=JtRl
 -----END PGP SIGNATURE-----
 
---Lb0e7rgc7IsuDeGj--
+--1LKvkjL3sHcu1TtY--
