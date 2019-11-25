@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBAAC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77CAC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A332068F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F06A2068F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 14:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfKYOuv (ORCPT
+        id S1728318AbfKYOvD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 09:50:51 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:39296 "EHLO honk.sigxcpu.org"
+        Mon, 25 Nov 2019 09:51:03 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:39240 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728317AbfKYOuv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 09:50:51 -0500
+        id S1728078AbfKYOut (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Nov 2019 09:50:49 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 28B5FFB04;
-        Mon, 25 Nov 2019 15:50:48 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 226D7FB07;
+        Mon, 25 Nov 2019 15:50:45 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5p-m8_npmQ2s; Mon, 25 Nov 2019 15:50:46 +0100 (CET)
+        with ESMTP id aBEq2K-xOEii; Mon, 25 Nov 2019 15:50:42 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id D26834928A; Mon, 25 Nov 2019 15:50:07 +0100 (CET)
+        id E128E4928D; Mon, 25 Nov 2019 15:50:07 +0100 (CET)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -45,9 +45,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         "Angus Ainslie (Purism)" <angus@akkea.ca>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: mxsfb: Add compatible for iMX8MQ
-Date:   Mon, 25 Nov 2019 15:50:06 +0100
-Message-Id: <1e452d74454d550ec4134428994ad8559aaa587e.1574693313.git.agx@sigxcpu.org>
+Subject: [PATCH v2 2/2] arm64: dts: imx8mq: Add eLCDIF controller
+Date:   Mon, 25 Nov 2019 15:50:07 +0100
+Message-Id: <742d9ef4a98a5cf771d9763e6d68be3bd7cb7461.1574693313.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574693313.git.agx@sigxcpu.org>
 References: <cover.1574693313.git.agx@sigxcpu.org>
@@ -59,25 +59,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-NXP's iMX8MQ has an LCDIF as well.
+Add a node for the eLCDIF controller, "disabled" by default.
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 ---
- Documentation/devicetree/bindings/display/mxsfb.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
-index 472e1ea6c591..c985871c46b3 100644
---- a/Documentation/devicetree/bindings/display/mxsfb.txt
-+++ b/Documentation/devicetree/bindings/display/mxsfb.txt
-@@ -6,6 +6,7 @@ Required properties:
- - compatible:	Should be "fsl,imx23-lcdif" for i.MX23.
- 		Should be "fsl,imx28-lcdif" for i.MX28.
- 		Should be "fsl,imx6sx-lcdif" for i.MX6SX.
-+		Should be "fsl,imx8mq-lcdif" for i.MX8MQ.
- - reg:		Address and length of the register set for LCDIF
- - interrupts:	Should contain LCDIF interrupt
- - clocks:	A list of phandle + clock-specifier pairs, one for each
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 7f9319452b58..1fadd2b126a9 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -448,6 +448,23 @@
+ 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+ 			};
+ 
++			lcdif: lcd-controller@30320000 {
++				compatible = "fsl,imx8mq-lcdif", "fsl,imx28-lcdif";
++				reg = <0x30320000 0x10000>;
++				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
++				clock-names = "pix";
++				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
++						  <&clk IMX8MQ_VIDEO_PLL1_BYPASS>,
++						  <&clk IMX8MQ_CLK_LCDIF_PIXEL>,
++						  <&clk IMX8MQ_VIDEO_PLL1>;
++				assigned-clock-parents = <&clk IMX8MQ_CLK_25M>,
++						  <&clk IMX8MQ_VIDEO_PLL1>,
++						  <&clk IMX8MQ_VIDEO_PLL1_OUT>;
++				assigned-clock-rates = <0>, <0>, <0>, <594000000>;
++				status = "disabled";
++			};
++
+ 			iomuxc: iomuxc@30330000 {
+ 				compatible = "fsl,imx8mq-iomuxc";
+ 				reg = <0x30330000 0x10000>;
 -- 
 2.23.0
 
