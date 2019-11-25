@@ -2,139 +2,247 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B689DC432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 12:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB849C432C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 13:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8936620836
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 12:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3092084D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 13:04:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FSKsCU3Z";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="aRiT/szg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpFkmbDD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfKYMbe (ORCPT
+        id S1727270AbfKYNE2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 07:31:34 -0500
-Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:54488
-        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbfKYMbe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 07:31:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574685093;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
-        bh=wTQkzRVUituDa/6iS8wAISmkIdu8SWe/Gj4Pw0VOWHU=;
-        b=FSKsCU3ZRo1fiXJu/vcIySLBQxh7hOMCOnmt6+k2AcEyzN5+Zz/tTKN+5CIVEq5m
-        /wLNT6BiR6zhYuGk+tT+xCk/7xhLx2k4nRLIYEs7t7fV0lG86gKlOFlGNZEATmf91Ej
-        7a2AgvNVkZlGARgr0JVIXoCbS2IRIQRC6vhYhQMI=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574685093;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
-        bh=wTQkzRVUituDa/6iS8wAISmkIdu8SWe/Gj4Pw0VOWHU=;
-        b=aRiT/szg04qdfxTMv4O7h3rceZ0pI/gJw2zmrGEWJmldoPBvH7HqxQRcX5vMFZ45
-        Sn1Uy40a/VXHq4GG9z9SrkR7lQe7X3D3Y4SCwDoRzLaAMn1MlRX9FqwtdFjUyJZ5Ii6
-        M/EOI3naXmlur80U66/u6yZK2JyXfBHNZVYifSh0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6A03DC447BD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 00/49] ath11k: driver for Qualcomm IEEE 802.11ax devices
-References: <1573810153-29623-1-git-send-email-kvalo@codeaurora.org>
-        <0101016e975ec74d-5c7043cf-f7c1-4301-939a-783203f9c80d-000000@us-west-2.amazonses.com>
-Date:   Mon, 25 Nov 2019 12:31:32 +0000
-In-Reply-To: <0101016e975ec74d-5c7043cf-f7c1-4301-939a-783203f9c80d-000000@us-west-2.amazonses.com>
-        (Kalle Valo's message of "Sat, 23 Nov 2019 08:26:41 +0000")
-Message-ID: <0101016ea28bac43-f72dbf97-32f4-4db4-a6d3-622b8f01f644-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 25 Nov 2019 08:04:28 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34024 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfKYNE2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 08:04:28 -0500
+Received: by mail-pl1-f196.google.com with SMTP id h13so6504731plr.1;
+        Mon, 25 Nov 2019 05:04:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=qGezSPv9jvcj/7xKFa9KZTI9OMyO6N5DYb75LLWYBuc=;
+        b=kpFkmbDDgsjT6k7lYYUGqtww5039GLqzwJS2PndxMuQwWtfm+CdpU5acLe4TDKHKyB
+         9PUXMpOQRqusDRFNkZ3bmg4jJytYgADZ/+E/O+oHv3/0jNSx0GoSZ3Q5/zR9a1iONIEO
+         JfoTNyATWDXwVX2Cv0m/wjpXrAkVgsxg/H1KuuyLC02LLkS+FblWYBd4dKqBQfsNkXAl
+         Oj4hgoEwE2pfUdddLgdvmYIMTdKw4LGRYnxW9uY+gwIpwGOwfOpBsgsOMe3zC4wk506P
+         rcK87N+mtizhp8B8XqDNRYMAsQh31gojSQqW3Dp2DDBaGfGZ/4Hd+CSvRKQX2wkzsk8v
+         jLcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qGezSPv9jvcj/7xKFa9KZTI9OMyO6N5DYb75LLWYBuc=;
+        b=D5Yxs0FBzUtI282BYwtXFk3smpVPgoSIgRLdJxbh8ggcarelNmp5eZkuxWKFzLKOJP
+         BXTGdHmqlY9xmozXriihurcvAqSvYhno98xeI1Dsegvc9p273vXAxNfhJsPjhslDfHpR
+         pbyUVZeldvE9XkEts9xw6Hg6h+TbzqnAgekWN0n4jl9HbGVaiolyZIErbCoxq29Q2kaH
+         JC9DJ0S0mnOGwTp4IoNOjB7ADZmqXSsHkobkcMeqhXmh33hHzZ+sj/hOPPXxFnb/zsWa
+         YAIJmI2gkzwNRnpk007vZsmqhIf2sbeu5YSQ+LW1eWJZ+djs11teGvzrg5pudtGdPXeq
+         CoeQ==
+X-Gm-Message-State: APjAAAX4omjvFF+aFOsGXvwqztB+JnPPOkUanliQgalsB2UZ8avgunLe
+        7skpn0mooDjUmsTFr93Rpjg=
+X-Google-Smtp-Source: APXvYqwkC+fd2MEbWas3tM4hFlRaxLaPx3Z5euuU8J3AD+bQgaEKba8isM885BEFVMhJl6QMRQGLdw==
+X-Received: by 2002:a17:902:b482:: with SMTP id y2mr28918431plr.128.1574687067822;
+        Mon, 25 Nov 2019 05:04:27 -0800 (PST)
+Received: from cnn ([2402:3a80:42d:2c57:5d0d:9f5:fef:e996])
+        by smtp.gmail.com with ESMTPSA id v189sm8793680pfv.133.2019.11.25.05.04.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Nov 2019 05:04:26 -0800 (PST)
+Date:   Mon, 25 Nov 2019 18:34:20 +0530
+From:   manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+To:     andrew@aj.id.au
+Cc:     joel@jms.id.au, vijaykhemka@fb.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: [PATCH v3] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Message-ID: <20191125130420.GA24018@cnn>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SES-Outgoing: 2019.11.25-54.240.27.187
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Kalle Valo <kvalo@codeaurora.org> writes:
+The Yosemite V2 is a facebook multi-node server
+platform that host four OCP server. The BMC
+in the Yosemite V2 platorm based on AST2500 SoC.
 
-> Kalle Valo <kvalo@codeaurora.org> writes:
->
->> ath11k is a new driver for Qualcomm IEEE 802.11ax devices, first
->> supporting only IPQ8074 SoC using the shared memory AHB bus. ath11k
->> uses mac80211 and supports AP, Station and Mesh modes.
->>
->> Even though ath11k has some similar code as with ath10k (especially
->> the WMI layer) it was concluded to be simpler to have a "clean start"
->> for ath11k code base and not try to share the code with ath10k. This
->> makes maintenance easier and avoids major changes in ath10k, which
->> would have significantly increased the risk of regressions in existing
->> setups.
->>
->> Even though the driver is very similar with ath10k but there are major
->> differences as well. The datapath is completely different. ath11k
->> supports multiple MACs, called "soc" in the firmware interface. And
->> there's only one WMI interface to support.
->>
->> Currently ath11k supports only IEEE 802.11ac mode, but patches for
->> 802.11ax are available and they will be submitted after ath11k is
->> accepted to upstream.
->>
->> The firmware images are available from ath11k-firmware repository but
->> they will be also submitted to linux-firmware:
->>
->> https://github.com/kvalo/ath11k-firmware
->
-> I also added to the commit log the version which was used in testing:
->
-> WLAN.HK.2.1.0.1-00629-QCAHKSWPL_SILICONZ-1
->
->> --------------[cut]-------------------[cut]-----------------
->>
->> I have split the driver into multiple patches for easier review, but
->> the final version will be split into three commits:
->>
->> 1. adding Documentatio/devicetree/bindings/net/wireless/qcom,ath11k.yaml
->>
->> 2. adding drivers/net/wireless/ath/ath11k/ with the commit log being the
->>    text before the cut line above.
->>
->> 3. adding ath11k entry to MAINTAINERS file
->>
->> This version is based on commit ad10d2ff619f0797cb102b2ff488429d3f8e4a8a
->> from ath11k-bringup branch on my ath.git tree:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/log/?h=ath11k-bringup
->>
->> This patchset applies to wireless-drivers-next but needs
->> CONFIG_COMPILE_TEST, CONFIG_REMOTEPROC AND CONFIG_QCOM_QMI_HELPERS to
->> be able to compile on x86.
->>
->> Please review and comment.
->
-> I have now prepared the three commits and they are in the pending
-> branch for build testing:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=20bddf19da715842fe24c8e9990ae1b75825c747
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=461a5c86cfa562bd3c4a8f6bec9a54c406540e87
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=8710785df81b8b57e62a71e9048c111a7db98005
->
-> In the next few days I'll apply these to ath-next branch and queue for v5.6.
+This patch adds linux device tree entry related to
+Yosemite V2 specific devices connected to BMC SoC.
 
-Manually applied to ath-next branch of my ath.git tree:
+Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+---
+ .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 151 +++++++++++++++++++++
+ 1 file changed, 151 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
 
-dae0978d4174 dt: bindings: net: add qcom,ath11k.yaml
-d5c65159f289 ath11k: driver for Qualcomm IEEE 802.11ax devices
-02fdd85da2ce MAINTAINERS: add ath11k
-
-Thanks everyone!
-
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+new file mode 100644
+index 0000000..09bffcd
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+@@ -0,0 +1,151 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright (c) 2018 Facebook Inc.
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "Facebook Yosemitev2 BMC";
++	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
++	aliases {
++		serial4 = &uart5;
++	};
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++	};
++
++	iio-hwmon {
++		// VOLATAGE SENSOR
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
++		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
++		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
++		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1_default>;
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "pnor";
++	};
++};
++
++&uart5 {
++	// BMC Console
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	use-ncsi;
++};
++
++&adc {
++	status = "okay";
++        pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default
++			&pinctrl_adc1_default
++			&pinctrl_adc2_default
++			&pinctrl_adc3_default
++			&pinctrl_adc4_default
++			&pinctrl_adc5_default
++			&pinctrl_adc6_default
++			&pinctrl_adc7_default
++			&pinctrl_adc8_default
++			&pinctrl_adc9_default
++			&pinctrl_adc10_default
++			&pinctrl_adc11_default
++			&pinctrl_adc12_default
++			&pinctrl_adc13_default
++			&pinctrl_adc14_default
++			&pinctrl_adc15_default>;
++};
++
++&i2c8 {
++	status = "okay";
++	//FRU EEPROM
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++		pagesize = <32>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++	tmp421@4e {
++	//INLET TEMP
++		compatible = "ti,tmp421";
++		reg = <0x4e>;
++	};
++	//OUTLET TEMP
++	tmp421@4f {
++		compatible = "ti,tmp421";
++		reg = <0x4f>;
++	};
++};
++
++&i2c10 {
++	status = "okay";
++	//HSC
++	adm1278@40 {
++		compatible = "adi,adm1278";
++		reg = <0x40>;
++	};
++};
++
++&i2c11 {
++	status = "okay";
++	//MEZZ_TEMP_SENSOR
++	tmp421@1f {
++		compatible = "ti,tmp421";
++		reg = <0x1f>;
++	};
++};
++
++&i2c12 {
++	status = "okay";
++	//MEZZ_FRU
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++		pagesize = <32>;
++	};
++};
++
++&pwm_tacho {
++	status = "okay";
++	//FSC
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++	fan@1 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
++	};
++};
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.7.4
+
