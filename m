@@ -2,426 +2,216 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E484C432C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 21:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE03C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 22:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C8D20727
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 21:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A536820706
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 22:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L/8ePBkL"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Euc8qOQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbfKYVXC (ORCPT
+        id S1725938AbfKYWCx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 16:23:02 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42700 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfKYVXC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 16:23:02 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q17so7810799pgt.9
-        for <devicetree@vger.kernel.org>; Mon, 25 Nov 2019 13:23:01 -0800 (PST)
+        Mon, 25 Nov 2019 17:02:53 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33726 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfKYWCx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 17:02:53 -0500
+Received: by mail-oi1-f195.google.com with SMTP id x21so7575838oic.0;
+        Mon, 25 Nov 2019 14:02:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MRWbzEgUDmf3m7DHTyD54EPb8B/zhp4opLc7il/4TZ0=;
-        b=L/8ePBkLez3+K02qqWuXHzwk2aoe/X/csJkxSiZ9yqGB073CgKBSnV0NCVAddtYhRA
-         Y50OFSl9bR9JRWyHZuQ1HQPQA5jaboTM+KdNzZs9oomThyM9ZFXL+OdGojGpwRRH3QX8
-         JaNM1Su0TjHE/31LckH9YGeeTpbN5P60ANE+3XINq9ZxfnEkVW9X8XIGxd0FgM+VgxLH
-         a3VDqpQMsloYUsXPX2Kj1nqH7EWHFPfJUE4a8sHJRQ8xGN0pV2DSaW/AfcODj7iLAlBm
-         lh7bXb6bZUXcsbi7IiO6LIYM3FHbf8pZNAzFDfW90SYsAvLrviPYQgU8A2fRdybWGgBT
-         Q2Dw==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lzw1koOlG6AU/5fLlo3Vm5FYX8EGSzhUjEGJB0YbmZI=;
+        b=Euc8qOQryfLxQGHFEmQspkPxC5+krVH0fJqiVlzF/VBEUJZ77CwlRrhVWol+93ELp+
+         3tXRgpl+gI9iHklzMUyyAKdGwZPbninkagQyjKK2c9FJeers6WbSTLt/E9vL00IZ/JOD
+         b9no+vQduOZ7CoAvlRR22JSGsNietL09Npvy9t5NfxiEFXe9MVXuFekcqXoGSmpsYbrN
+         RHa+Nl3eqAZsQriZ/q8HkHkGHj86A/zF4eEXlq+RYAkJJrYUApHE34RXkJjXf7OLizyw
+         CBWb4Ds9a93pNbBtfTADm9RGWhynlJId5mBtvvksMTDa/axGG8rAAvyTT9uu4Gh+Ozw1
+         PIbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MRWbzEgUDmf3m7DHTyD54EPb8B/zhp4opLc7il/4TZ0=;
-        b=EK0xAG9qMBGSPikwZNiGuCSykbCde3wuKqpDoJnLUrjGzXSZg/ECnZZGELIDWmvugJ
-         fAM0ZBepqRH4505K6odAOBtCfKB5we0vVUHUM9ZjAf5HImjuxMRpnB2vSm3EH1qJDsAC
-         vRF3hGZT1aTSFOfAcnD0UFo8KiCnoersPgUrWzPKtWhMONnXmzNY78sMUWzEnGOmOvV4
-         SqHdacLYSwOpieI8WSjeUruzR+e8lmqONB4zwTfJyrt1ygm6osKFmlDebwMXwq+8oWT3
-         IfYaJiSh0prEmz/H806aYeiA38Hh4q9dgi6dHXyGhs+glD8szWtX1IXOnHfiwHfJmgaH
-         ISew==
-X-Gm-Message-State: APjAAAWIE9tLcIXXthxP5zd6FabsgAkZV2cAHz1IesLzde8lag3roVhV
-        KDgz9w52TKt2S1RUOzM8dj5fTQ==
-X-Google-Smtp-Source: APXvYqzXRkrduILON+fC++84B2cdz7oCejyphDRUULYpI5GMxiVkhrcykpwAmPM/u71w01QGoLxnDQ==
-X-Received: by 2002:a63:354e:: with SMTP id c75mr35774576pga.325.1574716980757;
-        Mon, 25 Nov 2019 13:23:00 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id d139sm10304228pfd.162.2019.11.25.13.22.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Nov 2019 13:23:00 -0800 (PST)
-Date:   Mon, 25 Nov 2019 14:22:58 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        suzuki.poulose@arm.com
-Subject: Re: [PATCH v5 07/14] coresight: cti: Add device tree support for
- custom CTI.
-Message-ID: <20191125212258.GB18542@xps15>
-References: <20191119231912.12768-1-mike.leach@linaro.org>
- <20191119231912.12768-8-mike.leach@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lzw1koOlG6AU/5fLlo3Vm5FYX8EGSzhUjEGJB0YbmZI=;
+        b=hnI0c11fe4rzSaa8GN7jQGnED5YHXhkGc6EopXNEG5fqB4k7mNt88a5XtyvvAiHHKM
+         qyfFuxzuxCuLYJEIAAYY87FPt6e7Bhsx9hR4rX5xUil0k5ITZBltIBeuvdz9JeqwyJZJ
+         4SPyRdNnzxJyWrstLyRWozJrI/+PCTSaYKBpdMGXR38sJNbXoUCY8Vmdpuht9m9CjD+D
+         f1esUzyUl0ayboimXwZv7cJVC+taiSitWEmY+WdQkbYGkk1XqzawH+2Ju+Jh2KC45Ies
+         M17E0Ui9OXcK32+ewyojgqIDbYDDfMNInzQ/W3dS4WcoMaWvArklhnQu4GTI7/Isshsd
+         fBSw==
+X-Gm-Message-State: APjAAAVXs12dWS3pfx8LA4BNivCJjDA1r+nNHRnSfpHti7253LhTrBjN
+        NGvNej2W47nCYDHF/BHb03vOZs56HNCIigiCKZA=
+X-Google-Smtp-Source: APXvYqz2+uidMUMLdNPqKNBo+rgLlQc8P1ma/5QS/iXoES2Nu/oybeV80n0xcKuG+JaAuSMC59DQ4pufmrhKpQozzCc=
+X-Received: by 2002:aca:110f:: with SMTP id 15mr911822oir.47.1574719371254;
+ Mon, 25 Nov 2019 14:02:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119231912.12768-8-mike.leach@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com>
+ <CAFBinCDA=ZekRC0hgQnPLRZM3LMnqBZ6TWCvXhyixAmgDyTAsw@mail.gmail.com> <5c0029ec-7377-4c1a-0062-3b59a87f8dea@amlogic.com>
+In-Reply-To: <5c0029ec-7377-4c1a-0062-3b59a87f8dea@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 25 Nov 2019 23:02:40 +0100
+Message-ID: <CAFBinCBypbB4W42GOAc8ejAYHVQLTDRdat_z_L92TZvC2p+5rQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] arm64: meson: Add support for USB on Amlogic A1
+To:     Hanjie Lin <hanjie.lin@amlogic.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 11:19:05PM +0000, Mike Leach wrote:
-> Adds support for CTIs whose connections are implementation defined at
-> hardware design time, and not constrained by v8 architecture.
-> 
-> These CTIs have no standard connection setup, all the settings have to
-> be defined in the device tree files. The patch creates a set of connections
-> and trigger signals based on the information provided.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> ---
->  .../coresight/coresight-cti-platform.c        | 250 +++++++++++++++++-
->  .../hwtracing/coresight/coresight-cti-sysfs.c |  11 +
->  2 files changed, 257 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
-> index 790dd30b85f5..9c1ff432b487 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
-> @@ -13,9 +13,19 @@
->  #define NR_V8PE_OUT_SIGS	3
->  #define NR_V8ETM_INOUT_SIGS	4
->  
-> +/* CTI device tree trigger connection node keyword */
-> +#define CTI_DT_CONNS		"trig-conns"
-> +
->  /* CTI device tree connection property keywords */
->  #define CTI_DT_V8ARCH		"arm,cti-v8-arch"
->  #define CTI_DT_CSDEV_ASSOC	"arm,cs-dev-assoc"
-> +#define CTI_DT_TRIGIN_SIGS	"arm,trig-in-sigs"
-> +#define CTI_DT_TRIGOUT_SIGS	"arm,trig-out-sigs"
-> +#define CTI_DT_TRIGIN_TYPES	"arm,trig-in-types"
-> +#define CTI_DT_TRIGOUT_TYPES	"arm,trig-out-types"
-> +#define CTI_DT_FILTER_OUT_SIGS	"arm,trig-filters"
-> +#define CTI_DT_CONN_NAME	"arm,trig-conn-name"
-> +#define CTI_DT_CTM_ID		"arm,cti-ctm-id"
->  
->  /*
->   * Find a registered coresight device from a device fwnode.
-> @@ -68,6 +78,12 @@ static const char *of_cti_get_node_name(const struct device_node *node)
->  		return node->full_name;
->  	return "unknown";
->  }
-> +
-> +static bool of_cti_node_name_eq(const struct device_node *node,
-> +				const char *name)
-> +{
-> +	return of_node_name_eq(node, name);
-> +}
->  #else
->  static int of_cti_get_cpu_at_node(const struct device_node *node)
->  {
-> @@ -78,6 +94,12 @@ static const char *of_cti_get_node_name(const struct device_node *node)
->  {
->  	return "unknown";
->  }
-> +
-> +static bool of_cti_node_name_eq(const struct device_node *node,
-> +				const char *name)
-> +{
-> +	return false;
-> +}
->  #endif
->  
->  static int cti_plat_get_cpu_at_node(struct fwnode_handle *fwnode)
-> @@ -94,6 +116,14 @@ static const char *cti_plat_get_node_name(struct fwnode_handle *fwnode)
->  	return "unknown";
->  }
->  
-> +static bool cti_plat_node_name_eq(struct fwnode_handle *fwnode,
-> +				  const char *name)
-> +{
-> +	if (is_of_node(fwnode))
-> +		return of_cti_node_name_eq(to_of_node(fwnode), name);
-> +	return false;
-> +}
-> +
->  static int cti_plat_create_v8_etm_connection(struct device *dev,
->  					     struct cti_drvdata *drvdata)
->  {
-> @@ -205,6 +235,214 @@ static int cti_plat_create_v8_connections(struct device *dev,
->  	return ret;
->  }
->  
-> +static int cti_plat_count_sig_elements(const struct fwnode_handle *fwnode,
-> +				       const char *name)
-> +{
-> +	int nr_elem = fwnode_property_count_u32(fwnode, name);
-> +
-> +	return (nr_elem < 0 ? 0 : nr_elem);
-> +}
-> +
-> +static int cti_plat_read_trig_group(struct cti_trig_grp *tgrp,
-> +				    const struct fwnode_handle *fwnode,
-> +				    const char *grp_name)
-> +{
-> +	int idx, err = 0;
-> +	u32 *values;
-> +
-> +	if (!tgrp->nr_sigs)
-> +		return 0;
-> +
-> +	values = kcalloc(tgrp->nr_sigs, sizeof(u32), GFP_KERNEL);
-> +	if (!values)
-> +		return -ENOMEM;
-> +
-> +	err = fwnode_property_read_u32_array(fwnode, grp_name,
-> +					     values, tgrp->nr_sigs);
-> +
-> +	if (!err) {
-> +		/* set the signal usage mask */
-> +		for (idx = 0; idx < tgrp->nr_sigs; idx++)
-> +			tgrp->used_mask |= BIT(values[idx]);
-> +	}
-> +
-> +	kfree(values);
-> +	return err;
-> +}
-> +
-> +static int cti_plat_read_trig_types(struct cti_trig_grp *tgrp,
-> +				    const struct fwnode_handle *fwnode,
-> +				    const char *type_name)
-> +{
-> +	int items, used = 0, err = 0, nr_sigs;
-> +	u32 *values = NULL, i;
-> +
-> +	/* allocate an array according to number of signals in connection */
-> +	nr_sigs = tgrp->nr_sigs;
-> +	if (!nr_sigs)
-> +		return 0;
-> +
-> +	/* see if any types have been included in the device description */
-> +	items = cti_plat_count_sig_elements(fwnode, type_name);
-> +	if (items > nr_sigs)
-> +		return -EINVAL;
-> +
-> +	/* need an array to store the values iff there are any */
-> +	if (items) {
-> +		values = kcalloc(items, sizeof(u32), GFP_KERNEL);
-> +		if (!values)
-> +			return -ENOMEM;
-> +
-> +		err = fwnode_property_read_u32_array(fwnode, type_name,
-> +						     values, items);
-> +		if (err)
-> +			goto read_trig_types_out;
-> +	}
-> +
-> +	/*
-> +	 * Match type id to signal index, 1st type to 1st index etc.
-> +	 * If fewer types than signals default remainder to GEN_IO.
-> +	 */
-> +	for (i = 0; i < nr_sigs; i++) {
-> +		if (used < items) {
-> +			tgrp->sig_types[i] =
-> +				values[i] < CTI_TRIG_MAX ? values[i] : GEN_IO;
-> +			used++;
-> +		} else {
-> +			tgrp->sig_types[i] = GEN_IO;
-> +		}
-> +	}
-> +
-> +read_trig_types_out:
-> +	kfree(values);
-> +	return err;
-> +}
-> +
-> +static int cti_plat_process_filter_sigs(struct cti_drvdata *drvdata,
-> +					const struct fwnode_handle *fwnode)
-> +{
-> +	struct cti_trig_grp *tg = NULL;
-> +	int err = 0, nr_filter_sigs;
-> +
-> +	nr_filter_sigs = cti_plat_count_sig_elements(fwnode,
-> +						     CTI_DT_FILTER_OUT_SIGS);
-> +	if (nr_filter_sigs == 0)
-> +		return 0;
-> +
-> +	if (nr_filter_sigs > drvdata->config.nr_trig_max)
-> +		return -EINVAL;
-> +
-> +	tg = kzalloc(sizeof(*tg), GFP_KERNEL);
-> +	if (!tg)
-> +		return -ENOMEM;
-> +
-> +	err = cti_plat_read_trig_group(tg, fwnode, CTI_DT_FILTER_OUT_SIGS);
-> +	if (!err)
-> +		drvdata->config.trig_out_filter |= tg->used_mask;
-> +
-> +	kfree(tg);
-> +	return err;
-> +}
-> +
-> +static int cti_plat_create_connection(struct device *dev,
-> +				      struct cti_drvdata *drvdata,
-> +				      struct fwnode_handle *fwnode)
-> +{
-> +	struct cti_trig_con *tc = NULL;
-> +	int cpuid = -1, err = 0;
-> +	struct fwnode_handle *cs_fwnode = NULL;
-> +	struct coresight_device *csdev = NULL;
-> +	const char *assoc_name = "unknown";
-> +	char cpu_name_str[16];
-> +	int nr_sigs_in, nr_sigs_out;
-> +
-> +	/* look to see how many in and out signals we have */
-> +	nr_sigs_in = cti_plat_count_sig_elements(fwnode, CTI_DT_TRIGIN_SIGS);
-> +	nr_sigs_out = cti_plat_count_sig_elements(fwnode, CTI_DT_TRIGOUT_SIGS);
-> +
-> +	if ((nr_sigs_in > drvdata->config.nr_trig_max) ||
-> +	    (nr_sigs_out > drvdata->config.nr_trig_max))
-> +		return -EINVAL;
-> +
-> +	tc = cti_allocate_trig_con(dev, nr_sigs_in, nr_sigs_out);
-> +	if (!tc)
-> +		return -ENOMEM;
-> +
-> +	/* look for the signals properties. */
-> +	err = cti_plat_read_trig_group(tc->con_in, fwnode,
-> +				       CTI_DT_TRIGIN_SIGS);
-> +	if (err)
-> +		goto create_con_err;
-> +
-> +	err = cti_plat_read_trig_types(tc->con_in, fwnode,
-> +				       CTI_DT_TRIGIN_TYPES);
-> +	if (err)
-> +		goto create_con_err;
-> +
-> +	err = cti_plat_read_trig_group(tc->con_out, fwnode,
-> +				       CTI_DT_TRIGOUT_SIGS);
-> +	if (err)
-> +		goto create_con_err;
-> +
-> +	err = cti_plat_read_trig_types(tc->con_out, fwnode,
-> +				       CTI_DT_TRIGOUT_TYPES);
-> +	if (err)
-> +		goto create_con_err;
-> +
-> +	err = cti_plat_process_filter_sigs(drvdata, fwnode);
-> +	if (err)
-> +		goto create_con_err;
-> +
-> +	/* read the connection name if set - may be overridden by later */
-> +	fwnode_property_read_string(fwnode, CTI_DT_CONN_NAME, &assoc_name);
-> +
-> +	/* associated cpu ? */
-> +	cpuid = cti_plat_get_cpu_at_node(fwnode);
-> +	if (cpuid >= 0) {
-> +		drvdata->ctidev.cpu = cpuid;
-> +		scnprintf(cpu_name_str, sizeof(cpu_name_str), "cpu%d", cpuid);
-> +		assoc_name = cpu_name_str;
-> +	} else {
-> +		/* associated device ? */
-> +		cs_fwnode = fwnode_find_reference(fwnode,
-> +						  CTI_DT_CSDEV_ASSOC, 0);
-> +		if (!IS_ERR_OR_NULL(cs_fwnode)) {
-> +			csdev = cti_get_assoc_csdev_by_fwnode(cs_fwnode);
-> +			if (csdev) /* use device name if csdev found */
-> +				assoc_name = dev_name(&csdev->dev);
-> +			else  /* otherwise node name for later association */
-> +				assoc_name = cti_plat_get_node_name(cs_fwnode);
-> +			fwnode_handle_put(cs_fwnode);
-> +		}
-> +	}
-> +	/* set up a connection */
-> +	err = cti_add_connection_entry(dev, drvdata, tc, csdev, assoc_name);
-> +
-> +create_con_err:
-> +	return err;
-> +}
-> +
-> +static int cti_plat_create_impdef_connections(struct device *dev,
-> +					      struct cti_drvdata *drvdata)
-> +{
-> +	int rc = 0;
-> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> +	struct fwnode_handle *child = NULL;
-> +
-> +	if (IS_ERR_OR_NULL(fwnode))
-> +		return -EINVAL;
-> +
-> +	fwnode_for_each_child_node(fwnode, child) {
-> +		if (cti_plat_node_name_eq(child, CTI_DT_CONNS))
-> +			rc = cti_plat_create_connection(dev, drvdata, child);
-> +		if (rc != 0)
-> +			break;
-> +	}
-> +	fwnode_handle_put(child);
+Hi Hanjie,
 
-As far as I can tell we don't need to call fwnode_handle_put()?
+On Mon, Nov 25, 2019 at 8:53 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+>
+>
+>
+> On 2019/11/22 15:52, Martin Blumenstingl wrote:
+> > Hello Hanjie,
+> >
+> > On Fri, Nov 22, 2019 at 7:55 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+> > [...]
+> >>   dt-bindings: phy: Add Amlogic G12A USB2 PHY Bindings
+> >>   dt-bindings: usb: dwc3: Add the Amlogic A1 Family DWC3 Glue Bindings
+> >>   phy: amlogic: Add Amlogic A1 USB2 PHY Driver
+> > drivers/phy/amlogic/phy-meson-g12a-usb2.c seems very similar to the A1
+> > USB2 PHY you are introducing here.
+> >
+> >>   usb: dwc3: Add Amlogic A1 DWC3 glue
+> > drivers/usb/dwc3/dwc3-meson-g12a.c is also very similar to the dwc3 glue.
+> >
+> > I have two questions:
+> > - how is the PHY and the dwc3 glue different from G12A (or SM1)?
+> > - why do we need a separate set of new drivers (instead of updating
+> > the existing drivers)?
+> >
+> > We try to use one driver for the same IP block, even if there are
+> > several revisions with small differences (for example the SAR ADC
+> > driver supports all SoC generations from Meson8 to G12A/G12B/SM1,
+> > because 80-90% of the code is shared across all revisions).
+> >
+> >
+> > Martin
+> >
+> > .
+> >
+>
+> Hi Martin,
+>
+> thanks for the comment.
+>
+> 1, G12A have usb2-phy0/usb2-phy1/usb3-phy0 three phys and an interrupt to support host/peripheral/otg modes.
+>    A1 has one usb2-phy0 phy and only support host mode.
+dwc3-meson-g12a treats PHYs as optional
+so if you only pass "usb2-phy0" and skip usb2-phy1/usb3-phy0 then it
+will still work fine
+(I didn't check whether the binding also reflects this)
 
-With the above:
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> 2, G12A glue/phy drivers are for G12A SoCs, there are some diffrences to A1.
+>    G12A glue driver have dr_mode and interrupts two attributes to support otg mode while A1 hasn't this requirement.
+dwc3-meson-g12a ignores the interrupt for HOST-only mode
+(I didn't check whether the IRQ is optional in the dt-binding)
 
-> +
-> +	return rc;
-> +}
-> +
->  /* get the hardware configuration & connection data. */
->  int cti_plat_get_hw_data(struct device *dev,
->  			 struct cti_drvdata *drvdata)
-> @@ -212,12 +450,16 @@ int cti_plat_get_hw_data(struct device *dev,
->  	int rc = 0;
->  	struct cti_device *cti_dev = &drvdata->ctidev;
->  
-> +	/* get any CTM ID - defaults to 0 */
-> +	device_property_read_u32(dev, CTI_DT_CTM_ID, &cti_dev->ctm_id);
-> +
->  	/* check for a v8 architectural CTI device */
-> -	if (device_property_read_bool(dev, CTI_DT_V8ARCH)) {
-> +	if (device_property_read_bool(dev, CTI_DT_V8ARCH))
->  		rc = cti_plat_create_v8_connections(dev, drvdata);
-> -		if (rc)
-> -			return rc;
-> -	}
-> +	else
-> +		rc = cti_plat_create_impdef_connections(dev, drvdata);
-> +	if (rc)
-> +		return rc;
->  
->  	/* if no connections, just add a single default based on max IN-OUT */
->  	if (cti_dev->nr_trig_con == 0)
-> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> index 98de8a4768fc..f800402f73da 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> @@ -56,9 +56,20 @@ static ssize_t enable_store(struct device *dev,
->  }
->  static DEVICE_ATTR_RW(enable);
->  
-> +static ssize_t ctmid_show(struct device *dev,
-> +			  struct device_attribute *attr,
-> +			  char *buf)
-> +{
-> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%d\n", drvdata->ctidev.ctm_id);
-> +}
-> +static DEVICE_ATTR_RO(ctmid);
-> +
->  /* attribute and group sysfs tables. */
->  static struct attribute *coresight_cti_attrs[] = {
->  	&dev_attr_enable.attr,
-> +	&dev_attr_ctmid.attr,
->  	NULL,
->  };
->  
-> -- 
-> 2.17.1
-> 
+>    G12A glue driver has a hard coding vbus regulator code to support otg mode while A1 hasn't this requirement.
+my understanding is that whether a board has a VBUS regulator depends
+on the board design. it has nothing to do with the SoC itself
+
+>    G12A glue driver has a hard coding support phys while A1 only supports host mode.
+>         enum {
+>                 USB2_HOST_PHY = 0,
+>                 USB2_OTG_PHY,
+>                 USB3_HOST_PHY,
+>                 PHY_COUNT,
+>                 };
+this goes together with comment #1 - you can skip USB2_OTG_PHY and
+USB3_HOST_PHY and the driver should still work fine
+
+>    G12A glue driver only supports one clock while A1 needs four clocks.
+indeed, the dwc3-meson-g12a needs to be updated to support this
+I don't think that I have used it myself yet but there's the
+clk_bulk_data framework
+it seems to fit this use-case pretty well: define an arbitrary number
+of clocks for G12A/B an another set of clocks for A1 - then use the
+clk_bulk_data framework to enable/disable them all at once
+
+>    G12A and A1 phy drivers have different register configurations since hardware differences.
+other drivers have similar requirements: (mostly) identical register
+layout but different values per SoC
+here are two examples (I'm not sure if they are good examples though):
+Lantiq/Intel SoC [0] and Allwinner SoCs [1]
+
+I compared your driver with phy-meson-g12a-usb2 and only found four differences:
+1) PHY_CTRL_R18_MPLL_DCO_CLK_SEL is set for A1
+2) PHY_CTRL_R13_UPDATE_PMA_SIGNALS is not set for A1
+3) PHY_CTRL_R21 is updated twice for A1 (once for earlier gen SoCs)
+4) A1 doesn't reference the "xtal" clock
+
+Difference 4) seems to be a general problem because there seems to be
+a PLL inside the PHY registers and that PLL must be fed by some input
+clock
+So I believe that there is some clock input (which is currently
+missing from your A1 USB2 PHY driver)
+
+> 3, We have estimated these differences and we thought it's more clear and readable to have a dedicated glue/phy
+>    driver for A1 SoCs, so also dedicated dt-bindings.
+I think we should separate the driver and dt-bindings
+
+Based on what I have seen so far my preference for the PHY is:
+- use the existing dt-binding, because it seems to be the same IP
+block with different register configuration
+- use the existing driver because there are only three different
+register values (to me it feels like a dedicated driver for these
+means more overhead for little benefit)
+
+for the glue I think:
+- extend the existing dt-bindings and make some of the PHYs and the
+interrupt line optional. making the PHYs optional will be needed when
+adding GXL/GXM/AXG support anyways
+- use the existing driver and make the clock inputs depend on the SoC
+- everything else should already work as is
+
+please let me know if I missed something:
+comparing/reviewing the new and existing drivers is harder than just
+copying the existing one and modifying that copy
+(this is one of the reasons why I think that duplicating code makes
+the drivers harder to maintain)
+
+I also thought about the negative consequences of extending the
+existing driver(s).
+modifying the existing code could break the driver for existing boards.
+however, I think that is not a problem because BayLibre's Kernel CI
+labs have good coverage for G12A, G12B and SM1.
+so if you add some A1 boards there (or host your own lab with A1
+boards) any breakage will be found early (the Kernel CI bot even does
+git bisect and sends emails)
+
+
+Martin
+
+
+[0] https://github.com/torvalds/linux/blob/d2912cb15bdda8ba4a5dd73396ad62641af2f520/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c#L47
+[1] https://github.com/torvalds/linux/blob/c942fddf8793b2013be8c901b47d0a8dc02bf99f/drivers/phy/allwinner/phy-sun4i-usb.c#L862
