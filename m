@@ -2,84 +2,114 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CFAC432C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA97C432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F69C2082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:40:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pDiykXcQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3EC0A20866
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 15:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbfKYPkq (ORCPT
+        id S1728555AbfKYPq1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 10:40:46 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33159 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728525AbfKYPkp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 10:40:45 -0500
-Received: by mail-lf1-f68.google.com with SMTP id d6so11416667lfc.0
-        for <devicetree@vger.kernel.org>; Mon, 25 Nov 2019 07:40:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G0fv0VfL01xMdWSP2VZWnjiUfIRToWX/SHHYSb7AWDE=;
-        b=pDiykXcQZnwwnjSM8z/UXXc2cWhQ80Y2WQKFkZ2nQVOg48dSX/ZW1msmjEqM2jY4Tt
-         zolSUv0OMlPQe2xaDG4hdM92VycEb3YcTAz65YvJpy71C4AFoB26Vzw/BcsdWawHgtlh
-         CnJoTT2GzlWnWFjc0xhPUGjuzFV24NUjw890zTWHXAd02KYWRg9OYCzTRwQXpHO85SeI
-         mvkS4PeJi8h3r4qdNkU0qwB+DwY6swy3C6KBuDsB8gsvyjDVQSDsvks0Pbeqy7+FQOER
-         +130a6Vpi9juXS9ZRp+eOUApSsICBJDnNnVVdps5djaZp9pFdkY6nHDrvi7wWf2g93eZ
-         CX5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G0fv0VfL01xMdWSP2VZWnjiUfIRToWX/SHHYSb7AWDE=;
-        b=j14wwX0oUiKqUl8WxM7/qqnGPc/Hl81wzjr457M4gLKRRi2a6NTqdjvfdO65F69Ry/
-         fj+riNl4HttHPHcBlbufIXH6zzDPrqiy/aw+vXy9QSOxz0TFZrLxqhLewvPzPXhyKea1
-         EQTFkPDyoihY5g+TgvPoBbqJPQ7TflIReRwoljzc2jFkN5k+NA3urKFDSyOGOOlJo0qg
-         Y2ZXnAbDCyKS/les6UB2Gigicwg1PjE03GZpXv8t5jnHjJfiA+l1OYJx6vEuDIyuo7wP
-         GFpKK9Lb7BXH+4Gz39Gw4aNntVQeo5m5ah+KSNj5Gw9/7Cg4DaNEHrtMUwM49fBqeblA
-         wBsQ==
-X-Gm-Message-State: APjAAAV3NfyIR0d4R262j52k4Q6QUXsmxjLqQu7PJhjS0oj39zo7mZjl
-        sKnVKOxemDjnDPqDk2JABGD6UZwmtG13i2JPVZCPyg==
-X-Google-Smtp-Source: APXvYqw91BdlGKEVy4ulicoxULZj24A25+7eXLx3jO76pVaXCfRubRgu+6uPho+861OVfUhMFk+EELc9kObLcEvMftE=
-X-Received: by 2002:a19:f701:: with SMTP id z1mr15851906lfe.133.1574696442163;
- Mon, 25 Nov 2019 07:40:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20191125122256.53482-1-stephan@gerhold.net> <20191125122256.53482-4-stephan@gerhold.net>
-In-Reply-To: <20191125122256.53482-4-stephan@gerhold.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 Nov 2019 16:40:29 +0100
-Message-ID: <CACRpkdZ9=sZQ0+QxkKx-0GAAU0ot_nRgqgK4_wk3vGp9v+9DjQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] ARM: dts: ux500: Add pin configs for UART1 CTS/RTS pins
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 25 Nov 2019 10:46:27 -0500
+Received: from muru.com ([72.249.23.125]:43484 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728554AbfKYPq1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Nov 2019 10:46:27 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 3A89A80EA;
+        Mon, 25 Nov 2019 15:47:02 +0000 (UTC)
+Date:   Mon, 25 Nov 2019 07:46:21 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org, Paul Boddie <paul@boddie.org.uk>
+Subject: Re: [PATCH v3 8/8] MIPS: DTS: jz4780: add sgx gpu node
+Message-ID: <20191125154621.GY35479@atomide.com>
+References: <cover.1574595627.git.hns@goldelico.com>
+ <c73e2cee4f818654f264b0b7b5458bfaa0ac6a7a.1574595627.git.hns@goldelico.com>
+ <1574600246.3.0@crapouillou.net>
+ <20191124174837.GX35479@atomide.com>
+ <FA810F13-BF2A-4849-9BAA-01FA2F768976@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <FA810F13-BF2A-4849-9BAA-01FA2F768976@goldelico.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 1:26 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+* H. Nikolaus Schaller <hns@goldelico.com> [191124 18:00]:
+> Hi Paul, Tony,
+> 
+> > Am 24.11.2019 um 18:48 schrieb Tony Lindgren <tony@atomide.com>:
+> > 
+> > * Paul Cercueil <paul@crapouillou.net> [191124 12:58]:
+> >> Le dim., nov. 24, 2019 at 12:40, H. Nikolaus Schaller <hns@goldelico.com> a
+> >> écrit :
+> >>> and add interrupt and clocks.
+> > ...
+> >>> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> >>> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> >>> @@ -46,6 +46,17 @@
+> >>> 		#clock-cells = <1>;
+> >>> 	};
+> >>> 
+> >>> +	gpu: gpu@13040000 {
+> >> 
+> >> We try to keep the nodes ordered by address, could you move this node where
+> >> it belongs?
+> > ...
+> 
+> Yes, I have noted.
+> 
+> > 
+> >>> +		compatible = "ingenic,jz4780-sgx540-120", "img,sgx540-120",
+> >>> "img,sgx540", "img,sgx5";
+> >>> +		reg = <0x13040000 0x4000>;
+> >>> +
+> >>> +		clocks = <&cgu JZ4780_CLK_GPU>;
+> >>> +		clock-names = "gpu";
+> > 
+> > Just checking.. Is there something else to configure here
+> > potentially in addition to the clocks?
+> 
+> It doesn't look so. Unfortuantely there isn't much information
+> except a v3.18 kernel supported by the vendor and that one also
+> just has a gpu node with clock control.
+> 
+> > That is, do we need to do some interconnect specific
+> > configuration etc in addition to the clocks to have
+> > runtime PM work for enabling and disabling sgx on
+> > jz4780?
+> 
+> I think we have to leave that open for further study.
 
-> UART1 an be optionally used with additional CTS/RTS pins.
-> The pinctrl driver has an extra "u1ctsrts_a_1" pin group for them.
->
-> Add a new pin configuration to configure them correctly if needed.
->
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+OK for now, let's assume we just need to call
+clk_enable/disable from the PM runtime functions if a
+clock exists.
 
-Patch applied for v5.6 fixing up a spelling mistake in the process.
+Regards,
 
-Yours,
-Linus Walleij
+Tony
