@@ -2,98 +2,192 @@ Return-Path: <SRS0=aDgx=ZR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA64C43215
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 10:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC7FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 11:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F7E2082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 10:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3CC2068E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 25 Nov 2019 11:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfKYKay (ORCPT
+        id S1727316AbfKYLAI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 05:30:54 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35233 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfKYKay (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 05:30:54 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a69so5409208oib.2;
-        Mon, 25 Nov 2019 02:30:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NZhTG7JrTxVrl8HklVVpBm1b8hN58Dtj6eIptpC87Go=;
-        b=HK8VmpICBCFTgyKdBIf2CTJENZzTwGR1efsd3wkhpGEFehYKV/U8888WbYMPG4X/Uk
-         Tv2oO9NZS+cHdC75FcgtOzBzmtFbQ5eVIDZ9FB6ICFjixvl49SMzNKpLlY+n87iJbBjN
-         zYeEZDKtHT0sYk/eJQE+Yd8kGCSKep/5EiZYNJxPWnZMUP1OGJvW66+Vj30OLjrVCBYM
-         RPXYTWn7PV+7vyYhk7iFvE8baRGnYLMObIOPii4kvQZS/9NqKZXsrJXPothSk29U4yuz
-         EeQpAlZGTmshiUX7Rye6Lw9SvvmeAhBY5cY0xLqExHC8wzf3x/yB8reXJN3w3sJyErOG
-         2/1A==
-X-Gm-Message-State: APjAAAWcRzDcRV7uK7M4WktqA495Kx67NB/L1wbvOuz3P4P4gdFGRc+1
-        cEQueu4aNZatpkCi6HgGu7eQgGdbrNHXQojMu2s=
-X-Google-Smtp-Source: APXvYqzahB4IkEd3hY2YMl05tu9CqbTgIRb3JP+J1EsSDdVtzfDIq4iFyngv7ATmScbyCG2vev3Xaugc7OMo6N6vdHE=
-X-Received: by 2002:a05:6808:b17:: with SMTP id s23mr22937725oij.102.1574677852994;
- Mon, 25 Nov 2019 02:30:52 -0800 (PST)
+        Mon, 25 Nov 2019 06:00:08 -0500
+Received: from mail-eopbgr800085.outbound.protection.outlook.com ([40.107.80.85]:10193
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727278AbfKYLAI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Nov 2019 06:00:08 -0500
+Received: from DM6PR02CA0065.namprd02.prod.outlook.com (2603:10b6:5:177::42)
+ by SN6PR02MB4670.namprd02.prod.outlook.com (2603:10b6:805:8f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.19; Mon, 25 Nov
+ 2019 11:00:05 +0000
+Received: from SN1NAM02FT034.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::204) by DM6PR02CA0065.outlook.office365.com
+ (2603:10b6:5:177::42) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.17 via Frontend
+ Transport; Mon, 25 Nov 2019 11:00:05 +0000
+Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
+ smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ gmail.com discourages use of 149.199.60.83 as permitted sender)
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT034.mail.protection.outlook.com (10.152.72.141) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Mon, 25 Nov 2019 11:00:04 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iZC2E-00077C-OW; Mon, 25 Nov 2019 02:56:02 -0800
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iZC29-0000fp-DV; Mon, 25 Nov 2019 02:55:57 -0800
+Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAPAtu8s025518;
+        Mon, 25 Nov 2019 02:55:56 -0800
+Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1iZC27-0000fS-Pj; Mon, 25 Nov 2019 02:55:56 -0800
+From:   shubhrajyoti.datta@gmail.com
+To:     linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        corbet@lwn.net, gregkh@linuxfoundation.org, arnd@arndb.de,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH 1/3] dt-bindings: Add dt bindings for flex noc Performance Monitor
+Date:   Mon, 25 Nov 2019 16:25:50 +0530
+Message-Id: <1574679352-2989-1-git-send-email-shubhrajyoti.datta@gmail.com>
+X-Mailer: git-send-email 2.1.1
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--4.118-7.0-31-1
+X-imss-scan-details: No--4.118-7.0-31-1;No--4.118-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-Matching-Connectors: 132191532049817285;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(136003)(396003)(189003)(199004)(2616005)(107886003)(8936002)(316002)(426003)(966005)(6916009)(9686003)(70586007)(86362001)(50466002)(82202003)(450100002)(70206006)(4326008)(48376002)(36756003)(6306002)(9786002)(51416003)(55446002)(498600001)(50226002)(2351001)(2361001)(305945005)(2906002)(6666004)(356004)(61266001)(26005)(16586007)(47776003)(5660300002)(76482006)(81166006)(73392003)(8676002)(81156014)(336012);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4670;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-References: <1573660292-10629-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1573660292-10629-12-git-send-email-fabrizio.castro@bp.renesas.com> <20191119001226.GK5171@pendragon.ideasonboard.com>
-In-Reply-To: <20191119001226.GK5171@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 Nov 2019 11:30:42 +0100
-Message-ID: <CAMuHMdWAD_W7r3Ewy-oZPO=YPCGtik0BWrJg2OBr=QwOdKsnZw@mail.gmail.com>
-Subject: Re: [PATCH v4 11/13] ARM: shmobile_defconfig: Enable support for
- panels from EDT
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Peter Rosin <peda@axentia.se>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bd56b19f-1c42-4e46-3c22-08d77196a094
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4670:
+X-MS-Exchange-PUrlCount: 2
+X-Microsoft-Antispam-PRVS: <SN6PR02MB4670E75D91CB9915514074EC874A0@SN6PR02MB4670.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2089;
+X-Forefront-PRVS: 0232B30BBC
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?v0VmIqfjQ45mm+OPDOIuHwkXcGUWooiNiM+ncj9A7GYUVYcTlUWTqmokfuUs?=
+ =?us-ascii?Q?NHNs522PeTLKQfyRba7NXY7fsMhkNRVlybEOaPAcrCyCeMJwpAWlRqL7hkLG?=
+ =?us-ascii?Q?cETKZPpl6VeRiHpogKGKIA9ZghxZIqA1yx6GBhPZqv/mvsE/WtRl8VQOa67r?=
+ =?us-ascii?Q?SyXOojSai2s9v+eSEhT0hI8cQ2MP++yvH7Q0j2pj32iO5lYE9T53V8ImZKLy?=
+ =?us-ascii?Q?FKzjNMwKVIm/jQXwUZKEqdB0IAmPWLJb6N8Wpzunxpmu+kqgPRNxx6Obr2yW?=
+ =?us-ascii?Q?nJSywzNQ5tiuX6aU1VcLQBf8gnlh9NAh4246I048qvwwXPHTUprU4oxF+jEQ?=
+ =?us-ascii?Q?WAu5uZXaqBlhfRw0mOYYdTw4iEerOfD8aEnmuNTsZTFCn4BXctOgnonBdee0?=
+ =?us-ascii?Q?KmesuD3owmnuYpahIgnovXS6T3sHN2of+AEbh4LQxM4Pf5B4X6EWm7RORnLv?=
+ =?us-ascii?Q?TLb6x+K8dJjTyIm7TUptj5GJx+HCbUYRlooVQTqhf/cY+/RCbbVcME8wZvi1?=
+ =?us-ascii?Q?2dLshHxA+fHqI6oJh1w5CVRzlTNtKiNavo2Ja3zJ8R+RM2oLBW1g1C8Lw7Ui?=
+ =?us-ascii?Q?MdMaCWrhIQthXzswPIviSXScmGVEs65tjYGgh6T4aTNxV8tvI9aGPC0M472/?=
+ =?us-ascii?Q?EL7OBYWXCcsjNOF7xs4mzcnVsqeZnSjxAnkk6PyLYX3umIjdXGsuXGGt53L1?=
+ =?us-ascii?Q?e4mXrZ2ngrZyPfeex48p04uNsGvsoF7BkYHahJpEYl5QORLfzlj66RCQBvUm?=
+ =?us-ascii?Q?Ltr7ViTzildJSACM2W6JzLniWTwcl6kk7tN1kt0p8MP/2NvTxV80M0FhSyen?=
+ =?us-ascii?Q?opMoOKLQNZTTbgCwr3O4bfEk5lE7DSgn77cNQQL4iBsKT8uU9b/DgFEhM5hu?=
+ =?us-ascii?Q?TFmHR8SdDNheBgixFZVNbjTZlAQMQ+8kiAcT+OeHecCKXQ15/ZErMfW7PCes?=
+ =?us-ascii?Q?SG/XZvKNv1Zs+nmxxSurRDGvdPzHxCpqJN5nAC9BohnmNQbOCNIkx48dZb0W?=
+ =?us-ascii?Q?SIXAma3iwrr8ZqCELFUpw8wh3hUCOz3W71GnbTsOGp0wW4UqCaKAHkbo1pPp?=
+ =?us-ascii?Q?IVMpdnEIBFm0Ym5knCPVFuzK9bf35mjuKVxK9Sp85wcaPB4wW2KmHxxf/caE?=
+ =?us-ascii?Q?KT+Xx72d+COQnsgj55xlsxmR0Rbyv7nCcb7J8XjqIKOLvCxCNQGW4RKgoVMA?=
+ =?us-ascii?Q?kXXR1Bn4ZOJt9dPaYMHuN9CLxpDOqUcSUNC4qOeNxjLrPzrih/8Bvz4aFVwz?=
+ =?us-ascii?Q?UnpoVaaG4Bpfv7MR0Ma+RY9TtS4IaanBFzUSS7zvJYO5/AW4VOEIZbYgWJFS?=
+ =?us-ascii?Q?SWWjLbmSb//g72Hgrvr60veNwPo3i7HsfPhcggHB2hmR2B2rL9nRQ/Ye6P7a?=
+ =?us-ascii?Q?QqmqNzv3bnFbRTfzE/Ln/nwawaFzzaqFYeqq+OVzs6RUgkPmPm1N1N715ef1?=
+ =?us-ascii?Q?6jQ/oeqN+Q7T7GJDwUZYhtQgPNOiT4MvtpjntUIJwyFB3mMPsTw439Q/mr9E?=
+ =?us-ascii?Q?VcpWWTkT2wWWO6M25K5OjqFE/eKGPaJgY7JndoUnzmCZXDGF6BV/bTwO1MOT?=
+ =?us-ascii?Q?/gm8Nbg8KFg/ICcEj+E=3D?=
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2019 11:00:04.8196
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd56b19f-1c42-4e46-3c22-08d77196a094
+X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4670
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 1:12 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Wed, Nov 13, 2019 at 03:51:30PM +0000, Fabrizio Castro wrote:
-> > The iwg20d comes with an LCD panel from Emerging Display
-> > Technologies Corporation (EDT), therefore enable what's
-> > required to support it.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-> I expect Geert to pick this up.
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Thanks, queued in renesas-devel for v5.6.
+Add dt bindings for flexnoc Performance Monitor.
+The flexnoc counters for read and write response and requests are
+supported.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+changes from RFC:
+moved to schema / yaml
 
-                        Geert
+ .../devicetree/bindings/perf/xlnx-flexnoc-pm.yaml  | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
 
+diff --git a/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml b/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
+new file mode 100644
+index 0000000..bd0f345
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/xlnx-flexnoc-pm.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/perf/xlnx-flexnoc-pm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx flexnoc Performance Monitor device tree bindings
++
++maintainers:
++  - Arnd Bergmann <arnd@arndb.de>
++  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
++
++properties:
++  compatible:
++    # Versal SoC based boards
++    items:
++      - enum:
++          - xlnx,flexnoc-pm-2.7
++
++  reg:
++    items:
++      - description: funnel registers
++      - description: baselpd registers
++      - description: basefpd registers
++
++  reg-names:
++    # The core schema enforces this is a string array
++    items:
++      - const: funnel
++      - const: baselpd
++      - const: basefpd
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    performance-monitor@f0920000 {
++        compatible = "xlnx,flexnoc-pm-2.7";
++        reg-names = "funnel", "baselpd", "basefpd";
++        reg = <0x0 0xf0920000 0x0 0x1000>,
++              <0x0 0xf0980000 0x0 0x9000>,
++              <0x0 0xf0b80000 0x0 0x9000>;
++    };
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.1.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
