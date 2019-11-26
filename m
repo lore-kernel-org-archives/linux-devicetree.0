@@ -3,80 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948F9C43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 18:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC91C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 18:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587682075C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 18:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E2E2073F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 18:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574791773;
-	bh=khXt9vX/GT2fcUflwV853+ArzHccO1YSsCZHyTNOf14=;
+	s=default; t=1574791915;
+	bh=g6Pt8BENoBERMhWmoc+xJ+KNsVDQaHsuOtz12GWEL0A=;
 	h=In-Reply-To:References:Subject:Cc:From:To:Date:List-ID:From;
-	b=JFTA7Kf/Cz2giMP5RxeRT1DNhJfjVAB3+u1S0UBXH+dFzvMdOLNLtnwVHN83jf5l6
-	 4c3Bg8FO7lmuMGPaSVb9H6g8Db8JPfUBjkrz5YxTMCtk5Aq1H+WyIAM27Fz6IE0J8u
-	 INX54kfGOx2iRXdvzh3oegB1aMNS4IRk0Sgxu0zk=
+	b=K7360nv25Rrg9iVHU5mCsl7YTXahNhNMRgF0wyZW3S3II0MtDSnC2HidGYOOZkAdK
+	 sj9fyJVshoeTXntr7TvHk59iLI/ADuLfjUtPi0ShU6K5KzYiEcpW5lOH/xcnRcA3HU
+	 ZDjueCR4jglyuZA4TABH/zVv8iYKBU5ulkqF5QCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbfKZSJc (ORCPT
+        id S1727022AbfKZSLz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 13:09:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48434 "EHLO mail.kernel.org"
+        Tue, 26 Nov 2019 13:11:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfKZSJc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Nov 2019 13:09:32 -0500
+        id S1725870AbfKZSLy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Nov 2019 13:11:54 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A04620727;
-        Tue, 26 Nov 2019 18:09:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 275EA20727;
+        Tue, 26 Nov 2019 18:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574791772;
-        bh=khXt9vX/GT2fcUflwV853+ArzHccO1YSsCZHyTNOf14=;
+        s=default; t=1574791914;
+        bh=g6Pt8BENoBERMhWmoc+xJ+KNsVDQaHsuOtz12GWEL0A=;
         h=In-Reply-To:References:Subject:Cc:From:To:Date:From;
-        b=maxjfUlqLWHb1VU8NztT/3JTKPyFdzVBpgBSYUG4XpF0wgSd9gQtQ/lIXZj32nBeg
-         MBZf8RMoph8yWD0jjarMvGwcAtnwrLQgOVhK8PtLjTlpUpd4Cn/2QvUuAu7kKwDMhK
-         Jwe9INxKKq9mIo1ykNsPYS8krk1mhzD3EExWIy/w=
+        b=PHCvdrDUxwVFk6Az3dmnF7fUMWgLKa6WULn/iuhDMB0oEq6mzTZKrqaKMy5LPDis6
+         0dLw2WZQxD6eGforht/Ts7wm4swGwsXPDzPIBiRD8u7I4wKUkuckn7o+zasU9SeGYm
+         0y8eUCLQafhfbEr/MlD2UAy3YlkoDAVfKSVNp+oE=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573820552-21164-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1573820552-21164-1-git-send-email-shubhrajyoti.datta@gmail.com>
-Subject: Re: [PATCHv2 1/2] clk: clock-wizard: Move the clockwizard to clk
-Cc:     mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shubhrajyoti.datta@gmail.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <CAOCk7NqfHe6jRPmw6o650fyd6EyVfFObHhJ9=21ipuAqJo6oGA@mail.gmail.com>
+References: <1573812304-24074-1-git-send-email-tdas@codeaurora.org> <1573812304-24074-4-git-send-email-tdas@codeaurora.org> <CAOCk7NqfHe6jRPmw6o650fyd6EyVfFObHhJ9=21ipuAqJo6oGA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
 From:   Stephen Boyd <sboyd@kernel.org>
-To:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        shubhrajyoti.datta@gmail.com
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Taniya Das <tdas@codeaurora.org>
 User-Agent: alot/0.8.1
-Date:   Tue, 26 Nov 2019 10:09:31 -0800
-Message-Id: <20191126180932.3A04620727@mail.kernel.org>
+Date:   Tue, 26 Nov 2019 10:11:53 -0800
+Message-Id: <20191126181154.275EA20727@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting shubhrajyoti.datta@gmail.com (2019-11-15 04:22:31)
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Quoting Jeffrey Hugo (2019-11-15 07:11:01)
+> On Fri, Nov 15, 2019 at 3:07 AM Taniya Das <tdas@codeaurora.org> wrote:
+> > diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/=
+Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> > new file mode 100644
+> > index 0000000..c2d6243
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> > @@ -0,0 +1,69 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm Graphics Clock & Reset Controller Binding
+> > +
+> > +maintainers:
+> > +  - Taniya Das <tdas@codeaurora.org>
+> > +
+> > +description: |
+> > +  Qualcomm grpahics clock control module which supports the clocks, re=
+sets and
+> > +  power domains.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - qcom,msm8998-gpucc
+> > +      - qcom,sdm845-gpucc
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - description: Board XO source
+> > +      - description: GPLL0 source from GCC
 >=20
-> Move the clocking wizard driver from staging to clk.
->=20
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
-> this is moving the drivers/staging/clocking-wizard to clk
-> v2:
-> Added the makefile  and kconfig
->=20
->  drivers/clk/Kconfig                 |   6 +
->  drivers/clk/Makefile                |   1 +
->  drivers/clk/clk-xlnx-clock-wizard.c | 335 ++++++++++++++++++++++++++++++=
-++++++
+> This is not an accurate conversion.  GPLL0 was not valid for 845, and
+> is required for 8998.
 
-Where is the deletion of the file from staging? Has the TODO file in
-staging been resolved? Please Cc Soren and Greg on these patches. Also
-include a cover letter and convince us _why_ we should review these
-patches in the commit text. Stating what the patch is doing, i.e.
-"moving code around", is not helpful.
+Thanks for checking Jeff.
+
+It looks like on 845 there are two gpll0 clocks going to gpucc. From
+gpu_cc_parent_map_0:
+
+	"gcc_gpu_gpll0_clk_src",
+	"gcc_gpu_gpll0_div_clk_src",
 
