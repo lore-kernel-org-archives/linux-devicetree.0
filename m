@@ -2,203 +2,410 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCECC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 14:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6C9C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 15:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A00F20727
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 14:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DC42071A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 15:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nj3w38bZ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y6gwfA/R";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="LZaM8+Z6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfKZOdx (ORCPT
+        id S1728174AbfKZPB2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 09:33:53 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45561 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfKZOdx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 09:33:53 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 14so16768741oir.12;
-        Tue, 26 Nov 2019 06:33:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Ke9S+LOVhCSYY/a2D7Vlzb4JuZDRi+EFqSopQYxhvo=;
-        b=nj3w38bZg0AIusIt49/mQa4MqrbC8q2I1Gu83u5RhH7p+9zwD+Obg3mc8Ug/E3RIb/
-         +OpcBhlBKwiMWWTUHfcBQZyeyJz/QqfNgm/pXQV5UjZAycKx19JMKo1IcGDqKLKpF6bB
-         No4+dTgPNLBOUdswSF4JHl4Dco+G6DFR8+iujV3/usRywxvytpKcvu7kIqJoKLvNd29Z
-         Yi8AevjDxVXldLY7R688l+AMMCXFEMYWdSEr/v/cJg5qcQnIrNOGWI2F/Fm8A+qDaACI
-         ixM6YFWfxrFm2YmbDY5ct9hWCQlaGsMP5kzcnfllU6KHNE9RUkUrY0KoD6Qlxu31qLVC
-         zO/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Ke9S+LOVhCSYY/a2D7Vlzb4JuZDRi+EFqSopQYxhvo=;
-        b=t+Pm9UxCF1utiCD68wr5AjTUy4s72vesd+rqnTYY2/1d7lnvLhasJIuQ298ciRQqMj
-         VzCx19k6V5I6gvOS/KIwO9mEysB4VGJXcGi9Ckx8dvBWekrSwydQ8A0SPxkFfvMCdjiq
-         hqe1BaCoFoo7f13fW2r8U7LZhSw6Vp8ArhSUe0jmY9AAhrqeEKOxnYn5UOgxviOVJ3oc
-         S6UD7UZ28GZl4ONb3BKpCJgs6pPXEAVVKwrqvljEjNm3UhXB9wXexfLTDg7b0opFTX/S
-         nDmKouqmLuDeJ35btOtqylvomtVnZhWu33IIJI3kvpiBr1ZCiZKtHJ3W9BcnhonjkD1U
-         aVAg==
-X-Gm-Message-State: APjAAAU9HOGJE0SyJhRBMaOIt4y3Iqoe+svXRQCXz9zi9R95GlX3ZF99
-        zYDC7WOb6rWbtgFuR2SAQC1PMUtZ+2oVxGysENo=
-X-Google-Smtp-Source: APXvYqwdIx5fvcr/2eqn6PfsjTtnTEUauTJoJlXG+zzhycInNXig/nGBmY7EZu2DrNnThSLkOUcAJwQqVld3E5i8yP8=
-X-Received: by 2002:a05:6808:906:: with SMTP id w6mr3714280oih.162.1574778831671;
- Tue, 26 Nov 2019 06:33:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 26 Nov 2019 14:33:25 +0000
-Message-ID: <CA+V-a8tVK7oUYggTb5Vi3agMp4CH8gtiKDHet09DzE5-LAfiew@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add support for PCIe controller to work in endpoint
- mode on R-Car SoCs.
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Tue, 26 Nov 2019 10:01:28 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:60212
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726049AbfKZPB2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Nov 2019 10:01:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574780487;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=APFAqQ5hhFy6nrdgORg6OIjDflWXH5R08ymFxeXhbSA=;
+        b=Y6gwfA/R2jet5NtgXnPYy58NryRWzLEZHJBHgLTHamZRY8FsPr6iSHtHhKVCmTN3
+        gr0XD7zYsS9SQE/OvT7HVwFOOfuf+90Pwe5A2sT37JfHBB274qm/AaBBb5EFMZyayEo
+        bwwgP+LvJJIGzqDCFbAczTZmLANN2M/EfMV0GIwE=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574780486;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=APFAqQ5hhFy6nrdgORg6OIjDflWXH5R08ymFxeXhbSA=;
+        b=LZaM8+Z6Tmov6iGX9cxxCRDY4hTnbfe9ezHqwgDHj9h0uU4HeOohlSkrLFB3iZps
+        8oJ+5PderVJjqjr/me6RRghlU0OgFZkiaLeS+ktPGJ8GWQviKI5Zi+pcwwhWR9g2Tyg
+        4oeZ2VLDsTLMpN8iI6tpxcY/hL1jjfqTYF1fAu4g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 95115C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
+From:   Odelu Kukatla <okukatla@codeaurora.org>
+To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com, sboyd@kernel.org,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: [PATCH V1 1/2] dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
+Date:   Tue, 26 Nov 2019 15:01:26 +0000
+Message-ID: <0101016ea83b44e2-546fc9ff-6056-482b-a42d-231b9d908640-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1574780408-21282-1-git-send-email-okukatla@codeaurora.org>
+References: <1574780408-21282-1-git-send-email-okukatla@codeaurora.org>
+X-SES-Outgoing: 2019.11.26-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn/Kishon,
+The Qualcomm SC7180 platform has several bus fabrics that could be
+controlled and tuned dynamically according to the bandwidth demand.
 
-Gentle ping for this patch set.
+Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+---
+ .../bindings/interconnect/qcom,bcm-voter.yaml      |   1 +
+ .../bindings/interconnect/qcom,sc7180.yaml         | 155 +++++++++++++++++++++
+ include/dt-bindings/interconnect/qcom,sc7180.h     | 149 ++++++++++++++++++++
+ 3 files changed, 305 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
 
-On Wed, Nov 6, 2019 at 7:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->
-> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> This patch series adds support for PCIe controller on rcar to work in endpoint mode,
-> this also extends the epf framework to handle multiple outbound regions.
->
-Cheers,
---Prabhakar Lad
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+index 74f0715..55c9f34 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
++++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+@@ -19,6 +19,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - qcom,sc7180-bcm-voter
+       - qcom,sdm845-bcm-voter
+ 
+ required:
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+new file mode 100644
+index 0000000..487da5e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title:  Qualcomm SC7180 Network-On-Chip Interconnect
++
++maintainers:
++  - David Dai <daidavid1@codeaurora.org>
++
++description: |
++   SC7180 interconnect providers support system bandwidth requirements through
++   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
++   able to communicate with the BCM through the Resource State Coordinator (RSC)
++   associated with each execution environment. Provider nodes must point to at
++   least one RPMh device child node pertaining to their RSC and each provider
++   can map to multiple RPMh resources.
++
++properties:
++  reg:
++    maxItems: 1
++
++  compatible:
++    enum:
++      - qcom,sc7180-aggre1-noc
++      - qcom,sc7180-aggre2-noc
++      - qcom,sc7180-camnoc-virt
++      - qcom,sc7180-compute-noc
++      - qcom,sc7180-config-noc
++      - qcom,sc7180-dc-noc
++      - qcom,sc7180-gem-noc
++      - qcom,sc7180-ipa-virt
++      - qcom,sc7180-mc-virt
++      - qcom,sc7180-mmss-noc
++      - qcom,sc7180-npu-noc
++      - qcom,sc7180-qup-virt
++      - qcom,sc7180-system-noc
++
++  '#interconnect-cells':
++    const: 1
++
++  qcom,bcm-voters:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      List of phandles to qcom,bcm-voter nodes that are required by
++      this interconnect to send RPMh commands.
++
++  qcom,bcm-voter-names:
++    $ref: /schemas/types.yaml#/definitions/string-array
++    description: |
++      Names for each of the qcom,bcm-voters specified.
++
++required:
++  - compatible
++  - reg
++  - '#interconnect-cells'
++  - qcom,bcm-voters
++
++additionalProperties: false
++
++examples:
++  - |
++      #include <dt-bindings/interconnect/qcom,sc7180.h>
++
++      config_noc: interconnect@1500000 {
++            compatible = "qcom,sc7180-config-noc";
++            reg = <0 0x01500000 0 0x28000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      system_noc: interconnect@1620000 {
++            compatible = "qcom,sc7180-system-noc";
++            reg = <0 0x01620000 0 0x17080>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mc_virt: interconnect@1630000 {
++            compatible = "qcom,sc7180-mc-virt";
++            reg = <0 0x01630000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      qup_virt: interconnect@1650000 {
++            compatible = "qcom,sc7180-qup-virt";
++            reg = <0 0x01650000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      aggre1_noc: interconnect@16e0000 {
++            compatible = "qcom,sc7180-aggre1-noc";
++            reg = <0 0x016e0000 0 0x15080>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      aggre2_noc: interconnect@1700000 {
++            compatible = "qcom,sc7180-aggre2-noc";
++            reg = <0 0x01700000 0 0x1f880>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      compute_noc: interconnect@170e000 {
++            compatible = "qcom,sc7180-compute-noc";
++            reg = <0 0x0170e000 0 0x11880>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mmss_noc: interconnect@1740000 {
++            compatible = "qcom,sc7180-mmss-noc";
++            reg = <0 0x01740000 0 0x1c100>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      ipa_virt: interconnect@1e00000 {
++            compatible = "qcom,sc7180-ipa-virt";
++            reg = <0 0x01e00000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      dc_noc: interconnect@9160000 {
++            compatible = "qcom,sc7180-dc-noc";
++            reg = <0 0x09160000 0 0x03200>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      gem_noc: interconnect@9680000 {
++            compatible = "qcom,sc7180-gem-noc";
++            reg = <0 0x09680000 0 0x3e200>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      npu_noc: interconnect@9990000 {
++            compatible = "qcom,sc7180-npu-noc";
++            reg = <0 0x09990000 0 0x1600>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      camnoc_virt: interconnect@ac00000 {
++            compatible = "qcom,sc7180-camnoc-virt";
++            reg = <0 0x0ac00000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
+diff --git a/include/dt-bindings/interconnect/qcom,sc7180.h b/include/dt-bindings/interconnect/qcom,sc7180.h
+new file mode 100644
+index 0000000..b762bc3
+--- /dev/null
++++ b/include/dt-bindings/interconnect/qcom,sc7180.h
+@@ -0,0 +1,149 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Qualcomm SC7180 interconnect IDs
++ *
++ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
++#define __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
++
++#define MASTER_APPSS_PROC			0
++#define MASTER_SYS_TCU				1
++#define MASTER_NPU_SYS				2
++#define MASTER_IPA_CORE				3
++#define MASTER_LLCC				4
++#define MASTER_A1NOC_CFG			5
++#define MASTER_A2NOC_CFG			6
++#define MASTER_CNOC_DC_NOC			7
++#define MASTER_GEM_NOC_CFG			8
++#define MASTER_CNOC_MNOC_CFG			9
++#define MASTER_NPU_NOC_CFG			10
++#define MASTER_QDSS_BAM				11
++#define MASTER_QSPI				12
++#define MASTER_QUP_0				13
++#define MASTER_QUP_1				14
++#define MASTER_SNOC_CFG				15
++#define MASTER_A1NOC_SNOC			16
++#define MASTER_A2NOC_SNOC			17
++#define MASTER_COMPUTE_NOC			18
++#define MASTER_GEM_NOC_SNOC			19
++#define MASTER_MNOC_HF_MEM_NOC			20
++#define MASTER_MNOC_SF_MEM_NOC			21
++#define MASTER_NPU				22
++#define MASTER_SNOC_CNOC			23
++#define MASTER_SNOC_GC_MEM_NOC			24
++#define MASTER_SNOC_SF_MEM_NOC			25
++#define MASTER_QUP_CORE_0			26
++#define MASTER_QUP_CORE_1			27
++#define MASTER_CAMNOC_HF0			28
++#define MASTER_CAMNOC_HF1			29
++#define MASTER_CAMNOC_HF0_UNCOMP		30
++#define MASTER_CAMNOC_HF1_UNCOMP		31
++#define MASTER_CAMNOC_SF			32
++#define MASTER_CAMNOC_SF_UNCOMP			33
++#define MASTER_CRYPTO				34
++#define MASTER_GFX3D				35
++#define MASTER_IPA				36
++#define MASTER_MDP0				37
++#define MASTER_NPU_PROC				38
++#define MASTER_PIMEM				39
++#define MASTER_ROTATOR				40
++#define MASTER_VIDEO_P0				41
++#define MASTER_VIDEO_PROC			42
++#define MASTER_QDSS_DAP				43
++#define MASTER_QDSS_ETR				44
++#define MASTER_SDCC_2				45
++#define MASTER_UFS_MEM				46
++#define MASTER_USB3				47
++#define MASTER_EMMC				48
++#define SLAVE_EBI1				512
++#define SLAVE_IPA_CORE				513
++#define SLAVE_A1NOC_CFG				514
++#define SLAVE_A2NOC_CFG				515
++#define SLAVE_AHB2PHY_SOUTH			516
++#define SLAVE_AHB2PHY_CENTER			517
++#define SLAVE_AOP				518
++#define SLAVE_AOSS				519
++#define SLAVE_APPSS				520
++#define SLAVE_BOOT_ROM				521
++#define SLAVE_NPU_CAL_DP0			522
++#define SLAVE_CAMERA_CFG			523
++#define SLAVE_CAMERA_NRT_THROTTLE_CFG		524
++#define SLAVE_CAMERA_RT_THROTTLE_CFG		525
++#define SLAVE_CLK_CTL				526
++#define SLAVE_NPU_CP				527
++#define SLAVE_RBCPR_CX_CFG			528
++#define SLAVE_RBCPR_MX_CFG			529
++#define SLAVE_CRYPTO_0_CFG			530
++#define SLAVE_DCC_CFG				531
++#define SLAVE_CNOC_DDRSS			532
++#define SLAVE_DISPLAY_CFG			533
++#define SLAVE_DISPLAY_RT_THROTTLE_CFG		534
++#define SLAVE_DISPLAY_THROTTLE_CFG		535
++#define SLAVE_NPU_INT_DMA_BWMON_CFG		536
++#define SLAVE_NPU_DPM				537
++#define SLAVE_EMMC_CFG				538
++#define SLAVE_GEM_NOC_CFG			539
++#define SLAVE_GLM				540
++#define SLAVE_GFX3D_CFG				541
++#define SLAVE_IMEM_CFG				542
++#define SLAVE_IPA_CFG				543
++#define SLAVE_ISENSE_CFG			544
++#define SLAVE_LLCC_CFG				545
++#define SLAVE_NPU_LLM_CFG			546
++#define SLAVE_MSS_PROC_MS_MPU_CFG		547
++#define SLAVE_CNOC_MNOC_CFG			548
++#define SLAVE_CNOC_MSS				549
++#define SLAVE_NPU_CFG				550
++#define SLAVE_NPU_DMA_BWMON_CFG			551
++#define SLAVE_NPU_PROC_BWMON_CFG		552
++#define SLAVE_PDM				553
++#define SLAVE_PIMEM_CFG				554
++#define SLAVE_PRNG				555
++#define SLAVE_QDSS_CFG				556
++#define SLAVE_QM_CFG				557
++#define SLAVE_QM_MPU_CFG			558
++#define SLAVE_QSPI_0				559
++#define SLAVE_QUP_0				560
++#define SLAVE_QUP_1				561
++#define SLAVE_SDCC_2				562
++#define SLAVE_SECURITY				563
++#define SLAVE_SNOC_CFG				564
++#define SLAVE_NPU_TCM				565
++#define SLAVE_TCSR				566
++#define SLAVE_TLMM_WEST				567
++#define SLAVE_TLMM_NORTH			568
++#define SLAVE_TLMM_SOUTH			569
++#define SLAVE_UFS_MEM_CFG			570
++#define SLAVE_USB3				571
++#define SLAVE_VENUS_CFG				572
++#define SLAVE_VENUS_THROTTLE_CFG		573
++#define SLAVE_VSENSE_CTRL_CFG			574
++#define SLAVE_A1NOC_SNOC			575
++#define SLAVE_A2NOC_SNOC			576
++#define SLAVE_CAMNOC_UNCOMP			577
++#define SLAVE_CDSP_GEM_NOC			578
++#define SLAVE_SNOC_CNOC				579
++#define SLAVE_GEM_NOC_SNOC			580
++#define SLAVE_SNOC_GEM_NOC_GC			581
++#define SLAVE_SNOC_GEM_NOC_SF			582
++#define SLAVE_LLCC				583
++#define SLAVE_MNOC_HF_MEM_NOC			584
++#define SLAVE_MNOC_SF_MEM_NOC			585
++#define SLAVE_NPU_COMPUTE_NOC			586
++#define SLAVE_QUP_CORE_0			587
++#define SLAVE_QUP_CORE_1			588
++#define SLAVE_IMEM				589
++#define SLAVE_PIMEM				590
++#define SLAVE_SERVICE_A1NOC			591
++#define SLAVE_SERVICE_A2NOC			592
++#define SLAVE_SERVICE_CNOC			593
++#define SLAVE_SERVICE_GEM_NOC			594
++#define SLAVE_SERVICE_MNOC			595
++#define SLAVE_SERVICE_NPU_NOC			596
++#define SLAVE_SERVICE_SNOC			597
++#define SLAVE_QDSS_STM				598
++#define SLAVE_TCU				599
++
++#endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-
-> Note:
-> The cadence/rockchip/designware endpoint drivers are build tested only.
->
-> Endpoint configuration:
-> $ cd /sys/kernel/config/pci_ep
-> $ mkdir functions/pci_epf_test/func1
-> $ echo 0x1912 > functions/pci_epf_test/func1/vendorid
-> $ echo 0x002d > functions/pci_epf_test/func1/deviceid
-> $ echo 32 > functions/pci_epf_test/func1/msi_interrupts
-> $ ln -s functions/pci_epf_test/func1/ controllers/fe000000.pcie_ep/
-> $ echo 1 > controllers/fe000000.pcie_ep/start
->
-> Host side results:
-> lspci output:
-> 01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
->         Flags: bus master, fast devsel, latency 0, IRQ 103
->         Memory at fe200200 (64-bit, non-prefetchable) [size=128]
->         Memory at fe200000 (64-bit, non-prefetchable) [size=256]
->         Memory at fe200100 (64-bit, non-prefetchable) [size=256]
->         Capabilities: [40] Power Management version 3
->         Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
->         Capabilities: [70] Express Endpoint, MSI 00
->         Capabilities: [100] Virtual Channel
->         Kernel driver in use: pci-endpoint-test
->
-> pcitest results:
->
-> BAR tests
->
-> BAR0:           OKAY
-> BAR1:           NOT OKAY
-> BAR2:           OKAY
-> BAR3:           NOT OKAY
-> BAR4:           OKAY
-> BAR5:           NOT OKAY
->
-> Interrupt tests
->
-> SET IRQ TYPE TO LEGACY:         OKAY
-> LEGACY IRQ:     OKAY
-> Read Tests
->
-> SET IRQ TYPE TO LEGACY:         OKAY
-> READ (      1 bytes):           OKAY
-> READ (   1024 bytes):           OKAY
-> READ (   1025 bytes):           OKAY
-> READ (1024000 bytes):           OKAY
-> READ (1024001 bytes):           OKAY
->
-> Write Tests
->
-> WRITE (      1 bytes):          OKAY
-> WRITE (   1024 bytes):          OKAY
-> WRITE (   1025 bytes):          OKAY
-> WRITE (1024000 bytes):          OKAY
-> WRITE (1024001 bytes):          OKAY
->
-> Copy Tests
->
-> COPY (      1 bytes):           OKAY
-> COPY (   1024 bytes):           OKAY
-> COPY (   1025 bytes):           OKAY
-> COPY (1024000 bytes):           OKAY
-> COPY (1024001 bytes):           OKAY
->
-> BAR tests for 1/3/5 fail because its configured to use 64bit bars
->
-> Lad, Prabhakar (5):
->   pci: pcie-rcar: preparation for adding endpoint support
->   pci: endpoint: add support to handle multiple base for mapping
->     outbound memory
->   PCI: rcar: Add R-Car PCIe endpoint device tree bindings
->   pci: rcar: add support for rcar pcie controller in endpoint mode
->   misc: pci_endpoint_test: add device-id for RZ/G2 pcie controller
->
->  .../devicetree/bindings/pci/rcar-pci-ep.txt   |   43 +
->  arch/arm64/configs/defconfig                  |    2 +-
->  arch/arm64/configs/renesas_defconfig          |    2 +-
->  drivers/misc/pci_endpoint_test.c              |    3 +
->  drivers/pci/controller/Kconfig                |   11 +-
->  drivers/pci/controller/Makefile               |    3 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |   30 +-
->  drivers/pci/controller/pcie-cadence-ep.c      |   11 +-
->  drivers/pci/controller/pcie-rcar-ep.c         |  483 +++++++
->  drivers/pci/controller/pcie-rcar-host.c       | 1058 ++++++++++++++
->  drivers/pci/controller/pcie-rcar.c            | 1231 +----------------
->  drivers/pci/controller/pcie-rcar.h            |  129 ++
->  drivers/pci/controller/pcie-rockchip-ep.c     |   13 +-
->  drivers/pci/endpoint/functions/pci-epf-test.c |   29 +-
->  drivers/pci/endpoint/pci-epc-core.c           |    7 +-
->  drivers/pci/endpoint/pci-epc-mem.c            |  189 ++-
->  include/linux/pci-epc.h                       |   43 +-
->  17 files changed, 2016 insertions(+), 1271 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
->  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
->
-> --
-> 2.20.1
->
