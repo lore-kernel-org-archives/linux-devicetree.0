@@ -2,98 +2,83 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD527C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 17:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FD7C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 18:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBF12075C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 17:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="VKQR+Zj0"
+	by mail.kernel.org (Postfix) with ESMTP id 1B82F20836
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 18:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574791280;
+	bh=omsnWS1CdzFSYWPwB5Bc/IkaXklFcCy9SMZZUTRYQzs=;
+	h=In-Reply-To:References:Subject:Cc:From:To:Date:List-ID:From;
+	b=tDcE2iCpXE52C3ubjcGxB3k1z9i9nMQL+kODttULq4TT0ZJpkSFWDjJCb3h7Unc93
+	 MK702NdGhzBRVsaPHNMyP2cxTY63pVOFuLWAfM9hhAZHHFxmjrS+3/h5q5FEFDjJAb
+	 zCyQVdkrdqMHF2nSiMdVMGuporNI4GHnoQ/NoWro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfKZRnA (ORCPT
+        id S1725970AbfKZSBT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 12:43:00 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:52988 "EHLO mail.andi.de1.cc"
+        Tue, 26 Nov 2019 13:01:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfKZRm7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Nov 2019 12:42:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UJNRgJYokU+UFBwtU2ynndrvNCEKdJJFP6ze1hNesKA=; b=VKQR+Zj0Q2r4WCNqxVBEMXCJjm
-        RRPVV3THF0fJGtGADLnmC3BHkJB8U1LtDHLaPwPHJlAQBz3ItPNT3J7gDYOaFtND5sNia0Ae0EW1+
-        NYUDqVaIHwiA2ZCjoGEkaup2w7a6HGwXYfTWOgZ30upF+ndNyu9OCENAbVNv71gvbTbQ=;
-Received: from p200300ccff0be6001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:e600:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iZerL-0001ZJ-Vf; Tue, 26 Nov 2019 18:42:44 +0100
-Date:   Tue, 26 Nov 2019 18:42:42 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel@pyra-handheld.com, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Letux-kernel] [PATCH 0/2] net: wireless: ti: wl1251: sdio:
- remove ti, power-gpio
-Message-ID: <20191126184242.365603a2@aktux>
-In-Reply-To: <0101016ea8691109-5beadf07-b3ba-4d31-a516-c7f3015f2316-000000@us-west-2.amazonses.com>
-References: <cover.1574591746.git.hns@goldelico.com>
-        <0101016ea8691109-5beadf07-b3ba-4d31-a516-c7f3015f2316-000000@us-west-2.amazonses.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725870AbfKZSBT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Nov 2019 13:01:19 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C76792071A;
+        Tue, 26 Nov 2019 18:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574791278;
+        bh=omsnWS1CdzFSYWPwB5Bc/IkaXklFcCy9SMZZUTRYQzs=;
+        h=In-Reply-To:References:Subject:Cc:From:To:Date:From;
+        b=HaNfuNJCXCkhjrwWON6HDO91gUx5c4vNMR1sAm696rb63zkQZGtqM9XDdnHUzfvDM
+         poIJW3DSg7GABxuFVkdWdUSOzGHr2qgxLOpo+OnNLsFXYxwWIe5EEvWGuqaIUhfbJu
+         9owrAiqtUMfRkBfEhno9SjyQg7ED2+XEezweAKJk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACPK8XchwGdgE95jkdhwWbp0r+NHge7W3q6yQp-wzfxV3Kpajg@mail.gmail.com>
+References: <20191010020655.3776-1-andrew@aj.id.au> <20191010020655.3776-3-andrew@aj.id.au> <CACPK8Xcrc_2itUcGw6caa8Fp3sJE8oHBO5LJgBtqScwmVAuHJw@mail.gmail.com> <CACPK8XchwGdgE95jkdhwWbp0r+NHge7W3q6yQp-wzfxV3Kpajg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] clk: aspeed: Add RMII RCLK gates for both AST2500 MACs
+Cc:     linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>
+User-Agent: alot/0.8.1
+Date:   Tue, 26 Nov 2019 10:01:17 -0800
+Message-Id: <20191126180118.C76792071A@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 26 Nov 2019 15:51:28 +0000
-Kalle Valo <kvalo@codeaurora.org> wrote:
+Quoting Joel Stanley (2019-11-25 16:59:19)
+> Hi Stephen,
+>=20
+> On Thu, 10 Oct 2019 at 23:41, Joel Stanley <joel@jms.id.au> wrote:
+> >
+> > On Thu, 10 Oct 2019 at 02:06, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > RCLK is a fixed 50MHz clock derived from HPLL that is described by a
+> > > single gate for each MAC.
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> >
+> > Reviewed-by: Joel Stanley <joel@jms.id.au>
+>=20
+> I noticed this one hasn't been applied to clk-next.
+>=20
 
-> "H. Nikolaus Schaller" <hns@goldelico.com> writes:
-> 
-> > The driver has been updated to use the mmc/sdio core
-> > which does full power control. So we do no longer need
-> > the power control gipo.
-> >
-> > Note that it is still needed for the SPI based interface
-> > (N900).
-> >
-> > Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-> > Tested by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600MHz
-> >
-> > H. Nikolaus Schaller (2):
-> >   DTS: bindings: wl1251: mark ti,power-gpio as optional
-> >   net: wireless: ti: wl1251: sdio: remove ti,power-gpio
-> >
-> >  .../bindings/net/wireless/ti,wl1251.txt       |  3 +-
-> >  drivers/net/wireless/ti/wl1251/sdio.c         | 30 -------------------
-> >  2 files changed, 2 insertions(+), 31 deletions(-)  
-> 
-> Via which tree are these planned to go? Please always document that in
-> the cover letter so that maintainers don't need to guess.
-> 
-Hmm, this is about bisect issues and the former misc pandora
-fix/cleanup series now in linux-next that make you doubt it should go
-via wireless/net?
-So the question is whether it depends on that?
+It's marked awaiting upstream in my UI. I think it was some patch that
+might have come through your PR?
 
-Regards,
-Andreas
