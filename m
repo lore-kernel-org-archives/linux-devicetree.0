@@ -2,168 +2,119 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA80C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 19:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A2C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 20:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F76020863
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 19:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778392080F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 20:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574797466;
-	bh=um1j8Y/GaUsZ1q4T+Tiu5+4Kgs2yzoDg2ThT8cprhsY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PbcD6T+lFU2Ce5XH0WRRhm3Y2a36Gu108h9qkRosLpsYOk5yakuGovowAb3HCWaBt
-	 sdtvjDrP6R6MbATGDbjblvT/F/hpTXsWblfcc2DZy8QoXpJAq6SbCW+Jdr9rMvAPN+
-	 NPSDvp6qR6uUhEfPhx3frlOwrpXhbV+NKiOxBm00=
+	s=default; t=1574800486;
+	bh=uAr4H4DPpYHMYY7AUmSAnz0qLHRHZ5m17OkJuG7IPIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jWWUhIKo3xTWwpBHNXsPAXqUQZpUZf8sFvPgTvT0OC0imTD7rAo7KfVPy3Hp2zdsu
+	 ZRQvrZSdwOZgRTqxJp7W9ObuGqzJD0vi3lYGBVKGHrJre1/LGl+8To7xTF9Jx1zS4M
+	 0LKwoqlmBxA3lmtMHIu31QmrlbXXcuMq8Abzngd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbfKZToZ (ORCPT
+        id S1726072AbfKZUep (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 14:44:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfKZToZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Nov 2019 14:44:25 -0500
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E94B20874;
-        Tue, 26 Nov 2019 19:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574797464;
-        bh=um1j8Y/GaUsZ1q4T+Tiu5+4Kgs2yzoDg2ThT8cprhsY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=s2DzKRlGMlFyXboS3+ux6a+0J9Jj4ZZ2Ta/XPxcn/LL1zm9tGpoJ2knRLRxeO9UKm
-         7aSAdRg7u09+FNjsPT5WPuvb++5joBKHq8TQWRJVlfwsW0unmURJhcf+tUm4vCnOhA
-         45eqetRrjwiY4T6IizY/TnfK/dpZyfJ+ZiETfYLc=
-Received: by mail-qk1-f176.google.com with SMTP id c124so12823712qkg.0;
-        Tue, 26 Nov 2019 11:44:24 -0800 (PST)
-X-Gm-Message-State: APjAAAXGW1IjEtN2Z7mcpfuM0sbVat53CSxW58Gj6IejL6ARLRc4vglm
-        nq3t9KV0yZ4GPdiXNZl/E2EqbwIjNnsvqwIp/A==
-X-Google-Smtp-Source: APXvYqwtMCX2ktU7XP1vLiDif7HsVDYIGE5gPdIX/yIa4O+B0IDcNylxr73NToCcb42qbcuGNjawEioJubJ0X61Ew5M=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr115675qkn.254.1574797463436;
- Tue, 26 Nov 2019 11:44:23 -0800 (PST)
+        Tue, 26 Nov 2019 15:34:45 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45661 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfKZUep (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 15:34:45 -0500
+Received: by mail-io1-f66.google.com with SMTP id i11so11263782ioi.12;
+        Tue, 26 Nov 2019 12:34:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eCiyINJIqZQ9+c/j9O3wV96E5XzkXxVGgIEzTJ6ccpU=;
+        b=b9k89bAnLmb1qagKi1LUJu3LiGsnN1FMJYFfbWEm0B1GYoV/i4kYtOy1SjGBVDhJDo
+         BMZyY+htPtUlrDiqHFLpyKPtIXFcQYnSM26NHGpR+/QGmvrdgIN4rUVk1EkzJNCjvMM0
+         d186H016RdIo217/Bd3hDYz4jNiyPwvtKtwHrP0B2lxJkC8quUwPg7qK71o9MRmaUV7k
+         D0yah3csd0n3emtYCzVopi8Yuj13CNWwBbRmXHB0Me8zR7cYsPNzFtaaUvZJpl2dVVmA
+         f6csBLZzRewE3An2VS/xmWydcu0P6Iden6k6ZZ8pOyrVojbd2cp00SGOWg2Qi7zW3AlV
+         GPNA==
+X-Gm-Message-State: APjAAAXfT5DKO9PIWLIpDl1FIc2YIKt4DWj09knbdKC8NOVMCrR6ON6r
+        CLVowSLYrDdeI9gIVNhrRw==
+X-Google-Smtp-Source: APXvYqyNLRbXmRMw2om5THIIvUDL/2IP2aEwIaLwJGNOkUm6TYCHlgggxCi3KYF+cIwCDLGz2FM3sA==
+X-Received: by 2002:a6b:f317:: with SMTP id m23mr17361728ioh.303.1574800484514;
+        Tue, 26 Nov 2019 12:34:44 -0800 (PST)
+Received: from localhost ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id k22sm2923474iot.34.2019.11.26.12.34.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 12:34:43 -0800 (PST)
+Date:   Tue, 26 Nov 2019 13:34:42 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] libfdt: define INT32_MAX and UINT32_MAX in
+ libfdt_env.h
+Message-ID: <20191126203442.GA20537@bogus>
+References: <20191113071202.11287-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-References: <cover.1574458460.git.leonard.crestez@nxp.com> <CGME20191122214539epcas1p34d4ca24634642e8a79c33d7a7c9291ba@epcas1p3.samsung.com>
- <c0b332b85560e39d7dbb5e88b99bbed1d1b32373.1574458460.git.leonard.crestez@nxp.com>
- <f8838bc8-44db-551f-3199-eeea91e493f7@samsung.com>
-In-Reply-To: <f8838bc8-44db-551f-3199-eeea91e493f7@samsung.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 26 Nov 2019 12:44:12 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqJmZUVmM9BqQuD1npJ7Nqsh07CSEA5nB9-pt0v_X6HQCA@mail.gmail.com>
-Message-ID: <CAL_JsqJmZUVmM9BqQuD1npJ7Nqsh07CSEA5nB9-pt0v_X6HQCA@mail.gmail.com>
-Subject: Re: [PATCH v7 4/5] PM / devfreq: Add dynamic scaling for imx8m ddr controller
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        devicetree@vger.kernel.org,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113071202.11287-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 4:53 PM Chanwoo Choi <cw00.choi@samsung.com> wrote:
->
-> Hi Leonard,
->
-> On 11/23/19 6:45 AM, Leonard Crestez wrote:
-> > Add driver for dynamic scaling the DDR Controller on imx8m chips. Actual
-> > frequency switching is implemented inside TF-A, this driver wraps the
-> > SMC calls and synchronizes the clk tree.
-> >
-> > The DRAM clocks on imx8m have the following structure (abridged):
-> >
-> >  +----------+       |\            +------+
-> >  | dram_pll |-------|M| dram_core |      |
-> >  +----------+       |U|---------->| D    |
-> >                  /--|X|           |  D   |
-> >    dram_alt_root |  |/            |   R  |
-> >                  |                |    C |
-> >             +---------+           |      |
-> >             |FIX DIV/4|           |      |
-> >             +---------+           |      |
-> >   composite:     |                |      |
-> >  +----------+    |                |      |
-> >  | dram_alt |----/                |      |
-> >  +----------+                     |      |
-> >  | dram_apb |-------------------->|      |
-> >  +----------+                     +------+
-> >
-> > The dram_pll is used for higher rates and dram_alt is used for lower
-> > rates. The dram_alt and dram_apb clocks are "imx composite" and their
-> > parent can also be modified.
-> >
-> > This driver will prepare/enable the new parents ahead of switching (so
-> > that the expected roots are enabled) and afterwards it will call
-> > clk_set_parent to ensure the parents in clock framework are up-to-date.
-> >
-> > The driver relies on dram_pll dram_alt and dram_apb being marked with
-> > CLK_GET_RATE_NOCACHE for rate updates.
-> >
-> > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> > Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > ---
-> >  drivers/devfreq/Kconfig      |   9 +
-> >  drivers/devfreq/Makefile     |   1 +
-> >  drivers/devfreq/imx8m-ddrc.c | 465 +++++++++++++++++++++++++++++++++++
-> >  3 files changed, 475 insertions(+)
-> >  create mode 100644 drivers/devfreq/imx8m-ddrc.c
-> >
-> > diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> > index 59027d7ddf2a..5eac479dd05f 100644
-> > --- a/drivers/devfreq/Kconfig
-> > +++ b/drivers/devfreq/Kconfig
-> > @@ -89,10 +89,19 @@ config ARM_EXYNOS_BUS_DEVFREQ
-> >         Each memory bus group could contain many memoby bus block. It reads
-> >         PPMU counters of memory controllers by using DEVFREQ-event device
-> >         and adjusts the operating frequencies and voltages with OPP support.
-> >         This does not yet operate with optimal voltages.
-> >
-> > +config ARM_IMX8M_DDRC_DEVFREQ
-> > +     tristate "i.MX8M DDRC DEVFREQ Driver"
-> > +     depends on ARCH_MXC && HAVE_ARM_SMCCC
->
-> I'll edit it as following and applied it.
+On Wed, Nov 13, 2019 at 04:12:02PM +0900, Masahiro Yamada wrote:
+> The DTC v1.5.1 added references to (U)INT32_MAX.
+> 
+> This is no problem for user-space programs since <stdint.h> defines
+> (U)INT32_MAX along with (u)int32_t.
+> 
+> For the kernel space, libfdt_env.h needs to be adjusted before we
+> pull in the changes.
+> 
+> In the kernel, we usually use s/u32 instead of (u)int32_t for the
+> fixed-width types.
+> 
+> Accordingly, we already have S/U32_MAX for their max values.
+> So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
+> 
+> Instead, add them to the in-kernel libfdt_env.h to compile the
+> latest libfdt.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> My initial plan was to change this in a series of 3 patches
+> since it is clean, and reduces the code.
+> 
+> [1/3] https://lore.kernel.org/patchwork/patch/1147095/
+> [2/3] https://lore.kernel.org/patchwork/patch/1147096/
+> [3/3] https://lore.kernel.org/patchwork/patch/1147097/
+> 
+> 1/3 is stuck in the license bikeshed.
+> 
+> For 2/3, I have not been able to get Ack from Russell.
+> 
+> So, I chose a straight-forward fixup.
+> 
+> 
+> Changes in v3:
+>  - Resend as a single patch
+> 
+>  arch/arm/boot/compressed/libfdt_env.h | 4 +++-
+>  arch/powerpc/boot/libfdt_env.h        | 2 ++
+>  include/linux/libfdt_env.h            | 3 +++
+>  3 files changed, 8 insertions(+), 1 deletion(-)
 
-You corrupted the URLs in the binding patch when applying the series:
-
-Traceback (most recent call last):
- File "/usr/local/lib/python3.6/dist-packages/jsonschema/validators.py",
-line 774, in resolve_from_url
- document = self.store[url]
- File "/usr/local/lib/python3.6/dist-packages/jsonschema/_utils.py",
-line 22, in __getitem__
- return self.store[self.normalize(uri)]
-KeyError: 'https://protect2.fireeye.com/url?k=b51ff83f-e8cff0d7-b51e7370-000babff32e3-c25c03b8af1b12ee&u=http://devicetree.org/meta-schemas/core.yaml'
+Applied.
 
 Rob
