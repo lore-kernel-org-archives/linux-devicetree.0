@@ -2,166 +2,194 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44560C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 09:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D434C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 09:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B57D206BF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 09:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26E42073F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 09:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovYMWZh7"
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="yj/42p8M";
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="UM3FQllS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfKZJWp (ORCPT
+        id S1727275AbfKZJnH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:22:45 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44874 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbfKZJWp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 04:22:45 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v201so12413831lfa.11;
-        Tue, 26 Nov 2019 01:22:43 -0800 (PST)
+        Tue, 26 Nov 2019 04:43:07 -0500
+Received: from mx07-00252a01.pphosted.com ([62.209.51.214]:10708 "EHLO
+        mx07-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727636AbfKZJnF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:43:05 -0500
+Received: from pps.filterd (m0102628.ppops.net [127.0.0.1])
+        by mx07-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAQ9ZCK4012387
+        for <devicetree@vger.kernel.org>; Tue, 26 Nov 2019 09:37:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
+ cc : references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp;
+ bh=od7NtWv8A1ft46ESIAn5eCrlELpL9JojAJd+KINECi4=;
+ b=yj/42p8M5m7IE8Ht/7o0/YFharUMGlOYox7IFIQoFEp+X0CJKnG6o7cszwmadDYA+gBI
+ NaezpF3RrC+VBxFBOuhSX3zMBUm192U7kmMPxO8RKjuHAK2asOaOAVTJeSwGfbRXtSXc
+ NW9eZkhwWmF3e6914M2B745l0ybdIHZZNL+vWWVUD+D7geHfL7Ox3jKf+61xpSryRn+I
+ is7l8ZgXclE9+jxA4zJ1w3xi5DAfJYLucdrQj0y6Q+0ot8pcDJj1VLe73AfXUtsUweE+
+ lNv9yXNw3q2tXzXlix8BsUBbJwya9M8NOg03ODuXEHFQ86mdKaQaT4pNkKZw3YIAuHiR Jw== 
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        by mx07-00252a01.pphosted.com with ESMTP id 2weu29hee6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
+        for <devicetree@vger.kernel.org>; Tue, 26 Nov 2019 09:37:09 +0000
+Received: by mail-wm1-f72.google.com with SMTP id k7so882785wmj.3
+        for <devicetree@vger.kernel.org>; Tue, 26 Nov 2019 01:37:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nP42ri7Gfuyq7+jTSAaeHSR6UUUTuVIMdi0iTbY+h84=;
-        b=ovYMWZh7rJIAiQIsOphqx1xCiq5HXT19ucp08A6Hyajw4ROMLr8llSUbHC6t4TQbbK
-         ACgpjDob4IqxBrXWeNyQ5DWuHtKzhfrodRgDe4HZf/I2BlO9dhb3KFOYPGGzQqpr4Tzr
-         Kl7nncerWp7c7U/GWoDkqcdJA+K99QdIKjNxi/eA7+Yv9A/t6aCYgQZ1FltbxaTzzoTE
-         4AsFg2bM2KX0RP0FCJD/O/IG2nDPuPaGlcdLAqqPOOCj4YZLwBtna/a3teKAk5JeJkwa
-         k4Y0SxxyKhf06vtLD9Dqg7qh8UPyothUXTyyVUQ2V+T4JeSm4OLreRurbik48BVaGIKV
-         G4Ug==
+        d=raspberrypi.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=od7NtWv8A1ft46ESIAn5eCrlELpL9JojAJd+KINECi4=;
+        b=UM3FQllSTPplmabTC7jU+LvD7cb2Fa240ifZRDTJXFxChlEsJNHcaR/AfbBSmXRdnz
+         2eiiq9qJPnT7Bm3WqcNbdo8c4vDT5hRaMcQ8ASCvNqNXVLwg/s1NqhwXvB53f2NG9AmT
+         lVVGP/N/bHbHh3OgwN8MRxsK7oMBDUm+LtHpx8j3LDajq+Xk2K7AjT8aqk6HZn0WacaN
+         56T4do1RvngA5k9avohIS2oeWpX1pZvBfn7UJ00yurrTqZ7o88io8MPygmKqimVdQo0y
+         OtpPjyMbh16nPQzTN8uBuuXF+zqug9rEoU7H0q3piiYbiYM4EcyUjpEUGzCPnfstzE5E
+         0+BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nP42ri7Gfuyq7+jTSAaeHSR6UUUTuVIMdi0iTbY+h84=;
-        b=aYzwSDYwp0LMXU1ubKhSGt8LjA+WbD/rAZDwrn2fVQwZ+Rc/E/u65XupxAWFjgjrkt
-         jfshW28p3gLHKDPumbAq3dEjoblgomURSW0sctMNNP5KilcHBqXHeP0Y7fV2x+ClRAOC
-         hQWCm0vu1eH3++/v0k2MTca4H4QAB+QJn5Jv9DhTqz3pTCPyNJ41RP6Gs07THV1OQn2Y
-         KiHeznXpejc+XPghYFhmj16OcPVJ8pfeXBQFQxQHhZK6mZtVefLHoRILW775+NGtsxsb
-         FYBfs78Y0t4UU6SDWP4Lh1Resktij2gyIyBtAQSTYcg+csB+yJty9DiRW6TWOrzov1U8
-         DaqQ==
-X-Gm-Message-State: APjAAAUJczQmjehFtfAspbAF/lescnkWAVdfxaeLRiq5mTsIOUWUtAcJ
-        Dbv5iIG1Zq2ByreIYxw/wQQaYSqpUK6ts9VlbTQ=
-X-Google-Smtp-Source: APXvYqxwEoS4JdUZHseRdgXnA2T0ZSH6rIjpNKMLHoZ81qrtdpjff/6z2EOp2yzjzjEVqX1615n2wklv8ouZ3FFfeSM=
-X-Received: by 2002:ac2:5283:: with SMTP id q3mr23177580lfm.21.1574760162745;
- Tue, 26 Nov 2019 01:22:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20191121095350.158689-1-tali.perry1@gmail.com>
- <20191121095350.158689-3-tali.perry1@gmail.com> <20191125151618.GE2412@kunai> <CAHb3i=tGTcu2q15E5CL_od1rDgRDyx=ygoGSCu88AfBrnFn71w@mail.gmail.com>
-In-Reply-To: <CAHb3i=tGTcu2q15E5CL_od1rDgRDyx=ygoGSCu88AfBrnFn71w@mail.gmail.com>
-From:   Tali Perry <tali.perry1@gmail.com>
-Date:   Tue, 26 Nov 2019 11:27:54 +0200
-Message-ID: <CAHb3i=s+u1gHXwi7j7V_N-c8f8n7c1XB3QhkY8EAJuv6PA5GNw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] i2c: npcm: Add Nuvoton NPCM I2C controller driver
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=od7NtWv8A1ft46ESIAn5eCrlELpL9JojAJd+KINECi4=;
+        b=lo+AxBdyozXuh3KPPIfrfsP8JT5W9dWHz+/Dvopydf11keJ2fTRIuhGmOXoParfu3m
+         601fkqGoE20vOIEtCJu4yGB24MZabzupcEpLqI8l/+2wcM4bDER3hKPhqzaHTjD2f65t
+         erbBBOOPHVt/rLdmgUytDst24mWrCUsmHpr8qML/8b21MGTofMmBl+0/I7JDNfX3btem
+         iHTaS6ruonM/2IglibVY7Zf1IDHew4QT74NcgnXL4KMovpDcUGpPQgqgbL1pxibU0g8z
+         jWOxDOec73pyWrc+8mScpBAIA9OmrKOIuspU9jq9WN2Ez+DYJx8r4hpqhRd3numeVDK1
+         +gGA==
+X-Gm-Message-State: APjAAAWDSyZ9WmhnCcZR7kZfas1A26nQ8JEjGCKn+08u8YIS8U6RJlm7
+        z2QIjKH9MApAosdjKsv0WB0jo7LBWLYtmAeV94kz/T78F+0SW1caqIMSusJYF4K+DjCxREqvbzY
+        to1KBU60JEqJTPxsqPjEVxQ==
+X-Received: by 2002:a5d:4946:: with SMTP id r6mr28487130wrs.155.1574761028346;
+        Tue, 26 Nov 2019 01:37:08 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwBt2FmyEREb7ZvdP/DpQYA/wjkntFQB86TPOEh4oNOeIIRXcU33m0OX9mwck9d8Gn6k8YdQg==
+X-Received: by 2002:a5d:4946:: with SMTP id r6mr28487093wrs.155.1574761027986;
+        Tue, 26 Nov 2019 01:37:07 -0800 (PST)
+Received: from ?IPv6:2a00:1098:3142:14:f57f:65b0:b998:e2ca? ([2a00:1098:3142:14:f57f:65b0:b998:e2ca])
+        by smtp.gmail.com with ESMTPSA id e16sm2372706wme.35.2019.11.26.01.37.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2019 01:37:07 -0800 (PST)
+Subject: Re: [PATCH v3 3/7] ARM: dts: bcm2711: Enable PCIe controller
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Patrick Venture <venture@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        avifishman70@gmail.com, joel@jms.id.au,
-        Tomer Maimon <tmaimon77@gmail.com>, syniurge@gmail.com,
-        linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+ <20191126091946.7970-4-nsaenzjulienne@suse.de>
+From:   Phil Elwell <phil@raspberrypi.org>
+Message-ID: <ede90a60-8194-4035-01c2-2673f4a8cfe7@raspberrypi.org>
+Date:   Tue, 26 Nov 2019 09:37:08 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191126091946.7970-4-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-26_01:2019-11-26,2019-11-26 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Hi Nicolas,
 
-Thanks for your comments.
+On 26/11/2019 09:19, Nicolas Saenz Julienne wrote:
+> This enables bcm2711's PCIe bus, which is hardwired to a VIA
+> Technologies XHCI USB 3.0 controller.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> 
+> ---
+> 
+> This will likely need a rebase once the RPi GENET patches land.
+> 
+> Changes since v2:
+>    - Remove unused interrupt-map
+>    - correct dma-ranges to it's full size, non power of 2 bus DMA
+>      constraints now supported in linux-next[1]
+>    - add device_type
+>    - rename alias from pcie_0 to pcie0
+> 
+> Changes since v1:
+>    - remove linux,pci-domain
+> 
+> [1] https://lkml.org/lkml/2019/11/21/235
+> 
+>   arch/arm/boot/dts/bcm2711.dtsi | 41 ++++++++++++++++++++++++++++++++++
+>   1 file changed, 41 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index 667658497898..2e121fc8b3d0 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -288,6 +288,47 @@ IRQ_TYPE_LEVEL_LOW)>,
+>   		arm,cpu-registers-not-fw-configured;
+>   	};
+>   
+> +	scb {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +
+> +		ranges = <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
+> +			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
+> +
+> +		pcie0: pcie@7d500000 {
+> +			compatible = "brcm,bcm2711-pcie";
+> +			reg = <0x0 0x7d500000 0x9310>;
+> +			device_type = "pci";
+> +			#address-cells = <3>;
+> +			#interrupt-cells = <1>;
+> +			#size-cells = <2>;
+> +			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "pcie", "msi";
+> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +			interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143
+> +							IRQ_TYPE_LEVEL_HIGH>;
+> +			msi-controller;
+> +			msi-parent = <&pcie0>;
+> +
+> +			ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000
+> +				  0x0 0x04000000>;
+> +			/*
+> +			 * The wrapper around the PCIe block has a bug
+> +			 * preventing it from accessing beyond the first 3GB of
+> +			 * memory. As the bus DMA mask is rounded up to the
+> +			 * closest power of two of the dma-range size, we're
+> +			 * forced to set the limit at 2GB. This can be
+> +			 * harmlessly changed in the future once the DMA code
+> +			 * handles non power of two DMA limits.
+> +			 */
+> +			dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000
+> +				      0x0 0xc0000000>;
 
-The NPCM7XX BMC I2C\SMB controller HW module supports both SMB and I2C.
-It's main features are:
-1. Supports Fast-Mode (400 KHz clock) I2C and Fast-Mode-plus (1 MHz clock) =
-I2C
-2. Supports the =E2=80=98fairness=E2=80=99 arbitration protocol defined by =
-the MCTP
-SMBus/I2C Transport Binding Specification v1.0.0
-3. 32KB packets : this is an I2C spec limitation. The HW has no limit
-on packets size. It has a 16 bytes FIFO which can be reloaded over and
-over.
-4. w\o size byte (for SMB block protocol).
-5. Both master and slave. It can also replace modes in run time
-(requirement for IPMB and MCTP).
-6. Bus timing is selected to support both specs.
+The comment doesn't match the data here - I think for now the size field 
+needs to be reduced to 2GB to match the comment.
 
-Originally the HW spec stated SMB everywhere .
+Phil
 
-Should I rename the SMB to I2C all over the driver?
-
-Thanks,
-Tali Perry
-
-
-On Tue, Nov 26, 2019 at 8:47 AM Tali Perry <tali.perry1@gmail.com> wrote:
->
-> Hi Wolfram,
->
-> Thanks for your comments.
->
-> The NPCM7XX BMC I2C\SMB controller HW module supports both SMB and I2C.
-> It's main features are:
-> 1. Supports Fast-Mode (400 KHz clock) I2C and Fast-Mode-plus (1 MHz clock=
-) I2C
-> 2. Supports the =E2=80=98fairness=E2=80=99 arbitration protocol defined b=
-y the MCTP SMBus/I2C Transport Binding Specification v1.0.0
-> 3. 32KB packets : this is an I2C spec limitation. The HW has no limit on =
-packets size. It has a 16 bytes FIFO which can be reloaded over and over.
-> 4. w\o size byte (for SMB block protocol).
-> 5. Both master and slave. It can also replace modes in run time (requirem=
-ent for IPMB and MCTP).
-> 6. Bus timing is selected to support both specs.
->
-> Originally the HW spec stated SMB everywhere .
->
-> Should I rename the SMB to I2C all over the driver?
->
-> Thanks,
-> Tali Perry
->
->
-> On Mon, Nov 25, 2019 at 5:16 PM Wolfram Sang <wsa@the-dreams.de> wrote:
->>
->> On Thu, Nov 21, 2019 at 11:53:50AM +0200, Tali Perry wrote:
->> > Add Nuvoton NPCM BMC i2c controller driver.
->> >
->> > Signed-off-by: Tali Perry <tali.perry1@gmail.com>
->>
->> Looking at all this SMB_* naming of the registers and also the quirks,
->> this looks more like an SMBUS controller to me?
->>
->> > +     // currently I2C slave IF only supports single byte operations.
->> > +     // in order to utilyze the npcm HW FIFO, the driver will ask for=
- 16bytes
->> > +     // at a time, pack them in buffer, and then transmit them all to=
-gether
->> > +     // to the FIFO and onward to the bus .
->> > +     // NACK on read will be once reached to bus->adap->quirks->max_r=
-ead_len
->> > +     // sending a NACK whever the backend requests for it is not supp=
-orted.
->>
->> This for example...
->>
->> > +static const struct i2c_adapter_quirks npcm_i2c_quirks =3D {
->> > +     .max_read_len =3D 32768,
->> > +     .max_write_len =3D 32768,
->> > +     .max_num_msgs =3D 2,
->> > +     .flags =3D I2C_AQ_COMB_WRITE_THEN_READ
->> > +};
->>
->> ... and this. Like SMBus with the only exception of being able to send
->> 32K in a row. Or?
->>
+> +			brcm,enable-ssc;
+> +		};
+> +	};
+> +
+>   	cpus: cpus {
+>   		#address-cells = <1>;
+>   		#size-cells = <0>;
+> 
