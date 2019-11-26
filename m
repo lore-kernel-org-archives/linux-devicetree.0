@@ -2,82 +2,68 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F43C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 06:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5A7C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 07:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF58420727
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 06:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nTmrKgF6"
+	by mail.kernel.org (Postfix) with ESMTP id 1498C20659
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 07:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfKZGsG (ORCPT
+        id S1727150AbfKZHTg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 01:48:06 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:14539 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725765AbfKZGsG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 01:48:06 -0500
-X-UUID: db699e4521d2452290f4e1aecce9bf05-20191126
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=nJCMS+Zb2KV7c0nSvZbugfFbLOeQLmtQW9fHLXvNcd8=;
-        b=nTmrKgF6DdCMqV6Xarm3fgQ1xcW7h0+fzhjtyUo+Q+xbeAQJcXcLMtTf1xGRSpCLuknPNhAjNVRG0unFJAGAuEV14nwYQYF7F7DSTZ6jJAldnk0iSt5qrqfDgpHFCe78+/a6JhJCD3XbGRtZY6KrC+EA/996YN5RKvlxEjpaetA=;
-X-UUID: db699e4521d2452290f4e1aecce9bf05-20191126
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1907628759; Tue, 26 Nov 2019 14:48:01 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 26 Nov 2019 14:47:51 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 26 Nov 2019 14:48:23 +0800
-From:   <yongqiang.niu@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Tue, 26 Nov 2019 02:19:36 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:52950 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfKZHTg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 02:19:36 -0500
+Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id EFBD6CECF6;
+        Tue, 26 Nov 2019 08:28:41 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v6 0/4] Bluetooth: hci_bcm: Additional changes for BCM4354
+ support
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CANFp7mXNPsmfC_dDcxP1N9weiEFdogOvgSjuBLJSd+4-ONsoOQ@mail.gmail.com>
+Date:   Tue, 26 Nov 2019 08:19:33 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v1] drm/mediatek: fix up 1440x900 dp display black screen issue
-Date:   Tue, 26 Nov 2019 14:47:49 +0800
-Message-ID: <1574750869-12611-1-git-send-email-yongqiang.niu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Chen-Yu Tsai <wens@csie.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <1CEB6B69-09AA-47AA-BC43-BD17C00249E7@holtmann.org>
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <1CEDCBDC-221C-4E5F-90E9-898B02304562@holtmann.org>
+ <CANFp7mXNPsmfC_dDcxP1N9weiEFdogOvgSjuBLJSd+4-ONsoOQ@mail.gmail.com>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQoNClRoaXMg
-cGF0Y2ggZml4IHVwIDE0NDB4OTAwIGRwIGRpc3BsYXkgYmxhY2sgc2NyZWVuIGlzc3VlDQp0aGUg
-Y29tcHV0ZWQgcmVzdWx0IHdpbGwgb3ZlcmZsb3cgcmRtYTEgZmlmbyBtYXggc2l6ZQ0Kd2hlbiBl
-eHRlcm5hbCBkaXNwbGF5IHBpeGVsIGNsb2NrIGJpZ2dlciB0aGFuIDc0TUhaDQoNClNpZ25lZC1v
-ZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KLS0tDQog
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYyB8IDQgKysrKw0KIDEgZmls
-ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2Rpc3BfcmRtYS5jDQppbmRleCBjMWFiZGUzLi40MTE0M2Y1IDEwMDY0NA0KLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kaXNwX3JkbWEuYw0KQEAgLTE1Miw2ICsxNTIsMTAgQEAgc3RhdGljIHZv
-aWQgbXRrX3JkbWFfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsIHVuc2lnbmVkIGlu
-dCB3aWR0aCwNCiAJICogYWNjb3VudCBmb3IgYmxhbmtpbmcsIGFuZCB3aXRoIGEgcGl4ZWwgZGVw
-dGggb2YgNCBieXRlczoNCiAJICovDQogCXRocmVzaG9sZCA9IHdpZHRoICogaGVpZ2h0ICogdnJl
-ZnJlc2ggKiA0ICogNyAvIDEwMDAwMDA7DQorDQorCWlmICh0aHJlc2hvbGQgPiByZG1hX2ZpZm9f
-c2l6ZSkNCisJCXRocmVzaG9sZCA9IHJkbWFfZmlmb19zaXplOw0KKw0KIAlyZWcgPSBSRE1BX0ZJ
-Rk9fVU5ERVJGTE9XX0VOIHwNCiAJICAgICAgUkRNQV9GSUZPX1BTRVVET19TSVpFKHJkbWFfZmlm
-b19zaXplKSB8DQogCSAgICAgIFJETUFfT1VUUFVUX1ZBTElEX0ZJRk9fVEhSRVNIT0xEKHRocmVz
-aG9sZCk7DQotLSANCjEuOC4xLjEuZGlydHkNCg==
+Hi Abhishek,
+
+> It looks about the same as one of my earlier patch series. Outside a
+> few nitpicks, I'm ok with merging this.
+
+I fixed the nitpicks up and send a v2.
+
+However we should still work towards a generic description of Bluetooth PCM settings for all vendors. Any ideas are welcome.
+
+Regards
+
+Marcel
 
