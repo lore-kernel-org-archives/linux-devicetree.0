@@ -2,86 +2,78 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3297BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 03:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6EDC432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 04:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E564F206F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 03:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5992080F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 04:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="SZPRGPx9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DVoC6vHg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GhNKSt0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbfKZDaA (ORCPT
+        id S1727148AbfKZEUR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 22:30:00 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60307 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbfKZD37 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Nov 2019 22:29:59 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D5A866EB1;
-        Mon, 25 Nov 2019 22:29:56 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 25 Nov 2019 22:29:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=KycFNOHXT6CcMo9TPCaUgdaCZdV5Z8A
-        gfUCO43zSPqY=; b=SZPRGPx9vKNpFnpv0SeSxdh0I1XIeLEZC4Si0/CwdgRtM+/
-        3dR9AzoBMsUxHilPyAmcnmEchnmx60CvQ2uJw1KlVoK5nrVW0xf40HT/X+ESfuk8
-        7V1rAz6IvYmCSTmTUjs8cRCxqvitx4uoS4CRQ3Xe0L4xXFHdRMd0yDt/uFM2jb7k
-        FfSHjM15QbTiE1jxGF9n6ThOe5rxp5Shyggh1Y+HpJ8KZqOLuWTAtz53FzM2IsdS
-        8RappJ4/5uqxSe2LbWON2BzeWXW6XqIQuKbqakSOurlfxwIocsIJKp8cwjMwiM+p
-        wzDDd9iIiFJHeqjVKBVS/zJiutHPrYHrdXYG9cA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=KycFNO
-        HXT6CcMo9TPCaUgdaCZdV5Z8AgfUCO43zSPqY=; b=DVoC6vHgZP7GlRaGjS6wi4
-        m4k5YcHvRsm0BJEgVuabQ1TkpCFhc8Io7PBVD+t4qYk1UBpcs0OqABJtGhgBq22M
-        YnVJRUeFiX6F8aq2td2fRQpRCDcRSdvs4zBXvKoTAZztMn2GHIzskd8wuTBmm4AI
-        IQshSnpm+ZVrMGswQ2q40hJJWOCEl+MB8xLHERyxSptQhvKRGc1UVGePBo+jRSHW
-        +VnKUyI3jU+pp3X0Z8IJeM061bwVNHNZ0dcljBiihqxjIqztWGV/nYCbprL1bTyU
-        69oIx/FSbqjhjLxEnae1UEQZraxOayLPaSvYQUm/sndHRPK3iD8a3lqc9ATf8l1g
-        ==
-X-ME-Sender: <xms:M5zcXQYyo0_60wqHSTR-D_H-_nnC9aOnQC8ijBY9YGrv3yOtJYtnlw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeivddgheekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:M5zcXbFycGJH_bjQAn__qsQDJE_hxro8iDoCnX9Pki6M1q2AONCXWA>
-    <xmx:M5zcXWlhkIyIlI1-V6nTq7YYmo_viikNurSvZJsB0pZytcvhKSAvQQ>
-    <xmx:M5zcXWcTGGNFb9XpoqUUww4rYtA9a5djDT00wCkJubxARYzrNm0m0Q>
-    <xmx:NJzcXapUs5-wqIUNzKd4mc7LzVKttRIac-loODaTC7AEmKGM-QmVBg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 716AEE00A2; Mon, 25 Nov 2019 22:29:55 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
-Mime-Version: 1.0
-Message-Id: <2bab457b-a66e-4b40-949a-fda8b5ec69c0@www.fastmail.com>
-In-Reply-To: <d096ccaa-1ee5-24f2-d510-04339c131ad8@linux.vnet.ibm.com>
-References: <1573244313-9190-1-git-send-email-eajames@linux.ibm.com>
- <1573244313-9190-8-git-send-email-eajames@linux.ibm.com>
- <3de1107b-59e6-48a6-90a0-704f0ebf70da@www.fastmail.com>
- <d096ccaa-1ee5-24f2-d510-04339c131ad8@linux.vnet.ibm.com>
-Date:   Tue, 26 Nov 2019 14:00:16 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.vnet.ibm.com>,
-        "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     linux-aspeed@lists.ozlabs.org, "Joel Stanley" <joel@jms.id.au>,
-        maz@kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
-        tglx@linutronix.de, "Rob Herring" <robh+dt@kernel.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH 07/12] drivers/soc: xdma: Add user interface
-Content-Type: text/plain
+        Mon, 25 Nov 2019 23:20:17 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:1377 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfKZEUR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 23:20:17 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ddca8010001>; Mon, 25 Nov 2019 20:20:17 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 25 Nov 2019 20:20:15 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 25 Nov 2019 20:20:15 -0800
+Received: from [10.24.193.46] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Nov
+ 2019 04:20:12 +0000
+Subject: Re: [PATCH v4 3/5] dt-bindings: phy: tegra: Add Tegra194 support
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        JC Kuo <jckuo@nvidia.com>, "Rob Herring" <robh@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-tegra@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191009024343.30218-1-jckuo@nvidia.com>
+ <20191009024343.30218-4-jckuo@nvidia.com> <20191009233900.GA9109@bogus>
+ <20191014131752.GF422231@ulmo>
+ <CAL_Jsq+aKxfAir3skanfqmM+nFFzXPFL4eMa-+pq1kH-90YTbg@mail.gmail.com>
+ <57692050-8284-a31f-71fd-7441823f3f2b@nvidia.com>
+ <20191017120128.GE3122066@ulmo>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <0fd1f30c-5155-e1df-69b9-a49271b7cbce@nvidia.com>
+Date:   Tue, 26 Nov 2019 09:51:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <20191017120128.GE3122066@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574742017; bh=z3EDY6Eao4JzaFtK6U1s4QYBS3tl1Z7pp75azK3pO0o=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GhNKSt0c59jg+kLa61P4Y7fUmS5B6/57P69x4BbS3s3kr9ya+cgppsDi9gAODDoOM
+         CHe9bpxybhbX5WkOTH1zyXv455rh2nUDr1mBks7ZMTsXoZjc5MyfZm05DW5RAqacQX
+         zDvMrj6WnkiaQj63jDEMcfeSaUph5eAu0mH4BAjoK/2kiMkLK7ey1Zr8lS8tybxXtI
+         33RfTA9tQ5cEBvZU4qyb5Dt2v7MWl7ow4luF8uqK2i+BRAv/RsF7r2nN779yZYuXa1
+         Mm9i5l7ltO05tkpPW7zAGM9wkSVR5qOr46u53lpEL7nihLrxSmdrXZBgKhNRKnx2mi
+         m+l2KPQXG1Y+Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -89,343 +81,106 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On Tue, 26 Nov 2019, at 06:14, Eddie James wrote:
+On 17-10-2019 17:31, Thierry Reding wrote:
+> On Thu, Oct 17, 2019 at 03:48:52PM +0800, JC Kuo wrote:
+>> Hi Thierry, Hi Rob, Hi Kishon,
+>> Please let me know your thoughts of the below implementation.
+>>
+>> 1. Add a "bool disable_gen2" to "phy->attrs" structure.
+>> 2. In _of_phy_get() of phy-core.c to add the follow to parse a generic property.
+>>
+>> 	phy->attrs.disable_gen2 = of_property_read_bool(args.np,
+>> 							"usb-disable-gen2");
 > 
-> On 11/24/19 5:59 PM, Andrew Jeffery wrote:
-> >
-> > On Sat, 9 Nov 2019, at 06:48, Eddie James wrote:
-> >> This commits adds a miscdevice to provide a user interface to the XDMA
-> >> engine. The interface provides the write operation to start DMA
-> >> operations. The DMA parameters are passed as the data to the write call.
-> >> The actual data to transfer is NOT passed through write. Note that both
-> >> directions of DMA operation are accomplished through the write command;
-> >> BMC to host and host to BMC.
-> >>
-> >> The XDMA engine is restricted to only accessing the reserved memory
-> >> space on the AST2500, typically used by the VGA. For this reason, the
-> >> VGA memory space is pooled and allocated with genalloc. Users calling
-> >> mmap allocate pages from this pool for their usage. The space allocated
-> >> by a client will be the space used in the DMA operation. For an
-> >> "upstream" (BMC to host) operation, the data in the client's area will
-> >> be transferred to the host. For a "downstream" (host to BMC) operation,
-> >> the host data will be placed in the client's memory area.
-> >>
-> >> Poll is also provided in order to determine when the DMA operation is
-> >> complete for non-blocking IO.
-> >>
-> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> >> ---
-> >>   drivers/soc/aspeed/aspeed-xdma.c | 223 +++++++++++++++++++++++++++++++++++++++
-> >>   1 file changed, 223 insertions(+)
-> >>
-> >> diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
-> >> index 99041a6..3d37582 100644
-> >> --- a/drivers/soc/aspeed/aspeed-xdma.c
-> >> +++ b/drivers/soc/aspeed/aspeed-xdma.c
-> >> @@ -64,6 +64,9 @@
-> >>   #define XDMA_CMDQ_SIZE				PAGE_SIZE
-> >>   #define XDMA_NUM_CMDS				\
-> >>   	(XDMA_CMDQ_SIZE / sizeof(struct aspeed_xdma_cmd))
-> >> +#define XDMA_OP_SIZE_MAX			sizeof(struct aspeed_xdma_op)
-> >> +#define XDMA_OP_SIZE_MIN			\
-> >> +	(sizeof(struct aspeed_xdma_op) - sizeof(u64))
-> >>   
-> >>   /* Aspeed specification requires 10ms after switching the reset line */
-> >>   #define XDMA_RESET_TIME_MS			10
-> >> @@ -216,6 +219,7 @@ struct aspeed_xdma {
-> >>   	bool in_reset;
-> >>   	bool upstream;
-> >>   	unsigned int cmd_idx;
-> >> +	struct mutex file_lock;
-> > Please add documentation about what data file_lock is protecting.
-> >
-> >>   	struct mutex start_lock;
-> >>   	struct delayed_work reset_work;
-> >>   	spinlock_t client_lock;
-> >> @@ -230,6 +234,8 @@ struct aspeed_xdma {
-> >>   	dma_addr_t cmdq_vga_phys;
-> >>   	void *cmdq_vga_virt;
-> >>   	struct gen_pool *vga_pool;
-> >> +
-> >> +	struct miscdevice misc;
-> >>   };
-> >>   
-> >>   struct aspeed_xdma_client {
-> >> @@ -557,6 +563,204 @@ static irqreturn_t aspeed_xdma_pcie_irq(int irq,
-> >> void *arg)
-> >>   	return IRQ_HANDLED;
-> >>   }
-> >>   
-> >> +static ssize_t aspeed_xdma_write(struct file *file, const char __user *buf,
-> >> +				 size_t len, loff_t *offset)
-> >> +{
-> >> +	int rc;
-> >> +	struct aspeed_xdma_op op;
-> >> +	struct aspeed_xdma_client *client = file->private_data;
-> >> +	struct aspeed_xdma *ctx = client->ctx;
-> >> +	u32 offs = client->phys ? (client->phys - ctx->vga_phys) :
-> >> +		XDMA_CMDQ_SIZE;
-> >> +
-> >> +	if (len < XDMA_OP_SIZE_MIN)
-> >> +		return -EINVAL;
-> >> +
-> >> +	if (len > XDMA_OP_SIZE_MAX)
-> >> +		len = XDMA_OP_SIZE_MAX;
-> > Isn't this an EINVAL case as well?
+> Regarding this, I'm not sure how Rob imagined the generic properties to
+> work. Perhaps he was thinking about something like the max-link-speed
+> property found in the PCI bindings.
 > 
+> We could have something like this:
 > 
-> Perhaps so.
+>   - max-link-speed:
+>       If present this property specifies the USB generation supported on
+>       the PHY/port. Must be:
+>         1: for USB 3.1 Gen 1 (a.k.a. USB 3.0)
+>         2: for USB 3.1 Gen 2
 > 
+> I'm not sure if we need to consider anything prior to USB 3.0. I suppose
+> we could do a similar mapping to what I proposed for the PHY ->set_mode
+> callback:
 > 
-> >
-> >> +
-> >> +	rc = copy_from_user(&op, buf, len);
-> >> +	if (rc)
-> >> +		return rc;
-> >> +
-> >> +	if (op.direction == ASPEED_XDMA_DIRECTION_RESET) {
-> > Seems a bit abusive to use the direction field to issue a reset.
+>   - max-link-speed:
+>       If present this property specifies the USB generation supported on
+>       the PHY/port. Must be:
+>         0x0100: for USB 1.0 (Low-Speed)
+>         0x0101: for USB 1.1 (Full-Speed)
+>         0x0200: for USB 2.0 (Hi-Speed)
+>         0x0300: for USB 3.0 (SuperSpeed) (a.k.a. USB 3.1 Gen 1)
+>         0x0301: for USB 3.1 (SuperSpeed 10 Gbit/s) (a.k.a. USB 3.1 Gen 2)
+>         0x0302: for USB 3.2 (SuperSpeed 20 Gbit/s) (a.k.a. USB 3.2 Gen 2 x 2)
+>         ...
 > 
+> Or those could just be sequentially enumerated, like in the above
+> example.
 > 
-> What would you recommend instead?
+> Rob, any thoughts?
+> 
+> Thierry
+> 
 
-Looks like an ioctl() to me. But what need do we have to directly reset
-the device? Could we achieve the same by rebinding the driver if
-necessary? We should only need to reset it if the driver has bugs, or
-is there some errata that we need to deal with? Userspace shouldn't
-be handling that though?
+"Documentation/devicetree/bindings/usb/generic.txt" file already has dt-property named
+maximum-speed, which fulfills current requirement. So to disable gen2 feature simply
+add below entry to corresponding usb3 port entry.
+		padctl@3520000 {
+			status = "okay";
 
-> 
-> 
-> >
-> >> +		mutex_lock(&ctx->start_lock);
-> >> +
-> >> +		if (aspeed_xdma_reset_start(ctx)) {
-> >> +			msleep(XDMA_RESET_TIME_MS);
-> >> +
-> >> +			aspeed_xdma_reset_finish(ctx);
-> >> +		}
-> >> +
-> >> +		mutex_unlock(&ctx->start_lock);
-> >> +
-> >> +		return len;
-> >> +	} else if (op.direction > ASPEED_XDMA_DIRECTION_RESET) {
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	if (op.len > ctx->vga_size - offs)
-> >> +		return -EINVAL;
-> >> +
-> >> +	if (file->f_flags & O_NONBLOCK) {
-> >> +		if (!mutex_trylock(&ctx->file_lock))
-> >> +			return -EAGAIN;
-> >> +
-> >> +		if (ctx->in_progress || ctx->in_reset) {
-> > ctx->in_progress was protected by a lock that isn't file_lock, so this looks wrong.
-> 
-> 
-> file_lock isn't protecting in_progress. It's protecting access to the 
-> whole engine while a transfer is in progress.
+			ports {
+				usb3-3 {
+					maximum-speed = "super-speed";
+				};
+		};
 
-Then when would we ever gain file_lock if in_progress was set? Shouldn't the current
-client hold file_lock until we'd set in_progress to false, in which case we wouldn't
-need to check in_progress if we now hold the lock?
+Read the property using API usb_get_maximum_speed.
 
-> in_progress isn't protected at all,
-
-Except it is, because you've acquired file_lock above before checking it (and
-in_reset).
-
-And why is in_progress written to under ctx->start_lock (which is not file_lock)
-in aspeed_xdma_start() in the earlier patch if it's not protected?
-
-> it's just better to lock
-
-There's never a case of "it's just better to lock", as if it were optional. Either the
-variable needs to be protected against concurrent access or it doesn't. If it does,
-always access it under a consistent lock.
-
-> before waiting for 
-> in_progress so that multiple clients don't all see in_progress go false 
-> and have to wait for a mutex (particularly in the nonblocking case).
-
-Yes, so what you're suggesting is that in_progress needs to be protected against
-concurrent access, so needs to be accessed under a consistent lock. Though as
-suggested above it might be enough to successfully acquire file_lock.
-
-As far as I can see we have three events that we need to care about:
-
-1. Submission of a DMA request
-2. Completion of a DMA request
-3. PCIe-driven reset
-
-For 1, multiple concurrent submissions need to be serialised, so we need a
-mutex with the semantics of file_lock as you've described above.
-
-2 should only occur if we have an event of type 1 outstanding. If 1 is outstanding
-then receiving 2 should cause the process that triggered 1 to wake and release
-the mutex.
-
-3 can happen at any time which results in two cases that we need to care about:
-
-3a. DMA request in progress (i.e. 1 but have not yet seen corresponding 2)
-3b. DMA idle (no request in progress)
-
-Events of type 1 need to be serialised against 3. 2 won't occur after 3 until 1 has
-occurred, so there's no need to consider it in the serialisation for 3.
-
-In the case of 3a. we need to reset the device, then mark the current transfer failed,
-then wake the associated process. The woken process will release the mutex and
-allow any queued requests to proceed.
-
-3b is much simpler, though we need to prevent events of type 1 concurrently
-accessing the device while the reset is in progress. So we need a spinlock to cover
-configuring the device.
-
-So that's two locks - a mutex to serialise process-context access to the device, and
-a spinlock to serialise interrupts with respect to process-context access. Currently
-your implementation contains two mutexes (start_lock and file_lock) and two
-spinlocks (client_lock and reset_lock), all with fairly hazy definitions.
-
-> 
-> 
-> >
-> >> +			mutex_unlock(&ctx->file_lock);
-> >> +			return -EAGAIN;
-> >> +		}
-> >> +	} else {
-> >> +		mutex_lock(&ctx->file_lock);
-> >> +
-> >> +		rc = wait_event_interruptible(ctx->wait, !ctx->in_progress &&
-> >> +					      !ctx->in_reset);
-> > As above.
-> >
-> >> +		if (rc) {
-> >> +			mutex_unlock(&ctx->file_lock);
-> >> +			return -EINTR;
-> >> +		}
-> >> +	}
-> >> +
-> >> +	aspeed_xdma_start(ctx, &op, ctx->vga_phys + offs, client);
-> >> +
-> >> +	mutex_unlock(&ctx->file_lock);
-> >> +
-> >> +	if (!(file->f_flags & O_NONBLOCK)) {
-> >> +		rc = wait_event_interruptible(ctx->wait, !ctx->in_progress);
-> >> +		if (rc)
-> >> +			return -EINTR;
-> >> +
-> >> +		if (client->error)
-> >> +			return -EIO;
-> > What's the client->error value? Can it be more informative?
-> 
-> 
-> Not really. There isn't much error information available. Basically the 
-> only way to get an error is if the engine is reset (user or PCIE 
-> initiated) while the transfer is on-going.
-> 
-> 
-> >
-> >> +	}
-> >> +
-> >> +	return len;
-> > We've potentially truncated len above (in the len >  XDMA_OP_SIZE_MAX),
-> > which leads to some ambiguity with the write() syscall given that it can
-> > potentially return less than the requested length. This is one such case, but
-> > the caller probably shouldn't attempt a follow-up write.
-> >
-> > This would go away if we make the len > XDMA_OP_SIZE_MAX an EINVAL
-> > case as suggested agove.
-> 
-> 
-> Sure.
-> 
-> 
-> >
-> >> +}
-> >> +
-> >> +static __poll_t aspeed_xdma_poll(struct file *file,
-> >> +				 struct poll_table_struct *wait)
-> >> +{
-> >> +	__poll_t mask = 0;
-> >> +	__poll_t req = poll_requested_events(wait);
-> >> +	struct aspeed_xdma_client *client = file->private_data;
-> >> +	struct aspeed_xdma *ctx = client->ctx;
-> >> +
-> >> +	if (req & (EPOLLIN | EPOLLRDNORM)) {
-> >> +		if (client->in_progress)
-> >> +			poll_wait(file, &ctx->wait, wait);
-> >> +
-> >> +		if (!client->in_progress) {
-> >> +			if (client->error)
-> >> +				mask |= EPOLLERR;
-> >> +			else
-> >> +				mask |= EPOLLIN | EPOLLRDNORM;
-> >> +		}
-> >> +	}
-> >> +
-> >> +	if (req & (EPOLLOUT | EPOLLWRNORM)) {
-> >> +		if (ctx->in_progress)
-> >> +			poll_wait(file, &ctx->wait, wait);
-> >> +
-> >> +		if (!ctx->in_progress)
-> >> +			mask |= EPOLLOUT | EPOLLWRNORM;
-> >> +	}
-> >> +
-> >> +	return mask;
-> >> +}
-> >> +
-> >> +static void aspeed_xdma_vma_close(struct vm_area_struct *vma)
-> >> +{
-> >> +	struct aspeed_xdma_client *client = vma->vm_private_data;
-> >> +
-> >> +	gen_pool_free(client->ctx->vga_pool, (unsigned long)client->virt,
-> >> +		      client->size);
-> >> +
-> >> +	client->virt = NULL;
-> >> +	client->phys = 0;
-> >> +	client->size = 0;
-> >> +}
-> >> +
-> >> +static const struct vm_operations_struct aspeed_xdma_vm_ops = {
-> >> +	.close =	aspeed_xdma_vma_close,
-> >> +};
-> >> +
-> >> +static int aspeed_xdma_mmap(struct file *file, struct vm_area_struct *vma)
-> >> +{
-> >> +	int rc;
-> >> +	struct aspeed_xdma_client *client = file->private_data;
-> >> +	struct aspeed_xdma *ctx = client->ctx;
-> >> +
-> >> +	/* restrict file to one mapping */
-> >> +	if (client->size)
-> >> +		return -ENOMEM;
-> > Can we do better with the error code here?
-> 
-> 
-> Maybe? I'm open to suggestions...
-
-How about EBUSY?
-
-> 
-> 
-> >
-> >> +
-> >> +	client->size = vma->vm_end - vma->vm_start;
-> >> +	client->virt = gen_pool_dma_alloc(ctx->vga_pool, client->size,
-> >> +					  &client->phys);
-> >> +	if (!client->virt) {
-> >> +		client->phys = 0;
-> >> +		client->size = 0;
-> >> +		return -ENOMEM;
-> >> +	}
-> >> +
-> >> +	vma->vm_pgoff = (client->phys - ctx->vga_phys) >> PAGE_SHIFT;
-> > Where does client->phys get set?
-> 
-> 
-> gen_pool_dma_alloc sets it.
-
-Ah, yes. Thanks.
-
-Andrew
+Thanks,
+Nagarjuna
+>> 3. In individual phy driver, to add SOC/PHY specific programming accordingly.
+>>
+>> Thanks,
+>> JC
+>>
+>> On 10/14/19 9:40 PM, Rob Herring wrote:
+>>> On Mon, Oct 14, 2019 at 8:17 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>>>>
+>>>> On Wed, Oct 09, 2019 at 06:39:00PM -0500, Rob Herring wrote:
+>>>>> On Wed, Oct 09, 2019 at 10:43:41AM +0800, JC Kuo wrote:
+>>>>>> Extend the bindings to cover the set of features found in Tegra194.
+>>>>>> Note that, technically, there are four more supplies connected to the
+>>>>>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
+>>>>>> , but the power sequencing requirements of Tegra194 require these to be
+>>>>>> under the control of the PMIC.
+>>>>>>
+>>>>>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it is
+>>>>>> possible for some platforms have long signal trace that could not
+>>>>>> provide sufficient electrical environment for Gen 2 speed. To deal with
+>>>>>> this, a new device node property "nvidia,disable-gen2" was added to
+>>>>>> Tegra194 that be used to specifically disable Gen 2 speed for a
+>>>>>> particular USB 3.0 port so that the port can be limited to Gen 1 speed
+>>>>>> and avoid the instability.
+>>>>>
+>>>>> I suspect this may be a common issue and we should have a common
+>>>>> property. Typically, this kind of property is in the controller though
+>>>>> and supports multiple speed limits. See PCI bindings for inspiration.
+>>>>
+>>>> Given that support for gen 2 speeds is dependent on signal trace length,
+>>>> it doesn't really make sense to restrict the whole controller to a given
+>>>> speed if only the signal trace for a single port exceeds the limit for
+>>>> which gen 2 would work.
+>>>>
+>>>> Also, the USB PHYs are in a different hardware block than the USB
+>>>> controller, so this really is a property of the PHY block, not the USB
+>>>> controller.
+>>>
+>>> Okay, but still should be common for USB PHYs IMO.
+>>>
+>>> Rob
+>>>
