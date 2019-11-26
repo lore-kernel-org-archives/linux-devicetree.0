@@ -2,91 +2,93 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8275DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 11:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5A9C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 12:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F3A20835
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 11:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E992075C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 12:17:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FExPVgWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfKZL7t (ORCPT
+        id S1727690AbfKZMRk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 06:59:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:33468 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfKZL7s (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Nov 2019 06:59:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 588FD1FB;
-        Tue, 26 Nov 2019 03:59:48 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70CEF3F52E;
-        Tue, 26 Nov 2019 03:59:47 -0800 (PST)
-Date:   Tue, 26 Nov 2019 11:59:45 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Brijesh Singh <brijeshkumar.singh@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 8/8] dt: amd-seattle: add a description of the CPUs
- and caches
-Message-ID: <20191126115944.GB32965@lakrids.cambridge.arm.com>
-References: <20191126114319.2755-1-ardb@kernel.org>
- <20191126114319.2755-9-ardb@kernel.org>
+        Tue, 26 Nov 2019 07:17:40 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32911 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727657AbfKZMRk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 07:17:40 -0500
+Received: by mail-lj1-f194.google.com with SMTP id t5so19989304ljk.0
+        for <devicetree@vger.kernel.org>; Tue, 26 Nov 2019 04:17:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K5QyhOqHcLHyB/soUlYt5FDv11OM5DdtmqTnCRv6jT4=;
+        b=FExPVgWdtbMNIuXTPIXVc5qOikzvjSuB64a/ScIIZSKl19OwHNQKVYPtkkAlqMwZXP
+         j5XDbE9V/3TX3K70QMYPlGQ8FupeV7rNuUDQLuk494Pg+0MILV7n2iCi2v6khecWN+T9
+         a9JgwJPPFmXPInR15J9P66L8nnMYrm8uSxrfzVH3NA4poamD2ACpPi+SZ0jQ4lkTMc9E
+         xY5tl3JicyvMNramXtTuIAiL72X12FecnsKqCpbKX3owxV3D2KhJOByg40sGlmxPoWQL
+         vuwzzb/lR1c3hx9o9LfibGB/3z74EsRFvMeM0Da22dC7m0gNE3IofczV4Y731G2JOHYg
+         vnhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K5QyhOqHcLHyB/soUlYt5FDv11OM5DdtmqTnCRv6jT4=;
+        b=P2rpvuMabuXDUy0ILscu4iOwFC98O/ZyNPNmQnOg74gAIuwQR4jqsUzn5dTC6T1vVZ
+         yQwZw1tbkvLVstCODaNz/FePuEb4dOX8qRiNmwNrDZuvhw2tYL/Vdi7Oho5XIeYoRJFW
+         CrwULxZug9TRqv4lvXeQdiARVxbsYmXFX+FI0UTHcquWn3w6PCNPymnJUEdwKThX8YRz
+         yx14jEWMmoeuusJq1JYQtxpQpy8WqDFngp2qt6lo6xhQEoE6q0UGNraa5JP/mpb9jzgV
+         VtJAHTHHt5pGPhC+E3loa4dwT94OcriwugQvMKxnFrI4zJnlfmDkLNBqUM3Neuia4Mns
+         RefA==
+X-Gm-Message-State: APjAAAVuBCY/jY425MVulB6b+gVXnmyRt+laGTghyFGpEA7nvREdGlln
+        gQKs0lLUK7LvByxcpZP3oMR5nsRY5GW64OXRcE0Z6Xfamsg=
+X-Google-Smtp-Source: APXvYqyUvqGJTGlKL4forstKqT+EkT3JZiUWQ8b6UX/M2Coqf+nunSw34Afbi8voYdN3pSylpBVhvtHtd41ceJu+itg=
+X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr13958204ljm.218.1574770658404;
+ Tue, 26 Nov 2019 04:17:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191126114319.2755-9-ardb@kernel.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20191125170428.76069-1-stephan@gerhold.net>
+In-Reply-To: <20191125170428.76069-1-stephan@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 26 Nov 2019 13:17:26 +0100
+Message-ID: <CACRpkdZMQft4oY+jrJ1Y8aNm9RSjr_B9dC5ScKbST-vi1ZZ4CQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: ux500: Disable I2C/SPI buses by default
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 12:43:19PM +0100, Ard Biesheuvel wrote:
-> Add a DT description of the CPU and cache hierarchy as found on
-> the AMD Seattle SOC. Given the tight coupling of the PMU with
-> the CPUs, move the PMU node into the cpu .dtsi file as well, and
-> add the missing affinity description.
+On Mon, Nov 25, 2019 at 6:05 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-[...]
+> At the moment, all 5 I2C and 6 SPI buses are probed and exposed
+> to user-space by default - even if they are not muxed to any pins
+> on the board. This means that user-space sees an I2C/SPI bus that
+> cannot be actually used properly.
+>
+> In some cases this was used to put the corresponding pins into
+> a low power sleep mode - but even then the pins first need to be
+> configured by the board-specific device tree part.
+>
+> Avoid exposing unconfigured devices to user-space by disabling
+> the I2C/SPI buses by default. Enable them in the board device trees
+> when needed.
+>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
+All 4 patches applied and pushed to ux500-dts for v5.6!
 
-This should be "arm,cortex-a57"; likewise for the other CPUs.
-
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-
-And this should be (and should have been) "arm,cortex-a57-pmu".
-
-> +		interrupts = <0x0 0x7 0x4>,
-> +			     <0x0 0x8 0x4>,
-> +			     <0x0 0x9 0x4>,
-> +			     <0x0 0xa 0x4>,
-> +			     <0x0 0xb 0x4>,
-> +			     <0x0 0xc 0x4>,
-> +			     <0x0 0xd 0x4>,
-> +			     <0x0 0xe 0x4>;
-> +		interrupt-affinity = <&CPU0>,
-> +				     <&CPU1>,
-> +				     <&CPU2>,
-> +				     <&CPU3>,
-> +				     <&CPU4>,
-> +				     <&CPU5>,
-> +				     <&CPU6>,
-> +				     <&CPU7>;
-> +	};
-> +};
-
-Otherwise, this looks good to me.
-
-Thanks,
-Mark.
+Yours,
+Linus Walleij
