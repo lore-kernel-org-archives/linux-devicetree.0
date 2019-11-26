@@ -2,308 +2,273 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAACDC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 13:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9BBC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 13:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C582071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 13:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95C420727
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 13:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mILUIurV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KL+/WaCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbfKZNLY (ORCPT
+        id S1727573AbfKZNhq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:11:24 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37219 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfKZNLX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 08:11:23 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so3259314wmf.2
-        for <devicetree@vger.kernel.org>; Tue, 26 Nov 2019 05:11:20 -0800 (PST)
+        Tue, 26 Nov 2019 08:37:46 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41461 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfKZNhq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 08:37:46 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s18so644756pfd.8;
+        Tue, 26 Nov 2019 05:37:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Ugdp2jc0hj8kY9mNz4QotGpRxRC1rc0epA2aupuKJkc=;
-        b=mILUIurVcLLmOJC4mJjnLc4K3R4Gtx/XLmXvbaVBtOb7SC+E2vnuukb5m3Vxe7bSPN
-         DRiregu/mFtJfnKekW5iIORQaeXdzYRzUrGSagV/EYUke6PKWQtDCs7UIA21N7m/HuuF
-         sWJ+fsw1RbIoKvim0f24axSEFUNzCSbg04EGE7DxodbAEEtUuz1VBKWk1qFJSCqWZVoV
-         SFobUvuLuddBunIlYnoYsRLJZyvji7FO4jM7eEGzUSIiT1JrO8y6RuEnwpBsNPBqSTS7
-         5MPk5zvXiYoyAexr8WKpiy7CXQ6HjapJNkyMwV7BiAsmq8vZKe1XrJl54p/YcnAj19pP
-         K+zg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=PJJmAn9+iiP+EIIPXeCfCU5GCKc3tnqtF9QuTwOAxck=;
+        b=KL+/WaCkMRk4NvtjYC0qrnhtkEiQIlg2VPXwQ2mtmFHFUQEJS20Nz4f3NJbHrR2tyO
+         YeiN5ZhzlkkbcKnBOkzbHI9j6E4oud9db8/3TLfxPqIiGNqHQNxZGFDqCzPzFfgeCgAl
+         e8AQvrtw/ZhrE6lXlr3mSQfg7HXQrwxsFUs3QLyeJENp0rIeuQLwugjImN+Varj14NMz
+         2J9suJyLA9RMZupwPP6txwfMEX9/cGi9yBR0MPK/7ThWyQeqRfi/JSzRnlO8qtB9fM/K
+         kPqj2mIuLzFhhV8GrcF5JMMFk998OAhazyVvp19RSmqTc7aOCLicuqFqHcxEyH6t0/pU
+         jYrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Ugdp2jc0hj8kY9mNz4QotGpRxRC1rc0epA2aupuKJkc=;
-        b=G7ysZHw1Jc3OTNSqjfHraYSnXDHakkBhdjf1l2mpSWGwhfjUVFruUhVRVjuq/fd0Oy
-         usvR3GMdacewNDYn85xInKfLkcD3ZBKirL0VGkHjAZjvydsWhISDS632nCowQw5bcLEO
-         DSA9w7bB+P796iVXvg3W8B98ujIv/xtyqK0vJ5oSnJrCMtjb4pXYcUp1FtOe1JINShEC
-         /bEsIv+19tjE5LELdyCt3dvuwgwkCxreOjRjXXCcSDAZa4OLGKis4yZ7OWSTt3Mj0dDo
-         hxlhW/JIG5C6kKKkjgYUc3DsRbR2iCIYhIFpO/A7ZJ9YVpKCX84sxcNt++zp9ZvIOLl8
-         I5fQ==
-X-Gm-Message-State: APjAAAVurQ1oapyBc++5CoR2MgQm36jiRdiNkflUClLFZOnHD/LaTSr9
-        3BQ5bkydQbajYVkdpn6vFDhA4A==
-X-Google-Smtp-Source: APXvYqyGzsSieidOv3KRzauV1VUcHtNkcUtf6gAhDqg4GANFtHZ2XfOuiiBCYWfeP+/hT8oNpZ+nNA==
-X-Received: by 2002:a7b:c757:: with SMTP id w23mr2383458wmk.63.1574773879727;
-        Tue, 26 Nov 2019 05:11:19 -0800 (PST)
-Received: from [172.20.10.8] ([37.165.69.200])
-        by smtp.gmail.com with ESMTPSA id r2sm3148119wma.44.2019.11.26.05.11.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=PJJmAn9+iiP+EIIPXeCfCU5GCKc3tnqtF9QuTwOAxck=;
+        b=uMDaWDpATLCdC8fn2qdmPFSIYDc+rttGdcW10yubRi3x0++eLD1gyfdxonqKGsp7MJ
+         UvJSi2V7LmeuTghuMlRJbQRDoyClv+dhytzvSWbUnYrmmUIZBM++xXNsXJnF4tCRc2Pu
+         5Rr/C3je40vNlh2RQv3KhfpHI0zlvZtLFqq93esx4dg8kOkBTu3wx34LiDyVswA5pAfa
+         5tTCpUHCTYdU6umcFGWg9bf7IgMPDUvDp5xFvHE6msZVicDRSbjq2j+bA0NYkX/xPvz2
+         LGw1IIUO6Mppn6Z9fbAQNwJqXweyoeF9KiJSYpaefy3Onc1BvKE9sBFao+U+WecS0LhD
+         vULw==
+X-Gm-Message-State: APjAAAVG46sFC2KjZsHiQ2LnwiTGa89mZrfNkEMhduwrtYC4Oj4lSq/F
+        sH9c4dpLpQ0BipznOyn9qY0=
+X-Google-Smtp-Source: APXvYqwDp/TSNy31xwRpQsSSAIa1D75XoUXADWcKxaaZNigp8t9SyGGfJHWvoaSTa1WNrk5aVzL6hw==
+X-Received: by 2002:a65:4387:: with SMTP id m7mr31094525pgp.449.1574775465335;
+        Tue, 26 Nov 2019 05:37:45 -0800 (PST)
+Received: from cnn ([2402:3a80:473:c4b3:a194:63c9:69fb:ee71])
+        by smtp.gmail.com with ESMTPSA id s18sm13210501pfc.120.2019.11.26.05.37.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Nov 2019 05:11:19 -0800 (PST)
-Subject: Re: [PATCH 0/6] arm64: meson: Add support for USB on Amlogic A1
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com>
- <CAFBinCDA=ZekRC0hgQnPLRZM3LMnqBZ6TWCvXhyixAmgDyTAsw@mail.gmail.com>
- <5c0029ec-7377-4c1a-0062-3b59a87f8dea@amlogic.com>
- <CAFBinCBypbB4W42GOAc8ejAYHVQLTDRdat_z_L92TZvC2p+5rQ@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <272a7442-38b3-346c-4749-2b163464bd01@baylibre.com>
-Date:   Tue, 26 Nov 2019 14:11:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 26 Nov 2019 05:37:44 -0800 (PST)
+Date:   Tue, 26 Nov 2019 19:07:26 +0530
+From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
+To:     Vijay Khemka <vijaykhemka@fb.com>
+Cc:     andrew@aj.id.au, joel@jms.id.au, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: Re: [PATCH v3] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Message-ID: <20191126133726.GA2578@cnn>
+References: <20191125130420.GA24018@cnn>
+ <7F15A2E0-14C7-4C86-B589-35619A390B72@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCBypbB4W42GOAc8ejAYHVQLTDRdat_z_L92TZvC2p+5rQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7F15A2E0-14C7-4C86-B589-35619A390B72@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25/11/2019 23:02, Martin Blumenstingl wrote:
-> Hi Hanjie,
+On Mon, Nov 25, 2019 at 07:23:32PM +0000, Vijay Khemka wrote:
 > 
-> On Mon, Nov 25, 2019 at 8:53 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
->>
->>
->>
->> On 2019/11/22 15:52, Martin Blumenstingl wrote:
->>> Hello Hanjie,
->>>
->>> On Fri, Nov 22, 2019 at 7:55 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
->>> [...]
->>>>   dt-bindings: phy: Add Amlogic G12A USB2 PHY Bindings
->>>>   dt-bindings: usb: dwc3: Add the Amlogic A1 Family DWC3 Glue Bindings
->>>>   phy: amlogic: Add Amlogic A1 USB2 PHY Driver
->>> drivers/phy/amlogic/phy-meson-g12a-usb2.c seems very similar to the A1
->>> USB2 PHY you are introducing here.
->>>
->>>>   usb: dwc3: Add Amlogic A1 DWC3 glue
->>> drivers/usb/dwc3/dwc3-meson-g12a.c is also very similar to the dwc3 glue.
->>>
->>> I have two questions:
->>> - how is the PHY and the dwc3 glue different from G12A (or SM1)?
->>> - why do we need a separate set of new drivers (instead of updating
->>> the existing drivers)?
->>>
->>> We try to use one driver for the same IP block, even if there are
->>> several revisions with small differences (for example the SAR ADC
->>> driver supports all SoC generations from Meson8 to G12A/G12B/SM1,
->>> because 80-90% of the code is shared across all revisions).
->>>
->>>
->>> Martin
->>>
->>> .
->>>
->>
->> Hi Martin,
->>
->> thanks for the comment.
->>
->> 1, G12A have usb2-phy0/usb2-phy1/usb3-phy0 three phys and an interrupt to support host/peripheral/otg modes.
->>    A1 has one usb2-phy0 phy and only support host mode.
-> dwc3-meson-g12a treats PHYs as optional
-> so if you only pass "usb2-phy0" and skip usb2-phy1/usb3-phy0 then it
-> will still work fine
-> (I didn't check whether the binding also reflects this)
+> ﻿On 11/25/19, 5:04 AM, "manikandan-e" <manikandan.hcl.ers.epl@gmail.com> wrote:
+> 
+>     The Yosemite V2 is a facebook multi-node server
+>     platform that host four OCP server. The BMC
+>     in the Yosemite V2 platorm based on AST2500 SoC.
+>     
+>     This patch adds linux device tree entry related to
+>     Yosemite V2 specific devices connected to BMC SoC.
+> Nit: comments inline. Otherwise
+> Reviewed-by: Vijay Khemka <vijaykhemka@fb.com>
+>     
+> 
+>     Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+>     ---
+>      .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 151 +++++++++++++++++++++
+>      1 file changed, 151 insertions(+)
+>      create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+>     
+>     diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+>     new file mode 100644
+>     index 0000000..09bffcd
+>     --- /dev/null
+>     +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+>     @@ -0,0 +1,151 @@
+>     +// SPDX-License-Identifier: GPL-2.0+
+>     +// Copyright (c) 2018 Facebook Inc.
+>     +/dts-v1/;
+>     +
+>     +#include "aspeed-g5.dtsi"
+>     +#include <dt-bindings/gpio/aspeed-gpio.h>
+>     +
+>     +/ {
+>     +	model = "Facebook Yosemitev2 BMC";
+>     +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
+>     +	aliases {
+>     +		serial4 = &uart5;
+>     +	};
+>     +	chosen {
+>     +		stdout-path = &uart5;
+>     +		bootargs = "console=ttyS4,115200 earlyprintk";
+> bootargs are not required as it is overwritten by uboot. And baud rate is 57600
+           
+          As of now SPL and U-boot Baudrate based 115200 baudrate. Do we need to change it there. I understand that we can use SERIAL_CONSOLES           in meta-facebook.
+          Do i need to remove 'console=ttyS4.115200' or complete bootargs . If we remove bootargs, how can add any bootargs params in future.
 
-Exact, a simple match data could make max-phys to 1 for A1.
+>     +	};
+>     +
+>     +	memory@80000000 {
+>     +		reg = <0x80000000 0x20000000>;
+>     +	};
+>     +
+>     +	iio-hwmon {
+>     +		// VOLATAGE SENSOR
+>     +		compatible = "iio-hwmon";
+>     +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
+>     +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
+>     +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
+>     +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
+>     +	};
+>     +};
+>     +
+>     +&fmc {
+>     +	status = "okay";
+>     +	flash@0 {
+>     +		status = "okay";
+>     +		m25p,fast-read;
+>     +#include "openbmc-flash-layout.dtsi"
+>     +	};
+>     +};
+>     +
+>     +&spi1 {
+>     +	status = "okay";
+>     +	pinctrl-names = "default";
+>     +	pinctrl-0 = <&pinctrl_spi1_default>;
+>     +	flash@0 {
+>     +		status = "okay";
+>     +		m25p,fast-read;
+>     +		label = "pnor";
+>     +	};
+>     +};
+>     +
+>     +&uart5 {
+>     +	// BMC Console
+>     +	status = "okay";
+>     +};
+>     +
+>     +&mac0 {
+>     +	status = "okay";
+>     +	pinctrl-names = "default";
+>     +	pinctrl-0 = <&pinctrl_rmii1_default>;
+>     +	use-ncsi;
+>     +};
+>     +
+>     +&adc {
+>     +	status = "okay";
+>     +        pinctrl-names = "default";
+> Use tab for alignment
 
-> 
->> 2, G12A glue/phy drivers are for G12A SoCs, there are some diffrences to A1.
->>    G12A glue driver have dr_mode and interrupts two attributes to support otg mode while A1 hasn't this requirement.
-> dwc3-meson-g12a ignores the interrupt for HOST-only mode
-> (I didn't check whether the IRQ is optional in the dt-binding)
 
-Interrupt support and OTG manual switch is optional and can be easily bypassed.
+Checkpatch didn't shown any issue warning .As i checked in many dts file , format is same.
+It will helpful if i get more clarification. 
 
+>     +	pinctrl-0 = <&pinctrl_adc0_default
+>     +			&pinctrl_adc1_default
+>     +			&pinctrl_adc2_default
+>     +			&pinctrl_adc3_default
+>     +			&pinctrl_adc4_default
+>     +			&pinctrl_adc5_default
+>     +			&pinctrl_adc6_default
+>     +			&pinctrl_adc7_default
+>     +			&pinctrl_adc8_default
+>     +			&pinctrl_adc9_default
+>     +			&pinctrl_adc10_default
+>     +			&pinctrl_adc11_default
+>     +			&pinctrl_adc12_default
+>     +			&pinctrl_adc13_default
+>     +			&pinctrl_adc14_default
+>     +			&pinctrl_adc15_default>;
+>     +};
+>     +
+>     +&i2c8 {
+>     +	status = "okay";
+>     +	//FRU EEPROM
+>     +	eeprom@51 {
+>     +		compatible = "atmel,24c64";
+>     +		reg = <0x51>;
+>     +		pagesize = <32>;
+>     +	};
+>     +};
+>     +
+>     +&i2c9 {
+>     +	status = "okay";
+>     +	tmp421@4e {
+>     +	//INLET TEMP
+>     +		compatible = "ti,tmp421";
+>     +		reg = <0x4e>;
+>     +	};
+>     +	//OUTLET TEMP
+>     +	tmp421@4f {
+>     +		compatible = "ti,tmp421";
+>     +		reg = <0x4f>;
+>     +	};
+>     +};
+>     +
+>     +&i2c10 {
+>     +	status = "okay";
+>     +	//HSC
+>     +	adm1278@40 {
+>     +		compatible = "adi,adm1278";
+>     +		reg = <0x40>;
+>     +	};
+>     +};
+>     +
+>     +&i2c11 {
+>     +	status = "okay";
+>     +	//MEZZ_TEMP_SENSOR
+>     +	tmp421@1f {
+>     +		compatible = "ti,tmp421";
+>     +		reg = <0x1f>;
+>     +	};
+>     +};
+>     +
+>     +&i2c12 {
+>     +	status = "okay";
+>     +	//MEZZ_FRU
+>     +	eeprom@51 {
+>     +		compatible = "atmel,24c64";
+>     +		reg = <0x51>;
+>     +		pagesize = <32>;
+>     +	};
+>     +};
+>     +
+>     +&pwm_tacho {
+>     +	status = "okay";
+>     +	//FSC
+>     +	pinctrl-names = "default";
+>     +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+>     +	fan@0 {
+>     +		reg = <0x00>;
+>     +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+>     +	};
+>     +	fan@1 {
+>     +		reg = <0x01>;
+>     +		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+>     +	};
+>     +};
+>     -- 
+>     2.7.4
+>     
+>     
 > 
->>    G12A glue driver has a hard coding vbus regulator code to support otg mode while A1 hasn't this requirement.
-> my understanding is that whether a board has a VBUS regulator depends
-> on the board design. it has nothing to do with the SoC itself
-> 
->>    G12A glue driver has a hard coding support phys while A1 only supports host mode.
->>         enum {
->>                 USB2_HOST_PHY = 0,
->>                 USB2_OTG_PHY,
->>                 USB3_HOST_PHY,
->>                 PHY_COUNT,
->>                 };
-> this goes together with comment #1 - you can skip USB2_OTG_PHY and
-> USB3_HOST_PHY and the driver should still work fine
-
-Exact
-
-> 
->>    G12A glue driver only supports one clock while A1 needs four clocks.
-> indeed, the dwc3-meson-g12a needs to be updated to support this
-> I don't think that I have used it myself yet but there's the
-> clk_bulk_data framework
-> it seems to fit this use-case pretty well: define an arbitrary number
-> of clocks for G12A/B an another set of clocks for A1 - then use the
-> clk_bulk_data framework to enable/disable them all at once
-
-Exact, a simple conversion to clk_bulk_* would be enough
-
-> 
->>    G12A and A1 phy drivers have different register configurations since hardware differences.
-> other drivers have similar requirements: (mostly) identical register
-> layout but different values per SoC
-> here are two examples (I'm not sure if they are good examples though):
-> Lantiq/Intel SoC [0] and Allwinner SoCs [1]
-> 
-> I compared your driver with phy-meson-g12a-usb2 and only found four differences:
-> 1) PHY_CTRL_R18_MPLL_DCO_CLK_SEL is set for A1
-> 2) PHY_CTRL_R13_UPDATE_PMA_SIGNALS is not set for A1
-> 3) PHY_CTRL_R21 is updated twice for A1 (once for earlier gen SoCs)
-> 4) A1 doesn't reference the "xtal" clock
-> 
-> Difference 4) seems to be a general problem because there seems to be
-> a PLL inside the PHY registers and that PLL must be fed by some input
-> clock
-> So I believe that there is some clock input (which is currently
-> missing from your A1 USB2 PHY driver)
-
-These differences are trivial to add with a match data structure.
-
-> 
->> 3, We have estimated these differences and we thought it's more clear and readable to have a dedicated glue/phy
->>    driver for A1 SoCs, so also dedicated dt-bindings.
-> I think we should separate the driver and dt-bindings
-> 
-> Based on what I have seen so far my preference for the PHY is:
-> - use the existing dt-binding, because it seems to be the same IP
-> block with different register configuration
-> - use the existing driver because there are only three different
-> register values (to me it feels like a dedicated driver for these
-> means more overhead for little benefit)
-> 
-> for the glue I think:
-> - extend the existing dt-bindings and make some of the PHYs and the
-> interrupt line optional. making the PHYs optional will be needed when
-> adding GXL/GXM/AXG support anyways
-> - use the existing driver and make the clock inputs depend on the SoC
-> - everything else should already work as is
-> 
-> please let me know if I missed something:
-> comparing/reviewing the new and existing drivers is harder than just
-> copying the existing one and modifying that copy
-> (this is one of the reasons why I think that duplicating code makes
-> the drivers harder to maintain)
-> 
-> I also thought about the negative consequences of extending the
-> existing driver(s).
-> modifying the existing code could break the driver for existing boards.
-> however, I think that is not a problem because BayLibre's Kernel CI
-> labs have good coverage for G12A, G12B and SM1.
-> so if you add some A1 boards there (or host your own lab with A1
-> boards) any breakage will be found early (the Kernel CI bot even does
-> git bisect and sends emails)
-The overall architecture is the same since the GXL SoCs, we also plan to
-move the GXL/GXM USB complex into the G12A usb-ctrl driver because the architecture
-is very similar.
-
-For A1, the changes will be quite minimal, please try and post a RFC version so we
-can evaluate.
-
-Thanks,
-
-Neil
-
-> 
-> 
-> Martin
-> 
-> 
-> [0] https://github.com/torvalds/linux/blob/d2912cb15bdda8ba4a5dd73396ad62641af2f520/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c#L47
-> [1] https://github.com/torvalds/linux/blob/c942fddf8793b2013be8c901b47d0a8dc02bf99f/drivers/phy/allwinner/phy-sun4i-usb.c#L862
-> 
-
