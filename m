@@ -2,120 +2,98 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A6FC43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 18:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEF7C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 19:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922E320727
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 18:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913EF2071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 19:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574796222;
+	bh=8mtfgyPBWTm7Ix0WaVBLA8i85Em+XBWhR65cpJnrFTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q4bvJv7UW1z4SPOmU7xWTfiiG2BDZkH9b2qtFEXA+uMvaZjmsGrTZt9cmMGxS/AXZ
+	 Kixhb4OaCiOICz8jt5KHBTLlYnOTpF534ysj7hkl5AM7J441iEtEB9sw8rrMDogBs6
+	 eM8m5vEEtouhWJSS0ureLmGCIidMbLmFZ/PXW1Pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfKZSwM (ORCPT
+        id S1726049AbfKZTXm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 13:52:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45252 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726052AbfKZSwL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Nov 2019 13:52:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 38C30ABD6;
-        Tue, 26 Nov 2019 18:52:08 +0000 (UTC)
-Message-ID: <45feed391bbd95c46f64b31cf8817d4f773c8da1.camel@suse.de>
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 26 Nov 2019 19:51:59 +0100
-In-Reply-To: <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
-         <20191123165108.GA15306@ubuntu-x2-xlarge-x86>
-         <20191125074412.GA30595@lst.de>
-         <0b851d0e-37c7-062e-c287-05f8c8a54c16@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-B9dp7hYRMOcivm0VMcWv"
-User-Agent: Evolution 3.34.1 
+        Tue, 26 Nov 2019 14:23:42 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34663 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfKZTXl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 14:23:41 -0500
+Received: by mail-il1-f196.google.com with SMTP id p6so18754048ilp.1;
+        Tue, 26 Nov 2019 11:23:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5HQvc+ebgeUpvGjHDXPpgN7hbbmKJO3hU3E3sjzKKD4=;
+        b=EqJd8nzttabnecWFtvigXgc4xaHV6iASnnuBDEOSWKc/cSfcvhp/n+hhd0mT1vZ+1Z
+         uyYI3QN8hgD9BmHaTy6Et744bcFToCE2254ULsHCVKek6Rki0ZNrvEDwlzdK8E3QEo0T
+         VLdZq2MW/GXjQnChIeiycLbaUq+Ob9T6+tCobM4Y/+1Kkw+Qldrf1H+mOUDzPbKc6isk
+         MP8YFSeh6ZjyZJHmx8z9Xr6iUTPC/cE8y/St7tHOscjf8AeAmk1UlVEpwP39qDuwwV3c
+         JXPfQl6QmCe4ySrtlrLqH9+EuDiUyikr4xWGczgt/l9Az8a1ql6II8yPBmQoGO3xbWKw
+         bijg==
+X-Gm-Message-State: APjAAAWck6/rqoc5fnFGDwhG3e/nJw0HTm2OcKidlfKHreTe9jKxEwxr
+        x9DsiJ9V1I49R7iq7aE7Pg==
+X-Google-Smtp-Source: APXvYqxLi2BPHhib7tuA5K/dBdXW6V5zjrGNxJcK95S9arb/wV5mxmiHCV0Wk/se2VVXlbX81tL0FA==
+X-Received: by 2002:a92:6406:: with SMTP id y6mr41484371ilb.70.1574796219273;
+        Tue, 26 Nov 2019 11:23:39 -0800 (PST)
+Received: from localhost ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id q9sm2846876iod.79.2019.11.26.11.23.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2019 11:23:38 -0800 (PST)
+Date:   Tue, 26 Nov 2019 12:23:37 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Erhard Furtner <erhard_f@mailbox.org>
+Cc:     linuxppc-dev@ozlabs.org, robh+dt@kernel.org,
+        frowand.list@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Erhard Furtner <erhard_f@mailbox.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: Re: [PATCH v2] of: unittest: fix memory leak in
+ attach_node_and_children
+Message-ID: <20191126192337.GA13881@bogus>
+References: <20191126014804.28267-1-erhard_f@mailbox.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126014804.28267-1-erhard_f@mailbox.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, 26 Nov 2019 02:48:04 +0100, Erhard Furtner wrote:
+> In attach_node_and_children memory is allocated for full_name via
+> kasprintf. If the condition of the 1st if is not met the function
+> returns early without freeing the memory. Add a kfree() to fix that.
+> 
+> This has been detected with kmemleak:
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=205327
+> 
+> It looks like the leak was introduced by this commit:
+> Fixes: 5babefb7f7ab ("of: unittest: allow base devicetree to have symbol metadata")
+> 
+> Signed-off-by: Erhard Furtner <erhard_f@mailbox.org>
+> Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+> Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+> ---
+> Changes in v2:
+>   - Make the commit message more clearer.
+> 
+>  drivers/of/unittest.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
---=-B9dp7hYRMOcivm0VMcWv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks.
 
-On Mon, 2019-11-25 at 16:33 +0000, Robin Murphy wrote:
-> On 25/11/2019 7:44 am, Christoph Hellwig wrote:
-> > On Sat, Nov 23, 2019 at 09:51:08AM -0700, Nathan Chancellor wrote:
-> > > Just as an FYI, this introduces a warning on arm32 allyesconfig for m=
-e:
-> >=20
-> > I think the dma_limit argument to iommu_dma_alloc_iova should be a u64
-> > and/or we need to use min_t and open code the zero exception.
-> >=20
-> > Robin, Nicolas - any opinions?
->=20
-> Yeah, given that it's always held a mask I'm not entirely sure why it=20
-> was ever a dma_addr_t rather than a u64. Unless anyone else is desperate=
-=20
-> to do it I'll get a cleanup patch ready for rc1.
-
-Sounds good to me too
-
-Robin, since I started the mess, I'll be happy to do it if it helps offload=
-ing
-some work from you.
-
-Regards,
-Nicolas
-
-
---=-B9dp7hYRMOcivm0VMcWv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3ddE8ACgkQlfZmHno8
-x/5fVwgAnN7cpWXNHEbGgqyZcMqmBWCtR0bMa/xIu1xNgr/CAwMMZj0Z3/+6d18p
-mlU5N6AqlkTxefP9mV5ZxBzugcsriGR4+qJ05kZZAMxAeG625qDkfhSEl0FmUZRT
-WmEv98IN0aFzHEjZJAyPDNV8Ff1a3JpoHKQmnYs5z438rMZt49CPBC0jNPFdaEuj
-v9ry1DkR+cGYuD1WRyBQJjtze14XoG7ZCu0o9Htc02GZHq3OuabxDikuTC+UJ1jR
-BZX4ak4qGpJUGYT8fQA7IOA94Sd/N/CHMrDp8yv5f/kRcprKqgGX8PnMCUOPf4ns
-PsCZZGhEKvVwZy3/+QzWSYQ7q20O8w==
-=WYKI
------END PGP SIGNATURE-----
-
---=-B9dp7hYRMOcivm0VMcWv--
-
+Rob
