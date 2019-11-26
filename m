@@ -2,99 +2,185 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11E1C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 20:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDD1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 21:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9622084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 20:40:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AyMO8rPj"
+	by mail.kernel.org (Postfix) with ESMTP id E340B2084D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 21:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574804244;
+	bh=NiCNn3FuYjr3n6WG4QyUZzhp+ax9LgPmgNljIGhEErI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=E92IZigdGogo8Xg2g75Lk70PLZCsUKjTOLSRgQE/Kp07r8YH24/qtrbj9zNabjZVt
+	 e6JkVlKqHTVaX0s4rEVJ37xb8HJAsYP8VUPZCN+DpCywDTgWS1FsA1rFVTbAuuFSsu
+	 WvGcqu0LjkQFq6hOTL7ZnjPplJCdUraYQArDKVpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfKZUkq (ORCPT
+        id S1726333AbfKZVhX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 15:40:46 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:36232 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfKZUkp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 15:40:45 -0500
-Received: by mail-qv1-f68.google.com with SMTP id cv8so7913090qvb.3
-        for <devicetree@vger.kernel.org>; Tue, 26 Nov 2019 12:40:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hZS0DOzhdXc14SRcDepXoDm9fZsWuamRk2Ch1O62Y6M=;
-        b=AyMO8rPj9LC6qYrwszqbZ4FAZrfDRjArzZAfENajH2/k54YS7qEovG3akaP1pfq998
-         oupGI0fYi00PGvxzZzGMaLi+EWH6KEMUbqza6qlQCmZQCOsuqrj+BFPw02uFj6PZV+pN
-         NErENlOUIIeSCg8QvAUE7qBGs8sCvr79sXlSg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hZS0DOzhdXc14SRcDepXoDm9fZsWuamRk2Ch1O62Y6M=;
-        b=lecL55H+i6RdfvS3WO/EyOL472MhFrwL7j79xTVVIS+Mfp49KoSNroY/NylH8QhBHH
-         +eDXhySZ1iQa2QHH8bwB/9INuNq+JgpBwmvqhzftFr5z3dRQNjoGIrmWS8gWSLPUIRzZ
-         8+zkKVn3k/sTQD2Nv83gSb9rVhSHiK1ns6NiDXxH30wkHfoj00Xe4IL5G0EJINFD7bQd
-         B3lEC3KIoEXgnlM65BI4p44Lm0m9WLo0Wgtd5a2itIzQePMvBmZz7diD3DhzNSr1ietS
-         E0+nroIOcP9y9fXxSH7aBk4ZY6vLDNmWtwLXAheGIY3X+cgWL6KVahbjr7P0+0VRDFry
-         u73Q==
-X-Gm-Message-State: APjAAAWuEqtAWKuYzfYUaF9XmGCa9KZ0Yu+bx+Tza+gA+JqMN8u8U9In
-        XVcOYCUWmErzVyBubbZnsxF2VuzJ9WfjFyR3mVvf6g==
-X-Google-Smtp-Source: APXvYqyHWYlmAddGhtDAqk04GEexsdJ04kAI1FRb4pWTtUfU042FjywMeWoKRVllBy2/VViLe4Hc7w3el+bRbeVWXlU=
-X-Received: by 2002:ad4:568d:: with SMTP id bc13mr768895qvb.102.1574800844776;
- Tue, 26 Nov 2019 12:40:44 -0800 (PST)
+        Tue, 26 Nov 2019 16:37:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfKZVhX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Nov 2019 16:37:23 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B0120835;
+        Tue, 26 Nov 2019 21:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574804242;
+        bh=NiCNn3FuYjr3n6WG4QyUZzhp+ax9LgPmgNljIGhEErI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=drZqipwPeS+niJFsQ0qSF6WD0LHQSIqKXEeHnUMsVLnVc7MNuISEmOaQH+sDLt2g/
+         zMyTvJUM46sxgLF7lkaIhja1ULdda7AL64iLWUwrXiH0nczywhEf6oFTFeuLNA5HY6
+         hlclqFVo9MpY/gYtPhZbpczXork0in44N12KPgbI=
+Date:   Tue, 26 Nov 2019 15:37:18 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 3/6] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20191126213718.GA185422@google.com>
 MIME-Version: 1.0
-References: <20191118192123.82430-1-abhishekpandit@chromium.org>
- <1CEDCBDC-221C-4E5F-90E9-898B02304562@holtmann.org> <CANFp7mXNPsmfC_dDcxP1N9weiEFdogOvgSjuBLJSd+4-ONsoOQ@mail.gmail.com>
- <1CEB6B69-09AA-47AA-BC43-BD17C00249E7@holtmann.org>
-In-Reply-To: <1CEB6B69-09AA-47AA-BC43-BD17C00249E7@holtmann.org>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 26 Nov 2019 12:40:34 -0800
-Message-ID: <CANFp7mU=URXhZ8V67CyGs1wZ2_N_jTk42wd0XveTpBDV4ir75w@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] Bluetooth: hci_bcm: Additional changes for BCM4354 support
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191122104505.8986-4-vidyas@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Marcel,
+On Fri, Nov 22, 2019 at 04:15:02PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
 
-The series looks good to me.
+> +static irqreturn_t tegra_pcie_ep_irq_handler(struct tegra_pcie_dw *pcie)
+> +{
+> +	struct dw_pcie_ep *ep = &pcie->pci.ep;
+> +	u32 val, tmp;
+> +
+> +	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
+> +	if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_0_0);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_0_0);
+> +		if (val & APPL_INTR_STATUS_L1_0_0_HOT_RESET_DONE) {
+> +			/* clear any stale PEX_RST interrupt */
+> +			if (!kfifo_put(&pcie->event_fifo, EP_HOT_RST_DONE)) {
+> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +				return IRQ_HANDLED;
+> +			}
+> +			wake_up(&pcie->wq);
+> +		}
+> +		if (val & APPL_INTR_STATUS_L1_0_0_RDLH_LINK_UP_CHGED) {
+> +			tmp = appl_readl(pcie, APPL_LINK_STATUS);
+> +			if (tmp & APPL_LINK_STATUS_RDLH_LINK_UP) {
+> +				dev_info(pcie->dev, "Link is up with Host\n");
+> +				dw_pcie_ep_linkup(ep);
+> +			}
+> +		}
+> +	} else if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
 
-Thanks
-Abhishek
+Is it really the case that only one of
+APPL_INTR_STATUS_L0_LINK_STATE_INT and
+APPL_INTR_STATUS_L0_PCI_CMD_EN_INT can be set?
 
-On Mon, Nov 25, 2019 at 11:19 PM Marcel Holtmann <marcel@holtmann.org> wrote:
->
-> Hi Abhishek,
->
-> > It looks about the same as one of my earlier patch series. Outside a
-> > few nitpicks, I'm ok with merging this.
->
-> I fixed the nitpicks up and send a v2.
->
-> However we should still work towards a generic description of Bluetooth PCM settings for all vendors. Any ideas are welcome.
->
-> Regards
->
-> Marcel
->
+If it's possible that both could be set, maybe this should be
+something like this?
+
+  int spurious = 1;
+
+  if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
+    ...
+    spurious = 0;
+  }
+  if (val & APPL_INTR_STATUS_L0_PCI_CMD_EN_INT) {
+    ...
+    spurious = 0;
+  }
+
+  if (spurious) {
+    dev_warn(...)
+  }
+
+> +		val = appl_readl(pcie, APPL_INTR_STATUS_L1_15);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L1_15);
+> +		if (val & APPL_INTR_STATUS_L1_15_CFG_BME_CHGED) {
+> +			if (!kfifo_put(&pcie->event_fifo, EP_BME_CHANGE)) {
+> +				dev_err(pcie->dev, "EVENT FIFO is full\n");
+> +				return IRQ_HANDLED;
+> +			}
+> +			wake_up(&pcie->wq);
+> +		}
+> +	} else {
+> +		dev_warn(pcie->dev, "Random interrupt (STATUS = 0x%08X)\n",
+> +			 val);
+> +		appl_writel(pcie, val, APPL_INTR_STATUS_L0);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+> +static int tegra_pcie_ep_work_thread(void *p)
+> +{
+> +	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
+> +	u32 event;
+> +
+> +	while (true) {
+> +		wait_event_interruptible(pcie->wq,
+> +					 !kfifo_is_empty(&pcie->event_fifo));
+> +
+> +		if (kthread_should_stop())
+> +			break;
+> +
+> +		if (!kfifo_get(&pcie->event_fifo, &event)) {
+> +			dev_warn(pcie->dev, "EVENT FIFO is empty\n");
+> +			continue;
+> +		}
+> +
+> +		switch (event) {
+> +		case EP_PEX_RST_DEASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
+> +			pex_ep_event_pex_rst_deassert(pcie);
+> +			break;
+> +
+> +		case EP_PEX_RST_ASSERT:
+> +			dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
+> +			pex_ep_event_pex_rst_assert(pcie);
+> +			break;
+> +
+> +		case EP_HOT_RST_DONE:
+> +			dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
+> +			pex_ep_event_hot_rst_done(pcie);
+> +			break;
+> +
+> +		case EP_BME_CHANGE:
+> +			dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
+> +			pex_ep_event_bme_change(pcie);
+> +			break;
+> +
+> +		case EP_EVENT_EXIT:
+> +			dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
+> +			return 0;
+> +
+> +		default:
+> +			dev_warn(pcie->dev, "Invalid PCIe EP event\n");
+
+Maybe include the invalid event value in the message?
+
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
