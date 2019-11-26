@@ -2,88 +2,113 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8168BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 15:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863B4C432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 16:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55DDE2071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 15:53:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cEWGVoAD";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Hsi/pdz5"
+	by mail.kernel.org (Postfix) with ESMTP id 4E0E920865
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 16:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574785645;
+	bh=lsycWwVLMBQX+2olUenNQAufGZbjMZxM0wg2GgODZi0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hn5TesfuVxLL+Bu4E/sCgT3FcYLOYtr5DQKCvzkFRgiwsi/19SleE5ge/vlWtANBP
+	 KRIiM7ckQPHo2ayNzVtBtrtn7m6kkbfeeKczyUQvRNWBKtDbe4TnahjCoYouYYbcAz
+	 dKPazn4bPDeMJZna7mqE2YDGoq4cnVUoNM4W+64A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbfKZPxP (ORCPT
+        id S1727356AbfKZQ1Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 10:53:15 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:44568
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727191AbfKZPxP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Nov 2019 10:53:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574783594;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
-        bh=YoDxwdiX+/IIitr2cA1dXXofO95RcDisor5LI9W5Y+I=;
-        b=cEWGVoADnqlpmg65ZkFRYgxQ1oWSY6SNIlCzYCwQaHt4ITwuKENDlpea+romVKzg
-        ELrLRviKjNmHlLwi505+wgipnANfqmcfmB07MeewGBmba4jIg2a12G+FSPV/HadO60i
-        KXq8iBJ+KQ/2GXpmOxx4pEcpfBnYIUVBuQPOHPkY=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574783594;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
-        bh=YoDxwdiX+/IIitr2cA1dXXofO95RcDisor5LI9W5Y+I=;
-        b=Hsi/pdz5ePMVRy8dNn0FxMQNzxFIO5zqZChpu+abtXLgg26rOPRjxDQMct2SE5Xe
-        Mw8rJfQq2iK/AJ9t83G4v5B4EzyRjYJM778o7ydJxSA7lewhrqolexoDsnok5ob91tq
-        cskWkjTkcp3Ps5IPqanOxZxYcQWGnmTF34WUYFwg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 365B2C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 26 Nov 2019 11:27:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727333AbfKZQ1Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Nov 2019 11:27:24 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FE5320862;
+        Tue, 26 Nov 2019 16:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574785644;
+        bh=lsycWwVLMBQX+2olUenNQAufGZbjMZxM0wg2GgODZi0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mVc129KGwONqZlfcjKgKn/s3RnfMsjMPnSnShfcFgr9/TQs3j4NVIwdjcb50L8EpJ
+         CHPxlI7uWH4PWJZBsQkbX07vLBctI6Kj2ZQuYlqxgfFCtwABRHpmaO5UKug6/t0lvj
+         amEY5DsmnldMfat9dqYEGAt8vcwNzw/9yKIk1ayk=
+Date:   Tue, 26 Nov 2019 17:27:21 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: Re: [PATCH 2/2] net: wireless: ti: wl1251: sdio: remove ti,power-gpio
-References: <cover.1574591746.git.hns@goldelico.com>
-        <e1f18e0f1401a0d8b07ccb176732a2e3f3a5732a.1574591746.git.hns@goldelico.com>
-Date:   Tue, 26 Nov 2019 15:53:14 +0000
-In-Reply-To: <e1f18e0f1401a0d8b07ccb176732a2e3f3a5732a.1574591746.git.hns@goldelico.com>
-        (H. Nikolaus Schaller's message of "Sun, 24 Nov 2019 11:35:46 +0100")
-Message-ID: <0101016ea86aafc7-7f36235e-f486-4e71-bf28-87bffe60a179-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/1] arm64: dts: allwinner: a64: olinuxino: Add VCC-PG
+ supply
+Message-ID: <20191126162721.qi7scp3vadxn7k2i@gilmour.lan>
+References: <20191126110508.15264-1-stefan@olimex.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SES-Outgoing: 2019.11.26-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="duhffbtvsspnw6ng"
+Content-Disposition: inline
+In-Reply-To: <20191126110508.15264-1-stefan@olimex.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-"H. Nikolaus Schaller" <hns@goldelico.com> writes:
 
-> Remove handling of this property from code.
-> Note that wl->power_gpio is still needed in
-> the header file for SPI mode (N900).
+--duhffbtvsspnw6ng
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Stefan,
+
+On Tue, Nov 26, 2019 at 01:05:08PM +0200, Stefan Mavrodiev wrote:
+> On A64-OLinuXino boards, PG9 is used for USB1 enable/disable. The
+> port is supplied by DLDO4, which is disabled by default. The patch
+> adds the regulator as vcc-pg, which is later used by the pinctrl.
 >
-> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 > ---
->  drivers/net/wireless/ti/wl1251/sdio.c | 30 ---------------------------
->  1 file changed, 30 deletions(-)
+>  arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+> index 01a9a52edae4..c9d8c9c4ef20 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+> @@ -163,6 +163,10 @@
+>  	status = "okay";
+>  };
+>
+> +&pio {
+> +	vcc-pg-supply=<&reg_dldo4>;
 
-Please use "wl1251: " as title prefix, no need to have the full
-directory structure there.
+The equal sign should have spaces around it.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Also, can you please list all the bank supplies while you're at it?
+
+Thanks!
+Maxime
+>
+
+--duhffbtvsspnw6ng
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd1SaAAKCRDj7w1vZxhR
+xXArAP9pNq5XxgsrXMmqOM0FNRQA+MWaUyrJ8bzIKdPtsY1+xwD8DA+PgzubuRzo
+DT9smxFVEkQUm5d3dPI79hLwkAlgfAM=
+=l4bs
+-----END PGP SIGNATURE-----
+
+--duhffbtvsspnw6ng--
