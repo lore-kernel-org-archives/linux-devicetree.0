@@ -1,114 +1,106 @@
 Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863B4C432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 16:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E302C43141
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 16:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0E920865
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 16:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574785645;
-	bh=lsycWwVLMBQX+2olUenNQAufGZbjMZxM0wg2GgODZi0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hn5TesfuVxLL+Bu4E/sCgT3FcYLOYtr5DQKCvzkFRgiwsi/19SleE5ge/vlWtANBP
-	 KRIiM7ckQPHo2ayNzVtBtrtn7m6kkbfeeKczyUQvRNWBKtDbe4TnahjCoYouYYbcAz
-	 dKPazn4bPDeMJZna7mqE2YDGoq4cnVUoNM4W+64A=
+	by mail.kernel.org (Postfix) with ESMTP id 7736C20722
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 16:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aXlbzUUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfKZQ1Y (ORCPT
+        id S1726101AbfKZQfK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 11:27:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727333AbfKZQ1Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Nov 2019 11:27:24 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FE5320862;
-        Tue, 26 Nov 2019 16:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574785644;
-        bh=lsycWwVLMBQX+2olUenNQAufGZbjMZxM0wg2GgODZi0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mVc129KGwONqZlfcjKgKn/s3RnfMsjMPnSnShfcFgr9/TQs3j4NVIwdjcb50L8EpJ
-         CHPxlI7uWH4PWJZBsQkbX07vLBctI6Kj2ZQuYlqxgfFCtwABRHpmaO5UKug6/t0lvj
-         amEY5DsmnldMfat9dqYEGAt8vcwNzw/9yKIk1ayk=
-Date:   Tue, 26 Nov 2019 17:27:21 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Tue, 26 Nov 2019 11:35:10 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:23242 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfKZQfK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 11:35:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574786108;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=2as8WnxFO+tmi1fJ1uyawkpBUkNpCEuFJl0NIZl4N98=;
+        b=aXlbzUUhVS3MUzCqbY+9yPSGDVyjt/lN5YMlZXiOS6vjn+3Qt6SWrMGJUleItuumGP
+        rDQUKTBy+IfaRvaeg9d62c6dXbeS7mFKhwR2BtJprqN/1zULhnpZ489dnmGVYbS4LiWX
+        rbZoV3OqvHLovzDDxlrWthjqp3JV06roUlbdP3NLi+Eurjielyiyf99loZIA0rrfsPHJ
+        seNscK/MRCE8o/cSrlirFl64vz3KsYx1O4o4U8a2OgQqY1GhbGIYH0QAXQNY9B9vAOhI
+        GvSx3E71dFkHiOjuVhGIm8e+MdF0COukaf1esrd0i5ckLJbd9yo9eVAoIx98jhW2SsIv
+        /ySQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PuwDOspXA="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 45.0.2 DYNA|AUTH)
+        with ESMTPSA id y07703vAQGYv8av
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 26 Nov 2019 17:34:57 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH 0/2] net: wireless: ti: wl1251: sdio: remove ti,power-gpio
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <0101016ea86910ca-f8c93455-c4de-4906-a10a-bba6be6ff35a-000000@us-west-2.amazonses.com>
+Date:   Tue, 26 Nov 2019 17:34:56 +0100
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/1] arm64: dts: allwinner: a64: olinuxino: Add VCC-PG
- supply
-Message-ID: <20191126162721.qi7scp3vadxn7k2i@gilmour.lan>
-References: <20191126110508.15264-1-stefan@olimex.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="duhffbtvsspnw6ng"
-Content-Disposition: inline
-In-Reply-To: <20191126110508.15264-1-stefan@olimex.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <835C8FFB-48CA-4B7E-968C-E5781E0A6792@goldelico.com>
+References: <cover.1574591746.git.hns@goldelico.com> <0101016ea86910ca-f8c93455-c4de-4906-a10a-bba6be6ff35a-000000@us-west-2.amazonses.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---duhffbtvsspnw6ng
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Am 26.11.2019 um 16:51 schrieb Kalle Valo <kvalo@codeaurora.org>:
+> 
+> "H. Nikolaus Schaller" <hns@goldelico.com> writes:
+> 
+>> The driver has been updated to use the mmc/sdio core
+>> which does full power control. So we do no longer need
+>> the power control gipo.
+>> 
+>> Note that it is still needed for the SPI based interface
+>> (N900).
+>> 
+>> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Tested by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600MHz
+>> 
+>> H. Nikolaus Schaller (2):
+>>  DTS: bindings: wl1251: mark ti,power-gpio as optional
+>>  net: wireless: ti: wl1251: sdio: remove ti,power-gpio
+>> 
+>> .../bindings/net/wireless/ti,wl1251.txt       |  3 +-
+>> drivers/net/wireless/ti/wl1251/sdio.c         | 30 -------------------
+>> 2 files changed, 2 insertions(+), 31 deletions(-)
+> 
+> Via which tree are these planned to go? Please always document that in
+> the cover letter so that maintainers don't need to guess.
 
-Hi Stefan,
+Well, how should I know that better than maintainers?
 
-On Tue, Nov 26, 2019 at 01:05:08PM +0200, Stefan Mavrodiev wrote:
-> On A64-OLinuXino boards, PG9 is used for USB1 enable/disable. The
-> port is supplied by DLDO4, which is disabled by default. The patch
-> adds the regulator as vcc-pg, which is later used by the pinctrl.
->
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> index 01a9a52edae4..c9d8c9c4ef20 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> @@ -163,6 +163,10 @@
->  	status = "okay";
->  };
->
-> +&pio {
-> +	vcc-pg-supply=<&reg_dldo4>;
+I don't know who manages which trees and who feels responsible.
+So I have to guess even more.
 
-The equal sign should have spaces around it.
+I just use the get_maintainer.pl script to address everybody listed by it,
+assuming that it does the right thing.
 
-Also, can you please list all the bank supplies while you're at it?
+If the script doesn't do a good enough job it should be improved.
 
-Thanks!
-Maxime
->
+BR and thanks,
+Nikolaus
 
---duhffbtvsspnw6ng
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd1SaAAKCRDj7w1vZxhR
-xXArAP9pNq5XxgsrXMmqOM0FNRQA+MWaUyrJ8bzIKdPtsY1+xwD8DA+PgzubuRzo
-DT9smxFVEkQUm5d3dPI79hLwkAlgfAM=
-=l4bs
------END PGP SIGNATURE-----
-
---duhffbtvsspnw6ng--
