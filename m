@@ -2,63 +2,46 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77DFC43215
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 09:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E8DC43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 09:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB126207DD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 09:02:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="ZjtgOV/p"
+	by mail.kernel.org (Postfix) with ESMTP id 9E60E20836
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 09:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574759971;
+	bh=Iqz6aTqwrpGHW7R4infB/EOGkNdfCfDKkSzCxC6kw14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C2QOlBizM/rKAQzlPzX+g+E/qE/yxhSvU5opReq62/pRItP/l5slPQlt0Nzk5ca1/
+	 V4JWoMSPlWxmmO+fgpbe7UmFdsxfcSGglJtHRVF9BkVHmkfYdq0VJ3B2pswBG5GkB3
+	 GVVrX+2nKD5kXGKdJ/gScVaI50BvmnJLKOkXf/xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfKZJCa (ORCPT
+        id S1727275AbfKZJTb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 04:02:30 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:32847 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbfKZJCa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 04:02:30 -0500
-Received: by mail-il1-f195.google.com with SMTP id y16so9394444iln.0
-        for <devicetree@vger.kernel.org>; Tue, 26 Nov 2019 01:02:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=t3siywQMic4+3G/dPDeE17s5VtxexJ2M1JK1S3ouM4A=;
-        b=ZjtgOV/pr8z2qVPm7aKOTj8vneLya3QFAGjk+lNJj/QRunSEptXSIUv964TfpaXgRB
-         F3OKkiaNaSAD62pS0zHb9Avv1FbKH8LTbkug33+fFZwVSPcIVSdPG2OaYPJFu6GUkPs5
-         HoFCyAmD5YbmF23GK7W1JsY6CkqiKro/Yg565+jxX4ce1wygC+VMaUuGF6dJtlaxI4Ym
-         sNzF1zkjllRTjDM+OqPE2rH++4EddtYqGSSZV4suxjs7Ed8/0bKxHOkaSpDWp3HMBmY5
-         SkPvXeknRMoR9EGxWpz6IMr/+rKYOyJpDqQC4eL5FSrnbZKGvVFqx9l0IZDWAjuVtzsh
-         3xLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=t3siywQMic4+3G/dPDeE17s5VtxexJ2M1JK1S3ouM4A=;
-        b=hX6yEPf1DlZfPqsErXbMjj7xzrwXD708ktBbOGH0CS2qysdd8ZI+dtvUsY1be0imzn
-         qgyRUc+488/VeWGVC53XS4kPRaBTQD/05wcLffr4hucTavnvoWEhyuBAhWhvCGHiqzWI
-         ixaqtjm9h5tyqGdXyDa1R+i0UijD9yrUCuZmWHrhQHl6ajk89syfBdwhfi3nWCfvnXXH
-         coaRhUzyWvwyVbsB8OnE8tQfwaVP6iFXZIKgtR/NKxjGHek7kwaTJJWeUt1i7xUXhyL6
-         aTBMZU58s4ncnKt3YHPC1tTVqBty1HLML+8EiDsrKCnEmHkfJ78s1HwZ//yITPMiUFB2
-         PIxA==
-X-Gm-Message-State: APjAAAWaklibVahwP3+CUZEshiQg4E//+TshUbvr7Ac66DUO/CKGHTJ/
-        Yyj+q+qsDjJdQJlc+OdSjaLGQPzVe9k9+X9v3Mdh4g==
-X-Google-Smtp-Source: APXvYqy4JJs4tw+DQhFyc6W+aR+iSnEHpG2/S9kZTb9FNJ0ZfmIWFBpeEsmr/idfvM6lF5Zm2kkdOgUlGH9+yBjM+B0=
-X-Received: by 2002:a05:6e02:4d2:: with SMTP id f18mr37130431ils.270.1574758949256;
- Tue, 26 Nov 2019 01:02:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20191023114634.13657-0-mholenko@antmicro.com> <20191023114634.13657-2-mholenko@antmicro.com>
- <20191120192648.GA3087498@kroah.com>
-In-Reply-To: <20191120192648.GA3087498@kroah.com>
-From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Tue, 26 Nov 2019 10:02:18 +0100
-Message-ID: <CAPk366QgcOYPZJXM46o3Gn8ksFYYoNwJvnunUe7y0aLNgJuSRg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Tue, 26 Nov 2019 04:19:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727150AbfKZJTb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Nov 2019 04:19:31 -0500
+Received: from localhost (unknown [84.241.194.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 411842073F;
+        Tue, 26 Nov 2019 09:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574759970;
+        bh=Iqz6aTqwrpGHW7R4infB/EOGkNdfCfDKkSzCxC6kw14=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dBf8P9OwXY/kAat+PpZvnrDhYOsTxpOHy1o62o6qi6+RiG/Sr5MVqvy20q1IWiY0k
+         +bgDn/K9hTRbqGZvo8UpA5JbElIhKq/2ijMXUMCR5a7OhpBmiFl/iircUikAGSUX88
+         b67L/U1Z/fc3mQi1fCRozVw3hrI+9ofixjPJXEdw=
+Date:   Tue, 26 Nov 2019 10:19:26 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
@@ -78,70 +61,61 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Icenowy Zheng <icenowy@aosc.io>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
+Message-ID: <20191126091926.GB1372654@kroah.com>
+References: <20191023114634.13657-0-mholenko@antmicro.com>
+ <20191023114634.13657-2-mholenko@antmicro.com>
+ <20191120192648.GA3087498@kroah.com>
+ <CAPk366QgcOYPZJXM46o3Gn8ksFYYoNwJvnunUe7y0aLNgJuSRg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPk366QgcOYPZJXM46o3Gn8ksFYYoNwJvnunUe7y0aLNgJuSRg@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-=C5=9Br., 20 lis 2019 o 20:26 Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> napisa=C5=82(a):
->
-> On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
-> > +#ifdef __LITTLE_ENDIAN
-> > +# define LITEX_READ_REG(addr)                  ioread32(addr)
-> > +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
-> > +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
-> > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + o=
-ff)
-> > +#else
-> > +# define LITEX_READ_REG(addr)                  ioread32be(addr)
-> > +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
-> > +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
-> > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr +=
- off)
-> > +#endif
->
-> I just noticed this.
->
-> Ick, this is not good.  You will run into problems in the future with
-> this, I can guarantee it.  What about systems where the CPU is one
-> endian and the hardware in the other?  It will happen trust us.
+On Tue, Nov 26, 2019 at 10:02:18AM +0100, Mateusz Holenko wrote:
+> śr., 20 lis 2019 o 20:26 Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> napisał(a):
+> >
+> > On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
+> > > +#ifdef __LITTLE_ENDIAN
+> > > +# define LITEX_READ_REG(addr)                  ioread32(addr)
+> > > +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
+> > > +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
+> > > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + off)
+> > > +#else
+> > > +# define LITEX_READ_REG(addr)                  ioread32be(addr)
+> > > +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
+> > > +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
+> > > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr + off)
+> > > +#endif
+> >
+> > I just noticed this.
+> >
+> > Ick, this is not good.  You will run into problems in the future with
+> > this, I can guarantee it.  What about systems where the CPU is one
+> > endian and the hardware in the other?  It will happen trust us.
+> 
+> As mentioned in the previous comment, LiteX CSRs are guaranteed to be
+> always little-endian - this includes configurations with both
+> big-endian and little-endian CPUs.
 
-As mentioned in the previous comment, LiteX CSRs are guaranteed to be
-always little-endian - this includes configurations with both
-big-endian and little-endian CPUs.
+What enforces that guarantee?
 
-The aim of including the ifdef section was exactly to target situation
-where endianness is different for CPU and devices. As such this
-approach *should* work.
+> The aim of including the ifdef section was exactly to target situation
+> where endianness is different for CPU and devices. As such this
+> approach *should* work.
 
-> Make these real functions (inline is nice) and pass in the pointer to
-> the device so you can test for it and call the correct function based on
-> the cpu/hardware type.
->
-> And what about bitfields?  What endian are they for your
-> system/hardware?
->
-> Almost no kernel code should EVER be testing __LITTLE_ENDIAN, don't add
-> to it as it is not a good idea.
+"should" :)
 
-If I understand correctly, you suggest to replace compile-time
-ifdefing with probing the endianness in the runtime (by reading some
-register that should return a known value, say 1, and testing how bits
-are arranged). This is a good idea, as it protects against breaking an
-always-little-endian property of LiteX CSRs in the future.
+We have seen it happen all the time that some hardware team hooks this
+up backwards, no matter what the "spec" required.  So be careful here.
 
-I'll include this in the next version of the patchset.
+good luck!
 
-> thanks,
->
-> greg k-h
-
-Thanks for your comments!
-
---=20
-Mateusz Holenko
-Antmicro Ltd | www.antmicro.com
-Roosevelta 22, 60-829 Poznan, Poland
+greg k-h
