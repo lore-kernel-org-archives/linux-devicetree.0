@@ -2,185 +2,71 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6EDC432C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 04:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A283C43215
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 05:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5992080F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 04:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A9020678
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 05:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GhNKSt0c"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="asIamyGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfKZEUR (ORCPT
+        id S1726148AbfKZFed (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 23:20:17 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1377 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfKZEUR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 23:20:17 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ddca8010001>; Mon, 25 Nov 2019 20:20:17 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 25 Nov 2019 20:20:15 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 25 Nov 2019 20:20:15 -0800
-Received: from [10.24.193.46] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Nov
- 2019 04:20:12 +0000
-Subject: Re: [PATCH v4 3/5] dt-bindings: phy: tegra: Add Tegra194 support
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        JC Kuo <jckuo@nvidia.com>, "Rob Herring" <robh@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-tegra@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191009024343.30218-1-jckuo@nvidia.com>
- <20191009024343.30218-4-jckuo@nvidia.com> <20191009233900.GA9109@bogus>
- <20191014131752.GF422231@ulmo>
- <CAL_Jsq+aKxfAir3skanfqmM+nFFzXPFL4eMa-+pq1kH-90YTbg@mail.gmail.com>
- <57692050-8284-a31f-71fd-7441823f3f2b@nvidia.com>
- <20191017120128.GE3122066@ulmo>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <0fd1f30c-5155-e1df-69b9-a49271b7cbce@nvidia.com>
-Date:   Tue, 26 Nov 2019 09:51:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191017120128.GE3122066@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574742017; bh=z3EDY6Eao4JzaFtK6U1s4QYBS3tl1Z7pp75azK3pO0o=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=GhNKSt0c59jg+kLa61P4Y7fUmS5B6/57P69x4BbS3s3kr9ya+cgppsDi9gAODDoOM
-         CHe9bpxybhbX5WkOTH1zyXv455rh2nUDr1mBks7ZMTsXoZjc5MyfZm05DW5RAqacQX
-         zDvMrj6WnkiaQj63jDEMcfeSaUph5eAu0mH4BAjoK/2kiMkLK7ey1Zr8lS8tybxXtI
-         33RfTA9tQ5cEBvZU4qyb5Dt2v7MWl7ow4luF8uqK2i+BRAv/RsF7r2nN779yZYuXa1
-         Mm9i5l7ltO05tkpPW7zAGM9wkSVR5qOr46u53lpEL7nihLrxSmdrXZBgKhNRKnx2mi
-         m+l2KPQXG1Y+Q==
+        Tue, 26 Nov 2019 00:34:33 -0500
+Received: from sender4-pp-o97.zoho.com ([136.143.188.97]:25759 "EHLO
+        sender4-pp-o97.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfKZFec (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 00:34:32 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574746459; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Hk/o5YBhVkhivrYE6M8Jj8WdI2Ibg1xQm9VeORTlsFbyiShjfeHD/uKj2Sa7B01eWm9+SZaBiscDd0SDPr75ptOhBH8PLPXSDCcNwiX7H9lp9bbkvKPRKbmdmuXDjsvJjwTn3KeXYzscVmklPH6mBCIDBYkjk7bnZ7myFqdbpkE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574746459; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=B3Byg1E6dN5pQwW3/kQ65XwbC3TKftBlzTGMq8uWcxc=; 
+        b=HO9BPhP+4pN7wCxSuPS6Nwnux3UIXJ5nvd92sCAJYfEz1FT1vSw1KXlHSUQFPdRECYLOLkjmk7adPJ648RmxbySu79XxXP4r0qsYzZQcuVzXrRHHr+zIpEwqlNCNQcmRYS/Q+SnZEEkOvQHXcNcRJgt6dKoir2wMhkyJO2gM6bk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=QJTcWFa9EPDmbx2p4B+2puOQ1EXhuk+mp0PaeJHJgPIOYq2Txad2q0vTOxVEFr2ixoQ+4WF9keRO
+    iqBXZXdebnq5GTes1nn8wnhJxeKJd8X0HRstr7xkNtvVTXdcEzp6  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574746459;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=B3Byg1E6dN5pQwW3/kQ65XwbC3TKftBlzTGMq8uWcxc=;
+        b=asIamyGh+k5KSTcm08B985ZMuaUdnaVk4RUQ70mxwqPEmXxxqRPj978a/vrPnF9Z
+        V9DFwg3yp27/b3OK5tiZUkq9CKEAHjWyJYoDVWczNZkRjBCqOa3oGV5fzscFmBGVOd4
+        gOtMP4dihAU75o3s6XOs7FZpzkyfw7d4zTGWUxcg=
+Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 157474645824479.72030377729016; Mon, 25 Nov 2019 21:34:18 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mark.rutland@arm.com, syq@debian.org
+Subject: Fix bugs in X1000/X1500 and add X1830 pinctrl driver v6.
+Date:   Tue, 26 Nov 2019 13:33:52 +0800
+Message-Id: <1574746436-80066-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+v5->v6:
+1.Remove duplicates "ssi-ce0-d".
+2.Use local variables to streamline code.
+3.Rename "GPIO_HIZ" to "GPIO_PULL_DIS", and adjust
+  related code.
 
 
-On 17-10-2019 17:31, Thierry Reding wrote:
-> On Thu, Oct 17, 2019 at 03:48:52PM +0800, JC Kuo wrote:
->> Hi Thierry, Hi Rob, Hi Kishon,
->> Please let me know your thoughts of the below implementation.
->>
->> 1. Add a "bool disable_gen2" to "phy->attrs" structure.
->> 2. In _of_phy_get() of phy-core.c to add the follow to parse a generic property.
->>
->> 	phy->attrs.disable_gen2 = of_property_read_bool(args.np,
->> 							"usb-disable-gen2");
-> 
-> Regarding this, I'm not sure how Rob imagined the generic properties to
-> work. Perhaps he was thinking about something like the max-link-speed
-> property found in the PCI bindings.
-> 
-> We could have something like this:
-> 
->   - max-link-speed:
->       If present this property specifies the USB generation supported on
->       the PHY/port. Must be:
->         1: for USB 3.1 Gen 1 (a.k.a. USB 3.0)
->         2: for USB 3.1 Gen 2
-> 
-> I'm not sure if we need to consider anything prior to USB 3.0. I suppose
-> we could do a similar mapping to what I proposed for the PHY ->set_mode
-> callback:
-> 
->   - max-link-speed:
->       If present this property specifies the USB generation supported on
->       the PHY/port. Must be:
->         0x0100: for USB 1.0 (Low-Speed)
->         0x0101: for USB 1.1 (Full-Speed)
->         0x0200: for USB 2.0 (Hi-Speed)
->         0x0300: for USB 3.0 (SuperSpeed) (a.k.a. USB 3.1 Gen 1)
->         0x0301: for USB 3.1 (SuperSpeed 10 Gbit/s) (a.k.a. USB 3.1 Gen 2)
->         0x0302: for USB 3.2 (SuperSpeed 20 Gbit/s) (a.k.a. USB 3.2 Gen 2 x 2)
->         ...
-> 
-> Or those could just be sequentially enumerated, like in the above
-> example.
-> 
-> Rob, any thoughts?
-> 
-> Thierry
-> 
-
-"Documentation/devicetree/bindings/usb/generic.txt" file already has dt-property named
-maximum-speed, which fulfills current requirement. So to disable gen2 feature simply
-add below entry to corresponding usb3 port entry.
-		padctl@3520000 {
-			status = "okay";
-
-			ports {
-				usb3-3 {
-					maximum-speed = "super-speed";
-				};
-		};
-
-Read the property using API usb_get_maximum_speed.
-
-Thanks,
-Nagarjuna
->> 3. In individual phy driver, to add SOC/PHY specific programming accordingly.
->>
->> Thanks,
->> JC
->>
->> On 10/14/19 9:40 PM, Rob Herring wrote:
->>> On Mon, Oct 14, 2019 at 8:17 AM Thierry Reding <thierry.reding@gmail.com> wrote:
->>>>
->>>> On Wed, Oct 09, 2019 at 06:39:00PM -0500, Rob Herring wrote:
->>>>> On Wed, Oct 09, 2019 at 10:43:41AM +0800, JC Kuo wrote:
->>>>>> Extend the bindings to cover the set of features found in Tegra194.
->>>>>> Note that, technically, there are four more supplies connected to the
->>>>>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
->>>>>> , but the power sequencing requirements of Tegra194 require these to be
->>>>>> under the control of the PMIC.
->>>>>>
->>>>>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it is
->>>>>> possible for some platforms have long signal trace that could not
->>>>>> provide sufficient electrical environment for Gen 2 speed. To deal with
->>>>>> this, a new device node property "nvidia,disable-gen2" was added to
->>>>>> Tegra194 that be used to specifically disable Gen 2 speed for a
->>>>>> particular USB 3.0 port so that the port can be limited to Gen 1 speed
->>>>>> and avoid the instability.
->>>>>
->>>>> I suspect this may be a common issue and we should have a common
->>>>> property. Typically, this kind of property is in the controller though
->>>>> and supports multiple speed limits. See PCI bindings for inspiration.
->>>>
->>>> Given that support for gen 2 speeds is dependent on signal trace length,
->>>> it doesn't really make sense to restrict the whole controller to a given
->>>> speed if only the signal trace for a single port exceeds the limit for
->>>> which gen 2 would work.
->>>>
->>>> Also, the USB PHYs are in a different hardware block than the USB
->>>> controller, so this really is a property of the PHY block, not the USB
->>>> controller.
->>>
->>> Okay, but still should be common for USB PHYs IMO.
->>>
->>> Rob
->>>
