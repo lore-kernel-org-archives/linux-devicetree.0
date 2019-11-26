@@ -2,156 +2,576 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1984FC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 05:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCF6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 05:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E598620678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 05:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDAA207DD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 05:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gbIz5wXw"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="AGlMGSDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfKZFfE (ORCPT
+        id S1727524AbfKZFfV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 00:35:04 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:36382 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727385AbfKZFfD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 00:35:03 -0500
-X-UUID: 61b6324a1feb49fba40e1b4ef6a12df5-20191126
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=hFL5vz7eKp6uNs/FXh/b9reSAR4W3oNkLg9bRkAq17w=;
-        b=gbIz5wXwxQPvWbcGAuP22JA7wttL1F4kpqmsHIr88vjvGRzqGMy3RPtKzCnsJz2ZM1tzn1PMsYhRidQqCchF8OSyt+DG2Sx/e+XFwovwzOHX1HjT8pGO3+s8yesi3vVF+5asOVyh9JI4/tsc1+Kk1mh8yJgEXbpSLM7/U4i1o1k=;
-X-UUID: 61b6324a1feb49fba40e1b4ef6a12df5-20191126
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <freddy.hsin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 804266126; Tue, 26 Nov 2019 13:34:55 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 26 Nov 2019 13:34:45 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 26 Nov 2019 13:34:34 +0800
-From:   <freddy.hsin@mediatek.com>
-To:     <sre@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <matthias.bgg@gmail.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>
-CC:     <Chang-An.Chen@mediatek.com>, <wsd_upstream@mediatek.com>,
-        Freddy Hsin <freddy.hsin@mediatek.com>
-Subject: [PATCH v1 1/4] power: reset: add reboot mode driver
-Date:   Tue, 26 Nov 2019 13:34:47 +0800
-Message-ID: <1574746490-625-2-git-send-email-freddy.hsin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1574746490-625-1-git-send-email-freddy.hsin@mediatek.com>
-References: <1574746490-625-1-git-send-email-freddy.hsin@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 26 Nov 2019 00:35:21 -0500
+Received: from sender4-pp-o97.zoho.com ([136.143.188.97]:25783 "EHLO
+        sender4-pp-o97.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfKZFfU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 00:35:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574746487; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Dq0b4TyGMHqk3ijHZnZil8juYRNT6R+l6W84GYoC11l2fBhVwomV8mtsQbvZaOOF0CtrytdQYsUaoe8a/r5QLT43+4Nz/ggiyIvcXDZIucYq8B8ysNJomgG9EV2vX96zp1j2JoHdK/MraYxl2jcr0vZZguSuX73MuDaAkkpAZBo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574746487; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=daQLwlxO9X0/LGxD7GLZcjAmtuEugfe/4ZMiqWDUXZs=; 
+        b=JgC7+l1QRBMuXY/Y9gTX/Nz2jVV9QiQSHRx12692vZ6CejV19GcIXMXnB1vnar+1aUCJ3P2lpbmMToz9U5PrZ+Dm8VK4V+uP83eQkYrQ3QKgtPUC86iL/p1UCO+0+qX43/tNNX1eBUKLPiDWazUrAaJbk7sAZ59WmrFAOzK+f1g=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=Cbc2foW3NcPzCWiTqPJS7/qwSgmGAVbwDr/ZBdY4T95LVYuIB/HO9Ovp6M0rm9vjh4bm+ciTwVLO
+    /2h8mZ7zUttDsSMU7yqDq9n29u+7xXqS5xp6+5l6UY1x3ek6YK+j  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574746487;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=daQLwlxO9X0/LGxD7GLZcjAmtuEugfe/4ZMiqWDUXZs=;
+        b=AGlMGSDr4oADdfSzq70vrvRRadlZBASl4Jw58o4suj/If5zbku7WvFfjrHMTtEQF
+        DyIdm130FwwIrMrnLJK9V2TmnWNuFO9Cr4BRjTlSvs4qgu7O0hbpIvF+zhrxypVJl21
+        biwmY7nrhW4xXRA5DQBodCggbd3TDkFb+0N0eQds=
+Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 1574746485641934.2376507063308; Mon, 25 Nov 2019 21:34:45 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mark.rutland@arm.com, syq@debian.org
+Subject: [PATCH v6 4/4] pinctrl: Ingenic: Add pinctrl driver for X1830.
+Date:   Tue, 26 Nov 2019 13:33:56 +0800
+Message-Id: <1574746436-80066-5-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574746436-80066-1-git-send-email-zhouyanjie@zoho.com>
+References: <1574746436-80066-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogRnJlZGR5IEhzaW4gPGZyZWRkeS5oc2luQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBkcml2
-ZXIgcGFyc2VzIHRoZSByZWJvb3QgY29tbWFuZHMgbGlrZSAicmVib290IGJvb3Rsb2FkZXIiDQph
-bmQgInJlYm9vdCByZWNvdmVyeSIgdG8gZ2V0IGEgYm9vdCBtb2RlIGRlc2NyaWJlZCBpbiB0aGUN
-CmRldmljZSB0cmVlICwgdGhlbiBjYWxsIHRoZSB3cml0ZSBpbnRlcmZhZSB0byBzdG9yZSB0aGUg
-Ym9vdA0KbW9kZSBpbiBtdGsgUkdVIChyZXNldCBnZW5lcmF0aW9uIHVuaXQpIG5vbi12b2xhdGls
-ZSByZWdpc3RlciwNCndoaWNoIGNhbiBiZSByZWFkIGJ5IHRoZSBib290bG9hZGVyIGFmdGVyIHN5
-c3RlbSByZWJvb3QsIHRoZW4NCnRoZSBib290bG9hZGVyIGNhbiB0YWtlIGRpZmZlcmVudCBhY3Rp
-b24gYWNjb3JkaW5nIHRvIHRoZSBtb2RlDQpzdG9yZWQuDQoNClNpZ25lZC1vZmYtYnk6IEZyZWRk
-eSBIc2luIDxmcmVkZHkuaHNpbkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3Bvd2VyL3Jl
-c2V0L0tjb25maWcgICAgICB8ICAgMTEgKysrKw0KIGRyaXZlcnMvcG93ZXIvcmVzZXQvTWFrZWZp
-bGUgICAgIHwgICAgMSArDQogZHJpdmVycy9wb3dlci9yZXNldC9tdGstcmVib290LmMgfCAgMTE2
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMyBmaWxlcyBjaGFuZ2Vk
-LCAxMjggaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Bvd2VyL3Jl
-c2V0L210ay1yZWJvb3QuYw0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wb3dlci9yZXNldC9LY29u
-ZmlnIGIvZHJpdmVycy9wb3dlci9yZXNldC9LY29uZmlnDQppbmRleCBhNTY0MjM3Li4zMWZlZGI4
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wb3dlci9yZXNldC9LY29uZmlnDQorKysgYi9kcml2ZXJz
-L3Bvd2VyL3Jlc2V0L0tjb25maWcNCkBAIC0yNTYsNSArMjU2LDE2IEBAIGNvbmZpZyBOVk1FTV9S
-RUJPT1RfTU9ERQ0KIAkgIHRoZW4gdGhlIGJvb3Rsb2FkZXIgY2FuIHJlYWQgaXQgYW5kIHRha2Ug
-ZGlmZmVyZW50DQogCSAgYWN0aW9uIGFjY29yZGluZyB0byB0aGUgbW9kZS4NCiANCitjb25maWcg
-TVRLX1JFQk9PVF9NT0RFDQorCXRyaXN0YXRlICJNZWRpYXRlayBTb0NzIHJlc2V0IGRyaXZlciIN
-CisJZGVwZW5kcyBvbiBPRg0KKwlkZXBlbmRzIG9uIFJFR01BUA0KKwlzZWxlY3QgUkVCT09UX01P
-REUNCisJaGVscA0KKwkgIFNheSB5IGhlcmUgd2lsbCBlbmFibGUgcmVib290IG1vZGUgZHJpdmVy
-LiBUaGlzIHdpbGwNCisJICBnZXQgcmVib290IG1vZGUgYXJndW1lbnRzIGFuZCBzdG9yZSBpdCBp
-biBSR1UgbWFwcGVkDQorCSAgcmVnaXN0ZXIsIHRoZW4gdGhlIGJvb3Rsb2FkZXIgY2FuIHJlYWQg
-aXQgdG8gdGFrZSBkaWZmZXJlbnQNCisJICBhY3Rpb24gYWNjb3JkaW5nIHRvIHRoZSBtb2RlLg0K
-Kw0KIGVuZGlmDQogDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wb3dlci9yZXNldC9NYWtlZmlsZSBi
-L2RyaXZlcnMvcG93ZXIvcmVzZXQvTWFrZWZpbGUNCmluZGV4IDg1ZGEzMTk4Li4yYzY0MTA0IDEw
-MDY0NA0KLS0tIGEvZHJpdmVycy9wb3dlci9yZXNldC9NYWtlZmlsZQ0KKysrIGIvZHJpdmVycy9w
-b3dlci9yZXNldC9NYWtlZmlsZQ0KQEAgLTMwLDMgKzMwLDQgQEAgb2JqLSQoQ09ORklHX1JFQk9P
-VF9NT0RFKSArPSByZWJvb3QtbW9kZS5vDQogb2JqLSQoQ09ORklHX1NZU0NPTl9SRUJPT1RfTU9E
-RSkgKz0gc3lzY29uLXJlYm9vdC1tb2RlLm8NCiBvYmotJChDT05GSUdfUE9XRVJfUkVTRVRfU0My
-N1hYKSArPSBzYzI3eHgtcG93ZXJvZmYubw0KIG9iai0kKENPTkZJR19OVk1FTV9SRUJPT1RfTU9E
-RSkgKz0gbnZtZW0tcmVib290LW1vZGUubw0KK29iai0kKENPTkZJR19NVEtfUkVCT09UX01PREUp
-ICs9IG10ay1yZWJvb3Qubw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcG93ZXIvcmVzZXQvbXRrLXJl
-Ym9vdC5jIGIvZHJpdmVycy9wb3dlci9yZXNldC9tdGstcmVib290LmMNCm5ldyBmaWxlIG1vZGUg
-MTAwNjQ0DQppbmRleCAwMDAwMDAwLi41NDVjNDI3DQotLS0gL2Rldi9udWxsDQorKysgYi9kcml2
-ZXJzL3Bvd2VyL3Jlc2V0L210ay1yZWJvb3QuYw0KQEAgLTAsMCArMSwxMTYgQEANCisvLyBTUERY
-LUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKy8qDQorICogQ29weXJpZ2h0IChDKSAyMDE5
-IE1lZGlhVGVrIEluYy4NCisgKiBBdXRob3IgRnJlZGR5IEhzaW4gPGZyZWRkeS5oc2luQG1lZGlh
-dGVrLmNvbT4NCisgKi8NCisNCisjaW5jbHVkZSA8bGludXgvaW5pdC5oPg0KKyNpbmNsdWRlIDxs
-aW51eC9tb2R1bGUuaD4NCisjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQorI2luY2x1ZGUgPGxp
-bnV4L29mLmg+DQorI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KKyNpbmNsdWRl
-IDxsaW51eC9yZWJvb3QuaD4NCisjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQorI2luY2x1ZGUg
-PGxpbnV4L29mX2FkZHJlc3MuaD4NCisjaW5jbHVkZSA8bGludXgvcmVib290LW1vZGUuaD4NCisN
-CitzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9jb25maWcgbXRrX3JlZ21hcF9jb25maWcgPSB7
-DQorCS5yZWdfYml0cyA9IDMyLA0KKwkudmFsX2JpdHMgPSAzMiwNCisJLnJlZ19zdHJpZGUgPSA0
-LA0KK307DQorDQorc3RydWN0IG10a19yZWJvb3RfbW9kZSB7DQorCXN0cnVjdCByZWdtYXAgKm1h
-cDsNCisJc3RydWN0IHJlYm9vdF9tb2RlX2RyaXZlciByZWJvb3Q7DQorCXUzMiBvZmZzZXQ7DQor
-CXUzMiBtYXNrOw0KK307DQorDQorc3RhdGljIGludCBtdGtfcmVib290X21vZGVfd3JpdGUoc3Ry
-dWN0IHJlYm9vdF9tb2RlX2RyaXZlciAqcmVib290LA0KKwkJCQkgdW5zaWduZWQgaW50IG1hZ2lj
-KQ0KK3sNCisJc3RydWN0IG10a19yZWJvb3RfbW9kZSAqbXRrX3JibTsNCisJaW50IHJldDsNCisN
-CisJbXRrX3JibSA9IGNvbnRhaW5lcl9vZihyZWJvb3QsIHN0cnVjdCBtdGtfcmVib290X21vZGUs
-IHJlYm9vdCk7DQorDQorCXJldCA9IHJlZ21hcF91cGRhdGVfYml0cyhtdGtfcmJtLT5tYXAsIG10
-a19yYm0tPm9mZnNldCwNCisJCQkJIG10a19yYm0tPm1hc2ssIG1hZ2ljKTsNCisJaWYgKHJldCA8
-IDApDQorCQlkZXZfaW5mbyhyZWJvb3QtPmRldiwgInVwZGF0ZSByZWJvb3QgbW9kZSBiaXRzIGZh
-aWxlZFxuIik7DQorDQorCXJldHVybiByZXQ7DQorfQ0KKw0KK3N0YXRpYyBpbnQgbXRrX3JlZ21h
-cF9sb29rdXBfYnlfcGhhbmRsZShzdHJ1Y3QgZGV2aWNlICpkZXYsDQorCQkJCQlzdHJ1Y3QgbXRr
-X3JlYm9vdF9tb2RlICptdGtfcmJtKQ0KK3sNCisJc3RydWN0IGRldmljZV9ub2RlICp0b3ByZ3Vf
-bnA7DQorCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBkZXYtPm9mX25vZGU7DQorCXZvaWQgX19p
-b21lbSAqYmFzZTsNCisNCisJdG9wcmd1X25wID0gb2ZfcGFyc2VfcGhhbmRsZShucCwgInJlZ21h
-cCIsIDApOw0KKw0KKwlpZiAoIW9mX2RldmljZV9pc19jb21wYXRpYmxlKHRvcHJndV9ucCwgIm1l
-ZGlhdGVrLHRvcHJndSIpKQ0KKwkJcmV0dXJuIC1FSU5WQUw7DQorDQorCWJhc2UgPSBvZl9pb21h
-cCh0b3ByZ3VfbnAsIDApOw0KKwlpZiAoSVNfRVJSKGJhc2UpKQ0KKwkJcmV0dXJuIFBUUl9FUlIo
-YmFzZSk7DQorDQorCW10a19yYm0tPm1hcCA9IGRldm1fcmVnbWFwX2luaXRfbW1pbyhkZXYsIGJh
-c2UsDQorCQkJCQkgICAgICZtdGtfcmVnbWFwX2NvbmZpZyk7DQorCXJldHVybiBQVFJfRVJSX09S
-X1pFUk8obXRrX3JibS0+bWFwKTsNCit9DQorDQorc3RhdGljIGludCBtdGtfcmVib290X21vZGVf
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCit7DQorCWludCByZXQ7DQorCXN0
-cnVjdCBtdGtfcmVib290X21vZGUgKm10a19yYm07DQorDQorCW10a19yYm0gPSBkZXZtX2t6YWxs
-b2MoJnBkZXYtPmRldiwgc2l6ZW9mKCptdGtfcmJtKSwgR0ZQX0tFUk5FTCk7DQorCWlmICghbXRr
-X3JibSkNCisJCXJldHVybiAtRU5PTUVNOw0KKw0KKwltdGtfcmJtLT5yZWJvb3QuZGV2ID0gJnBk
-ZXYtPmRldjsNCisJbXRrX3JibS0+cmVib290LndyaXRlID0gbXRrX3JlYm9vdF9tb2RlX3dyaXRl
-Ow0KKwltdGtfcmJtLT5tYXNrID0gMHhmOw0KKw0KKwlyZXQgPSBtdGtfcmVnbWFwX2xvb2t1cF9i
-eV9waGFuZGxlKCZwZGV2LT5kZXYsIG10a19yYm0pOw0KKwlpZiAocmV0KSB7DQorCQlkZXZfaW5m
-bygmcGRldi0+ZGV2LCAiQ291bGRuJ3QgY3JlYXRlIHRoZSB0b3ByZ3UgcmVnbWFwXG4iKTsNCisJ
-CXJldHVybiAtRUlOVkFMOw0KKwl9DQorDQorCWlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMihwZGV2
-LT5kZXYub2Zfbm9kZSwgIm9mZnNldCIsDQorCQkJCSAmbXRrX3JibS0+b2Zmc2V0KSkNCisJCXJl
-dHVybiAtRUlOVkFMOw0KKw0KKwlvZl9wcm9wZXJ0eV9yZWFkX3UzMihwZGV2LT5kZXYub2Zfbm9k
-ZSwgIm1hc2siLCAmbXRrX3JibS0+bWFzayk7DQorDQorCXJldCA9IGRldm1fcmVib290X21vZGVf
-cmVnaXN0ZXIoJnBkZXYtPmRldiwgJm10a19yYm0tPnJlYm9vdCk7DQorCWlmIChyZXQpDQorCQlk
-ZXZfaW5mbygmcGRldi0+ZGV2LCAiY2FuJ3QgcmVnaXN0ZXIgcmVib290IG1vZGVcbiIpOw0KKw0K
-KwlyZXR1cm4gcmV0Ow0KK30NCisNCitzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBt
-dGtfcmVib290X21vZGVfb2ZfbWF0Y2hbXSA9IHsNCisJeyAuY29tcGF0aWJsZSA9ICJ0b3ByZ3Ut
-cmVib290LW1vZGUiIH0sDQorCXt9DQorfTsNCitNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBtdGtf
-cmVib290X21vZGVfb2ZfbWF0Y2gpOw0KKw0KK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
-IG10a19yZWJvb3RfbW9kZV9kcml2ZXIgPSB7DQorCS5wcm9iZSA9IG10a19yZWJvb3RfbW9kZV9w
-cm9iZSwNCisJLmRyaXZlciA9IHsNCisJCS5uYW1lID0gInRvcHJndS1yZWJvb3QtbW9kZSIsDQor
-CQkub2ZfbWF0Y2hfdGFibGUgPSBtdGtfcmVib290X21vZGVfb2ZfbWF0Y2gsDQorCX0sDQorfTsN
-Cittb2R1bGVfcGxhdGZvcm1fZHJpdmVyKG10a19yZWJvb3RfbW9kZV9kcml2ZXIpOw0KKw0KK01P
-RFVMRV9BVVRIT1IoIkZyZWRkeSBIc2luIDxmcmVkZHkuaHNpbkBtZWRpYXRlay5jb20+Iik7DQor
-TU9EVUxFX0RFU0NSSVBUSU9OKCJNZWRpYXRlayByZWJvb3QgbW9kZSBkcml2ZXIiKTsNCitNT0RV
-TEVfTElDRU5TRSgiR1BMIHYyIik7DQotLSANCjEuNy45LjUNCg==
+Add support for probing the pinctrl-ingenic driver on the
+X1830 Soc from Ingenic.
+
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
+
+Notes:
+    v2:
+    New patch.
+    
+    v2->v3:
+    Add pinctrl drivers for the PWM of X1830.
+    
+    v3->v4:
+    1.Use local variables to streamline code.
+    2.Prevents processors older than X1830 from being
+      configured in HiZ mode.
+    
+    v4->v5:
+    Fix compile-time warnings.
+    Reported-by: kbuild test robot <lkp@intel.com>
+    
+    v5->v6:
+    1.Use local variables to streamline code.
+    2.Rename "GPIO_HIZ" to "GPIO_PULL_DIS", and adjust
+      related code.
+
+ drivers/pinctrl/pinctrl-ingenic.c | 341 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 321 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 38f7f147..7b1b7ee 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -28,6 +28,10 @@
+ #define GPIO_PIN	0x00
+ #define GPIO_MSK	0x20
+ 
++#define GPIO_PULL_DIS	0x00
++#define GPIO_PULL_UP	0x01
++#define GPIO_PULL_DOWN	0x10
++
+ #define JZ4740_GPIO_DATA	0x10
+ #define JZ4740_GPIO_PULL_DIS	0x30
+ #define JZ4740_GPIO_FUNC	0x40
+@@ -45,6 +49,11 @@
+ #define X1000_GPIO_PZ_BASE		0x700
+ #define X1000_GPIO_PZ_GID2LD	0x7f0
+ 
++#define X1830_GPIO_PEL			0x110
++#define X1830_GPIO_PEH			0x120
++#define X1830_GPIO_PZ_BASE		0x7000
++#define X1830_GPIO_PZ_GID2LD	0x70f0
++
+ #define REG_SET(x) ((x) + 0x4)
+ #define REG_CLEAR(x) ((x) + 0x8)
+ 
+@@ -60,6 +69,7 @@ enum jz_version {
+ 	ID_X1000,
+ 	ID_X1000E,
+ 	ID_X1500,
++	ID_X1830,
+ };
+ 
+ struct ingenic_chip_info {
+@@ -1394,6 +1404,220 @@ static const struct ingenic_chip_info x1500_chip_info = {
+ 	.pull_downs = x1000_pull_downs,
+ };
+ 
++static const u32 x1830_pull_ups[4] = {
++	0x5fdfffc0, 0xffffefff, 0x1ffffbff, 0x0fcff3fc,
++};
++
++static const u32 x1830_pull_downs[4] = {
++	0x5fdfffc0, 0xffffefff, 0x1ffffbff, 0x0fcff3fc,
++};
++
++static int x1830_uart0_data_pins[] = { 0x33, 0x36, };
++static int x1830_uart0_hwflow_pins[] = { 0x34, 0x35, };
++static int x1830_uart1_data_pins[] = { 0x38, 0x37, };
++static int x1830_sfc_pins[] = { 0x17, 0x18, 0x1a, 0x19, 0x1b, 0x1c, };
++static int x1830_ssi0_dt_pins[] = { 0x4c, };
++static int x1830_ssi0_dr_pins[] = { 0x4b, };
++static int x1830_ssi0_clk_pins[] = { 0x4f, };
++static int x1830_ssi0_gpc_pins[] = { 0x4d, };
++static int x1830_ssi0_ce0_pins[] = { 0x50, };
++static int x1830_ssi0_ce1_pins[] = { 0x4e, };
++static int x1830_ssi1_dt_c_pins[] = { 0x53, };
++static int x1830_ssi1_dr_c_pins[] = { 0x54, };
++static int x1830_ssi1_clk_c_pins[] = { 0x57, };
++static int x1830_ssi1_gpc_c_pins[] = { 0x55, };
++static int x1830_ssi1_ce0_c_pins[] = { 0x58, };
++static int x1830_ssi1_ce1_c_pins[] = { 0x56, };
++static int x1830_ssi1_dt_d_pins[] = { 0x62, };
++static int x1830_ssi1_dr_d_pins[] = { 0x63, };
++static int x1830_ssi1_clk_d_pins[] = { 0x66, };
++static int x1830_ssi1_gpc_d_pins[] = { 0x64, };
++static int x1830_ssi1_ce0_d_pins[] = { 0x67, };
++static int x1830_ssi1_ce1_d_pins[] = { 0x65, };
++static int x1830_mmc0_1bit_pins[] = { 0x24, 0x25, 0x20, };
++static int x1830_mmc0_4bit_pins[] = { 0x21, 0x22, 0x23, };
++static int x1830_mmc1_1bit_pins[] = { 0x42, 0x43, 0x44, };
++static int x1830_mmc1_4bit_pins[] = { 0x45, 0x46, 0x47, };
++static int x1830_i2c0_pins[] = { 0x0c, 0x0d, };
++static int x1830_i2c1_pins[] = { 0x39, 0x3a, };
++static int x1830_i2c2_pins[] = { 0x5b, 0x5c, };
++static int x1830_pwm_pwm0_b_pins[] = { 0x31, };
++static int x1830_pwm_pwm0_c_pins[] = { 0x4b, };
++static int x1830_pwm_pwm1_b_pins[] = { 0x32, };
++static int x1830_pwm_pwm1_c_pins[] = { 0x4c, };
++static int x1830_pwm_pwm2_c_8_pins[] = { 0x48, };
++static int x1830_pwm_pwm2_c_13_pins[] = { 0x4d, };
++static int x1830_pwm_pwm3_c_9_pins[] = { 0x49, };
++static int x1830_pwm_pwm3_c_14_pins[] = { 0x4e, };
++static int x1830_pwm_pwm4_c_15_pins[] = { 0x4f, };
++static int x1830_pwm_pwm4_c_25_pins[] = { 0x59, };
++static int x1830_pwm_pwm5_c_16_pins[] = { 0x50, };
++static int x1830_pwm_pwm5_c_26_pins[] = { 0x5a, };
++static int x1830_pwm_pwm6_c_17_pins[] = { 0x51, };
++static int x1830_pwm_pwm6_c_27_pins[] = { 0x5b, };
++static int x1830_pwm_pwm7_c_18_pins[] = { 0x52, };
++static int x1830_pwm_pwm7_c_28_pins[] = { 0x5c, };
++static int x1830_mac_pins[] = {
++	0x29, 0x30, 0x2f, 0x28, 0x2e, 0x2d, 0x2a, 0x2b, 0x26, 0x27,
++};
++
++static int x1830_uart0_data_funcs[] = { 0, 0, };
++static int x1830_uart0_hwflow_funcs[] = { 0, 0, };
++static int x1830_uart1_data_funcs[] = { 0, 0, };
++static int x1830_sfc_funcs[] = { 1, 1, 1, 1, 1, 1, };
++static int x1830_ssi0_dt_funcs[] = { 0, };
++static int x1830_ssi0_dr_funcs[] = { 0, };
++static int x1830_ssi0_clk_funcs[] = { 0, };
++static int x1830_ssi0_gpc_funcs[] = { 0, };
++static int x1830_ssi0_ce0_funcs[] = { 0, };
++static int x1830_ssi0_ce1_funcs[] = { 0, };
++static int x1830_ssi1_dt_c_funcs[] = { 1, };
++static int x1830_ssi1_dr_c_funcs[] = { 1, };
++static int x1830_ssi1_clk_c_funcs[] = { 1, };
++static int x1830_ssi1_gpc_c_funcs[] = { 1, };
++static int x1830_ssi1_ce0_c_funcs[] = { 1, };
++static int x1830_ssi1_ce1_c_funcs[] = { 1, };
++static int x1830_ssi1_dt_d_funcs[] = { 2, };
++static int x1830_ssi1_dr_d_funcs[] = { 2, };
++static int x1830_ssi1_clk_d_funcs[] = { 2, };
++static int x1830_ssi1_gpc_d_funcs[] = { 2, };
++static int x1830_ssi1_ce0_d_funcs[] = { 2, };
++static int x1830_ssi1_ce1_d_funcs[] = { 2, };
++static int x1830_mmc0_1bit_funcs[] = { 0, 0, 0, };
++static int x1830_mmc0_4bit_funcs[] = { 0, 0, 0, };
++static int x1830_mmc1_1bit_funcs[] = { 0, 0, 0, };
++static int x1830_mmc1_4bit_funcs[] = { 0, 0, 0, };
++static int x1830_i2c0_funcs[] = { 1, 1, };
++static int x1830_i2c1_funcs[] = { 0, 0, };
++static int x1830_i2c2_funcs[] = { 1, 1, };
++static int x1830_pwm_pwm0_b_funcs[] = { 0, };
++static int x1830_pwm_pwm0_c_funcs[] = { 1, };
++static int x1830_pwm_pwm1_b_funcs[] = { 0, };
++static int x1830_pwm_pwm1_c_funcs[] = { 1, };
++static int x1830_pwm_pwm2_c_8_funcs[] = { 0, };
++static int x1830_pwm_pwm2_c_13_funcs[] = { 1, };
++static int x1830_pwm_pwm3_c_9_funcs[] = { 0, };
++static int x1830_pwm_pwm3_c_14_funcs[] = { 1, };
++static int x1830_pwm_pwm4_c_15_funcs[] = { 1, };
++static int x1830_pwm_pwm4_c_25_funcs[] = { 0, };
++static int x1830_pwm_pwm5_c_16_funcs[] = { 1, };
++static int x1830_pwm_pwm5_c_26_funcs[] = { 0, };
++static int x1830_pwm_pwm6_c_17_funcs[] = { 1, };
++static int x1830_pwm_pwm6_c_27_funcs[] = { 0, };
++static int x1830_pwm_pwm7_c_18_funcs[] = { 1, };
++static int x1830_pwm_pwm7_c_28_funcs[] = { 0, };
++static int x1830_mac_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
++
++static const struct group_desc x1830_groups[] = {
++	INGENIC_PIN_GROUP("uart0-data", x1830_uart0_data),
++	INGENIC_PIN_GROUP("uart0-hwflow", x1830_uart0_hwflow),
++	INGENIC_PIN_GROUP("uart1-data", x1830_uart1_data),
++	INGENIC_PIN_GROUP("sfc", x1830_sfc),
++	INGENIC_PIN_GROUP("ssi0-dt", x1830_ssi0_dt),
++	INGENIC_PIN_GROUP("ssi0-dr", x1830_ssi0_dr),
++	INGENIC_PIN_GROUP("ssi0-clk", x1830_ssi0_clk),
++	INGENIC_PIN_GROUP("ssi0-gpc", x1830_ssi0_gpc),
++	INGENIC_PIN_GROUP("ssi0-ce0", x1830_ssi0_ce0),
++	INGENIC_PIN_GROUP("ssi0-ce1", x1830_ssi0_ce1),
++	INGENIC_PIN_GROUP("ssi1-dt-c", x1830_ssi1_dt_c),
++	INGENIC_PIN_GROUP("ssi1-dr-c", x1830_ssi1_dr_c),
++	INGENIC_PIN_GROUP("ssi1-clk-c", x1830_ssi1_clk_c),
++	INGENIC_PIN_GROUP("ssi1-gpc-c", x1830_ssi1_gpc_c),
++	INGENIC_PIN_GROUP("ssi1-ce0-c", x1830_ssi1_ce0_c),
++	INGENIC_PIN_GROUP("ssi1-ce1-c", x1830_ssi1_ce1_c),
++	INGENIC_PIN_GROUP("ssi1-dt-d", x1830_ssi1_dt_d),
++	INGENIC_PIN_GROUP("ssi1-dr-d", x1830_ssi1_dr_d),
++	INGENIC_PIN_GROUP("ssi1-clk-d", x1830_ssi1_clk_d),
++	INGENIC_PIN_GROUP("ssi1-gpc-d", x1830_ssi1_gpc_d),
++	INGENIC_PIN_GROUP("ssi1-ce0-d", x1830_ssi1_ce0_d),
++	INGENIC_PIN_GROUP("ssi1-ce1-d", x1830_ssi1_ce1_d),
++	INGENIC_PIN_GROUP("mmc0-1bit", x1830_mmc0_1bit),
++	INGENIC_PIN_GROUP("mmc0-4bit", x1830_mmc0_4bit),
++	INGENIC_PIN_GROUP("mmc1-1bit", x1830_mmc1_1bit),
++	INGENIC_PIN_GROUP("mmc1-4bit", x1830_mmc1_4bit),
++	INGENIC_PIN_GROUP("i2c0-data", x1830_i2c0),
++	INGENIC_PIN_GROUP("i2c1-data", x1830_i2c1),
++	INGENIC_PIN_GROUP("i2c2-data", x1830_i2c2),
++	INGENIC_PIN_GROUP("pwm0-b", x1830_pwm_pwm0_b),
++	INGENIC_PIN_GROUP("pwm0-c", x1830_pwm_pwm0_c),
++	INGENIC_PIN_GROUP("pwm1-b", x1830_pwm_pwm1_b),
++	INGENIC_PIN_GROUP("pwm1-c", x1830_pwm_pwm1_c),
++	INGENIC_PIN_GROUP("pwm2-c-8", x1830_pwm_pwm2_c_8),
++	INGENIC_PIN_GROUP("pwm2-c-13", x1830_pwm_pwm2_c_13),
++	INGENIC_PIN_GROUP("pwm3-c-9", x1830_pwm_pwm3_c_9),
++	INGENIC_PIN_GROUP("pwm3-c-14", x1830_pwm_pwm3_c_14),
++	INGENIC_PIN_GROUP("pwm4-c-15", x1830_pwm_pwm4_c_15),
++	INGENIC_PIN_GROUP("pwm4-c-25", x1830_pwm_pwm4_c_25),
++	INGENIC_PIN_GROUP("pwm5-c-16", x1830_pwm_pwm5_c_16),
++	INGENIC_PIN_GROUP("pwm5-c-26", x1830_pwm_pwm5_c_26),
++	INGENIC_PIN_GROUP("pwm6-c-17", x1830_pwm_pwm6_c_17),
++	INGENIC_PIN_GROUP("pwm6-c-27", x1830_pwm_pwm6_c_27),
++	INGENIC_PIN_GROUP("pwm7-c-18", x1830_pwm_pwm7_c_18),
++	INGENIC_PIN_GROUP("pwm7-c-28", x1830_pwm_pwm7_c_28),
++	INGENIC_PIN_GROUP("mac", x1830_mac),
++};
++
++static const char *x1830_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
++static const char *x1830_uart1_groups[] = { "uart1-data", };
++static const char *x1830_sfc_groups[] = { "sfc", };
++static const char *x1830_ssi0_groups[] = {
++	"ssi0-dt", "ssi0-dr", "ssi0-clk", "ssi0-gpc", "ssi0-ce0", "ssi0-ce1",
++};
++static const char *x1830_ssi1_groups[] = {
++	"ssi1-dt-c", "ssi1-dt-d",
++	"ssi1-dr-c", "ssi1-dr-d",
++	"ssi1-clk-c", "ssi1-clk-d",
++	"ssi1-gpc-c", "ssi1-gpc-d",
++	"ssi1-ce0-c", "ssi1-ce0-d",
++	"ssi1-ce1-c", "ssi1-ce1-d",
++};
++static const char *x1830_mmc0_groups[] = { "mmc0-1bit", "mmc0-4bit", };
++static const char *x1830_mmc1_groups[] = { "mmc1-1bit", "mmc1-4bit", };
++static const char *x1830_i2c0_groups[] = { "i2c0-data", };
++static const char *x1830_i2c1_groups[] = { "i2c1-data", };
++static const char *x1830_i2c2_groups[] = { "i2c2-data", };
++static const char *x1830_pwm0_groups[] = { "pwm0-b", "pwm0-c", };
++static const char *x1830_pwm1_groups[] = { "pwm1-b", "pwm1-c", };
++static const char *x1830_pwm2_groups[] = { "pwm2-c-8", "pwm2-c-13", };
++static const char *x1830_pwm3_groups[] = { "pwm3-c-9", "pwm3-c-14", };
++static const char *x1830_pwm4_groups[] = { "pwm4-c-15", "pwm4-c-25", };
++static const char *x1830_pwm5_groups[] = { "pwm5-c-16", "pwm5-c-26", };
++static const char *x1830_pwm6_groups[] = { "pwm6-c-17", "pwm6-c-27", };
++static const char *x1830_pwm7_groups[] = { "pwm7-c-18", "pwm7-c-28", };
++static const char *x1830_mac_groups[] = { "mac", };
++
++static const struct function_desc x1830_functions[] = {
++	{ "uart0", x1830_uart0_groups, ARRAY_SIZE(x1830_uart0_groups), },
++	{ "uart1", x1830_uart1_groups, ARRAY_SIZE(x1830_uart1_groups), },
++	{ "sfc", x1830_sfc_groups, ARRAY_SIZE(x1830_sfc_groups), },
++	{ "ssi0", x1830_ssi0_groups, ARRAY_SIZE(x1830_ssi0_groups), },
++	{ "ssi1", x1830_ssi1_groups, ARRAY_SIZE(x1830_ssi1_groups), },
++	{ "mmc0", x1830_mmc0_groups, ARRAY_SIZE(x1830_mmc0_groups), },
++	{ "mmc1", x1830_mmc1_groups, ARRAY_SIZE(x1830_mmc1_groups), },
++	{ "i2c0", x1830_i2c0_groups, ARRAY_SIZE(x1830_i2c0_groups), },
++	{ "i2c1", x1830_i2c1_groups, ARRAY_SIZE(x1830_i2c1_groups), },
++	{ "i2c2", x1830_i2c2_groups, ARRAY_SIZE(x1830_i2c2_groups), },
++	{ "pwm0", x1830_pwm0_groups, ARRAY_SIZE(x1830_pwm0_groups), },
++	{ "pwm1", x1830_pwm1_groups, ARRAY_SIZE(x1830_pwm1_groups), },
++	{ "pwm2", x1830_pwm2_groups, ARRAY_SIZE(x1830_pwm2_groups), },
++	{ "pwm3", x1830_pwm3_groups, ARRAY_SIZE(x1830_pwm3_groups), },
++	{ "pwm4", x1830_pwm4_groups, ARRAY_SIZE(x1830_pwm4_groups), },
++	{ "pwm5", x1830_pwm5_groups, ARRAY_SIZE(x1830_pwm4_groups), },
++	{ "pwm6", x1830_pwm6_groups, ARRAY_SIZE(x1830_pwm4_groups), },
++	{ "pwm7", x1830_pwm7_groups, ARRAY_SIZE(x1830_pwm4_groups), },
++	{ "mac", x1830_mac_groups, ARRAY_SIZE(x1830_mac_groups), },
++};
++
++static const struct ingenic_chip_info x1830_chip_info = {
++	.num_chips = 4,
++	.groups = x1830_groups,
++	.num_groups = ARRAY_SIZE(x1830_groups),
++	.functions = x1830_functions,
++	.num_functions = ARRAY_SIZE(x1830_functions),
++	.pull_ups = x1830_pull_ups,
++	.pull_downs = x1830_pull_downs,
++};
++
+ static u32 ingenic_gpio_read_reg(struct ingenic_gpio_chip *jzgc, u8 reg)
+ {
+ 	unsigned int val;
+@@ -1422,13 +1646,20 @@ static void ingenic_gpio_shadow_set_bit(struct ingenic_gpio_chip *jzgc,
+ 	else
+ 		reg = REG_CLEAR(reg);
+ 
+-	regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_BASE + reg, BIT(offset));
++	if (jzgc->jzpc->version >= ID_X1830)
++		regmap_write(jzgc->jzpc->map, X1830_GPIO_PZ_BASE + reg, BIT(offset));
++	else
++		regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_BASE + reg, BIT(offset));
+ }
+ 
+ static void ingenic_gpio_shadow_set_bit_load(struct ingenic_gpio_chip *jzgc)
+ {
+-	regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_GID2LD,
+-			jzgc->gc.base / PINS_PER_GPIO_CHIP);
++	unsigned int offt = jzgc->gc.base / PINS_PER_GPIO_CHIP;
++
++	if (jzgc->jzpc->version >= ID_X1830)
++		regmap_write(jzgc->jzpc->map, X1830_GPIO_PZ_GID2LD, offt);
++	else
++		regmap_write(jzgc->jzpc->map, X1000_GPIO_PZ_GID2LD, offt);
+ }
+ 
+ static inline bool ingenic_gpio_get_value(struct ingenic_gpio_chip *jzgc,
+@@ -1668,25 +1899,36 @@ static inline void ingenic_config_pin(struct ingenic_pinctrl *jzpc,
+ 		unsigned int pin, u8 reg, bool set)
+ {
+ 	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
+-	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
++	unsigned int offt1 = pin / PINS_PER_GPIO_CHIP;
++	unsigned int offt2 = set ? REG_SET(reg) : REG_CLEAR(reg);
+ 
+-	regmap_write(jzpc->map, offt * 0x100 +
+-			(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
++	if (jzpc->version >= ID_X1830)
++		regmap_write(jzpc->map, offt1 * 0x1000 + offt2, BIT(idx));
++	else
++		regmap_write(jzpc->map, offt1 * 0x100 + offt2, BIT(idx));
+ }
+ 
+ static inline void ingenic_shadow_config_pin(struct ingenic_pinctrl *jzpc,
+ 		unsigned int pin, u8 reg, bool set)
+ {
+ 	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
++	unsigned int offt = set ? REG_SET(reg) : REG_CLEAR(reg);
+ 
+-	regmap_write(jzpc->map, X1000_GPIO_PZ_BASE +
+-			(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
++	if (jzpc->version >= ID_X1830)
++		regmap_write(jzpc->map, X1830_GPIO_PZ_BASE + offt, BIT(idx));
++	else
++		regmap_write(jzpc->map, X1000_GPIO_PZ_BASE + offt, BIT(idx));
+ }
+ 
+ static inline void ingenic_shadow_config_pin_load(struct ingenic_pinctrl *jzpc,
+ 		unsigned int pin)
+ {
+-	regmap_write(jzpc->map, X1000_GPIO_PZ_GID2LD, pin / PINS_PER_GPIO_CHIP);
++	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
++
++	if (jzpc->version >= ID_X1830)
++		regmap_write(jzpc->map, X1830_GPIO_PZ_GID2LD, offt);
++	else
++		regmap_write(jzpc->map, X1000_GPIO_PZ_GID2LD, offt);
+ }
+ 
+ static inline bool ingenic_get_pin_config(struct ingenic_pinctrl *jzpc,
+@@ -1696,7 +1938,10 @@ static inline bool ingenic_get_pin_config(struct ingenic_pinctrl *jzpc,
+ 	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
+ 	unsigned int val;
+ 
+-	regmap_read(jzpc->map, offt * 0x100 + reg, &val);
++	if (jzpc->version >= ID_X1830)
++		regmap_read(jzpc->map, offt * 0x1000 + reg, &val);
++	else
++		regmap_read(jzpc->map, offt * 0x100 + reg, &val);
+ 
+ 	return val & BIT(idx);
+ }
+@@ -1857,12 +2102,60 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
+ }
+ 
+ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
+-		unsigned int pin, bool enabled)
++		unsigned int pin, unsigned int bias)
+ {
+-	if (jzpc->version >= ID_JZ4760)
+-		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PEN, !enabled);
+-	else
+-		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
++	if (jzpc->version >= ID_X1830) {
++		unsigned int idx = pin % PINS_PER_GPIO_CHIP;
++		unsigned int idxl = pin % PINS_PER_GPIO_CHIP * 2;
++		unsigned int idxh = pin % PINS_PER_GPIO_CHIP % 16 * 2;
++		unsigned int offt = pin / PINS_PER_GPIO_CHIP;
++		unsigned int half = PINS_PER_GPIO_CHIP / 2;
++
++		switch (bias) {
++		case GPIO_PULL_UP:
++			if (idx < half) {
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_CLEAR(X1830_GPIO_PEL), BIT(idxl) * 2);
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_SET(X1830_GPIO_PEL), BIT(idxl));
++			} else {
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_CLEAR(X1830_GPIO_PEH), BIT(idxh) * 2);
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_SET(X1830_GPIO_PEH), BIT(idxh));
++			}
++			break;
++
++		case GPIO_PULL_DOWN:
++			if (idx < half) {
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_CLEAR(X1830_GPIO_PEL), BIT(idxl));
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_SET(X1830_GPIO_PEL), BIT(idxl) * 2);
++			} else {
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_CLEAR(X1830_GPIO_PEH), BIT(idxh));
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_SET(X1830_GPIO_PEH), BIT(idxh) * 2);
++			}
++			break;
++
++		case GPIO_PULL_DIS:
++		default:
++			if (idx < half)
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_CLEAR(X1830_GPIO_PEL), BIT(idxl) * 3);
++			else
++				regmap_write(jzpc->map, offt * 0x1000 +
++						REG_CLEAR(X1830_GPIO_PEH), BIT(idxh) * 3);
++			break;
++		}
++
++	} else if (jzpc->version >= ID_JZ4760) {
++		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PEN, !bias);
++	} else {
++		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !bias);
++	}
+ }
+ 
+ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+@@ -1889,7 +2182,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		case PIN_CONFIG_BIAS_DISABLE:
+ 			dev_dbg(jzpc->dev, "disable pull-over for pin P%c%u\n",
+ 					'A' + offt, idx);
+-			ingenic_set_bias(jzpc, pin, false);
++			ingenic_set_bias(jzpc, pin, GPIO_PULL_DIS);
+ 			break;
+ 
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+@@ -1897,7 +2190,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 				return -EINVAL;
+ 			dev_dbg(jzpc->dev, "set pull-up for pin P%c%u\n",
+ 					'A' + offt, idx);
+-			ingenic_set_bias(jzpc, pin, true);
++			ingenic_set_bias(jzpc, pin, GPIO_PULL_UP);
+ 			break;
+ 
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
+@@ -1905,7 +2198,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 				return -EINVAL;
+ 			dev_dbg(jzpc->dev, "set pull-down for pin P%c%u\n",
+ 					'A' + offt, idx);
+-			ingenic_set_bias(jzpc, pin, true);
++			ingenic_set_bias(jzpc, pin, GPIO_PULL_DOWN);
+ 			break;
+ 
+ 		default:
+@@ -1987,6 +2280,7 @@ static const struct of_device_id ingenic_pinctrl_of_match[] = {
+ 	{ .compatible = "ingenic,x1000-pinctrl", .data = (void *) ID_X1000 },
+ 	{ .compatible = "ingenic,x1000e-pinctrl", .data = (void *) ID_X1000E },
+ 	{ .compatible = "ingenic,x1500-pinctrl", .data = (void *) ID_X1500 },
++	{ .compatible = "ingenic,x1830-pinctrl", .data = (void *) ID_X1830 },
+ 	{},
+ };
+ 
+@@ -1996,6 +2290,7 @@ static const struct of_device_id ingenic_gpio_of_match[] __initconst = {
+ 	{ .compatible = "ingenic,jz4770-gpio", },
+ 	{ .compatible = "ingenic,jz4780-gpio", },
+ 	{ .compatible = "ingenic,x1000-gpio", },
++	{ .compatible = "ingenic,x1830-gpio", },
+ 	{},
+ };
+ 
+@@ -2018,7 +2313,10 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
+ 		return -ENOMEM;
+ 
+ 	jzgc->jzpc = jzpc;
+-	jzgc->reg_base = bank * 0x100;
++	if (jzpc->version >= ID_X1830)
++		jzgc->reg_base = bank * 0x1000;
++	else
++		jzgc->reg_base = bank * 0x100;
+ 
+ 	jzgc->gc.label = devm_kasprintf(dev, GFP_KERNEL, "GPIO%c", 'A' + bank);
+ 	if (!jzgc->gc.label)
+@@ -2111,7 +2409,9 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
+ 	else
+ 		jzpc->version = (enum jz_version)id->driver_data;
+ 
+-	if (jzpc->version >= ID_X1500)
++	if (jzpc->version >= ID_X1830)
++		chip_info = &x1830_chip_info;
++	else if (jzpc->version >= ID_X1500)
+ 		chip_info = &x1500_chip_info;
+ 	else if (jzpc->version >= ID_X1000E)
+ 		chip_info = &x1000e_chip_info;
+@@ -2208,6 +2508,7 @@ static const struct platform_device_id ingenic_pinctrl_ids[] = {
+ 	{ "x1000-pinctrl", ID_X1000 },
+ 	{ "x1000e-pinctrl", ID_X1000E },
+ 	{ "x1500-pinctrl", ID_X1500 },
++	{ "x1830-pinctrl", ID_X1830 },
+ 	{},
+ };
+ 
+-- 
+2.7.4
+
 
