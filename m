@@ -2,103 +2,95 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E646C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 08:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DCBC432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC0420722
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 08:46:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C3v7S2dp"
+	by mail.kernel.org (Postfix) with ESMTP id 6262A20722
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 08:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbfKZIqC (ORCPT
+        id S1726072AbfKZIs3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 03:46:02 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43399 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfKZIqB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 03:46:01 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so21384183wra.10
-        for <devicetree@vger.kernel.org>; Tue, 26 Nov 2019 00:46:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S9TvAxqbs52vNSqgx+w7DI/11Q+Ur87GTCZWKyu+iKQ=;
-        b=C3v7S2dpBoq5ZrjAYNyEJuTPQm6IZXqtXV1ZTBQ56D2g7jlgWB3CyBizpFA0uFns4a
-         wPyDX/rFFAkfeMDbYWihAE+nldjOVAvvxQCpUTwmDhJTAR7qimqorNolz6VajtmVMgpA
-         2N8Gb7qruF5CT5u7XsG70FeNC3bQf8bVo5SVTRO8Oo1+Y24Y00DvJpPcmEHclV+j8UQU
-         slHyEMUtLwKJaWoGYW96NioHwsUFE06PsHlkaplh9IbfjUVntjIntGo/79SgcRKrYheu
-         pqZ9PhXLu7WAOKScd8xIMdTp5dHGjbyOiw2W50f80iDCKL0ondE4+XCdj7lagw7Cl0hQ
-         ka0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S9TvAxqbs52vNSqgx+w7DI/11Q+Ur87GTCZWKyu+iKQ=;
-        b=ggtlsWquxQQob/1LJoczJqKis3tYuQNq1CElrTCKAPz4/fV+xzb5ZXKNSE8AfUkCzG
-         Z1brSOyJwnV9qCwt9rqmBXUx6UmE6pRxUZbZNah692Zpsu92e2lF7SYAEu/WlHv0KpxI
-         jZW/a2wAII5uCOPB8jDEcMZvYwzZ0+p3HLrYhKm0m+lyeQGENeYfexexPygN8KFrOe8W
-         A9hq+ANfu8TT0UaOzmtuXzKQpiYTo4cdgh2AQ6xKREcF59UCqoWQiLT7G2GC+RLeftp+
-         5vdGrgyfHysph8+Ocj45aizMG2Dx3Wgn7iba10I83rYfDYkJRIe/RbQoq8s3+f3jOhx6
-         Zp6A==
-X-Gm-Message-State: APjAAAV8MLZ8xuSF+nOxUfR0vjx81YMUHkjTceTKGUlPgI9vEc5py2Nw
-        Fhh+z/meqzRAEw3fd+j1ix8aXQp1BDIIfhCJEEXpfQ==
-X-Google-Smtp-Source: APXvYqxS5YJMNni/yigCyW2ja2TZreuwrAOgP0T+I1ix8EIUJsJWK79Z9hs20cpcH2g9W+2QqBaCGOjV2ybffpZLNfc=
-X-Received: by 2002:a5d:6508:: with SMTP id x8mr4054278wru.0.1574757959603;
- Tue, 26 Nov 2019 00:45:59 -0800 (PST)
+        Tue, 26 Nov 2019 03:48:29 -0500
+Received: from mx1.unisoc.com ([222.66.158.135]:38080 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726049AbfKZIs2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 03:48:28 -0500
+Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+        by SHSQR01.spreadtrum.com with ESMTPS id xAQ8kiPO006450
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 26 Nov 2019 16:46:44 +0800 (CST)
+        (envelope-from Chunyan.Zhang@unisoc.com)
+Received: from localhost (10.0.74.88) by BJMBX02.spreadtrum.com (10.0.64.8)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Tue, 26 Nov 2019 16:46:48
+ +0800
+From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH v3 0/3] Add Unisoc's SC9863A support
+Date:   Tue, 26 Nov 2019 16:46:41 +0800
+Message-ID: <20191126084644.17207-1-chunyan.zhang@unisoc.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191125225110.10924-1-ardb@kernel.org>
-In-Reply-To: <20191125225110.10924-1-ardb@kernel.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 26 Nov 2019 09:46:01 +0100
-Message-ID: <CAKv+Gu-h5X4bamP=Fy2kEpeqTtUNz=TU3AUpGtHY5caBpdVxeA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] dt: amd-seattle: update SMMU and PCIe descriptions
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Devicetree List <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Lendacky, Thomas" <thomas.lendacky@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        brijeshkumar.singh@amd.com, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+X-Originating-IP: [10.0.74.88]
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL: SHSQR01.spreadtrum.com xAQ8kiPO006450
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 25 Nov 2019 at 23:51, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> Bring the DT descriptions for AMD Seattle up to date:
-> - upgrade the existing SMMU descriptions to the new binding, and add the
->   missing descriptions of the PCIe and SATA SMMUs
-> - fix the description of the PCIe legacy interrupt routing
-> - remove the obsolete A0 Overdrive and Husky
->
-> Ard Biesheuvel (6):
->   dt: amd-seattle: remove Husky platform
->   dt: amd-seattle: remove Overdrive revision A0 support
->   dt: amd-seattle: upgrade AMD Seattle XGBE to new SMMU binding
->   dt: amd-seattle: fix PCIe legacy interrupt routing
->   dt: amd-seattle: add a description of the PCIe SMMU
->   dt: amd-seattle: add description of the SATA/CCP SMMUs
->
+SC9863A has Octa-core ARM Cortex A55 application processor. Find more
+details about it on the website: http://www.unisoc.com/sc9863a
 
-I'll need to respin this - please disregard for now.
+Changes from v2:
+* Discard some dt-bindings patches which have been applied by Rob Herring.
+* Added a new dt-binding file for sprd global-regs, also added a vendor directory for sprd.
+* Moved sprd.yaml to the vendor directory.
+* Addressed comments from Rob:
+- fixed dtbs_check errors;
+- move gic under to the bus node;
+- removed msi-controller from gic, sinceSC9863A doesn't provide ITS;
+- added specific compatible string for syscon nodes;
+- cut down registers range of syscon nodes;
+- removed unnecessary property "sprd,sc-id";
+- added earlycon support in devicetree.
 
->  arch/arm64/boot/dts/amd/Makefile              |  4 +-
->  .../boot/dts/amd/amd-overdrive-rev-b0.dts     |  4 +
->  .../boot/dts/amd/amd-overdrive-rev-b1.dts     |  5 ++
->  arch/arm64/boot/dts/amd/amd-overdrive.dts     | 66 ---------------
->  arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi  | 53 ++++++++++--
->  .../boot/dts/amd/amd-seattle-xgbe-b.dtsi      | 16 +---
->  arch/arm64/boot/dts/amd/husky.dts             | 84 -------------------
->  7 files changed, 61 insertions(+), 171 deletions(-)
->  delete mode 100644 arch/arm64/boot/dts/amd/amd-overdrive.dts
->  delete mode 100644 arch/arm64/boot/dts/amd/husky.dts
->
-> --
-> 2.17.1
->
+Changes from v1:
+- Convert DT bindings to json-schema.
+
+Chunyan Zhang (3):
+  dt-bindings: arm: sprd: add global registers bindings
+  dt-bindings: arm: move sprd board file to vendor directory
+  arm64: dts: Add Unisoc's SC9863A SoC support
+
+ .../bindings/arm/sprd/global-regs.yaml        |  34 ++
+ .../bindings/arm/{ => sprd}/sprd.yaml         |   0
+ arch/arm64/boot/dts/sprd/Makefile             |   3 +-
+ arch/arm64/boot/dts/sprd/sc9863a.dtsi         | 526 ++++++++++++++++++
+ arch/arm64/boot/dts/sprd/sharkl3.dtsi         | 148 +++++
+ arch/arm64/boot/dts/sprd/sp9863a-1h10.dts     |  39 ++
+ 6 files changed, 749 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
+ rename Documentation/devicetree/bindings/arm/{ => sprd}/sprd.yaml (100%)
+ create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+
+--
+2.20.1
+
+________________________________
+ This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
