@@ -2,89 +2,114 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B23C432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 01:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF07C432C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 01:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C05B2071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 01:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E81207FD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 01:56:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZsjGN9G3"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="tfZz/hUh";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="WU8WB3In"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfKZBW1 (ORCPT
+        id S1727237AbfKZB4K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 25 Nov 2019 20:22:27 -0500
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:34654 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfKZBW1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 20:22:27 -0500
-Received: by mail-pg1-f173.google.com with SMTP id z188so8119759pgb.1
-        for <devicetree@vger.kernel.org>; Mon, 25 Nov 2019 17:22:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=AtPRMYJsiWkwHiFFHZwBcUcKfK6FWEVPRzt0kULjoMk=;
-        b=ZsjGN9G3y6QPq/SuMUBdQdPjWMaaqGTsg369cIOxGzFWf76C6KhXoa28fC3PDPNsv+
-         7QWs10eF6lz9is8be53GzoigIeoomf7xOruNp1Y/bJBePCpSOXYLOA4H2/KJ77cRhk05
-         x0KvyJoRGbdZ9bbhy/XpP674iOcUGGYfS/H2W20tUStvBWi2ytsJmsFm0cuVxx0LrVhE
-         fJVgEsvqgV4FirojN5oa+BaOcKBvYRvapbjhDDbYa7cJEo8dtqNlxLA6y+V/jXxspakD
-         Spg4rGfGWHPFYnszQbpNq8GQ03LpilTeTOS2V8qw2dZ1gjduJRffPZoij6u5G0iQYIDa
-         y3mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=AtPRMYJsiWkwHiFFHZwBcUcKfK6FWEVPRzt0kULjoMk=;
-        b=gSpILkkRTdq8SAudLNOjA+mvtzf6FlIcj6IRiu7KU4fUb9k1Ddunog227ywjsCcaXW
-         vj27BIGFgGrgwcd1iNI6JnZwM82mCDeSeOWMW3cWp+dV14TDDjR35L/Fx72I6z8vk4n7
-         AT5ypvcGtc3D6oGPDSwyY9tv9tZAz2WNsuBY0WKjL+TdXA80+ZOFeszJFubOLOU15KEX
-         lUfGZqjQPSMy/2DmkKjBmK3UF5LqAdpNA1l8TGLD3xHK5ZEDTIayz/If/XrYXpCzj5PO
-         hkVxOFcfiHN70Uyeu6mINA6ndhSNsALhyB2LFVHfc8vEFu6bRe3Y6YW12L52GANOtLyU
-         i6Vw==
-X-Gm-Message-State: APjAAAWwOmZHMxXCrQs63odLPdqOAtHmVuT9wN5mhJZMAmEa7oQcW3TD
-        VRkR6oNPfpcYHVJpzI0VMRL4Kg==
-X-Google-Smtp-Source: APXvYqzCduZpVjmTaqiZExnNw3OMBfwJqTBjnW12KeeSXsvhWXRVkr9xrQzORP/oWCYG2oNVoKbw8g==
-X-Received: by 2002:a63:6a47:: with SMTP id f68mr35998951pgc.35.1574731346647;
-        Mon, 25 Nov 2019 17:22:26 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id r15sm9985094pfh.81.2019.11.25.17.22.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Nov 2019 17:22:25 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, robh+dt@kernel.org,
-        ulf.hansson@linaro.org
-Cc:     jianxin.pan@amlogic.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, yinxin_1989@aliyun.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: Amlogic 32-bit Meson SoC SDHC MMC controller driver
-In-Reply-To: <20191117142716.154764-1-martin.blumenstingl@googlemail.com>
-References: <20191117142716.154764-1-martin.blumenstingl@googlemail.com>
-Date:   Mon, 25 Nov 2019 17:22:25 -0800
-Message-ID: <7htv6rh1ny.fsf@baylibre.com>
+        Mon, 25 Nov 2019 20:56:10 -0500
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:38904 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbfKZB4K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 25 Nov 2019 20:56:10 -0500
+X-Greylist: delayed 471 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Nov 2019 20:56:09 EST
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47MRcx4JGHzQlC4;
+        Tue, 26 Nov 2019 02:48:17 +0100 (CET)
+Authentication-Results: gerste.heinlein-support.de (amavisd-new);
+        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+        header.d=mailbox.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+        t=1574732895;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3vGTyx4hrjcs+n5a2EyZnoDC1MYkgE9tWQx/rXiB5Jg=;
+        b=tfZz/hUhECWi98Ur/t45TDfhcHtd8n7kweUxvyoG2Hxe3iuq497B9zDKgr9yZ8tVD612U6
+        c3e9gO4VrJ9fo+NcjBEKMajYlRKbpLS0l6QCs9Wu15ZFkAMSQTf22UpziRbfhaBI72nyEx
+        bVMOykVbdveeIRkiJIwYMGb3aWQHDFtXSg8TzyCGCjQXYCqE//+chroTwyufwWR+fhD1HO
+        6+F+a7GdqRNWuwQKFVgKreWxYCYH11vZ+e+PyE+AJy4ounzlS+/jD1x+FhSOIyBOJMw5Gu
+        FHFOfpLDdjS2EO++HqpfoyYSjWXkJ2KTqLrHEOSfH8Of84LfTQqawP2oCf+jYQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
+        content-transfer-encoding:mime-version:message-id:date:date
+        :subject:subject:from:from:received; s=mail20150812; t=
+        1574732893; bh=PWOAFg4hdwumD5Wgmmm4vIukmBf1tHCRGCyJGHCyzX0=; b=W
+        U8WB3InnQZTnesO09wYOBTq74yclueWZR2ykRstZ+ZFCI8FX5d/NIV+cdZMxA+sU
+        BM67mm2e9fXfYMbTYPyYLp6KEqTI7SRnLzDZ0YNjG/8DCQVnpKwYTU+mecJk5OSk
+        vxEiOzmORXnym1Wxj/OI8NehWUjv9eVHU3A+oYRnIJo3EACTWS+S4J4OY8U2HH/u
+        hq3MaNTwXvVT4PYAypu6ZjzDATFK929epNUX1+AeA515Mj5rin9lokPcjdDpUvxD
+        czLTNYcOGKi9uYLStwNKKaZvJFYe5xH8+esXXAXsDW+sj0/VxEYKH1EOzKpuLqsi
+        wQfAZOHzSoqBWLqaR1GUg==
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id EnMWbBeg9YEO; Tue, 26 Nov 2019 02:48:13 +0100 (CET)
+From:   Erhard Furtner <erhard_f@mailbox.org>
+To:     linuxppc-dev@ozlabs.org
+Cc:     robh+dt@kernel.org, frowand.list@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Erhard Furtner <erhard_f@mailbox.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: [PATCH v2] of: unittest: fix memory leak in attach_node_and_children
+Date:   Tue, 26 Nov 2019 02:48:04 +0100
+Message-Id: <20191126014804.28267-1-erhard_f@mailbox.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Martin,
+In attach_node_and_children memory is allocated for full_name via
+kasprintf. If the condition of the 1st if is not met the function
+returns early without freeing the memory. Add a kfree() to fix that.
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+This has been detected with kmemleak:
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205327
 
-> this is the first non-RFC version of the driver for the Amlogic "SDHC"
-> MMC controller found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
+It looks like the leak was introduced by this commit:
+Fixes: 5babefb7f7ab ("of: unittest: allow base devicetree to have symbol metadata")
 
-This will need to be reviewed/merged by the MMC maintainers, but to get
-some broader testing (including in KernelCI) I've added this series to
-the 'testing' branch of my tree so it will be included in my 'integ'
-branch.
+Signed-off-by: Erhard Furtner <erhard_f@mailbox.org>
+Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+---
+Changes in v2:
+  - Make the commit message more clearer.
 
-Kevin
+ drivers/of/unittest.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 92e895d86458..ca7823eef2b4 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1146,8 +1146,10 @@ static void attach_node_and_children(struct device_node *np)
+ 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
+ 
+ 	if (!strcmp(full_name, "/__local_fixups__") ||
+-	    !strcmp(full_name, "/__fixups__"))
++	    !strcmp(full_name, "/__fixups__")) {
++		kfree(full_name);
+ 		return;
++	}
+ 
+ 	dup = of_find_node_by_path(full_name);
+ 	kfree(full_name);
+-- 
+2.23.0
+
