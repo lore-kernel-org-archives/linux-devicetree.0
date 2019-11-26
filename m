@@ -2,273 +2,203 @@ Return-Path: <SRS0=scSd=ZS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9BBC432C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 13:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCECC432C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 14:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95C420727
-	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 13:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A00F20727
+	for <linux-devicetree@archiver.kernel.org>; Tue, 26 Nov 2019 14:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KL+/WaCk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nj3w38bZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfKZNhq (ORCPT
+        id S1727547AbfKZOdx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 26 Nov 2019 08:37:46 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41461 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfKZNhq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 08:37:46 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s18so644756pfd.8;
-        Tue, 26 Nov 2019 05:37:45 -0800 (PST)
+        Tue, 26 Nov 2019 09:33:53 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45561 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfKZOdx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 26 Nov 2019 09:33:53 -0500
+Received: by mail-oi1-f193.google.com with SMTP id 14so16768741oir.12;
+        Tue, 26 Nov 2019 06:33:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=PJJmAn9+iiP+EIIPXeCfCU5GCKc3tnqtF9QuTwOAxck=;
-        b=KL+/WaCkMRk4NvtjYC0qrnhtkEiQIlg2VPXwQ2mtmFHFUQEJS20Nz4f3NJbHrR2tyO
-         YeiN5ZhzlkkbcKnBOkzbHI9j6E4oud9db8/3TLfxPqIiGNqHQNxZGFDqCzPzFfgeCgAl
-         e8AQvrtw/ZhrE6lXlr3mSQfg7HXQrwxsFUs3QLyeJENp0rIeuQLwugjImN+Varj14NMz
-         2J9suJyLA9RMZupwPP6txwfMEX9/cGi9yBR0MPK/7ThWyQeqRfi/JSzRnlO8qtB9fM/K
-         kPqj2mIuLzFhhV8GrcF5JMMFk998OAhazyVvp19RSmqTc7aOCLicuqFqHcxEyH6t0/pU
-         jYrQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Ke9S+LOVhCSYY/a2D7Vlzb4JuZDRi+EFqSopQYxhvo=;
+        b=nj3w38bZg0AIusIt49/mQa4MqrbC8q2I1Gu83u5RhH7p+9zwD+Obg3mc8Ug/E3RIb/
+         +OpcBhlBKwiMWWTUHfcBQZyeyJz/QqfNgm/pXQV5UjZAycKx19JMKo1IcGDqKLKpF6bB
+         No4+dTgPNLBOUdswSF4JHl4Dco+G6DFR8+iujV3/usRywxvytpKcvu7kIqJoKLvNd29Z
+         Yi8AevjDxVXldLY7R688l+AMMCXFEMYWdSEr/v/cJg5qcQnIrNOGWI2F/Fm8A+qDaACI
+         ixM6YFWfxrFm2YmbDY5ct9hWCQlaGsMP5kzcnfllU6KHNE9RUkUrY0KoD6Qlxu31qLVC
+         zO/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=PJJmAn9+iiP+EIIPXeCfCU5GCKc3tnqtF9QuTwOAxck=;
-        b=uMDaWDpATLCdC8fn2qdmPFSIYDc+rttGdcW10yubRi3x0++eLD1gyfdxonqKGsp7MJ
-         UvJSi2V7LmeuTghuMlRJbQRDoyClv+dhytzvSWbUnYrmmUIZBM++xXNsXJnF4tCRc2Pu
-         5Rr/C3je40vNlh2RQv3KhfpHI0zlvZtLFqq93esx4dg8kOkBTu3wx34LiDyVswA5pAfa
-         5tTCpUHCTYdU6umcFGWg9bf7IgMPDUvDp5xFvHE6msZVicDRSbjq2j+bA0NYkX/xPvz2
-         LGw1IIUO6Mppn6Z9fbAQNwJqXweyoeF9KiJSYpaefy3Onc1BvKE9sBFao+U+WecS0LhD
-         vULw==
-X-Gm-Message-State: APjAAAVG46sFC2KjZsHiQ2LnwiTGa89mZrfNkEMhduwrtYC4Oj4lSq/F
-        sH9c4dpLpQ0BipznOyn9qY0=
-X-Google-Smtp-Source: APXvYqwDp/TSNy31xwRpQsSSAIa1D75XoUXADWcKxaaZNigp8t9SyGGfJHWvoaSTa1WNrk5aVzL6hw==
-X-Received: by 2002:a65:4387:: with SMTP id m7mr31094525pgp.449.1574775465335;
-        Tue, 26 Nov 2019 05:37:45 -0800 (PST)
-Received: from cnn ([2402:3a80:473:c4b3:a194:63c9:69fb:ee71])
-        by smtp.gmail.com with ESMTPSA id s18sm13210501pfc.120.2019.11.26.05.37.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Nov 2019 05:37:44 -0800 (PST)
-Date:   Tue, 26 Nov 2019 19:07:26 +0530
-From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
-To:     Vijay Khemka <vijaykhemka@fb.com>
-Cc:     andrew@aj.id.au, joel@jms.id.au, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: Re: [PATCH v3] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20191126133726.GA2578@cnn>
-References: <20191125130420.GA24018@cnn>
- <7F15A2E0-14C7-4C86-B589-35619A390B72@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Ke9S+LOVhCSYY/a2D7Vlzb4JuZDRi+EFqSopQYxhvo=;
+        b=t+Pm9UxCF1utiCD68wr5AjTUy4s72vesd+rqnTYY2/1d7lnvLhasJIuQ298ciRQqMj
+         VzCx19k6V5I6gvOS/KIwO9mEysB4VGJXcGi9Ckx8dvBWekrSwydQ8A0SPxkFfvMCdjiq
+         hqe1BaCoFoo7f13fW2r8U7LZhSw6Vp8ArhSUe0jmY9AAhrqeEKOxnYn5UOgxviOVJ3oc
+         S6UD7UZ28GZl4ONb3BKpCJgs6pPXEAVVKwrqvljEjNm3UhXB9wXexfLTDg7b0opFTX/S
+         nDmKouqmLuDeJ35btOtqylvomtVnZhWu33IIJI3kvpiBr1ZCiZKtHJ3W9BcnhonjkD1U
+         aVAg==
+X-Gm-Message-State: APjAAAU9HOGJE0SyJhRBMaOIt4y3Iqoe+svXRQCXz9zi9R95GlX3ZF99
+        zYDC7WOb6rWbtgFuR2SAQC1PMUtZ+2oVxGysENo=
+X-Google-Smtp-Source: APXvYqwdIx5fvcr/2eqn6PfsjTtnTEUauTJoJlXG+zzhycInNXig/nGBmY7EZu2DrNnThSLkOUcAJwQqVld3E5i8yP8=
+X-Received: by 2002:a05:6808:906:: with SMTP id w6mr3714280oih.162.1574778831671;
+ Tue, 26 Nov 2019 06:33:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7F15A2E0-14C7-4C86-B589-35619A390B72@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 26 Nov 2019 14:33:25 +0000
+Message-ID: <CA+V-a8tVK7oUYggTb5Vi3agMp4CH8gtiKDHet09DzE5-LAfiew@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Add support for PCIe controller to work in endpoint
+ mode on R-Car SoCs.
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 07:23:32PM +0000, Vijay Khemka wrote:
-> 
-> ﻿On 11/25/19, 5:04 AM, "manikandan-e" <manikandan.hcl.ers.epl@gmail.com> wrote:
-> 
->     The Yosemite V2 is a facebook multi-node server
->     platform that host four OCP server. The BMC
->     in the Yosemite V2 platorm based on AST2500 SoC.
->     
->     This patch adds linux device tree entry related to
->     Yosemite V2 specific devices connected to BMC SoC.
-> Nit: comments inline. Otherwise
-> Reviewed-by: Vijay Khemka <vijaykhemka@fb.com>
->     
-> 
->     Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
->     ---
->      .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 151 +++++++++++++++++++++
->      1 file changed, 151 insertions(+)
->      create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->     
->     diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->     new file mode 100644
->     index 0000000..09bffcd
->     --- /dev/null
->     +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->     @@ -0,0 +1,151 @@
->     +// SPDX-License-Identifier: GPL-2.0+
->     +// Copyright (c) 2018 Facebook Inc.
->     +/dts-v1/;
->     +
->     +#include "aspeed-g5.dtsi"
->     +#include <dt-bindings/gpio/aspeed-gpio.h>
->     +
->     +/ {
->     +	model = "Facebook Yosemitev2 BMC";
->     +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
->     +	aliases {
->     +		serial4 = &uart5;
->     +	};
->     +	chosen {
->     +		stdout-path = &uart5;
->     +		bootargs = "console=ttyS4,115200 earlyprintk";
-> bootargs are not required as it is overwritten by uboot. And baud rate is 57600
-           
-          As of now SPL and U-boot Baudrate based 115200 baudrate. Do we need to change it there. I understand that we can use SERIAL_CONSOLES           in meta-facebook.
-          Do i need to remove 'console=ttyS4.115200' or complete bootargs . If we remove bootargs, how can add any bootargs params in future.
+Hi Bjorn/Kishon,
 
->     +	};
->     +
->     +	memory@80000000 {
->     +		reg = <0x80000000 0x20000000>;
->     +	};
->     +
->     +	iio-hwmon {
->     +		// VOLATAGE SENSOR
->     +		compatible = "iio-hwmon";
->     +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
->     +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
->     +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
->     +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
->     +	};
->     +};
->     +
->     +&fmc {
->     +	status = "okay";
->     +	flash@0 {
->     +		status = "okay";
->     +		m25p,fast-read;
->     +#include "openbmc-flash-layout.dtsi"
->     +	};
->     +};
->     +
->     +&spi1 {
->     +	status = "okay";
->     +	pinctrl-names = "default";
->     +	pinctrl-0 = <&pinctrl_spi1_default>;
->     +	flash@0 {
->     +		status = "okay";
->     +		m25p,fast-read;
->     +		label = "pnor";
->     +	};
->     +};
->     +
->     +&uart5 {
->     +	// BMC Console
->     +	status = "okay";
->     +};
->     +
->     +&mac0 {
->     +	status = "okay";
->     +	pinctrl-names = "default";
->     +	pinctrl-0 = <&pinctrl_rmii1_default>;
->     +	use-ncsi;
->     +};
->     +
->     +&adc {
->     +	status = "okay";
->     +        pinctrl-names = "default";
-> Use tab for alignment
+Gentle ping for this patch set.
+
+On Wed, Nov 6, 2019 at 7:36 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+>
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This patch series adds support for PCIe controller on rcar to work in endpoint mode,
+> this also extends the epf framework to handle multiple outbound regions.
+>
+Cheers,
+--Prabhakar Lad
 
 
-Checkpatch didn't shown any issue warning .As i checked in many dts file , format is same.
-It will helpful if i get more clarification. 
-
->     +	pinctrl-0 = <&pinctrl_adc0_default
->     +			&pinctrl_adc1_default
->     +			&pinctrl_adc2_default
->     +			&pinctrl_adc3_default
->     +			&pinctrl_adc4_default
->     +			&pinctrl_adc5_default
->     +			&pinctrl_adc6_default
->     +			&pinctrl_adc7_default
->     +			&pinctrl_adc8_default
->     +			&pinctrl_adc9_default
->     +			&pinctrl_adc10_default
->     +			&pinctrl_adc11_default
->     +			&pinctrl_adc12_default
->     +			&pinctrl_adc13_default
->     +			&pinctrl_adc14_default
->     +			&pinctrl_adc15_default>;
->     +};
->     +
->     +&i2c8 {
->     +	status = "okay";
->     +	//FRU EEPROM
->     +	eeprom@51 {
->     +		compatible = "atmel,24c64";
->     +		reg = <0x51>;
->     +		pagesize = <32>;
->     +	};
->     +};
->     +
->     +&i2c9 {
->     +	status = "okay";
->     +	tmp421@4e {
->     +	//INLET TEMP
->     +		compatible = "ti,tmp421";
->     +		reg = <0x4e>;
->     +	};
->     +	//OUTLET TEMP
->     +	tmp421@4f {
->     +		compatible = "ti,tmp421";
->     +		reg = <0x4f>;
->     +	};
->     +};
->     +
->     +&i2c10 {
->     +	status = "okay";
->     +	//HSC
->     +	adm1278@40 {
->     +		compatible = "adi,adm1278";
->     +		reg = <0x40>;
->     +	};
->     +};
->     +
->     +&i2c11 {
->     +	status = "okay";
->     +	//MEZZ_TEMP_SENSOR
->     +	tmp421@1f {
->     +		compatible = "ti,tmp421";
->     +		reg = <0x1f>;
->     +	};
->     +};
->     +
->     +&i2c12 {
->     +	status = "okay";
->     +	//MEZZ_FRU
->     +	eeprom@51 {
->     +		compatible = "atmel,24c64";
->     +		reg = <0x51>;
->     +		pagesize = <32>;
->     +	};
->     +};
->     +
->     +&pwm_tacho {
->     +	status = "okay";
->     +	//FSC
->     +	pinctrl-names = "default";
->     +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
->     +	fan@0 {
->     +		reg = <0x00>;
->     +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
->     +	};
->     +	fan@1 {
->     +		reg = <0x01>;
->     +		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
->     +	};
->     +};
->     -- 
->     2.7.4
->     
->     
-> 
+> Note:
+> The cadence/rockchip/designware endpoint drivers are build tested only.
+>
+> Endpoint configuration:
+> $ cd /sys/kernel/config/pci_ep
+> $ mkdir functions/pci_epf_test/func1
+> $ echo 0x1912 > functions/pci_epf_test/func1/vendorid
+> $ echo 0x002d > functions/pci_epf_test/func1/deviceid
+> $ echo 32 > functions/pci_epf_test/func1/msi_interrupts
+> $ ln -s functions/pci_epf_test/func1/ controllers/fe000000.pcie_ep/
+> $ echo 1 > controllers/fe000000.pcie_ep/start
+>
+> Host side results:
+> lspci output:
+> 01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
+>         Flags: bus master, fast devsel, latency 0, IRQ 103
+>         Memory at fe200200 (64-bit, non-prefetchable) [size=128]
+>         Memory at fe200000 (64-bit, non-prefetchable) [size=256]
+>         Memory at fe200100 (64-bit, non-prefetchable) [size=256]
+>         Capabilities: [40] Power Management version 3
+>         Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+>         Capabilities: [70] Express Endpoint, MSI 00
+>         Capabilities: [100] Virtual Channel
+>         Kernel driver in use: pci-endpoint-test
+>
+> pcitest results:
+>
+> BAR tests
+>
+> BAR0:           OKAY
+> BAR1:           NOT OKAY
+> BAR2:           OKAY
+> BAR3:           NOT OKAY
+> BAR4:           OKAY
+> BAR5:           NOT OKAY
+>
+> Interrupt tests
+>
+> SET IRQ TYPE TO LEGACY:         OKAY
+> LEGACY IRQ:     OKAY
+> Read Tests
+>
+> SET IRQ TYPE TO LEGACY:         OKAY
+> READ (      1 bytes):           OKAY
+> READ (   1024 bytes):           OKAY
+> READ (   1025 bytes):           OKAY
+> READ (1024000 bytes):           OKAY
+> READ (1024001 bytes):           OKAY
+>
+> Write Tests
+>
+> WRITE (      1 bytes):          OKAY
+> WRITE (   1024 bytes):          OKAY
+> WRITE (   1025 bytes):          OKAY
+> WRITE (1024000 bytes):          OKAY
+> WRITE (1024001 bytes):          OKAY
+>
+> Copy Tests
+>
+> COPY (      1 bytes):           OKAY
+> COPY (   1024 bytes):           OKAY
+> COPY (   1025 bytes):           OKAY
+> COPY (1024000 bytes):           OKAY
+> COPY (1024001 bytes):           OKAY
+>
+> BAR tests for 1/3/5 fail because its configured to use 64bit bars
+>
+> Lad, Prabhakar (5):
+>   pci: pcie-rcar: preparation for adding endpoint support
+>   pci: endpoint: add support to handle multiple base for mapping
+>     outbound memory
+>   PCI: rcar: Add R-Car PCIe endpoint device tree bindings
+>   pci: rcar: add support for rcar pcie controller in endpoint mode
+>   misc: pci_endpoint_test: add device-id for RZ/G2 pcie controller
+>
+>  .../devicetree/bindings/pci/rcar-pci-ep.txt   |   43 +
+>  arch/arm64/configs/defconfig                  |    2 +-
+>  arch/arm64/configs/renesas_defconfig          |    2 +-
+>  drivers/misc/pci_endpoint_test.c              |    3 +
+>  drivers/pci/controller/Kconfig                |   11 +-
+>  drivers/pci/controller/Makefile               |    3 +-
+>  .../pci/controller/dwc/pcie-designware-ep.c   |   30 +-
+>  drivers/pci/controller/pcie-cadence-ep.c      |   11 +-
+>  drivers/pci/controller/pcie-rcar-ep.c         |  483 +++++++
+>  drivers/pci/controller/pcie-rcar-host.c       | 1058 ++++++++++++++
+>  drivers/pci/controller/pcie-rcar.c            | 1231 +----------------
+>  drivers/pci/controller/pcie-rcar.h            |  129 ++
+>  drivers/pci/controller/pcie-rockchip-ep.c     |   13 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c |   29 +-
+>  drivers/pci/endpoint/pci-epc-core.c           |    7 +-
+>  drivers/pci/endpoint/pci-epc-mem.c            |  189 ++-
+>  include/linux/pci-epc.h                       |   43 +-
+>  17 files changed, 2016 insertions(+), 1271 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+>  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+>  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+>  create mode 100644 drivers/pci/controller/pcie-rcar.h
+>
+> --
+> 2.20.1
+>
