@@ -2,87 +2,183 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D23C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 22:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09141C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 22:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36454206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 22:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A598320870
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 22:24:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="SZtJFJb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfK0WSV (ORCPT
+        id S1727318AbfK0WYa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 17:18:21 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:46667 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfK0WSV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 17:18:21 -0500
-Received: from marcel-macpro.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 70E50CEC82;
-        Wed, 27 Nov 2019 23:27:27 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v6 0/4] Bluetooth: hci_bcm: Additional changes for BCM4354
- support
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CANFp7mXV73bmSj5CK6GOuHcjgZ99b1h39r-yU2ckYaoFZXPdDg@mail.gmail.com>
-Date:   Wed, 27 Nov 2019 23:18:18 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ondrej Jirman <megous@megous.com>,
+        Wed, 27 Nov 2019 17:24:30 -0500
+Received: from vps.xff.cz ([195.181.215.36]:33888 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbfK0WYa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 17:24:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1574893467; bh=03v6MvLb4Npw9AjFHB6zyIbUbdm8FNg3ot9ZMiWCnvw=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=SZtJFJb99qPrcwh17WvZ7KCnSMzXBjnAnvHpu7Gn3xSDHVbhUiaRVRhlTirhzYsKX
+         FZGf0WqtJx2bGpPWY8QtMbI6X9uvKcrlp5LJzPW9WjyQa/bG20uXYeqqn0Y+6Xqoz1
+         BjXvrmC8WC92tmr7mgjROc7CyUWoyPncd+CpV7BY=
+Date:   Wed, 27 Nov 2019 23:24:27 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Frank Lee <tiny.windzz@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <D47A45D6-956B-46C3-A51B-D383E813E87E@holtmann.org>
-References: <20191118192123.82430-1-abhishekpandit@chromium.org>
- <1CEDCBDC-221C-4E5F-90E9-898B02304562@holtmann.org>
- <CANFp7mXNPsmfC_dDcxP1N9weiEFdogOvgSjuBLJSd+4-ONsoOQ@mail.gmail.com>
- <1CEB6B69-09AA-47AA-BC43-BD17C00249E7@holtmann.org>
- <CANFp7mU=URXhZ8V67CyGs1wZ2_N_jTk42wd0XveTpBDV4ir75w@mail.gmail.com>
- <6A053F1E-E932-4087-8634-AEC6DED85B7D@holtmann.org>
- <CANFp7mXV73bmSj5CK6GOuHcjgZ99b1h39r-yU2ckYaoFZXPdDg@mail.gmail.com>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        devicetree <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/7] thermal: sun8i: add thermal driver for
+ H6/H5/H3/A64/A83T/R40
+Message-ID: <20191127222427.coyeggbxs5miioxn@core.my.home>
+Mail-Followup-To: Vasily Khoruzhick <anarsoul@gmail.com>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
+ <20191127052935.1719897-2-anarsoul@gmail.com>
+ <20191127111419.z5hfu5soxceiivg6@core.my.home>
+ <20191127173547.ch3pcv3lxgdcrfnu@gilmour.lan>
+ <CAEExFWvG-Af4qtUrxQV4ssNQCVQAmpXfxB+92wX+6ZxUNfX-Jw@mail.gmail.com>
+ <CA+E=qVcdwQO3Y8ismmBN-gRVNMs1Thx+TPLqstKM9fYf2_0qFQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVcdwQO3Y8ismmBN-gRVNMs1Thx+TPLqstKM9fYf2_0qFQ@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Abhishek,
-
->>> The series looks good to me.
->> 
->> you also tested it on your hardware?
->> 
->> Regards
->> 
->> Marcel
->> 
+On Wed, Nov 27, 2019 at 11:48:32AM -0800, Vasily Khoruzhick wrote:
+> On Wed, Nov 27, 2019 at 11:44 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+> >
+> > Hello Vasily,
+> >
+> > Thank you very much for your work on this.
+> > This looks good to me.
 > 
-> I have tested it on my hardware and it looks good now.
+> Thanks!
 > 
-> Only problem is it looks like the documentation is slightly wrong:
+> > By the way, I would like to ask comments about adding the following code.
 > 
-> +               brcm,bt-pcm-int-params = [1 2 0 1 1];
-> should be
-> +               brcm,bt-pcm-int-params = [01 02 00 01 01];
-> or
-> +               brcm,bt-pcm-int-params = /bits/ 8 <1 2 0 1 1>;
+> Can we add it as follow up patch? I don't think that I have a device
+> with working suspend to test it and I'm hesitant to add any code that
+> I can't test.
+
+I have, but it doesn't use any of the clocks and resets, so it wouldn't
+test this fully, and basicaly doesn't need re-calibration at all, probably.
+
+So that may be one feedback. On a83t, I'd made these callbacks a no-op.
+
+regards,
+	o.
+
+> >
+> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > index c0ed60782b11..579dde5e0701 100644
+> > --- a/drivers/thermal/sun8i_thermal.c
+> > +++ b/drivers/thermal/sun8i_thermal.c
+> > @@ -629,11 +629,63 @@ static const struct of_device_id of_ths_match[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(of, of_ths_match);
+> >
+> > +static int __maybe_unused sun8i_thermal_suspend(struct device *dev)
+> > +{
+> > + struct ths_device *tmdev; = dev_get_drvdata(dev);
+> > +
+> > + clk_disable(tmdev->mod_clk);
+> > + clk_disable(tmdev->bus_clk);
+> > +
+> > + reset_control_assert(tmdev->reset);
+> > +
+> > + return 0;
+> > +}
+> > +
+> > +static int __maybe_unused sun8i_thermal_resume(struct device *dev)
+> > +{
+> > + struct ths_device *tmdev; = dev_get_drvdata(dev);
+> > + int error;
+> > +
+> > + error = reset_control_deassert(tmdev->reset);
+> > + if (error)
+> > + return error;
+> > +
+> > + error = clk_enable(tmdev->bus_clk);
+> > + if (error)
+> > + goto assert_reset;
+> > +
+> > + clk_set_rate(tmdev->mod_clk, 24000000);
+> > + error = clk_enable(tmdev->mod_clk);
+> > + if (error)
+> > + goto bus_disable;
+> > +
+> > + sun8i_ths_calibrate(tmdev);
+> > +
+> > + ret = tmdev->chip->init(tmdev);
+> > + if (ret)
+> > + goto mod_disable;
+> > +
+> > + return 0;
+> > +
+> > +mod_disable:
+> > + clk_disable(tmdev->mod_clk);
+> > +bus_disable:
+> > + clk_disable(tmdev->bus_clk);
+> > +assert_reset:
+> > + reset_control_assert(tmdev->reset);
+> > +
+> > + return 0;
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(sun8i_thermal_pm_ops,
+> > + sun8i_thermal_suspend, sun8i_thermal_resume);
+> > +
+> >  static struct platform_driver ths_driver = {
+> >   .probe = sun8i_ths_probe,
+> >   .remove = sun8i_ths_remove,
+> >   .driver = {
+> >   .name = "sun8i-thermal",
+> > + .pm = &sun8i_thermal_pm_ops,
+> >   .of_match_table = of_ths_match,
+> >   },
+> >  };
+> >
+> > Yangtao
 > 
-
-since Johan already applied the patches, send a follow up patch for the docs.
-
-Regards
-
-Marcel
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
