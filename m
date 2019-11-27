@@ -2,88 +2,225 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6649DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA4EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2892820722
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574866035;
-	bh=79XvYHMIKCF1v9/aXtFMTviGPAJFroW9KlznpKwAGMw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dskc1iOO/rSSlZImN3kejwwGxrjasbRzUQz0u0A8FT/JtfqXwJXZTXnkrHAG479N4
-	 TXE7Ez28J5ychiQ+l1iQvsI2R/65YJ3WdeKK8W/EOEY6KtoimZHSauW9po/xPTedrt
-	 Oti//KTF+NrCrd3/XMSROoj6Dk0581uMpJa8XFZU=
+	by mail.kernel.org (Postfix) with ESMTP id CA5D52071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfK0OrO (ORCPT
+        id S1727092AbfK0PBw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:47:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbfK0OrO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Nov 2019 09:47:14 -0500
-Received: from localhost.localdomain.com (unknown [77.139.212.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7F3E206F0;
-        Wed, 27 Nov 2019 14:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574866034;
-        bh=79XvYHMIKCF1v9/aXtFMTviGPAJFroW9KlznpKwAGMw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgZidrlCy9pO3B7T4VgXY3Vn5uSkS/1nn7BB1AJJCFhh7Aedk1xnH1lOYr60gSMoZ
-         IQ7t0Lflbmqn9GB/e2WplWAcquJdB6wKoFBgMDhJIC4o0Jh1g6JaRdd2fW9uKcTV3l
-         GAmG5vL9gsQe7Abch9JOHvf3gCQysKaWecjaDoLA=
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     nbd@nbd.name
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
-        lorenzo.bianconi@redhat.com
-Subject: [PATCH v2 2/2] dt-bindings: net: wireless: mt76: introduce big-endian property
-Date:   Wed, 27 Nov 2019 16:46:34 +0200
-Message-Id: <1b46b03f6c60c08d29d4c3cc4e2ae0a50af5eb30.1574865558.git.lorenzo@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1574865558.git.lorenzo@kernel.org>
-References: <cover.1574865558.git.lorenzo@kernel.org>
+        Wed, 27 Nov 2019 10:01:52 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52059 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfK0PBw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 10:01:52 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iZyp9-0004PD-IJ; Wed, 27 Nov 2019 16:01:47 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iZyp8-0004Ih-HL; Wed, 27 Nov 2019 16:01:46 +0100
+Date:   Wed, 27 Nov 2019 16:01:46 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] pinctrl: da9062: add driver support
+Message-ID: <20191127150146.bbwse77eef6haita@pengutronix.de>
+References: <20191127115619.20278-1-m.felsch@pengutronix.de>
+ <20191127115619.20278-4-m.felsch@pengutronix.de>
+ <CACRpkdbd4J-FUNi=F12YQfNPajNCVaoKyqWU7qjmfFMbonzDKg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbd4J-FUNi=F12YQfNPajNCVaoKyqWU7qjmfFMbonzDKg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:09:12 up 12 days,  5:27, 23 users,  load average: 0.01, 0.05,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce big-endian property to specify mtd radio partition endianness
+Hi Linus,
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- .../devicetree/bindings/net/wireless/mediatek,mt76.txt         | 3 +++
- 1 file changed, 3 insertions(+)
+On 19-11-27 14:49, Linus Walleij wrote:
+> Hi Marco,
+> 
+> thanks for your patch!
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-index 7e675dafc256..d4d982f7ab37 100644
---- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-@@ -15,6 +15,8 @@ Optional properties:
- 
- - ieee80211-freq-limit: See ieee80211.txt
- - mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
-+- big-endian: if the radio eeprom partition is written in big-endian, specify
-+  this property
- 
- The MAC address can as well be set with corresponding optional properties
- defined in net/ethernet.txt.
-@@ -31,6 +33,7 @@ Optional nodes:
- 			reg = <0x0000 0 0 0 0>;
- 			ieee80211-freq-limit = <5000000 6000000>;
- 			mediatek,mtd-eeprom = <&factory 0x8000>;
-+			big-endian;
- 
- 			led {
- 				led-sources = <2>;
+thanks for your fast response.
+
+> On Wed, Nov 27, 2019 at 12:56 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> > be used as input, output or have a special use-case.
+> >
+> > The patch adds the support for the normal input/output use-case.
+> >
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> (...)
+> 
+> > +config PINCTRL_DA9062
+> > +       tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
+> > +       depends on MFD_DA9062
+> > +       select GPIOLIB
+> 
+> Hm this would be one of those that could use GENERIC_REGMAP_GPIO
+> the day we invent it but we haven't invented it yet.
+
+Yes it is. Is there a plan for GENERIC_REGMAP_GPIO?
+
+> > +#include <../gpio/gpiolib.h>
+> 
+> Put a comment above this telling us why you do this thing.
+
+Okay.
+
+> > +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> > +{
+> (...)
+> > +       return val & BIT(offset);
+> 
+> You should #include <linux/bits.h> since you use BIT()
+
+Argh.. of course I will add the include.
+
+> Usually I clamp it like this:
+> return !!(val & BIT(offset));
+
+Okay, I can change that too.
+
+> > +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+> > +{
+> > +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
+> > +       struct regmap *regmap = pctl->da9062->regmap;
+> > +       int gpio_mode;
+> > +
+> > +       gpio_mode = da9062_pctl_get_pin_mode(regmap, offset);
+> > +       if (gpio_mode < 0)
+> > +               return gpio_mode;
+> > +
+> > +       switch (gpio_mode) {
+> > +       case DA9062_PIN_ALTERNATE:
+> > +               return -ENOTSUPP;
+> > +       case DA9062_PIN_GPI:
+> > +               return 1;
+> > +       case DA9062_PIN_GPO_OD:
+> > +       case DA9062_PIN_GPO_PP:
+> > +               return 0;
+> 
+> We recently added defines for these directions in
+> <linux/gpio/driver.h>:
+> 
+> #define GPIO_LINE_DIRECTION_IN  1
+> #define GPIO_LINE_DIRECTION_OUT 0
+> 
+> Please use these. (Soon in Torvald's tree, else
+> in my "devel" branch.)
+
+I rebased it onto your devel, thanks for the hint.
+
+> > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
+> > +                                      unsigned int offset)
+> > +{
+> > +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
+> > +       struct regmap *regmap = pctl->da9062->regmap;
+> > +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
+> > +       unsigned int gpi_type;
+> > +       int ret;
+> > +
+> > +       ret = da9062_pctl_set_pin_mode(regmap, offset, DA9062_PIN_GPI);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       /*
+> > +        * If the gpio is active low we should set it in hw too. No worries
+> > +        * about gpio_get() because we read and return the gpio-level. So the
+> > +        * gpiolib active_low handling is still correct.
+> > +        *
+> > +        * 0 - active low, 1 - active high
+> > +        */
+> > +       gpi_type = !gpiod_is_active_low(desc);
+> 
+> That's interesting. Correct too, I guess.
+
+Double checked it again and the datasheet calls it gpio-level so I
+assume that this is correct.
+
+> > +static int da9062_gpio_direction_output(struct gpio_chip *gc,
+> > +                                       unsigned int offset, int value)
+> > +{
+> > +       /* Push-Pull / Open-Drain options are configured during set_config */
+> > +       da9062_gpio_set(gc, offset, value);
+> 
+> That looks dangerous. There is no guarantee that .set_config()
+> always gets called.
+
+Hm.. it seems that other drivers using this assumption too:
+  - gpio-lp87565.c
+  - gpio-tps65218.c
+  - ...
+
+But you're right I missed the possible users of
+gpiod_direction_output_raw().
+
+> Please create a local state container for the mode of each pin in
+> struct da9062_pctl and set it to push-pull by default at probe, then
+> set this to whatever the state is here and let the .set_config()
+> alter it later if need be.
+> 
+> If we don't do that you will get boot-time defaults I think and that
+> might create bugs.
+
+I will add a container for each pin, thanks for covering that.
+
+> > +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+> > +                                 unsigned long config)
+> > +{
+> (...)
+> > +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> > +               return da9062_pctl_set_pin_mode(regmap, offset,
+> > +                                               DA9062_PIN_GPO_OD);
+> > +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> > +               return da9062_pctl_set_pin_mode(regmap, offset,
+> > +                                               DA9062_PIN_GPO_PP);
+> 
+> So also store this in the per-pin state.
+
+Of course.
+
+Regards,
+  Marco
+
+> 
+> Yours,
+> Linus Walleij
+> 
+
 -- 
-2.21.0
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
