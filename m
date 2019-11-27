@@ -2,97 +2,96 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D591C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F48DC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473982073F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574867973;
-	bh=jaPfBfmqsrwkf66oLQ24R6Y6mRD1gE56XIOqxpRFbWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U8dwsKasrCR6YSxZJSnhccW8Ovx5LfpPMpSZpdwOPU4k2MERAyO2T9Tv0XAAPzxIY
-	 t0O7cZapCRAGcm1q1bVMh4glo56LhrdyjKsgy9EDpVrWkDyizo0bfsqLvs/RZm7FlY
-	 uAqxxYWg3vNNryZhymug5D0xD1xB0bUkMxP3Yg9k=
+	by mail.kernel.org (Postfix) with ESMTP id 76BC120665
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gug+HMXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfK0PTc (ORCPT
+        id S1727008AbfK0Pjr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:19:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:49030 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbfK0PTc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Nov 2019 10:19:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93EC71045;
-        Wed, 27 Nov 2019 07:19:31 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1299D3F68E;
-        Wed, 27 Nov 2019 07:19:30 -0800 (PST)
-Date:   Wed, 27 Nov 2019 15:19:29 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wed, 27 Nov 2019 10:39:47 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45908 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbfK0Pjr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 10:39:47 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xARFdcwh078476;
+        Wed, 27 Nov 2019 09:39:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574869178;
+        bh=Psyf7mTJ+jSTqnRUbqkBC0f+Z6J0CTi9u7TTpexnusY=;
+        h=From:To:CC:Subject:Date;
+        b=Gug+HMXCOXvtL1j7EJtwWaS8jwkdvec7geM0AvaUwFLqrLUuGx9gicfbPxB9UUv2C
+         YePqdFMeqqV9essK/IrTH0jORl2uyfDrOlRds98hSg7/MSrO93Xe5DSSLaFnIOXQFz
+         Uj92QTISNPu1RS5Z79c++emq3v5N2GcMUeb/TNCQ=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xARFdc06062892
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 Nov 2019 09:39:38 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
+ Nov 2019 09:39:38 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 27 Nov 2019 09:39:38 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFdbOP083678;
+        Wed, 27 Nov 2019 09:39:38 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] mfd: da9062: add support for the DA9062 GPIOs in
- the core
-Message-ID: <20191127151929.GC4879@sirena.org.uk>
-References: <20191127115619.20278-1-m.felsch@pengutronix.de>
- <20191127115619.20278-3-m.felsch@pengutronix.de>
- <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+CC:     Simon Horman <simon.horman@netronome.com>,
+        <netdev@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] dt-bindings: net: mdio: use non vendor specific compatible string in example
+Date:   Wed, 27 Nov 2019 17:39:28 +0200
+Message-ID: <20191127153928.22408-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UPT3ojh+0CqEDtpF"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
-X-Cookie: In the war of wits, he's unarmed.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Use non vendor specific compatible string in example, otherwise DT YAML
+schemas validation may trigger warnings specific to TI ti,davinci_mdio
+and not to the generic MDIO example.
 
---UPT3ojh+0CqEDtpF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ Documentation/devicetree/bindings/net/mdio.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, Nov 27, 2019 at 02:35:33PM +0100, Linus Walleij wrote:
+diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+index 5d08d2ffd4eb..524f062c6973 100644
+--- a/Documentation/devicetree/bindings/net/mdio.yaml
++++ b/Documentation/devicetree/bindings/net/mdio.yaml
+@@ -56,7 +56,7 @@ patternProperties:
+ examples:
+   - |
+     davinci_mdio: mdio@5c030000 {
+-        compatible = "ti,davinci_mdio";
++        compatible = "vendor,mdio";
+         reg = <0x5c030000 0x1000>;
+         #address-cells = <1>;
+         #size-cells = <0>;
+-- 
+2.17.1
 
-> I can clearly see that regmap's irqchip does not support
-> hierarchical interrupt domains, so we should just make a
-> mental note somewhere that "oh yeah and then one day
-> we should make regmap irqchips play well with hierarchical
-> interrupts".
-
-Why, what do we need to do?  We're just doing all the default stuff,
-it's not something we've opted out of, and the whole point with using
-the frameworks should be that we should get software features like this
-for free :(
-
---UPT3ojh+0CqEDtpF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3elAAACgkQJNaLcl1U
-h9D/mQf/SHkiJNyz5FkWqFCul6Rt1OwIG+cxhJcAMYt3DG6Z4hZtfJYwO7vyc/6w
-tJOi4We6kadTsMTJubGZKeGW8dfc1/FlIRRKNAVyirE0CVgPK4QxD9siE/6WIAVp
-vid8GzArd5VS0Lnjq9oZT8bSdQQnoFnH24w+AWV1vU9G3K0uNx8GQBN5q0/1kLpj
-USGiLl6Bc7DaA2cbcxVtKrjT4Z4Zrg36t61kT4fxbe8IK65Mb4V7sNMPdMqr5LaO
-PRHl4b4JZoleFOwkrwa5b5qMxx+f4fPZkOQ84wwCGm9eilLujuZAypo3Xyd20xzQ
-q4FpiOjwFOv3eEPp008ZB9lxsD5jSg==
-=PTcB
------END PGP SIGNATURE-----
-
---UPT3ojh+0CqEDtpF--
