@@ -2,68 +2,236 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E1CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 09:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7EAC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 10:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE627204FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 09:31:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f0sHLJDF"
+	by mail.kernel.org (Postfix) with ESMTP id 1A58C2071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 10:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbfK0JbN (ORCPT
+        id S1726219AbfK0KOr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 04:31:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57532 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfK0JbN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 04:31:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cArTQIBcelCpnlJ0+Dvnp+KYI2DLSwY3hnmMKGiD2ZA=; b=f0sHLJDFVuqrXrSn60GR/TykB
-        g0oJhOhjarhTssfVFdTxH9z+5dsOnSpvuYnj4P5U+RDEVy+ezBhb5JBnzurAiIuQCIAqlCUFt0Zrp
-        NZ3I73IclRB+MkDRImn4TsK9sgHy6NElSANsfLdNh1K6wRQKWbNretq9jIMGnangWxCasTpgfmoZ3
-        3+7IsRHJEEb7m/qqJwXghCaLQFIgyldmSDGBFGGI+2Uv1cVUsTk9IkIewstA8c0JXOiiJPb1Oamey
-        AptQz0HuwD8ESvXAPB/JJ5zzqOhYmfzBP8CTNB20BgFR+14S4eEM55MtwhgS+UoTrSw0eb8058y9T
-        qyKTZpNjg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZtfE-0001CA-KX; Wed, 27 Nov 2019 09:31:12 +0000
-Date:   Wed, 27 Nov 2019 01:31:12 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Haren Myneni <hbabu@us.ibm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, devicetree@vger.kernel.org,
-        Haren Myneni <haren@linux.vnet.ibm.com>,
-        herbert@gondor.apana.org.au, linuxppc-dev@lists.ozlabs.org,
-        Linuxppc-dev 
-        <linuxppc-dev-bounces+hbabu=us.ibm.com@lists.ozlabs.org>,
-        mikey@neuling.org, npiggin@gmail.com, sukadev@linux.vnet.ibm.com
-Subject: Re: [PATCH 02/14] Revert "powerpc/powernv: remove the unused
- vas_win_paste_addr and vas_win_id functions"
-Message-ID: <20191127093112.GA4485@infradead.org>
-References: <1574816607.13250.6.camel@hbabu-laptop>
- <20191127082810.GA17097@infradead.org>
- <OF14D260BC.48F4C927-ON002584BF.00332A80-882584BF.00335313@notes.na.collabserv.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OF14D260BC.48F4C927-ON002584BF.00332A80-882584BF.00335313@notes.na.collabserv.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 27 Nov 2019 05:14:47 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:62512 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726194AbfK0KOr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 05:14:47 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 27 Nov 2019 15:44:41 +0530
+IronPort-SDR: OjeLSeKxqZJDKOn+jHfn9L2iiTiZ5GzCQ39WQkShVImSP8mcFG9R5/L/Nv9Ff78Qd6DZ12xQk0
+ mP9y2MUSGxGHICILBYLEZKFpxHkDkMe/eId3nkwIRASH2d0QPulXtwgGWoRFYZwNQ1+xhWgXlv
+ pTaRJYZO7g5NvF51eu+R3zATLNrvPqQcYlyrnOtIrgSHeaXScj2x4tiF0DCwOWjFNOmG9rRMwe
+ 79Q/Ahtbf25BYTVFQgapXKL2TLFHgMuZL7mf/ospL9JY9Hjj2gWuK6ZV84YIs5ZgjD5vwH1OG7
+ LEj2FDopUPb0JjLbihfLm3UZ
+Received: from dhar-linux.qualcomm.com ([10.204.66.25])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 27 Nov 2019 15:44:16 +0530
+Received: by dhar-linux.qualcomm.com (Postfix, from userid 2306995)
+        id EB87A3B5B; Wed, 27 Nov 2019 15:44:15 +0530 (IST)
+From:   Shubhashree Dhar <dhar@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Shubhashree Dhar <dhar@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org,
+        Raviteja Tamatam <travitej@codeaurora.org>
+Subject: [PATCH] msm:disp:dpu1: add scaler support on SC7180 display
+Date:   Wed, 27 Nov 2019 15:44:12 +0530
+Message-Id: <1574849652-5429-1-git-send-email-dhar@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 01:20:36AM -0800, Haren Myneni wrote:
-> Thanks for the review.
-> vas_win_paste_addr() will be used in NX compression driver and planning to
-> post this series soon. Can I add this change later as part of this series?
+Add scaler support for display driver.
 
-Please only add core functionality and exports with the actual users.
+This patch has dependency on the below series
+
+https://patchwork.kernel.org/patch/11260267/
+
+Co-developed-by: Raviteja Tamatam <travitej@codeaurora.org>
+Signed-off-by: Raviteja Tamatam <travitej@codeaurora.org>
+Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 21 ++++++++++++++-------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |  3 +++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c    |  4 +++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h    |  3 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c      | 20 +++++++++++++++++---
+ 5 files changed, 39 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 1f2ac6e..89df411 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -182,7 +182,7 @@
+ 	.maxvdeciexp = MAX_VERT_DECIMATION,
+ };
+ 
+-#define _VIG_SBLK(num, sdma_pri) \
++#define _VIG_SBLK(num, sdma_pri, qseed_ver) \
+ 	{ \
+ 	.common = &sdm845_sspp_common, \
+ 	.maxdwnscale = MAX_DOWNSCALE_RATIO, \
+@@ -191,7 +191,7 @@
+ 	.src_blk = {.name = STRCAT("sspp_src_", num), \
+ 		.id = DPU_SSPP_SRC, .base = 0x00, .len = 0x150,}, \
+ 	.scaler_blk = {.name = STRCAT("sspp_scaler", num), \
+-		.id = DPU_SSPP_SCALER_QSEED3, \
++		.id = qseed_ver, \
+ 		.base = 0xa00, .len = 0xa0,}, \
+ 	.csc_blk = {.name = STRCAT("sspp_csc", num), \
+ 		.id = DPU_SSPP_CSC_10BIT, \
+@@ -216,10 +216,14 @@
+ 	.virt_num_formats = ARRAY_SIZE(plane_formats), \
+ 	}
+ 
+-static const struct dpu_sspp_sub_blks sdm845_vig_sblk_0 = _VIG_SBLK("0", 5);
+-static const struct dpu_sspp_sub_blks sdm845_vig_sblk_1 = _VIG_SBLK("1", 6);
+-static const struct dpu_sspp_sub_blks sdm845_vig_sblk_2 = _VIG_SBLK("2", 7);
+-static const struct dpu_sspp_sub_blks sdm845_vig_sblk_3 = _VIG_SBLK("3", 8);
++static const struct dpu_sspp_sub_blks sdm845_vig_sblk_0 =
++				_VIG_SBLK("0", 5, DPU_SSPP_SCALER_QSEED3);
++static const struct dpu_sspp_sub_blks sdm845_vig_sblk_1 =
++				_VIG_SBLK("1", 6, DPU_SSPP_SCALER_QSEED3);
++static const struct dpu_sspp_sub_blks sdm845_vig_sblk_2 =
++				_VIG_SBLK("2", 7, DPU_SSPP_SCALER_QSEED3);
++static const struct dpu_sspp_sub_blks sdm845_vig_sblk_3 =
++				_VIG_SBLK("3", 8, DPU_SSPP_SCALER_QSEED3);
+ 
+ static const struct dpu_sspp_sub_blks sdm845_dma_sblk_0 = _DMA_SBLK("8", 1);
+ static const struct dpu_sspp_sub_blks sdm845_dma_sblk_1 = _DMA_SBLK("9", 2);
+@@ -257,9 +261,12 @@
+ 		sdm845_dma_sblk_3, 13, SSPP_TYPE_DMA, DPU_CLK_CTRL_CURSOR1),
+ };
+ 
++static const struct dpu_sspp_sub_blks sc7180_vig_sblk_0 =
++				_VIG_SBLK("0", 4, DPU_SSPP_SCALER_QSEED4);
++
+ static struct dpu_sspp_cfg sc7180_sspp[] = {
+ 	SSPP_BLK("sspp_0", SSPP_VIG0, 0x4000, VIG_SC7180_MASK,
+-		sdm845_vig_sblk_0, 0,  SSPP_TYPE_VIG, DPU_CLK_CTRL_VIG0),
++		sc7180_vig_sblk_0, 0,  SSPP_TYPE_VIG, DPU_CLK_CTRL_VIG0),
+ 	SSPP_BLK("sspp_8", SSPP_DMA0, 0x24000,  DMA_SDM845_MASK,
+ 		sdm845_dma_sblk_0, 1, SSPP_TYPE_DMA, DPU_CLK_CTRL_DMA0),
+ 	SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  DMA_SDM845_MASK,
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index e7e731b..a5b124d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -94,6 +94,7 @@ enum {
+  * @DPU_SSPP_SRC             Src and fetch part of the pipes,
+  * @DPU_SSPP_SCALER_QSEED2,  QSEED2 algorithm support
+  * @DPU_SSPP_SCALER_QSEED3,  QSEED3 alogorithm support
++ * @DPU_SSPP_SCALER_QSEED4,  QSEED4 algorithm support
+  * @DPU_SSPP_SCALER_RGB,     RGB Scaler, supported by RGB pipes
+  * @DPU_SSPP_CSC,            Support of Color space converion
+  * @DPU_SSPP_CSC_10BIT,      Support of 10-bit Color space conversion
+@@ -324,6 +325,7 @@ struct dpu_sspp_blks_common {
+  * @maxupscale:  maxupscale ratio supported
+  * @smart_dma_priority: hw priority of rect1 of multirect pipe
+  * @max_per_pipe_bw: maximum allowable bandwidth of this pipe in kBps
++ * @qseed_ver: qseed version
+  * @src_blk:
+  * @scaler_blk:
+  * @csc_blk:
+@@ -344,6 +346,7 @@ struct dpu_sspp_sub_blks {
+ 	u32 maxupscale;
+ 	u32 smart_dma_priority;
+ 	u32 max_per_pipe_bw;
++	u32 qseed_ver;
+ 	struct dpu_src_blk src_blk;
+ 	struct dpu_scaler_blk scaler_blk;
+ 	struct dpu_pp_blk csc_blk;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
+index 4f8b813..a8e30de 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
+@@ -132,6 +132,7 @@
+ /* traffic shaper clock in Hz */
+ #define TS_CLK			19200000
+ 
++
+ static int _sspp_subblk_offset(struct dpu_hw_pipe *ctx,
+ 		int s_id,
+ 		u32 *idx)
+@@ -657,7 +658,8 @@ static void _setup_layer_ops(struct dpu_hw_pipe *c,
+ 		test_bit(DPU_SSPP_SMART_DMA_V2, &c->cap->features))
+ 		c->ops.setup_multirect = dpu_hw_sspp_setup_multirect;
+ 
+-	if (test_bit(DPU_SSPP_SCALER_QSEED3, &features)) {
++	if (test_bit(DPU_SSPP_SCALER_QSEED3, &features) ||
++			test_bit(DPU_SSPP_SCALER_QSEED4, &features)) {
+ 		c->ops.setup_scaler = _dpu_hw_sspp_setup_scaler3;
+ 		c->ops.get_scaler_ver = _dpu_hw_sspp_get_scaler3_ver;
+ 	}
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
+index a3680b4..ed7a3bd 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
+@@ -27,7 +27,8 @@
+  */
+ #define DPU_SSPP_SCALER ((1UL << DPU_SSPP_SCALER_RGB) | \
+ 	(1UL << DPU_SSPP_SCALER_QSEED2) | \
+-	(1UL << DPU_SSPP_SCALER_QSEED3))
++	 (1UL << DPU_SSPP_SCALER_QSEED3) | \
++	  (1UL << DPU_SSPP_SCALER_QSEED4))
+ 
+ /**
+  * Component indices
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 58d5acb..3914753 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -53,8 +53,13 @@ enum {
+ 	R_MAX
+ };
+ 
++/*
++ * Default Preload Values
++ */
+ #define DPU_QSEED3_DEFAULT_PRELOAD_H 0x4
+ #define DPU_QSEED3_DEFAULT_PRELOAD_V 0x3
++#define DPU_QSEED4_DEFAULT_PRELOAD_V 0x2
++#define DPU_QSEED4_DEFAULT_PRELOAD_H 0x4
+ 
+ #define DEFAULT_REFRESH_RATE	60
+ 
+@@ -477,8 +482,16 @@ static void _dpu_plane_setup_scaler3(struct dpu_plane *pdpu,
+ 			scale_cfg->src_width[i] /= chroma_subsmpl_h;
+ 			scale_cfg->src_height[i] /= chroma_subsmpl_v;
+ 		}
+-		scale_cfg->preload_x[i] = DPU_QSEED3_DEFAULT_PRELOAD_H;
+-		scale_cfg->preload_y[i] = DPU_QSEED3_DEFAULT_PRELOAD_V;
++
++		if (pdpu->pipe_hw->cap->features &
++			BIT(DPU_SSPP_SCALER_QSEED4)) {
++			scale_cfg->preload_x[i] = DPU_QSEED4_DEFAULT_PRELOAD_H;
++			scale_cfg->preload_y[i] = DPU_QSEED4_DEFAULT_PRELOAD_V;
++		} else {
++			scale_cfg->preload_x[i] = DPU_QSEED3_DEFAULT_PRELOAD_H;
++			scale_cfg->preload_y[i] = DPU_QSEED3_DEFAULT_PRELOAD_V;
++		}
++
+ 		pstate->pixel_ext.num_ext_pxls_top[i] =
+ 			scale_cfg->src_height[i];
+ 		pstate->pixel_ext.num_ext_pxls_left[i] =
+@@ -1337,7 +1350,8 @@ static int _dpu_plane_init_debugfs(struct drm_plane *plane)
+ 			pdpu->debugfs_root, &pdpu->debugfs_src);
+ 
+ 	if (cfg->features & BIT(DPU_SSPP_SCALER_QSEED3) ||
+-			cfg->features & BIT(DPU_SSPP_SCALER_QSEED2)) {
++			cfg->features & BIT(DPU_SSPP_SCALER_QSEED2) ||
++			cfg->features & BIT(DPU_SSPP_SCALER_QSEED4)) {
+ 		dpu_debugfs_setup_regset32(&pdpu->debugfs_scaler,
+ 				sblk->scaler_blk.base + cfg->base,
+ 				sblk->scaler_blk.len,
+-- 
+1.9.1
+
