@@ -2,246 +2,97 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF3EC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C64C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10AFD2068E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BFF2068E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="De9TnT8O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbgu7pRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfK0NXt (ORCPT
+        id S1727213AbfK0Nfq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:23:49 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37676 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfK0NXt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 08:23:49 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p24so10995500pfn.4;
-        Wed, 27 Nov 2019 05:23:49 -0800 (PST)
+        Wed, 27 Nov 2019 08:35:46 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39820 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbfK0Nfq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 08:35:46 -0500
+Received: by mail-vs1-f67.google.com with SMTP id x21so15197124vsp.6
+        for <devicetree@vger.kernel.org>; Wed, 27 Nov 2019 05:35:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=FYckdcYvzj5yK1e7XpJFaQ7ZpFtgpcz0P/S/HZ3xvbc=;
-        b=De9TnT8OPZ/OkNDYBgNjAksDWHzISRs/xzkfj1C3qsBCEHTgm0vG8VyIX/LYjDRKyj
-         MareuXWH38yaNVa5oZwxdlaVm8kALUSNOGcMGGnWm7onxh38Ms6rpfdE2HkGNI+3ucC8
-         fGTPcJ+PB1AS0O5lKIxWOs9DOu/OuhotKXujGQBuPn3D4nrZzJs9+A1VwxPlw1At3elQ
-         umy5EdOZ7iSrNlhnjTUfFaHOgGsDQuqcEQuLXfnmxdnbQoQzLY/85v5I3/cH0rXQQ89n
-         EgeIHjhNyZEtKnRLhJG12OQU8gaq9k3ruFP2MH6UryZ9agKdHLdufsDaGA5deLVB9VQ+
-         LD1Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dx6Wkv3ySGhXS7qkfXJJNC6KphczTVFp4Ev8Iq4fldI=;
+        b=nbgu7pRIs9YzZOrtRCF+j2cEMFGx1sNFj31QpHqVahAmOam94iAL18YA9Hq58tzKek
+         0mxzxrwGSu0aFlRhUFmhqiO3jbF624J7a6WJF7VNhKwUsJ6QyL5kpQFp+pZ/8+NYQHVw
+         KazwKCDdWqXG0tQEgIHXM3MmaP0hb3SYgoa2cT+eojLzYQSkhsvZJCVGYsj0XLRGaJYL
+         gHSUGVwnTKJI+oAHmMAM23csKKMTfylhYiyHEbSueon9SVvPBvi9kwkN8qaRzkynqp6E
+         kA/cDOdIo0iqh8Ioh6eihHtQjaGCB72jlNP7TdMoW9qbTRlXBeWgX+mtUxnHBYRXrBjD
+         ieFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FYckdcYvzj5yK1e7XpJFaQ7ZpFtgpcz0P/S/HZ3xvbc=;
-        b=O9F/L3KM2lLK3jucVglcPS3nzvNW33Uj7yrVEm3XbrJKEnTNBTPpA48FO4v1MdBPNl
-         AXMgIVq4/H6m1+xb/EzUnEA2AN3UL0vettmDHwt2kRwYc1xd+xd/kLtRRJXjQqRAwrDN
-         Em7xr+ol10plxiE+tSPDK1CXel88I3QcUvQX+zxPUNS027+kJXx1/mGD+3u1Tbze6aH+
-         b/PsBy/xccVileRgDQwjiWWdJtfedAegg0Ulv2Uiu97320GaidvPAcbmD/YPYdKv9FYp
-         DaakAQYEWt/6AiVrHpN+PaeCSt0ruKB9HA7bJqRI99vWDOIS/rK/csNJN8OVL91jYm19
-         bMHg==
-X-Gm-Message-State: APjAAAW+Nq9akkZeoiqi4TkgWHKu/klvKj9e9EPl7u7ag1pvZ1aSvnYL
-        zwRRvHA0PGlHmaYbTtjC0SA=
-X-Google-Smtp-Source: APXvYqz6/QPQIN/FIXGNBlmS5L9H3I4cIFW3BAhi8JvFvqwUYbWSeI4p/LK/W89Dganyyc04jkwrGA==
-X-Received: by 2002:a63:597:: with SMTP id 145mr2050606pgf.384.1574861028745;
-        Wed, 27 Nov 2019 05:23:48 -0800 (PST)
-Received: from cnn ([2402:3a80:46e:a1cb:a194:63c9:69fb:ee71])
-        by smtp.gmail.com with ESMTPSA id 16sm16855165pfc.21.2019.11.27.05.23.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Nov 2019 05:23:48 -0800 (PST)
-Date:   Wed, 27 Nov 2019 18:53:40 +0530
-From:   manikandan-e <manikandan.hcl.ers.epl@gmail.com>
-To:     andrew@aj.id.au
-Cc:     joel@jms.id.au, sdasari@fb.com, vijaykhemka@fb.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, manikandan.e@hcl.com
-Subject: [PATCH v4] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20191127132340.GA22672@cnn>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dx6Wkv3ySGhXS7qkfXJJNC6KphczTVFp4Ev8Iq4fldI=;
+        b=QXPZ9jOcgcQNa/wfH8Xyx94fctXZz8mueUoTT/Sto2BPx3U/LCp23GFtpJxIjjubKE
+         jEyetMOKJc+u7V1+/6lD7+jUb0C8FZJ+F4HK+qEH9lYRPTnm1bhrJVe1XM+G8OdkzPaZ
+         SSPJUgT3wdKjWrP6oiIq8jUcrKK9UfS3qaZ1LM1NslxoKgmNMhtqPyWV4R+ELk6scBsI
+         Smb+t0AHTpzEJZcdPUU5OwjJh70BXt/wna7E/y3/xa+etJ97sD3dwSmhxrEXp1kZow4x
+         CsNVj2dj13vH86dN3sRhHOb9tcM+x7eSGCRZ3LqzbnMFNfwKG5NwSMqfqcwP1QwzAFoP
+         f1kA==
+X-Gm-Message-State: APjAAAVCqF7oBNGtOY1nyKG+roEwSYHs2CgCj0ojseZ/p9Y2O5OkEMgl
+        EnU2gPmusfzHOsdwSthZV4O5AQHgJhVqMqyRxjLHCg==
+X-Google-Smtp-Source: APXvYqxTK7Y0dYdPsk1QLrm3GQ61nChJ51nQBQEnr2r1WJ4jId+4aZ7y6DwhtjdZzHGHtVxFBrSd3MlBXY9hpL+raRQ=
+X-Received: by 2002:a67:88c8:: with SMTP id k191mr3302354vsd.86.1574861745194;
+ Wed, 27 Nov 2019 05:35:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191127115619.20278-1-m.felsch@pengutronix.de> <20191127115619.20278-3-m.felsch@pengutronix.de>
+In-Reply-To: <20191127115619.20278-3-m.felsch@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 Nov 2019 14:35:33 +0100
+Message-ID: <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mfd: da9062: add support for the DA9062 GPIOs in
+ the core
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Yosemite V2 is a facebook multi-node server
-platform that host four OCP server. The BMC
-in the Yosemite V2 platorm based on AST2500 SoC.
+On Wed, Nov 27, 2019 at 12:56 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-This patch adds linux device tree entry related to
-Yosemite V2 specific devices connected to BMC SoC.
+> Currently the da9062 GPIO's aren't available. The patch adds the support
+> to make these available by adding a gpio device with the corresponding
+> irq resources. Furthermore the patch fixes a minor style issue for the
+> onkey device.
+>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
----
- .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 150 +++++++++++++++++++++
- 1 file changed, 150 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+This is a regmap irqchip so I guess not much to say about it.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-new file mode 100644
-index 0000000..44e2b17
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Facebook Inc.
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "Facebook Yosemitev2 BMC";
-+	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	iio-hwmon {
-+		// VOLATAGE SENSOR
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-+		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-+		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-+		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
-+
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&adc {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+			&pinctrl_adc1_default
-+			&pinctrl_adc2_default
-+			&pinctrl_adc3_default
-+			&pinctrl_adc4_default
-+			&pinctrl_adc5_default
-+			&pinctrl_adc6_default
-+			&pinctrl_adc7_default
-+			&pinctrl_adc8_default
-+			&pinctrl_adc9_default
-+			&pinctrl_adc10_default
-+			&pinctrl_adc11_default
-+			&pinctrl_adc12_default
-+			&pinctrl_adc13_default
-+			&pinctrl_adc14_default
-+			&pinctrl_adc15_default>;
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+	//FRU EEPROM
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+	tmp421@4e {
-+	//INLET TEMP
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	//OUTLET TEMP
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+	//HSC
-+	adm1278@40 {
-+		compatible = "adi,adm1278";
-+		reg = <0x40>;
-+	};
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+	//MEZZ_TEMP_SENSOR
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+	//MEZZ_FRU
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	//FSC
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+};
--- 
-2.7.4
+HOWEVER: this looks very much hierarchical does it not?
 
+I can clearly see that regmap's irqchip does not support
+hierarchical interrupt domains, so we should just make a
+mental note somewhere that "oh yeah and then one day
+we should make regmap irqchips play well with hierarchical
+interrupts".
+
+Yours,
+Linus Walleij
