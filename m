@@ -2,148 +2,72 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DB9C43141
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FF9C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93D1206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE83220722
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574866022;
+	bh=dXA8jlVAXu5F6lbLw369DRdBk1ynd0odjEvy2p5hWKY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=JZkDEQeYDojgz4g4AOT0uIPqAXpebsDGE3unna8MLFiSXR50E52C7LReakQrcTTaH
+	 stQDr95D1xollIWaGqXoc+Hrle+++VN2pUlPH0f/Pdco1F3tsbUKtP0Q0DVCiZoo9x
+	 RdTcr1v/5bZwMMT0HMjtbWP+KaF9tknKmE7xDThg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfK0Odr convert rfc822-to-8bit (ORCPT
+        id S1726698AbfK0OrA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:33:47 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37618 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfK0Odr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 09:33:47 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 128so12195533oih.4;
-        Wed, 27 Nov 2019 06:33:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p4HQ0sBvX9KwKME5QSEdWqGhxNVzafG2qhuy+QctP4M=;
-        b=uIu88hPH1HKUcJ9FxgIQiprCpNhBB3D/sjX+Z3Buoc3AY63eSySYBxawinLs6HB6ak
-         zufvG2EoASpJW4XPnzxzHwG1rlMVyeKe3ZNCeUEHK7NaAQEPF3hHHk/ZT6rbeQB3ct6r
-         ELxVeKaPffJqNdMQnrI5XdNkjLZC8Rjz9wPZIeG+PZqXI7EQpkrCLxR3w7Luf9iDTPV5
-         /quCP4xMzEftrmR/M6Gtrmkh1AlUIy7P9LNX9/hcFqFLk8M15dB6JogP3eYYNFrK4cNo
-         H2vByTo8FwlazB57PN3FpoWbmHSaDHpdWyhrRK7Q/SY+v4kCx9+mtCuStIq08XIKNkMo
-         s7sA==
-X-Gm-Message-State: APjAAAXTwa0AZ28VipTYnZc8636eEGfZjcCxegeiRt/BV5yfvpHuyTBl
-        pd46WN4VEFe4E4sOpkoN6hELorBye9nwkAivyhU=
-X-Google-Smtp-Source: APXvYqxCCNIKdr71l4+aem/37DJmvPbfkWnFnSlhjT3Aiy6bb+myMARYI5vlJfzw8lh/LBhhdEQ2bi0iWvwnKGpu9eY=
-X-Received: by 2002:a05:6808:b17:: with SMTP id s23mr4564212oij.102.1574865225731;
- Wed, 27 Nov 2019 06:33:45 -0800 (PST)
+        Wed, 27 Nov 2019 09:47:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726537AbfK0OrA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 09:47:00 -0500
+Received: from localhost.localdomain.com (unknown [77.139.212.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A40DB206F0;
+        Wed, 27 Nov 2019 14:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574866020;
+        bh=dXA8jlVAXu5F6lbLw369DRdBk1ynd0odjEvy2p5hWKY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kl2jU7TufAhdur9kJdsS5PJa4kgxaZ9mdot7ykp/NX9a9+bo++6FBXlS06i5H8Gco
+         M9ux/IWTkL+Wc+29YqL7IDIICQbpJWasQr3Kywrku3CBUKeYhZyRKLtB7ysNBXl3Le
+         T29vy4wjpZ40BJyNRX+ac25NGrM4ycud9gEQzg7I=
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     nbd@nbd.name
+Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
+        lorenzo.bianconi@redhat.com
+Subject: [PATCH v2 0/2] add support for big endian eeprom partition to mt76 driver
+Date:   Wed, 27 Nov 2019 16:46:32 +0200
+Message-Id: <cover.1574865558.git.lorenzo@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-6-geert+renesas@glider.be> <20191127141529.GA18189@vmlxhi-102.adit-jv.com>
-In-Reply-To: <20191127141529.GA18189@vmlxhi-102.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Nov 2019 15:33:34 +0100
-Message-ID: <CAMuHMdVMoo0rJ-Ji1ek-DqHEkRqM5Fk5o9RzQV08Z8SSdS9APA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Eugeniu,
+Introduce the possibility to specify eeprom radio partition endianness
+since mt76x0e users reported some devices (e.g TP-Link Archer VR200v)
+have been flashed with big endian calibration data.
 
-On Wed, Nov 27, 2019 at 3:15 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> On Wed, Nov 27, 2019 at 09:42:51AM +0100, Geert Uytterhoeven wrote:
-> > +static bool isrange(const char *s)
-> > +{
-> > +     size_t n = strlen(s);
->
-> Cppcheck 1.40-18521-ge6d692d96058:
-> drivers/gpio/gpio-aggregator.c:69:11: style: Variable 'n' is assigned a value that is never used. [unreadVariable]
->
-> Smatch v0.5.0-6150-gc1ed13e4ee7b:
-> drivers/gpio/gpio-aggregator.c:69 isrange() warn: unused return: n = strlen()
+Changes since v1:
+- Add bing-endian property documentation
 
-Correct, this is a remainder of code present temporarily during development.
-Will drop.
+Lorenzo Bianconi (2):
+  mt76: eeprom: add support for big endian eeprom partition
+  dt-bindings: net: wireless: mt76: introduce big-endian property
 
-(where are the days gcc itself warned about that?)
-
-> > +     aggr->lookups->dev_id = kasprintf(GFP_KERNEL, "%s.%d", DRV_NAME, id);
-> > +     if (!aggr->lookups) {
-> > +             res = -ENOMEM;
-> > +             goto remove_idr;
-> > +     }
->
-> s/aggr->lookups/aggr->lookups->dev_id/ ?
-
-Thanks, will fix.
-
-> > +static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-> > +                              unsigned long *bits)
-> > +{
-> > +     struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> > +     unsigned long *values, flags;
->
-> gcc 9.2.1:
-> warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
->
-> [..]
->
-> > +static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-> > +                               unsigned long *bits)
-> > +{
-> > +     struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> > +     unsigned long *values, flags;
->
-> gcc 9.2.1, same as above:
-> warning: ‘flags’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-
-So newer gcc is (again) no longer smart enough to notice the check is
-the same for initializer and user...
-
-> Should these be silenced like in 2bf593f101f3ca ("xilinx_uartps.c:
-> suppress "may be used uninitialised" warning") ?
-
-TBH, I'm not a big fan of silencing false positives.
-But if people like to see flags preinitialized to zero, that can be done...
-
-> I plan to do some runtime testing soon.
-
-Thanks, looking forward to the results!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../devicetree/bindings/net/wireless/mediatek,mt76.txt |  3 +++
+ drivers/net/wireless/mediatek/mt76/eeprom.c            | 10 ++++++++++
+ 2 files changed, 13 insertions(+)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
