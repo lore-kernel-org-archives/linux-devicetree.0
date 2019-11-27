@@ -4,26 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE93C43141
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 10:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFB2C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 10:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD08206BF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 10:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5E7206BF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 10:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfK0Kzj (ORCPT
+        id S1726560AbfK0Kz2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 05:55:39 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:45903 "EHLO
+        Wed, 27 Nov 2019 05:55:28 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:51915 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfK0Kza (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 05:55:30 -0500
+        with ESMTP id S1726282AbfK0Kz2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 05:55:28 -0500
 X-Originating-IP: 90.76.211.102
 Received: from localhost.localdomain (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 47898FF808;
-        Wed, 27 Nov 2019 10:55:28 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B240AFF805;
+        Wed, 27 Nov 2019 10:55:25 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
@@ -38,9 +39,9 @@ Cc:     <linux-mtd@lists.infradead.org>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Bernhard Frauendienst <kernel@nospam.obeliks.de>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 3/4] mtd: Add get_mtd_device_by_node() helper
-Date:   Wed, 27 Nov 2019 11:55:21 +0100
-Message-Id: <20191127105522.31445-4-miquel.raynal@bootlin.com>
+Subject: [PATCH v5 1/4] dt-bindings: mtd: Describe MTD partitions concatenation
+Date:   Wed, 27 Nov 2019 11:55:19 +0100
+Message-Id: <20191127105522.31445-2-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191127105522.31445-1-miquel.raynal@bootlin.com>
 References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
@@ -51,83 +52,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+The main use case to concatenate MTD devices is probably SPI-NOR
+flashes where the number of address bits is limited to 24, which can
+access a range of 16MiB. Board manufacturers might want to double the
+SPI storage size by adding a second flash asserted thanks to a second
+chip selects which enhances the addressing capabilities to 25 bits,
+32MiB. Having two devices for twice the size is great but without more
+glue, we cannot define partition boundaries spread across the two
+devices. This is the gap mtd-concat intends to address.
 
-Add an helper to retrieve a MTD device by its OF node. Since drivers can
-assign arbitrary names to MTD devices in the absence of a 'label' DT
-property, there is no other reliable way to retrieve a MTD device for a
-given OF node.
+There are three options to describe concatenated devices:
+1/ One flash chip is described in the DT with two CS;
+2/ Two flash chips are described in the DT with one CS each, a virtual
+   device is also created to describe the concatenation.
+3/ Partitions that must be concatenated are described in the
+   partitions subnodes in a specific part-concat property.
 
-Signed-off-by: Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-[<miquel.raynal@bootlin.com>: light internals rework]
+Solution 1/ presents at least 3 issues:
+* The hardware description is abused;
+* The concatenation only works for SPI devices (while it could be
+  helpful for any MTD);
+* It would require a lot of rework in the SPI core as most of the
+  logic assumes there is and there always will be only one CS per
+  chip.
+
+Solution 2/ also has caveats:
+* The virtual device has no hardware reality;
+* Possible optimizations at the hardware level will be hard to enable
+  efficiently (ie. a common direct mapping abstracted by a SPI
+  memories oriented controller).
+
+Solution 3/ is maybe better from the bindings point of view but
+introduces a real mess in kernel code and the amount of boilerplate is
+insane compared to solution 2. This is the one finally implemented.
+
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/mtd/mtdcore.c   | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/mtd.h |  2 ++
- 2 files changed, 40 insertions(+)
+ Documentation/devicetree/bindings/mtd/partition.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 76b4264936ff..5a94a2c0a6de 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -985,6 +985,44 @@ struct mtd_info *get_mtd_device_nm(const char *name)
- }
- EXPORT_SYMBOL_GPL(get_mtd_device_nm);
+diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+index afbbd870496d..6e3ac87ff988 100644
+--- a/Documentation/devicetree/bindings/mtd/partition.txt
++++ b/Documentation/devicetree/bindings/mtd/partition.txt
+@@ -61,6 +61,7 @@ Optional properties:
+   clobbered.
+ - lock : Do not unlock the partition at initialization time (not supported on
+   all devices)
++- part-concat : List of MTD partitions phandles that should be concatenated.
  
-+/**
-+ *	get_mtd_device_by_node - obtain a validated handle for an MTD device
-+ *	by of_node
-+ *	@of_node: OF node of MTD device to open
-+ *
-+ *	This function returns an MTD device structure in case of success,
-+ *	an error code otherwise.
-+ */
-+struct mtd_info *get_mtd_device_by_node(const struct device_node *of_node)
-+{
-+	struct mtd_info *mtd;
-+	bool found = false;
-+	int ret;
-+
-+	mutex_lock(&mtd_table_mutex);
-+
-+	mtd_for_each_device(mtd) {
-+		if (of_node == mtd->dev.of_node) {
-+			found = true;
-+			break;
-+		}
-+	}
-+
-+	if (found)
-+		ret = __get_mtd_device(mtd);
-+
-+	mutex_unlock(&mtd_table_mutex);
-+
-+	if (!found)
-+		return ERR_PTR(-ENODEV);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return mtd;
-+}
-+EXPORT_SYMBOL_GPL(get_mtd_device_by_node);
-+
- void put_mtd_device(struct mtd_info *mtd)
- {
- 	mutex_lock(&mtd_table_mutex);
-diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-index 677768b21a1d..0f25c476a1a3 100644
---- a/include/linux/mtd/mtd.h
-+++ b/include/linux/mtd/mtd.h
-@@ -573,6 +573,8 @@ extern struct mtd_info *get_mtd_device(struct mtd_info *mtd, int num);
- extern int __get_mtd_device(struct mtd_info *mtd);
- extern void __put_mtd_device(struct mtd_info *mtd);
- extern struct mtd_info *get_mtd_device_nm(const char *name);
-+extern struct mtd_info *get_mtd_device_by_node(
-+		const struct device_node *of_node);
- extern void put_mtd_device(struct mtd_info *mtd);
- 
+ Examples:
  
 -- 
 2.20.1
