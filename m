@@ -6,78 +6,93 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7588C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B3BC43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95972206E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACCD2084D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfK0RJr (ORCPT
+        id S1726970AbfK0RKX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:09:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:50416 "EHLO foss.arm.com"
+        Wed, 27 Nov 2019 12:10:23 -0500
+Received: from mga18.intel.com ([134.134.136.126]:9203 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbfK0RJq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:09:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12FDB30E;
-        Wed, 27 Nov 2019 09:09:46 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 019323F6C4;
-        Wed, 27 Nov 2019 09:09:44 -0800 (PST)
-Subject: Re: [PATCH 2/2] iommu: dma: Use of_iommu_get_resv_regions()
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190829111407.17191-1-thierry.reding@gmail.com>
- <20190829111407.17191-3-thierry.reding@gmail.com>
- <1caeaaa0-c5aa-b630-6d42-055b26764f40@arm.com> <20190902145245.GC1445@ulmo>
- <20190917175950.wrwiqnh5bp62uy3c@willie-the-truck>
- <20191126172910.GA2669319@ulmo> <20191127141631.GA280099@ulmo>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <864d5afb-72b4-a3ef-9c93-3a8ad4864c56@arm.com>
-Date:   Wed, 27 Nov 2019 17:09:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726593AbfK0RKX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:10:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 09:10:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
+   d="scan'208";a="199250615"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 27 Nov 2019 09:10:19 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ia0pW-0004W3-I3; Wed, 27 Nov 2019 19:10:18 +0200
+Date:   Wed, 27 Nov 2019 19:10:18 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com, bparrot@ti.com,
+        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
+        mripard@kernel.org, alexandre.belloni@bootlin.com,
+        shawnguo@kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] EDT-FT5x06 improvements
+Message-ID: <20191127171018.GQ32742@smile.fi.intel.com>
+References: <20191127120948.22251-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191127141631.GA280099@ulmo>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127120948.22251-1-m.felsch@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 27/11/2019 2:16 pm, Thierry Reding wrote:
-[...]
-> Nevermind that, I figured out that I was missingthe initialization of
-> some of the S2CR variables. I've got something that I think is working
-> now, though I don't know yet how to go about cleaning up the initial
-> mapping and "recycling" it.
+On Wed, Nov 27, 2019 at 01:09:43PM +0100, Marco Felsch wrote:
+> Hi,
 > 
-> I'll clean things up a bit, run some more tests and post a new patch
-> that can serve as a basis for discussion.
+> this v2 address all comments made on [1]. See the patch based changelog
+> for further information.
+> 
+> During the discussion we all agreed to use the common wakeup-src device
+> property but I added all users of this driver again. So they can provide
+> their ack-tag.
 
-I'm a little puzzled by the smmu->identity domain - disregarding the 
-fact that it's not actually used by the given diff ;) - if isolation is 
-the reason for not simply using a bypass S2CR for the window between 
-reset and the relevant .add_device call where the default domain proper 
-comes in[1], then surely exposing the union of memory regions to the 
-union of all associated devices isn't all that desirable either.
+It doesn't break my case (Adafruit 2.8" TFT + cap/ts).
 
-Either way, I'll give you the pre-emptive warning that this is the SMMU 
-in the way of my EFI framebuffer ;)
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-...
-arm-smmu 7fb20000.iommu: 	1 context banks (1 stage-2 only)
-...
+> 
+> Regards,
+>   Marco
+> 
+> [1] https://patchwork.kernel.org/cover/11149039/
+> 
+> Marco Felsch (4):
+>   Input: edt-ft5x06 - alphabetical include reorder
+>   dt-bindings: Input: edt-ft5x06 - document wakeup-source capability
+>   Input: edt-ft5x06 - make wakeup-source switchable
+>   Input: edt-ft5x06 - improve power management operations
+> 
+> Philipp Zabel (1):
+>   Input: edt-ft5x06: work around first register access error
+> 
+>  .../bindings/input/touchscreen/edt-ft5x06.txt |  2 +
+>  drivers/input/touchscreen/edt-ft5x06.c        | 85 ++++++++++++++++---
+>  2 files changed, 73 insertions(+), 14 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
 
-Robin.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-[1] the fact that it currently depends on probe order whether getting 
-that .add_device call requires a driver probing for the device is an 
-error as discussed elsewhere, and will get fixed separately, I promise.
+
