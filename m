@@ -2,31 +2,31 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A654EC432C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA06BC43215
 	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 12:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762062071E
+	by mail.kernel.org (Postfix) with ESMTP id A0EC320869
 	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 12:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfK0MKF (ORCPT
+        id S1726696AbfK0MKF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 27 Nov 2019 07:10:05 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51217 "EHLO
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40589 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfK0MKE (ORCPT
+        with ESMTP id S1726591AbfK0MKE (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 07:10:04 -0500
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1iZw8k-0002KA-VT; Wed, 27 Nov 2019 13:09:50 +0100
+        id 1iZw8k-0002KB-VT; Wed, 27 Nov 2019 13:09:50 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1iZw8j-0006Id-J4; Wed, 27 Nov 2019 13:09:49 +0100
+        id 1iZw8j-0006Ig-JR; Wed, 27 Nov 2019 13:09:49 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
         dmitry.torokhov@gmail.com, bparrot@ti.com,
@@ -34,10 +34,10 @@ To:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
         hdegoede@redhat.com, fcooper@ti.com, mripard@kernel.org,
         alexandre.belloni@bootlin.com, shawnguo@kernel.org
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
-        linux-input@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 1/5] Input: edt-ft5x06: work around first register access error
-Date:   Wed, 27 Nov 2019 13:09:44 +0100
-Message-Id: <20191127120948.22251-2-m.felsch@pengutronix.de>
+        linux-input@vger.kernel.org
+Subject: [PATCH v2 2/5] Input: edt-ft5x06 - alphabetical include reorder
+Date:   Wed, 27 Nov 2019 13:09:45 +0100
+Message-Id: <20191127120948.22251-3-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191127120948.22251-1-m.felsch@pengutronix.de>
 References: <20191127120948.22251-1-m.felsch@pengutronix.de>
@@ -52,46 +52,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+It seems that the include order is historical increased and no one takes
+care of it. Fix this to align it with the common rule to be in a
+alphabetical order.
 
-The EP0700MLP1 returns bogus data on the first register read access
-(reading the threshold parameter from register 0x00):
-
-    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
-
-It ignores writes until then. This patch adds a dummy read after which
-the number of sensors and parameter read/writes work correctly.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+
+v2:
+
+- move asm include behind linux includes
+
+ drivers/input/touchscreen/edt-ft5x06.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index d61731c0037d..b87b1e074f62 100644
+index b87b1e074f62..e1b31fd525e2 100644
 --- a/drivers/input/touchscreen/edt-ft5x06.c
 +++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -1050,6 +1050,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- {
- 	const struct edt_i2c_chip_data *chip_data;
- 	struct edt_ft5x06_ts_data *tsdata;
-+	u8 buf[2] = { 0xfc, 0x00 };
- 	struct input_dev *input;
- 	unsigned long irq_flags;
- 	int error;
-@@ -1140,6 +1141,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 		return error;
- 	}
+@@ -13,22 +13,23 @@
+  *    http://www.glyn.com/Products/Displays
+  */
  
-+	/*
-+	 * Dummy read access. EP0700MLP1 returns bogus data on the first
-+	 * register read access and ignores writes.
-+	 */
-+	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
+-#include <linux/module.h>
+-#include <linux/ratelimit.h>
+-#include <linux/irq.h>
+-#include <linux/interrupt.h>
+-#include <linux/input.h>
+-#include <linux/i2c.h>
+-#include <linux/kernel.h>
+-#include <linux/uaccess.h>
+-#include <linux/delay.h>
+ #include <linux/debugfs.h>
+-#include <linux/slab.h>
++#include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/input.h>
+ #include <linux/input/mt.h>
+ #include <linux/input/touchscreen.h>
+-#include <asm/unaligned.h>
++#include <linux/irq.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/ratelimit.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/slab.h>
++#include <linux/uaccess.h>
 +
- 	edt_ft5x06_ts_set_regs(tsdata);
- 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
- 	edt_ft5x06_ts_get_parameters(tsdata);
++#include <asm/unaligned.h>
+ 
+ #define WORK_REGISTER_THRESHOLD		0x00
+ #define WORK_REGISTER_REPORT_RATE	0x08
 -- 
 2.20.1
 
