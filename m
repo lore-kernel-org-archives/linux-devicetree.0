@@ -2,92 +2,265 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CB2C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A622C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D74720684
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A8B206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lHlMLmry"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yHpRnVxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbfK0Iet (ORCPT
+        id S1726320AbfK0IgZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:34:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50504 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfK0Iet (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 03:34:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AT9UghkO4fq0I9L3pqZzFdumeW8DrClZYJcOYkMOuVM=; b=lHlMLmryIW9QLDY3Y2XQ/CvtD
-        rNORXZOyqaPdZFk/SqsGbKeBiMRJa2K20MY0RVQqyP0OOxSFxJVV3U1jvdxD5RTWGP5CfS0kGzrtm
-        v5gnMqYe5bBKAs+j2qOo1wqgMHOiQ6WZUGlafUDR3dz9p8l8La/H+MOqWjRbVe+hUkT7EPdKE12Sa
-        XOmfSjQQa1Unu92TCaJ1G/ta24SwhjSM7xE7rh3jiyU8QP+tdsB1kJNAxwdBUW199f9AKGpIah4P9
-        vxTNMYDEx+/fxVzP9QSGovD0vU1oCyrIu6FCs9eOIopdvh/YiLJyNfYmMuGVH8ZZ/XrkWbDpVxWt9
-        N8bMFSvbw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZsmd-0007jY-FK; Wed, 27 Nov 2019 08:34:47 +0000
-Date:   Wed, 27 Nov 2019 00:34:47 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Haren Myneni <haren@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        mpe@ellerman.id.au, npiggin@gmail.com, mikey@neuling.org,
-        herbert@gondor.apana.org.au, sukadev@linux.vnet.ibm.com
-Subject: Re: [PATCH 06/14] powerpc/vas: Setup fault handler per VAS instance
-Message-ID: <20191127083447.GE17097@infradead.org>
-References: <1574816900.13250.12.camel@hbabu-laptop>
+        Wed, 27 Nov 2019 03:36:25 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42530 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfK0IgZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 03:36:25 -0500
+Received: by mail-pg1-f194.google.com with SMTP id i5so2171603pgj.9
+        for <devicetree@vger.kernel.org>; Wed, 27 Nov 2019 00:36:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kEWlTxImZpdkwXhGS8325FceSNRBs8VLhunG13s9KAM=;
+        b=yHpRnVxIjSPnmIdbMbeu/tYzFBYDtKTTB287cO1KR1bARwSmREn/eQP74Bl7Af9/y8
+         a82ewmL2RBQDxl2XmBxTNBAL+KaxJmKAwlKSRl+2cOkk7//wvP6vjlBiIup/h7v2jo8V
+         hD3ZtLbo9ZCwivNiTAZq2pUpGLBvhYf0Fvj3PTlMiN0akT2u3kqKvVPIDeYgrbSC2Cb9
+         ERUMql/9D07dmErr5NA8VCMA753S+WHPa1jovOmvlhsanFxOuurKFWr5XnitU2n4yk0s
+         6g95m1QCflgnf2y6N/vMnCzgc3LucbF8wwRMWAlX49Y/dCTaJfA0G0K6Ehqx6Ay7WAr2
+         baJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kEWlTxImZpdkwXhGS8325FceSNRBs8VLhunG13s9KAM=;
+        b=YNUdY+aFg5bDXl+jpvPGHWsivoDBTo8SC3ClBwlQv1Uvr1qI9pwoLGP+YeeDRwBoHa
+         noNVcuM+pVrY1j/9X6+K65qJkqekSSfSMmzA2cnJjNUr4qwFTHq0idtjc+TFiFCDfz2e
+         wfG7/ZCntcGMjbKMs2v3hT7hkHLUQcrzJFudXwVt6UzrnFltIuJ48dA0hmmSAsm8CoO4
+         E+OYvDMR85h0owzLZmx+flKh3WU+b9n8m2+h0XnQ6IQXCulR8yKvBkzvL5sIdAniytjv
+         A3GQvoqi4Mkr2qQ8SJSGMNZ73G5rh6LrDrzlS8ayBxFedhsVaEVS29dItxNVdKdhPdID
+         aN3w==
+X-Gm-Message-State: APjAAAWnnALwujIAnnftY2De0PECjloSbb1BYoHoh392XGHTKZobzFPd
+        Q9n54f6gIMrihXABJEIJhQLtkQ==
+X-Google-Smtp-Source: APXvYqz6ciA/bE2sIdxV8IrR+vllOp4Mb3eFxMKadK3NK074FLo5rfjIe4sBJET8JrQj229M/EAXpQ==
+X-Received: by 2002:a63:1b1f:: with SMTP id b31mr3451053pgb.177.1574843782900;
+        Wed, 27 Nov 2019 00:36:22 -0800 (PST)
+Received: from localhost ([122.171.112.123])
+        by smtp.gmail.com with ESMTPSA id k24sm15884442pfk.63.2019.11.27.00.36.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Nov 2019 00:36:21 -0800 (PST)
+Date:   Wed, 27 Nov 2019 14:06:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, fan.chen@mediatek.com
+Subject: Re: [v5, PATCH 4/5] cpufreq: mediatek: add opp notification for SVS
+ support
+Message-ID: <20191127083619.etocnhpyyut3hzwq@vireshk-i7>
+References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574816900.13250.12.camel@hbabu-laptop>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->  
-> +struct task_struct *fault_handler;
-> +
-> +void vas_wakeup_fault_handler(int virq, void *arg)
-> +{
-> +	struct vas_instance *vinst = arg;
-> +
-> +	atomic_inc(&vinst->pending_fault);
-> +	wake_up(&vinst->fault_wq);
-> +}
-> +
-> +/*
-> + * Fault handler thread for each VAS instance and process fault CRBs.
-> + */
-> +static int fault_handler_func(void *arg)
-> +{
-> +	struct vas_instance *vinst = (struct vas_instance *)arg;
-> +
-> +	do {
-> +		if (signal_pending(current))
-> +			flush_signals(current);
-> +
-> +		wait_event_interruptible(vinst->fault_wq,
-> +					atomic_read(&vinst->pending_fault) ||
-> +					kthread_should_stop());
-> +
-> +		if (kthread_should_stop())
-> +			break;
-> +
-> +		atomic_dec(&vinst->pending_fault);
-> +	} while (!kthread_should_stop());
-> +
-> +	return 0;
-> +}
+On 26-11-19, 19:50, Andrew-sh.Cheng wrote:
+> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
+> index 4b0cc50dd93b..7c37ab31230a 100644
+> --- a/drivers/cpufreq/mediatek-cpufreq.c
+> +++ b/drivers/cpufreq/mediatek-cpufreq.c
+> @@ -42,6 +42,10 @@ struct mtk_cpu_dvfs_info {
+>  	struct list_head list_head;
+>  	int intermediate_voltage;
+>  	bool need_voltage_tracking;
+> +	struct mutex lock; /* avoid notify and policy race condition */
 
-Pleae use threaded interrupts instead of reinventing them badly.
+Will a read-write lock be better suited here for performance reasons ?
+
+> +	struct notifier_block opp_nb;
+> +	int opp_cpu;
+> +	unsigned long opp_freq;
+>  };
+>  
+>  static LIST_HEAD(dvfs_info_list);
+> @@ -231,6 +235,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  	vproc = dev_pm_opp_get_voltage(opp);
+>  	dev_pm_opp_put(opp);
+>  
+> +	mutex_lock(&info->lock);
+>  	/*
+>  	 * If the new voltage or the intermediate voltage is higher than the
+>  	 * current voltage, scale up voltage first.
+> @@ -242,6 +247,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  			pr_err("cpu%d: failed to scale up voltage!\n",
+>  			       policy->cpu);
+>  			mtk_cpufreq_set_voltage(info, old_vproc);
+> +			mutex_unlock(&info->lock);
+>  			return ret;
+>  		}
+>  	}
+> @@ -253,6 +259,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		mtk_cpufreq_set_voltage(info, old_vproc);
+>  		WARN_ON(1);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -263,6 +270,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		clk_set_parent(cpu_clk, armpll);
+>  		mtk_cpufreq_set_voltage(info, old_vproc);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -273,6 +281,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		mtk_cpufreq_set_voltage(info, inter_vproc);
+>  		WARN_ON(1);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -288,15 +297,75 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  			clk_set_parent(cpu_clk, info->inter_clk);
+>  			clk_set_rate(armpll, old_freq_hz);
+>  			clk_set_parent(cpu_clk, armpll);
+> +			mutex_unlock(&info->lock);
+>  			return ret;
+>  		}
+>  	}
+>  
+> +	info->opp_freq = freq_hz;
+> +	mutex_unlock(&info->lock);
+> +
+>  	return 0;
+>  }
+>  
+>  #define DYNAMIC_POWER "dynamic-power-coefficient"
+>  
+> +static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
+> +				    unsigned long event, void *data)
+> +{
+> +	struct dev_pm_opp *opp = data;
+> +	struct dev_pm_opp *opp_item;
+> +	struct mtk_cpu_dvfs_info *info =
+> +		container_of(nb, struct mtk_cpu_dvfs_info, opp_nb);
+
+Do the assignment after all definitions, instead of awkwardly breaking
+the line here.
+
+> +	unsigned long freq, volt;
+> +	struct cpufreq_policy *policy;
+> +	int ret = 0;
+> +
+> +	if (event == OPP_EVENT_ADJUST_VOLTAGE) {
+> +		freq = dev_pm_opp_get_freq(opp);
+> +
+> +		mutex_lock(&info->lock);
+> +		if (info->opp_freq == freq) {
+> +			volt = dev_pm_opp_get_voltage(opp);
+> +			ret = mtk_cpufreq_set_voltage(info, volt);
+> +			if (ret)
+> +				dev_err(info->cpu_dev, "failed to scale voltage: %d\n",
+> +					ret);
+> +		}
+> +		mutex_unlock(&info->lock);
+> +	} else if (event == OPP_EVENT_DISABLE) {
+> +		freq = info->opp_freq;
+> +		opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev, &freq);
+
+name it new_opp instead of opp_item.
+
+> +		if (!IS_ERR(opp_item))
+> +			dev_pm_opp_put(opp_item);
+> +		else
+> +			freq = 0;
+> +
+
+What is the purpose of the above code ?
+
+> +		/* case of current opp is disabled */
+> +		if (freq == 0 || freq != info->opp_freq) {
+> +			// find an enable opp item
+
+Use proper commenting style please.
+
+> +			freq = 1;
+> +			opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev,
+> +							     &freq);
+> +			if (!IS_ERR(opp_item)) {
+> +				dev_pm_opp_put(opp_item);
+> +				policy = cpufreq_cpu_get(info->opp_cpu);
+> +				if (policy) {
+> +					cpufreq_driver_target(policy,
+> +						freq / 1000,
+> +						CPUFREQ_RELATION_L);
+
+Why don't you simply call this instead of all the code in the else
+block ?
+
+> +					cpufreq_cpu_put(policy);
+> +				}
+> +			} else {
+> +				pr_err("%s: all opp items are disabled\n",
+> +				       __func__);
+> +			}
+> +		}
+> +	}
+> +
+> +	return notifier_from_errno(ret);
+> +}
+> +
+>  static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>  {
+>  	struct device *cpu_dev;
+> @@ -383,11 +452,21 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>  	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
+>  	dev_pm_opp_put(opp);
+>  
+> +	info->opp_cpu = cpu;
+> +	info->opp_nb.notifier_call = mtk_cpufreq_opp_notifier;
+> +	ret = dev_pm_opp_register_notifier(cpu_dev, &info->opp_nb);
+> +	if (ret) {
+> +		pr_warn("cannot register opp notification\n");
+> +		goto out_free_opp_table;
+> +	}
+> +
+> +	mutex_init(&info->lock);
+>  	info->cpu_dev = cpu_dev;
+>  	info->proc_reg = proc_reg;
+>  	info->sram_reg = IS_ERR(sram_reg) ? NULL : sram_reg;
+>  	info->cpu_clk = cpu_clk;
+>  	info->inter_clk = inter_clk;
+> +	info->opp_freq = clk_get_rate(cpu_clk);
+>  
+>  	/*
+>  	 * If SRAM regulator is present, software "voltage tracking" is needed
+> -- 
+> 2.12.5
+
+-- 
+viresh
