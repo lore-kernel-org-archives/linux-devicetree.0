@@ -2,96 +2,82 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F48DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9103C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BC120665
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gug+HMXC"
+	by mail.kernel.org (Postfix) with ESMTP id AA1B520665
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfK0Pjr (ORCPT
+        id S1727010AbfK0PqB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:39:47 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45908 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbfK0Pjr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 10:39:47 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xARFdcwh078476;
-        Wed, 27 Nov 2019 09:39:38 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574869178;
-        bh=Psyf7mTJ+jSTqnRUbqkBC0f+Z6J0CTi9u7TTpexnusY=;
-        h=From:To:CC:Subject:Date;
-        b=Gug+HMXCOXvtL1j7EJtwWaS8jwkdvec7geM0AvaUwFLqrLUuGx9gicfbPxB9UUv2C
-         YePqdFMeqqV9essK/IrTH0jORl2uyfDrOlRds98hSg7/MSrO93Xe5DSSLaFnIOXQFz
-         Uj92QTISNPu1RS5Z79c++emq3v5N2GcMUeb/TNCQ=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xARFdc06062892
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Nov 2019 09:39:38 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 09:39:38 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 09:39:38 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFdbOP083678;
-        Wed, 27 Nov 2019 09:39:38 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-CC:     Simon Horman <simon.horman@netronome.com>,
-        <netdev@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] dt-bindings: net: mdio: use non vendor specific compatible string in example
-Date:   Wed, 27 Nov 2019 17:39:28 +0200
-Message-ID: <20191127153928.22408-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 Nov 2019 10:46:01 -0500
+Received: from muru.com ([72.249.23.125]:43714 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfK0PqB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 10:46:01 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 5BF508102;
+        Wed, 27 Nov 2019 15:46:37 +0000 (UTC)
+Date:   Wed, 27 Nov 2019 07:45:56 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jyri Sarha <jsarha@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 0/3] drm/omap: fix am4 evm lcd
+Message-ID: <20191127154556.GI43123@atomide.com>
+References: <20191114093950.4101-1-tomi.valkeinen@ti.com>
+ <52608d4e-dd67-1232-41e7-e6d0cba58783@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52608d4e-dd67-1232-41e7-e6d0cba58783@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use non vendor specific compatible string in example, otherwise DT YAML
-schemas validation may trigger warnings specific to TI ti,davinci_mdio
-and not to the generic MDIO example.
+Hi
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- Documentation/devicetree/bindings/net/mdio.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [191127 12:59]:
+> Hi Tony, Thierry, Laurent,
+> 
+> Any thoughts on the below points?
 
-diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-index 5d08d2ffd4eb..524f062c6973 100644
---- a/Documentation/devicetree/bindings/net/mdio.yaml
-+++ b/Documentation/devicetree/bindings/net/mdio.yaml
-@@ -56,7 +56,7 @@ patternProperties:
- examples:
-   - |
-     davinci_mdio: mdio@5c030000 {
--        compatible = "ti,davinci_mdio";
-+        compatible = "vendor,mdio";
-         reg = <0x5c030000 0x1000>;
-         #address-cells = <1>;
-         #size-cells = <0>;
--- 
-2.17.1
+> I think yet another option is to write some omap boot time quirks code,
+> which looks at the DT data, and changes the panel compatible string (for 1),
+> and removes the timings node (for 2).
 
+Nah, seems we can just update the compatible.
+
+> On 14/11/2019 11:39, Tomi Valkeinen wrote:
+> > 1) Panel driver is not probed. With omapdrm's panel-dpi, the match
+> > happened with "panel-dpi" compatible string. Now with panel-simple, the
+> > match should happen with the panel model compatible string, which is
+> > "osddisplays,osd057T0559-34ts" in the DT file. However, no such
+> > compatible exists in panel-simple.
+> >
+> > Interestingly, the actual panel at least on my EVMs and ePOSes is not
+> > osd057T0559-34ts, but osd070t1718-19ts. Also, I was unable to find any
+> > information about osd057T0559-34ts. I don't know the history with this,
+> > so it is possible that the early versions of the boards did have
+> > osd057T0559-34ts, but was later changed to osd070t1718-19ts.
+
+I guess you could keep the old compatible there too if really needed.
+But then again if the old compatible is known to be incorrect, it
+should be just updated.
+
+So it looks good to me for the dts changes. Do you want me to pick
+them into fixes as it seems that the panel driver fix is a separate
+issue?
+
+Regards,
+
+Tony
