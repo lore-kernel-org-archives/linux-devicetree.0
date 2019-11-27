@@ -2,212 +2,111 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606BCC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 05:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C41C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 05:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3551220835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 05:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DA02075C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 05:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAQ6Ywzj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="orG7A/Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfK0Fab (ORCPT
+        id S1725861AbfK0FfY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 00:30:31 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46306 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfK0FaG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 00:30:06 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k1so1837037pga.13;
-        Tue, 26 Nov 2019 21:30:04 -0800 (PST)
+        Wed, 27 Nov 2019 00:35:24 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35484 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfK0FfY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 00:35:24 -0500
+Received: by mail-ed1-f67.google.com with SMTP id f8so3337188edv.2;
+        Tue, 26 Nov 2019 21:35:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=m+wA1RX04BSPnVjNbxGCBXt8jtUUgOJo5n6EFES/ZC0=;
-        b=NAQ6Ywzj9ZjMbYy+Q3DneIn5TOVZ2ug1lpiHFijsVz2JtEvPUBvBkgj8JHiEkdBqyD
-         Yo1ds6nVDXNM0cJaEO0kynwlTYTLnDEpcjYckZrlyVH0BIIVQvVKOk9lDDTLM9ygfUiy
-         yrqwbgM/5YTex60dV7QIF11UcZndyIwbCpN1qtNBk3y/4b3vsnEZtfKnSlclLcxhcwC4
-         7nEwpotg17ZNtV0bX5M4ics/xwBQrih/YNycmZ17Djzt70nBHA2KiO0Cq5goqv+7zWaq
-         56Xz1OLjqebh7RxTS0qZzIKBqMDsbpZvvJDVLcdlyl5EtPjYFa4VWrgZ/E67wpN7xy7C
-         Davg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=49Oa8wYum3/ZSF68b6FEDAYGeeDj1B7QQTfs5X12P5o=;
+        b=orG7A/Ag4Mpz194IxVqBueUmwn4kcBrVHzZgSJ1Ge8qVVvCffnV7hSLi39OuHvPBWq
+         5ECqbBft5gcDI7jRMhhdbklzC7Q20ek16p74SljfvnVM0pRLFa0LYwP5d2F98xfdS2BS
+         eOlS5WXgMWStnv0CDrBHQOmZbOdnY81OgeQDtxqwzOTtvycIlqOm1dkgBa6xMZ5QDU3a
+         63GeMux9odh+61DP5cmXh73oH6n2gA8aFMnTlXFIOKRhZ3JQg6QyI1Sea6MacTn813Bl
+         BOjWQlQGraKo9jkwyV7qEgq/BEcbObhGOTBvYAxMj4yrg1cArNCMiAJZoB8XB60Xebva
+         G1qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=m+wA1RX04BSPnVjNbxGCBXt8jtUUgOJo5n6EFES/ZC0=;
-        b=dbN2vhyftPSv0bcruoyRQ0mhjsd1Y10wxiPW3qOarvSJhCPngW4H8HjWljJrUxvld1
-         n0hDpFbJQBSs9lfMwbusi2QKrz8YiYAED1xeaM0DnGBkO9I9A52ezAebgyA0sKaoqp8P
-         eRQ1wFruP0sofQgHg90vX/recnhMUjCiAAr6Oi/wJSD+Xt4rgu840UFpyb5D94bK2xS1
-         97a4RF2/B7B55wxogfWO7AVVA11Qk/NF+4whXODijK/DZCs3kOdCeG5Ihdud1hEEzkNS
-         yg6GqhLjsp6EgY9rJ2ozeEn0A22ToFqbiOWD6zPPE18y8pGpth2eNHvYcz0mf6k00mdG
-         QNcQ==
-X-Gm-Message-State: APjAAAUEQLVSW04vEcD/DNH9We03stSyU8LOwuAdg1RMOZdPQL20dPoD
-        DzvhqmhKAVSQ5yn5HVD7D10=
-X-Google-Smtp-Source: APXvYqw4sNgUo0b8NWUQsBZEeo0fVFA8rx27nKaYJzlqYHZYbIXE3nnctVmDaAM+vNmh+i0i+VgsvQ==
-X-Received: by 2002:a63:354e:: with SMTP id c75mr2768495pga.325.1574832604122;
-        Tue, 26 Nov 2019 21:30:04 -0800 (PST)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id p38sm4360825pjp.27.2019.11.26.21.30.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Nov 2019 21:30:03 -0800 (PST)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=49Oa8wYum3/ZSF68b6FEDAYGeeDj1B7QQTfs5X12P5o=;
+        b=dyk4vPDYNRSaKfUDVlisngitbSZZjVojgO9bvmNifkMoChrRvThNQod4dTqj0B3lFz
+         aBDfC/rxiXxHl7gRiFJFgjT+ADTzuR4AfuOhX2O42AxEvfryeeVCoBOrsERv4MrWt4dp
+         71FhA59fCHwJuJtd03EXzbPmwqdyk3ZCjfJBaXCmMI1v0Q6TJpjXxzsmXYcH8qkjdUGK
+         kErdWXf37q0GerxHE63qHM1LVFrIi4OhwGN5Fx9+wFujPr5Fu3etD8EYdWAdAcXgoB3x
+         bFoITrVGFjgY7HKbeoset00iJf2m0ZJghnfFMUND+Ki959KQPR+Ka2qmCgggVcJ8LmLz
+         tMyA==
+X-Gm-Message-State: APjAAAUF4OHGZPT13SG7lh09wKPgXybT1QltjrZozw/5D1zfydEdTZ0d
+        r2EecnOdw/ee8kLwGvaEJtt8JBzrWaUenDcIY5c=
+X-Google-Smtp-Source: APXvYqwQ8AbGM+kwuh2SxRqlpxfz20rbamxx7D0GEgKxBjcYRfCoJeN0AJA3JWgCFCweR06OFu5kduxXacMMGLAhPMI=
+X-Received: by 2002:a50:a2e5:: with SMTP id 92mr30508816edm.195.1574832922697;
+ Tue, 26 Nov 2019 21:35:22 -0800 (PST)
+MIME-Version: 1.0
+References: <1573820552-21164-1-git-send-email-shubhrajyoti.datta@gmail.com> <20191126180932.3A04620727@mail.kernel.org>
+In-Reply-To: <20191126180932.3A04620727@mail.kernel.org>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Wed, 27 Nov 2019 11:05:11 +0530
+Message-ID: <CAKfKVtEkffpzPHX1=fm1gBEz=3wRKmjqc5bdj054Ubj+SB+a=Q@mail.gmail.com>
+Subject: Re: [PATCHv2 1/2] clk: clock-wizard: Move the clockwizard to clk
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-clk@vger.kernel.org,
+        Mike Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for sun8i-thermal driver bindings
-Date:   Tue, 26 Nov 2019 21:29:30 -0800
-Message-Id: <20191127052935.1719897-3-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191127052935.1719897-1-anarsoul@gmail.com>
-References: <20191127052935.1719897-1-anarsoul@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+On Tue, Nov 26, 2019 at 11:39 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting shubhrajyoti.datta@gmail.com (2019-11-15 04:22:31)
+> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> >
+> > Move the clocking wizard driver from staging to clk.
+> >
+> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > ---
+> > this is moving the drivers/staging/clocking-wizard to clk
+> > v2:
+> > Added the makefile  and kconfig
+> >
+> >  drivers/clk/Kconfig                 |   6 +
+> >  drivers/clk/Makefile                |   1 +
+> >  drivers/clk/clk-xlnx-clock-wizard.c | 335 ++++++++++++++++++++++++++++++++++++
+>
+> Where is the deletion of the file from staging? Has the TODO file in
+> staging been resolved?
+I was trying to address the  set rate and the reconfig and will post
+patches for the
+fractional part.
 
-sun8i-thermal driver supports thermal sensor in wide range of Allwinner
-SoCs. Add YAML schema for its bindings.
+As part of that discussion[1]
+Greg suggested to move the code out of the staging.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 ++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+[1] https://spinics.net/lists/linux-driver-devel/msg117326.html
 
-diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-new file mode 100644
-index 000000000000..e622f0a4be90
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-+
-+maintainers:
-+  - Yangtao Li <tiny.windzz@gmail.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun8i-a83t-ths
-+      - const: allwinner,sun8i-h3-ths
-+      - const: allwinner,sun8i-r40-ths
-+      - const: allwinner,sun50i-a64-ths
-+      - const: allwinner,sun50i-h5-ths
-+      - const: allwinner,sun50i-h6-ths
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    anyOf:
-+      - items:
-+        - const: bus
-+        - const: mod
-+      - items:
-+        - const: bus
-+
-+  '#thermal-sensor-cells':
-+    enum: [ 0, 1 ]
-+    description: |
-+      Definition depends on soc version:
-+
-+      For "allwinner,sun8i-h3-ths",
-+      value must be 0.
-+      For all other compatibles
-+      value must be 1.
-+
-+  nvmem-cells:
-+    maxItems: 1
-+    items:
-+      - description: Calibration data for thermal sensors
-+
-+  nvmem-cell-names:
-+    items:
-+      - const: calibration
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#thermal-sensor-cells'
-+
-+examples:
-+  - |
-+    ths_a83t: ths@1f04000 {
-+         compatible = "allwinner,sun8i-a83t-ths";
-+         reg = <0x01f04000 0x100>;
-+         interrupts = <0 31 0>;
-+         nvmem-cells = <&ths_calibration>;
-+         nvmem-cell-names = "calibration";
-+         #thermal-sensor-cells = <1>;
-+    };
-+  - |
-+    ths_h3: ths@1c25000 {
-+         compatible = "allwinner,sun8i-h3-ths";
-+         reg = <0x01c25000 0x400>;
-+         clocks = <&ccu 0>, <&ccu 1>;
-+         clock-names = "bus", "mod";
-+         resets = <&ccu 2>;
-+         interrupts = <0 31 0>;
-+         nvmem-cells = <&ths_calibration>;
-+         nvmem-cell-names = "calibration";
-+         #thermal-sensor-cells = <0>;
-+    };
-+  - |
-+    ths_h6: ths@5070400 {
-+         compatible = "allwinner,sun50i-h6-ths";
-+         reg = <0x05070400 0x100>;
-+         clocks = <&ccu 0>;
-+         clock-names = "bus";
-+         resets = <&ccu 2>;
-+         interrupts = <0 15 0>;
-+         nvmem-cells = <&ths_calibration>;
-+         nvmem-cell-names = "calibration";
-+         #thermal-sensor-cells = <1>;
-+    };
-+
-+...
--- 
-2.24.0
 
+
+
+>Please Cc Soren and Greg on these patches. Also
+> include a cover letter and convince us _why_ we should review these
+> patches in the commit text. Stating what the patch is doing, i.e.
+> "moving code around", is not helpful.
+Sure will do.
+
+
+>
