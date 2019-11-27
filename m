@@ -2,98 +2,111 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0002C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 18:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59245C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 18:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC2A20871
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 18:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA5A2070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 18:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfK0SGU (ORCPT
+        id S1726970AbfK0SG0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 13:06:20 -0500
-Received: from mga05.intel.com ([192.55.52.43]:15976 "EHLO mga05.intel.com"
+        Wed, 27 Nov 2019 13:06:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:51138 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfK0SGU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Nov 2019 13:06:20 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 10:06:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
-   d="scan'208";a="211764761"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 27 Nov 2019 10:06:15 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ia1he-0005jH-Lf; Wed, 27 Nov 2019 20:06:14 +0200
-Date:   Wed, 27 Nov 2019 20:06:14 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com, bparrot@ti.com,
-        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
-        mripard@kernel.org, alexandre.belloni@bootlin.com,
-        shawnguo@kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] Input: edt-ft5x06 - improve power management
- operations
-Message-ID: <20191127180614.GS32742@smile.fi.intel.com>
-References: <20191127120948.22251-1-m.felsch@pengutronix.de>
- <20191127120948.22251-6-m.felsch@pengutronix.de>
- <20191127125932.GK32742@smile.fi.intel.com>
- <20191127130602.5zp537xdybbafnci@pengutronix.de>
- <20191127143217.GL32742@smile.fi.intel.com>
- <20191127172522.4wmc6pqyuw7vpvzl@pengutronix.de>
+        id S1726729AbfK0SG0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:06:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1924431B;
+        Wed, 27 Nov 2019 10:06:25 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 210853F6C4;
+        Wed, 27 Nov 2019 10:06:20 -0800 (PST)
+Subject: Re: [PATCH v3 1/7] linux/log2.h: Add roundup/rounddown_pow_two64()
+ family of functions
+To:     Leon Romanovsky <leon@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+References: <20191126091946.7970-1-nsaenzjulienne@suse.de>
+ <20191126091946.7970-2-nsaenzjulienne@suse.de>
+ <20191126125137.GA10331@unreal>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6e0b9079-9efd-2884-26d1-3db2d622079d@arm.com>
+Date:   Wed, 27 Nov 2019 18:06:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127172522.4wmc6pqyuw7vpvzl@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191126125137.GA10331@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 06:25:22PM +0100, Marco Felsch wrote:
-> On 19-11-27 16:32, Andy Shevchenko wrote:
-> > On Wed, Nov 27, 2019 at 02:06:02PM +0100, Marco Felsch wrote:
-> > > On 19-11-27 14:59, Andy Shevchenko wrote:
-> > > > On Wed, Nov 27, 2019 at 01:09:48PM +0100, Marco Felsch wrote:
-
-> > static void edt_ft5x06_ts_toggle_gpio(struct gpio_desc *gpiod, int value)
-> > {
-> > 	gpiod_...(..., !value);
-> > 	...
-> > 	gpiod_...(..., value);
-> > 	...
-> > }
-> > 
-> > ...resume(...)
-> > {
-> > 	...
-> > 	if (wake_gpio)
-> > 		...toggle_gpio(wake_gpio, 1);
-> > 	else if (reset_gpio)
-> > 		...toggle_gpio(reset_gpio, 0);
-> > 	...
-> > }
-> > 
-> > ?
+On 26/11/2019 12:51 pm, Leon Romanovsky wrote:
+> On Tue, Nov 26, 2019 at 10:19:39AM +0100, Nicolas Saenz Julienne wrote:
+>> Some users need to make sure their rounding function accepts and returns
+>> 64bit long variables regardless of the architecture. Sadly
+>> roundup/rounddown_pow_two() takes and returns unsigned longs. Create a
+>> new generic 64bit variant of the function and cleanup rougue custom
+>> implementations.
 > 
-> That's possible.. Don't see the improvement yet, but I can prepare a
-> folllow-up patch if Dmitry wants.
+> Is it possible to create general roundup/rounddown_pow_two() which will
+> work correctly for any type of variables, instead of creating special
+> variant for every type?
 
-The improvement is to get rid of duplication of flow how you toggle the GPIO.
-But yes, up to Dmitry.
+In fact, that is sort of the case already - roundup_pow_of_two() itself 
+wraps ilog2() such that the constant case *is* type-independent. And 
+since ilog2() handles non-constant values anyway, might it be reasonable 
+to just take the strongly-typed __roundup_pow_of_two() helper out of the 
+loop as below?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Robin
 
+----->8-----
+diff --git a/include/linux/log2.h b/include/linux/log2.h
+index 83a4a3ca3e8a..e825f8a6e8b5 100644
+--- a/include/linux/log2.h
++++ b/include/linux/log2.h
+@@ -172,11 +172,8 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
+   */
+  #define roundup_pow_of_two(n)			\
+  (						\
+-	__builtin_constant_p(n) ? (		\
+-		(n == 1) ? 1 :			\
+-		(1UL << (ilog2((n) - 1) + 1))	\
+-				   ) :		\
+-	__roundup_pow_of_two(n)			\
++	(__builtin_constant_p(n) && (n == 1)) ?	\
++	1 : (1UL << (ilog2((n) - 1) + 1))	\
+   )
 
+  /**
