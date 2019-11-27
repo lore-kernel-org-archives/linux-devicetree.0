@@ -2,375 +2,248 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24ECC43141
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A9BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D0C207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:37:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="bQGwY6V0"
+	by mail.kernel.org (Postfix) with ESMTP id 40B5E20835
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574876678;
+	bh=0mnbkXpRIAs1oWs7887fZ1hqjmi1n2cupNv6F6qcqnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nHRZIbkFCuqImAGy3msMiXgOpzKahQfK9YKKok317NzjBCQ20T0a/sbVEE7wRn9HI
+	 tr2ye3pxibIZdk5WhnUCTpg2EXzmMuVVf4A4XhTH41I6ltDoeiHfCW0TGgW+/HZKj3
+	 okfMqSYcXcQOt5sbgb+gXQF5HzGi9L8vFcYHknV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfK0Rhp (ORCPT
+        id S1726729AbfK0Roh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:37:45 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:44368 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfK0Rho (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 12:37:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574876261; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Oa3OZjm+zEJz5+1jQe04LGYhtCNnLh9zKg5UN09ntFg=;
-        b=bQGwY6V0vWGpfrUg1bm08VbV+6BMKYJithbTXTjZue4X2vjzrHQXmzq0L3mZtDGt7RkS75
-        S1//m9TQocAwm9/hWOUkCMcdR4uKmeRJj5h953vM9IqpzMf39xEhR0hmmCSmdz039uSKbC
-        fTPP98gbxUVh9DJGHCp9nMl8HvirH9c=
-Date:   Wed, 27 Nov 2019 18:37:33 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/5] clk: Ingenic: Adjust code to make it compatible with
- X1830.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <1574876253.3.4@crapouillou.net>
-In-Reply-To: <1574825576-91028-2-git-send-email-zhouyanjie@zoho.com>
-References: <1574825576-91028-1-git-send-email-zhouyanjie@zoho.com>
-        <1574825576-91028-2-git-send-email-zhouyanjie@zoho.com>
+        Wed, 27 Nov 2019 12:44:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbfK0Roh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:44:37 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ECAE2071E;
+        Wed, 27 Nov 2019 17:44:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574876676;
+        bh=0mnbkXpRIAs1oWs7887fZ1hqjmi1n2cupNv6F6qcqnM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NVvBMB3wRKTxMbLvW7a7orEuxSa5qmKwIzhQPwJEA1hcD6wtHcM+iBbi2g12emuJU
+         uB3XB7t7NFQXZT8q4MH4UiBt1ALildwE7zg/wS2PR1F0vre2NXqdxkNdu7oayb0qlF
+         3D9AdyA4pjS85SjD7oeKkaiCzB5oYB9gDNB4U4zo=
+Date:   Wed, 27 Nov 2019 18:44:34 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
+ sun8i-thermal driver bindings
+Message-ID: <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
+ <20191127052935.1719897-3-anarsoul@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vy5yg3fxo523fkw5"
+Content-Disposition: inline
+In-Reply-To: <20191127052935.1719897-3-anarsoul@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
 
+--vy5yg3fxo523fkw5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Le mer., nov. 27, 2019 at 11:32, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> 1.Adjust the PLL related code in "cgu.c" and "cgu.h" to make it
->   compatible with the X1830 Soc from Ingenic.
-> 2.Adjust the code in "jz4740-cgu.c" to be compatible with the
->   new cgu code.
-> 3.Adjust the code in "jz4725b-cgu.c" to be compatible with the
->   new cgu code.
-> 4.Adjust the code in "jz4770-cgu.c" to be compatible with the
->   new cgu code.
-> 5.Adjust the code in "jz4780-cgu.c" to be compatible with the
->   new cgu code.
-> 6.Adjust the code in "x1000-cgu.c" to be compatible with the
->   new cgu code.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+Hi,
+
+On Tue, Nov 26, 2019 at 09:29:30PM -0800, Vasily Khoruzhick wrote:
+> From: Yangtao Li <tiny.windzz@gmail.com>
+>
+> sun8i-thermal driver supports thermal sensor in wide range of Allwinner
+> SoCs. Add YAML schema for its bindings.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 > ---
->  drivers/clk/ingenic/cgu.c         | 55=20
-> +++++++++++++++++++++++++++++----------
->  drivers/clk/ingenic/cgu.h         | 12 ++++++++-
->  drivers/clk/ingenic/jz4725b-cgu.c |  3 ++-
->  drivers/clk/ingenic/jz4740-cgu.c  |  3 ++-
->  drivers/clk/ingenic/jz4770-cgu.c  |  6 +++--
->  drivers/clk/ingenic/jz4780-cgu.c  |  3 ++-
->  drivers/clk/ingenic/x1000-cgu.c   |  6 +++--
->  7 files changed, 66 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-> index 6e96303..c3c69a8 100644
-> --- a/drivers/clk/ingenic/cgu.c
-> +++ b/drivers/clk/ingenic/cgu.c
-> @@ -84,7 +84,7 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned=20
-> long parent_rate)
->  	pll_info =3D &clk_info->pll;
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->reg[1]);
-
-I really don't like this patch. There is no info on what reg[1] and=20
-reg[0] are. First, don't use hardcoded numbers, use macros with=20
-meaningful names. Second, why not just have two fields instead of one=20
-2-values array? That would remove a lot of the noise.
-
-
->  	spin_unlock_irqrestore(&cgu->lock, flags);
->=20
->  	m =3D (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
-> @@ -93,8 +93,17 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
-> unsigned long parent_rate)
->  	n +=3D pll_info->n_offset;
->  	od_enc =3D ctl >> pll_info->od_shift;
->  	od_enc &=3D GENMASK(pll_info->od_bits - 1, 0);
-> -	bypass =3D !pll_info->no_bypass_bit &&
-> -		 !!(ctl & BIT(pll_info->bypass_bit));
+>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 ++++++++++++++++++
+>  1 file changed, 103 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> new file mode 100644
+> index 000000000000..e622f0a4be90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> @@ -0,0 +1,103 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	if (pll_info->version >=3D CGU_X1830) {
-> +		spin_lock_irqsave(&cgu->lock, flags);
-> +		ctl =3D readl(cgu->base + pll_info->reg[0]);
-> +		spin_unlock_irqrestore(&cgu->lock, flags);
+> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Yangtao Li <tiny.windzz@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: allwinner,sun8i-a83t-ths
+> +      - const: allwinner,sun8i-h3-ths
+> +      - const: allwinner,sun8i-r40-ths
+> +      - const: allwinner,sun50i-a64-ths
+> +      - const: allwinner,sun50i-h5-ths
+> +      - const: allwinner,sun50i-h6-ths
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    anyOf:
+> +      - items:
+> +        - const: bus
+> +        - const: mod
+> +      - items:
+> +        - const: bus
 
-Why the spinlock?
+This can be:
 
+clock-names:
+  minItems: 1
+  maxItems: 2
+  items:
+    - const: bus
+    - const: mod
+
+And the length should be checked based on the compatible value, with
+something like
+
+if:
+  properties:
+    compatible:
+      contains:
+        const: allwinner,sun50i-h6-ths
+
+then:
+  properties:
+    clocks:
+      maxItems: 1
+
+    clock-names:
+      maxItems: 1
+
+else:
+  properties:
+    clocks:
+      maxItems: 2
+
+    clock-names:
+      maxItems: 2
 
 > +
-> +		bypass =3D !pll_info->no_bypass_bit &&
-> +			 !!(ctl & BIT(pll_info->bypass_bit));
-> +	} else
-
-Please comply to the kernel coding style - use brackets after the else.
-
-> +		bypass =3D !pll_info->no_bypass_bit &&
-> +			 !!(ctl & BIT(pll_info->bypass_bit));
->=20
->  	if (bypass)
->  		return parent_rate;
-> @@ -106,7 +115,10 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,=20
-> unsigned long parent_rate)
->  	BUG_ON(od =3D=3D pll_info->od_max);
->  	od++;
->=20
-> -	return div_u64((u64)parent_rate * m, n * od);
-> +	if (pll_info->version >=3D CGU_X1830)
-> +		return div_u64((u64)parent_rate * m * 2, n * od);
-
-Where does that *2 come from?
-
-> +	else
-> +		return div_u64((u64)parent_rate * m, n * od);
->  }
->=20
->  static unsigned long
-> @@ -139,7 +151,10 @@ ingenic_pll_calc(const struct=20
-> ingenic_cgu_clk_info *clk_info,
->  	if (pod)
->  		*pod =3D od;
->=20
-> -	return div_u64((u64)parent_rate * m, n * od);
-> +	if (pll_info->version >=3D CGU_X1830)
-> +		return div_u64((u64)parent_rate * m * 2, n * od);
-> +	else
-> +		return div_u64((u64)parent_rate * m, n * od);
->  }
->=20
->  static inline const struct ingenic_cgu_clk_info *to_clk_info(
-> @@ -183,7 +198,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
-> long req_rate,
->  			clk_info->name, req_rate, rate);
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->reg[1]);
->=20
->  	ctl &=3D ~(GENMASK(pll_info->m_bits - 1, 0) << pll_info->m_shift);
->  	ctl |=3D (m - pll_info->m_offset) << pll_info->m_shift;
-> @@ -194,7 +209,7 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned=20
-> long req_rate,
->  	ctl &=3D ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
->  	ctl |=3D pll_info->od_encoding[od - 1] << pll_info->od_shift;
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->reg[1]);
->  	spin_unlock_irqrestore(&cgu->lock, flags);
->=20
->  	return 0;
-> @@ -212,16 +227,28 @@ static int ingenic_pll_enable(struct clk_hw *hw)
->  	u32 ctl;
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
->=20
-> -	ctl &=3D ~BIT(pll_info->bypass_bit);
-> +	if (pll_info->version >=3D CGU_X1830) {
-> +		ctl =3D readl(cgu->base + pll_info->reg[0]);
+> +  '#thermal-sensor-cells':
+> +    enum: [ 0, 1 ]
+> +    description: |
+> +      Definition depends on soc version:
 > +
-> +		ctl &=3D ~BIT(pll_info->bypass_bit);
-> +
-> +		writel(ctl, cgu->base + pll_info->reg[0]);
-> +
-> +		ctl =3D readl(cgu->base + pll_info->reg[1]);
-> +	} else {
-> +		ctl =3D readl(cgu->base + pll_info->reg[1]);
-> +
-> +		ctl &=3D ~BIT(pll_info->bypass_bit);
-> +	}
-> +
->  	ctl |=3D BIT(pll_info->enable_bit);
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->reg[1]);
->=20
->  	/* wait for the PLL to stabilise */
->  	for (i =3D 0; i < timeout; i++) {
-> -		ctl =3D readl(cgu->base + pll_info->reg);
-> +		ctl =3D readl(cgu->base + pll_info->reg[1]);
->  		if (ctl & BIT(pll_info->stable_bit))
->  			break;
->  		mdelay(1);
-> @@ -245,11 +272,11 @@ static void ingenic_pll_disable(struct clk_hw=20
-> *hw)
->  	u32 ctl;
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->reg[1]);
->=20
->  	ctl &=3D ~BIT(pll_info->enable_bit);
->=20
-> -	writel(ctl, cgu->base + pll_info->reg);
-> +	writel(ctl, cgu->base + pll_info->reg[1]);
->  	spin_unlock_irqrestore(&cgu->lock, flags);
->  }
->=20
-> @@ -263,7 +290,7 @@ static int ingenic_pll_is_enabled(struct clk_hw=20
-> *hw)
->  	u32 ctl;
->=20
->  	spin_lock_irqsave(&cgu->lock, flags);
-> -	ctl =3D readl(cgu->base + pll_info->reg);
-> +	ctl =3D readl(cgu->base + pll_info->reg[1]);
->  	spin_unlock_irqrestore(&cgu->lock, flags);
->=20
->  	return !!(ctl & BIT(pll_info->enable_bit));
-> diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
-> index 0dc8004..5f87be4 100644
-> --- a/drivers/clk/ingenic/cgu.h
-> +++ b/drivers/clk/ingenic/cgu.h
-> @@ -42,8 +42,18 @@
->   * @stable_bit: the index of the stable bit in the PLL control=20
-> register
->   * @no_bypass_bit: if set, the PLL has no bypass functionality
->   */
-> +enum ingenic_cgu_version {
-> +	CGU_JZ4740,
-> +	CGU_JZ4725B,
-> +	CGU_JZ4770,
-> +	CGU_JZ4780,
-> +	CGU_X1000,
-> +	CGU_X1830,
-> +};
-> +
->  struct ingenic_cgu_pll_info {
-> -	unsigned reg;
-> +	enum ingenic_cgu_version version;
-> +	unsigned reg[2];
->  	const s8 *od_encoding;
->  	u8 m_shift, m_bits, m_offset;
->  	u8 n_shift, n_bits, n_offset;
-> diff --git a/drivers/clk/ingenic/jz4725b-cgu.c=20
-> b/drivers/clk/ingenic/jz4725b-cgu.c
-> index a3b4635..6da7b41 100644
-> --- a/drivers/clk/ingenic/jz4725b-cgu.c
-> +++ b/drivers/clk/ingenic/jz4725b-cgu.c
-> @@ -53,7 +53,8 @@ static const struct ingenic_cgu_clk_info=20
-> jz4725b_cgu_clocks[] =3D {
->  		"pll", CGU_CLK_PLL,
->  		.parents =3D { JZ4725B_CLK_EXT, -1, -1, -1 },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_CPPCR,
-> +			.version =3D CGU_JZ4725B,
-> +			.reg =3D { -1, CGU_REG_CPPCR },
->  			.m_shift =3D 23,
->  			.m_bits =3D 9,
->  			.m_offset =3D 2,
-> diff --git a/drivers/clk/ingenic/jz4740-cgu.c=20
-> b/drivers/clk/ingenic/jz4740-cgu.c
-> index 4f0e92c..3cf800d 100644
-> --- a/drivers/clk/ingenic/jz4740-cgu.c
-> +++ b/drivers/clk/ingenic/jz4740-cgu.c
-> @@ -68,7 +68,8 @@ static const struct ingenic_cgu_clk_info=20
-> jz4740_cgu_clocks[] =3D {
->  		"pll", CGU_CLK_PLL,
->  		.parents =3D { JZ4740_CLK_EXT, -1, -1, -1 },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_CPPCR,
-> +			.version =3D CGU_JZ4740,
-> +			.reg =3D { -1, CGU_REG_CPPCR },
->  			.m_shift =3D 23,
->  			.m_bits =3D 9,
->  			.m_offset =3D 2,
-> diff --git a/drivers/clk/ingenic/jz4770-cgu.c=20
-> b/drivers/clk/ingenic/jz4770-cgu.c
-> index 956dd65..a62dfb1 100644
-> --- a/drivers/clk/ingenic/jz4770-cgu.c
-> +++ b/drivers/clk/ingenic/jz4770-cgu.c
-> @@ -101,7 +101,8 @@ static const struct ingenic_cgu_clk_info=20
-> jz4770_cgu_clocks[] =3D {
->  		"pll0", CGU_CLK_PLL,
->  		.parents =3D { JZ4770_CLK_EXT },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_CPPCR0,
-> +			.version =3D CGU_JZ4770,
-> +			.reg =3D { -1, CGU_REG_CPPCR0 },
->  			.m_shift =3D 24,
->  			.m_bits =3D 7,
->  			.m_offset =3D 1,
-> @@ -123,7 +124,8 @@ static const struct ingenic_cgu_clk_info=20
-> jz4770_cgu_clocks[] =3D {
->  		"pll1", CGU_CLK_PLL,
->  		.parents =3D { JZ4770_CLK_EXT },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_CPPCR1,
-> +			.version =3D CGU_JZ4770,
-> +			.reg =3D { -1, CGU_REG_CPPCR1 },
->  			.m_shift =3D 24,
->  			.m_bits =3D 7,
->  			.m_offset =3D 1,
-> diff --git a/drivers/clk/ingenic/jz4780-cgu.c=20
-> b/drivers/clk/ingenic/jz4780-cgu.c
-> index ea905ff..59356d1b 100644
-> --- a/drivers/clk/ingenic/jz4780-cgu.c
-> +++ b/drivers/clk/ingenic/jz4780-cgu.c
-> @@ -220,7 +220,8 @@ static const struct ingenic_cgu_clk_info=20
-> jz4780_cgu_clocks[] =3D {
->  	/* PLLs */
->=20
->  #define DEF_PLL(name) { \
-> -	.reg =3D CGU_REG_ ## name, \
-> +	.version =3D CGU_JZ4780, \
-> +	.reg =3D { -1, CGU_REG_ ## name }, \
->  	.m_shift =3D 19, \
->  	.m_bits =3D 13, \
->  	.m_offset =3D 1, \
-> diff --git a/drivers/clk/ingenic/x1000-cgu.c=20
-> b/drivers/clk/ingenic/x1000-cgu.c
-> index b22d87b..7179b9f 100644
-> --- a/drivers/clk/ingenic/x1000-cgu.c
-> +++ b/drivers/clk/ingenic/x1000-cgu.c
-> @@ -57,7 +57,8 @@ static const struct ingenic_cgu_clk_info=20
-> x1000_cgu_clocks[] =3D {
->  		"apll", CGU_CLK_PLL,
->  		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_APLL,
-> +			.version =3D CGU_X1000,
-> +			.reg =3D { -1, CGU_REG_APLL },
->  			.m_shift =3D 24,
->  			.m_bits =3D 7,
->  			.m_offset =3D 1,
-> @@ -78,7 +79,8 @@ static const struct ingenic_cgu_clk_info=20
-> x1000_cgu_clocks[] =3D {
->  		"mpll", CGU_CLK_PLL,
->  		.parents =3D { X1000_CLK_EXCLK, -1, -1, -1 },
->  		.pll =3D {
-> -			.reg =3D CGU_REG_MPLL,
-> +			.version =3D CGU_X1000,
-> +			.reg =3D { -1, CGU_REG_MPLL },
->  			.m_shift =3D 24,
->  			.m_bits =3D 7,
->  			.m_offset =3D 1,
-> --
-> 2.7.4
->=20
->=20
+> +      For "allwinner,sun8i-h3-ths",
+> +      value must be 0.
+> +      For all other compatibles
+> +      value must be 1.
 
-=
+This should be checked using an if as well.
 
+> +
+> +  nvmem-cells:
+> +    maxItems: 1
+> +    items:
+> +      - description: Calibration data for thermal sensors
+
+You can drop the items and just move the description up one level,
+under nvmem-cells
+
+> +
+> +  nvmem-cell-names:
+> +    items:
+> +      - const: calibration
+
+Ditto for the const
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#thermal-sensor-cells'
+
+Whether clocks, clock-names and resets are thereshould be check using
+an if statement as well.
+
+> +
+> +examples:
+> +  - |
+> +    ths_a83t: ths@1f04000 {
+
+You don't need the label at all, and the node name should be
+temperature-sensor according to the DT spec, not ths. This applies to
+all you examples.
+
+> +         compatible = "allwinner,sun8i-a83t-ths";
+> +         reg = <0x01f04000 0x100>;
+> +         interrupts = <0 31 0>;
+> +         nvmem-cells = <&ths_calibration>;
+> +         nvmem-cell-names = "calibration";
+> +         #thermal-sensor-cells = <1>;
+> +    };
+
+New line.
+
+Thanks!
+Maxime
+
+--vy5yg3fxo523fkw5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd62AgAKCRDj7w1vZxhR
+xZhDAP92TopSGYK0i/lNbBksUI+7RNfvt+FhK2eVaXRB2/XToAD/S4RzDGUA4BXe
+Cx5DhAlOJY+WchG8X6c4StMtLQAUwAM=
+=6CMd
+-----END PGP SIGNATURE-----
+
+--vy5yg3fxo523fkw5--
