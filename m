@@ -2,96 +2,146 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0017C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDB2C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B517F2075C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75BB2075C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:17:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xjp/i3+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfK0RPB (ORCPT
+        id S1727028AbfK0RRh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:15:01 -0500
-Received: from mga18.intel.com ([134.134.136.126]:9555 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfK0RPB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:15:01 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 09:15:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
-   d="scan'208";a="206831043"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Nov 2019 09:14:57 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ia0u0-0004ah-PY; Wed, 27 Nov 2019 19:14:56 +0200
-Date:   Wed, 27 Nov 2019 19:14:56 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com, bparrot@ti.com,
-        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
-        mripard@kernel.org, alexandre.belloni@bootlin.com,
-        shawnguo@kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] EDT-FT5x06 improvements
-Message-ID: <20191127171456.GR32742@smile.fi.intel.com>
-References: <20191127120948.22251-1-m.felsch@pengutronix.de>
+        Wed, 27 Nov 2019 12:17:37 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:20584 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726537AbfK0RRg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:17:36 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARH2pcu012552;
+        Wed, 27 Nov 2019 18:17:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=fNAp9C+/NbGS9PcvQ8oHpxudnwZNMo8lEEBUEvBZe2E=;
+ b=xjp/i3+yYCaibmCaE3zAQsnM0xazAt9F/0hKy0lUglyNBxw3m0F3zZgY330s6sxKdlPZ
+ UH52Qy4f6nxnqaGwOU/onjfIV3PAxkLpmMqotO5B9KdlNcVIJ/DSOgMrr43St+uoNqFS
+ l8cKD1/sVxyIyeYU/QiIOwE15c8LlwBFI/hjaVp7T/SHW+dwllqeO6IRYebUI8T2b58n
+ 0934JBSNyWWdV9+lzDphdITrzh+aWX9EgkrSxoYTuqLYbVOZ53ZB8i8WHMNH08oB7oqj
+ hU50iYK+1l1LAGi7WKOkGr5+F5s4G92cLLYe52CCd0IFdkMj03ZSG7nvCTTyUXWLvCdw Ow== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2whcxkmw4x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Nov 2019 18:17:01 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3245710002A;
+        Wed, 27 Nov 2019 18:17:01 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6E3F42C4FDF;
+        Wed, 27 Nov 2019 18:17:00 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 27 Nov 2019 18:16:59
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <jic23@kernel.org>, <robh+dt@kernel.org>, <olivier.moysan@st.com>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <lars@metafoo.de>, <devicetree@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <pmeerw@pmeerw.net>, <knaack.h@gmx.de>, <fabrice.gasnier@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] dt-bindings: iio: adc: convert sd modulator to json-schema
+Date:   Wed, 27 Nov 2019 18:16:42 +0100
+Message-ID: <20191127171642.6014-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127120948.22251-1-m.felsch@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-27_04:2019-11-27,2019-11-27 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 01:09:43PM +0100, Marco Felsch wrote:
-> Hi,
-> 
-> this v2 address all comments made on [1]. See the patch based changelog
-> for further information.
-> 
-> During the discussion we all agreed to use the common wakeup-src device
-> property but I added all users of this driver again. So they can provide
-> their ack-tag.
-> 
+Convert the sigma delta modulator bindings
+to DT schema format using json-schema.
 
-Independently on the decision on patch 5, FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+ .../iio/adc/sigma-delta-modulator.txt         | 13 -------
+ .../iio/adc/sigma-delta-modulator.yaml        | 35 +++++++++++++++++++
+ 2 files changed, 35 insertions(+), 13 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
 
-> Regards,
->   Marco
-> 
-> [1] https://patchwork.kernel.org/cover/11149039/
-> 
-> Marco Felsch (4):
->   Input: edt-ft5x06 - alphabetical include reorder
->   dt-bindings: Input: edt-ft5x06 - document wakeup-source capability
->   Input: edt-ft5x06 - make wakeup-source switchable
->   Input: edt-ft5x06 - improve power management operations
-> 
-> Philipp Zabel (1):
->   Input: edt-ft5x06: work around first register access error
-> 
->  .../bindings/input/touchscreen/edt-ft5x06.txt |  2 +
->  drivers/input/touchscreen/edt-ft5x06.c        | 85 ++++++++++++++++---
->  2 files changed, 73 insertions(+), 14 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+deleted file mode 100644
+index 59b92cd32552..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
++++ /dev/null
+@@ -1,13 +0,0 @@
+-Device-Tree bindings for sigma delta modulator
+-
+-Required properties:
+-- compatible: should be "ads1201", "sd-modulator". "sd-modulator" can be use
+-	as a generic SD modulator if modulator not specified in compatible list.
+-- #io-channel-cells = <0>: See the IIO bindings section "IIO consumers".
+-
+-Example node:
+-
+-	ads1202: adc {
+-		compatible = "sd-modulator";
+-		#io-channel-cells = <0>;
+-	};
+diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
+new file mode 100644
+index 000000000000..8967c6f06d9d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/sigma-delta-modulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Device-Tree bindings for sigma delta modulator
++
++maintainers:
++  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
++
++properties:
++  compatible:
++    description: |
++      "sd-modulator" can be used as a generic SD modulator,
++      if the modulator is not specified in the compatible list.
++    enum:
++      - sd-modulator
++      - ads1201
++
++  '#io-channel-cells':
++    const: 0
++
++required:
++  - compatible
++  - '#io-channel-cells'
++
++examples:
++  - |
++    ads1202: adc@0 {
++      compatible = "sd-modulator";
++      #io-channel-cells = <0>;
++    };
++
++...
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
