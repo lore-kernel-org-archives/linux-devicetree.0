@@ -2,168 +2,120 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DE0C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A192C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 16:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7689D20684
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 15:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167032073F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 16:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zQX7Z4UT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ofwlf+CJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfK0Pzi (ORCPT
+        id S1727040AbfK0Qsf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 10:55:38 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:32868 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0Pzi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 10:55:38 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xARFtVCr071721;
-        Wed, 27 Nov 2019 09:55:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574870131;
-        bh=K63GQIrw0Sq+EfiUZbTAW80xzjkoZlaK1Fs4iboltMg=;
-        h=From:To:CC:Subject:Date;
-        b=zQX7Z4UT0A8dKZvD6orrZ+/oPB5evEms9YJ3zsSzVsBHntXBAkrJLIkeY4y3doXXD
-         XGYFeUuggkKX3Up/yaC4aWXlAfE1//+4z6BLYaKXef53frVWwippMjijuWdpcoKRKN
-         3PPFXeBCs1LWTXWqCPuscRbMBTGONt4RTEe6+sR8=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFtVkc104403;
-        Wed, 27 Nov 2019 09:55:31 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 27
- Nov 2019 09:55:31 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 27 Nov 2019 09:55:31 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xARFtUwu019376;
-        Wed, 27 Nov 2019 09:55:30 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] dt-bindings: net: ti: cpsw-switch: update to fix comments
-Date:   Wed, 27 Nov 2019 17:55:26 +0200
-Message-ID: <20191127155526.22746-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 Nov 2019 11:48:35 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:59360 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfK0Qsf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 11:48:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574873308; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WPAubu++VR8O6106th8bWP/AWSwIAFfPhimbYu2lKj8=;
+        b=ofwlf+CJ1IlMQ0kLgrEb5zIN+k5LEWMMXVW7CDDK6/UvlhOVDn4vIPaa4OEEJBgUcrPRQt
+        tfPMnf6Rc6uZDoyPBxSBGcFypUH++SNy+OnqywHzxcIps/ayXd47v/9h546A1tYFwExVH7
+        V/wRePs5XvizjR21CFR2uDLmz4jvEiQ=
+Date:   Wed, 27 Nov 2019 17:48:18 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 5/6] MIPS: X1000: Add pdma controller DT node.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Message-Id: <1574873298.3.0@crapouillou.net>
+In-Reply-To: <1574787974-58040-6-git-send-email-zhouyanjie@zoho.com>
+References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+        <1574787974-58040-6-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-After original patch was merged there were additional comments/requests
-provided by Rob Herring [1]. Mostly they are related to json-schema usage,
-and this patch fixes them. Also SPDX-License-Identifier has been changed to
-(GPL-2.0-only OR BSD-2-Clause) as requested.
+Hi Zhou,
 
-[1] https://lkml.org/lkml/2019/11/21/875
-Fixes: ef63fe72f698 ("dt-bindings: net: ti: add new cpsw switch driver bindings")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../bindings/net/ti,cpsw-switch.yaml          | 20 +++++++------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-index 81ae8cafabc1..4e072a023f3e 100644
---- a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: GPL-2.0
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
- $id: http://devicetree.org/schemas/net/ti,cpsw-switch.yaml#
-@@ -44,7 +44,6 @@ properties:
-     description: CPSW functional clock
- 
-   clock-names:
--    maxItems: 1
-     items:
-       - const: fck
- 
-@@ -70,7 +69,6 @@ properties:
-       Phandle to the system control device node which provides access to
-       efuse IO range with MAC addresses
- 
--
-   ethernet-ports:
-     type: object
-     properties:
-@@ -82,8 +80,6 @@ properties:
-     patternProperties:
-       "^port@[0-9]+$":
-           type: object
--          minItems: 1
--          maxItems: 2
-           description: CPSW external ports
- 
-           allOf:
-@@ -92,21 +88,20 @@ properties:
-           properties:
-             reg:
-               maxItems: 1
--              enum: [1, 2]
-+              items:
-+                - enum: [1, 2]
-               description: CPSW port number
- 
-             phys:
--              $ref: /schemas/types.yaml#definitions/phandle-array
-               maxItems: 1
-               description:  phandle on phy-gmii-sel PHY
- 
-             label:
--              $ref: /schemas/types.yaml#/definitions/string-array
--              maxItems: 1
-               description: label associated with this port
- 
-             ti,dual-emac-pvid:
--              $ref: /schemas/types.yaml#/definitions/uint32
-+              allOf:
-+                - $ref: /schemas/types.yaml#/definitions/uint32
-               maxItems: 1
-               minimum: 1
-               maximum: 1024
-@@ -136,7 +131,6 @@ properties:
-         description: CPTS reference clock
- 
-       clock-names:
--        maxItems: 1
-         items:
-           - const: cpts
- 
-@@ -201,7 +195,7 @@ examples:
-                         phys = <&phy_gmii_sel 1>;
-                         phy-handle = <&ethphy0_sw>;
-                         phy-mode = "rgmii";
--                        ti,dual_emac_pvid = <1>;
-+                        ti,dual-emac-pvid = <1>;
-                 };
- 
-                 cpsw_port2: port@2 {
-@@ -211,7 +205,7 @@ examples:
-                         phys = <&phy_gmii_sel 2>;
-                         phy-handle = <&ethphy1_sw>;
-                         phy-mode = "rgmii";
--                        ti,dual_emac_pvid = <2>;
-+                        ti,dual-emac-pvid = <2>;
-                 };
-         };
- 
--- 
-2.17.1
+Le mer., nov. 27, 2019 at 01:06, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> Add the appropriate DT node to probe the pdma controller driver
+> using the devicetree.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> ---
+>=20
+> Notes:
+>     v4:
+>     New patch.
+>=20
+>  arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
+> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> index 9e55edd..edfa70d 100644
+> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <dt-bindings/clock/x1000-cgu.h>
+> +#include <dt-bindings/dma/x1000-dma.h>
+
+You're not using any macro from that include file, so there's no need=20
+to have it here.
+
+Cheers,
+-Paul
+
+
+>=20
+>  / {
+>  	#address-cells =3D <1>;
+> @@ -173,4 +174,16 @@
+>=20
+>  		status =3D "disabled";
+>  	};
+> +
+> +	pdma: dma-controller@13420000 {
+> +		compatible =3D "ingenic,x1000-dma";
+> +		reg =3D <0x13420000 0x400
+> +			   0x13421000 0x40>;
+> +		#dma-cells =3D <2>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <10>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_PDMA>;
+> +	};
+>  };
+> --
+> 2.7.4
+>=20
+>=20
+
+=
 
