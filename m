@@ -2,311 +2,96 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E3DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 11:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C23C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 11:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E6020722
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 11:50:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZFSHVlOV";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="B+jawMYK"
+	by mail.kernel.org (Postfix) with ESMTP id 46AE92071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 11:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfK0LuH (ORCPT
+        id S1726320AbfK0L4Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 06:50:07 -0500
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:39426
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbfK0LuH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Nov 2019 06:50:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574855406;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=WlDrsgCVCWDXLmGPBhA+0beAWE9MAihheycKfW6qYJs=;
-        b=ZFSHVlOVJuuRKRGvtkPkII4NRtJv6Rg9FcYTL8aI43e0/H8gKBBJHu/I/0W4/huG
-        ENQBp7bBsFjQvouZDzjud2FzOQF7XvTFuPGeY/fJL+VrNhx3d19l/zln+ncjYSqPijk
-        x6kZFzOb3eoSxBToLzV56cPykinzoWqMA+R4W4Cg=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574855406;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=WlDrsgCVCWDXLmGPBhA+0beAWE9MAihheycKfW6qYJs=;
-        b=B+jawMYKTTMs8++BSnHDGEgV4hoWZf51MCZSbXmrcPSrN/Pkh92CVotkuCxWWzki
-        ykEVY1uhC42NtcUyGY7+BQrPYnM1JcP8vRUWypgEMjPAF465ngblyAYEd+Kzsg0dENs
-        B8wijC8gOg/bVX7wxSl4JRc1+h+ahaqg+WbAaRrA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08AD3C447B1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH V1 2/2] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD card
-Date:   Wed, 27 Nov 2019 11:50:06 +0000
-Message-ID: <0101016eacb27366-31803877-9137-4c0e-922b-6a71a0e63ab3-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1574855381-15193-1-git-send-email-vbadigan@codeaurora.org>
-References: <1574855381-15193-1-git-send-email-vbadigan@codeaurora.org>
-X-SES-Outgoing: 2019.11.27-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Wed, 27 Nov 2019 06:56:25 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60149 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfK0L4Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 06:56:25 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iZvvh-0000lB-KI; Wed, 27 Nov 2019 12:56:21 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iZvvh-0006Wv-2A; Wed, 27 Nov 2019 12:56:21 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, support.opensource@diasemi.com,
+        Adam.Thomson.Opensource@diasemi.com
+Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v2 1/3] dt-bindings: mfd: da9062: add gpio bindings
+Date:   Wed, 27 Nov 2019 12:56:17 +0100
+Message-Id: <20191127115619.20278-2-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191127115619.20278-1-m.felsch@pengutronix.de>
+References: <20191127115619.20278-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add sdhc instances for supporting eMMC and SD-card on sc7180.
-The regulators should be in HPM state for proper functionality of
-eMMC and SD-card. Updating corresponding regulators accordingly.
+Add gpio device documentation to make the da9062 gpios available for
+users.
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
+Changelog:
 
-This depends on the patch series (dt support for sc7180):
-https://lkml.org/lkml/2019/11/8/149
+v2:
+- remove sub-node documentation
+- squash gpio properties into mfd documentation
 ---
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  32 +++++++-
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 136 ++++++++++++++++++++++++++++++++
- 2 files changed, 164 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/mfd/da9062.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 189254f..583c42c 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -11,6 +11,7 @@
- #include "sc7180.dtsi"
- #include "pm6150.dtsi"
- #include "pm6150l.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
+diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
+index edca653a5777..089a28bc77a4 100644
+--- a/Documentation/devicetree/bindings/mfd/da9062.txt
++++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+@@ -13,6 +13,7 @@ da9062-rtc              :               : Real-Time Clock
+ da9062-onkey            :               : On Key
+ da9062-watchdog         :               : Watchdog Timer
+ da9062-thermal          :               : Thermal
++da9062-gpio             :               : GPIOs
  
- / {
- 	model = "Qualcomm Technologies, Inc. SC7180 IDP";
-@@ -103,7 +104,7 @@
- 		vreg_l12a_1p8: ldo12 {
- 			regulator-min-microvolt = <1696000>;
- 			regulator-max-microvolt = <1952000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
+ The DA9061 PMIC consists of:
  
- 		vreg_l13a_1p8: ldo13 {
-@@ -145,7 +146,7 @@
- 		vreg_l19a_2p9: ldo19 {
- 			regulator-min-microvolt = <2696000>;
- 			regulator-max-microvolt = <3304000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 	};
+@@ -38,6 +39,15 @@ Required properties:
+ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
+ further information on IRQ bindings.
  
-@@ -191,7 +192,7 @@
- 		vreg_l6c_2p9: ldo6 {
- 			regulator-min-microvolt = <2696000>;
- 			regulator-max-microvolt = <3304000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
++Optional properties:
++
++- gpio-controller : Marks the device as a gpio controller.
++- #gpio-cells     : Should be two. The first cell is the pin number and the
++                    second cell is used to specify the gpio polarity.
++
++See Documentation/devicetree/bindings/gpio/gpio.txt for further information on
++GPIO bindings.
++
+ Sub-nodes:
  
- 		vreg_l7c_3p0: ldo7 {
-@@ -209,7 +210,7 @@
- 		vreg_l9c_2p9: ldo9 {
- 			regulator-min-microvolt = <2952000>;
- 			regulator-max-microvolt = <3304000>;
--			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
- 		vreg_l10c_3p3: ldo10 {
-@@ -400,3 +401,26 @@
- 			bias-pull-up;
- 		};
- };
-+
-+&sdhc_1 {
-+	status = "ok";
-+
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&sdc1_on>;
-+	pinctrl-1 = <&sdc1_off>;
-+	vmmc-supply = <&vreg_l19a_2p9>;
-+	vqmmc-supply = <&vreg_l12a_1p8>;
-+
-+};
-+
-+&sdhc_2 {
-+	status = "ok";
-+
-+	pinctrl-names = "default","sleep";
-+	pinctrl-0 = <&sdc2_on>;
-+	pinctrl-1 = <&sdc2_off>;
-+	vmmc-supply  = <&vreg_l9c_2p9>;
-+	vqmmc-supply = <&vreg_l6c_2p9>;
-+
-+	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 666e9b9..207d44f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -897,6 +897,100 @@
- 					function = "qup15";
- 				};
- 			};
-+
-+			sdc1_on: sdc1-on {
-+				clk {
-+					pins = "sdc1_clk";
-+					bias-disable;
-+					drive-strength = <16>;
-+				};
-+
-+				cmd {
-+					pins = "sdc1_cmd";
-+					bias-pull-up;
-+					drive-strength = <10>;
-+				};
-+
-+				data {
-+					pins = "sdc1_data";
-+					bias-pull-up;
-+					drive-strength = <10>;
-+				};
-+
-+				rclk {
-+					pins = "sdc1_rclk";
-+					bias-pull-down;
-+				};
-+			};
-+
-+			sdc1_off: sdc1-off {
-+				clk {
-+					pins = "sdc1_clk";
-+					bias-disable;
-+					drive-strength = <2>;
-+				};
-+
-+				cmd {
-+					pins = "sdc1_cmd";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+
-+				data {
-+					pins = "sdc1_data";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+
-+				rclk {
-+					pins = "sdc1_rclk";
-+					bias-pull-down;
-+				};
-+			};
-+
-+			sdc2_on: sdc2_on {
-+				clk {
-+					pins = "sdc2_clk";
-+					bias-disable;
-+					drive-strength = <16>;
-+				};
-+				cmd {
-+					pins = "sdc2_cmd";
-+					bias-pull-up;
-+					drive-strength = <10>;
-+				};
-+				data {
-+					pins = "sdc2_data";
-+					bias-pull-up;
-+					drive-strength = <10>;
-+				};
-+				sd-cd {
-+					pins = "gpio69";
-+					bias-pull-down;
-+				};
-+			};
-+
-+			sdc2_off: sdc2_off {
-+				clk {
-+					pins = "sdc2_clk";
-+					bias-disable;
-+					drive-strength = <2>;
-+				};
-+				cmd {
-+					pins = "sdc2_cmd";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+				data {
-+					pins = "sdc2_data";
-+					bias-pull-up;
-+					drive-strength = <2>;
-+				};
-+				sd-cd {
-+					pins = "gpio69";
-+					bias-pull-down;
-+				};
-+			};
- 		};
- 
- 		qspi: spi@88dc000 {
-@@ -911,6 +1005,48 @@
- 			status = "disabled";
- 		};
- 
-+		sdhc_1: sdhci@7c4000 {
-+			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-+			reg = <0 0x7c4000 0 0x1000>;
-+			reg-names = "hc_mem";
-+
-+			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+
-+			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-+					<&gcc GCC_SDCC1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+
-+			bus-width = <8>;
-+			non-removable;
-+
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
-+			mmc-hs400-1_8v;
-+			mmc-hs400-enhanced-strobe;
-+
-+			status = "disabled";
-+		};
-+
-+		sdhc_2: sdhci@8804000 {
-+			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
-+			reg = <0 0x08804000 0 0x1000>;
-+			reg-names = "hc_mem";
-+
-+			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+
-+			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
-+					<&gcc GCC_SDCC2_AHB_CLK>;
-+			clock-names = "core","iface";
-+
-+			bus-width = <4>;
-+
-+			status = "disabled";
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0x0c440000 0 0x1100>,
+ - regulators : This node defines the settings for the LDOs and BUCKs.
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.20.1
 
