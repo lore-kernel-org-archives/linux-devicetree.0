@@ -2,117 +2,90 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE50C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA31C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A519C2073F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F192073F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574875656;
+	bh=ByMqMjORvr1UlWAYYDkMyxfvBy+o3EuQgE3OMZXqSEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dNq0FzmnA3voHgIElv36svoFt9mgrLHhQatxHBYgCatdenHH7t9/DI3Mfxh1VMi0G
+	 5jYsyisjXIVwnPe7jurPs3ScQwXZhusSIADmWiJ/K2LgT9L8iOxj9gV5ooM0ia5zcV
+	 XZ73ofS4oop7ydOGQvN4tjIGUAsaVdB/qUMxBN5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfK0R0D (ORCPT
+        id S1726576AbfK0R1g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:26:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44319 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbfK0R0A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 12:26:00 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ia14Z-00041y-JI; Wed, 27 Nov 2019 18:25:51 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ia14Z-0001Vf-5P; Wed, 27 Nov 2019 18:25:51 +0100
-Date:   Wed, 27 Nov 2019 18:25:51 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com, bparrot@ti.com,
-        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
-        mripard@kernel.org, alexandre.belloni@bootlin.com,
-        shawnguo@kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] EDT-FT5x06 improvements
-Message-ID: <20191127172551.z3la7o6d575j3sp4@pengutronix.de>
-References: <20191127120948.22251-1-m.felsch@pengutronix.de>
- <20191127171456.GR32742@smile.fi.intel.com>
+        Wed, 27 Nov 2019 12:27:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfK0R1g (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 12:27:36 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0690E20684;
+        Wed, 27 Nov 2019 17:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574875655;
+        bh=ByMqMjORvr1UlWAYYDkMyxfvBy+o3EuQgE3OMZXqSEQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2AIH2IH/uPxLpJz3SDjwC/o0aCYNhuQfHG5cvFiEgalqTLyWXggWEwYIgLXxB+9BM
+         A2TIRW1oN8Rag6Xq/2OVFN4vMk/Vuq6zj3BU94NY+NccQpJWbVrb1oza+Q3zTSb7p7
+         vgOfKS83SpKTZ10fMN6mdV2l5TZjWsOZL2etF+3Q=
+Date:   Wed, 27 Nov 2019 18:27:31 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] thermal: sun8i: add thermal driver for
+ H6/H5/H3/A64/A83T/R40
+Message-ID: <20191127172731.mwmo3zctn7pi6mmp@gilmour.lan>
+References: <20191127052935.1719897-1-anarsoul@gmail.com>
+ <20191127052935.1719897-2-anarsoul@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191127171456.GR32742@smile.fi.intel.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 18:25:25 up 12 days,  8:44, 24 users,  load average: 0.11, 0.06,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20191127052935.1719897-2-anarsoul@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi,
 
-On 19-11-27 19:14, Andy Shevchenko wrote:
-> On Wed, Nov 27, 2019 at 01:09:43PM +0100, Marco Felsch wrote:
-> > Hi,
-> > 
-> > this v2 address all comments made on [1]. See the patch based changelog
-> > for further information.
-> > 
-> > During the discussion we all agreed to use the common wakeup-src device
-> > property but I added all users of this driver again. So they can provide
-> > their ack-tag.
-> > 
-> 
-> Independently on the decision on patch 5, FWIW,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks for sending a new version of this!
 
-Thanks for testing and the review =)
+On Tue, Nov 26, 2019 at 09:29:29PM -0800, Vasily Khoruzhick wrote:
+> From: Yangtao Li <tiny.windzz@gmail.com>
+>
+> This patch adds the support for allwinner thermal sensor, within
+> allwinner SoC. It will register sensors for thermal framework
+> and use device tree to bind cooling device.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 
-Regards,
-  Marco
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-> > Regards,
-> >   Marco
-> > 
-> > [1] https://patchwork.kernel.org/cover/11149039/
-> > 
-> > Marco Felsch (4):
-> >   Input: edt-ft5x06 - alphabetical include reorder
-> >   dt-bindings: Input: edt-ft5x06 - document wakeup-source capability
-> >   Input: edt-ft5x06 - make wakeup-source switchable
-> >   Input: edt-ft5x06 - improve power management operations
-> > 
-> > Philipp Zabel (1):
-> >   Input: edt-ft5x06: work around first register access error
-> > 
-> >  .../bindings/input/touchscreen/edt-ft5x06.txt |  2 +
-> >  drivers/input/touchscreen/edt-ft5x06.c        | 85 ++++++++++++++++---
-> >  2 files changed, 73 insertions(+), 14 deletions(-)
-> > 
-> > -- 
-> > 2.20.1
-> > 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks!
+Maxime
