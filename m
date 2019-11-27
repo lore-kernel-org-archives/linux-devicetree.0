@@ -2,192 +2,89 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9C2C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46C3C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F5920674
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A499920678
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UfmrOfsS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="autV2GM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfK0Nta (ORCPT
+        id S1726852AbfK0N7C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:49:30 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:39043 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfK0Nta (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 08:49:30 -0500
-Received: by mail-ua1-f67.google.com with SMTP id r13so6986850uan.6
-        for <devicetree@vger.kernel.org>; Wed, 27 Nov 2019 05:49:29 -0800 (PST)
+        Wed, 27 Nov 2019 08:59:02 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:39576 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfK0N7C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 08:59:02 -0500
+Received: by mail-vs1-f65.google.com with SMTP id x21so15245117vsp.6
+        for <devicetree@vger.kernel.org>; Wed, 27 Nov 2019 05:59:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+nx+9qeUsVrgVxpWb5DGUTX9y7FEWCWKgVQeRiw+fPY=;
-        b=UfmrOfsSSr4N7iI9BXNqYEpRJx9A8H5jGQAhTC4CjaX3hP2U3ruLhBevRf5OFQjbGI
-         TKAe2SCcNPBm0WDAOxX1MGvTE8n1JFiPtDGrUMFaKl+Zf8T5kjtPjuaGkQmHnjpscrf1
-         rsTh6TolGy7ETbKDMiLBe3WoyCq9KZ8zuMxZdcpkTfaceyO7KpQnnNBuDmntwx5kYMNT
-         w5JafA+irlzk3yJLliprj02VrDtVGN51HK7QEmYsj3hEj3CHsv7r5nR9sOPu5tvesSJI
-         RaXnid6BtkHjSvotmPWXdMzdFCJqGEZ6CEsKLrrQ6+B6hfz9l4B4uD7zK40ed6rnubxL
-         boRA==
+        bh=gAq++vOmWlGE0rfhdloa1GAF3bf8ceEKuBq/5jw6JRM=;
+        b=autV2GM15bvqwiA+NNcmk4/aTXU/HSFEF/5su4++BbyqM9TTPEl160Dl4aSSi4PSHx
+         7dEzEqyacVs+yewRvnBZ83UHqscNkWGpzMcJWLLLi+QCkk1xhjhnBlxejNfHU/qVmTuj
+         T8igdSS/tZRj5c7YLCT4H6AYMtIaHIBwPBfL+kI7kHRiUmSNwFnRVIFTZRS1Wyt1h3R3
+         cyqBUvI2GSXDWeDlgidAaqloDquB80gWY3CD6nCyEEBi1JxlLSFZcsLD22SLWLifDTD2
+         +z7R1ny87pHoyTM6Q6jqCBqMtdOrTs+pljEMTkDmflCfHXKg6KEMU4pBGfyFDHpkZxXz
+         MSgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+nx+9qeUsVrgVxpWb5DGUTX9y7FEWCWKgVQeRiw+fPY=;
-        b=iT1NIvC8MXZspsxnkT5K4so/AWVMFA4FRrwBYVm+It7sywERgs+bUIK50uFtPBeo4v
-         VmHKqc+qrqyA593vUD49ndPmTlL8ilL67mm2L1UCWgP7Go7Y7xeUDKyPOipynWev9MC9
-         70h5T3fT8ud9fYWEgm/iTDvhRT9EWZ2oUDdaPuHy5oisLHJ8/lSl9Dd4LD9WsTX7XcYD
-         Zc8U9spQsTZ/4qQU8ytUX/Iezdwshi8ADFuKDntD1FOLBcSG6ADkvHsEIWuCHvwLBo38
-         bwYCGTAD0QZXajSddd2XnCPILJYd/MkqeOfT9vKGU74SYKhMROXkWjQ+iPM/u1JG1AOP
-         r4bg==
-X-Gm-Message-State: APjAAAW8TaZuwxGfedLck57UdmMd/zCwbL55eYp+/AfKe+ZVjM+iC3HO
-        FmcjH6KfPCsN2AvYWzyz+FK5+ZZ7457wb+0gUO+I0g==
-X-Google-Smtp-Source: APXvYqzedabYD3uY1NUNLUI3MPPvnAd6IgQOrq2x8I9KcgoT62IcEarJDYmcmpswdWe232KyoNDSmfy6U6TgM8ea1k4=
-X-Received: by 2002:ab0:2551:: with SMTP id l17mr2707934uan.54.1574862568419;
- Wed, 27 Nov 2019 05:49:28 -0800 (PST)
+        bh=gAq++vOmWlGE0rfhdloa1GAF3bf8ceEKuBq/5jw6JRM=;
+        b=n59yKJmqYYyU55bHoJ6OV+4bLusr20OBRo9dpE1HzbfgaqhVx/ceL8gVdHnbCaq7vQ
+         Ac8VoxeqdckZmsfR46LFTs2y9xY1hbXpn78oW/Cm12+izHbZwPPwIIf3KneFH1z00KHg
+         fzGxn6eaXRMt+UhmrBIi/NbE5HwMeXedwdCZpBoi8vG8HF4fiK4jjrnTOpRx/LUsyjmM
+         I+MfKjvrRTn52ef5lP3HsznPsd3WJL1wdAX74gQNdFsu9fh1Z2hpe0C4IfczmQgw8zpK
+         9dJ+IQ+9Ju/5JeNWPkXFjx4ybfIz9qAVdbIsNsGTXkkCNVqzHCsKhkpIIrLMvO5ZDEM4
+         WGYA==
+X-Gm-Message-State: APjAAAXprrwSNlbzAQkyYkaaNPaEIvZ9nuhP/otV6+6v8naoTnhp+Qmk
+        s/m3m+KpuCJqEbLXAp4e2q+m1HKNnO8RwZ4sPOi+Sw==
+X-Google-Smtp-Source: APXvYqyf8H0dROBB9bvOXaLHvIe1OfTnJRLDLNL9AnIDcuNOVVLHNLEtVlUz2d1I4D3NhQ2ISu26ZnJQDRyo/JcRIiU=
+X-Received: by 2002:a67:88c8:: with SMTP id k191mr3366250vsd.86.1574863141682;
+ Wed, 27 Nov 2019 05:59:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127115619.20278-1-m.felsch@pengutronix.de> <20191127115619.20278-4-m.felsch@pengutronix.de>
-In-Reply-To: <20191127115619.20278-4-m.felsch@pengutronix.de>
+References: <20191124195728.32226-1-stephan@gerhold.net>
+In-Reply-To: <20191124195728.32226-1-stephan@gerhold.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 Nov 2019 14:49:17 +0100
-Message-ID: <CACRpkdbd4J-FUNi=F12YQfNPajNCVaoKyqWU7qjmfFMbonzDKg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] pinctrl: da9062: add driver support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+Date:   Wed, 27 Nov 2019 14:58:50 +0100
+Message-ID: <CACRpkdagXoVamNGj6hQ-0YQAoDpwTVOY8uUCVB8wwsXY9aQj4A@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: ux500: Add "simple-bus" compatible to soc node
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marco,
+On Sun, Nov 24, 2019 at 8:58 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-thanks for your patch!
-
-On Wed, Nov 27, 2019 at 12:56 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-
-> The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-> be used as input, output or have a special use-case.
+> The "soc" node in the Ux500 device tree does not need any special
+> handling - it is just a simple I/O bus that can be accessed without
+> additional configuration.
 >
-> The patch adds the support for the normal input/output use-case.
+> Therefore we can additionally describe it as compatible with "simple-bus".
+> This can be used by platforms to probe devices under the soc node without
+> special handling for our custom "stericsson,db8500" compatible
+> (e.g. in U-Boot).
 >
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-(...)
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-> +config PINCTRL_DA9062
-> +       tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
-> +       depends on MFD_DA9062
-> +       select GPIOLIB
-
-Hm this would be one of those that could use GENERIC_REGMAP_GPIO
-the day we invent it but we haven't invented it yet.
-
-> +#include <../gpio/gpiolib.h>
-
-Put a comment above this telling us why you do this thing.
-
-> +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> +{
-(...)
-> +       return val & BIT(offset);
-
-You should #include <linux/bits.h> since you use BIT()
-
-Usually I clamp it like this:
-return !!(val & BIT(offset));
-
-> +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> +       struct regmap *regmap = pctl->da9062->regmap;
-> +       int gpio_mode;
-> +
-> +       gpio_mode = da9062_pctl_get_pin_mode(regmap, offset);
-> +       if (gpio_mode < 0)
-> +               return gpio_mode;
-> +
-> +       switch (gpio_mode) {
-> +       case DA9062_PIN_ALTERNATE:
-> +               return -ENOTSUPP;
-> +       case DA9062_PIN_GPI:
-> +               return 1;
-> +       case DA9062_PIN_GPO_OD:
-> +       case DA9062_PIN_GPO_PP:
-> +               return 0;
-
-We recently added defines for these directions in
-<linux/gpio/driver.h>:
-
-#define GPIO_LINE_DIRECTION_IN  1
-#define GPIO_LINE_DIRECTION_OUT 0
-
-Please use these. (Soon in Torvald's tree, else
-in my "devel" branch.)
-
-> +static int da9062_gpio_direction_input(struct gpio_chip *gc,
-> +                                      unsigned int offset)
-> +{
-> +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> +       struct regmap *regmap = pctl->da9062->regmap;
-> +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-> +       unsigned int gpi_type;
-> +       int ret;
-> +
-> +       ret = da9062_pctl_set_pin_mode(regmap, offset, DA9062_PIN_GPI);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /*
-> +        * If the gpio is active low we should set it in hw too. No worries
-> +        * about gpio_get() because we read and return the gpio-level. So the
-> +        * gpiolib active_low handling is still correct.
-> +        *
-> +        * 0 - active low, 1 - active high
-> +        */
-> +       gpi_type = !gpiod_is_active_low(desc);
-
-That's interesting. Correct too, I guess.
-
-> +static int da9062_gpio_direction_output(struct gpio_chip *gc,
-> +                                       unsigned int offset, int value)
-> +{
-> +       /* Push-Pull / Open-Drain options are configured during set_config */
-> +       da9062_gpio_set(gc, offset, value);
-
-That looks dangerous. There is no guarantee that .set_config()
-always gets called.
-
-Please create a local state container for the mode of each pin in
-struct da9062_pctl and set it to push-pull by default at probe, then
-set this to whatever the state is here and let the .set_config()
-alter it later if need be.
-
-If we don't do that you will get boot-time defaults I think and that
-might create bugs.
-
-> +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-> +                                 unsigned long config)
-> +{
-(...)
-> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +               return da9062_pctl_set_pin_mode(regmap, offset,
-> +                                               DA9062_PIN_GPO_OD);
-> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +               return da9062_pctl_set_pin_mode(regmap, offset,
-> +                                               DA9062_PIN_GPO_PP);
-
-So also store this in the per-pin state.
+Patch applied.
 
 Yours,
 Linus Walleij
