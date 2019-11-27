@@ -2,34 +2,33 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEC2C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F8FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7C22070B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E392070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfK0Inf (ORCPT
+        id S1726149AbfK0Inj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:43:35 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:48450 "EHLO
+        Wed, 27 Nov 2019 03:43:39 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:48480 "EHLO
         xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfK0InK (ORCPT
+        with ESMTP id S1726560AbfK0InK (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 03:43:10 -0500
 Received: from ramsan ([84.195.182.253])
         by xavier.telenet-ops.be with bizsmtp
-        id Wwiu2100X5USYZQ01wiuc6; Wed, 27 Nov 2019 09:43:07 +0100
+        id Wwiu2100T5USYZQ01wiuc1; Wed, 27 Nov 2019 09:43:07 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iZsuU-0000xl-Oj; Wed, 27 Nov 2019 09:42:54 +0100
+        id 1iZsuU-0000xh-LV; Wed, 27 Nov 2019 09:42:54 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iZsuU-0004Or-Ld; Wed, 27 Nov 2019 09:42:54 +0100
+        id 1iZsuU-0004OX-JP; Wed, 27 Nov 2019 09:42:54 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -49,9 +48,9 @@ Cc:     Alexander Graf <graf@amazon.com>,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-Date:   Wed, 27 Nov 2019 09:42:50 +0100
-Message-Id: <20191127084253.16356-5-geert+renesas@glider.be>
+Subject: [PATCH v3 2/7] gpiolib: Add support for gpiochipN-based table lookup
+Date:   Wed, 27 Nov 2019 09:42:48 +0100
+Message-Id: <20191127084253.16356-3-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191127084253.16356-1-geert+renesas@glider.be>
 References: <20191127084253.16356-1-geert+renesas@glider.be>
@@ -60,110 +59,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Device Tree bindings for a GPIO repeater, with optional translation
-of physical signal properties.  This is useful for describing explicitly
-the presence of e.g. an inverter on a GPIO line, and was inspired by the
-non-YAML gpio-inverter bindings by Harish Jenny K N
-<harish_kandiga@mentor.com>[1].
+Currently GPIO controllers can only be referred to by label in GPIO
+lookup tables.
 
-Note that this is different from a GPIO Nexus Node[2], which cannot do
-physical signal property translation.
-
-While an inverter can be described implicitly by exchanging the
-GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
-Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
-th provider and consumer sides:
-  1. The GPIO provider (controller) looks at the flags to know the
-     polarity, so it can translate between logical (active/not active)
-     and physical (high/low) signal levels.
-  2. While the signal polarity is usually fixed on the GPIO consumer
-     side (e.g. an LED is tied to either the supply voltage or GND),
-     it may be configurable on some devices, and both sides need to
-     agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
-     match the actual polarity.
-     There exists a similar issue with interrupt flags, where both the
-     interrupt controller and the device generating the interrupt need
-     to agree, which breaks in the presence of a physical inverter not
-     described in DT (see e.g. [3]).
-
-[1] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
-    https://lore.kernel.org/linux-gpio/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/
-
-[2] Devicetree Specification v0.3-rc2, Section 2.5
-    https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3-rc2
-
-[3] "[PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
-    inverted IRQ"
-    https://lore.kernel.org/linux-renesas-soc/20190607172958.20745-1-erosca@de.adit-jv.com/
+Add support for looking them up by "gpiochipN" name, with "N" either the
+corresponding GPIO device's ID number, or the GPIO controller's first
+GPIO number.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
+If this is rejected, the GPIO Aggregator documentation must be updated.
+
+The second variant is currently used by the legacy sysfs interface only,
+so perhaps the chip->base check should be dropped?
+
 v3:
   - New.
 ---
- .../bindings/gpio/gpio-repeater.yaml          | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
+ drivers/gpio/gpiolib.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-new file mode 100644
-index 0000000000000000..efdee0c3be43f731
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-repeater.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index c9e47620d2434983..d24a3d79dcfe69ad 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1746,9 +1746,29 @@ static int gpiochip_match_name(struct gpio_chip *chip, void *data)
+ 	return !strcmp(chip->label, name);
+ }
+ 
++static int gpiochip_match_id(struct gpio_chip *chip, void *data)
++{
++	int id = (uintptr_t)data;
 +
-+title: GPIO Repeater
++	return id == chip->base || id == chip->gpiodev->id;
++}
 +
-+maintainers:
-+  - Harish Jenny K N <harish_kandiga@mentor.com>
-+  - Geert Uytterhoeven <geert+renesas@glider.be>
+ static struct gpio_chip *find_chip_by_name(const char *name)
+ {
+-	return gpiochip_find((void *)name, gpiochip_match_name);
++	struct gpio_chip *chip;
++	int id;
 +
-+description:
-+  This represents a repeater for one or more GPIOs, possibly including physical
-+  signal property translation (e.g. polarity inversion).
++	chip = gpiochip_find((void *)name, gpiochip_match_name);
++	if (chip)
++		return chip;
 +
-+properties:
-+  compatible:
-+    const: gpio-repeater
++	if (!str_has_prefix(name, GPIOCHIP_NAME))
++		return NULL;
 +
-+  "#gpio-cells":
-+    const: 2
++	if (kstrtoint(name + strlen(GPIOCHIP_NAME), 10, &id))
++		return NULL;
 +
-+  gpio-controller: true
-+
-+  gpios:
-+    description:
-+      Phandle and specifier, one for each repeated GPIO.
-+
-+  gpio-line-names:
-+    description:
-+      Strings defining the names of the GPIO lines going out of the GPIO
-+      controller.
-+
-+required:
-+  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  # Device node describing a polarity inverter for a single GPIO
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    inverter: gpio-repeater {
-+        compatible = "gpio-repeater";
-+        #gpio-cells = <2>;
-+        gpio-controller;
-+        gpios = <&gpio 95 GPIO_ACTIVE_LOW>;
-+    };
++	return gpiochip_find((void *)(uintptr_t)id, gpiochip_match_id);
+ }
+ 
+ #ifdef CONFIG_GPIOLIB_IRQCHIP
 -- 
 2.17.1
 
