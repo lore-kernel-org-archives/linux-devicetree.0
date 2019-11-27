@@ -2,195 +2,114 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78BFC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E69C432C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB012206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0SJ5YXp"
+	by mail.kernel.org (Postfix) with ESMTP id 89785206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 14:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfK0OcR (ORCPT
+        id S1727207AbfK0OcX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 09:32:17 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34581 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfK0OcR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 09:32:17 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m6so17353099ljc.1;
-        Wed, 27 Nov 2019 06:32:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G00SHIj8HaZMxGCzFcaxH3zuEzPMMLNA3auZzPKOoUg=;
-        b=V0SJ5YXpoXsZhy2mVssl/oaUHCCkXn/uo8iwtzcSEuBCVbT4oHXaYGCkcR+iIobBqX
-         a4YqaT9W2rA66J+T90EqjAhYy4IpewQBfA/VcgZIL8HGS0Vy+smYXUdor8c+ScoFWY9C
-         Z8xgDJiaKj85lQvSOkDSbL+aUb1FM1vJJIjevxw2l2JV4R+dHztuePVf003G1Se+4zw5
-         a4pJ8d2taC5F5U7hYUeNMnQmx+fTUz4nNXyvJCCvNqX6mFE7bFlAtPdT2iSMIUhrGxtx
-         oe2BlPE034n0YEc8gF+5PQfi7amCp6aE9U85u4fGbq/4MUx/4B2/B2kupeYLeRpF2Wdx
-         m8xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G00SHIj8HaZMxGCzFcaxH3zuEzPMMLNA3auZzPKOoUg=;
-        b=SzAKscpL7HypEPTI81/UMBBtT2N3jfvFWIgPcWSTMQUwK54OaLQfPtByiwYQAwDTom
-         9x0Hz5VorkL4dn916qcjUUkZtSBnpzyXdFOscfzQ9NAe4EwX9B5V/W4POYO/v/X1hQbe
-         jrchX1/+FdCDN7IcvwSU4dNmPJQycI6EOi9GE6SwFH5jWE1jKPsr1LaLOm5AH9E2ceNv
-         ah6HBeT5dH7KXD+IBmFHXM3F804wxa2N5e3751npDBMVmRNdegSCi0Qnk5uEpfvq9j59
-         z5Poflt3vbO/OqvJQDPQsfPr29Y8bYxo1trWGAZEEl+CkVTB3XbZtnyMi3CMs5OV5HEf
-         qXbw==
-X-Gm-Message-State: APjAAAWqYaQTVq713sMJYEKwARwiezPVSAjFtYdsFOT2eO7pOx+rUOCI
-        cuQ5n3LAuozgB+FCBZKJ1r8Q0CXq
-X-Google-Smtp-Source: APXvYqxwPB997GOz8MMewM2L0dcNl3swOuQ4ZORuX65yeTj0JIcctBOZB12/uSeRhXDzH+kqZGalbg==
-X-Received: by 2002:a2e:3216:: with SMTP id y22mr16711520ljy.95.1574865133647;
-        Wed, 27 Nov 2019 06:32:13 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id o15sm7373513ljc.28.2019.11.27.06.32.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2019 06:32:13 -0800 (PST)
-Subject: Re: [PATCH v2 02/11] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1574830773-14892-1-git-send-email-skomatineni@nvidia.com>
- <1574830773-14892-3-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <64b6a780-d06c-9a10-490b-7285d2b0e207@gmail.com>
-Date:   Wed, 27 Nov 2019 17:32:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 27 Nov 2019 09:32:23 -0500
+Received: from mga02.intel.com ([134.134.136.20]:32796 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727235AbfK0OcW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 09:32:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 06:32:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,249,1571727600"; 
+   d="scan'208";a="211707747"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 27 Nov 2019 06:32:18 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iZyMb-0001vK-Tm; Wed, 27 Nov 2019 16:32:17 +0200
+Date:   Wed, 27 Nov 2019 16:32:17 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com, bparrot@ti.com,
+        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
+        mripard@kernel.org, alexandre.belloni@bootlin.com,
+        shawnguo@kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] Input: edt-ft5x06 - improve power management
+ operations
+Message-ID: <20191127143217.GL32742@smile.fi.intel.com>
+References: <20191127120948.22251-1-m.felsch@pengutronix.de>
+ <20191127120948.22251-6-m.felsch@pengutronix.de>
+ <20191127125932.GK32742@smile.fi.intel.com>
+ <20191127130602.5zp537xdybbafnci@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1574830773-14892-3-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127130602.5zp537xdybbafnci@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-27.11.2019 07:59, Sowjanya Komatineni пишет:
-> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3 with
-> mux and gate for each of these clocks.
-> 
-> Currently these PMC clocks are registered by Tegra clock driver using
-> clk_register_mux and clk_register_gate by passing PMC base address
-> and register offsets and PMC programming for these clocks happens
-> through direct PMC access by the clock driver.
-> 
-> With this, when PMC is in secure mode any direct PMC access from the
-> non-secure world does not go through and these clocks will not be
-> functional.
-> 
-> This patch adds these clocks registration with PMC as a clock provider
-> for these clocks. clk_ops callback implementations for these clocks
-> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC programming
-> in secure mode and non-secure mode.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 330 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 330 insertions(+)
-> 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index ea0e11a09c12..a353f6d0a832 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -13,6 +13,9 @@
->  
->  #include <linux/arm-smccc.h>
->  #include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk/clk-conf.h>
->  #include <linux/clk/tegra.h>
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
-> @@ -48,6 +51,7 @@
->  #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->  #include <dt-bindings/gpio/tegra186-gpio.h>
->  #include <dt-bindings/gpio/tegra194-gpio.h>
-> +#include <dt-bindings/soc/tegra-pmc.h>
->  
->  #define PMC_CNTRL			0x0
->  #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
-> @@ -100,6 +104,7 @@
->  #define PMC_WAKE2_STATUS		0x168
->  #define PMC_SW_WAKE2_STATUS		0x16c
->  
-> +#define PMC_CLK_OUT_CNTRL		0x1a8
->  #define PMC_SENSOR_CTRL			0x1b0
->  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
-> @@ -155,6 +160,91 @@
->  #define  TEGRA_SMC_PMC_READ	0xaa
->  #define  TEGRA_SMC_PMC_WRITE	0xbb
->  
-> +struct pmc_clk_mux {
-> +	struct clk_hw	hw;
-> +	unsigned long	offs;
-> +	u32		mask;
-> +	u32		shift;
-> +};
-> +
-> +#define to_pmc_clk_mux(_hw) container_of(_hw, struct pmc_clk_mux, hw)
-> +
-> +struct pmc_clk_gate {
-> +	struct clk_hw	hw;
-> +	unsigned long	offs;
-> +	u32		shift;
-> +};
-> +
-> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct pmc_clk_gate, hw)
-> +
-> +struct pmc_clk_init_data {
-> +	char *mux_name;
-> +	char *gate_name;
-> +	const char **parents;
-> +	int num_parents;
-> +	int mux_id;
-> +	int gate_id;
-> +	char *dev_name;
-> +	u8 mux_shift;
-> +	u8 gate_shift;
-> +	u8 init_parent_index;
-> +	int init_state;
-> +};
-> +
-> +static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
-> +	"clk_m_div4", "extern1",
-> +};
-> +
-> +static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
-> +	"clk_m_div4", "extern2",
-> +};
-> +
-> +static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
-> +	"clk_m_div4", "extern3",
-> +};
-> +
-> +static struct pmc_clk_init_data tegra_pmc_clks_data[] = {
+On Wed, Nov 27, 2019 at 02:06:02PM +0100, Marco Felsch wrote:
+> On 19-11-27 14:59, Andy Shevchenko wrote:
+> > On Wed, Nov 27, 2019 at 01:09:48PM +0100, Marco Felsch wrote:
 
-const?
+> > Perhaps
+> > 
+> > static void edt_ft5x06_ts_toggle_gpio(struct gpio_desc *gpiod)
+> > {
+> > 	...
+> > }
+> > 
+> > ...resume(...)
+> > {
+> > 	...
+> > 	if (wake_gpio)
+> > 		...toggle_gpio(wake_gpio);
+> > 	else if (reset_gpio)
+> > 		...toggle_gpio(reset_gpio);
+> > 	...
+> > }
+> > 
+> > ?
+> 
+> Thanks fpr your suggestion but we need to differentiate between reset
+> and wake logic level. The wake-gpio keeps asserted while the reset is
+> released. So the edt_ft5x06_ts_toggle_gpio() needs at least a 'is_reset'
+> parameter but then the simplification is gone.
 
-[snip]
+
+How about this:
+static void edt_ft5x06_ts_toggle_gpio(struct gpio_desc *gpiod, int value)
+{
+	gpiod_...(..., !value);
+	...
+	gpiod_...(..., value);
+	...
+}
+
+...resume(...)
+{
+	...
+	if (wake_gpio)
+		...toggle_gpio(wake_gpio, 1);
+	else if (reset_gpio)
+		...toggle_gpio(reset_gpio, 0);
+	...
+}
+
+?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
