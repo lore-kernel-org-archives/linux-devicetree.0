@@ -2,248 +2,98 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A9BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0002C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 18:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B5E20835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574876678;
-	bh=0mnbkXpRIAs1oWs7887fZ1hqjmi1n2cupNv6F6qcqnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nHRZIbkFCuqImAGy3msMiXgOpzKahQfK9YKKok317NzjBCQ20T0a/sbVEE7wRn9HI
-	 tr2ye3pxibIZdk5WhnUCTpg2EXzmMuVVf4A4XhTH41I6ltDoeiHfCW0TGgW+/HZKj3
-	 okfMqSYcXcQOt5sbgb+gXQF5HzGi9L8vFcYHknV4=
+	by mail.kernel.org (Postfix) with ESMTP id 7FC2A20871
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 18:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfK0Roh (ORCPT
+        id S1726655AbfK0SGU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:44:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
+        Wed, 27 Nov 2019 13:06:20 -0500
+Received: from mga05.intel.com ([192.55.52.43]:15976 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbfK0Roh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Nov 2019 12:44:37 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ECAE2071E;
-        Wed, 27 Nov 2019 17:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574876676;
-        bh=0mnbkXpRIAs1oWs7887fZ1hqjmi1n2cupNv6F6qcqnM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NVvBMB3wRKTxMbLvW7a7orEuxSa5qmKwIzhQPwJEA1hcD6wtHcM+iBbi2g12emuJU
-         uB3XB7t7NFQXZT8q4MH4UiBt1ALildwE7zg/wS2PR1F0vre2NXqdxkNdu7oayb0qlF
-         3D9AdyA4pjS85SjD7oeKkaiCzB5oYB9gDNB4U4zo=
-Date:   Wed, 27 Nov 2019 18:44:34 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/7] dt-bindings: thermal: add YAML schema for
- sun8i-thermal driver bindings
-Message-ID: <20191127174434.wousbqosmm5vxcsu@gilmour.lan>
-References: <20191127052935.1719897-1-anarsoul@gmail.com>
- <20191127052935.1719897-3-anarsoul@gmail.com>
+        id S1726576AbfK0SGU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 13:06:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2019 10:06:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,250,1571727600"; 
+   d="scan'208";a="211764761"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 27 Nov 2019 10:06:15 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ia1he-0005jH-Lf; Wed, 27 Nov 2019 20:06:14 +0200
+Date:   Wed, 27 Nov 2019 20:06:14 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com, bparrot@ti.com,
+        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
+        mripard@kernel.org, alexandre.belloni@bootlin.com,
+        shawnguo@kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] Input: edt-ft5x06 - improve power management
+ operations
+Message-ID: <20191127180614.GS32742@smile.fi.intel.com>
+References: <20191127120948.22251-1-m.felsch@pengutronix.de>
+ <20191127120948.22251-6-m.felsch@pengutronix.de>
+ <20191127125932.GK32742@smile.fi.intel.com>
+ <20191127130602.5zp537xdybbafnci@pengutronix.de>
+ <20191127143217.GL32742@smile.fi.intel.com>
+ <20191127172522.4wmc6pqyuw7vpvzl@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vy5yg3fxo523fkw5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191127052935.1719897-3-anarsoul@gmail.com>
+In-Reply-To: <20191127172522.4wmc6pqyuw7vpvzl@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Nov 27, 2019 at 06:25:22PM +0100, Marco Felsch wrote:
+> On 19-11-27 16:32, Andy Shevchenko wrote:
+> > On Wed, Nov 27, 2019 at 02:06:02PM +0100, Marco Felsch wrote:
+> > > On 19-11-27 14:59, Andy Shevchenko wrote:
+> > > > On Wed, Nov 27, 2019 at 01:09:48PM +0100, Marco Felsch wrote:
 
---vy5yg3fxo523fkw5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > static void edt_ft5x06_ts_toggle_gpio(struct gpio_desc *gpiod, int value)
+> > {
+> > 	gpiod_...(..., !value);
+> > 	...
+> > 	gpiod_...(..., value);
+> > 	...
+> > }
+> > 
+> > ...resume(...)
+> > {
+> > 	...
+> > 	if (wake_gpio)
+> > 		...toggle_gpio(wake_gpio, 1);
+> > 	else if (reset_gpio)
+> > 		...toggle_gpio(reset_gpio, 0);
+> > 	...
+> > }
+> > 
+> > ?
+> 
+> That's possible.. Don't see the improvement yet, but I can prepare a
+> folllow-up patch if Dmitry wants.
 
-Hi,
+The improvement is to get rid of duplication of flow how you toggle the GPIO.
+But yes, up to Dmitry.
 
-On Tue, Nov 26, 2019 at 09:29:30PM -0800, Vasily Khoruzhick wrote:
-> From: Yangtao Li <tiny.windzz@gmail.com>
->
-> sun8i-thermal driver supports thermal sensor in wide range of Allwinner
-> SoCs. Add YAML schema for its bindings.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> ---
->  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 103 ++++++++++++++++++
->  1 file changed, 103 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> new file mode 100644
-> index 000000000000..e622f0a4be90
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> @@ -0,0 +1,103 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Yangtao Li <tiny.windzz@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: allwinner,sun8i-a83t-ths
-> +      - const: allwinner,sun8i-h3-ths
-> +      - const: allwinner,sun8i-r40-ths
-> +      - const: allwinner,sun50i-a64-ths
-> +      - const: allwinner,sun50i-h5-ths
-> +      - const: allwinner,sun50i-h6-ths
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    anyOf:
-> +      - items:
-> +        - const: bus
-> +        - const: mod
-> +      - items:
-> +        - const: bus
+-- 
+With Best Regards,
+Andy Shevchenko
 
-This can be:
 
-clock-names:
-  minItems: 1
-  maxItems: 2
-  items:
-    - const: bus
-    - const: mod
-
-And the length should be checked based on the compatible value, with
-something like
-
-if:
-  properties:
-    compatible:
-      contains:
-        const: allwinner,sun50i-h6-ths
-
-then:
-  properties:
-    clocks:
-      maxItems: 1
-
-    clock-names:
-      maxItems: 1
-
-else:
-  properties:
-    clocks:
-      maxItems: 2
-
-    clock-names:
-      maxItems: 2
-
-> +
-> +  '#thermal-sensor-cells':
-> +    enum: [ 0, 1 ]
-> +    description: |
-> +      Definition depends on soc version:
-> +
-> +      For "allwinner,sun8i-h3-ths",
-> +      value must be 0.
-> +      For all other compatibles
-> +      value must be 1.
-
-This should be checked using an if as well.
-
-> +
-> +  nvmem-cells:
-> +    maxItems: 1
-> +    items:
-> +      - description: Calibration data for thermal sensors
-
-You can drop the items and just move the description up one level,
-under nvmem-cells
-
-> +
-> +  nvmem-cell-names:
-> +    items:
-> +      - const: calibration
-
-Ditto for the const
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - '#thermal-sensor-cells'
-
-Whether clocks, clock-names and resets are thereshould be check using
-an if statement as well.
-
-> +
-> +examples:
-> +  - |
-> +    ths_a83t: ths@1f04000 {
-
-You don't need the label at all, and the node name should be
-temperature-sensor according to the DT spec, not ths. This applies to
-all you examples.
-
-> +         compatible = "allwinner,sun8i-a83t-ths";
-> +         reg = <0x01f04000 0x100>;
-> +         interrupts = <0 31 0>;
-> +         nvmem-cells = <&ths_calibration>;
-> +         nvmem-cell-names = "calibration";
-> +         #thermal-sensor-cells = <1>;
-> +    };
-
-New line.
-
-Thanks!
-Maxime
-
---vy5yg3fxo523fkw5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXd62AgAKCRDj7w1vZxhR
-xZhDAP92TopSGYK0i/lNbBksUI+7RNfvt+FhK2eVaXRB2/XToAD/S4RzDGUA4BXe
-Cx5DhAlOJY+WchG8X6c4StMtLQAUwAM=
-=6CMd
------END PGP SIGNATURE-----
-
---vy5yg3fxo523fkw5--
