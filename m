@@ -2,145 +2,192 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B73C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9C2C43215
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457662068E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F5920674
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 13:49:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UfmrOfsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfK0NgC (ORCPT
+        id S1726320AbfK0Nta (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 08:36:02 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38835 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfK0NgC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 08:36:02 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iZxU7-00034M-ND; Wed, 27 Nov 2019 14:35:59 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iZxU7-0000zW-2W; Wed, 27 Nov 2019 14:35:59 +0100
-Date:   Wed, 27 Nov 2019 14:35:59 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Nick Dyer <nick@shmanahar.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, patchwork-lst@pengutronix.de,
-        kernel@pengutronix.de, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2] Input: atmel_mxt_ts - allow specification of config
- name
-Message-ID: <20191127133559.bgho6fcr76o5vfst@pengutronix.de>
-References: <20191127125456.9672-1-l.stach@pengutronix.de>
+        Wed, 27 Nov 2019 08:49:30 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:39043 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfK0Nta (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 08:49:30 -0500
+Received: by mail-ua1-f67.google.com with SMTP id r13so6986850uan.6
+        for <devicetree@vger.kernel.org>; Wed, 27 Nov 2019 05:49:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+nx+9qeUsVrgVxpWb5DGUTX9y7FEWCWKgVQeRiw+fPY=;
+        b=UfmrOfsSSr4N7iI9BXNqYEpRJx9A8H5jGQAhTC4CjaX3hP2U3ruLhBevRf5OFQjbGI
+         TKAe2SCcNPBm0WDAOxX1MGvTE8n1JFiPtDGrUMFaKl+Zf8T5kjtPjuaGkQmHnjpscrf1
+         rsTh6TolGy7ETbKDMiLBe3WoyCq9KZ8zuMxZdcpkTfaceyO7KpQnnNBuDmntwx5kYMNT
+         w5JafA+irlzk3yJLliprj02VrDtVGN51HK7QEmYsj3hEj3CHsv7r5nR9sOPu5tvesSJI
+         RaXnid6BtkHjSvotmPWXdMzdFCJqGEZ6CEsKLrrQ6+B6hfz9l4B4uD7zK40ed6rnubxL
+         boRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+nx+9qeUsVrgVxpWb5DGUTX9y7FEWCWKgVQeRiw+fPY=;
+        b=iT1NIvC8MXZspsxnkT5K4so/AWVMFA4FRrwBYVm+It7sywERgs+bUIK50uFtPBeo4v
+         VmHKqc+qrqyA593vUD49ndPmTlL8ilL67mm2L1UCWgP7Go7Y7xeUDKyPOipynWev9MC9
+         70h5T3fT8ud9fYWEgm/iTDvhRT9EWZ2oUDdaPuHy5oisLHJ8/lSl9Dd4LD9WsTX7XcYD
+         Zc8U9spQsTZ/4qQU8ytUX/Iezdwshi8ADFuKDntD1FOLBcSG6ADkvHsEIWuCHvwLBo38
+         bwYCGTAD0QZXajSddd2XnCPILJYd/MkqeOfT9vKGU74SYKhMROXkWjQ+iPM/u1JG1AOP
+         r4bg==
+X-Gm-Message-State: APjAAAW8TaZuwxGfedLck57UdmMd/zCwbL55eYp+/AfKe+ZVjM+iC3HO
+        FmcjH6KfPCsN2AvYWzyz+FK5+ZZ7457wb+0gUO+I0g==
+X-Google-Smtp-Source: APXvYqzedabYD3uY1NUNLUI3MPPvnAd6IgQOrq2x8I9KcgoT62IcEarJDYmcmpswdWe232KyoNDSmfy6U6TgM8ea1k4=
+X-Received: by 2002:ab0:2551:: with SMTP id l17mr2707934uan.54.1574862568419;
+ Wed, 27 Nov 2019 05:49:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127125456.9672-1-l.stach@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:29:21 up 12 days,  4:47, 24 users,  load average: 0.08, 0.03,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191127115619.20278-1-m.felsch@pengutronix.de> <20191127115619.20278-4-m.felsch@pengutronix.de>
+In-Reply-To: <20191127115619.20278-4-m.felsch@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 Nov 2019 14:49:17 +0100
+Message-ID: <CACRpkdbd4J-FUNi=F12YQfNPajNCVaoKyqWU7qjmfFMbonzDKg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] pinctrl: da9062: add driver support
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lucas,
+Hi Marco,
 
-just two nitpicks.
+thanks for your patch!
 
-On 19-11-27 13:54, Lucas Stach wrote:
-> From: Nick Dyer <nick@shmanahar.org>
-> 
-> Signed-off-by: Nick Dyer <nick@shmanahar.org>
-> ---
-> v2: Switch to linux instead of atmel as vendor prefix.
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
+On Wed, Nov 27, 2019 at 12:56 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-Don't know the git behaviour but where happens the cut if we have two
-'---'?
+> The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> be used as input, output or have a special use-case.
+>
+> The patch adds the support for the normal input/output use-case.
+>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+(...)
 
->  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 3 +++
->  drivers/input/touchscreen/atmel_mxt_ts.c                   | 6 +++++-
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> index c88919480d37..0764c7af045c 100644
-> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> @@ -31,6 +31,9 @@ Optional properties for main touchpad device:
->  
->  - reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
->  
-> +- linux,cfg-name: Provide name of configuration file in OBP_RAW format. This
-> +    will be downloaded from the firmware loader on probe to the device.
+> +config PINCTRL_DA9062
+> +       tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
+> +       depends on MFD_DA9062
+> +       select GPIOLIB
+
+Hm this would be one of those that could use GENERIC_REGMAP_GPIO
+the day we invent it but we haven't invented it yet.
+
+> +#include <../gpio/gpiolib.h>
+
+Put a comment above this telling us why you do this thing.
+
+> +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +{
+(...)
+> +       return val & BIT(offset);
+
+You should #include <linux/bits.h> since you use BIT()
+
+Usually I clamp it like this:
+return !!(val & BIT(offset));
+
+> +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
+> +       struct regmap *regmap = pctl->da9062->regmap;
+> +       int gpio_mode;
 > +
->  Example:
->  
->  	touch@4b {
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index 24c4b691b1c9..60997086763b 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -308,6 +308,7 @@ struct mxt_data {
->  	struct t7_config t7_cfg;
->  	struct mxt_dbg dbg;
->  	struct gpio_desc *reset_gpio;
-> +	const char *cfg_name;
->  
->  	/* Cached parameters from object table */
->  	u16 T5_address;
-> @@ -2142,7 +2143,8 @@ static int mxt_initialize(struct mxt_data *data)
->  	if (error)
->  		return error;
->  
-> -	error = request_firmware_nowait(THIS_MODULE, true, MXT_CFG_NAME,
-> +	error = request_firmware_nowait(THIS_MODULE, true,
-> +					data->cfg_name ? : MXT_CFG_NAME,
-
-This will produce a warning if clang is used [1]. I don't know if we
-should introduce gcc-extensions.
-
-[1] https://releases.llvm.org/8.0.0/tools/clang/docs/DiagnosticsReference.html#wgnu-conditional-omitted-operand
-
-Regards,
-  Marco
-
->  					&client->dev, GFP_KERNEL, data,
->  					mxt_config_cb);
->  	if (error) {
-> @@ -3015,6 +3017,8 @@ static int mxt_parse_device_properties(struct mxt_data *data)
->  		data->t19_num_keys = n_keys;
->  	}
->  
-> +	device_property_read_string(dev, "linux,cfg-name", &data->cfg_name);
+> +       gpio_mode = da9062_pctl_get_pin_mode(regmap, offset);
+> +       if (gpio_mode < 0)
+> +               return gpio_mode;
 > +
->  	return 0;
->  }
->  
-> -- 
-> 2.20.1
-> 
-> 
-> 
+> +       switch (gpio_mode) {
+> +       case DA9062_PIN_ALTERNATE:
+> +               return -ENOTSUPP;
+> +       case DA9062_PIN_GPI:
+> +               return 1;
+> +       case DA9062_PIN_GPO_OD:
+> +       case DA9062_PIN_GPO_PP:
+> +               return 0;
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+We recently added defines for these directions in
+<linux/gpio/driver.h>:
+
+#define GPIO_LINE_DIRECTION_IN  1
+#define GPIO_LINE_DIRECTION_OUT 0
+
+Please use these. (Soon in Torvald's tree, else
+in my "devel" branch.)
+
+> +static int da9062_gpio_direction_input(struct gpio_chip *gc,
+> +                                      unsigned int offset)
+> +{
+> +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
+> +       struct regmap *regmap = pctl->da9062->regmap;
+> +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
+> +       unsigned int gpi_type;
+> +       int ret;
+> +
+> +       ret = da9062_pctl_set_pin_mode(regmap, offset, DA9062_PIN_GPI);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /*
+> +        * If the gpio is active low we should set it in hw too. No worries
+> +        * about gpio_get() because we read and return the gpio-level. So the
+> +        * gpiolib active_low handling is still correct.
+> +        *
+> +        * 0 - active low, 1 - active high
+> +        */
+> +       gpi_type = !gpiod_is_active_low(desc);
+
+That's interesting. Correct too, I guess.
+
+> +static int da9062_gpio_direction_output(struct gpio_chip *gc,
+> +                                       unsigned int offset, int value)
+> +{
+> +       /* Push-Pull / Open-Drain options are configured during set_config */
+> +       da9062_gpio_set(gc, offset, value);
+
+That looks dangerous. There is no guarantee that .set_config()
+always gets called.
+
+Please create a local state container for the mode of each pin in
+struct da9062_pctl and set it to push-pull by default at probe, then
+set this to whatever the state is here and let the .set_config()
+alter it later if need be.
+
+If we don't do that you will get boot-time defaults I think and that
+might create bugs.
+
+> +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+> +                                 unsigned long config)
+> +{
+(...)
+> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +               return da9062_pctl_set_pin_mode(regmap, offset,
+> +                                               DA9062_PIN_GPO_OD);
+> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +               return da9062_pctl_set_pin_mode(regmap, offset,
+> +                                               DA9062_PIN_GPO_PP);
+
+So also store this in the per-pin state.
+
+Yours,
+Linus Walleij
