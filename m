@@ -2,41 +2,45 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0C4C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 11:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A654EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 12:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0E62071E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 11:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762062071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 12:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfK0L40 (ORCPT
+        id S1726983AbfK0MKF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 06:56:26 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41505 "EHLO
+        Wed, 27 Nov 2019 07:10:05 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51217 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfK0L4Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 06:56:25 -0500
+        with ESMTP id S1726696AbfK0MKE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 07:10:04 -0500
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1iZvvh-0000lA-KH; Wed, 27 Nov 2019 12:56:21 +0100
+        id 1iZw8k-0002KA-VT; Wed, 27 Nov 2019 13:09:50 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1iZvvh-0006Wt-1d; Wed, 27 Nov 2019 12:56:21 +0100
+        id 1iZw8j-0006Id-J4; Wed, 27 Nov 2019 13:09:49 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, support.opensource@diasemi.com,
-        Adam.Thomson.Opensource@diasemi.com
+To:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
+        dmitry.torokhov@gmail.com, bparrot@ti.com,
+        andy.shevchenko@gmail.com, simon.budig@kernelconcepts.de,
+        hdegoede@redhat.com, fcooper@ti.com, mripard@kernel.org,
+        alexandre.belloni@bootlin.com, shawnguo@kernel.org
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v2 0/3] Add DA9062 GPIO support
-Date:   Wed, 27 Nov 2019 12:56:16 +0100
-Message-Id: <20191127115619.20278-1-m.felsch@pengutronix.de>
+        linux-input@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2 1/5] Input: edt-ft5x06: work around first register access error
+Date:   Wed, 27 Nov 2019 13:09:44 +0100
+Message-Id: <20191127120948.22251-2-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191127120948.22251-1-m.felsch@pengutronix.de>
+References: <20191127120948.22251-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
@@ -48,26 +52,46 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-this update address all comments made on [1], for further details see
-the patch based changelog.
+The EP0700MLP1 returns bogus data on the first register read access
+(reading the threshold parameter from register 0x00):
 
-[1] https://patchwork.ozlabs.org/cover/1163308/
+    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
 
-Marco Felsch (3):
-  dt-bindings: mfd: da9062: add gpio bindings
-  mfd: da9062: add support for the DA9062 GPIOs in the core
-  pinctrl: da9062: add driver support
+It ignores writes until then. This patch adds a dummy read after which
+the number of sensors and parameter read/writes work correctly.
 
- .../devicetree/bindings/mfd/da9062.txt        |  10 +
- drivers/mfd/da9062-core.c                     |  16 +-
- drivers/pinctrl/Kconfig                       |  12 +
- drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/pinctrl-da9062.c              | 272 ++++++++++++++++++
- 5 files changed, 310 insertions(+), 1 deletion(-)
- create mode 100644 drivers/pinctrl/pinctrl-da9062.c
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index d61731c0037d..b87b1e074f62 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -1050,6 +1050,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ {
+ 	const struct edt_i2c_chip_data *chip_data;
+ 	struct edt_ft5x06_ts_data *tsdata;
++	u8 buf[2] = { 0xfc, 0x00 };
+ 	struct input_dev *input;
+ 	unsigned long irq_flags;
+ 	int error;
+@@ -1140,6 +1141,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
++	/*
++	 * Dummy read access. EP0700MLP1 returns bogus data on the first
++	 * register read access and ignores writes.
++	 */
++	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
++
+ 	edt_ft5x06_ts_set_regs(tsdata);
+ 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
+ 	edt_ft5x06_ts_get_parameters(tsdata);
 -- 
 2.20.1
 
