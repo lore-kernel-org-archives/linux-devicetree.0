@@ -2,204 +2,114 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533F5C432C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31C1C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B62204FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850DA2070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:46:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FlP8wRbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfK0Inp (ORCPT
+        id S1726143AbfK0IqL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:43:45 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:43634 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfK0InJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 03:43:09 -0500
-Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id Wwiu2100e5USYZQ01wiuXV; Wed, 27 Nov 2019 09:43:07 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iZsuU-0000xt-QR; Wed, 27 Nov 2019 09:42:54 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iZsuU-0004P0-Ny; Wed, 27 Nov 2019 09:42:54 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
-Date:   Wed, 27 Nov 2019 09:42:52 +0100
-Message-Id: <20191127084253.16356-7-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191127084253.16356-1-geert+renesas@glider.be>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
+        Wed, 27 Nov 2019 03:46:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52436 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfK0IqK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 03:46:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wXWwhpdRgill+QTPv3BKJAOvN43996rdTBF/4swV0U8=; b=FlP8wRbWl0zj7De91vYcG2C79
+        PtfKLaPfuDNa6KpnRDxy0fS5CW1/WBC2QkzQdd3uwh00blaoP5j6+Gl3q+8O5JAk1I6ZbMUw/6A9o
+        nYbRLjeK55ePNl8E4uj7o/U6veOHatkgw21qb4KqNQ4LrWUEc7m9JskRcraUsIIN+tpBmLSCvBlDK
+        VwFAaFCzk91GCmZy3kLOJE+KapzZfmNa5Po0POQ8t/IXUMaARP96Hb+bhdUFoS7Elk2eV0FvaeYMC
+        IEUnpzVwhlU5PX93IiFvjMUpHXzTxc+v+I/7xQ4KoeAK9WPm/QVieEpBXdbv2bG9/FBJ4Q4ssTccI
+        4ON2vYmfA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iZsxd-0003st-AT; Wed, 27 Nov 2019 08:46:09 +0000
+Date:   Wed, 27 Nov 2019 00:46:09 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Haren Myneni <haren@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        mpe@ellerman.id.au, npiggin@gmail.com, mikey@neuling.org,
+        herbert@gondor.apana.org.au, sukadev@linux.vnet.ibm.com
+Subject: Re: [PATCH 09/14] powerpc/vas: Update CSB and notify process for
+ fault CRBs
+Message-ID: <20191127084609.GF17097@infradead.org>
+References: <1574817074.13250.16.camel@hbabu-laptop>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574817074.13250.16.camel@hbabu-laptop>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the GPIO Aggregator/Repeater, and the three typical use-cases.
+>  
+> +static void notify_process(pid_t pid, u64 fault_addr)
+> +{
+> +	int rc;
+> +	struct kernel_siginfo info;
+> +
+> +	memset(&info, 0, sizeof(info));
+> +
+> +	info.si_signo = SIGSEGV;
+> +	info.si_errno = EFAULT;
+> +	info.si_code = SEGV_MAPERR;
+> +
+> +	info.si_addr = (void *)fault_addr;
+> +	rcu_read_lock();
+> +	rc = kill_pid_info(SIGSEGV, &info, find_vpid(pid));
+> +	rcu_read_unlock();
+> +
+> +	pr_devel("%s(): pid %d kill_proc_info() rc %d\n", __func__, pid, rc);
+> +}
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v3:
-  - New.
----
- .../admin-guide/gpio/gpio-aggregator.rst      | 111 ++++++++++++++++++
- Documentation/admin-guide/gpio/index.rst      |   1 +
- 2 files changed, 112 insertions(+)
- create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
+Shouldn't this use force_sig_fault_to_task instead?
 
-diff --git a/Documentation/admin-guide/gpio/gpio-aggregator.rst b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-new file mode 100644
-index 0000000000000000..826146e260253299
---- /dev/null
-+++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-@@ -0,0 +1,111 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+GPIO Aggregator/Repeater
-+========================
-+
-+The GPIO Aggregator/Repeater allows to aggregate GPIOs, and expose them as a
-+new gpio_chip.  This supports the following use cases.
-+
-+
-+Aggregating GPIOs using Sysfs
-+-----------------------------
-+
-+GPIO controllers are exported to userspace using /dev/gpiochip* character
-+devices.  Access control to these devices is provided by standard UNIX file
-+system permissions, on an all-or-nothing basis: either a GPIO controller is
-+accessible for a user, or it is not.
-+
-+The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-+them into a new gpio_chip, which can be assigned to a group or user using
-+standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-+hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-+GPIO controller, and no longer needs to care about which GPIOs to grab and
-+which not, reducing the attack surface.
-+
-+Aggregated GPIO controllers are instantiated and destroyed by writing to
-+write-only attribute files in sysfs.
-+
-+    /sys/bus/platform/drivers/gpio-aggregator/
-+
-+	"new_device" ...
-+		Userspace may ask the kernel to instantiate an aggregated GPIO
-+		controller by writing a string describing the GPIOs to
-+		aggregate to the "new_device" file, using the format
-+
-+		.. code-block:: none
-+
-+		    [<gpioA>] [<gpiochipB> <offsets>] ...
-+
-+		Where:
-+
-+		    "<gpioA>" ...
-+			    is a GPIO line name,
-+
-+		    "<gpiochipB>" ...
-+			    is a GPIO chip label or name, and
-+
-+		    "<offsets>" ...
-+			    is a comma-separated list of GPIO offsets and/or
-+			    GPIO offset ranges denoted by dashes.
-+
-+		Example: Instantiate a new GPIO aggregator by aggregating GPIO
-+		19 of "e6052000.gpio" and GPIOs 20-21 of "gpiochip2" into a new
-+		gpio_chip:
-+
-+		.. code-block:: bash
-+
-+		    echo 'e6052000.gpio 19 gpiochip2 20-21' > new_device
-+
-+	"delete_device" ...
-+		Userspace may ask the kernel to destroy an aggregated GPIO
-+		controller after use by writing its device name to the
-+		"delete_device" file.
-+
-+		Example: Destroy the previously-created aggregated GPIO
-+		controller "gpio-aggregator.0":
-+
-+		.. code-block:: bash
-+
-+		    echo gpio-aggregator.0 > delete_device
-+
-+
-+GPIO Repeater in Device Tree
-+----------------------------
-+
-+A GPIO Repeater is a node in a Device Tree representing a repeater for one or
-+more GPIOs, possibly including physical signal property translation (e.g.
-+polarity inversion).  This allows to model e.g. inverters in DT.
-+
-+See Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-+
-+
-+Generic GPIO Driver
-+-------------------
-+
-+The GPIO Aggregator can also be used as a generic driver for a simple
-+GPIO-operated device described in DT, without a dedicated in-kernel driver.
-+This is not unlike e.g. spidev, which allows to communicated with an SPI device
-+from userspace.
-+
-+Binding a device to the GPIO Aggregator is performed either by modifying the
-+gpio-aggregator driver, or by writing to the "driver_override" file in Sysfs.
-+
-+Example: If "frobnicator" is a GPIO-operated device described in DT, using its
-+own compatible value::
-+
-+        frobnicator {
-+                compatible = "myvendor,frobnicator";
-+
-+                gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>,
-+                        <&gpio2 20 GPIO_ACTIVE_LOW>;
-+        };
-+
-+it can be bound to the GPIO Aggregator by either:
-+
-+1. Adding its compatible value to ``gpio_aggregator_dt_ids[]``,
-+2. Binding manually using "driver_override":
-+
-+.. code-block:: bash
-+
-+    echo gpio-aggregator > /sys/bus/platform/devices/frobnicator/driver_override
-+    echo frobnicator > /sys/bus/platform/drivers/gpio-aggregator/bind
-diff --git a/Documentation/admin-guide/gpio/index.rst b/Documentation/admin-guide/gpio/index.rst
-index a244ba4e87d5398a..ef2838638e967777 100644
---- a/Documentation/admin-guide/gpio/index.rst
-+++ b/Documentation/admin-guide/gpio/index.rst
-@@ -7,6 +7,7 @@ gpio
- .. toctree::
-     :maxdepth: 1
- 
-+    gpio-aggregator
-     sysfs
- 
- .. only::  subproject and html
--- 
-2.17.1
+> +	/*
+> +	 * User space passed invalid CSB address, Notify process with
+> +	 * SEGV signal.
+> +	 */
+> +	tsk = get_pid_task(window->pid, PIDTYPE_PID);
+> +	/*
+> +	 * Send window will be closed after processing all NX requests
+> +	 * and process exits after closing all windows. In multi-thread
+> +	 * applications, thread may not exists, but does not close FD
+> +	 * (means send window) upon exit. Parent thread (tgid) can use
+> +	 * and close the window later.
+> +	 */
+> +	if (tsk) {
+> +		if (tsk->flags & PF_EXITING)
+> +			task_exit = 1;
+> +		put_task_struct(tsk);
+> +		pid = vas_window_pid(window);
 
+The pid is later used for sending the signal again, why not keep the
+reference?
+
+> +	} else {
+> +		pid = vas_window_tgid(window);
+> +
+> +		rcu_read_lock();
+> +		tsk = find_task_by_vpid(pid);
+> +		if (!tsk) {
+> +			rcu_read_unlock();
+> +			return;
+> +		}
+> +		if (tsk->flags & PF_EXITING)
+> +			task_exit = 1;
+> +		rcu_read_unlock();
+
+Why does this not need a reference to the task, but the other one does?
