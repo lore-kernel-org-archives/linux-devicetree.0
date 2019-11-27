@@ -2,114 +2,191 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31C1C432C0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A025EC432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 09:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850DA2070B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 08:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F3E2070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 09:01:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FlP8wRbW"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TMm3m1/9";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="SdpIEpRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfK0IqL (ORCPT
+        id S1726149AbfK0JBI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 03:46:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52436 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfK0IqK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 03:46:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wXWwhpdRgill+QTPv3BKJAOvN43996rdTBF/4swV0U8=; b=FlP8wRbWl0zj7De91vYcG2C79
-        PtfKLaPfuDNa6KpnRDxy0fS5CW1/WBC2QkzQdd3uwh00blaoP5j6+Gl3q+8O5JAk1I6ZbMUw/6A9o
-        nYbRLjeK55ePNl8E4uj7o/U6veOHatkgw21qb4KqNQ4LrWUEc7m9JskRcraUsIIN+tpBmLSCvBlDK
-        VwFAaFCzk91GCmZy3kLOJE+KapzZfmNa5Po0POQ8t/IXUMaARP96Hb+bhdUFoS7Elk2eV0FvaeYMC
-        IEUnpzVwhlU5PX93IiFvjMUpHXzTxc+v+I/7xQ4KoeAK9WPm/QVieEpBXdbv2bG9/FBJ4Q4ssTccI
-        4ON2vYmfA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iZsxd-0003st-AT; Wed, 27 Nov 2019 08:46:09 +0000
-Date:   Wed, 27 Nov 2019 00:46:09 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Haren Myneni <haren@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        mpe@ellerman.id.au, npiggin@gmail.com, mikey@neuling.org,
-        herbert@gondor.apana.org.au, sukadev@linux.vnet.ibm.com
-Subject: Re: [PATCH 09/14] powerpc/vas: Update CSB and notify process for
- fault CRBs
-Message-ID: <20191127084609.GF17097@infradead.org>
-References: <1574817074.13250.16.camel@hbabu-laptop>
+        Wed, 27 Nov 2019 04:01:08 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:54440
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726112AbfK0JBI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 04:01:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574845267;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=/FYkTuY+LSN9o25C15XeQWbPXu5BJmnWfDm9uE5K0cA=;
+        b=TMm3m1/91ExRDCMLB8pJ6x0cX5rFP8AUa2GNo5KGDKpqqNnE+h1v/m8pmNbadOZq
+        15qbbBP0ZOIAVLtW4P5naY/p3Iu8jD8717CiUUPvOmDZnz1G5DBc+fHsetkQ2zb90YB
+        IsicgbQYAZ0z0YdrA1mMS6shwab4DPXVY79YRbGw=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574845267;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=/FYkTuY+LSN9o25C15XeQWbPXu5BJmnWfDm9uE5K0cA=;
+        b=SdpIEpRHyQDsTefS5/UEb4j2gq6rYwfKjTe7s9OpQlJ0fgwk64BgO9mFKTGEpVtj
+        K0kIC06KEt3Dqg2R+mGHQltz6j/v28P8WoNuNxMyCIL4ypG1ID8gKXNQlkk4QwKugbL
+        kPBzHW3nxYGERsjxgNzk9LDplxikkDPyB1w7n+Qg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5641C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: sc7180: Add USB related nodes
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>
+References: <1573795421-13989-1-git-send-email-sanm@codeaurora.org>
+ <1573795421-13989-2-git-send-email-sanm@codeaurora.org>
+ <20191122005117.GM27773@google.com>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <0101016eac17bd3b-a4e688d8-03dd-45de-8e01-8052d9227752-000000@us-west-2.amazonses.com>
+Date:   Wed, 27 Nov 2019 09:01:07 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574817074.13250.16.camel@hbabu-laptop>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20191122005117.GM27773@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-SES-Outgoing: 2019.11.27-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->  
-> +static void notify_process(pid_t pid, u64 fault_addr)
-> +{
-> +	int rc;
-> +	struct kernel_siginfo info;
-> +
-> +	memset(&info, 0, sizeof(info));
-> +
-> +	info.si_signo = SIGSEGV;
-> +	info.si_errno = EFAULT;
-> +	info.si_code = SEGV_MAPERR;
-> +
-> +	info.si_addr = (void *)fault_addr;
-> +	rcu_read_lock();
-> +	rc = kill_pid_info(SIGSEGV, &info, find_vpid(pid));
-> +	rcu_read_unlock();
-> +
-> +	pr_devel("%s(): pid %d kill_proc_info() rc %d\n", __func__, pid, rc);
-> +}
+Hi Matthias,
 
-Shouldn't this use force_sig_fault_to_task instead?
+Thanks for the review.
 
-> +	/*
-> +	 * User space passed invalid CSB address, Notify process with
-> +	 * SEGV signal.
-> +	 */
-> +	tsk = get_pid_task(window->pid, PIDTYPE_PID);
-> +	/*
-> +	 * Send window will be closed after processing all NX requests
-> +	 * and process exits after closing all windows. In multi-thread
-> +	 * applications, thread may not exists, but does not close FD
-> +	 * (means send window) upon exit. Parent thread (tgid) can use
-> +	 * and close the window later.
-> +	 */
-> +	if (tsk) {
-> +		if (tsk->flags & PF_EXITING)
-> +			task_exit = 1;
-> +		put_task_struct(tsk);
-> +		pid = vas_window_pid(window);
+On 11/22/2019 6:21 AM, Matthias Kaehlcke wrote:
+> Hi Sandeep,
+>
+> On Fri, Nov 15, 2019 at 10:53:41AM +0530, Sandeep Maheswaram wrote:
+>> Add nodes for DWC3 USB controller, QMP and QUSB PHYs.
+>>
+>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sc7180-idp.dts |  25 ++++++++
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 105 ++++++++++++++++++++++++++++++++
+>>   2 files changed, 130 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index 666e9b9..2c7dbdc 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>>
+>> ...
+>>
+>> +		usb_1: usb@a6f8800 {
+>> +			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
+>> +			reg = <0 0x0a6f8800 0 0x400>;
+>> +			status = "disabled";
+>> +			#address-cells = <2>;
+>> +			#size-cells = <2>;
+>> +			ranges;
+>> +			dma-ranges;
+>> +
+>> +			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+>> +				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+>> +				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
+>> +				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+>> +				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
+>> +			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
+>> +				      "sleep";
+>> +
+>> +			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+>> +					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+>> +			assigned-clock-rates = <19200000>, <150000000>;
+>> +
+>> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-names = "hs_phy_irq", "ss_phy_irq",
+>> +					  "dm_hs_phy_irq", "dp_hs_phy_irq";
+>> +
+>> +			power-domains = <&gcc USB30_PRIM_GDSC>;
+>> +
+>> +			resets = <&gcc GCC_USB30_PRIM_BCR>;
+>> +
+>> +			usb_1_dwc3: dwc3@a600000 {
+>> +				compatible = "snps,dwc3";
+>> +				reg = <0 0x0a600000 0 0xe000>;
+>> +				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+>> +				iommus = <&apps_smmu 0x540 0>;
+>> +				snps,dis_u2_susphy_quirk;
+>> +				snps,dis_enblslpm_quirk;
+>> +				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+>> +				phy-names = "usb2-phy", "usb3-phy";
+>> +			};
+> I see the following message at boot:
+>
+> [    4.248436] dwc3 a600000.dwc3: Failed to get clk 'ref': -2
+>
+> Apparently the driver is operational regardless, however the binding lists
+> the clocks as required:
+>
+>    Required properties:
+>     ...
+>     - clock-names: should contain "ref", "bus_early", "suspend"
+>     - clocks: list of phandle and clock specifier pairs corresponding to
+>               entries in the clock-names property.
+>
+>    [Documentation/devicetree/bindings/usb/dwc3.txt]
+>
+> The driver code also has a comment stating that the clocks should be
+> specified:
+>
+>    /*
+>     * Clocks are optional, but new DT platforms should support all
+>     * clocks as required by the DT-binding.
+>     */
+>
+>    [drivers/usb/dwc3/core.txt]
+We are implenting all the required clocks in glue driver 
+drivers/usb/dwc3/dwc3-qcom.c.
 
-The pid is later used for sending the signal again, why not keep the
-reference?
+Also there is exception for qcom,dwc3 in documentation
 
-> +	} else {
-> +		pid = vas_window_tgid(window);
-> +
-> +		rcu_read_lock();
-> +		tsk = find_task_by_vpid(pid);
-> +		if (!tsk) {
-> +			rcu_read_unlock();
-> +			return;
-> +		}
-> +		if (tsk->flags & PF_EXITING)
-> +			task_exit = 1;
-> +		rcu_read_unlock();
+Documentation/devicetree/bindings/usb/dwc3.txt
 
-Why does this not need a reference to the task, but the other one does?
+
+Exception for clocks:
+
+clocks are optional if the parent node (i.e. glue-layer) is compatible to
+one of the following:
+"amlogic,meson-axg-dwc3"
+"amlogic,meson-gxl-dwc3"
+"cavium,octeon-7130-usb-uctl"
+"qcom,dwc3"
+"samsung,exynos5250-dwusb3"
+"samsung,exynos5433-dwusb3"
+"samsung,exynos7-dwusb3"
+"sprd,sc9860-dwc3"
+"st,stih407-dwc3"
+"ti,am437x-dwc3"
+"ti,dwc3"
+"ti,keystone-dwc3"
+"rockchip,rk3399-dwc3"
+"xlnx,zynqmp-dwc3"
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
