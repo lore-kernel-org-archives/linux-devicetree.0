@@ -2,114 +2,136 @@ Return-Path: <SRS0=XuEv=ZT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55066C43215
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FE3C432C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223E9206E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Mi2dC0jl"
+	by mail.kernel.org (Postfix) with ESMTP id EA288206E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 27 Nov 2019 17:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfK0RTS (ORCPT
+        id S1727004AbfK0RZg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 12:19:18 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:57226 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfK0RTS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 12:19:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574875156; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qm4Bp6xEH4gzTSGf8XJZFyOKVD9Yc5lDueukFVsJXso=;
-        b=Mi2dC0jlfct8iYYCs7ItSb/0U2+YIl19k4On1OhvNLogkankzwOreiyd7g0mcWHjxkDyEx
-        g01ky6cTtGskvSI9EM/3RkMVmo0C+W3Yg+nEBki/9budh5NsuUBLaXdNyRqgQK0rONa7Er
-        HTeoT02ffCoO5+/1x/I2Wzlu90rJ2MM=
-Date:   Wed, 27 Nov 2019 18:19:08 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/5] dt-bindings: clock: Add USB OTG clock for X1000.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <1574875148.3.3@crapouillou.net>
-In-Reply-To: <1574825576-91028-5-git-send-email-zhouyanjie@zoho.com>
-References: <1574825576-91028-1-git-send-email-zhouyanjie@zoho.com>
-        <1574825576-91028-5-git-send-email-zhouyanjie@zoho.com>
+        Wed, 27 Nov 2019 12:25:36 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50163 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfK0RZg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 12:25:36 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ia147-0003uj-UN; Wed, 27 Nov 2019 18:25:23 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ia146-0001PW-IG; Wed, 27 Nov 2019 18:25:22 +0100
+Date:   Wed, 27 Nov 2019 18:25:22 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com, bparrot@ti.com,
+        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
+        mripard@kernel.org, alexandre.belloni@bootlin.com,
+        shawnguo@kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] Input: edt-ft5x06 - improve power management
+ operations
+Message-ID: <20191127172522.4wmc6pqyuw7vpvzl@pengutronix.de>
+References: <20191127120948.22251-1-m.felsch@pengutronix.de>
+ <20191127120948.22251-6-m.felsch@pengutronix.de>
+ <20191127125932.GK32742@smile.fi.intel.com>
+ <20191127130602.5zp537xdybbafnci@pengutronix.de>
+ <20191127143217.GL32742@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127143217.GL32742@smile.fi.intel.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 18:23:16 up 12 days,  8:41, 24 users,  load average: 0.07, 0.03,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+Hi,
 
+On 19-11-27 16:32, Andy Shevchenko wrote:
+> On Wed, Nov 27, 2019 at 02:06:02PM +0100, Marco Felsch wrote:
+> > On 19-11-27 14:59, Andy Shevchenko wrote:
+> > > On Wed, Nov 27, 2019 at 01:09:48PM +0100, Marco Felsch wrote:
+> 
+> > > Perhaps
+> > > 
+> > > static void edt_ft5x06_ts_toggle_gpio(struct gpio_desc *gpiod)
+> > > {
+> > > 	...
+> > > }
+> > > 
+> > > ...resume(...)
+> > > {
+> > > 	...
+> > > 	if (wake_gpio)
+> > > 		...toggle_gpio(wake_gpio);
+> > > 	else if (reset_gpio)
+> > > 		...toggle_gpio(reset_gpio);
+> > > 	...
+> > > }
+> > > 
+> > > ?
+> > 
+> > Thanks fpr your suggestion but we need to differentiate between reset
+> > and wake logic level. The wake-gpio keeps asserted while the reset is
+> > released. So the edt_ft5x06_ts_toggle_gpio() needs at least a 'is_reset'
+> > parameter but then the simplification is gone.
+> 
+> 
+> How about this:
+> static void edt_ft5x06_ts_toggle_gpio(struct gpio_desc *gpiod, int value)
+> {
+> 	gpiod_...(..., !value);
+> 	...
+> 	gpiod_...(..., value);
+> 	...
+> }
+> 
+> ...resume(...)
+> {
+> 	...
+> 	if (wake_gpio)
+> 		...toggle_gpio(wake_gpio, 1);
+> 	else if (reset_gpio)
+> 		...toggle_gpio(reset_gpio, 0);
+> 	...
+> }
+> 
+> ?
 
-Le mer., nov. 27, 2019 at 11:32, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> Add the USB OTC clock bindings for the X1000 Soc from Ingenic.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  include/dt-bindings/clock/x1000-cgu.h | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
->=20
-> diff --git a/include/dt-bindings/clock/x1000-cgu.h=20
-> b/include/dt-bindings/clock/x1000-cgu.h
-> index bbaebaf..c401fce 100644
-> --- a/include/dt-bindings/clock/x1000-cgu.h
-> +++ b/include/dt-bindings/clock/x1000-cgu.h
-> @@ -29,16 +29,17 @@
->  #define X1000_CLK_MSCMUX	14
->  #define X1000_CLK_MSC0		15
->  #define X1000_CLK_MSC1		16
-> -#define X1000_CLK_SSIPLL	17
-> -#define X1000_CLK_SSIMUX	18
-> -#define X1000_CLK_SFC		19
-> -#define X1000_CLK_I2C0		20
-> -#define X1000_CLK_I2C1		21
-> -#define X1000_CLK_I2C2		22
-> -#define X1000_CLK_UART0		23
-> -#define X1000_CLK_UART1		24
-> -#define X1000_CLK_UART2		25
-> -#define X1000_CLK_SSI		26
-> -#define X1000_CLK_PDMA		27
+That's possible.. Don't see the improvement yet, but I can prepare a
+folllow-up patch if Dmitry wants.
 
-You can't do that. These macros are ABI now, since they are used in the=20
-devicetree. Just use the next valid number for your OTG clock.
+Regards,
+  Marco
 
-Cheers,
--Paul
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+> 
 
-> +#define X1000_CLK_OTG		17
-> +#define X1000_CLK_SSIPLL	18
-> +#define X1000_CLK_SSIMUX	19
-> +#define X1000_CLK_SFC		20
-> +#define X1000_CLK_I2C0		21
-> +#define X1000_CLK_I2C1		22
-> +#define X1000_CLK_I2C2		23
-> +#define X1000_CLK_UART0		24
-> +#define X1000_CLK_UART1		25
-> +#define X1000_CLK_UART2		26
-> +#define X1000_CLK_SSI		27
-> +#define X1000_CLK_PDMA		28
->=20
->  #endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
-> --
-> 2.7.4
->=20
->=20
-
-=
-
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
