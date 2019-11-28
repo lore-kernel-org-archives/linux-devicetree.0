@@ -2,287 +2,150 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A56C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 01:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C36CC43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 03:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C130D215E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 01:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C62215F1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 03:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="O3JngmG8"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="FCyCsZzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfK1BGy (ORCPT
+        id S1727175AbfK1D1w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 20:06:54 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.91]:41131 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727126AbfK1BGy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Nov 2019 20:06:54 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 4B877400DC981
-        for <devicetree@vger.kernel.org>; Wed, 27 Nov 2019 19:06:52 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id a8GiiGc0l3Qi0a8GiiXGHE; Wed, 27 Nov 2019 19:06:52 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hvOYKQUJE21stIgSn0WN4z50J2vix7puMNZz1Y1suDY=; b=O3JngmG83jQxHb4ZrcNpw7Mhpn
-        AiYoiDIeR3kYXDxmlz4VfrTSAd3m90MhLtm/mpC4PFRU26ZLpm6RVcVac4N5/L4MnsjfzUhV6VZQL
-        S5C6Xd7bPm1JAodGyvuSbG3vikDQmCGbZppNrVp2h4/Z+k1qcAYsLkJzO2oGqrKCpr55Ahv7WHmxa
-        rvKEpbg5362IgyELfg40R2FpopiWAbqisX6mw/7QxsEQwOm1XRfwwkN4cY9KDYI9qM4CJVK5Hlq4H
-        VAiC2nuRexYHEL1Vjmfu6wlYhYlRo/h9fOmb+zJLAM+i69/djeCNRUoIpPm0pnfNiws0WQIYQbW88
-        fcdzTgOQ==;
-Received: from [191.31.194.237] (port=59596 helo=[192.168.15.4])
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1ia8Gh-0041CU-Br; Wed, 27 Nov 2019 22:06:51 -0300
-Subject: Re: [PATCH v7 4/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191117141335.23404-1-matheus@castello.eng.br>
- <20191117141335.23404-5-matheus@castello.eng.br>
- <20191126145200.xqtvfrm6qc6yuutb@earth.universe>
-From:   Matheus Castello <matheus@castello.eng.br>
-Message-ID: <c5bb4962-10f7-0877-0c99-c2dad5bb53cf@castello.eng.br>
-Date:   Wed, 27 Nov 2019 22:06:47 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 27 Nov 2019 22:27:52 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25878 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbfK1D1w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 22:27:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574911629; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=SBgDnXauIGwMG/V3rh54/4hIICTGALqafTOQyTN5jT/ztfk4LnfHp3ni0PQ4YugvLb4j+uDt/NA/aD7DrMYi6n4h0ktCjyxTPmXVlsHgp1+xo4055xix3nn96YiCQm0IbOOsLEKJdhnU5m12G7p/3ljjlD7HoLLy87Ja1xMlUJo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574911629; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=2kXngwStwb77hgVkiYty+9VogGIhnRmmO+0aZj/j2Pw=; 
+        b=oBF8iA5I3dgw8hdbjjLvBoOmy+mvKPY7nnGWqozry2ImTnVv+KbhzStTErufcVoocBTXFiqoQ/U3DkXSoudb6zk73VmTfvccyPsUByPnC5UJAnK8SgRYIfEBggpl0icBRLih9Yf2rU8PHNDhixwPwV5/i6hLSDatR1sgEabYdok=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=jsuc/yQzIANxqCDQWoGtmfpWcSw3cLnu4Qih+yV4ilYpQSi1QSyWHgeGUcRT9UNYmIDOcKAfg7T4
+    4Opn16zsro+W+TjtjAdS8B5vF6JPK9diNJ2qHFzpdXQ76jBEcW8B  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574911629;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=2kXngwStwb77hgVkiYty+9VogGIhnRmmO+0aZj/j2Pw=;
+        b=FCyCsZzPB7tCWlH+awogkr2tMlOc7TtkpJQfF6VGPpkMnkuj4uRzu7V/pu2NjjQ3
+        XvcZN9FJ4whrlFh8u0LJV86kXSiH3r5nOyzMX1fsLKwqi3yvc7ztHNZBWGCbVQ1qmEU
+        7dVMDx57ErP4dUbOauNGVX+gqOOqooRuWRKPxd3I=
+Received: from [192.168.88.130] (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 1574911628677616.8260073790145; Wed, 27 Nov 2019 19:27:08 -0800 (PST)
+Subject: Re: [PATCH v4 5/6] MIPS: X1000: Add pdma controller DT node.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
+ <1574787974-58040-6-git-send-email-zhouyanjie@zoho.com>
+ <1574873298.3.0@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DDF3E81.2060502@zoho.com>
+Date:   Thu, 28 Nov 2019 11:26:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191126145200.xqtvfrm6qc6yuutb@earth.universe>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: pt-BR
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.194.237
-X-Source-L: No
-X-Exim-ID: 1ia8Gh-0041CU-Br
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.4]) [191.31.194.237]:59596
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 9
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+In-Reply-To: <1574873298.3.0@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Hi Paul,
 
-Em 11/26/19 11:52 AM, Sebastian Reichel escreveu:
-> Hi,
-> 
-> On Sun, Nov 17, 2019 at 11:13:34AM -0300, Matheus Castello wrote:
->> For configuration of fuel gauge alert for a low level state of charge
->> interrupt we add a function to config level threshold and a device tree
->> binding property to set it in flatned device tree node.
+On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 00:48, Paul Cercueil wrote:
+> Hi Zhou,
+>
+>
+> Le mer., nov. 27, 2019 at 01:06, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+> =C3=A9crit :
+>> Add the appropriate DT node to probe the pdma controller driver
+>> using the devicetree.
 >>
->> Now we can use "maxim,alert-low-soc-level" property with the values from
->> 1% up to 32% to configure alert interrupt threshold.
->>
->> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 >> ---
->>   drivers/power/supply/max17040_battery.c | 75 ++++++++++++++++++++++---
->>   1 file changed, 67 insertions(+), 8 deletions(-)
 >>
->> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
->> index 9909f8cd7b5d..3fc9e1c7b257 100644
->> --- a/drivers/power/supply/max17040_battery.c
->> +++ b/drivers/power/supply/max17040_battery.c
->> @@ -29,6 +29,9 @@
->>   #define MAX17040_DELAY		1000
->>   #define MAX17040_BATTERY_FULL	95
+>> Notes:
+>>     v4:
+>>     New patch.
 >>
->> +#define MAX17040_ATHD_MASK		0xFFC0
->> +#define MAX17040_ATHD_DEFAULT_POWER_UP	4
->> +
->>   struct max17040_chip {
->>   	struct i2c_client		*client;
->>   	struct delayed_work		work;
->> @@ -43,6 +46,8 @@ struct max17040_chip {
->>   	int soc;
->>   	/* State Of Charge */
->>   	int status;
->> +	/* Low alert threshold from 32% to 1% of the State of Charge */
->> +	u32 low_soc_alert;
->>   };
+>>  arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
 >>
->>   static int max17040_get_property(struct power_supply *psy,
->> @@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
->>   	max17040_write_reg(client, MAX17040_CMD, 0x0054);
->>   }
->>
->> +static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
->> +{
->> +	int ret;
->> +	u16 data;
->> +
->> +	level = 32 - level;
->> +	data = max17040_read_reg(client, MAX17040_RCOMP);
->> +	/* clear the alrt bit and set LSb 5 bits */
->> +	data &= MAX17040_ATHD_MASK;
->> +	data |= level;
->> +	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
->> +
->> +	return ret;
->> +}
->> +
->>   static void max17040_get_vcell(struct i2c_client *client)
->>   {
->>   	struct max17040_chip *chip = i2c_get_clientdata(client);
->> @@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *client)
->>   	u16 soc;
->>
->>   	soc = max17040_read_reg(client, MAX17040_SOC);
->> -
-> 
-> unrelated change.
-> 
->>   	chip->soc = (soc >> 8);
->>   }
->>
->> @@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *client)
->>   		chip->status = POWER_SUPPLY_STATUS_FULL;
->>   }
->>
->> +static int max17040_get_of_data(struct max17040_chip *chip)
->> +{
->> +	struct device *dev = &chip->client->dev;
->> +	struct device_node *np = dev->of_node;
->> +	int ret = 0;
->> +
->> +	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
->> +				 &chip->low_soc_alert)) {
->> +		chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
->> +	} else if (chip->low_soc_alert <= 0 ||
->> +			chip->low_soc_alert >= 33) {
->> +		/* low_soc_alert is not between 1% and 32% */
->> +		ret = -EINVAL;
->> +	}
-> 
-> use device_property_read_u32(), which is not DT specific. Also
-> code can be simplified a bit:
-> 
-> chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
-> device_property_read_u32(dev, "maxim,alert-low-soc-level", &chip->low_soc_alert);
-> if (chip->low_soc_alert <= 0 || chip->low_soc_alert >= 33)
->      return -EINVAL;
-> return 0;
-> 
-
-Thanks for the review, I will use this.
-
->> +
->> +	return ret;
->> +}
->> +
->>   static void max17040_check_changes(struct i2c_client *client)
->>   {
->>   	max17040_get_vcell(client);
->> @@ -192,6 +229,9 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
->>   	/* send uevent */
->>   	power_supply_changed(chip->battery);
->>
->> +	/* reset alert bit */
->> +	max17040_set_low_soc_alert(client, chip->low_soc_alert);
->> +
->>   	return IRQ_HANDLED;
->>   }
->>
->> @@ -230,6 +270,7 @@ static int max17040_probe(struct i2c_client *client,
->>   	struct i2c_adapter *adapter = client->adapter;
->>   	struct power_supply_config psy_cfg = {};
->>   	struct max17040_chip *chip;
->> +	int ret;
->>
->>   	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
->>   		return -EIO;
->> @@ -240,6 +281,12 @@ static int max17040_probe(struct i2c_client *client,
->>
->>   	chip->client = client;
->>   	chip->pdata = client->dev.platform_data;
->> +	ret = max17040_get_of_data(chip);
->> +	if (ret) {
->> +		dev_err(&client->dev,
->> +			"failed: low SOC alert OF data out of bounds\n");
->> +		return ret;
->> +	}
->>
->>   	i2c_set_clientdata(client, chip);
->>   	psy_cfg.drv_data = chip;
->> @@ -256,14 +303,26 @@ static int max17040_probe(struct i2c_client *client,
->>
->>   	/* check interrupt */
->>   	if (client->irq) {
->> -		int ret;
->> -
->> -		ret = max17040_enable_alert_irq(chip);
->> -
->> -		if (ret) {
->> -			client->irq = 0;
->> +		if (of_device_is_compatible(client->dev.of_node,
->> +					    "maxim,max77836-battery")) {
->> +			ret = max17040_set_low_soc_alert(client,
->> +							 chip->low_soc_alert);
->> +			if (ret) {
->> +				dev_err(&client->dev,
->> +					"Failed to set low SOC alert: err %d\n",
->> +					ret);
->> +				return ret;
->> +			}
->> +
->> +			ret = max17040_enable_alert_irq(chip);
->> +			if (ret) {
->> +				client->irq = 0;
->> +				dev_warn(&client->dev,
->> +					 "Failed to get IRQ err %d\n", ret);
->> +			}
->> +		} else {
->>   			dev_warn(&client->dev,
->> -				 "Failed to get IRQ err %d\n", ret);
->> +				 "Device not compatible for IRQ");
-> 
-> Something is odd here. Either this should be part of the first
-> patch ("max17040: Add IRQ handler for low SOC alert"), or both
-> device types support the IRQ and this check should be removed.
-> > -- Sebastian
+>> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
+>> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> index 9e55edd..edfa70d 100644
+>> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> @@ -1,5 +1,6 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>  #include <dt-bindings/clock/x1000-cgu.h>
+>> +#include <dt-bindings/dma/x1000-dma.h>
+>
+> You're not using any macro from that include file, so there's no need=20
+> to have it here.
 >
 
-The first patch add the IRQ without the configuration of the low SoC 
-alert, using the default state of charge level. This patch is working 
-with registers to config the low state of charge level, so it was 
-proposed to just try to write registers in the models compatible with 
-that (maxim,max77836-battery).
+Sure, I will fix this in v7.
 
-Maybe join the first patch to this one, and let DT binding be the first 
-patch on the series so we can already test compatible here, let me know 
-what you think about it.
+Thanks and best regards!
 
->>   		}
->>   	}
+> Cheers,
+> -Paul
+>
+>
 >>
->> --
->> 2.24.0.rc2
+>>  / {
+>>      #address-cells =3D <1>;
+>> @@ -173,4 +174,16 @@
 >>
+>>          status =3D "disabled";
+>>      };
+>> +
+>> +    pdma: dma-controller@13420000 {
+>> +        compatible =3D "ingenic,x1000-dma";
+>> +        reg =3D <0x13420000 0x400
+>> +               0x13421000 0x40>;
+>> +        #dma-cells =3D <2>;
+>> +
+>> +        interrupt-parent =3D <&intc>;
+>> +        interrupts =3D <10>;
+>> +
+>> +        clocks =3D <&cgu X1000_CLK_PDMA>;
+>> +    };
+>>  };
+>> --=20
+>> 2.7.4
+>>
+>>
+>
+>
+
+
+
