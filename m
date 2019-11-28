@@ -7,96 +7,85 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8C0C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 12:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E405C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 12:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C157D217D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 12:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521542176D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 12:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRYu0UXF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jabLiYoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfK1MUo (ORCPT
+        id S1726320AbfK1MV5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 07:20:44 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43684 "EHLO
+        Thu, 28 Nov 2019 07:21:57 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45135 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfK1MUn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 07:20:43 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a13so5116736ljm.10
-        for <devicetree@vger.kernel.org>; Thu, 28 Nov 2019 04:20:42 -0800 (PST)
+        with ESMTP id S1726556AbfK1MV5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 07:21:57 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n21so28251006ljg.12
+        for <devicetree@vger.kernel.org>; Thu, 28 Nov 2019 04:21:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qmf6jeZshq1jDY76loZcrxtrhAg7lwPCb71uVMENsw0=;
-        b=FRYu0UXFOIpf1bWRYoJ1c9xHbXgvePCRjx4PZ5IZ5RV3Yz07xamodlI746hL9a9kcu
-         oM/33Jk8YUVjiLAWEcliFiYtvfVwP69h8KPk0v0GARBdSoyaSNFtsfMYbyX7Dqk9AABs
-         W2Ftf/w30gEOA5INs/fO0ChaN4+or7M8h5eE61FnIshjUh38nh7BbyelaZmeOAL0hi75
-         emwPQn9+FGy139ZtDVsjT91HSxrtPW2QsuEAD/AhE5pO+wCEJ/YlJy2U+74OENsvW3gQ
-         wNux0h4Q+8bJN52v8Cdk7gR/N9vmkXJYOwJ1h3c1h26ULVZ+s7IBMeExpJ8BhUSIvipq
-         qocw==
+        bh=SXCA4P1++mZ4GjWU0WE3nsYL5FMcWa3cXbIapek2T/s=;
+        b=jabLiYoVLgEE4KTwesZZ2DmLmaC34ZclwZ1kroQlBm1emD0PcHERirT/hIXKWoQFos
+         FXGKTcgMut7RTmZ5gXXmVxyK4gRpeofT8e2F8s6uLfmA+TQObcbJyQh1OR+sP5z3w+vH
+         iVyRWxpvtyGd0kqgtzW3CQRScRwwOudpNBwxE1TAHpVCjIzAJwfin6SsgPTMGVpotdh3
+         ooylYNSUGySU9KKHhWVPly1OHawrnLauXENT78d93EllPbBwpznUq9al7WKA6Jc+w8X2
+         yzAsA4EJ59JuX+Vfi82qtpXLIyN+EOD8BlzexqqEakfaRNLtDQBtKzorXhAlD3MTM1sV
+         03JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qmf6jeZshq1jDY76loZcrxtrhAg7lwPCb71uVMENsw0=;
-        b=XqixpCKiwU1wRnq9l7/3iRmoMnexBwXiNCE40W4JbmsyHT9gcIhfUESfEt3ahMkl+v
-         19tppKY4u5t2bhlPKd2meeWaFm2KFqJBt+a6Vk4wbC1oqsxD7+ztLHOXLE53d3HJIY7t
-         0ta4y9Q4gLVFrcTV1DvBjt8/7MT7ZOZ7SzZDi1Rx3iTjf7wUQ3QW+CueGNW+ODfE5afo
-         YoFB6G9LbYKICUHSNwikEAth3g/SlRpTHOmjqWZWBplgrIQOIyPMFQv3asu/te3oB52Z
-         Dhs/+fwOD6rQKh1VEhpN6o6fp8d1qUdU9wnlnO5cC2NdxwJ2DDwtU2fRX7cngtda8GKG
-         +Vyg==
-X-Gm-Message-State: APjAAAWMkLSCmpyjeV1CNuAt3ODRtAiwDzFETvpT5GJxygDN7o53y3VE
-        C345+4C0QS3daMcRzoSyvsWUahx0Xa7rFrWMkhDIdA==
-X-Google-Smtp-Source: APXvYqy5FIUKPl7C4nNCrIegY7/L/e3N0NOcZm89h/t+XCUHcKulKwvWZPZSi8sYlGYMiq1wU75t2SUzdLcDQIXtsPc=
-X-Received: by 2002:a05:651c:102a:: with SMTP id w10mr5221499ljm.77.1574943641831;
- Thu, 28 Nov 2019 04:20:41 -0800 (PST)
+        bh=SXCA4P1++mZ4GjWU0WE3nsYL5FMcWa3cXbIapek2T/s=;
+        b=GLBf+GMYq+QhU66PQCYUmYY7WOj8ARDTjdRcj5XxZECCvXQMxG/umCVWruWL956e5Z
+         i0070XXEfatO+6346ToER8I7N2tO6mmzkdsADBVvPcLLtrax2CgQjjt/cP5po9H1TkSK
+         66BMLKOnE0Pf1DuwNUCq3oJ+SANLE3yzQmYRCPM9G3Xru2boD71JNBkrGvRo3A/99Xjm
+         uF8r5cG6gkCKbPYaHvUIDXNhdgVc2KUcytEBVAIsBeHA0uVsLds/5dIGYeUz4ExvexWf
+         xsJlVzflJcFPKbK4ArG6MkI3MgEhxjBBi1uyTW1zfb7ScKufCQHho6wFMLzMR9pn2ISN
+         52MQ==
+X-Gm-Message-State: APjAAAUmSccP8Sdtmx2qgUS4nH8QdM9/c7ofnr8saAQoizqHpE9mxNH5
+        gksZSrFdkPesbNa4tWVYmr8YU/8Jrv2mbjXofDxnRQ==
+X-Google-Smtp-Source: APXvYqxC+CilfFecs694uPA2TkzfBRgLiP8clA3RZ7THF3M8WYbpWuyE8yJFEz9LrJzLIs8TgrYqaoLQgeR+Iv/pMiA=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr13384895ljm.233.1574943715334;
+ Thu, 28 Nov 2019 04:21:55 -0800 (PST)
 MIME-Version: 1.0
-References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com> <1574661437-28486-6-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1574661437-28486-6-git-send-email-yash.shah@sifive.com>
+References: <7556683b57d8ce100855857f03d1cd3d2903d045.1574943062.git.christophe.leroy@c-s.fr>
+In-Reply-To: <7556683b57d8ce100855857f03d1cd3d2903d045.1574943062.git.christophe.leroy@c-s.fr>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Nov 2019 13:20:29 +0100
-Message-ID: <CACRpkdY7fGvTPcwwC0XU+XN2w_QUCj0MmOYhp183P3Lj7Qw8WA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive SoCs
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+Date:   Thu, 28 Nov 2019 13:21:43 +0100
+Message-ID: <CACRpkdZZc5QKqX74WbyO8WQmVw7SSm2HYYMtoxjbEWomGvnkUg@mail.gmail.com>
+Subject: Re: [PATCH] powerpc/devicetrees: Change 'gpios' to 'cs-gpios' on
+ fsl,spi nodes
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
+        "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 6:58 AM Yash Shah <yash.shah@sifive.com> wrote:
+On Thu, Nov 28, 2019 at 1:16 PM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
 
-> Adds the GPIO driver for SiFive RISC-V SoCs.
+> Since commit 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO
+> descriptors"), the prefered way to define chipselect GPIOs is using
+> 'cs-gpios' property instead of the legacy 'gpios' property.
 >
-> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> [Atish: Various fixes and code cleanup]
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-I suppose Marc will merge all patches into the irqchip tree
-as they are logically dependent? If you want the GPIO bindings
-and this driver directly merged (no deps) then I can do that
-as well.
 
 Yours,
 Linus Walleij
