@@ -2,29 +2,28 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83478C43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 15:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDA8C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 15:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE5A217D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 15:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D04217BC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 15:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfK1PzH (ORCPT
+        id S1726593AbfK1Pyu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 10:55:07 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:41371 "EHLO
+        Thu, 28 Nov 2019 10:54:50 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:53335 "EHLO
         relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfK1Pyw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 10:54:52 -0500
+        with ESMTP id S1726446AbfK1Pyu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 10:54:50 -0500
 X-Originating-IP: 90.76.211.102
 Received: from localhost.localdomain (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id B4EE840002;
-        Thu, 28 Nov 2019 15:54:49 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 9CE5540020;
+        Thu, 28 Nov 2019 15:54:47 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -34,14 +33,11 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Lee Jones <lee.jones@linaro.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 2/5] dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
-Date:   Thu, 28 Nov 2019 16:54:35 +0100
-Message-Id: <20191128155438.325738-3-paul.kocialkowski@bootlin.com>
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v4 0/5] LogiCVC mfd and GPIO support
+Date:   Thu, 28 Nov 2019 16:54:33 +0100
+Message-Id: <20191128155438.325738-1-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191128155438.325738-1-paul.kocialkowski@bootlin.com>
-References: <20191128155438.325738-1-paul.kocialkowski@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -49,73 +45,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The LogiCVC is a display engine which also exposes GPIO functionality.
-For this reason, it is described as a multi-function device that is expected
-to provide register access to its children nodes for gpio and display.
+This series introduces support for the LogiCVC GPIO block to the syscon GPIO
+driver, with dt bindings documentation also including the top-level mfd
+component.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Changes since v3:
+- Added collected tags;
+- Kept syscon_gpio_data set function pointer line intact;
+- Grouped declarations in a single line as requested.
+
+Changes since v2:
+- Fixed dt schema examples.
+
+Changes since v1:
+- Converted dt bindings documentation to dt schemas;
+- Used BIT macro and removed version from structure name;
+- Improved documentation example with gpio-line-names;
+- Added vendor prefix to dt bindings;
+- Added mfd component dt bindings documentation.
+
+Cheers,
+
+Paul
+
+Paul Kocialkowski (5):
+  dt-bindings: Add Xylon vendor prefix
+  dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
+  gpio: syscon: Add support for a custom get operation
+  dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
+  gpio: syscon: Add support for the Xylon LogiCVC GPIOs
+
+ .../bindings/gpio/xylon,logicvc-gpio.yaml     | 69 +++++++++++++++++++
+ .../bindings/mfd/xylon,logicvc.yaml           | 50 ++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ drivers/gpio/gpio-syscon.c                    | 68 +++++++++++++++++-
+ 4 files changed, 188 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
 
-diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-new file mode 100644
-index 000000000000..abc9937506e0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Bootlin
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Xylon LogiCVC multi-function device
-+
-+maintainers:
-+  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-+
-+description: |
-+  The LogiCVC is a display controller that also contains a GPIO controller.
-+  As a result, a multi-function device is exposed as parent of the display
-+  and GPIO blocks.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - xylon,logicvc-3.02.a
-+      - const: syscon
-+      - const: simple-mfd
-+
-+  reg:
-+    maxItems: 1
-+
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - xylon,logicvc-3.02.a
-+
-+  required:
-+    - compatible
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    logicvc: logicvc@43c00000 {
-+      compatible = "xylon,logicvc-3.02.a", "syscon", "simple-mfd";
-+      reg = <0x43c00000 0x6000>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+    };
 -- 
 2.24.0
 
