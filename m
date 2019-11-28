@@ -2,261 +2,376 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1A9C432C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 18:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995A8C43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 18:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C213D21739
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 18:12:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfsCJJoY"
+	by mail.kernel.org (Postfix) with ESMTP id 6884F21771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 18:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfK1SMb (ORCPT
+        id S1726545AbfK1Si4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 13:12:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35173 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfK1SMb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 13:12:31 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so170506wro.2;
-        Thu, 28 Nov 2019 10:12:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gOiN12bbCUO3RyXfDznIGhTVWbfXcZK6Qh/ggc0OYes=;
-        b=JfsCJJoYOWVRUBanWqnaw6rbES9MvgO1W+VeDdTEsSXcudgctA8bu5oM7t5fkBGHiP
-         pdo2qGWyRJDDwtSNtT91ZVJRxJz8wm6qKFVhDMKvkRj8RQ5wHw2J2Vtu77oZ+0khj87G
-         YhF+q+Nq/UOAajz97vDvT3hrauJL3r81iVt38OllwKaweh+/S6qkCdE5Di0g2saDrOS2
-         85hMXPcXLJvM5QgY68iDSAztbgNuG8cJLXIvDwck9J+IX7x/9y1WUus4y1IttY71AnXr
-         86RXYTQ5jwPekVkozqp7hqLujCgBaRIUT0/9+8lTcxN5G4Wa1mTVN0SxBwpVTZ+n4EK7
-         Irrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gOiN12bbCUO3RyXfDznIGhTVWbfXcZK6Qh/ggc0OYes=;
-        b=HhWtXoJ1uwCTHrE+D2JjqNRvOiLrPUJ1BM/rgWdDI48RoUJqafPu/JS0bS+bj+1FGt
-         bclFHo4Sakafv8g6EueyJTNyCQwKj/TDLemfyX0XSwd+dv2OeDwAs04FZBPwUqfVzZev
-         SCuvT9ex3lQ54scML8uPliYhL80gzx/RahIoYqvOgDitUD80tO1P5dU7O+nARFgwJo+R
-         XMKR+w0BWKDxfawi+zSiQl8n0NH5bw0zpxCCtVeWW4kscB4nYaOt08F2g3uQte0ag8c0
-         z0ui0B4FilLox4vXO8NzvcO81OFEXVE6c5EXK2SluyRiIEc0N+P/r/BMNah7eI4TJG6E
-         4q7w==
-X-Gm-Message-State: APjAAAWfpA79gltih091u8xopV+O99hjjBxWpMufhnyqOGgPn186FGSX
-        yVrD0FTiZ/70+Kxmq4VHb4QVvbQIYrHgxK/2NYs=
-X-Google-Smtp-Source: APXvYqwLivrUDOFwotPgOHEdBgkJYkN93LcnVm661eNB9GJY535YkvcBDz5QvPETO4ggUrOTK7S3wX1myz1hApCqs2c=
-X-Received: by 2002:adf:da52:: with SMTP id r18mr49789921wrl.167.1574964747263;
- Thu, 28 Nov 2019 10:12:27 -0800 (PST)
+        Thu, 28 Nov 2019 13:38:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:39744 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbfK1Si4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 Nov 2019 13:38:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29B521FB;
+        Thu, 28 Nov 2019 10:38:55 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 439083F6C4;
+        Thu, 28 Nov 2019 10:38:54 -0800 (PST)
+Subject: Re: [PATCH v5 05/14] dt-bindings: arm: Adds CoreSight CTI hardware
+ definitions.
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org
+References: <20191119231912.12768-1-mike.leach@linaro.org>
+ <20191119231912.12768-6-mike.leach@linaro.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <f2150b39-c662-4eea-a556-27d8ebb51735@arm.com>
+Date:   Thu, 28 Nov 2019 18:38:53 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191123132435.22093-1-peron.clem@gmail.com> <20191128174204.tbr5ldilkadw42gc@gilmour.lan>
-In-Reply-To: <20191128174204.tbr5ldilkadw42gc@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 28 Nov 2019 19:12:16 +0100
-Message-ID: <CAJiuCccY7AFsd22bOxKZW=BAne5YEG0vmnVmUNFamU9cpW_vNA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: Convert to new-style SPDX license identifiers
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191119231912.12768-6-mike.leach@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi Mike,
 
-On Thu, 28 Nov 2019 at 18:42, Maxime Ripard <mripard@kernel.org> wrote:
->
-> Hi Clement,
->
-> Sorry for the pretty slow answer
->
-> On Sat, Nov 23, 2019 at 02:24:35PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Move the SPDX-License-Identifier lines to the top and drop the
-> > license splat.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >
-> > Hi,
-> >
-> > This the same logic that what has be done on Amlogic.
-> >
-> > Commit: ARM64: dts: amlogic: Convert to new-style SPDX license identifi=
-ers
-> > https://lore.kernel.org/patchwork/patch/890455/
->
-> So there's a bunch of different things that should be addressed in
-> separate patches here I believe.
->
-> >  arch/arm64/boot/dts/allwinner/axp803.dtsi     | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-pine64-lts.dts   |  3 +-
-> >  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +----------------
-> >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +----------------
-> >  .../dts/allwinner/sun50i-a64-pinebook.dts     |  1 -
-> >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 42 +------------------
-> >  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 42 +------------------
-> >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |  3 +-
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +----------------
-> >  .../sun50i-h5-bananapi-m2-plus-v1.2.dts       |  4 +-
-> >  .../allwinner/sun50i-h5-bananapi-m2-plus.dts  |  4 +-
-> >  .../allwinner/sun50i-h5-nanopi-neo-plus2.dts  | 39 +----------------
-> >  .../dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 39 +----------------
-> >  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 39 +----------------
-> >  .../allwinner/sun50i-h5-orangepi-prime.dts    | 42 +------------------
-> >  .../sun50i-h5-orangepi-zero-plus.dts          |  3 +-
-> >  .../sun50i-h5-orangepi-zero-plus2.dts         | 39 +----------------
-> >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 39 +----------------
-> >  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  2 +-
-> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  2 +-
-> >  .../allwinner/sun50i-h6-orangepi-lite2.dts    |  2 +-
-> >  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  2 +-
-> >  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  2 +-
-> >  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  2 +-
-> >  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     |  2 +-
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  2 +-
-> >  30 files changed, 33 insertions(+), 634 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boo=
-t/dts/allwinner/axp803.dtsi
-> > index f0349ef4bfdd..f4f2c70fde5c 100644
-> > --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> > @@ -1,43 +1,6 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >  /*
-> >   * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
-> > - *
-> > - * This file is dual-licensed: you can use it either under the terms
-> > - * of the GPL or the X11 license, at your option. Note that this dual
-> > - * licensing only applies to this file, and not this project as a
-> > - * whole.
-> > - *
-> > - *  a) This file is free software; you can redistribute it and/or
-> > - *     modify it under the terms of the GNU General Public License as
-> > - *     published by the Free Software Foundation; either version 2 of =
-the
-> > - *     License, or (at your option) any later version.
-> > - *
-> > - *     This file is distributed in the hope that it will be useful,
-> > - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > - *     GNU General Public License for more details.
-> > - *
-> > - * Or, alternatively,
-> > - *
-> > - *  b) Permission is hereby granted, free of charge, to any person
-> > - *     obtaining a copy of this software and associated documentation
-> > - *     files (the "Software"), to deal in the Software without
-> > - *     restriction, including without limitation the rights to use,
-> > - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > - *     sell copies of the Software, and to permit persons to whom the
-> > - *     Software is furnished to do so, subject to the following
-> > - *     conditions:
-> > - *
-> > - *     The above copyright notice and this permission notice shall be
-> > - *     included in all copies or substantial portions of the Software.
-> > - *
-> > - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > - *     OTHER DEALINGS IN THE SOFTWARE.
-> >   */
->
-> So this is the first, obvious, one that you talk about in your commit
-> log. While the license says that it's X11, SPDX reports that it's now
-> MIT, can you clarify this?
+On 19/11/2019 23:19, Mike Leach wrote:
+> Adds new coresight-cti.yaml file describing the bindings required to define
+> CTI in the device trees.
+> 
+> Adds an include file to dt-bindings/arm to define constants describing
+> common signal functionality used in CoreSight and generic usage.
 
-As far as I know X11 and MIT are similar and MIT is preferred in Linux.
-see: LICENSES/preferred.
-So I have converted the X11 to MIT but it can be an explicit commit.
-This is done implicitly in the Amlogic commit.
+The documentation looks really nice and helpful. Some very minor nits
+below.
 
->
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts b/=
-arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > index 72d6961dc312..2ca36580436c 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-> > @@ -1,6 +1,5 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >  /*
-> > - * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > - *
-> >   * Copyright (c) 2018 ARM Ltd.
-> >   */
->
-> This is another kind of changes though. The SPDX identifier is there,
-> but under the wrong format and you're fixing it.
->
-> That being said, I'm not a super fan of mixing the two comment styles
-> for two lines.
->
-> What about using only // style comments for the header?
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
 
-Most of the other dts use this style for the header so I would like to
-keep this kind of style.
-Except if DT maintainers want explicity to move to another style.
-Having a coherency in all dts is better and we can move to another
-style with a simple script.
+> ---
+>   .../bindings/arm/coresight-cti.yaml           | 303 ++++++++++++++++++
+>   .../devicetree/bindings/arm/coresight.txt     |   7 +
+>   MAINTAINERS                                   |   2 +
+>   include/dt-bindings/arm/coresight-cti-dt.h    |  37 +++
+>   4 files changed, 349 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/arm/coresight-cti.yaml
+>   create mode 100644 include/dt-bindings/arm/coresight-cti-dt.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/coresight-cti.yaml b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
+> new file mode 100644
+> index 000000000000..882c72f1c798
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
+> @@ -0,0 +1,303 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright 2019 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/coresight-cti.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM Coresight Cross Trigger Interface (CTI) device.
+> +
+> +description: |
+> +  The CoreSight Embedded Cross Trigger (ECT) consists of CTI devices connected
+> +  to one or more CoreSight components and/or a CPU, with CTIs interconnected in
+> +  a star topology via the CTM (which is not programmable). The ECT components
 
->
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v=
-1.2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> > index 2e2b14c0ae75..a61d58c4db24 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-> > @@ -1,5 +1,7 @@
-> >  // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > -// Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-> > +/*
-> > + * Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-> > + */
->
-> Here you change the comment style. And based on the comment above that
-> wouldn't be necessary.
+nit: CTM is not expanded anywhere here. For the sake of completeness, 
+you may do that here.
 
-Ok, if we agree on the style.
+i.e, s/"a start topology via the CTM"/"a start topology via the Cross 
+Trigger Matrix (CTM)"/
 
->
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/=
-arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > index f335f7482a73..84b7e9936300 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > @@ -1,4 +1,4 @@
-> > -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >  /*
-> >   * Copyright (C) 2019 Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> >   */
->
-> And I'm not sure what this one (and the next) is?
 
-The license expressions in dual licensed files is wrong here, "OR"
-should be uppercase.
-I can move it to a separate commit if you like.
+> +  are not part of the trace generation data path and are thus not part of the
+> +  CoreSight graph described in the general CoreSight bindings file
+> +  coresight.txt.
+> +
+> +  The CTI component properties define the connections between the individual
+> +  CTI and the components it is directly connected to, consisting of input and
+> +  output hardware trigger signals. CTIs can have a maximum number of input and
+> +  output hardware trigger signals (8 each for v1 CTI, 32 each for v2 CTI). The
+> +  number is defined at design time, the maximum of each defined in the DEVID
+> +  register.
+> +
+> +  CTIs are interconnected in a star topology via the CTM, using a number of
+> +  programmable channels usually 4, but again implementation defined and
 
-Regards,
-Cl=C3=A9ment
+nit: "programmable channels, usually 4, but..." ?
 
->
-> Thanks!
-> Maxime
+> +  described in the DEVID register. The star topology is not required to be
+> +  described in the bindings as the actual connections are software
+> +  programmable.
+> +
+> +  In general the connections between CTI and components via the trigger signals
+> +  are implementation defined, other than when v8 core and ETM is present.
+
+nite: are implementation defined, *except when they are connected to an 
+Arm v8 compatible CPU or an ETM* ?
+
+
+> +  The v8 architecture defines the required signal connections between CPU core
+
+nit: "The Arm v8"
+
+> +  and CTI, and ETM and CTI, if the ETM if present.
+> +
+> +  When only minimal information is available for the CTI trigger connections,
+> +  then a minimal driver binding can be declare with no explicit trigger
+> +  signals. This will result in the using the DEVID register to set the
+> +  input and output triggers and channels in use. Any user / client
+> +  application will require additional information on the connections
+> +  between the CTI and other components for correct operation. This minimal
+> +  binding may be used when using the Integration Control registers to
+> +  discover connections between CTI and other CoreSight components,
+
+How about "When the CTI trigger connection information is unavailable,
+the driver detects the number of triggers and channels from the DEVID
+register and makes them available. The Integration Control registers
+can be then used to discover the connections for this CTI device
+to other CoreSight components".
+
+Since we recommend the use of the "Integration Control registers", which
+is not normally available unless you play around the code, it will be a
+good idea to metion, what the user needs to do to make the registers
+available. (One more reason to use the CONFIG symbol, makes that
+easier.)
+
+
+> +
+> +  Certain triggers between CoreSight devices and the CTI have specific types
+> +  and usages. These can be defined along with the signal indexes with the
+> +  constants defined in <dt-bindings/arm/coresight-cti-dt.h>
+> +
+> +  For example a CTI connected to a core will usually have a DBGREQ signal. This
+> +  is defined in the binding as type PE_EDBGREQ. These types will appear in an
+> +  optional array alongside the signal indexes. Omitting types will default all
+> +  signals to GEN_IO.
+> +
+> +  Note that some hardware trigger signals can be connected to non-CoreSight
+> +  components (e.g. UART etc) depending on hardware implementation.
+> +
+> +maintainers:
+> +  - Mike Leach <mike.leach@linaro.org>
+> +
+> +allOf:
+> +  - $ref: /schemas/arm/primecell.yaml#
+> +
+> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - arm,coresight-cti
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^cti(@[0-9a-f,]+)*$"
+> +  compatible:
+> +    items:
+> +      - const: arm,coresight-cti
+> +      - const: arm,primecell
+> +
+> +  reg:
+> +    items:
+> +      - description: device programming registers
+> +
+> +  arm,cti-v8-arch:
+
+If possible, please could we make this :
+
+"arm,cti-arm-v8-architected"
+
+to be more meaning ful ?
+
+> +    type: boolean
+> +    description:
+> +      This CTI follows the v8 architecturally mandated layout for a CTI.
+> +      Bindings declaring this must declare a cpu, and optionally a single
+> +      arm,cs-dev-assoc may be present to define an attached ETM. No additional
+> +      trig-conns nodes are permitted. The driver will build a connection model
+> +      according to architectural requirements. This will include a filter on
+> +      the CPU dbgreq signal as described above.
+> +
+> +  cpu:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Handle to cpu this device is associated with.
+> +
+> +  arm,cti-ctm-id:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Defines the CTM this CTI is connected to, in large systems with multiple
+> +      separate CTI/CTM nets. Typically multi-socket systems where the CTM is
+> +      propagated between sockets.
+> +
+> +  arm,cs-dev-assoc:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      defines a phandle reference to an associated CoreSight trace device.
+> +      When the associated trace device is enabled, then the respective CTI
+> +      will be enabled. Use in a trig-conns node, or in CTI base node when
+> +      arm,cti-v8-arch present. If the associated device has not been registered
+> +      then the node name will be stored as the connection name for later
+> +      resolution. If the associated device is not a CoreSight device or not
+> +      registered then the node name will remain the connection name and
+> +      automatic enabling will not occur.
+> +
+> +patternProperties:
+> +  '^trig_conns@[0-9]+$':
+
+I understand these bindings have been around for quite long and is too
+late to make any changes. So, feel free to ignore this suggestion below
+and I am perfectly fine with it.
+
+--- Begin silly comments Or Skip to DONE ----
+
+Could we make the property names a bit more obvious ? Since they are 
+supposed to be written by other people (unlike our variable names), it
+always makes sense to have expanded, meaningful names:
+
+s/trig_conns@/triggers@ ?
+
+s/arm,trig-{in,out}-sigs/arm,cti-{in,out}-triggers
+s/arm,trig-{in,out}-types/arm,cti-{in,out}-trigger-types
+
+"arm,trig-xxx" property name doesn't really imply that it is for cti.
+So, the above changes makes it explicit and more reader friendly.
+
+> +    type: object
+> +    description:
+> +      A trigger connections child node which describes the trigger signals
+> +      between this CTI and another hardware device. This device may be a CPU,
+> +      CoreSight device, any other hardware device or simple external IO lines.
+> +      The connection may have both input and output triggers, or only one or the
+> +      other.
+> +
+> +    properties:
+> +
+> +      arm,trig-in-sigs:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 1
+> +        maxItems: 32
+> +        description:
+> +          List of CTI trigger in signal numbers in use by a trig-conns node.
+> +
+> +      arm,trig-in-types:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 1
+> +        maxItems: 32
+> +        description:
+> +          List of constants representing the types for the CTI trigger in
+> +          signals. Types in this array match to the corresponding signal in the
+> +          arm,trig-in-sigs array. If the -types array is smaller, or omitted
+> +          completely, then the types will default to GEN_IO.
+> +
+> +      arm,trig-out-sigs:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 1
+> +        maxItems: 32
+> +        description:
+> +          List of CTI trigger out signal numbers in use by a trig-conns node.
+> +
+> +      arm,trig-out-types:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 1
+> +        maxItems: 32
+> +        description:
+> +          List of constants representing the types for the CTI trigger out
+> +          signals. Types in this array match to the corresponding signal
+> +          in the arm,trig-out-sigs array. If the "-types" array is smaller,
+> +          or omitted completely, then the types will default to GEN_IO.
+> +
+> +      arm,trig-filters:
+
+arm,cti-trigger-filters ?
+
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 1
+> +        maxItems: 32
+> +        description:
+> +          List of CTI trigger out signals that will be blocked from becoming
+> +          active, unless filtering is disabled on the driver.
+> +
+> +      arm,trig-conn-name:
+
+arm,cti-trigger-name ?
+
+
+--- DONE or End of silly comments ---
+
+> +  # Implementation defined CTI - CPU + ETM connections explicitly defined..
+> +  # Shows use of type constants from dt-bindings/arm/coresight-cti-dt.h
+> +  - |
+> +    #include <dt-bindings/arm/coresight-cti-dt.h>
+> +
+> +    cti@858000 {
+> +      compatible = "arm,coresight-cti", "arm,primecell";
+> +      reg = <0x858000 0x1000>;
+> +
+> +      clocks = <&soc_smc50mhz>;
+> +      clock-names = "apb_pclk";
+> +
+> +      arm,cti-ctm-id = <1>;
+> +
+> +      trig-conns@0 {
+> +            arm,trig-in-sigs = <4 5 6 7>;
+> +            arm,trig-in-types = <ETM_EXTOUT
+> +                                 ETM_EXTOUT
+> +                                 ETM_EXTOUT
+> +                                 ETM_EXTOUT>;
+> +            arm,trig-out-sigs = <4 5 6 7>;
+> +            arm,trig-out-types = <ETM_EXTIN
+> +                                  ETM_EXTIN
+> +                                  ETM_EXTIN
+> +                                  ETM_EXTIN>;
+> +            arm,cs-dev-assoc = <&etm0>;
+> +      };
+> +
+> +      trig-conns@1 {
+> +            cpu = <&CPU0>;
+> +            arm,trig-in-sigs = <0 1>;
+> +            arm,trig-in-types = <PE_DBGTRIGGER
+> +                                 PE_PMUIRQ>;
+> +            arm,trig-out-sigs=<0 1 2 >;
+> +            arm,trig-out-types = <PE_EDBGREQ
+> +                                  PE_DBGRESTART
+> +                                  PE_CTIIRQ>;
+> +
+> +            arm,trig-filters = <0>;
+> +      };
+> +    };
+> +  # Implementation defined CTI - none CoreSight component connections.
+
+nit: s/none/non ?
+
+Rest looks fine to me.
+
+Suzuki
