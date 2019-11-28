@@ -2,286 +2,233 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC41C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 07:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67256C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 09:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14FCE21741
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 07:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F2621781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 09:07:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQZ9KLRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfK1Hpu (ORCPT
+        id S1726492AbfK1JHf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 02:45:50 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:2444 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfK1Hpu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 02:45:50 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: UHpKq3Lgw7dATL4BFWWcwZzg+qlMyt7lUAM6o39zQ4RjZb/81jNiZgq/riXRYb2sgxQG1p60YE
- Fauy8UvJt6NU/1eqN73jlwEiicxV/u/JFeIj6mmz978ely0qQ4liwQRWPPyfv3DrXUJCG3pSPZ
- 9rHZnT5wLFRPglWUOJnBJFgwkFu2Z4kt2frdUY5rahgz27LSJmHPnwnj950gEGeog8PZVFqPZj
- d3/jB8LYXW3suShlxD5D9ownrfpJ+Eeructb3SofmTeIE7WuaLHozlVeTSSnOKjnp1fnNXhE1L
- LKI=
-X-IronPort-AV: E=Sophos;i="5.69,252,1571727600"; 
-   d="scan'208";a="58641170"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Nov 2019 00:45:46 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 28 Nov 2019 00:45:37 -0700
-Received: from M43218.microchip.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 28 Nov 2019 00:45:34 -0700
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <nicolas.ferre@microchip.com>,
-        <adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <claudiu.beznea@microchip.com>, <Eugen.Hristev@microchip.com>,
-        <alexandre.belloni@bootlin.com>,
-        "Ludovic Desroches" <ludovic.desroches@microchip.com>
-Subject: [PATCH v4 2/3] mmc: sdhci-of-at91: rework clocks management to support SAM9x60 device
-Date:   Thu, 28 Nov 2019 08:45:21 +0100
-Message-ID: <20191128074522.69706-2-ludovic.desroches@microchip.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191128074522.69706-1-ludovic.desroches@microchip.com>
-References: <20191128074522.69706-1-ludovic.desroches@microchip.com>
+        Thu, 28 Nov 2019 04:07:35 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45482 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfK1JHf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 04:07:35 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 203so19435074lfa.12
+        for <devicetree@vger.kernel.org>; Thu, 28 Nov 2019 01:07:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y5UjhnJuEjyj7DznN8ie96zzIoa0qgehxmQpy2Flwiw=;
+        b=jQZ9KLRH/IyP7J7f34S59X4Ixad02kof4PXY8+7sdJJV798Q3/puEG50I+ea6cSHeE
+         f1McteR0Ll2DfBB3hWoycKwI+Vq/n2ibWW5VqggbNVt1BDbMKHc+Fk5Dibzl502QKDxu
+         NifTSUg/07Fa5RU/CbYzSgdkiZ94td3zCvpGMrpIcZgxIi2OGlJInmqeM9vzm1MYp7Y0
+         KYJGhc3th9ybGvd1iNbdCaL5h84XuElMImS7geuzXiUP3TjGmo3bddm15Na91TPbvdHE
+         tctuE/d5+QPZCSAvaWJzO2J1X9LLiCZsYXtkbKqZeGE6RlKwc2gXUrE5CLkBdBHOyeew
+         yHQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y5UjhnJuEjyj7DznN8ie96zzIoa0qgehxmQpy2Flwiw=;
+        b=JOkuypra7IkolOLNZr4+mcx9u8Hnhp8rrs/asUP9wIZGwqWJfa0+Wq5MnCLIx9HJgh
+         u36NgXOUefDLOnJNlnNa7R7MJHqivVXq8WCddh3+t9F5sdgKP+Re0RCL9+x1lfm6NljC
+         AFTvA7K0H1vV22W/4rPOxd1BV0VfbrqxlsMpmC7c60uuAnkFB9QlTrHJMes6Cydh9Pl+
+         UHEYJfX0KIwNT51vHs76kOjigK8LM+h3i8/QMKGzz15SdXZ1FkGOcAv9o4SFZYLnLeKa
+         m8E46dg50ewbKhQcT/bDpyIJHw4XjollDuHyL5d4OMUysJY+/YnpKf8MTzJNjlUTcRJe
+         0sAg==
+X-Gm-Message-State: APjAAAXVfC/SOmtIJMowpxPlJwPt9/8NtRydu45I3U+hE2JHOhTkzvtB
+        ExkhO9yFHbzUwPdUa+T89QDSMQ==
+X-Google-Smtp-Source: APXvYqxUh3IoX9UT1+UEu8f/UNi7iEEkYiAYl9UMEyr8qEe1TA/mgZrkiAjCEM5tae8KEnBbxNMVDw==
+X-Received: by 2002:ac2:5195:: with SMTP id u21mr561024lfi.141.1574932051377;
+        Thu, 28 Nov 2019 01:07:31 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id g11sm8238595lfb.94.2019.11.28.01.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Nov 2019 01:07:30 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v6] drm/panel: Add generic DSI display controller YAML bindings
+Date:   Thu, 28 Nov 2019 10:07:26 +0100
+Message-Id: <20191128090726.51107-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In the SAM9x60 SoC, there are only two clocks instead of three for the
-SDHCI device. The base clk is no longer provided, it is generated
-internally from the mult clk.
+This adds a starting point for processing and defining generic
+bindings used by DSI display controllers and panels attached to
+the virtual DSI ports.
 
-The values of the base clk and mul in the capabilities registers may not
-reflect the reality as the mult clk is a programmable clock which can take
-several rates. As we can't trust those values, take them from the clock
-tree and update the capabilities according to.
-
-As we can have the same pitfall, in some cases, with the SAMA5D2 Soc,
-stop relying on capabilities too.
-
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Cc: devicetree@vger.kernel.org
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
+ChangeLog v5->v6:
+- Rename subject to pertain to DSI display controllers in general.
+- Change some of the wording in the DSI controller description text,
+  making it clear that the binding pertains to the combination of a
+  DSI controller with at least one panel attached.
+- Add a proper compiling example.
+ChangeLog v4->v5:
+- Drop the example.
+- I still have a vert annoying error message in the Sony
+  panel bindings that uses this schema:
+  sony,acx424akp.example.dt.yaml: panel@0: $nodename:0: 'panel@0' does not match '^dsi-controller(@.*)?$'
+  As this is modeled very closely to
+  Documentation/devicetree/bindings/net/mdio.yaml
+  and that one doesn't emit this type of warning for its ethernet-phy@0
+  etc I am pretty much clueless and just can't see what the problem
+  is.
+- If I can't figure this out the only viable next step is to drop the
+  ambition to create yaml bindings simply because I'm unable to do
+  it, and go back to traditional text bindings :(
+ChangeLog v3->v4:
+- Rename into display/dsi-controller.yaml
+- Require a virtual channel number for the DSI panel, as
+  DSI have this 2-bit virtual address field.
+- Bring in some but not all properties from the existing MIPI
+  DSI bindings. This schema can be used with simpler panels but
+  not complex panels with multiple virtual channels for the
+  moment. Let's handle it when we get there.
+- Add an example.
+ChangeLog v2->v3:
+- Make a more complete DSI panel binding including the controller
+  and its address-cells and size-cells and a pattern for the panel
+  nodes. The panel is one per DSI master, the reg property is
+  compulsory but should always be 0 (as far as I can tell) as
+  only one panel can be connected. The bus doesn't really have
+  any addresses for the panel, the address/reg notation seems
+  to be cargo-culted from the port graphs and is not necessary
+  to parse some device trees, it is used to tell whether the
+  node is a panel or not rather than any addressing.
+- I have no idea how many displays you can daisychain on a single
+  DSI master, I just guess 15 will be enough. The MIPI-specs
+  are memberwalled. Someone who knows can tell perhaps?
+ChangeLog v1->v2:
+- New patch after feedback.
+---
+ .../bindings/display/dsi-controller.yaml      | 91 +++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/dsi-controller.yaml
 
-Changes:
-- v4: fix typo for the capabilities register and remove extra
-  parentheses
-- v3: none
-- v2: none
-
- drivers/mmc/host/sdhci-of-at91.c | 105 +++++++++++++++++--------------
- 1 file changed, 58 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-index 5959e394b416..b2a8c45c9c23 100644
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -33,7 +33,14 @@
- 
- #define SDHCI_AT91_PRESET_COMMON_CONF	0x400 /* drv type B, programmable clock mode */
- 
-+struct sdhci_at91_soc_data {
-+	const struct sdhci_pltfm_data *pdata;
-+	bool baseclk_is_generated_internally;
-+	unsigned int divider_for_baseclk;
-+};
+diff --git a/Documentation/devicetree/bindings/display/dsi-controller.yaml b/Documentation/devicetree/bindings/display/dsi-controller.yaml
+new file mode 100644
+index 000000000000..fd986c36c737
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/dsi-controller.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/dsi-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- struct sdhci_at91_priv {
-+	const struct sdhci_at91_soc_data *soc_data;
- 	struct clk *hclock;
- 	struct clk *gck;
- 	struct clk *mainck;
-@@ -141,12 +148,24 @@ static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
- 	.set_power		= sdhci_at91_set_power,
- };
- 
--static const struct sdhci_pltfm_data soc_data_sama5d2 = {
-+static const struct sdhci_pltfm_data sdhci_sama5d2_pdata = {
- 	.ops = &sdhci_at91_sama5d2_ops,
- };
- 
-+static const struct sdhci_at91_soc_data soc_data_sama5d2 = {
-+	.pdata = &sdhci_sama5d2_pdata,
-+	.baseclk_is_generated_internally = false,
-+};
++title: Common Properties for DSI Display Panels
 +
-+static const struct sdhci_at91_soc_data soc_data_sam9x60 = {
-+	.pdata = &sdhci_sama5d2_pdata,
-+	.baseclk_is_generated_internally = true,
-+	.divider_for_baseclk = 2,
-+};
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
 +
- static const struct of_device_id sdhci_at91_dt_match[] = {
- 	{ .compatible = "atmel,sama5d2-sdhci", .data = &soc_data_sama5d2 },
-+	{ .compatible = "microchip,sam9x60-sdhci", .data = &soc_data_sam9x60 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, sdhci_at91_dt_match);
-@@ -156,50 +175,37 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_at91_priv *priv = sdhci_pltfm_priv(pltfm_host);
--	int ret;
- 	unsigned int			caps0, caps1;
- 	unsigned int			clk_base, clk_mul;
--	unsigned int			gck_rate, real_gck_rate;
-+	unsigned int			gck_rate, clk_base_rate;
- 	unsigned int			preset_div;
- 
--	/*
--	 * The mult clock is provided by as a generated clock by the PMC
--	 * controller. In order to set the rate of gck, we have to get the
--	 * base clock rate and the clock mult from capabilities.
--	 */
- 	clk_prepare_enable(priv->hclock);
- 	caps0 = readl(host->ioaddr + SDHCI_CAPABILITIES);
- 	caps1 = readl(host->ioaddr + SDHCI_CAPABILITIES_1);
--	clk_base = (caps0 & SDHCI_CLOCK_V3_BASE_MASK) >> SDHCI_CLOCK_BASE_SHIFT;
--	clk_mul = (caps1 & SDHCI_CLOCK_MUL_MASK) >> SDHCI_CLOCK_MUL_SHIFT;
--	gck_rate = clk_base * 1000000 * (clk_mul + 1);
--	ret = clk_set_rate(priv->gck, gck_rate);
--	if (ret < 0) {
--		dev_err(dev, "failed to set gck");
--		clk_disable_unprepare(priv->hclock);
--		return ret;
--	}
--	/*
--	 * We need to check if we have the requested rate for gck because in
--	 * some cases this rate could be not supported. If it happens, the rate
--	 * is the closest one gck can provide. We have to update the value
--	 * of clk mul.
--	 */
--	real_gck_rate = clk_get_rate(priv->gck);
--	if (real_gck_rate != gck_rate) {
--		clk_mul = real_gck_rate / (clk_base * 1000000) - 1;
--		caps1 &= (~SDHCI_CLOCK_MUL_MASK);
--		caps1 |= ((clk_mul << SDHCI_CLOCK_MUL_SHIFT) &
--			  SDHCI_CLOCK_MUL_MASK);
--		/* Set capabilities in r/w mode. */
--		writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN,
--		       host->ioaddr + SDMMC_CACR);
--		writel(caps1, host->ioaddr + SDHCI_CAPABILITIES_1);
--		/* Set capabilities in ro mode. */
--		writel(0, host->ioaddr + SDMMC_CACR);
--		dev_info(dev, "update clk mul to %u as gck rate is %u Hz\n",
--			 clk_mul, real_gck_rate);
--	}
++description: |
++  This document defines device tree properties common to DSI, Display
++  Serial Interface controllers and attached panels. It doesn't constitute
++  a device tree binding specification by itself but is meant to be referenced
++  by device tree bindings.
 +
-+	gck_rate = clk_get_rate(priv->gck);
-+	if (priv->soc_data->baseclk_is_generated_internally)
-+		clk_base_rate = gck_rate / priv->soc_data->divider_for_baseclk;
-+	else
-+		clk_base_rate = clk_get_rate(priv->mainck);
++  When referenced from panel device tree bindings the properties defined in
++  this document are defined as follows. The panel device tree bindings are
++  responsible for defining whether each property is required or optional.
 +
-+	clk_base = clk_base_rate / 1000000;
-+	clk_mul = gck_rate / clk_base_rate - 1;
++  Notice: this binding concerns DSI panels connected directly to a master
++  without any intermediate port graph to the panel. Each DSI master
++  can control one to four virtual channels to one panel. Each virtual
++  channel should have a node "panel" for their virtual channel with their
++  reg-property set to the virtual channel number, usually there is just
++  one virtual channel, number 0.
 +
-+	caps0 &= ~SDHCI_CLOCK_V3_BASE_MASK;
-+	caps0 |= (clk_base << SDHCI_CLOCK_BASE_SHIFT) & SDHCI_CLOCK_V3_BASE_MASK;
-+	caps1 &= ~SDHCI_CLOCK_MUL_MASK;
-+	caps1 |= (clk_mul << SDHCI_CLOCK_MUL_SHIFT) & SDHCI_CLOCK_MUL_MASK;
-+	/* Set capabilities in r/w mode. */
-+	writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN, host->ioaddr + SDMMC_CACR);
-+	writel(caps0, host->ioaddr + SDHCI_CAPABILITIES);
-+	writel(caps1, host->ioaddr + SDHCI_CAPABILITIES_1);
-+	/* Set capabilities in ro mode. */
-+	writel(0, host->ioaddr + SDMMC_CACR);
++properties:
++  $nodename:
++    pattern: "^dsi-controller(@.*)?$"
 +
-+	dev_info(dev, "update clk mul to %u as gck rate is %u Hz and clk base is %u Hz\n",
-+		 clk_mul, gck_rate, clk_base_rate);
- 
- 	/*
- 	 * We have to set preset values because it depends on the clk_mul
-@@ -207,19 +213,19 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
- 	 * maximum sd clock value is 120 MHz instead of 208 MHz. For that
- 	 * reason, we need to use presets to support SDR104.
- 	 */
--	preset_div = DIV_ROUND_UP(real_gck_rate, 24000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 24000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_SDR12);
--	preset_div = DIV_ROUND_UP(real_gck_rate, 50000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 50000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_SDR25);
--	preset_div = DIV_ROUND_UP(real_gck_rate, 100000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 100000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_SDR50);
--	preset_div = DIV_ROUND_UP(real_gck_rate, 120000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 120000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_SDR104);
--	preset_div = DIV_ROUND_UP(real_gck_rate, 50000000) - 1;
-+	preset_div = DIV_ROUND_UP(gck_rate, 50000000) - 1;
- 	writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
- 	       host->ioaddr + SDHCI_PRESET_FOR_DDR50);
- 
-@@ -314,7 +320,7 @@ static const struct dev_pm_ops sdhci_at91_dev_pm_ops = {
- static int sdhci_at91_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id	*match;
--	const struct sdhci_pltfm_data	*soc_data;
-+	const struct sdhci_at91_soc_data	*soc_data;
- 	struct sdhci_host		*host;
- 	struct sdhci_pltfm_host		*pltfm_host;
- 	struct sdhci_at91_priv		*priv;
-@@ -325,17 +331,22 @@ static int sdhci_at91_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	soc_data = match->data;
- 
--	host = sdhci_pltfm_init(pdev, soc_data, sizeof(*priv));
-+	host = sdhci_pltfm_init(pdev, soc_data->pdata, sizeof(*priv));
- 	if (IS_ERR(host))
- 		return PTR_ERR(host);
- 
- 	pltfm_host = sdhci_priv(host);
- 	priv = sdhci_pltfm_priv(pltfm_host);
-+	priv->soc_data = soc_data;
- 
- 	priv->mainck = devm_clk_get(&pdev->dev, "baseclk");
- 	if (IS_ERR(priv->mainck)) {
--		dev_err(&pdev->dev, "failed to get baseclk\n");
--		return PTR_ERR(priv->mainck);
-+		if (soc_data->baseclk_is_generated_internally) {
-+			priv->mainck = NULL;
-+		} else {
-+			dev_err(&pdev->dev, "failed to get baseclk\n");
-+			return PTR_ERR(priv->mainck);
-+		}
- 	}
- 
- 	priv->hclock = devm_clk_get(&pdev->dev, "hclock");
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^panel@[0-3]$":
++    description: Panels connected to the DSI link
++    type: object
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 3
++        description:
++          The virtual channel number of a DSI peripheral. Must be in the range
++          from 0 to 3, as DSI uses a 2-bit addressing scheme. Some DSI
++          peripherals respond to more than a single virtual channel. In that
++          case the reg property can take multiple entries, one for each virtual
++          channel that the peripheral responds to.
++
++      clock-master:
++        type: boolean
++        description:
++           Should be enabled if the host is being used in conjunction with
++           another DSI host to drive the same peripheral. Hardware supporting
++           such a configuration generally requires the data on both the busses
++           to be driven by the same clock. Only the DSI host instance
++           controlling this clock should contain this property.
++
++      enforce-video-mode:
++        type: boolean
++        description:
++          The best option is usually to run a panel in command mode, as this
++          gives better control over the panel hardware. However for different
++          reasons like broken hardware, missing features or testing, it may be
++          useful to be able to force a command mode-capable panel into video
++          mode.
++
++    required:
++      - reg
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    dsi-controller@a0351000 {
++        reg = <0xa0351000 0x1000>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++        panel@0 {
++            compatible = "sony,acx424akp";
++            reg = <0>;
++            vddi-supply = <&ab8500_ldo_aux1_reg>;
++            reset-gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
++        };
++    };
++
++...
 -- 
-2.24.0
+2.23.0
 
