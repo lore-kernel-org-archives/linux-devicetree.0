@@ -2,608 +2,206 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD08C43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 09:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D713CC432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0554D21774
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 09:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F65216F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:06:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MrIZCIXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfK1JzV (ORCPT
+        id S1726227AbfK1KGx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:55:21 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:26504 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbfK1JzV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:55:21 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Nov 2019 15:24:30 +0530
-IronPort-SDR: /mMrTxdXbspbnq7yne7NVa5wVj56tJYN4HBQAOllqiacaaETcOWkw4A8y56kTRh/url0wrxeeF
- UaEIdEOx3jPPrHprSQWEEPqEM+yGJT2CF5w39bikaD3Zl04NoHZc5YHXln2yKATKws0Ms/UieI
- wnuz6XNx7Rbwqpbznrof1b+j+BKXct0rn2fGko/tryjLEDnMWN2Ht6uT/L+jaJM+l7UI3zemGq
- iL3pN0Pm/2ahx659Dya4qWIS+0ouyFfUE39F46Xjlk8OdGBluKRJmTH3F+EoijObb90+tnAx4d
- C7LPQIPqRaXIOJJDuOOsj/0U
-Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 28 Nov 2019 15:24:13 +0530
-Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
-        id C65371A70; Thu, 28 Nov 2019 15:24:12 +0530 (IST)
-From:   Rajeshwari <rkambl@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thu, 28 Nov 2019 05:06:53 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38037 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfK1KGu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 05:06:50 -0500
+Received: by mail-lj1-f196.google.com with SMTP id k8so17298291ljh.5
+        for <devicetree@vger.kernel.org>; Thu, 28 Nov 2019 02:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tUJALJT7TTpPicHHFkyqG0CxrKAUNpXMj/J44tCGQC4=;
+        b=MrIZCIXKCoWoT3alX7UY36qi/6SmTc8BmnSzXxmhsQpC3yJD3IGpnPHTHRA18Eq4Ii
+         dA9JQj8dImYM/knYLxHfT9Amb+CBMYLylpGe8yqPF3l74o2xTtnKKtGSQgoG6/WTJ/oL
+         HUwMesK82Mbk14A7KTmke+h5acBeYRP/otlWfqCq7PAbpIRdWJ10VEj2VCjL7tbbk+Rr
+         NxZZ9SHbyBXhfeY2zwMQ1yglciw9gS/q4pPMp2nX+/rBkPPnVgj9MQHTPDHOLO99uH2y
+         VKbEYHJ6ET/W96KuTASZNjb2IB0ZQxCPs672YjBtFM0beOSqC8SiM1NMvSwegQqNVtV1
+         +kQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tUJALJT7TTpPicHHFkyqG0CxrKAUNpXMj/J44tCGQC4=;
+        b=gzeOncwVQLrtblTtmRcHbL9yWRY4D47Iuh6ZBwcf35sbxYIntYedTQZC1tLnph2CeX
+         9ZKoj2uQkS8rDwWtokzTTUUBXcyCfQMFz52K6S77xxaFLYt7AZ0/3jkzDeCSZdP7FrJC
+         4SX2J7CHwpEvwVAynNeWKNaHFBcCae2OrPvQUWBmaVNEgNaFEu6vV04CnIUdVR7oyb5U
+         1uzn+9JS/Qz8aLYY16DryZmHUJRs7UR+7O25+6HGe845gQIfzRbzooodshfcsXpXWYGB
+         q7Ssc74vJbqkfi6t7hg8hlxZbOQCj37r+UQCeTa60cieV8thhzmw08P8zTW3mzncfibp
+         IcBg==
+X-Gm-Message-State: APjAAAUgAMkCdBdydWqp7GL9rGSKRljywICjcL8czYa094m8WfoUyn5u
+        Dbzvf2H0SPVTHv2FJQ1f1V3APL0pY+0VbGzzupwMUQ==
+X-Google-Smtp-Source: APXvYqwk5GfDLW4bgJe+dmZ3t+boVThpmLI6573Ta152HHaHVEwKJ6QpDlfomukhdkz0o/BidvY2uXE+XHx6i4GMZaA=
+X-Received: by 2002:a2e:9699:: with SMTP id q25mr33914816lji.251.1574935607136;
+ Thu, 28 Nov 2019 02:06:47 -0800 (PST)
+MIME-Version: 1.0
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
+ <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com> <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com>
+In-Reply-To: <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 28 Nov 2019 11:06:35 +0100
+Message-ID: <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
+Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaa@codeaurora.org,
-        sanm@codeaurora.org, Rajeshwari <rkambl@codeaurora.org>
-Subject: [PATCH v2 1/1] arm64: dts: qcom: sc7180:  Add device node support for TSENS in SC7180
-Date:   Thu, 28 Nov 2019 15:24:07 +0530
-Message-Id: <1574934847-30372-2-git-send-email-rkambl@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org>
-References: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add TSENS node and user thermal zone for TSENS sensors in SC7180.
+On Fri, Nov 22, 2019 at 2:36 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> On 22/11/2019 14.10, Linus Walleij wrote:
+> > On Wed, Nov 20, 2019 at 2:34 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> >
+> >> Boards might use the same GPIO line to control several external devices.
+> >> Add section to document on how a shared GPIO pin can be described.
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >
+> > As I've stated earlier I think this information is surplus.
+> > If two devices have a phandle to the same GPIO line
+> > then it is by definition shared.
+>
+> Well, phandle + line number to be precise.
 
-Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
- 1 file changed, 527 insertions(+)
+This is what I mean when I say "phandle to the same GPIO line".
+Like this:
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 666e9b9..6656ffc 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -911,6 +911,26 @@
- 			status = "disabled";
- 		};
- 
-+		tsens0: thermal-sensor@c263000 {
-+			compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-+			reg = <0 0x0c263000 0 0x1ff>, /* TM */
-+				<0 0x0c222000 0 0x1ff>; /* SROT */
-+			#qcom,sensors = <15>;
-+			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow";
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		tsens1: thermal-sensor@c265000 {
-+			compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-+			reg = <0 0x0c265000 0 0x1ff>, /* TM */
-+				<0 0x0c223000 0 0x1ff>; /* SROT */
-+			#qcom,sensors = <10>;
-+			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow";
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0x0c440000 0 0x1100>,
-@@ -1121,6 +1141,513 @@
- 		};
- 	};
- 
-+	thermal-zones {
-+		cpu0-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 1>;
-+
-+			trips {
-+				cpu0_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu0_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu0_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 2>;
-+
-+			trips {
-+				cpu1_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu1_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu1_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu2-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 3>;
-+
-+			trips {
-+				cpu2_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu2_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu2_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu3-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 4>;
-+
-+			trips {
-+				cpu3_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu3_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu3_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu4-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 5>;
-+
-+			trips {
-+				cpu4_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu4_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu4_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu5-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 6>;
-+
-+			trips {
-+				cpu5_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu5_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu5_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu6-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 9>;
-+
-+			trips {
-+				cpu6_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu6_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu6_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu7-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 10>;
-+
-+			trips {
-+				cpu7_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu7_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu7_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu8-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 11>;
-+
-+			trips {
-+				cpu8_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu8_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu8_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu9-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 12>;
-+
-+			trips {
-+				cpu9_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu9_alert1: trip-point1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu9_crit: cpu_crit {
-+					temperature = <110000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		aoss0-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 0>;
-+
-+			trips {
-+				aoss0_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		cpuss0-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 7>;
-+
-+			trips {
-+				cpuss0_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+				cpuss0_crit: cluster0_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss1-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 8>;
-+
-+			trips {
-+				cpuss1_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+				cpuss1_crit: cluster0_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gpuss0-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 13>;
-+
-+			trips {
-+				gpuss0_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		gpuss1-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 14>;
-+
-+			trips {
-+				gpuss1_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		aoss1-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 0>;
-+
-+			trips {
-+				aoss1_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		cwlan-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 1>;
-+
-+			trips {
-+				cwlan_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		audio-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 2>;
-+
-+			trips {
-+				audio_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		ddr-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 3>;
-+
-+			trips {
-+				ddr_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		q6-hvx-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 4>;
-+
-+			trips {
-+				q6_hvx_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		camera-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 5>;
-+
-+			trips {
-+				camera_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		mdm-core-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 6>;
-+
-+			trips {
-+				mdm_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		mdm-dsp-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 7>;
-+
-+			trips {
-+				mdm_dsp_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		npu-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 8>;
-+
-+			trips {
-+				npu_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		video-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 9>;
-+
-+			trips {
-+				video_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+foo-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
 
+If the phandle <&gpio0 5 *>; appear in some other
+(non-disabled) node it has > 1 users.
+
+> >> +               line_a {
+> >> +                       gpio-shared;
+> >
+> > So this is unnecessary: if the same line is referenced
+> > by phandle from two places it is shared, simple as that.
+>
+> phandle is pointing to the gpio controller, not to the line.
+
+Cleared up above.
+
+> >> +                       gpios = <5 0>;
+> >> +                       output-low;
+> >
+> > This is overlapping with the use case to define initial
+> > state values for GPIOs, something that has been
+> > brought up repeatedly and I've collected links for
+> > previous discussions several times.
+>
+> I don't mind this to go away and the first set would configure the level.
+> Kept it here so I can reuse the gpio-hog code from gpiolib-of ;)
+
+People have tried to reuse the hog code to set up
+initial line levels as well, it failed because they could
+not get the DT bindings through the door.
+
+> > I guess if need be I have to look them up again.
+> >
+> > The DT maintainers don't like the hog syntax so
+> > something else is desired for this.
+>
+> I see, so the gpio-hog might change?
+
+They will not change since they are ABI, but their
+use case will not be extended AFAICT.
+Not my pick, I liked the hog syntax but we need
+consensus.
+
+> > (snip)
+> >> +The shared GPIO line management strategy can be selected with either of the
+> >> +following properties:
+> >> +- refcounted-low: The line must be kept low as long as there is at least one
+> >> +               request asking it to be low.
+> >> +- refcounted-high: The line must be kept high as long as there is at least one
+> >> +               request asking it to be high.
+> >
+> > Is this really needed? Isn't it more appropriate to just define the
+> > semantics such that as soon as some consumer requests the line
+> > high it will be refcounted high, and as soon as it is requested
+> > low by any consumer it will be refcounted low.
+>
+> Well. How do we decide which level is the one that should be preserved?
+
+First come first serve.
+
+If there is any conflict amongst the consumers we are
+screwed anyway so why try to establish where they should
+agree if they don't agree?
+
+> How would the core decide what to in a simplest case:
+> two device, they are the same part.
+> ENABLE pin which needs to be high to enable the device.
+> When the driver probes it asks for initial deasserted GPIO as the device
+> is not in active use.
+
+This makes me think it should be a unique driver
+with a unique compatible string, as it embodies
+use cases.
+
+It is too broad to just define
+refcounted-high or refcounted-low, that is hiding the
+real use case, so I would go for something like a
+resource in the device tree that all other devices that
+need it can take.
+
+Like a reset controller, precisely:
+
+reset: reset-controller {
+    compatible = "reset-gpio";
+    gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+    #reset-cells = <0>;
+};
+
+dev0 {
+    resets = <&reset>;
+};
+
+dev1 {
+    resets = <&reset>;
+};
+
+The ambition to use refcounted GPIOs to solve this
+usecase is probably wrong, I would say try to go for a
+GPIO-based reset controller instead.
+
+The fact that some Linux drivers are already using explicit
+GPIO's for their reset handling is maybe unfortunate,
+they will simply have to grow code to deal with a reset
+alternatively to GPIO, like first try to grab a reset
+handle and if that doesn't fall back to use a GPIO.
+
+I would say don't try to shoehorn this use case into the
+gpio library but instead try to create a reset controller that
+takes care of arbitrating the use of a single GPIO line.
+
+Yours,
+Linus Walleij
