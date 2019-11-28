@@ -2,109 +2,78 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF06C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F2BC43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D10221741
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:48:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bP5Ky/rG"
+	by mail.kernel.org (Postfix) with ESMTP id BCCA621775
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfK1Krx (ORCPT
+        id S1726546AbfK1KyJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:47:53 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58034 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfK1Krw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 05:47:52 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAll4A096685;
-        Thu, 28 Nov 2019 04:47:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938067;
-        bh=agcoWtKSTenRqtUlTyzEyGcBRm6Q0+Ai3WNO3BmnFjE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=bP5Ky/rGWNRIJXiEqUEJ3ULSyhXE+Rtzp8Zic6HwXGobf24j5w9oaqrGKcqZ3L/8y
-         Tj2pAvhUnCDG+LRGvFaNIvTBWip7QGaV3oLNydvX6bJdm6YURNewSW/8KylHoPrslk
-         Gdd9nJHaazzctcWjYQhH6H1rD18OSwoM1Nb4gJPo=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAllbp126409
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 04:47:47 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 04:47:47 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 04:47:47 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX41098163;
-        Thu, 28 Nov 2019 04:47:44 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Anil Varughese <aniljoy@cadence.com>,
-        Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 04/14] phy: cadence: Sierra: Add support for SERDES_16G used in J721E SoC
-Date:   Thu, 28 Nov 2019 16:16:38 +0530
-Message-ID: <20191128104648.21894-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191128104648.21894-1-kishon@ti.com>
-References: <20191128104648.21894-1-kishon@ti.com>
+        Thu, 28 Nov 2019 05:54:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:33652 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbfK1KyJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 Nov 2019 05:54:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91CA61FB;
+        Thu, 28 Nov 2019 02:54:08 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B60083F6C4;
+        Thu, 28 Nov 2019 02:54:07 -0800 (PST)
+Subject: Re: [PATCH v5 03/14] coresight: cti: Add sysfs access to program
+ function regs
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org
+References: <20191119231912.12768-1-mike.leach@linaro.org>
+ <20191119231912.12768-4-mike.leach@linaro.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <cc0eb144-48a2-bde5-4790-2fd5e1168360@arm.com>
+Date:   Thu, 28 Nov 2019 10:54:06 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191119231912.12768-4-mike.leach@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SERDES_16G in TI's J721E SoC uses Cadence Sierra PHY. Add
-support to use Cadence Sierra driver in J721E SoC.
+On 19/11/2019 23:19, Mike Leach wrote:
+> Adds in sysfs programming support for the CTI function register sets.
+> Allows direct manipulation of channel / trigger association registers.
+> 
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/phy/cadence/phy-cadence-sierra.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index c60809f615af..d3b0dac2db77 100644
---- a/drivers/phy/cadence/phy-cadence-sierra.c
-+++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -553,11 +553,25 @@ static const struct cdns_sierra_data cdns_map_sierra = {
- 	cdns_usb_regs
- };
- 
-+static const struct cdns_sierra_data cdns_ti_map_sierra = {
-+	SIERRA_MACRO_ID,
-+	0x0,
-+	0x1,
-+	ARRAY_SIZE(cdns_pcie_regs),
-+	ARRAY_SIZE(cdns_usb_regs),
-+	cdns_pcie_regs,
-+	cdns_usb_regs
-+};
-+
- static const struct of_device_id cdns_sierra_id_table[] = {
- 	{
- 		.compatible = "cdns,sierra-phy-t0",
- 		.data = &cdns_map_sierra,
- 	},
-+	{
-+		.compatible = "ti,sierra-phy-t0",
-+		.data = &cdns_ti_map_sierra,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, cdns_sierra_id_table);
--- 
-2.17.1
+> +/*
+> + * #define CTI_DEBUG_INTEGRATION_CTRL to enable the access to the integration
+> + * control registers. Normally only used to investigate connection data.
+> + */
 
+On a second thought, I have some comments on this symbol.
+
+Given that the integration control registers may be useful for people to
+find the device connections, I strongly feel that this is provided
+via a CONFIG symbol rather than a  debug symbol within the code.
+
+i.e, CONFIG_CTI_DEBUG_INTEGRATION_CTRL, to help the people better.
+Codewise this doesn't make much difference, but it certainly makes
+it more easier for people to use it.
+
+We have used debug symbols elsewhere in the drivers for pure functional
+debugging purposes. However I feel this is case is superior.
+
+
+Cheers
+Suzuki
