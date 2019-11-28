@@ -2,85 +2,158 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03DCC432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D383C43215
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEEF020880
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574938528;
-	bh=ad9+SWSKrOlB9g1376mkxAgY2Hz+I4lxYJjKgkKvaHo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vjS1zpVGoGEmur3KTLpZ68m5J+mkpakeyH8okS1TEXjY05ES7cxb2j2FD/Lz5Q3HP
-	 6sByPopIzQCPa6fi+DnJyuxBa6qaky1B3Ix3qRaObNlsCA0Tl+SktaXYM7sO0lan0z
-	 vgG2/Du4h0Skd3XVuk1ROkHch6X7UG0PkrkI81Bs=
+	by mail.kernel.org (Postfix) with ESMTP id 5F26421775
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:59:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sWhxq+s3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfK1KzQ (ORCPT
+        id S1726610AbfK1K76 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:55:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfK1KzQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 Nov 2019 05:55:16 -0500
-Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CBE521787;
-        Thu, 28 Nov 2019 10:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574938515;
-        bh=ad9+SWSKrOlB9g1376mkxAgY2Hz+I4lxYJjKgkKvaHo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7iD1hT2nyhscrbQezzTnDcOSShOEczC76I/vKfILPqUZcpvqK0KeoO+xTSTHnm3S
-         aYjkQG2DkMuwJldH3txVc7lkpFfTapZQdv+HNmHzLXjXQq7EqliTP98xm1q2aF/9CY
-         FRP/g0WB8DvCrsrmnXKSBcNjegiQfgeBrLqFkKcY=
-From:   kbingham@kernel.org
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        Simon Goda <simon.goda@doulos.com>
-Cc:     Kieran Bingham <kbingham@kernel.org>
-Subject: [PATCH 1/3] dt-bindings: vendor: Add JHD LCD vendor
-Date:   Thu, 28 Nov 2019 10:55:06 +0000
-Message-Id: <20191128105508.3916-2-kbingham@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191128105508.3916-1-kbingham@kernel.org>
-References: <20191128105508.3916-1-kbingham@kernel.org>
+        Thu, 28 Nov 2019 05:59:58 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59160 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfK1K76 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 05:59:58 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAxoMf099557;
+        Thu, 28 Nov 2019 04:59:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574938790;
+        bh=EeH349x8o4SCZvve2w+07qwX2Rkls7hx3AcZBuQt9LU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=sWhxq+s3W0b+pkKBdLhbIultvfQuGqTfydHKuhZuEGUOEWj33z6YihPboOL6t1dft
+         uAy75xYdY9+wI6iOGGGydQs++Zh+l/S3CHBeQRN3I2Kti7d5/oNx+YvuwgGbM9kguG
+         WoT/XsT1WRF+Bgxp8ZYJZkvH2RWl3mCy5u4HTSCs=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAxosP045258
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Nov 2019 04:59:50 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
+ Nov 2019 04:59:49 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 28 Nov 2019 04:59:49 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJF073287;
+        Thu, 28 Nov 2019 04:59:46 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v6 01/17] bindings: soc: ti: add documentation for k3 ringacc
+Date:   Thu, 28 Nov 2019 12:59:29 +0200
+Message-ID: <20191128105945.13071-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191128105945.13071-1-peter.ujfalusi@ti.com>
+References: <20191128105945.13071-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kieran Bingham <kbingham@kernel.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Jing Handa Electronics is an LCD manufacturer based in Shenzhen, China.
- http://www.jhdlcd.com.cn/Company.html
+The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+enable straightforward passing of work between a producer and a consumer.
+There is one RINGACC module per NAVSS on TI AM65x and j721e.
 
-Signed-off-by: Kieran Bingham <kbingham@kernel.org>
+This patch introduces RINGACC device tree bindings.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 05b3904a995b..5c671263a1f0 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -473,6 +473,8 @@ patternProperties:
-     description: JEDEC Solid State Technology Association
-   "^jesurun,.*":
-     description: Shenzhen Jesurun Electronics Business Dept.
-+  "^jhd,.*":
-+    description: Jing Handa Electronics
-   "^jianda,.*":
-     description: Jiandangjing Technology Co., Ltd.
-   "^karo,.*":
+diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+new file mode 100644
+index 000000000000..59758ccce809
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+@@ -0,0 +1,59 @@
++* Texas Instruments K3 NavigatorSS Ring Accelerator
++
++The Ring Accelerator (RA) is a machine which converts read/write accesses
++from/to a constant address into corresponding read/write accesses from/to a
++circular data structure in memory. The RA eliminates the need for each DMA
++controller which needs to access ring elements from having to know the current
++state of the ring (base address, current offset). The DMA controller
++performs a read or write access to a specific address range (which maps to the
++source interface on the RA) and the RA replaces the address for the transaction
++with a new address which corresponds to the head or tail element of the ring
++(head for reads, tail for writes).
++
++The Ring Accelerator is a hardware module that is responsible for accelerating
++management of the packet queues. The K3 SoCs can have more than one RA instances
++
++Required properties:
++- compatible	: Must be "ti,am654-navss-ringacc";
++- reg		: Should contain register location and length of the following
++		  named register regions.
++- reg-names	: should be
++		  "rt" - The RA Ring Real-time Control/Status Registers
++		  "fifos" - The RA Queues Registers
++		  "proxy_gcfg" - The RA Proxy Global Config Registers
++		  "proxy_target" - The RA Proxy Datapath Registers
++- ti,num-rings	: Number of rings supported by RA
++- ti,sci-rm-range-gp-rings : TI-SCI RM subtype for GP ring range
++- ti,sci	: phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id	: TI-SCI device id of the ring accelerator
++- msi-parent	: phandle for "ti,sci-inta" interrupt controller
++
++Optional properties:
++ -- ti,dma-ring-reset-quirk : enable ringacc / udma ring state interoperability
++		  issue software w/a
++
++Example:
++
++ringacc: ringacc@3c000000 {
++	compatible = "ti,am654-navss-ringacc";
++	reg =	<0x0 0x3c000000 0x0 0x400000>,
++		<0x0 0x38000000 0x0 0x400000>,
++		<0x0 0x31120000 0x0 0x100>,
++		<0x0 0x33000000 0x0 0x40000>;
++	reg-names = "rt", "fifos",
++		    "proxy_gcfg", "proxy_target";
++	ti,num-rings = <818>;
++	ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
++	ti,dma-ring-reset-quirk;
++	ti,sci = <&dmsc>;
++	ti,sci-dev-id = <187>;
++	msi-parent = <&inta_main_udmass>;
++};
++
++client:
++
++dma_ipx: dma_ipx@<addr> {
++	...
++	ti,ringacc = <&ringacc>;
++	...
++}
 -- 
-2.20.1
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
