@@ -2,68 +2,65 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5589C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 13:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24914C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 13:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C346217D7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 13:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42E821741
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 13:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSnjHIZ7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axPapZiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfK1NIB (ORCPT
+        id S1726556AbfK1NK6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 08:08:01 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36748 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfK1NIB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 08:08:01 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f16so20032758lfm.3;
-        Thu, 28 Nov 2019 05:07:58 -0800 (PST)
+        Thu, 28 Nov 2019 08:10:58 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42194 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfK1NK6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 08:10:58 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e28so4273693ljo.9;
+        Thu, 28 Nov 2019 05:10:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=krNXawKjvmsjzjqthj9NXj7bfe5FbskescRB9lZYihk=;
-        b=tSnjHIZ7j97iNLNhC41UhinPh2mT5Atv/vfAr5ybSsUYPEMDOtTbHmztohzwfPeqIg
-         +2tKjSPjRELDo++Lq02YOOa6o8z3CAymvCywCv0BvFVhkm8kBIo38z0of0HWs0AuLUgz
-         mwAGao+DAZFjEqArH9qtkkFJkOiNMues9lt46y8qkpRPjTLNAsaPwTR1qyBYRTH5SBHt
-         lb6Ya8TbO0AmjGl9PglAvbxfvpOBIkWA+in104B511jp8vudrYBDXiFXI105G97UvM+/
-         GcmIuZMJOtIYbsOTXYaX/OUP+YCjMZIWYFTRFGG2xWOI8zN+SWXNfJq4UFuxdrGrReV3
-         blag==
+        bh=moaWqxsCTNcr/KHQtrcCoszt/hAeOw9BWifx1uk8A5Q=;
+        b=axPapZizquiOGFlRJBrXPULlzZp3tlQPQ+W+0ssp5CEgmUMlleysHaw7dxfJOxsXyG
+         rG10jIDfUvkkLtkgp/3gvenvxAh8w6jxQB68PN89JsiEZWvZihr7Bu5XKX4z/uKqZeh9
+         1cUtGzGdouhtkdzzPYL7pKp83JZQvZbg+vjm3ey86tIxlB9eLdqgIO/XKZ2qy8q3m6pe
+         L+vleUmTtZ8MGm09lHp4DrODX04aJg8Or+UMNsImNFuuobkHoAo672Gsntsg2qRX7TbM
+         KRBxzWl3VAkQdjCzCE8fKo/KKVi6mE/oYn+AOOgs55MJLaOY3vFwrHcrLAGfR/TO7vqc
+         IHqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=krNXawKjvmsjzjqthj9NXj7bfe5FbskescRB9lZYihk=;
-        b=OlYum3zbU0mXMKVhS3/dy7lOpiROBvDWYCGoS77K+LqQAr/VjLpPxPuCkXr7MUmWdv
-         hU+2xPeVK3Xd4Vct4GlG0cEOuA96Aq7tQzlxLlqImF5Vd+6QdzaVbvgKA1ndylKeX5OG
-         C0ohx3HSTIgQg2EgkQwvvQcpQrBQxMCrFhmOy0yW5vU4K8sHD4ttJq5HMHS2rTw5mlLx
-         ovucClK/qQJc8S/7UhiOfC961nsmIUaD1Bh1c6R3EKzTQr1tgyTnYCnppJc1ZuJOLjQL
-         NcrLvPF1zEcqlBKkgE+sjzeASzJl1T+3uvgWchQW/hYgaeTkTxB577Pmgk2a1lpnZWvg
-         MNcw==
-X-Gm-Message-State: APjAAAUrZa/tDj1tlH89cAQ2oWNYAg8hhW8I9lUrmnJRKrj6jnG67qiP
-        yzg8Il78p6SOgeSuPIrV/BVVObdH
-X-Google-Smtp-Source: APXvYqyU0ruuq7MNBoRPFjuANT53CWyKaDZOqBOtEWrGhT3SSbfuwQD2vC77eWfA+eC+xOPwhvQPIA==
-X-Received: by 2002:ac2:43af:: with SMTP id t15mr9639796lfl.154.1574946476973;
-        Thu, 28 Nov 2019 05:07:56 -0800 (PST)
+        bh=moaWqxsCTNcr/KHQtrcCoszt/hAeOw9BWifx1uk8A5Q=;
+        b=fGmwk1xYtZjDECvMf+6qizSLMcVhr+iQwyPrIc/P4ErD/aNXpWShWdyct60SRtn7eS
+         LCztfr4aOpXSp0y1pwo7CBMCulqIUDS6nBZhd5fuTFfrv5Bses505JLSVXG3eCBiYqv8
+         TomxC0PWxXbeMl17Oap3sLNY+RP9BLyZDoFokSNYwm3PqgS3immydhj2gBdhIFVK57t5
+         12ErZ9Z93QeGx5U1Ka/eFcJFwkW4QNiebmml9YVHOfzkDsp6DaP0JMtdoj0zXwKlpeZu
+         Gw9r+LIBUlIb3/ZrOQ8xJo4ZNq+U6L+/StYqEK0AVFIpkVA6ChKukWzzU461eckgrV8P
+         JXkw==
+X-Gm-Message-State: APjAAAUveGM9UiHoRWEb6aHs+EEsktGj0XxFETRqV1pqiU6OjSN0dGTS
+        /AkQyBl4Xa4acSErBVVBkzJSwnAf
+X-Google-Smtp-Source: APXvYqwj8wYYiVvIaKk7aE7WjXr1yvvmuNWb7KDyFLO2q96zPD8Hep4DWS0HOeg5a60gzo7iKRaXFw==
+X-Received: by 2002:a2e:7e0b:: with SMTP id z11mr34405718ljc.45.1574946654374;
+        Thu, 28 Nov 2019 05:10:54 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id k25sm8596603ljg.22.2019.11.28.05.07.55
+        by smtp.googlemail.com with ESMTPSA id d24sm3229691lja.82.2019.11.28.05.10.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2019 05:07:56 -0800 (PST)
-Subject: Re: [PATCH v2 06/11] dt-bindings: clock: tegra: Remove pmc clock ids
- from clock dt-bindings
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
+        Thu, 28 Nov 2019 05:10:53 -0800 (PST)
+Subject: Re: [PATCH v2 00/11] Move PMC clocks into Tegra PMC driver
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, sboyd@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, robh+dt@kernel.org,
         mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
         pgaikwad@nvidia.com, mturquette@baylibre.com,
         horms+renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
@@ -73,16 +70,15 @@ Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1574830773-14892-1-git-send-email-skomatineni@nvidia.com>
- <1574830773-14892-7-git-send-email-skomatineni@nvidia.com>
- <22ab4e93-bf94-5c73-b4b9-6cf36d329b97@gmail.com>
- <20191128121844.GA2300319@ulmo>
+ <79e7bd6a-f138-1e7d-6e0b-435adde3b3e5@gmail.com>
+ <20191128122619.GB2300319@ulmo>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d8dddf52-79a7-71cc-fb5b-32b8f4dbb9fd@gmail.com>
-Date:   Thu, 28 Nov 2019 16:07:55 +0300
+Message-ID: <174fd19d-50de-b854-e5c6-65493efd1ea0@gmail.com>
+Date:   Thu, 28 Nov 2019 16:10:52 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191128121844.GA2300319@ulmo>
+In-Reply-To: <20191128122619.GB2300319@ulmo>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -91,185 +87,81 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-28.11.2019 15:18, Thierry Reding пишет:
-> On Wed, Nov 27, 2019 at 05:32:30PM +0300, Dmitry Osipenko wrote:
+28.11.2019 15:26, Thierry Reding пишет:
+> On Wed, Nov 27, 2019 at 05:31:34PM +0300, Dmitry Osipenko wrote:
 >> 27.11.2019 07:59, Sowjanya Komatineni пишет:
->>> clk_out_1, clk_out_2, clk_out_3, blink are part of Tegra pmc clocks.
+>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
+>>> are currently registered by Tegra clock driver using clk_regiser_mux and
+>>> clk_register_gate which performs direct Tegra PMC register access.
 >>>
->>> This patch removes ids for these clocks from Tegra clock dt-bindings.
+>>> When Tegra PMC is in secure mode, any access from non-secure world will
+>>> not go through.
 >>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>  include/dt-bindings/clock/tegra114-car.h        | 14 +++++++-------
->>>  include/dt-bindings/clock/tegra124-car-common.h | 14 +++++++-------
->>>  include/dt-bindings/clock/tegra20-car.h         |  2 +-
->>>  include/dt-bindings/clock/tegra210-car.h        | 14 +++++++-------
->>>  include/dt-bindings/clock/tegra30-car.h         | 14 +++++++-------
->>>  5 files changed, 29 insertions(+), 29 deletions(-)
+>>> This patch series adds these Tegra PMC clocks and blink controls to Tegra
+>>> PMC driver with PMC as clock provider and removed them from Tegra clock
+>>> driver. This also adds PMC specific clock id's to use in device tree and
+>>> removed clock ids of PMC clock from Tegra clock driver.
 >>>
->>> diff --git a/include/dt-bindings/clock/tegra114-car.h b/include/dt-bindings/clock/tegra114-car.h
->>> index bb5c2c999c05..9175cd0571b5 100644
->>> --- a/include/dt-bindings/clock/tegra114-car.h
->>> +++ b/include/dt-bindings/clock/tegra114-car.h
->>> @@ -270,10 +270,10 @@
->>>  #define TEGRA114_CLK_AUDIO3 242
->>>  #define TEGRA114_CLK_AUDIO4 243
->>>  #define TEGRA114_CLK_SPDIF 244
->>> -#define TEGRA114_CLK_CLK_OUT_1 245
->>> -#define TEGRA114_CLK_CLK_OUT_2 246
->>> -#define TEGRA114_CLK_CLK_OUT_3 247
->>> -#define TEGRA114_CLK_BLINK 248
->>> +/* 245 */
->>> +/* 246 */
->>> +/* 247 */
->>> +/* 248 */
->>>  /* 249 */
->>>  /* 250 */
->>>  /* 251 */
->>> @@ -333,9 +333,9 @@
->>>  #define TEGRA114_CLK_AUDIO3_MUX 303
->>>  #define TEGRA114_CLK_AUDIO4_MUX 304
->>>  #define TEGRA114_CLK_SPDIF_MUX 305
->>> -#define TEGRA114_CLK_CLK_OUT_1_MUX 306
->>> -#define TEGRA114_CLK_CLK_OUT_2_MUX 307
->>> -#define TEGRA114_CLK_CLK_OUT_3_MUX 308
->>> +/* 306 */
->>> +/* 307 */
->>> +/* 308 */
->>>  #define TEGRA114_CLK_DSIA_MUX 309
->>>  #define TEGRA114_CLK_DSIB_MUX 310
->>>  #define TEGRA114_CLK_XUSB_SS_DIV2 311
->>> diff --git a/include/dt-bindings/clock/tegra124-car-common.h b/include/dt-bindings/clock/tegra124-car-common.h
->>> index 0c4f5be0a742..90a0c5e7eb5f 100644
->>> --- a/include/dt-bindings/clock/tegra124-car-common.h
->>> +++ b/include/dt-bindings/clock/tegra124-car-common.h
->>> @@ -269,10 +269,10 @@
->>>  #define TEGRA124_CLK_AUDIO3 242
->>>  #define TEGRA124_CLK_AUDIO4 243
->>>  #define TEGRA124_CLK_SPDIF 244
->>> -#define TEGRA124_CLK_CLK_OUT_1 245
->>> -#define TEGRA124_CLK_CLK_OUT_2 246
->>> -#define TEGRA124_CLK_CLK_OUT_3 247
->>> -#define TEGRA124_CLK_BLINK 248
->>> +/* 245 */
->>> +/* 246 */
->>> +/* 247 */
->>> +/* 248 */
->>>  /* 249 */
->>>  /* 250 */
->>>  /* 251 */
->>> @@ -332,9 +332,9 @@
->>>  #define TEGRA124_CLK_AUDIO3_MUX 303
->>>  #define TEGRA124_CLK_AUDIO4_MUX 304
->>>  #define TEGRA124_CLK_SPDIF_MUX 305
->>> -#define TEGRA124_CLK_CLK_OUT_1_MUX 306
->>> -#define TEGRA124_CLK_CLK_OUT_2_MUX 307
->>> -#define TEGRA124_CLK_CLK_OUT_3_MUX 308
->>> +/* 306 */
->>> +/* 307 */
->>> +/* 308 */
->>>  /* 309 */
->>>  /* 310 */
->>>  #define TEGRA124_CLK_SOR0_LVDS 311 /* deprecated */
->>> diff --git a/include/dt-bindings/clock/tegra20-car.h b/include/dt-bindings/clock/tegra20-car.h
->>> index b21a0eb32921..fe541f627965 100644
->>> --- a/include/dt-bindings/clock/tegra20-car.h
->>> +++ b/include/dt-bindings/clock/tegra20-car.h
->>> @@ -131,7 +131,7 @@
->>>  #define TEGRA20_CLK_CCLK 108
->>>  #define TEGRA20_CLK_HCLK 109
->>>  #define TEGRA20_CLK_PCLK 110
->>> -#define TEGRA20_CLK_BLINK 111
->>> +/* 111 */
->>>  #define TEGRA20_CLK_PLL_A 112
->>>  #define TEGRA20_CLK_PLL_A_OUT0 113
->>>  #define TEGRA20_CLK_PLL_C 114
->>> diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
->>> index 44f60623f99b..a3d8d3e75728 100644
->>> --- a/include/dt-bindings/clock/tegra210-car.h
->>> +++ b/include/dt-bindings/clock/tegra210-car.h
->>> @@ -304,10 +304,10 @@
->>>  #define TEGRA210_CLK_AUDIO3 274
->>>  #define TEGRA210_CLK_AUDIO4 275
->>>  #define TEGRA210_CLK_SPDIF 276
->>> -#define TEGRA210_CLK_CLK_OUT_1 277
->>> -#define TEGRA210_CLK_CLK_OUT_2 278
->>> -#define TEGRA210_CLK_CLK_OUT_3 279
->>> -#define TEGRA210_CLK_BLINK 280
->>> +/* 277 */
->>> +/* 278 */
->>> +/* 279 */
->>> +/* 280 */
->>>  #define TEGRA210_CLK_SOR0_LVDS 281 /* deprecated */
->>>  #define TEGRA210_CLK_SOR0_OUT 281
->>>  #define TEGRA210_CLK_SOR1_OUT 282
->>> @@ -386,9 +386,9 @@
->>>  #define TEGRA210_CLK_AUDIO3_MUX 353
->>>  #define TEGRA210_CLK_AUDIO4_MUX 354
->>>  #define TEGRA210_CLK_SPDIF_MUX 355
->>> -#define TEGRA210_CLK_CLK_OUT_1_MUX 356
->>> -#define TEGRA210_CLK_CLK_OUT_2_MUX 357
->>> -#define TEGRA210_CLK_CLK_OUT_3_MUX 358
->>> +/* 356 */
->>> +/* 357 */
->>> +/* 358 */
->>>  #define TEGRA210_CLK_DSIA_MUX 359
->>>  #define TEGRA210_CLK_DSIB_MUX 360
->>>  /* 361 */
->>> diff --git a/include/dt-bindings/clock/tegra30-car.h b/include/dt-bindings/clock/tegra30-car.h
->>> index 3c90f1535551..20ef2462d9e1 100644
->>> --- a/include/dt-bindings/clock/tegra30-car.h
->>> +++ b/include/dt-bindings/clock/tegra30-car.h
->>> @@ -230,11 +230,11 @@
->>>  #define TEGRA30_CLK_AUDIO3 204
->>>  #define TEGRA30_CLK_AUDIO4 205
->>>  #define TEGRA30_CLK_SPDIF 206
->>> -#define TEGRA30_CLK_CLK_OUT_1 207 /* (extern1) */
->>> -#define TEGRA30_CLK_CLK_OUT_2 208 /* (extern2) */
->>> -#define TEGRA30_CLK_CLK_OUT_3 209 /* (extern3) */
->>> +/* 207 */
->>> +/* 208 */
->>> +/* 209 */
->>>  #define TEGRA30_CLK_SCLK 210
->>> -#define TEGRA30_CLK_BLINK 211
->>> +/* 211 */
->>>  #define TEGRA30_CLK_CCLK_G 212
->>>  #define TEGRA30_CLK_CCLK_LP 213
->>>  #define TEGRA30_CLK_TWD 214
->>> @@ -260,9 +260,9 @@
->>>  /* 297 */
->>>  /* 298 */
->>>  /* 299 */
->>> -#define TEGRA30_CLK_CLK_OUT_1_MUX 300
->>> -#define TEGRA30_CLK_CLK_OUT_2_MUX 301
->>> -#define TEGRA30_CLK_CLK_OUT_3_MUX 302
->>> +/* 300 */
->>> +/* 301 */
->>> +/* 302 */
->>>  #define TEGRA30_CLK_AUDIO0_MUX 303
->>>  #define TEGRA30_CLK_AUDIO1_MUX 304
->>>  #define TEGRA30_CLK_AUDIO2_MUX 305
+>>> This series also includes patch to update clock provider from tegra_car
+>>> to pmc in the device tree tegra210-smaug.dts that uses clk_out_2 from PMC.
 >>>
+>>> [v2]:	Changes between v1 and v2 are
+>>> 	- v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
+>>> 	  blink controls to Tegra PMC driver and removing clk-tegra-pmc.
+>>> 	- feedback related to pmc clocks in Tegra PMC driver from v1
+>>> 	- Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC programming
+>>> 	  by the clock driver using helper functions from Tegra PMC.
+>>>
+>>>  	  Note:
+>>> 	  To use helper functions from PMC driver, PMC early init need to
+>>> 	  happen prior to using helper functions and these helper functions are
+>>> 	  for PLLM Override and PLLE IDDQ programming in PMC during PLLM/PLLE
+>>> 	  clock registration which happen in clock_init prior to Tegra PMC
+>>> 	  probe.
+>>> 	  Moving PLLM/PLLE clocks registration to happen after Tegra PMC
+>>> 	  impacts other clocks EMC, MC and corresponding tegra_emc_init and
+>>> 	  tegra_mc_init.
+>>> 	  This implementation of configuring PMC registers thru helper
+>>> 	  functions in clock driver needs proper changes across PMC, Clock,
+>>> 	  EMC and MC inits to have it work across all Tegra platforms.
+>>>
+>>> 	  Currently PLLM Override is not enabled in the bootloader so proper
+>>> 	  patches for this fix will be taken care separately.
 >>
->> This a device-tree ABI breakage and I'm not sure that it's okay to break
->> older device-trees (Pixel C Smaug board), maybe some kind of fallback is
->> needed.
+>> Hello Sowjanya,
+>>
+>> Could you please clarify what do you mean by "PLLM Override not enabled
+>> in bootloader"?
+>>
+>> There is T124 Nyan Big Chromebook which is supported in upstream kernel,
+>> it has PLLM Override set by bootloader. I also have T30 Nexus 7 tablet
+>> which has the PLLM Override set by bootloader as well. It's not clear to
+>> me whether this patch series is supposed to break these devices. If the
+>> breakage is the case here, then I'm afraid you can't postpone supporting
+>> the PLLM Override and a full-featured implementation is needed.
 > 
-> The Smaug support was never really official. I don't think anybody uses
-> upstream on it "for real" because there's a very limited set of features
-> that we do support. My understanding is that there is a community around
-> Pixel C that runs their own forks with some more features and they have
-> occasionally upstreamed bits and pieces of that.
+> For some more background on why we chose to take this shortcut for now:
+> Sowjanya was looking at the full-featured implementation and that ended
+> up being a can of worms. The problem is that there are various inter-
+> dependencies between the PLLM override and the MC/EMC clocks.
 > 
-> So given how far behind we are with Smaug, I don't think breaking ABI
-> stability is really a problem in this case.
+> Unfortunately we depend a lot on the explicit ordering of driver probe,
+> especially during early boot, so this started to get very complicated,
+> very quickly.
 > 
-> Jon, we used to have a Smaug system in our internal upstream testing,
-> but that's no longer the case. If we ever were to reinstate that
-> testing, updating the DTB shouldn't be a problem, right? My recollection
-> is that updating the DTB was always done hand in hand with the kernel
-> update.
+> The bottom line was basically that we would need to move a whole bunch
+> of clocks to register at a very late point in time and support deferred
+> probe throughout in order to make it all work together nicely. Sowjanya
+> had a crack at that, and while the system ended up booting, there were a
+> number of errors from the MC and IOMMU drivers.
+> 
+> At the end, we decided to take a look at that separately because, as was
+> mentioned earlier, the PLLM override is not used on platforms where the
+> PMC is locked down, so the existing PLLM override code is going to
+> continue to work fine on the platforms where it's currently used.
+> 
+> Thierry
 
-IIRC, T210 doesn't have support for SoC audio driver yet in upstream
-kernel and thus Smaug only defined the audio codec in the device-tree,
-which never got utilized.
+Thank you and Sowjanya for the clarification.
+
+[snip]
