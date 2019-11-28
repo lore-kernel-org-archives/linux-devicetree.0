@@ -2,35 +2,36 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC54C43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 11:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC868C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 11:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8517321787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 11:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF55021787
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 11:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbfK1Ldf (ORCPT
+        id S1726448AbfK1Ldi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 06:33:35 -0500
+        Thu, 28 Nov 2019 06:33:38 -0500
 Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:42005 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbfK1Lde (ORCPT
+        by vger.kernel.org with ESMTP id S1726191AbfK1Ldi (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 Nov 2019 06:33:34 -0500
+        Thu, 28 Nov 2019 06:33:38 -0500
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Nov 2019 17:03:32 +0530
-IronPort-SDR: sG1FeRQ0Lk0+DoU4EZoM9Lf32SU0seLjHXGUYX8mtiWE2BU/WtXYkiYM173wJUbBu4Mq6UtJie
- CZge8mcwtHUyiazo1F8ojp0ECbp7N54QFFuE4lH0AhlNqkvs6lxsp4rSWMyjzPnzrWYCyQ0CeT
- blrHBxxhU9mpt/7S2BTdStLzQ2GfYJwsK6DvdJILmI8xbRAMEbmfDYquuk+9xml8fDdTqHuQqb
- rFPpPT7wrbALKVkWag60e2Vj2NNvHlaQswFhFeV4gK8GUBv2c0I4CShqe5tpnc3K6enEQJjXqM
- ETBQiUz4MI2RomkHKGEoL2wC
+IronPort-SDR: K08YTXR/j9WhCTvgCZWgAEPnFY17rVFk/lxj+crc66ef+AmFveKQMBBRHtmECy16DVCRdDJWsy
+ XpOFcDrlGgwFQVOP3RK1TEH6UqGptdIk0uiM2zlI1PuhScrnYwoL8C1zhLdd0HAkZw9ouoVV+4
+ uBzRfUZVrBw+Cmw16JgihhmLIEaSOXvY0x2zxla8jH5yC2CrDQqPkloJYynp5jqNIGiGuQNApM
+ XGjSatqmJfTI8ijFhk1CQ0nEJDv8sE7T9QUb+y7WWr0OLyIXiIQegAzyrJO07xtyyX4dlkTYK5
+ MAVN8Rm1CC/Jo36uiqlRsPFp
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 28 Nov 2019 17:03:11 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 28 Nov 2019 17:03:14 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 13E4E19B8; Thu, 28 Nov 2019 17:03:10 +0530 (IST)
+        id E1A8319C2; Thu, 28 Nov 2019 17:03:12 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -42,36 +43,36 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v2 0/3] Add USB DWC3 support for SC7180
-Date:   Thu, 28 Nov 2019 17:03:04 +0530
-Message-Id: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v2 3/3] dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
+Date:   Thu, 28 Nov 2019 17:03:07 +0530
+Message-Id: <1574940787-1004-4-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
+References: <1574940787-1004-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adding compatible for SC7180 in USB DWC3 driver.
-Converting dt binding to yaml.
-Adding compatible for SC7180 in dt bindings.
+Add compatible for SC7180 in usb dwc3 bindings.
 
-Changes in v2:
-Sorted the compatible in dwc3 driver.
-Converted dt binding to yaml.
-Added compatible in yaml.
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Sandeep Maheswaram (3):
-  usb: dwc3: Add support for SC7180 SOC
-  dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings to yaml
-  dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
-
- .../devicetree/bindings/usb/qcom,dwc3.txt          | 104 --------------
- .../devicetree/bindings/usb/qcom,dwc3.yaml         | 156 +++++++++++++++++++++
- drivers/usb/dwc3/dwc3-qcom.c                       |   3 +-
- 3 files changed, 158 insertions(+), 105 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
- create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+index 48ff9c5..3eab91a 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+@@ -15,6 +15,7 @@ properties:
+       - enum:
+           - qcom,msm8996-dwc3
+           - qcom,msm8998-dwc3
++          - qcom,sc7180-dwc3
+           - qcom,sdm845-dwc3
+       - const: qcom,dwc3
+ 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
