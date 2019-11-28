@@ -2,79 +2,76 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9179C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 09:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EFCC432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 09:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9740D21774
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 09:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE4921774
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 09:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfK1J3J (ORCPT
+        id S1726729AbfK1Jyd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 04:29:09 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:52872 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfK1J3J (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 Nov 2019 04:29:09 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id ADBD02056B;
-        Thu, 28 Nov 2019 10:29:07 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 99B2820234;
-        Thu, 28 Nov 2019 10:29:07 +0100 (CET)
-Subject: Re: [RFC PATCH 1/1] arm64: dts: added basic DTS for qmx8 congatec
- board
-To:     Oliver Graute <oliver.graute@kococonnector.com>
-References: <20191029122026.14208-1-oliver.graute@kococonnector.com>
- <20191029122026.14208-2-oliver.graute@kococonnector.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DT <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <9b865fc1-3c7a-f1bd-8ef2-65088d64b314@free.fr>
-Date:   Thu, 28 Nov 2019 10:29:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191029122026.14208-2-oliver.graute@kococonnector.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Nov 28 10:29:07 2019 +0100 (CET)
+        Thu, 28 Nov 2019 04:54:33 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:45163 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726448AbfK1Jyc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 28 Nov 2019 04:54:32 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 28 Nov 2019 15:24:30 +0530
+IronPort-SDR: 4BUZRXIKWJ8jBgBwl6fahyP8/Kq1wKbnhiuUgPXOPy2T929t3bqcDrt1AtFN4/Cm6VYPelpcyG
+ 3yapZndjV0aEX9qyNRyuOGQpIWTXiDJG5Cm1ZTVNrB47R7gvQwWjWfUGnRswLr877u1uFKMJjM
+ TfCl/0pcUVgqaz/009EnqSQ3hv2OcMT38OryDLHHjvsu+TcLydND1V/31dJyaw69AFo1/FQFwu
+ /jve+rAOgQJV/Hwz1Dy6V45uyD4f/fLbUaaptdUnl9Jee5R6R7bustdeFH5G7UjVUqmtG1IyYb
+ X9+FsD5pPCt0jKI8ntgTSPL6
+Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 28 Nov 2019 15:24:12 +0530
+Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
+        id 0CF2A1A68; Thu, 28 Nov 2019 15:24:10 +0530 (IST)
+From:   Rajeshwari <rkambl@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sivaa@codeaurora.org,
+        sanm@codeaurora.org, Rajeshwari <rkambl@codeaurora.org>
+Subject: [PATCH v2 0/1] Add device node support for TSENS in SC7180
+Date:   Thu, 28 Nov 2019 15:24:06 +0530
+Message-Id: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/10/2019 13:23, Oliver Graute wrote:
+Add TSENS node and user thermal zone configurations for TSENS sensors 
+in SC7180.
 
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec1>;
-> +	phy-mode = "rgmii";
-> +	phy-handle = <&ethphy0>;
-> +	fsl,magic-packet;
-> +	fsl,rgmii_txc_dly;
-> +	fsl,rgmii_rxc_dly;
-> +	status = "okay";
+The change has dependency on adding device tree support for sc7180 [1] 
+to merge first.
 
-The two fsl,rgmii* properties do not exist in mainline.
-I suppose there were copied from downstream?
+Dependencies:
 
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@0 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <6>;
-> +			at803x,eee-disabled;
-> +			at803x,vddio-1p8v;
-> +		};
-> +	};
-> +};
+[1] https://lkml.org/lkml/2019/11/8/149
 
-Regards.
+changes in v2:
+* Added polling delay.
+* Removed unwanted properties.
+* Updated sensor names under thermal-zones.
+* Updated trip points.
+* Added interrupt support.
+
+Rajeshwari (1):
+  arm64: dts: qcom: sc7180:  Add device node support for TSENS in SC7180
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 527 insertions(+)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
