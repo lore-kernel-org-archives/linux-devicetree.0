@@ -2,203 +2,165 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD87C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 20:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEDFC432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 20:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01A8216F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 20:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CB4217BC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 20:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prlw5sTf"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="f2bgNO11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfK1UGK (ORCPT
+        id S1726558AbfK1Uas (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 15:06:10 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43172 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfK1UGK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 15:06:10 -0500
-Received: by mail-lf1-f65.google.com with SMTP id l14so20854177lfh.10;
-        Thu, 28 Nov 2019 12:06:08 -0800 (PST)
+        Thu, 28 Nov 2019 15:30:48 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39176 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfK1Uar (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 15:30:47 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y11so29416175wrt.6
+        for <devicetree@vger.kernel.org>; Thu, 28 Nov 2019 12:30:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FjNGi4sGPAMOwSu//4rjJ+SnF7x7q5U9m2ivWbacmrs=;
-        b=prlw5sTfXskWdLGt1n1eJ5Y/HudXYVV3XQf//ICFu7YD/09HJLyK1Gt/eUqntGMq7j
-         MZxGrohvVH6Dt8zQSBdM82OBOsRclo678gkPc3GJTckx4aDYNkip2t+71xebU5f2nFFl
-         cRMUsgK0E73k/jnILquqQdmjxai2nVLnwLBA4v9fcLobpDuuQr3LVRgjJ/EPJRHZFWXF
-         jPYHvfhYr+VY1Z2o46InkqOw6/0HhGbhM5sncUxKEJGXgXyjGllKB/qXS0/NE1JeZX91
-         ADno3NmCgdKAKvCIXk9O2THtzM6650KH/LaL8O0n+gx+E4ocM+OlAOLPkN38n+r4qfB5
-         JUxg==
+        d=googlemail.com; s=20161025;
+        h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/F4fjTqCSCbemLPACFLDEoRElFjhhoWK5H/bkTRiXCc=;
+        b=f2bgNO11ck3HaI0MToSAz5sfRIth2du04Y84p5Vj6Zoh7GfqecklqXv7Mc8w6QoW9c
+         9YHbbZNIMjx3nr4p/OXY/12j63P1sTu0hxwW8t64mut2gNE9HxshnW0v6HDw4N84z4FF
+         obf0a1RUZ6pozT+TI1vcMXbn54XIPTQ3YzK2jM+FXirQjUcWLwjv7ci6D11069+9nmlF
+         /D/BY1CIHQo+kWLFL8Cug6HxxeY+xihVYLgrwdLry7UfFtDLIy4GM+MtXSc6Rq0kiC2s
+         wQGRqiSQqLBX3e5xKfYQpArRln9GKO47/omSl9u1w2U6gOYvtEn1zCDGGekyQPXd6t5k
+         ZXdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FjNGi4sGPAMOwSu//4rjJ+SnF7x7q5U9m2ivWbacmrs=;
-        b=NsBPPyg0ZdcgXsioX+aFa5mzGCt3xY4vd/E6FMeI94h79QRHRkzBnRw/JkhFe9ACYH
-         rxW4BXl+H9Q+EdU8YLuXqRVMou/uB5J8Q8jtIwdAl3iSuaFV9GiaIe5u5tHstJ92y3pE
-         71uZqKCtA73oipqQZxsPadrMRUpTAB5hdEFKPXawl8pKremOXlinTYF8bJyNmmZXQFT/
-         dU9n5ZKkQU+JQiswfZADKhYBiSEIDEowYj20/U2cl+qzj/WIq4CQ9u06i6ddQWvNfnyV
-         D8w8vNnpwyQb2sbmiMUrtBci2sVo2DuBqJ9Dr8e7f56AfBQZqoXQBVfZ2ks/WNMhGwEe
-         dOpg==
-X-Gm-Message-State: APjAAAUSYUcf2WOGS+QgiBOM/X1FsmefLdNve0H7nGpqZJHvYbWkPk88
-        /PqX5WUjeaRYTUfyHPebwXMprzXq
-X-Google-Smtp-Source: APXvYqzgPP9GLzInH7+s9jf2E5EQByrAmOEH9D4KiMZ3l/KM0WdjxySOJ/KXRCdKijAKz7DotGJUKQ==
-X-Received: by 2002:a19:6a15:: with SMTP id u21mr30911327lfu.31.1574971567031;
-        Thu, 28 Nov 2019 12:06:07 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id n30sm10178631lfi.54.2019.11.28.12.06.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2019 12:06:06 -0800 (PST)
-Subject: Re: [PATCH v1 08/29] dt-bindings: interconnect: tegra: Add initial
- IDs
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-9-digetx@gmail.com> <20191119062535.GC2462695@ulmo>
- <8cff3af3-42c7-3312-5f98-cd5eb98b7b7a@gmail.com>
- <f0f36176-8070-08a6-a61f-77221d916f04@gmail.com>
- <20191125113218.GK1409040@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a3c16696-8ecf-ac7f-4f8a-2dd3221e5334@gmail.com>
-Date:   Thu, 28 Nov 2019 23:06:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191125113218.GK1409040@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=/F4fjTqCSCbemLPACFLDEoRElFjhhoWK5H/bkTRiXCc=;
+        b=N3HjU3eg46cIR7Sqx0MRuF9TXFyBIIUp14YC+nkemmLWlopcNYNDA0edwZvRSlmaAo
+         eIqIU5rjA5Lx/DjQX2PyrggOFtVFGr92845jAbIWRVZ6r2oRa4nYAYDFFWm/cGPCUBmC
+         pFbnW7J9MzJvEmMm6Jv26oOFiAyv+Uuem/EQNS/5k6K81HMUsL3WPxAr1GPJW2UYlvSX
+         6bRXzDcoZij7BdbIFbowPUyQT96iPuPEO8tEA+PqbtocGr2443820QvUGkLfxCk7J+Pb
+         Op7SoJxjJckqWxTHQyGAQkV5725wfoc/D2c2IFoZk3pvHfWKibLfzh/Krxsi+222DNey
+         vD3Q==
+X-Gm-Message-State: APjAAAW4s7r8Ij01deAgqVP/LT//Iv+9xYdl8E6BoB5kiAlM84PKQe8Z
+        FJLGSutmGjvQNfTkgDV0Q3E=
+X-Google-Smtp-Source: APXvYqxwkJHZzFPosHHBBpY/9deoXC8APNrp9kOY0iXwsyFtedfw82C9F3QEEjvoxCLiTCcjwXo3SQ==
+X-Received: by 2002:a05:6000:149:: with SMTP id r9mr10658203wrx.147.1574973046452;
+        Thu, 28 Nov 2019 12:30:46 -0800 (PST)
+Received: from [192.168.0.87] (HSI-KBW-109-192-080-035.hsi6.kabel-badenwuerttemberg.de. [109.192.80.35])
+        by smtp.gmail.com with ESMTPSA id k127sm5454220wmk.31.2019.11.28.12.30.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Nov 2019 12:30:45 -0800 (PST)
+Message-ID: <1574973044.2362.11.camel@googlemail.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: phycore-imx6: set buck regulator modes
+ explicitly
+From:   Christoph Fritz <chf.fritz@googlemail.com>
+Reply-To: chf.fritz@googlemail.com
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 28 Nov 2019 21:30:44 +0100
+In-Reply-To: <AM5PR1001MB099480739860863EB08EA73280760@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <1573652416-9848-1-git-send-email-chf.fritz@googlemail.com>
+         <1573652416-9848-5-git-send-email-chf.fritz@googlemail.com>
+         <AM5PR1001MB099480739860863EB08EA73280760@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.12.9-1+b1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-25.11.2019 14:32, Thierry Reding пишет:
-> On Thu, Nov 21, 2019 at 08:14:35PM +0300, Dmitry Osipenko wrote:
->> 19.11.2019 19:56, Dmitry Osipenko пишет:
->>> 19.11.2019 09:25, Thierry Reding пишет:
->>>> On Mon, Nov 18, 2019 at 11:02:26PM +0300, Dmitry Osipenko wrote:
->>>>> Define interconnect IDs for memory controller (MC), external memory
->>>>> controller (EMC), external memory (EMEM) and memory clients of display
->>>>> controllers (DC).
->>>>>
->>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>> ---
->>>>>  include/dt-bindings/interconnect/tegra-icc.h | 11 +++++++++++
->>>>>  1 file changed, 11 insertions(+)
->>>>>  create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
->>>
->>>
->>> Hello Thierry,
->>>
->>>> There was a bit of discussion regarding this for a recent patch that I
->>>> was working on, see:
->>>>
->>>> 	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=140318
->>>
->>> Thank you very much for the link.
->>>
->>>> I'd rather not use an additional set of definitions for this. The memory
->>>> controller already has a set of native IDs for memory clients that I
->>>> think we can reuse for this.
->>>
->>> I missed that it's fine to have multiple ICC connections defined
->>> per-path, at quick glance looks like indeed it should be fine to re-use
->>> MC IDs.
->>
->> Well, it is not quite correct to have multiple connections per-path.
->>
->> Please take look at interconnect's binding and core.c:
->>
->>   1. there should be one src->dst connection per-path
->>   2. each connection should comprise of one source and one destination nodes
->>
->>>> I've only added these client IDs for Tegra194 because that's where we
->>>> need it to actually describe a specific hardware quirk, but I can come
->>>> up with the equivalent for older chips as well.
->>>
->>> Older Tegra SoCs have hardware units connected to MC through AHB bus,
->>> like USB for example. These units do not have MC client IDs and there is
->>> no MC ID defined for the AHB bus either, but probably it won't be a
->>> problem to define IDs for them if will be necessary.
->>>
->>
->> Since interconnect binding requires to define both source and
->> destination nodes for the path, then MC IDs are not enough in order to
->> define interconnect path because these IDs represent only the source
->> nodes. Destination node should be either EMC or EMEM.
-> 
-> This doesn't really map well to Tegra. The source of the path is always
-> the device and the destination is always the memory controller. We also
-> can have multiple paths between a device and the memory controller. The
-> typical case is to have at least a read and a write path, but there are
-> a number of devices that have multiple read and/or multiple write paths
-> to the memory controller.
-> 
-> Or perhaps I'm looking at this the wrong way, and what we really ought
-> to describe is the paths with MC sitting in the middle. So it'd be
-> something like:
-> 
-> 	MC ID --- source ---> MC --- destination ---> EMC
+Hi Shawn,
 
-Yes, this should be correct.
+ any chance to get this patch queued for the upcoming kernel?
 
-> for write paths and:
+bye
+ -- Christoph
+
+On Wed, 2019-11-13 at 16:26 +0000, Adam Thomson wrote:
+> On 13 November 2019 13:40, Christoph Fritz wrote:
 > 
-> 	EMC --- source ---> MC --- destination ---> MC ID
-
-Both write and read paths have the same direction in terms of
-interconnect API. The source node requests bandwidth from the
-destination node, where source is memory client and destination is EMC/EMEM.
-
-> for read paths. I have no idea what would be a good connection ID for
-> EMC, since I don't think MC really differentiates at that level. Perhaps
-> #interconnect-cells = <0> for EMC would be appropriate.
-
-It should be fine to define ICC ID for EMC that doesn't overlap with the
-memory client IDs, say #1000.
-
-> This would make the bindings look more like this, taking a random sample
-> from the above series:
+> > This patch sets initial buck regulator modes explicitly to a state this
+> > hardware needs. So a wrong initial mode set by bootloader or pmic itself
+> > does not interfere anymore.
+> > 
+> > Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
 > 
-> 	ethernet@2490000 {
-> 		...
-> 		interconnects = <&emc &mc TEGRA194_MEMORY_CLIENT_EQOSR>,
-> 				<&mc TEGRA194_MEMORY_CLIENT_EQOSW &emc>;
-> 		interconnect-names = "dma-mem", "dma-mem";
-> 		...
-> 	};
+> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 > 
-> In words, the above would mean that for the ethernet device there is one
-> path (a read slave interface) where data flows from the EMC through the
-> MC to the device with memory client ID TEGRA194_MEMORY_CLIENT_EQOSR. The
-> second path (a write slave interface) describes data flowing from the
-> device (with memory client ID TEGRA194_MEMORY_CLIENT_EQOSW) through the
-> MC and towards the EMC.
+> > ---
+> >  arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+> > b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+> > index 6486df3..644625d 100644
+> > --- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+> > @@ -5,6 +5,7 @@
+> >   */
+> > 
+> >  #include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/regulator/dlg,da9063-regulator.h>
+> > 
+> >  / {
+> >  	aliases {
+> > @@ -109,6 +110,7 @@
+> >  				regulator-name = "vdd_arm";
+> >  				regulator-min-microvolt = <730000>;
+> >  				regulator-max-microvolt = <1380000>;
+> > +				regulator-initial-mode =
+> > <DA9063_BUCK_MODE_SYNC>;
+> >  				regulator-always-on;
+> >  			};
+> > 
+> > @@ -116,6 +118,7 @@
+> >  				regulator-name = "vdd_soc";
+> >  				regulator-min-microvolt = <730000>;
+> >  				regulator-max-microvolt = <1380000>;
+> > +				regulator-initial-mode =
+> > <DA9063_BUCK_MODE_SYNC>;
+> >  				regulator-always-on;
+> >  			};
+> > 
+> > @@ -123,6 +126,7 @@
+> >  				regulator-name = "vdd_ddr3";
+> >  				regulator-min-microvolt = <1500000>;
+> >  				regulator-max-microvolt = <1500000>;
+> > +				regulator-initial-mode =
+> > <DA9063_BUCK_MODE_SYNC>;
+> >  				regulator-always-on;
+> >  			};
+> > 
+> > @@ -130,6 +134,7 @@
+> >  				regulator-name = "vdd_eth";
+> >  				regulator-min-microvolt = <1200000>;
+> >  				regulator-max-microvolt = <1200000>;
+> > +				regulator-initial-mode =
+> > <DA9063_BUCK_MODE_SYNC>;
+> >  				regulator-always-on;
+> >  			};
+> > 
+> > --
+> > 2.1.4
 > 
-> Irrespective of the above, I think we definitely need to keep separate
-> IDs for read and write paths because each of them have separate controls
-> for arbitration and latency allowance. So each of those may need to be
-> separately configurable.
-> 
-> Does that make sense?
 
-I'll try to update this series to use ICC-path per display plane and see
-how it goes.
 
-In general, looks like should be fine to have ICC paths defined per
-memory client.
+
