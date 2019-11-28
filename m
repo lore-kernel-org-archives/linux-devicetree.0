@@ -2,60 +2,60 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E90C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B53C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D05217BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72172217AB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 10:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hNJJknF9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ssa7qyeS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfK1KsC (ORCPT
+        id S1727289AbfK1KsP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 05:48:02 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58052 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfK1Kr6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 05:47:58 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAlttB096703;
-        Thu, 28 Nov 2019 04:47:55 -0600
+        Thu, 28 Nov 2019 05:48:15 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:33186 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbfK1KsO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 05:48:14 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAmBNe019608;
+        Thu, 28 Nov 2019 04:48:11 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574938075;
-        bh=wFhMbK0aKwv2VfpsctsKUnFfelTtACNb0m2S+vpm1lw=;
+        s=ti-com-17Q1; t=1574938091;
+        bh=A4eexwBxx9jDaE/igS84TVvW6d3QjFYRQu1H+O5DrHo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hNJJknF9+Z8dvRYsiRJSDe1bc7VFwji6P6XKfyX2y2H2BVQFfEfCJnS5hXSbg3hTe
-         8Yl5HqNcuCSuEFxCE8A3WYwlT/d+X7gOLf11mJ28AcufHXgj/VZpff4eQLxRHwnPof
-         7ANZVBLX3Mo4hQozIr7iqylTLdkjmu2l+HcX5dI8=
+        b=Ssa7qyeSHEZPQWpbi7lkaQxmxAu2vl5COTKtmcw//tGxMt+LJmeax1/C1xAtI1pDn
+         AET8Cn0vxiONe759BuEwz6kr71t+pCwkK3OSP10czlWYq/twOV3EVJ8MJUBAYTb0E8
+         6+H0gZn+epbz06pRi15OicQZ1TyF4s2Gcz2TspqM=
 Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAlt1A015090
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAmBCU126939
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Nov 2019 04:47:55 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
+        Thu, 28 Nov 2019 04:48:11 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
  (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
- Nov 2019 04:47:55 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 04:48:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 28 Nov 2019 04:47:55 -0600
+ Frontend Transport; Thu, 28 Nov 2019 04:48:11 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX44098163;
-        Thu, 28 Nov 2019 04:47:52 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAlX4A098163;
+        Thu, 28 Nov 2019 04:48:09 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Anil Varughese <aniljoy@cadence.com>,
         Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
 CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 07/14] phy: cadence: Sierra: Configure both lane cdb and common cdb registers for external SSC
-Date:   Thu, 28 Nov 2019 16:16:41 +0530
-Message-ID: <20191128104648.21894-8-kishon@ti.com>
+Subject: [PATCH v3 13/14] dt-bindings: phy: Document WIZ (SERDES wrapper) bindings
+Date:   Thu, 28 Nov 2019 16:16:47 +0530
+Message-ID: <20191128104648.21894-14-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191128104648.21894-1-kishon@ti.com>
 References: <20191128104648.21894-1-kishon@ti.com>
@@ -67,455 +67,183 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anil Varughese <aniljoy@cadence.com>
+Add DT binding documentation for WIZ (SERDES wrapper). WIZ is *NOT* a
+PHY but a wrapper used to configure some of the input signals to the
+SERDES. It is used with both Sierra(16G) and Torrent(10G) serdes.
 
-The existing configuration done in Cadence Sierra driver is only for
-reference and is not used in any platforms. Remove them and configure
-both lane cdb and common cdb registers to be used with external
-SSC configuration. This is validated in TI J721E platform.
-
-Signed-off-by: Anil Varughese <aniljoy@cadence.com>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+[jsarha@ti.com: Add separate compatible for Sierra(16G) and Torrent(10G)
+ SERDES]
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/phy/cadence/phy-cadence-sierra.c | 350 ++++++++++++++++-------
- 1 file changed, 254 insertions(+), 96 deletions(-)
+ .../bindings/phy/ti,phy-j721e-wiz.yaml        | 158 ++++++++++++++++++
+ 1 file changed, 158 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
 
-diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index d490e1641cf9..fdca3bd178c6 100644
---- a/drivers/phy/cadence/phy-cadence-sierra.c
-+++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -22,58 +22,125 @@
- #include <dt-bindings/phy/phy.h>
- 
- /* PHY register offsets */
--#define SIERRA_COMMON_CDB_OFFSET		0x0
--#define SIERRA_MACRO_ID_REG			0x0
-+#define SIERRA_COMMON_CDB_OFFSET			0x0
-+#define SIERRA_MACRO_ID_REG				0x0
-+#define SIERRA_CMN_PLLLC_MODE_PREG			0x48
-+#define SIERRA_CMN_PLLLC_LF_COEFF_MODE1_PREG		0x49
-+#define SIERRA_CMN_PLLLC_LF_COEFF_MODE0_PREG		0x4A
-+#define SIERRA_CMN_PLLLC_LOCK_CNTSTART_PREG		0x4B
-+#define SIERRA_CMN_PLLLC_BWCAL_MODE1_PREG		0x4F
-+#define SIERRA_CMN_PLLLC_BWCAL_MODE0_PREG		0x50
-+#define SIERRA_CMN_PLLLC_SS_TIME_STEPSIZE_MODE_PREG	0x62
- 
- #define SIERRA_LANE_CDB_OFFSET(ln, block_offset, reg_offset)	\
- 				((0x4000 << (block_offset)) + \
- 				 (((ln) << 9) << (reg_offset)))
- 
--#define SIERRA_DET_STANDEC_A_PREG		0x000
--#define SIERRA_DET_STANDEC_B_PREG		0x001
--#define SIERRA_DET_STANDEC_C_PREG		0x002
--#define SIERRA_DET_STANDEC_D_PREG		0x003
--#define SIERRA_DET_STANDEC_E_PREG		0x004
--#define SIERRA_PSM_LANECAL_PREG			0x008
--#define SIERRA_PSM_DIAG_PREG			0x015
--#define SIERRA_PSC_TX_A0_PREG			0x028
--#define SIERRA_PSC_TX_A1_PREG			0x029
--#define SIERRA_PSC_TX_A2_PREG			0x02A
--#define SIERRA_PSC_TX_A3_PREG			0x02B
--#define SIERRA_PSC_RX_A0_PREG			0x030
--#define SIERRA_PSC_RX_A1_PREG			0x031
--#define SIERRA_PSC_RX_A2_PREG			0x032
--#define SIERRA_PSC_RX_A3_PREG			0x033
--#define SIERRA_PLLCTRL_SUBRATE_PREG		0x03A
--#define SIERRA_PLLCTRL_GEN_D_PREG		0x03E
--#define SIERRA_DRVCTRL_ATTEN_PREG		0x06A
--#define SIERRA_CLKPATHCTRL_TMR_PREG		0x081
--#define SIERRA_RX_CREQ_FLTR_A_MODE1_PREG	0x087
--#define SIERRA_RX_CREQ_FLTR_A_MODE0_PREG	0x088
--#define SIERRA_CREQ_CCLKDET_MODE01_PREG		0x08E
--#define SIERRA_RX_CTLE_MAINTENANCE_PREG		0x091
--#define SIERRA_CREQ_FSMCLK_SEL_PREG		0x092
--#define SIERRA_CTLELUT_CTRL_PREG		0x098
--#define SIERRA_DFE_ECMP_RATESEL_PREG		0x0C0
--#define SIERRA_DFE_SMP_RATESEL_PREG		0x0C1
--#define SIERRA_DEQ_VGATUNE_CTRL_PREG		0x0E1
--#define SIERRA_TMRVAL_MODE3_PREG		0x16E
--#define SIERRA_TMRVAL_MODE2_PREG		0x16F
--#define SIERRA_TMRVAL_MODE1_PREG		0x170
--#define SIERRA_TMRVAL_MODE0_PREG		0x171
--#define SIERRA_PICNT_MODE1_PREG			0x174
--#define SIERRA_CPI_OUTBUF_RATESEL_PREG		0x17C
--#define SIERRA_LFPSFILT_NS_PREG			0x18A
--#define SIERRA_LFPSFILT_RD_PREG			0x18B
--#define SIERRA_LFPSFILT_MP_PREG			0x18C
--#define SIERRA_SDFILT_H2L_A_PREG		0x191
-+#define SIERRA_DET_STANDEC_A_PREG			0x000
-+#define SIERRA_DET_STANDEC_B_PREG			0x001
-+#define SIERRA_DET_STANDEC_C_PREG			0x002
-+#define SIERRA_DET_STANDEC_D_PREG			0x003
-+#define SIERRA_DET_STANDEC_E_PREG			0x004
-+#define SIERRA_PSM_LANECAL_DLY_A1_RESETS_PREG		0x008
-+#define SIERRA_PSM_A0IN_TMR_PREG			0x009
-+#define SIERRA_PSM_DIAG_PREG				0x015
-+#define SIERRA_PSC_TX_A0_PREG				0x028
-+#define SIERRA_PSC_TX_A1_PREG				0x029
-+#define SIERRA_PSC_TX_A2_PREG				0x02A
-+#define SIERRA_PSC_TX_A3_PREG				0x02B
-+#define SIERRA_PSC_RX_A0_PREG				0x030
-+#define SIERRA_PSC_RX_A1_PREG				0x031
-+#define SIERRA_PSC_RX_A2_PREG				0x032
-+#define SIERRA_PSC_RX_A3_PREG				0x033
-+#define SIERRA_PLLCTRL_SUBRATE_PREG			0x03A
-+#define SIERRA_PLLCTRL_GEN_D_PREG			0x03E
-+#define SIERRA_PLLCTRL_CPGAIN_MODE_PREG			0x03F
-+#define SIERRA_CLKPATH_BIASTRIM_PREG			0x04B
-+#define SIERRA_DFE_BIASTRIM_PREG			0x04C
-+#define SIERRA_DRVCTRL_ATTEN_PREG			0x06A
-+#define SIERRA_CLKPATHCTRL_TMR_PREG			0x081
-+#define SIERRA_RX_CREQ_FLTR_A_MODE3_PREG		0x085
-+#define SIERRA_RX_CREQ_FLTR_A_MODE2_PREG		0x086
-+#define SIERRA_RX_CREQ_FLTR_A_MODE1_PREG		0x087
-+#define SIERRA_RX_CREQ_FLTR_A_MODE0_PREG		0x088
-+#define SIERRA_CREQ_CCLKDET_MODE01_PREG			0x08E
-+#define SIERRA_RX_CTLE_MAINTENANCE_PREG			0x091
-+#define SIERRA_CREQ_FSMCLK_SEL_PREG			0x092
-+#define SIERRA_CREQ_EQ_CTRL_PREG			0x093
-+#define SIERRA_CREQ_SPARE_PREG				0x096
-+#define SIERRA_CREQ_EQ_OPEN_EYE_THRESH_PREG		0x097
-+#define SIERRA_CTLELUT_CTRL_PREG			0x098
-+#define SIERRA_DFE_ECMP_RATESEL_PREG			0x0C0
-+#define SIERRA_DFE_SMP_RATESEL_PREG			0x0C1
-+#define SIERRA_DEQ_PHALIGN_CTRL				0x0C4
-+#define SIERRA_DEQ_CONCUR_CTRL1_PREG			0x0C8
-+#define SIERRA_DEQ_CONCUR_CTRL2_PREG			0x0C9
-+#define SIERRA_DEQ_EPIPWR_CTRL2_PREG			0x0CD
-+#define SIERRA_DEQ_FAST_MAINT_CYCLES_PREG		0x0CE
-+#define SIERRA_DEQ_ERRCMP_CTRL_PREG			0x0D0
-+#define SIERRA_DEQ_OFFSET_CTRL_PREG			0x0D8
-+#define SIERRA_DEQ_GAIN_CTRL_PREG			0x0E0
-+#define SIERRA_DEQ_VGATUNE_CTRL_PREG			0x0E1
-+#define SIERRA_DEQ_GLUT0				0x0E8
-+#define SIERRA_DEQ_GLUT1				0x0E9
-+#define SIERRA_DEQ_GLUT2				0x0EA
-+#define SIERRA_DEQ_GLUT3				0x0EB
-+#define SIERRA_DEQ_GLUT4				0x0EC
-+#define SIERRA_DEQ_GLUT5				0x0ED
-+#define SIERRA_DEQ_GLUT6				0x0EE
-+#define SIERRA_DEQ_GLUT7				0x0EF
-+#define SIERRA_DEQ_GLUT8				0x0F0
-+#define SIERRA_DEQ_GLUT9				0x0F1
-+#define SIERRA_DEQ_GLUT10				0x0F2
-+#define SIERRA_DEQ_GLUT11				0x0F3
-+#define SIERRA_DEQ_GLUT12				0x0F4
-+#define SIERRA_DEQ_GLUT13				0x0F5
-+#define SIERRA_DEQ_GLUT14				0x0F6
-+#define SIERRA_DEQ_GLUT15				0x0F7
-+#define SIERRA_DEQ_GLUT16				0x0F8
-+#define SIERRA_DEQ_ALUT0				0x108
-+#define SIERRA_DEQ_ALUT1				0x109
-+#define SIERRA_DEQ_ALUT2				0x10A
-+#define SIERRA_DEQ_ALUT3				0x10B
-+#define SIERRA_DEQ_ALUT4				0x10C
-+#define SIERRA_DEQ_ALUT5				0x10D
-+#define SIERRA_DEQ_ALUT6				0x10E
-+#define SIERRA_DEQ_ALUT7				0x10F
-+#define SIERRA_DEQ_ALUT8				0x110
-+#define SIERRA_DEQ_ALUT9				0x111
-+#define SIERRA_DEQ_ALUT10				0x112
-+#define SIERRA_DEQ_ALUT11				0x113
-+#define SIERRA_DEQ_ALUT12				0x114
-+#define SIERRA_DEQ_ALUT13				0x115
-+#define SIERRA_DEQ_DFETAP_CTRL_PREG			0x128
-+#define SIERRA_DFE_EN_1010_IGNORE_PREG			0x134
-+#define SIERRA_DEQ_TAU_CTRL1_SLOW_MAINT_PREG		0x150
-+#define SIERRA_DEQ_TAU_CTRL2_PREG			0x151
-+#define SIERRA_DEQ_PICTRL_PREG				0x161
-+#define SIERRA_CPICAL_TMRVAL_MODE1_PREG			0x170
-+#define SIERRA_CPICAL_TMRVAL_MODE0_PREG			0x171
-+#define SIERRA_CPICAL_PICNT_MODE1_PREG			0x174
-+#define SIERRA_CPI_OUTBUF_RATESEL_PREG			0x17C
-+#define SIERRA_CPICAL_RES_STARTCODE_MODE23_PREG		0x183
-+#define SIERRA_LFPSDET_SUPPORT_PREG			0x188
-+#define SIERRA_LFPSFILT_NS_PREG				0x18A
-+#define SIERRA_LFPSFILT_RD_PREG				0x18B
-+#define SIERRA_LFPSFILT_MP_PREG				0x18C
-+#define SIERRA_SIGDET_SUPPORT_PREG			0x190
-+#define SIERRA_SDFILT_H2L_A_PREG			0x191
-+#define SIERRA_SDFILT_L2H_PREG				0x193
-+#define SIERRA_RXBUFFER_CTLECTRL_PREG			0x19E
-+#define SIERRA_RXBUFFER_RCDFECTRL_PREG			0x19F
-+#define SIERRA_RXBUFFER_DFECTRL_PREG			0x1A0
-+#define SIERRA_DEQ_TAU_CTRL1_FAST_MAINT_PREG		0x14F
-+#define SIERRA_DEQ_TAU_CTRL1_SLOW_MAINT_PREG		0x150
- 
- #define SIERRA_PHY_CONFIG_CTRL_OFFSET(block_offset)	\
- 				      (0xc000 << (block_offset))
--#define SIERRA_PHY_PLL_CFG			0xe
-+#define SIERRA_PHY_PLL_CFG				0xe
- 
--#define SIERRA_MACRO_ID				0x00007364
--#define SIERRA_MAX_LANES			4
-+#define SIERRA_MACRO_ID					0x00007364
-+#define SIERRA_MAX_LANES				4
- 
- static const struct reg_field macro_id_type =
- 				REG_FIELD(SIERRA_MACRO_ID_REG, 0, 15);
-@@ -97,10 +164,14 @@ struct cdns_sierra_data {
- 		u32 id_value;
- 		u8 block_offset_shift;
- 		u8 reg_offset_shift;
--		u32 pcie_regs;
--		u32 usb_regs;
--		struct cdns_reg_pairs *pcie_vals;
--		struct cdns_reg_pairs  *usb_vals;
-+		u32 pcie_cmn_regs;
-+		u32 pcie_ln_regs;
-+		u32 usb_cmn_regs;
-+		u32 usb_ln_regs;
-+		struct cdns_reg_pairs *pcie_cmn_vals;
-+		struct cdns_reg_pairs *pcie_ln_vals;
-+		struct cdns_reg_pairs *usb_cmn_vals;
-+		struct cdns_reg_pairs *usb_ln_vals;
- };
- 
- struct cdns_regmap_cdb_context {
-@@ -183,26 +254,35 @@ static int cdns_sierra_phy_init(struct phy *gphy)
- 	struct cdns_sierra_phy *phy = dev_get_drvdata(gphy->dev.parent);
- 	struct regmap *regmap = phy->regmap;
- 	int i, j;
--	struct cdns_reg_pairs *vals;
--	u32 num_regs;
-+	struct cdns_reg_pairs *cmn_vals, *ln_vals;
-+	u32 num_cmn_regs, num_ln_regs;
- 
- 	/* Initialise the PHY registers, unless auto configured */
- 	if (phy->autoconf)
- 		return 0;
- 
- 	if (ins->phy_type == PHY_TYPE_PCIE) {
--		num_regs = phy->init_data->pcie_regs;
--		vals = phy->init_data->pcie_vals;
-+		num_cmn_regs = phy->init_data->pcie_cmn_regs;
-+		num_ln_regs = phy->init_data->pcie_ln_regs;
-+		cmn_vals = phy->init_data->pcie_cmn_vals;
-+		ln_vals = phy->init_data->pcie_ln_vals;
- 	} else if (ins->phy_type == PHY_TYPE_USB3) {
--		num_regs = phy->init_data->usb_regs;
--		vals = phy->init_data->usb_vals;
-+		num_cmn_regs = phy->init_data->usb_cmn_regs;
-+		num_ln_regs = phy->init_data->usb_ln_regs;
-+		cmn_vals = phy->init_data->usb_cmn_vals;
-+		ln_vals = phy->init_data->usb_ln_vals;
- 	} else {
- 		return -EINVAL;
- 	}
+diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+new file mode 100644
+index 000000000000..5cd6f907f6af
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+@@ -0,0 +1,158 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+	regmap = phy->regmap_common_cdb;
-+	for (j = 0; j < num_cmn_regs ; j++)
-+		regmap_write(regmap, cmn_vals[j].off, cmn_vals[j].val);
++title: TI J721E WIZ (SERDES Wrapper)
 +
- 	for (i = 0; i < ins->num_lanes; i++) {
--		for (j = 0; j < num_regs ; j++) {
-+		for (j = 0; j < num_ln_regs ; j++) {
- 			regmap = phy->regmap_lane_cdb[i + ins->mlane];
--			regmap_write(regmap, vals[j].off, vals[j].val);
-+			regmap_write(regmap, ln_vals[j].off, ln_vals[j].val);
- 		}
- 	}
- 
-@@ -491,80 +571,158 @@ static int cdns_sierra_phy_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static struct cdns_reg_pairs cdns_usb_regs[] = {
--	/*
--	 * Write USB configuration parameters to the PHY.
--	 * These values are specific to this specific hardware
--	 * configuration.
--	 */
-+/* refclk100MHz_32b_PCIe_cmn_pll_ext_ssc */
-+static struct cdns_reg_pairs cdns_pcie_cmn_regs_ext_ssc[] = {
-+	{0x2106, SIERRA_CMN_PLLLC_LF_COEFF_MODE1_PREG},
-+	{0x2106, SIERRA_CMN_PLLLC_LF_COEFF_MODE0_PREG},
-+	{0x8A06, SIERRA_CMN_PLLLC_BWCAL_MODE1_PREG},
-+	{0x8A06, SIERRA_CMN_PLLLC_BWCAL_MODE0_PREG},
-+	{0x1B1B, SIERRA_CMN_PLLLC_SS_TIME_STEPSIZE_MODE_PREG}
-+};
++maintainers:
++  - Kishon Vijay Abraham I <kishon@ti.com>
 +
-+/* refclk100MHz_32b_PCIe_ln_ext_ssc */
-+static struct cdns_reg_pairs cdns_pcie_ln_regs_ext_ssc[] = {
-+	{0x813E, SIERRA_CLKPATHCTRL_TMR_PREG},
-+	{0x8047, SIERRA_RX_CREQ_FLTR_A_MODE3_PREG},
-+	{0x808F, SIERRA_RX_CREQ_FLTR_A_MODE2_PREG},
-+	{0x808F, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
-+	{0x808F, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
-+	{0x033C, SIERRA_RX_CTLE_MAINTENANCE_PREG},
-+	{0x44CC, SIERRA_CREQ_EQ_OPEN_EYE_THRESH_PREG}
-+};
++properties:
++  compatible:
++      enum:
++          - ti,j721e-wiz-16g
++          - ti,j721e-wiz-10g
 +
-+/* refclk100MHz_20b_USB_cmn_pll_ext_ssc */
-+static struct cdns_reg_pairs cdns_usb_cmn_regs_ext_ssc[] = {
-+	{0x2085, SIERRA_CMN_PLLLC_LF_COEFF_MODE1_PREG},
-+	{0x2085, SIERRA_CMN_PLLLC_LF_COEFF_MODE0_PREG},
-+	{0x0000, SIERRA_CMN_PLLLC_BWCAL_MODE0_PREG},
-+	{0x0000, SIERRA_CMN_PLLLC_SS_TIME_STEPSIZE_MODE_PREG}
-+};
++  power-domains:
++    maxItems: 1
 +
-+/* refclk100MHz_20b_USB_ln_ext_ssc */
-+static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
- 	{0xFE0A, SIERRA_DET_STANDEC_A_PREG},
- 	{0x000F, SIERRA_DET_STANDEC_B_PREG},
--	{0x55A5, SIERRA_DET_STANDEC_C_PREG},
--	{0x69AD, SIERRA_DET_STANDEC_D_PREG},
-+	{0x00A5, SIERRA_DET_STANDEC_C_PREG},
-+	{0x69ad, SIERRA_DET_STANDEC_D_PREG},
- 	{0x0241, SIERRA_DET_STANDEC_E_PREG},
--	{0x0110, SIERRA_PSM_LANECAL_PREG},
-+	{0x0010, SIERRA_PSM_LANECAL_DLY_A1_RESETS_PREG},
-+	{0x0014, SIERRA_PSM_A0IN_TMR_PREG},
- 	{0xCF00, SIERRA_PSM_DIAG_PREG},
- 	{0x001F, SIERRA_PSC_TX_A0_PREG},
- 	{0x0007, SIERRA_PSC_TX_A1_PREG},
- 	{0x0003, SIERRA_PSC_TX_A2_PREG},
- 	{0x0003, SIERRA_PSC_TX_A3_PREG},
- 	{0x0FFF, SIERRA_PSC_RX_A0_PREG},
--	{0x0003, SIERRA_PSC_RX_A1_PREG},
-+	{0x0619, SIERRA_PSC_RX_A1_PREG},
- 	{0x0003, SIERRA_PSC_RX_A2_PREG},
- 	{0x0001, SIERRA_PSC_RX_A3_PREG},
- 	{0x0001, SIERRA_PLLCTRL_SUBRATE_PREG},
- 	{0x0406, SIERRA_PLLCTRL_GEN_D_PREG},
-+	{0x5233, SIERRA_PLLCTRL_CPGAIN_MODE_PREG},
-+	{0x00CA, SIERRA_CLKPATH_BIASTRIM_PREG},
-+	{0x2512, SIERRA_DFE_BIASTRIM_PREG},
- 	{0x0000, SIERRA_DRVCTRL_ATTEN_PREG},
--	{0x823E, SIERRA_CLKPATHCTRL_TMR_PREG},
--	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
--	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
-+	{0x873E, SIERRA_CLKPATHCTRL_TMR_PREG},
-+	{0x03CF, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
-+	{0x01CE, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
- 	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01_PREG},
--	{0x023C, SIERRA_RX_CTLE_MAINTENANCE_PREG},
-+	{0x033F, SIERRA_RX_CTLE_MAINTENANCE_PREG},
- 	{0x3232, SIERRA_CREQ_FSMCLK_SEL_PREG},
--	{0x8452, SIERRA_CTLELUT_CTRL_PREG},
--	{0x4121, SIERRA_DFE_ECMP_RATESEL_PREG},
--	{0x4121, SIERRA_DFE_SMP_RATESEL_PREG},
--	{0x9999, SIERRA_DEQ_VGATUNE_CTRL_PREG},
--	{0x0330, SIERRA_TMRVAL_MODE0_PREG},
--	{0x01FF, SIERRA_PICNT_MODE1_PREG},
-+	{0x0000, SIERRA_CREQ_EQ_CTRL_PREG},
-+	{0x8000, SIERRA_CREQ_SPARE_PREG},
-+	{0xCC44, SIERRA_CREQ_EQ_OPEN_EYE_THRESH_PREG},
-+	{0x8453, SIERRA_CTLELUT_CTRL_PREG},
-+	{0x4110, SIERRA_DFE_ECMP_RATESEL_PREG},
-+	{0x4110, SIERRA_DFE_SMP_RATESEL_PREG},
-+	{0x0002, SIERRA_DEQ_PHALIGN_CTRL},
-+	{0x3200, SIERRA_DEQ_CONCUR_CTRL1_PREG},
-+	{0x5064, SIERRA_DEQ_CONCUR_CTRL2_PREG},
-+	{0x0030, SIERRA_DEQ_EPIPWR_CTRL2_PREG},
-+	{0x0048, SIERRA_DEQ_FAST_MAINT_CYCLES_PREG},
-+	{0x5A5A, SIERRA_DEQ_ERRCMP_CTRL_PREG},
-+	{0x02F5, SIERRA_DEQ_OFFSET_CTRL_PREG},
-+	{0x02F5, SIERRA_DEQ_GAIN_CTRL_PREG},
-+	{0x9A8A, SIERRA_DEQ_VGATUNE_CTRL_PREG},
-+	{0x0014, SIERRA_DEQ_GLUT0},
-+	{0x0014, SIERRA_DEQ_GLUT1},
-+	{0x0014, SIERRA_DEQ_GLUT2},
-+	{0x0014, SIERRA_DEQ_GLUT3},
-+	{0x0014, SIERRA_DEQ_GLUT4},
-+	{0x0014, SIERRA_DEQ_GLUT5},
-+	{0x0014, SIERRA_DEQ_GLUT6},
-+	{0x0014, SIERRA_DEQ_GLUT7},
-+	{0x0014, SIERRA_DEQ_GLUT8},
-+	{0x0014, SIERRA_DEQ_GLUT9},
-+	{0x0014, SIERRA_DEQ_GLUT10},
-+	{0x0014, SIERRA_DEQ_GLUT11},
-+	{0x0014, SIERRA_DEQ_GLUT12},
-+	{0x0014, SIERRA_DEQ_GLUT13},
-+	{0x0014, SIERRA_DEQ_GLUT14},
-+	{0x0014, SIERRA_DEQ_GLUT15},
-+	{0x0014, SIERRA_DEQ_GLUT16},
-+	{0x0BAE, SIERRA_DEQ_ALUT0},
-+	{0x0AEB, SIERRA_DEQ_ALUT1},
-+	{0x0A28, SIERRA_DEQ_ALUT2},
-+	{0x0965, SIERRA_DEQ_ALUT3},
-+	{0x08A2, SIERRA_DEQ_ALUT4},
-+	{0x07DF, SIERRA_DEQ_ALUT5},
-+	{0x071C, SIERRA_DEQ_ALUT6},
-+	{0x0659, SIERRA_DEQ_ALUT7},
-+	{0x0596, SIERRA_DEQ_ALUT8},
-+	{0x0514, SIERRA_DEQ_ALUT9},
-+	{0x0492, SIERRA_DEQ_ALUT10},
-+	{0x0410, SIERRA_DEQ_ALUT11},
-+	{0x038E, SIERRA_DEQ_ALUT12},
-+	{0x030C, SIERRA_DEQ_ALUT13},
-+	{0x03F4, SIERRA_DEQ_DFETAP_CTRL_PREG},
-+	{0x0001, SIERRA_DFE_EN_1010_IGNORE_PREG},
-+	{0x3C01, SIERRA_DEQ_TAU_CTRL1_FAST_MAINT_PREG},
-+	{0x3C40, SIERRA_DEQ_TAU_CTRL1_SLOW_MAINT_PREG},
-+	{0x1C08, SIERRA_DEQ_TAU_CTRL2_PREG},
-+	{0x0033, SIERRA_DEQ_PICTRL_PREG},
-+	{0x0400, SIERRA_CPICAL_TMRVAL_MODE1_PREG},
-+	{0x0330, SIERRA_CPICAL_TMRVAL_MODE0_PREG},
-+	{0x01FF, SIERRA_CPICAL_PICNT_MODE1_PREG},
- 	{0x0009, SIERRA_CPI_OUTBUF_RATESEL_PREG},
-+	{0x3232, SIERRA_CPICAL_RES_STARTCODE_MODE23_PREG},
-+	{0x0005, SIERRA_LFPSDET_SUPPORT_PREG},
- 	{0x000F, SIERRA_LFPSFILT_NS_PREG},
- 	{0x0009, SIERRA_LFPSFILT_RD_PREG},
- 	{0x0001, SIERRA_LFPSFILT_MP_PREG},
- 	{0x8013, SIERRA_SDFILT_H2L_A_PREG},
--	{0x0400, SIERRA_TMRVAL_MODE1_PREG},
--};
--
--static struct cdns_reg_pairs cdns_pcie_regs[] = {
--	/*
--	 * Write PCIe configuration parameters to the PHY.
--	 * These values are specific to this specific hardware
--	 * configuration.
--	 */
--	{0x891f, SIERRA_DET_STANDEC_D_PREG},
--	{0x0053, SIERRA_DET_STANDEC_E_PREG},
--	{0x0400, SIERRA_TMRVAL_MODE2_PREG},
--	{0x0200, SIERRA_TMRVAL_MODE3_PREG},
-+	{0x8009, SIERRA_SDFILT_L2H_PREG},
-+	{0x0024, SIERRA_RXBUFFER_CTLECTRL_PREG},
-+	{0x0020, SIERRA_RXBUFFER_RCDFECTRL_PREG},
-+	{0x4243, SIERRA_RXBUFFER_DFECTRL_PREG}
- };
- 
- static const struct cdns_sierra_data cdns_map_sierra = {
- 	SIERRA_MACRO_ID,
- 	0x2,
- 	0x2,
--	ARRAY_SIZE(cdns_pcie_regs),
--	ARRAY_SIZE(cdns_usb_regs),
--	cdns_pcie_regs,
--	cdns_usb_regs
-+	ARRAY_SIZE(cdns_pcie_cmn_regs_ext_ssc),
-+	ARRAY_SIZE(cdns_pcie_ln_regs_ext_ssc),
-+	ARRAY_SIZE(cdns_usb_cmn_regs_ext_ssc),
-+	ARRAY_SIZE(cdns_usb_ln_regs_ext_ssc),
-+	cdns_pcie_cmn_regs_ext_ssc,
-+	cdns_pcie_ln_regs_ext_ssc,
-+	cdns_usb_cmn_regs_ext_ssc,
-+	cdns_usb_ln_regs_ext_ssc,
- };
- 
- static const struct cdns_sierra_data cdns_ti_map_sierra = {
- 	SIERRA_MACRO_ID,
- 	0x0,
- 	0x1,
--	ARRAY_SIZE(cdns_pcie_regs),
--	ARRAY_SIZE(cdns_usb_regs),
--	cdns_pcie_regs,
--	cdns_usb_regs
-+	ARRAY_SIZE(cdns_pcie_cmn_regs_ext_ssc),
-+	ARRAY_SIZE(cdns_pcie_ln_regs_ext_ssc),
-+	ARRAY_SIZE(cdns_usb_cmn_regs_ext_ssc),
-+	ARRAY_SIZE(cdns_usb_ln_regs_ext_ssc),
-+	cdns_pcie_cmn_regs_ext_ssc,
-+	cdns_pcie_ln_regs_ext_ssc,
-+	cdns_usb_cmn_regs_ext_ssc,
-+	cdns_usb_ln_regs_ext_ssc,
- };
- 
- static const struct of_device_id cdns_sierra_id_table[] = {
++  clocks:
++    maxItems: 3
++    description: clock-specifier to represent input to the WIZ
++
++  clock-names:
++    items:
++      - const: fck
++      - const: core_ref_clk
++      - const: ext_ref_clk
++
++  num-lanes:
++    minimum: 1
++    maximum: 4
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  "#reset-cells":
++    const: 1
++
++  ranges: true
++
++  assigned-clocks:
++    maxItems: 2
++
++  assigned-clock-parents:
++    maxItems: 2
++
++patternProperties:
++  "^pll[0|1]_refclk$":
++    type: object
++    description: |
++      WIZ node should have subnodes for each of the PLLs present in
++      the SERDES.
++
++  "^cmn_refclk1?_dig_div$":
++    type: object
++    description: |
++      WIZ node should have subnodes for each of the PMA common refclock
++      provided by the SERDES.
++
++  "^refclk_dig$":
++    type: object
++    description: |
++      WIZ node should have subnode for refclk_dig to select the reference
++      clock source for the reference clock used in the PHY and PMA digital
++      logic.
++
++  "^serdes@[0-9a-f]+$":
++    type: object
++    description: |
++      WIZ node should have '1' subnode for the SERDES. It could be either
++      Sierra SERDES or Torrent SERDES. Sierra SERDES should follow the
++      bindings specified in
++      Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
++      Torrent SERDES should follow the bindings specified in
++      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
++
++required:
++  - compatible
++  - power-domains
++  - clocks
++  - clock-names
++  - num-lanes
++  - "#address-cells"
++  - "#size-cells"
++  - "#reset-cells"
++  - ranges
++
++examples:
++  - |
++    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++
++    wiz@5000000 {
++           compatible = "ti,j721e-wiz-16g";
++           #address-cells = <1>;
++           #size-cells = <1>;
++           power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
++           clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
++           clock-names = "fck", "core_ref_clk", "ext_ref_clk";
++           assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
++           assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
++           num-lanes = <2>;
++           #reset-cells = <1>;
++           ranges = <0x5000000 0x0 0x5000000 0x10000>;
++
++           pll0_refclk {
++                  clocks = <&k3_clks 293 13>, <&dummy_cmn_refclk>;
++                  clock-output-names = "wiz1_pll0_refclk";
++                  #clock-cells = <0>;
++                  assigned-clocks = <&wiz1_pll0_refclk>;
++                  assigned-clock-parents = <&k3_clks 293 13>;
++           };
++
++           pll1_refclk {
++                  clocks = <&k3_clks 293 0>, <&dummy_cmn_refclk1>;
++                  clock-output-names = "wiz1_pll1_refclk";
++                  #clock-cells = <0>;
++                  assigned-clocks = <&wiz1_pll1_refclk>;
++                  assigned-clock-parents = <&k3_clks 293 0>;
++           };
++
++           cmn_refclk_dig_div {
++                  clocks = <&wiz1_refclk_dig>;
++                  clock-output-names = "wiz1_cmn_refclk_dig_div";
++                  #clock-cells = <0>;
++           };
++
++           cmn_refclk1_dig_div {
++                  clocks = <&wiz1_pll1_refclk>;
++                  clock-output-names = "wiz1_cmn_refclk1_dig_div";
++                  #clock-cells = <0>;
++           };
++
++           refclk_dig {
++                  clocks = <&k3_clks 292 11>, <&k3_clks 292 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
++                  clock-output-names = "wiz0_refclk_dig";
++                  #clock-cells = <0>;
++                  assigned-clocks = <&wiz0_refclk_dig>;
++                  assigned-clock-parents = <&k3_clks 292 11>;
++           };
++
++           serdes@5000000 {
++                  compatible = "cdns,ti,sierra-phy-t0";
++                  reg-names = "serdes";
++                  reg = <0x5000000 0x10000>;
++                  #address-cells = <1>;
++                  #size-cells = <0>;
++                  resets = <&serdes_wiz0 0>;
++                  reset-names = "sierra_reset";
++                  clocks = <&wiz0_cmn_refclk_dig_div>, <&wiz0_cmn_refclk1_dig_div>;
++                  clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
++           };
++    };
 -- 
 2.17.1
 
