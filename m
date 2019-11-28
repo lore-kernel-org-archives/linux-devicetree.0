@@ -2,150 +2,160 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C36CC43215
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 03:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AA3C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 03:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C62215F1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 03:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D262A2166E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 03:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="FCyCsZzP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fpond.eu header.i=@fpond.eu header.b="PFclMg4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfK1D1w (ORCPT
+        id S1727150AbfK1Dop (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 22:27:52 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25878 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbfK1D1w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 22:27:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574911629; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=SBgDnXauIGwMG/V3rh54/4hIICTGALqafTOQyTN5jT/ztfk4LnfHp3ni0PQ4YugvLb4j+uDt/NA/aD7DrMYi6n4h0ktCjyxTPmXVlsHgp1+xo4055xix3nn96YiCQm0IbOOsLEKJdhnU5m12G7p/3ljjlD7HoLLy87Ja1xMlUJo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574911629; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=2kXngwStwb77hgVkiYty+9VogGIhnRmmO+0aZj/j2Pw=; 
-        b=oBF8iA5I3dgw8hdbjjLvBoOmy+mvKPY7nnGWqozry2ImTnVv+KbhzStTErufcVoocBTXFiqoQ/U3DkXSoudb6zk73VmTfvccyPsUByPnC5UJAnK8SgRYIfEBggpl0icBRLih9Yf2rU8PHNDhixwPwV5/i6hLSDatR1sgEabYdok=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=jsuc/yQzIANxqCDQWoGtmfpWcSw3cLnu4Qih+yV4ilYpQSi1QSyWHgeGUcRT9UNYmIDOcKAfg7T4
-    4Opn16zsro+W+TjtjAdS8B5vF6JPK9diNJ2qHFzpdXQ76jBEcW8B  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574911629;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=2kXngwStwb77hgVkiYty+9VogGIhnRmmO+0aZj/j2Pw=;
-        b=FCyCsZzPB7tCWlH+awogkr2tMlOc7TtkpJQfF6VGPpkMnkuj4uRzu7V/pu2NjjQ3
-        XvcZN9FJ4whrlFh8u0LJV86kXSiH3r5nOyzMX1fsLKwqi3yvc7ztHNZBWGCbVQ1qmEU
-        7dVMDx57ErP4dUbOauNGVX+gqOOqooRuWRKPxd3I=
-Received: from [192.168.88.130] (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
-        with SMTPS id 1574911628677616.8260073790145; Wed, 27 Nov 2019 19:27:08 -0800 (PST)
-Subject: Re: [PATCH v4 5/6] MIPS: X1000: Add pdma controller DT node.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1574787974-58040-1-git-send-email-zhouyanjie@zoho.com>
- <1574787974-58040-6-git-send-email-zhouyanjie@zoho.com>
- <1574873298.3.0@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DDF3E81.2060502@zoho.com>
-Date:   Thu, 28 Nov 2019 11:26:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Wed, 27 Nov 2019 22:44:45 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:19338 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbfK1Doo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 22:44:44 -0500
+X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Nov 2019 22:44:42 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574912681;
+        s=strato-dkim-0002; d=fpond.eu;
+        h=Subject:References:In-Reply-To:Message-ID:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=nvzO8rqYdXuIPjP0LXy5wKBL7E3Y7S8VI2AMrtpVuGw=;
+        b=PFclMg4EFSJ57I2l8e9SLhyyJ0lo4j9gQOL/+hg75rXhXe/iv9zfFaow6PMx7KMGi0
+        kM3Q/HKGaPTWry/0tp5DCvg/n61UxaccEI1Tjl9JhFrs/m94SuOahR5jeHvf233mqWvY
+        v7IR49TyI8D4sV4clCQdaPJQ347IvCTwnRG4w0fG97f6pqKqkQ4tXVagfoP1P9JUAEty
+        zhZlcyikYOtp8hXxNCp6dC6avl+l2U4U82cENXaOAQDwfz2fYHxoSjCSBb6Xpe5nmq63
+        SforMexiig6Ha4z2bYQFWpCeeiDQWetTw8SYlzstENyxzWcyQY7HAxGuQc1ktBCSKu+r
+        uWDQ==
+X-RZG-AUTH: ":OWANVUa4dPFUgKR/3dpvnYP0Np73amq+g13rqGzmt2bYDnKIKaws6YXTsc4="
+X-RZG-CLASS-ID: mo00
+Received: from oxapp04-01.back.ox.d0m.de
+        by smtp-ox.front (RZmta 46.0.0 AUTH)
+        with ESMTPSA id 604beevAS3cd2Io
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Thu, 28 Nov 2019 04:38:39 +0100 (CET)
+Date:   Thu, 28 Nov 2019 04:38:39 +0100 (CET)
+From:   Ulrich Hecht <uli@fpond.eu>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org
+Message-ID: <1936168849.1467696.1574912319589@webmail.strato.com>
+In-Reply-To: <20191127084253.16356-2-geert+renesas@glider.be>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-2-geert+renesas@glider.be>
+Subject: Re: [PATCH v3 1/7] gpiolib: Add GPIOCHIP_NAME definition
 MIME-Version: 1.0
-In-Reply-To: <1574873298.3.0@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev22
+X-Originating-IP: 112.198.74.215
+X-Originating-Client: open-xchange-appsuite
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
 
-On 2019=E5=B9=B411=E6=9C=8828=E6=97=A5 00:48, Paul Cercueil wrote:
-> Hi Zhou,
->
->
-> Le mer., nov. 27, 2019 at 01:06, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-> =C3=A9crit :
->> Add the appropriate DT node to probe the pdma controller driver
->> using the devicetree.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>
->> Notes:
->>     v4:
->>     New patch.
->>
->>  arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
->> b/arch/mips/boot/dts/ingenic/x1000.dtsi
->> index 9e55edd..edfa70d 100644
->> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
->> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
->> @@ -1,5 +1,6 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  #include <dt-bindings/clock/x1000-cgu.h>
->> +#include <dt-bindings/dma/x1000-dma.h>
->
-> You're not using any macro from that include file, so there's no need=20
-> to have it here.
+> On November 27, 2019 at 9:42 AM Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> 
+> 
+> The string literal "gpiochip" is used in several places.
+> Add a definition for it, and use it everywhere, to make sure everything
+> stays in sync.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+>   - New.
+> ---
+>  drivers/gpio/gpiolib-sysfs.c | 7 +++----
+>  drivers/gpio/gpiolib.c       | 4 ++--
+>  drivers/gpio/gpiolib.h       | 2 ++
+>  3 files changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+> index fbf6b1a0a4fae6ce..23e3d335cd543d53 100644
+> --- a/drivers/gpio/gpiolib-sysfs.c
+> +++ b/drivers/gpio/gpiolib-sysfs.c
+> @@ -762,10 +762,9 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
+>  		parent = &gdev->dev;
+>  
+>  	/* use chip->base for the ID; it's already known to be unique */
+> -	dev = device_create_with_groups(&gpio_class, parent,
+> -					MKDEV(0, 0),
+> -					chip, gpiochip_groups,
+> -					"gpiochip%d", chip->base);
+> +	dev = device_create_with_groups(&gpio_class, parent, MKDEV(0, 0), chip,
+> +					gpiochip_groups, GPIOCHIP_NAME "%d",
+> +					chip->base);
+>  	if (IS_ERR(dev))
+>  		return PTR_ERR(dev);
+>  
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index dce0b31f4125a6b3..c9e47620d2434983 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1419,7 +1419,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+>  		ret = gdev->id;
+>  		goto err_free_gdev;
+>  	}
+> -	dev_set_name(&gdev->dev, "gpiochip%d", gdev->id);
+> +	dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
+>  	device_initialize(&gdev->dev);
+>  	dev_set_drvdata(&gdev->dev, gdev);
+>  	if (chip->parent && chip->parent->driver)
+> @@ -5105,7 +5105,7 @@ static int __init gpiolib_dev_init(void)
+>  		return ret;
+>  	}
+>  
+> -	ret = alloc_chrdev_region(&gpio_devt, 0, GPIO_DEV_MAX, "gpiochip");
+> +	ret = alloc_chrdev_region(&gpio_devt, 0, GPIO_DEV_MAX, GPIOCHIP_NAME);
+>  	if (ret < 0) {
+>  		pr_err("gpiolib: failed to allocate char dev region\n");
+>  		bus_unregister(&gpio_bus_type);
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index ca9bc1e4803c2979..a4a759920faa48ab 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -16,6 +16,8 @@
+>  #include <linux/module.h>
+>  #include <linux/cdev.h>
+>  
+> +#define GPIOCHIP_NAME	"gpiochip"
+> +
+>  /**
+>   * struct gpio_device - internal state container for GPIO devices
+>   * @id: numerical ID number for the GPIO chip
+> -- 
+> 2.17.1
 >
 
-Sure, I will fix this in v7.
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
 
-Thanks and best regards!
-
-> Cheers,
-> -Paul
->
->
->>
->>  / {
->>      #address-cells =3D <1>;
->> @@ -173,4 +174,16 @@
->>
->>          status =3D "disabled";
->>      };
->> +
->> +    pdma: dma-controller@13420000 {
->> +        compatible =3D "ingenic,x1000-dma";
->> +        reg =3D <0x13420000 0x400
->> +               0x13421000 0x40>;
->> +        #dma-cells =3D <2>;
->> +
->> +        interrupt-parent =3D <&intc>;
->> +        interrupts =3D <10>;
->> +
->> +        clocks =3D <&cgu X1000_CLK_PDMA>;
->> +    };
->>  };
->> --=20
->> 2.7.4
->>
->>
->
->
-
-
-
+CU
+Uli
