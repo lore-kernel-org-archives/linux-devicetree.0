@@ -2,271 +2,287 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF72FC432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 00:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A56C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 01:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9786E215A5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 00:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C130D215E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 01:06:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="JW2HM0d3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="O3JngmG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfK1AqK (ORCPT
+        id S1727280AbfK1BGy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 19:46:10 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43723 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfK1AqJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 19:46:09 -0500
-Received: by mail-qt1-f194.google.com with SMTP id q8so24664788qtr.10;
-        Wed, 27 Nov 2019 16:46:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aJeoqcmKSSQvMjifG41URfXpoPD2I45j8yZ0E+rYsGo=;
-        b=JW2HM0d38B3YxpLDeP3VdWE5jC1VN+rWirnpsjbm7P1MG3Qvquz6yXZNb/VcCji6uh
-         B0aao0fYaU+rr3A/SmPrwOt9WA4bI5NBrlIQPqK5v/EKfh9j48phG2kk7fcK0d1D+Blm
-         UhV3sq6Z0f1FOKVWceulCSq6/F+rQ/sWTigVk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aJeoqcmKSSQvMjifG41URfXpoPD2I45j8yZ0E+rYsGo=;
-        b=NiciWzvKwnhMRUu9iuuZhBCQ0xM6ga1G5Er94uZoHZNP1PUMIleQAKLj2fiQB5yTHV
-         ARQ00uz/xjfxRmPvqoI4WRaC8kSiIaxox+Q6FIkniY8k6GpJUPIWbmThpynqw2GwAVAU
-         lkqtcKysALyM4aNrXJqTSXfTmtBA7Yg8gqA1LxhMnbtLH1Ysr4HOHetVk5TayoPBP4aM
-         wmmNDdj7WkNdGTevXO/djVm/qNJ214wErNJO0AcsVJI84zpkSFUAkb6pooLnJO2Dr3XW
-         p+bicQKxPWNdcP0KhCBTyIkqMhPa0WqTn0zPIrP7/gssNYwDGSLq/MEDe3mRRVnbmyX3
-         +z6Q==
-X-Gm-Message-State: APjAAAVIWaofWjtK3DjTS0CuV2Do31u1tjpbPJY+yngip3gu3Wkkir7h
-        SV2cUymD4XJMwJEwQvTGEp9ch6eA4U84RnRrQPw=
-X-Google-Smtp-Source: APXvYqwHl9cUPcDab0I8y61KT4zfdU3MEvfmMOQHLFg4tSI+jEGYfr73nyiTucDoGr+hQ7JGvoonYex7C6ghTlEKCJM=
-X-Received: by 2002:ac8:167c:: with SMTP id x57mr28046701qtk.255.1574901968058;
- Wed, 27 Nov 2019 16:46:08 -0800 (PST)
+        Wed, 27 Nov 2019 20:06:54 -0500
+Received: from gateway21.websitewelcome.com ([192.185.45.91]:41131 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727126AbfK1BGy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Nov 2019 20:06:54 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 4B877400DC981
+        for <devicetree@vger.kernel.org>; Wed, 27 Nov 2019 19:06:52 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id a8GiiGc0l3Qi0a8GiiXGHE; Wed, 27 Nov 2019 19:06:52 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hvOYKQUJE21stIgSn0WN4z50J2vix7puMNZz1Y1suDY=; b=O3JngmG83jQxHb4ZrcNpw7Mhpn
+        AiYoiDIeR3kYXDxmlz4VfrTSAd3m90MhLtm/mpC4PFRU26ZLpm6RVcVac4N5/L4MnsjfzUhV6VZQL
+        S5C6Xd7bPm1JAodGyvuSbG3vikDQmCGbZppNrVp2h4/Z+k1qcAYsLkJzO2oGqrKCpr55Ahv7WHmxa
+        rvKEpbg5362IgyELfg40R2FpopiWAbqisX6mw/7QxsEQwOm1XRfwwkN4cY9KDYI9qM4CJVK5Hlq4H
+        VAiC2nuRexYHEL1Vjmfu6wlYhYlRo/h9fOmb+zJLAM+i69/djeCNRUoIpPm0pnfNiws0WQIYQbW88
+        fcdzTgOQ==;
+Received: from [191.31.194.237] (port=59596 helo=[192.168.15.4])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1ia8Gh-0041CU-Br; Wed, 27 Nov 2019 22:06:51 -0300
+Subject: Re: [PATCH v7 4/5] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191117141335.23404-1-matheus@castello.eng.br>
+ <20191117141335.23404-5-matheus@castello.eng.br>
+ <20191126145200.xqtvfrm6qc6yuutb@earth.universe>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <c5bb4962-10f7-0877-0c99-c2dad5bb53cf@castello.eng.br>
+Date:   Wed, 27 Nov 2019 22:06:47 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191127060747.GA30829@cnn>
-In-Reply-To: <20191127060747.GA30829@cnn>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 28 Nov 2019 00:45:56 +0000
-Message-ID: <CACPK8Xc4jw_gPqbTZ5tbSBUD0NF3_aRk+aCbGDZBye3CF+n=rg@mail.gmail.com>
-Subject: Re: [PATCH v4] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>
-Cc:     Vijay Khemka <vijaykhemka@fb.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        manikandan.e@hcl.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191126145200.xqtvfrm6qc6yuutb@earth.universe>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: pt-BR
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.194.237
+X-Source-L: No
+X-Exim-ID: 1ia8Gh-0041CU-Br
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.4]) [191.31.194.237]:59596
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 9
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 27 Nov 2019 at 06:07, manikandan-e
-<manikandan.hcl.ers.epl@gmail.com> wrote:
+Hi Sebastian,
+
+Em 11/26/19 11:52 AM, Sebastian Reichel escreveu:
+> Hi,
+> 
+> On Sun, Nov 17, 2019 at 11:13:34AM -0300, Matheus Castello wrote:
+>> For configuration of fuel gauge alert for a low level state of charge
+>> interrupt we add a function to config level threshold and a device tree
+>> binding property to set it in flatned device tree node.
+>>
+>> Now we can use "maxim,alert-low-soc-level" property with the values from
+>> 1% up to 32% to configure alert interrupt threshold.
+>>
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> ---
+>>   drivers/power/supply/max17040_battery.c | 75 ++++++++++++++++++++++---
+>>   1 file changed, 67 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+>> index 9909f8cd7b5d..3fc9e1c7b257 100644
+>> --- a/drivers/power/supply/max17040_battery.c
+>> +++ b/drivers/power/supply/max17040_battery.c
+>> @@ -29,6 +29,9 @@
+>>   #define MAX17040_DELAY		1000
+>>   #define MAX17040_BATTERY_FULL	95
+>>
+>> +#define MAX17040_ATHD_MASK		0xFFC0
+>> +#define MAX17040_ATHD_DEFAULT_POWER_UP	4
+>> +
+>>   struct max17040_chip {
+>>   	struct i2c_client		*client;
+>>   	struct delayed_work		work;
+>> @@ -43,6 +46,8 @@ struct max17040_chip {
+>>   	int soc;
+>>   	/* State Of Charge */
+>>   	int status;
+>> +	/* Low alert threshold from 32% to 1% of the State of Charge */
+>> +	u32 low_soc_alert;
+>>   };
+>>
+>>   static int max17040_get_property(struct power_supply *psy,
+>> @@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
+>>   	max17040_write_reg(client, MAX17040_CMD, 0x0054);
+>>   }
+>>
+>> +static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
+>> +{
+>> +	int ret;
+>> +	u16 data;
+>> +
+>> +	level = 32 - level;
+>> +	data = max17040_read_reg(client, MAX17040_RCOMP);
+>> +	/* clear the alrt bit and set LSb 5 bits */
+>> +	data &= MAX17040_ATHD_MASK;
+>> +	data |= level;
+>> +	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   static void max17040_get_vcell(struct i2c_client *client)
+>>   {
+>>   	struct max17040_chip *chip = i2c_get_clientdata(client);
+>> @@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *client)
+>>   	u16 soc;
+>>
+>>   	soc = max17040_read_reg(client, MAX17040_SOC);
+>> -
+> 
+> unrelated change.
+> 
+>>   	chip->soc = (soc >> 8);
+>>   }
+>>
+>> @@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *client)
+>>   		chip->status = POWER_SUPPLY_STATUS_FULL;
+>>   }
+>>
+>> +static int max17040_get_of_data(struct max17040_chip *chip)
+>> +{
+>> +	struct device *dev = &chip->client->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	int ret = 0;
+>> +
+>> +	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
+>> +				 &chip->low_soc_alert)) {
+>> +		chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
+>> +	} else if (chip->low_soc_alert <= 0 ||
+>> +			chip->low_soc_alert >= 33) {
+>> +		/* low_soc_alert is not between 1% and 32% */
+>> +		ret = -EINVAL;
+>> +	}
+> 
+> use device_property_read_u32(), which is not DT specific. Also
+> code can be simplified a bit:
+> 
+> chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
+> device_property_read_u32(dev, "maxim,alert-low-soc-level", &chip->low_soc_alert);
+> if (chip->low_soc_alert <= 0 || chip->low_soc_alert >= 33)
+>      return -EINVAL;
+> return 0;
+> 
+
+Thanks for the review, I will use this.
+
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   static void max17040_check_changes(struct i2c_client *client)
+>>   {
+>>   	max17040_get_vcell(client);
+>> @@ -192,6 +229,9 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
+>>   	/* send uevent */
+>>   	power_supply_changed(chip->battery);
+>>
+>> +	/* reset alert bit */
+>> +	max17040_set_low_soc_alert(client, chip->low_soc_alert);
+>> +
+>>   	return IRQ_HANDLED;
+>>   }
+>>
+>> @@ -230,6 +270,7 @@ static int max17040_probe(struct i2c_client *client,
+>>   	struct i2c_adapter *adapter = client->adapter;
+>>   	struct power_supply_config psy_cfg = {};
+>>   	struct max17040_chip *chip;
+>> +	int ret;
+>>
+>>   	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
+>>   		return -EIO;
+>> @@ -240,6 +281,12 @@ static int max17040_probe(struct i2c_client *client,
+>>
+>>   	chip->client = client;
+>>   	chip->pdata = client->dev.platform_data;
+>> +	ret = max17040_get_of_data(chip);
+>> +	if (ret) {
+>> +		dev_err(&client->dev,
+>> +			"failed: low SOC alert OF data out of bounds\n");
+>> +		return ret;
+>> +	}
+>>
+>>   	i2c_set_clientdata(client, chip);
+>>   	psy_cfg.drv_data = chip;
+>> @@ -256,14 +303,26 @@ static int max17040_probe(struct i2c_client *client,
+>>
+>>   	/* check interrupt */
+>>   	if (client->irq) {
+>> -		int ret;
+>> -
+>> -		ret = max17040_enable_alert_irq(chip);
+>> -
+>> -		if (ret) {
+>> -			client->irq = 0;
+>> +		if (of_device_is_compatible(client->dev.of_node,
+>> +					    "maxim,max77836-battery")) {
+>> +			ret = max17040_set_low_soc_alert(client,
+>> +							 chip->low_soc_alert);
+>> +			if (ret) {
+>> +				dev_err(&client->dev,
+>> +					"Failed to set low SOC alert: err %d\n",
+>> +					ret);
+>> +				return ret;
+>> +			}
+>> +
+>> +			ret = max17040_enable_alert_irq(chip);
+>> +			if (ret) {
+>> +				client->irq = 0;
+>> +				dev_warn(&client->dev,
+>> +					 "Failed to get IRQ err %d\n", ret);
+>> +			}
+>> +		} else {
+>>   			dev_warn(&client->dev,
+>> -				 "Failed to get IRQ err %d\n", ret);
+>> +				 "Device not compatible for IRQ");
+> 
+> Something is odd here. Either this should be part of the first
+> patch ("max17040: Add IRQ handler for low SOC alert"), or both
+> device types support the IRQ and this check should be removed.
+> > -- Sebastian
 >
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platorm based on AST2500 SoC.
 
-spelling: platform
+The first patch add the IRQ without the configuration of the low SoC 
+alert, using the default state of charge level. This patch is working 
+with registers to config the low state of charge level, so it was 
+proposed to just try to write registers in the models compatible with 
+that (maxim,max77836-battery).
 
->
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
->
-> Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+Maybe join the first patch to this one, and let DT binding be the first 
+patch on the series so we can already test compatible here, let me know 
+what you think about it.
 
-Please see this:
-
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n418
-
- > then you just add a line saying:
- >
- > Signed-off-by: Random J Developer <random@developer.example.org>
- >
- > using your real name (sorry, no pseudonyms or anonymous contributions.)
-
-Can you make sure you've got your real name there? You can make this
-global with:
-
- > git config --global user.name "Random J Developer"
- > git commit --amend --reset-author
-
-
-> ---
->  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 150 +++++++++++++++++++++
->  1 file changed, 150 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> new file mode 100644
-> index 0000000..44e2b17
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> @@ -0,0 +1,150 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-
-The kernel prefers this to be spelt "GPL-2.0-or-later"
-
-> +// Copyright (c) 2018 Facebook Inc.
-> +/dts-v1/;
-> +
-> +#include "aspeed-g5.dtsi"
-> +#include <dt-bindings/gpio/aspeed-gpio.h>
-> +
-> +/ {
-> +       model = "Facebook Yosemitev2 BMC";
-> +       compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-> +       aliases {
-> +               serial4 = &uart5;
-> +       };
-> +       chosen {
-> +               stdout-path = &uart5;
-> +       };
-> +
-> +       memory@80000000 {
-> +               reg = <0x80000000 0x20000000>;
-> +       };
-> +
-> +       iio-hwmon {
-> +               // VOLATAGE SENSOR
-> +               compatible = "iio-hwmon";
-> +               io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-> +               <&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-> +               <&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-> +               <&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-> +       };
-> +};
-> +
-> +&fmc {
-> +       status = "okay";
-> +       flash@0 {
-> +               status = "okay";
-> +               m25p,fast-read;
-> +#include "openbmc-flash-layout.dtsi"
-> +       };
-> +};
-> +
-> +&spi1 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_spi1_default>;
-> +       flash@0 {
-> +               status = "okay";
-> +               m25p,fast-read;
-> +               label = "pnor";
-> +       };
-> +};
-> +
-> +&uart5 {
-> +       // BMC Console
-> +       status = "okay";
-> +};
-> +
-> +&mac0 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_rmii1_default>;
-> +       use-ncsi;
-> +};
-> +
-> +&adc {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_adc0_default
-> +                       &pinctrl_adc1_default
-> +                       &pinctrl_adc2_default
-> +                       &pinctrl_adc3_default
-> +                       &pinctrl_adc4_default
-> +                       &pinctrl_adc5_default
-> +                       &pinctrl_adc6_default
-> +                       &pinctrl_adc7_default
-> +                       &pinctrl_adc8_default
-> +                       &pinctrl_adc9_default
-> +                       &pinctrl_adc10_default
-> +                       &pinctrl_adc11_default
-> +                       &pinctrl_adc12_default
-> +                       &pinctrl_adc13_default
-> +                       &pinctrl_adc14_default
-> +                       &pinctrl_adc15_default>;
-> +};
-> +
-> +&i2c8 {
-> +       status = "okay";
-> +       //FRU EEPROM
-> +       eeprom@51 {
-> +               compatible = "atmel,24c64";
-> +               reg = <0x51>;
-> +               pagesize = <32>;
-> +       };
-> +};
-> +
-> +&i2c9 {
-> +       status = "okay";
-> +       tmp421@4e {
-> +       //INLET TEMP
-
-Make this consistent by putting it one line up.
-
-> +               compatible = "ti,tmp421";
-> +               reg = <0x4e>;
-> +       };
-> +       //OUTLET TEMP
-> +       tmp421@4f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x4f>;
-> +       };
-> +};
-> +
-> +&i2c10 {
-> +       status = "okay";
-> +       //HSC
-> +       adm1278@40 {
-> +               compatible = "adi,adm1278";
-> +               reg = <0x40>;
-> +       };
-> +};
-> +
-> +&i2c11 {
-> +       status = "okay";
-> +       //MEZZ_TEMP_SENSOR
-> +       tmp421@1f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x1f>;
-> +       };
-> +};
-> +
-> +&i2c12 {
-> +       status = "okay";
-> +       //MEZZ_FRU
-> +       eeprom@51 {
-> +               compatible = "atmel,24c64";
-> +               reg = <0x51>;
-> +               pagesize = <32>;
-> +       };
-> +};
-> +
-> +&pwm_tacho {
-> +       status = "okay";
-> +       //FSC
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +       fan@0 {
-> +               reg = <0x00>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> +       };
-> +       fan@1 {
-> +               reg = <0x01>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-> +       };
-> +};
-> --
-> 2.7.4
->
+>>   		}
+>>   	}
+>>
+>> --
+>> 2.24.0.rc2
+>>
