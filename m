@@ -2,234 +2,156 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79B7C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 03:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E24A3C432C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 05:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85609206E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 03:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B86206BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 05:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fpond.eu header.i=@fpond.eu header.b="kTHmdPrt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rxt8FGjT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfK1DrJ (ORCPT
+        id S1726653AbfK1FKF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 27 Nov 2019 22:47:09 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.101]:32521 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbfK1DrI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 27 Nov 2019 22:47:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574912825;
-        s=strato-dkim-0002; d=fpond.eu;
-        h=Subject:References:In-Reply-To:Message-ID:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=YdruPdKAoK6txPA5JOxDAj/vTUfByn2ONRopUgEmExs=;
-        b=kTHmdPrtWh/7DTav16iKTsrWvF4XqHRxyD6DUumHVdUHwfW1VSA5/+MbeHjoqFns25
-        Iz1h1OtWNIMItVSrlEbi7ll5Amx7IZ/6WF2sC0zACKTEdwza740luxdAarqL16QcwyiF
-        nVDcPwTT+v2ds2lZ2Bbi8B4Sz+FiSJSHTLlvR19qEb9Txm73LUvH5KJDDPdHXLFt+hDp
-        xRvZX2REFsSYu6dYwH4xGKiofS3Lhs9WllrCEUeIeE2AdeWMQLvPPForB4420+vbjJxo
-        MpRcplKL3+ZJqJhALIxXlpx1We+w05zq09SQeoeM+FUMtlKtkVzQpEoN9B7hZa1WLnEo
-        256w==
-X-RZG-AUTH: ":OWANVUa4dPFUgKR/3dpvnYP0Np73amq+g13rqGzmt2bYDnKIKaws6YXTsc4="
-X-RZG-CLASS-ID: mo00
-Received: from oxapp04-01.back.ox.d0m.de
-        by smtp-ox.front (RZmta 46.0.0 AUTH)
-        with ESMTPSA id 604beevAS3f32J3
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 28 Nov 2019 04:41:03 +0100 (CET)
-Date:   Thu, 28 Nov 2019 04:41:02 +0100 (CET)
-From:   Ulrich Hecht <uli@fpond.eu>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Thu, 28 Nov 2019 00:10:05 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33204 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbfK1FKE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 00:10:04 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so3562471pjb.0
+        for <devicetree@vger.kernel.org>; Wed, 27 Nov 2019 21:10:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=mH3WwLWJKCS7M5Q+lMxyNp1TtLh/YyHOg0YBxMxQmqU=;
+        b=Rxt8FGjTZyXeKY17A8C892aaFMnfChP85whFt4zWuuIkEp3vXW+myDE5HfgzbNFsPk
+         bCvfT3AqMKDLfsRkYoiqgRwnd1OAutKgcU0Sb0rJpiaUr5EG4dbLUhwjAZCQbvkWBH1E
+         xmu/vTCIEPLsMwZTbLbda63OQ3fsifQ2ar2wdZqoSB63vMOPC6ufQmnsT/iFt8z/n0+/
+         l0Yx+T4FDRlDR46booI12g122lfF8eU+9A2+xjyrmNqhdnXJo7g6olJMiebYYnLLgmo8
+         GFGyY9Ehnayo3wm+B8z0JiN1CjH1PEYh3wRUxWRaIvxMhISKyZd6MWWRMWhlvd34Czlm
+         /KZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mH3WwLWJKCS7M5Q+lMxyNp1TtLh/YyHOg0YBxMxQmqU=;
+        b=FFsZ5AMNckIGMkdswqFULIUwi/hus/6jr/tpEuem3Hag/TLTNmECG7lyfLZPvqd6Sj
+         ivAhlSFjF4ayuNrQa1IN6ehPD2BSCSRMrQsemTe7RLesF2CNQXSzCK9EBLHYHBUQmsmn
+         VJiBKtNQzHkiXJFplX95YhXZFMzJCEExLv/AhXQ+UMHY3YDdmwv8PM+7x6Iuw7CEVCVO
+         QWfJZWpbIyPlqxuAP/lGouM5zbnvA8rvxAEvQQRvhxwK00l+yvIJjbgDvU8HXYHbOBSy
+         pbz2MAWNJ/xdJL8XZLf/DFOCmMVBP0KXgRLHiyZCQbHBH2apBYZB44/0l2eYWBSnO8Jr
+         zyWA==
+X-Gm-Message-State: APjAAAXQGDJJc8vtSsElxzDaYgvOwFloRQrJrvSLLgQ8+He08Nabwku0
+        gUSuCpz0TAlHLG7DuBITG+kg3w==
+X-Google-Smtp-Source: APXvYqwVV0ALMAo/FMoz3Zicqfg8le83VSU6rFEDuilREl15IOPdjEeh3rGGqhVl5mRazcMs2qFoBQ==
+X-Received: by 2002:a17:90a:ab0c:: with SMTP id m12mr10177433pjq.69.1574917804019;
+        Wed, 27 Nov 2019 21:10:04 -0800 (PST)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id j20sm17799838pff.182.2019.11.27.21.10.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2019 21:10:03 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org
-Message-ID: <761320534.1467709.1574912462950@webmail.strato.com>
-In-Reply-To: <20191127084253.16356-7-geert+renesas@glider.be>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-7-geert+renesas@glider.be>
-Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater
- documentation
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev22
-X-Originating-IP: 112.198.74.215
-X-Originating-Client: open-xchange-appsuite
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v6 0/8] HiKey960 USB support
+Date:   Thu, 28 Nov 2019 05:09:53 +0000
+Message-Id: <20191128051001.18995-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Just another round here trying to push forward a patch series
+submitted originally by Yu Chen to get HiKey960 dev-board's USB
+functionality working.
 
-> On November 27, 2019 at 9:42 AM Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> 
-> 
-> Document the GPIO Aggregator/Repeater, and the three typical use-cases.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - New.
-> ---
->  .../admin-guide/gpio/gpio-aggregator.rst      | 111 ++++++++++++++++++
->  Documentation/admin-guide/gpio/index.rst      |   1 +
->  2 files changed, 112 insertions(+)
->  create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
-> 
-> diff --git a/Documentation/admin-guide/gpio/gpio-aggregator.rst b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-> new file mode 100644
-> index 0000000000000000..826146e260253299
-> --- /dev/null
-> +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-> @@ -0,0 +1,111 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +GPIO Aggregator/Repeater
-> +========================
-> +
-> +The GPIO Aggregator/Repeater allows to aggregate GPIOs, and expose them as a
-> +new gpio_chip.  This supports the following use cases.
-> +
-> +
-> +Aggregating GPIOs using Sysfs
-> +-----------------------------
-> +
-> +GPIO controllers are exported to userspace using /dev/gpiochip* character
-> +devices.  Access control to these devices is provided by standard UNIX file
-> +system permissions, on an all-or-nothing basis: either a GPIO controller is
-> +accessible for a user, or it is not.
-> +
-> +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-> +them into a new gpio_chip, which can be assigned to a group or user using
-> +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-> +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-> +GPIO controller, and no longer needs to care about which GPIOs to grab and
-> +which not, reducing the attack surface.
-> +
-> +Aggregated GPIO controllers are instantiated and destroyed by writing to
-> +write-only attribute files in sysfs.
-> +
-> +    /sys/bus/platform/drivers/gpio-aggregator/
-> +
-> +	"new_device" ...
-> +		Userspace may ask the kernel to instantiate an aggregated GPIO
-> +		controller by writing a string describing the GPIOs to
-> +		aggregate to the "new_device" file, using the format
-> +
-> +		.. code-block:: none
-> +
-> +		    [<gpioA>] [<gpiochipB> <offsets>] ...
-> +
-> +		Where:
-> +
-> +		    "<gpioA>" ...
-> +			    is a GPIO line name,
-> +
-> +		    "<gpiochipB>" ...
-> +			    is a GPIO chip label or name, and
-> +
-> +		    "<offsets>" ...
-> +			    is a comma-separated list of GPIO offsets and/or
-> +			    GPIO offset ranges denoted by dashes.
-> +
-> +		Example: Instantiate a new GPIO aggregator by aggregating GPIO
-> +		19 of "e6052000.gpio" and GPIOs 20-21 of "gpiochip2" into a new
-> +		gpio_chip:
-> +
-> +		.. code-block:: bash
-> +
-> +		    echo 'e6052000.gpio 19 gpiochip2 20-21' > new_device
-> +
-> +	"delete_device" ...
-> +		Userspace may ask the kernel to destroy an aggregated GPIO
-> +		controller after use by writing its device name to the
-> +		"delete_device" file.
-> +
-> +		Example: Destroy the previously-created aggregated GPIO
-> +		controller "gpio-aggregator.0":
-> +
-> +		.. code-block:: bash
-> +
-> +		    echo gpio-aggregator.0 > delete_device
-> +
-> +
-> +GPIO Repeater in Device Tree
-> +----------------------------
-> +
-> +A GPIO Repeater is a node in a Device Tree representing a repeater for one or
-> +more GPIOs, possibly including physical signal property translation (e.g.
-> +polarity inversion).  This allows to model e.g. inverters in DT.
-> +
-> +See Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-> +
-> +
-> +Generic GPIO Driver
-> +-------------------
-> +
-> +The GPIO Aggregator can also be used as a generic driver for a simple
-> +GPIO-operated device described in DT, without a dedicated in-kernel driver.
-> +This is not unlike e.g. spidev, which allows to communicated with an SPI device
-> +from userspace.
-> +
-> +Binding a device to the GPIO Aggregator is performed either by modifying the
-> +gpio-aggregator driver, or by writing to the "driver_override" file in Sysfs.
-> +
-> +Example: If "frobnicator" is a GPIO-operated device described in DT, using its
-> +own compatible value::
-> +
-> +        frobnicator {
-> +                compatible = "myvendor,frobnicator";
-> +
-> +                gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>,
-> +                        <&gpio2 20 GPIO_ACTIVE_LOW>;
-> +        };
-> +
-> +it can be bound to the GPIO Aggregator by either:
-> +
-> +1. Adding its compatible value to ``gpio_aggregator_dt_ids[]``,
-> +2. Binding manually using "driver_override":
-> +
-> +.. code-block:: bash
-> +
-> +    echo gpio-aggregator > /sys/bus/platform/devices/frobnicator/driver_override
-> +    echo frobnicator > /sys/bus/platform/drivers/gpio-aggregator/bind
-> diff --git a/Documentation/admin-guide/gpio/index.rst b/Documentation/admin-guide/gpio/index.rst
-> index a244ba4e87d5398a..ef2838638e967777 100644
-> --- a/Documentation/admin-guide/gpio/index.rst
-> +++ b/Documentation/admin-guide/gpio/index.rst
-> @@ -7,6 +7,7 @@ gpio
->  .. toctree::
->      :maxdepth: 1
->  
-> +    gpio-aggregator
->      sysfs
->  
->  .. only::  subproject and html
-> -- 
-> 2.17.1
->
+The full patchset (including dts changes not submitted here) can
+be found here:
+https://git.linaro.org/people/john.stultz/android-dev.git/log/?id=950276ae1baab3a22836d1f89aeadbb08adf41e0
 
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
 
-CU
-Uli
+NOTE: I unfortunately don't have any deep knowledge of the
+hardware other then the previously submitted code  and what I
+can intuit from testing. I tried to document the previously
+undocumented bindings, fixed up a few minor checkpatch issues
+and tried to address previous feedback as best I could.
+
+I'd greatly appreciate any feedback or thoughts!
+
+thanks
+-john
+
+New in v6:
+* Felipe previously had disliked extending the dwc3 binding
+  to allow for more flexible clock and resest lists, so in
+  the last series I switched back to the dwc3-simple-of.c 
+  approach, but Rob pushed back on the last series, and with
+  no reply from Felipe, I've switched back to this appraoch.
+  Clear guidance would be appreciated here!
+* Fixed build issue Reported-by: kbuild test robot <lkp@intel.com>
+
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+CC: ShuFan Lee <shufan_lee@richtek.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+
+John Stultz (5):
+  dt-bindings: usb: generic: Add role-switch-default-mode binding
+  usb: dwc3: Add support for role-switch-default-mode binding
+  dt-bindings: usb: dwc3: Allow clock list & resets to be more flexible
+  usb: dwc3: Rework clock initialization to be more flexible
+  usb: dwc3: Rework resets initialization to be more flexible
+
+Yu Chen (3):
+  usb: dwc3: Registering a role switch in the DRD code.
+  dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
+    switch functionality on HiKey960
+  misc: hisi_hikey_usb: Driver to support usb functionality of Hikey960
+
+ .../bindings/misc/hisilicon-hikey-usb.txt     |  40 ++++
+ .../devicetree/bindings/usb/dwc3.txt          |   5 +-
+ .../devicetree/bindings/usb/generic.txt       |   6 +
+ drivers/misc/Kconfig                          |   6 +
+ drivers/misc/Makefile                         |   1 +
+ drivers/misc/hisi_hikey_usb.c                 | 178 ++++++++++++++++++
+ drivers/usb/dwc3/core.c                       |  22 +--
+ drivers/usb/dwc3/core.h                       |   6 +
+ drivers/usb/dwc3/drd.c                        |  96 +++++++++-
+ 9 files changed, 341 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+ create mode 100644 drivers/misc/hisi_hikey_usb.c
+
+-- 
+2.17.1
+
