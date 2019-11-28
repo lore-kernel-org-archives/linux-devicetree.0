@@ -2,160 +2,96 @@ Return-Path: <SRS0=Bobf=ZU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14E1C432C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 12:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7B0C432C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 12:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788AA217C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 12:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223CD217F9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 28 Nov 2019 12:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kO0pFPX5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P9He/jdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfK1MQj (ORCPT
+        id S1726446AbfK1MS1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 28 Nov 2019 07:16:39 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:12721 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfK1MQj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 28 Nov 2019 07:16:39 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47NxSz08lfz9tyK4;
-        Thu, 28 Nov 2019 13:16:35 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=kO0pFPX5; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 3cE5LCkfSVGN; Thu, 28 Nov 2019 13:16:34 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47NxSy6D0Bz9tyJ9;
-        Thu, 28 Nov 2019 13:16:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1574943394; bh=z1woTg6MEJ3fy0Mii159dsi5J82uSDdsZ8O152Iuous=;
-        h=From:Subject:To:Cc:Date:From;
-        b=kO0pFPX5Ga+VpaB+Xu7pr1Ne0NcIRQYB2XZEeOLmsWlTQK5fjBJP7vp8ZiAQkB8rc
-         o/WVkeo1xdHQlOcSAYfTIIz8yTntK4iT8Y6LJoacyntLB7Mkr509OCR0KW6PLeCPL/
-         MjCrV5moEQvK8eip6iPnkRU2Fa3XSE3gba2jfcsw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 21A848B889;
-        Thu, 28 Nov 2019 13:16:36 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id f64NmaBkFnRc; Thu, 28 Nov 2019 13:16:36 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E3E2B8B87E;
-        Thu, 28 Nov 2019 13:16:35 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id BC2456B822; Thu, 28 Nov 2019 12:16:35 +0000 (UTC)
-Message-Id: <7556683b57d8ce100855857f03d1cd3d2903d045.1574943062.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/devicetrees: Change 'gpios' to 'cs-gpios' on fsl,spi
- nodes
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org
-Date:   Thu, 28 Nov 2019 12:16:35 +0000 (UTC)
+        Thu, 28 Nov 2019 07:18:27 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45732 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfK1MS1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Nov 2019 07:18:27 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 203so19881075lfa.12
+        for <devicetree@vger.kernel.org>; Thu, 28 Nov 2019 04:18:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+9HaPIwDGWIORg/ZtcvZAIKmu4aZIOqFrtCVzv15Uo8=;
+        b=P9He/jdZelhAF63c66JOtESkD9SWLHGoK4fcKXecnAKf5ycE/xInVMP5Id/tMj3hH6
+         Eot7YcHkj6OIenHQPCoyPdDUMMGen9pcS+VlrkT4DTKC4AybqCnhpzdjooSoRj7PVtHV
+         ECHxDrBKPIoRWVvwdJu+FH9TbmcBCA7YyDG2L2Rcfld6g7X6DH1nXRnyvIXtipPtyGu0
+         OIJUACG6vpMSL4VRwwpCnhSEGh97UwtAOzcrV90ler+nsjpdHlOmdo40cQk2SkGDsGG4
+         D5C017GmYOZtYttdL71Ygqefe9MCirKwDf1Htcj8o/01X5bZAL7OZv4XkVAUxYzWfgqa
+         Z9vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+9HaPIwDGWIORg/ZtcvZAIKmu4aZIOqFrtCVzv15Uo8=;
+        b=fQHAccXyqgFvZNTCK9xfhwP68Pm2PyK+siX16WPsZMSkn/p0ALBgaPhRYJ1OGGawhD
+         trHJTJ3QJbFqlfjR/4wrjHdddP5uT9cYvXRy00M2nESxwSPM1UydJVww9pdqDkNv6mhY
+         +ZjL0ngOV/HJLHOIxIOnCAbIPXc7nBcmJkWCjYywgHAor3rf3tHU6iUZ0MS0tGIEC/O9
+         d9+kUEUWq8RSvtngSJRYI5+lX/nuFFgT6RyqETsAtK01d+zH5AtW6RjuAa6ot/qljx3c
+         2YhU/C7vDubRNFO1NJEiRxyWwVNjv6ODwR8cicN+EjcUEaYkRlf5bI//lPVEFCQ78nb2
+         QLzQ==
+X-Gm-Message-State: APjAAAU9vLXELkLsUVelwpQwzh86vlZ7z5l06+qVze6TrKa+uNO3GgpQ
+        wKUXyQSe8Be70rWqG9olgySQP5hkbydFh1JfoWhETg==
+X-Google-Smtp-Source: APXvYqwfcdHhm4gyrSY0PXoqGz1WH61ou574arqZCBcFKymILHOQyJwQZjM0A1Ke/HyiK4TldEM2Asch76SNuXwaHnE=
+X-Received: by 2002:a19:645b:: with SMTP id b27mr21863272lfj.117.1574943505250;
+ Thu, 28 Nov 2019 04:18:25 -0800 (PST)
+MIME-Version: 1.0
+References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com> <1574661437-28486-5-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1574661437-28486-5-git-send-email-yash.shah@sifive.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 28 Nov 2019 13:18:13 +0100
+Message-ID: <CACRpkdZt53578c3tWFodq6-HwNzc+gp6mc-n-8-GKkGyy61JKQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] gpio: sifive: Add DT documentation for SiFive GPIO
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since commit 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO
-descriptors"), the prefered way to define chipselect GPIOs is using
-'cs-gpios' property instead of the legacy 'gpios' property.
+On Mon, Nov 25, 2019 at 6:58 AM Yash Shah <yash.shah@sifive.com> wrote:
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- Documentation/devicetree/bindings/spi/fsl-spi.txt | 8 ++++----
- arch/powerpc/boot/dts/mgcoge.dts                  | 2 +-
- arch/powerpc/boot/dts/mpc832x_rdb.dts             | 2 +-
- arch/powerpc/boot/dts/mpc8610_hpcd.dts            | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+> DT json-schema for GPIO controller added.
+>
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Compatible string update]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-index 411375eac54d..0654380eb751 100644
---- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-@@ -15,13 +15,13 @@ Required properties:
- - clock-frequency : input clock frequency to non FSL_SOC cores
- 
- Optional properties:
--- gpios : specifies the gpio pins to be used for chipselects.
-+- cs-gpios : specifies the gpio pins to be used for chipselects.
-   The gpios will be referred to as reg = <index> in the SPI child nodes.
-   If unspecified, a single SPI device without a chip select can be used.
- - fsl,spisel_boot : for the MPC8306 and MPC8309, specifies that the
-   SPISEL_BOOT signal is used as chip select for a slave device. Use
-   reg = <number of gpios> in the corresponding child node, i.e. 0 if
--  the gpios property is not present.
-+  the cs-gpios property is not present.
- 
- Example:
- 	spi@4c0 {
-@@ -31,8 +31,8 @@ Example:
- 		interrupts = <82 0>;
- 		interrupt-parent = <700>;
- 		mode = "cpu";
--		gpios = <&gpio 18 1	// device reg=<0>
--			 &gpio 19 1>;	// device reg=<1>
-+		cs-gpios = <&gpio 18 1		// device reg=<0>
-+			    &gpio 19 1>;	// device reg=<1>
- 	};
- 
- 
-diff --git a/arch/powerpc/boot/dts/mgcoge.dts b/arch/powerpc/boot/dts/mgcoge.dts
-index a2dd5f1da621..7de068991bde 100644
---- a/arch/powerpc/boot/dts/mgcoge.dts
-+++ b/arch/powerpc/boot/dts/mgcoge.dts
-@@ -224,7 +224,7 @@
- 				reg = <0x11a80 0x40 0x89fc 0x2>;
- 				interrupts = <2 8>;
- 				interrupt-parent = <&PIC>;
--				gpios = < &cpm2_pio_d 19 0>;
-+				cs-gpios = < &cpm2_pio_d 19 0>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				ds3106@1 {
-diff --git a/arch/powerpc/boot/dts/mpc832x_rdb.dts b/arch/powerpc/boot/dts/mpc832x_rdb.dts
-index b6257186528e..ecebc27a2898 100644
---- a/arch/powerpc/boot/dts/mpc832x_rdb.dts
-+++ b/arch/powerpc/boot/dts/mpc832x_rdb.dts
-@@ -249,7 +249,7 @@
- 			reg = <0x4c0 0x40>;
- 			interrupts = <2>;
- 			interrupt-parent = <&qeic>;
--			gpios = <&qe_pio_d 13 0>;
-+			cs-gpios = <&qe_pio_d 13 0>;
- 			mode = "cpu-qe";
- 
- 			mmc-slot@0 {
-diff --git a/arch/powerpc/boot/dts/mpc8610_hpcd.dts b/arch/powerpc/boot/dts/mpc8610_hpcd.dts
-index 1a8321ac105a..33bbe58c1ad0 100644
---- a/arch/powerpc/boot/dts/mpc8610_hpcd.dts
-+++ b/arch/powerpc/boot/dts/mpc8610_hpcd.dts
-@@ -200,7 +200,7 @@
- 			interrupts = <59 2>;
- 			interrupt-parent = <&mpic>;
- 			mode = "cpu";
--			gpios = <&sdcsr_pio 7 0>;
-+			cs-gpios = <&sdcsr_pio 7 0>;
- 			sleep = <&pmc 0x00000800 0>;
- 
- 			mmc-slot@0 {
--- 
-2.13.3
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
