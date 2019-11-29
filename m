@@ -2,340 +2,282 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205D2C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 19:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B096C43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 19:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD24421721
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 19:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DLyoqFRu"
+	by mail.kernel.org (Postfix) with ESMTP id 5175621771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 19:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfK2TGW (ORCPT
+        id S1727117AbfK2TKw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 14:06:22 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:42273 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfK2TGV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 14:06:21 -0500
-Received: by mail-pj1-f66.google.com with SMTP id y21so13638355pjn.9
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 11:06:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fdZGEeUOCOwh+tX8/OT2YL+SDadPhoIQm08hQY5lXJA=;
-        b=DLyoqFRu3dgnqsh/DNd7rk+3gNqmfCTN678B52BIcIHxdPk8dW0Ri8BJeIulTGzgo5
-         Pt7qDTHCAtvjZ4+jheGnLPVjzdEzVD0S2tSzCTSayQoefdlg8VHZPHEiJ74dNttre7YH
-         cxcaZapqq7rnMchfs13eqEX3k+IykwZk6Tgb1comLduiImT8ItmpiRpMpVX7vRf14ppR
-         F4YpTSqZIdn7rIoqdp4zBeZJDTGa6FGXSLhQhGHr1fQNPSAjASF0AbZL/D0Og3bGEYai
-         jvMIEfFfhnjirODlfsHBbS35p/6Dx00v7GNIBHoNVwUpOM0ieqMIXA3JB3oKTPwP7TE6
-         5N4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fdZGEeUOCOwh+tX8/OT2YL+SDadPhoIQm08hQY5lXJA=;
-        b=afeBmjrudETybohvnmU6V61niP/3N8g309M5gJ1/5UQSyg0rp5qX+HdJwhZ3xUvZ3E
-         pSRvP2E82DliYp/QGyntcZTJdlNS0UicHF7pP4HDrKUO+h0Sh2RYMadEggvfqc/sHm1d
-         PFU4AaT+poiEcyUr5zpiF5OCfWQKMcBiVaYhSfW2MKrRySbifdr93lKdkz6LRfskSzPI
-         XoPO/BzaUu8UL+KX18tNDghj4ACIHK0akLrAtyCMfF9ljwx98QdjV6hbexqkMkm9OSUG
-         2sGYIIbgsvoNyT8CexLnv18TpDjDjyzxxwRAgHLdzOoEazGCbrKHNR5c/kERwtHKKh+I
-         1WrQ==
-X-Gm-Message-State: APjAAAWIBRqiEXgrkPyiLzGFRjVHIBS2mkslqp0emO0yv51dT5nKybnX
-        Ow2jxhjQf8ymXU6Hp2Ra4qdS
-X-Google-Smtp-Source: APXvYqwa2yD9PgxAesmGNDxQ4uHt51wtgQZHPOeScSZhP4oPWUUXfmBV8Y+mzTIvkQKxIEu5czflog==
-X-Received: by 2002:a17:902:8a8a:: with SMTP id p10mr15855387plo.283.1575054380525;
-        Fri, 29 Nov 2019 11:06:20 -0800 (PST)
-Received: from localhost.localdomain ([2409:4072:638d:cc55:d006:f721:cde2:1059])
-        by smtp.gmail.com with ESMTPSA id h9sm25159974pgk.84.2019.11.29.11.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 11:06:19 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     mchehab@kernel.org, sakari.ailus@iki.fi
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 5/5] media: i2c: imx290: Add configurable link frequency and pixel rate
-Date:   Sat, 30 Nov 2019 00:35:41 +0530
-Message-Id: <20191129190541.30315-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
-References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+        Fri, 29 Nov 2019 14:10:52 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40724 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfK2TKw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 14:10:52 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id AE433291EAE
+Received: by earth.universe (Postfix, from userid 1000)
+        id BC5753C0C71; Fri, 29 Nov 2019 15:03:09 +0100 (CET)
+Date:   Fri, 29 Nov 2019 15:03:09 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me
+Subject: Re: [PATCH 2/2] power/supply: Add generic USB charger driver
+Message-ID: <20191129140309.ae4urya6f2hussxn@earth.universe>
+References: <20191103220801.10666-1-paul@crapouillou.net>
+ <20191103220801.10666-2-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bajdzh3ywfjytgnd"
+Content-Disposition: inline
+In-Reply-To: <20191103220801.10666-2-paul@crapouillou.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-IMX290 operates with multiple link frequency and pixel rate combinations.
-The initial driver used a single setting for both but since we now have
-the lane count support in place, let's add configurable link frequency
-and pixel rate.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/media/i2c/imx290.c | 155 +++++++++++++++++++++----------------
- 1 file changed, 89 insertions(+), 66 deletions(-)
+--bajdzh3ywfjytgnd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index f26c4a0ee0a0..d794ade26609 100644
---- a/drivers/media/i2c/imx290.c
-+++ b/drivers/media/i2c/imx290.c
-@@ -45,8 +45,6 @@
- #define IMX290_HMAX_2_720 0x19C8
- #define IMX290_HMAX_4_720 0x0CE4
- 
--#define IMX290_DEFAULT_LINK_FREQ 445500000
--
- static const char * const imx290_supply_name[] = {
- 	"vdda",
- 	"vddd",
-@@ -63,8 +61,6 @@ struct imx290_regval {
- struct imx290_mode {
- 	u32 width;
- 	u32 height;
--	u32 pixel_rate;
--	u32 link_freq_index;
- 
- 	const struct imx290_regval *data;
- 	u32 data_size;
-@@ -281,7 +277,10 @@ static const struct imx290_regval imx290_12bit_settings[] = {
- 
- /* supported link frequencies */
- static const s64 imx290_link_freq[] = {
--	IMX290_DEFAULT_LINK_FREQ,
-+	891000000, /* 1920x1080 -  2 lane */
-+	445500000, /* 1920x1080 -  4 lane */
-+	594000000, /* 1280x720  -  2 lane */
-+	297000000, /* 1280x720  -  4 lane */
- };
- 
- /* Mode configs */
-@@ -291,16 +290,12 @@ static const struct imx290_mode imx290_modes[] = {
- 		.height = 1080,
- 		.data = imx290_1080p_settings,
- 		.data_size = ARRAY_SIZE(imx290_1080p_settings),
--		.pixel_rate = 178200000,
--		.link_freq_index = 0,
- 	},
- 	{
- 		.width = 1280,
- 		.height = 720,
- 		.data = imx290_720p_settings,
- 		.data_size = ARRAY_SIZE(imx290_720p_settings),
--		.pixel_rate = 178200000,
--		.link_freq_index = 0,
- 	},
- };
- 
-@@ -509,6 +504,73 @@ static int imx290_get_fmt(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+static s64 imx290_get_link_freq_index(struct imx290 *imx290)
-+{
-+	const struct imx290_mode *cur_mode = imx290->current_mode;
-+	u8 index;
-+
-+	if (cur_mode->width == 1920)
-+		index = imx290->nlanes / 4;
-+	else
-+		index = (imx290->nlanes / 4) + 2;
-+
-+	return index;
-+}
-+
-+static s64 imx290_get_link_freq(struct imx290 *imx290)
-+{
-+	u8 index = imx290_get_link_freq_index(imx290);
-+
-+	return imx290_link_freq[index];
-+}
-+
-+static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
-+{
-+	s64 link_freq = imx290_get_link_freq(imx290);
-+	u8 nlanes = imx290->nlanes;
-+
-+	/* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
-+	return (link_freq * 2 * nlanes / imx290->bpp);
-+}
-+
-+static int imx290_write_current_format(struct imx290 *imx290,
-+				       struct v4l2_mbus_framefmt *format)
-+{
-+	int ret;
-+
-+	switch (format->code) {
-+	case MEDIA_BUS_FMT_SRGGB10_1X10:
-+		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
-+						ARRAY_SIZE(
-+							imx290_10bit_settings));
-+		if (ret < 0) {
-+			dev_err(imx290->dev, "Could not set format registers\n");
-+			return ret;
-+		}
-+
-+		imx290->bpp = 10;
-+
-+		break;
-+	case MEDIA_BUS_FMT_SRGGB12_1X12:
-+		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-+						ARRAY_SIZE(
-+							imx290_12bit_settings));
-+		if (ret < 0) {
-+			dev_err(imx290->dev, "Could not set format registers\n");
-+			return ret;
-+		}
-+
-+		imx290->bpp = 12;
-+
-+		break;
-+	default:
-+		dev_err(imx290->dev, "Unknown pixel format\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int imx290_set_fmt(struct v4l2_subdev *sd,
- 			  struct v4l2_subdev_pad_config *cfg,
- 		      struct v4l2_subdev_format *fmt)
-@@ -517,6 +579,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
- 	const struct imx290_mode *mode;
- 	struct v4l2_mbus_framefmt *format;
- 	unsigned int i;
-+	int ret = 0;
- 
- 	mutex_lock(&imx290->lock);
- 
-@@ -542,17 +605,27 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
- 		format = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
- 	} else {
- 		format = &imx290->current_format;
--		__v4l2_ctrl_s_ctrl(imx290->link_freq, mode->link_freq_index);
--		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate, mode->pixel_rate);
--
- 		imx290->current_mode = mode;
-+
-+		/* Set current frame format */
-+		ret = imx290_write_current_format(imx290, &fmt->format);
-+		if (ret < 0) {
-+			dev_err(imx290->dev, "Could not set frame format\n");
-+			goto err_out;
-+		}
-+
-+		__v4l2_ctrl_s_ctrl(imx290->link_freq,
-+				   imx290_get_link_freq_index(imx290));
-+		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate,
-+					 imx290_calc_pixel_rate(imx290));
- 	}
- 
- 	*format = fmt->format;
- 
-+err_out:
- 	mutex_unlock(&imx290->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
-@@ -569,44 +642,6 @@ static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
- 	return 0;
- }
- 
--static int imx290_write_current_format(struct imx290 *imx290,
--				       struct v4l2_mbus_framefmt *format)
--{
--	int ret;
--
--	switch (format->code) {
--	case MEDIA_BUS_FMT_SRGGB10_1X10:
--		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
--						ARRAY_SIZE(
--							imx290_10bit_settings));
--		if (ret < 0) {
--			dev_err(imx290->dev, "Could not set format registers\n");
--			return ret;
--		}
--
--		imx290->bpp = 10;
--
--		break;
--	case MEDIA_BUS_FMT_SRGGB12_1X12:
--		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
--						ARRAY_SIZE(
--							imx290_12bit_settings));
--		if (ret < 0) {
--			dev_err(imx290->dev, "Could not set format registers\n");
--			return ret;
--		}
--
--		imx290->bpp = 12;
--
--		break;
--	default:
--		dev_err(imx290->dev, "Unknown pixel format\n");
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
- static int imx290_set_hmax(struct imx290 *imx290, u32 val)
- {
- 	int ret;
-@@ -640,13 +675,6 @@ static int imx290_start_streaming(struct imx290 *imx290)
- 		return ret;
- 	}
- 
--	/* Set current frame format */
--	ret = imx290_write_current_format(imx290, &imx290->current_format);
--	if (ret < 0) {
--		dev_err(imx290->dev, "Could not set frame format\n");
--		return ret;
--	}
--
- 	/* Apply default values of current mode */
- 	ret = imx290_set_register_array(imx290, imx290->current_mode->data,
- 					imx290->current_mode->data_size);
-@@ -901,12 +929,6 @@ static int imx290_probe(struct i2c_client *client)
- 		goto free_err;
- 	}
- 
--	if (imx290->ep.link_frequencies[0] != IMX290_DEFAULT_LINK_FREQ) {
--		dev_err(dev, "Unsupported link frequency\n");
--		ret = -EINVAL;
--		goto free_err;
--	}
--
- 	/* Only CSI2 is supported for now */
- 	if (imx290->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
- 		dev_err(dev, "Unsupported bus type, should be CSI2\n");
-@@ -973,14 +995,15 @@ static int imx290_probe(struct i2c_client *client)
- 				       &imx290_ctrl_ops,
- 				       V4L2_CID_LINK_FREQ,
- 				       ARRAY_SIZE(imx290_link_freq) - 1,
--				       0, imx290_link_freq);
-+				       (imx290->nlanes / 4),
-+				       imx290_link_freq);
- 	if (imx290->link_freq)
- 		imx290->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
- 
- 	imx290->pixel_rate = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
- 					       V4L2_CID_PIXEL_RATE, 1,
- 					       INT_MAX, 1,
--					       imx290_modes[0].pixel_rate);
-+					       imx290_calc_pixel_rate(imx290));
- 
- 	v4l2_ctrl_new_std_menu_items(&imx290->ctrls, &imx290_ctrl_ops,
- 				     V4L2_CID_TEST_PATTERN,
--- 
-2.17.1
+Hi Paul,
 
+On Sun, Nov 03, 2019 at 11:08:01PM +0100, Paul Cercueil wrote:
+> This simple charger driver uses the USB PHY framework to detect the
+> presence of a charger.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/power/supply/Kconfig               |   7 ++
+>  drivers/power/supply/Makefile              |   1 +
+>  drivers/power/supply/generic-usb-charger.c | 140 +++++++++++++++++++++
+>  3 files changed, 148 insertions(+)
+>  create mode 100644 drivers/power/supply/generic-usb-charger.c
+>=20
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index c84a7b1caeb6..069a91d89a42 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -51,6 +51,13 @@ config GENERIC_ADC_BATTERY
+>  	  Say Y here to enable support for the generic battery driver
+>  	  which uses IIO framework to read adc.
+> =20
+> +config GENERIC_USB_CHARGER
+> +	tristate "Generic USB charger"
+> +	depends on USB_PHY
+> +	help
+> +	  Say Y here to enable a generic USB charger driver which uses
+> +	  the USB PHY framework to detect the presence of the charger.
+> +
+>  config MAX8925_POWER
+>  	tristate "MAX8925 battery charger support"
+>  	depends on MFD_MAX8925
+> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+> index 6c7da920ea83..03f9b553bdfc 100644
+> --- a/drivers/power/supply/Makefile
+> +++ b/drivers/power/supply/Makefile
+> @@ -8,6 +8,7 @@ power_supply-$(CONFIG_LEDS_TRIGGERS)	+=3D power_supply_le=
+ds.o
+>  obj-$(CONFIG_POWER_SUPPLY)	+=3D power_supply.o
+>  obj-$(CONFIG_POWER_SUPPLY_HWMON) +=3D power_supply_hwmon.o
+>  obj-$(CONFIG_GENERIC_ADC_BATTERY)	+=3D generic-adc-battery.o
+> +obj-$(CONFIG_GENERIC_USB_CHARGER)	+=3D generic-usb-charger.o
+> =20
+>  obj-$(CONFIG_PDA_POWER)		+=3D pda_power.o
+>  obj-$(CONFIG_APM_POWER)		+=3D apm_power.o
+> diff --git a/drivers/power/supply/generic-usb-charger.c b/drivers/power/s=
+upply/generic-usb-charger.c
+> new file mode 100644
+> index 000000000000..d005acfc33c7
+> --- /dev/null
+> +++ b/drivers/power/supply/generic-usb-charger.c
+> @@ -0,0 +1,140 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Simple USB charger driver
+> + * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/usb/phy.h>
+
+Missing <linux/of.h> for of_match_ptr()
+
+> +
+> +struct usb_charger {
+> +	struct usb_phy *phy;
+> +	struct notifier_block nb;
+> +	struct power_supply_desc desc;
+> +	struct power_supply *charger;
+> +};
+> +
+> +static enum power_supply_property usb_charger_properties[] =3D {
+> +	POWER_SUPPLY_PROP_ONLINE,
+> +};
+> +
+> +static int usb_charger_get_property(struct power_supply *psy,
+> +				    enum power_supply_property psp,
+> +				    union power_supply_propval *val)
+> +{
+> +	struct usb_charger *charger =3D power_supply_get_drvdata(psy);
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_ONLINE:
+> +		val->intval =3D charger->phy->chg_state =3D=3D USB_CHARGER_PRESENT;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int usb_charger_event(struct notifier_block *nb,
+> +			     unsigned long event, void *d)
+> +{
+> +	struct usb_charger *charger =3D container_of(nb, struct usb_charger, nb=
+);
+> +
+> +	power_supply_changed(charger->charger);
+> +
+> +	return 0;
+> +}
+> +
+> +static int usb_charger_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct power_supply_desc *desc;
+> +	struct usb_charger *charger;
+> +	struct power_supply_config cfg =3D {
+> +		.of_node =3D dev->of_node,
+> +	};
+> +	int err;
+> +
+> +	charger =3D devm_kzalloc(dev, sizeof(*charger), GFP_KERNEL);
+> +	if (!charger)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, charger);
+> +	charger->nb.notifier_call =3D usb_charger_event;
+> +	cfg.drv_data =3D charger;
+> +
+> +	if (dev->of_node)
+> +		charger->phy =3D devm_usb_get_phy_by_phandle(dev, "phys", 0);
+> +	else
+> +		charger->phy =3D devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+> +	if (IS_ERR(charger->phy)) {
+> +		err =3D PTR_ERR(charger->phy);
+> +		if (err !=3D -EPROBE_DEFER)
+> +			dev_err(dev, "No transceiver configured");
+> +		return err;
+> +	}
+> +
+> +	desc =3D &charger->desc;
+> +	desc->name =3D "usb-charger";
+> +	desc->properties =3D usb_charger_properties;
+> +	desc->num_properties =3D ARRAY_SIZE(usb_charger_properties);
+> +	desc->get_property =3D usb_charger_get_property;
+> +
+> +	switch (charger->phy->chg_type) {
+> +	case SDP_TYPE:
+> +		desc->type =3D POWER_SUPPLY_TYPE_USB;
+> +		break;
+> +	case DCP_TYPE:
+> +		desc->type =3D POWER_SUPPLY_TYPE_USB_DCP;
+> +		break;
+> +	case CDP_TYPE:
+> +		desc->type =3D POWER_SUPPLY_TYPE_USB_CDP;
+> +		break;
+> +	case ACA_TYPE:
+> +		desc->type =3D POWER_SUPPLY_TYPE_USB_ACA;
+> +		break;
+> +	default:
+> +		desc->type =3D POWER_SUPPLY_TYPE_UNKNOWN;
+> +	}
+
+This is deprecated in favour of the POWER_SUPPLY_PROP_USB_TYPE
+property. Set desc->type to POWER_SUPPLY_TYPE_USB and have a
+look at e.g. drivers/power/supply/cros_usbpd-charger.c to see
+how POWER_SUPPLY_PROP_USB_TYPE is supposed to work.
+
+> +	charger->charger =3D devm_power_supply_register(dev, desc, &cfg);
+> +	if (IS_ERR(charger->charger)) {
+> +		dev_err(dev, "Unable to register charger");
+> +		return PTR_ERR(charger->charger);
+> +	}
+> +
+> +	return usb_register_notifier(charger->phy, &charger->nb);
+
+Please register with devm_add_action_or_reset() or (better)
+create a devm_usb_register_notifier().
+
+> +}
+> +
+> +static int usb_charger_remove(struct platform_device *pdev)
+> +{
+> +	struct usb_charger *charger =3D platform_get_drvdata(pdev);
+> +
+> +	usb_unregister_notifier(charger->phy, &charger->nb);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id usb_charger_of_match[] =3D {
+> +	{ .compatible =3D "usb-charger" },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, usb_charger_of_match);
+> +#endif
+> +
+> +static struct platform_driver usb_charger_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "usb-charger",
+> +		.of_match_table =3D of_match_ptr(usb_charger_of_match),
+> +	},
+> +	.probe =3D usb_charger_probe,
+> +	.remove =3D usb_charger_remove,
+> +};
+> +module_platform_driver(usb_charger_driver);
+> +
+> +MODULE_DESCRIPTION("Simple USB charger driver");
+> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+> +MODULE_LICENSE("GPL");
+
+-- Sebastian
+
+--bajdzh3ywfjytgnd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3hJRoACgkQ2O7X88g7
++ppwUQ//S4fkfoZcxF+Bd69hJM9WCajnDkVjzSK6kRqpi7HFltSP4bRf9p/3uLdk
+p9tB0afL5DHlQ8f4+dMBkaFA+47L1G4fuHojEYwsTpj3ClAvUNbbH4RwCko3GBwH
+9LglJrav6t0l8rrQ6gCHgjzVyCvILN8YDdNUI2DSBIzgEi2iNjz2q6gryHD15YMe
+k95eDRTuDBCyEWL50sQBM3iDhFMwoNhauPJ+c5KlmlOCt32kEk0Ng+dqPLkjBRWD
+RwgeQawiHduZJpKAWX3q27dVORcSVwPKfQ85tkkjjsbJ1SUzVFQsNRdcvAZrgb/y
+DTT8KfE0YlU7EfNKfD7ZYHgCVQgCAz3yqjIjU3xHuwu5P29S7sIqS27apKLYrKH3
+5+XLpaN2fu1W5QzjXCJ8AfMKU/HTgDY1zBAGvmFtNNlQLXMKrBcZ1oBWUdKoqkQo
+4sf7jqxvrKq/+x4BkJXTHKZT2bnXa68PdZCixSyOQ9fM7ha4lmo66q1zsHzCyJb9
+8bEQnWBnEBBYdyLNFjAfNBPa+3Jzi3OZQske88pf4ntO2336rqL3/JoNfWYqVejj
+3S6PM/By/lCnlXMOTTAQ9Keip37YigpNB5PHstJ1TU9XxRLkH9l/PuKdbuR9vOnm
+bmTNcGlSd62X3+I4+R6+Czrs8Bc6AUJ2Gyb/bFsT1wz1HJO01R0=
+=k+8E
+-----END PGP SIGNATURE-----
+
+--bajdzh3ywfjytgnd--
