@@ -2,161 +2,175 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82567C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646ABC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 16:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A88D2176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E42C208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 16:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="b1IChhjA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pY9tvyaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfK2Pjl (ORCPT
+        id S1727028AbfK2Qsu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 10:39:41 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45177 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfK2Pjk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 10:39:40 -0500
-Received: by mail-io1-f65.google.com with SMTP id i11so21982339ioi.12
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 07:39:40 -0800 (PST)
+        Fri, 29 Nov 2019 11:48:50 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33443 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfK2Qsu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 11:48:50 -0500
+Received: by mail-ed1-f68.google.com with SMTP id a24so26228950edt.0;
+        Fri, 29 Nov 2019 08:48:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GZ64dFx/b6xoVXXGFcVREkFmLBqmtyqbMTpiRv9D3vk=;
-        b=b1IChhjArK99MWA1YVOtlfL8+65h6lp14vSr6zaz6U/uJRX1NnqsinLYifo5jeI8QL
-         9NQqI1S+uP+PGNiVgwxZaSP1yEr699GBPQgTa6Kxh2KZRCo8kjWU6gyU6oXnAHBXHxm3
-         kKZNUp9hgsc4yPCyLbIbC8GpTx/9/en1oOVRoFnC6VE98XRs3rHb47JkrHJC94IOtQeB
-         i66Upa+3wY0VAI9TN3tHeEZHLaWFuZqdU/5nelGTlXkejXirbyXtWERnkMkfKQm+EgWO
-         WBNJuDj1LGuChGWfugCocwa7j5aYFC6mASJdftS5jEu3k3FjKMWHf2Aw2qU7gKJaz5Yb
-         RekQ==
+         :cc;
+        bh=UufnYlf2GsYCPyzbkkHk/dTVOPXtueY9E5VYzdhLqUs=;
+        b=pY9tvyazS85bTfSIan9LQaMzwCiangviUqIczyltzkqih6hrGj2G5d8O0oWBBg2DVo
+         YKL90Vfw4gTHQYAwP3UzR3vqm8iE1gjZADNDnRVnfzBsdv7S2hS7H4QX3kkiPzhGnmzY
+         4wVayL16J93zLdJ15b7j5ISMap+5xu91iJFnxOgsNWTBlyKkzkb0JON4vI+PZXXNupXi
+         PhYlFRfJpxg07Skq3LYOGnO4bnMpne6RmIJFZKxdNwJ0Ycwf0YsGBmfrefQDDtfIGyM3
+         taNJpZYsFQkWfAI3yksn8Bv0Z/bQeLW6vRY8dZnZlZyeMd3MJHGO6Idu2N0NWjYEbmSU
+         9u4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GZ64dFx/b6xoVXXGFcVREkFmLBqmtyqbMTpiRv9D3vk=;
-        b=gc6cYIfxalOQH/XpqRibijv6yoROU3IM4ilRsPQNJL41GchYmQHOnFsosRwIY2b5DM
-         roftoBXJrmMO4NsiClNhqWcuuwVXjUhlISTe570b40GNaf2WzLbgR4OxCTydoOhN5GWa
-         04VMiG8y6yf6g6YkEWgedE6hGsIgUBE5UQotwaH0GzCexrqLs+nDhFLDk5FPlBCYrdf/
-         QoGcTrA24Ox09PxQ3cOVjQG1kN5BGLJIxrzbpddyPnIuM9vVUTdSuKpgaDfQQo3B5RtK
-         j43ksPq6UKkWOOvrgn2CwfegSQmQFRsOUQuj0uyksbxwCvVOaXcPmJLkqQdlFNAh/s93
-         swxQ==
-X-Gm-Message-State: APjAAAUKYj+Z9hIdTqBKt9NxHMCg6RKUduZTWpZjPIeWPkp9EWUXIGNS
-        TtPVkVie41hl/e1Clk7/P1F2hrDalxqB1JjbaacdnA==
-X-Google-Smtp-Source: APXvYqxXwIY3yJH7Gn9pZM6Hw5rVVw762bvoB4Gded6U8Sn+JmxOp/vhgIZapxUg9GwljvgJfYpXIkZys55MYqMsxDU=
-X-Received: by 2002:a02:a388:: with SMTP id y8mr10590059jak.70.1575041979840;
- Fri, 29 Nov 2019 07:39:39 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=UufnYlf2GsYCPyzbkkHk/dTVOPXtueY9E5VYzdhLqUs=;
+        b=BgRrdsTE+YYd25k8RU1bZuTcqyoEY2cXqsJjNfWhFuKVmCZAn7PXhn7rdnsca8aM57
+         d1ylgStbPm0NKBQ4me2pbPJqp9Pi1TDCTtOi4+XMwzhg0wZzzsB9sfVnoPo/hudBp8Cn
+         KFYHHXXWw4HSo27aWUD/p1hJ6tS+pnx2xSw3bZtQOxeCP8IATbx32gcWLAks1K79Weu6
+         Xr3yCz8i0LMYLsAvz4xu1aSpllDaKyH5A681pnHiLNfgSxmuptsZelEIV2T7gaD+unnW
+         NO0MSwhKd64xrSgucAYkpwoeGHWo0rHFRuox3TYqiq/Pr6PjItvlLm9xeDNdaNZJHwDH
+         sbzg==
+X-Gm-Message-State: APjAAAWhvl/a04HDuFN9vnTNWXtHbOouAl7B7lLanNNiVokSDihQC5Pp
+        F53FRU1Zzb1uSyC30G6hXWjrRk+5blRrWbvXzeQfarY2
+X-Google-Smtp-Source: APXvYqxMCZ12ZTAFseqpRkfanwT5QgN0HgMTMYKPNJBhwzpA+ToKqjaShI3w7o9le0g6Sk6wWYbkA/1kj05qoecE0lo=
+X-Received: by 2002:a50:9fcb:: with SMTP id c69mr46409317edf.163.1575046127828;
+ Fri, 29 Nov 2019 08:48:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20191023114634.13657-0-mholenko@antmicro.com> <20191023114634.13657-2-mholenko@antmicro.com>
- <20191120192648.GA3087498@kroah.com> <CAPk366QgcOYPZJXM46o3Gn8ksFYYoNwJvnunUe7y0aLNgJuSRg@mail.gmail.com>
- <20191126091926.GB1372654@kroah.com>
-In-Reply-To: <20191126091926.GB1372654@kroah.com>
-From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Fri, 29 Nov 2019 16:39:28 +0100
-Message-ID: <CAPk366T-B_7ADCC4XhOT8QdQ5hxC3mNkvfcuY3diu1wnWBHkAg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
+References: <1575010545-25971-1-git-send-email-harigovi@codeaurora.org> <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1575010545-25971-2-git-send-email-harigovi@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 29 Nov 2019 08:48:34 -0800
+Message-ID: <CAF6AEGt8zuKWz-e_yRS_hbn6HV6DAXDvK4zwjJ-naQtEoe7uuA@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v1 1/2] dt-bindings: display: add sc7180 panel variant
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 26 lis 2019 o 10:19 Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> napisa=C5=82(a):
+On Thu, Nov 28, 2019 at 10:56 PM Harigovindan P <harigovi@codeaurora.org> wrote:
 >
-> On Tue, Nov 26, 2019 at 10:02:18AM +0100, Mateusz Holenko wrote:
-> > =C5=9Br., 20 lis 2019 o 20:26 Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> napisa=C5=82(a):
-> > >
-> > > On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
-> > > > +#ifdef __LITTLE_ENDIAN
-> > > > +# define LITEX_READ_REG(addr)                  ioread32(addr)
-> > > > +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off=
-)
-> > > > +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr=
-)
-> > > > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr=
- + off)
-> > > > +#else
-> > > > +# define LITEX_READ_REG(addr)                  ioread32be(addr)
-> > > > +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + o=
-ff)
-> > > > +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, ad=
-dr)
-> > > > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, ad=
-dr + off)
-> > > > +#endif
-> > >
-> > > I just noticed this.
-> > >
-> > > Ick, this is not good.  You will run into problems in the future with
-> > > this, I can guarantee it.  What about systems where the CPU is one
-> > > endian and the hardware in the other?  It will happen trust us.
-> >
-> > As mentioned in the previous comment, LiteX CSRs are guaranteed to be
-> > always little-endian - this includes configurations with both
-> > big-endian and little-endian CPUs.
+> Add a compatible string to support sc7180 panel version.
 >
-> What enforces that guarantee?
-
-liteuart is na IP core that comes as a part of a design generated and
-configured by LiteX SoC builder
-(https://github.com/enjoy-digital/litex). Current implementation of
-LiteX generates systems in such a way that CSRs in peripherals are
-little-endian regardless of a softcore CPU used (available options
-cover both little-endian and big-endian CPU cores). Liteuart is a part
-of the LiteX project and is probably not usable outside of it.
-
-I was digging through the code and documentation to verify that the
-always-little-endian-CSR behaviour is "guaranteed", but - to my
-surprise - couldn't find anything. It seems to be simply an
-implementation detail that might (maybe?) change in the future.
-
-In this context your suggestion about probing things dynamically seems
-to be even more relevant.
-
-> > The aim of including the ifdef section was exactly to target situation
-> > where endianness is different for CPU and devices. As such this
-> > approach *should* work.
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>  .../bindings/display/visionox,rm69299.txt          | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100755 Documentation/devicetree/bindings/display/visionox,rm69299.txt
 >
-> "should" :)
->
-> We have seen it happen all the time that some hardware team hooks this
-> up backwards, no matter what the "spec" required.  So be careful here.
->
-> good luck!
->
-> greg k-h
+> diff --git a/Documentation/devicetree/bindings/display/visionox,rm69299.txt b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
+> new file mode 100755
+> index 0000000..4622191
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/visionox,rm69299.txt
+> @@ -0,0 +1,68 @@
+> +Visionox model RM69299 DSI display driver
+> +
+> +The Visionox RM69299 is a generic display driver, currently only configured
+> +for use in the 1080p display on the Qualcomm SC7180 MTP board.
+> +
+> +Required properties:
+> +- compatible: should be "visionox,rm69299-1080p-display"
+> +- vdda-supply: phandle of the regulator that provides the supply voltage
+> +  Power IC supply
+> +- vdd3p3-supply: phandle of the regulator that provides the supply voltage
+> +  Power IC supply
+> +- reset-gpios: phandle of gpio for reset line
+> +  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
+> +  (active low)
+> +- mode-gpios: phandle of the gpio for choosing the mode of the display
+> +  for single DSI
+> +- ports: This device has one video port driven by one DSI. Their connections
+> +  are modeled using the OF graph bindings specified in
+> +  Documentation/devicetree/bindings/graph.txt.
+> +  - port@0: DSI input port driven by master DSI
+> +
+> +Example:
+> +
+> +       dsi@ae94000 {
+> +               panel@0 {
+> +                       compatible = "visionox,rm69299-1080p-display";
+> +                       reg = <0>;
+> +
+> +                       vdda-supply = <&src_pp1800_l8c>;
+> +                       vdd3p3-supply = <&src_pp2800_l18a>;
+> +
+> +                       pinctrl-names = "default", "suspend";
+> +                       pinctrl-0 = <&disp_pins_default>;
+> +                       pinctrl-1 = <&disp_pins_default>;
+> +
+> +                       reset-gpios = <&pm6150l_gpios 3 0>;
+> +
+> +                       display-timings {
+> +                               timing0: timing-0 {
+> +                                       /* originally
+> +                                        * 268316160 Mhz,
+> +                                        * but value below fits
+> +                                        * better w/ downstream
+> +                                        */
+> +                                       clock-frequency = <158695680>;
+> +                                       hactive = <1080>;
+> +                                       vactive = <2248>;
+> +                                       hfront-porch = <26>;
+> +                                       hback-porch = <36>;
+> +                                       hsync-len = <2>;
+> +                                       vfront-porch = <56>;
+> +                                       vback-porch = <4>;
+> +                                       vsync-len = <4>;
+> +                               };
 
+why do we specify timings in dt?  Would the panel use different
+timings on a different board?
 
+BR,
+-R
 
---=20
-Mateusz Holenko
-Antmicro Ltd | www.antmicro.com
-Roosevelta 22, 60-829 Poznan, Poland
+> +                       };
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       panel0_in: endpoint {
+> +                                               remote-endpoint = <&dsi0_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +       };
+> --
+> 2.7.4
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
