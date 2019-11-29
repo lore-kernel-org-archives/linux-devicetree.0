@@ -2,125 +2,151 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D3AC432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 14:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688A6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A649C215A5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 14:52:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kcjurm5s"
+	by mail.kernel.org (Postfix) with ESMTP id 41430216F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfK2OwK (ORCPT
+        id S1726893AbfK2PLB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:52:10 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52525 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726843AbfK2OwK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:52:10 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xATEl2rW015649;
-        Fri, 29 Nov 2019 15:51:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=g8lD3rtdXNrCg147P/vL/OTbncUOSvc26kNNxIEODlU=;
- b=kcjurm5sWToNx0YxGPewWYGHrO6fGpUyf6fVE3BiBVSse71WSxfWao+4zlxicrc4hVXw
- 4/2x6utimcqGQPR0/QULgoj2VHX4b2+inZ5O1MGFNWOsUvYjH9kEmtQxk4pFra33P31n
- gMZtS+MnVpo9AvHicIdyxUrN8lopXOiCZuqsNzjTV1XAV/RG2lGF9Oy22/Bb1AQHxAUa
- KnFryJpdfh7UaI9YmZW/54NYzzBO5sHroCSyXnZ5AXPY0JHcb6MlB5zVCgEOaaUYTLMq
- tR4Ytc2/IL1LnhMwgp+s3kjw0a3GpCiKeByP5nxenR/LmY7zY8ynZBC0mDU8csL/g/P6 TA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2whcxjg1nr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 Nov 2019 15:51:51 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 778B310002A;
-        Fri, 29 Nov 2019 15:51:49 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4622B2B9FAF;
-        Fri, 29 Nov 2019 15:51:49 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 29 Nov
- 2019 15:51:48 +0100
-Subject: Re: [PATCH 5/6] ARM: dts: stm32: Adapt STM32MP157 DK boards to stm32
- DT diversity
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-References: <20191120144109.25321-1-alexandre.torgue@st.com>
- <20191120144109.25321-6-alexandre.torgue@st.com>
- <CAK8P3a2Bg9KwfEqEE3_NUHxVv=svFGuj--Tnq-w-xFg63cfqAA@mail.gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <92be0a67-c0ed-23bd-08f3-73f71d8bfc3f@st.com>
-Date:   Fri, 29 Nov 2019 15:51:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 29 Nov 2019 10:11:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49002 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfK2PLB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 10:11:01 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iahv6-0000aO-4d; Fri, 29 Nov 2019 16:10:56 +0100
+Date:   Fri, 29 Nov 2019 16:10:56 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
+Message-ID: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2Bg9KwfEqEE3_NUHxVv=svFGuj--Tnq-w-xFg63cfqAA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-29_04:2019-11-29,2019-11-29 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+I've been looking at phandle_cache and noticed the following: The raw
+phandle value as generated by dtc starts at zero and is incremented by
+one for each phandle entry. The qemu pSeries model is using Slof (which
+is probably the same thing as used on real hardware) and this looks like
+a poiner value for the phandle.
+With
+	qemu-system-ppc64le -m 16G -machine pseries -smp 8 
 
+I got the following output:
+| entries: 64
+| phandle 7e732468 slot 28 hash c
+| phandle 7e732ad0 slot 10 hash 27
+| phandle 7e732ee8 slot 28 hash 3a
+| phandle 7e734160 slot 20 hash 36
+| phandle 7e734318 slot 18 hash 3a
+| phandle 7e734428 slot 28 hash 33
+| phandle 7e734538 slot 38 hash 2c
+| phandle 7e734850 slot 10 hash e
+| phandle 7e735220 slot 20 hash 2d
+| phandle 7e735bf0 slot 30 hash d
+| phandle 7e7365c0 slot 0 hash 2d
+| phandle 7e736f90 slot 10 hash d
+| phandle 7e737960 slot 20 hash 2d
+| phandle 7e738330 slot 30 hash d
+| phandle 7e738d00 slot 0 hash 2d
+| phandle 7e739730 slot 30 hash 38
+| phandle 7e73bd08 slot 8 hash 17
+| phandle 7e73c2e0 slot 20 hash 32
+| phandle 7e73c7f8 slot 38 hash 37
+| phandle 7e782420 slot 20 hash 13
+| phandle 7e782ed8 slot 18 hash 1b
+| phandle 7e73ce28 slot 28 hash 39
+| phandle 7e73d390 slot 10 hash 22
+| phandle 7e73d9a8 slot 28 hash 1a
+| phandle 7e73dc28 slot 28 hash 37
+| phandle 7e73de00 slot 0 hash a
+| phandle 7e73e028 slot 28 hash 0
+| phandle 7e7621a8 slot 28 hash 36
+| phandle 7e73e458 slot 18 hash 1e
+| phandle 7e73e608 slot 8 hash 1e
+| phandle 7e740078 slot 38 hash 28
+| phandle 7e740180 slot 0 hash 1d
+| phandle 7e740240 slot 0 hash 33
+| phandle 7e740348 slot 8 hash 29
+| phandle 7e740410 slot 10 hash 2
+| phandle 7e740eb0 slot 30 hash 3e
+| phandle 7e745390 slot 10 hash 33
+| phandle 7e747b08 slot 8 hash c
+| phandle 7e748528 slot 28 hash f
+| phandle 7e74a6e0 slot 20 hash 18
+| phandle 7e74aab0 slot 30 hash b
+| phandle 7e74f788 slot 8 hash d
+| Used entries: 8, hashed: 29
 
-On 11/29/19 3:20 PM, Arnd Bergmann wrote:
-> On Wed, Nov 20, 2019 at 3:41 PM Alexandre Torgue
-> <alexandre.torgue@st.com> wrote:
->>
->> To handle STM32MP15 SOCs diversity, some updates have to been done.
->> This commit mainly adapt dk1 board to include the correct package and the
->> correct SOC version. A new file has been created to factorize common parts.
->>
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>
->> diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
->> index 3f869bd67082..1292ac3b6890 100644
->> --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
->> +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
->>          model = "STMicroelectronics STM32MP157A-DK1 Discovery Board";
->>          compatible = "st,stm32mp157a-dk1", "st,stm32mp157";
->> -
->> -       aliases {
->> -               ethernet0 = &ethernet0;
->> -               serial0 = &uart4;
->> -       };
->> -
->> -       chosen {
->> -               stdout-path = "serial0:115200n8";
->> -       };
->> -
-> 
-> As a rule, I would leave aliases and chosen nodes in the .dts file and not
-> move them into a shared .dtsi, since they tend to be board specific.
-> 
-> (even if that may not be the case in this particular file)
+So the hash array has 64 entries out which only 8 are populated. Using
+hash_32() populates 29 entries.
+Could someone with real hardware verify this?
+I'm not sure how important this performance wise, it looks just like a
+waste using only 1/8 of the array.
 
-I agree, I'll move them in V2.
+The patch used for testing:
 
-Thanks
-Alex
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 1d667eb730e19..2640d4bc81a9a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -197,6 +197,7 @@ void of_populate_phandle_cache(void)
+ 	u32 cache_entries;
+ 	struct device_node *np;
+ 	u32 phandles = 0;
++	struct device_node **cache2;
+ 
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 
+@@ -214,14 +215,32 @@ void of_populate_phandle_cache(void)
+ 
+ 	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
+ 				GFP_ATOMIC);
++	cache2 = kcalloc(cache_entries, sizeof(*phandle_cache), GFP_ATOMIC);
+ 	if (!phandle_cache)
+ 		goto out;
+ 
++	pr_err("%s(%d) entries: %d\n", __func__, __LINE__, cache_entries);
+ 	for_each_of_allnodes(np)
+ 		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
++			int slot;
+ 			of_node_get(np);
+ 			phandle_cache[np->phandle & phandle_cache_mask] = np;
++			slot = hash_32(np->phandle, __ffs(cache_entries));
++			cache2[slot] = np;
++			pr_err("%s(%d) phandle %x slot %x hash %x\n", __func__, __LINE__,
++			       np->phandle, np->phandle & phandle_cache_mask, slot);
+ 		}
++	{
++		int i, filled = 0, filled_hash = 0;
++
++		for (i = 0; i < cache_entries; i++) {
++			if (phandle_cache[i])
++				filled++;
++			if (cache2[i])
++				filled_hash++;
++		}
++		pr_err("%s(%d) Used entries: %d, hashed: %d\n", __func__, __LINE__, filled, filled_hash);
++	}
+ 
+ out:
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
 
-> 
->        Arnd
-> 
+Sebastian
