@@ -2,157 +2,161 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC8BC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82567C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5EB215A5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A88D2176D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fybemh1f"
+	dkim=pass (2048-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="b1IChhjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfK2P2d (ORCPT
+        id S1727072AbfK2Pjl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 10:28:33 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37713 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfK2P2d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 10:28:33 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so4713651wru.4
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 07:28:31 -0800 (PST)
+        Fri, 29 Nov 2019 10:39:41 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45177 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfK2Pjk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 10:39:40 -0500
+Received: by mail-io1-f65.google.com with SMTP id i11so21982339ioi.12
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 07:39:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=QBYK1E+SFEUtR4nuF0Hq1/Zl0vxT8rcgdq12kebEYCw=;
-        b=fybemh1fl5FELIMmoJZnWKoGU6gkjl55CTvBtsMkTjKBe9+9q5azX3vK7CrnWlD4+m
-         ATTa/+yYn808n2UnMe0zSU27V/ALJzcfyewxcwoGDLMpE+3nRgHaRQI6DA94AukXUiJB
-         hjsqV4+jtcmEmj/BDh8dLZ/DRjse6sDrT0bCl7ecTrNNyYBw6BwzfFzs7Ti5p0v23MnE
-         +fDRYLnLSJ559SpDXDxTsKfDHmPdDwfAe4/MCFncI1Wzvl2k8yyzbCe3Y5158WP0Gpt4
-         xntmd2a+Rl7Oonw3WrC2tR2S9zGYEskSnvLdMeDrEhklUgWbep0gTuvPx0qYaX4l87Lz
-         Gxwg==
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GZ64dFx/b6xoVXXGFcVREkFmLBqmtyqbMTpiRv9D3vk=;
+        b=b1IChhjArK99MWA1YVOtlfL8+65h6lp14vSr6zaz6U/uJRX1NnqsinLYifo5jeI8QL
+         9NQqI1S+uP+PGNiVgwxZaSP1yEr699GBPQgTa6Kxh2KZRCo8kjWU6gyU6oXnAHBXHxm3
+         kKZNUp9hgsc4yPCyLbIbC8GpTx/9/en1oOVRoFnC6VE98XRs3rHb47JkrHJC94IOtQeB
+         i66Upa+3wY0VAI9TN3tHeEZHLaWFuZqdU/5nelGTlXkejXirbyXtWERnkMkfKQm+EgWO
+         WBNJuDj1LGuChGWfugCocwa7j5aYFC6mASJdftS5jEu3k3FjKMWHf2Aw2qU7gKJaz5Yb
+         RekQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=QBYK1E+SFEUtR4nuF0Hq1/Zl0vxT8rcgdq12kebEYCw=;
-        b=aCoAmq99U5vPRScsH/uxEyziza08u/bIw8B33SMNnH3p4g3zTavqTyNMk8bZL/JFv8
-         LOpx2su7f5Q5oqwyFKStiHILT6KueE2uHSLtZEjvAw2cNDkW5VsnerBU9YFXsyAOaZIl
-         mAZPX9OJS4ZNxicil3xSwxDYHrMhIZEJsWDK3OuBdVjyCF9UPiJMKFCcqVJxABR5yzGm
-         cUwNi79Ep7rT8LCNtwYlwG3l7DzT/vcizZ+Lv4OoGiooI1e5SFb2wH/izyJsqGyj6FgP
-         UMOyqo9U6FwUc8albBMqLC+KTPf6I49/hzRJdhcAWt7IFLNwJwKt7ZeU/Lk/f/pii0KY
-         Ziqw==
-X-Gm-Message-State: APjAAAVZcbbO/ChZpzxkZX3yT8+8gybxl7Sv+ZSOXDrL09ZgvoGQLrf6
-        SsnuEJrKaQHyutkyonlb5IHf0Q==
-X-Google-Smtp-Source: APXvYqwp522ZQItIPDw0UZZeNpADWsIPr6wHnrqJzszsiD5Ngr1SfU1KzHkCvXFfBFKhk2oWIkEzYw==
-X-Received: by 2002:a5d:4d8d:: with SMTP id b13mr10405744wru.6.1575041310867;
-        Fri, 29 Nov 2019 07:28:30 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m3sm27328570wrw.20.2019.11.29.07.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2019 07:28:30 -0800 (PST)
-References: <20191129144605.182774-1-jian.hu@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "Rob Herring" <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] add Amlogic A1 clock controller driver
-In-reply-to: <20191129144605.182774-1-jian.hu@amlogic.com>
-Date:   Fri, 29 Nov 2019 16:28:29 +0100
-Message-ID: <1jwobi7lcy.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GZ64dFx/b6xoVXXGFcVREkFmLBqmtyqbMTpiRv9D3vk=;
+        b=gc6cYIfxalOQH/XpqRibijv6yoROU3IM4ilRsPQNJL41GchYmQHOnFsosRwIY2b5DM
+         roftoBXJrmMO4NsiClNhqWcuuwVXjUhlISTe570b40GNaf2WzLbgR4OxCTydoOhN5GWa
+         04VMiG8y6yf6g6YkEWgedE6hGsIgUBE5UQotwaH0GzCexrqLs+nDhFLDk5FPlBCYrdf/
+         QoGcTrA24Ox09PxQ3cOVjQG1kN5BGLJIxrzbpddyPnIuM9vVUTdSuKpgaDfQQo3B5RtK
+         j43ksPq6UKkWOOvrgn2CwfegSQmQFRsOUQuj0uyksbxwCvVOaXcPmJLkqQdlFNAh/s93
+         swxQ==
+X-Gm-Message-State: APjAAAUKYj+Z9hIdTqBKt9NxHMCg6RKUduZTWpZjPIeWPkp9EWUXIGNS
+        TtPVkVie41hl/e1Clk7/P1F2hrDalxqB1JjbaacdnA==
+X-Google-Smtp-Source: APXvYqxXwIY3yJH7Gn9pZM6Hw5rVVw762bvoB4Gded6U8Sn+JmxOp/vhgIZapxUg9GwljvgJfYpXIkZys55MYqMsxDU=
+X-Received: by 2002:a02:a388:: with SMTP id y8mr10590059jak.70.1575041979840;
+ Fri, 29 Nov 2019 07:39:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191023114634.13657-0-mholenko@antmicro.com> <20191023114634.13657-2-mholenko@antmicro.com>
+ <20191120192648.GA3087498@kroah.com> <CAPk366QgcOYPZJXM46o3Gn8ksFYYoNwJvnunUe7y0aLNgJuSRg@mail.gmail.com>
+ <20191126091926.GB1372654@kroah.com>
+In-Reply-To: <20191126091926.GB1372654@kroah.com>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Fri, 29 Nov 2019 16:39:28 +0100
+Message-ID: <CAPk366T-B_7ADCC4XhOT8QdQ5hxC3mNkvfcuY3diu1wnWBHkAg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On Fri 29 Nov 2019 at 15:45, Jian Hu <jian.hu@amlogic.com> wrote:
-
-> add support for Amlogic A1 clock driver, the clock includes 
-> three parts: peripheral clocks, pll clocks, CPU clocks.
-> sys pll and CPU clocks will be sent in next patch.
+wt., 26 lis 2019 o 10:19 Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> napisa=C5=82(a):
 >
-> Changes since v1 at [2]:
-
-v2 or v1 ??
-
-> -add probe function for A1
-> -seperate the clock driver into two patch
-> -change some clock flags and ops
-> -add support for a1 PLL ops
-> -add A1 clock node
+> On Tue, Nov 26, 2019 at 10:02:18AM +0100, Mateusz Holenko wrote:
+> > =C5=9Br., 20 lis 2019 o 20:26 Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> napisa=C5=82(a):
+> > >
+> > > On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
+> > > > +#ifdef __LITTLE_ENDIAN
+> > > > +# define LITEX_READ_REG(addr)                  ioread32(addr)
+> > > > +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off=
+)
+> > > > +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr=
+)
+> > > > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr=
+ + off)
+> > > > +#else
+> > > > +# define LITEX_READ_REG(addr)                  ioread32be(addr)
+> > > > +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + o=
+ff)
+> > > > +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, ad=
+dr)
+> > > > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, ad=
+dr + off)
+> > > > +#endif
+> > >
+> > > I just noticed this.
+> > >
+> > > Ick, this is not good.  You will run into problems in the future with
+> > > this, I can guarantee it.  What about systems where the CPU is one
+> > > endian and the hardware in the other?  It will happen trust us.
+> >
+> > As mentioned in the previous comment, LiteX CSRs are guaranteed to be
+> > always little-endian - this includes configurations with both
+> > big-endian and little-endian CPUs.
 >
-> Changes since v1 at [1]:
-> -place A1 config alphabetically
-> -add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
-> -separate the driver into two driver: peripheral and pll driver
-> -delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
-> -delete the change in Kconfig.platforms, address to Kevin alone
-> -remove the useless comments
-> -modify the meson pll driver to support A1 PLLs
+> What enforces that guarantee?
+
+liteuart is na IP core that comes as a part of a design generated and
+configured by LiteX SoC builder
+(https://github.com/enjoy-digital/litex). Current implementation of
+LiteX generates systems in such a way that CSRs in peripherals are
+little-endian regardless of a softcore CPU used (available options
+cover both little-endian and big-endian CPU cores). Liteuart is a part
+of the LiteX project and is probably not usable outside of it.
+
+I was digging through the code and documentation to verify that the
+always-little-endian-CSR behaviour is "guaranteed", but - to my
+surprise - couldn't find anything. It seems to be simply an
+implementation detail that might (maybe?) change in the future.
+
+In this context your suggestion about probing things dynamically seems
+to be even more relevant.
+
+> > The aim of including the ifdef section was exactly to target situation
+> > where endianness is different for CPU and devices. As such this
+> > approach *should* work.
 >
-> [1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
-> [2] https://lkml.kernel.org/r/1571382865-41978-1-git-send-email-jian.hu@amlogic.com
+> "should" :)
 >
-> Jian Hu (7):
->   dt-bindings: clock: meson: add A1 PLL clock controller bindings
->   clk: meson: add support for A1 PLL clock ops
->   clk: meson: eeclk: refactor eeclk common driver to support A1
->   clk: meson: a1: add support for Amlogic A1 PLL clock driver
->   dt-bindings: clock: meson: add A1 peripheral clock controller bindings
->   clk: meson: a1: add support for Amlogic A1 Peripheral clock driver
->   arm64: dts: meson: add A1 PLL and periphs clock controller
-
-The arm64 is for the DT maintainer. Please send it separately after this
-series is applied (if it gets applied)
-
-> Please fix the underlying issue, then you can post your series again.
-
-This was a comment on your v2. Did you fix the orphan/ordering issue ?
-If you did, you probably should mention it here.
-If you did not, I'm probably not going to review this further until you do.
-
+> We have seen it happen all the time that some hardware team hooks this
+> up backwards, no matter what the "spec" required.  So be careful here.
 >
->  .../bindings/clock/amlogic,a1-clkc.yaml       |   70 +
->  .../bindings/clock/amlogic,a1-pll-clkc.yaml   |   56 +
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   26 +
->  drivers/clk/meson/Kconfig                     |   20 +
->  drivers/clk/meson/Makefile                    |    2 +
->  drivers/clk/meson/a1-pll.c                    |  334 +++
->  drivers/clk/meson/a1-pll.h                    |   56 +
->  drivers/clk/meson/a1.c                        | 2309 +++++++++++++++++
->  drivers/clk/meson/a1.h                        |  120 +
->  drivers/clk/meson/clk-pll.c                   |   21 +
->  drivers/clk/meson/clk-pll.h                   |    1 +
->  drivers/clk/meson/meson-eeclk.c               |   59 +-
->  drivers/clk/meson/meson-eeclk.h               |    2 +
->  drivers/clk/meson/parm.h                      |    1 +
->  include/dt-bindings/clock/a1-clkc.h           |   98 +
->  include/dt-bindings/clock/a1-pll-clkc.h       |   16 +
->  16 files changed, 3181 insertions(+), 10 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->  create mode 100644 drivers/clk/meson/a1-pll.c
->  create mode 100644 drivers/clk/meson/a1-pll.h
->  create mode 100644 drivers/clk/meson/a1.c
->  create mode 100644 drivers/clk/meson/a1.h
->  create mode 100644 include/dt-bindings/clock/a1-clkc.h
->  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+> good luck!
+>
+> greg k-h
 
+
+
+--=20
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
