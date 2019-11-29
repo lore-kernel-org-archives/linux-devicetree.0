@@ -4,68 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E20DC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329F9C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF92217D7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11186217D6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfK2JOT (ORCPT
+        id S1726609AbfK2JWy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:14:19 -0500
-Received: from olimex.com ([184.105.72.32]:33116 "EHLO olimex.com"
+        Fri, 29 Nov 2019 04:22:54 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:55230 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbfK2JOT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:14:19 -0500
-Received: from localhost.localdomain ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 01:14:09 -0800
-From:   Stefan Mavrodiev <stefan@olimex.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Cc:     linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 3/3] arm64: dts: allwinner: a64: olinuxino: Fix SDIO supply regulator
-Date:   Fri, 29 Nov 2019 11:13:36 +0200
-Message-Id: <20191129091336.13104-4-stefan@olimex.com>
+        id S1725892AbfK2JWw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 Nov 2019 04:22:52 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1A5DE1A03FE;
+        Fri, 29 Nov 2019 10:22:51 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5B2981A0D2B;
+        Fri, 29 Nov 2019 10:22:47 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 675A0402DE;
+        Fri, 29 Nov 2019 17:22:42 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+Subject: [v6,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata E-00013
+Date:   Fri, 29 Nov 2019 17:22:22 +0800
+Message-Id: <20191129092222.2706-3-biwen.li@nxp.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191129091336.13104-1-stefan@olimex.com>
-References: <20191129091336.13104-1-stefan@olimex.com>
+In-Reply-To: <20191129092222.2706-1-biwen.li@nxp.com>
+References: <20191129092222.2706-1-biwen.li@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A64-OLinuXino uses DCDC1 (VCC-IO) for MMC1 supply. In the dts
-ALDO2 is set, which is VCC-PL. Since DCDC1 is always present, the boards
-are working without a problem.
+Specify a channel zero in idle state to
+avoid enterring tri-stated state for PCA9547.
+About E-00013:
+	- Description: I2C1 and I2C3 buses
+	  are missing pull-up.
+	- Impact: When the PCA954x device is tri-stated, the I2C bus
+	  will float. This makes the I2C bus and its associated
+	  downstream devices inaccessible.
+	- Hardware fix: Populate resistors R189 and R190 for I2C1
+	  and resistors R228 and R229 for I2C3.
+	- Software fix: Remove the tri-state option from the PCA954x
+	  driver(PCA954x always on enable status, specify a
+	  channel zero in dts to fix the errata E-00013).
 
-THis pacth sets the correct regulator.
-
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Change in v6:
+	- none
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index ad3559c576dd..869bb146a9ff 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -140,7 +140,7 @@
- &mmc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	vmmc-supply = <&reg_aldo2>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	vqmmc-supply = <&reg_dldo4>;
- 	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
+Change in v5:
+	- specify a channel zero when pca9547 in idle state.
+
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+index 6fd7f63085c9..412f1bc0db5f 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+@@ -49,6 +49,7 @@
+ 		reg = <0x75>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		idle-state = <0>;
+ 		i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 2.17.1
 
