@@ -2,265 +2,139 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A726C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E97C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0D92176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7EC22176D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfK2S2V (ORCPT
+        id S1727010AbfK2Sdp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 13:28:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:51026 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbfK2S2V (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 Nov 2019 13:28:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2AFE31B;
-        Fri, 29 Nov 2019 10:28:18 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3DD23F68E;
-        Fri, 29 Nov 2019 10:28:17 -0800 (PST)
-Subject: Re: [PATCH v5 08/14] coresight: cti: Enable CTI associated with
- devices.
-To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     mathieu.poirier@linaro.org
-References: <20191119231912.12768-1-mike.leach@linaro.org>
- <20191119231912.12768-9-mike.leach@linaro.org>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <c48fe3ee-335b-3dfb-33c1-a2cd7d5a00e6@arm.com>
-Date:   Fri, 29 Nov 2019 18:28:16 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 29 Nov 2019 13:33:45 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40054 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfK2Sdp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 13:33:45 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 0AED228C03C
+Received: by earth.universe (Postfix, from userid 1000)
+        id 40A483C0C78; Fri, 29 Nov 2019 19:33:40 +0100 (CET)
+Date:   Fri, 29 Nov 2019 19:33:40 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/5] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+Message-ID: <20191129183340.hsjddxot7ocnxran@earth.universe>
+References: <20191117141335.23404-1-matheus@castello.eng.br>
+ <20191117141335.23404-5-matheus@castello.eng.br>
+ <20191126145200.xqtvfrm6qc6yuutb@earth.universe>
+ <c5bb4962-10f7-0877-0c99-c2dad5bb53cf@castello.eng.br>
 MIME-Version: 1.0
-In-Reply-To: <20191119231912.12768-9-mike.leach@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xcuscrzzo6oezrpv"
+Content-Disposition: inline
+In-Reply-To: <c5bb4962-10f7-0877-0c99-c2dad5bb53cf@castello.eng.br>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19/11/2019 23:19, Mike Leach wrote:
-> The CoreSight subsystem enables a path of devices from source to sink.
-> Any CTI devices associated with the path devices must be enabled at the
-> same time.
-> 
-> This patch adds an associated coresight_device element to the main
-> coresight device structure, and uses this to create associations between
-> the CTI and other devices based on the device tree data. The associated
-> device element is used to enable CTI in conjunction with the path elements.
-> 
-> CTI devices are reference counted so where a single CTI is associated with
-> multiple elements on the path, it will be enabled on the first associated
-> device enable, and disabled with the last associated device disable.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> ---
->   drivers/hwtracing/coresight/coresight-cti.c   | 87 +++++++++++++++++++
->   .../hwtracing/coresight/coresight-platform.c  | 23 +++++
->   drivers/hwtracing/coresight/coresight-priv.h  |  6 ++
->   drivers/hwtracing/coresight/coresight.c       | 58 +++++++++++--
->   include/linux/coresight.h                     |  5 ++
->   5 files changed, 173 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> index 369488dd7b8e..cf116463149a 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> @@ -440,6 +440,90 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
->   	return err;
->   }
->   
-> +/*
-> + * Look for a matching connection device name in the list of
-> + * connections. If found then swap in the csdev name and return
-> + * found.
-> + */
-> +static bool
-> +cti_match_con_name(struct cti_device *ctidev, const char *node_name,
-> +		   const char *csdev_name)
 
-Here we actually fixup the name of the connection, rather than simply 
-matching it. So it may be apt to rename this to cti_match_fixup_name()
+--xcuscrzzo6oezrpv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +{
-> +	struct cti_trig_con *trig_con;
-> +
-> +	list_for_each_entry(trig_con, &ctidev->trig_cons, node) {
-> +		if (trig_con->con_dev_name) {
-> +			if (!strcmp(node_name, trig_con->con_dev_name)) {
+Hi,
 
-Can there be duplicate node_name's ? Does it make sense to store the 
-fwhandle along with the "temporary node_name" to match it later while
-fixing up ?
+On Wed, Nov 27, 2019 at 10:06:47PM -0300, Matheus Castello wrote:
+> [...]
+> > > @@ -256,14 +303,26 @@ static int max17040_probe(struct i2c_client *cl=
+ient,
+> > >=20
+> > >   	/* check interrupt */
+> > >   	if (client->irq) {
+> > > -		int ret;
+> > > -
+> > > -		ret =3D max17040_enable_alert_irq(chip);
+> > > -
+> > > -		if (ret) {
+> > > -			client->irq =3D 0;
+> > > +		if (of_device_is_compatible(client->dev.of_node,
+> > > +					    "maxim,max77836-battery")) {
+> > > +			ret =3D max17040_set_low_soc_alert(client,
+> > > +							 chip->low_soc_alert);
+> > > +			if (ret) {
+> > > +				dev_err(&client->dev,
+> > > +					"Failed to set low SOC alert: err %d\n",
+> > > +					ret);
+> > > +				return ret;
+> > > +			}
+> > > +
+> > > +			ret =3D max17040_enable_alert_irq(chip);
+> > > +			if (ret) {
+> > > +				client->irq =3D 0;
+> > > +				dev_warn(&client->dev,
+> > > +					 "Failed to get IRQ err %d\n", ret);
+> > > +			}
+> > > +		} else {
+> > >   			dev_warn(&client->dev,
+> > > -				 "Failed to get IRQ err %d\n", ret);
+> > > +				 "Device not compatible for IRQ");
+> >=20
+> > Something is odd here. Either this should be part of the first
+> > patch ("max17040: Add IRQ handler for low SOC alert"), or both
+> > device types support the IRQ and this check should be removed.
+>=20
+> The first patch add the IRQ without the configuration of the low SoC aler=
+t,
+> using the default state of charge level. This patch is working with
+> registers to config the low state of charge level, so it was proposed to
+> just try to write registers in the models compatible with that
+> (maxim,max77836-battery).
+>=20
+> Maybe join the first patch to this one, and let DT binding be the first
+> patch on the series so we can already test compatible here, let me know w=
+hat
+> you think about it.
 
-> +				/* match: so swap in csdev name */
-> +				kfree(trig_con->con_dev_name);
-> +				trig_con->con_dev_name =
-> +					kstrdup(csdev_name, GFP_KERNEL);
-> +				return true;
-> +			}
-> +		}
-> +	}
-> +	return false;
-> +}
+Assuming the !max77836 do not have any interrupt support, you can
+just add the OF check in the first patch in "if (client->irq)", so
+that it reads=20
 
+if (client->irq && of_device_is_compatible(...)) {
+    ...
+}
 
-> +/*
-> + * Search the cti list to add an associated CTI into the supplied CS device
-> + * This will set the association if CTI declared before the CS device
-> + */
-> +void cti_add_assoc_to_csdev(struct coresight_device *csdev)
-> +{
+-- Sebastian
 
-..
+--xcuscrzzo6oezrpv
+Content-Type: application/pgp-signature; name="signature.asc"
 
- > +	struct cti_drvdata *ect_item;
- > +	struct cti_device *ctidev;
- > +	const char *node_name = NULL, *csdev_name;
- > +
- > +	/* protect the list */
- > +	mutex_lock(&ect_mutex);
- > +
- > +	/* exit if current is an ECT device.*/
- > +	if ((csdev->type == CORESIGHT_DEV_TYPE_ECT) || list_empty(&ect_net))
- > +		goto cti_add_done;
- > +
- > +	/* if we didn't find the csdev previously we used the fwnode name */
- > +	node_name = coresight_get_fwnode_name(csdev->dev.parent);
+-----BEGIN PGP SIGNATURE-----
 
-We used "cti_plat_get_node_name()" when we added the name in the
-absence of csdev in patch 7, could we not reuse the function here ?
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3hZIAACgkQ2O7X88g7
++pqwQQ/+JvYfTlob8QpLMuveqR4F7Jz+118C4j8H6w4xx8uCSp/xPQSxGSQ7zSIg
+mrAm5+YQnm12m4e2nZwdLNAkePuW++O+U9was7s0TUsjVFRC4tQhtwo+LIAbirBz
+RjqOm7tzZnTGu2w6Bhfoe3iyIRvNxELaEl4jk1iEV1qgn6G+z55p6Z6KpbMKWxKu
+8PKEtmZdeN9s9fZQdkyukjvPAs23E2pUB8a++mc7Y5kML6xMMwqnR6Wn+MzaJgq9
+7jL1dNZJ///rH/3JtOr/F237jAZdFdocwIhzS+uDYIU2FxC3WYu3/lD8TMXmWeBb
+kYwOUHDvSx2sh1Bx52UyKvLT1rAtSIbp/u2NbOj9w3zB7k+cl9ePqw7HqiJlZ11d
+V8T93H6bQvCXbftcSAvtRUA8HKh1HSO8o1U8+RMtBxz1y6B2LqNfD4dFT+wltWSj
+Q+HyuzGfz6mrFQ3owFmohyeOSOC1FHJa6Fc1Z40obR3XKYBBMrO+8qXckTim9/dk
+SsPF7E0O6UNJyqthzw9HL1R99F7AX9JX2fjOMAsWpVvoaDEqDkt3Ebt96Gl/YvRL
+x+/+cWQSwGxikSHdDg6drOOYQri/jzySqwFJJhCtvnjqXGRUCRFxgluAIzy4qDBf
++67VS9ef6Xd2QDlxOPjxRAeqOYbCz6Z8v91q2s0FfS/uC5r7jCo=
+=+2/E
+-----END PGP SIGNATURE-----
 
- > +
- > +	if (!node_name)
- > +		goto cti_add_done;
- > +
- > +	/* this is the name we want to use for the association */
- > +	csdev_name = dev_name(&csdev->dev);
-
-
-> +
-> +	/* for each CTI in list... */
-> +	list_for_each_entry(ect_item, &ect_net, node) {
-> +		ctidev = &ect_item->ctidev;
-> +		if (cti_match_con_name(ctidev, node_name, csdev_name)) {
-> +			/*
-> +			 * if we found a matching name then update the
-> +			 * association pointers.
-> +			 */
-> +			csdev->ect_dev = ect_item->csdev;
-> +			goto cti_add_done;
-
-			break; instead ?
-
-> +		}
-> +	}
-> +cti_add_done:
-> +	mutex_unlock(&ect_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(cti_add_assoc_to_csdev);
-> +
-> +/*
-> + * Update the cross references where the associated device was found
-> + * while we were building the connection info. This will occur if the
-> + * assoc device was registered before the CTI.
-> + */
-> +static void cti_update_conn_xrefs(struct cti_drvdata *drvdata)
-> +{
-> +	struct cti_trig_con *tc;
-> +	struct cti_device *ctidev = &drvdata->ctidev;
-> +
-> +	list_for_each_entry(tc, &ctidev->trig_cons, node) {
-> +		if (tc->con_dev)
-> +			tc->con_dev->ect_dev = drvdata->csdev;
-> +	}
-
-Does this need to take the coresight_mutex to avoid racing against
-a coresight_enable_path() ? Though this may be fine as long as the
-CTI driver detects that that device was not enabled.
-
-Also, it looks like we have a potential issue with perf vs sysfs mode.
-The perf mode doesn't seem to take the coresight_mutex, for
-build_path/enable_path operations. This is outside the scope of this
-series though.
-
-> +}
-> +
->   /** cti ect operations **/
->   int cti_enable(struct coresight_device *csdev)
->   {
-> @@ -574,6 +658,9 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
->   	drvdata->csdev_release = drvdata->csdev->dev.release;
->   	drvdata->csdev->dev.release = cti_device_release;
->   
-> +	/* set any cross references */
-> +	cti_update_conn_xrefs(drvdata);
-> +
-    	/* all done - dec pm refcount */
->   	pm_runtime_put(&adev->dev);
->   	dev_info(&drvdata->csdev->dev, "CTI initialized\n");
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 3c5bee429105..6721cb1af5fe 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -293,6 +293,12 @@ static int of_get_coresight_platform_data(struct device *dev,
->   
->   	return 0;
->   }
-> +
-> +static inline const char *of_coresight_get_node_name(struct device *dev)
-> +{
-> +	return dev->of_node->full_name;
-> +}
-> +
->   #else
->   static inline int
->   of_get_coresight_platform_data(struct device *dev,
-> @@ -305,6 +311,11 @@ static inline int of_coresight_get_cpu(struct device *dev)
->   {
->   	return -ENODEV;
->   }
-> +
-> +static inline const char *of_coresight_get_node_name(struct device *dev)
-> +{
-> +	return NULL;
-> +}
->   #endif
->   
->   #ifdef CONFIG_ACPI
-> @@ -766,6 +777,18 @@ static inline int acpi_coresight_get_cpu(struct device *dev)
->   }
->   #endif
->   
-> +const char *coresight_get_fwnode_name(struct device *dev)
-
-As mentioned above, please could we reuse the name helper we used
-during the insertion rather than introducing a new wrapper which
-effectively does the same thing ?
-
-> +{
-> +	const char *node_name = NULL;
-> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> +
-> +	if (is_of_node(fwnode))
-> +		node_name = of_coresight_get_node_name(dev);
-> +
-> +	return node_name;
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_get_fwnode_name);
-
-Why does this get exported ? If a following patch needs it, you may
-always do that when you need it.
-
-
-Cheers
-Suzuki
+--xcuscrzzo6oezrpv--
