@@ -2,287 +2,140 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5510CC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 06:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC41C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 06:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214222176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 06:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F13D21721
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 06:27:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="dDaWzIFF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbfK2GHp (ORCPT
+        id S1726877AbfK2G1j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 01:07:45 -0500
-Received: from segapp02.wistron.com ([103.200.3.19]:59447 "EHLO
-        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725892AbfK2GHp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 01:07:45 -0500
-X-Greylist: delayed 302 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 Nov 2019 01:07:42 EST
-Received: from EXCHAPP02.whq.wistron (unverified [10.37.38.25]) by 
-    TWNHUMSW4.wistron.com (Clearswift SMTPRS 5.6.0) with ESMTP id 
-    <Tdbc3e1450bc0a81672162c@TWNHUMSW4.wistron.com>; Fri, 29 Nov 2019 
-    14:02:38 +0800
-Received: from EXCHAPP02.whq.wistron (10.37.38.25) by EXCHAPP02.whq.wistron 
-    (10.37.38.25) with Microsoft SMTP Server 
-    (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 
-    15.1.1713.5; Fri, 29 Nov 2019 14:02:37 +0800
-Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP02.whq.wistron 
-    (10.37.38.25) with Microsoft SMTP Server id 15.1.1713.5 via Frontend 
-    Transport; Fri, 29 Nov 2019 14:02:37 +0800
-From:   Ben Pai <Ben_Pai@wistron.com>
-To:     <linux@roeck-us.net>
-CC:     <robh+dt@kernel.org>, <jdelvare@suse.com>,
-        <linux-kernel@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <corbet@lwn.net>,
-        <wangat@tw.ibm.com>, <Andy_YF_Wang@wistron.com>,
-        <Claire_Ku@wistron.com>, Ben Pai <Ben_Pai@wistron.com>
-Subject: [ v1] hwmon: (pmbus) Add Wistron power supply pmbus driver
-Date:   Fri, 29 Nov 2019 14:02:30 +0800
-Message-ID: <20191129060230.14522-1-Ben_Pai@wistron.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 29 Nov 2019 01:27:39 -0500
+Received: from mail-eopbgr730051.outbound.protection.outlook.com ([40.107.73.51]:50176
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726205AbfK2G1j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 Nov 2019 01:27:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A9aU/d2SxQVsjcXo7W6tLYWTQqlTvdl2468kagu46SQzTioHdP04FovUqBZklB6VAWAFxIlICOrPqxzKmArWYpS5tA2GnNFBK7BfWhEEHtyBYSSYzMvan3lQFuo6fbLLP6NSPp8CSTP4FipUjoxcvzVHoO+pdLkmGpUgfR02o/rA5hkzHOyDc5rTaiFjqD3+/M54QOK3HfiRpsTjuU+v98Gk2CbGKK9k76V0PhiLYmhhfO+ZaeWIgyUkd2ZnbJHPbSdQBBQ3zzvLeh/eVoKUi5BTRpMpS9q1zYU3fOAfv52ylW6CoN1rina2zmjUkIUqJp2aSrdWFj3fT25nvHBpKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=viUSNnsqM4Y7NnCnv2+KdWjxbq8l3IwXdzio077fP24=;
+ b=kg6VwxbJO3/cLHqtNzhEtajpn3gNUz0o+n40e90ybvCK5MJ1Z+4P/zA5g2QFRjlp89G2lWKgbBGCu5clcpJDYnemNPKy7NHFal5MKvKHnaWhBF/tUbAzUaGMHJCMcBiCa43tj8lqZD7SZTbH6TU7IFSTjpm3DmvY5otT6vY1jn8M4HgHO0K80PGZP+JrduBcwMAodjGagvDBNLOywHfvrwA175rednw+1KqdAj9pR0+o09ca4cfNmxYtyDoZqiV+mr341m4x65ha9Iz7xUcQxYvbGlX6AhekAFz1E0GSdJfjUQJmgxbGZNyDGZdZK5ItgmHNZ9h2HWXujH9VCqGlIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=viUSNnsqM4Y7NnCnv2+KdWjxbq8l3IwXdzio077fP24=;
+ b=dDaWzIFF9cCuuynLT3hLCtwI/BwOBhoQyL1iu4oNhCF4Tm/kOnhPKC7Qu1Y9jB64V1HZCvRJ/rMp6Zp4lkw1T2nJ6slQilrL6JWt5QKdMbCAdL2zmP+/jNIE3lmNSbEcqinKNupZjkMPZYBhetIYF3HhAt593fLMpuGm2lx1FQA=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3621.namprd13.prod.outlook.com (20.180.14.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.7; Fri, 29 Nov 2019 06:27:35 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2495.014; Fri, 29 Nov 2019
+ 06:27:35 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        "maz@kernel.org" <maz@kernel.org>
+CC:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: RE: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive SoCs
+Thread-Topic: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive SoCs
+Thread-Index: AQHVo1VQYzPWzURXhUW+zbyogELnYqeghcaAgAEtw2A=
+Date:   Fri, 29 Nov 2019 06:27:35 +0000
+Message-ID: <CH2PR13MB33682C26386CB4EE8A7EA1C98C460@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
+ <1574661437-28486-6-git-send-email-yash.shah@sifive.com>
+ <CACRpkdY7fGvTPcwwC0XU+XN2w_QUCj0MmOYhp183P3Lj7Qw8WA@mail.gmail.com>
+In-Reply-To: <CACRpkdY7fGvTPcwwC0XU+XN2w_QUCj0MmOYhp183P3Lj7Qw8WA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5722f923-09e2-40a9-117a-08d774953942
+x-ms-traffictypediagnostic: CH2PR13MB3621:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB362165964670A04D8AE3A8308C460@CH2PR13MB3621.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 0236114672
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(39850400004)(136003)(376002)(366004)(346002)(396003)(199004)(189003)(13464003)(5660300002)(8936002)(53546011)(26005)(102836004)(52536014)(186003)(33656002)(71190400001)(99286004)(4326008)(2501003)(66066001)(6506007)(256004)(7696005)(71200400001)(76176011)(81156014)(81166006)(8676002)(25786009)(3846002)(6116002)(2906002)(478600001)(14454004)(7736002)(305945005)(74316002)(7416002)(55016002)(446003)(11346002)(44832011)(9686003)(316002)(86362001)(54906003)(110136005)(229853002)(6436002)(6246003)(107886003)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3621;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zA3fOm6YafPUw3Nb2DnJbTlVo60S7E03zfjVeG86kJyKPCv/chA4Ei6zWpnS905j1BEUCjDGctyHKYaM3DmGKmIoql/KE+2INkejqBZXRd7ATyFhG4WkYCcfU77vYQT+rfHf75niK0iCUobgIavhkAo7HLJPtBQW77meAKz9egL78FHpWY/dbnCGxwU9fxaZc4HhewUze/Xl5n0WIXupiJXM5F9wlHtbkAayEYXPGFIjH8hoGllKhrigMXTWgOmfdqaP+rebn4aD/3mSaznmrd4Yra8hsU2E/12s1x27lThqmSqZMNL2PEjU6qtOl2dmb1beWJjUAUBmCPkTdNeBz2RcEjJMRJiJ3SQv5V2JdwxzjxVCdt3yVmMRAXyRS0BLddBXVDujrOA2QPI/wCL3mLgNJpfQdZFQF+L+L9DqU60cSnEmg9uynU2yEvrFH9iI
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-X-TM-SNTS-SMTP:     2BB2C5B8A09FB1C966BBAE698742D39AE829BF86664D6743517F47263D541F492000:8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5722f923-09e2-40a9-117a-08d774953942
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2019 06:27:35.2346
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Fa8uHPabDltyStMfloGNmeGlpwVd45tHjPDtOz0rq+Y23V/qeBTd9rnf0MY3SidznM80wifou8r6ZaqGR1SoVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3621
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the driver to monitor Wisreon power supplies with hwmon over pmbus.
-
-Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
----
- drivers/hwmon/pmbus/Kconfig       |   9 ++
- drivers/hwmon/pmbus/Makefile      |   1 +
- drivers/hwmon/pmbus/wistron-wps.c | 180 ++++++++++++++++++++++++++++++
- 3 files changed, 190 insertions(+)
- create mode 100644 drivers/hwmon/pmbus/wistron-wps.c
-
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index d62d69bb7e49..ebb7024e58ab 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -219,6 +219,15 @@ config SENSORS_UCD9200
- 	  This driver can also be built as a module. If so, the module will
- 	  be called ucd9200.
- 
-+config SENSORS_WISTRON_WPS
-+	tristate "Wistron Power Supply"
-+	help
-+	  If you say yes here you get hardware monitoring support for the Wistron
-+	  power supply.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called wistron-wps.
-+
- config SENSORS_ZL6100
- 	tristate "Intersil ZL6100 and compatibles"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index 03bacfcfd660..cad38f99e8c5 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -25,4 +25,5 @@ obj-$(CONFIG_SENSORS_TPS40422)	+= tps40422.o
- obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
- obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
- obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
-+obj-$(CONFIG_SENSORS_WISTRON_WPS) += wistron-wps.o
- obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
-diff --git a/drivers/hwmon/pmbus/wistron-wps.c b/drivers/hwmon/pmbus/wistron-wps.c
-new file mode 100644
-index 000000000000..764496aa9d4f
---- /dev/null
-+++ b/drivers/hwmon/pmbus/wistron-wps.c
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright 2019 Wistron Corp.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/debugfs.h>
-+#include <linux/device.h>
-+#include <linux/fs.h>
-+#include <linux/i2c.h>
-+#include <linux/jiffies.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/pmbus.h>
-+
-+#include "pmbus.h"
-+
-+#define WPS_ID_CMD				0x99
-+#define WPS_PN_CMD				0x9A
-+#define WPS_FW_CMD				0x9B
-+#define WPS_DATE_CMD				0x9D
-+#define WPS_SN_CMD				0x9E
-+
-+enum {
-+	WPS_DEBUGFS_ID,
-+	WPS_DEBUGFS_PN,
-+	WPS_DEBUGFS_SN,
-+	WPS_DEBUGFS_FW,
-+	WPS_DEBUGFS_DATE,
-+	WPS_DEBUGFS_NUM_ENTRIES
-+};
-+
-+struct wistron_wps {
-+
-+	struct i2c_client *client;
-+
-+	int debugfs_entries[WPS_DEBUGFS_NUM_ENTRIES];
-+
-+};
-+
-+#define to_psu(x, y) container_of((x), struct wistron_wps, debugfs_entries[(y)])
-+
-+static ssize_t wistron_wps_debugfs_op(struct file *file, char __user *buf,
-+				    size_t count, loff_t *ppos)
-+{
-+	u8 cmd;
-+	int rc;
-+	int *idxp = file->private_data;
-+	int idx = *idxp;
-+	struct wistron_wps *psu = to_psu(idxp, idx);
-+	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
-+
-+	switch (idx) {
-+	case WPS_DEBUGFS_ID:
-+		cmd = WPS_ID_CMD;
-+		break;
-+	case WPS_DEBUGFS_PN:
-+		cmd = WPS_PN_CMD;
-+		break;
-+	case WPS_DEBUGFS_SN:
-+		cmd = WPS_SN_CMD;
-+		break;
-+	case WPS_DEBUGFS_FW:
-+		cmd = WPS_FW_CMD;
-+		break;
-+	case WPS_DEBUGFS_DATE:
-+		cmd = WPS_DATE_CMD;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	rc = i2c_smbus_read_block_data(psu->client, cmd, data);
-+	if (rc < 0)
-+		return rc;
-+
-+done:
-+	data[rc] = '\n';
-+	rc += 2;
-+
-+	return simple_read_from_buffer(buf, count, ppos, data, rc);
-+}
-+
-+static const struct file_operations wistron_wps_fops = {
-+	.llseek = noop_llseek,
-+	.read = wistron_wps_debugfs_op,
-+	.open = simple_open,
-+};
-+
-+static struct pmbus_driver_info wistron_wps_info = {
-+	.pages = 1,
-+	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-+		PMBUS_HAVE_PIN | PMBUS_HAVE_POUT | PMBUS_HAVE_FAN12 |
-+		PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-+		PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+		PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-+		PMBUS_HAVE_STATUS_FAN12,
-+};
-+
-+static struct pmbus_platform_data wistron_wps_pdata = {
-+	.flags = PMBUS_SKIP_STATUS_CHECK,
-+};
-+
-+static int wistron_wps_probe(struct i2c_client *client,
-+			   const struct i2c_device_id *id)
-+{
-+	int i, rc;
-+	struct dentry *debugfs;
-+	struct dentry *wistron_wps_dir;
-+	struct wistron_wps *psu;
-+
-+	client->dev.platform_data = &wistron_wps_pdata;
-+	rc = pmbus_do_probe(client, id, &wistron_wps_info);
-+	if (rc)
-+		return rc;
-+
-+	psu = devm_kzalloc(&client->dev, sizeof(*psu), GFP_KERNEL);
-+	if (!psu)
-+		return 0;
-+
-+	psu->client = client;
-+
-+	debugfs = pmbus_get_debugfs_dir(client);
-+	if (!debugfs)
-+		return 0;
-+
-+	wistron_wps_dir = debugfs_create_dir(client->name, debugfs);
-+	if (!wistron_wps_dir)
-+		return 0;
-+
-+	for (i = 0; i < WPS_DEBUGFS_NUM_ENTRIES; ++i)
-+		psu->debugfs_entries[i] = i;
-+
-+	debugfs_create_file("fru", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_ID],
-+			    &wistron_wps_fops);
-+	debugfs_create_file("part_number", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_PN],
-+			    &wistron_wps_fops);
-+	debugfs_create_file("serial_number", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_SN],
-+			    &wistron_wps_fops);
-+	debugfs_create_file("fw_version", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_FW],
-+			    &wistron_wps_fops);
-+	debugfs_create_file("mfr_date", 0444, wistron_wps_dir,
-+			    &psu->debugfs_entries[WPS_DEBUGFS_DATE],
-+			    &wistron_wps_fops);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id wistron_wps_id[] = {
-+	{ "wistron_wps", 1 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, wistron_wps_id);
-+
-+static const struct of_device_id wistron_wps_of_match[] = {
-+	{ .compatible = "wistron,wps" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, wistron_wps_of_match);
-+
-+static struct i2c_driver wistron_wps_driver = {
-+	.driver = {
-+		.name = "wistron-wps",
-+		.of_match_table = wistron_wps_of_match,
-+	},
-+	.probe = wistron_wps_probe,
-+	.remove = pmbus_do_remove,
-+	.id_table = wistron_wps_id,
-+};
-+
-+module_i2c_driver(wistron_wps_driver);
-+
-+MODULE_AUTHOR("Ben Pai");
-+MODULE_DESCRIPTION("PMBus driver for Wistron power supplies");
-+MODULE_LICENSE("GPL");
--- 
-2.17.1
-
-
----------------------------------------------------------------------------------------------------------------------------------------------------------------
-This email contains confidential or legally privileged information and is for the sole use of its intended recipient. 
-Any unauthorized review, use, copying or distribution of this email or the content of this email is strictly prohibited.
-If you are not the intended recipient, you may reply to the sender and should delete this e-mail immediately.
----------------------------------------------------------------------------------------------------------------------------------------------------------------
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW51cyBXYWxsZWlqIDxsaW51
+cy53YWxsZWlqQGxpbmFyby5vcmc+DQo+IFNlbnQ6IDI4IE5vdmVtYmVyIDIwMTkgMTc6NTANCj4g
+VG86IFlhc2ggU2hhaCA8eWFzaC5zaGFoQHNpZml2ZS5jb20+DQo+IENjOiBiZ29sYXN6ZXdza2lA
+YmF5bGlicmUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29t
+OyBwYWxtZXJAZGFiYmVsdC5jb207IFBhdWwgV2FsbXNsZXkgKCBTaWZpdmUpDQo+IDxwYXVsLndh
+bG1zbGV5QHNpZml2ZS5jb20+OyBhb3VAZWVjcy5iZXJrZWxleS5lZHU7IHRnbHhAbGludXRyb25p
+eC5kZTsNCj4gamFzb25AbGFrZWRhZW1vbi5uZXQ7IG1hekBrZXJuZWwub3JnOyBibWVuZy5jbkBn
+bWFpbC5jb207DQo+IGF0aXNoLnBhdHJhQHdkYy5jb207IFNhZ2FyIEthZGFtIDxzYWdhci5rYWRh
+bUBzaWZpdmUuY29tPjsgbGludXgtDQo+IGdwaW9Admdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IHJpc2N2QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNhY2hpbiBHaGFkaQ0KPiA8c2FjaGluLmdoYWRp
+QHNpZml2ZS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgNS82XSBncGlvOiBzaWZpdmU6
+IEFkZCBHUElPIGRyaXZlciBmb3IgU2lGaXZlIFNvQ3MNCj4gDQo+IE9uIE1vbiwgTm92IDI1LCAy
+MDE5IGF0IDY6NTggQU0gWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lmaXZlLmNvbT4gd3JvdGU6DQo+
+IA0KPiA+IEFkZHMgdGhlIEdQSU8gZHJpdmVyIGZvciBTaUZpdmUgUklTQy1WIFNvQ3MuDQo+ID4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBXZXNsZXkgVy4gVGVycHN0cmEgPHdlc2xleUBzaWZpdmUuY29t
+Pg0KPiA+IFtBdGlzaDogVmFyaW91cyBmaXhlcyBhbmQgY29kZSBjbGVhbnVwXQ0KPiA+IFNpZ25l
+ZC1vZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3ZGMuY29tPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IFlhc2ggU2hhaCA8eWFzaC5zaGFoQHNpZml2ZS5jb20+DQo+IA0KPiBSZXZpZXdlZC1i
+eTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiANCj4gSSBzdXBw
+b3NlIE1hcmMgd2lsbCBtZXJnZSBhbGwgcGF0Y2hlcyBpbnRvIHRoZSBpcnFjaGlwIHRyZWUgYXMg
+dGhleSBhcmUgbG9naWNhbGx5DQo+IGRlcGVuZGVudD8gSWYgeW91IHdhbnQgdGhlIEdQSU8gYmlu
+ZGluZ3MgYW5kIHRoaXMgZHJpdmVyIGRpcmVjdGx5IG1lcmdlZA0KPiAobm8gZGVwcykgdGhlbiBJ
+IGNhbiBkbyB0aGF0IGFzIHdlbGwuDQoNClllcywgdGhlIEdQSU8gZHJpdmVyIGhhdmUgbG9naWNh
+bCBkZXBlbmRlbmN5IG9uIGlycWNoaXAgcGF0Y2hlcy4gSXQgaXMgYmVzdCBpZiBNYXJjIG1lcmdl
+cyBhbGwgdGhlIHBhdGNoZXMgaW50byB0aGUgaXJxY2hpcCB0cmVlLg0KDQpATWFyYyBaeW5naWVy
+LCBBcmUgeW91IGdvaW5nIHRvIG1lcmdlIGFsbCB0aGUgcGF0Y2hlcyBpbnRvIHRoZSBpcnFjaGlw
+IHRyZWU/DQoNCi0gWWFzaA0K
