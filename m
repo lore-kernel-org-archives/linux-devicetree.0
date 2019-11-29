@@ -2,130 +2,160 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0687C33CA0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A961EC432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FCE21721
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:06:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ku0Tjv6N"
+	by mail.kernel.org (Postfix) with ESMTP id 7F64F2158A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 18:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575050933;
+	bh=Xu+YNH5iJZKmKWNk67isl2Av/j+0Bv39AJk12G8kfjk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZY3C4ens2WQ9ufqX4ZDYDXsrOMzU1ncx22PWB8e1U+7WHlGYmGuU/amUDhc6QCCw7
+	 d5qdEY6NSvDHhd/4mAnJynRsOGqhbI4XmW+qSMrJjQWSodTVmkZ+KB+9A9dMcK0EQ5
+	 /zesz3LAJqDp8zwqfCpGcbxzZaLfTLJL8Pb5LW0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfK2SGZ (ORCPT
+        id S1727022AbfK2SIw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 13:06:25 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3528 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727009AbfK2SGX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 Nov 2019 13:06:23 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xATI273l023387;
-        Fri, 29 Nov 2019 19:06:07 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=CqTqqQisL0mVfRLeJ/Q6yUnUr6jBevycXIRNZu4CnYo=;
- b=Ku0Tjv6NuowssSIMuEa0R+OxoNmOPdAKQ/DAD0cEWcja4ORZ6myw+tFS1n0oPtVZhCZx
- Sda+Pfx6FcxYPWVQOKhshJlu9dhPG6u097Bm7B5GKMmc7+AuOcSCddB3N7t6JTj8mgpt
- jEmgiFTTqQfb1PKAYNbtaPIkodzVmMcr60qwbg2Dg7CxLZsCfI0qNaLZc18q0V5pUDYB
- q/cFqtGHRPntGyNh2NWLvtG2tAAWFTi78QswRhNUsgrkR6dikwqI8xe6/py2KYGpNT21
- nV7bq4SkqynTQ0Y31nZzzgCtzXtHuO5Z4H7L5Os7SUTEbnfGbGOkzpcn4sw7xVTY6EJ3 mA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2whcxjgr6v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 Nov 2019 19:06:07 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4AFD910002A;
-        Fri, 29 Nov 2019 19:06:07 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3F5EE222D1F;
-        Fri, 29 Nov 2019 19:06:07 +0100 (CET)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 29 Nov 2019 19:06:06
- +0100
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>, <arnd@arndb.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 4/6] ARM: dts: stm32: Manage security diversity for STM32M15x SOCs
-Date:   Fri, 29 Nov 2019 19:06:00 +0100
-Message-ID: <20191129180602.28470-5-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191129180602.28470-1-alexandre.torgue@st.com>
-References: <20191129180602.28470-1-alexandre.torgue@st.com>
+        Fri, 29 Nov 2019 13:08:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:50888 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727005AbfK2SIw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 Nov 2019 13:08:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AB081FB;
+        Fri, 29 Nov 2019 10:08:51 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17D663F68E;
+        Fri, 29 Nov 2019 10:08:50 -0800 (PST)
+Date:   Fri, 29 Nov 2019 18:08:49 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] mfd: da9062: add support for the DA9062 GPIOs in
+ the core
+Message-ID: <20191129180849.GB5747@sirena.org.uk>
+References: <20191127115619.20278-1-m.felsch@pengutronix.de>
+ <20191127115619.20278-3-m.felsch@pengutronix.de>
+ <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
+ <20191127151929.GC4879@sirena.org.uk>
+ <CACRpkdbJbCwo7yALnywscCTZBzO1ZzWY_=c5RoVGqY7Eue3t=Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-29_06:2019-11-29,2019-11-29 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CUfgB8w4ZwR/yMy5"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbJbCwo7yALnywscCTZBzO1ZzWY_=c5RoVGqY7Eue3t=Q@mail.gmail.com>
+X-Cookie: To love is good, love being difficult.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit creates a new file to manage security diversity on STM32MP15x
-SOCs. On STM32MP15xY, "Y" gives information:
- -Y = A means no cryp IP and no secure boot.
- -Y = C means cryp IP + secure boot.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+--CUfgB8w4ZwR/yMy5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 9a0b55be134d..072fc7025987 100644
---- a/arch/arm/boot/dts/stm32mp151.dtsi
-+++ b/arch/arm/boot/dts/stm32mp151.dtsi
-@@ -1255,15 +1255,6 @@
- 			status = "disabled";
- 		};
- 
--		cryp1: cryp@54001000 {
--			compatible = "st,stm32mp1-cryp";
--			reg = <0x54001000 0x400>;
--			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&rcc CRYP1>;
--			resets = <&rcc CRYP1_R>;
--			status = "disabled";
--		};
--
- 		hash1: hash@54002000 {
- 			compatible = "st,stm32f756-hash";
- 			reg = <0x54002000 0x400>;
-diff --git a/arch/arm/boot/dts/stm32mp15xc.dtsi b/arch/arm/boot/dts/stm32mp15xc.dtsi
-new file mode 100644
-index 000000000000..b06a55a2fa18
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp15xc.dtsi
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
-+ * Author: Alexandre Torgue <alexandre.torgue@st.com> for STMicroelectronics.
-+ */
-+
-+/ {
-+	soc {
-+		cryp1: cryp@54001000 {
-+			compatible = "st,stm32mp1-cryp";
-+			reg = <0x54001000 0x400>;
-+			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&rcc CRYP1>;
-+			resets = <&rcc CRYP1_R>;
-+			status = "disabled";
-+		};
-+	};
-+};
--- 
-2.17.1
+On Fri, Nov 29, 2019 at 09:49:56AM +0100, Linus Walleij wrote:
+> On Wed, Nov 27, 2019 at 4:19 PM Mark Brown <broonie@kernel.org> wrote:
 
+> > Why, what do we need to do?  We're just doing all the default stuff,
+> > it's not something we've opted out of, and the whole point with using
+> > the frameworks should be that we should get software features like this
+> > for free :(
+
+> I guess it is a bit about moving targets.
+
+> The regmap irq thing was covering all reasonable cases until
+> the hierarchical interrupts were introduced some years ago.
+
+> The hallmark of these are that the irq_domain_ops implement
+> .translate() .alloc() and .free() rather than .map() and .xlate()
+> as the irqdomain in reqmap-irq currently does.
+
+So there's two completely different APIs.  Are all the drivers supposed
+to be being updated to implement both?  It looks like the second API is
+ifdefed out when not in use so I guess so but...
+
+> The problem with hierarchical domains is that the system using
+> them need to be hierarchical "all the way up" to the overarching
+> top-level irqchip. Currently only the ARM GIC and the IXP4xx
+> irq top-level irq controllers supports this, ruling out some
+> obvious users like all non-ARM systems (for now).
+
+Are you sure?  It looks like the API was introduced by Intel and io_apic
+appears to be using the new interfaces.
+
+> I think the assumption in hierarchical irq is that you have
+> a few hardware-specific irchips and you know exactly which
+> irqchip that goes on top of another one, as well as which
+> hardware irq line is connected to which hardware irq line
+> on the parent.
+
+The documentation says that this is for systems where "there may be
+multiple interrupt controllers involved in delivering an interrupt from
+the device to the target CPU" which describes more or less every single
+regmap-irq user, though the threading might mean it doesn't quite map
+onto what was being thought of there.  But basically everything I can
+find suggests that regmap-irq should be a hierarchical controller apart
+=66rom how we figure out the primary IRQ.
+
+> Since we know the specific hardware (from a compatible
+> string or so) we can hardcode the parent-to-child mappings
+> of interrupt lines in the driver. These mappings are not
+> in the device tree for example.
+
+That seems to be part of it, yes, which seems unfortunate.
+
+> Therefore supporting hierarchical and nonhierarchical alike
+> in a very generic plug-in irqchip like the regmap-irq is a bit
+> of a challenge as it has to support both hierarchical and
+> non-hierarchical, because it is not possible to just
+> convert this to hierarchical callbacks: it has to check what
+> its parent is doing and adapt, essentially implement both
+> hierarchical and non-hierarchical at this time.
+
+It looks that way, yes.
+
+> Also we need to pass mappings between parent and child
+> somehow. In the gpiolib we did this with a callback to the
+> GPIO-chip-specific driver. How to do it for something
+> generic like regmap-irq is an open question.
+
+Currently regmap-irq just gets a parent interrupt from whatever is using
+it so yeah, this doesn't map on at all well especially since the user is
+likely to be using just a normal interrupt binding for this which is
+apparently explicitly not allowed[1].  I'm not sure what to do here.
+
+[1] https://elinux.org/images/8/8c/Zyngier.pdf
+
+--CUfgB8w4ZwR/yMy5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3hXrAACgkQJNaLcl1U
+h9DjvAf/dBusub/Tb/6cifVAVsYUQ5jBLUL96REY80STQQtFD79EKeYFZovD/h5I
+Bi3hilPup9OWhs6Dit19ikq7ET6GmCP1HnunBrEV8LNABTiBmmrglLqM5bqdoYqb
+ykVv3yCK2U2yJ4DAfu4eG5cX7Mg72t7BfDsFF9PL8/p1jOkyocm+LAVzf3vDcatH
+tuthvFlyLllErgl+OiqWsI88f6tkuhyzLmP+oesYzMSLqRVaZyz2XNQvv3UA4ykd
+BWVWBHI51Kr5OO+kMBojuSsd7Y1FMiuRmp4AKswMTOfWfT3+Atjou/HHfoHhsgy/
+/v3banHni7UzfhmC3kuezEnMOqywbg==
+=cuXw
+-----END PGP SIGNATURE-----
+
+--CUfgB8w4ZwR/yMy5--
