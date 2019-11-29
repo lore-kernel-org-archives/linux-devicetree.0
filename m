@@ -2,117 +2,73 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B79BC43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED8FC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C892176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575018742;
-	bh=D7C4w+4s2X0XNpRConTGLaydGNgZ/tefnnJz0BmjCbQ=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=GqJl9b6XQcdJmYpMy0JgoJqiypfxRy5zjRMWbu5owE2u6gyFr3EZZURFiFOjw5o7I
-	 VPck4CrpXonKB9VspnXvS2VafUxBs0o7l/yVLdvIVY6oJLHeXQm3OeW90d0e6T5Af0
-	 nLnaU3i6kfJ/EPu9fkwI/Yr5Vhnega2ouju+e3I8=
+	by mail.kernel.org (Postfix) with ESMTP id 597E4215A5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfK2JMV (ORCPT
+        id S1726800AbfK2JOJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:12:21 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:47315 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726143AbfK2JMV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:12:21 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iacJu-00053w-Nt; Fri, 29 Nov 2019 10:12:10 +0100
-To:     Yash Shah <yash.shah@sifive.com>
-Subject: RE: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive SoCs
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 Nov 2019 09:12:10 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        <bgolaszewski@baylibre.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        <aou@eecs.berkeley.edu>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <bmeng.cn@gmail.com>,
-        <atish.patra@wdc.com>, Sagar Kadam <sagar.kadam@sifive.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-In-Reply-To: <CH2PR13MB33682C26386CB4EE8A7EA1C98C460@CH2PR13MB3368.namprd13.prod.outlook.com>
-References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
- <1574661437-28486-6-git-send-email-yash.shah@sifive.com>
- <CACRpkdY7fGvTPcwwC0XU+XN2w_QUCj0MmOYhp183P3Lj7Qw8WA@mail.gmail.com>
- <CH2PR13MB33682C26386CB4EE8A7EA1C98C460@CH2PR13MB3368.namprd13.prod.outlook.com>
-Message-ID: <208a63e8819b84f9dc03f270f2606294@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Fri, 29 Nov 2019 04:14:09 -0500
+Received: from olimex.com ([184.105.72.32]:37210 "EHLO olimex.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbfK2JOJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 29 Nov 2019 04:14:09 -0500
+Received: from localhost.localdomain ([94.155.250.134])
+        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 01:13:59 -0800
+From:   Stefan Mavrodiev <stefan@olimex.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Cc:     linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
+Subject: [PATCH 1/3] arm64: dts: allwinner: a64: olinuxino: Fix eMMC supply regulator
+Date:   Fri, 29 Nov 2019 11:13:34 +0200
+Message-Id: <20191129091336.13104-2-stefan@olimex.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191129091336.13104-1-stefan@olimex.com>
+References: <20191129091336.13104-1-stefan@olimex.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-29 06:27, Yash Shah wrote:
->> -----Original Message-----
->> From: Linus Walleij <linus.walleij@linaro.org>
->> Sent: 28 November 2019 17:50
->> To: Yash Shah <yash.shah@sifive.com>
->> Cc: bgolaszewski@baylibre.com; robh+dt@kernel.org;
->> mark.rutland@arm.com; palmer@dabbelt.com; Paul Walmsley ( Sifive)
->> <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu; 
->> tglx@linutronix.de;
->> jason@lakedaemon.net; maz@kernel.org; bmeng.cn@gmail.com;
->> atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>; linux-
->> gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
->> riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Sachin 
->> Ghadi
->> <sachin.ghadi@sifive.com>
->> Subject: Re: [PATCH v3 5/6] gpio: sifive: Add GPIO driver for SiFive 
->> SoCs
->>
->> On Mon, Nov 25, 2019 at 6:58 AM Yash Shah <yash.shah@sifive.com> 
->> wrote:
->>
->> > Adds the GPIO driver for SiFive RISC-V SoCs.
->> >
->> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
->> > [Atish: Various fixes and code cleanup]
->> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> I suppose Marc will merge all patches into the irqchip tree as they 
->> are logically
->> dependent? If you want the GPIO bindings and this driver directly 
->> merged
->> (no deps) then I can do that as well.
->
-> Yes, the GPIO driver have logical dependency on irqchip patches. It
-> is best if Marc merges all the patches into the irqchip tree.
->
-> @Marc Zyngier, Are you going to merge all the patches into the 
-> irqchip tree?
+A64-OLinuXino-eMMC uses 1.8V for eMMC supply. This is done via a triple
+jumper, which sets VCC-PL to either 1.8V or 3.3V. This setting is different
+for boards with and without eMMC.
 
-I'm happy to pick this up, but that's definitely 5.6 material as
-I stopped collecting new 5.5 features a couple of weeks ago.
+This is not a big issue for DDR52 mode, however the eMMC will not work in
+HS200/HS400, since these modes explicitly requires 1.8V.
 
-Thanks,
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-         M.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
+index 96ab0227e82d..7d135decbd53 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
+@@ -14,8 +14,8 @@
+ &mmc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_pins>;
+-	vmmc-supply = <&reg_dcdc1>;
+-	vqmmc-supply = <&reg_dcdc1>;
++	vmmc-supply = <&reg_eldo1>;
++	vqmmc-supply = <&reg_eldo1>;
+ 	bus-width = <8>;
+ 	non-removable;
+ 	cap-mmc-hw-reset;
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
