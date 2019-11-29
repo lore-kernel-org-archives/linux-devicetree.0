@@ -2,146 +2,124 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8095C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5679AC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888172086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2412C21771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EaG70I7R"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lB9otGP+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfK2VJx (ORCPT
+        id S1727090AbfK2VLZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:09:53 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:36051 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfK2VJx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 16:09:53 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D75B723059;
-        Fri, 29 Nov 2019 22:09:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1575061791;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=vBGH4Is8jTUA/hpecRwlSpOFBZJJLpBTculd0msTkEU=;
-        b=EaG70I7RiyaiHNh/CcggLrwsnJYaFUU7+ulXZv6r7uax/uYOh4rlcOeqMH/3n3wvENoJIZ
-        gN0VCKL7LHsbbJ8/s8YolS1WJTPmr/1amTZIigQC6/FpyBMa2hlTszvhPrVMarKnhtzWJb
-        tC92UluXLeJUc8T3/mXoYXM5wBXYhyw=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] arm64: dts: ls1028a: put SAIs into async mode
-Date:   Fri, 29 Nov 2019 22:09:37 +0100
-Message-Id: <20191129210937.26808-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Fri, 29 Nov 2019 16:11:25 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40426 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfK2VLZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 16:11:25 -0500
+Received: by mail-il1-f195.google.com with SMTP id b15so4923974ila.7
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 13:11:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J737RfycvasrkDMuXXVhGv8GjJozMIk9WjH6tUo8YNU=;
+        b=lB9otGP+R7D5FDCg+yCl5lzrEbHVc6Uxs0+r8izKBMVVOofA3vofUwCrTGfrnh/HzZ
+         nQhDEkKv9iFoZWHxi6Lm1vM755MYXzxCy5RZp4jPRE/gJ2i9XvIJGWnd9ekCs/i9szP+
+         517eLdsZZuxFUU4mWYjZgOVY1hD6uyvbW1lnCzq/wktHxgnQA6T1f0c9qQjJHQmI0zbI
+         8V+2XFBdclfe41bWEdDMCU2YuW4KMdfuROPYnbBrNDN52yqzzuCMy8RtBtAnZxGVEyDm
+         ntE4PwYVP+sP+TljhMeQQ5sxV0Ry0ylzC2Nuyf3oC2BT/Tqn/gwKUaSZXUT6AHKd8tDK
+         rpEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J737RfycvasrkDMuXXVhGv8GjJozMIk9WjH6tUo8YNU=;
+        b=Qar2glpHVTyAoRW/zcrCRMW74Nq6a8RA2w1TEmPp2KzywECG1KT/ZZSmfDT4XbUEm9
+         4zpgaUg5SkwkoORjLxz457VPxoxEdio1nxzY/A87hSFxW4eLzvoabwiokZACWQXrd5GC
+         dnITCgIJqQ+9cGKEt/CaPcR2Kdzt9Vt7OgdEqx6fpAZAyrmPndFqyUhh5qtEcQMTKWSn
+         DhP2MhiMoJYFHM3wUOndee40yL2+p/7MutLcZIQRdbGE7sARday3t3w5Ryb2nPmXHQ0E
+         +THDWkv9nBH9ZQC4AGcpHhcWbRonmUKR75dMuPtAE9xYvEZeW5edCutwHclNnkLf4T1D
+         1Kyg==
+X-Gm-Message-State: APjAAAUsFP9cBhy+ypn1PdGG+eqLWwUTYEvcNMHQ6M1jlaVeC8OC9Se3
+        wLsarrWdlwHVSLG67p0UsNhz9XNaInr3F2vgQ/8Xkw==
+X-Google-Smtp-Source: APXvYqyOXHCVc3ozOJPEmGcC3VwB8m0Qnuuz5GE4mQlGcSQvgINwg2paqQAOa7PK0kmgMZbGH4Jw33/Thcthow443Ck=
+X-Received: by 2002:a92:1547:: with SMTP id v68mr13668342ilk.58.1575061884570;
+ Fri, 29 Nov 2019 13:11:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: D75B723059
-X-Spamd-Result: default: False [6.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         MID_CONTAINS_FROM(1.00)[];
-         NEURAL_HAM(-0.00)[-0.607];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+References: <20191119231912.12768-1-mike.leach@linaro.org> <20191119231912.12768-8-mike.leach@linaro.org>
+ <20191125212258.GB18542@xps15> <35357ff3-2b1e-764e-cfbd-65bcc7a4faa6@arm.com>
+In-Reply-To: <35357ff3-2b1e-764e-cfbd-65bcc7a4faa6@arm.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 29 Nov 2019 14:11:13 -0700
+Message-ID: <CANLsYkxqO71aBzf=BqcFDWccp3XH3gXc4OESgRy0-rTEe27fJA@mail.gmail.com>
+Subject: Re: [PATCH v5 07/14] coresight: cti: Add device tree support for
+ custom CTI.
+To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The LS1028A SoC has only unidirectional SAIs. Therefore, it doesn't make
-sense to have the RX and TX part synchronous. Even worse, the RX part
-wont work out of the box because by default it is configured as
-synchronous to the TX part. And as said before, the pinmux of the SoC
-can only be configured to route either the RX or the TX signals to the
-SAI but never both at the same time. Thus configure the asynchronous
-mode by default.
+On Fri, 29 Nov 2019 at 07:16, Suzuki Kuruppassery Poulose
+<suzuki.poulose@arm.com> wrote:
+>
+> On 25/11/2019 21:22, Mathieu Poirier wrote:
+> > On Tue, Nov 19, 2019 at 11:19:05PM +0000, Mike Leach wrote:
+> >> Adds support for CTIs whose connections are implementation defined at
+> >> hardware design time, and not constrained by v8 architecture.
+> >>
+> >> These CTIs have no standard connection setup, all the settings have to
+> >> be defined in the device tree files. The patch creates a set of connections
+> >> and trigger signals based on the information provided.
+> >>
+> >> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> >> ---
+> >>   .../coresight/coresight-cti-platform.c        | 250 +++++++++++++++++-
+> >>   .../hwtracing/coresight/coresight-cti-sysfs.c |  11 +
+> >>   2 files changed, 257 insertions(+), 4 deletions(-)
+>
+> >> +static int cti_plat_create_impdef_connections(struct device *dev,
+> >> +                                          struct cti_drvdata *drvdata)
+> >> +{
+> >> +    int rc = 0;
+> >> +    struct fwnode_handle *fwnode = dev_fwnode(dev);
+> >> +    struct fwnode_handle *child = NULL;
+> >> +
+> >> +    if (IS_ERR_OR_NULL(fwnode))
+> >> +            return -EINVAL;
+> >> +
+> >> +    fwnode_for_each_child_node(fwnode, child) {
+> >> +            if (cti_plat_node_name_eq(child, CTI_DT_CONNS))
+> >> +                    rc = cti_plat_create_connection(dev, drvdata, child);
+> >> +            if (rc != 0)
+> >> +                    break;
+> >> +    }
+> >> +    fwnode_handle_put(child);
+> >
+> > As far as I can tell we don't need to call fwnode_handle_put()?
+>
+> Actually we do, if we break the scan in between, at least for of_nodes.
+> I had to literally look it down all the way down to confirm this.
+>
+> So for CONFIG_OF it ends up in of_get_next_available_child(), which
+> drops the ref on "prev" and grabs the "next". So in case we break
+> the loop, we must drop the ref on the child.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Well spotted.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 379913756e90..9be33426e5ce 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -637,6 +637,7 @@
- 			dma-names = "tx", "rx";
- 			dmas = <&edma0 1 4>,
- 			       <&edma0 1 3>;
-+			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
- 
-@@ -651,6 +652,7 @@
- 			dma-names = "tx", "rx";
- 			dmas = <&edma0 1 6>,
- 			       <&edma0 1 5>;
-+			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
- 
-@@ -665,6 +667,7 @@
- 			dma-names = "tx", "rx";
- 			dmas = <&edma0 1 8>,
- 			       <&edma0 1 7>;
-+			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
- 
-@@ -679,6 +682,7 @@
- 			dma-names = "tx", "rx";
- 			dmas = <&edma0 1 10>,
- 			       <&edma0 1 9>;
-+			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
- 
-@@ -693,6 +697,7 @@
- 			dma-names = "tx", "rx";
- 			dmas = <&edma0 1 12>,
- 			       <&edma0 1 11>;
-+			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
- 
-@@ -707,6 +712,7 @@
- 			dma-names = "tx", "rx";
- 			dmas = <&edma0 1 14>,
- 			       <&edma0 1 13>;
-+			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
- 
--- 
-2.20.1
-
+> Otherwise, the last
+> result would be NULL, which would have dropped the ref on the "last"
+> valid entry. And this is harmless with a NULL ptr.
+>
+> Suzuki
