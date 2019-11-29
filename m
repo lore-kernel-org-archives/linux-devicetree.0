@@ -2,151 +2,157 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688A6C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC8BC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41430216F4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5EB215A5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 15:28:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fybemh1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfK2PLB (ORCPT
+        id S1726903AbfK2P2d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 10:11:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49002 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfK2PLB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 10:11:01 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iahv6-0000aO-4d; Fri, 29 Nov 2019 16:10:56 +0100
-Date:   Fri, 29 Nov 2019 16:10:56 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [RFC] Efficiency of the phandle_cache on ppc64/SLOF
-Message-ID: <20191129151056.o5c44lm5lb4wsr4r@linutronix.de>
+        Fri, 29 Nov 2019 10:28:33 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37713 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfK2P2d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 10:28:33 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so4713651wru.4
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 07:28:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=QBYK1E+SFEUtR4nuF0Hq1/Zl0vxT8rcgdq12kebEYCw=;
+        b=fybemh1fl5FELIMmoJZnWKoGU6gkjl55CTvBtsMkTjKBe9+9q5azX3vK7CrnWlD4+m
+         ATTa/+yYn808n2UnMe0zSU27V/ALJzcfyewxcwoGDLMpE+3nRgHaRQI6DA94AukXUiJB
+         hjsqV4+jtcmEmj/BDh8dLZ/DRjse6sDrT0bCl7ecTrNNyYBw6BwzfFzs7Ti5p0v23MnE
+         +fDRYLnLSJ559SpDXDxTsKfDHmPdDwfAe4/MCFncI1Wzvl2k8yyzbCe3Y5158WP0Gpt4
+         xntmd2a+Rl7Oonw3WrC2tR2S9zGYEskSnvLdMeDrEhklUgWbep0gTuvPx0qYaX4l87Lz
+         Gxwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=QBYK1E+SFEUtR4nuF0Hq1/Zl0vxT8rcgdq12kebEYCw=;
+        b=aCoAmq99U5vPRScsH/uxEyziza08u/bIw8B33SMNnH3p4g3zTavqTyNMk8bZL/JFv8
+         LOpx2su7f5Q5oqwyFKStiHILT6KueE2uHSLtZEjvAw2cNDkW5VsnerBU9YFXsyAOaZIl
+         mAZPX9OJS4ZNxicil3xSwxDYHrMhIZEJsWDK3OuBdVjyCF9UPiJMKFCcqVJxABR5yzGm
+         cUwNi79Ep7rT8LCNtwYlwG3l7DzT/vcizZ+Lv4OoGiooI1e5SFb2wH/izyJsqGyj6FgP
+         UMOyqo9U6FwUc8albBMqLC+KTPf6I49/hzRJdhcAWt7IFLNwJwKt7ZeU/Lk/f/pii0KY
+         Ziqw==
+X-Gm-Message-State: APjAAAVZcbbO/ChZpzxkZX3yT8+8gybxl7Sv+ZSOXDrL09ZgvoGQLrf6
+        SsnuEJrKaQHyutkyonlb5IHf0Q==
+X-Google-Smtp-Source: APXvYqwp522ZQItIPDw0UZZeNpADWsIPr6wHnrqJzszsiD5Ngr1SfU1KzHkCvXFfBFKhk2oWIkEzYw==
+X-Received: by 2002:a5d:4d8d:: with SMTP id b13mr10405744wru.6.1575041310867;
+        Fri, 29 Nov 2019 07:28:30 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id m3sm27328570wrw.20.2019.11.29.07.28.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 07:28:30 -0800 (PST)
+References: <20191129144605.182774-1-jian.hu@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] add Amlogic A1 clock controller driver
+In-reply-to: <20191129144605.182774-1-jian.hu@amlogic.com>
+Date:   Fri, 29 Nov 2019 16:28:29 +0100
+Message-ID: <1jwobi7lcy.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I've been looking at phandle_cache and noticed the following: The raw
-phandle value as generated by dtc starts at zero and is incremented by
-one for each phandle entry. The qemu pSeries model is using Slof (which
-is probably the same thing as used on real hardware) and this looks like
-a poiner value for the phandle.
-With
-	qemu-system-ppc64le -m 16G -machine pseries -smp 8 
 
-I got the following output:
-| entries: 64
-| phandle 7e732468 slot 28 hash c
-| phandle 7e732ad0 slot 10 hash 27
-| phandle 7e732ee8 slot 28 hash 3a
-| phandle 7e734160 slot 20 hash 36
-| phandle 7e734318 slot 18 hash 3a
-| phandle 7e734428 slot 28 hash 33
-| phandle 7e734538 slot 38 hash 2c
-| phandle 7e734850 slot 10 hash e
-| phandle 7e735220 slot 20 hash 2d
-| phandle 7e735bf0 slot 30 hash d
-| phandle 7e7365c0 slot 0 hash 2d
-| phandle 7e736f90 slot 10 hash d
-| phandle 7e737960 slot 20 hash 2d
-| phandle 7e738330 slot 30 hash d
-| phandle 7e738d00 slot 0 hash 2d
-| phandle 7e739730 slot 30 hash 38
-| phandle 7e73bd08 slot 8 hash 17
-| phandle 7e73c2e0 slot 20 hash 32
-| phandle 7e73c7f8 slot 38 hash 37
-| phandle 7e782420 slot 20 hash 13
-| phandle 7e782ed8 slot 18 hash 1b
-| phandle 7e73ce28 slot 28 hash 39
-| phandle 7e73d390 slot 10 hash 22
-| phandle 7e73d9a8 slot 28 hash 1a
-| phandle 7e73dc28 slot 28 hash 37
-| phandle 7e73de00 slot 0 hash a
-| phandle 7e73e028 slot 28 hash 0
-| phandle 7e7621a8 slot 28 hash 36
-| phandle 7e73e458 slot 18 hash 1e
-| phandle 7e73e608 slot 8 hash 1e
-| phandle 7e740078 slot 38 hash 28
-| phandle 7e740180 slot 0 hash 1d
-| phandle 7e740240 slot 0 hash 33
-| phandle 7e740348 slot 8 hash 29
-| phandle 7e740410 slot 10 hash 2
-| phandle 7e740eb0 slot 30 hash 3e
-| phandle 7e745390 slot 10 hash 33
-| phandle 7e747b08 slot 8 hash c
-| phandle 7e748528 slot 28 hash f
-| phandle 7e74a6e0 slot 20 hash 18
-| phandle 7e74aab0 slot 30 hash b
-| phandle 7e74f788 slot 8 hash d
-| Used entries: 8, hashed: 29
+On Fri 29 Nov 2019 at 15:45, Jian Hu <jian.hu@amlogic.com> wrote:
 
-So the hash array has 64 entries out which only 8 are populated. Using
-hash_32() populates 29 entries.
-Could someone with real hardware verify this?
-I'm not sure how important this performance wise, it looks just like a
-waste using only 1/8 of the array.
+> add support for Amlogic A1 clock driver, the clock includes 
+> three parts: peripheral clocks, pll clocks, CPU clocks.
+> sys pll and CPU clocks will be sent in next patch.
+>
+> Changes since v1 at [2]:
 
-The patch used for testing:
+v2 or v1 ??
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 1d667eb730e19..2640d4bc81a9a 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -197,6 +197,7 @@ void of_populate_phandle_cache(void)
- 	u32 cache_entries;
- 	struct device_node *np;
- 	u32 phandles = 0;
-+	struct device_node **cache2;
- 
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 
-@@ -214,14 +215,32 @@ void of_populate_phandle_cache(void)
- 
- 	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
- 				GFP_ATOMIC);
-+	cache2 = kcalloc(cache_entries, sizeof(*phandle_cache), GFP_ATOMIC);
- 	if (!phandle_cache)
- 		goto out;
- 
-+	pr_err("%s(%d) entries: %d\n", __func__, __LINE__, cache_entries);
- 	for_each_of_allnodes(np)
- 		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
-+			int slot;
- 			of_node_get(np);
- 			phandle_cache[np->phandle & phandle_cache_mask] = np;
-+			slot = hash_32(np->phandle, __ffs(cache_entries));
-+			cache2[slot] = np;
-+			pr_err("%s(%d) phandle %x slot %x hash %x\n", __func__, __LINE__,
-+			       np->phandle, np->phandle & phandle_cache_mask, slot);
- 		}
-+	{
-+		int i, filled = 0, filled_hash = 0;
-+
-+		for (i = 0; i < cache_entries; i++) {
-+			if (phandle_cache[i])
-+				filled++;
-+			if (cache2[i])
-+				filled_hash++;
-+		}
-+		pr_err("%s(%d) Used entries: %d, hashed: %d\n", __func__, __LINE__, filled, filled_hash);
-+	}
- 
- out:
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> -add probe function for A1
+> -seperate the clock driver into two patch
+> -change some clock flags and ops
+> -add support for a1 PLL ops
+> -add A1 clock node
+>
+> Changes since v1 at [1]:
+> -place A1 config alphabetically
+> -add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
+> -separate the driver into two driver: peripheral and pll driver
+> -delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
+> -delete the change in Kconfig.platforms, address to Kevin alone
+> -remove the useless comments
+> -modify the meson pll driver to support A1 PLLs
+>
+> [1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
+> [2] https://lkml.kernel.org/r/1571382865-41978-1-git-send-email-jian.hu@amlogic.com
+>
+> Jian Hu (7):
+>   dt-bindings: clock: meson: add A1 PLL clock controller bindings
+>   clk: meson: add support for A1 PLL clock ops
+>   clk: meson: eeclk: refactor eeclk common driver to support A1
+>   clk: meson: a1: add support for Amlogic A1 PLL clock driver
+>   dt-bindings: clock: meson: add A1 peripheral clock controller bindings
+>   clk: meson: a1: add support for Amlogic A1 Peripheral clock driver
+>   arm64: dts: meson: add A1 PLL and periphs clock controller
 
-Sebastian
+The arm64 is for the DT maintainer. Please send it separately after this
+series is applied (if it gets applied)
+
+> Please fix the underlying issue, then you can post your series again.
+
+This was a comment on your v2. Did you fix the orphan/ordering issue ?
+If you did, you probably should mention it here.
+If you did not, I'm probably not going to review this further until you do.
+
+>
+>  .../bindings/clock/amlogic,a1-clkc.yaml       |   70 +
+>  .../bindings/clock/amlogic,a1-pll-clkc.yaml   |   56 +
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   26 +
+>  drivers/clk/meson/Kconfig                     |   20 +
+>  drivers/clk/meson/Makefile                    |    2 +
+>  drivers/clk/meson/a1-pll.c                    |  334 +++
+>  drivers/clk/meson/a1-pll.h                    |   56 +
+>  drivers/clk/meson/a1.c                        | 2309 +++++++++++++++++
+>  drivers/clk/meson/a1.h                        |  120 +
+>  drivers/clk/meson/clk-pll.c                   |   21 +
+>  drivers/clk/meson/clk-pll.h                   |    1 +
+>  drivers/clk/meson/meson-eeclk.c               |   59 +-
+>  drivers/clk/meson/meson-eeclk.h               |    2 +
+>  drivers/clk/meson/parm.h                      |    1 +
+>  include/dt-bindings/clock/a1-clkc.h           |   98 +
+>  include/dt-bindings/clock/a1-pll-clkc.h       |   16 +
+>  16 files changed, 3181 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>  create mode 100644 drivers/clk/meson/a1-pll.c
+>  create mode 100644 drivers/clk/meson/a1-pll.h
+>  create mode 100644 drivers/clk/meson/a1.c
+>  create mode 100644 drivers/clk/meson/a1.h
+>  create mode 100644 include/dt-bindings/clock/a1-clkc.h
+>  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+
