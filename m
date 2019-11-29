@@ -2,136 +2,118 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA735C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 07:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E313C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 07:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4AB4215F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 07:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439AA21736
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 07:57:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oX9ygkYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfK2Huc (ORCPT
+        id S1726360AbfK2H5g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 02:50:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38947 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfK2Huc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 02:50:32 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iab2s-0003x1-FL; Fri, 29 Nov 2019 08:50:30 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iab2r-0002eU-Fz; Fri, 29 Nov 2019 08:50:29 +0100
-Date:   Fri, 29 Nov 2019 08:50:29 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        kernel@pengutronix.de, Adam.Thomson.Opensource@diasemi.com,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/5] gpio: add support to get local gpio number
-Message-ID: <20191129075029.gs42pdwehjarem6y@pengutronix.de>
-References: <20191127135932.7223-1-m.felsch@pengutronix.de>
- <20191127135932.7223-2-m.felsch@pengutronix.de>
- <CAMpxmJXzBphmW7SWD05wtLjSAR7VBzVAgnYJYd3Sd49Bp6AmgQ@mail.gmail.com>
- <20191128124942.4ddyi5eeclvxmqbg@pengutronix.de>
- <20191129074524.dipo37u6lv7vzfhc@pengutronix.de>
+        Fri, 29 Nov 2019 02:57:36 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40817 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfK2H5g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 02:57:36 -0500
+Received: by mail-wm1-f66.google.com with SMTP id y5so13880234wmi.5
+        for <devicetree@vger.kernel.org>; Thu, 28 Nov 2019 23:57:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=hClcGyZUyRAdPFEjS9zD1iTFQS5wk4UVwSxzy8NeBsE=;
+        b=oX9ygkYVmfkmhy6yyVe5qnMqSvemShkjRnoGFQwH7OJmhzPZH5d1VXD4Z3Sx71BBfN
+         OmqfwNUjNEazDwZ6pgmaO/EbVx2503hXI4aZwkUfbHFKJ7u1TYerNMrH/huLTXmZOojX
+         ahP9UJAX5MYBNSC8wAEhjh8VQQNkOfelHW+79ryd+XKSJXWvarrlVQpRtemr3UMXXAUe
+         nfgrP/MiD+QbYie1y9yVFntFeRMzyalEwWxFbCcEDJkzaGb8hWhY0jfQqg3iNHycfEhW
+         nkOvqZs1uifx1VTdoJSQ3+RCr12fIzmD2yTuj4KqS9r1i36n7AuXtNQzR4t15BLjRQaF
+         YXPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hClcGyZUyRAdPFEjS9zD1iTFQS5wk4UVwSxzy8NeBsE=;
+        b=ZTUh5Q8aYKp7yBW73spJn89nFgKNhTzgWS3gFybRH784mX2Qn4LXUgOfAVAtqhkq59
+         UkT0TZLnWsJuy0KElagwcQWTPPsTegAABK/oAkaBw+mOO8DVYLwOJyRuwDVibGLiFOms
+         flSqS4oU6uotS7zxupG0JIhkdbMCeZ2SB98XIHGYeD6IyEO0Bsl/70K0csHyUlWg3WSW
+         738qd2HdBGIgohZLcMffuajfkDYihP8MKnZhBoeboCaaLPRj4cjjp4GpNUmysTUqfuJG
+         tgK5f3re1qJf+RcmYVf0p7Cfy6PmdJbpWSlpSYHhCVi5JpohFpP2IITZzrxPJoVDEPrG
+         DaOQ==
+X-Gm-Message-State: APjAAAUtaZTeLynPlbazmKYiILq00MgfZvMHBvs6q4x6VrsB7E2swTYq
+        PSYVcusJFZfrDNIKE3oNNuY=
+X-Google-Smtp-Source: APXvYqzzIc2cg6FFoHZWnQAg16nZrA34PO73gfpwf17n8oEimaxGpOKXuawypKW0iXLZZluncDmwgQ==
+X-Received: by 2002:a05:600c:21d6:: with SMTP id x22mr13267705wmj.126.1575014253972;
+        Thu, 28 Nov 2019 23:57:33 -0800 (PST)
+Received: from localhost ([193.47.161.132])
+        by smtp.gmail.com with ESMTPSA id c1sm25745470wrs.24.2019.11.28.23.57.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Nov 2019 23:57:33 -0800 (PST)
+Date:   Fri, 29 Nov 2019 08:56:49 +0100
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     DTR <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org Pantelis Antoniou" 
+        <pantelis.antoniou@gmail.com>,
+        "netdev@vger.kernel.org Linux ARM" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC PATCH 1/1] arm64: dts: added basic DTS for qmx8 congatec
+ board
+Message-ID: <20191129075649.GE2460@optiplex>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191129074524.dipo37u6lv7vzfhc@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:49:56 up 13 days, 23:08, 28 users,  load average: 0.00, 0.04,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <ed8b6139-a67d-d5d3-c65b-260d020c95e0@free.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19-11-29 08:45, Uwe Kleine-König wrote:
-> On Thu, Nov 28, 2019 at 01:49:42PM +0100, Marco Felsch wrote:
-> > On 19-11-28 11:46, Bartosz Golaszewski wrote:
-> > > śr., 27 lis 2019 o 14:59 Marco Felsch <m.felsch@pengutronix.de> napisał(a):
-> > > >
-> > > > Sometimes consumers needs to know the gpio-chip local gpio number of a
-> > > > 'struct gpio_desc' for further configuration. This is often the case for
-> > > > mfd devices.
-> > > >
-> > > 
-> > > We already have this support. It's just a matter of exporting it, so
-> > > maybe adjust the commit message to not be confusing.
-> > 
-> > Therefore I mentioned the consumers.
-> > 
-> > > That being said: I'm not really a fan of this - the whole idea of gpio
-> > > descriptors was to make them opaque and their hardware offsets
-> > > irrelevant. :(
-> > 
-> > I know therefore I added a driver local helper but this wasn't the way
-> > Linus wanted to go..
-> > 
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > ---
-> > > >  drivers/gpio/gpiolib.c        |  6 ++++++
-> > > >  include/linux/gpio/consumer.h | 10 ++++++++++
-> > > >  2 files changed, 16 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > > > index 104ed299d5ea..7709648313fc 100644
-> > > > --- a/drivers/gpio/gpiolib.c
-> > > > +++ b/drivers/gpio/gpiolib.c
-> > > > @@ -4377,6 +4377,12 @@ int gpiod_count(struct device *dev, const char *con_id)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(gpiod_count);
-> > > >
-> > > > +int gpiod_to_offset(struct gpio_desc *desc)
-> > > 
-> > > Maybe call it: gpiod_desc_to_offset()?
-> > 
-> > The function name is proposed by Linus too so Linus what's your
-> > oppinion?
+On 28/11/19, Marc Gonzalez wrote:
+> On 28/11/2019 10:55, Oliver Graute wrote:
 > 
-> INAL (I'm not a Linus) but I wonder what the 'd' in gpiod stands for.
-> Assuming it already meand "desc" I'd prefer gpiod_to_offset.
-
-Yes, that was my assumption too.
-
-Regards,
-  Marco
-
-> Best regards
-> Uwe
+> > On 28/11/19, Marc Gonzalez wrote:
+> > 
+> >> On 29/10/2019 13:23, Oliver Graute wrote:
+> >>
+> >>> +&fec1 {
+> >>> +	pinctrl-names = "default";
+> >>> +	pinctrl-0 = <&pinctrl_fec1>;
+> >>> +	phy-mode = "rgmii";
+> >>> +	phy-handle = <&ethphy0>;
+> >>> +	fsl,magic-packet;
+> >>> +	fsl,rgmii_txc_dly;
+> >>> +	fsl,rgmii_rxc_dly;
+> >>> +	status = "okay";
+> >>
+> >> The two fsl,rgmii* properties do not exist in mainline.
+> >> I suppose there were copied from downstream?
+> > 
+> > you are right, I'll remove them.
 > 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-> 
+> You should first check what the downstream driver does for them.
+> And check if there is an equivalent action in mainline.
+> These delays tend to be required for the PHY to work at all.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+ok as far as I see there is currently no equilant action in mainline.
+Downstream linux-imx use rgmii_txc_dly and rgmii_rxc_dly in fec_probe()
+and fec_restart() for some imx8qm-fec and imx8mq-fec PHY delay quirks.
+Perhaps this missing quirks are related to the random crashes in that
+driver I have with imx8qm.
+
+[  129.211959] fec 5b040000.ethernet eth0: rcv is not +last
+[  129.217300] fec 5b040000.ethernet eth0: rcv is not +last
+[  129.222647] fec 5b040000.ethernet eth0: rcv is not +last
+[  129.227966] fec 5b040000.ethernet eth0: rcv is not +last
+[  129.233282] fec 5b040000.ethernet eth0: rcv is not +last
+
+Best regards,
+
+Oliver
