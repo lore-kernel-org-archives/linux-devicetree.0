@@ -2,106 +2,110 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C32C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CF8C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6925721774
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218CD21774
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:33:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WOk8dlVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbfK2J0z (ORCPT
+        id S1726819AbfK2JdF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:26:55 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41356 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfK2J0z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 04:26:55 -0500
-Received: by mail-ed1-f66.google.com with SMTP id n24so3826441edo.8;
-        Fri, 29 Nov 2019 01:26:54 -0800 (PST)
+        Fri, 29 Nov 2019 04:33:05 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43766 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfK2JdF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 04:33:05 -0500
+Received: by mail-lf1-f67.google.com with SMTP id l14so22087671lfh.10
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 01:33:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H/Od6kVrXI87O4KN/Z/H7nofcItikhLmOLU1xinq+0o=;
+        b=WOk8dlVMR/QLVPtqElvHr+0adH/0ak6x3Ek5lWCQvsvbZdrw2XhrM1EuzzJgz51GHX
+         vD5/azUjcuyK6flVMNJfglKVkr0cdABA1K9P8bCzgk4dsP+69qixQyMIttJ2FtL5r82k
+         pY2/42xk4ditN95qjoRlqrufFZoIS26RWd/KGELpFvgf5ZTGMUhmzX86JmIflatOI2Vb
+         mlXd8v4CpNaaPF6fu3lKHXrEOTopZEtlVuU0Ca73zkpcNh/2XJaF9HNRieLGKJfLu50t
+         GeBTBxDVfDylh0i/orThzdQ3hREAzZTxWQZAVf6OV9me8/MHTTXzFDz78tV+tWZedXto
+         Gf/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=61Qn8sc6UymCs2JwYwR9E7PQUQwsg86yGcxrakyfLnc=;
-        b=tKotwCZB1OIyoWhF3qvKTQ0hh+PK+vJ242n4RXT+4dTLsxyyo8UBX7olemY6onxpuy
-         IpimaWFhbSpL9TZU8bZ/b0lXCCJFXv3ut8dhg/R0c9WqnP+g2cawIMj8lZWlwUo6RC3T
-         z+Hbf29JRKIsuXk7iRoI+V2qUUu80krKqm0X8cdGYD4BK6QCJH+Oe1LB8HsqEM+ag3o0
-         zj9ES8+oTgq+u7YgHSF3gBz/HrdKgpGv9HzXp211MMrOp1yr8IbjwSN7m6J1MZs3iRuJ
-         sjAJ/pzpX1DYbURuTyVnikovhmBeq0PLHqlwDT6SYeuulHdcctXNSY2wbj8ToVwYpJ2g
-         uraQ==
-X-Gm-Message-State: APjAAAX/HFaAZod872BKftOB6Xj70BOKeZZd9Og5oubUklfiVDKPZ6re
-        SHz2iYbToTG1ZUx2QDMTJi3S+Tp2kXk=
-X-Google-Smtp-Source: APXvYqxxU2OcafQ4X++3xe7l/4gBufnuLKpfQ4uJVFQqfkICOAryrt5kfMoT0vf0z3VhTRnlgRa8sQ==
-X-Received: by 2002:a50:fc96:: with SMTP id f22mr44140890edq.119.1575019613340;
-        Fri, 29 Nov 2019 01:26:53 -0800 (PST)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id o30sm1273065edc.61.2019.11.29.01.26.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Nov 2019 01:26:52 -0800 (PST)
-Received: by mail-wr1-f51.google.com with SMTP id c14so9622216wrn.7;
-        Fri, 29 Nov 2019 01:26:52 -0800 (PST)
-X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr2960888wrx.178.1575019612588;
- Fri, 29 Nov 2019 01:26:52 -0800 (PST)
+        bh=H/Od6kVrXI87O4KN/Z/H7nofcItikhLmOLU1xinq+0o=;
+        b=AQpUI/iMxsgqGBagVJDkKm9GeAPk+3qvZiW3UgtyFdAXHnFjW6o2fiE6yRh7Ybok4u
+         6sA3l7Mfhpp+XCEJfrF6X5CPTXjxdqXAt7l3JdrS3MqsL0jilWpK4Rcezw6Ccomqc31/
+         3G4IGahx4Ng0rQAut2MYzpEyxOumhAg/9u9Phbuo9rtXvd41VLy/Hh2bEnz15WGi0kPR
+         XCpy20R5gIcVO6McBRb7+zOg9jDxDO7WLkfFMs2wPnxkT8yPtI42z3D9xLNxqjZx5b8N
+         3zvnwMdvLryV77umLJQLY0Cmls6w2D9O3qKwONusOwGwJUfqO4SQo2N0QENnQdWxXuGo
+         D99g==
+X-Gm-Message-State: APjAAAWX847SjiNuKi7QGR4B39aTZ7azPDAHwxAepxUxueOHtn3EO9dU
+        jgrMEooleEsnawAAX4Ev3vo/UeoaRAEVBx6C6JZVDw==
+X-Google-Smtp-Source: APXvYqx5uTey2rEFuGI2JxeLrjghoyWWEsx0pJUzBXBm9m+sNFbMNKzsj1UJL7ckQkpZjRuMiLHWc9xiMRqzdmQz7LQ=
+X-Received: by 2002:a19:f701:: with SMTP id z1mr29467397lfe.133.1575019983038;
+ Fri, 29 Nov 2019 01:33:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20191129091336.13104-1-stefan@olimex.com> <20191129091336.13104-2-stefan@olimex.com>
-In-Reply-To: <20191129091336.13104-2-stefan@olimex.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 29 Nov 2019 17:26:39 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64oCx90LQScKTiHVyHLd6c7Rgs_g5L79Yr1J8kgS8-Kyg@mail.gmail.com>
-Message-ID: <CAGb2v64oCx90LQScKTiHVyHLd6c7Rgs_g5L79Yr1J8kgS8-Kyg@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 1/3] arm64: dts: allwinner: a64: olinuxino:
- Fix eMMC supply regulator
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
+References: <20191127135932.7223-1-m.felsch@pengutronix.de> <20191127135932.7223-2-m.felsch@pengutronix.de>
+In-Reply-To: <20191127135932.7223-2-m.felsch@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 29 Nov 2019 10:32:51 +0100
+Message-ID: <CACRpkdbG=XiQHNZa+zBqdyTDRhyXD5rLxbLjp3qqGbcQeTX26Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] gpio: add support to get local gpio number
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2019 at 5:14 PM Stefan Mavrodiev <stefan@olimex.com> wrote:
->
-> A64-OLinuXino-eMMC uses 1.8V for eMMC supply. This is done via a triple
-> jumper, which sets VCC-PL to either 1.8V or 3.3V. This setting is different
-> for boards with and without eMMC.
->
-> This is not a big issue for DDR52 mode, however the eMMC will not work in
-> HS200/HS400, since these modes explicitly requires 1.8V.
->
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
-> index 96ab0227e82d..7d135decbd53 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
-> @@ -14,8 +14,8 @@
->  &mmc2 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&mmc2_pins>;
-> -       vmmc-supply = <&reg_dcdc1>;
-> -       vqmmc-supply = <&reg_dcdc1>;
-> +       vmmc-supply = <&reg_eldo1>;
+Hi Marco,
 
-If I'm reading the schematics correctly, VCC on the eMMC is from 3.3V.
-This corresponds to the vmmc-supply property. So you shouldn't change it.
+thanks for your patch!
 
-> +       vqmmc-supply = <&reg_eldo1>;
+On Wed, Nov 27, 2019 at 2:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-vqmmc-supply is from the VCC-PC rail, which is the one you say is triple-
-jumpered. So this change makes sense.
+> Sometimes consumers needs to know the gpio-chip local gpio number of a
+> 'struct gpio_desc' for further configuration. This is often the case for
+> mfd devices.
+>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+(...)
+> +int gpiod_to_offset(struct gpio_desc *desc)
+> +{
+> +       return gpio_chip_hwgpio(desc);
+> +}
+> +EXPORT_SYMBOL_GPL(gpiod_to_offset);
 
-ChenYu
+That seems like an unnecessary wrapper.
+
+What about renaming gpio_chip_hwgpio() everywhere
+to gpiod_to_offet(), remove it from drivers/gpio/gpiolib.h
+and export it in <linux/gpio/consumer.h> instead?
+
+I suppose this is what Bartosz is indicating, not sure though.
+
+Indeed it is a bit of a worrysome thing to export and we need
+to be very specific about its usecase, so I'd also like some
+nice to-the-point kerneldoc on the export site so that it is
+clear what corner cases this function is for. (Like in this
+specific driver.)
+
+Yours,
+Linus Walleij
