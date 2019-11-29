@@ -2,296 +2,139 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6569EC432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4289AC43215
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F74217BA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124ED24650
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 21:39:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X2QQphmk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XhymOJiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfK2VZc (ORCPT
+        id S1727193AbfK2VjW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 16:25:32 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37232 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfK2VZc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 16:25:32 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so23120773ioc.4
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 13:25:32 -0800 (PST)
+        Fri, 29 Nov 2019 16:39:22 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39410 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfK2VjW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 16:39:22 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e10so24144019ljj.6
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 13:39:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rQWXhLEHvXY0fOacTxBkCCu+SBMW2v/Wmdf1V/A/YNU=;
-        b=X2QQphmk/ovbpXP2p/ACcYml+DNYCC0qh1VutHnuDWP+ygHjABDgNfFgfYysTlOyDV
-         Ilh3I76sMi/N8IyACRcMSsJRoCtFf7ZEAlrYT0g7SfbsMCGHOqOG2jxR7Tmn1akOXa//
-         vIerJI53FMkX1JugGdN+KFy2QF4ToSAARSwXC8oYshbETfbKip89dK5KTsrdUkmyjbuh
-         9oZII4kNa5Lp9Nx7R2y6vo7NsrlqmZA6j9Aa+50XgqX0ZbquZKq2VAvmqr7N4rzrs/wl
-         QHdMysjCpAlGDOjJKGYpzofOyt4VOa6RaL/Nd7GsqHt5/iTGAQ6eNgUuX/HHLykNYYnR
-         J9qw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HoCIkfIpHUEqxrpa5VNin8a9xzNcml7RJzBZOqUbMCI=;
+        b=XhymOJiD3Z2aYsBi1GtNTmqv4cD8lZuV3n18svaQOYIQckWoHxOiES3GCLPpqqi9xF
+         ElUzyTYZ/VPe8tY/gh9Fc7J0JDEg7fGZDsQji6Gy+g9cPS7yVWGpavdASwkXBmAJDo9M
+         6DcZDgXVWSJDqEztf2bZcl8ELnuyOlYW7n1Jk8FnLYoK03OBlPNvo6Ycbn3HBeGzBtHm
+         7r5nNgT4uFYwy6SdusagmXvIC8XfXg2xFDBtKfsLYtVnFoSblrT1l8DZD9NgPZNUGTpB
+         7XNcVK1xyUEjbSFuaQUFZ2T/bWzgDCdIlWlzBqhDIOGiS/yhprw/RB1CRSLOHSV9KDgP
+         Y6Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rQWXhLEHvXY0fOacTxBkCCu+SBMW2v/Wmdf1V/A/YNU=;
-        b=QMiHxAf3J+oZBnVUaUr/BXxShMBVzUfVXnr5uYWlLhVTkbrD/uRsmpdFnuufkkEjoV
-         FBStNf4RHhWZattBBHytOLnF+UC0RuCNcCGoT/OnQuEzOF1OdsdDv1PHLiCFLJmuVVlX
-         qzUHwhfGZtm/tzsc1ykMPBrlFs9SY4oS6UAhkbig+SVlwqg0PGF34wivL/fyIhG8Xa4S
-         5sP7qx8SAEpikPHfBTYyOCa7+EU99EEr5xNUuk7eMG9qwMtlNU5G+A7o+CPzYHDqWWeI
-         nVaT8C+7DZyCqeAKPGV7DYVlkg4aJEmAOYzSDqosDkWU3rfPBlWYN8DvmjJMjrwWdVM2
-         OP/w==
-X-Gm-Message-State: APjAAAVQ8wWjKyA223otf1tNdql5U6KYeQNqvgUid4fHbIGglOmDSAd3
-        kYUXW3RFU3waPLpZwbQOV+6ukDVlix401PWum1dySw==
-X-Google-Smtp-Source: APXvYqwR23S5it+fulG0l1d5hrTAFUe5YcVwda2R5nEcSJ/skggaAfJd21lD8TqoD9tVJ+OFQNyWFoB9joOxh6kdNug=
-X-Received: by 2002:a02:a08:: with SMTP id 8mr12145440jaw.98.1575062731367;
- Fri, 29 Nov 2019 13:25:31 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HoCIkfIpHUEqxrpa5VNin8a9xzNcml7RJzBZOqUbMCI=;
+        b=Fnv0L/Tag9o+YbT8Fhbo4A4p1sytXOidTDbO4ezpGfvySq+rrEh5JURrwTTlGvoNnN
+         N+awH+B5pZKcRMxnzyzP81X6jZ4DuxQUJdwHAVicLUxls9YN+D54K2+Z9p6vvdEvbDOw
+         0cKGS1sLG05nOxPMiZMtUdiZdGnCadvbhwGsz/OKmIdXH61x6od9VYbco2VhvB0FgJ5D
+         ZazJ66QQBfX/H8gCIMVAHOt+Fg7yFABBy+Ku44gL17iMUXDuuRizBYZh7Y01k7JtHmHA
+         /64Eh83Zd9i8ecUWBQvf+tavuT01IizaPBdhqvRDaCHRy2jQdSfQuxgEaoiFIaAzOYct
+         sVFQ==
+X-Gm-Message-State: APjAAAWOgNyqy2zV6d5vhQkaThd/WlJlwJdX+0TOnaGtofDSdRawqZP1
+        6eA2uKdZ6nmauqFq1m3FxLZ0eA==
+X-Google-Smtp-Source: APXvYqzNEPzDYPTg7B0zYEoaYUWO6O51RXUBdgXRZrq4wpucNmLYPHPSkvc02v5pkenXgOWZn5z0ng==
+X-Received: by 2002:a2e:9549:: with SMTP id t9mr2600851ljh.148.1575063560250;
+        Fri, 29 Nov 2019 13:39:20 -0800 (PST)
+Received: from centauri.lan (ua-84-217-220-205.bbcust.telenor.se. [84.217.220.205])
+        by smtp.gmail.com with ESMTPSA id b190sm10742234lfd.39.2019.11.29.13.39.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Nov 2019 13:39:19 -0800 (PST)
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc:     amit.kucheria@linaro.org, sboyd@kernel.org, vireshk@kernel.org,
+        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v7 0/5] Add support for QCOM Core Power Reduction
+Date:   Fri, 29 Nov 2019 22:39:10 +0100
+Message-Id: <20191129213917.1301110-1-niklas.cassel@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191119231912.12768-1-mike.leach@linaro.org> <20191119231912.12768-9-mike.leach@linaro.org>
- <c48fe3ee-335b-3dfb-33c1-a2cd7d5a00e6@arm.com>
-In-Reply-To: <c48fe3ee-335b-3dfb-33c1-a2cd7d5a00e6@arm.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 29 Nov 2019 14:25:20 -0700
-Message-ID: <CANLsYkyAhbpzGFt6Y7cJ19fSpAAtifbHdr=_3fRztqog6xOFpA@mail.gmail.com>
-Subject: Re: [PATCH v5 08/14] coresight: cti: Enable CTI associated with devices.
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     Mike Leach <mike.leach@linaro.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 29 Nov 2019 at 11:28, Suzuki Kuruppassery Poulose
-<suzuki.poulose@arm.com> wrote:
->
-> On 19/11/2019 23:19, Mike Leach wrote:
-> > The CoreSight subsystem enables a path of devices from source to sink.
-> > Any CTI devices associated with the path devices must be enabled at the
-> > same time.
-> >
-> > This patch adds an associated coresight_device element to the main
-> > coresight device structure, and uses this to create associations between
-> > the CTI and other devices based on the device tree data. The associated
-> > device element is used to enable CTI in conjunction with the path elements.
-> >
-> > CTI devices are reference counted so where a single CTI is associated with
-> > multiple elements on the path, it will be enabled on the first associated
-> > device enable, and disabled with the last associated device disable.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > ---
-> >   drivers/hwtracing/coresight/coresight-cti.c   | 87 +++++++++++++++++++
-> >   .../hwtracing/coresight/coresight-platform.c  | 23 +++++
-> >   drivers/hwtracing/coresight/coresight-priv.h  |  6 ++
-> >   drivers/hwtracing/coresight/coresight.c       | 58 +++++++++++--
-> >   include/linux/coresight.h                     |  5 ++
-> >   5 files changed, 173 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> > index 369488dd7b8e..cf116463149a 100644
-> > --- a/drivers/hwtracing/coresight/coresight-cti.c
-> > +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> > @@ -440,6 +440,90 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
-> >       return err;
-> >   }
-> >
-> > +/*
-> > + * Look for a matching connection device name in the list of
-> > + * connections. If found then swap in the csdev name and return
-> > + * found.
-> > + */
-> > +static bool
-> > +cti_match_con_name(struct cti_device *ctidev, const char *node_name,
-> > +                const char *csdev_name)
->
-> Here we actually fixup the name of the connection, rather than simply
-> matching it. So it may be apt to rename this to cti_match_fixup_name()
->
-> > +{
-> > +     struct cti_trig_con *trig_con;
-> > +
-> > +     list_for_each_entry(trig_con, &ctidev->trig_cons, node) {
-> > +             if (trig_con->con_dev_name) {
-> > +                     if (!strcmp(node_name, trig_con->con_dev_name)) {
->
-> Can there be duplicate node_name's ? Does it make sense to store the
-> fwhandle along with the "temporary node_name" to match it later while
-> fixing up ?
+This series adds support for Core Power Reduction (CPR), a form of
+Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
 
-I think we're fine here - CS devices have bidirectional connections
-that are checked by the DTC.  You get a bitter complaint if two CS
-nodes have the same value.
+This series is based on top of the qcs404 cpufreq patch series that
+hasn't landed yet:
+https://patchwork.kernel.org/project/linux-arm-msm/list/?series=207821
+as well as that series' matching device tree changes:
+https://patchwork.kernel.org/project/linux-arm-msm/list/?series=207831
 
->
-> > +                             /* match: so swap in csdev name */
-> > +                             kfree(trig_con->con_dev_name);
-> > +                             trig_con->con_dev_name =
-> > +                                     kstrdup(csdev_name, GFP_KERNEL);
-> > +                             return true;
-> > +                     }
-> > +             }
-> > +     }
-> > +     return false;
-> > +}
->
->
-> > +/*
-> > + * Search the cti list to add an associated CTI into the supplied CS device
-> > + * This will set the association if CTI declared before the CS device
-> > + */
-> > +void cti_add_assoc_to_csdev(struct coresight_device *csdev)
-> > +{
->
-> ..
->
->  > +    struct cti_drvdata *ect_item;
->  > +    struct cti_device *ctidev;
->  > +    const char *node_name = NULL, *csdev_name;
->  > +
->  > +    /* protect the list */
->  > +    mutex_lock(&ect_mutex);
->  > +
->  > +    /* exit if current is an ECT device.*/
->  > +    if ((csdev->type == CORESIGHT_DEV_TYPE_ECT) || list_empty(&ect_net))
->  > +            goto cti_add_done;
->  > +
->  > +    /* if we didn't find the csdev previously we used the fwnode name */
->  > +    node_name = coresight_get_fwnode_name(csdev->dev.parent);
->
-> We used "cti_plat_get_node_name()" when we added the name in the
-> absence of csdev in patch 7, could we not reuse the function here ?
->
->  > +
->  > +    if (!node_name)
->  > +            goto cti_add_done;
->  > +
->  > +    /* this is the name we want to use for the association */
->  > +    csdev_name = dev_name(&csdev->dev);
->
->
-> > +
-> > +     /* for each CTI in list... */
-> > +     list_for_each_entry(ect_item, &ect_net, node) {
-> > +             ctidev = &ect_item->ctidev;
-> > +             if (cti_match_con_name(ctidev, node_name, csdev_name)) {
-> > +                     /*
-> > +                      * if we found a matching name then update the
-> > +                      * association pointers.
-> > +                      */
-> > +                     csdev->ect_dev = ect_item->csdev;
-> > +                     goto cti_add_done;
->
->                         break; instead ?
->
-> > +             }
-> > +     }
-> > +cti_add_done:
-> > +     mutex_unlock(&ect_mutex);
-> > +}
-> > +EXPORT_SYMBOL_GPL(cti_add_assoc_to_csdev);
-> > +
-> > +/*
-> > + * Update the cross references where the associated device was found
-> > + * while we were building the connection info. This will occur if the
-> > + * assoc device was registered before the CTI.
-> > + */
-> > +static void cti_update_conn_xrefs(struct cti_drvdata *drvdata)
-> > +{
-> > +     struct cti_trig_con *tc;
-> > +     struct cti_device *ctidev = &drvdata->ctidev;
-> > +
-> > +     list_for_each_entry(tc, &ctidev->trig_cons, node) {
-> > +             if (tc->con_dev)
-> > +                     tc->con_dev->ect_dev = drvdata->csdev;
-> > +     }
->
-> Does this need to take the coresight_mutex to avoid racing against
-> a coresight_enable_path() ? Though this may be fine as long as the
-> CTI driver detects that that device was not enabled.
->
-> Also, it looks like we have a potential issue with perf vs sysfs mode.
-> The perf mode doesn't seem to take the coresight_mutex, for
-> build_path/enable_path operations. This is outside the scope of this
-> series though.
->
-> > +}
-> > +
-> >   /** cti ect operations **/
-> >   int cti_enable(struct coresight_device *csdev)
-> >   {
-> > @@ -574,6 +658,9 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
-> >       drvdata->csdev_release = drvdata->csdev->dev.release;
-> >       drvdata->csdev->dev.release = cti_device_release;
-> >
-> > +     /* set any cross references */
-> > +     cti_update_conn_xrefs(drvdata);
-> > +
->         /* all done - dec pm refcount */
-> >       pm_runtime_put(&adev->dev);
-> >       dev_info(&drvdata->csdev->dev, "CTI initialized\n");
-> > diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> > index 3c5bee429105..6721cb1af5fe 100644
-> > --- a/drivers/hwtracing/coresight/coresight-platform.c
-> > +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> > @@ -293,6 +293,12 @@ static int of_get_coresight_platform_data(struct device *dev,
-> >
-> >       return 0;
-> >   }
-> > +
-> > +static inline const char *of_coresight_get_node_name(struct device *dev)
-> > +{
-> > +     return dev->of_node->full_name;
-> > +}
-> > +
-> >   #else
-> >   static inline int
-> >   of_get_coresight_platform_data(struct device *dev,
-> > @@ -305,6 +311,11 @@ static inline int of_coresight_get_cpu(struct device *dev)
-> >   {
-> >       return -ENODEV;
-> >   }
-> > +
-> > +static inline const char *of_coresight_get_node_name(struct device *dev)
-> > +{
-> > +     return NULL;
-> > +}
-> >   #endif
-> >
-> >   #ifdef CONFIG_ACPI
-> > @@ -766,6 +777,18 @@ static inline int acpi_coresight_get_cpu(struct device *dev)
-> >   }
-> >   #endif
-> >
-> > +const char *coresight_get_fwnode_name(struct device *dev)
->
-> As mentioned above, please could we reuse the name helper we used
-> during the insertion rather than introducing a new wrapper which
-> effectively does the same thing ?
->
-> > +{
-> > +     const char *node_name = NULL;
-> > +     struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > +
-> > +     if (is_of_node(fwnode))
-> > +             node_name = of_coresight_get_node_name(dev);
-> > +
-> > +     return node_name;
-> > +}
-> > +EXPORT_SYMBOL_GPL(coresight_get_fwnode_name);
->
-> Why does this get exported ? If a following patch needs it, you may
-> always do that when you need it.
->
->
-> Cheers
-> Suzuki
+For testing purposes, this patch series, including the dependencies
+listed above, is available on the following git tag:
+https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-v7
+
+CPR is a technology that reduces core power on a CPU or on other device.
+It reads voltage settings from efuses (that have been written in
+production), it uses these voltage settings as initial values, for each
+OPP.
+
+After moving to a certain OPP, CPR monitors dynamic factors such as
+temperature, etc. and adjusts the voltage for that frequency accordingly
+to save power and meet silicon characteristic requirements.
+
+This driver has been developed together with Jorge Ramirez-Ortiz, and
+is based on an RFC by Stephen Boyd[1], which in turn is based on work
+by others on codeaurora.org[2].
+
+[1] https://lkml.org/lkml/2015/9/18/833
+[2] https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/regulator/cpr-regulator.c?h=msm-4.14
+
+Changes since v6:
+(Addressed comments from Ulf Hansson)
+-Initialize mutex later.
+-Take the mutex in cpr_pd_attach_dev(), in case we ever
+implement async attach in the future.
+-Add comment regarding why we get the cpu clock rate.
+-Add comment how we handle unlisted frequencies.
+-Clarify comment regarding why things related to virtual corners
+are performed in cpr_pd_attach_dev().
+-Removed the internal performance_state variable, the performance
+state is instead calculated using the current corner pointer.
+-Save a pointer to the first genpd dev that gets attached,
+and use that rather than get_cpu_device(0), when getting the CPU
+OPP table.
+
+Niklas Cassel (5):
+  dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+  power: avs: Add support for CPR (Core Power Reduction)
+  arm64: dts: qcom: qcs404: Add CPR and populate OPP table
+  arm64: defconfig: enable CONFIG_QCOM_CPR
+  arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
+
+ .../bindings/power/avs/qcom,cpr.txt           |  130 ++
+ MAINTAINERS                                   |    8 +
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  132 +-
+ arch/arm64/configs/defconfig                  |    2 +
+ drivers/power/avs/Kconfig                     |   15 +
+ drivers/power/avs/Makefile                    |    1 +
+ drivers/power/avs/qcom-cpr.c                  | 1792 +++++++++++++++++
+ 7 files changed, 2072 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+ create mode 100644 drivers/power/avs/qcom-cpr.c
+
+-- 
+2.23.0
+
