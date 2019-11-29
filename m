@@ -2,104 +2,250 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB38C43215
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EB8C432C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5478C2176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:55:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="cBGFQ57s"
+	by mail.kernel.org (Postfix) with ESMTP id 52E61215F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfK2IzS (ORCPT
+        id S1726586AbfK2JHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:55:18 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25857 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfK2IzS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 03:55:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1575017651; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=aHQGL27AFyIrx+4oOxuaIqQQQ05SYfgXcvBgDPo74I4GtjesLSMcmmSf98E4hz0E8fSu2z7kqUVejs8NL3zHAW0a7gU3S7shqull0lJlOaFeg4QiWfxs32e1UkqeGrt+LdQbQ/V2I+V9B0dlztkZBEwBt2rZK8fdvE1Zk5LRiXQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1575017651; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=1hGPrm+p5zUCh8vVbV4PGe97UQ4RnYIUCs3Zs7VaTEA=; 
-        b=eyAQlfXg11rewE0YRYgPP0SRA+Znw3khgFYEWhREQsg5kW4qcEF/162fNN0dDCCPZCkjAOkvrZEtSdcg3AsqsPwLIuF+6vCzs9hisj4To48ancE5xeOzyM6UWX11FjkoYLSCRONdT2tIqRqebKuTv7gEZuY1fYYcMYWQ1TDZGLo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=JOkHCOHculHLpgRfs0cQ+GrhUZ6ZNVMhPKMrEMY9S1OFzi8T3JaB/la396AWgcR0vSPX1hg2A4/t
-    vkKWJUOv9ljPKin4glgH++3MSNLieW1c0/8zvcGfgfnDd/nQgO0O  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1575017651;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=1hGPrm+p5zUCh8vVbV4PGe97UQ4RnYIUCs3Zs7VaTEA=;
-        b=cBGFQ57soBFWmCZPK1RiYIEn9CJ3aKspL4ueR2PYYkql0kl14d65Wx3TO0UVdLxZ
-        m1L3qLC4VZ0QSJSDB0mfZjMiebvEz7UQTiQwkNscUfGtPJfR/U7lHSrujMT2Vv7ah31
-        1kwSKTulP8+JC1zARaOS+kcRvNY11cSbbg4ExmGw=
-Received: from zhouyanjie-virtual-machine.localdomain (139.207.146.46 [139.207.146.46]) by mx.zohomail.com
-        with SMTPS id 1575017648817736.2370865952828; Fri, 29 Nov 2019 00:54:08 -0800 (PST)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        heiko@sntech.de, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
-        geert+renesas@glider.be, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Subject: [PATCH v6 10/12] MIPS: CU1000: Update defconfig for rtc.
-Date:   Fri, 29 Nov 2019 16:48:51 +0800
-Message-Id: <1575017333-29020-11-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
-References: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Fri, 29 Nov 2019 04:07:41 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39381 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfK2JHl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 04:07:41 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iacFV-0002zM-HH; Fri, 29 Nov 2019 10:07:37 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iacFU-0005Yt-Hn; Fri, 29 Nov 2019 10:07:36 +0100
+Date:   Fri, 29 Nov 2019 10:07:36 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] pinctrl: da9062: add driver support
+Message-ID: <20191129090736.f2ozwtrhynryatlq@pengutronix.de>
+References: <20191127115619.20278-1-m.felsch@pengutronix.de>
+ <20191127115619.20278-4-m.felsch@pengutronix.de>
+ <CACRpkdbd4J-FUNi=F12YQfNPajNCVaoKyqWU7qjmfFMbonzDKg@mail.gmail.com>
+ <20191127150146.bbwse77eef6haita@pengutronix.de>
+ <CAMpxmJVmvj_4DN85j4vu32FUZVnzmQzQfUtOVKAd0GVO3sWYmA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJVmvj_4DN85j4vu32FUZVnzmQzQfUtOVKAd0GVO3sWYmA@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:06:19 up 14 days, 24 min, 28 users,  load average: 0.07, 0.08,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Selected rtc support by default.
+On 19-11-28 11:47, Bartosz Golaszewski wrote:
+> śr., 27 lis 2019 o 16:01 Marco Felsch <m.felsch@pengutronix.de> napisał(a):
+> >
+> > Hi Linus,
+> >
+> > On 19-11-27 14:49, Linus Walleij wrote:
+> > > Hi Marco,
+> > >
+> > > thanks for your patch!
+> >
+> > thanks for your fast response.
+> >
+> > > On Wed, Nov 27, 2019 at 12:56 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > >
+> > > > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> > > > be used as input, output or have a special use-case.
+> > > >
+> > > > The patch adds the support for the normal input/output use-case.
+> > > >
+> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > (...)
+> > >
+> > > > +config PINCTRL_DA9062
+> > > > +       tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
+> > > > +       depends on MFD_DA9062
+> > > > +       select GPIOLIB
+> > >
+> > > Hm this would be one of those that could use GENERIC_REGMAP_GPIO
+> > > the day we invent it but we haven't invented it yet.
+> >
+> > Yes it is. Is there a plan for GENERIC_REGMAP_GPIO?
+> >
+> 
+> Yes, it's the second item on my TODO after the LINEINFO_FD series. I
+> just got a board I can use for developing this so I should have
+> something shortly.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
+So it is okay to keep the above select and change it later?
 
-Notes:
-    v5:
-    New patch.
-    
-    v5->v6:
-    No change.
+Regards,
+  Marco
 
- arch/mips/configs/cu1000-neo_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+> Bart
+> 
+> > > > +#include <../gpio/gpiolib.h>
+> > >
+> > > Put a comment above this telling us why you do this thing.
+> >
+> > Okay.
+> >
+> > > > +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> > > > +{
+> > > (...)
+> > > > +       return val & BIT(offset);
+> > >
+> > > You should #include <linux/bits.h> since you use BIT()
+> >
+> > Argh.. of course I will add the include.
+> >
+> > > Usually I clamp it like this:
+> > > return !!(val & BIT(offset));
+> >
+> > Okay, I can change that too.
+> >
+> > > > +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+> > > > +{
+> > > > +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
+> > > > +       struct regmap *regmap = pctl->da9062->regmap;
+> > > > +       int gpio_mode;
+> > > > +
+> > > > +       gpio_mode = da9062_pctl_get_pin_mode(regmap, offset);
+> > > > +       if (gpio_mode < 0)
+> > > > +               return gpio_mode;
+> > > > +
+> > > > +       switch (gpio_mode) {
+> > > > +       case DA9062_PIN_ALTERNATE:
+> > > > +               return -ENOTSUPP;
+> > > > +       case DA9062_PIN_GPI:
+> > > > +               return 1;
+> > > > +       case DA9062_PIN_GPO_OD:
+> > > > +       case DA9062_PIN_GPO_PP:
+> > > > +               return 0;
+> > >
+> > > We recently added defines for these directions in
+> > > <linux/gpio/driver.h>:
+> > >
+> > > #define GPIO_LINE_DIRECTION_IN  1
+> > > #define GPIO_LINE_DIRECTION_OUT 0
+> > >
+> > > Please use these. (Soon in Torvald's tree, else
+> > > in my "devel" branch.)
+> >
+> > I rebased it onto your devel, thanks for the hint.
+> >
+> > > > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
+> > > > +                                      unsigned int offset)
+> > > > +{
+> > > > +       struct da9062_pctl *pctl = gpiochip_get_data(gc);
+> > > > +       struct regmap *regmap = pctl->da9062->regmap;
+> > > > +       struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
+> > > > +       unsigned int gpi_type;
+> > > > +       int ret;
+> > > > +
+> > > > +       ret = da9062_pctl_set_pin_mode(regmap, offset, DA9062_PIN_GPI);
+> > > > +       if (ret)
+> > > > +               return ret;
+> > > > +
+> > > > +       /*
+> > > > +        * If the gpio is active low we should set it in hw too. No worries
+> > > > +        * about gpio_get() because we read and return the gpio-level. So the
+> > > > +        * gpiolib active_low handling is still correct.
+> > > > +        *
+> > > > +        * 0 - active low, 1 - active high
+> > > > +        */
+> > > > +       gpi_type = !gpiod_is_active_low(desc);
+> > >
+> > > That's interesting. Correct too, I guess.
+> >
+> > Double checked it again and the datasheet calls it gpio-level so I
+> > assume that this is correct.
+> >
+> > > > +static int da9062_gpio_direction_output(struct gpio_chip *gc,
+> > > > +                                       unsigned int offset, int value)
+> > > > +{
+> > > > +       /* Push-Pull / Open-Drain options are configured during set_config */
+> > > > +       da9062_gpio_set(gc, offset, value);
+> > >
+> > > That looks dangerous. There is no guarantee that .set_config()
+> > > always gets called.
+> >
+> > Hm.. it seems that other drivers using this assumption too:
+> >   - gpio-lp87565.c
+> >   - gpio-tps65218.c
+> >   - ...
+> >
+> > But you're right I missed the possible users of
+> > gpiod_direction_output_raw().
+> >
+> > > Please create a local state container for the mode of each pin in
+> > > struct da9062_pctl and set it to push-pull by default at probe, then
+> > > set this to whatever the state is here and let the .set_config()
+> > > alter it later if need be.
+> > >
+> > > If we don't do that you will get boot-time defaults I think and that
+> > > might create bugs.
+> >
+> > I will add a container for each pin, thanks for covering that.
+> >
+> > > > +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+> > > > +                                 unsigned long config)
+> > > > +{
+> > > (...)
+> > > > +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> > > > +               return da9062_pctl_set_pin_mode(regmap, offset,
+> > > > +                                               DA9062_PIN_GPO_OD);
+> > > > +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> > > > +               return da9062_pctl_set_pin_mode(regmap, offset,
+> > > > +                                               DA9062_PIN_GPO_PP);
+> > >
+> > > So also store this in the per-pin state.
+> >
+> > Of course.
+> >
+> > Regards,
+> >   Marco
+> >
+> > >
+> > > Yours,
+> > > Linus Walleij
+> > >
+> >
+> > --
+> > Pengutronix e.K.                           |                             |
+> > Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> > 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
 
-diff --git a/arch/mips/configs/cu1000-neo_defconfig b/arch/mips/configs/cu1000-neo_defconfig
-index eef0c5a..b2c090a 100644
---- a/arch/mips/configs/cu1000-neo_defconfig
-+++ b/arch/mips/configs/cu1000-neo_defconfig
-@@ -63,6 +63,8 @@ CONFIG_GPIO_SYSFS=y
- # CONFIG_USB_SUPPORT is not set
- CONFIG_MMC=y
- CONFIG_MMC_JZ4740=y
-+CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_JZ4740=y
- CONFIG_DMADEVICES=y
- CONFIG_DMA_JZ4780=y
- # CONFIG_IOMMU_SUPPORT is not set
 -- 
-2.7.4
-
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
