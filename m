@@ -2,136 +2,302 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E653C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A16C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6CF3217BA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD6521774
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KVLHCWMi"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="RZUU7g2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfK2IuK (ORCPT
+        id S1726702AbfK2Iue (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:50:10 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44249 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfK2IuK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 03:50:10 -0500
-Received: by mail-lj1-f193.google.com with SMTP id c19so4093771lji.11
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 00:50:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DDD/UnUADM3mnwpvsAchbYVhZu3juMpSxL84tbPsIbo=;
-        b=KVLHCWMignsuWlcS7LxuvXdykXnJdIoBNiW8JithqBRaN9wcvo1g4UE3oE6h6RdcRN
-         jLEvrMDIUWh3WxK9ixpeKqxPjlewzTq0GI6ilyuAFhW2YJf1ZqbkL3ADAUdPwFG875jh
-         x9vo6h0wlgAaxokaLK4+dCSaEdEZrMQXocgg3mRKJwRpOm0JsRMmk9AGZyiS5TIAU7qN
-         6LRFXkHjDx00GXywgORKLFx4NJ+nqr0y7wGWB2ZGfDi/YrZchGozjMmNsFaqACRsKEPr
-         fn6mkQtNRbJfvCBG9q3xKL9NRXLgrzKNGAdC+zFhxaiIniwKZZetUCiZPeUpg5H5cbep
-         yDpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DDD/UnUADM3mnwpvsAchbYVhZu3juMpSxL84tbPsIbo=;
-        b=M1mJwGrQOfw/bJrAzQZH3MXHYr21ek/JvvhQdO0GEWr24/NcCeL8SNYgsTaD3BdrsM
-         oO1u5MbDU9/ytZ7s7TAJvkEhdsIiiiuE+7XBmuR5KToYVAy4MR04uLkSISffeSqyZrDR
-         doWaeLebEgFubJx6XqUHlR+Jq408sSwkTNIwiJHDttygStGBbL4qGnZTrnAOgCsjmnvx
-         Ouxv33E47zURpt7gYrN3+AZWPHlOXOowh8rrA8XtEguFiIMty/5zDKX0G3mveb8Kf0qw
-         q6mOw5l8OICTsd8ljKmHmaPixCnjrtwe/YfNlS+SBdDkDSOMRWTphp8LQGp3wuOv1lyH
-         kD6w==
-X-Gm-Message-State: APjAAAVij9a9DU7+8MwYGu0MoQoHMqON9zt1JOMHmmj2fMB+d+Bb0zNn
-        SL/WOOdau+r1yC1H3q+81D78WnukuhWoWQ/P9Oygvg==
-X-Google-Smtp-Source: APXvYqxNOTdjq0eH1xPQUrG1i3ed9i46I+BwE5vw5X2SkpBR2UmTqJlh0NKv9bJLxRIPCTk4T6SWpbiyPuLBwslQnQw=
-X-Received: by 2002:a2e:9a12:: with SMTP id o18mr36852322lji.191.1575017408368;
- Fri, 29 Nov 2019 00:50:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127115619.20278-1-m.felsch@pengutronix.de>
- <20191127115619.20278-3-m.felsch@pengutronix.de> <CACRpkdYLeSjsXaG6Bg4Y2-8PW41ALn4PN7QUvp3tA7XReWrKGg@mail.gmail.com>
- <20191127151929.GC4879@sirena.org.uk>
-In-Reply-To: <20191127151929.GC4879@sirena.org.uk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Nov 2019 09:49:56 +0100
-Message-ID: <CACRpkdbJbCwo7yALnywscCTZBzO1ZzWY_=c5RoVGqY7Eue3t=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] mfd: da9062: add support for the DA9062 GPIOs in
- the core
-To:     Mark Brown <broonie@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 29 Nov 2019 03:50:34 -0500
+Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25814 "EHLO
+        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfK2Iud (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 03:50:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575017386; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=dLja4iDbdo0DGhlXJfR+2cCcXqgMQTmYPYi+tFzOabefYY01dtEoRIn5iwHxFT5SHv7bT46xU6xA3CU8DZl159p46L6eJ5lK4heKy9rnKAY6e17K6mQcgeSxJHU6S6Yr2LWbqQ5Q7jzZvGfhnxmN1AwfmUN4/aGvr6cxW1a8/PI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1575017386; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=BHyThfnol8fhXd5mJuF3LT91Vd9/nF2qNlUB2KTGsF8=; 
+        b=OT83HCUmckSNtXCyDzAglp54mNxD24vY2gMftn4B87mvPTt4x8gjoUZMdmAXS+9u3hDUnl4ua5I4H7SNUEHXacuggGn7qCkFmR5pZKMYCjrgrv+8sEWo8JWi6lO9OXthBV8ptyisNdpS90J1fW3dOXQVEAYWUl4+u3Z/dqdETK4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=uS9HD9na59Y+h3wlc254QVHlEmXeE0+8VLzKmu9Pz0fxjo8+8eLtaJxJaJUerSLinrMEosvrYwMZ
+    NIl8U6iCr4sfjHUme954uns6bYGFLrLYopKyFh6fl7ou4f8ACSkl  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1575017386;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=BHyThfnol8fhXd5mJuF3LT91Vd9/nF2qNlUB2KTGsF8=;
+        b=RZUU7g2HPSYqNNzhOsoMatJ1oN8p8TPeCD8ywM0QZ4I4+oevqwIlEiYXwdLfGA/W
+        3drTvS2I+vPJzRJNvAwSStcMflKN+XSN7UFxGo1hDTKe6x7rNtrT8Efy3RPTTFrgOZ4
+        sbMgkSDE9BFusrIXn38BrtuEKZ+DyjhVMznVPO4I=
+Received: from zhouyanjie-virtual-machine.localdomain (139.207.146.46 [139.207.146.46]) by mx.zohomail.com
+        with SMTPS id 1575017384522253.80501101504683; Fri, 29 Nov 2019 00:49:44 -0800 (PST)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Subject: [PATCH v6 01/12] MIPS: Ingenic: Initial X1000 support.
+Date:   Fri, 29 Nov 2019 16:48:42 +0800
+Message-Id: <1575017333-29020-2-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
+References: <1575017333-29020-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 4:19 PM Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Nov 27, 2019 at 02:35:33PM +0100, Linus Walleij wrote:
->
-> > I can clearly see that regmap's irqchip does not support
-> > hierarchical interrupt domains, so we should just make a
-> > mental note somewhere that "oh yeah and then one day
-> > we should make regmap irqchips play well with hierarchical
-> > interrupts".
->
-> Why, what do we need to do?  We're just doing all the default stuff,
-> it's not something we've opted out of, and the whole point with using
-> the frameworks should be that we should get software features like this
-> for free :(
+Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
+This is left unselectable in Kconfig until a X1000 based board is
+added in a later commit.
 
-I guess it is a bit about moving targets.
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
 
-The regmap irq thing was covering all reasonable cases until
-the hierarchical interrupts were introduced some years ago.
+Notes:
+    v1->v2:
+    Rebase on top of mips-next, use ingenic-timer driver
+    for system timer and clocksource.
+    
+    v2->v3:
+    Drop the 'apb' node.
+    
+    v3->v4:
+    Adjust the node order to make it consistent with
+    other Ingenic boards.
+    
+    v4->v5:
+    No change.
+    
+    v5->v6:
+    No change.
 
-The hallmark of these are that the irq_domain_ops implement
-.translate() .alloc() and .free() rather than .map() and .xlate()
-as the irqdomain in reqmap-irq currently does.
+ arch/mips/boot/dts/ingenic/x1000.dtsi | 176 ++++++++++++++++++++++++++++++++++
+ arch/mips/jz4740/Kconfig              |   6 ++
+ 2 files changed, 182 insertions(+)
+ create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
 
-The problem with hierarchical domains is that the system using
-them need to be hierarchical "all the way up" to the overarching
-top-level irqchip. Currently only the ARM GIC and the IXP4xx
-irq top-level irq controllers supports this, ruling out some
-obvious users like all non-ARM systems (for now).
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+new file mode 100644
+index 00000000..13a6c9ff
+--- /dev/null
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -0,0 +1,176 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <dt-bindings/clock/x1000-cgu.h>
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "ingenic,x1000", "ingenic,x1000e";
++
++	cpuintc: interrupt-controller {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
++
++	intc: interrupt-controller@10001000 {
++		compatible = "ingenic,x1000-intc", "ingenic,jz4780-intc";
++		reg = <0x10001000 0x50>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&cpuintc>;
++		interrupts = <2>;
++	};
++
++	exclk: ext {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++	};
++
++	rtclk: rtc {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++	};
++
++	cgu: x1000-cgu@10000000 {
++		compatible = "ingenic,x1000-cgu";
++		reg = <0x10000000 0x100>;
++
++		#clock-cells = <1>;
++
++		clocks = <&exclk>, <&rtclk>;
++		clock-names = "ext", "rtc";
++	};
++
++	tcu: timer@10002000 {
++		compatible = "ingenic,x1000-tcu",
++				 "ingenic,jz4770-tcu",
++				 "simple-mfd";
++		reg = <0x10002000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x10002000 0x1000>;
++
++		#clock-cells = <1>;
++
++		clocks = <&cgu X1000_CLK_RTCLK
++			  &cgu X1000_CLK_EXCLK
++			  &cgu X1000_CLK_PCLK>;
++		clock-names = "rtc", "ext", "pclk";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <27 26 25>;
++	};
++
++	pinctrl: pin-controller@10010000 {
++		compatible = "ingenic,x1000-pinctrl";
++		reg = <0x10010000 0x800>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		gpa: gpio@0 {
++			compatible = "ingenic,x1000-gpio";
++			reg = <0>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 0 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <17>;
++		};
++
++		gpb: gpio@1 {
++			compatible = "ingenic,x1000-gpio";
++			reg = <1>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 32 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <16>;
++		};
++
++		gpc: gpio@2 {
++			compatible = "ingenic,x1000-gpio";
++			reg = <2>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 64 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <15>;
++		};
++
++		gpd: gpio@3 {
++			compatible = "ingenic,x1000-gpio";
++			reg = <3>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 96 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <14>;
++		};
++	};
++
++	uart0: serial@10030000 {
++		compatible = "ingenic,x1000-uart";
++		reg = <0x10030000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <51>;
++
++		clocks = <&exclk>, <&cgu X1000_CLK_UART0>;
++		clock-names = "baud", "module";
++
++		status = "disabled";
++	};
++
++	uart1: serial@10031000 {
++		compatible = "ingenic,x1000-uart";
++		reg = <0x10031000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <50>;
++
++		clocks = <&exclk>, <&cgu X1000_CLK_UART1>;
++		clock-names = "baud", "module";
++
++		status = "disabled";
++	};
++
++	uart2: serial@10032000 {
++		compatible = "ingenic,x1000-uart";
++		reg = <0x10032000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <49>;
++
++		clocks = <&exclk>, <&cgu X1000_CLK_UART2>;
++		clock-names = "baud", "module";
++
++		status = "disabled";
++	};
++};
+diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+index 4dd0c44..6b96844 100644
+--- a/arch/mips/jz4740/Kconfig
++++ b/arch/mips/jz4740/Kconfig
+@@ -33,3 +33,9 @@ config MACH_JZ4780
+ 	select MIPS_CPU_SCACHE
+ 	select SYS_HAS_CPU_MIPS32_R2
+ 	select SYS_SUPPORTS_HIGHMEM
++
++config MACH_X1000
++	bool
++	select MIPS_CPU_SCACHE
++	select SYS_HAS_CPU_MIPS32_R2
++	select SYS_SUPPORTS_HIGHMEM
+-- 
+2.7.4
 
-I think the assumption in hierarchical irq is that you have
-a few hardware-specific irchips and you know exactly which
-irqchip that goes on top of another one, as well as which
-hardware irq line is connected to which hardware irq line
-on the parent.
 
-Since we know the specific hardware (from a compatible
-string or so) we can hardcode the parent-to-child mappings
-of interrupt lines in the driver. These mappings are not
-in the device tree for example.
-
-Therefore supporting hierarchical and nonhierarchical alike
-in a very generic plug-in irqchip like the regmap-irq is a bit
-of a challenge as it has to support both hierarchical and
-non-hierarchical, because it is not possible to just
-convert this to hierarchical callbacks: it has to check what
-its parent is doing and adapt, essentially implement both
-hierarchical and non-hierarchical at this time.
-
-Also we need to pass mappings between parent and child
-somehow. In the gpiolib we did this with a callback to the
-GPIO-chip-specific driver. How to do it for something
-generic like regmap-irq is an open question.
-
-So it is a bit complex.
-
-(Marc may correct me here.)
-
-Yours,
-Linus Walleij
