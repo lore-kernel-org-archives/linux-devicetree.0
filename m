@@ -4,41 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5250CC47410
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 16:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE86FC43141
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2049A217BA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 16:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C196E21736
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 17:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfK2Q6Y (ORCPT
+        id S1727361AbfK2RZr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 11:58:24 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50001 "EHLO
+        Fri, 29 Nov 2019 12:25:47 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49953 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfK2Q6Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 11:58:24 -0500
+        with ESMTP id S1727337AbfK2RZr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 12:25:47 -0500
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1iajb2-00013o-2j; Fri, 29 Nov 2019 17:58:20 +0100
+        id 1iak1U-0003D6-Mz; Fri, 29 Nov 2019 18:25:40 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1iajb1-0005ML-Fv; Fri, 29 Nov 2019 17:58:19 +0100
+        id 1iak1S-0003AN-LL; Fri, 29 Nov 2019 18:25:38 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, support.opensource@diasemi.com,
-        Adam.Thomson.Opensource@diasemi.com
-Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v3 3/3] pinctrl: da9062: add driver support
-Date:   Fri, 29 Nov 2019 17:58:17 +0100
-Message-Id: <20191129165817.20426-4-m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, joel@jms.id.au, andrew@aj.id.au,
+        lgirdwood@gmail.com, broonie@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: [PATCH v3 1/6] gpio: treewide rename gpio_chip_hwgpio to gpiod_to_offset
+Date:   Fri, 29 Nov 2019 18:25:32 +0100
+Message-Id: <20191129172537.31410-2-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191129165817.20426-1-m.felsch@pengutronix.de>
-References: <20191129165817.20426-1-m.felsch@pengutronix.de>
+In-Reply-To: <20191129172537.31410-1-m.felsch@pengutronix.de>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
@@ -50,391 +52,335 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-be used as input, output or have a special use-case.
+During discussion [1] we decided to rename the gpio subsystem local
+helper so the name is more meaningful for users outside the gpio
+subsystem. Making the helper public is done by a 2nd patch. The
+current users are the gpiolib itself and the aspeed gpio driver.
+The renaming is done by the following command:
 
-The patch adds the support for the normal input/output use-case.
+    find ./drivers/gpio -type f -exec sed -i 's/gpio_chip_hwgpio/gpiod_to_offset/g' {} \;
+
+[1] https://lkml.org/lkml/2019/11/27/357
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
 Changelog:
-
 v3:
-- add comment for gpio private include
-- add missing bits.h include
-- add pin_config state container and set initial pin state to push-pull
-- make use of GPIO_LINE_DIRECTION_{IN,OUT}
-- update MAINTAINERS entry -> gpio-da90??.c already covered but not
-  pinctrl-da90??.c
+- new patch
 
-v2:
-- fix minor style issue
-- move from drivers/gpio to drivers/pinctrl
-- Fix spelling issue
-- rename local gpio_dir to gpio_mode
-- Add datasheet reference and TODO notes
-- move gpio to mfd-root node to avoid hierarchical interrupt chips
-- Add gpio-controller property check
-- remove of_device_id since we drop the gpio of-subnode
-- Drop da9062_gpio_get_hwgpio
+ drivers/gpio/gpio-aspeed.c   |  6 ++---
+ drivers/gpio/gpiolib-sysfs.c |  8 +++---
+ drivers/gpio/gpiolib.c       | 52 ++++++++++++++++++------------------
+ drivers/gpio/gpiolib.h       |  2 +-
+ 4 files changed, 34 insertions(+), 34 deletions(-)
 
- MAINTAINERS                      |   1 +
- drivers/pinctrl/Kconfig          |  12 ++
- drivers/pinctrl/Makefile         |   1 +
- drivers/pinctrl/pinctrl-da9062.c | 297 +++++++++++++++++++++++++++++++
- 4 files changed, 311 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-da9062.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 296de2b51c83..2b680790fdf8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4837,6 +4837,7 @@ F:	drivers/leds/leds-da90??.c
- F:	drivers/mfd/da903x.c
- F:	drivers/mfd/da90??-*.c
- F:	drivers/mfd/da91??-*.c
-+F:	drivers/pinctrl/pinctrl-da90??.c
- F:	drivers/power/supply/da9052-battery.c
- F:	drivers/power/supply/da91??-*.c
- F:	drivers/regulator/da903x.c
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index b372419d61f2..977787c158cc 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -126,6 +126,18 @@ config PINCTRL_DA850_PUPD
- 	  Driver for TI DA850/OMAP-L138/AM18XX pinconf. Used to control
- 	  pullup/pulldown pin groups.
+diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+index 09e53c5f3b0a..b1d1d39e5174 100644
+--- a/drivers/gpio/gpio-aspeed.c
++++ b/drivers/gpio/gpio-aspeed.c
+@@ -21,7 +21,7 @@
  
-+config PINCTRL_DA9062
-+	tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
-+	depends on MFD_DA9062
-+	select GPIOLIB
-+	help
-+	  The Dialog DA9062 PMIC provides multiple GPIOs that can be muxed for
-+	  different functions. This driver bundles a pinctrl driver to select the
-+	  function muxing and a GPIO driver to handle the GPIO when the GPIO
-+	  function is selected.
-+
-+	  Say yes to enable pinctrl and GPIO support for the DA9062 PMIC.
-+
- config PINCTRL_DIGICOLOR
- 	bool
- 	depends on OF && (ARCH_DIGICOLOR || COMPILE_TEST)
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index ac537fdbc998..2397684cbe11 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_PINCTRL_AT91PIO4)	+= pinctrl-at91-pio4.o
- obj-$(CONFIG_PINCTRL_AMD)	+= pinctrl-amd.o
- obj-$(CONFIG_PINCTRL_BM1880)	+= pinctrl-bm1880.o
- obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
-+obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
- obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
- obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
- obj-$(CONFIG_PINCTRL_GEMINI)	+= pinctrl-gemini.o
-diff --git a/drivers/pinctrl/pinctrl-da9062.c b/drivers/pinctrl/pinctrl-da9062.c
-new file mode 100644
-index 000000000000..39f13fcbd3a8
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-da9062.c
-@@ -0,0 +1,297 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Dialog DA9062 pinctrl and GPIO driver.
-+ * Based on DA9055 GPIO driver.
-+ *
-+ * TODO:
-+ *   - add pinmux and pinctrl support (gpio alternate mode)
-+ *
-+ * Documents:
-+ * [1] https://www.dialog-semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
-+ *
-+ * Copyright (C) 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-+ */
-+#include <linux/bits.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/gpio/driver.h>
-+
-+#include <linux/mfd/da9062/core.h>
-+#include <linux/mfd/da9062/registers.h>
-+
-+/*
-+ * We need this get the gpio_desc from a <gpio_chip,offset> tuple to decide if
-+ * the gpio is active low without a vendor specific dt-binding.
-+ */
-+#include <../gpio/gpiolib.h>
-+
-+#define DA9062_TYPE(offset)		(4 * (offset % 2))
-+#define DA9062_PIN_SHIFT(offset)	(4 * (offset % 2))
-+#define DA9062_PIN_ALTERNATE		0x00 /* gpio alternate mode */
-+#define DA9062_PIN_GPI			0x01 /* gpio in */
-+#define DA9062_PIN_GPO_OD		0x02 /* gpio out open-drain */
-+#define DA9062_PIN_GPO_PP		0x03 /* gpio out push-pull */
-+#define DA9062_GPIO_NUM			5
-+
-+struct da9062_pctl {
-+	struct da9062 *da9062;
-+	struct gpio_chip gc;
-+	unsigned int pin_config[DA9062_GPIO_NUM];
-+};
-+
-+static int da9062_pctl_get_pin_mode(struct da9062_pctl *pctl,
-+				    unsigned int offset)
-+{
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	int ret, val;
-+
-+	ret = regmap_read(regmap, DA9062AA_GPIO_0_1 + (offset >> 1), &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	val >>= DA9062_PIN_SHIFT(offset);
-+	val &= DA9062AA_GPIO0_PIN_MASK;
-+
-+	return val;
-+}
-+
-+static int da9062_pctl_set_pin_mode(struct da9062_pctl *pctl,
-+				    unsigned int offset, unsigned int mode_req)
-+{
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	unsigned int mode = mode_req;
-+	unsigned int mask;
-+	int ret;
-+
-+	mode &= DA9062AA_GPIO0_PIN_MASK;
-+	mode <<= DA9062_PIN_SHIFT(offset);
-+	mask = DA9062AA_GPIO0_PIN_MASK << DA9062_PIN_SHIFT(offset);
-+
-+	ret = regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-+				 mask, mode);
-+	if (!ret)
-+		pctl->pin_config[offset] = mode_req;
-+
-+	return ret;
-+}
-+
-+static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	int gpio_mode, val;
-+	int ret;
-+
-+	gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-+	if (gpio_mode < 0)
-+		return gpio_mode;
-+
-+	switch (gpio_mode) {
-+	case DA9062_PIN_ALTERNATE:
-+		return -ENOTSUPP;
-+	case DA9062_PIN_GPI:
-+		ret = regmap_read(regmap, DA9062AA_STATUS_B, &val);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	case DA9062_PIN_GPO_OD:
-+	case DA9062_PIN_GPO_PP:
-+		ret = regmap_read(regmap, DA9062AA_GPIO_MODE0_4, &val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return !!(val & BIT(offset));
-+}
-+
-+static void da9062_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			    int value)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct regmap *regmap = pctl->da9062->regmap;
-+
-+	regmap_update_bits(regmap, DA9062AA_GPIO_MODE0_4, BIT(offset),
-+			   value << offset);
-+}
-+
-+static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	int gpio_mode;
-+
-+	gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-+	if (gpio_mode < 0)
-+		return gpio_mode;
-+
-+	switch (gpio_mode) {
-+	case DA9062_PIN_ALTERNATE:
-+		return -ENOTSUPP;
-+	case DA9062_PIN_GPI:
-+		return GPIO_LINE_DIRECTION_IN;
-+	case DA9062_PIN_GPO_OD:
-+	case DA9062_PIN_GPO_PP:
-+		return GPIO_LINE_DIRECTION_OUT;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int da9062_gpio_direction_input(struct gpio_chip *gc,
-+				       unsigned int offset)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-+	unsigned int gpi_type;
-+	int ret;
-+
-+	ret = da9062_pctl_set_pin_mode(pctl, offset, DA9062_PIN_GPI);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * If the gpio is active low we should set it in hw too. No worries
-+	 * about gpio_get() because we read and return the gpio-level. So the
-+	 * gpiolib active_low handling is still correct.
-+	 *
-+	 * 0 - active low, 1 - active high
-+	 */
-+	gpi_type = !gpiod_is_active_low(desc);
-+
-+	return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-+				DA9062AA_GPIO0_TYPE_MASK << DA9062_TYPE(offset),
-+				gpi_type << DA9062_TYPE(offset));
-+}
-+
-+static int da9062_gpio_direction_output(struct gpio_chip *gc,
-+					unsigned int offset, int value)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	unsigned int pin_config = pctl->pin_config[offset];
-+	int ret;
-+
-+	ret = da9062_pctl_set_pin_mode(pctl, offset, pin_config);
-+	if (ret)
-+		return ret;
-+
-+	da9062_gpio_set(gc, offset, value);
-+
-+	return 0;
-+}
-+
-+static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-+				  unsigned long config)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	int gpio_mode;
-+
-+	/*
-+	 * We need to meet the following restrictions [1, Figure 18]:
-+	 * - PIN_CONFIG_BIAS_PULL_DOWN -> only allowed if the pin is used as
-+	 *				  gpio input
-+	 * - PIN_CONFIG_BIAS_PULL_UP   -> only allowed if the pin is used as
-+	 *				  gpio output open-drain.
-+	 */
-+
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-+		if (gpio_mode < 0)
-+			return -EINVAL;
-+		else if (gpio_mode != DA9062_PIN_GPI)
-+			return -ENOTSUPP;
-+		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-+					  BIT(offset), BIT(offset));
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-+		if (gpio_mode < 0)
-+			return -EINVAL;
-+		else if (gpio_mode != DA9062_PIN_GPO_OD)
-+			return -ENOTSUPP;
-+		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-+					  BIT(offset), BIT(offset));
-+	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+		return da9062_pctl_set_pin_mode(pctl, offset,
-+						DA9062_PIN_GPO_OD);
-+	case PIN_CONFIG_DRIVE_PUSH_PULL:
-+		return da9062_pctl_set_pin_mode(pctl, offset,
-+						DA9062_PIN_GPO_PP);
-+	default:
-+		return -ENOTSUPP;
-+	}
-+}
-+
-+static int da9062_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct da9062 *da9062 = pctl->da9062;
-+
-+	return regmap_irq_get_virq(da9062->regmap_irq,
-+				   DA9062_IRQ_GPI0 + offset);
-+}
-+
-+static const struct gpio_chip reference_gc = {
-+	.owner = THIS_MODULE,
-+	.get = da9062_gpio_get,
-+	.set = da9062_gpio_set,
-+	.get_direction = da9062_gpio_get_direction,
-+	.direction_input = da9062_gpio_direction_input,
-+	.direction_output = da9062_gpio_direction_output,
-+	.set_config = da9062_gpio_set_config,
-+	.to_irq = da9062_gpio_to_irq,
-+	.can_sleep = true,
-+	.ngpio = DA9062_GPIO_NUM,
-+	.base = -1,
-+};
-+
-+static int da9062_pctl_probe(struct platform_device *pdev)
-+{
-+	struct device *parent = pdev->dev.parent;
-+	struct da9062_pctl *pctl;
-+	int i;
-+
-+	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
-+	if (!pctl)
-+		return -ENOMEM;
-+
-+	pctl->da9062 = dev_get_drvdata(parent);
-+	if (!pctl->da9062)
-+		return -EINVAL;
-+
-+	if (!device_property_present(parent, "gpio-controller"))
-+		return 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(pctl->pin_config); i++)
-+		pctl->pin_config[i] = DA9062_PIN_GPO_PP;
-+
-+	/*
-+	 * Currently the driver handles only the GPIO support. The
-+	 * pinctrl/pinmux support can be added later if needed.
-+	 */
-+	pctl->gc = reference_gc;
-+	pctl->gc.label = dev_name(&pdev->dev);
-+	pctl->gc.parent = &pdev->dev;
-+#ifdef CONFIG_OF_GPIO
-+	pctl->gc.of_node = parent->of_node;
-+#endif
-+
-+	platform_set_drvdata(pdev, pctl);
-+
-+	return devm_gpiochip_add_data(&pdev->dev, &pctl->gc, pctl);
-+}
-+
-+static struct platform_driver da9062_pctl_driver = {
-+	.probe = da9062_pctl_probe,
-+	.driver = {
-+		.name	= "da9062-gpio",
-+	},
-+};
-+module_platform_driver(da9062_pctl_driver);
-+
-+MODULE_AUTHOR("Marco Felsch <kernel@pengutronix.de>");
-+MODULE_DESCRIPTION("DA9062 PMIC pinctrl and GPIO Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:da9062-gpio");
+ /*
+  * These two headers aren't meant to be used by GPIO drivers. We need
+- * them in order to access gpio_chip_hwgpio() which we need to implement
++ * them in order to access gpiod_to_offset() which we need to implement
+  * the aspeed specific API which allows the coprocessor to request
+  * access to some GPIOs and to arbitrate between coprocessor and ARM.
+  */
+@@ -1007,7 +1007,7 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
+ {
+ 	struct gpio_chip *chip = gpiod_to_chip(desc);
+ 	struct aspeed_gpio *gpio = gpiochip_get_data(chip);
+-	int rc = 0, bindex, offset = gpio_chip_hwgpio(desc);
++	int rc = 0, bindex, offset = gpiod_to_offset(desc);
+ 	const struct aspeed_gpio_bank *bank = to_bank(offset);
+ 	unsigned long flags;
+ 
+@@ -1053,7 +1053,7 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc *desc)
+ {
+ 	struct gpio_chip *chip = gpiod_to_chip(desc);
+ 	struct aspeed_gpio *gpio = gpiochip_get_data(chip);
+-	int rc = 0, bindex, offset = gpio_chip_hwgpio(desc);
++	int rc = 0, bindex, offset = gpiod_to_offset(desc);
+ 	const struct aspeed_gpio_bank *bank = to_bank(offset);
+ 	unsigned long flags;
+ 
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index fbf6b1a0a4fa..d4cab6a80928 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -192,7 +192,7 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 	 *        Remove this redundant call (along with the corresponding
+ 	 *        unlock) when those drivers have been fixed.
+ 	 */
+-	ret = gpiochip_lock_as_irq(desc->gdev->chip, gpio_chip_hwgpio(desc));
++	ret = gpiochip_lock_as_irq(desc->gdev->chip, gpiod_to_offset(desc));
+ 	if (ret < 0)
+ 		goto err_put_kn;
+ 
+@@ -206,7 +206,7 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 	return 0;
+ 
+ err_unlock:
+-	gpiochip_unlock_as_irq(desc->gdev->chip, gpio_chip_hwgpio(desc));
++	gpiochip_unlock_as_irq(desc->gdev->chip, gpiod_to_offset(desc));
+ err_put_kn:
+ 	sysfs_put(data->value_kn);
+ 
+@@ -224,7 +224,7 @@ static void gpio_sysfs_free_irq(struct device *dev)
+ 
+ 	data->irq_flags = 0;
+ 	free_irq(data->irq, data);
+-	gpiochip_unlock_as_irq(desc->gdev->chip, gpio_chip_hwgpio(desc));
++	gpiochip_unlock_as_irq(desc->gdev->chip, gpiod_to_offset(desc));
+ 	sysfs_put(data->value_kn);
+ }
+ 
+@@ -622,7 +622,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 	else
+ 		data->direction_can_change = false;
+ 
+-	offset = gpio_chip_hwgpio(desc);
++	offset = gpiod_to_offset(desc);
+ 	if (chip->names && chip->names[offset])
+ 		ioname = chip->names[offset];
+ 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 104ed299d5ea..548cf41c6179 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -218,7 +218,7 @@ int gpiod_get_direction(struct gpio_desc *desc)
+ 	int ret;
+ 
+ 	chip = gpiod_to_chip(desc);
+-	offset = gpio_chip_hwgpio(desc);
++	offset = gpiod_to_offset(desc);
+ 
+ 	if (!chip->get_direction)
+ 		return -ENOTSUPP;
+@@ -2679,7 +2679,7 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+ 	if (chip->request) {
+ 		/* chip->request may sleep */
+ 		spin_unlock_irqrestore(&gpio_lock, flags);
+-		offset = gpio_chip_hwgpio(desc);
++		offset = gpiod_to_offset(desc);
+ 		if (gpiochip_line_is_valid(chip, offset))
+ 			ret = chip->request(chip, offset);
+ 		else
+@@ -2781,7 +2781,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+ 		if (chip->free) {
+ 			spin_unlock_irqrestore(&gpio_lock, flags);
+ 			might_sleep_if(chip->can_sleep);
+-			chip->free(chip, gpio_chip_hwgpio(desc));
++			chip->free(chip, gpiod_to_offset(desc));
+ 			spin_lock_irqsave(&gpio_lock, flags);
+ 		}
+ 		kfree_const(desc->label);
+@@ -2965,9 +2965,9 @@ int gpiod_direction_input(struct gpio_desc *desc)
+ 	 * assume we are in input mode after this.
+ 	 */
+ 	if (chip->direction_input) {
+-		ret = chip->direction_input(chip, gpio_chip_hwgpio(desc));
++		ret = chip->direction_input(chip, gpiod_to_offset(desc));
+ 	} else if (chip->get_direction &&
+-		  (chip->get_direction(chip, gpio_chip_hwgpio(desc)) != 1)) {
++		  (chip->get_direction(chip, gpiod_to_offset(desc)) != 1)) {
+ 		gpiod_warn(desc,
+ 			   "%s: missing direction_input() operation and line is output\n",
+ 			   __func__);
+@@ -2977,10 +2977,10 @@ int gpiod_direction_input(struct gpio_desc *desc)
+ 		clear_bit(FLAG_IS_OUT, &desc->flags);
+ 
+ 	if (test_bit(FLAG_PULL_UP, &desc->flags))
+-		gpio_set_config(chip, gpio_chip_hwgpio(desc),
++		gpio_set_config(chip, gpiod_to_offset(desc),
+ 				PIN_CONFIG_BIAS_PULL_UP);
+ 	else if (test_bit(FLAG_PULL_DOWN, &desc->flags))
+-		gpio_set_config(chip, gpio_chip_hwgpio(desc),
++		gpio_set_config(chip, gpiod_to_offset(desc),
+ 				PIN_CONFIG_BIAS_PULL_DOWN);
+ 
+ 	trace_gpio_direction(desc_to_gpio(desc), 1, ret);
+@@ -3008,11 +3008,11 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
+ 	}
+ 
+ 	if (gc->direction_output) {
+-		ret = gc->direction_output(gc, gpio_chip_hwgpio(desc), val);
++		ret = gc->direction_output(gc, gpiod_to_offset(desc), val);
+ 	} else {
+ 		/* Check that we are in output mode if we can */
+ 		if (gc->get_direction &&
+-		    gc->get_direction(gc, gpio_chip_hwgpio(desc))) {
++		    gc->get_direction(gc, gpiod_to_offset(desc))) {
+ 			gpiod_warn(desc,
+ 				"%s: missing direction_output() operation\n",
+ 				__func__);
+@@ -3022,7 +3022,7 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
+ 		 * If we can't actively set the direction, we are some
+ 		 * output-only chip, so just drive the output as desired.
+ 		 */
+-		gc->set(gc, gpio_chip_hwgpio(desc), val);
++		gc->set(gc, gpiod_to_offset(desc), val);
+ 	}
+ 
+ 	if (!ret)
+@@ -3085,7 +3085,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 	gc = desc->gdev->chip;
+ 	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags)) {
+ 		/* First see if we can enable open drain in hardware */
+-		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
++		ret = gpio_set_config(gc, gpiod_to_offset(desc),
+ 				      PIN_CONFIG_DRIVE_OPEN_DRAIN);
+ 		if (!ret)
+ 			goto set_output_value;
+@@ -3096,7 +3096,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 		}
+ 	}
+ 	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
+-		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
++		ret = gpio_set_config(gc, gpiod_to_offset(desc),
+ 				      PIN_CONFIG_DRIVE_OPEN_SOURCE);
+ 		if (!ret)
+ 			goto set_output_value;
+@@ -3106,7 +3106,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 			goto set_output_flag;
+ 		}
+ 	} else {
+-		gpio_set_config(gc, gpio_chip_hwgpio(desc),
++		gpio_set_config(gc, gpiod_to_offset(desc),
+ 				PIN_CONFIG_DRIVE_PUSH_PULL);
+ 	}
+ 
+@@ -3150,7 +3150,7 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
+ 	}
+ 
+ 	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
+-	return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
++	return chip->set_config(chip, gpiod_to_offset(desc), config);
+ }
+ EXPORT_SYMBOL_GPL(gpiod_set_debounce);
+ 
+@@ -3186,7 +3186,7 @@ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
+ 
+ 	packed = pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
+ 					  !transitory);
+-	gpio = gpio_chip_hwgpio(desc);
++	gpio = gpiod_to_offset(desc);
+ 	rc = chip->set_config(chip, gpio, packed);
+ 	if (rc == -ENOTSUPP) {
+ 		dev_dbg(&desc->gdev->dev, "Persistence not supported for GPIO %d\n",
+@@ -3240,7 +3240,7 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
+ 	int value;
+ 
+ 	chip = desc->gdev->chip;
+-	offset = gpio_chip_hwgpio(desc);
++	offset = gpiod_to_offset(desc);
+ 	value = chip->get ? chip->get(chip, offset) : -EIO;
+ 	value = value < 0 ? value : !!value;
+ 	trace_gpio_value(desc_to_gpio(desc), 1, value);
+@@ -3329,7 +3329,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+ 		first = i;
+ 		do {
+ 			const struct gpio_desc *desc = desc_array[i];
+-			int hwgpio = gpio_chip_hwgpio(desc);
++			int hwgpio = gpiod_to_offset(desc);
+ 
+ 			__set_bit(hwgpio, mask);
+ 			i++;
+@@ -3349,7 +3349,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+ 
+ 		for (j = first; j < i; ) {
+ 			const struct gpio_desc *desc = desc_array[j];
+-			int hwgpio = gpio_chip_hwgpio(desc);
++			int hwgpio = gpiod_to_offset(desc);
+ 			int value = test_bit(hwgpio, bits);
+ 
+ 			if (!raw && test_bit(FLAG_ACTIVE_LOW, &desc->flags))
+@@ -3479,7 +3479,7 @@ static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
+ {
+ 	int ret = 0;
+ 	struct gpio_chip *chip = desc->gdev->chip;
+-	int offset = gpio_chip_hwgpio(desc);
++	int offset = gpiod_to_offset(desc);
+ 
+ 	if (value) {
+ 		ret = chip->direction_input(chip, offset);
+@@ -3504,7 +3504,7 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
+ {
+ 	int ret = 0;
+ 	struct gpio_chip *chip = desc->gdev->chip;
+-	int offset = gpio_chip_hwgpio(desc);
++	int offset = gpiod_to_offset(desc);
+ 
+ 	if (value) {
+ 		ret = chip->direction_output(chip, offset, 1);
+@@ -3526,7 +3526,7 @@ static void gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
+ 
+ 	chip = desc->gdev->chip;
+ 	trace_gpio_value(desc_to_gpio(desc), 0, value);
+-	chip->set(chip, gpio_chip_hwgpio(desc), value);
++	chip->set(chip, gpiod_to_offset(desc), value);
+ }
+ 
+ /*
+@@ -3610,7 +3610,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 
+ 		do {
+ 			struct gpio_desc *desc = desc_array[i];
+-			int hwgpio = gpio_chip_hwgpio(desc);
++			int hwgpio = gpiod_to_offset(desc);
+ 			int value = test_bit(i, value_bitmap);
+ 
+ 			/*
+@@ -3822,7 +3822,7 @@ int gpiod_to_irq(const struct gpio_desc *desc)
+ 		return -EINVAL;
+ 
+ 	chip = desc->gdev->chip;
+-	offset = gpio_chip_hwgpio(desc);
++	offset = gpiod_to_offset(desc);
+ 	if (chip->to_irq) {
+ 		int retirq = chip->to_irq(chip, offset);
+ 
+@@ -4678,7 +4678,7 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
+ 	int ret;
+ 
+ 	chip = gpiod_to_chip(desc);
+-	hwnum = gpio_chip_hwgpio(desc);
++	hwnum = gpiod_to_offset(desc);
+ 
+ 	local_desc = gpiochip_request_own_desc(chip, hwnum, name,
+ 					       lflags, dflags);
+@@ -4759,7 +4759,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ 		 * If pin hardware number of array member 0 is also 0, select
+ 		 * its chip as a candidate for fast bitmap processing path.
+ 		 */
+-		if (descs->ndescs == 0 && gpio_chip_hwgpio(desc) == 0) {
++		if (descs->ndescs == 0 && gpiod_to_offset(desc) == 0) {
+ 			struct gpio_descs *array;
+ 
+ 			bitmap_size = BITS_TO_LONGS(chip->ngpio > count ?
+@@ -4803,7 +4803,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ 		 * but their pins are not in hardware order.
+ 		 */
+ 		else if (array_info &&
+-			   gpio_chip_hwgpio(desc) != descs->ndescs) {
++			   gpiod_to_offset(desc) != descs->ndescs) {
+ 			/*
+ 			 * Don't use fast path if all array members processed so
+ 			 * far belong to the same chip as this one but its pin
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index b8b10a409c7b..a7f93ce6e114 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -127,7 +127,7 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
+ /*
+  * Return the GPIO number of the passed descriptor relative to its chip
+  */
+-static inline int gpio_chip_hwgpio(const struct gpio_desc *desc)
++static inline int gpiod_to_offet(const struct gpio_desc *desc)
+ {
+ 	return desc - &desc->gdev->descs[0];
+ }
 -- 
 2.20.1
 
