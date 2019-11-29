@@ -2,104 +2,112 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50719C432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 14:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CA6C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 14:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2960B21721
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 14:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DC621736
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 14:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfK2OUg (ORCPT
+        id S1726893AbfK2OqR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 09:20:36 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:44877 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfK2OUg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 09:20:36 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MKKpV-1iMjin0mhb-00Ln5s; Fri, 29 Nov 2019 15:20:34 +0100
-Received: by mail-qt1-f171.google.com with SMTP id g1so23258830qtj.6;
-        Fri, 29 Nov 2019 06:20:33 -0800 (PST)
-X-Gm-Message-State: APjAAAVeIxuyG3arKOOpff/wBt4fufMFQaJR36pToBgDvGlcl+PwWGR6
-        rIs6xxFXDF8RKMfxOyD6nq053DuH42W0tWhoApw=
-X-Google-Smtp-Source: APXvYqzuj1g3/GU3W0Lff3sjm4Lv42/6ORZFJ6s5TNnb+zf08goAKPnWFeOteSaiZYTfp9N207PDOibr4xIs9S0H9Os=
-X-Received: by 2002:ac8:27ab:: with SMTP id w40mr923393qtw.18.1575037232961;
- Fri, 29 Nov 2019 06:20:32 -0800 (PST)
+        Fri, 29 Nov 2019 09:46:17 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:43435 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfK2OqR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 09:46:17 -0500
+Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 29 Nov 2019
+ 22:46:36 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v3 0/7] add Amlogic A1 clock controller driver
+Date:   Fri, 29 Nov 2019 22:45:58 +0800
+Message-ID: <20191129144605.182774-1-jian.hu@amlogic.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191120144109.25321-1-alexandre.torgue@st.com> <20191120144109.25321-6-alexandre.torgue@st.com>
-In-Reply-To: <20191120144109.25321-6-alexandre.torgue@st.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 29 Nov 2019 15:20:17 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2Bg9KwfEqEE3_NUHxVv=svFGuj--Tnq-w-xFg63cfqAA@mail.gmail.com>
-Message-ID: <CAK8P3a2Bg9KwfEqEE3_NUHxVv=svFGuj--Tnq-w-xFg63cfqAA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] ARM: dts: stm32: Adapt STM32MP157 DK boards to stm32
- DT diversity
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NLvHyL+xPM210KGzaFmfQUilyszQKsVCq0rRB+YIq5LrCHU9WQA
- pCT8E4l4MQ/OP9uxya3h4OyXD3F2m4ULoMvsAPtrHxeaq4W8eyGhKa49jzX2J0zlOzPvny7
- iT/eu9rIsz2LCduZww9Hwfk40A1A/QBR8aX0Wr8WbmwBWRncps/TtWXuUOwY/yUc3FKwCu0
- 7Ja2/21WE2cdd1J5ymQVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MYtAM4pt8kk=:yKpuwmxdfDAm+eV3XXctxq
- j8ugWM++Q5TJbQ4ax+2qKJ+OSnBV7Rk6XuEUBWlZy+H/8f28LCqsGfMZVdBiCwTfb3qMowl7e
- EOifNHddK6UzKpWhnYNHvyyuWxfFfeW1Ur+5D/hpDSLwMR1D+k4IRzKKa90aaEBg1wJwEnG4x
- gZYjGzeI8dVwcvtNLu/mlw9EVqJJT8adqGt60ma5IeroGxTFbOqPls4LyXxoAQWhVFSywp5Ai
- PUl6FbqRHBdORgGLxYbLdYgw8fkd+19S4hpERiD2tK11oHHG5MC3/HU/19nIA4znb/n+jql7n
- mdRfuGJd3eBcQOcq29Y0qxornamU0DSlC9xnAxLtB0xdONUL61RkqC5nv8+IQJFWpLS6jVAej
- 7eG981M4KS7dhm0gi9PyUr01loIewX5bdrht5iFAdRBaiBqeYC+8si0Rx1ovX+W/Hhi47Pi2G
- LtscDhoWDCDFIl4peisvyS2mLqYFFsUDEBUo8BZSr/e9+peOvSZ9agffe+S9jWzzDgZxYvaGB
- O5dwcNo9XHOZGHvFdm5MDTux3qUEfmnckS9Ag3JleRnGpqmowDJlOrhOCMWPfBrhkyDxooWXr
- Ac8HTHy59a7lAjhi6Vmf6wJkmbhxpRpJVwA0OOtUH4lfgw8PhVi++PZ3SPuRCAyhNYLYDfzo0
- xiVPf3ezMVdsl3mqfsFYcThhUt2KgiuT89FvKyMCVhKx21sagKkTaXwKoIG2g5T7TBYe/MaAN
- RR/dqlEfr2K4+Jg9inmEhWx4AsZbS+UQdK3PfUBo5HpcgzgBPBMZbtHQDF32myxkw8aih5zVB
- W/BsqbH9YCzAXtot2oLpZ5NjrFbW9UeZA+EnH4S/h4JBrz3KfDZP6KoJndmbxhpl4nguNAP7s
- 4/Qh0uYpEbvdCpwlqWkQ==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.25]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 3:41 PM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
->
-> To handle STM32MP15 SOCs diversity, some updates have to been done.
-> This commit mainly adapt dk1 board to include the correct package and the
-> correct SOC version. A new file has been created to factorize common parts.
->
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->
-> diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> index 3f869bd67082..1292ac3b6890 100644
-> --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
->         model = "STMicroelectronics STM32MP157A-DK1 Discovery Board";
->         compatible = "st,stm32mp157a-dk1", "st,stm32mp157";
-> -
-> -       aliases {
-> -               ethernet0 = &ethernet0;
-> -               serial0 = &uart4;
-> -       };
-> -
-> -       chosen {
-> -               stdout-path = "serial0:115200n8";
-> -       };
-> -
+add support for Amlogic A1 clock driver, the clock includes 
+three parts: peripheral clocks, pll clocks, CPU clocks.
+sys pll and CPU clocks will be sent in next patch.
 
-As a rule, I would leave aliases and chosen nodes in the .dts file and not
-move them into a shared .dtsi, since they tend to be board specific.
+Changes since v1 at [2]:
+-add probe function for A1
+-seperate the clock driver into two patch
+-change some clock flags and ops
+-add support for a1 PLL ops
+-add A1 clock node
 
-(even if that may not be the case in this particular file)
+Changes since v1 at [1]:
+-place A1 config alphabetically
+-add actual reason for RO ops, CLK_IS_CRITICAL, CLK_IGNORE_UNUSED
+-separate the driver into two driver: peripheral and pll driver
+-delete CLK_IGNORE_UNUSED flag for pwm b/c/d/e/f clock, dsp clock
+-delete the change in Kconfig.platforms, address to Kevin alone
+-remove the useless comments
+-modify the meson pll driver to support A1 PLLs
 
-      Arnd
+[1] https://lkml.kernel.org/r/1569411888-98116-1-git-send-email-jian.hu@amlogic.com
+[2] https://lkml.kernel.org/r/1571382865-41978-1-git-send-email-jian.hu@amlogic.com
+
+Jian Hu (7):
+  dt-bindings: clock: meson: add A1 PLL clock controller bindings
+  clk: meson: add support for A1 PLL clock ops
+  clk: meson: eeclk: refactor eeclk common driver to support A1
+  clk: meson: a1: add support for Amlogic A1 PLL clock driver
+  dt-bindings: clock: meson: add A1 peripheral clock controller bindings
+  clk: meson: a1: add support for Amlogic A1 Peripheral clock driver
+  arm64: dts: meson: add A1 PLL and periphs clock controller
+
+ .../bindings/clock/amlogic,a1-clkc.yaml       |   70 +
+ .../bindings/clock/amlogic,a1-pll-clkc.yaml   |   56 +
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   26 +
+ drivers/clk/meson/Kconfig                     |   20 +
+ drivers/clk/meson/Makefile                    |    2 +
+ drivers/clk/meson/a1-pll.c                    |  334 +++
+ drivers/clk/meson/a1-pll.h                    |   56 +
+ drivers/clk/meson/a1.c                        | 2309 +++++++++++++++++
+ drivers/clk/meson/a1.h                        |  120 +
+ drivers/clk/meson/clk-pll.c                   |   21 +
+ drivers/clk/meson/clk-pll.h                   |    1 +
+ drivers/clk/meson/meson-eeclk.c               |   59 +-
+ drivers/clk/meson/meson-eeclk.h               |    2 +
+ drivers/clk/meson/parm.h                      |    1 +
+ include/dt-bindings/clock/a1-clkc.h           |   98 +
+ include/dt-bindings/clock/a1-pll-clkc.h       |   16 +
+ 16 files changed, 3181 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+ create mode 100644 drivers/clk/meson/a1-pll.c
+ create mode 100644 drivers/clk/meson/a1-pll.h
+ create mode 100644 drivers/clk/meson/a1.c
+ create mode 100644 drivers/clk/meson/a1.h
+ create mode 100644 include/dt-bindings/clock/a1-clkc.h
+ create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+
+-- 
+2.24.0
+
