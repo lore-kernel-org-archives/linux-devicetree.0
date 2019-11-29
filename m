@@ -2,84 +2,137 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6DBC432C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8B8C432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D54E21774
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1158521774
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 09:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ktkDtU+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfK2JWv (ORCPT
+        id S1726609AbfK2JZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 04:22:51 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:55190 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbfK2JWv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 Nov 2019 04:22:51 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 40F9C1A0407;
-        Fri, 29 Nov 2019 10:22:49 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 81E491A03FE;
-        Fri, 29 Nov 2019 10:22:45 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8DAA2402A7;
-        Fri, 29 Nov 2019 17:22:40 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v6,1/3] dt-bindings: i2c: support property idle-state
-Date:   Fri, 29 Nov 2019 17:22:20 +0800
-Message-Id: <20191129092222.2706-1-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 29 Nov 2019 04:25:12 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33812 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfK2JZM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 04:25:12 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m6so23844520ljc.1
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 01:25:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mg1s2q4SGEIjUen50+yfiIskGrnLGRT7vDezP+iB3ek=;
+        b=ktkDtU+MQ2A0ntvCYC85sCMclaO55zFflKLdsI6avwawIIlmHsDcE4mn8nJ3AztMEv
+         /Cby7GoxYXup1ExYM3BQmgQXwwmBRJn6aVro0IWVoTMqa0JghFRIhtQsJ/lqSJ5qA3zr
+         MehV1JylaHRE3qimaRKxr9uZSvY7MsCMlu/rzHFHBqy5wxIpyLk0W/JtJwv5UNsLEhqI
+         Dxw3WCwOkkXy8sbssqn2378Js68tUCcht+TUwnuLI8DQO1mDdhR/OHeESiGR+5Za+VlW
+         WTUCQFExToy0WVEcC2iYO6SGwBoaXe6KQGnXu/YWd18dToXPpJUkn+mjZ46/ACfLFkxV
+         A/tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mg1s2q4SGEIjUen50+yfiIskGrnLGRT7vDezP+iB3ek=;
+        b=a7nik27cfD/gaZg4WFzhkHx6lZA13UjgfpTD9XaKJnrZeps8jkW+zqAL/3iyjncY/y
+         rNFueBnrynyqbq8OLBhQiF4qwDqVcT8GeszQuy965kzQfoovMneL1UZ+/SH8v4R7O18y
+         hDqv/HRZCeLJTU0X03a+MpnLDMMPHP16BPIuibMy4hfhP81i+Gs0+ta6Zo/faHlbH8XT
+         67yls9+CX/OVKkMypfdP5zb7No/7NHm9XwS6DPjeXu5gUWt16EasHT0fic/4ejHyCiWA
+         GR+Q2owGw5rghkj6c2ncoXt9PvpFUWz2B54eDb0L2fLueFW9WbyAvg+x9984eFKyfNsl
+         Sw3g==
+X-Gm-Message-State: APjAAAU23GCrG5efQvANFjvsEdPdYl1tfV/TgxP/YY2wTCfMee2U7q1h
+        tl/f45Rc7h8VIjSXz4pMdiiMN55xvDCVCE+sOJhpPw==
+X-Google-Smtp-Source: APXvYqzTv0ijDNJAizgamXHOcidWYTyrultraC4Zuh5XFuR7VO2T4//KTaO/9/IsP5Sukin50F6jt4XGVFDVmELqfPI=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr16086638ljm.233.1575019510217;
+ Fri, 29 Nov 2019 01:25:10 -0800 (PST)
+MIME-Version: 1.0
+References: <20191128155438.325738-1-paul.kocialkowski@bootlin.com> <20191128155438.325738-6-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20191128155438.325738-6-paul.kocialkowski@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 29 Nov 2019 10:24:58 +0100
+Message-ID: <CACRpkdaSLsq-oA7t8OL6_6L+ivZE+a83M4JbTZ2HW5E1E7c6yw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This supports property idle-state
+Hi Paul,
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v6:
-	- none
+thanks for your patch!
 
-Change in v5:
-	- none
+On Thu, Nov 28, 2019 at 4:54 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
 
-Change in v4:
-	- none
+> The LogiCVC display hardware block comes with GPIO capabilities
+> that must be exposed separately from the main driver (as GPIOs) for
+> use with regulators and panels. A syscon is used to share the same
+> regmap across the two drivers.
+>
+> Since the GPIO capabilities are pretty simple, add them to the syscon
+> GPIO driver.
+>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+(...)
+> +#define LOGICVC_CTRL_REG               0x40
+> +#define LOGICVC_CTRL_GPIO_SHIFT                11
+> +#define LOGICVC_CTRL_GPIO_BITS         5
+> +
+> +#define LOGICVC_POWER_CTRL_REG         0x78
+> +#define LOGICVC_POWER_CTRL_GPIO_SHIFT  0
+> +#define LOGICVC_POWER_CTRL_GPIO_BITS   4
+> +
+> +static void logicvc_gpio_offset(struct syscon_gpio_priv *priv,
+> +                               unsigned offset, unsigned int *reg,
+> +                               unsigned int *bit)
+> +{
+> +       if (offset >= LOGICVC_CTRL_GPIO_BITS) {
+> +               *reg = LOGICVC_POWER_CTRL_REG;
+> +
+> +               /* To the (virtual) power ctrl offset. */
+> +               offset -= LOGICVC_CTRL_GPIO_BITS;
+> +               /* To the actual bit offset in reg. */
+> +               offset += LOGICVC_POWER_CTRL_GPIO_SHIFT;
+> +       } else {
+> +               *reg = LOGICVC_CTRL_REG;
+> +
+> +               /* To the actual bit offset in reg. */
+> +               offset += LOGICVC_CTRL_GPIO_SHIFT;
+> +       }
+> +
+> +       *bit = BIT(offset);
+> +}
 
-Change in v3:
-	- update subject and description
-	- add some information for property idle-state
+The gpio-syscon.c is for simple syscons where the lines
+you want to affect are nicely ordered in the registers.
+It is intended to be generic.
 
-Change in v2:
-	- update subject and description
-	- add property idle-state
+This is kind of shoehorning a special case into the generic
+code.
 
- Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Isn't it more appropriate to create a specific driver for this
+hardware?
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-index 30ac6a60f041..7abda506b828 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-@@ -25,6 +25,8 @@ Required Properties:
- Optional Properties:
- 
-   - reset-gpios: Reference to the GPIO connected to the reset input.
-+  - idle-state: if present, overrides i2c-mux-idle-disconnect,
-+    Please refer to Documentation/devicetree/bindings/mux/mux-controller.txt
-   - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
-     children in idle state. This is necessary for example, if there are several
-     multiplexers on the bus and the devices behind them use same I2C addresses.
--- 
-2.17.1
+Special get/set quirks for any possible quirky offset is
+certainly not the way to go, if this should be supported
+we need generic properties in struct syscon_gpio_data
+to indicate the valid bits and offsets.
 
+Yours,
+Linus Walleij
