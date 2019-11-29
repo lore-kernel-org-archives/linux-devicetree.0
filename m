@@ -2,197 +2,287 @@ Return-Path: <SRS0=12Nb=ZV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95887C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 05:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5510CC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 06:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686DA2077B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 05:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bZFp7oMD"
+	by mail.kernel.org (Postfix) with ESMTP id 214222176D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 06:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbfK2FeD (ORCPT
+        id S1726164AbfK2GHp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 00:34:03 -0500
-Received: from mail-eopbgr130047.outbound.protection.outlook.com ([40.107.13.47]:54496
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725860AbfK2FeC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 29 Nov 2019 00:34:02 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RcMMtLTIMc6Li6DKdxkVfIiSwvEV6tB2hUxj3Ox+oZ37EfXL/BjextTFQwVITfVJdeeWLu/0Ce5lqDq6qiLPoAeDO+yXKXgxAqUnZJlpx3p2/6Bvq3UKxARUmcjvuSQcf81l2NLDqT6aakR0DLuZw5y8c21B+VuoZLZbL8S9pg7htddRex4svjGrqdayXmwVPb8cSaDJ1Hr6cU6PM+JLNWMOWguM2mlrbWa3lYXZfn6fsfq597G4Os5YA5+2XlXWYJPjVbAiCJDPVw3bpfE8YYFGDVVklb5FpSQncVMg4mDUja8iFTV60MCQcwJU0tPxgUc12oz61eBd/GNPUR5YvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dxbD+1226YR2VeViQqTfgbStEMJKdquYiojmwBwHWUk=;
- b=CvvDiI76n/PNmJWtZEctDRbV0BCDQSYE5HMUn9xqkBaNzwJ/GZ22aZoUKD5cpYvNWeB8rhgYKe2mEFhGltsPRSEnSt9E8ix71e892XWieBa3sPDHuerkmc5/5Lw19lJqszrMSr8Bsi9gmEVD1tTiSwxHA6OQHQcejAEIwHGOIJV4bm5y9hwbwf3/Gjad2cj8yxI+CYG4jz3rCd5Hb9aAaSU/W2E1M/T5L+WSibtxx/G7dE/atM3B/1yyG+Gt+xSQ9Fl0U+tlw9heM1jtmxGavLyI7IHH4jZqh5Oi2tVld4y0Dxt1nMWOzOnY5xIJJe94eNNiZQpTBQNpyVJ2FGVHrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dxbD+1226YR2VeViQqTfgbStEMJKdquYiojmwBwHWUk=;
- b=bZFp7oMDerOAkB+zYkL179kVBtEXpV5yG0iKyboiK/+3/pXSe/2g8nu6vZKrVHkSurjMS+JYjyBp74YTp0RA2kpxTqerGMr3+N9w7L7gYZqkITQh5I4vWQHSkzgCnpCBYK5PMP9Z9aLz7wm5apxqAWkzWcpqfvi4bz8x9iomiCc=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB6221.eurprd04.prod.outlook.com (20.179.25.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.21; Fri, 29 Nov 2019 05:33:55 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2495.014; Fri, 29 Nov 2019
- 05:33:55 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     Stephen Boyd <sboyd@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v7 5/5] arm64: dts: imx8m: Add ddr controller nodes
-Thread-Topic: [PATCH v7 5/5] arm64: dts: imx8m: Add ddr controller nodes
-Thread-Index: AQHVoX4qUUvWMnVlkEqCY7YW+VjVzQ==
-Date:   Fri, 29 Nov 2019 05:33:55 +0000
-Message-ID: <VI1PR04MB702390E22E7273310BE47747EE460@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1574458460.git.leonard.crestez@nxp.com>
- <23e46c12c98947315229c20dea6784ad40d294c4.1574458460.git.leonard.crestez@nxp.com>
- <CAHCN7xK_w9m7sZOJtGFVtpeu1BHN_H6eyeYCOgZQS67t1SvmRQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 650fd6cb-af99-4959-bcfa-08d7748db9d9
-x-ms-traffictypediagnostic: VI1PR04MB6221:|VI1PR04MB6221:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB6221AEBD7118D69D12995FBDEE460@VI1PR04MB6221.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0236114672
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(366004)(346002)(396003)(199004)(189003)(3846002)(6116002)(7696005)(4326008)(2906002)(8936002)(86362001)(81166006)(81156014)(8676002)(14454004)(55016002)(9686003)(4001150100001)(6436002)(6246003)(186003)(14444005)(256004)(102836004)(26005)(53546011)(6506007)(76176011)(25786009)(54906003)(110136005)(66446008)(64756008)(66556008)(66476007)(74316002)(66066001)(316002)(66946007)(7416002)(76116006)(91956017)(99286004)(446003)(305945005)(7736002)(5660300002)(44832011)(478600001)(229853002)(52536014)(71190400001)(71200400001)(33656002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6221;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +pJgowwOVjh9zjulv1XQkAYe3hfOvoV2H+EvqfI910Cnfr+RxjyRjlGtL0t9vKhqWa5INw9bx+SsC1cjUliXpPGwEUFcqDBV33XFDuGCFFkR0xViO+KMLq5GCOzSkNvt6fCfVam8qT/eDuMlrTehWzcjt9yRaLrhVnAkpGEPfLcihbnEhb86o+CNIRDzJVdvhCbyJm7X3f8igDdRMDu1OkcfQ2hThIuWJRwMruAnSlvHRjOvThwGSxCLPNWO/zUYz0XQoe9Ho0ghsultFJg0sbj+ONoJ7LBFY7qSpPSeshgQBz7JiYBF5DRxmGTvdin76+tvkpynqQXrXSYMKa7kYDxBbG9bkzKHk2pGfv4CxdUgb7tcp1HocvNT6s/HJCZfNHKLEqDqkGyzZ7IH3cpezMiHJOVLoPFcHjHW89h7nOcclJp3xiIfE2gIb+4aRfB1
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 29 Nov 2019 01:07:45 -0500
+Received: from segapp02.wistron.com ([103.200.3.19]:59447 "EHLO
+        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725892AbfK2GHp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 01:07:45 -0500
+X-Greylist: delayed 302 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 Nov 2019 01:07:42 EST
+Received: from EXCHAPP02.whq.wistron (unverified [10.37.38.25]) by 
+    TWNHUMSW4.wistron.com (Clearswift SMTPRS 5.6.0) with ESMTP id 
+    <Tdbc3e1450bc0a81672162c@TWNHUMSW4.wistron.com>; Fri, 29 Nov 2019 
+    14:02:38 +0800
+Received: from EXCHAPP02.whq.wistron (10.37.38.25) by EXCHAPP02.whq.wistron 
+    (10.37.38.25) with Microsoft SMTP Server 
+    (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 
+    15.1.1713.5; Fri, 29 Nov 2019 14:02:37 +0800
+Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP02.whq.wistron 
+    (10.37.38.25) with Microsoft SMTP Server id 15.1.1713.5 via Frontend 
+    Transport; Fri, 29 Nov 2019 14:02:37 +0800
+From:   Ben Pai <Ben_Pai@wistron.com>
+To:     <linux@roeck-us.net>
+CC:     <robh+dt@kernel.org>, <jdelvare@suse.com>,
+        <linux-kernel@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <corbet@lwn.net>,
+        <wangat@tw.ibm.com>, <Andy_YF_Wang@wistron.com>,
+        <Claire_Ku@wistron.com>, Ben Pai <Ben_Pai@wistron.com>
+Subject: [ v1] hwmon: (pmbus) Add Wistron power supply pmbus driver
+Date:   Fri, 29 Nov 2019 14:02:30 +0800
+Message-ID: <20191129060230.14522-1-Ben_Pai@wistron.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 650fd6cb-af99-4959-bcfa-08d7748db9d9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2019 05:33:55.2056
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Eup+OmXlpjWhVoCDx0dpP9irOXPbmgO9Z40jDkqENdNMwx9WQmPagNBMMsoD7UamyhEoo/cznOv+oXbHRyszyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6221
+Content-Type: text/plain; charset="us-ascii"
+X-TM-SNTS-SMTP:     2BB2C5B8A09FB1C966BBAE698742D39AE829BF86664D6743517F47263D541F492000:8
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-11-28 4:43 PM, Adam Ford wrote:=0A=
-> On Fri, Nov 22, 2019 at 3:46 PM Leonard Crestez <leonard.crestez@nxp.com>=
- wrote:=0A=
->>=0A=
->> This is used by the imx-ddrc devfreq driver to implement dynamic=0A=
->> frequency scaling of DRAM.=0A=
->>=0A=
->> Support for proactive scaling via interconnect will come later. The=0A=
->> high-performance bus masters which need that (display, vpu, gpu) are=0A=
->> mostly not yet enabled in upstream anyway.=0A=
->>=0A=
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> ---=0A=
->>   arch/arm64/boot/dts/freescale/imx8mm-evk.dts  | 18 ++++++++++++++=0A=
->>   arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 10 ++++++++=0A=
->>   .../boot/dts/freescale/imx8mn-ddr4-evk.dts    | 18 ++++++++++++++=0A=
->>   arch/arm64/boot/dts/freescale/imx8mn.dtsi     | 10 ++++++++=0A=
->>   arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 24 +++++++++++++++++++=
-=0A=
->>   arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 10 ++++++++=0A=
->>   6 files changed, 90 insertions(+)=0A=
->>=0A=
->> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/b=
-oot/dts/freescale/imx8mm-evk.dts=0A=
->> index 28ab17a277bb..ecf0d385c164 100644=0A=
->> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts=0A=
->> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts=0A=
->> @@ -75,10 +75,28 @@=0A=
->>=0A=
->>   &A53_0 {=0A=
->>          cpu-supply =3D <&buck2_reg>;=0A=
->>   };=0A=
->>=0A=
->> +&ddrc {=0A=
->> +       operating-points-v2 =3D <&ddrc_opp_table>;=0A=
->> +=0A=
->> +       ddrc_opp_table: opp-table {=0A=
->> +               compatible =3D "operating-points-v2";=0A=
->> +=0A=
->> +               opp-25M {=0A=
->> +                       opp-hz =3D /bits/ 64 <25000000>;=0A=
->> +               };=0A=
->> +               opp-100M {=0A=
->> +                       opp-hz =3D /bits/ 64 <100000000>;=0A=
->> +               };=0A=
->> +               opp-750M {=0A=
->> +                       opp-hz =3D /bits/ 64 <750000000>;=0A=
->> +               };=0A=
->> +       };=0A=
->> +};=0A=
-> =0A=
-> The SoC's device tree has the opp for the SoC.  Since the SoC also has=0A=
-> the DDR controller, why not put the opp for the DDR into the SoC's=0A=
-> device tree set for its maximum rates.  If the individual boards need=0A=
-> to change them, they can do it on a case-by-case basis.=0A=
-> =0A=
-> As more and more people add devices based on imx8m q/m/n, I can=0A=
-> imaging a lot of these entries will be duplicated if they base their=0A=
-> design on the reference evk for their respective SoC.=0A=
-=0A=
-The OPPs can vary from board to board for the same SoC. For example ddr4 =
-=0A=
-and lpddr4 variants of the NXP evk boards have different setpoints.=0A=
-=0A=
-If a default set was included in soc dtsi then some boards would end up =0A=
-having to use /delete-node/ and I wanted to avoid that. Last I check =0A=
-that feature wasn't even officially documented for dtc?=0A=
-=0A=
-Perhaps this could be revisited if it ends up being duplicated on many =0A=
-boards.=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+Add the driver to monitor Wisreon power supplies with hwmon over pmbus.
+
+Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+---
+ drivers/hwmon/pmbus/Kconfig       |   9 ++
+ drivers/hwmon/pmbus/Makefile      |   1 +
+ drivers/hwmon/pmbus/wistron-wps.c | 180 ++++++++++++++++++++++++++++++
+ 3 files changed, 190 insertions(+)
+ create mode 100644 drivers/hwmon/pmbus/wistron-wps.c
+
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index d62d69bb7e49..ebb7024e58ab 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -219,6 +219,15 @@ config SENSORS_UCD9200
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called ucd9200.
+ 
++config SENSORS_WISTRON_WPS
++	tristate "Wistron Power Supply"
++	help
++	  If you say yes here you get hardware monitoring support for the Wistron
++	  power supply.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called wistron-wps.
++
+ config SENSORS_ZL6100
+ 	tristate "Intersil ZL6100 and compatibles"
+ 	help
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index 03bacfcfd660..cad38f99e8c5 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -25,4 +25,5 @@ obj-$(CONFIG_SENSORS_TPS40422)	+= tps40422.o
+ obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
+ obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
+ obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
++obj-$(CONFIG_SENSORS_WISTRON_WPS) += wistron-wps.o
+ obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
+diff --git a/drivers/hwmon/pmbus/wistron-wps.c b/drivers/hwmon/pmbus/wistron-wps.c
+new file mode 100644
+index 000000000000..764496aa9d4f
+--- /dev/null
++++ b/drivers/hwmon/pmbus/wistron-wps.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright 2019 Wistron Corp.
++ */
++
++#include <linux/bitops.h>
++#include <linux/debugfs.h>
++#include <linux/device.h>
++#include <linux/fs.h>
++#include <linux/i2c.h>
++#include <linux/jiffies.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/pmbus.h>
++
++#include "pmbus.h"
++
++#define WPS_ID_CMD				0x99
++#define WPS_PN_CMD				0x9A
++#define WPS_FW_CMD				0x9B
++#define WPS_DATE_CMD				0x9D
++#define WPS_SN_CMD				0x9E
++
++enum {
++	WPS_DEBUGFS_ID,
++	WPS_DEBUGFS_PN,
++	WPS_DEBUGFS_SN,
++	WPS_DEBUGFS_FW,
++	WPS_DEBUGFS_DATE,
++	WPS_DEBUGFS_NUM_ENTRIES
++};
++
++struct wistron_wps {
++
++	struct i2c_client *client;
++
++	int debugfs_entries[WPS_DEBUGFS_NUM_ENTRIES];
++
++};
++
++#define to_psu(x, y) container_of((x), struct wistron_wps, debugfs_entries[(y)])
++
++static ssize_t wistron_wps_debugfs_op(struct file *file, char __user *buf,
++				    size_t count, loff_t *ppos)
++{
++	u8 cmd;
++	int rc;
++	int *idxp = file->private_data;
++	int idx = *idxp;
++	struct wistron_wps *psu = to_psu(idxp, idx);
++	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
++
++	switch (idx) {
++	case WPS_DEBUGFS_ID:
++		cmd = WPS_ID_CMD;
++		break;
++	case WPS_DEBUGFS_PN:
++		cmd = WPS_PN_CMD;
++		break;
++	case WPS_DEBUGFS_SN:
++		cmd = WPS_SN_CMD;
++		break;
++	case WPS_DEBUGFS_FW:
++		cmd = WPS_FW_CMD;
++		break;
++	case WPS_DEBUGFS_DATE:
++		cmd = WPS_DATE_CMD;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	rc = i2c_smbus_read_block_data(psu->client, cmd, data);
++	if (rc < 0)
++		return rc;
++
++done:
++	data[rc] = '\n';
++	rc += 2;
++
++	return simple_read_from_buffer(buf, count, ppos, data, rc);
++}
++
++static const struct file_operations wistron_wps_fops = {
++	.llseek = noop_llseek,
++	.read = wistron_wps_debugfs_op,
++	.open = simple_open,
++};
++
++static struct pmbus_driver_info wistron_wps_info = {
++	.pages = 1,
++	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
++		PMBUS_HAVE_PIN | PMBUS_HAVE_POUT | PMBUS_HAVE_FAN12 |
++		PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
++		PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
++		PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
++		PMBUS_HAVE_STATUS_FAN12,
++};
++
++static struct pmbus_platform_data wistron_wps_pdata = {
++	.flags = PMBUS_SKIP_STATUS_CHECK,
++};
++
++static int wistron_wps_probe(struct i2c_client *client,
++			   const struct i2c_device_id *id)
++{
++	int i, rc;
++	struct dentry *debugfs;
++	struct dentry *wistron_wps_dir;
++	struct wistron_wps *psu;
++
++	client->dev.platform_data = &wistron_wps_pdata;
++	rc = pmbus_do_probe(client, id, &wistron_wps_info);
++	if (rc)
++		return rc;
++
++	psu = devm_kzalloc(&client->dev, sizeof(*psu), GFP_KERNEL);
++	if (!psu)
++		return 0;
++
++	psu->client = client;
++
++	debugfs = pmbus_get_debugfs_dir(client);
++	if (!debugfs)
++		return 0;
++
++	wistron_wps_dir = debugfs_create_dir(client->name, debugfs);
++	if (!wistron_wps_dir)
++		return 0;
++
++	for (i = 0; i < WPS_DEBUGFS_NUM_ENTRIES; ++i)
++		psu->debugfs_entries[i] = i;
++
++	debugfs_create_file("fru", 0444, wistron_wps_dir,
++			    &psu->debugfs_entries[WPS_DEBUGFS_ID],
++			    &wistron_wps_fops);
++	debugfs_create_file("part_number", 0444, wistron_wps_dir,
++			    &psu->debugfs_entries[WPS_DEBUGFS_PN],
++			    &wistron_wps_fops);
++	debugfs_create_file("serial_number", 0444, wistron_wps_dir,
++			    &psu->debugfs_entries[WPS_DEBUGFS_SN],
++			    &wistron_wps_fops);
++	debugfs_create_file("fw_version", 0444, wistron_wps_dir,
++			    &psu->debugfs_entries[WPS_DEBUGFS_FW],
++			    &wistron_wps_fops);
++	debugfs_create_file("mfr_date", 0444, wistron_wps_dir,
++			    &psu->debugfs_entries[WPS_DEBUGFS_DATE],
++			    &wistron_wps_fops);
++
++	return 0;
++}
++
++static const struct i2c_device_id wistron_wps_id[] = {
++	{ "wistron_wps", 1 },
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, wistron_wps_id);
++
++static const struct of_device_id wistron_wps_of_match[] = {
++	{ .compatible = "wistron,wps" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, wistron_wps_of_match);
++
++static struct i2c_driver wistron_wps_driver = {
++	.driver = {
++		.name = "wistron-wps",
++		.of_match_table = wistron_wps_of_match,
++	},
++	.probe = wistron_wps_probe,
++	.remove = pmbus_do_remove,
++	.id_table = wistron_wps_id,
++};
++
++module_i2c_driver(wistron_wps_driver);
++
++MODULE_AUTHOR("Ben Pai");
++MODULE_DESCRIPTION("PMBus driver for Wistron power supplies");
++MODULE_LICENSE("GPL");
+-- 
+2.17.1
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+This email contains confidential or legally privileged information and is for the sole use of its intended recipient. 
+Any unauthorized review, use, copying or distribution of this email or the content of this email is strictly prohibited.
+If you are not the intended recipient, you may reply to the sender and should delete this e-mail immediately.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
