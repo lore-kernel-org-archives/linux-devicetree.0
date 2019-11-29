@@ -6,58 +6,57 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31921C432C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EDAC432C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043E021781
-	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A96721774
+	for <linux-devicetree@archiver.kernel.org>; Fri, 29 Nov 2019 08:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x2h/3aiI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JYgDLrUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfK2IZ7 (ORCPT
+        id S1726879AbfK2I3c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 29 Nov 2019 03:25:59 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36983 "EHLO
+        Fri, 29 Nov 2019 03:29:32 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45435 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbfK2IZ7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 03:25:59 -0500
-Received: by mail-lj1-f196.google.com with SMTP id u17so3662857lja.4
-        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 00:25:57 -0800 (PST)
+        with ESMTP id S1725892AbfK2I3b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 29 Nov 2019 03:29:31 -0500
+Received: by mail-lj1-f196.google.com with SMTP id d20so1250445ljc.12
+        for <devicetree@vger.kernel.org>; Fri, 29 Nov 2019 00:29:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rjwO1FwEHwaRe98ERPpJb4XhcKjr+G42GNFc2FaNjPY=;
-        b=x2h/3aiIvlsEahqJZ/3btpCdFt4VmD5TTiD8V3r9A2XcxM+kI1n2O1vDNFBYlvTc4C
-         w03cOACsyuypSasUEovKSkK/gGhjMthY2sd9WW6J6zzIDOjiv7jea8myB4sLc32X3Ku2
-         3nMKKMhEsspzTb1EznV4qpbStmbAZAZLqa6q59CBYHkXtJLQjkZnU2cxccmLf6c4Fp2P
-         6J4x1pyWdOvEQgZpQU1+NGwmCl00WWd0yeemqpqhQbgDhb8A1vjdMsCfCfE4Qlg6ZJV/
-         +YGEUzgyDtGQYsg283APPSsnaZGLJfNBSW8zIJvjX+n2sWC1PAMmgDXuUOEMBB5l6J70
-         WqFQ==
+        bh=cWGIyDGedrBpqvnGEcfpuSqDBvTplOuqKnHOt1z2nZY=;
+        b=JYgDLrUje5DKLKp+k3Oade2QQs94WUDe1/8QVxUb7fsNTk/l6626+oRlXD3e/bpqq8
+         3rXVOCn0W8WeVVi211CVf31RgRAvuuS0547r4rO7b8Qtqnt42ewe9w+v0yZ6ApeYS/pT
+         AhaSF/3el3gdmRajOhieiokp6NWpp5KDmsg4Vy+O4Ndx/X8ZiUvvtr9MvUBytVXKX6nq
+         4lzl2ls4ows7n0x+hLyiowSg7RcF2HUUiqvfF/iFHV13scJqOdo55G8+ne3TV9wbPt7D
+         i4KUysQTFkRwCs7GHaAge7IXW0GhQ3iI5+IFlsuloczcM77XNCDWJsEqmETJcstMZeix
+         tDAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rjwO1FwEHwaRe98ERPpJb4XhcKjr+G42GNFc2FaNjPY=;
-        b=F0qjUMMHMyBr7ogayCzmrZezYb4oQ73aWCvMMeHweBow1WFuM74maMlRvZwAl41SPl
-         6kdPyAeqURciD2EaQ/cDbvnU/u2/0F0UXmI9stgs0A0WRRby2MgyA+mEMDRykEnrGXTy
-         cCwEay8bKcpt2LBJugZUGdIXgV8AT8GCmxjkE+Vax+cFuA4qg5stO+9Oq0hS5/dCNiQ7
-         3hAlaAElcG8wd5UeOERvtkpqFqpy/2FrvIm0GndFZouBYHWZGpxqZboSJJj2C9f9PncP
-         90vEdaniPG1tMNiRh2lWzE271OjLgwJ19Fy9bTGm/+Pa4nZg4LbOwfVYQfrS0nmHwSGW
-         OEFA==
-X-Gm-Message-State: APjAAAUgUpttc5EjoCekXIpyIZUsNeRDvFDROLV70QJ/A+qy5nhZZ5yb
-        Apg1nvDJUFx541WYu533zb056UsuTIRIqxMjho43YA==
-X-Google-Smtp-Source: APXvYqxPEF84EN3dLF+KpgUma2Eg2Jv1hy3/PNjxMNx7d9TCfClYT8X1c071v7TmAfiER5FyEPDqCKtqjr2DW1EP2Ek=
-X-Received: by 2002:a05:651c:102a:: with SMTP id w10mr7850453ljm.77.1575015956975;
- Fri, 29 Nov 2019 00:25:56 -0800 (PST)
+        bh=cWGIyDGedrBpqvnGEcfpuSqDBvTplOuqKnHOt1z2nZY=;
+        b=CCTuznHqzh9EonVJPkOJIG7mp7d7Gwlb324reFfk4GnZO83+B+QIK+lvukdpXrhdZl
+         k8F2P9KehyOUYk/48TILqp7B9ROz7V7eRnQL0DyGyAPZWhMjBWxPFAHWjLXrX22rUz+S
+         SXtX3+3j8osCmzQsN34vZLOh6VrOHjIOEvRNpmBVM3kQzzvpBWWj23xkeiANDhyUgUIx
+         FQjgfVyxLqsAYy1fmHLinqaYHDciGdP3AHju/Q6BawnSMDve5IV1AoGNW+wCL5TFRzq8
+         SY934A5oBxB2OjAQhXG1WXBEGN5XPAO9A8Bz0pIrbu4C/Frw4+HyXOjP8hjpJp8h5m/R
+         wOMA==
+X-Gm-Message-State: APjAAAV7UKlR7fJUtGslY3p0a144opmfbyVB7Aun2uLHu8VA9RhRk+Ia
+        05KtURM18XdaVpqN5a55vu1p3k1FKGw0qM0uo7hXWA==
+X-Google-Smtp-Source: APXvYqyFVu1QDHRAEXN8klwjdP572QLZkNK+IG5v4PcKoUa4g8y93kq9uXa8jHwJNaDlWusiqugi2HpACqmUZgN4wsY=
+X-Received: by 2002:a2e:9a12:: with SMTP id o18mr36798466lji.191.1575016168447;
+ Fri, 29 Nov 2019 00:29:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127135932.7223-1-m.felsch@pengutronix.de> <20191127135932.7223-6-m.felsch@pengutronix.de>
-In-Reply-To: <20191127135932.7223-6-m.felsch@pengutronix.de>
+References: <20191127135932.7223-1-m.felsch@pengutronix.de> <20191127135932.7223-4-m.felsch@pengutronix.de>
+In-Reply-To: <20191127135932.7223-4-m.felsch@pengutronix.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Nov 2019 09:25:45 +0100
-Message-ID: <CACRpkdb9iXneW3BUj6RfODYnL7DwMwbGbPwXgQ4Z5YTj7MgGcw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] regulator: da9062: add gpio based regulator
- dis-/enable support
+Date:   Fri, 29 Nov 2019 09:29:16 +0100
+Message-ID: <CACRpkdbw_R2Lu1G8ZqV8vMCQL+A7XUV7qAb=gC-je6dzPC2rzw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] regulator: da9062: add voltage selection gpio support
 To:     Marco Felsch <m.felsch@pengutronix.de>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Support Opensource <support.opensource@diasemi.com>,
@@ -78,25 +77,31 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Wed, Nov 27, 2019 at 2:59 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-> Each regulator can be enabeld/disabled by the internal pmic state
-> machine or by a gpio input signal. Typically the OTP configures the
-> regulators to be enabled/disabled on a specific sequence number which is
-> most the time fine. Sometimes we need to reconfigure that due to a PCB
-> bug. This patch adds the support to disable/enable the regulator based
-> on a gpio input signal.
+> The DA9062/1 devices can switch their regulator voltages between
+> voltage-A (active) and voltage-B (suspend) settings. Switching the
+> voltages can be controlled by ther internal state-machine or by a gpio
+> input signal and can be configured for each individual regulator. This
+> commit adds the gpio-based voltage switching support.
 >
 > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+> Changelog:
+>
+> v2:
+> - use new public api gpiod_to_offset()
 
-Overall I think this is fine, it's a solid use case that need to be
-supported.
+OK this is better in my opinion, at least it is a lesser evil than
+the hacks I've seen.
 
-> +       struct reg_field ena_gpi;
+> +       struct reg_field vsel_gpi;
 
-Maybe just add some doc comment to this struct member?
+Again add some comments to the code describing what this is
+about please. A general purpose input that can be configured
+such that it is not a general purpose input anymore, but instead
+looped back internally to control a voltage on the DA9062.
 
-IIUC it is a general purpose input that can be configured
-such that it will enable one of the DA9062 regulators when
-asserted. (Correct?)
+Part of me wonder if these lines are really "general purpose"
+but I suppose software could use them.
 
 Yours,
 Linus Walleij
